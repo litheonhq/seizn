@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding, createQueryEmbedding } from '@/lib/ai';
-import type { AddMemoryRequest, SearchMemoryRequest } from '@/types/database';
+import { hashApiKey } from '@/lib/api-key';
+import type { AddMemoryRequest } from '@/types/database';
 
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
@@ -26,15 +27,17 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
+    const keyHash = hashApiKey(apiKey);
 
     // Verify API key and get user_id
     const { data: keyData, error: keyError } = await supabase
       .from('api_keys')
-      .select('user_id, is_active')
-      .eq('key_prefix', apiKey.substring(0, 8))
+      .select('user_id')
+      .eq('key_hash', keyHash)
+      .eq('is_active', true)
       .single();
 
-    if (keyError || !keyData || !keyData.is_active) {
+    if (keyError || !keyData) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401 }
@@ -77,7 +80,7 @@ export async function POST(request: NextRequest) {
     await supabase
       .from('api_keys')
       .update({ last_used_at: new Date().toISOString() })
-      .eq('key_prefix', apiKey.substring(0, 8));
+      .eq('key_hash', keyHash);
 
     return NextResponse.json({
       success: true,
@@ -114,15 +117,17 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = createServerClient();
+    const keyHash = hashApiKey(apiKey);
 
     // Verify API key
     const { data: keyData, error: keyError } = await supabase
       .from('api_keys')
-      .select('user_id, is_active')
-      .eq('key_prefix', apiKey.substring(0, 8))
+      .select('user_id')
+      .eq('key_hash', keyHash)
+      .eq('is_active', true)
       .single();
 
-    if (keyError || !keyData || !keyData.is_active) {
+    if (keyError || !keyData) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401 }
@@ -159,7 +164,7 @@ export async function GET(request: NextRequest) {
     await supabase
       .from('api_keys')
       .update({ last_used_at: new Date().toISOString() })
-      .eq('key_prefix', apiKey.substring(0, 8));
+      .eq('key_hash', keyHash);
 
     return NextResponse.json({
       success: true,
