@@ -30,9 +30,10 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="#features" className="text-sm text-gray-600 hover:text-black transition-colors">Features</a>
             <a href="#pricing" className="text-sm text-gray-600 hover:text-black transition-colors">Pricing</a>
-            <button className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
-              Get Early Access
-            </button>
+            <a href="/login" className="text-sm text-gray-600 hover:text-black transition-colors">Login</a>
+            <a href="/login" className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
+              Get Started
+            </a>
           </div>
         </div>
       </nav>
@@ -43,7 +44,7 @@ export default function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 mb-8">
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm text-gray-600">Coming Q1 2026</span>
+            <span className="text-sm text-gray-600">Now in Beta</span>
           </div>
 
           {/* Headline */}
@@ -205,7 +206,7 @@ const memories = await seizn.search({
 
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-6 bg-gray-50">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
               Simple, transparent pricing
@@ -215,110 +216,158 @@ const memories = await seizn.search({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Free */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-100">
+            <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <div className="text-sm font-medium text-gray-500 mb-2">Free</div>
-              <div className="text-4xl font-semibold text-gray-900 mb-1">$0</div>
+              <div className="text-3xl font-semibold text-gray-900 mb-1">$0</div>
               <div className="text-sm text-gray-500 mb-6">Forever free</div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   10,000 memories
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   1,000 API calls/mo
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Community support
                 </li>
               </ul>
-              <button className="w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors">
+              <a href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
                 Get Started
-              </button>
+              </a>
+            </div>
+
+            {/* Plus */}
+            <div className="bg-white p-6 rounded-2xl border border-gray-100">
+              <div className="text-sm font-medium text-gray-500 mb-2">Plus</div>
+              <div className="text-3xl font-semibold text-gray-900 mb-1">$9</div>
+              <div className="text-sm text-gray-500 mb-6">per month</div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  50,000 memories
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  10,000 API calls/mo
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Email support
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Basic analytics
+                </li>
+              </ul>
+              <a href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
+                Get Started
+              </a>
             </div>
 
             {/* Pro */}
-            <div className="bg-black p-8 rounded-2xl relative">
-              <div className="absolute top-4 right-4 bg-white/10 text-white text-xs px-2 py-1 rounded-full">
+            <div className="bg-black p-6 rounded-2xl relative">
+              <div className="absolute top-4 right-4 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
                 Popular
               </div>
               <div className="text-sm font-medium text-gray-400 mb-2">Pro</div>
-              <div className="text-4xl font-semibold text-white mb-1">$19</div>
+              <div className="text-3xl font-semibold text-white mb-1">$29</div>
               <div className="text-sm text-gray-400 mb-6">per month</div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-2 text-sm text-gray-300">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   200,000 memories
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-300">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   50,000 API calls/mo
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-300">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Priority support
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-300">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Advanced analytics
                 </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Webhooks
+                </li>
               </ul>
-              <button className="w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors">
+              <a href="/login" className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center">
                 Get Started
-              </button>
+              </a>
             </div>
 
             {/* Enterprise */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-100">
+            <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <div className="text-sm font-medium text-gray-500 mb-2">Enterprise</div>
-              <div className="text-4xl font-semibold text-gray-900 mb-1">Custom</div>
+              <div className="text-3xl font-semibold text-gray-900 mb-1">Custom</div>
               <div className="text-sm text-gray-500 mb-6">Contact us</div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Unlimited memories
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Unlimited API calls
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Dedicated support
                 </li>
                 <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Custom SLA
                 </li>
+                <li className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  On-premise option
+                </li>
               </ul>
-              <button className="w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors">
+              <a href="mailto:contact@seizn.com" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
                 Contact Sales
-              </button>
+              </a>
             </div>
           </div>
         </div>
