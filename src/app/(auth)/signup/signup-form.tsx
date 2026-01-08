@@ -223,13 +223,13 @@ export default function SignupForm() {
           {/* Terms */}
           <p className="mt-4 text-xs text-zinc-500 text-center">
             By signing up, you agree to our{" "}
-            <a href="/terms" className="text-emerald-400 hover:underline">
+            <Link href="/terms" className="text-emerald-400 hover:underline">
               Terms of Service
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a href="/privacy" className="text-emerald-400 hover:underline">
+            <Link href="/privacy" className="text-emerald-400 hover:underline">
               Privacy Policy
-            </a>
+            </Link>
           </p>
 
           {/* Sign In Link */}

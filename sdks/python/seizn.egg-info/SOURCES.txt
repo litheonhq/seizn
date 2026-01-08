@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+seizn/__init__.py
+seizn/client.py
+seizn/types.py
+seizn.egg-info/PKG-INFO
+seizn.egg-info/SOURCES.txt
+seizn.egg-info/dependency_links.txt
+seizn.egg-info/requires.txt
+seizn.egg-info/top_level.txt
