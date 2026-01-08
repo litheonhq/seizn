@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -128,11 +129,12 @@ export function DashboardClient({ user }: { user: User }) {
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="text-xl font-bold text-white">
+          <Link href="/" className="text-xl font-bold text-white">
             Seizn<span className="text-emerald-400">.</span>
-          </a>
+          </Link>
           <div className="flex items-center gap-4">
             {user.image && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={user.image}
                 alt={user.name || "Avatar"}

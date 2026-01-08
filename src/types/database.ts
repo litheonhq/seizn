@@ -49,6 +49,7 @@ export interface Memory {
 
   memory_type: MemoryType;
   tags: string[];
+  namespace: string;
 
   scope: MemoryScope;
   session_id: string | null;
@@ -98,6 +99,7 @@ export interface AddMemoryRequest {
   content: string;
   memory_type?: MemoryType;
   tags?: string[];
+  namespace?: string;
   scope?: MemoryScope;
   session_id?: string;
   agent_id?: string;
@@ -110,6 +112,7 @@ export interface SearchMemoryRequest {
   threshold?: number;
   memory_type?: MemoryType;
   tags?: string[];
+  namespace?: string;
   scope?: MemoryScope;
   session_id?: string;
   agent_id?: string;
@@ -120,6 +123,7 @@ export interface MemorySearchResult {
   content: string;
   memory_type: MemoryType;
   tags: string[];
+  namespace: string;
   similarity: number;
 }
 
@@ -148,6 +152,7 @@ export interface Database {
           embedding?: number[] | null;
           memory_type?: MemoryType;
           tags?: string[];
+          namespace?: string;
           scope?: MemoryScope;
           session_id?: string | null;
           agent_id?: string | null;
@@ -175,6 +180,7 @@ export interface Database {
           match_user_id: string;
           match_count?: number;
           match_threshold?: number;
+          match_namespace?: string;
         };
         Returns: MemorySearchResult[];
       };

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -234,17 +235,17 @@ export default function SignupForm() {
           {/* Sign In Link */}
           <p className="mt-6 text-center text-zinc-400 text-sm">
             Already have an account?{" "}
-            <a href="/login" className="text-emerald-400 hover:text-emerald-300">
+            <Link href="/login" className="text-emerald-400 hover:text-emerald-300">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
 
         {/* Back to home */}
         <p className="mt-6 text-center">
-          <a href="/" className="text-zinc-500 hover:text-zinc-300 text-sm">
+          <Link href="/" className="text-zinc-500 hover:text-zinc-300 text-sm">
             ← Back to home
-          </a>
+          </Link>
         </p>
       </div>
     </div>
