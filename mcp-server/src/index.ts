@@ -9,7 +9,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 // Configuration from environment
-const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://seizn.com";
+const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://www.seizn.com";
 const SEIZN_API_KEY = process.env.SEIZN_API_KEY || "";
 
 if (!SEIZN_API_KEY) {
@@ -48,7 +48,7 @@ async function apiRequest(
   const url = `${SEIZN_API_URL}${endpoint}`;
 
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json; charset=utf-8",
     "x-api-key": SEIZN_API_KEY,
   };
 
