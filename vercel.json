@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "seizn.com"
+        }
+      ],
+      "destination": "https://www.seizn.com/:path*",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/internal/optimize",
