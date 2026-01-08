@@ -208,12 +208,12 @@ export function DashboardClient({ user }: { user: User }) {
             <p className="text-3xl font-bold text-emerald-400">
               {stats?.planDisplay || "Free"}
             </p>
-            <a
+            <Link
               href="/pricing"
               className="text-emerald-400 text-sm hover:underline mt-1 inline-block"
             >
               Upgrade
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -339,12 +339,12 @@ curl -X POST https://seizn.com/api/extract \\
             </pre>
           </div>
           <div className="mt-4">
-            <a
+            <Link
               href="/docs"
               className="text-emerald-400 hover:text-emerald-300 text-sm"
             >
               View full documentation →
-            </a>
+            </Link>
           </div>
         </div>
       </main>
