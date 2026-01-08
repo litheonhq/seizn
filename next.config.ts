@@ -2,16 +2,8 @@ import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
-  // Suppress punycode deprecation warning
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        punycode: false,
-      };
-    }
-    return config;
-  },
+  // Use empty turbopack config to silence the warning
+  turbopack: {},
 };
 
 // Sentry configuration options
