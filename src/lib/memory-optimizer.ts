@@ -204,20 +204,70 @@ export function calculateImportanceScore(memory: Memory): number {
   return Math.max(1, Math.min(10, Math.round(calculatedImportance)));
 }
 
+// Plan-based decay days configuration
+// Free: 60 days, Plus: 120 days, Pro/Enterprise: configurable
+const PLAN_DECAY_DAYS: Record<string, number> = {
+  free: 60,
+  plus: 120,
+  pro: 180,
+  enterprise: 365,
+};
+
+// Get user's decay settings
+async function getUserDecaySettings(userId: string): Promise<{
+  decayEnabled: boolean;
+  decayDays: number | null;
+}> {
+  const supabase = createServerClient();
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('plan, memory_decay_enabled, memory_decay_days')
+    .eq('id', userId)
+    .single();
+
+  if (error || !profile) {
+    return { decayEnabled: true, decayDays: 60 }; // Default to free plan
+  }
+
+  const plan = profile.plan || 'free';
+
+  // Pro/Enterprise can disable decay
+  if (['pro', 'enterprise'].includes(plan) && profile.memory_decay_enabled === false) {
+    return { decayEnabled: false, decayDays: null };
+  }
+
+  // Custom days for Pro+ (if set)
+  if (['pro', 'enterprise'].includes(plan) && profile.memory_decay_days) {
+    return { decayEnabled: true, decayDays: profile.memory_decay_days };
+  }
+
+  // Plan default
+  return { decayEnabled: true, decayDays: PLAN_DECAY_DAYS[plan] || 60 };
+}
+
 // Apply decay to unused memories (forgetting curve)
 export async function applyMemoryDecay(userId: string): Promise<number> {
   const supabase = createServerClient();
 
-  // Get memories that haven't been accessed in 60+ days
-  const sixtyDaysAgo = new Date();
-  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+  // Get user's decay settings
+  const { decayEnabled, decayDays } = await getUserDecaySettings(userId);
+
+  // If decay is disabled (Pro+ option), skip
+  if (!decayEnabled || decayDays === null) {
+    return 0;
+  }
+
+  // Calculate cutoff date based on plan
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - decayDays);
 
   const { data: staleMemories, error: fetchError } = await supabase
     .from('memories')
     .select('id, importance, access_count, last_accessed_at, created_at')
     .eq('user_id', userId)
     .eq('is_deleted', false)
-    .lt('last_accessed_at', sixtyDaysAgo.toISOString())
+    .lt('last_accessed_at', cutoffDate.toISOString())
     .gt('importance', 1); // Don't decay already-low importance
 
   if (fetchError || !staleMemories) {

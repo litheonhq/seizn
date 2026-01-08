@@ -50,21 +50,21 @@
     "subtitle": "無料で始めて、成長に合わせて拡張。",
     "free": {
       "name": "Free",
-      "price": "¥0",
+      "price": "$0",
       "period": "永久無料",
       "features": ["10,000メモリ", "月1,000 API呼び出し", "コミュニティサポート"],
       "cta": "始める"
     },
     "plus": {
       "name": "Plus",
-      "price": "¥1,400",
+      "price": "$9",
       "period": "月額",
       "features": ["50,000メモリ", "月10,000 API呼び出し", "メールサポート", "基本分析"],
       "cta": "購読"
     },
     "pro": {
       "name": "Pro",
-      "price": "¥4,500",
+      "price": "$29",
       "period": "月額",
       "badge": "人気",
       "features": ["200,000メモリ", "月50,000 API呼び出し", "優先サポート", "高度な分析", "Webhook"],
@@ -72,7 +72,7 @@
     },
     "enterprise": {
       "name": "Enterprise",
-      "price": "カスタム",
+      "price": "Custom",
       "period": "お問い合わせ",
       "features": ["無制限メモリ", "無制限API呼び出し", "専任サポート", "カスタムSLA", "オンプレミスオプション"],
       "cta": "営業に連絡"

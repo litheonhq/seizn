@@ -8,6 +8,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
+import { logMemoryAccess } from '@/lib/audit';
 import type { AddMemoryRequest } from '@/types/database';
 
 // POST /api/memories - Add a new memory
@@ -192,6 +193,12 @@ export async function GET(request: NextRequest) {
         results.map((m: { id: string }) => trackMemoryAccess(m.id))
       ).catch(console.error);
     }
+
+    // Audit log: memory search
+    logMemoryAccess(request, userId, keyId, 'search', {
+      memoryCount: results?.length || 0,
+      query,
+    }).catch(console.error);
 
     return NextResponse.json({
       success: true,
