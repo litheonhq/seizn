@@ -2,7 +2,19 @@ import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
-  // Configuration for Next.js
+  // Exclude mcp-server from build process
+  webpack: (config) => {
+    // Ignore mcp-server directory during watch
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/mcp-server/**', '**/node_modules/**'],
+    };
+    return config;
+  },
+  // ESLint - only lint src directory
+  eslint: {
+    dirs: ['src'],
+  },
 };
 
 // Sentry configuration options (updated for v10+)

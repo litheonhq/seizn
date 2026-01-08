@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "predeploy": "bash scripts/pre-deploy.sh",
+    "deploy": "npm run predeploy && vercel --prod"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.11.1",
