@@ -52,14 +52,23 @@
       "name": "Free",
       "price": "$0",
       "period": "永久無料",
-      "features": ["10,000メモリ", "月1,000 API呼び出し", "コミュニティサポート"],
+      "features": [
+        "10,000メモリ",
+        "月1,000 API呼び出し",
+        "コミュニティサポート"
+      ],
       "cta": "始める"
     },
     "plus": {
       "name": "Plus",
       "price": "$9",
       "period": "月額",
-      "features": ["50,000メモリ", "月10,000 API呼び出し", "メールサポート", "基本分析"],
+      "features": [
+        "50,000メモリ",
+        "月10,000 API呼び出し",
+        "メールサポート",
+        "基本分析"
+      ],
       "cta": "購読"
     },
     "pro": {
@@ -67,14 +76,26 @@
       "price": "$29",
       "period": "月額",
       "badge": "人気",
-      "features": ["200,000メモリ", "月50,000 API呼び出し", "優先サポート", "高度な分析", "Webhook"],
+      "features": [
+        "200,000メモリ",
+        "月50,000 API呼び出し",
+        "優先サポート",
+        "高度な分析",
+        "Webhook"
+      ],
       "cta": "購読"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Custom",
       "period": "お問い合わせ",
-      "features": ["無制限メモリ", "無制限API呼び出し", "専任サポート", "カスタムSLA", "オンプレミスオプション"],
+      "features": [
+        "無制限メモリ",
+        "無制限API呼び出し",
+        "専任サポート",
+        "カスタムSLA",
+        "オンプレミスオプション"
+      ],
       "cta": "営業に連絡"
     }
   },
@@ -166,5 +187,44 @@
     "privacy": "プライバシー",
     "terms": "利用規約",
     "contact": "お問い合わせ"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "welcome": "おかえりなさい",
+    "overview": "概要",
+    "usage": "使用状況",
+    "apiKeys": "APIキー",
+    "settings": "設定",
+    "signOut": "ログアウト",
+    "stats": {
+      "memories": "メモリ",
+      "apiCalls": "本日のAPI呼び出し",
+      "plan": "現在のプラン",
+      "unlimited": "無制限"
+    },
+    "keys": {
+      "title": "APIキー管理",
+      "create": "新しいキーを作成",
+      "name": "キー名",
+      "namePlaceholder": "マイAPIキー",
+      "created": "作成日",
+      "lastUsed": "最終使用",
+      "never": "未使用",
+      "copy": "コピー",
+      "copied": "コピーしました！",
+      "delete": "削除",
+      "deleteConfirm": "このAPIキーを削除しますか？",
+      "warning": "このキーは安全に保存してください。再表示されません。",
+      "noKeys": "APIキーがありません。新しいキーを作成してください。"
+    },
+    "usagePage": {
+      "title": "使用統計",
+      "period": "現在の期間",
+      "memoriesUsed": "使用メモリ",
+      "apiCallsUsed": "使用API呼び出し",
+      "remaining": "残り",
+      "upgrade": "プランをアップグレード"
+    },
+    "language": "言語"
   }
 }

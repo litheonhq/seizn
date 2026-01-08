@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { locales, localeNames, type Locale } from '@/i18n/config';
+import { setStoredLocale } from '@/lib/locale';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
