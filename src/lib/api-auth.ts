@@ -3,6 +3,7 @@ import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
 import { checkRateLimit, getRateLimitHeaders } from './rate-limit';
+import { logAuthFailure, logSuspiciousActivity } from './audit';
 
 interface AuthResult {
   userId: string;
@@ -29,6 +30,8 @@ export async function authenticateRequest(
   const apiKey = request.headers.get('x-api-key');
 
   if (!apiKey) {
+    // Log auth failure (no key provided)
+    logAuthFailure(request, 'no_api_key_provided').catch(console.error);
     return {
       authError: {
         error: 'API key required. Pass your API key in the x-api-key header.',
@@ -49,6 +52,8 @@ export async function authenticateRequest(
     .single();
 
   if (keyError || !keyData) {
+    // Log auth failure with key prefix for investigation
+    logAuthFailure(request, 'invalid_api_key', apiKey).catch(console.error);
     return {
       authError: {
         error: 'Invalid or inactive API key',
@@ -85,6 +90,12 @@ export async function authenticateRequest(
   const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
 
   if (!rateLimitResult.allowed) {
+    // Log rate limit violation as suspicious activity
+    logSuspiciousActivity(request, keyData.user_id, 'rate_limit', {
+      plan,
+      remaining: rateLimitResult.remaining,
+      limit: rateLimitResult.limit,
+    }).catch(console.error);
     return {
       authError: {
         error: 'Rate limit exceeded. Please slow down your requests.',

@@ -50,21 +50,21 @@
     "subtitle": "무료로 시작하고, 성장에 따라 확장하세요.",
     "free": {
       "name": "Free",
-      "price": "₩0",
+      "price": "$0",
       "period": "영구 무료",
       "features": ["10,000 메모리", "월 1,000 API 호출", "커뮤니티 지원"],
       "cta": "시작하기"
     },
     "plus": {
       "name": "Plus",
-      "price": "₩12,000",
+      "price": "$9",
       "period": "월",
       "features": ["50,000 메모리", "월 10,000 API 호출", "이메일 지원", "기본 분석"],
       "cta": "구독하기"
     },
     "pro": {
       "name": "Pro",
-      "price": "₩39,000",
+      "price": "$29",
       "period": "월",
       "badge": "인기",
       "features": ["200,000 메모리", "월 50,000 API 호출", "우선 지원", "고급 분석", "웹훅"],
@@ -72,7 +72,7 @@
     },
     "enterprise": {
       "name": "Enterprise",
-      "price": "맞춤형",
+      "price": "Custom",
       "period": "문의",
       "features": ["무제한 메모리", "무제한 API 호출", "전담 지원", "맞춤 SLA", "온프레미스 옵션"],
       "cta": "영업팀 문의"
