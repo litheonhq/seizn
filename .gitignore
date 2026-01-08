@@ -43,3 +43,9 @@ next-env.d.ts
 .vercel
 .env*.local
 __pycache__/
+
+# SDKs build artifacts
+sdks/*/node_modules/
+sdks/*/dist/
+sdks/*/*.egg-info/
+sdks/*/package-lock.json
