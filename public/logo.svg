@@ -1,23 +1,18 @@
 <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <rect width="200" height="200" rx="40" fill="#000000"/>
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+  </defs>
 
-  <!-- S letter stylized as memory/brain circuit -->
-  <path d="M60 70 Q60 50 85 50 L115 50 Q140 50 140 70 Q140 90 115 90 L85 90 Q60 90 60 110 Q60 130 85 130 L115 130 Q140 130 140 150"
-        stroke="#10B981"
-        stroke-width="16"
+  <!-- Rounded square background -->
+  <rect width="200" height="200" rx="44" fill="#0A0A0A"/>
+
+  <!-- Stylized S - clean fintech style -->
+  <path d="M65 68 C65 52, 78 42, 100 42 L120 42 C142 42, 155 52, 155 68 C155 84, 142 94, 120 94 L80 94 C58 94, 45 104, 45 120 C45 136, 58 146, 80 146 L100 146 C122 146, 135 156, 135 172"
+        stroke="url(#gradient)"
+        stroke-width="18"
         stroke-linecap="round"
         fill="none"/>
-
-  <!-- Memory dots/nodes -->
-  <circle cx="60" cy="70" r="6" fill="#10B981"/>
-  <circle cx="140" cy="70" r="6" fill="#10B981"/>
-  <circle cx="60" cy="110" r="6" fill="#10B981"/>
-  <circle cx="140" cy="150" r="6" fill="#10B981"/>
-
-  <!-- Connection lines -->
-  <line x1="60" y1="70" x2="45" y2="55" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
-  <line x1="140" y1="70" x2="155" y2="55" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
-  <line x1="140" y1="150" x2="155" y2="165" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
-  <line x1="60" y1="110" x2="45" y2="125" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
 </svg>
