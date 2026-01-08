@@ -3,6 +3,10 @@
     {
       "path": "/api/internal/optimize",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/internal/webhooks",
+      "schedule": "* * * * *"
     }
   ]
 }

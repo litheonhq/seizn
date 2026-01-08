@@ -94,6 +94,37 @@ export interface WaitlistEntry {
   created_at: string;
 }
 
+export type WebhookEvent = 'memory.created' | 'memory.updated' | 'memory.deleted';
+
+export interface Webhook {
+  id: string;
+  user_id: string;
+  name: string;
+  url: string;
+  secret: string | null;
+  events: WebhookEvent[];
+  namespace: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WebhookDelivery {
+  id: string;
+  webhook_id: string;
+  event_type: string;
+  payload: Record<string, unknown>;
+  status: 'pending' | 'success' | 'failed';
+  status_code: number | null;
+  response_body: string | null;
+  error_message: string | null;
+  attempt_count: number;
+  max_attempts: number;
+  next_retry_at: string | null;
+  created_at: string;
+  delivered_at: string | null;
+}
+
 // API Request/Response types
 export interface AddMemoryRequest {
   content: string;

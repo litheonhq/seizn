@@ -1,10 +1,13 @@
 // AI Service Clients for Seizn
 
+import { getCachedEmbedding, setCachedEmbedding } from './redis';
+
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
 const VOYAGE_MODEL = 'voyage-3'; // 1024 dimensions
 
-export async function createEmbedding(text: string): Promise<number[]> {
+// Internal function to call Voyage API
+async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Promise<number[]> {
   const apiKey = process.env.VOYAGE_API_KEY;
   if (!apiKey) throw new Error('VOYAGE_API_KEY not set');
 
@@ -17,7 +20,7 @@ export async function createEmbedding(text: string): Promise<number[]> {
     body: JSON.stringify({
       model: VOYAGE_MODEL,
       input: text,
-      input_type: 'document',
+      input_type: inputType,
     }),
   });
 
@@ -30,30 +33,36 @@ export async function createEmbedding(text: string): Promise<number[]> {
   return data.data[0].embedding;
 }
 
-export async function createQueryEmbedding(query: string): Promise<number[]> {
-  const apiKey = process.env.VOYAGE_API_KEY;
-  if (!apiKey) throw new Error('VOYAGE_API_KEY not set');
-
-  const response = await fetch(VOYAGE_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: VOYAGE_MODEL,
-      input: query,
-      input_type: 'query',
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Voyage API error: ${error}`);
+export async function createEmbedding(text: string): Promise<number[]> {
+  // Check cache first
+  const cached = await getCachedEmbedding(text, 'document');
+  if (cached) {
+    return cached;
   }
 
-  const data = await response.json();
-  return data.data[0].embedding;
+  // Call API
+  const embedding = await callVoyageAPI(text, 'document');
+
+  // Cache for future use (non-blocking)
+  setCachedEmbedding(text, 'document', embedding).catch(console.error);
+
+  return embedding;
+}
+
+export async function createQueryEmbedding(query: string): Promise<number[]> {
+  // Check cache first
+  const cached = await getCachedEmbedding(query, 'query');
+  if (cached) {
+    return cached;
+  }
+
+  // Call API
+  const embedding = await callVoyageAPI(query, 'query');
+
+  // Cache for future use (non-blocking)
+  setCachedEmbedding(query, 'query', embedding).catch(console.error);
+
+  return embedding;
 }
 
 // Anthropic Claude for Memory Extraction
@@ -214,4 +223,126 @@ export function estimateTokens(text: string): number {
   const koreanChars = (text.match(/[\uAC00-\uD7AF]/g) || []).length;
   const otherChars = text.length - koreanChars;
   return Math.ceil(koreanChars / 2 + otherChars / 4);
+}
+
+// Conversation Message type
+export interface ConversationMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp?: string;
+}
+
+// Conversation Summary result
+export interface ConversationSummary {
+  summary: string;
+  key_points: string[];
+  extracted_memories: ExtractedMemory[];
+  topic: string;
+  message_count: number;
+  time_range?: { start: string; end: string };
+}
+
+const SUMMARIZATION_PROMPT = `You are an expert conversation summarizer. Your task is to analyze conversations and create concise, actionable summaries.
+
+## Output Format
+Return a JSON object with:
+- "summary": A 2-4 sentence overview of the conversation
+- "key_points": Array of 3-7 bullet points capturing main discussion items
+- "extracted_memories": Array of important facts to remember (same format as memory extraction)
+- "topic": A short topic label (2-5 words)
+
+## Guidelines
+1. Focus on decisions made, tasks discussed, and important information shared
+2. Ignore greetings, small talk, and filler content
+3. Preserve technical details, names, dates, and specific numbers
+4. Extract memories that would be useful in future conversations
+5. Be language-aware: maintain the original language for proper nouns and technical terms
+
+Return only valid JSON, no markdown.`;
+
+export async function summarizeConversation(
+  messages: ConversationMessage[],
+  options: { model?: 'haiku' | 'sonnet'; existingMemories?: string[] } = {}
+): Promise<ConversationSummary> {
+  const { model = 'haiku', existingMemories = [] } = options;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  const modelId = model === 'haiku'
+    ? 'claude-3-5-haiku-20241022'
+    : 'claude-sonnet-4-20250514';
+
+  // Format conversation for summarization
+  const conversationText = messages
+    .map((m) => `[${m.role.toUpperCase()}]${m.timestamp ? ` (${m.timestamp})` : ''}: ${m.content}`)
+    .join('\n\n');
+
+  let userMessage = `Summarize this conversation:\n\n${conversationText}`;
+
+  // Add existing memories to avoid duplicate extraction
+  if (existingMemories.length > 0) {
+    userMessage += `\n\n---\nExisting memories (avoid duplicating):\n${existingMemories.slice(0, 10).map(m => `- ${m}`).join('\n')}`;
+  }
+
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: modelId,
+      max_tokens: 2048,
+      system: SUMMARIZATION_PROMPT,
+      messages: [
+        { role: 'user', content: userMessage },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Anthropic API error: ${error}`);
+  }
+
+  const data = await response.json();
+  const text = data.content[0].text;
+
+  try {
+    const result = JSON.parse(text);
+
+    // Calculate time range from timestamps if available
+    const timestamps = messages
+      .filter(m => m.timestamp)
+      .map(m => m.timestamp as string)
+      .sort();
+
+    return {
+      summary: result.summary || '',
+      key_points: Array.isArray(result.key_points) ? result.key_points : [],
+      extracted_memories: (result.extracted_memories || []).map((m: ExtractedMemory) => ({
+        content: m.content,
+        memory_type: m.memory_type || 'fact',
+        tags: Array.isArray(m.tags) ? m.tags : [],
+        confidence: Math.min(1, Math.max(0, m.confidence || 0.8)),
+        importance: Math.min(10, Math.max(1, m.importance || 5)),
+      })),
+      topic: result.topic || 'General Conversation',
+      message_count: messages.length,
+      time_range: timestamps.length >= 2
+        ? { start: timestamps[0], end: timestamps[timestamps.length - 1] }
+        : undefined,
+    };
+  } catch {
+    console.error('Failed to parse summarization result:', text);
+    return {
+      summary: 'Failed to generate summary',
+      key_points: [],
+      extracted_memories: [],
+      topic: 'Unknown',
+      message_count: messages.length,
+    };
+  }
 }

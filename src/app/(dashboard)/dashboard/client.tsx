@@ -132,7 +132,18 @@ export function DashboardClient({ user }: { user: User }) {
           <Link href="/" className="text-xl font-bold text-white">
             Seizn<span className="text-emerald-400">.</span>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
+            <nav className="flex items-center gap-4">
+              <Link href="/dashboard" className="text-white text-sm">
+                Dashboard
+              </Link>
+              <Link
+                href="/dashboard/usage"
+                className="text-zinc-400 hover:text-white text-sm"
+              >
+                Usage
+              </Link>
+            </nav>
             {user.image && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
