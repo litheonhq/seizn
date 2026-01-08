@@ -70,11 +70,11 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
             <a href="#features" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.features}</a>
             <a href="#pricing" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.pricing}</a>
             <a href={`/${locale}/docs`} className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.docs}</a>
-            <a href="/login" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.login}</a>
+            <Link href="/login" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.login}</Link>
             <LanguageSwitcher currentLocale={locale} />
-            <a href="/login" className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors btn-hover-lift">
+            <Link href="/login" className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors btn-hover-lift">
               {t.nav.getStarted}
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -103,13 +103,13 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
               <a href="#features" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
               <a href="#pricing" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</a>
               <a href={`/${locale}/docs`} className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
-              <a href="/login" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</a>
+              <Link href="/login" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
               <div className="py-2">
                 <LanguageSwitcher currentLocale={locale} />
               </div>
-              <a href="/login" className="block w-full text-center bg-black text-white px-4 py-3 rounded-full hover:bg-gray-800 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/login" className="block w-full text-center bg-black text-white px-4 py-3 rounded-full hover:bg-gray-800 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 {t.nav.getStarted}
-              </a>
+              </Link>
             </div>
           </div>
         )}
@@ -308,9 +308,9 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <a href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
+              <Link href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
                 {t.pricing.free.cta}
-              </a>
+              </Link>
             </div>
 
             {/* Plus */}
