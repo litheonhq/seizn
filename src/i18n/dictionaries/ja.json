@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "title": "Seizn - AIメモリインフラ",
+    "description": "AIに永続的なメモリを与えましょう。Seiznはコンテキストを自動的に抽出、保存、検索します — AIがすべてを記憶するように。"
+  },
+  "nav": {
+    "features": "機能",
+    "pricing": "料金",
+    "docs": "ドキュメント",
+    "login": "ログイン",
+    "getStarted": "始める"
+  },
+  "hero": {
+    "badge": "2026年第1四半期リリース予定",
+    "title": "AIアプリケーションのための",
+    "titleHighlight": "メモリインフラ",
+    "subtitle": "AIに永続的なメモリを与えましょう。Seiznはコンテキストを自動的に抽出、保存、検索します — AIがすべてを記憶するように。",
+    "emailPlaceholder": "メールアドレスを入力",
+    "joinWaitlist": "ウェイトリストに登録",
+    "joining": "登録中...",
+    "onTheList": "登録完了しました！",
+    "stats": {
+      "tokenSavings": "トークン節約",
+      "retrievalTime": "検索時間",
+      "uptimeSla": "稼働率SLA"
+    }
+  },
+  "features": {
+    "title": "開発者のために設計",
+    "subtitle": "シンプルなAPI、パワフルなインフラ。数分で任意のAIに永続的なメモリを追加できます。",
+    "smartExtraction": {
+      "title": "スマート抽出",
+      "description": "Claude AIを使用して、会話から重要な事実、好み、コンテキストを自動的に抽出します。"
+    },
+    "instantRetrieval": {
+      "title": "即時検索",
+      "description": "ハイブリッドベクター+グラフ検索が、毎回ミリ秒単位で関連するメモリを返します。"
+    },
+    "enterpriseSecurity": {
+      "title": "エンタープライズセキュリティ",
+      "description": "エンドツーエンド暗号化、SOC 2準拠、きめ細かなアクセス制御と監査ログを提供します。"
+    }
+  },
+  "codePreview": {
+    "title": "シンプルな統合",
+    "subtitle": "数行のコードでAIにメモリを追加できます。"
+  },
+  "pricing": {
+    "title": "シンプルで透明な料金",
+    "subtitle": "無料で始めて、成長に合わせて拡張。",
+    "free": {
+      "name": "Free",
+      "price": "¥0",
+      "period": "永久無料",
+      "features": ["10,000メモリ", "月1,000 API呼び出し", "コミュニティサポート"],
+      "cta": "始める"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "¥1,400",
+      "period": "月額",
+      "features": ["50,000メモリ", "月10,000 API呼び出し", "メールサポート", "基本分析"],
+      "cta": "購読"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "¥4,500",
+      "period": "月額",
+      "badge": "人気",
+      "features": ["200,000メモリ", "月50,000 API呼び出し", "優先サポート", "高度な分析", "Webhook"],
+      "cta": "購読"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "カスタム",
+      "period": "お問い合わせ",
+      "features": ["無制限メモリ", "無制限API呼び出し", "専任サポート", "カスタムSLA", "オンプレミスオプション"],
+      "cta": "営業に連絡"
+    }
+  },
+  "enterprisePage": {
+    "title": "営業に連絡",
+    "subtitle": "専任サポート、SLA保証、カスタム統合を含むエンタープライズ向けカスタムプランをご提供します。",
+    "includes": "エンタープライズプランに含まれるもの:",
+    "includesList": [
+      "99.9%稼働率SLA",
+      "優先サポート（24時間）",
+      "専任アカウントマネージャー",
+      "カスタム統合",
+      "SSO / SAML認証",
+      "データ保持ポリシー",
+      "セキュリティ監査レポート",
+      "カスタム契約"
+    ],
+    "form": {
+      "companyName": "会社名",
+      "yourName": "お名前",
+      "workEmail": "業務メール",
+      "phone": "電話番号",
+      "jobTitle": "役職",
+      "companySize": "会社規模",
+      "useCase": "ユースケースについてお聞かせください",
+      "useCasePlaceholder": "何を構築していますか？Seiznをどのように使用する予定ですか？",
+      "expectedVolume": "予想月間API呼び出し数",
+      "timeline": "タイムライン",
+      "requirements": "特定の要件",
+      "requirementsPlaceholder": "SSO、特定のSLA、データレジデンシー、コンプライアンス要件など",
+      "submit": "営業に連絡",
+      "submitting": "送信中...",
+      "privacyNote": "このフォームを送信することで、以下に同意したものとみなされます："
+    },
+    "companySizes": {
+      "select": "選択...",
+      "1-10": "1-10人",
+      "11-50": "11-50人",
+      "51-200": "51-200人",
+      "201-500": "201-500人",
+      "500+": "500人以上"
+    },
+    "volumes": {
+      "select": "選択...",
+      "lt100k": "10万未満",
+      "100k-500k": "10万 - 50万",
+      "500k-1m": "50万 - 100万",
+      "1m-5m": "100万 - 500万",
+      "5m+": "500万以上"
+    },
+    "timelines": {
+      "select": "選択...",
+      "immediate": "すぐに開始可能",
+      "1-3months": "1-3ヶ月以内",
+      "3-6months": "3-6ヶ月以内",
+      "6+months": "6ヶ月以降"
+    },
+    "success": {
+      "title": "ありがとうございます！",
+      "message": "お問い合わせを受け付けました。営業担当者が1-2営業日以内にご連絡いたします。",
+      "backHome": "ホームに戻る"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "おかえりなさい",
+      "subtitle": "アカウントにログイン",
+      "email": "メール",
+      "password": "パスワード",
+      "submit": "ログイン",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUp": "サインアップ",
+      "or": "または"
+    },
+    "signup": {
+      "title": "アカウント作成",
+      "subtitle": "Seiznで始めましょう",
+      "name": "名前",
+      "email": "メール",
+      "password": "パスワード",
+      "submit": "アカウント作成",
+      "hasAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "or": "または"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. All rights reserved.",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "contact": "お問い合わせ"
+  }
+}

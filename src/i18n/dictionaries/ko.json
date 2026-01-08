@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "title": "Seizn - AI 메모리 인프라",
+    "description": "AI에게 영구 메모리를 제공하세요. Seizn은 컨텍스트를 자동으로 추출, 저장, 검색합니다 — AI가 모든 것을 기억하도록."
+  },
+  "nav": {
+    "features": "기능",
+    "pricing": "요금제",
+    "docs": "문서",
+    "login": "로그인",
+    "getStarted": "시작하기"
+  },
+  "hero": {
+    "badge": "2026년 1분기 출시 예정",
+    "title": "AI 애플리케이션을 위한",
+    "titleHighlight": "메모리 인프라",
+    "subtitle": "AI에게 영구 메모리를 제공하세요. Seizn은 컨텍스트를 자동으로 추출, 저장, 검색합니다 — AI가 모든 것을 기억하도록.",
+    "emailPlaceholder": "이메일을 입력하세요",
+    "joinWaitlist": "대기자 명단 등록",
+    "joining": "등록 중...",
+    "onTheList": "등록이 완료되었습니다!",
+    "stats": {
+      "tokenSavings": "토큰 절감",
+      "retrievalTime": "검색 시간",
+      "uptimeSla": "가동률 SLA"
+    }
+  },
+  "features": {
+    "title": "개발자를 위한 설계",
+    "subtitle": "간단한 API, 강력한 인프라. 몇 분 만에 모든 AI에 영구 메모리를 추가하세요.",
+    "smartExtraction": {
+      "title": "스마트 추출",
+      "description": "Claude AI를 사용하여 대화에서 핵심 사실, 선호도, 컨텍스트를 자동으로 추출합니다."
+    },
+    "instantRetrieval": {
+      "title": "즉시 검색",
+      "description": "하이브리드 벡터 + 그래프 검색이 매번 밀리초 단위로 관련 메모리를 반환합니다."
+    },
+    "enterpriseSecurity": {
+      "title": "엔터프라이즈 보안",
+      "description": "엔드투엔드 암호화, SOC 2 준수, 세분화된 접근 제어 및 감사 로그를 제공합니다."
+    }
+  },
+  "codePreview": {
+    "title": "간단한 통합",
+    "subtitle": "단 몇 줄의 코드로 AI에 메모리를 추가하세요."
+  },
+  "pricing": {
+    "title": "심플하고 투명한 요금제",
+    "subtitle": "무료로 시작하고, 성장에 따라 확장하세요.",
+    "free": {
+      "name": "Free",
+      "price": "₩0",
+      "period": "영구 무료",
+      "features": ["10,000 메모리", "월 1,000 API 호출", "커뮤니티 지원"],
+      "cta": "시작하기"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "₩12,000",
+      "period": "월",
+      "features": ["50,000 메모리", "월 10,000 API 호출", "이메일 지원", "기본 분석"],
+      "cta": "구독하기"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "₩39,000",
+      "period": "월",
+      "badge": "인기",
+      "features": ["200,000 메모리", "월 50,000 API 호출", "우선 지원", "고급 분석", "웹훅"],
+      "cta": "구독하기"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "맞춤형",
+      "period": "문의",
+      "features": ["무제한 메모리", "무제한 API 호출", "전담 지원", "맞춤 SLA", "온프레미스 옵션"],
+      "cta": "영업팀 문의"
+    }
+  },
+  "enterprisePage": {
+    "title": "영업팀 문의",
+    "subtitle": "전담 지원, SLA 보장, 맞춤 통합을 포함한 엔터프라이즈 맞춤 플랜을 받아보세요.",
+    "includes": "엔터프라이즈 플랜 포함 사항:",
+    "includesList": [
+      "99.9% 가동률 SLA",
+      "우선 지원 (24시간)",
+      "전담 계정 관리자",
+      "맞춤 통합",
+      "SSO / SAML 인증",
+      "데이터 보존 정책",
+      "보안 감사 보고서",
+      "맞춤 계약"
+    ],
+    "form": {
+      "companyName": "회사명",
+      "yourName": "담당자명",
+      "workEmail": "업무 이메일",
+      "phone": "연락처",
+      "jobTitle": "직책",
+      "companySize": "회사 규모",
+      "useCase": "사용 목적을 알려주세요",
+      "useCasePlaceholder": "무엇을 만들고 계신가요? Seizn을 어떻게 사용하실 예정인가요?",
+      "expectedVolume": "예상 월간 API 호출 수",
+      "timeline": "도입 일정",
+      "requirements": "특별 요구사항",
+      "requirementsPlaceholder": "SSO, 특정 SLA, 데이터 저장 위치, 규정 준수 요구사항 등",
+      "submit": "영업팀 문의",
+      "submitting": "제출 중...",
+      "privacyNote": "이 양식을 제출하면 다음에 동의하는 것입니다:"
+    },
+    "companySizes": {
+      "select": "선택...",
+      "1-10": "1-10명",
+      "11-50": "11-50명",
+      "51-200": "51-200명",
+      "201-500": "201-500명",
+      "500+": "500명 이상"
+    },
+    "volumes": {
+      "select": "선택...",
+      "lt100k": "10만 미만",
+      "100k-500k": "10만 - 50만",
+      "500k-1m": "50만 - 100만",
+      "1m-5m": "100만 - 500만",
+      "5m+": "500만 이상"
+    },
+    "timelines": {
+      "select": "선택...",
+      "immediate": "바로 시작 가능",
+      "1-3months": "1-3개월 내",
+      "3-6months": "3-6개월 내",
+      "6+months": "6개월 이후"
+    },
+    "success": {
+      "title": "감사합니다!",
+      "message": "문의가 접수되었습니다. 영업 담당자가 1-2 영업일 내에 연락드리겠습니다.",
+      "backHome": "홈으로 돌아가기"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "다시 오신 것을 환영합니다",
+      "subtitle": "계정에 로그인하세요",
+      "email": "이메일",
+      "password": "비밀번호",
+      "submit": "로그인",
+      "noAccount": "계정이 없으신가요?",
+      "signUp": "회원가입",
+      "or": "또는"
+    },
+    "signup": {
+      "title": "계정 만들기",
+      "subtitle": "Seizn으로 시작하세요",
+      "name": "이름",
+      "email": "이메일",
+      "password": "비밀번호",
+      "submit": "계정 만들기",
+      "hasAccount": "이미 계정이 있으신가요?",
+      "signIn": "로그인",
+      "or": "또는"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. All rights reserved.",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "contact": "문의하기"
+  }
+}
