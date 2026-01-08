@@ -1,0 +1,770 @@
+openapi: 3.1.0
+info:
+  title: Seizn Memory API
+  description: |
+    AI Memory Infrastructure for Developers.
+
+    ## Authentication
+    All API requests require an API key passed via the `X-API-Key` header.
+
+    ```bash
+    curl -H "X-API-Key: sk_your_api_key" https://api.seizn.dev/api/memories
+    ```
+
+    ## Models Used
+    - **Embedding**: Voyage-3 (1024 dimensions)
+    - **Memory Extraction**: Claude 3.5 Haiku / Claude Sonnet 4
+    - **Query Generation**: Claude 3.5 Haiku / Claude Sonnet 4
+
+    ## Rate Limits
+    - Free: 1,000 API calls/month
+    - Plus: 10,000 API calls/month
+    - Pro: 100,000 API calls/month
+
+  version: 1.0.0
+  contact:
+    name: Seizn Support
+    email: support@seizn.dev
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.seizn.dev
+    description: Production
+  - url: http://localhost:3000
+    description: Local development
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Memories
+    description: Memory CRUD operations
+  - name: AI
+    description: AI-powered memory operations
+  - name: Webhooks
+    description: Webhook management
+
+paths:
+  /api/memories:
+    post:
+      tags: [Memories]
+      summary: Add a memory
+      description: Store a new memory with automatic embedding generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemoryRequest'
+            example:
+              content: "User prefers dark mode and uses TypeScript"
+              memory_type: "preference"
+              tags: ["ui", "tech"]
+              namespace: "default"
+      responses:
+        '200':
+          description: Memory created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  memory:
+                    $ref: '#/components/schemas/Memory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      tags: [Memories]
+      summary: Search memories
+      description: |
+        Search memories using vector similarity, keyword matching, or hybrid search.
+
+        **Search Modes:**
+        - `vector` (default): Semantic similarity search
+        - `keyword`: Full-text BM25 search
+        - `hybrid`: Combined vector + keyword with RRF ranking
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: mode
+          in: query
+          schema:
+            type: string
+            enum: [vector, keyword, hybrid]
+            default: vector
+          description: Search mode
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+          description: Maximum results to return
+        - name: threshold
+          in: query
+          schema:
+            type: number
+            default: 0.7
+            minimum: 0
+            maximum: 1
+          description: Minimum similarity threshold (vector/hybrid modes)
+        - name: namespace
+          in: query
+          schema:
+            type: string
+          description: Filter by namespace
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  mode:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MemorySearchResult'
+                  count:
+                    type: integer
+
+    delete:
+      tags: [Memories]
+      summary: Delete memories (bulk)
+      description: Soft delete multiple memories by IDs
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated memory IDs
+      responses:
+        '200':
+          description: Memories deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deleted:
+                    type: integer
+
+  /api/memories/{id}:
+    get:
+      tags: [Memories]
+      summary: Get a memory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Memory details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  memory:
+                    $ref: '#/components/schemas/Memory'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Memories]
+      summary: Update a memory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                memory_type:
+                  $ref: '#/components/schemas/MemoryType'
+                tags:
+                  type: array
+                  items:
+                    type: string
+                importance:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+      responses:
+        '200':
+          description: Memory updated
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Memories]
+      summary: Delete a memory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Memory deleted
+
+  /api/extract:
+    post:
+      tags: [AI]
+      summary: Extract memories from conversation
+      description: |
+        Use AI to automatically extract important memories from a conversation.
+        Extracted memories can be automatically stored or returned for review.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [conversation]
+              properties:
+                conversation:
+                  type: string
+                  description: The conversation text to analyze
+                model:
+                  type: string
+                  enum: [haiku, sonnet]
+                  default: haiku
+                  description: AI model to use
+                auto_store:
+                  type: boolean
+                  default: true
+                  description: Automatically store extracted memories
+                namespace:
+                  type: string
+                  default: default
+            example:
+              conversation: |
+                User: I'm a software engineer at Google, working on ML infrastructure.
+                Assistant: That's interesting! What technologies do you work with?
+                User: Mostly Python and TensorFlow. I prefer PyTorch though.
+              model: haiku
+              auto_store: true
+      responses:
+        '200':
+          description: Extraction results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  extracted:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExtractedMemory'
+                  stored:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Memory'
+
+  /api/query:
+    post:
+      tags: [AI]
+      summary: Query with memory context (RAG)
+      description: |
+        Generate an AI response using relevant memories as context.
+        This is a RAG (Retrieval-Augmented Generation) endpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: User's question or prompt
+                model:
+                  type: string
+                  enum: [haiku, sonnet]
+                  default: haiku
+                top_k:
+                  type: integer
+                  default: 5
+                  description: Number of memories to retrieve
+                namespace:
+                  type: string
+                include_memories:
+                  type: boolean
+                  default: true
+                  description: Include used memories in response
+            example:
+              query: "What programming languages do I know?"
+              model: haiku
+              top_k: 5
+      responses:
+        '200':
+          description: AI response with memory context
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                  memories_used:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        content:
+                          type: string
+                        similarity:
+                          type: number
+                  model_used:
+                    type: string
+
+  /api/summarize:
+    post:
+      tags: [AI]
+      summary: Summarize a conversation
+      description: |
+        Generate a summary of a conversation and optionally extract/store memories.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [messages]
+              properties:
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required: [role, content]
+                    properties:
+                      role:
+                        type: string
+                        enum: [user, assistant, system]
+                      content:
+                        type: string
+                      timestamp:
+                        type: string
+                        format: date-time
+                save_memories:
+                  type: boolean
+                  default: false
+                  description: Store extracted memories
+                model:
+                  type: string
+                  enum: [haiku, sonnet]
+                  default: haiku
+                namespace:
+                  type: string
+            example:
+              messages:
+                - role: user
+                  content: "I need help with my React project"
+                - role: assistant
+                  content: "Sure! What are you building?"
+                - role: user
+                  content: "A dashboard for my startup"
+              save_memories: true
+      responses:
+        '200':
+          description: Summary results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  summary:
+                    type: object
+                    properties:
+                      text:
+                        type: string
+                      topic:
+                        type: string
+                      key_points:
+                        type: array
+                        items:
+                          type: string
+                      message_count:
+                        type: integer
+                  extracted_memories:
+                    type: integer
+                  saved_memories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Memory'
+
+  /api/webhooks:
+    get:
+      tags: [Webhooks]
+      summary: List webhooks
+      responses:
+        '200':
+          description: List of webhooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+                  count:
+                    type: integer
+
+    post:
+      tags: [Webhooks]
+      summary: Create a webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, url]
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                url:
+                  type: string
+                  format: uri
+                  description: Must be HTTPS
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/WebhookEvent'
+                  default: [memory.created]
+                namespace:
+                  type: string
+                  description: Only trigger for specific namespace
+            example:
+              name: "My Webhook"
+              url: "https://example.com/webhook"
+              events: ["memory.created", "memory.deleted"]
+      responses:
+        '200':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  webhook:
+                    allOf:
+                      - $ref: '#/components/schemas/Webhook'
+                      - type: object
+                        properties:
+                          secret:
+                            type: string
+                            description: HMAC secret (shown only once)
+                  message:
+                    type: string
+
+    patch:
+      tags: [Webhooks]
+      summary: Update a webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/WebhookEvent'
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Webhook updated
+
+    delete:
+      tags: [Webhooks]
+      summary: Delete a webhook
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Webhook deleted
+
+  /api/webhooks/deliveries:
+    get:
+      tags: [Webhooks]
+      summary: Get webhook delivery history
+      parameters:
+        - name: webhook_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, success, failed]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Delivery history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deliveries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookDelivery'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    MemoryType:
+      type: string
+      enum: [fact, preference, experience, relationship, instruction]
+
+    MemoryScope:
+      type: string
+      enum: [user, session, agent]
+
+    Memory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        memory_type:
+          $ref: '#/components/schemas/MemoryType'
+        tags:
+          type: array
+          items:
+            type: string
+        namespace:
+          type: string
+        scope:
+          $ref: '#/components/schemas/MemoryScope'
+        importance:
+          type: integer
+          minimum: 1
+          maximum: 10
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        created_at:
+          type: string
+          format: date-time
+
+    MemorySearchResult:
+      allOf:
+        - $ref: '#/components/schemas/Memory'
+        - type: object
+          properties:
+            similarity:
+              type: number
+              description: Cosine similarity score
+            keyword_rank:
+              type: number
+              description: BM25 rank (hybrid mode only)
+            combined_score:
+              type: number
+              description: RRF combined score (hybrid mode only)
+
+    AddMemoryRequest:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          description: Memory content
+        memory_type:
+          $ref: '#/components/schemas/MemoryType'
+        tags:
+          type: array
+          items:
+            type: string
+        namespace:
+          type: string
+          default: default
+        scope:
+          $ref: '#/components/schemas/MemoryScope'
+        session_id:
+          type: string
+        agent_id:
+          type: string
+        source:
+          type: string
+
+    ExtractedMemory:
+      type: object
+      properties:
+        content:
+          type: string
+        memory_type:
+          $ref: '#/components/schemas/MemoryType'
+        tags:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+        importance:
+          type: integer
+
+    WebhookEvent:
+      type: string
+      enum: [memory.created, memory.updated, memory.deleted]
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+        namespace:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    WebhookDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_id:
+          type: string
+          format: uuid
+        webhook_name:
+          type: string
+        event_type:
+          type: string
+        status:
+          type: string
+          enum: [pending, success, failed]
+        status_code:
+          type: integer
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+        attempt_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

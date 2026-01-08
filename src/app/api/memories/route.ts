@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET /api/memories - Search memories
+// Supports: mode=vector (default), mode=hybrid, mode=keyword
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
@@ -122,23 +123,52 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const namespace = searchParams.get('namespace') || null;
+    const mode = searchParams.get('mode') || 'vector'; // vector, hybrid, keyword
 
     const supabase = createServerClient();
 
-    // Create query embedding
-    const queryEmbedding = await createQueryEmbedding(query);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let results: any[] | null = null;
+    let searchError: Error | null = null;
 
-    // Search using the database function
-    const { data: results, error: searchError } = await supabase.rpc(
-      'search_memories',
-      {
+    if (mode === 'keyword') {
+      // Keyword-only search (no embedding needed)
+      const { data, error } = await supabase.rpc('keyword_search_memories', {
+        query_text: query,
+        match_user_id: userId,
+        match_count: limit,
+        match_namespace: namespace,
+      });
+      results = data;
+      searchError = error;
+    } else if (mode === 'hybrid') {
+      // Hybrid search (keyword + vector)
+      const queryEmbedding = await createQueryEmbedding(query);
+      const { data, error } = await supabase.rpc('hybrid_search_memories', {
+        query_text: query,
         query_embedding: queryEmbedding,
         match_user_id: userId,
         match_count: limit,
         match_threshold: threshold,
         match_namespace: namespace,
-      }
-    );
+        keyword_weight: 0.3,
+        vector_weight: 0.7,
+      });
+      results = data;
+      searchError = error;
+    } else {
+      // Default: vector-only search
+      const queryEmbedding = await createQueryEmbedding(query);
+      const { data, error } = await supabase.rpc('search_memories', {
+        query_embedding: queryEmbedding,
+        match_user_id: userId,
+        match_count: limit,
+        match_threshold: threshold,
+        match_namespace: namespace,
+      });
+      results = data;
+      searchError = error;
+    }
 
     if (searchError) {
       console.error('Search error:', searchError);
@@ -153,7 +183,7 @@ export async function GET(request: NextRequest) {
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
       200,
-      { embedding: query.length }
+      { embedding: mode !== 'keyword' ? query.length : 0 }
     );
 
     // Track access for returned memories (background, non-blocking)
@@ -165,6 +195,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      mode,
       results: results || [],
       count: results?.length || 0,
     });

@@ -2,16 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
+import { checkRateLimit, getRateLimitHeaders } from './rate-limit';
 
 interface AuthResult {
   userId: string;
   keyId: string;
   plan: string;
+  rateLimitHeaders?: Record<string, string>;
 }
 
 interface AuthError {
   error: string;
   status: number;
+  headers?: Record<string, string>;
 }
 
 type AuthResponse = AuthResult | { authError: AuthError };
@@ -75,10 +78,27 @@ export async function authenticateRequest(
     .eq('id', keyData.user_id)
     .single();
 
+  const plan = profile?.plan || 'free';
+
+  // Check rate limit (per-minute burst protection)
+  const rateLimitResult = checkRateLimit(keyData.user_id, plan);
+  const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
+
+  if (!rateLimitResult.allowed) {
+    return {
+      authError: {
+        error: 'Rate limit exceeded. Please slow down your requests.',
+        status: 429,
+        headers: rateLimitHeaders,
+      },
+    };
+  }
+
   return {
     userId: keyData.user_id,
     keyId: keyData.id,
-    plan: profile?.plan || 'free',
+    plan,
+    rateLimitHeaders,
   };
 }
 
@@ -93,7 +113,19 @@ export function isAuthError(result: AuthResponse): result is { authError: AuthEr
  * Create error response from auth error
  */
 export function authErrorResponse(authError: AuthError): NextResponse {
-  return NextResponse.json({ error: authError.error }, { status: authError.status });
+  const response = NextResponse.json(
+    { error: authError.error },
+    { status: authError.status }
+  );
+
+  // Add rate limit headers if present
+  if (authError.headers) {
+    Object.entries(authError.headers).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+  }
+
+  return response;
 }
 
 interface RequestContext {
