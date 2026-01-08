@@ -1,0 +1,10 @@
+<svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon -->
+  <rect x="0" y="8" width="32" height="32" rx="8" fill="#000000"/>
+  <text x="16" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">S</text>
+  <circle cx="24" cy="16" r="3" fill="#10B981"/>
+
+  <!-- Wordmark -->
+  <text x="44" y="33" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#000000">Seizn</text>
+  <text x="119" y="33" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#10B981">.</text>
+</svg>
