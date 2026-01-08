@@ -44,7 +44,7 @@ export default function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 mb-8">
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm text-gray-600">Now in Beta</span>
+            <span className="text-sm text-gray-600">Coming Q1 2026</span>
           </div>
 
           {/* Headline */}
