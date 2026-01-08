@@ -1,0 +1,20 @@
+# MCP Server - 별도 패키지로 독립 실행
+mcp-server/
+
+# Development files
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.idea/
+.vscode/
+
+# Test files
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
