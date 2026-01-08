@@ -1,44 +1,26 @@
 // Memory Extraction API - Extract memories from conversations using Claude AI
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { hashApiKey } from '@/lib/api-key';
 import { extractMemories, createEmbedding } from '@/lib/ai';
+import {
+  authenticateRequest,
+  isAuthError,
+  authErrorResponse,
+  logRequest,
+} from '@/lib/api-auth';
 
 // POST /api/extract - Extract and store memories from conversation
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
-    // Verify API key
-    const apiKey = request.headers.get('x-api-key');
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key required' },
-        { status: 401 }
-      );
+    // Authenticate and check usage limits
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
     }
 
-    const supabase = createServerClient();
-    const keyHash = hashApiKey(apiKey);
-
-    // Find the API key and get user
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id')
-      .eq('key_hash', keyHash)
-      .eq('is_active', true)
-      .single();
-
-    if (keyError || !keyData) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
-        { status: 401 }
-      );
-    }
-
-    // Update last_used_at
-    await supabase
-      .from('api_keys')
-      .update({ last_used_at: new Date().toISOString() })
-      .eq('key_hash', keyHash);
+    const { userId, keyId } = authResult;
 
     // Parse request body
     const body = await request.json();
@@ -46,26 +28,32 @@ export async function POST(request: NextRequest) {
       conversation,
       model = 'haiku',
       auto_store = true,
-      namespace = 'default'
+      namespace = 'default',
     } = body;
 
     if (!conversation || typeof conversation !== 'string') {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/extract', method: 'POST', startTime },
+        400
+      );
       return NextResponse.json(
         { error: 'conversation (string) is required' },
         { status: 400 }
       );
     }
 
+    const supabase = createServerClient();
+
     // Get existing memories for deduplication
     const { data: existingMemories } = await supabase
       .from('memories')
       .select('content')
-      .eq('user_id', keyData.user_id)
+      .eq('user_id', userId)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false })
       .limit(20);
 
-    const existingContents = existingMemories?.map(m => m.content) || [];
+    const existingContents = existingMemories?.map((m) => m.content) || [];
 
     // Extract memories using Claude
     const extracted = await extractMemories(conversation, {
@@ -74,6 +62,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (extracted.length === 0) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/extract', method: 'POST', startTime },
+        200,
+        { input: conversation.length, output: 0 }
+      );
       return NextResponse.json({
         message: 'No significant memories found in the conversation',
         extracted: [],
@@ -95,18 +88,15 @@ export async function POST(request: NextRequest) {
           const { data: inserted, error: insertError } = await supabase
             .from('memories')
             .insert({
-              user_id: keyData.user_id,
+              user_id: userId,
               content: memory.content,
               memory_type: memory.memory_type,
               tags: memory.tags,
               importance: memory.importance,
               embedding,
               namespace,
-              metadata: {
-                confidence: memory.confidence,
-                extracted_at: new Date().toISOString(),
-                model_used: model,
-              },
+              source: 'extract_api',
+              confidence: memory.confidence,
             })
             .select('id, content, memory_type, tags, importance, created_at')
             .single();
@@ -122,9 +112,20 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Log successful request with token estimates
+    await logRequest(
+      { userId, keyId, endpoint: '/api/extract', method: 'POST', startTime },
+      200,
+      {
+        input: Math.ceil(conversation.length / 4), // Approximate tokens
+        output: Math.ceil(JSON.stringify(extracted).length / 4),
+        embedding: storedCount * 500, // Approximate embedding tokens
+      }
+    );
+
     return NextResponse.json({
       message: `Extracted ${extracted.length} memories, stored ${storedCount}`,
-      extracted: extracted.map(m => ({
+      extracted: extracted.map((m) => ({
         content: m.content,
         memory_type: m.memory_type,
         tags: m.tags,
@@ -133,7 +134,6 @@ export async function POST(request: NextRequest) {
       })),
       stored: auto_store ? storedMemories : null,
     });
-
   } catch (error) {
     console.error('Extract API error:', error);
     return NextResponse.json(
