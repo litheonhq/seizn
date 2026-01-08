@@ -17,6 +17,8 @@ export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +72,29 @@ export default function SignupForm() {
     } catch {
       setError("An error occurred. Please try again.");
       setIsLoading(false);
+    }
+  };
+
+  const proceedToLogin = async () => {
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl,
+    });
+
+    if (result?.error) {
+      router.push("/login?message=Account created. Please sign in.");
+    } else {
+      router.push(callbackUrl);
+    }
+  };
+
+  const copyApiKey = async () => {
+    if (apiKey) {
+      await navigator.clipboard.writeText(apiKey);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
