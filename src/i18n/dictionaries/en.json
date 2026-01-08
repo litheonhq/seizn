@@ -52,14 +52,23 @@
       "name": "Free",
       "price": "$0",
       "period": "Forever free",
-      "features": ["10,000 memories", "1,000 API calls/mo", "Community support"],
+      "features": [
+        "10,000 memories",
+        "1,000 API calls/mo",
+        "Community support"
+      ],
       "cta": "Get Started"
     },
     "plus": {
       "name": "Plus",
       "price": "$9",
       "period": "per month",
-      "features": ["50,000 memories", "10,000 API calls/mo", "Email support", "Basic analytics"],
+      "features": [
+        "50,000 memories",
+        "10,000 API calls/mo",
+        "Email support",
+        "Basic analytics"
+      ],
       "cta": "Subscribe"
     },
     "pro": {
@@ -67,14 +76,26 @@
       "price": "$29",
       "period": "per month",
       "badge": "Popular",
-      "features": ["200,000 memories", "50,000 API calls/mo", "Priority support", "Advanced analytics", "Webhooks"],
+      "features": [
+        "200,000 memories",
+        "50,000 API calls/mo",
+        "Priority support",
+        "Advanced analytics",
+        "Webhooks"
+      ],
       "cta": "Subscribe"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Custom",
       "period": "Contact us",
-      "features": ["Unlimited memories", "Unlimited API calls", "Dedicated support", "Custom SLA", "On-premise option"],
+      "features": [
+        "Unlimited memories",
+        "Unlimited API calls",
+        "Dedicated support",
+        "Custom SLA",
+        "On-premise option"
+      ],
       "cta": "Contact Sales"
     }
   },
@@ -166,5 +187,44 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "overview": "Overview",
+    "usage": "Usage",
+    "apiKeys": "API Keys",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "stats": {
+      "memories": "Memories",
+      "apiCalls": "API Calls Today",
+      "plan": "Current Plan",
+      "unlimited": "Unlimited"
+    },
+    "keys": {
+      "title": "Your API Keys",
+      "create": "Create New Key",
+      "name": "Key Name",
+      "namePlaceholder": "My API Key",
+      "created": "Created",
+      "lastUsed": "Last Used",
+      "never": "Never",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this API key?",
+      "warning": "Save this key securely. It will not be shown again.",
+      "noKeys": "No API keys yet. Create one to get started."
+    },
+    "usagePage": {
+      "title": "Usage Statistics",
+      "period": "Current Period",
+      "memoriesUsed": "Memories Used",
+      "apiCallsUsed": "API Calls Used",
+      "remaining": "Remaining",
+      "upgrade": "Upgrade Plan"
+    },
+    "language": "Language"
   }
 }

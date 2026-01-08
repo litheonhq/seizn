@@ -3,6 +3,7 @@
 export type Plan = 'free' | 'plus' | 'pro' | 'enterprise';
 export type MemoryType = 'fact' | 'preference' | 'experience' | 'relationship' | 'instruction';
 export type MemoryScope = 'user' | 'session' | 'agent';
+export type SupportedLocale = 'en' | 'ko' | 'ja';
 
 export interface Profile {
   id: string;
@@ -23,6 +24,9 @@ export interface Profile {
   memory_count: number;
   api_calls_this_month: number;
 
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
   updated_at: string;
 }
@@ -37,6 +41,9 @@ export interface ApiKey {
   last_used_at: string | null;
   expires_at: string | null;
   is_active: boolean;
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
 }
 
@@ -58,6 +65,9 @@ export interface Memory {
   source: string | null;
   confidence: number;
   importance: number;
+
+  // Preferences
+  language: SupportedLocale;
 
   created_at: string;
   updated_at: string;
@@ -83,6 +93,9 @@ export interface UsageLog {
   status_code: number | null;
   latency_ms: number | null;
 
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
 }
 
@@ -91,6 +104,9 @@ export interface WaitlistEntry {
   email: string;
   source: string;
   referrer: string | null;
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
 }
 
@@ -105,6 +121,9 @@ export interface Webhook {
   events: WebhookEvent[];
   namespace: string | null;
   is_active: boolean;
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
   updated_at: string;
 }
@@ -121,6 +140,9 @@ export interface WebhookDelivery {
   attempt_count: number;
   max_attempts: number;
   next_retry_at: string | null;
+  // Preferences
+  language: SupportedLocale;
+
   created_at: string;
   delivered_at: string | null;
 }
