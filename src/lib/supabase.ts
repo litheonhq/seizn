@@ -1,20 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '@/types/database';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabaseClient = SupabaseClient<any, any, any>;
 
 // Client-side Supabase client (uses anon key)
-export function createBrowserClient() {
+export function createBrowserClient(): AnySupabaseClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  return createClient<Database>(supabaseUrl, supabaseAnonKey);
+  return createClient(supabaseUrl, supabaseAnonKey);
 }
 
 // Server-side Supabase client (uses service role key)
-export function createServerClient() {
+export function createServerClient(): AnySupabaseClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
+  return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
