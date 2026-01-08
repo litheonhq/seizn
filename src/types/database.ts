@@ -134,12 +134,27 @@ export interface Database {
       };
       api_keys: {
         Row: ApiKey;
-        Insert: Omit<ApiKey, 'id' | 'created_at'>;
+        Insert: Omit<ApiKey, 'id' | 'created_at' | 'last_used_at' | 'expires_at'> & {
+          last_used_at?: string | null;
+          expires_at?: string | null;
+        };
         Update: Partial<ApiKey>;
       };
       memories: {
         Row: Memory;
-        Insert: Omit<Memory, 'id' | 'created_at' | 'updated_at' | 'accessed_at' | 'is_deleted' | 'deleted_at'>;
+        Insert: {
+          user_id: string;
+          content: string;
+          embedding?: number[] | null;
+          memory_type?: MemoryType;
+          tags?: string[];
+          scope?: MemoryScope;
+          session_id?: string | null;
+          agent_id?: string | null;
+          source?: string | null;
+          confidence?: number;
+          importance?: number;
+        };
         Update: Partial<Memory>;
       };
       usage_logs: {
