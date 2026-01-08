@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { generateApiKey } from '@/lib/api-key';
 
 // POST /api/auth/signup - Create a new user account
 export async function POST(request: NextRequest) {
