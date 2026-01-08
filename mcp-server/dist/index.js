@@ -5,7 +5,7 @@ const index_js_1 = require("@modelcontextprotocol/sdk/server/index.js");
 const stdio_js_1 = require("@modelcontextprotocol/sdk/server/stdio.js");
 const types_js_1 = require("@modelcontextprotocol/sdk/types.js");
 // Configuration from environment
-const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://seizn.com";
+const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://www.seizn.com";
 const SEIZN_API_KEY = process.env.SEIZN_API_KEY || "";
 if (!SEIZN_API_KEY) {
     console.error("Warning: SEIZN_API_KEY not set. API calls will fail.");
@@ -14,7 +14,7 @@ if (!SEIZN_API_KEY) {
 async function apiRequest(endpoint, method = "GET", body) {
     const url = `${SEIZN_API_URL}${endpoint}`;
     const headers = {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
         "x-api-key": SEIZN_API_KEY,
     };
     const options = {
