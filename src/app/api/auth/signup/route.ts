@@ -75,6 +75,18 @@ export async function POST(request: NextRequest) {
       plan: 'free',
     });
 
+    // Generate instant API key (mem0-style UX)
+    const { key, hash, prefix } = generateApiKey();
+
+    await supabase.from('api_keys').insert({
+      user_id: authData.user.id,
+      name: 'Default Key',
+      key_hash: hash,
+      key_prefix: prefix,
+      scopes: ['memory:read', 'memory:write'],
+      is_active: true,
+    });
+
     return NextResponse.json({
       success: true,
       message: 'Account created successfully',
@@ -82,6 +94,8 @@ export async function POST(request: NextRequest) {
         id: authData.user.id,
         email: authData.user.email,
       },
+      apiKey: key,
+      apiKeyMessage: 'Save this API key securely. It will not be shown again.',
     });
   } catch (error) {
     console.error('Signup error:', error);

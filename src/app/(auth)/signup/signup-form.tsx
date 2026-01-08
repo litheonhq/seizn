@@ -55,7 +55,14 @@ export default function SignupForm() {
 
       setSuccess(true);
 
-      // Auto-login after signup
+      // If API key was generated, show it before proceeding
+      if (data.apiKey) {
+        setApiKey(data.apiKey);
+        setIsLoading(false);
+        return; // Don't auto-login yet, let user copy the key first
+      }
+
+      // Auto-login after signup (fallback if no API key)
       const result = await signIn("credentials", {
         email,
         password,
@@ -116,8 +123,42 @@ export default function SignupForm() {
 
         {/* Card */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8">
-          {/* Success Message */}
-          {success && (
+          {/* Success Message with API Key */}
+          {success && apiKey && (
+            <div className="mb-6 space-y-4">
+              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm">
+                Account created successfully!
+              </div>
+              <div className="p-4 bg-zinc-800 border border-zinc-700 rounded-lg">
+                <p className="text-sm text-zinc-300 mb-2 font-medium">
+                  Your API Key
+                </p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 px-3 py-2 bg-zinc-900 rounded text-emerald-400 text-xs font-mono break-all">
+                    {apiKey}
+                  </code>
+                  <button
+                    onClick={copyApiKey}
+                    className="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-white text-sm transition-colors"
+                  >
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <p className="mt-3 text-xs text-amber-400">
+                  ⚠️ Save this key securely. It will not be shown again.
+                </p>
+              </div>
+              <button
+                onClick={proceedToLogin}
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors"
+              >
+                Continue to Dashboard
+              </button>
+            </div>
+          )}
+
+          {/* Success without API Key (fallback) */}
+          {success && !apiKey && (
             <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm">
               Account created successfully! Signing you in...
             </div>
@@ -130,6 +171,9 @@ export default function SignupForm() {
             </div>
           )}
 
+          {/* Hide form when API key is displayed */}
+          {!apiKey && (
+          <>
           {/* OAuth Buttons */}
           <div className="space-y-3">
             <button
@@ -264,6 +308,8 @@ export default function SignupForm() {
               Sign in
             </Link>
           </p>
+          </>
+          )}
         </div>
 
         {/* Back to home */}
