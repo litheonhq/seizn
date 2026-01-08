@@ -1,0 +1,131 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from './supabase';
+import { hashApiKey } from './api-key';
+import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
+
+interface AuthResult {
+  userId: string;
+  keyId: string;
+  plan: string;
+}
+
+interface AuthError {
+  error: string;
+  status: number;
+}
+
+type AuthResponse = AuthResult | { authError: AuthError };
+
+/**
+ * Authenticate API request and check usage limits
+ */
+export async function authenticateRequest(
+  request: NextRequest,
+  options?: { skipUsageCheck?: boolean }
+): Promise<AuthResponse> {
+  const apiKey = request.headers.get('x-api-key');
+
+  if (!apiKey) {
+    return {
+      authError: {
+        error: 'API key required. Pass your API key in the x-api-key header.',
+        status: 401,
+      },
+    };
+  }
+
+  const supabase = createServerClient();
+  const keyHash = hashApiKey(apiKey);
+
+  // Verify API key and get user_id
+  const { data: keyData, error: keyError } = await supabase
+    .from('api_keys')
+    .select('id, user_id')
+    .eq('key_hash', keyHash)
+    .eq('is_active', true)
+    .single();
+
+  if (keyError || !keyData) {
+    return {
+      authError: {
+        error: 'Invalid or inactive API key',
+        status: 401,
+      },
+    };
+  }
+
+  // Check usage limits unless skipped
+  if (!options?.skipUsageCheck) {
+    const usageCheck = await checkUsageLimits(keyData.user_id);
+
+    if (!usageCheck.allowed) {
+      return {
+        authError: {
+          error: usageCheck.reason || 'Usage limit exceeded',
+          status: 429,
+        },
+      };
+    }
+  }
+
+  // Get user plan
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('plan')
+    .eq('id', keyData.user_id)
+    .single();
+
+  return {
+    userId: keyData.user_id,
+    keyId: keyData.id,
+    plan: profile?.plan || 'free',
+  };
+}
+
+/**
+ * Check if auth result is an error
+ */
+export function isAuthError(result: AuthResponse): result is { authError: AuthError } {
+  return 'authError' in result;
+}
+
+/**
+ * Create error response from auth error
+ */
+export function authErrorResponse(authError: AuthError): NextResponse {
+  return NextResponse.json({ error: authError.error }, { status: authError.status });
+}
+
+interface RequestContext {
+  userId: string;
+  keyId: string;
+  endpoint: string;
+  method: string;
+  startTime: number;
+}
+
+/**
+ * Log the API request after completion
+ */
+export async function logRequest(
+  ctx: RequestContext,
+  statusCode: number,
+  tokenUsage?: { input?: number; output?: number; embedding?: number }
+): Promise<void> {
+  const latencyMs = Date.now() - ctx.startTime;
+
+  await Promise.all([
+    logApiUsage({
+      userId: ctx.userId,
+      apiKeyId: ctx.keyId,
+      endpoint: ctx.endpoint,
+      method: ctx.method,
+      statusCode,
+      latencyMs,
+      inputTokens: tokenUsage?.input,
+      outputTokens: tokenUsage?.output,
+      embeddingTokens: tokenUsage?.embedding,
+    }),
+    updateApiKeyLastUsed(ctx.keyId),
+  ]);
+}

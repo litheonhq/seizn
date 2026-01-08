@@ -1,44 +1,26 @@
 // Memory-Augmented Query API - RAG-style responses using stored memories
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { hashApiKey } from '@/lib/api-key';
 import { createQueryEmbedding, generateWithMemories } from '@/lib/ai';
+import {
+  authenticateRequest,
+  isAuthError,
+  authErrorResponse,
+  logRequest,
+} from '@/lib/api-auth';
 
 // POST /api/query - Query with memory-augmented context
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
-    // Verify API key
-    const apiKey = request.headers.get('x-api-key');
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key required' },
-        { status: 401 }
-      );
+    // Authenticate and check usage limits
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
     }
 
-    const supabase = createServerClient();
-    const keyHash = hashApiKey(apiKey);
-
-    // Find the API key and get user
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id')
-      .eq('key_hash', keyHash)
-      .eq('is_active', true)
-      .single();
-
-    if (keyError || !keyData) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
-        { status: 401 }
-      );
-    }
-
-    // Update last_used_at
-    await supabase
-      .from('api_keys')
-      .update({ last_used_at: new Date().toISOString() })
-      .eq('key_hash', keyHash);
+    const { userId, keyId } = authResult;
 
     // Parse request body
     const body = await request.json();
@@ -51,35 +33,39 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!query || typeof query !== 'string') {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/query', method: 'POST', startTime },
+        400
+      );
       return NextResponse.json(
         { error: 'query (string) is required' },
         { status: 400 }
       );
     }
 
+    const supabase = createServerClient();
+
     // Generate query embedding
     const queryEmbedding = await createQueryEmbedding(query);
 
     // Search for relevant memories using vector similarity
-    const { data: memories, error: searchError } = await supabase.rpc('search_memories', {
-      query_embedding: queryEmbedding,
-      match_user_id: keyData.user_id,
-      match_count: top_k,
-      match_threshold: 0.5,
-    });
+    const { data: memories, error: searchError } = await supabase.rpc(
+      'search_memories',
+      {
+        query_embedding: queryEmbedding,
+        match_user_id: userId,
+        match_count: top_k,
+        match_threshold: 0.5,
+        match_namespace: namespace || null,
+      }
+    );
 
     if (searchError) {
       console.error('Memory search error:', searchError);
       // Fall back to basic query without memories
     }
 
-    // Filter by namespace if provided
-    let relevantMemories = memories || [];
-    if (namespace && relevantMemories.length > 0) {
-      relevantMemories = relevantMemories.filter(
-        (m: { namespace?: string }) => m.namespace === namespace
-      );
-    }
+    const relevantMemories = memories || [];
 
     // Extract memory contents for context
     const memoryContents = relevantMemories.map(
@@ -93,18 +79,30 @@ export async function POST(request: NextRequest) {
       model as 'haiku' | 'sonnet'
     );
 
+    // Log successful request
+    await logRequest(
+      { userId, keyId, endpoint: '/api/query', method: 'POST', startTime },
+      200,
+      {
+        input: Math.ceil((query.length + memoryContents.join(' ').length) / 4),
+        output: Math.ceil(response.length / 4),
+        embedding: Math.ceil(query.length / 4),
+      }
+    );
+
     return NextResponse.json({
       response,
       memories_used: include_memories
-        ? relevantMemories.map((m: { id: string; content: string; similarity: number }) => ({
-            id: m.id,
-            content: m.content,
-            similarity: m.similarity,
-          }))
+        ? relevantMemories.map(
+            (m: { id: string; content: string; similarity: number }) => ({
+              id: m.id,
+              content: m.content,
+              similarity: m.similarity,
+            })
+          )
         : undefined,
       model_used: model,
     });
-
   } catch (error) {
     console.error('Query API error:', error);
     return NextResponse.json(
