@@ -1,5 +1,16 @@
 #!/usr/bin/env node
 
+// Force UTF-8 encoding for Windows compatibility
+if (process.platform === 'win32') {
+  const { execSync } = require('child_process');
+  try {
+    execSync('chcp 65001', { stdio: 'ignore' });
+  } catch {}
+}
+
+// Ensure stdin uses UTF-8
+process.stdin.setEncoding('utf8');
+
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {

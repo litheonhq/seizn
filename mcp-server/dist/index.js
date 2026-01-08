@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// Force UTF-8 encoding for Windows compatibility
+if (process.platform === 'win32') {
+    const { execSync } = require('child_process');
+    try {
+        execSync('chcp 65001', { stdio: 'ignore' });
+    }
+    catch { }
+}
+// Ensure stdin uses UTF-8
+process.stdin.setEncoding('utf8');
 const index_js_1 = require("@modelcontextprotocol/sdk/server/index.js");
 const stdio_js_1 = require("@modelcontextprotocol/sdk/server/stdio.js");
 const types_js_1 = require("@modelcontextprotocol/sdk/types.js");
