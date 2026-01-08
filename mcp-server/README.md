@@ -137,3 +137,36 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ---
 
 Made with love by [Seizn](https://seizn.com)
+
+## Troubleshooting
+
+### Windows Encoding Issues (Korean/Japanese/Chinese garbled)
+
+If non-ASCII characters appear as `???` or `�`, use the cmd wrapper:
+
+```json
+{
+  "mcpServers": {
+    "seizn": {
+      "command": "cmd",
+      "args": ["/c", "chcp 65001 >nul && npx -y seizn-mcp@latest"],
+      "env": {
+        "SEIZN_API_URL": "https://www.seizn.com",
+        "SEIZN_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+This sets the Windows console code page to UTF-8 (65001) before starting the server.
+
+### Cache Issues
+
+If you're not getting the latest version:
+
+```bash
+npm cache clean --force
+```
+
+Then restart your IDE/application.
