@@ -1,8 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
+
+declare global {
+  interface Window {
+    createLemonSqueezy?: () => void;
+  }
+}
 
 export default function Home() {
+  // Initialize Lemon Squeezy on mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.createLemonSqueezy) {
+      window.createLemonSqueezy();
+    }
+  }, []);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -278,9 +291,12 @@ const memories = await seizn.search({
                   Basic analytics
                 </li>
               </ul>
-              <a href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
-                Get Started
-              </a>
+              <CheckoutButton
+                variantId={PLAN_VARIANTS.plus}
+                className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center"
+              >
+                Subscribe
+              </CheckoutButton>
             </div>
 
             {/* Pro */}
@@ -323,9 +339,12 @@ const memories = await seizn.search({
                   Webhooks
                 </li>
               </ul>
-              <a href="/login" className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center">
-                Get Started
-              </a>
+              <CheckoutButton
+                variantId={PLAN_VARIANTS.pro}
+                className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center"
+              >
+                Subscribe
+              </CheckoutButton>
             </div>
 
             {/* Enterprise */}
