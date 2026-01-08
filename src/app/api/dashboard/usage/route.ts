@@ -18,8 +18,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate date range
     const now = new Date();
-    let startDate = new Date();
-    let groupBy: 'day' | 'week' = 'day';
+    const startDate = new Date();
 
     switch (period) {
       case '30d':
@@ -27,7 +26,7 @@ export async function GET(request: NextRequest) {
         break;
       case '90d':
         startDate.setDate(now.getDate() - 90);
-        groupBy = 'week';
+        
         break;
       default: // 7d
         startDate.setDate(now.getDate() - 7);
@@ -52,7 +51,7 @@ export async function GET(request: NextRequest) {
     const summary = calculateSummary(logs || []);
 
     // Get per-API-key usage
-    const { data: keyUsage, error: keyError } = await supabase
+    const { data: keyUsage } = await supabase
       .from('usage_logs')
       .select('api_key_id, endpoint')
       .eq('user_id', userId)
