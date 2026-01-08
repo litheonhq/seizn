@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface FormData {
   company_name: string;
@@ -76,9 +77,9 @@ export default function EnterprisePage() {
           <p className="text-gray-400 mb-6">
             We&apos;ve received your inquiry. Our team will contact you within 1-2 business days.
           </p>
-          <a href="/" className="text-blue-400 hover:underline">
+          <Link href="/" className="text-blue-400 hover:underline">
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );
