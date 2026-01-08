@@ -1,8 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { hashApiKey } from '@/lib/api-key';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
+}
+
+// Helper function to verify API key
+async function verifyApiKey(apiKey: string) {
+  const supabase = createServerClient();
+  const keyHash = hashApiKey(apiKey);
+
+  const { data: keyData, error: keyError } = await supabase
+    .from('api_keys')
+    .select('user_id')
+    .eq('key_hash', keyHash)
+    .eq('is_active', true)
+    .single();
+
+  if (keyError || !keyData) {
+    return null;
+  }
+
+  // Update last_used_at
+  await supabase
+    .from('api_keys')
+    .update({ last_used_at: new Date().toISOString() })
+    .eq('key_hash', keyHash);
+
+  return keyData.user_id;
 }
 
 // GET /api/memories/[id] - Get a specific memory
@@ -18,23 +44,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const supabase = createServerClient();
-
-    // Verify API key
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id, is_active')
-      .eq('key_prefix', apiKey.substring(0, 8))
-      .single();
-
-    if (keyError || !keyData || !keyData.is_active) {
+    const userId = await verifyApiKey(apiKey);
+    if (!userId) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401 }
       );
     }
 
-    const userId = keyData.user_id;
+    const supabase = createServerClient();
 
     // Get memory
     const { data: memory, error: fetchError } = await supabase
@@ -79,23 +97,15 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const supabase = createServerClient();
-
-    // Verify API key
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id, is_active')
-      .eq('key_prefix', apiKey.substring(0, 8))
-      .single();
-
-    if (keyError || !keyData || !keyData.is_active) {
+    const userId = await verifyApiKey(apiKey);
+    if (!userId) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401 }
       );
     }
 
-    const userId = keyData.user_id;
+    const supabase = createServerClient();
 
     // Build update object (only allowed fields)
     const updateData: Record<string, unknown> = {};
@@ -153,23 +163,15 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const supabase = createServerClient();
-
-    // Verify API key
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id, is_active')
-      .eq('key_prefix', apiKey.substring(0, 8))
-      .single();
-
-    if (keyError || !keyData || !keyData.is_active) {
+    const userId = await verifyApiKey(apiKey);
+    if (!userId) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401 }
       );
     }
 
-    const userId = keyData.user_id;
+    const supabase = createServerClient();
 
     // Soft delete (set is_deleted = true)
     const { data: memory, error: deleteError } = await supabase
