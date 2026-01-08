@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { type Locale } from "@/i18n/config";
-import { ServiceSelectorClient } from "./service-selector-client";
+import { SummerClient } from "./summer-client";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -12,14 +12,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dict = await getDictionary(locale);
 
   return {
-    title: dict.metadata.title,
-    description: dict.metadata.description,
+    title: `Summer - ${dict.hero.title} | Seizn`,
+    description: dict.hero.subtitle,
   };
 }
 
-export default async function Home({ params }: Props) {
+export default async function SummerPage({ params }: Props) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
-  return <ServiceSelectorClient dict={dict} locale={locale} />;
+  return <SummerClient dict={dict} locale={locale} />;
 }
