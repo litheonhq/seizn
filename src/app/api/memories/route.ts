@@ -7,6 +7,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import type { AddMemoryRequest } from '@/types/database';
 
 // POST /api/memories - Add a new memory
@@ -154,6 +155,13 @@ export async function GET(request: NextRequest) {
       200,
       { embedding: query.length }
     );
+
+    // Track access for returned memories (background, non-blocking)
+    if (results && results.length > 0) {
+      Promise.all(
+        results.map((m: { id: string }) => trackMemoryAccess(m.id))
+      ).catch(console.error);
+    }
 
     return NextResponse.json({
       success: true,
