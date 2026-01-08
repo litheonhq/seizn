@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <rect width="200" height="200" rx="40" fill="#000000"/>
+
+  <!-- S letter stylized as memory/brain circuit -->
+  <path d="M60 70 Q60 50 85 50 L115 50 Q140 50 140 70 Q140 90 115 90 L85 90 Q60 90 60 110 Q60 130 85 130 L115 130 Q140 130 140 150"
+        stroke="#10B981"
+        stroke-width="16"
+        stroke-linecap="round"
+        fill="none"/>
+
+  <!-- Memory dots/nodes -->
+  <circle cx="60" cy="70" r="6" fill="#10B981"/>
+  <circle cx="140" cy="70" r="6" fill="#10B981"/>
+  <circle cx="60" cy="110" r="6" fill="#10B981"/>
+  <circle cx="140" cy="150" r="6" fill="#10B981"/>
+
+  <!-- Connection lines -->
+  <line x1="60" y1="70" x2="45" y2="55" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <line x1="140" y1="70" x2="155" y2="55" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <line x1="140" y1="150" x2="155" y2="165" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="110" x2="45" y2="125" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+</svg>
