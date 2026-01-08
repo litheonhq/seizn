@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { type Locale } from "@/i18n/config";
-import { ServiceSelectorClient } from "./service-selector-client";
+import { SpringClient } from "./spring-client";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -12,14 +12,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dict = await getDictionary(locale);
 
   return {
-    title: dict.metadata.title,
-    description: dict.metadata.description,
+    title: `Spring - ${dict.springPage.title} ${dict.springPage.titleHighlight} | Seizn`,
+    description: dict.springPage.subtitle,
   };
 }
 
-export default async function Home({ params }: Props) {
+export default async function SpringPage({ params }: Props) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
-  return <ServiceSelectorClient dict={dict} locale={locale} />;
+  return <SpringClient dict={dict} locale={locale} />;
 }
