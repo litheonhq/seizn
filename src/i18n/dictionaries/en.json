@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "title": "Seizn - AI Memory Infrastructure",
+    "description": "Give your AI persistent memory. Seizn extracts, stores, and retrieves context automatically — so your AI remembers everything."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "login": "Login",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "badge": "Coming Q1 2026",
+    "title": "Memory infrastructure",
+    "titleHighlight": "for AI applications",
+    "subtitle": "Give your AI persistent memory. Seizn extracts, stores, and retrieves context automatically — so your AI remembers everything.",
+    "emailPlaceholder": "Enter your email",
+    "joinWaitlist": "Join Waitlist",
+    "joining": "Joining...",
+    "onTheList": "You're on the list!",
+    "stats": {
+      "tokenSavings": "Token Savings",
+      "retrievalTime": "Retrieval Time",
+      "uptimeSla": "Uptime SLA"
+    }
+  },
+  "features": {
+    "title": "Built for developers",
+    "subtitle": "Simple APIs, powerful infrastructure. Add persistent memory to any AI in minutes.",
+    "smartExtraction": {
+      "title": "Smart Extraction",
+      "description": "Automatically extracts key facts, preferences, and context from conversations using Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Instant Retrieval",
+      "description": "Hybrid vector + graph search returns relevant memories in milliseconds, every time."
+    },
+    "enterpriseSecurity": {
+      "title": "Enterprise Security",
+      "description": "End-to-end encryption, SOC 2 compliant, with granular access controls and audit logs."
+    }
+  },
+  "codePreview": {
+    "title": "Simple integration",
+    "subtitle": "Add memory to your AI in just a few lines of code."
+  },
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "Start free, scale as you grow.",
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "period": "Forever free",
+      "features": ["10,000 memories", "1,000 API calls/mo", "Community support"],
+      "cta": "Get Started"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "per month",
+      "features": ["50,000 memories", "10,000 API calls/mo", "Email support", "Basic analytics"],
+      "cta": "Subscribe"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "per month",
+      "badge": "Popular",
+      "features": ["200,000 memories", "50,000 API calls/mo", "Priority support", "Advanced analytics", "Webhooks"],
+      "cta": "Subscribe"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "period": "Contact us",
+      "features": ["Unlimited memories", "Unlimited API calls", "Dedicated support", "Custom SLA", "On-premise option"],
+      "cta": "Contact Sales"
+    }
+  },
+  "enterprisePage": {
+    "title": "Contact Sales",
+    "subtitle": "Get a custom plan for your enterprise needs with dedicated support, SLA guarantees, and custom integrations.",
+    "includes": "Enterprise includes:",
+    "includesList": [
+      "99.9% Uptime SLA",
+      "Priority Support (24h)",
+      "Dedicated Account Manager",
+      "Custom Integrations",
+      "SSO / SAML Authentication",
+      "Data Retention Policy",
+      "Security Audit Reports",
+      "Custom Contracts"
+    ],
+    "form": {
+      "companyName": "Company Name",
+      "yourName": "Your Name",
+      "workEmail": "Work Email",
+      "phone": "Phone",
+      "jobTitle": "Job Title",
+      "companySize": "Company Size",
+      "useCase": "Tell us about your use case",
+      "useCasePlaceholder": "What are you building? How will you use Seizn?",
+      "expectedVolume": "Expected Monthly API Calls",
+      "timeline": "Timeline",
+      "requirements": "Specific Requirements",
+      "requirementsPlaceholder": "SSO, specific SLA, data residency, compliance requirements, etc.",
+      "submit": "Contact Sales",
+      "submitting": "Submitting...",
+      "privacyNote": "By submitting this form, you agree to our"
+    },
+    "companySizes": {
+      "select": "Select...",
+      "1-10": "1-10 employees",
+      "11-50": "11-50 employees",
+      "51-200": "51-200 employees",
+      "201-500": "201-500 employees",
+      "500+": "500+ employees"
+    },
+    "volumes": {
+      "select": "Select...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Select...",
+      "immediate": "Ready to start now",
+      "1-3months": "1-3 months",
+      "3-6months": "3-6 months",
+      "6+months": "6+ months"
+    },
+    "success": {
+      "title": "Thank You!",
+      "message": "We've received your inquiry. Our team will contact you within 1-2 business days.",
+      "backHome": "Back to Home"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "or": "or continue with"
+    },
+    "signup": {
+      "title": "Create an account",
+      "subtitle": "Start building with Seizn",
+      "name": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "or": "or continue with"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact"
+  }
+}
