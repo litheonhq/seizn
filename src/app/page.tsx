@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 
 declare global {
@@ -47,12 +48,12 @@ export default function Home() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100" role="navigation" aria-label="Main navigation">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2" aria-label="Seizn Home">
+          <Link href="/" className="flex items-center gap-2" aria-label="Seizn Home">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">S</span>
             </div>
             <span className="font-semibold text-xl tracking-tight">Seizn</span>
-          </a>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
@@ -444,12 +445,12 @@ const memories = await seizn.search({
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-gray-100" role="contentinfo">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <a href="/" className="flex items-center gap-2" aria-label="Seizn Home">
+          <Link href="/" className="flex items-center gap-2" aria-label="Seizn Home">
             <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center">
               <span className="text-white font-bold text-xs">S</span>
             </div>
             <span className="font-medium">Seizn</span>
-          </a>
+          </Link>
           <div className="text-sm text-gray-500">
             © {new Date().getFullYear()} Seizn. All rights reserved.
           </div>
