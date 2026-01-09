@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
+import { sendEmail } from '@/lib/email';
+import { welcomeEmail } from '@/lib/email/templates';
 
 // POST /api/auth/signup - Create a new user account
 export async function POST(request: NextRequest) {
@@ -86,6 +88,13 @@ export async function POST(request: NextRequest) {
       scopes: ['memory:read', 'memory:write'],
       is_active: true,
     });
+
+    // Send welcome email (non-blocking)
+    sendEmail({
+      to: email,
+      subject: 'Welcome to Seizn!',
+      html: welcomeEmail(name || ''),
+    }).catch((err) => console.error('Failed to send welcome email:', err));
 
     return NextResponse.json({
       success: true,

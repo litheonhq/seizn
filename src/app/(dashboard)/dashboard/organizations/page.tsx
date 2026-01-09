@@ -1,9 +1,9 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import { UsageClient } from "./client";
+import OrganizationsClient from "./client";
 
-export default async function UsagePage() {
+export default async function OrganizationsPage() {
   const session = await auth();
 
   if (!session?.user) {
@@ -12,7 +12,7 @@ export default async function UsagePage() {
 
   return (
     <DashboardShell>
-      <UsageClient />
+      <OrganizationsClient />
     </DashboardShell>
   );
 }

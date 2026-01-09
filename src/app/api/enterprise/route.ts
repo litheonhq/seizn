@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { sendEmail } from '@/lib/email';
+import { enterpriseInquiryConfirmationEmail } from '@/lib/email/templates';
 
 interface EnterpriseInquiryRequest {
   company_name: string;
@@ -96,10 +98,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to submit inquiry' }, { status: 500 });
     }
 
-    // TODO: Send notification email to sales team
-    // TODO: Send confirmation email to user
-    // await sendSlackNotification(inquiry);
-    // await sendConfirmationEmail(body.email);
+    // Send confirmation email to user (non-blocking)
+    sendEmail({
+      to: body.email,
+      subject: `We received your enterprise inquiry - ${body.company_name}`,
+      html: enterpriseInquiryConfirmationEmail(body.company_name, body.contact_name),
+    }).catch((err) => console.error('Failed to send enterprise confirmation email:', err));
+
+    // Send notification to sales team (non-blocking)
+    sendEmail({
+      to: 'sales@seizn.com',
+      subject: `[Enterprise Inquiry] ${body.company_name} - ${determineInquiryPriority(body).toUpperCase()}`,
+      html: `
+        <h2>New Enterprise Inquiry</h2>
+        <p><strong>Company:</strong> ${body.company_name}</p>
+        <p><strong>Contact:</strong> ${body.contact_name} (${body.email})</p>
+        <p><strong>Phone:</strong> ${body.phone || 'N/A'}</p>
+        <p><strong>Job Title:</strong> ${body.job_title || 'N/A'}</p>
+        <p><strong>Company Size:</strong> ${body.company_size || 'N/A'}</p>
+        <p><strong>Industry:</strong> ${body.industry || 'N/A'}</p>
+        <p><strong>Website:</strong> ${body.website || 'N/A'}</p>
+        <h3>Use Case</h3>
+        <p>${body.use_case}</p>
+        <p><strong>Expected Volume:</strong> ${body.expected_volume || 'N/A'}</p>
+        <p><strong>Timeline:</strong> ${body.timeline || 'N/A'}</p>
+        <p><strong>Requirements:</strong> ${body.requirements || 'N/A'}</p>
+        <hr/>
+        <p><strong>Priority:</strong> ${determineInquiryPriority(body)}</p>
+        <p><strong>Inquiry ID:</strong> ${inquiry.id}</p>
+      `,
+    }).catch((err) => console.error('Failed to send sales notification:', err));
 
     return NextResponse.json({
       success: true,

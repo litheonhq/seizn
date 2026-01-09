@@ -32,7 +32,7 @@ export default function DocsPage() {
           <h1 className="text-4xl font-bold text-white mb-4">
             API Documentation
           </h1>
-          <p className="text-xl text-zinc-400 max-w-2xl">
+          <p className="text-xl text-zinc-400 max-w-2xl mb-8">
             Everything you need to integrate Seizn into your applications.
             Add persistent memory to your AI with just a few lines of code.
           </p>

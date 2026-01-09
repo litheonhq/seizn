@@ -44,3 +44,6 @@ Sentry.init({
     'ResizeObserver loop limit exceeded',
   ],
 });
+
+// Export for Next.js App Router navigation instrumentation
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

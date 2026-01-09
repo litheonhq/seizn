@@ -131,6 +131,47 @@ client = Seizn(
     base_url="https://api.seizn.dev",  # Custom endpoint
     timeout=30.0,  # Request timeout
 )
+
+## Async Support
+
+For high-performance applications, use the async client:
+
+```python
+from seizn import AsyncSeizn
+import asyncio
+
+async def main():
+    async with AsyncSeizn(api_key="sk_...") as client:
+        # Add a single memory
+        memory = await client.add("User prefers dark mode")
+
+        # Batch add multiple memories (parallel)
+        memories = await client.add_many([
+            {"content": "Fact 1", "memory_type": "fact", "tags": ["tag1"]},
+            {"content": "Fact 2", "memory_type": "fact", "tags": ["tag2"]},
+            {"content": "Preference 1", "memory_type": "preference"},
+        ])
+
+        # Search and query
+        results = await client.search("user preferences")
+        response = await client.query("What are the user's preferences?")
+
+asyncio.run(main())
+```
+
+### Async Features
+
+- **Parallel batch operations**: `add_many()` adds multiple memories concurrently
+- **Auto retry with exponential backoff**: Handles transient failures automatically
+- **Connection pooling**: Efficient HTTP connection management
+
+```python
+# Configure retries
+client = AsyncSeizn(
+    api_key="sk_...",
+    retries=5,          # Number of retry attempts
+    retry_delay=1.0,    # Base delay (uses exponential backoff)
+)
 ```
 
 ## Models Used

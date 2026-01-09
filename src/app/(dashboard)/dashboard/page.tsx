@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { DashboardClient } from "./client";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import DashboardOverviewClient from "./overview-client";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -9,5 +10,9 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return <DashboardClient user={session.user} />;
+  return (
+    <DashboardShell>
+      <DashboardOverviewClient user={session.user} />
+    </DashboardShell>
+  );
 }

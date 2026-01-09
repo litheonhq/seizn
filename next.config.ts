@@ -2,6 +2,9 @@ import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
+  // Enable standalone output for Docker
+  output: 'standalone',
+
   // Exclude mcp-server from build process
   webpack: (config) => {
     // Ignore mcp-server directory during watch

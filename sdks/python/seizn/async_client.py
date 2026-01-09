@@ -1,7 +1,8 @@
-"""Seizn Python SDK Client."""
+"""Seizn Async Python SDK Client."""
 
 import httpx
 from typing import List, Optional, Dict, Any, Union
+import asyncio
 
 from .types import (
     Memory,
@@ -15,72 +16,116 @@ from .types import (
 )
 
 
-class SeiznError(Exception):
-    """Base exception for Seizn errors."""
+class SeiznAsyncError(Exception):
+    """Base exception for Seizn async client errors."""
     def __init__(self, message: str, status_code: Optional[int] = None):
         self.message = message
         self.status_code = status_code
         super().__init__(message)
 
 
-class Seizn:
+class AsyncSeizn:
     """
-    Seizn Memory API Client.
+    Async Seizn Memory API Client.
 
     Usage:
-        client = Seizn(api_key="sk_...")
-        client.add("User prefers TypeScript")
-        results = client.search("programming preferences")
+        async with AsyncSeizn(api_key="sk_...") as client:
+            await client.add("User prefers TypeScript")
+            results = await client.search("programming preferences")
     """
 
     DEFAULT_BASE_URL = "https://api.seizn.dev"
+    DEFAULT_RETRIES = 3
+    DEFAULT_RETRY_DELAY = 1.0
 
     def __init__(
         self,
         api_key: str,
         base_url: Optional[str] = None,
         timeout: float = 30.0,
+        retries: int = DEFAULT_RETRIES,
+        retry_delay: float = DEFAULT_RETRY_DELAY,
     ):
         """
-        Initialize the Seizn client.
+        Initialize the async Seizn client.
 
         Args:
             api_key: Your Seizn API key (starts with sk_)
             base_url: Override the API base URL (for testing)
             timeout: Request timeout in seconds
+            retries: Number of retry attempts for transient failures
+            retry_delay: Base delay between retries (exponential backoff)
         """
         self.api_key = api_key
         self.base_url = (base_url or self.DEFAULT_BASE_URL).rstrip("/")
         self.timeout = timeout
-        self._client = httpx.Client(
-            base_url=self.base_url,
-            headers={"X-API-Key": api_key},
-            timeout=timeout,
-        )
+        self.retries = retries
+        self.retry_delay = retry_delay
+        self._client: Optional[httpx.AsyncClient] = None
 
-    def _request(
+    async def _get_client(self) -> httpx.AsyncClient:
+        """Get or create the HTTP client."""
+        if self._client is None or self._client.is_closed:
+            self._client = httpx.AsyncClient(
+                base_url=self.base_url,
+                headers={"X-API-Key": self.api_key},
+                timeout=self.timeout,
+            )
+        return self._client
+
+    async def _request(
         self,
         method: str,
         path: str,
         params: Optional[Dict] = None,
         json: Optional[Dict] = None,
     ) -> Dict[str, Any]:
-        """Make an HTTP request to the API."""
-        response = self._client.request(method, path, params=params, json=json)
+        """Make an HTTP request to the API with retries."""
+        client = await self._get_client()
+        last_exception = None
 
-        if response.status_code >= 400:
+        for attempt in range(self.retries):
             try:
-                error_data = response.json()
-                message = error_data.get("error", response.text)
-            except Exception:
-                message = response.text
-            raise SeiznError(message, response.status_code)
+                response = await client.request(method, path, params=params, json=json)
 
-        return response.json()
+                if response.status_code >= 500:
+                    # Server error - retry
+                    raise SeiznAsyncError(f"Server error: {response.status_code}", response.status_code)
+
+                if response.status_code >= 400:
+                    # Client error - don't retry
+                    try:
+                        error_data = response.json()
+                        message = error_data.get("error", response.text)
+                    except Exception:
+                        message = response.text
+                    raise SeiznAsyncError(message, response.status_code)
+
+                return response.json()
+
+            except (httpx.TimeoutException, httpx.ConnectError) as e:
+                last_exception = SeiznAsyncError(str(e))
+                if attempt < self.retries - 1:
+                    delay = self.retry_delay * (2 ** attempt)
+                    await asyncio.sleep(delay)
+                continue
+
+            except SeiznAsyncError as e:
+                if e.status_code and e.status_code >= 500:
+                    last_exception = e
+                    if attempt < self.retries - 1:
+                        delay = self.retry_delay * (2 ** attempt)
+                        await asyncio.sleep(delay)
+                    continue
+                raise
+
+        if last_exception:
+            raise last_exception
+        raise SeiznAsyncError("Request failed after retries")
 
     # ==================== Memory Operations ====================
 
-    def add(
+    async def add(
         self,
         content: str,
         memory_type: Union[MemoryType, str] = MemoryType.FACT,
@@ -88,19 +133,7 @@ class Seizn:
         namespace: str = "default",
         **kwargs,
     ) -> Memory:
-        """
-        Add a new memory.
-
-        Args:
-            content: The memory content
-            memory_type: Type of memory (fact, preference, etc.)
-            tags: Optional tags for categorization
-            namespace: Namespace for organization
-            **kwargs: Additional fields (scope, session_id, agent_id, source)
-
-        Returns:
-            The created Memory object
-        """
+        """Add a new memory."""
         data = {
             "content": content,
             "memory_type": memory_type.value if isinstance(memory_type, MemoryType) else memory_type,
@@ -108,41 +141,48 @@ class Seizn:
             "namespace": namespace,
             **kwargs,
         }
-        result = self._request("POST", "/api/memories", json=data)
+        result = await self._request("POST", "/api/memories", json=data)
         return Memory.from_dict(result["memory"])
 
-    def get(self, memory_id: str) -> Memory:
+    async def add_many(
+        self,
+        memories: List[Dict[str, Any]],
+        namespace: str = "default",
+    ) -> List[Memory]:
         """
-        Get a specific memory by ID.
+        Add multiple memories in parallel.
 
         Args:
-            memory_id: The memory UUID
+            memories: List of memory dicts with 'content', 'memory_type', 'tags'
+            namespace: Default namespace for all memories
 
         Returns:
-            The Memory object
+            List of created Memory objects
         """
-        result = self._request("GET", f"/api/memories/{memory_id}")
+        tasks = []
+        for mem in memories:
+            task = self.add(
+                content=mem["content"],
+                memory_type=mem.get("memory_type", "fact"),
+                tags=mem.get("tags", []),
+                namespace=mem.get("namespace", namespace),
+            )
+            tasks.append(task)
+        return await asyncio.gather(*tasks)
+
+    async def get(self, memory_id: str) -> Memory:
+        """Get a specific memory by ID."""
+        result = await self._request("GET", f"/api/memories/{memory_id}")
         return Memory.from_dict(result["memory"])
 
-    def update(
+    async def update(
         self,
         memory_id: str,
         memory_type: Optional[Union[MemoryType, str]] = None,
         tags: Optional[List[str]] = None,
         importance: Optional[int] = None,
     ) -> Memory:
-        """
-        Update a memory.
-
-        Args:
-            memory_id: The memory UUID
-            memory_type: New memory type
-            tags: New tags
-            importance: New importance (1-10)
-
-        Returns:
-            The updated Memory object
-        """
+        """Update a memory."""
         data = {}
         if memory_type:
             data["memory_type"] = memory_type.value if isinstance(memory_type, MemoryType) else memory_type
@@ -151,36 +191,20 @@ class Seizn:
         if importance is not None:
             data["importance"] = importance
 
-        result = self._request("PATCH", f"/api/memories/{memory_id}", json=data)
+        result = await self._request("PATCH", f"/api/memories/{memory_id}", json=data)
         return Memory.from_dict(result["memory"])
 
-    def delete(self, memory_id: str) -> bool:
-        """
-        Delete a memory.
-
-        Args:
-            memory_id: The memory UUID
-
-        Returns:
-            True if deleted successfully
-        """
-        self._request("DELETE", f"/api/memories/{memory_id}")
+    async def delete(self, memory_id: str) -> bool:
+        """Delete a memory."""
+        await self._request("DELETE", f"/api/memories/{memory_id}")
         return True
 
-    def delete_many(self, memory_ids: List[str]) -> int:
-        """
-        Delete multiple memories.
-
-        Args:
-            memory_ids: List of memory UUIDs
-
-        Returns:
-            Number of deleted memories
-        """
-        result = self._request("DELETE", "/api/memories", params={"ids": ",".join(memory_ids)})
+    async def delete_many(self, memory_ids: List[str]) -> int:
+        """Delete multiple memories."""
+        result = await self._request("DELETE", "/api/memories", params={"ids": ",".join(memory_ids)})
         return result.get("deleted", 0)
 
-    def search(
+    async def search(
         self,
         query: str,
         mode: Union[SearchMode, str] = SearchMode.VECTOR,
@@ -188,19 +212,7 @@ class Seizn:
         threshold: float = 0.7,
         namespace: Optional[str] = None,
     ) -> List[SearchResult]:
-        """
-        Search memories.
-
-        Args:
-            query: Search query
-            mode: Search mode (vector, keyword, hybrid)
-            limit: Maximum results
-            threshold: Minimum similarity threshold
-            namespace: Filter by namespace
-
-        Returns:
-            List of SearchResult objects
-        """
+        """Search memories."""
         params = {
             "query": query,
             "mode": mode.value if isinstance(mode, SearchMode) else mode,
@@ -210,40 +222,29 @@ class Seizn:
         if namespace:
             params["namespace"] = namespace
 
-        result = self._request("GET", "/api/memories", params=params)
+        result = await self._request("GET", "/api/memories", params=params)
         return [SearchResult.from_dict(r) for r in result.get("results", [])]
 
     # ==================== AI Operations ====================
 
-    def extract(
+    async def extract(
         self,
         conversation: str,
         model: str = "haiku",
         auto_store: bool = True,
         namespace: str = "default",
     ) -> List[ExtractedMemory]:
-        """
-        Extract memories from a conversation.
-
-        Args:
-            conversation: The conversation text
-            model: AI model to use (haiku or sonnet)
-            auto_store: Automatically store extracted memories
-            namespace: Namespace for stored memories
-
-        Returns:
-            List of ExtractedMemory objects
-        """
+        """Extract memories from a conversation."""
         data = {
             "conversation": conversation,
             "model": model,
             "auto_store": auto_store,
             "namespace": namespace,
         }
-        result = self._request("POST", "/api/extract", json=data)
+        result = await self._request("POST", "/api/extract", json=data)
         return [ExtractedMemory.from_dict(m) for m in result.get("extracted", [])]
 
-    def query(
+    async def query(
         self,
         query: str,
         model: str = "haiku",
@@ -251,19 +252,7 @@ class Seizn:
         namespace: Optional[str] = None,
         include_memories: bool = True,
     ) -> QueryResponse:
-        """
-        Query with memory-augmented context (RAG).
-
-        Args:
-            query: User's question
-            model: AI model to use (haiku or sonnet)
-            top_k: Number of memories to retrieve
-            namespace: Filter memories by namespace
-            include_memories: Include used memories in response
-
-        Returns:
-            QueryResponse with AI response and used memories
-        """
+        """Query with memory-augmented context (RAG)."""
         data = {
             "query": query,
             "model": model,
@@ -273,7 +262,7 @@ class Seizn:
         if namespace:
             data["namespace"] = namespace
 
-        result = self._request("POST", "/api/query", json=data)
+        result = await self._request("POST", "/api/query", json=data)
 
         memories_used = []
         if include_memories and result.get("memories_used"):
@@ -285,32 +274,21 @@ class Seizn:
             model_used=result.get("model_used", model),
         )
 
-    def summarize(
+    async def summarize(
         self,
         messages: List[Dict[str, str]],
         model: str = "haiku",
         save_memories: bool = False,
         namespace: str = "default",
     ) -> ConversationSummary:
-        """
-        Summarize a conversation.
-
-        Args:
-            messages: List of message dicts with 'role' and 'content'
-            model: AI model to use
-            save_memories: Store extracted memories
-            namespace: Namespace for stored memories
-
-        Returns:
-            ConversationSummary object
-        """
+        """Summarize a conversation."""
         data = {
             "messages": messages,
             "model": model,
             "save_memories": save_memories,
             "namespace": namespace,
         }
-        result = self._request("POST", "/api/summarize", json=data)
+        result = await self._request("POST", "/api/summarize", json=data)
         summary = result.get("summary", {})
 
         return ConversationSummary(
@@ -322,7 +300,7 @@ class Seizn:
 
     # ==================== Export/Import Operations ====================
 
-    def export_memories(
+    async def export_memories(
         self,
         format: str = "json",
         namespace: Optional[str] = None,
@@ -355,14 +333,15 @@ class Seizn:
             params["memory_type"] = memory_type
 
         if format == "csv":
-            response = self._client.request("GET", "/api/memories/export", params=params)
+            client = await self._get_client()
+            response = await client.request("GET", "/api/memories/export", params=params)
             if response.status_code >= 400:
-                raise SeiznError(response.text, response.status_code)
+                raise SeiznAsyncError(response.text, response.status_code)
             return {"csv": response.text}
 
-        return self._request("GET", "/api/memories/export", params=params)
+        return await self._request("GET", "/api/memories/export", params=params)
 
-    def import_memories(
+    async def import_memories(
         self,
         memories: List[Dict[str, Any]],
         skip_duplicates: bool = True,
@@ -382,34 +361,23 @@ class Seizn:
             "memories": memories,
             "skip_duplicates": skip_duplicates,
         }
-        return self._request("POST", "/api/memories/import", json=data)
+        return await self._request("POST", "/api/memories/import", json=data)
 
     # ==================== Webhook Operations ====================
 
-    def list_webhooks(self) -> List[Webhook]:
+    async def list_webhooks(self) -> List[Webhook]:
         """List all webhooks."""
-        result = self._request("GET", "/api/webhooks")
+        result = await self._request("GET", "/api/webhooks")
         return [Webhook.from_dict(w) for w in result.get("webhooks", [])]
 
-    def create_webhook(
+    async def create_webhook(
         self,
         name: str,
         url: str,
         events: Optional[List[str]] = None,
         namespace: Optional[str] = None,
     ) -> Webhook:
-        """
-        Create a webhook.
-
-        Args:
-            name: Webhook name
-            url: HTTPS endpoint URL
-            events: Events to subscribe to
-            namespace: Only trigger for specific namespace
-
-        Returns:
-            Webhook object (includes secret - save it!)
-        """
+        """Create a webhook."""
         data = {
             "name": name,
             "url": url,
@@ -418,22 +386,24 @@ class Seizn:
         if namespace:
             data["namespace"] = namespace
 
-        result = self._request("POST", "/api/webhooks", json=data)
+        result = await self._request("POST", "/api/webhooks", json=data)
         return Webhook.from_dict(result["webhook"])
 
-    def delete_webhook(self, webhook_id: str) -> bool:
+    async def delete_webhook(self, webhook_id: str) -> bool:
         """Delete a webhook."""
-        self._request("DELETE", "/api/webhooks", params={"id": webhook_id})
+        await self._request("DELETE", "/api/webhooks", params={"id": webhook_id})
         return True
 
     # ==================== Context Manager ====================
 
-    def __enter__(self):
+    async def __aenter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._client.close()
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
-    def close(self):
+    async def close(self):
         """Close the HTTP client."""
-        self._client.close()
+        if self._client:
+            await self._client.aclose()
+            self._client = None

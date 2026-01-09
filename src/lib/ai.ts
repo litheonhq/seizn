@@ -217,6 +217,169 @@ Use these memories naturally in your response when relevant. Don't explicitly me
   return data.content[0].text;
 }
 
+// ==================== Vision / Multimodal ====================
+
+const IMAGE_EXTRACTION_PROMPT = `You are an expert at extracting information from images for long-term memory storage.
+
+## Your Task
+Analyze the provided image and extract any important information that should be remembered for future context.
+
+## Memory Types
+- **fact**: Objective information visible in the image (text, numbers, diagrams, settings)
+- **preference**: Preferences or choices shown (UI settings, configurations, selected options)
+- **experience**: Events, activities, or achievements depicted
+- **relationship**: People or connections shown
+- **instruction**: Instructions, tutorials, or how-to information visible
+
+## Extraction Rules
+1. Extract ONLY genuinely important information worth storing
+2. Be specific and accurate about what you see
+3. Use third person ("The user has...", "The image shows...")
+4. Include relevant text visible in the image
+5. Note important visual elements (charts, graphs, code, UI)
+6. Confidence reflects certainty of your interpretation
+7. Importance reflects how useful this memory will be
+
+## Output Format
+Return a JSON array only. No markdown, no explanation.
+Each object: { "content": string, "memory_type": string, "tags": string[], "confidence": number, "importance": number }
+
+If nothing important to extract, return empty array: []`;
+
+interface ImageExtractionOptions {
+  model?: 'haiku' | 'sonnet';
+  context?: string; // Additional context about the image
+  existingMemories?: string[];
+}
+
+export async function extractMemoriesFromImage(
+  imageData: string, // Base64 encoded image or URL
+  mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
+  options: ImageExtractionOptions = {}
+): Promise<ExtractedMemory[]> {
+  const { model = 'sonnet', context, existingMemories = [] } = options;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  // Use Sonnet for vision tasks (better quality)
+  const modelId = model === 'haiku'
+    ? 'claude-3-5-haiku-20241022'
+    : 'claude-sonnet-4-20250514';
+
+  // Build content array with image
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content: any[] = [
+    {
+      type: 'image',
+      source: imageData.startsWith('http')
+        ? { type: 'url', url: imageData }
+        : { type: 'base64', media_type: mediaType, data: imageData },
+    },
+  ];
+
+  // Add context if provided
+  let textContent = 'Extract any important memories from this image.';
+  if (context) {
+    textContent += `\n\nContext: ${context}`;
+  }
+  if (existingMemories.length > 0) {
+    textContent += `\n\n---\nExisting memories (DO NOT duplicate these):\n${existingMemories.slice(0, 10).map(m => `- ${m}`).join('\n')}`;
+  }
+
+  content.push({ type: 'text', text: textContent });
+
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: modelId,
+      max_tokens: 2048,
+      system: IMAGE_EXTRACTION_PROMPT,
+      messages: [
+        {
+          role: 'user',
+          content,
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Anthropic API error: ${error}`);
+  }
+
+  const data = await response.json();
+  const text = data.content[0].text;
+
+  try {
+    const memories = JSON.parse(text);
+    // Validate and normalize
+    return memories.map((m: ExtractedMemory) => ({
+      content: m.content,
+      memory_type: m.memory_type || 'fact',
+      tags: Array.isArray(m.tags) ? m.tags : [],
+      confidence: Math.min(1, Math.max(0, m.confidence || 0.8)),
+      importance: Math.min(10, Math.max(1, m.importance || 5)),
+    }));
+  } catch {
+    console.error('Failed to parse image memory extraction:', text);
+    return [];
+  }
+}
+
+// Describe an image for text embedding
+export async function describeImageForEmbedding(
+  imageData: string,
+  mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
+): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-3-5-haiku-20241022',
+      max_tokens: 500,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: imageData.startsWith('http')
+                ? { type: 'url', url: imageData }
+                : { type: 'base64', media_type: mediaType, data: imageData },
+            },
+            {
+              type: 'text',
+              text: 'Describe this image in 2-3 sentences for indexing purposes. Focus on the main content, any text visible, and key visual elements.',
+            },
+          ],
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Anthropic API error: ${error}`);
+  }
+
+  const data = await response.json();
+  return data.content[0].text;
+}
+
 // Token counting estimate (rough)
 export function estimateTokens(text: string): number {
   // Rough estimate: ~4 chars per token for English, ~2 for Korean

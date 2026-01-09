@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendEmail } from '@/lib/email';
+import { organizationInviteEmail } from '@/lib/email/templates';
 import { createServerClient } from '@/lib/supabase';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
@@ -185,8 +187,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create invite' }, { status: 500 });
     }
 
-    // TODO: Send invite email
-    // await sendInviteEmail(email, org_id, token);
+    // Send invite email
+    try {
+      // Get organization name
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('name')
+        .eq('id', org_id)
+        .single();
+
+      // Get inviter name
+      const { data: inviter } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .single();
+
+      await sendEmail({
+        to: email.toLowerCase(),
+        subject: `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
+        html: organizationInviteEmail(
+          inviter?.full_name || 'A team member',
+          org?.name || 'Organization',
+          `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`
+        ),
+      });
+    } catch (emailError) {
+      console.error('Failed to send invite email:', emailError);
+      // Continue anyway - invite was created successfully
+    }
 
     return NextResponse.json({
       success: true,

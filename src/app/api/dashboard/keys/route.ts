@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
+import { sendEmail } from '@/lib/email';
+import { apiKeyCreatedEmail } from '@/lib/email/templates';
 
 // GET /api/dashboard/keys - List user's API keys (NextAuth session)
 export async function GET() {
@@ -113,6 +115,15 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to create key' },
         { status: 500 }
       );
+    }
+
+    // Send API key created notification email (non-blocking)
+    if (session.user.email) {
+      sendEmail({
+        to: session.user.email,
+        subject: `New API Key Created: ${name}`,
+        html: apiKeyCreatedEmail(name, prefix),
+      }).catch((err) => console.error('Failed to send API key notification:', err));
     }
 
     return NextResponse.json({
