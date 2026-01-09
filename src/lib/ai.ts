@@ -118,7 +118,7 @@ export async function extractMemories(
 
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
-    : 'claude-sonnet-4-20250514';
+    : 'claude-3-5-sonnet-20241022';
 
   let userMessage = `Extract memories from this conversation:\n\n${conversation}`;
 
@@ -182,7 +182,7 @@ export async function generateWithMemories(
 
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
-    : 'claude-sonnet-4-20250514';
+    : 'claude-3-5-sonnet-20241022';
 
   const systemPrompt = `You are a helpful AI assistant with access to the user's memories. Use these memories to provide personalized, contextually relevant responses.
 
@@ -265,7 +265,7 @@ export async function extractMemoriesFromImage(
   // Use Sonnet for vision tasks (better quality)
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
-    : 'claude-sonnet-4-20250514';
+    : 'claude-3-5-sonnet-20241022';
 
   // Build content array with image
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -434,7 +434,7 @@ export async function summarizeConversation(
 
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
-    : 'claude-sonnet-4-20250514';
+    : 'claude-3-5-sonnet-20241022';
 
   // Format conversation for summarization
   const conversationText = messages
