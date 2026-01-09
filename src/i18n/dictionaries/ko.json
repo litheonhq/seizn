@@ -38,7 +38,7 @@
     },
     "enterpriseSecurity": {
       "title": "엔터프라이즈 보안",
-      "description": "엔드투엔드 암호화, SOC 2 준수, 세분화된 접근 제어 및 감사 로그를 제공합니다."
+      "description": "종단간 암호화, SOC 2 준수, 세분화된 접근 제어 및 감사 로그를 제공합니다."
     }
   },
   "codePreview": {
