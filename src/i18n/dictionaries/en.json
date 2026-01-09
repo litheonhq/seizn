@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn - AI Memory Infrastructure",
-    "description": "Give your AI persistent memory. Seizn extracts, stores, and retrieves context automatically — so your AI remembers everything."
+    "description": "Give your AI lasting memory. Seizn automatically stores and retrieves context, so your AI remembers past conversations."
   },
   "nav": {
     "features": "Features",
@@ -14,7 +14,7 @@
     "badge": "Coming Q1 2026",
     "title": "Memory infrastructure",
     "titleHighlight": "for AI applications",
-    "subtitle": "Give your AI persistent memory. Seizn extracts, stores, and retrieves context automatically — so your AI remembers everything.",
+    "subtitle": "Give your AI lasting memory. Seizn automatically stores and retrieves context, so your AI remembers past conversations.",
     "emailPlaceholder": "Enter your email",
     "joinWaitlist": "Join Waitlist",
     "joining": "Joining...",
@@ -306,7 +306,7 @@
     "badge": "Coming Soon",
     "title": "One Chat.",
     "titleHighlight": "Every AI.",
-    "subtitle": "Access GPT-4, Claude, Gemini, and more in one unified interface. With memory that follows you everywhere.",
+    "subtitle": "No matter which you choose,\nthey all remember you.",
     "waitlistTitle": "Join the Spring Waitlist",
     "emailPlaceholder": "Enter your email",
     "joinWaitlist": "Join Waitlist",
