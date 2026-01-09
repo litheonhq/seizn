@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn - AI 메모리 인프라",
-    "description": "AI에게 영구 메모리를 제공하세요. Seizn은 컨텍스트를 자동으로 추출, 저장, 검색합니다 — AI가 모든 것을 기억하도록."
+    "description": "AI에게 지속적인 기억을 선사하세요. Seizn이 컨텍스트를 자동으로 저장하고 불러와, AI가 과거를 기억합니다."
   },
   "nav": {
     "features": "기능",
@@ -14,7 +14,7 @@
     "badge": "2026년 1분기 출시 예정",
     "title": "AI 애플리케이션을 위한",
     "titleHighlight": "메모리 인프라",
-    "subtitle": "AI에게 영구 메모리를 제공하세요. Seizn은 컨텍스트를 자동으로 추출, 저장, 검색합니다 — AI가 모든 것을 기억하도록.",
+    "subtitle": "AI에게 지속적인 기억을 선사하세요. Seizn이 컨텍스트를 자동으로 저장하고 불러와, AI가 과거를 기억합니다.",
     "emailPlaceholder": "이메일을 입력하세요",
     "joinWaitlist": "대기자 명단 등록",
     "joining": "등록 중...",
@@ -27,7 +27,7 @@
   },
   "features": {
     "title": "개발자를 위한 설계",
-    "subtitle": "간단한 API, 강력한 인프라. 몇 분 만에 모든 AI에 영구 메모리를 추가하세요.",
+    "subtitle": "간단한 API, 강력한 인프라. 몇 분 만에 모든 AI에 지속적인 기억력을 더하세요.",
     "smartExtraction": {
       "title": "스마트 추출",
       "description": "Claude AI를 사용하여 대화에서 핵심 사실, 선호도, 컨텍스트를 자동으로 추출합니다."
@@ -278,7 +278,7 @@
       "name": "Spring",
       "icon": "🌸",
       "tagline": "멀티 AI 채팅",
-      "description": "GPT-4, Claude, Gemini 등 모든 AI와 대화하세요 — 당신을 기억하는 영구 메모리와 함께.",
+      "description": "GPT-4, Claude, Gemini 등 모든 AI와 대화하세요 — 당신을 기억하는 AI와 함께.",
       "features": [
         "한 곳에서 모든 주요 AI 모델 사용",
         "세션 간 선호도 기억",
@@ -291,7 +291,7 @@
       "name": "Summer",
       "icon": "☀️",
       "tagline": "메모리 API",
-      "description": "개발자 친화적 API로 AI 앱에 영구 메모리를 더하세요.",
+      "description": "개발자 친화적 API로 AI 앱에 지속적인 기억력을 더하세요.",
       "features": [
         "간단한 REST API와 SDK",
         "50ms 이하 검색 속도",
@@ -320,7 +320,7 @@
         "description": "GPT-4, Claude, Gemini, Llama 등을 자유롭게 전환. 각 작업에 최적의 모델을 선택하세요."
       },
       "persistentMemory": {
-        "title": "영구 메모리",
+        "title": "지속적인 기억",
         "description": "선호도, 컨텍스트, 히스토리가 모든 대화와 모든 모델에서 유지됩니다."
       },
       "freeGenerosity": {
