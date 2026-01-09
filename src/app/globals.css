@@ -124,6 +124,202 @@ body {
 
 /* Selection color */
 ::selection {
-  background: #10B981;
+  background: #F472B6;
   color: white;
+}
+
+/* Sakura floating animations */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 0.6; }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-15px) rotate(-90deg); opacity: 0.5; }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-10px) rotate(90deg); opacity: 0.4; }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+
+/* Sakura gradient text */
+.text-gradient-sakura {
+  background: linear-gradient(135deg, #F472B6 0%, #EC4899 50%, #DB2777 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 114, 182, 0.1);
+}
+
+/* Sakura button */
+.btn-sakura {
+  background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-sakura:hover {
+  background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3);
+}
+
+/* Soft shadow */
+.shadow-sakura {
+  box-shadow: 0 4px 24px rgba(244, 114, 182, 0.15);
+}
+
+/* Progress bar animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(244, 114, 182, 0.2); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ========== Seasonal Themes ========== */
+
+/* Spring Theme (March - May) - Sakura */
+.theme-spring {
+  --theme-primary: #F472B6;
+  --theme-secondary: #EC4899;
+  --theme-accent: #FECDD3;
+  --theme-bg-gradient: linear-gradient(135deg, #FFF1F2 0%, #FFF 50%, #FCE7F3 100%);
+  --theme-particle-color: rgba(244, 114, 182, 0.3);
+}
+
+/* Summer Theme (June - August) - Ocean */
+.theme-summer {
+  --theme-primary: #06B6D4;
+  --theme-secondary: #0EA5E9;
+  --theme-accent: #BAE6FD;
+  --theme-bg-gradient: linear-gradient(135deg, #F0F9FF 0%, #FFF 50%, #E0F2FE 100%);
+  --theme-particle-color: rgba(6, 182, 212, 0.3);
+}
+
+/* Autumn Theme (September - November) - Maple */
+.theme-autumn {
+  --theme-primary: #F59E0B;
+  --theme-secondary: #EA580C;
+  --theme-accent: #FED7AA;
+  --theme-bg-gradient: linear-gradient(135deg, #FFFBEB 0%, #FFF 50%, #FEF3C7 100%);
+  --theme-particle-color: rgba(245, 158, 11, 0.3);
+}
+
+/* Winter Theme (December - February) - Snow */
+.theme-winter {
+  --theme-primary: #8B5CF6;
+  --theme-secondary: #6366F1;
+  --theme-accent: #E0E7FF;
+  --theme-bg-gradient: linear-gradient(135deg, #F5F3FF 0%, #FFF 50%, #EEF2FF 100%);
+  --theme-particle-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Theme-aware components */
+.theme-gradient-bg {
+  background: var(--theme-bg-gradient);
+}
+
+.theme-primary {
+  color: var(--theme-primary);
+}
+
+.theme-bg-primary {
+  background-color: var(--theme-primary);
+}
+
+.theme-gradient-btn {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+  transition: all 0.3s ease;
+}
+
+.theme-gradient-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.theme-border {
+  border-color: var(--theme-accent);
+}
+
+.theme-shadow {
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--theme-primary) 20%, transparent);
+}
+
+.theme-gradient-text {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Snowflake animation for winter */
+@keyframes snowfall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+.animate-snowfall {
+  animation: snowfall 10s linear infinite;
+}
+
+/* Leaf fall animation for autumn */
+@keyframes leaffall {
+  0% { transform: translateY(-10px) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 0.5; }
+  50% { transform: translateY(50vh) rotate(180deg) translateX(30px); }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(100vh) rotate(360deg) translateX(-10px); opacity: 0; }
+}
+
+.animate-leaffall {
+  animation: leaffall 12s ease-in-out infinite;
+}
+
+/* Wave animation for summer */
+@keyframes wave {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(10px) translateY(-5px); }
+  50% { transform: translateX(0) translateY(-10px); }
+  75% { transform: translateX(-10px) translateY(-5px); }
+}
+
+.animate-wave {
+  animation: wave 4s ease-in-out infinite;
 }

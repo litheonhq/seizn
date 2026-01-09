@@ -20,6 +20,14 @@
     {
       "path": "/api/internal/webhooks",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/usage-alerts",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-summary",
+      "schedule": "0 9 * * 1"
     }
   ]
 }
