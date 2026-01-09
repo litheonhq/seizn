@@ -156,6 +156,20 @@ body {
   animation: float-fast 4s ease-in-out infinite;
 }
 
+/* Marquee animation for AI logos */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Sakura gradient text */
 .text-gradient-sakura {
   background: linear-gradient(135deg, #F472B6 0%, #EC4899 50%, #DB2777 100%);
