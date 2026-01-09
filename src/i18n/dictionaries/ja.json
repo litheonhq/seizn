@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn - AIメモリインフラ",
-    "description": "AIに永続的なメモリを与えましょう。Seiznはコンテキストを自動的に抽出、保存、検索します — AIがすべてを記憶するように。"
+    "description": "AIに持続的な記憶を。Seiznがコンテキストを自動で保存・検索し、AIが過去の会話を記憶します。"
   },
   "nav": {
     "features": "機能",
@@ -14,7 +14,7 @@
     "badge": "2026年第1四半期リリース予定",
     "title": "AIアプリケーションのための",
     "titleHighlight": "メモリインフラ",
-    "subtitle": "AIに永続的なメモリを与えましょう。Seiznはコンテキストを自動的に抽出、保存、検索します — AIがすべてを記憶するように。",
+    "subtitle": "AIに持続的な記憶を。Seiznがコンテキストを自動で保存・検索し、AIが過去の会話を記憶します。",
     "emailPlaceholder": "メールアドレスを入力",
     "joinWaitlist": "ウェイトリストに登録",
     "joining": "登録中...",
@@ -306,7 +306,7 @@
     "badge": "近日公開",
     "title": "一つのチャット。",
     "titleHighlight": "すべてのAI。",
-    "subtitle": "GPT-4、Claude、Geminiなどを統合インターフェースで。どこでも付いてくるメモリと共に。",
+    "subtitle": "どれを選んでも、\nすべてがあなたを覚えています。",
     "waitlistTitle": "Spring ウェイトリストに登録",
     "emailPlaceholder": "メールアドレスを入力",
     "joinWaitlist": "ウェイトリスト登録",
