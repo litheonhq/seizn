@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn - AI 메모리 인프라",
-    "description": "AI에게 지속적인 기억을 선사하세요. Seizn이 컨텍스트를 자동으로 저장하고 불러와, AI가 과거를 기억합니다."
+    "description": "AI에게 지속적인 기억을 부여하세요. Seizn이 컨텍스트를 자동으로 저장하고 검색해, AI가 과거 대화를 기억합니다."
   },
   "nav": {
     "features": "기능",
@@ -14,7 +14,7 @@
     "badge": "2026년 1분기 출시 예정",
     "title": "AI 애플리케이션을 위한",
     "titleHighlight": "메모리 인프라",
-    "subtitle": "AI에게 지속적인 기억을 선사하세요. Seizn이 컨텍스트를 자동으로 저장하고 불러와, AI가 과거를 기억합니다.",
+    "subtitle": "AI에게 지속적인 기억을 부여하세요. Seizn이 컨텍스트를 자동으로 저장하고 검색해, AI가 과거 대화를 기억합니다.",
     "emailPlaceholder": "이메일을 입력하세요",
     "joinWaitlist": "대기자 명단 등록",
     "joining": "등록 중...",
