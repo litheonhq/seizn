@@ -138,30 +138,70 @@ export function SpringClient({ dict, locale }: SpringClientProps) {
         </div>
       </section>
 
-      {/* AI Models Showcase */}
-      <section className="py-16 px-6 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="glass-card-premium rounded-2xl p-8">
-            <div className="flex flex-wrap items-center justify-center gap-8">
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="text-2xl">🤖</span>
-                <span className="font-medium">GPT-4</span>
+      {/* AI Models Showcase - Infinite Scroll */}
+      <section className="py-16 relative z-10 overflow-hidden">
+        <div className="glass-card-premium mx-6 rounded-2xl py-6 overflow-hidden">
+          <div className="flex animate-marquee">
+            {/* First set */}
+            <div className="flex items-center gap-12 px-6 shrink-0">
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🤖</span>
+                <span className="font-medium text-lg">GPT-4</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="text-2xl">🧠</span>
-                <span className="font-medium">Claude</span>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🧠</span>
+                <span className="font-medium text-lg">Claude</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="text-2xl">✨</span>
-                <span className="font-medium">Gemini</span>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">✨</span>
+                <span className="font-medium text-lg">Gemini</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="text-2xl">🦙</span>
-                <span className="font-medium">Llama</span>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🦙</span>
+                <span className="font-medium text-lg">Llama</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="text-2xl">🔮</span>
-                <span className="font-medium">Mistral</span>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🔮</span>
+                <span className="font-medium text-lg">Mistral</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🌊</span>
+                <span className="font-medium text-lg">DeepSeek</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">⚡</span>
+                <span className="font-medium text-lg">Grok</span>
+              </div>
+            </div>
+            {/* Duplicate set for seamless loop */}
+            <div className="flex items-center gap-12 px-6 shrink-0">
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🤖</span>
+                <span className="font-medium text-lg">GPT-4</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🧠</span>
+                <span className="font-medium text-lg">Claude</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">✨</span>
+                <span className="font-medium text-lg">Gemini</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🦙</span>
+                <span className="font-medium text-lg">Llama</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🔮</span>
+                <span className="font-medium text-lg">Mistral</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">🌊</span>
+                <span className="font-medium text-lg">DeepSeek</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="text-3xl">⚡</span>
+                <span className="font-medium text-lg">Grok</span>
               </div>
             </div>
           </div>
