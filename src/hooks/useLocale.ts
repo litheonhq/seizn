@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Locale, defaultLocale } from '@/i18n/config';
-import { getStoredLocale, setStoredLocale, detectLocale } from '@/lib/locale';
+import { setStoredLocale, detectLocale } from '@/lib/locale';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
 // Cache dictionaries to avoid re-fetching

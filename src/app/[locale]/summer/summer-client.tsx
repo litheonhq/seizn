@@ -322,11 +322,11 @@ const memories = await seizn.search({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Free */}
-            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover">
+            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover flex flex-col">
               <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.free.name}</div>
               <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.free.price}</div>
               <div className="text-sm text-gray-500 mb-6">{t.pricing.free.period}</div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 flex-grow">
                 {t.pricing.free.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
                     <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
@@ -338,17 +338,17 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <Link href="/login" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center">
+              <Link href="/login" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
                 {t.pricing.free.cta}
               </Link>
             </div>
 
             {/* Plus */}
-            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover">
+            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover flex flex-col">
               <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.plus.name}</div>
               <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.plus.price}</div>
               <div className="text-sm text-gray-500 mb-6">{t.pricing.plus.period}</div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 flex-grow">
                 {t.pricing.plus.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
                     <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
@@ -362,23 +362,23 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 variantId={PLAN_VARIANTS.plus}
-                className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center"
+                className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8"
               >
                 {t.pricing.plus.cta}
               </CheckoutButton>
             </div>
 
             {/* Pro */}
-            <div className="relative summer-gradient-btn rounded-3xl p-6 glass-card-hover overflow-hidden">
+            <div className="relative summer-gradient-btn rounded-3xl p-6 glass-card-hover overflow-hidden flex flex-col">
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-              <div className="relative">
+              <div className="relative flex flex-col flex-grow">
                 <div className="absolute top-0 right-0 bg-white text-cyan-600 text-xs px-3 py-1 rounded-full font-medium shadow-md">
                   {t.pricing.pro.badge}
                 </div>
                 <div className="text-sm font-medium text-cyan-100 mb-2">{t.pricing.pro.name}</div>
                 <div className="text-3xl font-semibold text-white mb-1">{t.pricing.pro.price}</div>
                 <div className="text-sm text-cyan-100 mb-6">{t.pricing.pro.period}</div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 flex-grow">
                   {t.pricing.pro.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-cyan-50">
                       <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
@@ -392,7 +392,7 @@ const memories = await seizn.search({
                 </ul>
                 <CheckoutButton
                   variantId={PLAN_VARIANTS.pro}
-                  className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg"
+                  className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg mt-8"
                 >
                   {t.pricing.pro.cta}
                 </CheckoutButton>
@@ -400,11 +400,11 @@ const memories = await seizn.search({
             </div>
 
             {/* Enterprise */}
-            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover">
+            <div className="glass-card-premium rounded-3xl p-6 glass-card-hover flex flex-col">
               <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.enterprise.name}</div>
               <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.enterprise.price}</div>
               <div className="text-sm text-gray-500 mb-6">{t.pricing.enterprise.period}</div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 flex-grow">
                 {t.pricing.enterprise.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
                     <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
@@ -416,7 +416,7 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <a href="mailto:contact@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center">
+              <a href="mailto:contact@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
                 {t.pricing.enterprise.cta}
               </a>
             </div>

@@ -49,34 +49,8 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Build query
-    let query = supabase
-      .from('memories')
-      .select(`
-        id,
-        content,
-        memory_type,
-        tags,
-        namespace,
-        importance,
-        source,
-        created_at,
-        updated_at
-      `)
-      .eq('user_id', userId)
-      .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
 
-    // Apply optional filters
-    if (namespace) {
-      query = query.eq('namespace', namespace);
-    }
-    if (memory_type) {
-      query = query.eq('memory_type', memory_type);
-    }
-
-    const { data: memories, error, count } = await supabase
+    const { data: memories, error } = await supabase
       .from('memories')
       .select('id, content, memory_type, tags, namespace, importance, source, created_at, updated_at', { count: 'exact' })
       .eq('user_id', userId)
