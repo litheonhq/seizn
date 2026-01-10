@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
           source: memory.source || 'import',
           confidence: 1.0,
         });
-      } catch (embeddingError) {
+      } catch {
         results.failed++;
         results.errors.push(`Memory ${i}: Failed to create embedding`);
       }

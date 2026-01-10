@@ -268,11 +268,11 @@ export function SpringClient({ dict, locale }: SpringClientProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Free */}
-            <div className="glass-card-premium rounded-3xl p-8 glass-card-hover">
+            <div className="glass-card-premium rounded-3xl p-8 glass-card-hover flex flex-col">
               <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.free.name}</div>
               <div className="text-4xl font-semibold text-gray-900 mb-1">{t.pricing.free.price}</div>
               <div className="text-sm text-gray-500 mb-6">{t.pricing.free.period}</div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 flex-grow">
                 {t.pricing.free.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
                     <div className="w-5 h-5 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
@@ -289,16 +289,16 @@ export function SpringClient({ dict, locale }: SpringClientProps) {
                   const form = document.querySelector('form');
                   form?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="block w-full py-3.5 rounded-full border-2 border-pink-200 text-pink-600 font-medium hover:bg-pink-50 transition-all duration-300 text-center"
+                className="block w-full py-3.5 mt-8 rounded-full border-2 border-pink-200 text-pink-600 font-medium hover:bg-pink-50 transition-all duration-300 text-center"
               >
                 {t.pricing.free.cta}
               </button>
             </div>
 
             {/* Pro */}
-            <div className="relative spring-gradient-btn rounded-3xl p-8 glass-card-hover overflow-hidden">
+            <div className="relative spring-gradient-btn rounded-3xl p-8 glass-card-hover overflow-hidden flex flex-col">
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-              <div className="relative">
+              <div className="relative flex flex-col flex-grow">
                 {t.pricing.pro.badge && (
                   <div className="absolute top-0 right-0 bg-white text-pink-600 text-xs px-3 py-1 rounded-full font-medium shadow-md">
                     {t.pricing.pro.badge}
@@ -307,7 +307,7 @@ export function SpringClient({ dict, locale }: SpringClientProps) {
                 <div className="text-sm font-medium text-pink-100 mb-2">{t.pricing.pro.name}</div>
                 <div className="text-4xl font-semibold text-white mb-1">{t.pricing.pro.price}</div>
                 <div className="text-sm text-pink-100 mb-6">{t.pricing.pro.period}</div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 flex-grow">
                   {t.pricing.pro.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-pink-50">
                       <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
@@ -324,7 +324,7 @@ export function SpringClient({ dict, locale }: SpringClientProps) {
                     const form = document.querySelector('form');
                     form?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="block w-full py-3.5 rounded-full bg-white text-pink-600 font-medium hover:bg-pink-50 transition-all duration-300 text-center shadow-lg"
+                  className="block w-full py-3.5 mt-8 rounded-full bg-white text-pink-600 font-medium hover:bg-pink-50 transition-all duration-300 text-center shadow-lg"
                 >
                   {t.pricing.pro.cta}
                 </button>

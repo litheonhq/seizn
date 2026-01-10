@@ -34,7 +34,7 @@ class AsyncSeizn:
             results = await client.search("programming preferences")
     """
 
-    DEFAULT_BASE_URL = "https://api.seizn.dev"
+    DEFAULT_BASE_URL = "https://seizn.com"
     DEFAULT_RETRIES = 3
     DEFAULT_RETRY_DELAY = 1.0
 
@@ -242,6 +242,43 @@ class AsyncSeizn:
             "namespace": namespace,
         }
         result = await self._request("POST", "/api/extract", json=data)
+        return [ExtractedMemory.from_dict(m) for m in result.get("extracted", [])]
+
+
+    async def extract_image(
+        self,
+        image: str,
+        media_type: str = "image/png",
+        model: str = "haiku",
+        auto_store: bool = True,
+        namespace: str = "default",
+        context: Optional[str] = None,
+    ) -> List[ExtractedMemory]:
+        """
+        Extract memories from an image using Claude Vision.
+
+        Args:
+            image: Base64 encoded image data
+            media_type: Image MIME type (image/png, image/jpeg, image/gif, image/webp)
+            model: AI model to use (haiku or sonnet)
+            auto_store: Automatically store extracted memories
+            namespace: Namespace for stored memories
+            context: Optional context about the image
+
+        Returns:
+            List of ExtractedMemory objects
+        """
+        data = {
+            "image": image,
+            "media_type": media_type,
+            "model": model,
+            "auto_store": auto_store,
+            "namespace": namespace,
+        }
+        if context:
+            data["context"] = context
+
+        result = await self._request("POST", "/api/extract/image", json=data)
         return [ExtractedMemory.from_dict(m) for m in result.get("extracted", [])]
 
     async def query(

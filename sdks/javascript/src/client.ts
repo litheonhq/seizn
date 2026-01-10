@@ -50,7 +50,7 @@ export class Seizn {
   private baseUrl: string;
   private timeout: number;
 
-  static DEFAULT_BASE_URL = 'https://api.seizn.dev';
+  static DEFAULT_BASE_URL = 'https://seizn.com';
 
   constructor(config: SeiznConfig) {
     this.apiKey = config.apiKey;
@@ -259,6 +259,95 @@ export class Seizn {
       },
     });
     return result.summary;
+  }
+
+
+  /**
+   * Extract memories from an image using Claude Vision.
+   */
+  async extractImage(
+    image: string,
+    options?: {
+      media_type?: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp';
+      model?: 'haiku' | 'sonnet';
+      auto_store?: boolean;
+      namespace?: string;
+      context?: string;
+    }
+  ): Promise<ExtractedMemory[]> {
+    const result = await this.request<{
+      success: boolean;
+      extracted: ExtractedMemory[];
+      stored: Memory[];
+      count: number;
+    }>('POST', '/api/extract/image', {
+      body: {
+        image,
+        media_type: options?.media_type || 'image/png',
+        model: options?.model || 'haiku',
+        auto_store: options?.auto_store ?? true,
+        namespace: options?.namespace || 'default',
+        context: options?.context,
+      },
+    });
+    return result.extracted;
+  }
+
+  // ==================== Export/Import Operations ====================
+
+  /**
+   * Export memories.
+   */
+  async exportMemories(options?: {
+    format?: 'json' | 'csv';
+    namespace?: string;
+    memory_type?: MemoryType;
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    export: {
+      format: string;
+      exported_at: string;
+      count: number;
+      total_count: number;
+    };
+    memories: Memory[];
+  }> {
+    return this.request('GET', '/api/memories/export', {
+      params: {
+        format: options?.format || 'json',
+        limit: options?.limit || 10000,
+        offset: options?.offset || 0,
+        ...(options?.namespace && { namespace: options.namespace }),
+        ...(options?.memory_type && { memory_type: options.memory_type }),
+      },
+    });
+  }
+
+  /**
+   * Import memories in bulk.
+   */
+  async importMemories(
+    memories: Array<{
+      content: string;
+      memory_type?: MemoryType;
+      tags?: string[];
+      namespace?: string;
+      importance?: number;
+    }>,
+    options?: { skip_duplicates?: boolean }
+  ): Promise<{
+    success: boolean;
+    imported: number;
+    skipped: number;
+    failed: number;
+  }> {
+    return this.request('POST', '/api/memories/import', {
+      body: {
+        memories,
+        skip_duplicates: options?.skip_duplicates ?? true,
+      },
+    });
   }
 
   // ==================== Webhook Operations ====================

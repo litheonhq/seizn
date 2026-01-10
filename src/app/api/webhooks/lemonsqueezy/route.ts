@@ -57,9 +57,22 @@ interface WebhookPayload {
 }
 
 // Map variant IDs to plan names
+// Update these IDs from your LemonSqueezy dashboard
 const VARIANT_TO_PLAN: Record<number, string> = {
+  // Summer (existing)
   1201299: "plus",
   1201303: "pro",
+  // Spring plans - update with actual variant IDs from LemonSqueezy
+  // Format: VARIANT_ID: "plan_name"
+  // Monthly plans
+  1301001: "starter",   // Spring Starter Monthly
+  1301002: "plus",      // Spring Plus Monthly
+  1301003: "pro",       // Spring Pro Monthly
+  // Yearly plans
+  1301011: "starter",   // Spring Starter Yearly
+  1301012: "plus",      // Spring Plus Yearly
+  1301013: "pro",       // Spring Pro Yearly
+  // Enterprise - handled separately
 };
 
 // Verify webhook signature
