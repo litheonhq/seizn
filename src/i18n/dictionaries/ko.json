@@ -285,7 +285,7 @@
         "모델 간 매끄러운 컨텍스트 전환"
       ],
       "cta": "Spring 시작하기",
-      "badge": "출시 예정"
+      "badge": ""
     },
     "summer": {
       "name": "Summer",
@@ -303,15 +303,12 @@
     "footer": "Seizn의 사계절 — 모든 필요를 위한 AI 메모리"
   },
   "springPage": {
-    "badge": "출시 예정",
+    "badge": "",
     "title": "하나의 채팅.",
     "titleHighlight": "모든 AI.",
     "subtitle": "무엇을 선택해도,\n모두가 당신을 기억합니다.",
-    "waitlistTitle": "Spring 대기자 명단 등록",
-    "emailPlaceholder": "이메일을 입력하세요",
-    "joinWaitlist": "대기자 등록",
-    "joining": "등록 중...",
-    "onTheList": "등록되었습니다!",
+    "startChatting": "지금 시작하기",
+    "viewPricing": "요금제 보기",
     "features": {
       "title": "왜 Spring인가요?",
       "subtitle": "모든 AI의 장점을 하나로.",
@@ -339,7 +336,7 @@
           "세션 간 메모리",
           "웹 & 모바일 앱"
         ],
-        "cta": "대기자 등록"
+        "cta": "무료로 시작"
       },
       "pro": {
         "name": "Pro",
@@ -352,7 +349,7 @@
           "고급 메모리 제어",
           "API 접근"
         ],
-        "cta": "대기자 등록"
+        "cta": "Pro 업그레이드"
       }
     }
   }
