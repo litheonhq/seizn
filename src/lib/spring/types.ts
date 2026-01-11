@@ -359,6 +359,8 @@ export interface ChatRequest {
   memory_enabled?: boolean;
   memory_namespace?: string;
   stream?: boolean;
+  mode?: 'default' | 'roleplay';
+  character_id?: string;
 }
 
 export interface ChatResponse {

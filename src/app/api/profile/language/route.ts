@@ -34,7 +34,7 @@ export async function PATCH(request: NextRequest) {
       .eq('id', session.user.id);
 
     if (error) {
-      console.error('Language update error:', error);
+      console.error('Language update error:', { userId: session.user.id, error });
       return NextResponse.json(
         { error: 'Failed to update language' },
         { status: 500 }
