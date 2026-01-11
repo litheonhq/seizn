@@ -107,6 +107,10 @@ export async function POST(request: NextRequest) {
     // Generate new API key
     const { key, hash, prefix } = generateApiKey();
 
+    // Set expiration date (90 days from now)
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 90);
+
     // Insert key record
     const { data: keyRecord, error: insertError } = await supabase
       .from('api_keys')
@@ -117,6 +121,7 @@ export async function POST(request: NextRequest) {
         key_prefix: prefix,
         scopes: ['memory:read', 'memory:write'],
         is_active: true,
+        expires_at: expiresAt.toISOString(),
       })
       .select('id, name, key_prefix, scopes, created_at')
       .single();

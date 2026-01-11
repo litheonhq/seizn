@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { createServerClient } from './supabase';
+import { alertAuthFailure, alertSuspiciousActivity } from './telegram';
 
 export interface AuditLogParams {
   userId: string;
@@ -146,6 +147,12 @@ export async function logAuthFailure(
     },
     context
   );
+
+  // Send Telegram alert for auth failures
+  alertAuthFailure(
+    context.ipAddress || 'unknown',
+    reason
+  ).catch(console.error);
 }
 
 /**
@@ -169,6 +176,13 @@ export async function logSuspiciousActivity(
     },
     context
   );
+
+  // Send Telegram alert for suspicious activity
+  alertSuspiciousActivity(
+    userId,
+    activityType,
+    { ...details, ip: context.ipAddress }
+  ).catch(console.error);
 }
 
 // Action types for reference
