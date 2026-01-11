@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import type { Conversation, Message, AIModel } from "@/lib/spring/types";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Locale } from "@/i18n/config";
@@ -61,7 +61,27 @@ export function ChatMain({
     }
   };
 
-  const mainPadding = isSidebarOpen ? "lg:pl-80" : "lg:pl-20";
+  const mainPadding = isSidebarOpen ? "lg:pl-[18rem]" : "lg:pl-[4.5rem]";
+
+  const welcomeCopy = useMemo(() => {
+    switch (locale) {
+      case "ko":
+        return {
+          title: "Spring에 오신 것을 환영해요",
+          subtitle: "다중 모델 대화와 메모리. 무엇이든 물어보면 대화를 기억해둘게요.",
+        };
+      case "ja":
+        return {
+          title: "Springへようこそ",
+          subtitle: "マルチモデルのチャットとメモリ。聞いてくれれば会話を覚えておきます。",
+        };
+      default:
+        return {
+          title: "Welcome to Spring",
+          subtitle: "Multi-AI chat with memory. Ask anything, and I'll remember our conversations.",
+        };
+    }
+  }, [locale]);
 
   return (
     <main className={`min-h-screen flex flex-col bg-white transition-[padding] duration-300 ${mainPadding}`}>
@@ -89,7 +109,7 @@ export function ChatMain({
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <WelcomeScreen onSuggestionClick={handleSend} />
+          <WelcomeScreen onSuggestionClick={handleSend} copy={welcomeCopy} locale={locale} />
         ) : (
           <MessageList messages={messages} />
         )}
@@ -156,13 +176,29 @@ export function ChatMain({
 }
 
 // Welcome Screen Component
-function WelcomeScreen({ onSuggestionClick }: { onSuggestionClick: (message: string) => void }) {
-  const suggestions = [
-    "Help me write a professional email",
-    "Explain quantum computing simply",
-    "Create a weekly meal plan",
-    "Debug this code for me",
-  ];
+function WelcomeScreen({
+  onSuggestionClick,
+  copy,
+  locale,
+}: {
+  onSuggestionClick: (message: string) => void;
+  copy: { title: string; subtitle: string };
+  locale: Locale;
+}) {
+  const suggestions = useMemo(() => {
+    if (locale === "ko") {
+      return ["이메일 초안 작성 도와줘", "양자컴퓨팅을 쉽게 설명해줘", "주간 식단을 만들어줘", "이 코드 디버그해줘"];
+    }
+    if (locale === "ja") {
+      return ["メール文面を作成して", "量子コンピュータをやさしく説明して", "1週間の食事プランを作って", "このコードをデバッグして"];
+    }
+    return [
+      "Help me write a professional email",
+      "Explain quantum computing simply",
+      "Create a weekly meal plan",
+      "Debug this code for me",
+    ];
+  }, [locale]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 py-8">
@@ -171,11 +207,10 @@ function WelcomeScreen({ onSuggestionClick }: { onSuggestionClick: (message: str
       </div>
 
       <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-        Welcome to Spring
+        {copy.title}
       </h2>
       <p className="text-gray-500 text-center max-w-md mb-8">
-        Multi-AI chat with memory. Ask anything, and I&apos;ll remember our
-        conversations.
+        {copy.subtitle}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">

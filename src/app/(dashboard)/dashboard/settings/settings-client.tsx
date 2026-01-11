@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 
 interface ProfileData {
@@ -10,18 +11,16 @@ interface ProfileData {
 }
 
 export function SettingsClient() {
+  const { status: sessionStatus } = useSession();
   const [profile, setProfile] = useState<ProfileData>({});
   const [language, setLanguage] = useState<Locale>("en");
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   useEffect(() => {
     const loadProfile = async () => {
       try {
         const res = await fetch("/api/me", { credentials: "include" });
-        if (res.status === 401) {
-          window.location.href = "/login?callbackUrl=/dashboard/settings";
-          return;
-        }
+        if (res.status === 401) return;
         const data = await res.json();
         setProfile({
           email: data?.user?.email,
@@ -37,7 +36,7 @@ export function SettingsClient() {
   }, []);
 
   const saveLanguage = async (lang: Locale) => {
-    setStatus("saving");
+    setSaveStatus("saving");
     try {
       const res = await fetch("/api/profile/language", {
         method: "PATCH",
@@ -47,30 +46,36 @@ export function SettingsClient() {
       });
       if (!res.ok) {
         if (res.status === 401) {
-          window.location.href = "/login?callbackUrl=/dashboard/settings";
+          signIn(undefined, { callbackUrl: "/dashboard/settings" });
           return;
         }
         throw new Error("Failed to save language");
       }
       document.cookie = `NEXT_LOCALE=${lang};max-age=${60 * 60 * 24 * 365};path=/`;
-      setStatus("saved");
-      setTimeout(() => setStatus("idle"), 2000);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (err) {
       console.error(err);
-      setStatus("error");
+      setSaveStatus("error");
     }
   };
 
   return (
     <div className="space-y-6">
+      {sessionStatus === "loading" && (
+        <div className="text-sm text-gray-500">Loading…</div>
+      )}
+      {sessionStatus === "unauthenticated" && (
+        <div className="text-sm text-red-600">로그인이 필요합니다.</div>
+      )}
       <header className="flex items-center justify-between gap-3">
         <div>
           <p className="text-sm text-gray-500">Settings</p>
           <h1 className="text-2xl font-semibold text-gray-900">Profile & Preferences</h1>
         </div>
-        {status === "saving" && <span className="text-sm text-gray-500">Saving…</span>}
-        {status === "saved" && <span className="text-sm text-emerald-600">Saved</span>}
-        {status === "error" && <span className="text-sm text-red-600">Save failed</span>}
+        {saveStatus === "saving" && <span className="text-sm text-gray-500">Saving…</span>}
+        {saveStatus === "saved" && <span className="text-sm text-emerald-600">Saved</span>}
+        {saveStatus === "error" && <span className="text-sm text-red-600">Save failed</span>}
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
