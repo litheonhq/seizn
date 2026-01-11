@@ -60,7 +60,6 @@ const navigation = [
   { name: "Usage", nameJa: "利用状況", href: "/dashboard/usage", icon: ChartIcon },
   { name: "API Keys", nameJa: "APIキー", href: "/dashboard/keys", icon: KeyIcon },
   { name: "Docs", nameJa: "ドキュメント", href: "/docs", icon: BookIcon },
-  { name: "Roleplay Hub", nameJa: "ロールプレイ", href: "/dashboard/roleplay", icon: RoleplayIcon },
   { name: "Settings", nameJa: "設定", href: "/dashboard/settings", icon: SettingsIcon },
 ];
 
@@ -391,19 +390,6 @@ function SettingsIcon({ className }: { className?: string }) {
         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.757.426 1.757 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.757-2.924 1.757-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.757-.426-1.757-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.065z"
       />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  );
-}
-
-function RoleplayIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6.75 7.5a4.5 4.5 0 118.57 1.704L21 13.5l-3.281 1.64a4.502 4.502 0 01-8.409 1.86L3 16.5l3.75-2.25V7.5z"
-      />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75h.008v.008H9V6.75zM12 6.75h.008v.008H12V6.75z" />
     </svg>
   );
 }
