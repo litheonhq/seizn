@@ -285,7 +285,7 @@
         "Seamless context switching between models"
       ],
       "cta": "Try Spring",
-      "badge": "Coming Soon"
+      "badge": ""
     },
     "summer": {
       "name": "Summer",
@@ -303,15 +303,12 @@
     "footer": "Part of the Seizn seasons — AI memory for every need"
   },
   "springPage": {
-    "badge": "Coming Soon",
+    "badge": "",
     "title": "One Chat.",
     "titleHighlight": "Every AI.",
     "subtitle": "No matter which you choose,\nthey all remember you.",
-    "waitlistTitle": "Join the Spring Waitlist",
-    "emailPlaceholder": "Enter your email",
-    "joinWaitlist": "Join Waitlist",
-    "joining": "Joining...",
-    "onTheList": "You're on the list!",
+    "startChatting": "Start Chatting",
+    "viewPricing": "View Pricing",
     "features": {
       "title": "Why Spring?",
       "subtitle": "The best of every AI, unified.",
@@ -339,7 +336,7 @@
           "Memory across sessions",
           "Web & mobile apps"
         ],
-        "cta": "Join Waitlist"
+        "cta": "Get Started Free"
       },
       "pro": {
         "name": "Pro",
@@ -352,7 +349,7 @@
           "Advanced memory controls",
           "API access"
         ],
-        "cta": "Join Waitlist"
+        "cta": "Upgrade to Pro"
       }
     }
   }

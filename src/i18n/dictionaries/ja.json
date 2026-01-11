@@ -285,7 +285,7 @@
         "モデル間のシームレスなコンテキスト切り替え"
       ],
       "cta": "Springを試す",
-      "badge": "近日公開"
+      "badge": ""
     },
     "summer": {
       "name": "Summer",
@@ -303,15 +303,12 @@
     "footer": "Seiznの四季 — あらゆるニーズのためのAIメモリ"
   },
   "springPage": {
-    "badge": "近日公開",
+    "badge": "",
     "title": "一つのチャット。",
     "titleHighlight": "すべてのAI。",
     "subtitle": "どれを選んでも、\nすべてがあなたを覚えています。",
-    "waitlistTitle": "Spring ウェイトリストに登録",
-    "emailPlaceholder": "メールアドレスを入力",
-    "joinWaitlist": "ウェイトリスト登録",
-    "joining": "登録中...",
-    "onTheList": "登録完了！",
+    "startChatting": "今すぐ始める",
+    "viewPricing": "料金プランを見る",
     "features": {
       "title": "なぜSpring？",
       "subtitle": "すべてのAIの長所を一つに。",
@@ -339,7 +336,7 @@
           "セッション間メモリ",
           "Web＆モバイルアプリ"
         ],
-        "cta": "ウェイトリスト登録"
+        "cta": "無料で始める"
       },
       "pro": {
         "name": "Pro",
@@ -352,7 +349,7 @@
           "高度なメモリ制御",
           "APIアクセス"
         ],
-        "cta": "ウェイトリスト登録"
+        "cta": "Proにアップグレード"
       }
     }
   }

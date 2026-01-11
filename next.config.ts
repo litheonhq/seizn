@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // Enable standalone output for Docker
   output: 'standalone',
 
+  // Disable devtools indicator in development
+  devIndicators: false,
+
   // Exclude mcp-server from build process
   webpack: (config) => {
     // Ignore mcp-server directory during watch
