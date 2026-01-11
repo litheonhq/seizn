@@ -11,7 +11,7 @@ import {
 
   
 } from '@/lib/spring/db';
-import { AIModel, ChatRequest } from '@/lib/spring/types';
+import { AIModel, ChatRequest, MODELS } from '@/lib/spring/types';
 import { autoSelectModel } from '@/lib/spring/model-fallback';
 
 
@@ -42,10 +42,25 @@ export async function POST(request: NextRequest) {
       system_prompt,
       memory_enabled = true,
       stream = true,
+      mode = 'default',
+      character_id,
     } = body;
 
     if (!message?.trim()) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+    }
+
+    // Validate model
+    const allowedModels = Object.keys(MODELS) as AIModel[];
+    if (!allowedModels.includes(model as AIModel)) {
+      return NextResponse.json(
+        { error: `Unsupported model: ${model}`, allowed_models: allowedModels },
+        { status: 400 }
+      );
+    }
+
+    if (mode && mode !== 'default' && mode !== 'roleplay') {
+      return NextResponse.json({ error: 'Invalid mode. Use default or roleplay.' }, { status: 400 });
     }
 
     // 3. Auto-select model with fallback
@@ -105,7 +120,7 @@ export async function POST(request: NextRequest) {
         role: m.role as 'user' | 'assistant' | 'system',
         content: m.content,
       })),
-      { role: 'user' as const, content: message },
+      { role: 'user' as const, content: mode === 'roleplay' && character_id ? `[roleplay:${character_id}] ${message}` : message },
     ];
 
     // 9. Save user message
@@ -281,18 +296,19 @@ async function streamResponse(
         );
 
         controller.close();
-      } catch (error) {
-        console.error('Stream error:', error);
-        controller.enqueue(
-          encoder.encode(
-            `data: ${JSON.stringify({
-              type: 'error',
-              error: 'Stream failed',
-            })}\n\n`
-          )
-        );
-        controller.close();
-      }
+    } catch (error) {
+      console.error('Stream error:', error);
+      controller.enqueue(
+        encoder.encode(
+          `data: ${JSON.stringify({
+            type: 'error',
+            error: 'Stream failed',
+            detail: error instanceof Error ? error.message : 'Unknown error',
+          })}\n\n`
+        )
+      );
+      controller.close();
+    }
     },
   });
 
@@ -314,9 +330,19 @@ async function fetchRelevantMemories(
   namespace?: string | null
 ): Promise<Array<{ id: string; content: string; similarity: number }>> {
   try {
-
     // Use Summer's memory search
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/query`, {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXTAUTH_URL ||
+      '';
+
+    if (!baseUrl) {
+      console.warn('Memory fetch skipped: no base URL configured');
+      return [];
+    }
+
+    const response = await fetch(`${baseUrl}/api/query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
