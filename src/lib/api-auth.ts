@@ -46,7 +46,7 @@ export async function authenticateRequest(
   // Verify API key and get user_id
   const { data: keyData, error: keyError } = await supabase
     .from('api_keys')
-    .select('id, user_id')
+    .select('id, user_id, expires_at')
     .eq('key_hash', keyHash)
     .eq('is_active', true)
     .single();
@@ -57,6 +57,17 @@ export async function authenticateRequest(
     return {
       authError: {
         error: 'Invalid or inactive API key',
+        status: 401,
+      },
+    };
+  }
+
+  // Check if key has expired
+  if (keyData.expires_at && new Date(keyData.expires_at) < new Date()) {
+    logAuthFailure(request, 'expired_api_key', apiKey).catch(console.error);
+    return {
+      authError: {
+        error: 'API key has expired. Please generate a new key.',
         status: 401,
       },
     };
