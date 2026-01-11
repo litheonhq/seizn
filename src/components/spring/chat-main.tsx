@@ -7,6 +7,8 @@ import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
 import { SessionCostTracker } from "./cost-meter";
 import { ModelRecommendation } from "./model-recommendation";
+import { ImageGenerator } from "./image-generator";
+import { FileUploadModal } from "./file-upload";
 
 interface ChatMainProps {
   conversation: Conversation | null;
@@ -28,6 +30,8 @@ export function ChatMain({
   );
   const [isStreaming, setIsStreaming] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [showImageGenerator, setShowImageGenerator] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -104,11 +108,35 @@ export function ChatMain({
           placeholder="Send a message..."
           value={inputValue}
           onChange={setInputValue}
+          onFileClick={() => setShowFileUpload(true)}
+          onImageClick={() => setShowImageGenerator(true)}
         />
         <p className="text-xs text-center text-gray-400 mt-2">
           Spring uses AI models. Check important info.
         </p>
       </div>
+
+      {/* Modals */}
+      {showImageGenerator && (
+        <ImageGenerator
+          onClose={() => setShowImageGenerator(false)}
+          onImageGenerated={(image) => {
+            // Optionally add image to chat
+            console.log("Image generated:", image);
+          }}
+        />
+      )}
+
+      {showFileUpload && (
+        <FileUploadModal
+          onClose={() => setShowFileUpload(false)}
+          conversationId={conversation?.id}
+          onFileAnalyzed={(file) => {
+            // Optionally add file analysis to chat
+            console.log("File analyzed:", file);
+          }}
+        />
+      )}
     </main>
   );
 }
