@@ -1,8 +1,7 @@
-'use client';
+﻿'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
 import { locales, localeNames, type Locale } from '@/i18n/config';
-// Locale storage handled by middleware
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
@@ -21,6 +20,16 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
 
     // Set cookie
     document.cookie = `NEXT_LOCALE=${newLocale};max-age=${60 * 60 * 24 * 365};path=/`;
+
+    // Persist to profile if logged in (best-effort)
+    fetch('/api/profile/language', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language: newLocale }),
+      credentials: 'include',
+    }).catch(() => {
+      // ignore errors (e.g., anonymous user)
+    });
 
     router.push(newPath);
   };
@@ -63,6 +72,15 @@ export function LanguageSwitcherIcon({ currentLocale, className = '' }: Language
     const newPath = segments.join('/');
 
     document.cookie = `NEXT_LOCALE=${newLocale};max-age=${60 * 60 * 24 * 365};path=/`;
+
+    fetch('/api/profile/language', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language: newLocale }),
+      credentials: 'include',
+    }).catch(() => {
+      // ignore errors
+    });
 
     router.push(newPath);
   };

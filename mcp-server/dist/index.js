@@ -12,13 +12,97 @@ if (process.platform === 'win32') {
 // Ensure stdin uses UTF-8
 process.stdin.setEncoding('utf8');
 const index_js_1 = require("@modelcontextprotocol/sdk/server/index.js");
-const stdio_js_1 = require("@modelcontextprotocol/sdk/server/stdio.js");
 const types_js_1 = require("@modelcontextprotocol/sdk/types.js");
 // Configuration from environment
 const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://www.seizn.com";
 const SEIZN_API_KEY = process.env.SEIZN_API_KEY || "";
 if (!SEIZN_API_KEY) {
     console.error("Warning: SEIZN_API_KEY not set. API calls will fail.");
+}
+// Content-Length framed transport (Claude/Codex clients expect this framing)
+class ContentLengthStdioTransport {
+    stdin;
+    stdout;
+    buffer = Buffer.alloc(0);
+    onmessage;
+    onerror;
+    onclose;
+    constructor(stdin = process.stdin, stdout = process.stdout) {
+        this.stdin = stdin;
+        this.stdout = stdout;
+    }
+    handleError = (error) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.onerror?.(err);
+    };
+    handleData = (chunk) => {
+        const incoming = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, "utf8");
+        this.buffer = Buffer.concat([this.buffer, incoming]);
+        this.processBuffer();
+    };
+    processBuffer() {
+        while (true) {
+            const headerEnd = this.buffer.indexOf("\r\n\r\n");
+            // Fallback: accept bare newline-delimited JSON if no headers are present
+            if (headerEnd === -1) {
+                const newlineIndex = this.buffer.indexOf("\n");
+                if (newlineIndex === -1)
+                    return;
+                const line = this.buffer.slice(0, newlineIndex).toString("utf8").replace(/\r$/, "");
+                this.buffer = this.buffer.slice(newlineIndex + 1);
+                this.safeHandle(line);
+                continue;
+            }
+            const headerText = this.buffer.slice(0, headerEnd).toString("utf8");
+            const lengthMatch = headerText.match(/Content-Length:\s*(\d+)/i);
+            if (!lengthMatch) {
+                this.buffer = this.buffer.slice(headerEnd + 4);
+                continue;
+            }
+            const contentLength = Number(lengthMatch[1]);
+            const messageStart = headerEnd + 4;
+            const messageEnd = messageStart + contentLength;
+            if (this.buffer.length < messageEnd)
+                return;
+            const jsonText = this.buffer.slice(messageStart, messageEnd).toString("utf8");
+            this.buffer = this.buffer.slice(messageEnd);
+            this.safeHandle(jsonText);
+        }
+    }
+    safeHandle(raw) {
+        try {
+            const message = JSON.parse(raw);
+            this.onmessage?.(message);
+        }
+        catch (error) {
+            this.handleError(error);
+        }
+    }
+    async start() {
+        this.stdin.on("data", this.handleData);
+        this.stdin.on("error", this.handleError);
+    }
+    async close() {
+        this.stdin.off("data", this.handleData);
+        this.stdin.off("error", this.handleError);
+        if (this.stdin.listenerCount("data") === 0) {
+            this.stdin.pause();
+        }
+        this.buffer = Buffer.alloc(0);
+        this.onclose?.();
+    }
+    async send(message) {
+        const json = JSON.stringify(message);
+        const payload = `Content-Length: ${Buffer.byteLength(json, "utf8")}\r\n\r\n${json}`;
+        await new Promise((resolve) => {
+            if (this.stdout.write(payload)) {
+                resolve();
+            }
+            else {
+                this.stdout.once("drain", () => resolve());
+            }
+        });
+    }
 }
 // API Helper
 async function apiRequest(endpoint, method = "GET", body) {
@@ -419,7 +503,7 @@ async function main() {
         }
     });
     // Start server
-    const transport = new stdio_js_1.StdioServerTransport();
+    const transport = new ContentLengthStdioTransport();
     await server.connect(transport);
     console.error("Seizn MCP Server running on stdio");
 }

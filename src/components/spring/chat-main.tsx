@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import type { Conversation, Message, AIModel } from "@/lib/spring/types";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import type { Locale } from "@/i18n/config";
 import { ModelSelector } from "./model-selector";
 import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
@@ -16,6 +18,7 @@ interface ChatMainProps {
   onSendMessage: (content: string, model: AIModel) => void;
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  locale: Locale;
 }
 
 export function ChatMain({
@@ -24,6 +27,7 @@ export function ChatMain({
   onSendMessage,
   isSidebarOpen,
   onToggleSidebar,
+  locale,
 }: ChatMainProps) {
   const [selectedModel, setSelectedModel] = useState<AIModel>(
     (conversation?.default_model as AIModel) || "gpt-4o-mini"
@@ -57,8 +61,10 @@ export function ChatMain({
     }
   };
 
+  const mainPadding = isSidebarOpen ? "lg:pl-80" : "lg:pl-20";
+
   return (
-    <main className="flex-1 flex flex-col h-full bg-white">
+    <main className={`min-h-screen flex flex-col bg-white transition-[padding] duration-300 ${mainPadding}`}>
       {/* Header */}
       <header className="h-14 border-b border-gray-100 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
@@ -76,11 +82,7 @@ export function ChatMain({
         </div>
 
         <div className="flex items-center gap-3">
-          <SessionCostTracker />
-          <ModelSelector
-            selectedModel={selectedModel}
-            onSelect={setSelectedModel}
-          />
+          <LanguageSwitcher currentLocale={locale} className="hidden sm:block" />
         </div>
       </header>
 
@@ -96,24 +98,36 @@ export function ChatMain({
 
       {/* Input Area */}
       <div className="border-t border-gray-100 p-4">
-        <ModelRecommendation
-          query={inputValue}
-          currentModel={selectedModel}
-          onSelectModel={setSelectedModel}
-          className="mb-3 max-w-3xl mx-auto"
-        />
-        <ChatInput
-          onSend={handleSend}
-          isLoading={isStreaming}
-          placeholder="Send a message..."
-          value={inputValue}
-          onChange={setInputValue}
-          onFileClick={() => setShowFileUpload(true)}
-          onImageClick={() => setShowImageGenerator(true)}
-        />
-        <p className="text-xs text-center text-gray-400 mt-2">
-          Spring uses AI models. Check important info.
-        </p>
+        <div className="max-w-4xl mx-auto space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <ModelSelector
+                selectedModel={selectedModel}
+                onSelect={setSelectedModel}
+              />
+              <SessionCostTracker />
+            </div>
+            <LanguageSwitcher currentLocale={locale} className="sm:hidden inline-flex" />
+          </div>
+          <ModelRecommendation
+            query={inputValue}
+            currentModel={selectedModel}
+            onSelectModel={setSelectedModel}
+            className="max-w-3xl"
+          />
+          <ChatInput
+            onSend={handleSend}
+            isLoading={isStreaming}
+            placeholder="Send a message..."
+            value={inputValue}
+            onChange={setInputValue}
+            onFileClick={() => setShowFileUpload(true)}
+            onImageClick={() => setShowImageGenerator(true)}
+          />
+          <p className="text-xs text-center text-gray-400">
+            Spring uses AI models. Check important info.
+          </p>
+        </div>
       </div>
 
       {/* Modals */}

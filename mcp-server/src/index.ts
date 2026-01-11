@@ -12,7 +12,6 @@ if (process.platform === 'win32') {
 process.stdin.setEncoding('utf8');
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -48,6 +47,98 @@ interface Relation {
   from: string;
   to: string;
   relationType: string;
+}
+
+// Content-Length framed transport (Claude/Codex clients expect this framing)
+class ContentLengthStdioTransport {
+  private buffer = Buffer.alloc(0);
+  onmessage?: (message: unknown) => void;
+  onerror?: (error: Error) => void;
+  onclose?: () => void;
+
+  constructor(
+    private stdin: NodeJS.ReadStream = process.stdin,
+    private stdout: NodeJS.WriteStream = process.stdout
+  ) {}
+
+  private handleError = (error: unknown) => {
+    const err = error instanceof Error ? error : new Error(String(error));
+    this.onerror?.(err);
+  };
+
+  private handleData = (chunk: Buffer | string) => {
+    const incoming = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, "utf8");
+    this.buffer = Buffer.concat([this.buffer, incoming]);
+    this.processBuffer();
+  };
+
+  private processBuffer() {
+    while (true) {
+      const headerEnd = this.buffer.indexOf("\r\n\r\n");
+
+      // Fallback: accept bare newline-delimited JSON if no headers are present
+      if (headerEnd === -1) {
+        const newlineIndex = this.buffer.indexOf("\n");
+        if (newlineIndex === -1) return;
+        const line = this.buffer.slice(0, newlineIndex).toString("utf8").replace(/\r$/, "");
+        this.buffer = this.buffer.slice(newlineIndex + 1);
+        this.safeHandle(line);
+        continue;
+      }
+
+      const headerText = this.buffer.slice(0, headerEnd).toString("utf8");
+      const lengthMatch = headerText.match(/Content-Length:\s*(\d+)/i);
+      if (!lengthMatch) {
+        this.buffer = this.buffer.slice(headerEnd + 4);
+        continue;
+      }
+
+      const contentLength = Number(lengthMatch[1]);
+      const messageStart = headerEnd + 4;
+      const messageEnd = messageStart + contentLength;
+      if (this.buffer.length < messageEnd) return;
+
+      const jsonText = this.buffer.slice(messageStart, messageEnd).toString("utf8");
+      this.buffer = this.buffer.slice(messageEnd);
+      this.safeHandle(jsonText);
+    }
+  }
+
+  private safeHandle(raw: string) {
+    try {
+      const message = JSON.parse(raw);
+      this.onmessage?.(message);
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async start() {
+    this.stdin.on("data", this.handleData);
+    this.stdin.on("error", this.handleError);
+  }
+
+  async close() {
+    this.stdin.off("data", this.handleData);
+    this.stdin.off("error", this.handleError);
+    if (this.stdin.listenerCount("data") === 0) {
+      this.stdin.pause();
+    }
+    this.buffer = Buffer.alloc(0);
+    this.onclose?.();
+  }
+
+  async send(message: unknown) {
+    const json = JSON.stringify(message);
+    const payload = `Content-Length: ${Buffer.byteLength(json, "utf8")}\r\n\r\n${json}`;
+    await new Promise<void>((resolve) => {
+      if (this.stdout.write(payload)) {
+        resolve();
+      } else {
+        this.stdout.once("drain", () => resolve());
+      }
+    });
+  }
 }
 
 // API Helper
@@ -520,7 +611,7 @@ async function main() {
   });
 
   // Start server
-  const transport = new StdioServerTransport();
+  const transport = new ContentLengthStdioTransport();
   await server.connect(transport);
 
   console.error("Seizn MCP Server running on stdio");

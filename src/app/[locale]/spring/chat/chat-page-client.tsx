@@ -21,7 +21,7 @@ export function ChatPageClient({ locale, user }: ChatPageClientProps) {
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [fallbackNotification, setFallbackNotification] = useState<{
     message: string;
     originalModel: string;
@@ -265,6 +265,7 @@ export function ChatPageClient({ locale, user }: ChatPageClientProps) {
         onSendMessage={handleSendMessage}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        locale={locale}
       />
     </>
   );

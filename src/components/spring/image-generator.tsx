@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ImageModel, IMAGE_MODELS, GeneratedImage } from "@/lib/spring/types";
 
 interface ImageGeneratorProps {
@@ -206,11 +207,16 @@ export function ImageGenerator({ onClose, onImageGenerated }: ImageGeneratorProp
             <div className="grid grid-cols-2 gap-4">
               {generatedImages.map((image, index) => (
                 <div key={image.id || index} className="relative group">
-                  <img
-                    src={image.url}
-                    alt={image.prompt}
-                    className="w-full rounded-lg shadow-md"
-                  />
+                  <div className="w-full overflow-hidden rounded-lg shadow-md aspect-square">
+                    <Image
+                      src={image.url}
+                      alt={image.prompt || "generated image"}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      priority={index === 0}
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
                     <a
                       href={image.url}
