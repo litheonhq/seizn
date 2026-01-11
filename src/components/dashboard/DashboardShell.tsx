@@ -1,19 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-
-type Season = "spring" | "summer" | "autumn" | "winter";
-
-function getSeason(): Season {
-  const month = new Date().getMonth() + 1;
-  if (month >= 3 && month <= 5) return "spring";
-  if (month >= 6 && month <= 8) return "summer";
-  if (month >= 9 && month <= 11) return "autumn";
-  return "winter";
-}
 
 const seasonConfig = {
   spring: {
@@ -37,7 +27,7 @@ const seasonConfig = {
   autumn: {
     name: "Autumn",
     nameJa: "秋",
-    icon: "🍁",
+    icon: "🍂",
     particles: Array.from({ length: 6 }, (_, i) => ({
       className: "animate-leaffall",
       delay: i * 2,
@@ -54,12 +44,24 @@ const seasonConfig = {
   },
 };
 
+type Season = keyof typeof seasonConfig;
+
+function getSeason(): Season {
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 5) return "spring";
+  if (month >= 6 && month <= 8) return "summer";
+  if (month >= 9 && month <= 11) return "autumn";
+  return "winter";
+}
+
 const navigation = [
-  { name: "Overview", nameJa: "概要", href: "/dashboard", icon: HomeIcon },
+  { name: "Overview", nameJa: "概況", href: "/dashboard", icon: HomeIcon },
   { name: "Organizations", nameJa: "組織", href: "/dashboard/organizations", icon: UsersIcon },
-  { name: "Usage", nameJa: "使用量", href: "/dashboard/usage", icon: ChartIcon },
+  { name: "Usage", nameJa: "利用状況", href: "/dashboard/usage", icon: ChartIcon },
   { name: "API Keys", nameJa: "APIキー", href: "/dashboard/keys", icon: KeyIcon },
   { name: "Docs", nameJa: "ドキュメント", href: "/docs", icon: BookIcon },
+  { name: "Roleplay Hub", nameJa: "ロールプレイ", href: "/dashboard/roleplay", icon: RoleplayIcon },
+  { name: "Settings", nameJa: "設定", href: "/dashboard/settings", icon: SettingsIcon },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -67,12 +69,16 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
+  const [isSidebarPinned, setIsSidebarPinned] = useState(false);
+  const [isSidebarHovering, setIsSidebarHovering] = useState(false);
 
   useEffect(() => {
     setSeason(getSeason());
   }, []);
 
   const config = seasonConfig[season];
+  const isSidebarExpanded = isSidebarPinned || isSidebarHovering;
+  const mainPaddingClass = isSidebarExpanded ? "lg:pl-72" : "lg:pl-20";
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -98,45 +104,74 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       </div>
 
       {/* Sidebar - Desktop */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-72 glass-card hidden lg:flex lg:flex-col">
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col glass-card transition-[width] duration-300 ${
+          isSidebarExpanded ? "w-72" : "w-20"
+        }`}
+        onMouseEnter={() => setIsSidebarHovering(true)}
+        onMouseLeave={() => setIsSidebarHovering(false)}
+      >
         {/* Logo */}
-        <div className="p-6 border-b theme-border">
+        <div className="p-4 border-b theme-border">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 theme-gradient-btn rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">S</span>
             </div>
-            <div>
-              <span className="text-xl font-bold text-gray-900">
-                Seizn<span className="theme-primary">.</span>
-              </span>
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                {config.icon} {config.nameJa}
-              </p>
-            </div>
+            {isSidebarExpanded && (
+              <div className="flex-1 min-w-0">
+                <span className="text-xl font-bold text-gray-900 block truncate">
+                  Seizn<span className="theme-primary">.</span>
+                </span>
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  {config.icon} {config.nameJa}
+                </p>
+              </div>
+            )}
           </Link>
+          <div className="mt-3 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setIsSidebarPinned((prev) => !prev)}
+              className="flex items-center justify-center rounded-xl px-2.5 py-2 text-xs font-medium text-gray-500 hover:text-gray-800 hover:bg-white/60 transition-colors"
+              title={isSidebarPinned ? "사이드바 접기" : "사이드바 고정"}
+            >
+              {isSidebarPinned ? <UnpinIcon className="w-4 h-4" /> : <PinIcon className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
           {navigation.map((item) => {
             const active = isActive(item.href);
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-medium transition-all duration-300 ${
+                title={item.name}
+                className={`group flex items-center rounded-2xl text-sm font-medium transition-all duration-300 ${
+                  isSidebarExpanded ? "gap-3 px-4 py-3.5" : "justify-center p-3"
+                } ${
                   active
                     ? "theme-gradient-btn text-white shadow-lg theme-shadow"
                     : "text-gray-600 hover:bg-white/60 hover:text-gray-900 hover:shadow-md"
                 }`}
               >
-                <item.icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${
-                  active ? "text-white" : "text-gray-400 group-hover:text-gray-600"
-                }`} />
-                <span>{item.name}</span>
-                <span className={`ml-auto text-xs ${active ? "text-white/70" : "text-gray-400"}`}>
-                  {item.nameJa}
-                </span>
+                <item.icon
+                  className={`w-5 h-5 transition-transform group-hover:scale-110 ${
+                    active ? "text-white" : "text-gray-400 group-hover:text-gray-600"
+                  }`}
+                />
+                {isSidebarExpanded ? (
+                  <>
+                    <span className="truncate">{item.name}</span>
+                    <span className={`ml-auto text-xs ${active ? "text-white/70" : "text-gray-400"}`}>
+                      {item.nameJa}
+                    </span>
+                  </>
+                ) : (
+                  <span className="sr-only">{item.name}</span>
+                )}
               </Link>
             );
           })}
@@ -144,37 +179,63 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 hover:bg-white/80 transition-colors">
-            {session?.user?.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={session.user.image}
-                alt={session.user.name || ""}
-                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
-              />
-            ) : (
-              <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
-                <span className="text-white font-semibold">
-                  {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
-                </span>
+          {isSidebarExpanded ? (
+            <>
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 hover:bg-white/80 transition-colors">
+                {session?.user?.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name || ""}
+                    className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
+                  />
+                ) : (
+                  <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
+                    <span className="text-white font-semibold">
+                      {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
+                    </span>
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {session?.user?.name || "User"}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
+                </div>
               </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
-                {session?.user?.name || "User"}
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                {session?.user?.email}
-              </p>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="mt-3 w-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-white/60 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <LogoutIcon className="w-4 h-4" />
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-3">
+              {session?.user?.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || ""}
+                  className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
+                />
+              ) : (
+                <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
+                  <span className="text-white font-semibold">
+                    {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
+                  </span>
+                </div>
+              )}
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="w-11 h-11 flex items-center justify-center rounded-2xl text-gray-500 hover:text-gray-700 hover:bg-white/70 transition-all duration-200"
+                title="Sign Out"
+              >
+                <LogoutIcon className="w-5 h-5" />
+              </button>
             </div>
-          </div>
-          <button
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="mt-3 w-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-white/60 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
-          >
-            <LogoutIcon className="w-4 h-4" />
-            Sign Out
-          </button>
+          )}
         </div>
       </aside>
 
@@ -209,9 +270,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                    active
-                      ? "theme-gradient-btn text-white"
-                      : "text-gray-600 hover:bg-white/60"
+                    active ? "theme-gradient-btn text-white" : "text-gray-600 hover:bg-white/60"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -231,7 +290,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       </header>
 
       {/* Main Content */}
-      <main className="lg:pl-72 pt-16 lg:pt-0 min-h-screen relative z-10">
+      <main className={`pt-16 lg:pt-0 min-h-screen relative z-10 ${mainPaddingClass}`}>
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
@@ -250,7 +309,11 @@ function HomeIcon({ className }: { className?: string }) {
 function UsersIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+      />
     </svg>
   );
 }
@@ -258,7 +321,11 @@ function UsersIcon({ className }: { className?: string }) {
 function ChartIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+      />
     </svg>
   );
 }
@@ -266,7 +333,11 @@ function ChartIcon({ className }: { className?: string }) {
 function KeyIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
+      />
     </svg>
   );
 }
@@ -274,7 +345,11 @@ function KeyIcon({ className }: { className?: string }) {
 function BookIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+      />
     </svg>
   );
 }
@@ -298,7 +373,61 @@ function CloseIcon({ className }: { className?: string }) {
 function LogoutIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+      />
+    </svg>
+  );
+}
+
+function SettingsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.757.426 1.757 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.757-2.924 1.757-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.757-.426-1.757-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.065z"
+      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
+}
+
+function RoleplayIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6.75 7.5a4.5 4.5 0 118.57 1.704L21 13.5l-3.281 1.64a4.502 4.502 0 01-8.409 1.86L3 16.5l3.75-2.25V7.5z"
+      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75h.008v.008H9V6.75zM12 6.75h.008v.008H12V6.75z" />
+    </svg>
+  );
+}
+
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.5 4.5l3 3-3.75 3.75.75 3-2.25 2.25-3-6-4.5 4.5-1.5-1.5 4.5-4.5-6-3 2.25-2.25 3 .75L16.5 4.5z"
+      />
+    </svg>
+  );
+}
+
+function UnpinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M7.5 6.75l10.5 10.5M15 6l.75-2.25L18 3l3 3-1.5 2.25L17.25 9M7.5 13.5L4.5 21l7.5-3-3-4.5 4.5-4.5"
+      />
     </svg>
   );
 }

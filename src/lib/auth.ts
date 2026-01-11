@@ -4,12 +4,42 @@ import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { createServerClient } from './supabase';
 
+const useSecureCookies = process.env.NODE_ENV === 'production';
+const cookiePrefix = useSecureCookies ? '__Secure-' : '';
+
+function getCookieDomain() {
+  if (process.env.AUTH_COOKIE_DOMAIN) {
+    return process.env.AUTH_COOKIE_DOMAIN;
+  }
+
+  const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
+  if (!url) return undefined;
+
+  try {
+    const hostname = new URL(url).hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
+    return hostname.startsWith('.') ? hostname : `.${hostname}`;
+  } catch {
+    return undefined;
+  }
+}
+
+const cookieDomain = getCookieDomain();
+
+const sharedCookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax' as const,
+  path: '/',
+  secure: useSecureCookies,
+  ...(cookieDomain ? { domain: cookieDomain } : {}),
+};
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     // GitHub OAuth
     GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID || process.env.GITHUB_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_SECRET || '',
     }),
     // Google OAuth
     Google({
@@ -91,6 +121,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: '/login',
     error: '/login',
+  },
+  trustHost: true,
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}authjs.session-token`,
+      options: sharedCookieOptions,
+    },
+    callbackUrl: {
+      name: `${cookiePrefix}authjs.callback-url`,
+      options: sharedCookieOptions,
+    },
+    pkceCodeVerifier: {
+      name: `${cookiePrefix}authjs.pkce.code_verifier`,
+      options: { ...sharedCookieOptions, maxAge: 60 * 15 },
+    },
+    state: {
+      name: `${cookiePrefix}authjs.state`,
+      options: { ...sharedCookieOptions, maxAge: 60 * 15 },
+    },
+    nonce: {
+      name: `${cookiePrefix}authjs.nonce`,
+      options: sharedCookieOptions,
+    },
+    webauthnChallenge: {
+      name: `${cookiePrefix}authjs.challenge`,
+      options: { ...sharedCookieOptions, maxAge: 60 * 15 },
+    },
   },
   session: {
     strategy: 'jwt',
