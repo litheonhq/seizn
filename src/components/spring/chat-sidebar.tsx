@@ -82,7 +82,7 @@ export function ChatSidebar({
           </div>
 
           {/* Actions */}
-          <div className="px-3 pt-3 pb-2 space-y-2 border-b border-gray-100">
+          <div className="px-3 pt-3 pb-2 border-b border-gray-100">
             <button
               onClick={onNewChat}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm hover:shadow-md transition-all ${
@@ -93,16 +93,6 @@ export function ChatSidebar({
               <PlusIcon className="w-5 h-5" />
               {isOpen && <span className="font-medium">새 대화</span>}
             </button>
-            <Link
-              href="/dashboard/roleplay"
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-pink-100 text-pink-600 hover:bg-pink-50 transition-colors ${
-                isOpen ? "" : "justify-center"
-              }`}
-              title="Roleplay Hub"
-            >
-              <ChatBubbleIcon className="w-5 h-5" />
-              {isOpen && <span className="font-medium">Roleplay Hub</span>}
-            </Link>
           </div>
 
           {/* Quota Display */}

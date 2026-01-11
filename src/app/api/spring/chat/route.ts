@@ -141,7 +141,8 @@ export async function POST(request: NextRequest) {
         systemPrompt,
         injectedMemories,
         userMessage.id,
-        fallbackOccurred ? { occurred: true, message: fallbackMessage, originalModel: model } : undefined
+        fallbackOccurred ? { occurred: true, message: fallbackMessage, originalModel: model } : undefined,
+        request.signal
       );
     }
 
@@ -209,7 +210,8 @@ async function streamResponse(
   systemPrompt: string | undefined,
   injectedMemories: Array<{ id: string; content: string; similarity: number }>,
   _userMessageId: string,
-  fallback?: { occurred: boolean; message?: string; originalModel?: string }
+  fallback?: { occurred: boolean; message?: string; originalModel?: string },
+  signal?: AbortSignal
 ) {
   const encoder = new TextEncoder();
   const startTime = Date.now();
@@ -220,7 +222,34 @@ async function streamResponse(
 
   const stream = new ReadableStream({
     async start(controller) {
+      let keepAlive: ReturnType<typeof setInterval> | undefined;
+      const sendPing = () => {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'ping' })}\n\n`));
+      };
+
+      const handleAbort = () => {
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({
+              type: 'error',
+              error: 'Request aborted by client',
+            })}\n\n`
+          )
+        );
+        controller.close();
+      };
+
       try {
+        if (signal) {
+          if (signal.aborted) {
+            handleAbort();
+            return;
+          }
+          signal.addEventListener('abort', handleAbort);
+        }
+
+        keepAlive = setInterval(sendPing, 15000);
+
         // Send initial event with conversation info
         controller.enqueue(
           encoder.encode(
@@ -296,19 +325,22 @@ async function streamResponse(
         );
 
         controller.close();
-    } catch (error) {
-      console.error('Stream error:', error);
-      controller.enqueue(
-        encoder.encode(
-          `data: ${JSON.stringify({
-            type: 'error',
-            error: 'Stream failed',
-            detail: error instanceof Error ? error.message : 'Unknown error',
-          })}\n\n`
-        )
-      );
-      controller.close();
-    }
+      } catch (error) {
+        console.error('Stream error:', error);
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({
+              type: 'error',
+              error: 'Stream failed',
+              detail: error instanceof Error ? error.message : 'Unknown error',
+            })}\n\n`
+          )
+        );
+        controller.close();
+      } finally {
+        if (keepAlive) clearInterval(keepAlive);
+        if (signal) signal.removeEventListener('abort', handleAbort);
+      }
     },
   });
 

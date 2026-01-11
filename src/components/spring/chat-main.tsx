@@ -84,9 +84,9 @@ export function ChatMain({
   }, [locale]);
 
   return (
-    <main className={`min-h-screen flex flex-col bg-white transition-[padding] duration-300 ${mainPadding}`}>
+    <main className={`min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white transition-[padding] duration-300 ${mainPadding}`}>
       {/* Header */}
-      <header className="h-14 border-b border-gray-100 flex items-center justify-between px-4">
+      <header className="h-14 border-b border-gray-100/80 bg-white/80 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-10">
         <div className="flex items-center gap-3">
           {!isSidebarOpen && (
             <button
@@ -117,10 +117,10 @@ export function ChatMain({
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-gray-100 p-4">
-        <div className="max-w-4xl mx-auto space-y-3">
+      <div className="border-t border-gray-200/60 bg-white/80 backdrop-blur-sm p-4 md:p-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <ModelSelector
                 selectedModel={selectedModel}
                 onSelect={setSelectedModel}
@@ -187,43 +187,64 @@ function WelcomeScreen({
 }) {
   const suggestions = useMemo(() => {
     if (locale === "ko") {
-      return ["이메일 초안 작성 도와줘", "양자컴퓨팅을 쉽게 설명해줘", "주간 식단을 만들어줘", "이 코드 디버그해줘"];
+      return [
+        { text: "이메일 초안 작성 도와줘", icon: "✉️" },
+        { text: "양자컴퓨팅을 쉽게 설명해줘", icon: "🔬" },
+        { text: "주간 식단을 만들어줘", icon: "🍽️" },
+        { text: "이 코드 디버그해줘", icon: "🐛" },
+      ];
     }
     if (locale === "ja") {
-      return ["メール文面を作成して", "量子コンピュータをやさしく説明して", "1週間の食事プランを作って", "このコードをデバッグして"];
+      return [
+        { text: "メール文面を作成して", icon: "✉️" },
+        { text: "量子コンピュータをやさしく説明して", icon: "🔬" },
+        { text: "1週間の食事プランを作って", icon: "🍽️" },
+        { text: "このコードをデバッグして", icon: "🐛" },
+      ];
     }
     return [
-      "Help me write a professional email",
-      "Explain quantum computing simply",
-      "Create a weekly meal plan",
-      "Debug this code for me",
+      { text: "Help me write a professional email", icon: "✉️" },
+      { text: "Explain quantum computing simply", icon: "🔬" },
+      { text: "Create a weekly meal plan", icon: "🍽️" },
+      { text: "Debug this code for me", icon: "🐛" },
     ];
   }, [locale]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 py-8">
-      <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-        <span className="text-white text-2xl font-bold">S</span>
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)] px-6 py-12">
+      {/* Logo */}
+      <div className="relative mb-8">
+        <div className="w-20 h-20 bg-gradient-to-br from-pink-400 via-rose-500 to-pink-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-pink-500/30">
+          <span className="text-white text-3xl font-bold">S</span>
+        </div>
+        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-4 border-white shadow-sm" />
       </div>
 
-      <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+      {/* Title */}
+      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">
         {copy.title}
       </h2>
-      <p className="text-gray-500 text-center max-w-md mb-8">
+      <p className="text-gray-500 text-center max-w-lg mb-10 text-lg">
         {copy.subtitle}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
+      {/* Suggestion Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
         {suggestions.map((suggestion, i) => (
           <button
             key={i}
-            onClick={() => onSuggestionClick(suggestion)}
-            className="text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
+            onClick={() => onSuggestionClick(suggestion.text)}
+            className="group relative text-left p-5 bg-white hover:bg-gray-50 rounded-2xl border border-gray-200 hover:border-pink-300 shadow-sm hover:shadow-md transition-all duration-200"
           >
-            <p className="text-sm text-gray-700 group-hover:text-gray-900">
-              {suggestion}
-            </p>
-            <ArrowIcon className="w-4 h-4 text-gray-400 group-hover:text-pink-500 mt-2 transition-colors" />
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">{suggestion.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-gray-800 font-medium group-hover:text-pink-600 transition-colors">
+                  {suggestion.text}
+                </p>
+              </div>
+              <ArrowIcon className="w-5 h-5 text-gray-300 group-hover:text-pink-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
+            </div>
           </button>
         ))}
       </div>
