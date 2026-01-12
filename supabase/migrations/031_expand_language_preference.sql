@@ -1,11 +1,14 @@
--- Expand language preference to support all 18 locales
--- Previously only supported: en, ko, ja
--- Now supports: en, ko, ja, zh-hans, zh-hant, es, ru, uk, he, ar, fr, de, sv, nl, vi, pl, pt-BR, pt-PT
+-- Add language column to profiles with support for all 18 locales
+-- This replaces the original migration 014 which only supported en/ko/ja
 
--- Drop existing constraint
+-- Add language column if not exists
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS language TEXT DEFAULT 'en';
+
+-- Drop old constraint if exists (from migration 014)
 ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_language_check;
 
--- Add new constraint with all supported languages
+-- Add new constraint with all 18 supported languages
 ALTER TABLE profiles
 ADD CONSTRAINT profiles_language_check
 CHECK (language IN (
