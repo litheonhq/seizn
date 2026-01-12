@@ -113,9 +113,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {/* Logo */}
         <div className="p-4 border-b theme-border">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 theme-gradient-btn rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-10 h-10 rounded-2xl shadow-lg" />
             {isSidebarExpanded && (
               <div className="flex-1 min-w-0">
                 <span className="text-xl font-bold text-gray-900 block truncate">
@@ -148,8 +147,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 key={item.name}
                 href={item.href}
                 title={item.name}
-                className={`group flex items-center rounded-2xl text-sm font-medium transition-all duration-300 ${
-                  isSidebarExpanded ? "gap-3 px-4 py-3.5" : "justify-center p-3"
+                className={`group flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 ${
+                  isSidebarExpanded ? "gap-3 px-4 py-3" : "justify-center p-3"
                 } ${
                   active
                     ? "theme-gradient-btn text-white shadow-lg theme-shadow"
@@ -242,9 +241,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <header className="lg:hidden fixed top-0 inset-x-0 z-40 glass-card border-b theme-border">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 theme-gradient-btn rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold">S</span>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 rounded-xl" />
             <span className="text-lg font-bold text-gray-900">Seizn</span>
           </Link>
           <div className="flex items-center gap-2">

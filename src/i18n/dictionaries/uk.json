@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - Інфраструктура пам'яті ШІ",
+    "description": "Дайте вашому ШІ тривалу пам'ять. Seizn автоматично зберігає та витягує контекст, щоб ваш ШІ пам'ятав минулі розмови."
+  },
+  "nav": {
+    "features": "Функції",
+    "pricing": "Ціни",
+    "docs": "Документація",
+    "login": "Увійти",
+    "getStarted": "Почати"
+  },
+  "hero": {
+    "badge": "Запуск Q1 2026",
+    "title": "Інфраструктура пам'яті",
+    "titleHighlight": "для ШІ-застосунків",
+    "subtitle": "Дайте вашому ШІ тривалу пам'ять. Seizn автоматично зберігає та витягує контекст, щоб ваш ШІ пам'ятав минулі розмови.",
+    "emailPlaceholder": "Введіть email",
+    "joinWaitlist": "До списку очікування",
+    "joining": "Приєднуємось...",
+    "onTheList": "Ви у списку!",
+    "stats": {
+      "tokenSavings": "Економія токенів",
+      "retrievalTime": "Час витягування",
+      "uptimeSla": "SLA доступності"
+    }
+  },
+  "features": {
+    "title": "Створено для розробників",
+    "subtitle": "Прості API, потужна інфраструктура. Додайте постійну пам'ять будь-якому ШІ за хвилини.",
+    "smartExtraction": {
+      "title": "Розумне витягування",
+      "description": "Автоматично витягує ключові факти, вподобання та контекст з розмов за допомогою Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Миттєве витягування",
+      "description": "Гібридний векторно-графовий пошук повертає релевантні спогади за мілісекунди."
+    },
+    "enterpriseSecurity": {
+      "title": "Корпоративна безпека",
+      "description": "Наскрізне шифрування, відповідність SOC 2, гранулярний контроль доступу та журнали аудиту."
+    }
+  },
+  "codePreview": {
+    "title": "Проста інтеграція",
+    "subtitle": "Додайте пам'ять вашому ШІ лише в кілька рядків коду."
+  },
+  "pricing": {
+    "title": "Прості та прозорі ціни",
+    "subtitle": "Почніть безкоштовно, масштабуйтесь у міру росту.",
+    "free": {
+      "name": "Безкоштовно",
+      "price": "$0",
+      "period": "Назавжди безкоштовно",
+      "features": [
+        "10,000 спогадів",
+        "1,000 API-викликів/міс",
+        "Підтримка спільноти"
+      ],
+      "cta": "Почати"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "на місяць",
+      "features": [
+        "50,000 спогадів",
+        "10,000 API-викликів/міс",
+        "Підтримка email",
+        "Базова аналітика"
+      ],
+      "cta": "Підписатись"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "на місяць",
+      "badge": "Популярний",
+      "features": [
+        "200,000 спогадів",
+        "50,000 API-викликів/міс",
+        "Пріоритетна підтримка",
+        "Розширена аналітика",
+        "Webhooks"
+      ],
+      "cta": "Підписатись"
+    },
+    "enterprise": {
+      "name": "Корпоративний",
+      "price": "За запитом",
+      "period": "Зв'яжіться з нами",
+      "features": [
+        "Безлімітні спогади",
+        "Безлімітні API-виклики",
+        "Виділена підтримка",
+        "Індивідуальний SLA",
+        "On-premise опція"
+      ],
+      "cta": "Зв'язатися з відділом продажів"
+    }
+  },
+  "enterprisePage": {
+    "title": "Зв'язатися з відділом продажів",
+    "subtitle": "Отримайте індивідуальний план для корпоративних потреб з виділеною підтримкою, гарантіями SLA та індивідуальними інтеграціями.",
+    "includes": "Корпоративний план включає:",
+    "includesList": [
+      "SLA 99.9% доступності",
+      "Пріоритетна підтримка (24год)",
+      "Виділений менеджер",
+      "Індивідуальні інтеграції",
+      "SSO / SAML автентифікація",
+      "Політика зберігання даних",
+      "Звіти аудиту безпеки",
+      "Індивідуальні контракти"
+    ],
+    "form": {
+      "companyName": "Назва компанії",
+      "yourName": "Ваше ім'я",
+      "workEmail": "Робочий email",
+      "phone": "Телефон",
+      "jobTitle": "Посада",
+      "companySize": "Розмір компанії",
+      "useCase": "Розкажіть про ваш випадок використання",
+      "useCasePlaceholder": "Що ви створюєте? Як використовуватимете Seizn?",
+      "expectedVolume": "Очікувана кількість API-викликів на місяць",
+      "timeline": "Терміни",
+      "requirements": "Специфічні вимоги",
+      "requirementsPlaceholder": "SSO, конкретний SLA, резидентність даних, вимоги відповідності тощо.",
+      "submit": "Зв'язатися з відділом продажів",
+      "submitting": "Надсилання...",
+      "privacyNote": "Надсилаючи цю форму, ви погоджуєтесь з нашою"
+    },
+    "companySizes": {
+      "select": "Виберіть...",
+      "1-10": "1-10 співробітників",
+      "11-50": "11-50 співробітників",
+      "51-200": "51-200 співробітників",
+      "201-500": "201-500 співробітників",
+      "500+": "500+ співробітників"
+    },
+    "volumes": {
+      "select": "Виберіть...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Виберіть...",
+      "immediate": "Готові почати зараз",
+      "1-3months": "1-3 місяці",
+      "3-6months": "3-6 місяців",
+      "6+months": "6+ місяців"
+    },
+    "success": {
+      "title": "Дякуємо!",
+      "message": "Ми отримали ваш запит. Наша команда зв'яжеться з вами протягом 1-2 робочих днів.",
+      "backHome": "На головну"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "З поверненням",
+      "subtitle": "Увійдіть до акаунту",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Увійти",
+      "noAccount": "Немає акаунту?",
+      "signUp": "Зареєструватися",
+      "or": "або продовжити з"
+    },
+    "signup": {
+      "title": "Створити акаунт",
+      "subtitle": "Почніть працювати з Seizn",
+      "name": "Повне ім'я",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Створити акаунт",
+      "hasAccount": "Вже є акаунт?",
+      "signIn": "Увійти",
+      "or": "або продовжити з"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Усі права захищені.",
+    "privacy": "Конфіденційність",
+    "terms": "Умови",
+    "contact": "Контакти"
+  },
+  "dashboard": {
+    "title": "Панель керування",
+    "welcome": "З поверненням",
+    "overview": "Огляд",
+    "usage": "Використання",
+    "apiKeys": "API-ключі",
+    "settings": "Налаштування",
+    "signOut": "Вийти",
+    "stats": {
+      "memories": "Спогади",
+      "apiCalls": "API-викликів сьогодні",
+      "plan": "Поточний план",
+      "unlimited": "Безліміт"
+    },
+    "keys": {
+      "title": "Ваші API-ключі",
+      "create": "Створити новий ключ",
+      "name": "Назва ключа",
+      "namePlaceholder": "Мій API-ключ",
+      "created": "Створено",
+      "lastUsed": "Останнє використання",
+      "never": "Ніколи",
+      "copy": "Копіювати",
+      "copied": "Скопійовано!",
+      "delete": "Видалити",
+      "deleteConfirm": "Ви впевнені, що хочете видалити цей API-ключ?",
+      "warning": "Збережіть цей ключ у надійному місці. Він більше не буде показаний.",
+      "noKeys": "Поки немає API-ключів. Створіть один, щоб почати."
+    },
+    "usagePage": {
+      "title": "Статистика використання",
+      "period": "Поточний період",
+      "memoriesUsed": "Використано спогадів",
+      "apiCallsUsed": "Використано API-викликів",
+      "remaining": "Залишилось",
+      "upgrade": "Покращити план"
+    },
+    "language": "Мова"
+  },
+  "pricingPage": {
+    "title": "Ціни",
+    "subtitle": "Прості та прозорі ціни. Почніть безкоштовно, масштабуйтесь у міру росту.",
+    "faq": {
+      "title": "Часті запитання",
+      "subtitle": "Все, що потрібно знати про Seizn",
+      "questions": [
+        {
+          "q": "Що таке пам'ять ШІ і чим вона відрізняється від RAG?",
+          "a": "Пам'ять ШІ — це постійне сховище, яке запам'ятовує вподобання користувача, факти та контекст між сесіями. На відміну від RAG, який витягує статичні документи, Seizn динамічно витягує та оновлює спогади з розмов, створюючи живу базу знань."
+        },
+        {
+          "q": "Де зберігаються мої дані?",
+          "a": "Усі дані зберігаються на захищених серверах у США (AWS) з наскрізним шифруванням. Ми відповідаємо GDPR і CCPA. Ви можете запросити повне видалення даних у будь-який час."
+        },
+        {
+          "q": "Як почати?",
+          "a": "1) Зареєструйтесь безкоштовно, 2) Створіть API-ключ, 3) Встановіть SDK (npm install @seizn/sdk), 4) Додайте спогади 3 рядками коду."
+        },
+        {
+          "q": "Що відбувається при перевищенні лімітів плану?",
+          "a": "Ми повідомимо вас на 80%. При перевищенні API-виклики продовжують працювати зі зниженим пріоритетом. Оновіть план у будь-який момент для миттєвого збільшення ліміту."
+        },
+        {
+          "q": "Чи можна видалити конкретні спогади?",
+          "a": "Так. Видаляйте окремі спогади, масово за тегами або очистіть все. Видалені дані видаляються протягом 24 годин."
+        },
+        {
+          "q": "Які моделі ШІ підтримуються?",
+          "a": "Будь-яка модель: GPT-4, Claude, Gemini, Llama. SDK для JS/TS, Python, REST API. Працює з LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Чи є безкоштовний пробний період?",
+          "a": "Безкоштовний план постійний: 10,000 спогадів, 1,000 API-викликів/місяць. Без кредитної картки."
+        },
+        {
+          "q": "Наскільки швидке витягування?",
+          "a": "В середньому менше 50мс. Гібридний векторно-графовий пошук з оптимізованими індексами."
+        }
+      ],
+      "stillQuestions": "Залишились запитання?",
+      "contactUs": "Зв'яжіться з нами"
+    }
+  },
+  "serviceSelector": {
+    "title": "Оберіть свій досвід",
+    "subtitle": "Два способи використати силу пам'яті ШІ",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Мульти-ШІ чат",
+      "description": "Спілкуйтесь з GPT-4, Claude, Gemini та іншими — усі з постійною пам'яттю, яка пам'ятає вас.",
+      "features": [
+        "Доступ до всіх основних моделей ШІ в одному місці",
+        "Ваші вподобання запам'ятовуються між сесіями",
+        "Безшовне перемикання контексту між моделями"
+      ],
+      "cta": "Спробувати Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API пам'яті",
+      "description": "Дайте вашим ШІ-застосункам постійну пам'ять з нашим API, орієнтованим на розробників.",
+      "features": [
+        "Простий REST API і SDK",
+        "Час витягування менше 50мс",
+        "Безпека корпоративного рівня"
+      ],
+      "cta": "Дослідити API",
+      "badge": "Доступно зараз"
+    },
+    "footer": "Частина сезонів Seizn — пам'ять ШІ для будь-яких потреб"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Один чат.",
+    "titleHighlight": "Усі ШІ.",
+    "subtitle": "Який би ви не обрали,\nусі вони пам'ятають вас.",
+    "startChatting": "Почати спілкування",
+    "viewPricing": "Переглянути ціни",
+    "features": {
+      "title": "Чому Spring?",
+      "subtitle": "Найкраще від кожного ШІ, об'єднане.",
+      "multiModel": {
+        "title": "Мульти-модельний доступ",
+        "description": "Перемикайтесь між GPT-4, Claude, Gemini, Llama та іншими. Обирайте найкращу модель для кожного завдання."
+      },
+      "persistentMemory": {
+        "title": "Постійна пам'ять",
+        "description": "Ваші вподобання, контекст та історія зберігаються в кожній розмові та кожній моделі."
+      },
+      "freeGenerosity": {
+        "title": "Безкоштовний план рівня Cursor",
+        "description": "Щедре безкоштовне використання. Більшості користувачів не потрібно платити. Pro за $9.99/місяць для просунутих користувачів."
+      }
+    },
+    "pricing": {
+      "title": "Прості ціни",
+      "free": {
+        "name": "Безкоштовно",
+        "price": "$0",
+        "period": "Назавжди",
+        "features": [
+          "Усі моделі ШІ",
+          "Пам'ять між сесіями",
+          "Веб і мобільні застосунки"
+        ],
+        "cta": "Почати безкоштовно"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "на місяць",
+        "badge": "Найкраща ціна",
+        "features": [
+          "Все з безкоштовного",
+          "Пріоритетний доступ",
+          "Розширене керування пам'яттю",
+          "Доступ до API"
+        ],
+        "cta": "Перейти на Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

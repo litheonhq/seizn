@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - תשתית זיכרון AI",
+    "description": "תנו ל-AI שלכם זיכרון מתמשך. Seizn שומר ומאחזר הקשר באופן אוטומטי, כך שה-AI שלכם זוכר שיחות קודמות."
+  },
+  "nav": {
+    "features": "תכונות",
+    "pricing": "מחירים",
+    "docs": "תיעוד",
+    "login": "התחברות",
+    "getStarted": "התחל"
+  },
+  "hero": {
+    "badge": "זמין Q1 2026",
+    "title": "תשתית זיכרון",
+    "titleHighlight": "ליישומי AI",
+    "subtitle": "תנו ל-AI שלכם זיכרון מתמשך. Seizn שומר ומאחזר הקשר באופן אוטומטי, כך שה-AI שלכם זוכר שיחות קודמות.",
+    "emailPlaceholder": "הזן את המייל שלך",
+    "joinWaitlist": "הצטרף לרשימת ההמתנה",
+    "joining": "מצטרף...",
+    "onTheList": "אתה ברשימה!",
+    "stats": {
+      "tokenSavings": "חיסכון בטוקנים",
+      "retrievalTime": "זמן אחזור",
+      "uptimeSla": "SLA זמינות"
+    }
+  },
+  "features": {
+    "title": "נבנה למפתחים",
+    "subtitle": "APIs פשוטים, תשתית עוצמתית. הוסיפו זיכרון מתמשך לכל AI תוך דקות.",
+    "smartExtraction": {
+      "title": "חילוץ חכם",
+      "description": "מחלץ באופן אוטומטי עובדות מפתח, העדפות והקשר משיחות באמצעות Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "אחזור מיידי",
+      "description": "חיפוש היברידי וקטור + גרף מחזיר זיכרונות רלוונטיים באלפיות שנייה."
+    },
+    "enterpriseSecurity": {
+      "title": "אבטחה ארגונית",
+      "description": "הצפנה מקצה לקצה, תואם SOC 2, עם בקרות גישה מדויקות ויומני ביקורת."
+    }
+  },
+  "codePreview": {
+    "title": "אינטגרציה פשוטה",
+    "subtitle": "הוסיפו זיכרון ל-AI שלכם בכמה שורות קוד בלבד."
+  },
+  "pricing": {
+    "title": "תמחור פשוט ושקוף",
+    "subtitle": "התחילו בחינם, התרחבו לפי הצורך.",
+    "free": {
+      "name": "חינם",
+      "price": "$0",
+      "period": "חינם לנצח",
+      "features": [
+        "10,000 זיכרונות",
+        "1,000 קריאות API/חודש",
+        "תמיכה קהילתית"
+      ],
+      "cta": "התחל"
+    },
+    "plus": {
+      "name": "פלוס",
+      "price": "$9",
+      "period": "לחודש",
+      "features": [
+        "50,000 זיכרונות",
+        "10,000 קריאות API/חודש",
+        "תמיכה במייל",
+        "אנליטיקס בסיסי"
+      ],
+      "cta": "הירשם"
+    },
+    "pro": {
+      "name": "פרו",
+      "price": "$29",
+      "period": "לחודש",
+      "badge": "פופולרי",
+      "features": [
+        "200,000 זיכרונות",
+        "50,000 קריאות API/חודש",
+        "תמיכה עדיפה",
+        "אנליטיקס מתקדם",
+        "Webhooks"
+      ],
+      "cta": "הירשם"
+    },
+    "enterprise": {
+      "name": "ארגוני",
+      "price": "מותאם אישית",
+      "period": "צור קשר",
+      "features": [
+        "זיכרונות ללא הגבלה",
+        "קריאות API ללא הגבלה",
+        "תמיכה ייעודית",
+        "SLA מותאם אישית",
+        "אפשרות On-premise"
+      ],
+      "cta": "צור קשר עם מכירות"
+    }
+  },
+  "enterprisePage": {
+    "title": "צור קשר עם מכירות",
+    "subtitle": "קבלו תוכנית מותאמת אישית לצרכים הארגוניים שלכם עם תמיכה ייעודית, ערבויות SLA ואינטגרציות מותאמות.",
+    "includes": "הארגוני כולל:",
+    "includesList": [
+      "SLA זמינות 99.9%",
+      "תמיכה עדיפה (24 שעות)",
+      "מנהל חשבון ייעודי",
+      "אינטגרציות מותאמות",
+      "אימות SSO / SAML",
+      "מדיניות שמירת נתונים",
+      "דוחות ביקורת אבטחה",
+      "חוזים מותאמים"
+    ],
+    "form": {
+      "companyName": "שם החברה",
+      "yourName": "שמך",
+      "workEmail": "מייל עבודה",
+      "phone": "טלפון",
+      "jobTitle": "תפקיד",
+      "companySize": "גודל החברה",
+      "useCase": "ספר לנו על השימוש שלך",
+      "useCasePlaceholder": "מה אתה בונה? איך תשתמש ב-Seizn?",
+      "expectedVolume": "קריאות API חודשיות צפויות",
+      "timeline": "ציר זמן",
+      "requirements": "דרישות ספציפיות",
+      "requirementsPlaceholder": "SSO, SLA ספציפי, מיקום נתונים, דרישות תאימות וכו'.",
+      "submit": "צור קשר עם מכירות",
+      "submitting": "שולח...",
+      "privacyNote": "בשליחת טופס זה, אתה מסכים ל"
+    },
+    "companySizes": {
+      "select": "בחר...",
+      "1-10": "1-10 עובדים",
+      "11-50": "11-50 עובדים",
+      "51-200": "51-200 עובדים",
+      "201-500": "201-500 עובדים",
+      "500+": "500+ עובדים"
+    },
+    "volumes": {
+      "select": "בחר...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "בחר...",
+      "immediate": "מוכן להתחיל עכשיו",
+      "1-3months": "1-3 חודשים",
+      "3-6months": "3-6 חודשים",
+      "6+months": "6+ חודשים"
+    },
+    "success": {
+      "title": "תודה!",
+      "message": "קיבלנו את הפנייה שלך. הצוות שלנו יצור איתך קשר תוך 1-2 ימי עסקים.",
+      "backHome": "חזרה לדף הבית"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "ברוך שובך",
+      "subtitle": "התחבר לחשבון שלך",
+      "email": "מייל",
+      "password": "סיסמה",
+      "submit": "התחבר",
+      "noAccount": "אין לך חשבון?",
+      "signUp": "הירשם",
+      "or": "או המשך עם"
+    },
+    "signup": {
+      "title": "צור חשבון",
+      "subtitle": "התחל לבנות עם Seizn",
+      "name": "שם מלא",
+      "email": "מייל",
+      "password": "סיסמה",
+      "submit": "צור חשבון",
+      "hasAccount": "כבר יש לך חשבון?",
+      "signIn": "התחבר",
+      "or": "או המשך עם"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. כל הזכויות שמורות.",
+    "privacy": "פרטיות",
+    "terms": "תנאים",
+    "contact": "צור קשר"
+  },
+  "dashboard": {
+    "title": "לוח בקרה",
+    "welcome": "ברוך שובך",
+    "overview": "סקירה",
+    "usage": "שימוש",
+    "apiKeys": "מפתחות API",
+    "settings": "הגדרות",
+    "signOut": "התנתק",
+    "stats": {
+      "memories": "זיכרונות",
+      "apiCalls": "קריאות API היום",
+      "plan": "תוכנית נוכחית",
+      "unlimited": "ללא הגבלה"
+    },
+    "keys": {
+      "title": "מפתחות ה-API שלך",
+      "create": "צור מפתח חדש",
+      "name": "שם המפתח",
+      "namePlaceholder": "מפתח ה-API שלי",
+      "created": "נוצר",
+      "lastUsed": "שימוש אחרון",
+      "never": "מעולם לא",
+      "copy": "העתק",
+      "copied": "הועתק!",
+      "delete": "מחק",
+      "deleteConfirm": "האם אתה בטוח שברצונך למחוק מפתח API זה?",
+      "warning": "שמור מפתח זה בצורה מאובטחת. הוא לא יוצג שוב.",
+      "noKeys": "אין מפתחות API עדיין. צור אחד כדי להתחיל."
+    },
+    "usagePage": {
+      "title": "סטטיסטיקות שימוש",
+      "period": "תקופה נוכחית",
+      "memoriesUsed": "זיכרונות בשימוש",
+      "apiCallsUsed": "קריאות API בשימוש",
+      "remaining": "נותר",
+      "upgrade": "שדרג תוכנית"
+    },
+    "language": "שפה"
+  },
+  "pricingPage": {
+    "title": "מחירים",
+    "subtitle": "תמחור פשוט ושקוף. התחילו בחינם, התרחבו לפי הצורך.",
+    "faq": {
+      "title": "שאלות נפוצות",
+      "subtitle": "כל מה שאתם צריכים לדעת על Seizn",
+      "questions": [
+        {
+          "q": "מהו זיכרון AI ובמה הוא שונה מ-RAG?",
+          "a": "זיכרון AI הוא אחסון מתמשך שזוכר העדפות משתמש, עובדות והקשר בין סשנים. בניגוד ל-RAG שמאחזר מסמכים סטטיים, Seizn מחלץ ומעדכן זיכרונות באופן דינמי משיחות, ויוצר בסיס ידע חי."
+        },
+        {
+          "q": "איפה הנתונים שלי מאוחסנים?",
+          "a": "כל הנתונים מאוחסנים בשרתים מאובטחים בארה\"ב (AWS) עם הצפנה מקצה לקצה. אנו עומדים ב-GDPR ו-CCPA. תוכלו לבקש מחיקת נתונים מלאה בכל עת."
+        },
+        {
+          "q": "איך מתחילים?",
+          "a": "1) הירשמו בחינם, 2) צרו מפתח API, 3) התקינו SDK (npm install @seizn/sdk), 4) הוסיפו זיכרונות ב-3 שורות קוד."
+        },
+        {
+          "q": "מה קורה אם אני חורג ממגבלות התוכנית?",
+          "a": "נודיע לכם ב-80%. אם תחרגו, קריאות API ימשיכו בעדיפות מופחתת. שדרגו בכל עת להגדלת מגבלה מיידית."
+        },
+        {
+          "q": "האם אני יכול למחוק זיכרונות ספציפיים?",
+          "a": "כן. מחקו זיכרונות בודדים, מחיקה המונית לפי תגיות, או נקו הכל. נתונים שנמחקו מוסרים תוך 24 שעות."
+        },
+        {
+          "q": "אילו מודלי AI נתמכים?",
+          "a": "כל מודל: GPT-4, Claude, Gemini, Llama. SDKs ל-JS/TS, Python, REST API. עובד עם LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "האם יש תקופת ניסיון חינם?",
+          "a": "התוכנית החינמית היא קבועה: 10,000 זיכרונות, 1,000 קריאות API/חודש. לא נדרש כרטיס אשראי."
+        },
+        {
+          "q": "כמה מהיר האחזור?",
+          "a": "מתחת ל-50ms בממוצע. חיפוש היברידי וקטור + גרף עם אינדקסים מותאמים."
+        }
+      ],
+      "stillQuestions": "עדיין יש שאלות?",
+      "contactUs": "צרו איתנו קשר ב"
+    }
+  },
+  "serviceSelector": {
+    "title": "בחר את החוויה שלך",
+    "subtitle": "שתי דרכים לרתום את כוח זיכרון ה-AI",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "צ'אט רב-AI",
+      "description": "שוחח עם GPT-4, Claude, Gemini ועוד — כולם עם זיכרון מתמשך שזוכר אותך.",
+      "features": [
+        "גישה לכל מודלי ה-AI המובילים במקום אחד",
+        "ההעדפות שלך נזכרות בין סשנים",
+        "החלפת הקשר חלקה בין מודלים"
+      ],
+      "cta": "נסה את Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API זיכרון",
+      "description": "תנו ליישומי ה-AI שלכם זיכרון מתמשך עם ה-API הידידותי למפתחים שלנו.",
+      "features": [
+        "REST API ו-SDKs פשוטים",
+        "זמן אחזור מתחת ל-50ms",
+        "אבטחה ברמה ארגונית"
+      ],
+      "cta": "חקור את ה-API",
+      "badge": "זמין עכשיו"
+    },
+    "footer": "חלק מעונות Seizn — זיכרון AI לכל צורך"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "צ'אט אחד.",
+    "titleHighlight": "כל ה-AI.",
+    "subtitle": "לא משנה איזה תבחר,\nכולם זוכרים אותך.",
+    "startChatting": "התחל לשוחח",
+    "viewPricing": "צפה במחירים",
+    "features": {
+      "title": "למה Spring?",
+      "subtitle": "הטוב ביותר מכל AI, מאוחד.",
+      "multiModel": {
+        "title": "גישה רב-מודלית",
+        "description": "עבור בין GPT-4, Claude, Gemini, Llama ועוד. בחר את המודל הטוב ביותר לכל משימה."
+      },
+      "persistentMemory": {
+        "title": "זיכרון מתמשך",
+        "description": "ההעדפות, ההקשר וההיסטוריה שלך נשמרים בכל שיחה ובכל מודל."
+      },
+      "freeGenerosity": {
+        "title": "שכבה חינמית ברמת Cursor",
+        "description": "שימוש חינמי נדיב. רוב המשתמשים אף פעם לא צריכים לשלם. Pro ב-$9.99/חודש למשתמשי כוח."
+      }
+    },
+    "pricing": {
+      "title": "תמחור פשוט",
+      "free": {
+        "name": "חינם",
+        "price": "$0",
+        "period": "לנצח",
+        "features": [
+          "כל מודלי ה-AI",
+          "זיכרון בין סשנים",
+          "אפליקציות ווב ומובייל"
+        ],
+        "cta": "התחל בחינם"
+      },
+      "pro": {
+        "name": "פרו",
+        "price": "$9.99",
+        "period": "לחודש",
+        "badge": "ערך מיטבי",
+        "features": [
+          "הכל בחינם",
+          "גישה עדיפה",
+          "בקרות זיכרון מתקדמות",
+          "גישת API"
+        ],
+        "cta": "שדרג לפרו"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

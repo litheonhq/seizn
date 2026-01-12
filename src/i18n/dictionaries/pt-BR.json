@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - Infraestrutura de Memória IA",
+    "description": "Dê ao seu AI memória duradoura. O Seizn armazena e recupera contexto automaticamente, para que seu AI lembre conversas anteriores."
+  },
+  "nav": {
+    "features": "Recursos",
+    "pricing": "Preços",
+    "docs": "Documentação",
+    "login": "Entrar",
+    "getStarted": "Começar"
+  },
+  "hero": {
+    "badge": "Disponível Q1 2026",
+    "title": "Infraestrutura de memória",
+    "titleHighlight": "para aplicações IA",
+    "subtitle": "Dê ao seu AI memória duradoura. O Seizn armazena e recupera contexto automaticamente, para que seu AI lembre conversas anteriores.",
+    "emailPlaceholder": "Digite seu email",
+    "joinWaitlist": "Entrar na Lista de Espera",
+    "joining": "Entrando...",
+    "onTheList": "Você está na lista!",
+    "stats": {
+      "tokenSavings": "Economia de Tokens",
+      "retrievalTime": "Tempo de Recuperação",
+      "uptimeSla": "SLA de Disponibilidade"
+    }
+  },
+  "features": {
+    "title": "Feito para desenvolvedores",
+    "subtitle": "APIs simples, infraestrutura poderosa. Adicione memória persistente a qualquer IA em minutos.",
+    "smartExtraction": {
+      "title": "Extração Inteligente",
+      "description": "Extrai automaticamente fatos importantes, preferências e contexto de conversas usando Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Recuperação Instantânea",
+      "description": "Busca híbrida vetor + grafo retorna memórias relevantes em milissegundos."
+    },
+    "enterpriseSecurity": {
+      "title": "Segurança Empresarial",
+      "description": "Criptografia ponta a ponta, compatível com SOC 2, com controles de acesso granulares e logs de auditoria."
+    }
+  },
+  "codePreview": {
+    "title": "Integração simples",
+    "subtitle": "Adicione memória ao seu AI em apenas algumas linhas de código."
+  },
+  "pricing": {
+    "title": "Preços simples e transparentes",
+    "subtitle": "Comece grátis, escale conforme crescer.",
+    "free": {
+      "name": "Grátis",
+      "price": "$0",
+      "period": "Grátis para sempre",
+      "features": [
+        "10.000 memórias",
+        "1.000 chamadas API/mês",
+        "Suporte da comunidade"
+      ],
+      "cta": "Começar"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "por mês",
+      "features": [
+        "50.000 memórias",
+        "10.000 chamadas API/mês",
+        "Suporte por email",
+        "Analytics básico"
+      ],
+      "cta": "Assinar"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "por mês",
+      "badge": "Popular",
+      "features": [
+        "200.000 memórias",
+        "50.000 chamadas API/mês",
+        "Suporte prioritário",
+        "Analytics avançado",
+        "Webhooks"
+      ],
+      "cta": "Assinar"
+    },
+    "enterprise": {
+      "name": "Empresarial",
+      "price": "Personalizado",
+      "period": "Entre em contato",
+      "features": [
+        "Memórias ilimitadas",
+        "Chamadas API ilimitadas",
+        "Suporte dedicado",
+        "SLA personalizado",
+        "Opção on-premise"
+      ],
+      "cta": "Contatar Vendas"
+    }
+  },
+  "enterprisePage": {
+    "title": "Contatar Vendas",
+    "subtitle": "Obtenha um plano personalizado para as necessidades da sua empresa com suporte dedicado, garantias de SLA e integrações personalizadas.",
+    "includes": "Empresarial inclui:",
+    "includesList": [
+      "SLA de 99,9% de disponibilidade",
+      "Suporte prioritário (24h)",
+      "Gerente de conta dedicado",
+      "Integrações personalizadas",
+      "Autenticação SSO / SAML",
+      "Política de retenção de dados",
+      "Relatórios de auditoria de segurança",
+      "Contratos personalizados"
+    ],
+    "form": {
+      "companyName": "Nome da Empresa",
+      "yourName": "Seu Nome",
+      "workEmail": "Email Corporativo",
+      "phone": "Telefone",
+      "jobTitle": "Cargo",
+      "companySize": "Tamanho da Empresa",
+      "useCase": "Conte-nos sobre seu caso de uso",
+      "useCasePlaceholder": "O que você está construindo? Como usará o Seizn?",
+      "expectedVolume": "Chamadas API Mensais Esperadas",
+      "timeline": "Cronograma",
+      "requirements": "Requisitos Específicos",
+      "requirementsPlaceholder": "SSO, SLA específico, residência de dados, requisitos de conformidade, etc.",
+      "submit": "Contatar Vendas",
+      "submitting": "Enviando...",
+      "privacyNote": "Ao enviar este formulário, você concorda com nossa"
+    },
+    "companySizes": {
+      "select": "Selecionar...",
+      "1-10": "1-10 funcionários",
+      "11-50": "11-50 funcionários",
+      "51-200": "51-200 funcionários",
+      "201-500": "201-500 funcionários",
+      "500+": "500+ funcionários"
+    },
+    "volumes": {
+      "select": "Selecionar...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Selecionar...",
+      "immediate": "Pronto para começar agora",
+      "1-3months": "1-3 meses",
+      "3-6months": "3-6 meses",
+      "6+months": "6+ meses"
+    },
+    "success": {
+      "title": "Obrigado!",
+      "message": "Recebemos sua solicitação. Nossa equipe entrará em contato em 1-2 dias úteis.",
+      "backHome": "Voltar ao Início"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Entre na sua conta",
+      "email": "Email",
+      "password": "Senha",
+      "submit": "Entrar",
+      "noAccount": "Não tem uma conta?",
+      "signUp": "Cadastrar",
+      "or": "ou continuar com"
+    },
+    "signup": {
+      "title": "Criar uma conta",
+      "subtitle": "Comece a construir com o Seizn",
+      "name": "Nome completo",
+      "email": "Email",
+      "password": "Senha",
+      "submit": "Criar conta",
+      "hasAccount": "Já tem uma conta?",
+      "signIn": "Entrar",
+      "or": "ou continuar com"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Todos os direitos reservados.",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "contact": "Contato"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo de volta",
+    "overview": "Visão Geral",
+    "usage": "Uso",
+    "apiKeys": "Chaves API",
+    "settings": "Configurações",
+    "signOut": "Sair",
+    "stats": {
+      "memories": "Memórias",
+      "apiCalls": "Chamadas API Hoje",
+      "plan": "Plano Atual",
+      "unlimited": "Ilimitado"
+    },
+    "keys": {
+      "title": "Suas Chaves API",
+      "create": "Criar Nova Chave",
+      "name": "Nome da Chave",
+      "namePlaceholder": "Minha Chave API",
+      "created": "Criada",
+      "lastUsed": "Último Uso",
+      "never": "Nunca",
+      "copy": "Copiar",
+      "copied": "Copiado!",
+      "delete": "Excluir",
+      "deleteConfirm": "Tem certeza que deseja excluir esta chave API?",
+      "warning": "Salve esta chave com segurança. Ela não será mostrada novamente.",
+      "noKeys": "Nenhuma chave API ainda. Crie uma para começar."
+    },
+    "usagePage": {
+      "title": "Estatísticas de Uso",
+      "period": "Período Atual",
+      "memoriesUsed": "Memórias Usadas",
+      "apiCallsUsed": "Chamadas API Usadas",
+      "remaining": "Restante",
+      "upgrade": "Melhorar Plano"
+    },
+    "language": "Idioma"
+  },
+  "pricingPage": {
+    "title": "Preços",
+    "subtitle": "Preços simples e transparentes. Comece grátis, escale conforme crescer.",
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "subtitle": "Tudo o que você precisa saber sobre o Seizn",
+      "questions": [
+        {
+          "q": "O que é Memória IA e como é diferente de RAG?",
+          "a": "Memória IA é armazenamento persistente que lembra preferências do usuário, fatos e contexto entre sessões. Diferente do RAG que recupera documentos estáticos, o Seizn extrai e atualiza memórias dinamicamente das conversas, criando uma base de conhecimento viva."
+        },
+        {
+          "q": "Onde meus dados são armazenados?",
+          "a": "Todos os dados são armazenados em servidores seguros nos EUA (AWS) com criptografia ponta a ponta. Estamos em conformidade com GDPR e CCPA. Você pode solicitar exclusão completa de dados a qualquer momento."
+        },
+        {
+          "q": "Como começar?",
+          "a": "1) Cadastre-se grátis, 2) Crie uma chave API, 3) Instale o SDK (npm install @seizn/sdk), 4) Adicione memórias com 3 linhas de código."
+        },
+        {
+          "q": "O que acontece se eu exceder os limites do meu plano?",
+          "a": "Notificamos você em 80%. Se exceder, chamadas API continuam com prioridade reduzida. Faça upgrade a qualquer momento para aumento instantâneo do limite."
+        },
+        {
+          "q": "Posso excluir memórias específicas?",
+          "a": "Sim. Exclua memórias individuais, exclusão em massa por tags ou limpe tudo. Dados excluídos são removidos em 24 horas."
+        },
+        {
+          "q": "Quais modelos de IA são suportados?",
+          "a": "Qualquer modelo: GPT-4, Claude, Gemini, Llama. SDKs para JS/TS, Python, REST API. Funciona com LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Existe teste grátis?",
+          "a": "O plano grátis é permanente: 10.000 memórias, 1.000 chamadas API/mês. Sem necessidade de cartão de crédito."
+        },
+        {
+          "q": "Qual a velocidade de recuperação?",
+          "a": "Menos de 50ms em média. Busca híbrida vetor + grafo com índices otimizados."
+        }
+      ],
+      "stillQuestions": "Ainda tem perguntas?",
+      "contactUs": "Entre em contato conosco em"
+    }
+  },
+  "serviceSelector": {
+    "title": "Escolha Sua Experiência",
+    "subtitle": "Duas formas de aproveitar o poder da memória IA",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Chat Multi-IA",
+      "description": "Converse com GPT-4, Claude, Gemini e mais — todos com memória persistente que lembra de você.",
+      "features": [
+        "Acesse todos os principais modelos IA em um lugar",
+        "Suas preferências lembradas entre sessões",
+        "Troca de contexto perfeita entre modelos"
+      ],
+      "cta": "Experimentar Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API de Memória",
+      "description": "Dê às suas aplicações IA memória persistente com nossa API focada em desenvolvedores.",
+      "features": [
+        "REST API e SDKs simples",
+        "Tempo de recuperação menor que 50ms",
+        "Segurança de nível empresarial"
+      ],
+      "cta": "Explorar API",
+      "badge": "Disponível Agora"
+    },
+    "footer": "Parte das estações Seizn — memória IA para cada necessidade"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Um Chat.",
+    "titleHighlight": "Toda IA.",
+    "subtitle": "Não importa qual você escolha,\ntodos lembram de você.",
+    "startChatting": "Começar a Conversar",
+    "viewPricing": "Ver Preços",
+    "features": {
+      "title": "Por que Spring?",
+      "subtitle": "O melhor de cada IA, unificado.",
+      "multiModel": {
+        "title": "Acesso Multi-Modelo",
+        "description": "Alterne entre GPT-4, Claude, Gemini, Llama e mais. Escolha o melhor modelo para cada tarefa."
+      },
+      "persistentMemory": {
+        "title": "Memória Persistente",
+        "description": "Suas preferências, contexto e histórico mantidos em cada conversa e cada modelo."
+      },
+      "freeGenerosity": {
+        "title": "Nível Grátis ao estilo Cursor",
+        "description": "Uso grátis generoso. A maioria dos usuários nunca precisa pagar. Pro por $9,99/mês para usuários avançados."
+      }
+    },
+    "pricing": {
+      "title": "Preços Simples",
+      "free": {
+        "name": "Grátis",
+        "price": "$0",
+        "period": "Para sempre",
+        "features": [
+          "Todos os modelos IA",
+          "Memória entre sessões",
+          "Apps web e mobile"
+        ],
+        "cta": "Começar Grátis"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "por mês",
+        "badge": "Melhor Valor",
+        "features": [
+          "Tudo no Grátis",
+          "Acesso prioritário",
+          "Controles de memória avançados",
+          "Acesso à API"
+        ],
+        "cta": "Fazer Upgrade para Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - Инфраструктура памяти ИИ",
+    "description": "Дайте вашему ИИ долгосрочную память. Seizn автоматически сохраняет и извлекает контекст, чтобы ваш ИИ помнил прошлые разговоры."
+  },
+  "nav": {
+    "features": "Функции",
+    "pricing": "Цены",
+    "docs": "Документация",
+    "login": "Вход",
+    "getStarted": "Начать"
+  },
+  "hero": {
+    "badge": "Запуск Q1 2026",
+    "title": "Инфраструктура памяти",
+    "titleHighlight": "для ИИ-приложений",
+    "subtitle": "Дайте вашему ИИ долгосрочную память. Seizn автоматически сохраняет и извлекает контекст, чтобы ваш ИИ помнил прошлые разговоры.",
+    "emailPlaceholder": "Введите email",
+    "joinWaitlist": "В список ожидания",
+    "joining": "Присоединяемся...",
+    "onTheList": "Вы в списке!",
+    "stats": {
+      "tokenSavings": "Экономия токенов",
+      "retrievalTime": "Время извлечения",
+      "uptimeSla": "SLA доступности"
+    }
+  },
+  "features": {
+    "title": "Создано для разработчиков",
+    "subtitle": "Простые API, мощная инфраструктура. Добавьте постоянную память любому ИИ за минуты.",
+    "smartExtraction": {
+      "title": "Умное извлечение",
+      "description": "Автоматически извлекает ключевые факты, предпочтения и контекст из разговоров с помощью Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Мгновенное извлечение",
+      "description": "Гибридный векторно-графовый поиск возвращает релевантные воспоминания за миллисекунды."
+    },
+    "enterpriseSecurity": {
+      "title": "Корпоративная безопасность",
+      "description": "Сквозное шифрование, соответствие SOC 2, гранулярный контроль доступа и журналы аудита."
+    }
+  },
+  "codePreview": {
+    "title": "Простая интеграция",
+    "subtitle": "Добавьте память вашему ИИ всего в несколько строк кода."
+  },
+  "pricing": {
+    "title": "Простые и прозрачные цены",
+    "subtitle": "Начните бесплатно, масштабируйтесь по мере роста.",
+    "free": {
+      "name": "Бесплатно",
+      "price": "$0",
+      "period": "Навсегда бесплатно",
+      "features": [
+        "10,000 воспоминаний",
+        "1,000 API-вызовов/мес",
+        "Поддержка сообщества"
+      ],
+      "cta": "Начать"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "в месяц",
+      "features": [
+        "50,000 воспоминаний",
+        "10,000 API-вызовов/мес",
+        "Поддержка по email",
+        "Базовая аналитика"
+      ],
+      "cta": "Подписаться"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "в месяц",
+      "badge": "Популярный",
+      "features": [
+        "200,000 воспоминаний",
+        "50,000 API-вызовов/мес",
+        "Приоритетная поддержка",
+        "Расширенная аналитика",
+        "Webhooks"
+      ],
+      "cta": "Подписаться"
+    },
+    "enterprise": {
+      "name": "Корпоративный",
+      "price": "По запросу",
+      "period": "Свяжитесь с нами",
+      "features": [
+        "Безлимитные воспоминания",
+        "Безлимитные API-вызовы",
+        "Выделенная поддержка",
+        "Индивидуальный SLA",
+        "On-premise опция"
+      ],
+      "cta": "Связаться с отделом продаж"
+    }
+  },
+  "enterprisePage": {
+    "title": "Связаться с отделом продаж",
+    "subtitle": "Получите индивидуальный план для корпоративных нужд с выделенной поддержкой, гарантиями SLA и индивидуальными интеграциями.",
+    "includes": "Корпоративный план включает:",
+    "includesList": [
+      "SLA 99.9% доступности",
+      "Приоритетная поддержка (24ч)",
+      "Выделенный менеджер",
+      "Индивидуальные интеграции",
+      "SSO / SAML аутентификация",
+      "Политика хранения данных",
+      "Отчёты аудита безопасности",
+      "Индивидуальные контракты"
+    ],
+    "form": {
+      "companyName": "Название компании",
+      "yourName": "Ваше имя",
+      "workEmail": "Рабочий email",
+      "phone": "Телефон",
+      "jobTitle": "Должность",
+      "companySize": "Размер компании",
+      "useCase": "Расскажите о вашем случае использования",
+      "useCasePlaceholder": "Что вы создаёте? Как будете использовать Seizn?",
+      "expectedVolume": "Ожидаемое количество API-вызовов в месяц",
+      "timeline": "Сроки",
+      "requirements": "Специфические требования",
+      "requirementsPlaceholder": "SSO, конкретный SLA, резидентность данных, требования соответствия и т.д.",
+      "submit": "Связаться с отделом продаж",
+      "submitting": "Отправка...",
+      "privacyNote": "Отправляя эту форму, вы соглашаетесь с нашей"
+    },
+    "companySizes": {
+      "select": "Выберите...",
+      "1-10": "1-10 сотрудников",
+      "11-50": "11-50 сотрудников",
+      "51-200": "51-200 сотрудников",
+      "201-500": "201-500 сотрудников",
+      "500+": "500+ сотрудников"
+    },
+    "volumes": {
+      "select": "Выберите...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Выберите...",
+      "immediate": "Готовы начать сейчас",
+      "1-3months": "1-3 месяца",
+      "3-6months": "3-6 месяцев",
+      "6+months": "6+ месяцев"
+    },
+    "success": {
+      "title": "Спасибо!",
+      "message": "Мы получили ваш запрос. Наша команда свяжется с вами в течение 1-2 рабочих дней.",
+      "backHome": "На главную"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "С возвращением",
+      "subtitle": "Войдите в аккаунт",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Войти",
+      "noAccount": "Нет аккаунта?",
+      "signUp": "Зарегистрироваться",
+      "or": "или продолжить с"
+    },
+    "signup": {
+      "title": "Создать аккаунт",
+      "subtitle": "Начните работать с Seizn",
+      "name": "Полное имя",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Создать аккаунт",
+      "hasAccount": "Уже есть аккаунт?",
+      "signIn": "Войти",
+      "or": "или продолжить с"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Все права защищены.",
+    "privacy": "Конфиденциальность",
+    "terms": "Условия",
+    "contact": "Контакты"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "С возвращением",
+    "overview": "Обзор",
+    "usage": "Использование",
+    "apiKeys": "API-ключи",
+    "settings": "Настройки",
+    "signOut": "Выйти",
+    "stats": {
+      "memories": "Воспоминания",
+      "apiCalls": "API-вызовов сегодня",
+      "plan": "Текущий план",
+      "unlimited": "Безлимит"
+    },
+    "keys": {
+      "title": "Ваши API-ключи",
+      "create": "Создать новый ключ",
+      "name": "Название ключа",
+      "namePlaceholder": "Мой API-ключ",
+      "created": "Создан",
+      "lastUsed": "Последнее использование",
+      "never": "Никогда",
+      "copy": "Копировать",
+      "copied": "Скопировано!",
+      "delete": "Удалить",
+      "deleteConfirm": "Вы уверены, что хотите удалить этот API-ключ?",
+      "warning": "Сохраните этот ключ в надёжном месте. Он больше не будет показан.",
+      "noKeys": "Пока нет API-ключей. Создайте один, чтобы начать."
+    },
+    "usagePage": {
+      "title": "Статистика использования",
+      "period": "Текущий период",
+      "memoriesUsed": "Использовано воспоминаний",
+      "apiCallsUsed": "Использовано API-вызовов",
+      "remaining": "Осталось",
+      "upgrade": "Улучшить план"
+    },
+    "language": "Язык"
+  },
+  "pricingPage": {
+    "title": "Цены",
+    "subtitle": "Простые и прозрачные цены. Начните бесплатно, масштабируйтесь по мере роста.",
+    "faq": {
+      "title": "Часто задаваемые вопросы",
+      "subtitle": "Всё, что нужно знать о Seizn",
+      "questions": [
+        {
+          "q": "Что такое память ИИ и чем она отличается от RAG?",
+          "a": "Память ИИ — это постоянное хранилище, которое запоминает предпочтения пользователя, факты и контекст между сессиями. В отличие от RAG, который извлекает статические документы, Seizn динамически извлекает и обновляет воспоминания из разговоров, создавая живую базу знаний."
+        },
+        {
+          "q": "Где хранятся мои данные?",
+          "a": "Все данные хранятся на защищённых серверах в США (AWS) со сквозным шифрованием. Мы соответствуем GDPR и CCPA. Вы можете запросить полное удаление данных в любое время."
+        },
+        {
+          "q": "Как начать?",
+          "a": "1) Зарегистрируйтесь бесплатно, 2) Создайте API-ключ, 3) Установите SDK (npm install @seizn/sdk), 4) Добавьте воспоминания 3 строками кода."
+        },
+        {
+          "q": "Что происходит при превышении лимитов плана?",
+          "a": "Мы уведомим вас на 80%. При превышении API-вызовы продолжают работать с пониженным приоритетом. Обновите план в любой момент для мгновенного увеличения лимита."
+        },
+        {
+          "q": "Можно ли удалить конкретные воспоминания?",
+          "a": "Да. Удаляйте отдельные воспоминания, массово по тегам или очистите всё. Удалённые данные удаляются в течение 24 часов."
+        },
+        {
+          "q": "Какие модели ИИ поддерживаются?",
+          "a": "Любая модель: GPT-4, Claude, Gemini, Llama. SDK для JS/TS, Python, REST API. Работает с LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Есть ли бесплатный пробный период?",
+          "a": "Бесплатный план постоянный: 10,000 воспоминаний, 1,000 API-вызовов/месяц. Без кредитной карты."
+        },
+        {
+          "q": "Насколько быстрое извлечение?",
+          "a": "В среднем менее 50мс. Гибридный векторно-графовый поиск с оптимизированными индексами."
+        }
+      ],
+      "stillQuestions": "Остались вопросы?",
+      "contactUs": "Свяжитесь с нами"
+    }
+  },
+  "serviceSelector": {
+    "title": "Выберите свой опыт",
+    "subtitle": "Два способа использовать силу памяти ИИ",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Мульти-ИИ чат",
+      "description": "Общайтесь с GPT-4, Claude, Gemini и другими — все с постоянной памятью, которая помнит вас.",
+      "features": [
+        "Доступ ко всем основным моделям ИИ в одном месте",
+        "Ваши предпочтения запоминаются между сессиями",
+        "Бесшовное переключение контекста между моделями"
+      ],
+      "cta": "Попробовать Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API памяти",
+      "description": "Дайте вашим ИИ-приложениям постоянную память с нашим API, ориентированным на разработчиков.",
+      "features": [
+        "Простой REST API и SDK",
+        "Время извлечения менее 50мс",
+        "Безопасность корпоративного уровня"
+      ],
+      "cta": "Изучить API",
+      "badge": "Доступно сейчас"
+    },
+    "footer": "Часть сезонов Seizn — память ИИ для любых нужд"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Один чат.",
+    "titleHighlight": "Все ИИ.",
+    "subtitle": "Какой бы вы ни выбрали,\nвсе они помнят вас.",
+    "startChatting": "Начать общение",
+    "viewPricing": "Посмотреть цены",
+    "features": {
+      "title": "Почему Spring?",
+      "subtitle": "Лучшее от каждого ИИ, объединённое.",
+      "multiModel": {
+        "title": "Мульти-модельный доступ",
+        "description": "Переключайтесь между GPT-4, Claude, Gemini, Llama и другими. Выбирайте лучшую модель для каждой задачи."
+      },
+      "persistentMemory": {
+        "title": "Постоянная память",
+        "description": "Ваши предпочтения, контекст и история сохраняются в каждом разговоре и каждой модели."
+      },
+      "freeGenerosity": {
+        "title": "Бесплатный план уровня Cursor",
+        "description": "Щедрое бесплатное использование. Большинству пользователей не нужно платить. Pro за $9.99/месяц для продвинутых пользователей."
+      }
+    },
+    "pricing": {
+      "title": "Простые цены",
+      "free": {
+        "name": "Бесплатно",
+        "price": "$0",
+        "period": "Навсегда",
+        "features": [
+          "Все модели ИИ",
+          "Память между сессиями",
+          "Веб и мобильные приложения"
+        ],
+        "cta": "Начать бесплатно"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "в месяц",
+        "badge": "Лучшая цена",
+        "features": [
+          "Всё из бесплатного",
+          "Приоритетный доступ",
+          "Расширенное управление памятью",
+          "Доступ к API"
+        ],
+        "cta": "Перейти на Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

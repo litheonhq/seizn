@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - AI-geheugeninfrastructuur",
+    "description": "Geef je AI blijvend geheugen. Seizn slaat automatisch context op en haalt deze op, zodat je AI eerdere gesprekken onthoudt."
+  },
+  "nav": {
+    "features": "Functies",
+    "pricing": "Prijzen",
+    "docs": "Documentatie",
+    "login": "Inloggen",
+    "getStarted": "Aan de slag"
+  },
+  "hero": {
+    "badge": "Beschikbaar Q1 2026",
+    "title": "Geheugeninfrastructuur",
+    "titleHighlight": "voor AI-toepassingen",
+    "subtitle": "Geef je AI blijvend geheugen. Seizn slaat automatisch context op en haalt deze op, zodat je AI eerdere gesprekken onthoudt.",
+    "emailPlaceholder": "Voer je e-mail in",
+    "joinWaitlist": "Schrijf je in voor de wachtlijst",
+    "joining": "Bezig met aanmelden...",
+    "onTheList": "Je staat op de lijst!",
+    "stats": {
+      "tokenSavings": "Tokenbesparing",
+      "retrievalTime": "Ophaaltijd",
+      "uptimeSla": "Uptime SLA"
+    }
+  },
+  "features": {
+    "title": "Gebouwd voor ontwikkelaars",
+    "subtitle": "Eenvoudige API's, krachtige infrastructuur. Voeg binnen minuten blijvend geheugen toe aan elke AI.",
+    "smartExtraction": {
+      "title": "Slimme extractie",
+      "description": "Extraheert automatisch belangrijke feiten, voorkeuren en context uit gesprekken met Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Directe ophaling",
+      "description": "Hybride vector + graafzoekopdracht retourneert relevante herinneringen in milliseconden."
+    },
+    "enterpriseSecurity": {
+      "title": "Enterprise-beveiliging",
+      "description": "End-to-end encryptie, SOC 2-conform, met gedetailleerde toegangscontroles en auditlogboeken."
+    }
+  },
+  "codePreview": {
+    "title": "Eenvoudige integratie",
+    "subtitle": "Voeg geheugen toe aan je AI met slechts een paar regels code."
+  },
+  "pricing": {
+    "title": "Eenvoudige, transparante prijzen",
+    "subtitle": "Begin gratis, schaal naarmate je groeit.",
+    "free": {
+      "name": "Gratis",
+      "price": "$0",
+      "period": "Voor altijd gratis",
+      "features": [
+        "10.000 herinneringen",
+        "1.000 API-aanroepen/maand",
+        "Community-ondersteuning"
+      ],
+      "cta": "Aan de slag"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "per maand",
+      "features": [
+        "50.000 herinneringen",
+        "10.000 API-aanroepen/maand",
+        "E-mailondersteuning",
+        "Basis-analytics"
+      ],
+      "cta": "Abonneren"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "per maand",
+      "badge": "Populair",
+      "features": [
+        "200.000 herinneringen",
+        "50.000 API-aanroepen/maand",
+        "Prioriteitsondersteuning",
+        "Geavanceerde analytics",
+        "Webhooks"
+      ],
+      "cta": "Abonneren"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Op maat",
+      "period": "Neem contact op",
+      "features": [
+        "Onbeperkte herinneringen",
+        "Onbeperkte API-aanroepen",
+        "Toegewijde ondersteuning",
+        "Aangepaste SLA",
+        "On-premise optie"
+      ],
+      "cta": "Contact verkoop"
+    }
+  },
+  "enterprisePage": {
+    "title": "Contact verkoop",
+    "subtitle": "Krijg een aangepast plan voor je bedrijfsbehoeften met toegewijde ondersteuning, SLA-garanties en aangepaste integraties.",
+    "includes": "Enterprise omvat:",
+    "includesList": [
+      "99,9% uptime SLA",
+      "Prioriteitsondersteuning (24u)",
+      "Toegewijde accountmanager",
+      "Aangepaste integraties",
+      "SSO / SAML-authenticatie",
+      "Beleid voor gegevensbewaring",
+      "Beveiligingsauditrapporten",
+      "Aangepaste contracten"
+    ],
+    "form": {
+      "companyName": "Bedrijfsnaam",
+      "yourName": "Uw naam",
+      "workEmail": "Werk e-mail",
+      "phone": "Telefoon",
+      "jobTitle": "Functietitel",
+      "companySize": "Bedrijfsgrootte",
+      "useCase": "Vertel ons over uw use case",
+      "useCasePlaceholder": "Wat bouwt u? Hoe zult u Seizn gebruiken?",
+      "expectedVolume": "Verwachte maandelijkse API-aanroepen",
+      "timeline": "Tijdlijn",
+      "requirements": "Specifieke vereisten",
+      "requirementsPlaceholder": "SSO, specifieke SLA, datalocatie, compliance-vereisten, etc.",
+      "submit": "Contact verkoop",
+      "submitting": "Bezig met verzenden...",
+      "privacyNote": "Door dit formulier in te dienen, gaat u akkoord met onze"
+    },
+    "companySizes": {
+      "select": "Selecteer...",
+      "1-10": "1-10 medewerkers",
+      "11-50": "11-50 medewerkers",
+      "51-200": "51-200 medewerkers",
+      "201-500": "201-500 medewerkers",
+      "500+": "500+ medewerkers"
+    },
+    "volumes": {
+      "select": "Selecteer...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Selecteer...",
+      "immediate": "Klaar om nu te starten",
+      "1-3months": "1-3 maanden",
+      "3-6months": "3-6 maanden",
+      "6+months": "6+ maanden"
+    },
+    "success": {
+      "title": "Bedankt!",
+      "message": "We hebben uw aanvraag ontvangen. Ons team neemt binnen 1-2 werkdagen contact met u op.",
+      "backHome": "Terug naar home"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in op uw account",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "submit": "Inloggen",
+      "noAccount": "Geen account?",
+      "signUp": "Registreren",
+      "or": "of doorgaan met"
+    },
+    "signup": {
+      "title": "Account aanmaken",
+      "subtitle": "Begin met bouwen met Seizn",
+      "name": "Volledige naam",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "submit": "Account aanmaken",
+      "hasAccount": "Heeft u al een account?",
+      "signIn": "Inloggen",
+      "or": "of doorgaan met"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Alle rechten voorbehouden.",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "contact": "Contact"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welkom terug",
+    "overview": "Overzicht",
+    "usage": "Gebruik",
+    "apiKeys": "API-sleutels",
+    "settings": "Instellingen",
+    "signOut": "Uitloggen",
+    "stats": {
+      "memories": "Herinneringen",
+      "apiCalls": "API-aanroepen vandaag",
+      "plan": "Huidig plan",
+      "unlimited": "Onbeperkt"
+    },
+    "keys": {
+      "title": "Uw API-sleutels",
+      "create": "Nieuwe sleutel maken",
+      "name": "Sleutelnaam",
+      "namePlaceholder": "Mijn API-sleutel",
+      "created": "Aangemaakt",
+      "lastUsed": "Laatst gebruikt",
+      "never": "Nooit",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!",
+      "delete": "Verwijderen",
+      "deleteConfirm": "Weet u zeker dat u deze API-sleutel wilt verwijderen?",
+      "warning": "Bewaar deze sleutel veilig. Hij wordt niet opnieuw getoond.",
+      "noKeys": "Nog geen API-sleutels. Maak er een om te beginnen."
+    },
+    "usagePage": {
+      "title": "Gebruiksstatistieken",
+      "period": "Huidige periode",
+      "memoriesUsed": "Gebruikte herinneringen",
+      "apiCallsUsed": "Gebruikte API-aanroepen",
+      "remaining": "Resterend",
+      "upgrade": "Plan upgraden"
+    },
+    "language": "Taal"
+  },
+  "pricingPage": {
+    "title": "Prijzen",
+    "subtitle": "Eenvoudige, transparante prijzen. Begin gratis, schaal naarmate u groeit.",
+    "faq": {
+      "title": "Veelgestelde vragen",
+      "subtitle": "Alles wat u moet weten over Seizn",
+      "questions": [
+        {
+          "q": "Wat is AI-geheugen en hoe verschilt het van RAG?",
+          "a": "AI-geheugen is permanente opslag die gebruikersvoorkeuren, feiten en context over sessies heen onthoudt. In tegenstelling tot RAG dat statische documenten ophaalt, extraheert en werkt Seizn dynamisch herinneringen bij uit gesprekken, waardoor een levende kennisbank ontstaat."
+        },
+        {
+          "q": "Waar worden mijn gegevens opgeslagen?",
+          "a": "Alle gegevens worden opgeslagen op beveiligde servers in de VS (AWS) met end-to-end encryptie. We voldoen aan GDPR en CCPA. U kunt op elk moment volledige gegevensverwijdering aanvragen."
+        },
+        {
+          "q": "Hoe begin ik?",
+          "a": "1) Registreer gratis, 2) Maak API-sleutel, 3) Installeer SDK (npm install @seizn/sdk), 4) Voeg herinneringen toe met 3 regels code."
+        },
+        {
+          "q": "Wat gebeurt er als ik mijn planlimieten overschrijd?",
+          "a": "We informeren u bij 80%. Als u overschrijdt, gaan API-aanroepen door met verlaagde prioriteit. Upgrade wanneer u wilt voor directe limietverhoging."
+        },
+        {
+          "q": "Kan ik specifieke herinneringen verwijderen?",
+          "a": "Ja. Verwijder individuele herinneringen, bulk verwijderen op tags, of alles wissen. Verwijderde gegevens worden binnen 24 uur verwijderd."
+        },
+        {
+          "q": "Welke AI-modellen worden ondersteund?",
+          "a": "Elk model: GPT-4, Claude, Gemini, Llama. SDK's voor JS/TS, Python, REST API. Werkt met LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Is er een gratis proefperiode?",
+          "a": "Het gratis plan is permanent: 10.000 herinneringen, 1.000 API-aanroepen/maand. Geen creditcard nodig."
+        },
+        {
+          "q": "Hoe snel is het ophalen?",
+          "a": "Minder dan 50ms gemiddeld. Hybride vector + graafzoekopdracht met geoptimaliseerde indexen."
+        }
+      ],
+      "stillQuestions": "Nog vragen?",
+      "contactUs": "Neem contact met ons op via"
+    }
+  },
+  "serviceSelector": {
+    "title": "Kies uw ervaring",
+    "subtitle": "Twee manieren om de kracht van AI-geheugen te benutten",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Multi-AI Chat",
+      "description": "Chat met GPT-4, Claude, Gemini en meer — allemaal met blijvend geheugen dat u onthoudt.",
+      "features": [
+        "Toegang tot alle grote AI-modellen op één plek",
+        "Uw voorkeuren worden onthouden tussen sessies",
+        "Naadloze contextwisseling tussen modellen"
+      ],
+      "cta": "Probeer Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Geheugen-API",
+      "description": "Geef uw AI-toepassingen blijvend geheugen met onze ontwikkelaarsvriendelijke API.",
+      "features": [
+        "Eenvoudige REST API en SDK's",
+        "Ophaaltijd onder 50ms",
+        "Enterprise-grade beveiliging"
+      ],
+      "cta": "Verken API",
+      "badge": "Nu beschikbaar"
+    },
+    "footer": "Onderdeel van de Seizn-seizoenen — AI-geheugen voor elke behoefte"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Eén chat.",
+    "titleHighlight": "Alle AI's.",
+    "subtitle": "Welke u ook kiest,\nze onthouden u allemaal.",
+    "startChatting": "Begin met chatten",
+    "viewPricing": "Bekijk prijzen",
+    "features": {
+      "title": "Waarom Spring?",
+      "subtitle": "Het beste van elke AI, verenigd.",
+      "multiModel": {
+        "title": "Multi-model toegang",
+        "description": "Wissel tussen GPT-4, Claude, Gemini, Llama en meer. Kies het beste model voor elke taak."
+      },
+      "persistentMemory": {
+        "title": "Blijvend geheugen",
+        "description": "Uw voorkeuren, context en geschiedenis worden bewaard in elk gesprek en elk model."
+      },
+      "freeGenerosity": {
+        "title": "Cursor-niveau gratis tier",
+        "description": "Royaal gratis gebruik. De meeste gebruikers hoeven nooit te betalen. Pro voor $9,99/maand voor powergebruikers."
+      }
+    },
+    "pricing": {
+      "title": "Eenvoudige prijzen",
+      "free": {
+        "name": "Gratis",
+        "price": "$0",
+        "period": "Voor altijd",
+        "features": [
+          "Alle AI-modellen",
+          "Geheugen tussen sessies",
+          "Web- en mobiele apps"
+        ],
+        "cta": "Gratis beginnen"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "per maand",
+        "badge": "Beste waarde",
+        "features": [
+          "Alles in Gratis",
+          "Prioriteitstoegang",
+          "Geavanceerde geheugencontroles",
+          "API-toegang"
+        ],
+        "cta": "Upgrade naar Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

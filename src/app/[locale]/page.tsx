@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { type Locale } from "@/i18n/config";
-import { ServiceSelectorClient } from "./service-selector-client";
+import { ExtremeHomepageClient } from "@/components/extreme-homepage";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -9,11 +9,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const dict = await getDictionary(locale);
+  // Dictionary fetch preserved for future i18n of metadata
+  const _dict = await getDictionary(locale);
 
   return {
-    title: dict.metadata.title,
-    description: dict.metadata.description,
+    title: "Seizn - Search you can debug",
+    description: "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    openGraph: {
+      title: "Seizn - Search you can debug",
+      description: "Integrated retrieval stack with built-in tracing, evaluation, and governance.",
+      type: "website",
+    },
   };
 }
 
@@ -21,5 +27,5 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
-  return <ServiceSelectorClient dict={dict} locale={locale} />;
+  return <ExtremeHomepageClient dict={dict} locale={locale} />;
 }
