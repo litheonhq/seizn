@@ -1,13 +1,26 @@
 import { createServerClient } from './supabase';
+import {
+  getPlan,
+  getEffectivePlan,
+  isUnlimited,
+  formatLimit,
+  type PlanConfig,
+} from './plan-limits';
 
+// Re-export for backwards compatibility
+export { getPlan, formatLimit } from './plan-limits';
+
+// Legacy interface (kept for backwards compatibility)
 interface PlanLimits {
   memories: number;
   apiCallsDaily: number;
   apiKeys: number;
 }
 
+// Legacy export (kept for backwards compatibility)
 export const PLAN_LIMITS: Record<string, PlanLimits> = {
   free: { memories: 10000, apiCallsDaily: 1000, apiKeys: 2 },
+  starter: { memories: 50000, apiCallsDaily: 5000, apiKeys: 3 },
   plus: { memories: 100000, apiCallsDaily: 10000, apiKeys: 5 },
   pro: { memories: 1000000, apiCallsDaily: 100000, apiKeys: 10 },
   enterprise: { memories: -1, apiCallsDaily: -1, apiKeys: 100 }, // -1 = unlimited
@@ -26,19 +39,30 @@ interface UsageCheck {
 
 /**
  * Check if user has exceeded their plan limits
+ * Also checks subscription status (expiry)
  */
 export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
   const supabase = createServerClient();
 
-  // Get user profile
+  // Get user profile including subscription status
   const { data: profile } = await supabase
     .from('profiles')
-    .select('plan, memory_count')
+    .select('plan, memory_count, subscription_ends_at, subscription_cancelled')
     .eq('id', userId)
     .single();
 
-  const plan = profile?.plan || 'free';
-  const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
+  // Get effective plan (considering subscription expiry)
+  const effectivePlan = getEffectivePlan({
+    plan: profile?.plan || 'free',
+    subscription_ends_at: profile?.subscription_ends_at,
+  });
+
+  const planConfig = getPlan(effectivePlan);
+  const limits: PlanLimits = {
+    memories: planConfig.memories,
+    apiCallsDaily: planConfig.apiCallsDaily,
+    apiKeys: planConfig.apiKeys,
+  };
 
   // Count API calls today
   const today = new Date();
@@ -54,24 +78,24 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
   const callsToday = apiCallsToday || 0;
 
   // Check memory limit (only if not unlimited)
-  if (limits.memories > 0 && memoryCount >= limits.memories) {
+  if (!isUnlimited(limits.memories) && memoryCount >= limits.memories) {
     return {
       allowed: false,
-      reason: `Memory limit reached (${limits.memories.toLocaleString()} for ${plan} plan)`,
+      reason: `Memory limit reached (${formatLimit(limits.memories)} for ${effectivePlan} plan). Upgrade your plan for more storage.`,
       usage: { memories: memoryCount, apiCallsToday: callsToday },
       limits,
-      plan,
+      plan: effectivePlan,
     };
   }
 
   // Check API call limit (only if not unlimited)
-  if (limits.apiCallsDaily > 0 && callsToday >= limits.apiCallsDaily) {
+  if (!isUnlimited(limits.apiCallsDaily) && callsToday >= limits.apiCallsDaily) {
     return {
       allowed: false,
-      reason: `Daily API call limit reached (${limits.apiCallsDaily.toLocaleString()} for ${plan} plan)`,
+      reason: `Daily API call limit reached (${formatLimit(limits.apiCallsDaily)} for ${effectivePlan} plan). Upgrade your plan for higher limits.`,
       usage: { memories: memoryCount, apiCallsToday: callsToday },
       limits,
-      plan,
+      plan: effectivePlan,
     };
   }
 
@@ -79,7 +103,7 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
     allowed: true,
     usage: { memories: memoryCount, apiCallsToday: callsToday },
     limits,
-    plan,
+    plan: effectivePlan,
   };
 }
 

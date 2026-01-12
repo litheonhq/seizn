@@ -1,6 +1,8 @@
 // Rate limiting with sliding window for burst protection
 // Uses in-memory cache with periodic cleanup
 
+import { getPlan, getLimit } from './plan-limits';
+
 interface RateLimitEntry {
   count: number;
   resetAt: number;
@@ -26,11 +28,13 @@ function cleanup() {
   }
 }
 
-// Rate limits per plan (requests per minute)
+// Legacy rate limits (kept for backwards compatibility)
+// New code should use getLimit(plan, 'rateLimit') from plan-limits.ts
 export const RATE_LIMITS: Record<string, number> = {
-  free: 60,      // 60 req/min = 1 req/sec
-  plus: 300,     // 300 req/min = 5 req/sec
-  pro: 600,      // 600 req/min = 10 req/sec
+  free: 60,        // 60 req/min = 1 req/sec
+  starter: 120,    // 120 req/min = 2 req/sec
+  plus: 300,       // 300 req/min = 5 req/sec
+  pro: 600,        // 600 req/min = 10 req/sec
   enterprise: 3000, // 3000 req/min = 50 req/sec
 };
 
@@ -51,7 +55,8 @@ export function checkRateLimit(
 ): RateLimitResult {
   cleanup();
 
-  const limit = RATE_LIMITS[plan] || RATE_LIMITS.free;
+  // Get rate limit from plan configuration
+  const limit = getLimit(plan, 'rateLimit');
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute window
   const key = `ratelimit:${identifier}`;
