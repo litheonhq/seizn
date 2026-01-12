@@ -354,8 +354,8 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Search you can debug.",
-    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "heroTitle": "Пошук, який можна дебажити.",
+    "heroSubtitle": "Інтегрований пошуковий стек з вбудованим трасуванням, оцінкою та управлінням. Один запит = результати + трасування + вартість.",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
