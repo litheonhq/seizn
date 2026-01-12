@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Providers } from "@/components/providers";
-import { locales, type Locale } from "@/i18n/config";
+import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import "../globals.css";
 
@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0A0A0A",
+  themeColor: "#0B1220",
 };
 
 export async function generateStaticParams() {
@@ -41,6 +41,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     en: 'en_US',
     ko: 'ko_KR',
     ja: 'ja_JP',
+    'zh-CN': 'zh_CN',
+    'zh-TW': 'zh_TW',
+    'zh-HK': 'zh_HK',
+    es: 'es_ES',
+    ru: 'ru_RU',
+    uk: 'uk_UA',
+    he: 'he_IL',
+    ar: 'ar_SA',
+    fr: 'fr_FR',
+    de: 'de_DE',
+    sv: 'sv_SE',
+    nl: 'nl_NL',
+    vi: 'vi_VN',
+    pl: 'pl_PL',
+    'pt-BR': 'pt_BR',
+    'pt-PT': 'pt_PT',
   };
 
   return {
@@ -60,6 +76,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         'en': '/en',
         'ko': '/ko',
         'ja': '/ja',
+        'zh-CN': '/zh-CN',
+        'zh-TW': '/zh-TW',
+        'zh-HK': '/zh-HK',
+        'es': '/es',
+        'ru': '/ru',
+        'uk': '/uk',
+        'he': '/he',
+        'ar': '/ar',
+        'fr': '/fr',
+        'de': '/de',
+        'sv': '/sv',
+        'nl': '/nl',
+        'vi': '/vi',
+        'pl': '/pl',
+        'pt-BR': '/pt-BR',
+        'pt-PT': '/pt-PT',
       },
     },
     openGraph: {
@@ -97,7 +129,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     icons: {
-      icon: "/icon.svg",
+      icon: [
+        { url: "/seizn-icon.svg", type: "image/svg+xml" },
+        { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      ],
       apple: "/apple-touch-icon.png",
     },
   };
@@ -114,7 +150,7 @@ export default async function LocaleLayout({
   const locale = (locales.includes(localeParam as Locale) ? localeParam : 'en') as Locale;
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={isRtl(locale) ? 'rtl' : 'ltr'}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

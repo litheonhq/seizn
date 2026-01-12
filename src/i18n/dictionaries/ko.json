@@ -5,7 +5,7 @@
   },
   "nav": {
     "features": "기능",
-    "pricing": "요금제",
+    "pricing": "플랜",
     "docs": "문서",
     "login": "로그인",
     "getStarted": "시작하기"
@@ -352,5 +352,53 @@
         "cta": "Pro 업그레이드"
       }
     }
+  },
+  "extremeHome": {
+    "heroTitle": "디버깅 가능한 검색.",
+    "heroSubtitle": "트레이싱, 평가, 거버넌스가 내장된 통합 검색 스택. 한 번의 요청 = 결과 + 트레이스 + 비용.",
+    "firstRetrievalComplete": "첫 번째 검색 완료",
+    "copySnippetHint": "아래 코드를 복사해 재현하세요",
+    "copySnippetTitle": "코드 복사",
+    "copySnippetSubtitle": "위 설정을 그대로 반영한 코드입니다",
+    "whySeizn": {
+      "title": "Seizn vs LangChain + Pinecone?",
+      "subtitle": "파편화된 도구들을 붙여 쓰지 마세요. 필요한 모든 것이 하나의 통합 스택에.",
+      "tracingTitle": "내장 트레이싱 + 평가",
+      "tracingDesc": "모든 요청이 기본으로 트레이싱됩니다. LangSmith나 커스텀 로깅 없이 평가를 실행하고, 회귀를 감지하고, 프로덕션 이슈를 디버깅하세요.",
+      "tracingBadge": "기본 ON",
+      "autopilotTitle": "예산 인식 오토파일럿",
+      "autopilotDesc": "지연 시간 또는 비용 예산을 설정하면 오토파일럿이 자동으로 최적의 검색 전략을 선택합니다. 수동 튜닝 불필요.",
+      "autopilotBadge": "선택",
+      "governanceTitle": "거버넌스 + 감사 로그",
+      "governanceDesc": "PII 탐지, GDPR 호환 삭제, 완전한 감사 추적. 나중에 덧붙이는 게 아니라 처음부터 컴플라이언스를 위해 설계.",
+      "governanceBadge": "팀 기본",
+      "lessGlueTitle": "더 적은 구성 요소",
+      "lessGlueDesc": "LangChain + Pinecone + LangSmith + 커스텀 PII 필터를 조합할 필요 없습니다. 하나의 SDK, 하나의 대시보드, 하나의 청구서.",
+      "lessGlueBadge": "코드 감소"
+    },
+    "trust": {
+      "security": "RLS + 키 해싱",
+      "securityDesc": "기본 보안",
+      "rateLimits": "요청 제한",
+      "rateLimitsDesc": "사용량 알림",
+      "auditLogs": "감사 로그",
+      "auditLogsDesc": "완전한 추적성"
+    },
+    "pricingCta": {
+      "title": "심플하고 투명한 가격",
+      "subtitle": "무료로 시작하고, 성장에 따라 확장하세요. 숨겨진 비용 없음.",
+      "viewPricing": "가격 보기",
+      "contactSales": "영업 문의"
+    },
+    "nav": {
+      "docs": "문서",
+      "pricing": "플랜",
+      "enterprise": "기업",
+      "getApiKey": "API Key 받기",
+      "tryDemo": "데모 체험"
+    },
+    "requestBuilder": "요청 빌더",
+    "results": "결과",
+    "trace": "트레이스"
   }
 }

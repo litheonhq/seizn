@@ -20,7 +20,7 @@ export async function PATCH(request: NextRequest) {
     // Validate language
     if (!language || !locales.includes(language as Locale)) {
       return NextResponse.json(
-        { error: 'Invalid language. Supported: en, ko, ja' },
+        { error: `Invalid language. Supported: ${locales.join(', ')}` },
         { status: 400 }
       );
     }

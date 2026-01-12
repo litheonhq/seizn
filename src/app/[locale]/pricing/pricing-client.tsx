@@ -128,8 +128,8 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
             <div className="glass-card-premium rounded-2xl p-6 inline-block">
               <p className="text-gray-600">
                 {faq.stillQuestions}{" "}
-                <a href="mailto:contact@seizn.com" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
-                  {faq.contactUs} contact@seizn.com
+                <a href="mailto:info@seizn.com" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
+                  {faq.contactUs} info@seizn.com
                 </a>
               </p>
             </div>
@@ -195,7 +195,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           <nav className="flex items-center gap-6">
             <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.privacy}</a>
             <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.terms}</a>
-            <a href="mailto:contact@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
+            <a href="mailto:info@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
           </nav>
         </div>
       </footer>

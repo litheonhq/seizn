@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { locales, localeNames, type Locale } from '@/i18n/config';
 
 interface LanguageSwitcherProps {
@@ -10,9 +10,10 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwitcherProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const handleChange = (newLocale: Locale) => {
+    if (newLocale === currentLocale) return;
+
     // Remove current locale from pathname and add new one
     const segments = pathname.split('/');
     segments[1] = newLocale;
@@ -31,7 +32,8 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
       // ignore errors (e.g., anonymous user)
     });
 
-    router.push(newPath);
+    // Force full page reload to load new dictionary from server
+    window.location.href = newPath;
   };
 
   return (
@@ -60,7 +62,6 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
 // Icon version for mobile/compact layouts
 export function LanguageSwitcherIcon({ currentLocale, className = '' }: LanguageSwitcherProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const cycleLocale = () => {
     const currentIndex = locales.indexOf(currentLocale);
@@ -82,13 +83,30 @@ export function LanguageSwitcherIcon({ currentLocale, className = '' }: Language
       // ignore errors
     });
 
-    router.push(newPath);
+    // Force full page reload to load new dictionary from server
+    window.location.href = newPath;
   };
 
   const flagEmoji: Record<Locale, string> = {
     en: '🇺🇸',
     ko: '🇰🇷',
     ja: '🇯🇵',
+    'zh-CN': '🇨🇳',
+    'zh-TW': '🇹🇼',
+    'zh-HK': '🇭🇰',
+    es: '🇪🇸',
+    ru: '🇷🇺',
+    uk: '🇺🇦',
+    he: '🇮🇱',
+    ar: '🇸🇦',
+    fr: '🇫🇷',
+    de: '🇩🇪',
+    sv: '🇸🇪',
+    nl: '🇳🇱',
+    vi: '🇻🇳',
+    pl: '🇵🇱',
+    'pt-BR': '🇧🇷',
+    'pt-PT': '🇵🇹',
   };
 
   return (

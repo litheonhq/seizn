@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - بنية تحتية لذاكرة الذكاء الاصطناعي",
+    "description": "امنح الذكاء الاصطناعي الخاص بك ذاكرة دائمة. يقوم Seizn بتخزين واسترداد السياق تلقائياً، حتى يتذكر الذكاء الاصطناعي المحادثات السابقة."
+  },
+  "nav": {
+    "features": "المميزات",
+    "pricing": "الأسعار",
+    "docs": "التوثيق",
+    "login": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن"
+  },
+  "hero": {
+    "badge": "متاح Q1 2026",
+    "title": "بنية تحتية للذاكرة",
+    "titleHighlight": "لتطبيقات الذكاء الاصطناعي",
+    "subtitle": "امنح الذكاء الاصطناعي الخاص بك ذاكرة دائمة. يقوم Seizn بتخزين واسترداد السياق تلقائياً، حتى يتذكر الذكاء الاصطناعي المحادثات السابقة.",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "joinWaitlist": "انضم لقائمة الانتظار",
+    "joining": "جارٍ الانضمام...",
+    "onTheList": "أنت في القائمة!",
+    "stats": {
+      "tokenSavings": "توفير الرموز",
+      "retrievalTime": "وقت الاسترداد",
+      "uptimeSla": "اتفاقية مستوى الخدمة"
+    }
+  },
+  "features": {
+    "title": "مصمم للمطورين",
+    "subtitle": "واجهات برمجة تطبيقات بسيطة، بنية تحتية قوية. أضف ذاكرة دائمة لأي ذكاء اصطناعي في دقائق.",
+    "smartExtraction": {
+      "title": "استخراج ذكي",
+      "description": "يستخرج تلقائياً الحقائق الرئيسية والتفضيلات والسياق من المحادثات باستخدام Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "استرداد فوري",
+      "description": "البحث الهجين المتجه + الرسم البياني يُرجع الذكريات ذات الصلة في أجزاء من الثانية."
+    },
+    "enterpriseSecurity": {
+      "title": "أمان المؤسسات",
+      "description": "تشفير من طرف إلى طرف، متوافق مع SOC 2، مع عناصر تحكم وصول دقيقة وسجلات تدقيق."
+    }
+  },
+  "codePreview": {
+    "title": "تكامل بسيط",
+    "subtitle": "أضف ذاكرة للذكاء الاصطناعي الخاص بك بسطور قليلة من الكود."
+  },
+  "pricing": {
+    "title": "أسعار بسيطة وشفافة",
+    "subtitle": "ابدأ مجاناً، وتوسع مع نموك.",
+    "free": {
+      "name": "مجاني",
+      "price": "$0",
+      "period": "مجاني للأبد",
+      "features": [
+        "10,000 ذاكرة",
+        "1,000 استدعاء API/شهر",
+        "دعم المجتمع"
+      ],
+      "cta": "ابدأ"
+    },
+    "plus": {
+      "name": "بلس",
+      "price": "$9",
+      "period": "شهرياً",
+      "features": [
+        "50,000 ذاكرة",
+        "10,000 استدعاء API/شهر",
+        "دعم بالبريد الإلكتروني",
+        "تحليلات أساسية"
+      ],
+      "cta": "اشترك"
+    },
+    "pro": {
+      "name": "برو",
+      "price": "$29",
+      "period": "شهرياً",
+      "badge": "شائع",
+      "features": [
+        "200,000 ذاكرة",
+        "50,000 استدعاء API/شهر",
+        "دعم أولوية",
+        "تحليلات متقدمة",
+        "Webhooks"
+      ],
+      "cta": "اشترك"
+    },
+    "enterprise": {
+      "name": "المؤسسات",
+      "price": "مخصص",
+      "period": "تواصل معنا",
+      "features": [
+        "ذكريات غير محدودة",
+        "استدعاءات API غير محدودة",
+        "دعم مخصص",
+        "اتفاقية مستوى خدمة مخصصة",
+        "خيار التثبيت المحلي"
+      ],
+      "cta": "تواصل مع المبيعات"
+    }
+  },
+  "enterprisePage": {
+    "title": "تواصل مع المبيعات",
+    "subtitle": "احصل على خطة مخصصة لاحتياجات مؤسستك مع دعم مخصص وضمانات اتفاقية مستوى الخدمة وتكاملات مخصصة.",
+    "includes": "المؤسسات تشمل:",
+    "includesList": [
+      "اتفاقية مستوى خدمة 99.9%",
+      "دعم أولوية (24 ساعة)",
+      "مدير حساب مخصص",
+      "تكاملات مخصصة",
+      "مصادقة SSO / SAML",
+      "سياسة الاحتفاظ بالبيانات",
+      "تقارير تدقيق الأمان",
+      "عقود مخصصة"
+    ],
+    "form": {
+      "companyName": "اسم الشركة",
+      "yourName": "اسمك",
+      "workEmail": "البريد الإلكتروني للعمل",
+      "phone": "الهاتف",
+      "jobTitle": "المسمى الوظيفي",
+      "companySize": "حجم الشركة",
+      "useCase": "أخبرنا عن حالة الاستخدام",
+      "useCasePlaceholder": "ماذا تبني؟ كيف ستستخدم Seizn؟",
+      "expectedVolume": "استدعاءات API الشهرية المتوقعة",
+      "timeline": "الجدول الزمني",
+      "requirements": "متطلبات محددة",
+      "requirementsPlaceholder": "SSO، اتفاقية مستوى خدمة محددة، إقامة البيانات، متطلبات الامتثال، إلخ.",
+      "submit": "تواصل مع المبيعات",
+      "submitting": "جارٍ الإرسال...",
+      "privacyNote": "بإرسال هذا النموذج، فإنك توافق على"
+    },
+    "companySizes": {
+      "select": "اختر...",
+      "1-10": "1-10 موظفين",
+      "11-50": "11-50 موظف",
+      "51-200": "51-200 موظف",
+      "201-500": "201-500 موظف",
+      "500+": "500+ موظف"
+    },
+    "volumes": {
+      "select": "اختر...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "اختر...",
+      "immediate": "جاهز للبدء الآن",
+      "1-3months": "1-3 أشهر",
+      "3-6months": "3-6 أشهر",
+      "6+months": "6+ أشهر"
+    },
+    "success": {
+      "title": "شكراً!",
+      "message": "لقد استلمنا استفسارك. سيتواصل معك فريقنا خلال 1-2 أيام عمل.",
+      "backHome": "العودة للصفحة الرئيسية"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجل الدخول إلى حسابك",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "سجل الآن",
+      "or": "أو تابع مع"
+    },
+    "signup": {
+      "title": "إنشاء حساب",
+      "subtitle": "ابدأ البناء مع Seizn",
+      "name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "إنشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "or": "أو تابع مع"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. جميع الحقوق محفوظة.",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "contact": "تواصل معنا"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بعودتك",
+    "overview": "نظرة عامة",
+    "usage": "الاستخدام",
+    "apiKeys": "مفاتيح API",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "stats": {
+      "memories": "الذكريات",
+      "apiCalls": "استدعاءات API اليوم",
+      "plan": "الخطة الحالية",
+      "unlimited": "غير محدود"
+    },
+    "keys": {
+      "title": "مفاتيح API الخاصة بك",
+      "create": "إنشاء مفتاح جديد",
+      "name": "اسم المفتاح",
+      "namePlaceholder": "مفتاح API الخاص بي",
+      "created": "تم الإنشاء",
+      "lastUsed": "آخر استخدام",
+      "never": "أبداً",
+      "copy": "نسخ",
+      "copied": "تم النسخ!",
+      "delete": "حذف",
+      "deleteConfirm": "هل أنت متأكد من حذف مفتاح API هذا؟",
+      "warning": "احفظ هذا المفتاح بأمان. لن يتم عرضه مرة أخرى.",
+      "noKeys": "لا توجد مفاتيح API بعد. أنشئ واحداً للبدء."
+    },
+    "usagePage": {
+      "title": "إحصائيات الاستخدام",
+      "period": "الفترة الحالية",
+      "memoriesUsed": "الذكريات المستخدمة",
+      "apiCallsUsed": "استدعاءات API المستخدمة",
+      "remaining": "المتبقي",
+      "upgrade": "ترقية الخطة"
+    },
+    "language": "اللغة"
+  },
+  "pricingPage": {
+    "title": "الأسعار",
+    "subtitle": "أسعار بسيطة وشفافة. ابدأ مجاناً، وتوسع مع نموك.",
+    "faq": {
+      "title": "الأسئلة الشائعة",
+      "subtitle": "كل ما تحتاج معرفته عن Seizn",
+      "questions": [
+        {
+          "q": "ما هي ذاكرة الذكاء الاصطناعي وكيف تختلف عن RAG؟",
+          "a": "ذاكرة الذكاء الاصطناعي هي تخزين دائم يتذكر تفضيلات المستخدم والحقائق والسياق عبر الجلسات. على عكس RAG الذي يسترد المستندات الثابتة، يقوم Seizn باستخراج وتحديث الذكريات ديناميكياً من المحادثات، مما يخلق قاعدة معرفية حية."
+        },
+        {
+          "q": "أين يتم تخزين بياناتي؟",
+          "a": "يتم تخزين جميع البيانات على خوادم آمنة في الولايات المتحدة (AWS) مع تشفير من طرف إلى طرف. نحن ملتزمون بـ GDPR و CCPA. يمكنك طلب حذف البيانات الكامل في أي وقت."
+        },
+        {
+          "q": "كيف أبدأ؟",
+          "a": "1) سجل مجاناً، 2) أنشئ مفتاح API، 3) ثبت SDK (npm install @seizn/sdk)، 4) أضف ذكريات بـ 3 سطور كود."
+        },
+        {
+          "q": "ماذا يحدث إذا تجاوزت حدود خطتي؟",
+          "a": "نُعلمك عند 80%. إذا تجاوزت، تستمر استدعاءات API بأولوية مخفضة. قم بالترقية في أي وقت لزيادة فورية في الحد."
+        },
+        {
+          "q": "هل يمكنني حذف ذكريات محددة؟",
+          "a": "نعم. احذف ذكريات فردية، أو احذف بالجملة حسب العلامات، أو امسح الكل. يتم إزالة البيانات المحذوفة خلال 24 ساعة."
+        },
+        {
+          "q": "ما نماذج الذكاء الاصطناعي المدعومة؟",
+          "a": "أي نموذج: GPT-4, Claude, Gemini, Llama. SDKs لـ JS/TS, Python, REST API. يعمل مع LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "هل هناك تجربة مجانية؟",
+          "a": "الخطة المجانية دائمة: 10,000 ذاكرة، 1,000 استدعاء API/شهر. لا حاجة لبطاقة ائتمان."
+        },
+        {
+          "q": "ما سرعة الاسترداد؟",
+          "a": "أقل من 50 مللي ثانية في المتوسط. بحث هجين متجه + رسم بياني مع فهارس محسنة."
+        }
+      ],
+      "stillQuestions": "لا تزال لديك أسئلة؟",
+      "contactUs": "تواصل معنا على"
+    }
+  },
+  "serviceSelector": {
+    "title": "اختر تجربتك",
+    "subtitle": "طريقتان لتسخير قوة ذاكرة الذكاء الاصطناعي",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "دردشة متعددة AI",
+      "description": "دردش مع GPT-4، Claude، Gemini والمزيد — كلهم بذاكرة دائمة تتذكرك.",
+      "features": [
+        "الوصول إلى جميع نماذج AI الرئيسية في مكان واحد",
+        "تفضيلاتك محفوظة عبر الجلسات",
+        "تبديل سياق سلس بين النماذج"
+      ],
+      "cta": "جرب Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API الذاكرة",
+      "description": "امنح تطبيقات AI الخاصة بك ذاكرة دائمة مع API الموجه للمطورين.",
+      "features": [
+        "REST API و SDKs بسيطة",
+        "وقت استرداد أقل من 50ms",
+        "أمان على مستوى المؤسسات"
+      ],
+      "cta": "استكشف API",
+      "badge": "متاح الآن"
+    },
+    "footer": "جزء من مواسم Seizn — ذاكرة AI لكل حاجة"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "دردشة واحدة.",
+    "titleHighlight": "كل AI.",
+    "subtitle": "بغض النظر عن اختيارك،\nكلهم يتذكرونك.",
+    "startChatting": "ابدأ الدردشة",
+    "viewPricing": "عرض الأسعار",
+    "features": {
+      "title": "لماذا Spring؟",
+      "subtitle": "أفضل ما في كل AI، موحد.",
+      "multiModel": {
+        "title": "وصول متعدد النماذج",
+        "description": "تبديل بين GPT-4، Claude، Gemini، Llama والمزيد. اختر أفضل نموذج لكل مهمة."
+      },
+      "persistentMemory": {
+        "title": "ذاكرة دائمة",
+        "description": "تفضيلاتك وسياقك وتاريخك محفوظ عبر كل محادثة وكل نموذج."
+      },
+      "freeGenerosity": {
+        "title": "طبقة مجانية بمستوى Cursor",
+        "description": "استخدام مجاني سخي. معظم المستخدمين لا يحتاجون للدفع أبداً. Pro بـ $9.99/شهر للمستخدمين المحترفين."
+      }
+    },
+    "pricing": {
+      "title": "أسعار بسيطة",
+      "free": {
+        "name": "مجاني",
+        "price": "$0",
+        "period": "للأبد",
+        "features": [
+          "جميع نماذج AI",
+          "ذاكرة عبر الجلسات",
+          "تطبيقات الويب والجوال"
+        ],
+        "cta": "ابدأ مجاناً"
+      },
+      "pro": {
+        "name": "برو",
+        "price": "$9.99",
+        "period": "شهرياً",
+        "badge": "أفضل قيمة",
+        "features": [
+          "كل شيء في المجاني",
+          "وصول أولوية",
+          "تحكم متقدم بالذاكرة",
+          "وصول API"
+        ],
+        "cta": "ترقية إلى Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

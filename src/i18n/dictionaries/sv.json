@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - AI-minnesinfrastruktur",
+    "description": "Ge din AI bestående minne. Seizn lagrar och hämtar kontext automatiskt, så att din AI kommer ihåg tidigare konversationer."
+  },
+  "nav": {
+    "features": "Funktioner",
+    "pricing": "Priser",
+    "docs": "Dokumentation",
+    "login": "Logga in",
+    "getStarted": "Kom igång"
+  },
+  "hero": {
+    "badge": "Tillgänglig Q1 2026",
+    "title": "Minnesinfrastruktur",
+    "titleHighlight": "för AI-applikationer",
+    "subtitle": "Ge din AI bestående minne. Seizn lagrar och hämtar kontext automatiskt, så att din AI kommer ihåg tidigare konversationer.",
+    "emailPlaceholder": "Ange din e-post",
+    "joinWaitlist": "Gå med i väntelistan",
+    "joining": "Ansluter...",
+    "onTheList": "Du är med på listan!",
+    "stats": {
+      "tokenSavings": "Tokenbesparingar",
+      "retrievalTime": "Hämtningstid",
+      "uptimeSla": "Drifttids-SLA"
+    }
+  },
+  "features": {
+    "title": "Byggd för utvecklare",
+    "subtitle": "Enkla API:er, kraftfull infrastruktur. Lägg till beständigt minne till vilken AI som helst på minuter.",
+    "smartExtraction": {
+      "title": "Smart extraktion",
+      "description": "Extraherar automatiskt nyckelfakta, preferenser och kontext från konversationer med Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Omedelbar hämtning",
+      "description": "Hybrid vektor + grafsökning returnerar relevanta minnen på millisekunder."
+    },
+    "enterpriseSecurity": {
+      "title": "Företagssäkerhet",
+      "description": "End-to-end-kryptering, SOC 2-kompatibel, med detaljerade åtkomstkontroller och granskningsloggar."
+    }
+  },
+  "codePreview": {
+    "title": "Enkel integration",
+    "subtitle": "Lägg till minne till din AI med bara några rader kod."
+  },
+  "pricing": {
+    "title": "Enkla, transparenta priser",
+    "subtitle": "Börja gratis, skala när du växer.",
+    "free": {
+      "name": "Gratis",
+      "price": "$0",
+      "period": "Gratis för alltid",
+      "features": [
+        "10 000 minnen",
+        "1 000 API-anrop/månad",
+        "Community-support"
+      ],
+      "cta": "Kom igång"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "per månad",
+      "features": [
+        "50 000 minnen",
+        "10 000 API-anrop/månad",
+        "E-postsupport",
+        "Grundläggande analys"
+      ],
+      "cta": "Prenumerera"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "per månad",
+      "badge": "Populär",
+      "features": [
+        "200 000 minnen",
+        "50 000 API-anrop/månad",
+        "Prioriterad support",
+        "Avancerad analys",
+        "Webhooks"
+      ],
+      "cta": "Prenumerera"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Anpassad",
+      "period": "Kontakta oss",
+      "features": [
+        "Obegränsade minnen",
+        "Obegränsade API-anrop",
+        "Dedikerad support",
+        "Anpassad SLA",
+        "On-premise-alternativ"
+      ],
+      "cta": "Kontakta försäljning"
+    }
+  },
+  "enterprisePage": {
+    "title": "Kontakta försäljning",
+    "subtitle": "Få en anpassad plan för dina företagsbehov med dedikerad support, SLA-garantier och anpassade integrationer.",
+    "includes": "Enterprise inkluderar:",
+    "includesList": [
+      "99,9% drifttids-SLA",
+      "Prioriterad support (24h)",
+      "Dedikerad kontoansvarig",
+      "Anpassade integrationer",
+      "SSO / SAML-autentisering",
+      "Policy för datalagring",
+      "Säkerhetsgranskningsrapporter",
+      "Anpassade avtal"
+    ],
+    "form": {
+      "companyName": "Företagsnamn",
+      "yourName": "Ditt namn",
+      "workEmail": "Arbets-e-post",
+      "phone": "Telefon",
+      "jobTitle": "Jobbtitel",
+      "companySize": "Företagsstorlek",
+      "useCase": "Berätta om ditt användningsfall",
+      "useCasePlaceholder": "Vad bygger du? Hur kommer du använda Seizn?",
+      "expectedVolume": "Förväntade månatliga API-anrop",
+      "timeline": "Tidslinje",
+      "requirements": "Specifika krav",
+      "requirementsPlaceholder": "SSO, specifik SLA, dataresidency, efterlevnadskrav, etc.",
+      "submit": "Kontakta försäljning",
+      "submitting": "Skickar...",
+      "privacyNote": "Genom att skicka detta formulär godkänner du vår"
+    },
+    "companySizes": {
+      "select": "Välj...",
+      "1-10": "1-10 anställda",
+      "11-50": "11-50 anställda",
+      "51-200": "51-200 anställda",
+      "201-500": "201-500 anställda",
+      "500+": "500+ anställda"
+    },
+    "volumes": {
+      "select": "Välj...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Välj...",
+      "immediate": "Redo att börja nu",
+      "1-3months": "1-3 månader",
+      "3-6months": "3-6 månader",
+      "6+months": "6+ månader"
+    },
+    "success": {
+      "title": "Tack!",
+      "message": "Vi har mottagit din förfrågan. Vårt team kontaktar dig inom 1-2 arbetsdagar.",
+      "backHome": "Tillbaka till startsidan"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Välkommen tillbaka",
+      "subtitle": "Logga in på ditt konto",
+      "email": "E-post",
+      "password": "Lösenord",
+      "submit": "Logga in",
+      "noAccount": "Har du inget konto?",
+      "signUp": "Registrera dig",
+      "or": "eller fortsätt med"
+    },
+    "signup": {
+      "title": "Skapa ett konto",
+      "subtitle": "Börja bygga med Seizn",
+      "name": "Fullständigt namn",
+      "email": "E-post",
+      "password": "Lösenord",
+      "submit": "Skapa konto",
+      "hasAccount": "Har du redan ett konto?",
+      "signIn": "Logga in",
+      "or": "eller fortsätt med"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Alla rättigheter förbehållna.",
+    "privacy": "Integritet",
+    "terms": "Villkor",
+    "contact": "Kontakt"
+  },
+  "dashboard": {
+    "title": "Kontrollpanel",
+    "welcome": "Välkommen tillbaka",
+    "overview": "Översikt",
+    "usage": "Användning",
+    "apiKeys": "API-nycklar",
+    "settings": "Inställningar",
+    "signOut": "Logga ut",
+    "stats": {
+      "memories": "Minnen",
+      "apiCalls": "API-anrop idag",
+      "plan": "Nuvarande plan",
+      "unlimited": "Obegränsad"
+    },
+    "keys": {
+      "title": "Dina API-nycklar",
+      "create": "Skapa ny nyckel",
+      "name": "Nyckelnamn",
+      "namePlaceholder": "Min API-nyckel",
+      "created": "Skapad",
+      "lastUsed": "Senast använd",
+      "never": "Aldrig",
+      "copy": "Kopiera",
+      "copied": "Kopierad!",
+      "delete": "Ta bort",
+      "deleteConfirm": "Är du säker på att du vill ta bort denna API-nyckel?",
+      "warning": "Spara denna nyckel säkert. Den visas inte igen.",
+      "noKeys": "Inga API-nycklar ännu. Skapa en för att komma igång."
+    },
+    "usagePage": {
+      "title": "Användningsstatistik",
+      "period": "Nuvarande period",
+      "memoriesUsed": "Använda minnen",
+      "apiCallsUsed": "Använda API-anrop",
+      "remaining": "Återstående",
+      "upgrade": "Uppgradera plan"
+    },
+    "language": "Språk"
+  },
+  "pricingPage": {
+    "title": "Priser",
+    "subtitle": "Enkla, transparenta priser. Börja gratis, skala när du växer.",
+    "faq": {
+      "title": "Vanliga frågor",
+      "subtitle": "Allt du behöver veta om Seizn",
+      "questions": [
+        {
+          "q": "Vad är AI-minne och hur skiljer det sig från RAG?",
+          "a": "AI-minne är beständig lagring som kommer ihåg användarpreferenser, fakta och kontext över sessioner. Till skillnad från RAG som hämtar statiska dokument, extraherar och uppdaterar Seizn dynamiskt minnen från konversationer, vilket skapar en levande kunskapsbas."
+        },
+        {
+          "q": "Var lagras min data?",
+          "a": "All data lagras på säkra servrar i USA (AWS) med end-to-end-kryptering. Vi följer GDPR och CCPA. Du kan begära fullständig dataradering när som helst."
+        },
+        {
+          "q": "Hur kommer jag igång?",
+          "a": "1) Registrera dig gratis, 2) Skapa API-nyckel, 3) Installera SDK (npm install @seizn/sdk), 4) Lägg till minnen med 3 rader kod."
+        },
+        {
+          "q": "Vad händer om jag överskrider mina plangränser?",
+          "a": "Vi meddelar dig vid 80%. Om du överskrider, fortsätter API-anrop med reducerad prioritet. Uppgradera när som helst för omedelbar gränshöjning."
+        },
+        {
+          "q": "Kan jag radera specifika minnen?",
+          "a": "Ja. Radera individuella minnen, massradera efter taggar eller rensa allt. Raderad data tas bort inom 24 timmar."
+        },
+        {
+          "q": "Vilka AI-modeller stöds?",
+          "a": "Vilken modell som helst: GPT-4, Claude, Gemini, Llama. SDK:er för JS/TS, Python, REST API. Fungerar med LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Finns det en gratis provperiod?",
+          "a": "Gratisplanen är permanent: 10 000 minnen, 1 000 API-anrop/månad. Inget kreditkort behövs."
+        },
+        {
+          "q": "Hur snabb är hämtningen?",
+          "a": "Under 50ms i genomsnitt. Hybrid vektor + grafsökning med optimerade index."
+        }
+      ],
+      "stillQuestions": "Har du fortfarande frågor?",
+      "contactUs": "Kontakta oss på"
+    }
+  },
+  "serviceSelector": {
+    "title": "Välj din upplevelse",
+    "subtitle": "Två sätt att utnyttja kraften i AI-minne",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Multi-AI-chatt",
+      "description": "Chatta med GPT-4, Claude, Gemini och mer — alla med beständigt minne som kommer ihåg dig.",
+      "features": [
+        "Tillgång till alla stora AI-modeller på ett ställe",
+        "Dina preferenser sparas mellan sessioner",
+        "Sömlös kontextväxling mellan modeller"
+      ],
+      "cta": "Prova Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Minnes-API",
+      "description": "Ge dina AI-applikationer beständigt minne med vårt utvecklarvänliga API.",
+      "features": [
+        "Enkla REST API och SDK:er",
+        "Hämtningstid under 50ms",
+        "Företagsklassad säkerhet"
+      ],
+      "cta": "Utforska API",
+      "badge": "Tillgänglig nu"
+    },
+    "footer": "En del av Seizn-säsongerna — AI-minne för alla behov"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "En chatt.",
+    "titleHighlight": "Alla AI:er.",
+    "subtitle": "Oavsett vilken du väljer,\nalla kommer ihåg dig.",
+    "startChatting": "Börja chatta",
+    "viewPricing": "Visa priser",
+    "features": {
+      "title": "Varför Spring?",
+      "subtitle": "Det bästa från varje AI, förenat.",
+      "multiModel": {
+        "title": "Multi-modellåtkomst",
+        "description": "Växla mellan GPT-4, Claude, Gemini, Llama och mer. Välj den bästa modellen för varje uppgift."
+      },
+      "persistentMemory": {
+        "title": "Beständigt minne",
+        "description": "Dina preferenser, kontext och historik bevaras i varje konversation och varje modell."
+      },
+      "freeGenerosity": {
+        "title": "Cursor-nivå gratisnivå",
+        "description": "Generös gratis användning. De flesta användare behöver aldrig betala. Pro för $9,99/månad för avancerade användare."
+      }
+    },
+    "pricing": {
+      "title": "Enkel prissättning",
+      "free": {
+        "name": "Gratis",
+        "price": "$0",
+        "period": "För alltid",
+        "features": [
+          "Alla AI-modeller",
+          "Minne mellan sessioner",
+          "Webb- och mobilappar"
+        ],
+        "cta": "Kom igång gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "per månad",
+        "badge": "Bästa värde",
+        "features": [
+          "Allt i Gratis",
+          "Prioriterad åtkomst",
+          "Avancerade minneskontroller",
+          "API-åtkomst"
+        ],
+        "cta": "Uppgradera till Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

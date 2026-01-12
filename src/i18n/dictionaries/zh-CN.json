@@ -1,0 +1,404 @@
+{
+  "metadata": {
+    "title": "Seizn - AI记忆基础设施",
+    "description": "为您的AI赋予持久记忆。Seizn自动存储和检索上下文，让您的AI记住过去的对话。"
+  },
+  "nav": {
+    "features": "功能",
+    "pricing": "定价",
+    "docs": "文档",
+    "login": "登录",
+    "getStarted": "开始使用"
+  },
+  "hero": {
+    "badge": "2026年第一季度上线",
+    "title": "AI应用的",
+    "titleHighlight": "记忆基础设施",
+    "subtitle": "为您的AI赋予持久记忆。Seizn自动存储和检索上下文，让您的AI记住过去的对话。",
+    "emailPlaceholder": "输入您的邮箱",
+    "joinWaitlist": "加入等候名单",
+    "joining": "正在加入...",
+    "onTheList": "您已加入名单！",
+    "stats": {
+      "tokenSavings": "Token节省",
+      "retrievalTime": "检索时间",
+      "uptimeSla": "正常运行时间SLA"
+    }
+  },
+  "features": {
+    "title": "为开发者打造",
+    "subtitle": "简单的API，强大的基础设施。几分钟内为任何AI添加持久记忆。",
+    "smartExtraction": {
+      "title": "智能提取",
+      "description": "使用Claude AI自动从对话中提取关键事实、偏好和上下文。"
+    },
+    "instantRetrieval": {
+      "title": "即时检索",
+      "description": "混合向量+图搜索在毫秒内返回相关记忆，每次都如此。"
+    },
+    "enterpriseSecurity": {
+      "title": "企业级安全",
+      "description": "端到端加密，符合SOC 2标准，具有精细的访问控制和审计日志。"
+    }
+  },
+  "codePreview": {
+    "title": "简单集成",
+    "subtitle": "只需几行代码即可为您的AI添加记忆。"
+  },
+  "pricing": {
+    "title": "简单透明的定价",
+    "subtitle": "免费开始，随需扩展。",
+    "free": {
+      "name": "免费版",
+      "price": "$0",
+      "period": "永久免费",
+      "features": [
+        "10,000条记忆",
+        "每月1,000次API调用",
+        "社区支持"
+      ],
+      "cta": "开始使用"
+    },
+    "plus": {
+      "name": "Plus版",
+      "price": "$9",
+      "period": "每月",
+      "features": [
+        "50,000条记忆",
+        "每月10,000次API调用",
+        "邮件支持",
+        "基础分析"
+      ],
+      "cta": "订阅"
+    },
+    "pro": {
+      "name": "Pro版",
+      "price": "$29",
+      "period": "每月",
+      "badge": "热门",
+      "features": [
+        "200,000条记忆",
+        "每月50,000次API调用",
+        "优先支持",
+        "高级分析",
+        "Webhooks"
+      ],
+      "cta": "订阅"
+    },
+    "enterprise": {
+      "name": "企业版",
+      "price": "定制",
+      "period": "联系我们",
+      "features": [
+        "无限记忆",
+        "无限API调用",
+        "专属支持",
+        "定制SLA",
+        "本地部署选项"
+      ],
+      "cta": "联系销售"
+    }
+  },
+  "enterprisePage": {
+    "title": "联系销售",
+    "subtitle": "获取定制企业方案，享受专属支持、SLA保证和定制集成。",
+    "includes": "企业版包含：",
+    "includesList": [
+      "99.9%正常运行时间SLA",
+      "优先支持（24小时）",
+      "专属客户经理",
+      "定制集成",
+      "SSO/SAML认证",
+      "数据保留策略",
+      "安全审计报告",
+      "定制合同"
+    ],
+    "form": {
+      "companyName": "公司名称",
+      "yourName": "您的姓名",
+      "workEmail": "工作邮箱",
+      "phone": "电话",
+      "jobTitle": "职位",
+      "companySize": "公司规模",
+      "useCase": "请介绍您的使用场景",
+      "useCasePlaceholder": "您在构建什么？您将如何使用Seizn？",
+      "expectedVolume": "预期月度API调用量",
+      "timeline": "时间规划",
+      "requirements": "具体需求",
+      "requirementsPlaceholder": "SSO、特定SLA、数据驻留、合规要求等。",
+      "submit": "联系销售",
+      "submitting": "提交中...",
+      "privacyNote": "提交此表单即表示您同意我们的"
+    },
+    "companySizes": {
+      "select": "请选择...",
+      "1-10": "1-10名员工",
+      "11-50": "11-50名员工",
+      "51-200": "51-200名员工",
+      "201-500": "201-500名员工",
+      "500+": "500名以上员工"
+    },
+    "volumes": {
+      "select": "请选择...",
+      "lt100k": "< 10万",
+      "100k-500k": "10万 - 50万",
+      "500k-1m": "50万 - 100万",
+      "1m-5m": "100万 - 500万",
+      "5m+": "500万以上"
+    },
+    "timelines": {
+      "select": "请选择...",
+      "immediate": "立即开始",
+      "1-3months": "1-3个月",
+      "3-6months": "3-6个月",
+      "6+months": "6个月以上"
+    },
+    "success": {
+      "title": "感谢您！",
+      "message": "我们已收到您的咨询。我们的团队将在1-2个工作日内与您联系。",
+      "backHome": "返回首页"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录您的账户",
+      "email": "邮箱",
+      "password": "密码",
+      "submit": "登录",
+      "noAccount": "还没有账户？",
+      "signUp": "注册",
+      "or": "或继续使用"
+    },
+    "signup": {
+      "title": "创建账户",
+      "subtitle": "开始使用Seizn构建",
+      "name": "全名",
+      "email": "邮箱",
+      "password": "密码",
+      "submit": "创建账户",
+      "hasAccount": "已有账户？",
+      "signIn": "登录",
+      "or": "或继续使用"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. 保留所有权利。",
+    "privacy": "隐私",
+    "terms": "条款",
+    "contact": "联系"
+  },
+  "dashboard": {
+    "title": "控制台",
+    "welcome": "欢迎回来",
+    "overview": "概览",
+    "usage": "使用情况",
+    "apiKeys": "API密钥",
+    "settings": "设置",
+    "signOut": "退出登录",
+    "stats": {
+      "memories": "记忆",
+      "apiCalls": "今日API调用",
+      "plan": "当前套餐",
+      "unlimited": "无限"
+    },
+    "keys": {
+      "title": "您的API密钥",
+      "create": "创建新密钥",
+      "name": "密钥名称",
+      "namePlaceholder": "我的API密钥",
+      "created": "创建时间",
+      "lastUsed": "最后使用",
+      "never": "从未",
+      "copy": "复制",
+      "copied": "已复制！",
+      "delete": "删除",
+      "deleteConfirm": "确定要删除此API密钥吗？",
+      "warning": "请安全保存此密钥。它不会再次显示。",
+      "noKeys": "还没有API密钥。创建一个开始使用吧。"
+    },
+    "usagePage": {
+      "title": "使用统计",
+      "period": "当前周期",
+      "memoriesUsed": "已用记忆",
+      "apiCallsUsed": "已用API调用",
+      "remaining": "剩余",
+      "upgrade": "升级套餐"
+    },
+    "language": "语言"
+  },
+  "pricingPage": {
+    "title": "定价",
+    "subtitle": "简单透明的定价。免费开始，随需扩展。",
+    "faq": {
+      "title": "常见问题",
+      "subtitle": "关于Seizn您需要知道的一切",
+      "questions": [
+        {
+          "q": "什么是AI记忆，它与RAG有何不同？",
+          "a": "AI记忆是持久存储，能跨会话记住用户偏好、事实和上下文。与检索静态文档的RAG不同，Seizn从对话中动态提取和更新记忆，创建一个活的知识库。"
+        },
+        {
+          "q": "我的数据存储在哪里？",
+          "a": "所有数据都存储在美国（AWS）的安全服务器上，采用端到端加密。我们符合GDPR和CCPA标准。您可以随时请求完全删除数据。"
+        },
+        {
+          "q": "如何开始？",
+          "a": "1) 免费注册，2) 创建API密钥，3) 安装SDK（npm install @seizn/sdk），4) 用3行代码添加记忆。"
+        },
+        {
+          "q": "如果超出套餐限制会怎样？",
+          "a": "我们会在达到80%时通知您。如果超出，API调用将以降低优先级继续。随时升级可立即增加限额。"
+        },
+        {
+          "q": "可以删除特定记忆吗？",
+          "a": "可以。可以删除单个记忆、按标签批量删除或清除全部。删除的数据将在24小时内移除。"
+        },
+        {
+          "q": "支持哪些AI模型？",
+          "a": "支持任何模型：GPT-4、Claude、Gemini、Llama。提供JS/TS、Python SDK和REST API。兼容LangChain、LlamaIndex、Vercel AI。"
+        },
+        {
+          "q": "有免费试用吗？",
+          "a": "免费版永久有效：10,000条记忆，每月1,000次API调用。无需信用卡。"
+        },
+        {
+          "q": "检索速度有多快？",
+          "a": "平均低于50毫秒。混合向量+图搜索，配合优化索引。"
+        }
+      ],
+      "stillQuestions": "还有问题？",
+      "contactUs": "联系我们"
+    }
+  },
+  "serviceSelector": {
+    "title": "选择您的体验",
+    "subtitle": "两种方式利用AI记忆的力量",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "多AI聊天",
+      "description": "与GPT-4、Claude、Gemini等对话——都具有记住您的持久记忆。",
+      "features": [
+        "在一个地方访问所有主流AI模型",
+        "您的偏好跨会话记忆",
+        "模型间无缝上下文切换"
+      ],
+      "cta": "试用Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "记忆API",
+      "description": "通过我们开发者优先的API为您的AI应用程序提供持久记忆。",
+      "features": [
+        "简单的REST API和SDK",
+        "低于50毫秒的检索时间",
+        "企业级安全"
+      ],
+      "cta": "探索API",
+      "badge": "现已可用"
+    },
+    "footer": "Seizn四季系列的一部分——满足各种需求的AI记忆"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "一个聊天。",
+    "titleHighlight": "所有AI。",
+    "subtitle": "无论您选择哪个，\n它们都会记住您。",
+    "startChatting": "开始聊天",
+    "viewPricing": "查看定价",
+    "features": {
+      "title": "为什么选择Spring？",
+      "subtitle": "每个AI的精华，统一呈现。",
+      "multiModel": {
+        "title": "多模型访问",
+        "description": "在GPT-4、Claude、Gemini、Llama等之间切换。为每个任务选择最佳模型。"
+      },
+      "persistentMemory": {
+        "title": "持久记忆",
+        "description": "您的偏好、上下文和历史记录在每次对话和每个模型中保持。"
+      },
+      "freeGenerosity": {
+        "title": "Cursor级别的免费层",
+        "description": "慷慨的免费使用。大多数用户无需付费。专业版每月$9.99，适合高级用户。"
+      }
+    },
+    "pricing": {
+      "title": "简单定价",
+      "free": {
+        "name": "免费版",
+        "price": "$0",
+        "period": "永久",
+        "features": [
+          "所有AI模型",
+          "跨会话记忆",
+          "网页和移动应用"
+        ],
+        "cta": "免费开始"
+      },
+      "pro": {
+        "name": "专业版",
+        "price": "$9.99",
+        "period": "每月",
+        "badge": "最佳价值",
+        "features": [
+          "免费版所有功能",
+          "优先访问",
+          "高级记忆控制",
+          "API访问"
+        ],
+        "cta": "升级到专业版"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Search you can debug.",
+    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
+    "copySnippetTitle": "Copy this snippet",
+    "copySnippetSubtitle": "Generated from your exact settings above",
+    "whySeizn": {
+      "title": "Why Seizn vs LangChain + Pinecone?",
+      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
+      "tracingTitle": "Built-in Tracing + Eval",
+      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "autopilotBadge": "Optional",
+      "governanceTitle": "Governance + Audit Logs",
+      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
+      "governanceBadge": "Default for Teams",
+      "lessGlueTitle": "Fewer Moving Parts",
+      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueBadge": "Less Glue Code"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Secure by default",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "Full traceability"
+    },
+    "pricingCta": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "viewPricing": "View Pricing",
+      "contactSales": "Contact Sales"
+    },
+    "nav": {
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "enterprise": "Enterprise",
+      "getApiKey": "Get API Key",
+      "tryDemo": "Try Demo"
+    },
+    "requestBuilder": "Request Builder",
+    "results": "Results",
+    "trace": "Trace"
+  }
+}

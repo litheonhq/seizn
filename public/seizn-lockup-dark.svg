@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 600">
+
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="600" y2="600" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#3CCB7F"/>
+    <stop offset="55%" stop-color="#4C6FFF"/>
+    <stop offset="100%" stop-color="#A855F7"/>
+  </linearGradient>
+</defs>
+
+<g transform="translate(0,0)">
+  <path d="M120 160 H480 L120 440 H480" fill="none" stroke="url(#g)" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="300" r="32" fill="#F7C948"/>
+</g>
+
+<text x="700" y="380" font-family="Space Grotesk, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="280" font-weight="700" letter-spacing="-6" fill="#FFFFFF">Seizn</text>
+</svg>
