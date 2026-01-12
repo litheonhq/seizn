@@ -13,6 +13,10 @@ const publicPaths = [
   '/monitoring',
   '/robots.txt',
   '/sitemap.xml',
+  '/dashboard',  // Dashboard routes (separate route group, not locale-prefixed)
+  '/login',      // Auth routes
+  '/signup',
+  '/docs',       // Documentation
 ];
 
 function getLocaleFromPath(pathname: string): Locale | null {

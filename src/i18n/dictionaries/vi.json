@@ -354,8 +354,8 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Search you can debug.",
-    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "heroTitle": "Tìm kiếm có thể gỡ lỗi.",
+    "heroSubtitle": "Stack tìm kiếm tích hợp với truy vết, đánh giá và quản trị tích hợp sẵn. Một yêu cầu = kết quả + truy vết + chi phí.",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

@@ -354,8 +354,8 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Search you can debug.",
-    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "heroTitle": "Wyszukiwanie, które możesz debugować.",
+    "heroSubtitle": "Zintegrowany stos wyszukiwania z wbudowanym śledzeniem, oceną i zarządzaniem. Jedno żądanie = wyniki + ślad + koszt.",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

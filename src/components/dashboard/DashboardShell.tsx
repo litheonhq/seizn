@@ -9,8 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 const seasonConfig = {
   spring: {
     name: "Spring",
-    nameJa: "春",
-    icon: "🌸",
+        icon: "🌸",
     particles: Array.from({ length: 8 }, (_, i) => ({
       className: "animate-float-slow",
       delay: i * 0.5,
@@ -18,8 +17,7 @@ const seasonConfig = {
   },
   summer: {
     name: "Summer",
-    nameJa: "夏",
-    icon: "🌊",
+        icon: "🌊",
     particles: Array.from({ length: 6 }, (_, i) => ({
       className: "animate-wave",
       delay: i * 0.3,
@@ -27,8 +25,7 @@ const seasonConfig = {
   },
   autumn: {
     name: "Autumn",
-    nameJa: "秋",
-    icon: "🍂",
+        icon: "🍂",
     particles: Array.from({ length: 6 }, (_, i) => ({
       className: "animate-leaffall",
       delay: i * 2,
@@ -36,8 +33,7 @@ const seasonConfig = {
   },
   winter: {
     name: "Winter",
-    nameJa: "冬",
-    icon: "❄️",
+        icon: "❄️",
     particles: Array.from({ length: 10 }, (_, i) => ({
       className: "animate-snowfall",
       delay: i * 1,
@@ -56,12 +52,12 @@ function getSeason(): Season {
 }
 
 const navigation = [
-  { name: "Overview", nameJa: "概況", href: "/dashboard", icon: HomeIcon },
-  { name: "Organizations", nameJa: "組織", href: "/dashboard/organizations", icon: UsersIcon },
-  { name: "Usage", nameJa: "利用状況", href: "/dashboard/usage", icon: ChartIcon },
-  { name: "API Keys", nameJa: "APIキー", href: "/dashboard/keys", icon: KeyIcon },
-  { name: "Docs", nameJa: "ドキュメント", href: "/docs", icon: BookIcon },
-  { name: "Settings", nameJa: "設定", href: "/dashboard/settings", icon: SettingsIcon },
+  { name: "Overview", href: "/dashboard", icon: HomeIcon },
+  { name: "Organizations", href: "/dashboard/organizations", icon: UsersIcon },
+  { name: "Usage", href: "/dashboard/usage", icon: ChartIcon },
+  { name: "API Keys", href: "/dashboard/keys", icon: KeyIcon },
+  { name: "Docs", href: "/docs", icon: BookIcon },
+  { name: "Settings", href: "/dashboard/settings", icon: SettingsIcon },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -139,7 +135,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   Seizn<span className="theme-primary">.</span>
                 </span>
                 <p className="text-xs text-gray-500 flex items-center gap-1">
-                  {config.icon} {config.nameJa}
+                  {config.icon} {config.name}
                 </p>
               </div>
             )}
@@ -181,9 +177,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 {isSidebarExpanded ? (
                   <>
                     <span className="truncate">{item.name}</span>
-                    <span className={`ml-auto text-xs ${active ? "text-white/70" : "text-gray-400"}`}>
-                      {item.nameJa}
-                    </span>
+                    
                   </>
                 ) : (
                   <span className="sr-only">{item.name}</span>
