@@ -181,6 +181,32 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
     setMobileConsoleTab("results");
   }, [config]);
 
+  // Auto-run demo on page load (once per session)
+  useEffect(() => {
+    // Skip if already run in this session or already executed
+    const hasAutoRun = sessionStorage.getItem("seizn-demo-auto-run");
+    if (hasAutoRun || hasRun) return;
+
+    // Wait for page to fully load, then auto-run demo
+    const timer = setTimeout(() => {
+      // Set a demo query
+      setConfig((prev) => ({
+        ...prev,
+        query: "How do I implement secure authentication?",
+      }));
+
+      // Trigger the demo run after a short delay
+      setTimeout(async () => {
+        await handleRun();
+        sessionStorage.setItem("seizn-demo-auto-run", "true");
+        // Switch to trace tab to show the trace visualization
+        setActiveTab("trace");
+      }, 500);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [hasRun, handleRun]);
+
   const t = dict;
 
   return (
