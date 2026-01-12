@@ -76,7 +76,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
-  const [isSidebarHovering, setIsSidebarHovering] = useState(false);
 
   useEffect(() => {
     setSeason(getSeason());
@@ -142,16 +141,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               </div>
             )}
           </Link>
-          <div className="mt-3 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setIsSidebarPinned((prev) => !prev)}
-              className="flex items-center justify-center rounded-xl px-2.5 py-2 text-xs font-medium text-gray-500 hover:text-gray-800 hover:bg-white/60 transition-colors"
-              title={isSidebarPinned ? t("dashboard.unpinSidebar") : t("dashboard.pinSidebar")}
-            >
-              {isSidebarPinned ? <UnpinIcon className="w-4 h-4" /> : <PinIcon className="w-4 h-4" />}
-            </button>
-          </div>
         </div>
 
         {/* Navigation */}
@@ -159,11 +148,21 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           {navigationConfig.map((item) => {
             const active = isActive(item.href);
             const label = t(item.key);
+
+            // When sidebar is collapsed, clicking icon toggles sidebar instead of navigating
+            const handleClick = (e: React.MouseEvent) => {
+              if (!isSidebarExpanded) {
+                e.preventDefault();
+                setIsSidebarPinned(true);
+              }
+            };
+
             return (
               <Link
                 key={item.key}
                 href={item.href}
                 title={label}
+                onClick={handleClick}
                 className={`group flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 ${
                   isSidebarExpanded ? "gap-3 px-4 py-3" : "justify-center p-3"
                 } ${
@@ -180,7 +179,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 {isSidebarExpanded ? (
                   <>
                     <span className="truncate">{label}</span>
-
                   </>
                 ) : (
                   <span className="sr-only">{label}</span>
@@ -192,63 +190,39 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          {isSidebarExpanded ? (
-            <>
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 hover:bg-white/80 transition-colors">
-                {session?.user?.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name || ""}
-                    className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
-                  />
-                ) : (
-                  <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
-                    <span className="text-white font-semibold">
-                      {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
-                    </span>
-                  </div>
-                )}
+          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 ${isSidebarExpanded ? 'hover:bg-white/80' : 'justify-center'} transition-colors`}>
+            {session?.user?.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={session.user.image}
+                alt={session.user.name || ""}
+                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
+                <span className="text-white font-semibold">
+                  {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
+                </span>
+              </div>
+            )}
+            {isSidebarExpanded && (
+              <>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-900 truncate">
                     {session?.user?.name || "User"}
                   </p>
                   <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
                 </div>
-              </div>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="mt-3 w-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-white/60 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                <LogoutIcon className="w-4 h-4" />
-                {t("dashboard.signOut")}
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col items-center gap-3">
-              {session?.user?.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={session.user.image}
-                  alt={session.user.name || ""}
-                  className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
-                />
-              ) : (
-                <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
-                  <span className="text-white font-semibold">
-                    {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
-                  </span>
-                </div>
-              )}
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-11 h-11 flex items-center justify-center rounded-2xl text-gray-500 hover:text-gray-700 hover:bg-white/70 transition-all duration-200"
-                title={t("dashboard.signOut")}
-              >
-                <LogoutIcon className="w-5 h-5" />
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white/60 rounded-xl transition-all duration-200"
+                  title={t("dashboard.signOut")}
+                >
+                  <LogoutIcon className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -408,26 +382,3 @@ function SettingsIcon({ className }: { className?: string }) {
   );
 }
 
-function PinIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16.5 4.5l3 3-3.75 3.75.75 3-2.25 2.25-3-6-4.5 4.5-1.5-1.5 4.5-4.5-6-3 2.25-2.25 3 .75L16.5 4.5z"
-      />
-    </svg>
-  );
-}
-
-function UnpinIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M7.5 6.75l10.5 10.5M15 6l.75-2.25L18 3l3 3-1.5 2.25L17.25 9M7.5 13.5L4.5 21l7.5-3-3-4.5 4.5-4.5"
-      />
-    </svg>
-  );
-}

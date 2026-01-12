@@ -242,6 +242,35 @@
       "languageHint": "Affects UI + dashboard",
       "loading": "Loading...",
       "loginRequired": "Login required."
+    },
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "overviewPage": {
+      "subtitle": "Here's an overview of your AI memory usage",
+      "totalMemories": "Total Memories",
+      "apiCalls": "API Calls",
+      "activeKeys": "Active API Keys",
+      "currentPlan": "Current Plan",
+      "usage": "Usage",
+      "today": "Today",
+      "dailyLimit": "Daily Limit",
+      "recentMemories": "Recent Memories",
+      "viewAll": "View All",
+      "noMemories": "No memories yet",
+      "noMemoriesHint": "Start by adding your first memory via API",
+      "quickStart": "Quick Start",
+      "createApiKey": "Create API Key",
+      "getStartedApi": "Get started with the API",
+      "viewDocumentation": "View Documentation",
+      "learnSeizn": "Learn how to use Seizn",
+      "createOrganization": "Create Organization",
+      "collaborateTeam": "Collaborate with your team",
+      "quickExample": "Quick Example",
+      "manageKeys": "Manage Keys",
+      "upgradePlan": "Upgrade Plan"
     }
   },
   "pricingPage": {
