@@ -83,7 +83,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
   const config = seasonConfig[season];
   const isSidebarExpanded = isSidebarPinned;
-  const mainPaddingClass = isSidebarExpanded ? "lg:pl-72" : "lg:pl-20";
+  // Fixed sidebar padding - sidebar overlays instead of pushing content
+  const mainPaddingClass = "lg:pl-20";
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -117,29 +118,35 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         ))}
       </div>
 
+      {/* Sidebar Backdrop - Desktop */}
+      {isSidebarExpanded && (
+        <div
+          className="fixed inset-0 z-40 hidden lg:block bg-black/20 backdrop-blur-sm transition-opacity duration-300"
+          onClick={() => setIsSidebarPinned(false)}
+        />
+      )}
+
       {/* Sidebar - Desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col glass-card transition-[width] duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col glass-card transition-all duration-300 ease-out ${
           isSidebarExpanded ? "w-72" : "w-20"
         }`}
-        
-        
       >
         {/* Logo */}
         <div className="p-4 border-b theme-border">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-10 h-10 rounded-2xl shadow-lg" />
-            {isSidebarExpanded && (
-              <div className="flex-1 min-w-0">
-                <span className="text-xl font-bold text-gray-900 block truncate">
-                  Seizn<span className="theme-primary">.</span>
-                </span>
-                <p className="text-xs text-gray-500 flex items-center gap-1">
-                  {config.icon} {config.name}
-                </p>
-              </div>
-            )}
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-10 h-10 rounded-2xl shadow-lg flex-shrink-0" />
+            <div className={`flex-1 min-w-0 transition-all duration-300 ease-out ${
+              isSidebarExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 w-0'
+            }`}>
+              <span className="text-xl font-bold text-gray-900 block truncate whitespace-nowrap">
+                Seizn<span className="theme-primary">.</span>
+              </span>
+              <p className="text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
+                {config.icon} {config.name}
+              </p>
+            </div>
           </Link>
         </div>
 
@@ -163,7 +170,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 href={item.href}
                 title={label}
                 onClick={handleClick}
-                className={`group flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 ${
+                className={`group flex items-center rounded-2xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden ${
                   isSidebarExpanded ? "gap-3 px-4 py-3" : "justify-center p-3"
                 } ${
                   active
@@ -172,17 +179,14 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 }`}
               >
                 <item.icon
-                  className={`w-5 h-5 transition-transform group-hover:scale-110 ${
+                  className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                     active ? "text-white" : "text-gray-400 group-hover:text-gray-600"
                   }`}
                 />
-                {isSidebarExpanded ? (
-                  <>
-                    <span className="truncate">{label}</span>
-                  </>
-                ) : (
-                  <span className="sr-only">{label}</span>
-                )}
+                <span className={`truncate whitespace-nowrap transition-all duration-300 ease-out ${
+                  isSidebarExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 w-0'
+                }`}>{label}</span>
+                {!isSidebarExpanded && <span className="sr-only">{label}</span>}
               </Link>
             );
           })}
@@ -190,38 +194,44 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 ${isSidebarExpanded ? 'hover:bg-white/80' : 'justify-center'} transition-colors`}>
+          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 ${isSidebarExpanded ? 'hover:bg-white/80' : 'justify-center'} transition-all duration-300`}>
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
+                className={`rounded-full ring-2 ring-white shadow-md transition-all duration-300 ${
+                  isSidebarExpanded ? 'w-11 h-11' : 'w-8 h-8'
+                }`}
               />
             ) : (
-              <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
-                <span className="text-white font-semibold">
+              <div className={`rounded-full theme-gradient-btn flex items-center justify-center shadow-md transition-all duration-300 ${
+                isSidebarExpanded ? 'w-11 h-11' : 'w-8 h-8'
+              }`}>
+                <span className={`text-white font-semibold transition-all duration-300 ${
+                  isSidebarExpanded ? 'text-base' : 'text-sm'
+                }`}>
                   {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
                 </span>
               </div>
             )}
-            {isSidebarExpanded && (
-              <>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 truncate">
-                    {session?.user?.name || "User"}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
-                </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white/60 rounded-xl transition-all duration-200"
-                  title={t("dashboard.signOut")}
-                >
-                  <LogoutIcon className="w-5 h-5" />
-                </button>
-              </>
-            )}
+            <div className={`flex items-center gap-3 overflow-hidden transition-all duration-300 ease-out ${
+              isSidebarExpanded ? 'flex-1 opacity-100' : 'w-0 opacity-0'
+            }`}>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate whitespace-nowrap">
+                  {session?.user?.name || "User"}
+                </p>
+                <p className="text-xs text-gray-500 truncate whitespace-nowrap">{session?.user?.email}</p>
+              </div>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white/60 rounded-xl transition-all duration-200 flex-shrink-0"
+                title={t("dashboard.signOut")}
+              >
+                <LogoutIcon className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </aside>

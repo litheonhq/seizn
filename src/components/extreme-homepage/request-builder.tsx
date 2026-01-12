@@ -57,7 +57,7 @@ export function RequestBuilder({
             value={config.query}
             onChange={(e) => updateConfig({ query: e.target.value })}
             placeholder="Enter your search query..."
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all text-gray-900 placeholder:text-gray-400"
             rows={3}
             disabled={disabled}
           />
@@ -95,7 +95,7 @@ export function RequestBuilder({
         <select
           value={config.dataset}
           onChange={(e) => updateConfig({ dataset: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all"
+          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900"
           disabled={disabled}
         >
           {SAMPLE_DATASETS.map((ds) => (
