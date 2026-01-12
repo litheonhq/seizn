@@ -196,9 +196,9 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
-            <a href={`/${locale}/docs`} className="text-sm text-gray-600 hover:text-black transition-colors">
+            <Link href="/docs" className="text-sm text-gray-600 hover:text-black transition-colors">
               {t.extremeHome?.nav?.docs || "Docs"}
-            </a>
+            </Link>
             <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-black transition-colors">
               {t.extremeHome?.nav?.pricing || "Pricing"}
             </Link>
@@ -238,7 +238,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-100">
             <div className="px-4 py-4 space-y-4">
-              <a href={`/${locale}/docs`} className="block text-gray-600">{t.extremeHome?.nav?.docs || 'Docs'}</a>
+              <Link href="/docs" className="block text-gray-600">{t.extremeHome?.nav?.docs || "Docs"}</Link>
               <Link href={`/${locale}/pricing`} className="block text-gray-600">{t.extremeHome?.nav?.pricing || "Pricing"}</Link>
               <Link href={`/${locale}/enterprise`} className="block text-gray-600">{t.extremeHome?.nav?.enterprise || "Enterprise"}</Link>
               <LanguageSwitcher currentLocale={locale} />
@@ -548,7 +548,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
           </div>
           <nav className="flex items-center gap-6">
-            <a href={`/${locale}/docs`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || 'Docs'}</a>
+            <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
             <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
             <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</a>
             <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</a>

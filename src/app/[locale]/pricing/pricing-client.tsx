@@ -64,7 +64,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           <div className="flex items-center gap-6">
             <a href={`/${locale}#features`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.nav.features}</a>
             <Link href={`/${locale}/pricing`} className="text-sm text-gray-900 font-medium hidden md:block">{t.nav.pricing}</Link>
-            <a href={`/${locale}/docs`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.nav.docs}</a>
+            <Link href="/docs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.nav.docs}</Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href="/login"
@@ -217,7 +217,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
 
   return (
     <div
-      className={`relative glass-card-premium rounded-3xl p-6 glass-card-hover overflow-hidden ${
+      className={`relative glass-card-premium rounded-3xl p-6 glass-card-hover overflow-hidden h-full flex flex-col ${
         isPro ? "ring-2 ring-purple-500/50 shadow-xl" : ""
       }`}
     >
@@ -233,12 +233,12 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
         </div>
       )}
 
-      <div className="relative">
+      <div className="relative flex flex-col flex-grow">
         <div className="text-sm font-medium text-gray-500 mb-2">{plan.name}</div>
         <div className="text-3xl font-semibold text-gray-900 mb-1">{plan.price}</div>
         <div className="text-sm text-gray-500 mb-6">{plan.period}</div>
 
-        <ul className="space-y-3 mb-8">
+        <ul className="space-y-3 flex-grow">
           {plan.features.map((feature: string, i: number) => (
             <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
               <div className={`w-5 h-5 rounded-full ${isPro ? "bg-purple-100" : "bg-emerald-100"} flex items-center justify-center flex-shrink-0`}>
@@ -251,6 +251,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
           ))}
         </ul>
 
+        <div className="mt-8">
         {type === "free" && (
           <Link
             href="/login"
@@ -283,6 +284,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
             {plan.cta}
           </Link>
         )}
+        </div>
       </div>
     </div>
   );
