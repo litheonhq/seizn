@@ -446,5 +446,139 @@
     "requestBuilder": "요청 빌더",
     "results": "결과",
     "trace": "트레이스"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "대시보드",
+      "getStarted": "시작하기"
+    },
+    "sidebar": {
+      "gettingStarted": "시작하기",
+      "quickStart": "빠른 시작",
+      "authentication": "인증",
+      "apiReference": "API 참조",
+      "endpoints": "엔드포인트",
+      "rateLimits": "요청 제한",
+      "errorCodes": "오류 코드",
+      "resources": "리소스",
+      "security": "보안",
+      "sdks": "SDK"
+    },
+    "hero": {
+      "title": "API 문서",
+      "subtitle": "Seizn을 애플리케이션에 통합하는 데 필요한 모든 것. 몇 줄의 코드로 AI에 영구 메모리를 추가하세요."
+    },
+    "quickStart": {
+      "title": "빠른 시작",
+      "description": "대시보드에서 API 키를 받은 후",
+      "dashboardLink": "대시보드",
+      "then": "요청을 시작하세요:"
+    },
+    "authentication": {
+      "title": "인증",
+      "description": "모든 API 요청에는",
+      "header": "x-api-key",
+      "headerSuffix": "헤더에 API 키가 필요합니다.",
+      "securityTitle": "보안:",
+      "securityText": "API 키를 안전하게 보관하세요. 클라이언트 측 코드에 노출하지 마세요. 환경 변수나 백엔드 프록시를 사용하세요."
+    },
+    "endpoints": {
+      "title": "API 엔드포인트",
+      "requestBody": "요청 본문",
+      "queryParams": "쿼리 매개변수",
+      "response": "응답",
+      "postMemories": {
+        "description": "사용자의 메모리 저장소에 새 메모리를 추가합니다.",
+        "content": "string (필수) - 메모리 내용",
+        "memoryType": "string - 유형: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - 분류용 태그",
+        "namespace": "string - 조직용 네임스페이스 (기본값: \"default\")",
+        "scope": "string - 범위: user, session, agent",
+        "sessionId": "string - 세션 범위 메모리용 세션 ID",
+        "agentId": "string - 에이전트 범위 메모리용 에이전트 ID"
+      },
+      "getMemories": {
+        "description": "의미적 유사성을 사용하여 메모리를 검색합니다.",
+        "query": "string (필수) - 검색 쿼리",
+        "limit": "number - 최대 결과 수 (기본값: 10, 최대: 100)",
+        "threshold": "number - 유사도 임계값 0-1 (기본값: 0.7)",
+        "namespace": "string - 네임스페이스로 필터링"
+      },
+      "deleteMemories": {
+        "description": "ID로 메모리를 삭제합니다.",
+        "ids": "string (필수) - 쉼표로 구분된 메모리 ID"
+      },
+      "extract": {
+        "description": "AI를 사용하여 대화에서 메모리를 추출하고 저장합니다.",
+        "conversation": "string (필수) - 메모리를 추출할 대화 텍스트",
+        "model": "string - AI 모델: haiku (빠름) 또는 sonnet (더 좋음) (기본값: haiku)",
+        "autoStore": "boolean - 추출된 메모리 자동 저장 (기본값: true)",
+        "namespace": "string - 저장된 메모리의 네임스페이스 (기본값: \"default\")"
+      },
+      "query": {
+        "description": "관련 메모리를 컨텍스트로 사용하여 AI 생성 응답을 받습니다 (RAG).",
+        "queryParam": "string (필수) - 사용자의 질문 또는 프롬프트",
+        "model": "string - AI 모델: haiku 또는 sonnet (기본값: haiku)",
+        "topK": "number - 컨텍스트로 사용할 메모리 수 (기본값: 5)",
+        "namespace": "string - 네임스페이스로 메모리 필터링",
+        "includeMemories": "boolean - 응답에 사용된 메모리 포함 (기본값: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "요청 제한",
+      "plan": "플랜",
+      "dailyApiCalls": "일일 API 호출",
+      "maxMemories": "최대 메모리",
+      "apiKeys": "API 키",
+      "free": "무료",
+      "plus": "플러스",
+      "pro": "프로",
+      "enterprise": "엔터프라이즈",
+      "unlimited": "무제한",
+      "exceeded": "요청 제한을 초과하면 API가",
+      "response": "응답을 반환합니다."
+    },
+    "errors": {
+      "title": "오류 코드",
+      "code": "코드",
+      "description": "설명",
+      "success": "성공",
+      "badRequest": "잘못된 요청 - 매개변수 누락 또는 유효하지 않음",
+      "unauthorized": "권한 없음 - API 키가 유효하지 않거나 누락됨",
+      "tooManyRequests": "요청 과다 - 요청 제한 초과",
+      "serverError": "내부 서버 오류 - 문제가 발생했습니다"
+    },
+    "security": {
+      "title": "보안 및 거버넌스",
+      "dataSecurityTitle": "데이터 보안",
+      "encryptionAtRest": "저장 시 암호화:",
+      "encryptionAtRestDesc": "모든 데이터 AES-256으로 암호화",
+      "encryptionInTransit": "전송 중 암호화:",
+      "encryptionInTransitDesc": "모든 연결에 TLS 1.3",
+      "tenantIsolation": "테넌트 격리:",
+      "tenantIsolationDesc": "계정 간 완전한 데이터 분리",
+      "apiKeyManagement": "API 키 관리",
+      "keyRotation": "키 순환:",
+      "keyRotationDesc": "대시보드에서 언제든지 키 순환",
+      "keyExpiration": "키 만료:",
+      "keyExpirationDesc": "90일 후 자동 만료 (설정 가능)",
+      "usageTracking": "사용량 추적:",
+      "usageTrackingDesc": "키별 사용량 실시간 모니터링",
+      "dataRetention": "데이터 보존 및 삭제",
+      "export": "내보내기:",
+      "exportDesc": "API 또는 대시보드를 통해 언제든지 모든 데이터 내보내기",
+      "deletion": "삭제:",
+      "deletionDesc": "30일 후 보존 없이 영구 삭제",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "데이터 주체 권리 완전 준수"
+    },
+    "sdks": {
+      "title": "SDK",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. All rights reserved."
+    }
   }
 }

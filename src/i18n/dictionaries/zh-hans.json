@@ -446,5 +446,139 @@
     "requestBuilder": "Request Builder",
     "results": "Results",
     "trace": "Trace"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "仪表板",
+      "getStarted": "开始使用"
+    },
+    "sidebar": {
+      "gettingStarted": "开始使用",
+      "quickStart": "快速入门",
+      "authentication": "认证",
+      "apiReference": "API参考",
+      "endpoints": "端点",
+      "rateLimits": "速率限制",
+      "errorCodes": "错误代码",
+      "resources": "资源",
+      "security": "安全",
+      "sdks": "SDK"
+    },
+    "hero": {
+      "title": "API文档",
+      "subtitle": "将Seizn集成到您的应用程序所需的一切。只需几行代码即可为您的AI添加持久记忆。"
+    },
+    "quickStart": {
+      "title": "快速入门",
+      "description": "从仪表板获取您的API密钥",
+      "dashboardLink": "仪表板",
+      "then": "，然后开始发送请求："
+    },
+    "authentication": {
+      "title": "认证",
+      "description": "所有API请求都需要在",
+      "header": "x-api-key",
+      "headerSuffix": "标头中传递API密钥。",
+      "securityTitle": "安全：",
+      "securityText": "请妥善保管您的API密钥。不要在客户端代码中暴露它们。使用环境变量或后端代理。"
+    },
+    "endpoints": {
+      "title": "API端点",
+      "requestBody": "请求体",
+      "queryParams": "查询参数",
+      "response": "响应",
+      "postMemories": {
+        "description": "向用户的记忆存储添加新记忆。",
+        "content": "string (必需) - 记忆内容",
+        "memoryType": "string - 类型：fact、preference、experience、relationship、instruction",
+        "tags": "string[] - 用于分类的标签",
+        "namespace": "string - 用于组织的命名空间（默认：\"default\"）",
+        "scope": "string - 范围：user、session、agent",
+        "sessionId": "string - 会话范围记忆的会话ID",
+        "agentId": "string - 代理范围记忆的代理ID"
+      },
+      "getMemories": {
+        "description": "使用语义相似性搜索记忆。",
+        "query": "string (必需) - 搜索查询",
+        "limit": "number - 最大结果数（默认：10，最大：100）",
+        "threshold": "number - 相似度阈值 0-1（默认：0.7）",
+        "namespace": "string - 按命名空间筛选"
+      },
+      "deleteMemories": {
+        "description": "按ID删除记忆。",
+        "ids": "string (必需) - 逗号分隔的记忆ID"
+      },
+      "extract": {
+        "description": "使用AI从对话中提取并存储记忆。",
+        "conversation": "string (必需) - 要提取记忆的对话文本",
+        "model": "string - AI模型：haiku（更快）或sonnet（更好）（默认：haiku）",
+        "autoStore": "boolean - 自动存储提取的记忆（默认：true）",
+        "namespace": "string - 存储记忆的命名空间（默认：\"default\"）"
+      },
+      "query": {
+        "description": "使用相关记忆作为上下文获取AI生成的响应（RAG）。",
+        "queryParam": "string (必需) - 用户的问题或提示",
+        "model": "string - AI模型：haiku或sonnet（默认：haiku）",
+        "topK": "number - 用作上下文的记忆数量（默认：5）",
+        "namespace": "string - 按命名空间筛选记忆",
+        "includeMemories": "boolean - 在响应中包含使用的记忆（默认：true）"
+      }
+    },
+    "rateLimits": {
+      "title": "速率限制",
+      "plan": "计划",
+      "dailyApiCalls": "每日API调用",
+      "maxMemories": "最大记忆数",
+      "apiKeys": "API密钥",
+      "free": "免费",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "企业版",
+      "unlimited": "无限",
+      "exceeded": "当您超过速率限制时，API将返回",
+      "response": "响应。"
+    },
+    "errors": {
+      "title": "错误代码",
+      "code": "代码",
+      "description": "描述",
+      "success": "成功",
+      "badRequest": "错误请求 - 缺少参数或参数无效",
+      "unauthorized": "未授权 - API密钥无效或缺失",
+      "tooManyRequests": "请求过多 - 超过速率限制",
+      "serverError": "内部服务器错误 - 出现问题"
+    },
+    "security": {
+      "title": "安全与治理",
+      "dataSecurityTitle": "数据安全",
+      "encryptionAtRest": "静态加密：",
+      "encryptionAtRestDesc": "所有数据使用AES-256加密",
+      "encryptionInTransit": "传输加密：",
+      "encryptionInTransitDesc": "所有连接使用TLS 1.3",
+      "tenantIsolation": "租户隔离：",
+      "tenantIsolationDesc": "账户间完全数据隔离",
+      "apiKeyManagement": "API密钥管理",
+      "keyRotation": "密钥轮换：",
+      "keyRotationDesc": "随时从仪表板轮换密钥",
+      "keyExpiration": "密钥过期：",
+      "keyExpirationDesc": "90天后自动过期（可配置）",
+      "usageTracking": "使用跟踪：",
+      "usageTrackingDesc": "实时监控每个密钥的使用情况",
+      "dataRetention": "数据保留与删除",
+      "export": "导出：",
+      "exportDesc": "随时通过API或仪表板导出所有数据",
+      "deletion": "删除：",
+      "deletionDesc": "30天后永久删除，不保留",
+      "compliance": "GDPR/CCPA：",
+      "complianceDesc": "完全符合数据主体权利"
+    },
+    "sdks": {
+      "title": "SDK",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. 保留所有权利。"
+    }
   }
 }

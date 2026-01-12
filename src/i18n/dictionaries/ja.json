@@ -446,5 +446,139 @@
     "requestBuilder": "Request Builder",
     "results": "Results",
     "trace": "Trace"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "ダッシュボード",
+      "getStarted": "始める"
+    },
+    "sidebar": {
+      "gettingStarted": "はじめに",
+      "quickStart": "クイックスタート",
+      "authentication": "認証",
+      "apiReference": "APIリファレンス",
+      "endpoints": "エンドポイント",
+      "rateLimits": "レート制限",
+      "errorCodes": "エラーコード",
+      "resources": "リソース",
+      "security": "セキュリティ",
+      "sdks": "SDK"
+    },
+    "hero": {
+      "title": "APIドキュメント",
+      "subtitle": "Seiznをアプリケーションに統合するために必要なすべて。数行のコードでAIに永続メモリを追加できます。"
+    },
+    "quickStart": {
+      "title": "クイックスタート",
+      "description": "ダッシュボードからAPIキーを取得し",
+      "dashboardLink": "ダッシュボード",
+      "then": "、リクエストを開始してください:"
+    },
+    "authentication": {
+      "title": "認証",
+      "description": "すべてのAPIリクエストには",
+      "header": "x-api-key",
+      "headerSuffix": "ヘッダーにAPIキーが必要です。",
+      "securityTitle": "セキュリティ:",
+      "securityText": "APIキーを安全に保管してください。クライアント側のコードに公開しないでください。環境変数またはバックエンドプロキシを使用してください。"
+    },
+    "endpoints": {
+      "title": "APIエンドポイント",
+      "requestBody": "リクエストボディ",
+      "queryParams": "クエリパラメータ",
+      "response": "レスポンス",
+      "postMemories": {
+        "description": "ユーザーのメモリストアに新しいメモリを追加します。",
+        "content": "string (必須) - メモリの内容",
+        "memoryType": "string - タイプ: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - 分類用タグ",
+        "namespace": "string - 整理用の名前空間 (デフォルト: \"default\")",
+        "scope": "string - スコープ: user, session, agent",
+        "sessionId": "string - セッションスコープメモリ用のセッションID",
+        "agentId": "string - エージェントスコープメモリ用のエージェントID"
+      },
+      "getMemories": {
+        "description": "意味的類似性を使用してメモリを検索します。",
+        "query": "string (必須) - 検索クエリ",
+        "limit": "number - 最大結果数 (デフォルト: 10, 最大: 100)",
+        "threshold": "number - 類似度しきい値 0-1 (デフォルト: 0.7)",
+        "namespace": "string - 名前空間でフィルター"
+      },
+      "deleteMemories": {
+        "description": "IDでメモリを削除します。",
+        "ids": "string (必須) - カンマ区切りのメモリID"
+      },
+      "extract": {
+        "description": "AIを使用して会話からメモリを抽出して保存します。",
+        "conversation": "string (必須) - メモリを抽出する会話テキスト",
+        "model": "string - AIモデル: haiku (高速) または sonnet (高品質) (デフォルト: haiku)",
+        "autoStore": "boolean - 抽出されたメモリを自動保存 (デフォルト: true)",
+        "namespace": "string - 保存されたメモリの名前空間 (デフォルト: \"default\")"
+      },
+      "query": {
+        "description": "関連するメモリをコンテキストとして使用してAI生成の応答を取得します (RAG)。",
+        "queryParam": "string (必須) - ユーザーの質問またはプロンプト",
+        "model": "string - AIモデル: haiku または sonnet (デフォルト: haiku)",
+        "topK": "number - コンテキストとして使用するメモリ数 (デフォルト: 5)",
+        "namespace": "string - 名前空間でメモリをフィルター",
+        "includeMemories": "boolean - 使用されたメモリをレスポンスに含める (デフォルト: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "レート制限",
+      "plan": "プラン",
+      "dailyApiCalls": "日次API呼び出し",
+      "maxMemories": "最大メモリ",
+      "apiKeys": "APIキー",
+      "free": "無料",
+      "plus": "プラス",
+      "pro": "プロ",
+      "enterprise": "エンタープライズ",
+      "unlimited": "無制限",
+      "exceeded": "レート制限を超えると、APIは",
+      "response": "レスポンスを返します。"
+    },
+    "errors": {
+      "title": "エラーコード",
+      "code": "コード",
+      "description": "説明",
+      "success": "成功",
+      "badRequest": "不正なリクエスト - パラメータが不足または無効",
+      "unauthorized": "認証エラー - APIキーが無効または不足",
+      "tooManyRequests": "リクエスト過多 - レート制限超過",
+      "serverError": "内部サーバーエラー - 問題が発生しました"
+    },
+    "security": {
+      "title": "セキュリティとガバナンス",
+      "dataSecurityTitle": "データセキュリティ",
+      "encryptionAtRest": "保存時の暗号化:",
+      "encryptionAtRestDesc": "すべてのデータをAES-256で暗号化",
+      "encryptionInTransit": "転送中の暗号化:",
+      "encryptionInTransitDesc": "すべての接続にTLS 1.3",
+      "tenantIsolation": "テナント分離:",
+      "tenantIsolationDesc": "アカウント間の完全なデータ分離",
+      "apiKeyManagement": "APIキー管理",
+      "keyRotation": "キーローテーション:",
+      "keyRotationDesc": "ダッシュボードからいつでもキーをローテーション",
+      "keyExpiration": "キーの有効期限:",
+      "keyExpirationDesc": "90日後に自動期限切れ (設定可能)",
+      "usageTracking": "使用状況追跡:",
+      "usageTrackingDesc": "キーごとの使用状況をリアルタイムで監視",
+      "dataRetention": "データ保持と削除",
+      "export": "エクスポート:",
+      "exportDesc": "APIまたはダッシュボードを通じていつでもすべてのデータをエクスポート",
+      "deletion": "削除:",
+      "deletionDesc": "30日後に保持なしで完全削除",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "データ主体の権利に完全準拠"
+    },
+    "sdks": {
+      "title": "SDK",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. All rights reserved."
+    }
   }
 }

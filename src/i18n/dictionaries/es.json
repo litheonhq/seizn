@@ -446,5 +446,139 @@
     "requestBuilder": "Request Builder",
     "results": "Results",
     "trace": "Trace"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "Panel",
+      "getStarted": "Comenzar"
+    },
+    "sidebar": {
+      "gettingStarted": "Primeros pasos",
+      "quickStart": "Inicio rápido",
+      "authentication": "Autenticación",
+      "apiReference": "Referencia API",
+      "endpoints": "Endpoints",
+      "rateLimits": "Límites de tasa",
+      "errorCodes": "Códigos de error",
+      "resources": "Recursos",
+      "security": "Seguridad",
+      "sdks": "SDKs"
+    },
+    "hero": {
+      "title": "Documentación API",
+      "subtitle": "Todo lo que necesitas para integrar Seizn en tus aplicaciones. Añade memoria persistente a tu IA con solo unas líneas de código."
+    },
+    "quickStart": {
+      "title": "Inicio Rápido",
+      "description": "Obtén tu clave API desde el",
+      "dashboardLink": "panel",
+      "then": ", luego comienza a hacer solicitudes:"
+    },
+    "authentication": {
+      "title": "Autenticación",
+      "description": "Todas las solicitudes API requieren una clave API pasada en el encabezado",
+      "header": "x-api-key",
+      "headerSuffix": ".",
+      "securityTitle": "Seguridad:",
+      "securityText": "Mantén tus claves API secretas. Nunca las expongas en código del lado del cliente. Usa variables de entorno o un proxy backend."
+    },
+    "endpoints": {
+      "title": "Endpoints API",
+      "requestBody": "Cuerpo de solicitud",
+      "queryParams": "Parámetros de consulta",
+      "response": "Respuesta",
+      "postMemories": {
+        "description": "Añade un nuevo recuerdo al almacén de memoria del usuario.",
+        "content": "string (required) - The memory content",
+        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tags for categorization",
+        "namespace": "string - Namespace for organization (default: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - Session ID for session-scoped memories",
+        "agentId": "string - Agent ID for agent-scoped memories"
+      },
+      "getMemories": {
+        "description": "Busca recuerdos usando similitud semántica.",
+        "query": "string (required) - Search query",
+        "limit": "number - Max results (default: 10, max: 100)",
+        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
+        "namespace": "string - Filter by namespace"
+      },
+      "deleteMemories": {
+        "description": "Elimina recuerdos por sus IDs.",
+        "ids": "string (required) - Comma-separated memory IDs"
+      },
+      "extract": {
+        "description": "Extrae y almacena recuerdos de una conversación usando IA.",
+        "conversation": "string (required) - The conversation text to extract memories from",
+        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
+        "autoStore": "boolean - Automatically store extracted memories (default: true)",
+        "namespace": "string - Namespace for stored memories (default: \"default\")"
+      },
+      "query": {
+        "description": "Obtén respuestas generadas por IA usando recuerdos relevantes como contexto (RAG).",
+        "queryParam": "string (required) - The user's question or prompt",
+        "model": "string - AI model: haiku or sonnet (default: haiku)",
+        "topK": "number - Number of memories to use as context (default: 5)",
+        "namespace": "string - Filter memories by namespace",
+        "includeMemories": "boolean - Include used memories in response (default: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "Límites de Tasa",
+      "plan": "Plan",
+      "dailyApiCalls": "Llamadas API diarias",
+      "maxMemories": "Memorias máximas",
+      "apiKeys": "Claves API",
+      "free": "Gratis",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "Empresarial",
+      "unlimited": "Ilimitado",
+      "exceeded": "Cuando excedes tu límite de tasa, la API devuelve una respuesta",
+      "response": "."
+    },
+    "errors": {
+      "title": "Códigos de Error",
+      "code": "Código",
+      "description": "Descripción",
+      "success": "Éxito",
+      "badRequest": "Solicitud incorrecta - Parámetros faltantes o inválidos",
+      "unauthorized": "No autorizado - Clave API inválida o faltante",
+      "tooManyRequests": "Demasiadas solicitudes - Límite de tasa excedido",
+      "serverError": "Error interno del servidor - Algo salió mal"
+    },
+    "security": {
+      "title": "Seguridad y Gobernanza",
+      "dataSecurityTitle": "Seguridad de datos",
+      "encryptionAtRest": "Cifrado en reposo:",
+      "encryptionAtRestDesc": "Todos los datos cifrados con AES-256",
+      "encryptionInTransit": "Cifrado en tránsito:",
+      "encryptionInTransitDesc": "TLS 1.3 para todas las conexiones",
+      "tenantIsolation": "Aislamiento de inquilinos:",
+      "tenantIsolationDesc": "Separación completa de datos entre cuentas",
+      "apiKeyManagement": "Gestión de claves API",
+      "keyRotation": "Rotación de claves:",
+      "keyRotationDesc": "Rota las claves en cualquier momento desde el panel",
+      "keyExpiration": "Expiración de claves:",
+      "keyExpirationDesc": "Expiración automática después de 90 días (configurable)",
+      "usageTracking": "Seguimiento de uso:",
+      "usageTrackingDesc": "Monitorea el uso por clave en tiempo real",
+      "dataRetention": "Retención y eliminación de datos",
+      "export": "Exportar:",
+      "exportDesc": "Exporta todos tus datos en cualquier momento vía API o panel",
+      "deletion": "Eliminación:",
+      "deletionDesc": "Eliminación permanente sin retención después de 30 días",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "Cumplimiento total con los derechos del sujeto de datos"
+    },
+    "sdks": {
+      "title": "SDKs",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. Todos los derechos reservados."
+    }
   }
 }

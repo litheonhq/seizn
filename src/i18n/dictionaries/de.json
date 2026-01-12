@@ -446,5 +446,139 @@
     "requestBuilder": "Request Builder",
     "results": "Results",
     "trace": "Trace"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "getStarted": "Loslegen"
+    },
+    "sidebar": {
+      "gettingStarted": "Erste Schritte",
+      "quickStart": "Schnellstart",
+      "authentication": "Authentifizierung",
+      "apiReference": "API-Referenz",
+      "endpoints": "Endpunkte",
+      "rateLimits": "Rate-Limits",
+      "errorCodes": "Fehlercodes",
+      "resources": "Ressourcen",
+      "security": "Sicherheit",
+      "sdks": "SDKs"
+    },
+    "hero": {
+      "title": "API-Dokumentation",
+      "subtitle": "Alles, was Sie brauchen, um Seizn in Ihre Anwendungen zu integrieren. Fügen Sie Ihrer KI mit nur wenigen Codezeilen persistenten Speicher hinzu."
+    },
+    "quickStart": {
+      "title": "Schnellstart",
+      "description": "Holen Sie sich Ihren API-Schlüssel vom",
+      "dashboardLink": "Dashboard",
+      "then": ", dann beginnen Sie mit den Anfragen:"
+    },
+    "authentication": {
+      "title": "Authentifizierung",
+      "description": "Alle API-Anfragen erfordern einen API-Schlüssel im Header",
+      "header": "x-api-key",
+      "headerSuffix": ".",
+      "securityTitle": "Sicherheit:",
+      "securityText": "Halten Sie Ihre API-Schlüssel geheim. Setzen Sie sie niemals in clientseitigem Code aus. Verwenden Sie Umgebungsvariablen oder einen Backend-Proxy."
+    },
+    "endpoints": {
+      "title": "API-Endpunkte",
+      "requestBody": "Anfragekörper",
+      "queryParams": "Abfrageparameter",
+      "response": "Antwort",
+      "postMemories": {
+        "description": "Fügt dem Speicher des Benutzers eine neue Erinnerung hinzu.",
+        "content": "string (required) - The memory content",
+        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tags for categorization",
+        "namespace": "string - Namespace for organization (default: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - Session ID for session-scoped memories",
+        "agentId": "string - Agent ID for agent-scoped memories"
+      },
+      "getMemories": {
+        "description": "Sucht Erinnerungen anhand semantischer Ähnlichkeit.",
+        "query": "string (required) - Search query",
+        "limit": "number - Max results (default: 10, max: 100)",
+        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
+        "namespace": "string - Filter by namespace"
+      },
+      "deleteMemories": {
+        "description": "Löscht Erinnerungen anhand ihrer IDs.",
+        "ids": "string (required) - Comma-separated memory IDs"
+      },
+      "extract": {
+        "description": "Extrahiert und speichert Erinnerungen aus einem Gespräch mithilfe von KI.",
+        "conversation": "string (required) - The conversation text to extract memories from",
+        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
+        "autoStore": "boolean - Automatically store extracted memories (default: true)",
+        "namespace": "string - Namespace for stored memories (default: \"default\")"
+      },
+      "query": {
+        "description": "Erhält KI-generierte Antworten unter Verwendung relevanter Erinnerungen als Kontext (RAG).",
+        "queryParam": "string (required) - The user's question or prompt",
+        "model": "string - AI model: haiku or sonnet (default: haiku)",
+        "topK": "number - Number of memories to use as context (default: 5)",
+        "namespace": "string - Filter memories by namespace",
+        "includeMemories": "boolean - Include used memories in response (default: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "Rate-Limits",
+      "plan": "Plan",
+      "dailyApiCalls": "Tägliche API-Aufrufe",
+      "maxMemories": "Max. Erinnerungen",
+      "apiKeys": "API-Schlüssel",
+      "free": "Kostenlos",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "Enterprise",
+      "unlimited": "Unbegrenzt",
+      "exceeded": "Wenn Sie Ihr Rate-Limit überschreiten, gibt die API eine Antwort zurück",
+      "response": "."
+    },
+    "errors": {
+      "title": "Fehlercodes",
+      "code": "Code",
+      "description": "Beschreibung",
+      "success": "Erfolg",
+      "badRequest": "Ungültige Anfrage - Fehlende oder ungültige Parameter",
+      "unauthorized": "Nicht autorisiert - Ungültiger oder fehlender API-Schlüssel",
+      "tooManyRequests": "Zu viele Anfragen - Rate-Limit überschritten",
+      "serverError": "Interner Serverfehler - Etwas ist schief gelaufen"
+    },
+    "security": {
+      "title": "Sicherheit & Governance",
+      "dataSecurityTitle": "Datensicherheit",
+      "encryptionAtRest": "Verschlüsselung im Ruhezustand:",
+      "encryptionAtRestDesc": "Alle Daten mit AES-256 verschlüsselt",
+      "encryptionInTransit": "Verschlüsselung bei Übertragung:",
+      "encryptionInTransitDesc": "TLS 1.3 für alle Verbindungen",
+      "tenantIsolation": "Mandantenisolierung:",
+      "tenantIsolationDesc": "Vollständige Datentrennung zwischen Konten",
+      "apiKeyManagement": "API-Schlüsselverwaltung",
+      "keyRotation": "Schlüsselrotation:",
+      "keyRotationDesc": "Schlüssel jederzeit vom Dashboard aus rotieren",
+      "keyExpiration": "Schlüsselablauf:",
+      "keyExpirationDesc": "Automatischer Ablauf nach 90 Tagen (konfigurierbar)",
+      "usageTracking": "Nutzungsverfolgung:",
+      "usageTrackingDesc": "Nutzung pro Schlüssel in Echtzeit überwachen",
+      "dataRetention": "Datenaufbewahrung & Löschung",
+      "export": "Export:",
+      "exportDesc": "Alle Daten jederzeit über API oder Dashboard exportieren",
+      "deletion": "Löschung:",
+      "deletionDesc": "Endgültige Löschung ohne Aufbewahrung nach 30 Tagen",
+      "compliance": "DSGVO/CCPA:",
+      "complianceDesc": "Volle Compliance mit Betroffenenrechten"
+    },
+    "sdks": {
+      "title": "SDKs",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. Alle Rechte vorbehalten."
+    }
   }
 }

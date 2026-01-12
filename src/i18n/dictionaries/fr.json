@@ -446,5 +446,139 @@
     "requestBuilder": "Request Builder",
     "results": "Results",
     "trace": "Trace"
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "getStarted": "Commencer"
+    },
+    "sidebar": {
+      "gettingStarted": "Pour commencer",
+      "quickStart": "Démarrage rapide",
+      "authentication": "Authentification",
+      "apiReference": "Référence API",
+      "endpoints": "Points de terminaison",
+      "rateLimits": "Limites de taux",
+      "errorCodes": "Codes d'erreur",
+      "resources": "Ressources",
+      "security": "Sécurité",
+      "sdks": "SDKs"
+    },
+    "hero": {
+      "title": "Documentation API",
+      "subtitle": "Tout ce dont vous avez besoin pour intégrer Seizn dans vos applications. Ajoutez une mémoire persistante à votre IA en quelques lignes de code."
+    },
+    "quickStart": {
+      "title": "Démarrage Rapide",
+      "description": "Obtenez votre clé API depuis le",
+      "dashboardLink": "tableau de bord",
+      "then": ", puis commencez à faire des requêtes:"
+    },
+    "authentication": {
+      "title": "Authentification",
+      "description": "Toutes les requêtes API nécessitent une clé API passée dans l'en-tête",
+      "header": "x-api-key",
+      "headerSuffix": ".",
+      "securityTitle": "Sécurité:",
+      "securityText": "Gardez vos clés API secrètes. Ne les exposez jamais dans le code côté client. Utilisez des variables d'environnement ou un proxy backend."
+    },
+    "endpoints": {
+      "title": "Points de terminaison API",
+      "requestBody": "Corps de la requête",
+      "queryParams": "Paramètres de requête",
+      "response": "Réponse",
+      "postMemories": {
+        "description": "Ajoute un nouveau souvenir au magasin de mémoire de l'utilisateur.",
+        "content": "string (required) - The memory content",
+        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tags for categorization",
+        "namespace": "string - Namespace for organization (default: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - Session ID for session-scoped memories",
+        "agentId": "string - Agent ID for agent-scoped memories"
+      },
+      "getMemories": {
+        "description": "Recherche des souvenirs en utilisant la similarité sémantique.",
+        "query": "string (required) - Search query",
+        "limit": "number - Max results (default: 10, max: 100)",
+        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
+        "namespace": "string - Filter by namespace"
+      },
+      "deleteMemories": {
+        "description": "Supprime des souvenirs par leurs IDs.",
+        "ids": "string (required) - Comma-separated memory IDs"
+      },
+      "extract": {
+        "description": "Extrait et stocke des souvenirs d'une conversation en utilisant l'IA.",
+        "conversation": "string (required) - The conversation text to extract memories from",
+        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
+        "autoStore": "boolean - Automatically store extracted memories (default: true)",
+        "namespace": "string - Namespace for stored memories (default: \"default\")"
+      },
+      "query": {
+        "description": "Obtient des réponses générées par IA en utilisant les souvenirs pertinents comme contexte (RAG).",
+        "queryParam": "string (required) - The user's question or prompt",
+        "model": "string - AI model: haiku or sonnet (default: haiku)",
+        "topK": "number - Number of memories to use as context (default: 5)",
+        "namespace": "string - Filter memories by namespace",
+        "includeMemories": "boolean - Include used memories in response (default: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "Limites de Taux",
+      "plan": "Plan",
+      "dailyApiCalls": "Appels API quotidiens",
+      "maxMemories": "Mémoires max",
+      "apiKeys": "Clés API",
+      "free": "Gratuit",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "Entreprise",
+      "unlimited": "Illimité",
+      "exceeded": "Lorsque vous dépassez votre limite de taux, l'API renvoie une réponse",
+      "response": "."
+    },
+    "errors": {
+      "title": "Codes d'Erreur",
+      "code": "Code",
+      "description": "Description",
+      "success": "Succès",
+      "badRequest": "Mauvaise requête - Paramètres manquants ou invalides",
+      "unauthorized": "Non autorisé - Clé API invalide ou manquante",
+      "tooManyRequests": "Trop de requêtes - Limite de taux dépassée",
+      "serverError": "Erreur serveur interne - Quelque chose s'est mal passé"
+    },
+    "security": {
+      "title": "Sécurité et Gouvernance",
+      "dataSecurityTitle": "Sécurité des données",
+      "encryptionAtRest": "Chiffrement au repos:",
+      "encryptionAtRestDesc": "Toutes les données chiffrées avec AES-256",
+      "encryptionInTransit": "Chiffrement en transit:",
+      "encryptionInTransitDesc": "TLS 1.3 pour toutes les connexions",
+      "tenantIsolation": "Isolation des locataires:",
+      "tenantIsolationDesc": "Séparation complète des données entre les comptes",
+      "apiKeyManagement": "Gestion des clés API",
+      "keyRotation": "Rotation des clés:",
+      "keyRotationDesc": "Faites pivoter les clés à tout moment depuis le tableau de bord",
+      "keyExpiration": "Expiration des clés:",
+      "keyExpirationDesc": "Expiration automatique après 90 jours (configurable)",
+      "usageTracking": "Suivi de l'utilisation:",
+      "usageTrackingDesc": "Surveillez l'utilisation par clé en temps réel",
+      "dataRetention": "Rétention et suppression des données",
+      "export": "Export:",
+      "exportDesc": "Exportez toutes vos données à tout moment via l'API ou le tableau de bord",
+      "deletion": "Suppression:",
+      "deletionDesc": "Suppression définitive sans rétention après 30 jours",
+      "compliance": "RGPD/CCPA:",
+      "complianceDesc": "Conformité totale aux droits des personnes concernées"
+    },
+    "sdks": {
+      "title": "SDKs",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. Tous droits réservés."
+    }
   }
 }
