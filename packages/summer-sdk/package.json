@@ -1,0 +1,65 @@
+{
+  "name": "@seizn/summer",
+  "version": "0.1.0",
+  "description": "Seizn Summer - RAG Infrastructure SDK for AI Applications",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "summer",
+    "rag",
+    "retrieval-augmented-generation",
+    "ai",
+    "vector-search",
+    "semantic-search",
+    "llm",
+    "embeddings"
+  ],
+  "author": "Seizn <support@seizn.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iruhana/seizn.git",
+    "directory": "packages/summer-sdk"
+  },
+  "homepage": "https://docs.seizn.com/summer",
+  "bugs": {
+    "url": "https://github.com/iruhana/seizn/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}
