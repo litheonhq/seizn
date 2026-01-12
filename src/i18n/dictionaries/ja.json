@@ -218,12 +218,31 @@
       "noKeys": "APIキーがありません。新しいキーを作成してください。"
     },
     "usagePage": {
-      "title": "使用統計",
+      "title": "使用量分析",
       "period": "現在の期間",
       "memoriesUsed": "使用メモリ",
-      "apiCallsUsed": "使用API呼び出し",
+      "apiCallsUsed": "API呼び出し回数",
       "remaining": "残り",
-      "upgrade": "プランをアップグレード"
+      "upgrade": "プランアップグレード",
+      "subtitle": "API使用量とコストを監視します。",
+      "days7": "7日間",
+      "days30": "30日間",
+      "days90": "90日間",
+      "loading": "読み込み中...",
+      "totalApiCalls": "API呼び出し合計",
+      "totalTokens": "トークン合計",
+      "estimatedCost": "推定コスト",
+      "avgLatency": "平均レイテンシ",
+      "dailyApiCalls": "日別API呼び出し",
+      "calls": "回",
+      "endpointUsage": "エンドポイント使用量",
+      "noData": "データなし",
+      "avg": "平均",
+      "errors": "エラー",
+      "usageByApiKey": "APIキー別使用量",
+      "errorsTitle": "エラー",
+      "errorRate": "エラー率",
+      "noUsageData": "使用量データがありません"
     },
     "language": "言語",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "APIキー",
+      "subtitle": "SeiznサービスにアクセスするためのAPIキーを管理",
+      "createNewKey": "新規キー作成",
+      "activeKeys": "有効なキー",
+      "noKeysTitle": "APIキーがありません",
+      "noKeysDesc": "最初のAPIキーを作成してSeiznとの連携を開始",
+      "createApiKey": "APIキー作成",
+      "created": "作成日",
+      "neverUsed": "未使用",
+      "lastUsed": "最終使用",
+      "revoke": "取り消し",
+      "revokeConfirm": "APIキー\"{keyName}\"を取り消しますか？この操作は元に戻せません。",
+      "usageGuide": "使用ガイド",
+      "authentication": "認証",
+      "authDesc": "リクエストヘッダーにAPIキーを含めてください：",
+      "exampleRequest": "リクエスト例",
+      "keyCreated": "APIキーが作成されました！",
+      "keyCreatedDesc": "今すぐこのキーをコピーしてください。再表示されません。",
+      "copyToClipboard": "クリップボードにコピー",
+      "copied": "コピー済み！",
+      "done": "完了",
+      "createKeyTitle": "APIキー作成",
+      "createKeyDesc": "キーにわかりやすい名前を付けてください",
+      "keyName": "キー名",
+      "keyNamePlaceholder": "例：本番、開発、テスト",
+      "cancel": "キャンセル",
+      "creating": "作成中...",
+      "createKey": "キー作成"
+    },
+    "organizationsPage": {
+      "title": "組織",
+      "subtitle": "チームを管理し、メンバーと協力",
+      "newOrganization": "新規組織",
+      "noOrgsTitle": "組織がありません",
+      "noOrgsDesc": "最初の組織を作成してチームとのコラボレーションを開始",
+      "createOrganization": "組織を作成",
+      "created": "作成日",
+      "plan": "プラン",
+      "freePlan": "無料",
+      "createOrgTitle": "組織を作成",
+      "createOrgDesc": "新しいチームワークスペースを設定",
+      "orgName": "組織名",
+      "orgNamePlaceholder": "例：株式会社サンプル",
+      "urlSlug": "URLスラッグ",
+      "urlSlugPlaceholder": "sample-corp",
+      "cancel": "キャンセル",
+      "creating": "作成中...",
+      "create": "作成",
+      "roles": {
+        "owner": "オーナー",
+        "admin": "管理者",
+        "member": "メンバー"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "リクエストビルダー",
+      "query": "クエリ",
+      "queryPlaceholder": "検索クエリを入力...",
+      "tryExamples": "例を試す",
+      "dataset": "データセット",
+      "latencyBudget": "レイテンシ予算",
+      "fast": "高速",
+      "thorough": "詳細",
+      "topK": "上位K",
+      "results": "件",
+      "features": "機能",
+      "hybridSearch": "ハイブリッド検索",
+      "hybridSearchDesc": "ベクトル+キーワード結合",
+      "rerank": "再ランキング",
+      "rerankDesc": "クロスエンコーダで再スコア",
+      "answerContract": "回答契約",
+      "answerContractDesc": "回答品質の検証",
+      "running": "実行中...",
+      "runQuery": "クエリ実行",
+      "datasets": {
+        "techDocs": "技術ドキュメント",
+        "legalContracts": "法的契約書",
+        "researchPapers": "研究論文"
+      }
+    },
+    "resultsPanel": {
+      "searching": "検索中...",
+      "noResults": "クエリを実行して結果を表示",
+      "score": "スコア"
+    },
+    "tracePanel": {
+      "tracing": "パイプライン追跡中...",
+      "noTrace": "クエリを実行してトレースを表示",
+      "latency": "レイテンシ",
+      "cost": "コスト",
+      "tokens": "トークン",
+      "vectorOps": "ベクター操作",
+      "cached": "キャッシュ",
+      "model": "モデル",
+      "input": "入力",
+      "output": "出力"
+    },
+    "tabs": {
+      "results": "結果",
+      "trace": "トレース"
+    }
   },
   "docs": {
     "nav": {

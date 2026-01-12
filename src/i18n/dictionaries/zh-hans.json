@@ -218,12 +218,31 @@
       "noKeys": "还没有API密钥。创建一个开始使用吧。"
     },
     "usagePage": {
-      "title": "使用统计",
+      "title": "使用分析",
       "period": "当前周期",
-      "memoriesUsed": "已用记忆",
-      "apiCallsUsed": "已用API调用",
+      "memoriesUsed": "已用内存",
+      "apiCallsUsed": "API调用次数",
       "remaining": "剩余",
-      "upgrade": "升级套餐"
+      "upgrade": "升级计划",
+      "subtitle": "监控您的API使用量和成本。",
+      "days7": "7天",
+      "days30": "30天",
+      "days90": "90天",
+      "loading": "加载中...",
+      "totalApiCalls": "API调用总数",
+      "totalTokens": "令牌总数",
+      "estimatedCost": "预估成本",
+      "avgLatency": "平均延迟",
+      "dailyApiCalls": "每日API调用",
+      "calls": "次调用",
+      "endpointUsage": "端点使用量",
+      "noData": "暂无数据",
+      "avg": "平均",
+      "errors": "错误",
+      "usageByApiKey": "按API密钥使用量",
+      "errorsTitle": "错误",
+      "errorRate": "错误率",
+      "noUsageData": "无使用数据"
     },
     "language": "语言",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "API密钥",
+      "subtitle": "管理您的Seizn服务API密钥",
+      "createNewKey": "创建新密钥",
+      "activeKeys": "活动密钥",
+      "noKeysTitle": "暂无API密钥",
+      "noKeysDesc": "创建您的第一个API密钥以开始与Seizn集成",
+      "createApiKey": "创建API密钥",
+      "created": "创建于",
+      "neverUsed": "从未使用",
+      "lastUsed": "最后使用",
+      "revoke": "撤销",
+      "revokeConfirm": "撤销API密钥\"{keyName}\"？此操作无法撤消。",
+      "usageGuide": "使用指南",
+      "authentication": "认证",
+      "authDesc": "在请求头中包含您的API密钥：",
+      "exampleRequest": "请求示例",
+      "keyCreated": "API密钥已创建！",
+      "keyCreatedDesc": "请立即复制此密钥。它将不会再次显示。",
+      "copyToClipboard": "复制到剪贴板",
+      "copied": "已复制！",
+      "done": "完成",
+      "createKeyTitle": "创建API密钥",
+      "createKeyDesc": "为您的密钥起一个描述性名称",
+      "keyName": "密钥名称",
+      "keyNamePlaceholder": "例如：生产、开发、测试",
+      "cancel": "取消",
+      "creating": "创建中...",
+      "createKey": "创建密钥"
+    },
+    "organizationsPage": {
+      "title": "组织",
+      "subtitle": "管理您的团队并与他人协作",
+      "newOrganization": "新建组织",
+      "noOrgsTitle": "暂无组织",
+      "noOrgsDesc": "创建您的第一个组织以开始团队协作",
+      "createOrganization": "创建组织",
+      "created": "创建于",
+      "plan": "计划",
+      "freePlan": "免费",
+      "createOrgTitle": "创建组织",
+      "createOrgDesc": "设置新的团队工作区",
+      "orgName": "组织名称",
+      "orgNamePlaceholder": "例如：某某公司",
+      "urlSlug": "URL别名",
+      "urlSlugPlaceholder": "my-company",
+      "cancel": "取消",
+      "creating": "创建中...",
+      "create": "创建",
+      "roles": {
+        "owner": "所有者",
+        "admin": "管理员",
+        "member": "成员"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "请求构建器",
+      "query": "查询",
+      "queryPlaceholder": "输入搜索查询...",
+      "tryExamples": "试试示例",
+      "dataset": "数据集",
+      "latencyBudget": "延迟预算",
+      "fast": "快速",
+      "thorough": "详细",
+      "topK": "前K个",
+      "results": "个结果",
+      "features": "功能",
+      "hybridSearch": "混合搜索",
+      "hybridSearchDesc": "向量+关键词结合",
+      "rerank": "重新排序",
+      "rerankDesc": "交叉编码器重新评分",
+      "answerContract": "答案契约",
+      "answerContractDesc": "验证答案质量",
+      "running": "运行中...",
+      "runQuery": "执行查询",
+      "datasets": {
+        "techDocs": "技术文档",
+        "legalContracts": "法律合同",
+        "researchPapers": "研究论文"
+      }
+    },
+    "resultsPanel": {
+      "searching": "搜索中...",
+      "noResults": "运行查询以查看结果",
+      "score": "得分"
+    },
+    "tracePanel": {
+      "tracing": "追踪管道中...",
+      "noTrace": "运行查询以查看追踪",
+      "latency": "延迟",
+      "cost": "成本",
+      "tokens": "令牌",
+      "vectorOps": "向量操作",
+      "cached": "已缓存",
+      "model": "模型",
+      "input": "输入",
+      "output": "输出"
+    },
+    "tabs": {
+      "results": "结果",
+      "trace": "追踪"
+    }
   },
   "docs": {
     "nav": {

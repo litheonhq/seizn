@@ -218,12 +218,31 @@
       "noKeys": "Пока нет API-ключей. Создайте один, чтобы начать."
     },
     "usagePage": {
-      "title": "Статистика использования",
-      "period": "Текущий период",
-      "memoriesUsed": "Использовано воспоминаний",
-      "apiCallsUsed": "Использовано API-вызовов",
+      "title": "Аналитика Использования",
+      "period": "Текущий Период",
+      "memoriesUsed": "Использовано Памяти",
+      "apiCallsUsed": "API Вызовов",
       "remaining": "Осталось",
-      "upgrade": "Улучшить план"
+      "upgrade": "Улучшить План",
+      "subtitle": "Мониторинг использования API и затрат.",
+      "days7": "7 Дней",
+      "days30": "30 Дней",
+      "days90": "90 Дней",
+      "loading": "Загрузка...",
+      "totalApiCalls": "Всего API Вызовов",
+      "totalTokens": "Всего Токенов",
+      "estimatedCost": "Расчётная Стоимость",
+      "avgLatency": "Средн. Задержка",
+      "dailyApiCalls": "Ежедневные API Вызовы",
+      "calls": "вызовов",
+      "endpointUsage": "Использование Endpoint",
+      "noData": "Нет данных",
+      "avg": "средн.",
+      "errors": "ошибок",
+      "usageByApiKey": "Использование по API Ключу",
+      "errorsTitle": "Ошибки",
+      "errorRate": "частота ошибок",
+      "noUsageData": "Нет данных об использовании"
     },
     "language": "Язык",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "API Ключи",
+      "subtitle": "Управление API ключами для доступа к сервисам Seizn",
+      "createNewKey": "Создать Новый Ключ",
+      "activeKeys": "Активные Ключи",
+      "noKeysTitle": "Нет API ключей",
+      "noKeysDesc": "Создайте первый API ключ для интеграции с Seizn",
+      "createApiKey": "Создать API Ключ",
+      "created": "Создан",
+      "neverUsed": "Не использовался",
+      "lastUsed": "Последнее использование",
+      "revoke": "Отозвать",
+      "revokeConfirm": "Отозвать API ключ \"{keyName}\"? Это действие нельзя отменить.",
+      "usageGuide": "Руководство по Использованию",
+      "authentication": "Аутентификация",
+      "authDesc": "Включите API ключ в заголовок запроса:",
+      "exampleRequest": "Пример Запроса",
+      "keyCreated": "API Ключ Создан!",
+      "keyCreatedDesc": "Скопируйте этот ключ сейчас. Он больше не будет показан.",
+      "copyToClipboard": "Копировать в Буфер",
+      "copied": "Скопировано!",
+      "done": "Готово",
+      "createKeyTitle": "Создать API Ключ",
+      "createKeyDesc": "Дайте ключу описательное имя",
+      "keyName": "Имя Ключа",
+      "keyNamePlaceholder": "напр.: Продакшн, Разработка, Тест",
+      "cancel": "Отмена",
+      "creating": "Создание...",
+      "createKey": "Создать Ключ"
+    },
+    "organizationsPage": {
+      "title": "Организации",
+      "subtitle": "Управляйте командами и сотрудничайте",
+      "newOrganization": "Новая Организация",
+      "noOrgsTitle": "Нет организаций",
+      "noOrgsDesc": "Создайте первую организацию для совместной работы",
+      "createOrganization": "Создать Организацию",
+      "created": "Создана",
+      "plan": "План",
+      "freePlan": "Бесплатный",
+      "createOrgTitle": "Создать Организацию",
+      "createOrgDesc": "Настройте новое рабочее пространство",
+      "orgName": "Название Организации",
+      "orgNamePlaceholder": "напр.: Моя Компания",
+      "urlSlug": "URL Слаг",
+      "urlSlugPlaceholder": "my-company",
+      "cancel": "Отмена",
+      "creating": "Создание...",
+      "create": "Создать",
+      "roles": {
+        "owner": "владелец",
+        "admin": "админ",
+        "member": "участник"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "Конструктор Запросов",
+      "query": "Запрос",
+      "queryPlaceholder": "Введите поисковый запрос...",
+      "tryExamples": "Примеры",
+      "dataset": "Набор данных",
+      "latencyBudget": "Бюджет задержки",
+      "fast": "быстро",
+      "thorough": "тщательно",
+      "topK": "Топ K",
+      "results": "результатов",
+      "features": "Функции",
+      "hybridSearch": "Гибридный поиск",
+      "hybridSearchDesc": "Вектор + ключевое слово",
+      "rerank": "Переранжирование",
+      "rerankDesc": "Переоценка с cross-encoder",
+      "answerContract": "Контракт ответа",
+      "answerContractDesc": "Проверка качества ответа",
+      "running": "Выполнение...",
+      "runQuery": "Выполнить запрос",
+      "datasets": {
+        "techDocs": "Техническая документация",
+        "legalContracts": "Юридические договоры",
+        "researchPapers": "Научные статьи"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Поиск...",
+      "noResults": "Выполните запрос для просмотра",
+      "score": "Оценка"
+    },
+    "tracePanel": {
+      "tracing": "Трассировка...",
+      "noTrace": "Выполните запрос для трассировки",
+      "latency": "Задержка",
+      "cost": "Стоимость",
+      "tokens": "Токены",
+      "vectorOps": "Вект. операции",
+      "cached": "кэш",
+      "model": "Модель",
+      "input": "Вход",
+      "output": "Выход"
+    },
+    "tabs": {
+      "results": "Результаты",
+      "trace": "Трассировка"
+    }
   },
   "docs": {
     "nav": {

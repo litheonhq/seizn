@@ -12,19 +12,41 @@ export interface RequestConfig {
   topK: number;
 }
 
+export interface RequestBuilderTranslations {
+  title?: string;
+  query?: string;
+  queryPlaceholder?: string;
+  tryExamples?: string;
+  dataset?: string;
+  latencyBudget?: string;
+  fast?: string;
+  thorough?: string;
+  topK?: string;
+  results?: string;
+  features?: string;
+  hybridSearch?: string;
+  hybridSearchDesc?: string;
+  rerank?: string;
+  rerankDesc?: string;
+  answerContract?: string;
+  answerContractDesc?: string;
+  running?: string;
+  runQuery?: string;
+  datasets?: {
+    techDocs?: string;
+    legalContracts?: string;
+    researchPapers?: string;
+  };
+}
+
 interface RequestBuilderProps {
   config: RequestConfig;
   onConfigChange: (config: RequestConfig) => void;
   onRun: () => void;
   isLoading: boolean;
   disabled?: boolean;
+  translations?: RequestBuilderTranslations;
 }
-
-const SAMPLE_DATASETS = [
-  { id: "tech-docs", name: "Tech Documentation", count: "2.4K docs" },
-  { id: "legal-contracts", name: "Legal Contracts", count: "850 docs" },
-  { id: "research-papers", name: "Research Papers", count: "1.2K docs" },
-];
 
 const SAMPLE_QUERIES = [
   "How do I implement authentication with JWT?",
@@ -38,6 +60,7 @@ export function RequestBuilder({
   onRun,
   isLoading,
   disabled,
+  translations: t,
 }: RequestBuilderProps) {
   const [showSampleQueries, setShowSampleQueries] = useState(false);
 
@@ -45,18 +68,24 @@ export function RequestBuilder({
     onConfigChange({ ...config, ...updates });
   };
 
+  const SAMPLE_DATASETS = [
+    { id: "tech-docs", name: t?.datasets?.techDocs || "Tech Documentation", count: "2.4K docs" },
+    { id: "legal-contracts", name: t?.datasets?.legalContracts || "Legal Contracts", count: "850 docs" },
+    { id: "research-papers", name: t?.datasets?.researchPapers || "Research Papers", count: "1.2K docs" },
+  ];
+
   return (
     <div className="flex flex-col h-full">
       {/* Query Input */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Query
+          {t?.query || "Query"}
         </label>
         <div className="relative">
           <textarea
             value={config.query}
             onChange={(e) => updateConfig({ query: e.target.value })}
-            placeholder="Enter your search query..."
+            placeholder={t?.queryPlaceholder || "Enter your search query..."}
             className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all text-gray-900 placeholder:text-gray-400"
             rows={3}
             disabled={disabled}
@@ -66,7 +95,7 @@ export function RequestBuilder({
             onClick={() => setShowSampleQueries(!showSampleQueries)}
             className="absolute right-3 bottom-3 text-xs text-gray-400 hover:text-gray-600 transition-colors"
           >
-            Try examples
+            {t?.tryExamples || "Try examples"}
           </button>
         </div>
         {showSampleQueries && (
@@ -90,27 +119,34 @@ export function RequestBuilder({
       {/* Dataset Selector */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Dataset
+          {t?.dataset || "Dataset"}
         </label>
-        <select
-          value={config.dataset}
-          onChange={(e) => updateConfig({ dataset: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900"
-          disabled={disabled}
-        >
-          {SAMPLE_DATASETS.map((ds) => (
-            <option key={ds.id} value={ds.id}>
-              {ds.name} ({ds.count})
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={config.dataset}
+            onChange={(e) => updateConfig({ dataset: e.target.value })}
+            className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900 appearance-none cursor-pointer"
+            disabled={disabled}
+          >
+            {SAMPLE_DATASETS.map((ds) => (
+              <option key={ds.id} value={ds.id}>
+                {ds.name} ({ds.count})
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       {/* Budget Slider */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <label className="text-sm font-medium text-gray-700">
-            Latency Budget
+            {t?.latencyBudget || "Latency Budget"}
           </label>
           <span className="text-sm text-gray-500">{config.budgetMs}ms</span>
         </div>
@@ -125,16 +161,16 @@ export function RequestBuilder({
           disabled={disabled}
         />
         <div className="flex justify-between text-xs text-gray-400 mt-1">
-          <span>50ms (fast)</span>
-          <span>2000ms (thorough)</span>
+          <span>50ms ({t?.fast || "fast"})</span>
+          <span>2000ms ({t?.thorough || "thorough"})</span>
         </div>
       </div>
 
       {/* Top K */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm font-medium text-gray-700">Top K</label>
-          <span className="text-sm text-gray-500">{config.topK} results</span>
+          <label className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
+          <span className="text-sm text-gray-500">{config.topK} {t?.results || "results"}</span>
         </div>
         <input
           type="range"
@@ -150,13 +186,13 @@ export function RequestBuilder({
       {/* Feature Toggles */}
       <div className="mb-6 space-y-3">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Features
+          {t?.features || "Features"}
         </label>
 
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">Hybrid Search</span>
-            <p className="text-xs text-gray-500">Combine vector + keyword</p>
+            <span className="text-sm font-medium text-gray-800">{t?.hybridSearch || "Hybrid Search"}</span>
+            <p className="text-xs text-gray-500">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>
           </div>
           <input
             type="checkbox"
@@ -169,8 +205,8 @@ export function RequestBuilder({
 
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">Rerank</span>
-            <p className="text-xs text-gray-500">Re-score with cross-encoder</p>
+            <span className="text-sm font-medium text-gray-800">{t?.rerank || "Rerank"}</span>
+            <p className="text-xs text-gray-500">{t?.rerankDesc || "Re-score with cross-encoder"}</p>
           </div>
           <input
             type="checkbox"
@@ -183,8 +219,8 @@ export function RequestBuilder({
 
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">Answer Contract</span>
-            <p className="text-xs text-gray-500">Validate answer quality</p>
+            <span className="text-sm font-medium text-gray-800">{t?.answerContract || "Answer Contract"}</span>
+            <p className="text-xs text-gray-500">{t?.answerContractDesc || "Validate answer quality"}</p>
           </div>
           <input
             type="checkbox"
@@ -208,7 +244,7 @@ export function RequestBuilder({
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            Running...
+            {t?.running || "Running..."}
           </>
         ) : (
           <>
@@ -216,7 +252,7 @@ export function RequestBuilder({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Run Query
+            {t?.runQuery || "Run Query"}
           </>
         )}
       </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 
 interface DailyUsage {
@@ -43,6 +44,7 @@ interface UsageData {
 }
 
 export function UsageClient() {
+  const { t } = useDashboardTranslation();
   const [period, setPeriod] = useState<"7d" | "30d" | "90d">("7d");
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,10 +82,10 @@ export function UsageClient() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Usage Analytics
+              {t("dashboard.usagePage.title")}
             </h2>
             <p className="text-gray-500">
-              Monitor your API usage and costs.
+              {t("dashboard.usagePage.subtitle")}
             </p>
           </div>
 
@@ -99,38 +101,38 @@ export function UsageClient() {
                     : "bg-gray-100 text-gray-500 hover:text-gray-900"
                 }`}
               >
-                {p === "7d" ? "7 Days" : p === "30d" ? "30 Days" : "90 Days"}
+                {p === "7d" ? t("dashboard.usagePage.days7") : p === "30d" ? t("dashboard.usagePage.days30") : t("dashboard.usagePage.days90")}
               </button>
             ))}
           </div>
         </div>
 
         {isLoading ? (
-          <div className="text-gray-500 text-center py-12">Loading...</div>
+          <div className="text-gray-500 text-center py-12">{t("dashboard.usagePage.loading")}</div>
         ) : usage ? (
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">Total API Calls</p>
+                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.totalCalls.toLocaleString()}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">Total Tokens</p>
+                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.totalTokens.toLocaleString()}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">Estimated Cost</p>
+                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent">
                   ${usage.summary.totalCostDollars}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">Avg Latency</p>
+                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.avgLatency}ms
                 </p>
@@ -140,7 +142,7 @@ export function UsageClient() {
             {/* Daily Usage Chart */}
             <div className="glass-card border border-gray-200 rounded-2xl p-6 mb-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-6">
-                Daily API Calls
+                {t("dashboard.usagePage.dailyApiCalls")}
               </h3>
               <div className="h-48 flex items-end gap-1">
                 {usage.daily.map((day, i) => (
@@ -151,7 +153,7 @@ export function UsageClient() {
                     <div className="relative w-full">
                       {/* Tooltip */}
                       <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-100 px-2 py-1 rounded text-xs text-gray-900 whitespace-nowrap z-10">
-                        {day.calls} calls
+                        {day.calls} {t("dashboard.usagePage.calls")}
                         <br />
                         {day.date}
                       </div>
@@ -184,10 +186,10 @@ export function UsageClient() {
               {/* Endpoint Breakdown */}
               <div className="glass-card border border-gray-200 rounded-2xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Endpoint Usage
+                  {t("dashboard.usagePage.endpointUsage")}
                 </h3>
                 {usage.endpoints.length === 0 ? (
-                  <p className="text-gray-400 text-sm">No data yet</p>
+                  <p className="text-gray-400 text-sm">{t("dashboard.usagePage.noData")}</p>
                 ) : (
                   <div className="space-y-3">
                     {usage.endpoints.slice(0, 5).map((ep) => (
@@ -197,7 +199,7 @@ export function UsageClient() {
                             {ep.endpoint}
                           </span>
                           <span className="text-gray-500">
-                            {ep.calls.toLocaleString()} calls
+                            {ep.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -209,10 +211,10 @@ export function UsageClient() {
                           />
                         </div>
                         <div className="flex justify-between text-xs text-gray-400 mt-1">
-                          <span>{ep.avgLatency}ms avg</span>
+                          <span>{ep.avgLatency}ms {t("dashboard.usagePage.avg")}</span>
                           {ep.errors > 0 && (
                             <span className="text-red-500">
-                              {ep.errorRate}% errors
+                              {ep.errorRate}% {t("dashboard.usagePage.errors")}
                             </span>
                           )}
                         </div>
@@ -225,10 +227,10 @@ export function UsageClient() {
               {/* API Key Breakdown */}
               <div className="glass-card border border-gray-200 rounded-2xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Usage by API Key
+                  {t("dashboard.usagePage.usageByApiKey")}
                 </h3>
                 {usage.apiKeys.length === 0 ? (
-                  <p className="text-gray-400 text-sm">No data yet</p>
+                  <p className="text-gray-400 text-sm">{t("dashboard.usagePage.noData")}</p>
                 ) : (
                   <div className="space-y-3">
                     {usage.apiKeys.slice(0, 5).map((key) => (
@@ -238,7 +240,7 @@ export function UsageClient() {
                             {key.name || key.prefix + "..."}
                           </span>
                           <span className="text-gray-500">
-                            {key.calls.toLocaleString()} calls
+                            {key.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -260,18 +262,18 @@ export function UsageClient() {
             {usage.summary.totalErrors > 0 && (
               <div className="mt-8 bg-red-500/10 border border-red-500/20 rounded-2xl p-6">
                 <h3 className="text-lg font-semibold text-red-500 mb-2">
-                  Errors
+                  {t("dashboard.usagePage.errorsTitle")}
                 </h3>
                 <p className="text-gray-700">
-                  {usage.summary.totalErrors} errors (
-                  {usage.summary.errorRate}% error rate) in the selected period.
+                  {usage.summary.totalErrors} {t("dashboard.usagePage.errors")} (
+                  {usage.summary.errorRate}% {t("dashboard.usagePage.errorRate")})
                 </p>
               </div>
             )}
           </>
         ) : (
           <div className="text-gray-500 text-center py-12">
-            No usage data available
+            {t("dashboard.usagePage.noUsageData")}
           </div>
         )}
       </div>);
