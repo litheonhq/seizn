@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+
 
 interface DailyUsage {
   date: string;
@@ -71,38 +71,18 @@ export function UsageClient() {
     : 1;
 
   return (
-    <div className="min-h-screen bg-zinc-950">
-      {/* Header */}
-      <header className="border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold text-white">
-              Seizn<span className="text-emerald-400">.</span>
-            </Link>
-            <nav className="flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-zinc-400 hover:text-white text-sm"
-              >
-                Dashboard
-              </Link>
-              <Link href="/dashboard/usage" className="text-white text-sm">
-                Usage
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-8">
+      
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Usage Analytics
             </h2>
-            <p className="text-zinc-400">
+            <p className="text-gray-500">
               Monitor your API usage and costs.
             </p>
           </div>
@@ -113,10 +93,10 @@ export function UsageClient() {
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   period === p
-                    ? "bg-emerald-600 text-white"
-                    : "bg-zinc-800 text-zinc-400 hover:text-white"
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-gray-900"
+                    : "bg-gray-100 text-gray-500 hover:text-gray-900"
                 }`}
               >
                 {p === "7d" ? "7 Days" : p === "30d" ? "30 Days" : "90 Days"}
@@ -126,40 +106,40 @@ export function UsageClient() {
         </div>
 
         {isLoading ? (
-          <div className="text-zinc-400 text-center py-12">Loading...</div>
+          <div className="text-gray-500 text-center py-12">Loading...</div>
         ) : usage ? (
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                <p className="text-zinc-400 text-sm">Total API Calls</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="glass-card border border-gray-200 rounded-2xl p-4">
+                <p className="text-gray-500 text-sm">Total API Calls</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.totalCalls.toLocaleString()}
                 </p>
               </div>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                <p className="text-zinc-400 text-sm">Total Tokens</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="glass-card border border-gray-200 rounded-2xl p-4">
+                <p className="text-gray-500 text-sm">Total Tokens</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.totalTokens.toLocaleString()}
                 </p>
               </div>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                <p className="text-zinc-400 text-sm">Estimated Cost</p>
-                <p className="text-2xl font-bold text-emerald-400">
+              <div className="glass-card border border-gray-200 rounded-2xl p-4">
+                <p className="text-gray-500 text-sm">Estimated Cost</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent">
                   ${usage.summary.totalCostDollars}
                 </p>
               </div>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-                <p className="text-zinc-400 text-sm">Avg Latency</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="glass-card border border-gray-200 rounded-2xl p-4">
+                <p className="text-gray-500 text-sm">Avg Latency</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {usage.summary.avgLatency}ms
                 </p>
               </div>
             </div>
 
             {/* Daily Usage Chart */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-8">
-              <h3 className="text-lg font-semibold text-white mb-6">
+            <div className="glass-card border border-gray-200 rounded-2xl p-6 mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">
                 Daily API Calls
               </h3>
               <div className="h-48 flex items-end gap-1">
@@ -170,14 +150,14 @@ export function UsageClient() {
                   >
                     <div className="relative w-full">
                       {/* Tooltip */}
-                      <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-800 px-2 py-1 rounded text-xs text-white whitespace-nowrap z-10">
+                      <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-100 px-2 py-1 rounded text-xs text-gray-900 whitespace-nowrap z-10">
                         {day.calls} calls
                         <br />
                         {day.date}
                       </div>
                       {/* Bar */}
                       <div
-                        className="w-full bg-emerald-500/80 hover:bg-emerald-400 rounded-t transition-colors"
+                        className="w-full bg-gradient-to-t from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 rounded-t transition-colors"
                         style={{
                           height: `${Math.max((day.calls / maxCalls) * 160, 4)}px`,
                         }}
@@ -187,7 +167,7 @@ export function UsageClient() {
                     {(i === 0 ||
                       i === usage.daily.length - 1 ||
                       i % Math.ceil(usage.daily.length / 7) === 0) && (
-                      <span className="text-zinc-500 text-xs mt-2 transform -rotate-45 origin-left">
+                      <span className="text-gray-400 text-xs mt-2 transform -rotate-45 origin-left">
                         {new Date(day.date).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -202,36 +182,36 @@ export function UsageClient() {
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Endpoint Breakdown */}
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
+              <div className="glass-card border border-gray-200 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Endpoint Usage
                 </h3>
                 {usage.endpoints.length === 0 ? (
-                  <p className="text-zinc-500 text-sm">No data yet</p>
+                  <p className="text-gray-400 text-sm">No data yet</p>
                 ) : (
                   <div className="space-y-3">
                     {usage.endpoints.slice(0, 5).map((ep) => (
                       <div key={ep.endpoint}>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-zinc-300 font-mono truncate max-w-[200px]">
+                          <span className="text-gray-700 font-mono truncate max-w-[200px]">
                             {ep.endpoint}
                           </span>
-                          <span className="text-zinc-400">
+                          <span className="text-gray-500">
                             {ep.calls.toLocaleString()} calls
                           </span>
                         </div>
-                        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-emerald-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-teal-400 to-cyan-500 rounded-full"
                             style={{
                               width: `${(ep.calls / usage.endpoints[0].calls) * 100}%`,
                             }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs text-zinc-500 mt-1">
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
                           <span>{ep.avgLatency}ms avg</span>
                           {ep.errors > 0 && (
-                            <span className="text-red-400">
+                            <span className="text-red-500">
                               {ep.errorRate}% errors
                             </span>
                           )}
@@ -243,25 +223,25 @@ export function UsageClient() {
               </div>
 
               {/* API Key Breakdown */}
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
+              <div className="glass-card border border-gray-200 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Usage by API Key
                 </h3>
                 {usage.apiKeys.length === 0 ? (
-                  <p className="text-zinc-500 text-sm">No data yet</p>
+                  <p className="text-gray-400 text-sm">No data yet</p>
                 ) : (
                   <div className="space-y-3">
                     {usage.apiKeys.slice(0, 5).map((key) => (
                       <div key={key.keyId}>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-zinc-300">
+                          <span className="text-gray-700">
                             {key.name || key.prefix + "..."}
                           </span>
-                          <span className="text-zinc-400">
+                          <span className="text-gray-500">
                             {key.calls.toLocaleString()} calls
                           </span>
                         </div>
-                        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-blue-500 rounded-full"
                             style={{
@@ -278,11 +258,11 @@ export function UsageClient() {
 
             {/* Error Rate */}
             {usage.summary.totalErrors > 0 && (
-              <div className="mt-8 bg-red-500/10 border border-red-500/20 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-red-400 mb-2">
+              <div className="mt-8 bg-red-500/10 border border-red-500/20 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-red-500 mb-2">
                   Errors
                 </h3>
-                <p className="text-zinc-300">
+                <p className="text-gray-700">
                   {usage.summary.totalErrors} errors (
                   {usage.summary.errorRate}% error rate) in the selected period.
                 </p>
@@ -290,11 +270,9 @@ export function UsageClient() {
             )}
           </>
         ) : (
-          <div className="text-zinc-400 text-center py-12">
+          <div className="text-gray-500 text-center py-12">
             No usage data available
           </div>
         )}
-      </main>
-    </div>
-  );
+      </div>);
 }

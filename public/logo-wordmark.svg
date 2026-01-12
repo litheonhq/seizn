@@ -1,20 +1,22 @@
 <svg width="180" height="48" viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#10B981"/>
-      <stop offset="100%" style="stop-color:#059669"/>
+    <linearGradient id="seiznGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3DDC84"/>
+      <stop offset="35%" stop-color="#00A3FF"/>
+      <stop offset="70%" stop-color="#FF8A00"/>
+      <stop offset="100%" stop-color="#A855F7"/>
     </linearGradient>
+    <mask id="cutout">
+      <rect width="40" height="48" fill="white"/>
+      <circle cx="20" cy="24" r="3" fill="black"/>
+    </mask>
   </defs>
 
-  <!-- Icon -->
-  <rect x="0" y="4" width="40" height="40" rx="9" fill="#0A0A0A"/>
-  <path d="M12.5 15.5 C12.5 12.5, 15 11, 20 11 L24 11 C29 11, 31.5 12.5, 31.5 15.5 C31.5 18.5, 29 20, 24 20 L16 20 C11 20, 8.5 21.5, 8.5 24.5 C8.5 27.5, 11 29, 16 29 L20 29 C25 29, 27.5 30.5, 27.5 33.5"
-        stroke="url(#grad)"
-        stroke-width="3.5"
-        stroke-linecap="round"
-        fill="none"/>
+  <!-- Z-Trace Mark with breakpoint cutout -->
+  <g mask="url(#cutout)">
+    <path d="M8 12 H32 L8 36 H32" stroke="url(#seiznGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
 
   <!-- Wordmark -->
-  <text x="52" y="33" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" letter-spacing="-0.5" fill="#0A0A0A">Seizn</text>
-  <text x="130" y="33" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" fill="url(#grad)">.</text>
+  <text x="52" y="33" font-family="Geist, Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" letter-spacing="-0.5" fill="#0A0A0A">Seizn</text>
 </svg>

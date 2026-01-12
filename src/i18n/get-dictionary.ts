@@ -7,16 +7,15 @@ const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
   en: () => import('./dictionaries/en.json').then((module) => module.default),
   ko: () => import('./dictionaries/ko.json').then((module) => module.default),
   ja: () => import('./dictionaries/ja.json').then((module) => module.default),
-  // Chinese (split by region)
-  'zh-CN': () => import('./dictionaries/zh-CN.json').then((module) => module.default),
-  'zh-TW': () => import('./dictionaries/zh-TW.json').then((module) => module.default),
-  'zh-HK': () => import('./dictionaries/zh-HK.json').then((module) => module.default),
+  // Chinese (split by script)
+  'zh-hans': () => import('./dictionaries/zh-hans.json').then((module) => module.default),
+  'zh-hant': () => import('./dictionaries/zh-hant.json').then((module) => module.default),
   // Spanish
   es: () => import('./dictionaries/es.json').then((module) => module.default),
   // Eastern European
   ru: () => import('./dictionaries/ru.json').then((module) => module.default),
   uk: () => import('./dictionaries/uk.json').then((module) => module.default),
-  // Middle Eastern
+  // Middle Eastern (RTL)
   he: () => import('./dictionaries/he.json').then((module) => module.default),
   ar: () => import('./dictionaries/ar.json').then((module) => module.default),
   // Western European

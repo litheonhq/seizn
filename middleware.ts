@@ -28,6 +28,60 @@ function isPublicPath(pathname: string): boolean {
   return publicPaths.some((path) => pathname.startsWith(path));
 }
 
+// Parse Accept-Language header with q-value support
+function parseAcceptLanguage(header: string): string[] {
+  // Example: "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+  return header
+    .split(',')
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(';');
+      const qParam = params.find((p) => p.trim().startsWith('q='));
+      const q = qParam ? Number(qParam.split('=')[1]) : 1;
+      return { tag: tag.toLowerCase().trim(), q };
+    })
+    .sort((a, b) => b.q - a.q)
+    .map((x) => x.tag);
+}
+
+// Match Accept-Language tag to supported locale
+function matchLocale(tag: string): Locale | null {
+  // 1) exact match
+  if (locales.includes(tag as Locale)) return tag as Locale;
+
+  // 2) Chinese script rules (must-have)
+  // zh-tw / zh-hk -> zh-hant
+  if (tag.startsWith('zh')) {
+    if (tag.includes('tw') || tag.includes('hk') || tag.includes('hant') || tag.includes('mo')) {
+      return 'zh-hant';
+    }
+    // default for zh-cn / zh-hans / generic zh
+    return 'zh-hans';
+  }
+
+  // 3) Portuguese regional rules
+  if (tag.startsWith('pt')) {
+    if (tag.includes('br')) return 'pt-BR';
+    if (tag.includes('pt')) return 'pt-PT';
+    return 'pt-BR'; // default to Brazilian Portuguese
+  }
+
+  // 4) prefix match (fr-ca -> fr, en-us -> en)
+  const base = tag.split('-')[0];
+  if (locales.includes(base as Locale)) return base as Locale;
+
+  return null;
+}
+
+// Get locale from Accept-Language header
+function getLocaleFromAcceptLanguage(header: string): Locale | null {
+  const tags = parseAcceptLanguage(header);
+  for (const tag of tags) {
+    const matched = matchLocale(tag);
+    if (matched) return matched;
+  }
+  return null;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -44,30 +98,32 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Detect locale from various sources
+  // Detect locale from various sources (priority order)
   let detectedLocale: Locale = defaultLocale;
 
-  // 1. Check cookie for saved preference
+  // 1. Check cookie for saved preference (highest priority)
   const savedLocale = request.cookies.get('NEXT_LOCALE')?.value as Locale | undefined;
   if (savedLocale && locales.includes(savedLocale)) {
     detectedLocale = savedLocale;
   } else {
-    // 2. Check IP-based geolocation (Vercel provides this header)
-    const country = request.headers.get('x-vercel-ip-country');
-    if (country) {
-      detectedLocale = getLocaleFromCountry(country);
-    } else {
-      // 3. Fallback to Accept-Language header
-      const acceptLanguage = request.headers.get('accept-language');
-      if (acceptLanguage) {
-        const preferredLocale = acceptLanguage
-          .split(',')
-          .map((lang) => lang.split(';')[0].trim().substring(0, 2).toLowerCase())
-          .find((lang) => locales.includes(lang as Locale)) as Locale | undefined;
-
-        if (preferredLocale) {
-          detectedLocale = preferredLocale;
+    // 2. Check Accept-Language header (q-value aware)
+    const acceptLanguage = request.headers.get('accept-language');
+    if (acceptLanguage) {
+      const preferredLocale = getLocaleFromAcceptLanguage(acceptLanguage);
+      if (preferredLocale) {
+        detectedLocale = preferredLocale;
+      } else {
+        // 3. Fallback to IP-based geolocation (Vercel provides this header)
+        const country = request.headers.get('x-vercel-ip-country');
+        if (country) {
+          detectedLocale = getLocaleFromCountry(country);
         }
+      }
+    } else {
+      // No Accept-Language, use IP geolocation
+      const country = request.headers.get('x-vercel-ip-country');
+      if (country) {
+        detectedLocale = getLocaleFromCountry(country);
       }
     }
   }
