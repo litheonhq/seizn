@@ -26,7 +26,27 @@ export default function DocsPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12 flex gap-12">
+        {/* Sidebar Navigation */}
+        <nav className="hidden lg:block w-56 shrink-0">
+          <div className="sticky top-24 space-y-1">
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Getting Started</p>
+            <a href="#quickstart" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Quick Start</a>
+            <a href="#authentication" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Authentication</a>
+
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">API Reference</p>
+            <a href="#endpoints" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Endpoints</a>
+            <a href="#rate-limits" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Rate Limits</a>
+            <a href="#errors" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Error Codes</a>
+
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">Resources</p>
+            <a href="#security" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">Security</a>
+            <a href="#sdks" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">SDKs</a>
+          </div>
+        </nav>
+
+        {/* Main Content */}
+        <div className="flex-1 min-w-0">
         {/* Hero */}
         <div className="mb-16">
           <h1 className="text-4xl font-bold text-white mb-4">
@@ -476,6 +496,7 @@ await client.extract({ conversation: '...' });`}
             </div>
           </div>
         </section>
+        </div>
       </div>
 
       {/* Footer */}
