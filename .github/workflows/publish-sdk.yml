@@ -1,0 +1,70 @@
+name: Publish SDK Packages
+
+on:
+  push:
+    tags:
+      - 'spring-v*'
+      - 'summer-v*'
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        type: choice
+        options:
+          - spring-sdk
+          - summer-sdk
+          - all
+
+jobs:
+  publish-spring:
+    if: startsWith(github.ref, 'refs/tags/spring-v') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.package == 'spring-sdk' || github.event.inputs.package == 'all'))
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/spring-sdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-summer:
+    if: startsWith(github.ref, 'refs/tags/summer-v') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.package == 'summer-sdk' || github.event.inputs.package == 'all'))
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/summer-sdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
