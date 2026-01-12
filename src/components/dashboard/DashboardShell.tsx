@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 const seasonConfig = {
   spring: {
@@ -51,19 +52,20 @@ function getSeason(): Season {
   return "winter";
 }
 
-const navigation = [
-  { name: "Overview", href: "/dashboard", icon: HomeIcon },
-  { name: "Organizations", href: "/dashboard/organizations", icon: UsersIcon },
-  { name: "Usage", href: "/dashboard/usage", icon: ChartIcon },
-  { name: "API Keys", href: "/dashboard/keys", icon: KeyIcon },
-  { name: "Docs", href: "/docs", icon: BookIcon },
-  { name: "Settings", href: "/dashboard/settings", icon: SettingsIcon },
+const navigationConfig = [
+  { key: "dashboard.overview", href: "/dashboard", icon: HomeIcon },
+  { key: "dashboard.organizations", href: "/dashboard/organizations", icon: UsersIcon },
+  { key: "dashboard.usage", href: "/dashboard/usage", icon: ChartIcon },
+  { key: "dashboard.apiKeys", href: "/dashboard/keys", icon: KeyIcon },
+  { key: "dashboard.docs", href: "/docs", icon: BookIcon },
+  { key: "dashboard.settings", href: "/dashboard/settings", icon: SettingsIcon },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useDashboardTranslation();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -145,7 +147,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               type="button"
               onClick={() => setIsSidebarPinned((prev) => !prev)}
               className="flex items-center justify-center rounded-xl px-2.5 py-2 text-xs font-medium text-gray-500 hover:text-gray-800 hover:bg-white/60 transition-colors"
-              title={isSidebarPinned ? "사이드바 접기" : "사이드바 고정"}
+              title={isSidebarPinned ? t("dashboard.unpinSidebar") : t("dashboard.pinSidebar")}
             >
               {isSidebarPinned ? <UnpinIcon className="w-4 h-4" /> : <PinIcon className="w-4 h-4" />}
             </button>
@@ -154,13 +156,14 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* Navigation */}
         <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
-          {navigation.map((item) => {
+          {navigationConfig.map((item) => {
             const active = isActive(item.href);
+            const label = t(item.key);
             return (
               <Link
-                key={item.name}
+                key={item.key}
                 href={item.href}
-                title={item.name}
+                title={label}
                 className={`group flex items-center rounded-2xl text-sm font-medium transition-colors duration-200 ${
                   isSidebarExpanded ? "gap-3 px-4 py-3" : "justify-center p-3"
                 } ${
@@ -176,11 +179,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 />
                 {isSidebarExpanded ? (
                   <>
-                    <span className="truncate">{item.name}</span>
-                    
+                    <span className="truncate">{label}</span>
+
                   </>
                 ) : (
-                  <span className="sr-only">{item.name}</span>
+                  <span className="sr-only">{label}</span>
                 )}
               </Link>
             );
@@ -218,7 +221,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 className="mt-3 w-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-white/60 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <LogoutIcon className="w-4 h-4" />
-                Sign Out
+                {t("dashboard.signOut")}
               </button>
             </>
           ) : (
@@ -240,7 +243,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="w-11 h-11 flex items-center justify-center rounded-2xl text-gray-500 hover:text-gray-700 hover:bg-white/70 transition-all duration-200"
-                title="Sign Out"
+                title={t("dashboard.signOut")}
               >
                 <LogoutIcon className="w-5 h-5" />
               </button>
@@ -271,11 +274,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <nav className="px-4 pb-4 space-y-1 animate-fade-in">
-            {navigation.map((item) => {
+            {navigationConfig.map((item) => {
               const active = isActive(item.href);
+              const label = t(item.key);
               return (
                 <Link
-                  key={item.name}
+                  key={item.key}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
@@ -283,7 +287,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
-                  {item.name}
+                  {label}
                 </Link>
               );
             })}
@@ -292,7 +296,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/60"
             >
               <LogoutIcon className="w-5 h-5" />
-              Sign Out
+              {t("dashboard.signOut")}
             </button>
           </nav>
         )}
