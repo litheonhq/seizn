@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { locales, localeNames, type Locale } from "@/i18n/config";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface ProfileData {
   email?: string | null;
@@ -12,6 +13,7 @@ interface ProfileData {
 
 export function SettingsClient() {
   const { status: sessionStatus } = useSession();
+  const { t, locale: currentLocale } = useDashboardTranslation();
   const [profile, setProfile] = useState<ProfileData>({});
   const [language, setLanguage] = useState<Locale>("en");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -53,7 +55,10 @@ export function SettingsClient() {
       }
       document.cookie = `NEXT_LOCALE=${lang};max-age=${60 * 60 * 24 * 365};path=/`;
       setSaveStatus("saved");
-      setTimeout(() => setSaveStatus("idle"), 2000);
+      // Reload page to apply new language
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (err) {
       console.error(err);
       setSaveStatus("error");
@@ -63,34 +68,34 @@ export function SettingsClient() {
   return (
     <div className="space-y-6">
       {sessionStatus === "loading" && (
-        <div className="text-sm text-gray-500">Loading…</div>
+        <div className="text-sm text-gray-500">{t("dashboard.settingsPage.loading")}</div>
       )}
       {sessionStatus === "unauthenticated" && (
-        <div className="text-sm text-red-600">로그인이 필요합니다.</div>
+        <div className="text-sm text-red-600">{t("dashboard.settingsPage.loginRequired")}</div>
       )}
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-gray-500">Settings</p>
-          <h1 className="text-2xl font-semibold text-gray-900">Profile & Preferences</h1>
+          <p className="text-sm text-gray-500">{t("dashboard.settingsPage.title")}</p>
+          <h1 className="text-2xl font-semibold text-gray-900">{t("dashboard.settingsPage.subtitle")}</h1>
         </div>
-        {saveStatus === "saving" && <span className="text-sm text-gray-500">Saving…</span>}
-        {saveStatus === "saved" && <span className="text-sm text-emerald-600">Saved</span>}
-        {saveStatus === "error" && <span className="text-sm text-red-600">Save failed</span>}
+        {saveStatus === "saving" && <span className="text-sm text-gray-500">{t("dashboard.settingsPage.saving")}</span>}
+        {saveStatus === "saved" && <span className="text-sm text-emerald-600">{t("dashboard.settingsPage.saved")}</span>}
+        {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-gray-100 bg-white/80 p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Account</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">{t("dashboard.settingsPage.account")}</h2>
           <div className="space-y-2 text-sm text-gray-700">
-            <div className="flex justify-between"><span>Email</span><span className="font-medium">{profile.email || "-"}</span></div>
-            <div className="flex justify-between"><span>Name</span><span className="font-medium">{profile.name || "-"}</span></div>
+            <div className="flex justify-between"><span>{t("dashboard.settingsPage.email")}</span><span className="font-medium">{profile.email || "-"}</span></div>
+            <div className="flex justify-between"><span>{t("dashboard.settingsPage.name")}</span><span className="font-medium">{profile.name || "-"}</span></div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white/80 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">Language</h2>
-            <span className="text-xs text-gray-500">Affects UI + dashboard</span>
+            <h2 className="text-lg font-semibold text-gray-900">{t("dashboard.language")}</h2>
+            <span className="text-xs text-gray-500">{t("dashboard.settingsPage.languageHint")}</span>
           </div>
           <select
             value={language}

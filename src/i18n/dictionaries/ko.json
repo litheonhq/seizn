@@ -192,10 +192,14 @@
     "title": "대시보드",
     "welcome": "다시 오셨네요",
     "overview": "개요",
+    "organizations": "조직",
     "usage": "사용량",
     "apiKeys": "API 키",
+    "docs": "문서",
     "settings": "설정",
     "signOut": "로그아웃",
+    "pinSidebar": "사이드바 고정",
+    "unpinSidebar": "사이드바 접기",
     "stats": {
       "memories": "메모리",
       "apiCalls": "오늘 API 호출",
@@ -225,7 +229,20 @@
       "remaining": "남은 양",
       "upgrade": "요금제 업그레이드"
     },
-    "language": "언어"
+    "language": "언어",
+    "settingsPage": {
+      "title": "설정",
+      "subtitle": "프로필 및 환경설정",
+      "saving": "저장 중...",
+      "saved": "저장됨",
+      "saveFailed": "저장 실패",
+      "account": "계정",
+      "email": "이메일",
+      "name": "이름",
+      "languageHint": "UI와 대시보드에 적용됩니다",
+      "loading": "로딩 중...",
+      "loginRequired": "로그인이 필요합니다."
+    }
   },
   "pricingPage": {
     "title": "요금제",

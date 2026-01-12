@@ -192,10 +192,14 @@
     "title": "Dashboard",
     "welcome": "Welcome back",
     "overview": "Overview",
+    "organizations": "Organizations",
     "usage": "Usage",
     "apiKeys": "API Keys",
+    "docs": "Docs",
     "settings": "Settings",
     "signOut": "Sign Out",
+    "pinSidebar": "Pin sidebar",
+    "unpinSidebar": "Collapse sidebar",
     "stats": {
       "memories": "Memories",
       "apiCalls": "API Calls Today",
@@ -225,7 +229,20 @@
       "remaining": "Remaining",
       "upgrade": "Upgrade Plan"
     },
-    "language": "Language"
+    "language": "Language",
+    "settingsPage": {
+      "title": "Settings",
+      "subtitle": "Profile & Preferences",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "saveFailed": "Save failed",
+      "account": "Account",
+      "email": "Email",
+      "name": "Name",
+      "languageHint": "Affects UI + dashboard",
+      "loading": "Loading...",
+      "loginRequired": "Login required."
+    }
   },
   "pricingPage": {
     "title": "Pricing",

@@ -225,7 +225,24 @@
       "remaining": "Pozostało",
       "upgrade": "Ulepsz plan"
     },
-    "language": "Język"
+    "language": "Język",
+    "organizations": "Organizations",
+    "docs": "Docs",
+    "pinSidebar": "Pin sidebar",
+    "unpinSidebar": "Collapse sidebar",
+    "settingsPage": {
+      "title": "Settings",
+      "subtitle": "Profile & Preferences",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "saveFailed": "Save failed",
+      "account": "Account",
+      "email": "Email",
+      "name": "Name",
+      "languageHint": "Affects UI + dashboard",
+      "loading": "Loading...",
+      "loginRequired": "Login required."
+    }
   },
   "pricingPage": {
     "title": "Cennik",

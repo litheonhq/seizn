@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import "../globals.css";
 import { Providers } from "@/components/providers";
 import { locales, isRtl, type Locale } from "@/i18n/config";
+import { DashboardLocaleProvider } from "@/contexts/DashboardLocaleContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +45,11 @@ export default async function DashboardLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <DashboardLocaleProvider initialLocale={locale}>
+            {children}
+          </DashboardLocaleProvider>
+        </Providers>
       </body>
     </html>
   );
