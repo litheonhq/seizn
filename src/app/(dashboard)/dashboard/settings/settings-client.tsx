@@ -13,7 +13,7 @@ interface ProfileData {
 
 export function SettingsClient() {
   const { status: sessionStatus } = useSession();
-  const { t, locale: currentLocale } = useDashboardTranslation();
+  const { t } = useDashboardTranslation();
   const [profile, setProfile] = useState<ProfileData>({});
   const [language, setLanguage] = useState<Locale>("en");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");

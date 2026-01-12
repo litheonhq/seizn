@@ -242,6 +242,35 @@
       "languageHint": "UI와 대시보드에 적용됩니다",
       "loading": "로딩 중...",
       "loginRequired": "로그인이 필요합니다."
+    },
+    "greeting": {
+      "morning": "좋은 아침이에요",
+      "afternoon": "좋은 오후에요",
+      "evening": "좋은 저녁이에요"
+    },
+    "overviewPage": {
+      "subtitle": "AI 메모리 사용량 현황입니다",
+      "totalMemories": "전체 메모리",
+      "apiCalls": "API 호출",
+      "activeKeys": "활성 API 키",
+      "currentPlan": "현재 요금제",
+      "usage": "사용량",
+      "today": "오늘",
+      "dailyLimit": "일일 한도",
+      "recentMemories": "최근 메모리",
+      "viewAll": "전체 보기",
+      "noMemories": "메모리가 없습니다",
+      "noMemoriesHint": "API를 통해 첫 번째 메모리를 추가해 보세요",
+      "quickStart": "빠른 시작",
+      "createApiKey": "API 키 생성",
+      "getStartedApi": "API 시작하기",
+      "viewDocumentation": "문서 보기",
+      "learnSeizn": "Seizn 사용법 알아보기",
+      "createOrganization": "조직 만들기",
+      "collaborateTeam": "팀과 협업하기",
+      "quickExample": "빠른 예제",
+      "manageKeys": "키 관리",
+      "upgradePlan": "요금제 업그레이드"
     }
   },
   "pricingPage": {

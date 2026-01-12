@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface User {
   id: string;
@@ -34,6 +35,7 @@ interface RecentMemory {
 }
 
 export default function DashboardOverviewClient({ user }: { user: User }) {
+  const { t, locale } = useDashboardTranslation();
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentMemories, setRecentMemories] = useState<RecentMemory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,9 +70,9 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return { text: "Good morning", ja: "おはようございます" };
-    if (hour < 18) return { text: "Good afternoon", ja: "こんにちは" };
-    return { text: "Good evening", ja: "こんばんは" };
+    if (hour < 12) return t("dashboard.greeting.morning");
+    if (hour < 18) return t("dashboard.greeting.afternoon");
+    return t("dashboard.greeting.evening");
   };
 
   const greeting = getGreeting();
@@ -98,12 +100,11 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="relative">
-          <p className="text-gray-500 text-sm mb-1">{greeting.ja}</p>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {greeting.text}, {user.name || user.email?.split("@")[0]}
+            {greeting}, {user.name || user.email?.split("@")[0]}
           </h1>
           <p className="text-gray-600">
-            Here&apos;s an overview of your AI memory usage
+            {t("dashboard.overviewPage.subtitle")}
           </p>
         </div>
       </div>
@@ -120,7 +121,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               {stats?.planDisplay || "Free"}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mb-1">Total Memories</p>
+          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.totalMemories")}</p>
           <p className="text-3xl font-bold text-gray-900">
             {isLoading ? (
               <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
@@ -130,10 +131,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           </p>
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-              <span>Usage</span>
+              <span>{t("dashboard.overviewPage.usage")}</span>
               <span>
                 {stats?.memories.limit === -1
-                  ? "Unlimited"
+                  ? t("dashboard.stats.unlimited")
                   : `${stats?.memories.percentage || 0}%`}
               </span>
             </div>
@@ -155,10 +156,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <ApiIcon className="w-6 h-6 text-white" />
             </div>
             <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-              Today
+              {t("dashboard.overviewPage.today")}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mb-1">API Calls</p>
+          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.apiCalls")}</p>
           <p className="text-3xl font-bold text-gray-900">
             {isLoading ? (
               <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
@@ -168,10 +169,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           </p>
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-              <span>Daily Limit</span>
+              <span>{t("dashboard.overviewPage.dailyLimit")}</span>
               <span>
                 {stats?.apiCalls.limit === -1
-                  ? "Unlimited"
+                  ? t("dashboard.stats.unlimited")
                   : stats?.apiCalls.limit.toLocaleString()}
               </span>
             </div>
@@ -193,7 +194,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <KeyIcon className="w-6 h-6 text-white" />
             </div>
           </div>
-          <p className="text-sm text-gray-500 mb-1">Active API Keys</p>
+          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.activeKeys")}</p>
           <p className="text-3xl font-bold text-gray-900">
             {isLoading ? (
               <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" />
@@ -205,7 +206,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             href="/dashboard/keys"
             className="mt-3 inline-flex items-center text-sm theme-primary hover:underline"
           >
-            Manage Keys
+            {t("dashboard.overviewPage.manageKeys")}
             <ArrowIcon className="w-4 h-4 ml-1" />
           </Link>
         </div>
@@ -217,7 +218,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <SparkleIcon className="w-6 h-6 text-white" />
             </div>
           </div>
-          <p className="text-sm text-gray-500 mb-1">Current Plan</p>
+          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.currentPlan")}</p>
           <p className="text-3xl font-bold theme-gradient-text">
             {isLoading ? (
               <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
@@ -229,7 +230,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             href="/pricing"
             className="mt-3 inline-flex items-center text-sm theme-primary hover:underline"
           >
-            Upgrade Plan
+            {t("dashboard.overviewPage.upgradePlan")}
             <ArrowIcon className="w-4 h-4 ml-1" />
           </Link>
         </div>
@@ -240,9 +241,9 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         {/* Recent Memories */}
         <div className="lg:col-span-2 glass-card rounded-2xl overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Recent Memories</h2>
+            <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.recentMemories")}</h2>
             <Link href="/dashboard/memories" className="text-sm theme-primary hover:underline">
-              View All
+              {t("dashboard.overviewPage.viewAll")}
             </Link>
           </div>
           {isLoading ? (
@@ -262,8 +263,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                 <BrainIcon className="w-6 h-6 text-gray-400" />
               </div>
-              <p>No memories yet</p>
-              <p className="text-sm mt-1">Start by adding your first memory via API</p>
+              <p>{t("dashboard.overviewPage.noMemories")}</p>
+              <p className="text-sm mt-1">{t("dashboard.overviewPage.noMemoriesHint")}</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
@@ -274,7 +275,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                     <div className="flex-1 min-w-0">
                       <p className="text-gray-900 text-sm line-clamp-2">{memory.content}</p>
                       <p className="text-xs text-gray-400 mt-1">
-                        {new Date(memory.created_at).toLocaleDateString("ja-JP", {
+                        {new Date(memory.created_at).toLocaleDateString(locale, {
                           month: "short",
                           day: "numeric",
                           hour: "2-digit",
@@ -294,7 +295,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
         {/* Quick Actions */}
         <div className="glass-card rounded-2xl p-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Quick Start</h2>
+          <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
           <div className="space-y-3">
             <Link
               href="/dashboard/keys"
@@ -304,8 +305,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 <KeyIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">Create API Key</p>
-                <p className="text-xs text-gray-500">Get started with the API</p>
+                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.createApiKey")}</p>
+                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.getStartedApi")}</p>
               </div>
             </Link>
             <Link
@@ -316,8 +317,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 <BookIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">View Documentation</p>
-                <p className="text-xs text-gray-500">Learn how to use Seizn</p>
+                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.viewDocumentation")}</p>
+                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.learnSeizn")}</p>
               </div>
             </Link>
             <Link
@@ -328,15 +329,15 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 <UsersIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">Create Organization</p>
-                <p className="text-xs text-gray-500">Collaborate with your team</p>
+                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.createOrganization")}</p>
+                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.collaborateTeam")}</p>
               </div>
             </Link>
           </div>
 
           {/* Code Example */}
           <div className="mt-6 pt-6 border-t theme-border">
-            <p className="text-sm font-medium text-gray-700 mb-3">Quick Example</p>
+            <p className="text-sm font-medium text-gray-700 mb-3">{t("dashboard.overviewPage.quickExample")}</p>
             <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
               <pre className="text-xs text-gray-300">
                 <code>{`curl -X POST \\
