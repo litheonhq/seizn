@@ -4,6 +4,12 @@ import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
 import { checkRateLimit, getRateLimitHeaders } from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
+import {
+  AuthErrors,
+  RateLimitErrors,
+  ErrorCodes,
+  type ApiErrorResponse,
+} from './api-error';
 
 interface AuthResult {
   userId: string;
@@ -13,6 +19,7 @@ interface AuthResult {
 }
 
 interface AuthError {
+  code: string;
   error: string;
   status: number;
   headers?: Record<string, string>;
@@ -34,6 +41,7 @@ export async function authenticateRequest(
     logAuthFailure(request, 'no_api_key_provided').catch(console.error);
     return {
       authError: {
+        code: ErrorCodes.AUTH_MISSING_KEY,
         error: 'API key required. Pass your API key in the x-api-key header.',
         status: 401,
       },
@@ -56,6 +64,7 @@ export async function authenticateRequest(
     logAuthFailure(request, 'invalid_api_key', apiKey).catch(console.error);
     return {
       authError: {
+        code: ErrorCodes.AUTH_INVALID_KEY,
         error: 'Invalid or inactive API key',
         status: 401,
       },
@@ -67,7 +76,8 @@ export async function authenticateRequest(
     logAuthFailure(request, 'expired_api_key', apiKey).catch(console.error);
     return {
       authError: {
-        error: 'API key has expired. Please generate a new key.',
+        code: ErrorCodes.AUTH_EXPIRED_KEY,
+        error: 'API key has expired. Please generate a new key from the dashboard.',
         status: 401,
       },
     };
@@ -80,7 +90,8 @@ export async function authenticateRequest(
     if (!usageCheck.allowed) {
       return {
         authError: {
-          error: usageCheck.reason || 'Usage limit exceeded',
+          code: ErrorCodes.QUOTA_EXCEEDED,
+          error: usageCheck.reason || 'Usage limit exceeded. Upgrade your plan for higher limits.',
           status: 429,
         },
       };
@@ -109,6 +120,7 @@ export async function authenticateRequest(
     }).catch(console.error);
     return {
       authError: {
+        code: ErrorCodes.RATE_LIMIT_EXCEEDED,
         error: 'Rate limit exceeded. Please slow down your requests.',
         status: 429,
         headers: rateLimitHeaders,
@@ -135,10 +147,22 @@ export function isAuthError(result: AuthResponse): result is { authError: AuthEr
  * Create error response from auth error
  */
 export function authErrorResponse(authError: AuthError): NextResponse {
+  const requestId = `req_${crypto.randomUUID().replace(/-/g, '').substring(0, 24)}`;
+
   const response = NextResponse.json(
-    { error: authError.error },
+    {
+      error: {
+        code: authError.code,
+        message: authError.error,
+        request_id: requestId,
+        docs_url: 'https://seizn.com/docs#authentication',
+      },
+    },
     { status: authError.status }
   );
+
+  // Add request ID header
+  response.headers.set('X-Request-ID', requestId);
 
   // Add rate limit headers if present
   if (authError.headers) {
