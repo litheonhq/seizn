@@ -218,12 +218,31 @@
       "noKeys": "Aún no tienes claves API. Crea una para comenzar."
     },
     "usagePage": {
-      "title": "Estadísticas de Uso",
+      "title": "Análisis de Uso",
       "period": "Período Actual",
       "memoriesUsed": "Memorias Usadas",
       "apiCallsUsed": "Llamadas API Usadas",
       "remaining": "Restante",
-      "upgrade": "Mejorar Plan"
+      "upgrade": "Mejorar Plan",
+      "subtitle": "Monitorea tu uso de API y costos.",
+      "days7": "7 Días",
+      "days30": "30 Días",
+      "days90": "90 Días",
+      "loading": "Cargando...",
+      "totalApiCalls": "Total Llamadas API",
+      "totalTokens": "Total Tokens",
+      "estimatedCost": "Costo Estimado",
+      "avgLatency": "Latencia Promedio",
+      "dailyApiCalls": "Llamadas API Diarias",
+      "calls": "llamadas",
+      "endpointUsage": "Uso de Endpoints",
+      "noData": "Sin datos",
+      "avg": "prom",
+      "errors": "errores",
+      "usageByApiKey": "Uso por Clave API",
+      "errorsTitle": "Errores",
+      "errorRate": "tasa de error",
+      "noUsageData": "Sin datos de uso disponibles"
     },
     "language": "Idioma",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "Claves API",
+      "subtitle": "Gestiona tus claves API para acceder a los servicios de Seizn",
+      "createNewKey": "Crear Nueva Clave",
+      "activeKeys": "Claves Activas",
+      "noKeysTitle": "Sin claves API",
+      "noKeysDesc": "Crea tu primera clave API para comenzar a integrar con Seizn",
+      "createApiKey": "Crear Clave API",
+      "created": "Creada",
+      "neverUsed": "Nunca usada",
+      "lastUsed": "Último uso",
+      "revoke": "Revocar",
+      "revokeConfirm": "¿Revocar clave API \"{keyName}\"? Esta acción no se puede deshacer.",
+      "usageGuide": "Guía de Uso",
+      "authentication": "Autenticación",
+      "authDesc": "Incluye tu clave API en el encabezado de la solicitud:",
+      "exampleRequest": "Ejemplo de Solicitud",
+      "keyCreated": "¡Clave API Creada!",
+      "keyCreatedDesc": "Copia esta clave ahora. No se mostrará de nuevo.",
+      "copyToClipboard": "Copiar al Portapapeles",
+      "copied": "¡Copiado!",
+      "done": "Listo",
+      "createKeyTitle": "Crear Clave API",
+      "createKeyDesc": "Dale a tu clave un nombre descriptivo",
+      "keyName": "Nombre de Clave",
+      "keyNamePlaceholder": "ej: Producción, Desarrollo, Pruebas",
+      "cancel": "Cancelar",
+      "creating": "Creando...",
+      "createKey": "Crear Clave"
+    },
+    "organizationsPage": {
+      "title": "Organizaciones",
+      "subtitle": "Gestiona tus equipos y colabora con otros",
+      "newOrganization": "Nueva Organización",
+      "noOrgsTitle": "Sin organizaciones",
+      "noOrgsDesc": "Crea tu primera organización para comenzar a colaborar",
+      "createOrganization": "Crear Organización",
+      "created": "Creada",
+      "plan": "Plan",
+      "freePlan": "Gratis",
+      "createOrgTitle": "Crear Organización",
+      "createOrgDesc": "Configura un nuevo espacio de trabajo",
+      "orgName": "Nombre de Organización",
+      "orgNamePlaceholder": "ej: Mi Empresa",
+      "urlSlug": "URL Slug",
+      "urlSlugPlaceholder": "mi-empresa",
+      "cancel": "Cancelar",
+      "creating": "Creando...",
+      "create": "Crear",
+      "roles": {
+        "owner": "propietario",
+        "admin": "admin",
+        "member": "miembro"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "Constructor de Solicitudes",
+      "query": "Consulta",
+      "queryPlaceholder": "Ingrese su consulta de búsqueda...",
+      "tryExamples": "Ver ejemplos",
+      "dataset": "Conjunto de datos",
+      "latencyBudget": "Presupuesto de latencia",
+      "fast": "rápido",
+      "thorough": "detallado",
+      "topK": "Top K",
+      "results": "resultados",
+      "features": "Características",
+      "hybridSearch": "Búsqueda Híbrida",
+      "hybridSearchDesc": "Combinar vector + palabra clave",
+      "rerank": "Reordenar",
+      "rerankDesc": "Re-puntuar con cross-encoder",
+      "answerContract": "Contrato de Respuesta",
+      "answerContractDesc": "Validar calidad de respuesta",
+      "running": "Ejecutando...",
+      "runQuery": "Ejecutar Consulta",
+      "datasets": {
+        "techDocs": "Documentación Técnica",
+        "legalContracts": "Contratos Legales",
+        "researchPapers": "Artículos de Investigación"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Buscando...",
+      "noResults": "Ejecute una consulta para ver resultados",
+      "score": "Puntuación"
+    },
+    "tracePanel": {
+      "tracing": "Rastreando pipeline...",
+      "noTrace": "Ejecute una consulta para ver el rastreo",
+      "latency": "Latencia",
+      "cost": "Costo",
+      "tokens": "Tokens",
+      "vectorOps": "Ops Vectoriales",
+      "cached": "en caché",
+      "model": "Modelo",
+      "input": "Entrada",
+      "output": "Salida"
+    },
+    "tabs": {
+      "results": "Resultados",
+      "trace": "Rastreo"
+    }
   },
   "docs": {
     "nav": {

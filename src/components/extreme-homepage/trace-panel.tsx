@@ -23,9 +23,23 @@ export interface TraceSummary {
   steps: TraceStep[];
 }
 
+export interface TracePanelTranslations {
+  tracing?: string;
+  noTrace?: string;
+  latency?: string;
+  cost?: string;
+  tokens?: string;
+  vectorOps?: string;
+  cached?: string;
+  model?: string;
+  input?: string;
+  output?: string;
+}
+
 interface TracePanelProps {
   trace: TraceSummary | null;
   isLoading: boolean;
+  translations?: TracePanelTranslations;
 }
 
 const STAGE_COLORS: Record<TraceStep["stage"], { bg: string; text: string; border: string }> = {
@@ -36,60 +50,60 @@ const STAGE_COLORS: Record<TraceStep["stage"], { bg: string; text: string; borde
   validate: { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200" },
 };
 
-export function TracePanel({ trace, isLoading }: TracePanelProps) {
+export function TracePanel({ trace, isLoading, translations: t }: TracePanelProps) {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-gray-400">
         <svg className="animate-spin w-8 h-8 mb-4" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
         </svg>
-        <p className="text-sm">Tracing pipeline...</p>
+        <p className="text-sm">{t?.tracing || "Tracing pipeline..."}</p>
       </div>
     );
   }
 
   if (!trace) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-gray-400">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
-        <p className="text-sm">Run a query to see the trace</p>
+        <p className="text-sm">{t?.noTrace || "Run a query to see the trace"}</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-full overflow-auto max-h-[calc(100%-2rem)]">
       {/* Summary Bar */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
         <div className="flex items-center gap-6">
           <div>
-            <div className="text-xs text-gray-500 mb-1">Latency</div>
+            <div className="text-xs text-gray-500 mb-1">{t?.latency || "Latency"}</div>
             <div className="text-lg font-semibold text-gray-900">
               {trace.totalLatencyMs.toFixed(0)}ms
             </div>
           </div>
           <div className="w-px h-10 bg-gray-200" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">Cost</div>
+            <div className="text-xs text-gray-500 mb-1">{t?.cost || "Cost"}</div>
             <div className="text-lg font-semibold text-gray-900">
               ${trace.totalCost.toFixed(4)}
             </div>
           </div>
           <div className="w-px h-10 bg-gray-200" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">Tokens</div>
+            <div className="text-xs text-gray-500 mb-1">{t?.tokens || "Tokens"}</div>
             <div className="text-lg font-semibold text-gray-900">
               {trace.tokensUsed.toLocaleString()}
             </div>
           </div>
           <div className="w-px h-10 bg-gray-200" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">Vector Ops</div>
+            <div className="text-xs text-gray-500 mb-1">{t?.vectorOps || "Vector Ops"}</div>
             <div className="text-lg font-semibold text-gray-900">
               {trace.vectorOps}
             </div>
@@ -130,7 +144,7 @@ export function TracePanel({ trace, isLoading }: TracePanelProps) {
                       </span>
                       {step.cached && (
                         <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">
-                          cached
+                          {t?.cached || "cached"}
                         </span>
                       )}
                     </div>
@@ -156,9 +170,9 @@ export function TracePanel({ trace, isLoading }: TracePanelProps) {
 
                   {/* Meta Info */}
                   <div className="flex items-center gap-4 text-xs text-gray-500">
-                    {step.model && <span>Model: {step.model}</span>}
-                    {step.inputSize !== undefined && <span>Input: {step.inputSize}</span>}
-                    {step.outputSize !== undefined && <span>Output: {step.outputSize}</span>}
+                    {step.model && <span>{t?.model || "Model"}: {step.model}</span>}
+                    {step.inputSize !== undefined && <span>{t?.input || "Input"}: {step.inputSize}</span>}
+                    {step.outputSize !== undefined && <span>{t?.output || "Output"}: {step.outputSize}</span>}
                   </div>
 
                   {/* Expanded Details */}

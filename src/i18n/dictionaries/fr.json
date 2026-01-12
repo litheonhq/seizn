@@ -218,12 +218,31 @@
       "noKeys": "Pas encore de clés API. Créez-en une pour commencer."
     },
     "usagePage": {
-      "title": "Statistiques d'utilisation",
-      "period": "Période actuelle",
-      "memoriesUsed": "Souvenirs utilisés",
-      "apiCallsUsed": "Appels API utilisés",
+      "title": "Analyse d'Utilisation",
+      "period": "Période Actuelle",
+      "memoriesUsed": "Mémoires Utilisées",
+      "apiCallsUsed": "Appels API Utilisés",
       "remaining": "Restant",
-      "upgrade": "Mettre à niveau"
+      "upgrade": "Mettre à Niveau",
+      "subtitle": "Surveillez votre utilisation API et vos coûts.",
+      "days7": "7 Jours",
+      "days30": "30 Jours",
+      "days90": "90 Jours",
+      "loading": "Chargement...",
+      "totalApiCalls": "Total Appels API",
+      "totalTokens": "Total Jetons",
+      "estimatedCost": "Coût Estimé",
+      "avgLatency": "Latence Moyenne",
+      "dailyApiCalls": "Appels API Quotidiens",
+      "calls": "appels",
+      "endpointUsage": "Utilisation des Endpoints",
+      "noData": "Pas de données",
+      "avg": "moy",
+      "errors": "erreurs",
+      "usageByApiKey": "Utilisation par Clé API",
+      "errorsTitle": "Erreurs",
+      "errorRate": "taux d'erreur",
+      "noUsageData": "Aucune donnée d'utilisation disponible"
     },
     "language": "Langue",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "Clés API",
+      "subtitle": "Gérez vos clés API pour accéder aux services Seizn",
+      "createNewKey": "Créer Nouvelle Clé",
+      "activeKeys": "Clés Actives",
+      "noKeysTitle": "Aucune clé API",
+      "noKeysDesc": "Créez votre première clé API pour commencer l'intégration avec Seizn",
+      "createApiKey": "Créer Clé API",
+      "created": "Créée",
+      "neverUsed": "Jamais utilisée",
+      "lastUsed": "Dernière utilisation",
+      "revoke": "Révoquer",
+      "revokeConfirm": "Révoquer la clé API \"{keyName}\" ? Cette action est irréversible.",
+      "usageGuide": "Guide d'Utilisation",
+      "authentication": "Authentification",
+      "authDesc": "Incluez votre clé API dans l'en-tête de la requête :",
+      "exampleRequest": "Exemple de Requête",
+      "keyCreated": "Clé API Créée !",
+      "keyCreatedDesc": "Copiez cette clé maintenant. Elle ne sera plus affichée.",
+      "copyToClipboard": "Copier dans le Presse-papiers",
+      "copied": "Copié !",
+      "done": "Terminé",
+      "createKeyTitle": "Créer Clé API",
+      "createKeyDesc": "Donnez un nom descriptif à votre clé",
+      "keyName": "Nom de la Clé",
+      "keyNamePlaceholder": "ex: Production, Développement, Test",
+      "cancel": "Annuler",
+      "creating": "Création...",
+      "createKey": "Créer Clé"
+    },
+    "organizationsPage": {
+      "title": "Organisations",
+      "subtitle": "Gérez vos équipes et collaborez avec d'autres",
+      "newOrganization": "Nouvelle Organisation",
+      "noOrgsTitle": "Aucune organisation",
+      "noOrgsDesc": "Créez votre première organisation pour commencer à collaborer",
+      "createOrganization": "Créer Organisation",
+      "created": "Créée",
+      "plan": "Plan",
+      "freePlan": "Gratuit",
+      "createOrgTitle": "Créer Organisation",
+      "createOrgDesc": "Configurez un nouvel espace de travail",
+      "orgName": "Nom de l'Organisation",
+      "orgNamePlaceholder": "ex: Mon Entreprise",
+      "urlSlug": "URL Slug",
+      "urlSlugPlaceholder": "mon-entreprise",
+      "cancel": "Annuler",
+      "creating": "Création...",
+      "create": "Créer",
+      "roles": {
+        "owner": "propriétaire",
+        "admin": "admin",
+        "member": "membre"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "Constructeur de Requêtes",
+      "query": "Requête",
+      "queryPlaceholder": "Entrez votre requête de recherche...",
+      "tryExamples": "Voir exemples",
+      "dataset": "Jeu de données",
+      "latencyBudget": "Budget de latence",
+      "fast": "rapide",
+      "thorough": "approfondi",
+      "topK": "Top K",
+      "results": "résultats",
+      "features": "Fonctionnalités",
+      "hybridSearch": "Recherche Hybride",
+      "hybridSearchDesc": "Combiner vecteur + mot-clé",
+      "rerank": "Reclasser",
+      "rerankDesc": "Re-scorer avec cross-encoder",
+      "answerContract": "Contrat de Réponse",
+      "answerContractDesc": "Valider la qualité de réponse",
+      "running": "Exécution...",
+      "runQuery": "Exécuter Requête",
+      "datasets": {
+        "techDocs": "Documentation Technique",
+        "legalContracts": "Contrats Juridiques",
+        "researchPapers": "Articles de Recherche"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Recherche...",
+      "noResults": "Exécutez une requête pour voir les résultats",
+      "score": "Score"
+    },
+    "tracePanel": {
+      "tracing": "Traçage du pipeline...",
+      "noTrace": "Exécutez une requête pour voir le tracé",
+      "latency": "Latence",
+      "cost": "Coût",
+      "tokens": "Jetons",
+      "vectorOps": "Ops Vectorielles",
+      "cached": "en cache",
+      "model": "Modèle",
+      "input": "Entrée",
+      "output": "Sortie"
+    },
+    "tabs": {
+      "results": "Résultats",
+      "trace": "Tracé"
+    }
   },
   "docs": {
     "nav": {

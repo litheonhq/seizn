@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface Organization {
   id: string;
@@ -14,6 +15,7 @@ interface Organization {
 }
 
 export default function OrganizationsClient() {
+  const { t, locale } = useDashboardTranslation();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -85,9 +87,9 @@ export default function OrganizationsClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Organizations</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.organizationsPage.title")}</h1>
           <p className="text-gray-500 mt-1">
-            Manage your teams and collaborate with others
+            {t("dashboard.organizationsPage.subtitle")}
           </p>
         </div>
         <button
@@ -95,7 +97,7 @@ export default function OrganizationsClient() {
           className="theme-gradient-btn text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
         >
           <PlusIcon className="w-5 h-5" />
-          New Organization
+          {t("dashboard.organizationsPage.newOrganization")}
         </button>
       </div>
 
@@ -116,16 +118,16 @@ export default function OrganizationsClient() {
             <UsersIcon className="w-8 h-8 text-gray-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            No organizations yet
+            {t("dashboard.organizationsPage.noOrgsTitle")}
           </h3>
           <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-            Create your first organization to start collaborating with your team
+            {t("dashboard.organizationsPage.noOrgsDesc")}
           </p>
           <button
             onClick={() => setShowCreateModal(true)}
             className="theme-gradient-btn text-white px-6 py-2.5 rounded-xl font-medium"
           >
-            Create Organization
+            {t("dashboard.organizationsPage.createOrganization")}
           </button>
         </div>
       ) : (
@@ -143,7 +145,7 @@ export default function OrganizationsClient() {
                   </span>
                 </div>
                 <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(org.role)}`}>
-                  {org.role}
+                  {t(`dashboard.organizationsPage.roles.${org.role}`)}
                 </span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:theme-gradient-text transition-all">
@@ -152,10 +154,10 @@ export default function OrganizationsClient() {
               <p className="text-sm text-gray-500 mb-4">/{org.slug}</p>
               <div className="flex items-center justify-between pt-4 border-t theme-border">
                 <span className="text-xs text-gray-400">
-                  Created {new Date(org.created_at).toLocaleDateString("ja-JP")}
+                  {t("dashboard.organizationsPage.created")} {new Date(org.created_at).toLocaleDateString(locale)}
                 </span>
                 <span className="text-xs font-medium theme-primary">
-                  {org.plan || "Free"} Plan
+                  {org.plan || t("dashboard.organizationsPage.freePlan")} {t("dashboard.organizationsPage.plan")}
                 </span>
               </div>
             </Link>
@@ -182,9 +184,9 @@ export default function OrganizationsClient() {
               <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
                 <UsersIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Create Organization</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t("dashboard.organizationsPage.createOrgTitle")}</h2>
               <p className="text-gray-500 text-sm mt-1">
-                Set up a new team workspace
+                {t("dashboard.organizationsPage.createOrgDesc")}
               </p>
             </div>
 
@@ -197,7 +199,7 @@ export default function OrganizationsClient() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Organization Name
+                  {t("dashboard.organizationsPage.orgName")}
                 </label>
                 <input
                   type="text"
@@ -213,13 +215,13 @@ export default function OrganizationsClient() {
                       );
                     }
                   }}
-                  placeholder="Acme Corp"
+                  placeholder={t("dashboard.organizationsPage.orgNamePlaceholder")}
                   className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  URL Slug
+                  {t("dashboard.organizationsPage.urlSlug")}
                 </label>
                 <div className="flex items-center">
                   <span className="text-gray-400 text-sm mr-1">seizn.com/</span>
@@ -233,7 +235,7 @@ export default function OrganizationsClient() {
                           .replace(/[^a-z0-9-]/g, "-")
                       )
                     }
-                    placeholder="acme-corp"
+                    placeholder={t("dashboard.organizationsPage.urlSlugPlaceholder")}
                     className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
                   />
                 </div>
@@ -245,14 +247,14 @@ export default function OrganizationsClient() {
                 onClick={() => setShowCreateModal(false)}
                 className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
               >
-                Cancel
+                {t("dashboard.organizationsPage.cancel")}
               </button>
               <button
                 onClick={handleCreateOrg}
                 disabled={isCreating || !newOrgName.trim()}
                 className="flex-1 theme-gradient-btn text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isCreating ? "Creating..." : "Create"}
+                {isCreating ? t("dashboard.organizationsPage.creating") : t("dashboard.organizationsPage.create")}
               </button>
             </div>
           </div>

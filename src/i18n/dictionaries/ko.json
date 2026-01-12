@@ -222,12 +222,31 @@
       "noKeys": "API 키가 없습니다. 새 키를 생성하세요."
     },
     "usagePage": {
-      "title": "사용량 통계",
+      "title": "사용량 분석",
       "period": "현재 기간",
       "memoriesUsed": "사용된 메모리",
-      "apiCallsUsed": "사용된 API 호출",
-      "remaining": "남은 양",
-      "upgrade": "요금제 업그레이드"
+      "apiCallsUsed": "API 호출 수",
+      "remaining": "남음",
+      "upgrade": "플랜 업그레이드",
+      "subtitle": "API 사용량과 비용을 모니터링하세요.",
+      "days7": "7일",
+      "days30": "30일",
+      "days90": "90일",
+      "loading": "로딩 중...",
+      "totalApiCalls": "총 API 호출",
+      "totalTokens": "총 토큰",
+      "estimatedCost": "예상 비용",
+      "avgLatency": "평균 지연시간",
+      "dailyApiCalls": "일별 API 호출",
+      "calls": "호출",
+      "endpointUsage": "엔드포인트 사용량",
+      "noData": "데이터 없음",
+      "avg": "평균",
+      "errors": "오류",
+      "usageByApiKey": "API 키별 사용량",
+      "errorsTitle": "오류",
+      "errorRate": "오류율",
+      "noUsageData": "사용량 데이터가 없습니다"
     },
     "language": "언어",
     "settingsPage": {
@@ -271,6 +290,61 @@
       "quickExample": "빠른 예제",
       "manageKeys": "키 관리",
       "upgradePlan": "요금제 업그레이드"
+    },
+    "keysPage": {
+      "title": "API 키",
+      "subtitle": "Seizn 서비스 접근을 위한 API 키 관리",
+      "createNewKey": "새 키 생성",
+      "activeKeys": "활성 키",
+      "noKeysTitle": "API 키가 없습니다",
+      "noKeysDesc": "첫 API 키를 생성하여 Seizn 연동을 시작하세요",
+      "createApiKey": "API 키 생성",
+      "created": "생성일",
+      "neverUsed": "사용한 적 없음",
+      "lastUsed": "마지막 사용",
+      "revoke": "취소",
+      "revokeConfirm": "API 키 \"{keyName}\"을(를) 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "usageGuide": "사용 가이드",
+      "authentication": "인증",
+      "authDesc": "요청 헤더에 API 키를 포함하세요:",
+      "exampleRequest": "요청 예시",
+      "keyCreated": "API 키가 생성되었습니다!",
+      "keyCreatedDesc": "지금 이 키를 복사하세요. 다시 표시되지 않습니다.",
+      "copyToClipboard": "클립보드에 복사",
+      "copied": "복사됨!",
+      "done": "완료",
+      "createKeyTitle": "API 키 생성",
+      "createKeyDesc": "키에 설명적인 이름을 지정하세요",
+      "keyName": "키 이름",
+      "keyNamePlaceholder": "예: 프로덕션, 개발, 테스트",
+      "cancel": "취소",
+      "creating": "생성 중...",
+      "createKey": "키 생성"
+    },
+    "organizationsPage": {
+      "title": "조직",
+      "subtitle": "팀을 관리하고 다른 사람들과 협업하세요",
+      "newOrganization": "새 조직",
+      "noOrgsTitle": "조직이 없습니다",
+      "noOrgsDesc": "첫 조직을 생성하여 팀과 협업을 시작하세요",
+      "createOrganization": "조직 생성",
+      "created": "생성일",
+      "plan": "플랜",
+      "freePlan": "무료",
+      "createOrgTitle": "조직 생성",
+      "createOrgDesc": "새로운 팀 워크스페이스 설정",
+      "orgName": "조직 이름",
+      "orgNamePlaceholder": "예: 우리회사",
+      "urlSlug": "URL 슬러그",
+      "urlSlugPlaceholder": "my-company",
+      "cancel": "취소",
+      "creating": "생성 중...",
+      "create": "생성",
+      "roles": {
+        "owner": "소유자",
+        "admin": "관리자",
+        "member": "멤버"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "API Key 받기",
       "tryDemo": "데모 체험"
     },
-    "requestBuilder": "요청 빌더",
-    "results": "결과",
-    "trace": "트레이스"
+    "requestBuilder": {
+      "title": "요청 빌더",
+      "query": "쿼리",
+      "queryPlaceholder": "검색어를 입력하세요...",
+      "tryExamples": "예시 보기",
+      "dataset": "데이터셋",
+      "latencyBudget": "지연 시간 예산",
+      "fast": "빠름",
+      "thorough": "정밀",
+      "topK": "상위 K",
+      "results": "개 결과",
+      "features": "기능",
+      "hybridSearch": "하이브리드 검색",
+      "hybridSearchDesc": "벡터 + 키워드 결합",
+      "rerank": "재순위",
+      "rerankDesc": "크로스 인코더로 재점수화",
+      "answerContract": "답변 계약",
+      "answerContractDesc": "답변 품질 검증",
+      "running": "실행 중...",
+      "runQuery": "쿼리 실행",
+      "datasets": {
+        "techDocs": "기술 문서",
+        "legalContracts": "법률 계약서",
+        "researchPapers": "연구 논문"
+      }
+    },
+    "resultsPanel": {
+      "searching": "검색 중...",
+      "noResults": "쿼리를 실행하여 결과 확인",
+      "score": "점수"
+    },
+    "tracePanel": {
+      "tracing": "파이프라인 추적 중...",
+      "noTrace": "쿼리를 실행하여 트레이스 확인",
+      "latency": "지연 시간",
+      "cost": "비용",
+      "tokens": "토큰",
+      "vectorOps": "벡터 연산",
+      "cached": "캐시됨",
+      "model": "모델",
+      "input": "입력",
+      "output": "출력"
+    },
+    "tabs": {
+      "results": "결과",
+      "trace": "트레이스"
+    }
   },
   "docs": {
     "nav": {

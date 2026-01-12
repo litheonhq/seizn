@@ -218,12 +218,31 @@
       "noKeys": "還沒有API金鑰。建立一個開始使用吧。"
     },
     "usagePage": {
-      "title": "使用統計",
+      "title": "使用分析",
       "period": "目前週期",
-      "memoriesUsed": "已用記憶",
-      "apiCallsUsed": "已用API呼叫",
+      "memoriesUsed": "已用記憶體",
+      "apiCallsUsed": "API呼叫次數",
       "remaining": "剩餘",
-      "upgrade": "升級方案"
+      "upgrade": "升級方案",
+      "subtitle": "監控您的API使用量和成本。",
+      "days7": "7天",
+      "days30": "30天",
+      "days90": "90天",
+      "loading": "載入中...",
+      "totalApiCalls": "API呼叫總數",
+      "totalTokens": "權杖總數",
+      "estimatedCost": "預估成本",
+      "avgLatency": "平均延遲",
+      "dailyApiCalls": "每日API呼叫",
+      "calls": "次呼叫",
+      "endpointUsage": "端點使用量",
+      "noData": "尚無資料",
+      "avg": "平均",
+      "errors": "錯誤",
+      "usageByApiKey": "按API金鑰使用量",
+      "errorsTitle": "錯誤",
+      "errorRate": "錯誤率",
+      "noUsageData": "無使用資料"
     },
     "language": "語言",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "API金鑰",
+      "subtitle": "管理您的Seizn服務API金鑰",
+      "createNewKey": "建立新金鑰",
+      "activeKeys": "使用中金鑰",
+      "noKeysTitle": "尚無API金鑰",
+      "noKeysDesc": "建立您的第一個API金鑰以開始與Seizn整合",
+      "createApiKey": "建立API金鑰",
+      "created": "建立於",
+      "neverUsed": "從未使用",
+      "lastUsed": "最後使用",
+      "revoke": "撤銷",
+      "revokeConfirm": "撤銷API金鑰\"{keyName}\"？此操作無法復原。",
+      "usageGuide": "使用指南",
+      "authentication": "驗證",
+      "authDesc": "在請求標頭中包含您的API金鑰：",
+      "exampleRequest": "請求範例",
+      "keyCreated": "API金鑰已建立！",
+      "keyCreatedDesc": "請立即複製此金鑰。它將不會再次顯示。",
+      "copyToClipboard": "複製到剪貼簿",
+      "copied": "已複製！",
+      "done": "完成",
+      "createKeyTitle": "建立API金鑰",
+      "createKeyDesc": "為您的金鑰取一個描述性名稱",
+      "keyName": "金鑰名稱",
+      "keyNamePlaceholder": "例如：正式、開發、測試",
+      "cancel": "取消",
+      "creating": "建立中...",
+      "createKey": "建立金鑰"
+    },
+    "organizationsPage": {
+      "title": "組織",
+      "subtitle": "管理您的團隊並與他人協作",
+      "newOrganization": "新建組織",
+      "noOrgsTitle": "尚無組織",
+      "noOrgsDesc": "建立您的第一個組織以開始團隊協作",
+      "createOrganization": "建立組織",
+      "created": "建立於",
+      "plan": "方案",
+      "freePlan": "免費",
+      "createOrgTitle": "建立組織",
+      "createOrgDesc": "設定新的團隊工作區",
+      "orgName": "組織名稱",
+      "orgNamePlaceholder": "例如：某某公司",
+      "urlSlug": "URL別名",
+      "urlSlugPlaceholder": "my-company",
+      "cancel": "取消",
+      "creating": "建立中...",
+      "create": "建立",
+      "roles": {
+        "owner": "擁有者",
+        "admin": "管理員",
+        "member": "成員"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "請求建構器",
+      "query": "查詢",
+      "queryPlaceholder": "輸入搜尋查詢...",
+      "tryExamples": "試試範例",
+      "dataset": "資料集",
+      "latencyBudget": "延遲預算",
+      "fast": "快速",
+      "thorough": "詳細",
+      "topK": "前K個",
+      "results": "個結果",
+      "features": "功能",
+      "hybridSearch": "混合搜尋",
+      "hybridSearchDesc": "向量+關鍵字結合",
+      "rerank": "重新排序",
+      "rerankDesc": "交叉編碼器重新評分",
+      "answerContract": "答案契約",
+      "answerContractDesc": "驗證答案品質",
+      "running": "執行中...",
+      "runQuery": "執行查詢",
+      "datasets": {
+        "techDocs": "技術文件",
+        "legalContracts": "法律合約",
+        "researchPapers": "研究論文"
+      }
+    },
+    "resultsPanel": {
+      "searching": "搜尋中...",
+      "noResults": "執行查詢以查看結果",
+      "score": "得分"
+    },
+    "tracePanel": {
+      "tracing": "追蹤管道中...",
+      "noTrace": "執行查詢以查看追蹤",
+      "latency": "延遲",
+      "cost": "成本",
+      "tokens": "權杖",
+      "vectorOps": "向量操作",
+      "cached": "已快取",
+      "model": "模型",
+      "input": "輸入",
+      "output": "輸出"
+    },
+    "tabs": {
+      "results": "結果",
+      "trace": "追蹤"
+    }
   },
   "docs": {
     "nav": {

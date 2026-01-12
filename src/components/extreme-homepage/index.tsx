@@ -5,9 +5,9 @@ import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
-import { RequestBuilder, type RequestConfig } from "./request-builder";
-import { ResultsPanel, type SearchResult } from "./results-panel";
-import { TracePanel, type TraceSummary } from "./trace-panel";
+import { RequestBuilder, type RequestConfig, type RequestBuilderTranslations } from "./request-builder";
+import { ResultsPanel, type SearchResult, type ResultsPanelTranslations } from "./results-panel";
+import { TracePanel, type TraceSummary, type TracePanelTranslations } from "./trace-panel";
 import { SnippetTabs } from "./snippet-tabs";
 
 interface ExtremeHomepageClientProps {
@@ -215,8 +215,21 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <span className="font-semibold text-xl tracking-tight">Seizn</span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
+          {/* Desktop Nav - Centered Links */}
+          <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
+            <Link href="/docs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.docs || "Docs"}
+            </Link>
+            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.pricing || "Pricing"}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.enterprise || "Enterprise"}
+            </Link>
+          </div>
+
+          {/* Desktop Nav - Right Side */}
+          <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href="/dashboard/keys"
@@ -338,17 +351,18 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <div className="grid grid-cols-2 gap-6">
               {/* Left: Request Builder */}
               <div className="bg-white rounded-xl p-6 border border-gray-100">
-                <h3 className="text-sm font-medium text-gray-500 mb-4">{t.extremeHome?.requestBuilder || "Request Builder"}</h3>
+                <h3 className="text-sm font-medium text-gray-500 mb-4">{(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
                 <RequestBuilder
                   config={config}
                   onConfigChange={setConfig}
                   onRun={handleRun}
                   isLoading={isLoading}
+                  translations={t.extremeHome?.requestBuilder as RequestBuilderTranslations}
                 />
               </div>
 
               {/* Right: Results + Trace */}
-              <div className="bg-white rounded-xl p-6 border border-gray-100">
+              <div className="bg-white rounded-xl p-6 border border-gray-100 flex flex-col min-h-[600px]">
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
@@ -359,7 +373,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                         : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
-                    Results
+                    {t.extremeHome?.tabs?.results || "Results"}
                     {results.length > 0 && (
                       <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full">
                         {results.length}
@@ -374,7 +388,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                         : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
-                    Trace
+                    {t.extremeHome?.tabs?.trace || "Trace"}
                     {trace && (
                       <span className="ml-2 text-xs bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded-full">
                         {trace.totalLatencyMs.toFixed(0)}ms
@@ -384,11 +398,22 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 </div>
 
                 {/* Tab Content */}
-                {activeTab === "results" ? (
-                  <ResultsPanel results={results} isLoading={isLoading} showRerankDelta={config.rerank} />
-                ) : (
-                  <TracePanel trace={trace} isLoading={isLoading} />
-                )}
+                <div className="flex-1">
+                  {activeTab === "results" ? (
+                    <ResultsPanel
+                      results={results}
+                      isLoading={isLoading}
+                      showRerankDelta={config.rerank}
+                      translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
+                    />
+                  ) : (
+                    <TracePanel
+                      trace={trace}
+                      isLoading={isLoading}
+                      translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -397,19 +422,36 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           <div className="md:hidden bg-gray-50 rounded-2xl p-4 border border-gray-100">
             {/* Mobile Tabs */}
             <div className="flex items-center gap-2 mb-4 overflow-x-auto">
-              {(["request", "results", "trace"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setMobileConsoleTab(tab)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
-                    mobileConsoleTab === tab
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
+              <button
+                onClick={() => setMobileConsoleTab("request")}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  mobileConsoleTab === "request"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                {(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request"}
+              </button>
+              <button
+                onClick={() => setMobileConsoleTab("results")}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  mobileConsoleTab === "results"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                {t.extremeHome?.tabs?.results || "Results"}
+              </button>
+              <button
+                onClick={() => setMobileConsoleTab("trace")}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  mobileConsoleTab === "trace"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                {t.extremeHome?.tabs?.trace || "Trace"}
+              </button>
             </div>
 
             <div className="bg-white rounded-xl p-4 border border-gray-100 min-h-[400px]">
@@ -419,13 +461,23 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   onConfigChange={setConfig}
                   onRun={handleRun}
                   isLoading={isLoading}
+                  translations={t.extremeHome?.requestBuilder as RequestBuilderTranslations}
                 />
               )}
               {mobileConsoleTab === "results" && (
-                <ResultsPanel results={results} isLoading={isLoading} showRerankDelta={config.rerank} />
+                <ResultsPanel
+                  results={results}
+                  isLoading={isLoading}
+                  showRerankDelta={config.rerank}
+                  translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
+                />
               )}
               {mobileConsoleTab === "trace" && (
-                <TracePanel trace={trace} isLoading={isLoading} />
+                <TracePanel
+                  trace={trace}
+                  isLoading={isLoading}
+                  translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                />
               )}
             </div>
           </div>

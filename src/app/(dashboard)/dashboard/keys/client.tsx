@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface ApiKey {
   id: string;
@@ -11,6 +12,7 @@ interface ApiKey {
 }
 
 export default function ApiKeysClient() {
+  const { t, locale } = useDashboardTranslation();
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -101,9 +103,9 @@ export default function ApiKeysClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">API Keys</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.keysPage.title")}</h1>
           <p className="text-gray-500 mt-1">
-            Manage your API keys for accessing Seizn services
+            {t("dashboard.keysPage.subtitle")}
           </p>
         </div>
         <button
@@ -111,14 +113,14 @@ export default function ApiKeysClient() {
           className="theme-gradient-btn text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
         >
           <PlusIcon className="w-5 h-5" />
-          Create New Key
+          {t("dashboard.keysPage.createNewKey")}
         </button>
       </div>
 
       {/* API Keys List */}
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-4 border-b theme-border">
-          <h2 className="font-semibold text-gray-900">Active Keys</h2>
+          <h2 className="font-semibold text-gray-900">{t("dashboard.keysPage.activeKeys")}</h2>
         </div>
 
         {isLoading ? (
@@ -142,16 +144,16 @@ export default function ApiKeysClient() {
               <KeyIcon className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No API keys yet
+              {t("dashboard.keysPage.noKeysTitle")}
             </h3>
             <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-              Create your first API key to start integrating with Seizn
+              {t("dashboard.keysPage.noKeysDesc")}
             </p>
             <button
               onClick={() => setShowCreateModal(true)}
               className="theme-gradient-btn text-white px-6 py-2.5 rounded-xl font-medium"
             >
-              Create API Key
+              {t("dashboard.keysPage.createApiKey")}
             </button>
           </div>
         ) : (
@@ -173,21 +175,21 @@ export default function ApiKeysClient() {
                 <div className="flex items-center gap-4">
                   <div className="text-right hidden sm:block">
                     <p className="text-sm text-gray-600">
-                      Created {new Date(key.created_at).toLocaleDateString("ja-JP")}
+                      {t("dashboard.keysPage.created")} {new Date(key.created_at).toLocaleDateString(locale)}
                     </p>
                     {key.last_used_at ? (
                       <p className="text-xs text-gray-400">
-                        Last used {new Date(key.last_used_at).toLocaleDateString("ja-JP")}
+                        {t("dashboard.keysPage.lastUsed")} {new Date(key.last_used_at).toLocaleDateString(locale)}
                       </p>
                     ) : (
-                      <p className="text-xs text-gray-400">Never used</p>
+                      <p className="text-xs text-gray-400">{t("dashboard.keysPage.neverUsed")}</p>
                     )}
                   </div>
                   <button
                     onClick={() => revokeApiKey(key.id, key.name)}
                     className="px-3 py-1.5 text-sm text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
-                    Revoke
+                    {t("dashboard.keysPage.revoke")}
                   </button>
                 </div>
               </div>
@@ -198,19 +200,19 @@ export default function ApiKeysClient() {
 
       {/* Usage Guide */}
       <div className="glass-card rounded-2xl p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">Usage Guide</h2>
+        <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.keysPage.usageGuide")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Authentication</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">{t("dashboard.keysPage.authentication")}</h3>
             <p className="text-sm text-gray-500 mb-3">
-              Include your API key in the request header:
+              {t("dashboard.keysPage.authDesc")}
             </p>
             <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
               <code className="text-sm text-gray-300">x-api-key: YOUR_API_KEY</code>
             </div>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Example Request</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">{t("dashboard.keysPage.exampleRequest")}</h3>
             <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
               <pre className="text-sm text-gray-300">
 {`curl -X POST \\
@@ -246,9 +248,9 @@ export default function ApiKeysClient() {
                   <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900">API Key Created!</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{t("dashboard.keysPage.keyCreated")}</h2>
                   <p className="text-gray-500 text-sm mt-1">
-                    Copy this key now. You won&apos;t see it again.
+                    {t("dashboard.keysPage.keyCreatedDesc")}
                   </p>
                 </div>
 
@@ -264,14 +266,14 @@ export default function ApiKeysClient() {
                       : "theme-gradient-btn text-white"
                   }`}
                 >
-                  {copied ? "Copied!" : "Copy to Clipboard"}
+                  {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
                 </button>
 
                 <button
                   onClick={closeModal}
                   className="w-full mt-3 py-3 text-gray-600 hover:text-gray-800 transition-colors"
                 >
-                  Done
+                  {t("dashboard.keysPage.done")}
                 </button>
               </div>
             ) : (
@@ -281,9 +283,9 @@ export default function ApiKeysClient() {
                   <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
                     <KeyIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900">Create API Key</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{t("dashboard.keysPage.createKeyTitle")}</h2>
                   <p className="text-gray-500 text-sm mt-1">
-                    Give your key a descriptive name
+                    {t("dashboard.keysPage.createKeyDesc")}
                   </p>
                 </div>
 
@@ -295,13 +297,13 @@ export default function ApiKeysClient() {
 
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Key Name
+                    {t("dashboard.keysPage.keyName")}
                   </label>
                   <input
                     type="text"
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
-                    placeholder="e.g., Production, Development, Testing"
+                    placeholder={t("dashboard.keysPage.keyNamePlaceholder")}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
                     onKeyDown={(e) => e.key === "Enter" && createApiKey()}
                     autoFocus
@@ -313,14 +315,14 @@ export default function ApiKeysClient() {
                     onClick={closeModal}
                     className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                   >
-                    Cancel
+                    {t("dashboard.keysPage.cancel")}
                   </button>
                   <button
                     onClick={createApiKey}
                     disabled={isCreating || !newKeyName.trim()}
                     className="flex-1 theme-gradient-btn text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isCreating ? "Creating..." : "Create Key"}
+                    {isCreating ? t("dashboard.keysPage.creating") : t("dashboard.keysPage.createKey")}
                   </button>
                 </div>
               </div>

@@ -218,12 +218,31 @@
       "noKeys": "Chưa có khóa API. Tạo một khóa để bắt đầu."
     },
     "usagePage": {
-      "title": "Thống kê sử dụng",
-      "period": "Kỳ hiện tại",
-      "memoriesUsed": "Ký ức đã dùng",
-      "apiCallsUsed": "Lệnh gọi API đã dùng",
-      "remaining": "Còn lại",
-      "upgrade": "Nâng cấp gói"
+      "title": "Usage Analytics",
+      "period": "Current Period",
+      "memoriesUsed": "Memories Used",
+      "apiCallsUsed": "API Calls Used",
+      "remaining": "Remaining",
+      "upgrade": "Upgrade Plan",
+      "subtitle": "Monitor your API usage and costs.",
+      "days7": "7 Days",
+      "days30": "30 Days",
+      "days90": "90 Days",
+      "loading": "Loading...",
+      "totalApiCalls": "Total API Calls",
+      "totalTokens": "Total Tokens",
+      "estimatedCost": "Estimated Cost",
+      "avgLatency": "Avg Latency",
+      "dailyApiCalls": "Daily API Calls",
+      "calls": "calls",
+      "endpointUsage": "Endpoint Usage",
+      "noData": "No data yet",
+      "avg": "avg",
+      "errors": "errors",
+      "usageByApiKey": "Usage by API Key",
+      "errorsTitle": "Errors",
+      "errorRate": "error rate",
+      "noUsageData": "No usage data available"
     },
     "language": "Ngôn ngữ",
     "organizations": "Organizations",
@@ -271,6 +290,61 @@
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
       "upgradePlan": "Upgrade Plan"
+    },
+    "keysPage": {
+      "title": "API Keys",
+      "subtitle": "Manage your API keys for accessing Seizn services",
+      "createNewKey": "Create New Key",
+      "activeKeys": "Active Keys",
+      "noKeysTitle": "No API keys yet",
+      "noKeysDesc": "Create your first API key to start integrating with Seizn",
+      "createApiKey": "Create API Key",
+      "created": "Created",
+      "neverUsed": "Never used",
+      "lastUsed": "Last used",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke API key \"{keyName}\"? This action cannot be undone.",
+      "usageGuide": "Usage Guide",
+      "authentication": "Authentication",
+      "authDesc": "Include your API key in the request header:",
+      "exampleRequest": "Example Request",
+      "keyCreated": "API Key Created!",
+      "keyCreatedDesc": "Copy this key now. You won't see it again.",
+      "copyToClipboard": "Copy to Clipboard",
+      "copied": "Copied!",
+      "done": "Done",
+      "createKeyTitle": "Create API Key",
+      "createKeyDesc": "Give your key a descriptive name",
+      "keyName": "Key Name",
+      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "createKey": "Create Key"
+    },
+    "organizationsPage": {
+      "title": "Organizations",
+      "subtitle": "Manage your teams and collaborate with others",
+      "newOrganization": "New Organization",
+      "noOrgsTitle": "No organizations yet",
+      "noOrgsDesc": "Create your first organization to start collaborating with your team",
+      "createOrganization": "Create Organization",
+      "created": "Created",
+      "plan": "Plan",
+      "freePlan": "Free",
+      "createOrgTitle": "Create Organization",
+      "createOrgDesc": "Set up a new team workspace",
+      "orgName": "Organization Name",
+      "orgNamePlaceholder": "Acme Corp",
+      "urlSlug": "URL Slug",
+      "urlSlugPlaceholder": "acme-corp",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "create": "Create",
+      "roles": {
+        "owner": "owner",
+        "admin": "admin",
+        "member": "member"
+      }
     }
   },
   "pricingPage": {
@@ -443,9 +517,53 @@
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo"
     },
-    "requestBuilder": "Request Builder",
-    "results": "Results",
-    "trace": "Trace"
+    "requestBuilder": {
+      "title": "Request Builder",
+      "query": "Query",
+      "queryPlaceholder": "Enter your search query...",
+      "tryExamples": "Try examples",
+      "dataset": "Dataset",
+      "latencyBudget": "Latency Budget",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "results",
+      "features": "Features",
+      "hybridSearch": "Hybrid Search",
+      "hybridSearchDesc": "Combine vector + keyword",
+      "rerank": "Rerank",
+      "rerankDesc": "Re-score with cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "Validate answer quality",
+      "running": "Running...",
+      "runQuery": "Run Query",
+      "datasets": {
+        "techDocs": "Tech Documentation",
+        "legalContracts": "Legal Contracts",
+        "researchPapers": "Research Papers"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Searching...",
+      "noResults": "Run a query to see results",
+      "score": "Score"
+    },
+    "tracePanel": {
+      "tracing": "Tracing pipeline...",
+      "noTrace": "Run a query to see the trace",
+      "latency": "Latency",
+      "cost": "Cost",
+      "tokens": "Tokens",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "Model",
+      "input": "Input",
+      "output": "Output"
+    },
+    "tabs": {
+      "results": "Results",
+      "trace": "Trace"
+    }
   },
   "docs": {
     "nav": {
