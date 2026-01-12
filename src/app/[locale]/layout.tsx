@@ -32,32 +32,37 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+// OpenGraph locale mapping
+const localeMap: Record<Locale, string> = {
+  en: 'en_US',
+  ko: 'ko_KR',
+  ja: 'ja_JP',
+  'zh-hans': 'zh_Hans_CN',
+  'zh-hant': 'zh_Hant_TW',
+  es: 'es_ES',
+  ru: 'ru_RU',
+  uk: 'uk_UA',
+  he: 'he_IL',
+  ar: 'ar_SA',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  sv: 'sv_SE',
+  nl: 'nl_NL',
+  vi: 'vi_VN',
+  pl: 'pl_PL',
+  'pt-BR': 'pt_BR',
+  'pt-PT': 'pt_PT',
+};
+
+// Auto-generate alternates.languages from locales array
+const alternateLanguages = Object.fromEntries(
+  locales.map((l) => [l, `/${l}`])
+) as Record<string, string>;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : 'en') as Locale;
   const dict = await getDictionary(locale);
-
-  const localeMap: Record<Locale, string> = {
-    en: 'en_US',
-    ko: 'ko_KR',
-    ja: 'ja_JP',
-    'zh-CN': 'zh_CN',
-    'zh-TW': 'zh_TW',
-    'zh-HK': 'zh_HK',
-    es: 'es_ES',
-    ru: 'ru_RU',
-    uk: 'uk_UA',
-    he: 'he_IL',
-    ar: 'ar_SA',
-    fr: 'fr_FR',
-    de: 'de_DE',
-    sv: 'sv_SE',
-    nl: 'nl_NL',
-    vi: 'vi_VN',
-    pl: 'pl_PL',
-    'pt-BR': 'pt_BR',
-    'pt-PT': 'pt_PT',
-  };
 
   return {
     title: {
@@ -72,27 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase: new URL("https://www.seizn.com"),
     alternates: {
       canonical: `/${locale}`,
-      languages: {
-        'en': '/en',
-        'ko': '/ko',
-        'ja': '/ja',
-        'zh-CN': '/zh-CN',
-        'zh-TW': '/zh-TW',
-        'zh-HK': '/zh-HK',
-        'es': '/es',
-        'ru': '/ru',
-        'uk': '/uk',
-        'he': '/he',
-        'ar': '/ar',
-        'fr': '/fr',
-        'de': '/de',
-        'sv': '/sv',
-        'nl': '/nl',
-        'vi': '/vi',
-        'pl': '/pl',
-        'pt-BR': '/pt-BR',
-        'pt-PT': '/pt-PT',
-      },
+      languages: alternateLanguages,
     },
     openGraph: {
       type: "website",
@@ -148,9 +133,10 @@ export default async function LocaleLayout({
 }) {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : 'en') as Locale;
+  const dir = isRtl(locale) ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={isRtl(locale) ? 'rtl' : 'ltr'}>
+    <html lang={locale} dir={dir}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

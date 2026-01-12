@@ -2,16 +2,15 @@ export const locales = [
   'en',
   'ko',
   'ja',
-  // Chinese (split by region)
-  'zh-CN',
-  'zh-TW',
-  'zh-HK',
+  // Chinese (split by script, not region)
+  'zh-hans', // Simplified Chinese (CN, SG)
+  'zh-hant', // Traditional Chinese (TW, HK, MO)
   // Spanish
   'es',
   // Eastern European
   'ru',
   'uk',
-  // Middle Eastern
+  // Middle Eastern (RTL)
   'he',
   'ar',
   // Western European
@@ -34,9 +33,8 @@ export const localeNames: Record<Locale, string> = {
   en: 'English',
   ko: '한국어',
   ja: '日本語',
-  'zh-CN': '中文(简体)',
-  'zh-TW': '中文(繁體)',
-  'zh-HK': '中文(香港)',
+  'zh-hans': '简体中文',
+  'zh-hant': '繁體中文',
   es: 'Español',
   ru: 'Русский',
   uk: 'Українська',
@@ -53,20 +51,22 @@ export const localeNames: Record<Locale, string> = {
 };
 
 // RTL languages
-export const rtlLocales: Locale[] = ['he', 'ar'];
+export const rtlLocales = new Set<Locale>(['he', 'ar']);
 
 export function isRtl(locale: Locale): boolean {
-  return rtlLocales.includes(locale);
+  return rtlLocales.has(locale);
 }
 
-// Country to locale mapping
+// Country to locale mapping (fallback only, don't force for multilingual countries)
 export const countryToLocale: Record<string, Locale> = {
   KR: 'ko',
   JP: 'ja',
-  // Chinese regions
-  CN: 'zh-CN',
-  TW: 'zh-TW',
-  HK: 'zh-HK',
+  // Chinese regions (script-based)
+  CN: 'zh-hans',
+  SG: 'zh-hans', // Singapore uses Simplified
+  TW: 'zh-hant',
+  HK: 'zh-hant',
+  MO: 'zh-hant', // Macau
   // Spanish-speaking
   ES: 'es',
   MX: 'es',
@@ -77,16 +77,14 @@ export const countryToLocale: Record<string, Locale> = {
   // Eastern European
   RU: 'ru',
   UA: 'uk',
-  // Middle Eastern
+  // Middle Eastern (RTL)
   IL: 'he',
   SA: 'ar',
   AE: 'ar',
   EG: 'ar',
   // Western European
   FR: 'fr',
-  CA: 'fr',
-  BE: 'fr',
-  CH: 'de',
+  // CA/BE/CH: Accept-Language takes priority, these are multilingual
   DE: 'de',
   AT: 'de',
   SE: 'sv',
@@ -97,11 +95,10 @@ export const countryToLocale: Record<string, Locale> = {
   BR: 'pt-BR',
   PT: 'pt-PT',
   // English-speaking
-  SG: 'en',
-  IE: 'en',
   US: 'en',
   GB: 'en',
   AU: 'en',
+  IE: 'en',
   // All other countries default to English
 };
 

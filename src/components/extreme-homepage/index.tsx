@@ -17,6 +17,11 @@ interface ExtremeHomepageClientProps {
 
 type ResultTab = "results" | "trace";
 
+const scrollToDemo = () => {
+  const demo = document.getElementById("demo");
+  if (demo) demo.scrollIntoView({ behavior: "smooth" });
+};
+
 const DEFAULT_CONFIG: RequestConfig = {
   query: "",
   dataset: "tech-docs",
@@ -207,7 +212,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             >
               Get API Key
             </Link>
-            <button className="text-sm border-2 border-gray-800 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-800 hover:text-white transition-all font-medium">
+            <button onClick={scrollToDemo} className="text-sm border-2 border-gray-800 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-800 hover:text-white transition-all font-medium">
               {t.extremeHome?.nav?.tryDemo || "Try Demo"}
             </button>
           </div>
@@ -246,7 +251,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       </nav>
 
       {/* Hero = Live Console */}
-      <section className="pt-24 pb-8 px-4 sm:px-6">
+      <section id="demo" className="pt-24 pb-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Hero Text */}
           <div className="text-center mb-8">

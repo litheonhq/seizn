@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -65,7 +66,15 @@ const navigation = [
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/en/login");
+    }
+  }, [status, router]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
@@ -76,13 +85,22 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }, []);
 
   const config = seasonConfig[season];
-  const isSidebarExpanded = isSidebarPinned || isSidebarHovering;
+  const isSidebarExpanded = isSidebarPinned;
   const mainPaddingClass = isSidebarExpanded ? "lg:pl-72" : "lg:pl-20";
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
   };
+
+  // Show loading or redirect if not authenticated
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
   return (
     <div className={`theme-${season} min-h-screen theme-gradient-bg`}>
@@ -107,8 +125,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col glass-card transition-[width] duration-300 ${
           isSidebarExpanded ? "w-72" : "w-20"
         }`}
-        onMouseEnter={() => setIsSidebarHovering(true)}
-        onMouseLeave={() => setIsSidebarHovering(false)}
+        
+        
       >
         {/* Logo */}
         <div className="p-4 border-b theme-border">
