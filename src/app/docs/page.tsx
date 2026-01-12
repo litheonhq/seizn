@@ -347,6 +347,66 @@ curl "https://seizn.com/api/memories?query=user+preferences" \\
           </div>
         </section>
 
+        {/* Security & Governance */}
+        <section id="security" className="mb-16">
+          <h2 className="text-2xl font-bold text-white mb-6">Security & Governance</h2>
+          <div className="space-y-6">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Data Security</h3>
+              <ul className="space-y-3 text-zinc-400">
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Encryption at rest:</strong> All data encrypted with AES-256</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Encryption in transit:</strong> TLS 1.3 for all connections</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Tenant isolation:</strong> Complete data separation between accounts</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">API Key Management</h3>
+              <ul className="space-y-3 text-zinc-400">
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Key rotation:</strong> Rotate keys anytime from the dashboard</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Key expiration:</strong> Auto-expire keys after 90 days (configurable)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Usage tracking:</strong> Monitor per-key usage in real-time</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Data Retention & Deletion</h3>
+              <ul className="space-y-3 text-zinc-400">
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Export:</strong> Export all your data anytime via API or dashboard</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">Deletion:</strong> Hard delete with no retention after 30 days</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-400">✓</span>
+                  <span><strong className="text-zinc-300">GDPR/CCPA:</strong> Full compliance with data subject rights</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* SDKs */}
         <section id="sdks" className="mb-16">
           <h2 className="text-2xl font-bold text-white mb-6">SDKs</h2>
