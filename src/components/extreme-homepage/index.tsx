@@ -17,11 +17,6 @@ interface ExtremeHomepageClientProps {
 
 type ResultTab = "results" | "trace";
 
-const scrollToDemo = () => {
-  const demo = document.getElementById("demo");
-  if (demo) demo.scrollIntoView({ behavior: "smooth" });
-};
-
 const DEFAULT_CONFIG: RequestConfig = {
   query: "",
   dataset: "tech-docs",
@@ -222,25 +217,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/docs" className="text-sm text-gray-600 hover:text-black transition-colors">
-              {t.extremeHome?.nav?.docs || "Docs"}
-            </Link>
-            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-black transition-colors">
-              {t.extremeHome?.nav?.pricing || "Pricing"}
-            </Link>
-            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 hover:text-black transition-colors">
-              {t.extremeHome?.nav?.enterprise || "Enterprise"}
-            </Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href="/dashboard/keys"
               className="text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
             >
-              Get API Key
+              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
             </Link>
-            <button onClick={scrollToDemo} className="text-sm border-2 border-gray-800 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-800 hover:text-white transition-all font-medium">
-              {t.extremeHome?.nav?.tryDemo || "Try Demo"}
-            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -264,9 +247,26 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-100">
             <div className="px-4 py-4 space-y-4">
-              <Link href="/docs" className="block text-gray-600">{t.extremeHome?.nav?.docs || "Docs"}</Link>
-              <Link href={`/${locale}/pricing`} className="block text-gray-600">{t.extremeHome?.nav?.pricing || "Pricing"}</Link>
-              <Link href={`/${locale}/enterprise`} className="block text-gray-600">{t.extremeHome?.nav?.enterprise || "Enterprise"}</Link>
+              <div className="flex justify-center gap-8 py-2">
+                <Link href="/docs" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                  <span className="text-xs">{t.extremeHome?.nav?.docs || "Docs"}</span>
+                </Link>
+                <Link href={`/${locale}/pricing`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-xs">{t.extremeHome?.nav?.pricing || "Pricing"}</span>
+                </Link>
+                <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                  </svg>
+                  <span className="text-xs">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
+                </Link>
+              </div>
               <LanguageSwitcher currentLocale={locale} />
               <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full">
                 {t.extremeHome?.nav?.getApiKey || "Get API Key"}
@@ -284,9 +284,37 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 mb-4">
               {t.extremeHome?.heroTitle || "Search you can debug."}
             </h1>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-6">
               {t.extremeHome?.heroSubtitle || "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost."}
             </p>
+
+            {/* Quick Links */}
+            <div className="flex items-center justify-center gap-8 md:gap-12">
+              <Link href="/docs" className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
+                <div className="w-12 h-12 rounded-2xl bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium">{t.extremeHome?.nav?.docs || "Docs"}</span>
+              </Link>
+              <Link href={`/${locale}/pricing`} className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
+                <div className="w-12 h-12 rounded-2xl bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium">{t.extremeHome?.nav?.pricing || "Pricing"}</span>
+              </Link>
+              <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
+                <div className="w-12 h-12 rounded-2xl bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
+              </Link>
+            </div>
           </div>
 
           {/* Progress Indicator */}
