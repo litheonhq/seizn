@@ -7,6 +7,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import type { AddMemoryRequest } from '@/types/database';
@@ -30,10 +31,7 @@ export async function POST(request: NextRequest) {
         { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
         400
       );
-      return NextResponse.json(
-        { error: 'Content is required' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('content');
     }
 
     const supabase = createServerClient();
@@ -67,10 +65,7 @@ export async function POST(request: NextRequest) {
         { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
         500
       );
-      return NextResponse.json(
-        { error: 'Failed to add memory' },
-        { status: 500 }
-      );
+      return ServerErrors.database('insert_memory');
     }
 
     // Log successful request
@@ -86,10 +81,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Add memory error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('add_memory');
   }
 }
 
@@ -114,10 +106,7 @@ export async function GET(request: NextRequest) {
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
         400
       );
-      return NextResponse.json(
-        { error: 'Query parameter is required' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('query');
     }
 
     // Parse search parameters
@@ -177,7 +166,7 @@ export async function GET(request: NextRequest) {
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
         500
       );
-      return NextResponse.json({ error: 'Search failed' }, { status: 500 });
+      return ServerErrors.database('search_memories');
     }
 
     // Log successful request
@@ -208,10 +197,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Search memory error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('search_memories');
   }
 }
 
@@ -231,10 +217,7 @@ export async function DELETE(request: NextRequest) {
 
     const ids = searchParams.get('ids')?.split(',').filter(Boolean);
     if (!ids || ids.length === 0) {
-      return NextResponse.json(
-        { error: 'Memory IDs required (comma-separated)' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('ids');
     }
 
     const supabase = createServerClient();
@@ -252,10 +235,7 @@ export async function DELETE(request: NextRequest) {
         { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
         500
       );
-      return NextResponse.json(
-        { error: 'Failed to delete memories' },
-        { status: 500 }
-      );
+      return ServerErrors.database('delete_memories');
     }
 
     await logRequest(
@@ -269,9 +249,6 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error('Delete memory error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('delete_memories');
   }
 }
