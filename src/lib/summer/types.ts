@@ -114,6 +114,7 @@ export interface RetrievalTrace {
     embedQuery?: number;
     vectorSearch?: number;
     rerank?: number;
+    compression?: number;
     total?: number;
   };
   autopilot: {
@@ -124,6 +125,14 @@ export interface RetrievalTrace {
   experiment?: RetrievalExperimentInfo;
   /** For joining feedback without exposing DB ids */
   sampled?: boolean;
+}
+
+/** Compression options for retrieval */
+export interface CompressionParams {
+  /** Enable context compression (default: false) */
+  enabled: boolean;
+  /** Target compression ratio (0.1 to 1.0, default: 0.5) */
+  target_ratio?: number;
 }
 
 export interface RetrieveParams {
@@ -144,6 +153,9 @@ export interface RetrieveParams {
   experimentId?: string;
 
   includeTrace?: boolean;
+
+  /** Context compression options */
+  compression?: CompressionParams;
 }
 
 export interface RetrieveResponse {
@@ -152,6 +164,10 @@ export interface RetrieveResponse {
   trace?: RetrievalTrace;
   /** Query receipt with cost/execution/evidence breakdown */
   receipt?: import('@/lib/retrieval/receipt').QueryReceipt;
+  /** Compressed context chunks (if compression enabled) */
+  compressed?: import('@/lib/compression').CompressedChunk[];
+  /** Compression statistics (if compression enabled) */
+  compressionStats?: import('@/lib/compression').CompressionTraceStats;
 }
 
 // ============================================

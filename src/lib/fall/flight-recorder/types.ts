@@ -10,6 +10,7 @@ export type RetrievalEventType =
   | 'candidates'
   | 'rerank'
   | 'context'
+  | 'compression'
   | 'answer_contract'
   | 'feedback'
   | 'error'

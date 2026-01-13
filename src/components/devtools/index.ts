@@ -23,3 +23,6 @@ export { ReceiptTab } from "./ReceiptTab";
 export type { ReceiptTabProps } from "./ReceiptTab";
 export { WhyNotPanel } from "./WhyNotPanel";
 export type { WhyNotPanelProps, WhyNotResult, WhyNotBlocker, WhyNotStages, WhyNotStage } from "./WhyNotPanel";
+
+export { CompressionTab } from "./CompressionTab";
+export type { CompressionTabProps } from "./CompressionTab";

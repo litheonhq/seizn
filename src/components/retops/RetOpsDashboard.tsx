@@ -7,6 +7,7 @@ import { LatencyDistribution } from "./LatencyDistribution";
 import { QualityTrend } from "./QualityTrend";
 import { TopQueries } from "./TopQueries";
 import { AlertsPanel } from "./AlertsPanel";
+import { DriftDashboard } from "@/components/drift";
 import type {
   RetOpsMetrics,
   RetrievalStats,
@@ -20,6 +21,8 @@ import type {
 // ============================================
 // Types
 // ============================================
+
+type DashboardTab = "overview" | "drift";
 
 export interface RetOpsDashboardProps {
   /** Collection ID to filter by (optional) */
@@ -50,6 +53,7 @@ export function RetOpsDashboard({
   className = "",
   refreshInterval = 30,
 }: RetOpsDashboardProps) {
+  const [activeTab, setActiveTab] = useState<DashboardTab>("overview");
   const [period, setPeriod] = useState<TimePeriod>("24h");
   const [data, setData] = useState<DashboardData>({
     metrics: null,
@@ -158,7 +162,7 @@ export function RetOpsDashboard({
           <h1 className="text-2xl font-bold text-gray-900">RetOps Dashboard</h1>
           <p className="text-sm text-gray-500 mt-1">
             Retrieval Operations Monitoring
-            {lastUpdated && (
+            {lastUpdated && activeTab === "overview" && (
               <span className="ml-2">
                 - Updated {lastUpdated.toLocaleTimeString()}
               </span>
@@ -167,80 +171,116 @@ export function RetOpsDashboard({
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Period Selector */}
-          <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value as TimePeriod)}
-            className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {periodOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          {/* Tab Selector */}
+          <div className="flex rounded-lg border border-gray-300 bg-white overflow-hidden">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "overview"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("drift")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "drift"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              Drift Radar
+            </button>
+          </div>
 
-          {/* Refresh Button */}
-          <button
-            onClick={fetchData}
-            disabled={data.loading}
-            className="p-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-            title="Refresh"
-          >
-            <RefreshIcon className={`w-5 h-5 ${data.loading ? "animate-spin" : ""}`} />
-          </button>
+          {/* Period Selector (only for overview) */}
+          {activeTab === "overview" && (
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value as TimePeriod)}
+              className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {periodOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {/* Refresh Button (only for overview) */}
+          {activeTab === "overview" && (
+            <button
+              onClick={fetchData}
+              disabled={data.loading}
+              className="p-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+              title="Refresh"
+            >
+              <RefreshIcon className={`w-5 h-5 ${data.loading ? "animate-spin" : ""}`} />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Error Message */}
-      {data.error && (
-        <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-          <p className="text-sm text-red-700">{data.error}</p>
-        </div>
+      {/* Tab Content */}
+      {activeTab === "overview" ? (
+        <>
+          {/* Error Message */}
+          {data.error && (
+            <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+              <p className="text-sm text-red-700">{data.error}</p>
+            </div>
+          )}
+
+          {/* Metrics Overview */}
+          <MetricsOverview metrics={data.metrics} loading={data.loading} />
+
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Query Volume Chart */}
+            <QueryVolumeChart
+              stats={data.stats}
+              timeSeries={data.timeSeries}
+              loading={data.loading}
+            />
+
+            {/* Latency Distribution */}
+            <LatencyDistribution
+              metrics={data.metrics}
+              timeSeries={data.timeSeries}
+              loading={data.loading}
+            />
+          </div>
+
+          {/* Quality Trend */}
+          <QualityTrend
+            quality={data.quality}
+            trend={data.qualityTrend}
+            loading={data.loading}
+          />
+
+          {/* Bottom Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Top Queries */}
+            <TopQueries
+              queries={data.stats?.topQueries || []}
+              loading={data.loading}
+            />
+
+            {/* Alerts Panel */}
+            <AlertsPanel
+              alerts={data.alerts}
+              loading={data.loading}
+              onAcknowledge={handleAcknowledgeAlert}
+            />
+          </div>
+        </>
+      ) : (
+        /* Drift Radar Dashboard */
+        <DriftDashboard collectionId={collectionId} />
       )}
-
-      {/* Metrics Overview */}
-      <MetricsOverview metrics={data.metrics} loading={data.loading} />
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Query Volume Chart */}
-        <QueryVolumeChart
-          stats={data.stats}
-          timeSeries={data.timeSeries}
-          loading={data.loading}
-        />
-
-        {/* Latency Distribution */}
-        <LatencyDistribution
-          metrics={data.metrics}
-          timeSeries={data.timeSeries}
-          loading={data.loading}
-        />
-      </div>
-
-      {/* Quality Trend */}
-      <QualityTrend
-        quality={data.quality}
-        trend={data.qualityTrend}
-        loading={data.loading}
-      />
-
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Queries */}
-        <TopQueries
-          queries={data.stats?.topQueries || []}
-          loading={data.loading}
-        />
-
-        {/* Alerts Panel */}
-        <AlertsPanel
-          alerts={data.alerts}
-          loading={data.loading}
-          onAcknowledge={handleAcknowledgeAlert}
-        />
-      </div>
     </div>
   );
 }

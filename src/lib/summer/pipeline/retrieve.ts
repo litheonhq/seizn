@@ -10,6 +10,11 @@ import { recommendEfSearch } from '../tuning/hnsw';
 
 import { startTrace, addEvent, finishTrace } from '@/lib/fall/flight-recorder';
 import { generateReceiptFromResult } from '@/lib/retrieval/receipt';
+import {
+  compressContext,
+  type CompressedChunk,
+  type CompressionTraceStats,
+} from '@/lib/compression';
 
 function dedupeByChunkId(results: VectorSearchResult[]): VectorSearchResult[] {
   const map = new Map<string, VectorSearchResult>();
@@ -213,7 +218,49 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResponse
     });
   }
 
-  // 6) Final context selection (logged for Answer Contract)
+
+  // 6) Context compression (optional)
+  let compressionMs = 0;
+  let compressedChunks: CompressedChunk[] | undefined;
+  let compressionStats: CompressionTraceStats | undefined;
+
+  if (params.compression?.enabled && finalResults.length > 0) {
+    const compressionStart = Date.now();
+
+    const chunkInputs = finalResults.map((r) => ({
+      chunk_id: r.chunkId,
+      text: r.text,
+      document_id: r.documentId,
+      metadata: r.metadata,
+    }));
+
+    const compressionResult = await compressContext(
+      chunkInputs,
+      params.query,
+      { target_ratio: params.compression.target_ratio ?? 0.5 }
+    );
+
+    compressionMs = Date.now() - compressionStart;
+    compressedChunks = compressionResult.chunks;
+    compressionStats = {
+      chunks_compressed: compressionResult.chunks.length,
+      original_tokens: compressionResult.total_original_tokens,
+      compressed_tokens: compressionResult.total_compressed_tokens,
+      ratio: compressionResult.overall_ratio,
+      time_ms: compressionMs,
+    };
+
+    addEvent(traceHandle, 'compression', {
+      enabled: true,
+      target_ratio: params.compression.target_ratio ?? 0.5,
+      original_tokens: compressionResult.total_original_tokens,
+      compressed_tokens: compressionResult.total_compressed_tokens,
+      overall_ratio: compressionResult.overall_ratio,
+      latency_ms: compressionMs,
+    });
+  }
+
+  // 7) Final context selection (logged for Answer Contract)
   addEvent(traceHandle, 'context', {
     selectedChunkIds: finalResults.slice(0, 12).map((r) => r.chunkId),
   });
@@ -224,6 +271,7 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResponse
     embedQuery: embedMs,
     vectorSearch: searchMs,
     rerank: plan.config.rerank ? rerankMs : undefined,
+    compression: params.compression?.enabled ? compressionMs : undefined,
     total: totalMs,
   };
 
@@ -279,6 +327,7 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResponse
       embedding: embedMs,
       search: searchMs,
       rerank: plan.config.rerank ? rerankMs : 0,
+      compression: params.compression?.enabled ? compressionMs : 0,
       total: totalMs,
     },
     resultsCount: finalResults.length,
@@ -290,5 +339,7 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResponse
     config: plan.config,
     trace: params.includeTrace ? trace : undefined,
     receipt,
+    compressed: compressedChunks,
+    compressionStats,
   };
 }
