@@ -41,7 +41,7 @@ export function DocsClient() {
         <nav className="hidden lg:block w-56 shrink-0">
           <div className="sticky top-24 space-y-1">
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">{t("docs.sidebar.overview")}</p>
-            <a href="#quickstart" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">{t("docs.sidebar.quickStart")}</a>
+            <Link href="/docs/quickstart" className="block py-1.5 text-sm text-emerald-400 font-medium hover:text-emerald-300 transition-colors">{t("docs.sidebar.quickStart")}</Link>
             <a href="#authentication" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">{t("docs.sidebar.authentication")}</a>
 
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{t("docs.sidebar.apiReference")}</p>

@@ -67,3 +67,4 @@ export { resend };
 
 // Re-export templates for convenience
 export * from './templates';
+export * from './rtbf-templates';

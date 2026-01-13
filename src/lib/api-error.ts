@@ -58,21 +58,20 @@ export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
 
 export interface ApiErrorResponse {
   error: {
-    code: ErrorCode;
+    error_code: ErrorCode;
     message: string;
-    request_id: string;
-    trace_id: string; // Alias for request_id (for observability tools)
-    suggested_fix: string;
+    trace_id: string;
+    hint: string;
     details?: Record<string, unknown>;
     docs_url?: string;
   };
 }
 
 // ============================================
-// Suggested Fixes Map
+// Hints Map (Human-readable resolution guidance)
 // ============================================
 
-const SuggestedFixes: Record<ErrorCode, string> = {
+const Hints: Record<ErrorCode, string> = {
   // Auth
   [ErrorCodes.AUTH_MISSING_KEY]: 'Add x-api-key header to your request',
   [ErrorCodes.AUTH_INVALID_KEY]: 'Check API key in Dashboard → API Keys',
@@ -122,8 +121,8 @@ interface CreateErrorOptions {
   headers?: Record<string, string>;
 }
 
-function generateRequestId(): string {
-  return `req_${randomUUID().replace(/-/g, '').substring(0, 24)}`;
+function generateTraceId(): string {
+  return `trc_${randomUUID().replace(/-/g, '').substring(0, 24)}`;
 }
 
 function getDocsUrl(code: ErrorCode): string {
@@ -141,18 +140,16 @@ function getDocsUrl(code: ErrorCode): string {
 }
 
 export function createApiError(options: CreateErrorOptions): NextResponse<ApiErrorResponse> {
-  const requestId = generateRequestId();
-  const traceId = `trc_${requestId.slice(4)}`; // Convert req_ to trc_
+  const traceId = generateTraceId();
   const docsUrl = getDocsUrl(options.code);
-  const suggestedFix = SuggestedFixes[options.code] || 'Contact support with trace_id';
+  const hint = Hints[options.code] || 'Contact support with trace_id';
 
   const errorResponse: ApiErrorResponse = {
     error: {
-      code: options.code,
+      error_code: options.code,
       message: options.message,
-      request_id: requestId,
       trace_id: traceId,
-      suggested_fix: suggestedFix,
+      hint: hint,
       ...(options.details && { details: options.details }),
       docs_url: docsUrl,
     },
@@ -160,8 +157,7 @@ export function createApiError(options: CreateErrorOptions): NextResponse<ApiErr
 
   const response = NextResponse.json(errorResponse, { status: options.status });
 
-  // Add standard headers
-  response.headers.set('X-Request-ID', requestId);
+  // Add trace ID header for observability
   response.headers.set('X-Trace-ID', traceId);
 
   // Add custom headers if provided
@@ -360,6 +356,12 @@ export function isApiError(response: unknown): response is ApiErrorResponse {
     typeof response === 'object' &&
     response !== null &&
     'error' in response &&
-    typeof (response as ApiErrorResponse).error?.code === 'string'
+    typeof (response as ApiErrorResponse).error?.error_code === 'string'
   );
 }
+
+/**
+ * Generate a trace ID for request tracking
+ * Exported for use in routes that need to include trace_id in custom responses
+ */
+export { generateTraceId };

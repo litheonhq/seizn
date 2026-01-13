@@ -1,8 +1,15 @@
 /**
  * SLO Configuration
+ *
+ * Service Level Objectives for Seizn Platform
+ *
+ * Key Metrics:
+ * - P95 Latency: < 500ms (memory operations)
+ * - 5xx Error Rate: < 0.1%
+ * - API Availability: >= 99.9%
  */
 
-import type { SLOConfig, AlertConfig } from './types';
+import type { SLOConfig, AlertConfig, OperationSLOConfig } from './types';
 
 /**
  * SLO Targets
@@ -28,6 +35,44 @@ export const SLO_TARGETS: SLOConfig = {
     target: 99.9, // percentage
     unit: '%',
     comparison: 'gte',
+  },
+};
+
+/**
+ * Operation-specific SLO Targets
+ * Different operations have different latency requirements
+ */
+export const OPERATION_SLO_TARGETS: OperationSLOConfig = {
+  // Memory operations (CRUD)
+  memory: {
+    create: { p95: 500, p99: 1000, name: 'Memory Create' },
+    read: { p95: 200, p99: 500, name: 'Memory Read' },
+    update: { p95: 500, p99: 1000, name: 'Memory Update' },
+    delete: { p95: 300, p99: 600, name: 'Memory Delete' },
+    list: { p95: 300, p99: 800, name: 'Memory List' },
+  },
+  // Query operations (vector search)
+  query: {
+    simple: { p95: 500, p99: 1000, name: 'Simple Query' },
+    semantic: { p95: 800, p99: 1500, name: 'Semantic Query' },
+    hybrid: { p95: 1000, p99: 2000, name: 'Hybrid Query' },
+  },
+  // Embedding operations
+  embedding: {
+    single: { p95: 300, p99: 600, name: 'Single Embedding' },
+    batch: { p95: 1000, p99: 2000, name: 'Batch Embedding' },
+  },
+  // Reranking operations
+  rerank: {
+    small: { p95: 200, p99: 500, name: 'Small Rerank (<10 docs)' },
+    medium: { p95: 500, p99: 1000, name: 'Medium Rerank (10-50 docs)' },
+    large: { p95: 1000, p99: 2000, name: 'Large Rerank (>50 docs)' },
+  },
+  // API general operations
+  api: {
+    health: { p95: 50, p99: 100, name: 'Health Check' },
+    auth: { p95: 300, p99: 600, name: 'Authentication' },
+    general: { p95: 500, p99: 1000, name: 'General API' },
   },
 };
 
@@ -74,4 +119,36 @@ export const METRICS_CONFIG = {
 export const TELEGRAM_CONFIG = {
   botToken: process.env.TELEGRAM_BOT_TOKEN,
   chatId: process.env.TELEGRAM_CHAT_ID,
+};
+
+/**
+ * Sentry Alert Configuration
+ */
+export const SENTRY_CONFIG = {
+  enabled: process.env.NODE_ENV === 'production',
+  dsn: process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN,
+
+  // Sentry metric names
+  metricNames: {
+    p95Latency: 'seizn.slo.p95_latency_ms',
+    errorRate5xx: 'seizn.slo.error_rate_5xx_percent',
+    availability: 'seizn.slo.availability_percent',
+    memoryOpLatency: 'seizn.memory.operation_latency_ms',
+    queryLatency: 'seizn.query.latency_ms',
+    requestCount: 'seizn.requests.total',
+  },
+
+  // Sample rates
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 0.1,
+};
+
+/**
+ * Redis Metrics Configuration
+ */
+export const REDIS_METRICS_CONFIG = {
+  enabled: true,
+  keyPrefix: 'seizn:metrics:',
+  ttlSeconds: 3600, // 1 hour
+  maxDataPoints: 10000,
 };

@@ -823,6 +823,177 @@
           "answer": "必要なもの：1) データ範囲（保存されるもの/されないもの）、2) 暗号化（保存時：AES-256、転送中：TLS）、3) テナント分離方法、4) 削除/保持ポリシー、5) 監査ログアクセス、6) キーローテーション/有効期限ポリシー。ドキュメントにセキュリティとガバナンスのページを維持してください。"
         }
       ]
+    },
+    "componentsPage": {
+      "title": "UIコンポーネント",
+      "subtitle": "SeizのUIコンポーネントライブラリの包括的なドキュメント。各コンポーネントにはProps、使用例、ベストプラクティスが含まれています。",
+      "all": "すべて",
+      "components": {
+        "graphCanvas": {
+          "description": "React Flowを使用したメイングラフキャンバスコンポーネント。インタラクティブなコントロール、ミニマップ、パーミッションパネルでノードとエッジをレンダリングします。"
+        },
+        "nodeRenderer": {
+          "description": "グラフ可視化用のカスタムノードレンダラー。ノードタイプ、ステータス、パーミッションをスタイリングして表示します。"
+        },
+        "edgeRenderer": {
+          "description": "グラフ接続用のカスタムエッジレンダラー。有向、無向、双方向エッジをカスタムスタイリングでサポートします。"
+        },
+        "graphControls": {
+          "description": "グラフフィルタリングとズーム用のコントロールパネル。ノードタイプ、エッジタイプ、検索でフィルタリングします。"
+        },
+        "permissionPanel": {
+          "description": "選択したノードの詳細なパーミッション情報を表示するサイドパネル。"
+        },
+        "explainPanel": {
+          "description": "スコア内訳と帰属を含む完全な検索説明を表示する展開可能なパネル。"
+        },
+        "scoreBreakdown": {
+          "description": "関連性スコアコンポーネント（ベクター、キーワード、リランク、新しさ）の視覚的な内訳。"
+        },
+        "attributionList": {
+          "description": "結果に寄与したドキュメントを示すソース帰属のリスト。"
+        },
+        "highlightedPassage": {
+          "description": "マッチするスパン（完全一致、意味的一致、キーワード、エンティティ）をハイライトしたテキストパッセージ。"
+        },
+        "retOpsDashboard": {
+          "description": "自動更新と期間選択を備えた検索操作監視のメインダッシュボード。"
+        },
+        "metricsOverview": {
+          "description": "主要メトリクスを表示する概要カード：QPS、レイテンシ、キャッシュヒット率、エラー率、MRR、グラウンディング。"
+        },
+        "queryVolumeChart": {
+          "description": "検索タイプ分布とともに時間経過に伴うクエリボリュームを表示する折れ線グラフ。"
+        },
+        "latencyDistribution": {
+          "description": "SLOコンプライアンスインジケータ付きのレイテンシパーセンタイル棒グラフとトレンド可視化。"
+        },
+        "qualityTrend": {
+          "description": "Precision/Recall at K付きの検索品質トレンド（MRR、nDCG、グラウンディング）を表示するエリアチャート。"
+        },
+        "topQueries": {
+          "description": "レイテンシ、キャッシュヒット率、結果数を含む最も頻繁なクエリのランク付きリスト。"
+        },
+        "alertsPanel": {
+          "description": "重大度フィルタリング、確認、ステータス追跡を備えたアラート管理パネル。"
+        }
+      },
+      "props": "Props",
+      "usage": "使用例",
+      "propName": "名前",
+      "propType": "型",
+      "propDefault": "デフォルト",
+      "propDescription": "説明",
+      "copy": "コピー",
+      "copied": "コピーしました！",
+      "categories": {
+        "graph": {
+          "title": "グラフコンポーネント",
+          "description": "パーミッションと関係マッピング用のインタラクティブなグラフ可視化"
+        },
+        "explain": {
+          "title": "説明コンポーネント",
+          "description": "RAG結果の説明可能性と帰属の可視化"
+        },
+        "retops": {
+          "title": "RetOpsコンポーネント",
+          "description": "検索操作の監視と分析ダッシュボード"
+        }
+      }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5分クイックスタート | Seizn",
+        "description": "わずか10行のコードで5分でAIメモリを追加"
+      },
+      "badge": "5分チュートリアル",
+      "noCreditCard": "クレジットカード不要",
+      "title": "Seiznを始めよう",
+      "subtitle": "5分以内でAIに永続メモリを追加。各ステップを完了するたびにチェックしてください。",
+      "getApiKey": "APIキーを取得",
+      "fullExample": "完全な例（10行）",
+      "copy": "コピー",
+      "copied": "コピーしました！",
+      "progress": "進捗",
+      "stepsLabel": "ステップ",
+      "steps": {
+        "getApiKey": {
+          "title": "APIキーを取得",
+          "time": "30秒",
+          "description": "サインアップしてダッシュボードからAPIキーを生成します。",
+          "actionLabel": "ダッシュボードへ"
+        },
+        "install": {
+          "title": "SDKをインストール",
+          "time": "30秒",
+          "description": "お好みのパッケージマネージャーでSeizn SDKをインストールします。"
+        },
+        "saveMemory": {
+          "title": "メモリを保存",
+          "time": "2分",
+          "description": "AIが後で呼び出せる情報を保存します。"
+        },
+        "searchMemory": {
+          "title": "メモリを検索",
+          "time": "2分",
+          "description": "自然言語検索で関連するメモリを取得します。"
+        }
+      },
+      "completion": {
+        "title": "おめでとうございます！",
+        "description": "クイックスタートを完了しました。AIに永続メモリが追加されました。",
+        "readDocs": "ドキュメントを読む",
+        "goToDashboard": "ダッシュボードへ"
+      },
+      "expectedOutput": {
+        "title": "期待される出力",
+        "description": "メモリを検索すると、次のようなレスポンスが返されます："
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "APIリファレンス",
+          "description": "高度なユースケースのためのすべてのエンドポイントとオプションを探索します。"
+        },
+        "sdkExamples": {
+          "title": "SDK例",
+          "description": "Python、TypeScriptなどのコピー＆ペースト例。"
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "メモリタイプ、名前空間、ベストプラクティスに関するよくある質問。"
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "APIリファレンス | Seizn",
+        "description": "Seizn CI、Autopilot、Cache、Contracts、Healing、Graph、Versions、Explain、RetOps APIの完全なAPIドキュメント"
+      },
+      "title": "APIリファレンス",
+      "description": "Memory、AI、Webhooks、CI、Autopilot、Cache、Contracts、Healing、Graph、Versions、Explain、RetOpsを含むすべてのSeizn APIの完全なドキュメント。",
+      "auth": {
+        "title": "認証",
+        "description": "すべてのAPIエンドポイントはAPIキーによる認証が必要です。X-API-Keyヘッダーにキーを含めてください。"
+      },
+      "sidebar": {
+        "title": "APIグループ"
+      },
+      "endpoint": {
+        "parameters": "パラメータ",
+        "requestBody": "リクエストボディ",
+        "response": "レスポンス",
+        "errorCodes": "エラーコード"
+      },
+      "table": {
+        "name": "名前",
+        "type": "型",
+        "required": "必須",
+        "description": "説明",
+        "code": "コード",
+        "message": "メッセージ"
+      },
+      "copy": "コピー",
+      "copied": "コピーしました！"
     }
   }
 }

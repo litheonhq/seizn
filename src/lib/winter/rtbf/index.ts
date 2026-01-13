@@ -44,3 +44,5 @@ export {
   verifyCompliance,
   runPendingVerifications,
 } from './verification';
+
+export type { DeletionCertificate } from './verification';

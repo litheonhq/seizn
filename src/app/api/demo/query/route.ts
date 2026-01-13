@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createQueryEmbedding } from '@/lib/ai';
 import { ValidationErrors, ServerErrors, createApiError, ErrorCodes } from '@/lib/api-error';
-import { Redis } from '@upstash/redis';
+import { getRedis } from '@/lib/redis';
 
 // Demo namespace with pre-seeded sample memories
 const DEMO_USER_ID = 'demo-user-00000000-0000-0000-0000-000000000000';
@@ -11,11 +11,17 @@ const RATE_LIMIT_KEY_PREFIX = 'demo_query:';
 const RATE_LIMIT_WINDOW = 24 * 60 * 60; // 24 hours
 const MAX_DEMO_QUERIES = 3; // 3 free queries per IP per day
 
-// Initialize Upstash Redis client
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+/**
+ * Get Redis client with runtime validation
+ * Throws error if Redis is not configured (required for demo rate limiting)
+ */
+function getRequiredRedis() {
+  const redis = getRedis();
+  if (!redis) {
+    throw new Error('Redis is required for demo rate limiting but UPSTASH_REDIS_REST_URL/TOKEN are not configured');
+  }
+  return redis;
+}
 
 interface DemoQueryRequest {
   query: string;
@@ -27,6 +33,7 @@ interface DemoQueryRequest {
  */
 export async function GET(request: NextRequest) {
   try {
+    const redis = getRequiredRedis();
     const ip = getClientIP(request);
     const rateLimitKey = `${RATE_LIMIT_KEY_PREFIX}${ip}`;
 
@@ -58,6 +65,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
+    const redis = getRequiredRedis();
+
     // Get client IP for rate limiting
     const ip = getClientIP(request);
     const rateLimitKey = `${RATE_LIMIT_KEY_PREFIX}${ip}`;

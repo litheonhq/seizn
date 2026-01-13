@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { retrieve } from '@/lib/summer';
 import { estimateTokens } from '@/lib/summer/utils/tokens';
+import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 
 // POST /api/summer/retrieve
 // Body:
@@ -31,12 +32,12 @@ export async function POST(request: NextRequest) {
 
     if (!collectionId || typeof collectionId !== 'string') {
       await logRequest({ userId, keyId, endpoint: '/api/summer/retrieve', method: 'POST', startTime }, 400);
-      return NextResponse.json({ error: 'collection_id (string) is required' }, { status: 400 });
+      return ValidationErrors.missingField('collection_id');
     }
 
     if (!query || typeof query !== 'string') {
       await logRequest({ userId, keyId, endpoint: '/api/summer/retrieve', method: 'POST', startTime }, 400);
-      return NextResponse.json({ error: 'query (string) is required' }, { status: 400 });
+      return ValidationErrors.missingField('query');
     }
 
     const result = await retrieve({
@@ -77,6 +78,6 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (err) {
     console.error('Summer retrieve error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('summer_retrieve');
   }
 }
