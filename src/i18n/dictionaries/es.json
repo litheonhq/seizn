@@ -571,16 +571,23 @@
       "getStarted": "Comenzar"
     },
     "sidebar": {
+      "overview": "Visión general",
       "gettingStarted": "Primeros pasos",
+      "whenToUse": "Cuándo usar",
       "quickStart": "Inicio rápido",
       "authentication": "Autenticación",
+      "concepts": "Conceptos",
+      "memoryObject": "Objeto de memoria",
+      "namespaceScope": "Namespace y Scope",
+      "bestPractices": "Mejores prácticas",
       "apiReference": "Referencia API",
       "endpoints": "Endpoints",
       "rateLimits": "Límites de tasa",
       "errorCodes": "Códigos de error",
       "resources": "Recursos",
       "security": "Seguridad",
-      "sdks": "SDKs"
+      "sdks": "SDKs",
+      "faq": "FAQ"
     },
     "hero": {
       "title": "Documentación API",

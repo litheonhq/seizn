@@ -571,16 +571,23 @@
       "getStarted": "시작하기"
     },
     "sidebar": {
+      "overview": "개요",
       "gettingStarted": "시작하기",
+      "whenToUse": "사용 시기",
       "quickStart": "빠른 시작",
       "authentication": "인증",
+      "concepts": "핵심 개념",
+      "memoryObject": "메모리 객체",
+      "namespaceScope": "네임스페이스 & 스코프",
+      "bestPractices": "모범 사례",
       "apiReference": "API 참조",
       "endpoints": "엔드포인트",
       "rateLimits": "요청 제한",
       "errorCodes": "오류 코드",
       "resources": "리소스",
       "security": "보안",
-      "sdks": "SDK"
+      "sdks": "SDK",
+      "faq": "FAQ"
     },
     "hero": {
       "title": "API 문서",

@@ -571,16 +571,23 @@
       "getStarted": "Get Started"
     },
     "sidebar": {
+      "overview": "Обзор",
       "gettingStarted": "Getting Started",
+      "whenToUse": "Когда использовать",
       "quickStart": "Quick Start",
       "authentication": "Authentication",
+      "concepts": "Концепции",
+      "memoryObject": "Объект памяти",
+      "namespaceScope": "Namespace и Scope",
+      "bestPractices": "Лучшие практики",
       "apiReference": "API Reference",
       "endpoints": "Endpoints",
       "rateLimits": "Rate Limits",
       "errorCodes": "Error Codes",
       "resources": "Resources",
       "security": "Security",
-      "sdks": "SDKs"
+      "sdks": "SDKs",
+      "faq": "FAQ"
     },
     "hero": {
       "title": "API Documentation",
