@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "seizn.fullname" . }}
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.seizn.autoscaling.enabled }}
+  replicas: {{ .Values.seizn.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "seizn.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        {{- include "seizn.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "seizn.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.security.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command: ['sh', '-c', 'until nc -z {{ include "seizn.postgresql.host" . }} {{ include "seizn.postgresql.port" . }}; do echo waiting for postgres; sleep 2; done;']
+        - name: wait-for-redis
+          image: busybox:1.36
+          command: ['sh', '-c', 'until nc -z {{ include "seizn.redis.host" . }} {{ include "seizn.redis.port" . }}; do echo waiting for redis; sleep 2; done;']
+        {{- if .Values.qdrant.enabled }}
+        - name: wait-for-qdrant
+          image: busybox:1.36
+          command: ['sh', '-c', 'until nc -z {{ include "seizn.qdrant.host" . }} {{ include "seizn.qdrant.httpPort" . }}; do echo waiting for qdrant; sleep 2; done;']
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.security.containerSecurityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}{{ .Values.seizn.image.repository }}:{{ .Values.seizn.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.seizn.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "seizn.fullname" . }}-config
+            - secretRef:
+                name: {{ .Values.seizn.secrets.existingSecret | default (printf "%s-secrets" (include "seizn.fullname" .)) }}
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://{{ include "seizn.postgresql.username" . }}:$(POSTGRES_PASSWORD)@{{ include "seizn.postgresql.host" . }}:{{ include "seizn.postgresql.port" . }}/{{ include "seizn.postgresql.database" . }}"
+            - name: REDIS_URL
+              value: "redis://:$(REDIS_PASSWORD)@{{ include "seizn.redis.host" . }}:{{ include "seizn.redis.port" . }}"
+            - name: QDRANT_URL
+              value: "http://{{ include "seizn.qdrant.host" . }}:{{ include "seizn.qdrant.httpPort" . }}"
+            {{- range $key, $value := .Values.seizn.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.seizn.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.seizn.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.seizn.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: data
+          {{- if .Values.seizn.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "seizn.fullname" . }}-data
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.seizn.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.seizn.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.seizn.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

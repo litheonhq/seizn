@@ -1,0 +1,256 @@
+# Seizn Helm Chart Values
+# Default configuration for Kubernetes deployment
+
+# ============================================
+# Global Settings
+# ============================================
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# ============================================
+# Seizn Application
+# ============================================
+seizn:
+  replicaCount: 2
+
+  image:
+    repository: seizn/seizn
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - host: seizn.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: seizn-tls
+        hosts:
+          - seizn.example.com
+
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Pod disruption budget
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+  # Environment variables
+  env:
+    NODE_ENV: production
+    NEXT_TELEMETRY_DISABLED: "1"
+
+  # Secrets (create separately or use external secrets)
+  secrets:
+    # Set to true to create secret from values below
+    create: false
+    # Or reference existing secret
+    existingSecret: "seizn-secrets"
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Persistent storage for app data
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 10Gi
+
+# ============================================
+# PostgreSQL Configuration
+# ============================================
+postgresql:
+  enabled: true
+  auth:
+    username: seizn
+    database: seizn
+    existingSecret: seizn-postgres-secret
+  primary:
+    persistence:
+      enabled: true
+      size: 50Gi
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+  metrics:
+    enabled: true
+
+# External PostgreSQL (if postgresql.enabled = false)
+externalPostgresql:
+  host: ""
+  port: 5432
+  database: seizn
+  username: seizn
+  existingSecret: ""
+  existingSecretPasswordKey: password
+
+# ============================================
+# Redis Configuration
+# ============================================
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    existingSecret: seizn-redis-secret
+  master:
+    persistence:
+      enabled: true
+      size: 10Gi
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  metrics:
+    enabled: true
+
+# External Redis (if redis.enabled = false)
+externalRedis:
+  host: ""
+  port: 6379
+  existingSecret: ""
+  existingSecretPasswordKey: password
+
+# ============================================
+# Qdrant Vector Database
+# ============================================
+qdrant:
+  enabled: true
+  replicaCount: 1
+
+  image:
+    repository: qdrant/qdrant
+    tag: "v1.7.4"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    httpPort: 6333
+    grpcPort: 6334
+
+  persistence:
+    enabled: true
+    size: 50Gi
+
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+# External Qdrant (if qdrant.enabled = false)
+externalQdrant:
+  host: ""
+  httpPort: 6333
+  grpcPort: 6334
+  apiKey: ""
+  existingSecret: ""
+
+# ============================================
+# Monitoring
+# ============================================
+monitoring:
+  enabled: false
+
+  prometheus:
+    enabled: true
+
+  grafana:
+    enabled: true
+    adminUser: admin
+    adminPassword: ""
+    existingSecret: ""
+
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+
+# ============================================
+# Security
+# ============================================
+security:
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+    runAsUser: 1001
+    runAsNonRoot: true
+
+  # Container security context
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
+  # Network policies
+  networkPolicy:
+    enabled: true
+    ingress:
+      enabled: true
+    egress:
+      enabled: true
+
+# ============================================
+# Service Account
+# ============================================
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}

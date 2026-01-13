@@ -1,0 +1,13 @@
+{{- if .Values.seizn.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "seizn.fullname" . }}
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.seizn.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "seizn.selectorLabels" . | nindent 6 }}
+{{- end }}

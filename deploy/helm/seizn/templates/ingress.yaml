@@ -1,0 +1,41 @@
+{{- if .Values.seizn.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "seizn.fullname" . }}
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+  {{- with .Values.seizn.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.seizn.ingress.className }}
+  ingressClassName: {{ .Values.seizn.ingress.className }}
+  {{- end }}
+  {{- if .Values.seizn.ingress.tls }}
+  tls:
+    {{- range .Values.seizn.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.seizn.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "seizn.fullname" $ }}
+                port:
+                  number: {{ $.Values.seizn.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}

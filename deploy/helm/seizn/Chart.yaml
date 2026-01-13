@@ -1,0 +1,28 @@
+apiVersion: v2
+name: seizn
+description: Seizn - AI-powered RAG platform for enterprise search and knowledge management
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - seizn
+  - rag
+  - ai
+  - search
+  - knowledge-management
+  - enterprise
+home: https://seizn.com
+sources:
+  - https://github.com/seizn/seizn
+maintainers:
+  - name: Seizn Team
+    email: support@seizn.com
+dependencies:
+  - name: postgresql
+    version: "14.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "18.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
