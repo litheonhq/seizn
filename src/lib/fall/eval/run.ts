@@ -1,7 +1,8 @@
 import { createServerClient } from '@/lib/supabase';
 import { retrieve } from '@/lib/summer';
 import type { RetrievalConfig } from '@/lib/summer/types';
-import { computeContextPrecisionRecall } from './metrics';
+import { computeContextPrecisionRecall, type RagMetrics } from './metrics';
+import { judgeFaithfulness } from './judge';
 
 export interface RunEvalParams {
   userId: string;
@@ -13,6 +14,10 @@ export interface RunEvalParams {
   override?: Partial<RetrievalConfig>;
 
   limitCases?: number;
+  /** Enable LLM-as-judge faithfulness scoring (costly) */
+  enableFaithfulness?: boolean;
+  /** Simulated answer for faithfulness eval (use with RAG pipelines that generate answers) */
+  answerGenerator?: (query: string, chunks: { id: string; text: string }[]) => Promise<string>;
 }
 
 export interface RunEvalResult {
@@ -63,12 +68,15 @@ export async function runEval(params: RunEvalParams): Promise<RunEvalResult> {
 
     if (caseErr) throw caseErr;
 
+    // Accumulators for metrics
     let sumPrecision = 0;
     let sumRecall = 0;
     let sumMrr = 0;
+    let sumFaithfulness = 0;
     let nPrec = 0;
     let nRec = 0;
     let nMrr = 0;
+    let nFaith = 0;
 
     for (const c of cases ?? []) {
       const query = String(c.query_text ?? '');
@@ -86,9 +94,10 @@ export async function runEval(params: RunEvalParams): Promise<RunEvalResult> {
 
       const retrievedChunkIds = res.results.map((r) => r.chunkId);
 
+      // Deterministic metrics
       const det = computeContextPrecisionRecall({ retrievedChunkIds, expectedChunkIds });
 
-      const metrics: Record<string, unknown> = {
+      const metrics: RagMetrics = {
         ...det,
       };
 
@@ -103,6 +112,39 @@ export async function runEval(params: RunEvalParams): Promise<RunEvalResult> {
       if (typeof det.mrr === 'number') {
         sumMrr += det.mrr;
         nMrr += 1;
+      }
+
+      // LLM-as-judge faithfulness scoring (optional, costly)
+      if (params.enableFaithfulness && res.results.length > 0) {
+        const contextChunks = res.results.map((r) => ({
+          id: r.chunkId,
+          text: r.text ?? '',
+        }));
+
+        // Generate answer if answerGenerator provided, otherwise use concatenated chunks
+        let answer: string;
+        if (params.answerGenerator) {
+          answer = await params.answerGenerator(query, contextChunks);
+        } else {
+          // Default: use the top chunks as "answer" (for retrieval-only eval)
+          answer = contextChunks
+            .slice(0, 5)
+            .map((ch) => ch.text)
+            .join('\n\n');
+        }
+
+        const faithResult = await judgeFaithfulness({
+          answer,
+          contextChunks,
+          model: 'haiku', // Use haiku for cost efficiency
+        });
+
+        if (faithResult) {
+          metrics.faithfulness = faithResult.score;
+          metrics.faithfulness_explanation = faithResult.explanation;
+          sumFaithfulness += faithResult.score;
+          nFaith += 1;
+        }
       }
 
       const { error: insertErr } = await supabase.from('fall_eval_results').insert({
@@ -124,6 +166,7 @@ export async function runEval(params: RunEvalParams): Promise<RunEvalResult> {
       avg_context_precision: nPrec ? sumPrecision / nPrec : null,
       avg_context_recall: nRec ? sumRecall / nRec : null,
       avg_mrr: nMrr ? sumMrr / nMrr : null,
+      avg_faithfulness: nFaith ? sumFaithfulness / nFaith : null,
     };
 
     await supabase
