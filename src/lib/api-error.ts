@@ -194,6 +194,14 @@ export const AuthErrors = {
       status: 401,
     }),
 
+  // Alias for invalidApiKey (backwards compatibility)
+  invalidKey: () =>
+    createApiError({
+      code: ErrorCodes.AUTH_INVALID_KEY,
+      message: 'Invalid or inactive API key.',
+      status: 401,
+    }),
+
   expiredApiKey: () =>
     createApiError({
       code: ErrorCodes.AUTH_EXPIRED_KEY,
@@ -246,6 +254,14 @@ export const ValidationErrors = {
       message: reason ? `Invalid value for ${field}: ${reason}` : `Invalid value for ${field}`,
       status: 400,
       details: { field, reason },
+    }),
+
+  invalidFormat: (field: string, expected?: string) =>
+    createApiError({
+      code: ErrorCodes.INVALID_FIELD_VALUE,
+      message: expected ? `Invalid format for ${field}: expected ${expected}` : `Invalid format for ${field}`,
+      status: 400,
+      details: { field, expected },
     }),
 
   invalidBody: (reason?: string) =>

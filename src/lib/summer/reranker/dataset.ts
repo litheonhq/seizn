@@ -303,15 +303,15 @@ export async function generateHardNegatives(
     positiveDoc
       .toLowerCase()
       .split(/\s+/)
-      .filter((w) => w.length > 3)
+      .filter((w: string) => w.length > 3)
   );
 
   const scoredCandidates = candidates.map((c) => {
     const words = c.content
       .toLowerCase()
       .split(/\s+/)
-      .filter((w) => w.length > 3);
-    const overlap = words.filter((w) => positiveWords.has(w)).length;
+      .filter((w: string) => w.length > 3);
+    const overlap = words.filter((w: string) => positiveWords.has(w)).length;
     return { ...c, score: overlap / Math.max(words.length, 1) };
   });
 

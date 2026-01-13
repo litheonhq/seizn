@@ -255,7 +255,7 @@ export async function completeTraining(
 
   const { data: run } = await supabase
     .from('summer_reranker_runs')
-    .select('metrics, logs')
+    .select('metrics, logs, progress')
     .eq('id', runId)
     .single();
 
@@ -268,7 +268,7 @@ export async function completeTraining(
     .from('summer_reranker_runs')
     .update({
       status: 'completed',
-      progress: { ...run.progress, percentComplete: 100 },
+      progress: { ...(run.progress as Record<string, unknown>), percentComplete: 100 },
       metrics,
       logs,
       completed_at: new Date().toISOString(),
