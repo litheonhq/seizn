@@ -1,0 +1,652 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Seizn Memory API",
+    "description": "Persistent memory infrastructure for AI applications. Store, search, extract, and query memories with built-in governance and auditability.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Seizn Support",
+      "email": "support@seizn.com",
+      "url": "https://seizn.com"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://seizn.com/terms"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://seizn.com/api",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/memories": {
+      "post": {
+        "summary": "Store a memory",
+        "description": "Store a new memory with optional metadata like memory_type, tags, namespace, and scope.",
+        "operationId": "createMemory",
+        "tags": ["Memories"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMemoryRequest"
+              },
+              "example": {
+                "content": "User prefers dark mode interfaces",
+                "memory_type": "preference",
+                "tags": ["ui", "settings"],
+                "namespace": "default"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memory created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateMemoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - missing or invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Search memories",
+        "description": "Search stored memories using semantic similarity. Returns memories ranked by relevance to the query.",
+        "operationId": "searchMemories",
+        "tags": ["Memories"],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "The search query for semantic matching",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "threshold",
+            "in": "query",
+            "required": false,
+            "description": "Minimum similarity score (0-1) for results",
+            "schema": {
+              "type": "number",
+              "default": 0.7,
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": false,
+            "description": "Filter by namespace",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memory_type",
+            "in": "query",
+            "required": false,
+            "description": "Filter by memory type",
+            "schema": {
+              "type": "string",
+              "enum": ["fact", "preference", "experience", "relationship", "instruction"]
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "description": "Filter by scope",
+            "schema": {
+              "type": "string",
+              "enum": ["user", "session", "agent"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchMemoriesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete memories",
+        "description": "Delete one or more memories by their IDs.",
+        "operationId": "deleteMemories",
+        "tags": ["Memories"],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "required": true,
+            "description": "Comma-separated list of memory IDs to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Memories deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteMemoriesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extract": {
+      "post": {
+        "summary": "Extract memories from conversation",
+        "description": "Automatically extract facts, preferences, and instructions from a conversation using AI.",
+        "operationId": "extractMemories",
+        "tags": ["Extraction"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              },
+              "example": {
+                "conversation": "User: I prefer using dark mode. Also, I write mostly in Python.\nAssistant: Got it! I'll remember that.",
+                "model": "haiku",
+                "auto_store": true,
+                "namespace": "default"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extraction completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query": {
+      "post": {
+        "summary": "Query with memory-augmented response",
+        "description": "Generate a response to a query using relevant memories as context (RAG).",
+        "operationId": "queryMemories",
+        "tags": ["Query"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryRequest"
+              },
+              "example": {
+                "query": "What are my preferences for code editors?",
+                "model": "haiku",
+                "top_k": 5,
+                "include_memories": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query response with memories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key for authentication. Get your key from the dashboard."
+      }
+    },
+    "schemas": {
+      "Memory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the memory"
+          },
+          "content": {
+            "type": "string",
+            "description": "The memory content"
+          },
+          "memory_type": {
+            "type": "string",
+            "enum": ["fact", "preference", "experience", "relationship", "instruction"],
+            "description": "Type of memory"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for categorization"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace for isolation"
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["user", "session", "agent"],
+            "description": "Scope of the memory"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "similarity": {
+            "type": "number",
+            "description": "Similarity score (only in search results)"
+          }
+        }
+      },
+      "CreateMemoryRequest": {
+        "type": "object",
+        "required": ["content"],
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The memory content to store",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "memory_type": {
+            "type": "string",
+            "enum": ["fact", "preference", "experience", "relationship", "instruction"],
+            "default": "fact",
+            "description": "Type classification for the memory"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional tags for categorization"
+          },
+          "namespace": {
+            "type": "string",
+            "default": "default",
+            "description": "Namespace for memory isolation"
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["user", "session", "agent"],
+            "default": "user",
+            "description": "Scope determines when the memory applies"
+          },
+          "session_id": {
+            "type": "string",
+            "description": "Session identifier (for session scope)"
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Agent identifier (for agent scope)"
+          }
+        }
+      },
+      "CreateMemoryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "memory": {
+            "$ref": "#/components/schemas/Memory"
+          }
+        }
+      },
+      "SearchMemoriesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Memory"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of results returned"
+          }
+        }
+      },
+      "DeleteMemoriesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deleted": {
+            "type": "integer",
+            "description": "Number of memories deleted"
+          }
+        }
+      },
+      "ExtractRequest": {
+        "type": "object",
+        "required": ["conversation"],
+        "properties": {
+          "conversation": {
+            "type": "string",
+            "description": "The conversation text to extract memories from"
+          },
+          "model": {
+            "type": "string",
+            "enum": ["haiku", "sonnet"],
+            "default": "haiku",
+            "description": "AI model for extraction"
+          },
+          "auto_store": {
+            "type": "boolean",
+            "default": true,
+            "description": "Automatically store extracted memories"
+          },
+          "namespace": {
+            "type": "string",
+            "default": "default",
+            "description": "Namespace for stored memories"
+          }
+        }
+      },
+      "ExtractedMemory": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "memory_type": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "description": "Extraction confidence score"
+          },
+          "importance": {
+            "type": "integer",
+            "description": "Importance score (1-10)"
+          }
+        }
+      },
+      "ExtractResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "extracted": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtractedMemory"
+            }
+          },
+          "stored": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Memory"
+            }
+          }
+        }
+      },
+      "QueryRequest": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The question or query"
+          },
+          "model": {
+            "type": "string",
+            "enum": ["haiku", "sonnet"],
+            "default": "haiku",
+            "description": "AI model for response generation"
+          },
+          "top_k": {
+            "type": "integer",
+            "default": 5,
+            "description": "Number of memories to use as context"
+          },
+          "namespace": {
+            "type": "string",
+            "description": "Namespace to search within"
+          },
+          "include_memories": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include used memories in response"
+          }
+        }
+      },
+      "QueryResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string",
+            "description": "Generated response"
+          },
+          "memories_used": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Memory"
+            },
+            "description": "Memories used to generate the response"
+          },
+          "model_used": {
+            "type": "string",
+            "description": "Model used for generation"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Memories",
+      "description": "Store, search, and delete memories"
+    },
+    {
+      "name": "Extraction",
+      "description": "Extract memories from conversations"
+    },
+    {
+      "name": "Query",
+      "description": "Query with memory-augmented responses"
+    }
+  ]
+}

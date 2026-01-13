@@ -1,0 +1,58 @@
+# Seizn - AI Memory Infrastructure
+
+Seizn provides persistent memory APIs for AI applications. Store, search, extract, and query memories with built-in governance, security, and auditability.
+
+## What Seizn Does
+- **Persistent Memory**: Store and retrieve context that persists across sessions
+- **Semantic Search**: Find relevant memories using meaning, not just keywords
+- **Auto-Extraction**: Automatically extract facts, preferences, and instructions from conversations
+- **Memory-Augmented Queries**: Generate responses grounded in stored memories
+- **Enterprise Ready**: Key rotation, audit logs, tenant isolation, GDPR compliance
+
+## When to Use Seizn
+- User personalization (tone, language, preferences) across sessions
+- Agent work continuity (project rules, decisions, state)
+- Conversation-to-structured data extraction
+- Semantic memory retrieval for AI applications
+- Audit-ready memory management
+
+## Documentation
+- Overview: https://seizn.com/docs
+- Quick Start: https://seizn.com/docs#quickstart
+- API Reference: https://seizn.com/docs#endpoints
+- FAQ: https://seizn.com/docs/faq
+- Security: https://seizn.com/docs#security
+
+## API
+- Base URL: https://seizn.com/api
+- OpenAPI Spec: https://seizn.com/openapi.json
+- Authentication: x-api-key header
+
+### Core Endpoints
+- POST /api/memories - Store a memory
+- GET /api/memories - Search memories (semantic)
+- DELETE /api/memories - Delete memories by ID
+- POST /api/extract - Extract memories from conversation
+- POST /api/query - Query with memory-augmented response
+
+## SDKs
+- JavaScript/TypeScript: https://www.npmjs.com/package/seizn
+- Python: https://pypi.org/project/seizn
+
+## Key Concepts
+- **namespace**: Isolate memories by project/tenant/environment
+- **scope**: user | session | agent - control memory applicability
+- **memory_type**: fact | preference | instruction | relationship | experience
+- **threshold**: 0-1 similarity cutoff for search (default: 0.7)
+
+## Security
+- AES-256 encryption at rest
+- TLS 1.3 encryption in transit
+- Tenant isolation via Row Level Security
+- API key rotation and expiration
+- Audit logging for compliance
+
+## Contact
+- Website: https://seizn.com
+- Dashboard: https://seizn.com/dashboard
+- Support: support@seizn.com

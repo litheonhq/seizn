@@ -571,16 +571,23 @@
       "getStarted": "始める"
     },
     "sidebar": {
+      "overview": "概要",
       "gettingStarted": "はじめに",
+      "whenToUse": "使用タイミング",
       "quickStart": "クイックスタート",
       "authentication": "認証",
+      "concepts": "コンセプト",
+      "memoryObject": "メモリオブジェクト",
+      "namespaceScope": "ネームスペース & スコープ",
+      "bestPractices": "ベストプラクティス",
       "apiReference": "APIリファレンス",
       "endpoints": "エンドポイント",
       "rateLimits": "レート制限",
       "errorCodes": "エラーコード",
       "resources": "リソース",
       "security": "セキュリティ",
-      "sdks": "SDK"
+      "sdks": "SDK",
+      "faq": "FAQ"
     },
     "hero": {
       "title": "APIドキュメント",

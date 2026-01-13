@@ -571,16 +571,23 @@
       "getStarted": "开始使用"
     },
     "sidebar": {
+      "overview": "概述",
       "gettingStarted": "开始使用",
+      "whenToUse": "使用场景",
       "quickStart": "快速入门",
       "authentication": "认证",
+      "concepts": "核心概念",
+      "memoryObject": "内存对象",
+      "namespaceScope": "命名空间 & 作用域",
+      "bestPractices": "最佳实践",
       "apiReference": "API参考",
       "endpoints": "端点",
       "rateLimits": "速率限制",
       "errorCodes": "错误代码",
       "resources": "资源",
       "security": "安全",
-      "sdks": "SDK"
+      "sdks": "SDK",
+      "faq": "FAQ"
     },
     "hero": {
       "title": "API文档",
