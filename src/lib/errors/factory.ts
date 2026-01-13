@@ -116,7 +116,6 @@ export function createApiErrorFromException(
   if ('code' in error && 'toJSON' in error) {
     // It's a SeizApiError
     const seizError = error as SeizApiError;
-    const errorJson = seizError.toJSON();
 
     return createApiError({
       code: seizError.code,

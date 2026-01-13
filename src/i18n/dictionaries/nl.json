@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "Veelgestelde Vragen",
+      "subtitle": "Veelgestelde vragen over de Seizn Memory API, van aan de slag tot geavanceerde operaties.",
+      "stillHaveQuestions": "Nog vragen?",
+      "stillHaveQuestionsDesc": "Bekijk onze documentatie of neem contact op met ons supportteam.",
+      "readDocs": "Lees Documentatie",
+      "contactSupport": "Contact Support",
+      "categories": {
+        "all": "Alle",
+        "gettingStarted": "Aan de Slag",
+        "coreConcepts": "Kernconcepten",
+        "searchRetrieval": "Zoeken en Ophalen",
+        "extraction": "Extractie",
+        "operations": "Operaties",
+        "securityCompliance": "Beveiliging en Compliance"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Wat is Seizn Memory en welk probleem lost het op?",
+          "answer": "Seizn Memory is een AI-geheugeninfrastructuur die persistente, doorzoekbare geheugen biedt voor AI-applicaties. In tegenstelling tot vectordatabases die alleen vectoren opslaan/zoeken, bevat Seizn de volledige productlaag: geheugenextractie, beleidsbeheer, sleutelbeheer, verwijdering, auditlogs en SDK's. Het lost het probleem op van het behouden van context tussen AI-sessies en het mogelijk maken van gepersonaliseerde AI-ervaringen."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Hoe verschilt Seizn van vectordatabases zoals Pinecone of Weaviate?",
+          "answer": "Vectordatabases zijn opslag-/zoekinfrastructuur voor vectoren. Seizn is een compleet geheugensysteem daarbovenop gebouwd, dat biedt: automatische geheugenextractie uit gesprekken, geheugentype-classificatie, namespace/scope-beheer, API-sleutelrotatie, auditlogs, SDK's en governance-functies. Denk eraan als 'geheugeninfrastructuur' vs 'zoekinfrastructuur'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Heb ik RAG nodig om Seizn te gebruiken?",
+          "answer": "Nee. Het meest voorkomende startpunt is: geheugen opslaan -> zoeken -> injecteren in prompt. RAG (automatische contextcompositie + responsgeneratie) is de volgende stap. Je kunt eenvoudig beginnen en complexiteit toevoegen waar nodig."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Wat is de snelste manier om een PoC te bouwen?",
+          "answer": "1) POST /api/memories om een gebruikersvoorkeur op te slaan. 2) GET /api/memories om te zoeken. 3) Injecteer de resultaten in je LLM-prompt. 4) Voeg later /api/extract toe voor auto-extractie en /api/query voor geheugen-verrijkte antwoorden."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Wat moet ik opslaan in /api/memories?",
+          "answer": "Sla informatie op die geldig blijft tussen gesprekken: voorkeuren (toon, taal, formaat), feiten (baan, tools, projectstructuur), instructies (\"vat altijd samen in tabellen\"), relaties (\"Alice is de teamleider\"). Vermijd het opslaan van tijdelijke of sessie-specifieke gegevens tenzij je session scope gebruikt."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Welke gegevens moet ik NIET opslaan?",
+          "answer": "Sla nooit op: wachtwoorden, API-sleutels, tokens, sessiecookies (auth-info), SSN, paspoortnummers, bankrekeningen (PII), creditcardinfo (betalingsgegevens). Voor tijdelijke gegevens, gebruik session scope met TTL indien nodig."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Waarom is namespace belangrijk?",
+          "answer": "Namespace scheidt geheugens per project/tenant/omgeving. Zonder dit raken gegevens vermengd, daalt de zoekkwaliteit, en wordt verwijderen/exporteren moeilijk. Aanbevolen: 'org:acme/app:chat/env:prod' of 'project:myapp/env:staging'. Gebruik nooit alleen 'default' in productie."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Wanneer moet ik scope (user/session/agent) gebruiken?",
+          "answer": "user: Voorkeuren die globaal voor een gebruiker gelden. session: Doelen of context alleen geldig voor dit gesprek. agent: Regels specifiek voor één agent in een multi-agent systeem. Correct scopegebruik verkort promptlengte en verbetert responsconsistentie."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Wat zijn memory_types en waarom zijn ze belangrijk?",
+          "answer": "memory_type classificeert geheugens: fact (onveranderlijke info), preference (gebruikerskeuzes), instruction (te volgen regels), relationship (mensen/org-verbindingen), experience (gebeurtenissen uit het verleden). Dit is de krachtigste as voor filtering, verwijdering en beleidstoepassing."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Hoe werken threshold en limit?",
+          "answer": "limit: Aantal kandidaatgeheugens om op te halen (te laag = relevante missen, te hoog = ruis in context). threshold: 0-1 gelijkenisdrempel (hoger = strenger). Begin met limit=10, threshold=0.7. Als je geheugens mist, verlaag threshold naar 0.6 en verhoog limit naar 20. Bij irrelevante resultaten, verhoog threshold naar 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Waarom zijn mijn zoekresultaten irrelevant?",
+          "answer": "Meestal een van: 1) namespaces vermengd, 2) te veel geheugens opgeslagen (ruis), 3) threshold te laag, 4) content te abstract ('houdt van dingen' vs specifieke feiten). Oplossing: scheid namespaces, maak content specifiek, verhoog threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Zoekkwaliteit daalde bij groeiende geheugens. Wat te doen?",
+          "answer": "Voeg belangrijkheidsscore toe en bewaar alleen belangrijke geheugens. Gebruik TTL om oude geheugens automatisch te laten verlopen. Voeg periodiek vergelijkbare geheugens samen tot samenvattingen. Scheid namespaces om zoekbereik te verkleinen."
+        },
+        {
+          "category": "extraction",
+          "question": "Hoe moet ik /api/extract gebruiken?",
+          "answer": "Aanbevolen flow: 1) Roep aan met auto_store=false om geëxtraheerde geheugens te bekijken. 2) Toon resultaten aan gebruiker ter bevestiging. 3) Sla alleen goedgekeurde geheugens op. 4) Zodra extractiekwaliteit bewezen is, schakel over naar auto_store=true voor automatisering."
+        },
+        {
+          "category": "extraction",
+          "question": "Wat is het verschil tussen model=haiku en model=sonnet?",
+          "answer": "haiku: Sneller, goedkoper, goed voor de meeste gevallen. sonnet: Nauwkeuriger, beter voor belangrijke extracties (onboarding, contracten, beleid). Gebruik haiku voor bulk/initiële extractie, sonnet voor risicovolle scenario's."
+        },
+        {
+          "category": "operations",
+          "question": "Kan ik een geheugen wijzigen na opslag?",
+          "answer": "Ja, maar het aanbevolen patroon is: nieuw geheugen maken + oude verwijderen/archiveren. Deze aanpak is beter voor audittrails en voorkomt regressieproblemen."
+        },
+        {
+          "category": "operations",
+          "question": "Hoe verwijder ik geheugens?",
+          "answer": "Twee benaderingen: 1) Verwijderen op ID (precies), 2) Verwijderen op namespace (bulkopruiming). Voor enterprise/compliance, zorg voor 'volledige verwijdering + auditlog'. Documenteer je verwijderbeleid duidelijk."
+        },
+        {
+          "category": "operations",
+          "question": "Ik krijg 429 Too Many Requests. Wat te doen?",
+          "answer": "Je hebt de rate limit bereikt. Oplossingen: 1) Implementeer exponentiële backoff (1s -> 2s -> 4s). 2) Zet verzoeken server-side in wachtrij. 3) Verminder verzoekfrequentie: cache dubbele queries, batch operaties, verminder extractiefrequentie."
+        },
+        {
+          "category": "operations",
+          "question": "Hoe verlaag ik kosten?",
+          "answer": "Grootste kostendrijvers: 1) Extractiefrequentie - verminder aanroepen. 2) Zoekbereik - gebruik namespace om te beperken. 3) Modelkeuze - gebruik haiku voor routine, sonnet voor belangrijk. 4) Caching - cache herhaalde queries. 5) Batch operaties waar mogelijk."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Kan ik de API-sleutel in de browser (frontend) gebruiken?",
+          "answer": "Niet aanbevolen - hoog risico op sleutelblootstelling. Roep Seizn aan vanaf je server (Next.js Route Handler, Cloudflare Worker, serverless functie) en laat de browser je server aanroepen. Stel nooit API-sleutels bloot aan client-side code."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Welke documentatie heeft mijn security/juridisch team nodig?",
+          "answer": "Ze willen: 1) Gegevensbereik (wat wel/niet wordt opgeslagen), 2) Versleuteling (at rest: AES-256, in transit: TLS), 3) Tenant-isolatiemethode, 4) Verwijder-/retentiebeleid, 5) Auditlogtoegang, 6) Sleutelrotatie-/vervalbeleid. Houd een Beveiliging & Governance pagina in je docs."
+        }
+      ]
     }
   }
 }

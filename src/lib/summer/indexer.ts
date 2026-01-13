@@ -11,7 +11,6 @@
 
 import { createHash } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
-import { getEmbeddingProvider } from './embedding';
 import { VoyageEmbeddingProvider } from './embedding/voyage';
 import { chunkDocument } from './chunker';
 import type {

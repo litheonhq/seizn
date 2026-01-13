@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "자주 묻는 질문",
+      "subtitle": "Seizn Memory API에 대한 일반적인 질문들, 시작부터 고급 운영까지.",
+      "stillHaveQuestions": "아직 궁금한 점이 있으신가요?",
+      "stillHaveQuestionsDesc": "문서를 확인하거나 지원팀에 문의하세요.",
+      "readDocs": "문서 보기",
+      "contactSupport": "지원팀 문의",
+      "categories": {
+        "all": "전체",
+        "gettingStarted": "시작하기",
+        "coreConcepts": "핵심 개념",
+        "searchRetrieval": "검색 및 조회",
+        "extraction": "추출",
+        "operations": "운영",
+        "securityCompliance": "보안 및 규정 준수"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Seizn Memory란 무엇이며 어떤 문제를 해결하나요?",
+          "answer": "Seizn Memory는 AI 애플리케이션을 위한 영구적이고 검색 가능한 메모리를 제공하는 AI 메모리 인프라입니다. 벡터만 저장/검색하는 벡터 데이터베이스와 달리, Seizn은 메모리 추출, 정책 관리, 키 관리, 삭제, 감사 로그, SDK를 포함한 완전한 제품 레이어를 제공합니다. AI 세션 간 컨텍스트 유지와 개인화된 AI 경험을 가능하게 하는 문제를 해결합니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn은 Pinecone이나 Weaviate 같은 벡터 데이터베이스와 어떻게 다른가요?",
+          "answer": "벡터 데이터베이스는 벡터를 위한 저장소/검색 인프라입니다. Seizn은 그 위에 구축된 완전한 메모리 시스템으로, 대화에서 자동 메모리 추출, 메모리 유형 분류, 네임스페이스/스코프 관리, API 키 순환, 감사 로깅, SDK, 거버넌스 기능을 제공합니다. '메모리 인프라' vs '검색 인프라'라고 생각하시면 됩니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn을 사용하려면 RAG가 필요한가요?",
+          "answer": "아니요. 가장 일반적인 시작점은: 메모리 저장 -> 검색 -> 프롬프트에 주입입니다. RAG(자동 컨텍스트 구성 + 응답 생성)는 다음 단계입니다. 간단하게 시작하고 필요에 따라 복잡성을 추가할 수 있습니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "PoC를 가장 빠르게 구축하는 방법은?",
+          "answer": "1) POST /api/memories로 사용자 선호도 저장. 2) GET /api/memories로 검색. 3) 결과를 LLM 프롬프트에 주입. 4) 나중에 자동 추출을 위한 /api/extract와 메모리 증강 응답을 위한 /api/query 추가."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "/api/memories에 무엇을 저장해야 하나요?",
+          "answer": "대화 간에 유효한 정보를 저장하세요: 선호도(톤, 언어, 형식), 사실(직업, 도구, 프로젝트 구조), 지시사항(\"항상 표로 요약\"), 관계(\"Alice가 팀 리더\"). 세션 스코프를 사용하지 않는 한 임시 또는 세션별 데이터 저장은 피하세요."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "저장하면 안 되는 데이터는?",
+          "answer": "절대 저장하지 마세요: 비밀번호, API 키, 토큰, 세션 쿠키(인증 정보), 주민등록번호, 여권 번호, 은행 계좌(PII), 신용카드 정보(결제 데이터). 임시 데이터의 경우 필요하면 TTL이 있는 세션 스코프를 사용하세요."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "네임스페이스가 왜 중요한가요?",
+          "answer": "네임스페이스는 프로젝트/테넌트/환경별로 메모리를 분리합니다. 없으면 데이터가 섞이고, 검색 품질이 떨어지며, 삭제/내보내기가 어려워집니다. 권장: 'org:acme/app:chat/env:prod' 또는 'project:myapp/env:staging'. 프로덕션에서 'default'만 사용하지 마세요."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "스코프(user/session/agent)는 언제 사용해야 하나요?",
+          "answer": "user: 사용자에게 전역적으로 적용되는 선호도. session: 이 대화에만 유효한 목표나 컨텍스트. agent: 멀티 에이전트 시스템에서 하나의 에이전트에 특정한 규칙. 스코프를 적절히 사용하면 프롬프트 길이가 줄어들고 응답 일관성이 향상됩니다."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "memory_type이란 무엇이고 왜 중요한가요?",
+          "answer": "memory_type은 메모리를 분류합니다: fact(변하지 않는 정보), preference(사용자 선택), instruction(따라야 할 규칙), relationship(사람/조직 연결), experience(과거 이벤트). 필터링, 삭제, 정책 적용을 위한 가장 강력한 축입니다."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "threshold와 limit은 어떻게 작동하나요?",
+          "answer": "limit: 검색할 후보 메모리 수(너무 낮으면 관련 메모리 누락, 너무 높으면 노이즈 컨텍스트). threshold: 0-1 유사도 컷오프(높을수록 엄격). limit=10, threshold=0.7로 시작하세요. 메모리가 누락되면 threshold를 0.6으로 낮추고 limit을 20으로 올리세요. 관련 없는 결과가 나오면 threshold를 0.75-0.8로 올리세요."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "검색 결과가 관련 없는 이유는?",
+          "answer": "보통 다음 중 하나: 1) 네임스페이스가 섞임, 2) 너무 많은 메모리 저장(노이즈), 3) threshold가 너무 낮음, 4) 콘텐츠가 너무 추상적('좋아하는 것들' vs 구체적 사실). 해결: 네임스페이스 분리, 콘텐츠 구체화, threshold 올리기."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "메모리가 늘어나면서 검색 품질이 떨어졌습니다. 어떻게 해야 하나요?",
+          "answer": "중요도 점수를 추가하고 높은 중요도 메모리만 유지하세요. TTL을 사용하여 오래된 메모리를 자동 만료시키세요. 주기적으로 유사한 메모리를 요약으로 병합하세요. 검색 범위를 줄이기 위해 네임스페이스를 분리하세요."
+        },
+        {
+          "category": "extraction",
+          "question": "/api/extract는 어떻게 사용해야 하나요?",
+          "answer": "권장 플로우: 1) auto_store=false로 호출하여 추출된 메모리 미리보기. 2) 사용자에게 확인을 위해 결과 표시. 3) 승인된 메모리만 저장. 4) 추출 품질이 입증되면 자동화를 위해 auto_store=true로 전환."
+        },
+        {
+          "category": "extraction",
+          "question": "model=haiku와 model=sonnet의 차이점은?",
+          "answer": "haiku: 더 빠르고, 저렴하며, 대부분의 경우에 적합. sonnet: 더 정확하고, 중요한 추출(온보딩, 계약, 정책)에 더 좋음. 대량/초기 추출에는 haiku, 중요한 시나리오에는 sonnet을 사용하세요."
+        },
+        {
+          "category": "operations",
+          "question": "저장 후 메모리를 수정할 수 있나요?",
+          "answer": "예, 하지만 권장 패턴은: 새 메모리 생성 + 이전 메모리 삭제/보관입니다. 이 접근 방식이 감사 추적에 더 좋고 회귀 문제를 방지합니다."
+        },
+        {
+          "category": "operations",
+          "question": "메모리를 어떻게 삭제하나요?",
+          "answer": "두 가지 접근 방식: 1) ID로 삭제(정확), 2) 네임스페이스로 삭제(대량 정리). 엔터프라이즈/규정 준수를 위해 '완전 삭제 + 감사 로그'를 보장하세요. 삭제 정책을 명확히 문서화하세요."
+        },
+        {
+          "category": "operations",
+          "question": "429 Too Many Requests 오류가 발생합니다. 어떻게 해야 하나요?",
+          "answer": "요청 제한에 도달했습니다. 해결책: 1) 지수 백오프 구현(1초 -> 2초 -> 4초). 2) 서버 측에서 요청 대기열 관리. 3) 요청 빈도 줄이기: 중복 쿼리 캐시, 배치 작업, 추출 빈도 낮추기."
+        },
+        {
+          "category": "operations",
+          "question": "비용을 줄이려면 어떻게 해야 하나요?",
+          "answer": "가장 큰 비용 요인: 1) 추출 빈도 - 호출 줄이기. 2) 검색 범위 - 네임스페이스로 좁히기. 3) 모델 선택 - 일상에 haiku, 중요한 것에 sonnet. 4) 캐싱 - 반복 쿼리 캐시. 5) 가능하면 배치 작업."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "브라우저(프론트엔드)에서 API 키를 사용할 수 있나요?",
+          "answer": "권장하지 않습니다 - 키 노출 위험이 높습니다. 서버(Next.js Route Handler, Cloudflare Worker, 서버리스 함수)에서 Seizn을 호출하고 브라우저가 서버를 호출하도록 하세요. 클라이언트 측 코드에 API 키를 절대 노출하지 마세요."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "보안/법무팀에 필요한 문서는 무엇인가요?",
+          "answer": "필요한 것: 1) 데이터 범위(저장되는/안 되는 것), 2) 암호화(저장 시: AES-256, 전송 중: TLS), 3) 테넌트 격리 방법, 4) 삭제/보존 정책, 5) 감사 로그 접근, 6) 키 순환/만료 정책. 문서에 보안 및 거버넌스 페이지를 유지하세요."
+        }
+      ]
     }
   }
 }

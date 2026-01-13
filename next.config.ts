@@ -31,6 +31,9 @@ const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG || 'kics-projects',
   project: process.env.SENTRY_PROJECT || 'seizn',
 
+  // Auth token for source maps upload (required for releases)
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 

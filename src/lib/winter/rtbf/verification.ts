@@ -11,7 +11,6 @@ import {
   VerificationResult,
   VerificationCheck,
   RemainingRecord,
-  RTBFRequest,
   DEFAULT_RTBF_CONFIG,
   ErasureScopeParams,
   ErasureScope,

@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "よくある質問",
+      "subtitle": "Seizn Memory APIに関する一般的な質問、入門から高度な運用まで。",
+      "stillHaveQuestions": "まだ質問がありますか？",
+      "stillHaveQuestionsDesc": "ドキュメントをご確認いただくか、サポートチームにお問い合わせください。",
+      "readDocs": "ドキュメントを読む",
+      "contactSupport": "サポートに連絡",
+      "categories": {
+        "all": "すべて",
+        "gettingStarted": "はじめに",
+        "coreConcepts": "コア概念",
+        "searchRetrieval": "検索と取得",
+        "extraction": "抽出",
+        "operations": "運用",
+        "securityCompliance": "セキュリティとコンプライアンス"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Seizn Memoryとは何ですか？どのような問題を解決しますか？",
+          "answer": "Seizn Memoryは、AIアプリケーション向けの永続的で検索可能なメモリを提供するAIメモリインフラストラクチャです。ベクトルの保存/検索のみを行うベクトルデータベースとは異なり、Seiznはメモリ抽出、ポリシー管理、キー管理、削除、監査ログ、SDKを含む完全な製品レイヤーを提供します。AIセッション間のコンテキスト維持とパーソナライズされたAI体験を可能にする問題を解決します。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "SeizはPineconeやWeaviateなどのベクトルデータベースとどう違いますか？",
+          "answer": "ベクトルデータベースはベクトルの保存/検索インフラです。Seiznはその上に構築された完全なメモリシステムで、会話からの自動メモリ抽出、メモリタイプ分類、名前空間/スコープ管理、APIキーローテーション、監査ログ、SDK、ガバナンス機能を提供します。「メモリインフラ」vs「検索インフラ」と考えてください。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seiznを使用するにはRAGが必要ですか？",
+          "answer": "いいえ。最も一般的な出発点は：メモリを保存 -> 検索 -> プロンプトに注入です。RAG（自動コンテキスト構成 + 応答生成）は次のステップです。シンプルに始めて、必要に応じて複雑さを追加できます。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "PoCを最速で構築する方法は？",
+          "answer": "1) POST /api/memoriesでユーザー設定を保存。2) GET /api/memoriesで検索。3) 結果をLLMプロンプトに注入。4) 後で自動抽出用の/api/extractとメモリ拡張応答用の/api/queryを追加。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "/api/memoriesに何を保存すべきですか？",
+          "answer": "会話間で有効な情報を保存：好み（トーン、言語、フォーマット）、事実（仕事、ツール、プロジェクト構造）、指示（「常にテーブルで要約」）、関係（「Aliceがチームリーダー」）。セッションスコープを使用しない限り、一時的またはセッション固有のデータの保存は避けてください。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "保存してはいけないデータは？",
+          "answer": "決して保存しないでください：パスワード、APIキー、トークン、セッションクッキー（認証情報）、社会保障番号、パスポート番号、銀行口座（PII）、クレジットカード情報（決済データ）。一時的なデータには、必要に応じてTTL付きのセッションスコープを使用してください。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "名前空間が重要な理由は？",
+          "answer": "名前空間はプロジェクト/テナント/環境でメモリを分離します。なければデータが混在し、検索品質が低下し、削除/エクスポートが困難になります。推奨：'org:acme/app:chat/env:prod'または'project:myapp/env:staging'。本番環境で'default'だけを使用しないでください。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "スコープ（user/session/agent）はいつ使用すべきですか？",
+          "answer": "user：ユーザーにグローバルに適用される好み。session：この会話でのみ有効な目標やコンテキスト。agent：マルチエージェントシステムで1つのエージェントに固有のルール。スコープを適切に使用すると、プロンプトの長さが短くなり、応答の一貫性が向上します。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "memory_typeとは何ですか？なぜ重要ですか？",
+          "answer": "memory_typeはメモリを分類します：fact（不変の情報）、preference（ユーザーの選択）、instruction（従うべきルール）、relationship（人/組織のつながり）、experience（過去のイベント）。フィルタリング、削除、ポリシー適用のための最も強力な軸です。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "thresholdとlimitはどのように機能しますか？",
+          "answer": "limit：取得する候補メモリの数（低すぎると関連するものを見逃し、高すぎるとノイズの多いコンテキスト）。threshold：0-1の類似度カットオフ（高いほど厳格）。limit=10、threshold=0.7から始めてください。メモリが不足している場合はthresholdを0.6に下げ、limitを20に上げてください。無関係な結果が出る場合はthresholdを0.75-0.8に上げてください。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "検索結果が無関係な理由は？",
+          "answer": "通常は次のいずれか：1) 名前空間が混在、2) 保存されたメモリが多すぎる（ノイズ）、3) thresholdが低すぎる、4) コンテンツが抽象的すぎる（「物が好き」vs具体的な事実）。解決策：名前空間を分離、コンテンツを具体化、thresholdを上げる。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "メモリが増えると検索品質が低下しました。どうすればいいですか？",
+          "answer": "重要度スコアリングを追加し、高重要度のメモリのみを保持。TTLを使用して古いメモリを自動期限切れに。定期的に類似したメモリを要約に統合。検索範囲を減らすために名前空間を分離。"
+        },
+        {
+          "category": "extraction",
+          "question": "/api/extractはどのように使用すべきですか？",
+          "answer": "推奨フロー：1) auto_store=falseで呼び出して抽出されたメモリをプレビュー。2) ユーザーに確認のため結果を表示。3) 承認されたメモリのみを保存。4) 抽出品質が証明されたら、自動化のためにauto_store=trueに切り替え。"
+        },
+        {
+          "category": "extraction",
+          "question": "model=haikuとmodel=sonnetの違いは？",
+          "answer": "haiku：より高速、より安価、ほとんどのケースに適合。sonnet：より正確、重要な抽出（オンボーディング、契約、ポリシー）に適合。バルク/初期抽出にはhaiku、重要なシナリオにはsonnetを使用。"
+        },
+        {
+          "category": "operations",
+          "question": "保存後にメモリを変更できますか？",
+          "answer": "はい、ただし推奨パターンは：新しいメモリを作成 + 古いメモリを削除/アーカイブです。このアプローチは監査証跡に適しており、回帰問題を防ぎます。"
+        },
+        {
+          "category": "operations",
+          "question": "メモリを削除するにはどうすればいいですか？",
+          "answer": "2つのアプローチ：1) IDで削除（正確）、2) 名前空間で削除（一括クリーンアップ）。エンタープライズ/コンプライアンスのために「完全削除 + 監査ログ」を確保。削除ポリシーを明確に文書化してください。"
+        },
+        {
+          "category": "operations",
+          "question": "429 Too Many Requestsエラーが発生しています。どうすればいいですか？",
+          "answer": "レート制限に達しました。解決策：1) 指数バックオフを実装（1秒 -> 2秒 -> 4秒）。2) サーバー側でリクエストをキューイング。3) リクエスト頻度を減らす：重複クエリをキャッシュ、バッチ操作、抽出頻度を下げる。"
+        },
+        {
+          "category": "operations",
+          "question": "コストを削減するにはどうすればいいですか？",
+          "answer": "最大のコスト要因：1) 抽出頻度 - 呼び出しを減らす。2) 検索範囲 - 名前空間で絞り込む。3) モデル選択 - 日常にはhaiku、重要なものにはsonnet。4) キャッシング - 繰り返しのクエリをキャッシュ。5) 可能な場合はバッチ操作。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "ブラウザ（フロントエンド）でAPIキーを使用できますか？",
+          "answer": "推奨されません - キー漏洩のリスクが高い。サーバー（Next.js Route Handler、Cloudflare Worker、サーバーレス関数）からSeiznを呼び出し、ブラウザがサーバーを呼び出すようにしてください。クライアント側のコードにAPIキーを決して公開しないでください。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "セキュリティ/法務チームに必要なドキュメントは？",
+          "answer": "必要なもの：1) データ範囲（保存されるもの/されないもの）、2) 暗号化（保存時：AES-256、転送中：TLS）、3) テナント分離方法、4) 削除/保持ポリシー、5) 監査ログアクセス、6) キーローテーション/有効期限ポリシー。ドキュメントにセキュリティとガバナンスのページを維持してください。"
+        }
+      ]
     }
   }
 }

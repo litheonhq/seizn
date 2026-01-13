@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. 保留所有权利。"
+    },
+    "faqPage": {
+      "title": "常见问题",
+      "subtitle": "关于 Seizn Memory API 的常见问题，从入门到高级操作。",
+      "stillHaveQuestions": "还有其他问题？",
+      "stillHaveQuestionsDesc": "查看我们的文档或联系支持团队。",
+      "readDocs": "阅读文档",
+      "contactSupport": "联系支持",
+      "categories": {
+        "all": "全部",
+        "gettingStarted": "入门",
+        "coreConcepts": "核心概念",
+        "searchRetrieval": "搜索与检索",
+        "extraction": "提取",
+        "operations": "运营",
+        "securityCompliance": "安全与合规"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "什么是 Seizn Memory？它解决什么问题？",
+          "answer": "Seizn Memory 是一个为 AI 应用程序提供持久、可搜索记忆的 AI 记忆基础设施。与仅存储/搜索向量的向量数据库不同，Seizn 包含完整的产品层：记忆提取、策略管理、密钥管理、删除、审计日志和 SDK。它解决了跨 AI 会话维护上下文和实现个性化 AI 体验的问题。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn 与 Pinecone 或 Weaviate 等向量数据库有何不同？",
+          "answer": "向量数据库是向量的存储/搜索基础设施。Seizn 是建立在其之上的完整记忆系统，提供：从对话中自动提取记忆、记忆类型分类、命名空间/作用域管理、API 密钥轮换、审计日志、SDK 和治理功能。可以理解为「记忆基础设施」与「搜索基础设施」的区别。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "使用 Seizn 需要 RAG 吗？",
+          "answer": "不需要。最常见的起点是：存储记忆 -> 搜索 -> 注入提示词。RAG（自动上下文组合 + 响应生成）是下一步。您可以简单开始，根据需要增加复杂性。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "构建 PoC 的最快方法是什么？",
+          "answer": "1) POST /api/memories 存储用户偏好。2) GET /api/memories 搜索。3) 将结果注入 LLM 提示词。4) 之后，添加 /api/extract 进行自动提取，添加 /api/query 获取记忆增强响应。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "应该在 /api/memories 中存储什么？",
+          "answer": "存储跨对话有效的信息：偏好（语气、语言、格式）、事实（工作、工具、项目结构）、指令（「总是用表格总结」）、关系（「Alice 是团队负责人」）。除非使用会话作用域，否则避免存储临时或会话特定的数据。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "哪些数据不应该存储？",
+          "answer": "永远不要存储：密码、API 密钥、令牌、会话 Cookie（认证信息）、社会安全号、护照号、银行账户（PII）、信用卡信息（支付数据）。对于临时数据，如果需要可以使用带 TTL 的会话作用域。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "为什么命名空间很重要？",
+          "answer": "命名空间按项目/租户/环境分离记忆。没有它，数据会混合，搜索质量下降，删除/导出变得困难。推荐：'org:acme/app:chat/env:prod' 或 'project:myapp/env:staging'。生产环境中永远不要只使用 'default'。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什么时候应该使用作用域（user/session/agent）？",
+          "answer": "user：全局适用于用户的偏好。session：仅在此对话中有效的目标或上下文。agent：多代理系统中特定于一个代理的规则。正确使用作用域可以减少提示词长度并提高响应一致性。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什么是 memory_type？为什么重要？",
+          "answer": "memory_type 对记忆进行分类：fact（不变信息）、preference（用户选择）、instruction（要遵循的规则）、relationship（人/组织联系）、experience（过去事件）。这是用于过滤、删除和策略应用的最强大的维度。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "threshold 和 limit 如何工作？",
+          "answer": "limit：要检索的候选记忆数量（太低会错过相关记忆，太高会产生噪音上下文）。threshold：0-1 相似度截止值（越高越严格）。从 limit=10、threshold=0.7 开始。如果缺少记忆，将 threshold 降至 0.6，limit 提高到 20。如果结果不相关，将 threshold 提高到 0.75-0.8。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "为什么我的搜索结果不相关？",
+          "answer": "通常是以下原因之一：1) 命名空间混合，2) 存储的记忆太多（噪音），3) threshold 太低，4) 内容太抽象（「喜欢东西」与具体事实）。解决方案：分离命名空间、使内容具体化、提高 threshold。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "随着记忆增长，搜索质量下降了。我该怎么办？",
+          "answer": "添加重要性评分，只保留高重要性的记忆。使用 TTL 自动过期旧记忆。定期将相似记忆合并为摘要。分离命名空间以减少搜索范围。"
+        },
+        {
+          "category": "extraction",
+          "question": "我应该如何使用 /api/extract？",
+          "answer": "推荐流程：1) 使用 auto_store=false 调用以预览提取的记忆。2) 向用户显示结果以确认。3) 只存储已批准的记忆。4) 一旦提取质量得到证明，切换到 auto_store=true 进行自动化。"
+        },
+        {
+          "category": "extraction",
+          "question": "model=haiku 和 model=sonnet 有什么区别？",
+          "answer": "haiku：更快、更便宜，适合大多数情况。sonnet：更准确，更适合重要提取（入职、合同、政策）。大批量/初始提取使用 haiku，重要场景使用 sonnet。"
+        },
+        {
+          "category": "operations",
+          "question": "存储后可以修改记忆吗？",
+          "answer": "可以，但推荐的模式是：创建新记忆 + 删除/归档旧记忆。这种方法更适合审计追踪，并防止回归问题。"
+        },
+        {
+          "category": "operations",
+          "question": "如何删除记忆？",
+          "answer": "两种方法：1) 按 ID 删除（精确），2) 按命名空间删除（批量清理）。对于企业/合规，确保「完全删除 + 审计日志」。清楚地记录您的删除策略。"
+        },
+        {
+          "category": "operations",
+          "question": "我收到 429 Too Many Requests 错误。我该怎么办？",
+          "answer": "您已达到速率限制。解决方案：1) 实现指数退避（1秒 -> 2秒 -> 4秒）。2) 在服务器端排队请求。3) 减少请求频率：缓存重复查询、批量操作、降低提取频率。"
+        },
+        {
+          "category": "operations",
+          "question": "如何降低成本？",
+          "answer": "最大成本驱动因素：1) 提取频率 - 减少调用。2) 搜索范围 - 使用命名空间缩小。3) 模型选择 - 日常使用 haiku，重要的使用 sonnet。4) 缓存 - 缓存重复查询。5) 尽可能批量操作。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "可以在浏览器（前端）中使用 API 密钥吗？",
+          "answer": "不推荐 - 密钥泄露风险高。从您的服务器（Next.js Route Handler、Cloudflare Worker、无服务器函数）调用 Seizn，让浏览器调用您的服务器。永远不要将 API 密钥暴露给客户端代码。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "我的安全/法务团队需要什么文档？",
+          "answer": "他们需要：1) 数据范围（存储/不存储什么），2) 加密（静态：AES-256，传输中：TLS），3) 租户隔离方法，4) 删除/保留策略，5) 审计日志访问，6) 密钥轮换/过期策略。在文档中保留安全与治理页面。"
+        }
+      ]
     }
   }
 }

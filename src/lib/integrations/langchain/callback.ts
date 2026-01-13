@@ -27,7 +27,6 @@ import type {
   SeizCallbackConfig,
   SpanData,
   TraceResult,
-  SeizError,
 } from './types';
 
 const DEFAULT_BASE_URL = 'https://seizn.com/api';
@@ -110,7 +109,7 @@ export class SeizCallbackHandler {
       this.initializeTrace(runId);
     }
 
-    const span = this.startSpan(
+    this.startSpan(
       `chain:${chain.name ?? 'unknown'}`,
       {
         runId,

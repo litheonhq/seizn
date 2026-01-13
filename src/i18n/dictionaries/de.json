@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. Alle Rechte vorbehalten."
+    },
+    "faqPage": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Häufige Fragen zur Seizn Memory API, von den ersten Schritten bis zu fortgeschrittenen Operationen.",
+      "stillHaveQuestions": "Noch Fragen?",
+      "stillHaveQuestionsDesc": "Schauen Sie in unsere Dokumentation oder kontaktieren Sie unser Support-Team.",
+      "readDocs": "Dokumentation lesen",
+      "contactSupport": "Support kontaktieren",
+      "categories": {
+        "all": "Alle",
+        "gettingStarted": "Erste Schritte",
+        "coreConcepts": "Kernkonzepte",
+        "searchRetrieval": "Suche und Abruf",
+        "extraction": "Extraktion",
+        "operations": "Operationen",
+        "securityCompliance": "Sicherheit und Compliance"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Was ist Seizn Memory und welches Problem löst es?",
+          "answer": "Seizn Memory ist eine KI-Speicherinfrastruktur, die persistenten, durchsuchbaren Speicher für KI-Anwendungen bietet. Anders als Vektordatenbanken, die nur Vektoren speichern/suchen, enthält Seizn die vollständige Produktschicht: Speicherextraktion, Richtlinienverwaltung, Schlüsselverwaltung, Löschung, Audit-Logs und SDKs. Es löst das Problem der Kontexterhaltung über KI-Sitzungen hinweg und ermöglicht personalisierte KI-Erlebnisse."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Wie unterscheidet sich Seizn von Vektordatenbanken wie Pinecone oder Weaviate?",
+          "answer": "Vektordatenbanken sind Speicher-/Suchinfrastruktur für Vektoren. Seizn ist ein vollständiges Speichersystem darauf aufgebaut, das bietet: automatische Speicherextraktion aus Gesprächen, Speichertyp-Klassifizierung, Namespace/Scope-Verwaltung, API-Schlüsselrotation, Audit-Logs, SDKs und Governance-Funktionen. Denken Sie an 'Speicherinfrastruktur' vs 'Suchinfrastruktur'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Brauche ich RAG um Seizn zu nutzen?",
+          "answer": "Nein. Der häufigste Startpunkt ist: Speicher speichern -> suchen -> in Prompt einfügen. RAG (automatische Kontextzusammenstellung + Antwortgenerierung) ist der nächste Schritt. Sie können einfach beginnen und Komplexität nach Bedarf hinzufügen."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Was ist der schnellste Weg einen PoC zu bauen?",
+          "answer": "1) POST /api/memories um eine Benutzerpräferenz zu speichern. 2) GET /api/memories zum Suchen. 3) Ergebnisse in Ihren LLM-Prompt einfügen. 4) Später /api/extract für Auto-Extraktion und /api/query für speichererweiterte Antworten hinzufügen."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Was sollte ich in /api/memories speichern?",
+          "answer": "Speichern Sie Informationen, die über Gespräche hinweg gültig bleiben: Präferenzen (Ton, Sprache, Format), Fakten (Job, Tools, Projektstruktur), Anweisungen (\"immer in Tabellen zusammenfassen\"), Beziehungen (\"Alice ist die Teamleiterin\"). Vermeiden Sie temporäre oder sitzungsspezifische Daten, es sei denn Sie nutzen Session-Scope."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Welche Daten sollte ich NICHT speichern?",
+          "answer": "Niemals speichern: Passwörter, API-Schlüssel, Tokens, Session-Cookies (Auth-Infos), SSN, Passnummern, Bankkonten (PII), Kreditkarteninfos (Zahlungsdaten). Für temporäre Daten nutzen Sie Session-Scope mit TTL wenn nötig."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Warum ist Namespace wichtig?",
+          "answer": "Namespace trennt Speicher nach Projekt/Tenant/Umgebung. Ohne ihn werden Daten vermischt, Suchqualität sinkt, und Löschung/Export wird schwierig. Empfohlen: 'org:acme/app:chat/env:prod' oder 'project:myapp/env:staging'. Nutzen Sie niemals nur 'default' in Produktion."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Wann sollte ich Scope (user/session/agent) nutzen?",
+          "answer": "user: Präferenzen die global für einen Benutzer gelten. session: Ziele oder Kontext nur für dieses Gespräch gültig. agent: Regeln spezifisch für einen Agent in einem Multi-Agent-System. Korrekter Scope-Einsatz reduziert Prompt-Länge und verbessert Antwortkonsistenz."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Was sind memory_types und warum sind sie wichtig?",
+          "answer": "memory_type klassifiziert Speicher: fact (unveränderliche Info), preference (Benutzerauswahl), instruction (zu befolgende Regeln), relationship (Personen/Org-Verbindungen), experience (vergangene Ereignisse). Dies ist die mächtigste Achse für Filterung, Löschung und Richtlinienanwendung."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Wie funktionieren threshold und limit?",
+          "answer": "limit: Anzahl der Kandidaten-Speicher zum Abrufen (zu niedrig = relevante verpassen, zu hoch = verrauschter Kontext). threshold: 0-1 Ähnlichkeitsgrenze (höher = strenger). Starten Sie mit limit=10, threshold=0.7. Bei verpassten Speichern threshold auf 0.6 senken und limit auf 20 erhöhen. Bei irrelevanten Ergebnissen threshold auf 0.75-0.8 erhöhen."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Warum sind meine Suchergebnisse irrelevant?",
+          "answer": "Meist eines davon: 1) Namespaces gemischt, 2) zu viele Speicher (Rauschen), 3) threshold zu niedrig, 4) Inhalt zu abstrakt ('mag Sachen' vs spezifische Fakten). Lösung: Namespaces trennen, Inhalt spezifisch machen, threshold erhöhen."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Suchqualität sank mit wachsenden Speichern. Was tun?",
+          "answer": "Wichtigkeits-Scoring hinzufügen und nur wichtige Speicher behalten. TTL nutzen um alte Speicher automatisch ablaufen zu lassen. Periodisch ähnliche Speicher zu Zusammenfassungen fusionieren. Namespaces trennen um Suchbereich zu reduzieren."
+        },
+        {
+          "category": "extraction",
+          "question": "Wie sollte ich /api/extract nutzen?",
+          "answer": "Empfohlener Ablauf: 1) Mit auto_store=false aufrufen um extrahierte Speicher vorzuschauen. 2) Ergebnisse dem Benutzer zur Bestätigung zeigen. 3) Nur genehmigte Speicher speichern. 4) Sobald Extraktionsqualität bewiesen, auf auto_store=true für Automatisierung wechseln."
+        },
+        {
+          "category": "extraction",
+          "question": "Was ist der Unterschied zwischen model=haiku und model=sonnet?",
+          "answer": "haiku: Schneller, günstiger, gut für die meisten Fälle. sonnet: Genauer, besser für wichtige Extraktionen (Onboarding, Verträge, Richtlinien). Nutzen Sie haiku für Massen-/Erstextraktion, sonnet für risikoreiche Szenarien."
+        },
+        {
+          "category": "operations",
+          "question": "Kann ich einen Speicher nach dem Speichern ändern?",
+          "answer": "Ja, aber das empfohlene Muster ist: neuen Speicher erstellen + alten löschen/archivieren. Dieser Ansatz ist besser für Audit-Trails und verhindert Regressionsprobleme."
+        },
+        {
+          "category": "operations",
+          "question": "Wie lösche ich Speicher?",
+          "answer": "Zwei Ansätze: 1) Nach ID löschen (präzise), 2) Nach Namespace löschen (Massenbereinigung). Für Enterprise/Compliance sicherstellen 'vollständige Löschung + Audit-Log'. Ihre Löschrichtlinie klar dokumentieren."
+        },
+        {
+          "category": "operations",
+          "question": "Ich bekomme 429 Too Many Requests. Was tun?",
+          "answer": "Sie haben das Ratenlimit erreicht. Lösungen: 1) Exponentielles Backoff implementieren (1s -> 2s -> 4s). 2) Anfragen serverseitig in Warteschlange stellen. 3) Anfragehäufigkeit reduzieren: Duplikat-Abfragen cachen, Batch-Operationen, Extraktionshäufigkeit senken."
+        },
+        {
+          "category": "operations",
+          "question": "Wie reduziere ich Kosten?",
+          "answer": "Größte Kostentreiber: 1) Extraktionshäufigkeit - Aufrufe reduzieren. 2) Suchbereich - Namespace zum Eingrenzen nutzen. 3) Modellwahl - haiku für Routine, sonnet für Wichtiges. 4) Caching - wiederholte Abfragen cachen. 5) Batch-Operationen wenn möglich."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Kann ich den API-Schlüssel im Browser (Frontend) nutzen?",
+          "answer": "Nicht empfohlen - hohes Risiko der Schlüsselexposition. Rufen Sie Seizn von Ihrem Server auf (Next.js Route Handler, Cloudflare Worker, Serverless-Funktion) und lassen Sie den Browser Ihren Server aufrufen. Niemals API-Schlüssel im Client-Code exponieren."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Welche Dokumentation braucht mein Sicherheits-/Rechtsteam?",
+          "answer": "Sie wollen: 1) Datenumfang (was wird gespeichert/nicht gespeichert), 2) Verschlüsselung (ruhend: AES-256, übertragend: TLS), 3) Tenant-Isolierungsmethode, 4) Lösch-/Aufbewahrungsrichtlinie, 5) Audit-Log-Zugriff, 6) Schlüsselrotations-/Ablaufrichtlinie. Eine Sicherheits- und Governance-Seite in Ihren Docs führen."
+        }
+      ]
     }
   }
 }

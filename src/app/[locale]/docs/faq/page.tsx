@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
 import { LocaleFAQClient } from "./faq-client";
 
 export async function generateStaticParams() {
@@ -13,16 +14,20 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
+  const dict = await getDictionary(locale);
+
+  const title = dict.docs?.faqPage?.title || "FAQ";
+  const subtitle = dict.docs?.faqPage?.subtitle || "Frequently asked questions about Seizn Memory API.";
 
   return {
-    title: "FAQ - Seizn Memory API",
-    description: "Frequently asked questions about Seizn Memory API. Learn about memory storage, search, extraction, and best practices for AI memory management.",
+    title: `${title} - Seizn Memory API`,
+    description: subtitle,
     alternates: {
       canonical: `/${locale}/docs/faq`,
     },
     openGraph: {
-      title: "FAQ - Seizn Memory API",
-      description: "Frequently asked questions about Seizn Memory API for AI applications.",
+      title: `${title} - Seizn Memory API`,
+      description: subtitle,
       type: "website",
     },
   };
@@ -31,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocaleFAQPage({ params }: Props) {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
+  const dictionary = await getDictionary(locale);
 
-  return <LocaleFAQClient locale={locale} />;
+  return <LocaleFAQClient locale={locale} dictionary={dictionary} />;
 }

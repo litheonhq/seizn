@@ -9,7 +9,6 @@ import type {
   EvalReport,
   ReportConfig,
   ReportFormat,
-  EvalRun,
   EvalRunMetrics,
   EvalCaseResult,
   MetricComparison,
