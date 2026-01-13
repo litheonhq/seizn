@@ -28,6 +28,10 @@
     {
       "path": "/api/cron/weekly-summary",
       "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/drift-analysis",
+      "schedule": "0 4 * * *"
     }
   ]
 }
