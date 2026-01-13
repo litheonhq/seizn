@@ -80,7 +80,52 @@ interface Trace {
   created_at: string;
 }
 
-function generateReport(traces: Trace[], period: string) {
+interface ComparisonStats {
+  count: number;
+  avg_latency_ms: number;
+  avg_cost_usd: number;
+  avg_mrr?: number;
+}
+
+interface RerankComparison {
+  enabled: ComparisonStats;
+  disabled: ComparisonStats;
+  impact: {
+    latency_delta_ms: number;
+    cost_delta_usd: number;
+    mrr_improvement: number;
+  };
+}
+
+interface AutopilotComparison {
+  enabled: Omit<ComparisonStats, 'avg_mrr'>;
+  disabled: Omit<ComparisonStats, 'avg_mrr'>;
+  savings: {
+    cost_saved_usd: number;
+    cost_saved_percent: number;
+  };
+}
+
+function generateReport(traces: Trace[], _period: string): {
+  period: string;
+  generated_at: string;
+  summary: {
+    total_queries: number;
+    total_cost_usd: number;
+    avg_latency_ms: number;
+    avg_cost_per_query_usd: number;
+  };
+  rerank_comparison: RerankComparison;
+  autopilot_comparison: AutopilotComparison;
+  trends: { date: string; queries: number; cost_usd: number; avg_latency_ms: number }[];
+  projections: {
+    estimated_annual_cost_usd: number;
+    estimated_annual_savings_usd: number;
+    savings_percent: number;
+  };
+  recommendations: string[];
+} {
+  const period = _period;
   // Split traces by config
   const withRerank = traces.filter((t) => t.config?.rerank === true);
   const withoutRerank = traces.filter((t) => t.config?.rerank !== true);
@@ -207,9 +252,9 @@ function aggregateByDay(traces: Trace[]) {
 }
 
 function generateRecommendations(
-  rerankComparison: ReturnType<typeof generateReport>['rerank_comparison'],
-  autopilotComparison: ReturnType<typeof generateReport>['autopilot_comparison']
-) {
+  rerankComparison: RerankComparison,
+  autopilotComparison: AutopilotComparison
+): string[] {
   const recommendations: string[] = [];
 
   // Rerank recommendations
