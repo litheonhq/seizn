@@ -1,3 +1,6 @@
+import type { PiiMaskingConfig } from './pii-safe';
+import type { SamplingConfig, SamplingReason } from './sampling';
+
 export type RetrievalEventType =
   | 'embed'
   | 'candidates'
@@ -11,6 +14,8 @@ export interface RetrievalEvent {
   type: RetrievalEventType;
   ts: string; // ISO
   payload: Record<string, unknown>;
+  /** Whether PII was detected and masked in this event */
+  piiMasked?: boolean;
 }
 
 export interface TraceStartParams {
@@ -32,6 +37,8 @@ export interface TraceSummary {
   error?: string;
   experimentId?: string;
   armId?: string;
+  /** Chunk texts for context event (will be PII-masked if configured) */
+  chunkTexts?: string[];
 }
 
 export interface TraceHandle {
@@ -41,4 +48,21 @@ export interface TraceHandle {
   sampled: boolean;
   events: RetrievalEvent[];
   base: TraceStartParams;
+  /** Sampling decision metadata */
+  samplingInfo?: {
+    rate: number;
+    reason: SamplingReason;
+  };
+}
+
+/**
+ * Configuration for the Flight Recorder
+ */
+export interface FlightRecorderConfig {
+  /** PII masking configuration */
+  piiMasking?: Partial<PiiMaskingConfig>;
+  /** Sampling configuration */
+  sampling?: Partial<SamplingConfig>;
+  /** Enable debug logging */
+  debug?: boolean;
 }
