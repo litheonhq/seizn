@@ -51,3 +51,17 @@ export function decryptJson<T = unknown>(payloadB64: string, secret?: string): T
   const plaintext = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
   return JSON.parse(plaintext.toString('utf-8')) as T;
 }
+
+/**
+ * Encrypt a string value with AES-256-GCM.
+ */
+export function encrypt(value: string, secret?: string): string {
+  return encryptJson(value, secret);
+}
+
+/**
+ * Decrypt a string value previously encrypted by encrypt().
+ */
+export function decrypt(payloadB64: string, secret?: string): string {
+  return decryptJson<string>(payloadB64, secret);
+}

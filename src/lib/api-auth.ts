@@ -228,3 +228,41 @@ export async function logRequest(
     updateApiKeyLastUsed(ctx.keyId),
   ]);
 }
+
+export interface ValidateApiKeyResult {
+  success: true;
+  userId: string;
+  keyId: string;
+  plan: string;
+  orgId?: string;
+}
+
+/**
+ * Validate API key and return user info (simplified helper)
+ * Returns { success: true, ... } on success, or null on failure
+ */
+export async function validateApiKey(
+  request: NextRequest
+): Promise<ValidateApiKeyResult | null> {
+  const result = await authenticateRequest(request, { skipUsageCheck: true });
+
+  if (isAuthError(result)) {
+    return null;
+  }
+
+  // Try to get orgId from profile
+  const supabase = createServerClient();
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('organization_id')
+    .eq('id', result.userId)
+    .single();
+
+  return {
+    success: true,
+    userId: result.userId,
+    keyId: result.keyId,
+    plan: result.plan,
+    orgId: profile?.organization_id ?? undefined,
+  };
+}
