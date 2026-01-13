@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "seizn.fullname" . }}-config
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.seizn.env.NODE_ENV | default "production" | quote }}
+  NEXT_TELEMETRY_DISABLED: {{ .Values.seizn.env.NEXT_TELEMETRY_DISABLED | default "1" | quote }}
+  {{- range $key, $value := .Values.seizn.env }}
+  {{- if not (or (eq $key "NODE_ENV") (eq $key "NEXT_TELEMETRY_DISABLED")) }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}

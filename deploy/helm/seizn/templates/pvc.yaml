@@ -1,0 +1,21 @@
+{{- if .Values.seizn.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "seizn.fullname" . }}-data
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.seizn.persistence.accessMode }}
+  {{- if .Values.seizn.persistence.storageClass }}
+  {{- if (eq "-" .Values.seizn.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.seizn.persistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.seizn.persistence.size }}
+{{- end }}
