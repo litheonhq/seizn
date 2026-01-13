@@ -9,7 +9,7 @@ import { getSSOService, SSOService } from '@/lib/enterprise';
 export async function GET(request: NextRequest) {
   try {
     const authResult = await validateApiKey(request);
-    if (!authResult.success) {
+    if (!authResult?.success) {
       return AuthErrors.invalidKey();
     }
 
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const authResult = await validateApiKey(request);
-    if (!authResult.success) {
+    if (!authResult?.success) {
       return AuthErrors.invalidKey();
     }
 
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const authResult = await validateApiKey(request);
-    if (!authResult.success) {
+    if (!authResult?.success) {
       return AuthErrors.invalidKey();
     }
 
