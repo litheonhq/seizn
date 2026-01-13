@@ -38,6 +38,8 @@
   ],
   "exclude": [
     "node_modules",
-    "mcp-server"
+    "mcp-server",
+    "examples",
+    "packages"
   ]
 }
