@@ -284,7 +284,7 @@ export function FederatedClient() {
             </button>
           </div>
 
-          {testResults && (
+          {testResults !== null && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <pre className="text-sm overflow-auto max-h-96">
                 {JSON.stringify(testResults, null, 2)}
