@@ -213,4 +213,14 @@ export const AuditActions = {
   // Suspicious
   SUSPICIOUS_RATE_LIMIT: 'suspicious.rate_limit',
   SUSPICIOUS_UNUSUAL_ACCESS: 'suspicious.unusual_access',
+
+  // Federated
+  FEDERATED_SOURCE_CREATE: 'federated.source.create',
+  FEDERATED_SOURCE_UPDATE: 'federated.source.update',
+  FEDERATED_SOURCE_DELETE: 'federated.source.delete',
+  FEDERATED_SOURCE_VERIFY: 'federated.source.verify',
+  FEDERATED_BINDING_CREATE: 'federated.binding.create',
+  FEDERATED_BINDING_DELETE: 'federated.binding.delete',
+  FEDERATED_ACCESS_GRANT: 'federated.access.grant',
+  FEDERATED_ACCESS_REVOKE: 'federated.access.revoke',
 } as const;
