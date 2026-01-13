@@ -144,10 +144,28 @@ export function isAuthError(result: AuthResponse): result is { authError: AuthEr
 }
 
 /**
+ * Suggested fixes for auth errors
+ */
+const AuthSuggestedFixes: Record<string, string> = {
+  [ErrorCodes.AUTH_MISSING_KEY]: 'Add x-api-key header to your request',
+  [ErrorCodes.AUTH_INVALID_KEY]: 'Check API key in Dashboard → API Keys',
+  [ErrorCodes.AUTH_EXPIRED_KEY]: 'Generate new API key in Dashboard',
+  [ErrorCodes.RATE_LIMIT_EXCEEDED]: 'Implement exponential backoff (1s→2s→4s)',
+  [ErrorCodes.QUOTA_EXCEEDED]: 'Upgrade plan or wait for quota reset',
+};
+
+/**
  * Create error response from auth error
  */
 export function authErrorResponse(authError: AuthError): NextResponse {
   const requestId = `req_${crypto.randomUUID().replace(/-/g, '').substring(0, 24)}`;
+  const traceId = `trc_${requestId.slice(4)}`;
+  const suggestedFix = AuthSuggestedFixes[authError.code] || 'Contact support with trace_id';
+
+  // Determine docs URL based on error type
+  const docsUrl = authError.code.startsWith('RATE_') || authError.code.startsWith('QUOTA_')
+    ? 'https://seizn.com/docs#rate-limits'
+    : 'https://seizn.com/docs#authentication';
 
   const response = NextResponse.json(
     {
@@ -155,14 +173,17 @@ export function authErrorResponse(authError: AuthError): NextResponse {
         code: authError.code,
         message: authError.error,
         request_id: requestId,
-        docs_url: 'https://seizn.com/docs#authentication',
+        trace_id: traceId,
+        suggested_fix: suggestedFix,
+        docs_url: docsUrl,
       },
     },
     { status: authError.status }
   );
 
-  // Add request ID header
+  // Add request ID and trace ID headers
   response.headers.set('X-Request-ID', requestId);
+  response.headers.set('X-Trace-ID', traceId);
 
   // Add rate limit headers if present
   if (authError.headers) {

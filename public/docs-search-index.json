@@ -199,6 +199,38 @@
       "content": "POST /api/winter/forget - Permanently delete all user data. Right-to-be-forgotten compliance.",
       "url": "/docs#security",
       "keywords": ["forget", "gdpr", "delete", "right to be forgotten", "compliance", "winter"]
+    },
+    {
+      "id": "error-semantics",
+      "title": "Error Response Format",
+      "section": "API Reference",
+      "content": "All errors include: code (machine-readable), message (human-readable), trace_id, suggested_fix, docs_url. Use trace_id when contacting support.",
+      "url": "/docs#errors",
+      "keywords": ["error", "trace_id", "suggested_fix", "request_id", "debug", "troubleshoot"]
+    },
+    {
+      "id": "error-auth-missing",
+      "title": "AUTH_MISSING_KEY Error",
+      "section": "Error Codes",
+      "content": "No API key provided. Fix: Add x-api-key header to your request. Get API key from Dashboard → API Keys.",
+      "url": "/docs#errors",
+      "keywords": ["AUTH_MISSING_KEY", "api key", "header", "x-api-key", "401"]
+    },
+    {
+      "id": "error-auth-invalid",
+      "title": "AUTH_INVALID_KEY Error",
+      "section": "Error Codes",
+      "content": "API key not found or inactive. Fix: Verify key in Dashboard → API Keys. Check for typos or regenerate if needed.",
+      "url": "/docs#errors",
+      "keywords": ["AUTH_INVALID_KEY", "invalid", "inactive", "key", "401"]
+    },
+    {
+      "id": "error-rate-limit",
+      "title": "RATE_LIMIT_EXCEEDED Error",
+      "section": "Error Codes",
+      "content": "Too many requests per minute. Fix: Implement exponential backoff (1s→2s→4s). Check X-RateLimit-Reset header.",
+      "url": "/docs#rate-limits",
+      "keywords": ["RATE_LIMIT_EXCEEDED", "throttle", "backoff", "429", "retry"]
     }
   ]
 }

@@ -61,10 +61,54 @@ export interface ApiErrorResponse {
     code: ErrorCode;
     message: string;
     request_id: string;
+    trace_id: string; // Alias for request_id (for observability tools)
+    suggested_fix: string;
     details?: Record<string, unknown>;
     docs_url?: string;
   };
 }
+
+// ============================================
+// Suggested Fixes Map
+// ============================================
+
+const SuggestedFixes: Record<ErrorCode, string> = {
+  // Auth
+  [ErrorCodes.AUTH_MISSING_KEY]: 'Add x-api-key header to your request',
+  [ErrorCodes.AUTH_INVALID_KEY]: 'Check API key in Dashboard → API Keys',
+  [ErrorCodes.AUTH_EXPIRED_KEY]: 'Generate new API key in Dashboard',
+  [ErrorCodes.AUTH_UNAUTHORIZED]: 'Verify resource ownership or permissions',
+
+  // Rate limits
+  [ErrorCodes.RATE_LIMIT_EXCEEDED]: 'Implement exponential backoff (1s→2s→4s)',
+  [ErrorCodes.QUOTA_EXCEEDED]: 'Upgrade plan or wait for quota reset',
+  [ErrorCodes.DAILY_LIMIT_EXCEEDED]: 'Wait until tomorrow or upgrade plan',
+  [ErrorCodes.MONTHLY_LIMIT_EXCEEDED]: 'Upgrade plan for higher limits',
+
+  // Validation
+  [ErrorCodes.VALIDATION_ERROR]: 'Check request body against API docs',
+  [ErrorCodes.MISSING_REQUIRED_FIELD]: 'Add missing field to request body',
+  [ErrorCodes.INVALID_FIELD_VALUE]: 'Check field type and constraints in docs',
+  [ErrorCodes.INVALID_REQUEST_BODY]: 'Ensure JSON is valid and properly formatted',
+
+  // Resource
+  [ErrorCodes.RESOURCE_NOT_FOUND]: 'Verify resource ID exists and is accessible',
+  [ErrorCodes.MEMORY_NOT_FOUND]: 'Check memory ID or use GET /api/memories to search',
+  [ErrorCodes.COLLECTION_NOT_FOUND]: 'Verify collection exists in your namespace',
+  [ErrorCodes.DOCUMENT_NOT_FOUND]: 'Check document ID in the collection',
+  [ErrorCodes.USER_NOT_FOUND]: 'Verify user credentials or registration',
+
+  // Conflict
+  [ErrorCodes.RESOURCE_ALREADY_EXISTS]: 'Use different identifier or update existing',
+  [ErrorCodes.DUPLICATE_ENTRY]: 'Check for existing entry before creating',
+
+  // Server
+  [ErrorCodes.INTERNAL_ERROR]: 'Retry request; contact support if persists',
+  [ErrorCodes.SERVICE_UNAVAILABLE]: 'Check status.seizn.com; retry in 1 minute',
+  [ErrorCodes.DATABASE_ERROR]: 'Retry request; check input data format',
+  [ErrorCodes.EMBEDDING_ERROR]: 'Retry request; check content length (<8K chars)',
+  [ErrorCodes.AI_MODEL_ERROR]: 'Retry request; try simpler model if available',
+};
 
 // ============================================
 // Error Factory
@@ -98,13 +142,17 @@ function getDocsUrl(code: ErrorCode): string {
 
 export function createApiError(options: CreateErrorOptions): NextResponse<ApiErrorResponse> {
   const requestId = generateRequestId();
+  const traceId = `trc_${requestId.slice(4)}`; // Convert req_ to trc_
   const docsUrl = getDocsUrl(options.code);
+  const suggestedFix = SuggestedFixes[options.code] || 'Contact support with trace_id';
 
   const errorResponse: ApiErrorResponse = {
     error: {
       code: options.code,
       message: options.message,
       request_id: requestId,
+      trace_id: traceId,
+      suggested_fix: suggestedFix,
       ...(options.details && { details: options.details }),
       docs_url: docsUrl,
     },
@@ -114,6 +162,7 @@ export function createApiError(options: CreateErrorOptions): NextResponse<ApiErr
 
   // Add standard headers
   response.headers.set('X-Request-ID', requestId);
+  response.headers.set('X-Trace-ID', traceId);
 
   // Add custom headers if provided
   if (options.headers) {
