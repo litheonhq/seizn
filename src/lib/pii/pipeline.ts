@@ -12,6 +12,24 @@ import {
   shouldScanNamespace,
   type PIIAction,
 } from './config';
+import * as Sentry from '@sentry/nextjs';
+import { getRedis } from '@/lib/redis';
+
+// =============================================================================
+// Redis Key Constants for PII Metrics
+// =============================================================================
+
+const PII_REDIS_KEYS = {
+  /** Daily detection count by type: seizn:pii:daily:{date}:{type} */
+  DAILY_COUNT: 'seizn:pii:daily',
+  /** Daily action count: seizn:pii:actions:{date}:{action} */
+  ACTION_COUNT: 'seizn:pii:actions',
+  /** Namespace statistics: seizn:pii:namespace:{date}:{namespace} */
+  NAMESPACE_STATS: 'seizn:pii:namespace',
+};
+
+// TTL for PII metrics: 30 days
+const PII_METRICS_TTL = 60 * 60 * 24 * 30;
 
 // =============================================================================
 // Types
@@ -222,7 +240,14 @@ function generateWarnings(matches: PIIMatch[]): PIIWarning[] {
 }
 
 /**
- * Log PII detection (without actual values)
+ * Log PII detection to monitoring services
+ *
+ * Records PII detection events to:
+ * - Console (development only)
+ * - Sentry (custom event with tags)
+ * - Redis (daily counters for analytics)
+ *
+ * IMPORTANT: Never logs actual PII values - only types, counts, and confidence scores
  */
 function logPIIDetection(
   scanResult: PIIScanResult,
@@ -242,13 +267,140 @@ function logPIIDetection(
     highestConfidence: scanResult.confidence,
   };
 
-  // Log to console in development, could be sent to logging service
+  // Log to console in development
   if (process.env.NODE_ENV === 'development') {
     console.log('[PII Detection]', JSON.stringify(summary));
   }
 
-  // TODO: In production, send to logging/analytics service
-  // await logToService('pii-detection', summary);
+  // Production logging: Sentry custom event
+  if (process.env.NODE_ENV === 'production') {
+    recordPIIToSentry(summary);
+  }
+
+  // Production logging: Redis metrics (fire-and-forget)
+  recordPIIToRedis(summary).catch((error) => {
+    console.warn('[PII Metrics] Failed to record to Redis:', error);
+  });
+}
+
+/**
+ * Record PII detection to Sentry as a custom event
+ * Only records metadata - never actual PII values
+ */
+function recordPIIToSentry(summary: {
+  timestamp: string;
+  namespace: string;
+  detectedTypes: PIIType[];
+  counts: {
+    blocked: number;
+    masked: number;
+    warned: number;
+    allowed: number;
+  };
+  highestConfidence: number;
+}): void {
+  try {
+    Sentry.withScope((scope) => {
+      // Set tags for filtering and grouping
+      scope.setTag('pii.namespace', summary.namespace);
+      scope.setTag('pii.has_blocked', (summary.counts.blocked > 0).toString());
+      scope.setTag('pii.has_masked', (summary.counts.masked > 0).toString());
+
+      // Set context with detailed information (no actual PII values)
+      scope.setContext('pii_detection', {
+        detectedTypes: summary.detectedTypes,
+        counts: summary.counts,
+        highestConfidence: summary.highestConfidence,
+        totalDetections:
+          summary.counts.blocked +
+          summary.counts.masked +
+          summary.counts.warned +
+          summary.counts.allowed,
+      });
+
+      // Set level based on whether any PII was blocked
+      const level = summary.counts.blocked > 0 ? 'warning' : 'info';
+      scope.setLevel(level);
+
+      // Capture as a custom event (not an error)
+      Sentry.captureMessage(
+        `PII Detection: ${summary.detectedTypes.join(', ')} in namespace "${summary.namespace}"`,
+        level
+      );
+    });
+
+    // Also record as metric if available
+    if (typeof Sentry.metrics?.gauge === 'function') {
+      // Record detection event count (gauge used as Sentry metrics API)
+      Sentry.metrics.gauge('seizn.pii.detections', 1, {
+        unit: 'none',
+      });
+
+      // Record per-type detection
+      for (const type of summary.detectedTypes) {
+        Sentry.metrics.gauge(`seizn.pii.type.${type}`, 1, {
+          unit: 'none',
+        });
+      }
+    }
+  } catch (error) {
+    console.warn('[PII Sentry] Failed to record event:', error);
+  }
+}
+
+/**
+ * Record PII detection metrics to Redis
+ * Stores daily counters for analytics dashboard
+ */
+async function recordPIIToRedis(summary: {
+  timestamp: string;
+  namespace: string;
+  detectedTypes: PIIType[];
+  counts: {
+    blocked: number;
+    masked: number;
+    warned: number;
+    allowed: number;
+  };
+  highestConfidence: number;
+}): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  try {
+    // Use pipeline for atomic operations
+    const pipeline = redis.pipeline();
+
+    // Increment daily detection count per type
+    for (const type of summary.detectedTypes) {
+      const typeKey = `${PII_REDIS_KEYS.DAILY_COUNT}:${today}:${type}`;
+      pipeline.incr(typeKey);
+      pipeline.expire(typeKey, PII_METRICS_TTL);
+    }
+
+    // Increment action counts
+    const actions = ['blocked', 'masked', 'warned', 'allowed'] as const;
+    for (const action of actions) {
+      if (summary.counts[action] > 0) {
+        const actionKey = `${PII_REDIS_KEYS.ACTION_COUNT}:${today}:${action}`;
+        pipeline.incrby(actionKey, summary.counts[action]);
+        pipeline.expire(actionKey, PII_METRICS_TTL);
+      }
+    }
+
+    // Increment namespace detection count
+    const namespaceKey = `${PII_REDIS_KEYS.NAMESPACE_STATS}:${today}:${summary.namespace}`;
+    pipeline.incr(namespaceKey);
+    pipeline.expire(namespaceKey, PII_METRICS_TTL);
+
+    // Execute all commands
+    await pipeline.exec();
+  } catch (error) {
+    // Log but don't throw - metrics should not break the main flow
+    console.warn('[PII Redis] Failed to record metrics:', error);
+  }
 }
 
 // =============================================================================
@@ -287,4 +439,65 @@ export function contentPassesPIIPolicy(
 ): boolean {
   const result = processPIIForWrite(content, namespace);
   return result.allowed;
+}
+
+// =============================================================================
+// PII Metrics Query Functions
+// =============================================================================
+
+/**
+ * Get PII detection statistics for a specific date
+ */
+export async function getPIIStats(date?: string): Promise<{
+  byType: Record<string, number>;
+  byAction: Record<string, number>;
+  byNamespace: Record<string, number>;
+} | null> {
+  const redis = getRedis();
+  if (!redis) return null;
+
+  const targetDate = date || new Date().toISOString().split('T')[0];
+
+  try {
+    // Get all type counts for the date
+    const typeKeys = await redis.keys(`${PII_REDIS_KEYS.DAILY_COUNT}:${targetDate}:*`);
+    const byType: Record<string, number> = {};
+
+    for (const key of typeKeys) {
+      const type = key.split(':').pop() || '';
+      const count = await redis.get<number>(key);
+      if (count !== null) {
+        byType[type] = count;
+      }
+    }
+
+    // Get action counts
+    const actionKeys = await redis.keys(`${PII_REDIS_KEYS.ACTION_COUNT}:${targetDate}:*`);
+    const byAction: Record<string, number> = {};
+
+    for (const key of actionKeys) {
+      const action = key.split(':').pop() || '';
+      const count = await redis.get<number>(key);
+      if (count !== null) {
+        byAction[action] = count;
+      }
+    }
+
+    // Get namespace counts
+    const namespaceKeys = await redis.keys(`${PII_REDIS_KEYS.NAMESPACE_STATS}:${targetDate}:*`);
+    const byNamespace: Record<string, number> = {};
+
+    for (const key of namespaceKeys) {
+      const namespace = key.split(':').pop() || '';
+      const count = await redis.get<number>(key);
+      if (count !== null) {
+        byNamespace[namespace] = count;
+      }
+    }
+
+    return { byType, byAction, byNamespace };
+  } catch (error) {
+    console.error('[PII Stats] Failed to get statistics:', error);
+    return null;
+  }
 }
