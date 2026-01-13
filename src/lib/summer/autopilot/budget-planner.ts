@@ -69,6 +69,95 @@ const LATENCY_ESTIMATES = {
   networkOverhead: 30,
 };
 
+// Provider-specific latency overhead (ms)
+const PROVIDER_LATENCY_OVERHEAD: Record<string, number> = {
+  local: 0,
+  pinecone: 40,
+  weaviate: 35,
+  azure_ai_search: 50,
+  vespa: 45,
+  custom: 80,
+};
+
+// Budget allocation for federated scenarios
+export interface FederatedBudgetAllocation {
+  provider: string;
+  collectionId: string;
+  allocatedBudgetMs: number;
+  priority: number;
+  timeoutMs: number;
+}
+
+/**
+ * Allocate budget across multiple federated sources
+ */
+export function allocateFederatedBudget(
+  totalBudgetMs: number,
+  sources: Array<{ collectionId: string; provider: string; priority?: number }>
+): FederatedBudgetAllocation[] {
+  if (sources.length === 0) return [];
+
+  // Reserve 30% for merge/rerank
+  const availableBudgetMs = totalBudgetMs * 0.7;
+
+  // For parallel execution, each source gets the full budget minus its overhead
+  // Timeout is the full available budget (sources run in parallel)
+  return sources.map((source, idx) => {
+    const overhead = PROVIDER_LATENCY_OVERHEAD[source.provider] ?? PROVIDER_LATENCY_OVERHEAD.custom;
+    const priority = source.priority ?? (idx === 0 ? 1 : 2); // First source is primary
+
+    return {
+      provider: source.provider,
+      collectionId: source.collectionId,
+      allocatedBudgetMs: availableBudgetMs - overhead,
+      priority,
+      timeoutMs: Math.max(100, availableBudgetMs - overhead),
+    };
+  });
+}
+
+/**
+ * Estimate total latency for federated query
+ */
+export function estimateFederatedLatency(
+  sources: Array<{ provider: string }>,
+  config: { topK: number; searchEf: number; mode: string; rerank: boolean; rerankTopN: number }
+): number {
+  if (sources.length === 0) {
+    return LATENCY_ESTIMATES.networkOverhead + LATENCY_ESTIMATES.embedQuery;
+  }
+
+  // Parallel execution: max of all source latencies
+  let maxSourceLatency = 0;
+  for (const source of sources) {
+    const overhead = PROVIDER_LATENCY_OVERHEAD[source.provider] ?? PROVIDER_LATENCY_OVERHEAD.custom;
+    const searchLatency =
+      config.mode === 'keyword'
+        ? LATENCY_ESTIMATES.keywordSearch(config.topK)
+        : LATENCY_ESTIMATES.vectorSearch(config.topK, config.searchEf);
+
+    maxSourceLatency = Math.max(maxSourceLatency, overhead + searchLatency);
+  }
+
+  // Add sequential operations
+  let total =
+    LATENCY_ESTIMATES.networkOverhead +
+    LATENCY_ESTIMATES.embedQuery +
+    maxSourceLatency;
+
+  // Merge/dedup happens after all sources return
+  if (sources.length > 1) {
+    total += LATENCY_ESTIMATES.hybridMerge + LATENCY_ESTIMATES.dedup;
+  }
+
+  // Rerank is last
+  if (config.rerank && config.rerankTopN > 0) {
+    total += LATENCY_ESTIMATES.rerank(config.rerankTopN);
+  }
+
+  return total;
+}
+
 /**
  * Create a budget-aware retrieval plan
  */
