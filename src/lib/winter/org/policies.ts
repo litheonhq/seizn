@@ -300,8 +300,8 @@ export async function updatePolicy(
     action: 'policy.update',
     resource_type: 'policies',
     resource_id: params.id,
-    previous_state: current.config,
-    new_state: updates.config || current.config,
+    previous_state: current.config as unknown as Record<string, unknown>,
+    new_state: (updates.config || current.config) as unknown as Record<string, unknown>,
     details: {
       updated_fields: Object.keys(params).filter((k) => k !== 'id'),
     },
@@ -340,7 +340,7 @@ export async function deletePolicy(
     action: 'policy.delete',
     resource_type: 'policies',
     resource_id: policyId,
-    previous_state: policy.config,
+    previous_state: policy.config as unknown as Record<string, unknown>,
     details: {
       policy_type: policy.policy_type,
       name: policy.name,

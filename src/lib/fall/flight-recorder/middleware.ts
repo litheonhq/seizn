@@ -339,7 +339,7 @@ export async function withSpan<T>(
   const span = {
     name: spanName,
     startedAt,
-    status: 'running' as const,
+    status: 'running' as 'running' | 'success' | 'error',
     input,
   };
 

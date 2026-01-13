@@ -129,7 +129,7 @@ export async function listMembers(
       accepted_at: m.accepted_at,
       status: (m.status || 'active') as MemberStatus,
       created_at: m.created_at,
-      user: m.user as OrgMember['user'],
+      user: (Array.isArray(m.user) ? m.user[0] : m.user) as OrgMember['user'],
     })),
     total: count || 0,
     limit,
@@ -185,7 +185,7 @@ export async function getMember(memberId: string): Promise<OrgMember | null> {
     accepted_at: data.accepted_at,
     status: (data.status || 'active') as MemberStatus,
     created_at: data.created_at,
-    user: data.user as OrgMember['user'],
+    user: (Array.isArray(data.user) ? data.user[0] : data.user) as OrgMember['user'],
   };
 }
 
@@ -240,7 +240,7 @@ export async function getMemberByUser(
     accepted_at: data.accepted_at,
     status: (data.status || 'active') as MemberStatus,
     created_at: data.created_at,
-    user: data.user as OrgMember['user'],
+    user: (Array.isArray(data.user) ? data.user[0] : data.user) as OrgMember['user'],
   };
 }
 

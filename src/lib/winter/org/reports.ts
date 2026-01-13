@@ -732,7 +732,7 @@ async function generateApiUsageReport(
     const key = `${log.method || 'GET'}:${log.endpoint || 'unknown'}`;
     const existing = endpointMap.get(key) || {
       calls: 0,
-      latencies: [],
+      latencies: [] as number[],
       errors: 0,
       method: log.method || 'GET',
     };

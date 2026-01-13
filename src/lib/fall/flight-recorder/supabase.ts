@@ -23,6 +23,7 @@ export class SupabaseFlightRecorder implements FlightRecorder {
       startedAtMs: Date.now(),
       sampled: true,
       events: [],
+      spans: [],
       base: params,
     };
   }
