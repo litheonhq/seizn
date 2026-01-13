@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 
 interface User {
   id: string;
@@ -96,6 +97,9 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
   return (
     <div className="space-y-8">
+      {/* Onboarding Wizard - Shows until all steps are complete */}
+      <OnboardingWizard userId={user.id} />
+
       {/* Welcome Section */}
       <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
