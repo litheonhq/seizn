@@ -46,7 +46,7 @@ export function TraceViewerClient({ shareId }: Props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/traces/${shareId}`)
+    fetch(`/api/traces/shared/${shareId}`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success) {

@@ -7,7 +7,7 @@ interface RouteParams {
 }
 
 /**
- * GET /api/traces/[shareId] - Get a shared trace (public, no auth required)
+ * GET /api/traces/shared/[shareId] - Get a shared trace (public, no auth required)
  *
  * Returns the trace snapshot if the share link is valid and not expired
  */
