@@ -231,6 +231,14 @@
       "content": "Too many requests per minute. Fix: Implement exponential backoff (1s→2s→4s). Check X-RateLimit-Reset header.",
       "url": "/docs#rate-limits",
       "keywords": ["RATE_LIMIT_EXCEEDED", "throttle", "backoff", "429", "retry"]
+    },
+    {
+      "id": "demo-query",
+      "title": "Public Demo Query API",
+      "section": "Getting Started",
+      "content": "Try Seizn without an API key. POST /api/demo/query with { query: 'your question' }. Limited to 3 free queries per IP per day.",
+      "url": "/docs#quickstart",
+      "keywords": ["demo", "try", "free", "no api key", "test", "sample"]
     }
   ]
 }
