@@ -44,6 +44,24 @@ tags:
     description: AI-powered memory operations
   - name: Webhooks
     description: Webhook management
+  - name: CI
+    description: Continuous Integration tracing and test management
+  - name: Autopilot
+    description: AI-powered code analysis and automated fixes
+  - name: Cache
+    description: Semantic caching for AI responses
+  - name: Contracts
+    description: API contract validation and management
+  - name: Healing
+    description: Self-healing system for automatic issue resolution
+  - name: Graph
+    description: Knowledge graph data and federated queries
+  - name: Versions
+    description: Version control for data and configurations
+  - name: Explain
+    description: Query explanation and optimization suggestions
+  - name: RetOps
+    description: Retrieval operations monitoring and quality metrics
 
 paths:
   /api/memories:
@@ -581,6 +599,1521 @@ paths:
                     items:
                       $ref: '#/components/schemas/WebhookDelivery'
 
+  # ========== CI API ==========
+  /api/ci/traces:
+    get:
+      tags: [CI]
+      summary: List CI traces
+      description: List all CI traces with optional filtering
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, running, success, failed]
+          description: Filter by status
+        - name: branch
+          in: query
+          schema:
+            type: string
+          description: Filter by branch name
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+          description: Maximum number of results
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: List of CI traces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  traces:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CITrace'
+                  total:
+                    type: integer
+                  hasMore:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [CI]
+      summary: Create a CI trace
+      description: Create a new CI trace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [branch, commit, repository]
+              properties:
+                branch:
+                  type: string
+                  description: Branch name
+                commit:
+                  type: string
+                  description: Commit SHA
+                repository:
+                  type: string
+                  description: Repository URL or name
+                metadata:
+                  type: object
+                  description: Additional metadata
+            example:
+              branch: "main"
+              commit: "a1b2c3d"
+              repository: "org/repo"
+      responses:
+        '200':
+          description: Trace created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CITrace'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/ci/tests/{traceId}:
+    get:
+      tags: [CI]
+      summary: Get test results
+      description: Get test results for a specific trace
+      parameters:
+        - name: traceId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The trace ID
+      responses:
+        '200':
+          description: Test results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  traceId:
+                    type: string
+                  tests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TestResult'
+                  summary:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      passed:
+                        type: integer
+                      failed:
+                        type: integer
+                      skipped:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/ci/report:
+    get:
+      tags: [CI]
+      summary: Generate CI report
+      description: Generate a CI report for a time period
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Start date (ISO 8601)
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: End date (ISO 8601)
+        - name: branch
+          in: query
+          schema:
+            type: string
+          description: Filter by branch
+      responses:
+        '200':
+          description: CI report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  period:
+                    type: object
+                    properties:
+                      start:
+                        type: string
+                        format: date-time
+                      end:
+                        type: string
+                        format: date-time
+                  summary:
+                    type: object
+                    properties:
+                      totalBuilds:
+                        type: integer
+                      successRate:
+                        type: number
+                      avgDuration:
+                        type: integer
+                      failureReasons:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            reason:
+                              type: string
+                            count:
+                              type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ========== Autopilot API ==========
+  /api/autopilot/analyze:
+    post:
+      tags: [Autopilot]
+      summary: Analyze code
+      description: Analyze code for issues and improvements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [repository]
+              properties:
+                repository:
+                  type: string
+                  description: Repository URL
+                branch:
+                  type: string
+                  default: main
+                  description: Branch to analyze
+                files:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific files to analyze
+                analysisType:
+                  type: string
+                  enum: [security, performance, quality, all]
+                  default: all
+                  description: Type of analysis
+            example:
+              repository: "https://github.com/org/repo"
+              branch: "main"
+              analysisType: "security"
+      responses:
+        '200':
+          description: Analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/autopilot/fix:
+    post:
+      tags: [Autopilot]
+      summary: Generate fixes
+      description: Generate automated fixes for detected issues
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [analysisId]
+              properties:
+                analysisId:
+                  type: string
+                  description: Analysis ID from /analyze
+                issueIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific issues to fix (default all)
+                autoCommit:
+                  type: boolean
+                  default: false
+                  description: Auto-commit fixes
+            example:
+              analysisId: "analysis_xyz789"
+              issueIds: ["issue_001"]
+              autoCommit: false
+      responses:
+        '200':
+          description: Fix results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/autopilot/pr:
+    post:
+      tags: [Autopilot]
+      summary: Create PR with fixes
+      description: Create a pull request with fixes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fixId]
+              properties:
+                fixId:
+                  type: string
+                  description: Fix ID from /fix
+                title:
+                  type: string
+                  description: PR title
+                description:
+                  type: string
+                  description: PR description
+                targetBranch:
+                  type: string
+                  default: main
+                  description: Target branch
+            example:
+              fixId: "fix_abc123"
+              title: "Fix security vulnerabilities"
+              targetBranch: "main"
+      responses:
+        '200':
+          description: PR created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutopilotPR'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          description: No permission to create PR
+
+  /api/autopilot/status/{prId}:
+    get:
+      tags: [Autopilot]
+      summary: Get PR status
+      description: Get status of an autopilot PR
+      parameters:
+        - name: prId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The PR ID
+      responses:
+        '200':
+          description: PR status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  prId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [open, merged, closed]
+                  url:
+                    type: string
+                  mergedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  checks:
+                    type: object
+                    properties:
+                      ci:
+                        type: string
+                      review:
+                        type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ========== Cache API ==========
+  /api/summer/cache/query:
+    post:
+      tags: [Cache]
+      summary: Query semantic cache
+      description: Query the semantic cache for similar responses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: The query string
+                threshold:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.85
+                  description: Similarity threshold
+                namespace:
+                  type: string
+                  description: Cache namespace
+            example:
+              query: "What is the capital of France?"
+              threshold: 0.85
+      responses:
+        '200':
+          description: Cache query result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hit:
+                    type: boolean
+                  similarity:
+                    type: number
+                  cachedResponse:
+                    type: object
+                    nullable: true
+                    properties:
+                      id:
+                        type: string
+                      query:
+                        type: string
+                      response:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      ttl:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/summer/cache/invalidate:
+    post:
+      tags: [Cache]
+      summary: Invalidate cache
+      description: Invalidate cache entries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cacheIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific cache IDs to invalidate
+                namespace:
+                  type: string
+                  description: Invalidate entire namespace
+                pattern:
+                  type: string
+                  description: Pattern to match queries
+            example:
+              namespace: "default"
+      responses:
+        '200':
+          description: Invalidation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invalidated:
+                    type: integer
+                  namespace:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/summer/cache/stats:
+    get:
+      tags: [Cache]
+      summary: Get cache statistics
+      description: Get cache statistics
+      parameters:
+        - name: namespace
+          in: query
+          schema:
+            type: string
+          description: Filter by namespace
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [hour, day, week, month]
+          description: Time period
+      responses:
+        '200':
+          description: Cache statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalEntries:
+                    type: integer
+                  hitRate:
+                    type: number
+                  missRate:
+                    type: number
+                  avgLatency:
+                    type: integer
+                  storage:
+                    type: object
+                    properties:
+                      used:
+                        type: string
+                      limit:
+                        type: string
+                  topQueries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        query:
+                          type: string
+                        hits:
+                          type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ========== Contracts API ==========
+  /api/fall/contracts:
+    post:
+      tags: [Contracts]
+      summary: Create contract
+      description: Create a new API contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, version, schema]
+              properties:
+                name:
+                  type: string
+                  description: Contract name
+                version:
+                  type: string
+                  description: Contract version (semver)
+                schema:
+                  type: object
+                  description: OpenAPI/JSON Schema definition
+                description:
+                  type: string
+                  description: Contract description
+            example:
+              name: "UserAPI"
+              version: "1.0.0"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+      responses:
+        '200':
+          description: Contract created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Contract with same name/version exists
+
+    get:
+      tags: [Contracts]
+      summary: List contracts
+      description: List all contracts
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, deprecated, draft]
+          description: Filter by status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by name
+      responses:
+        '200':
+          description: List of contracts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contracts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Contract'
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/fall/contracts/validate:
+    post:
+      tags: [Contracts]
+      summary: Validate against contract
+      description: Validate a request/response against a contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [contractId, endpoint, method]
+              properties:
+                contractId:
+                  type: string
+                  description: Contract ID to validate against
+                endpoint:
+                  type: string
+                  description: Endpoint path
+                method:
+                  type: string
+                  description: HTTP method
+                request:
+                  type: object
+                  description: Request body to validate
+                response:
+                  type: object
+                  description: Response body to validate
+            example:
+              contractId: "contract_abc123"
+              endpoint: "/users"
+              method: "POST"
+              request:
+                email: "invalid-email"
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                        expected:
+                          type: string
+                        actual:
+                          type: string
+                  warnings:
+                    type: array
+                    items:
+                      type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/fall/contracts/{id}:
+    get:
+      tags: [Contracts]
+      summary: Get contract
+      description: Get a specific contract by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Contract ID
+      responses:
+        '200':
+          description: Contract details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ========== Healing API ==========
+  /api/fall/healing/analyze:
+    post:
+      tags: [Healing]
+      summary: Analyze issue
+      description: Analyze an issue for potential auto-healing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [errorType, errorMessage]
+              properties:
+                errorType:
+                  type: string
+                  description: Type of error (runtime, validation, network, etc.)
+                errorMessage:
+                  type: string
+                  description: Error message
+                stackTrace:
+                  type: string
+                  description: Stack trace
+                context:
+                  type: object
+                  description: Additional context
+            example:
+              errorType: "network"
+              errorMessage: "Connection timeout"
+              stackTrace: "Error at fetch..."
+      responses:
+        '200':
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealingAnalysis'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/fall/healing/fix:
+    post:
+      tags: [Healing]
+      summary: Apply healing fix
+      description: Apply a healing fix
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [analysisId, fixId]
+              properties:
+                analysisId:
+                  type: string
+                  description: Analysis ID from /analyze
+                fixId:
+                  type: string
+                  description: Fix ID to apply
+                dryRun:
+                  type: boolean
+                  default: false
+                  description: Preview without applying
+            example:
+              analysisId: "heal_abc123"
+              fixId: "fix_001"
+              dryRun: false
+      responses:
+        '200':
+          description: Healing result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  healingId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [applied, skipped, failed]
+                  fixId:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                      message:
+                        type: string
+                      duration:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Fix already applied
+
+  /api/fall/healing/history:
+    get:
+      tags: [Healing]
+      summary: Get healing history
+      description: Get healing history
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start date (ISO 8601)
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End date (ISO 8601)
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [success, failed, pending]
+          description: Filter by status
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+          description: Maximum results
+      responses:
+        '200':
+          description: Healing history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  healings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        errorType:
+                          type: string
+                        fixApplied:
+                          type: string
+                        status:
+                          type: string
+                        timestamp:
+                          type: string
+                          format: date-time
+                  stats:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      successRate:
+                        type: number
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ========== Graph API ==========
+  /api/winter/graph/data:
+    post:
+      tags: [Graph]
+      summary: Query/modify graph data
+      description: Query or modify graph data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [operation]
+              properties:
+                operation:
+                  type: string
+                  enum: [query, insert, update, delete]
+                  description: Operation type
+                nodes:
+                  type: array
+                  items:
+                    type: object
+                  description: Node data for insert/update
+                edges:
+                  type: array
+                  items:
+                    type: object
+                  description: Edge data for relationships
+                query:
+                  type: string
+                  description: Graph query (for query operation)
+            example:
+              operation: "query"
+              query: "MATCH (u:User) RETURN u LIMIT 10"
+      responses:
+        '200':
+          description: Graph operation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  operation:
+                    type: string
+                  results:
+                    type: object
+                    properties:
+                      nodes:
+                        type: array
+                        items:
+                          type: object
+                      edges:
+                        type: array
+                        items:
+                          type: object
+                  metadata:
+                    type: object
+                    properties:
+                      nodesAffected:
+                        type: integer
+                      executionTime:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/winter/graph/permissions/{nodeId}:
+    get:
+      tags: [Graph]
+      summary: Get node permissions
+      description: Get permissions for a graph node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Node ID
+      responses:
+        '200':
+          description: Node permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodeId:
+                    type: string
+                  permissions:
+                    type: object
+                    properties:
+                      read:
+                        type: array
+                        items:
+                          type: string
+                      write:
+                        type: array
+                        items:
+                          type: string
+                      admin:
+                        type: array
+                        items:
+                          type: string
+                  inherited:
+                    type: object
+                    nullable: true
+                    properties:
+                      from:
+                        type: string
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/winter/graph/federated/query:
+    post:
+      tags: [Graph]
+      summary: Federated query
+      description: Execute a federated query across multiple data sources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: Federated query string
+                sources:
+                  type: array
+                  items:
+                    type: string
+                  description: Data sources to query
+                timeout:
+                  type: integer
+                  default: 30000
+                  description: Query timeout in ms
+                mergeStrategy:
+                  type: string
+                  enum: [union, intersection]
+                  description: How to merge results
+            example:
+              query: "SELECT * FROM users WHERE active = true"
+              sources: ["postgres", "mongodb"]
+              timeout: 30000
+      responses:
+        '200':
+          description: Federated query result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  queryId:
+                    type: string
+                  status:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source:
+                          type: string
+                        data:
+                          type: array
+                          items:
+                            type: object
+                        count:
+                          type: integer
+                  merged:
+                    type: array
+                    items:
+                      type: object
+                  executionTime:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '504':
+          description: Query exceeded timeout
+
+  # ========== Versions API ==========
+  /api/summer/versions:
+    post:
+      tags: [Versions]
+      summary: Create version
+      description: Create a new version
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resourceType, resourceId, data]
+              properties:
+                resourceType:
+                  type: string
+                  description: Type of resource (config, schema, data)
+                resourceId:
+                  type: string
+                  description: Resource identifier
+                data:
+                  type: object
+                  description: Version data
+                message:
+                  type: string
+                  description: Version commit message
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Version tags
+            example:
+              resourceType: "config"
+              resourceId: "app_settings"
+              data:
+                rateLimit: 1000
+              message: "Updated rate limits"
+      responses:
+        '200':
+          description: Version created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Versions]
+      summary: List versions
+      description: List versions for a resource
+      parameters:
+        - name: resourceType
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Type of resource
+        - name: resourceId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Resource identifier
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+          description: Maximum results
+      responses:
+        '200':
+          description: List of versions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Version'
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/summer/versions/{id}/restore:
+    post:
+      tags: [Versions]
+      summary: Restore version
+      description: Restore to a specific version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Version ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createBackup:
+                  type: boolean
+                  default: true
+                  description: Create backup before restore
+      responses:
+        '200':
+          description: Restore result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  restored:
+                    type: boolean
+                  fromVersion:
+                    type: string
+                  toVersion:
+                    type: string
+                  backupId:
+                    type: string
+                  restoredAt:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Resource is locked
+
+  /api/summer/versions/{id}/diff/{compareId}:
+    get:
+      tags: [Versions]
+      summary: Get version diff
+      description: Get diff between two versions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: First version ID
+        - name: compareId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Second version ID
+      responses:
+        '200':
+          description: Version diff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version1:
+                    type: string
+                  version2:
+                    type: string
+                  diff:
+                    type: object
+                    properties:
+                      added:
+                        type: array
+                        items:
+                          type: object
+                      removed:
+                        type: array
+                        items:
+                          type: object
+                      changed:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            path:
+                              type: string
+                            from: {}
+                            to: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ========== Explain API ==========
+  /api/summer/explain:
+    post:
+      tags: [Explain]
+      summary: Explain query
+      description: Analyze and explain a query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: The query to explain
+                queryType:
+                  type: string
+                  enum: [sql, graphql, natural, auto]
+                  default: auto
+                  description: Query type
+                includeOptimizations:
+                  type: boolean
+                  default: true
+                  description: Include optimization suggestions
+            example:
+              query: "SELECT * FROM users WHERE status = 'active'"
+              queryType: "sql"
+              includeOptimizations: true
+      responses:
+        '200':
+          description: Query explanation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryExplanation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          description: Unable to parse query
+
+  /api/summer/explain/{queryId}:
+    get:
+      tags: [Explain]
+      summary: Get explanation
+      description: Get a previously analyzed query explanation
+      parameters:
+        - name: queryId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Query ID
+      responses:
+        '200':
+          description: Query explanation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryExplanation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ========== RetOps API ==========
+  /api/summer/retops/metrics:
+    get:
+      tags: [RetOps]
+      summary: Get metrics
+      description: Get retrieval operation metrics
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [hour, day, week, month]
+          description: Time period
+        - name: operation
+          in: query
+          schema:
+            type: string
+          description: Filter by operation type
+      responses:
+        '200':
+          description: RetOps metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  period:
+                    type: string
+                  metrics:
+                    type: object
+                    properties:
+                      totalOperations:
+                        type: integer
+                      avgLatency:
+                        type: integer
+                      p95Latency:
+                        type: integer
+                      p99Latency:
+                        type: integer
+                      errorRate:
+                        type: number
+                      throughput:
+                        type: integer
+                  breakdown:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        count:
+                          type: integer
+                        avgLatency:
+                          type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/summer/retops/stats:
+    get:
+      tags: [RetOps]
+      summary: Get statistics
+      description: Get retrieval statistics
+      parameters:
+        - name: namespace
+          in: query
+          schema:
+            type: string
+          description: Filter by namespace
+      responses:
+        '200':
+          description: RetOps statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalDocuments:
+                    type: integer
+                  totalVectors:
+                    type: integer
+                  indexSize:
+                    type: string
+                  namespaces:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        documents:
+                          type: integer
+                  lastUpdated:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/summer/retops/quality:
+    get:
+      tags: [RetOps]
+      summary: Get quality metrics
+      description: Get retrieval quality metrics
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [day, week, month]
+          description: Time period
+      responses:
+        '200':
+          description: Quality metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  period:
+                    type: string
+                  quality:
+                    type: object
+                    properties:
+                      avgRelevanceScore:
+                        type: number
+                      mrr:
+                        type: number
+                        description: Mean Reciprocal Rank
+                      ndcg:
+                        type: number
+                        description: Normalized Discounted Cumulative Gain
+                      precision:
+                        type: number
+                      recall:
+                        type: number
+                  trends:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: number
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/summer/retops/alerts:
+    get:
+      tags: [RetOps]
+      summary: Get alerts
+      description: Get active alerts for retrieval operations
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [critical, warning, info]
+          description: Filter by severity
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, resolved]
+          description: Filter by status
+      responses:
+        '200':
+          description: RetOps alerts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alerts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        severity:
+                          type: string
+                          enum: [critical, warning, info]
+                        type:
+                          type: string
+                        message:
+                          type: string
+                        triggeredAt:
+                          type: string
+                          format: date-time
+                        status:
+                          type: string
+                          enum: [active, resolved]
+                  summary:
+                    type: object
+                    properties:
+                      critical:
+                        type: integer
+                      warning:
+                        type: integer
+                      info:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -748,6 +2281,264 @@ components:
       properties:
         error:
           type: string
+
+    # CI API Schemas
+    CITrace:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, success, failed]
+        branch:
+          type: string
+        commit:
+          type: string
+        repository:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        duration:
+          type: integer
+          description: Duration in milliseconds
+        metadata:
+          type: object
+
+    TestResult:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [passed, failed, skipped]
+        duration:
+          type: integer
+        file:
+          type: string
+        error:
+          type: string
+          nullable: true
+
+    # Autopilot API Schemas
+    AnalysisResult:
+      type: object
+      properties:
+        analysisId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+        issues:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              severity:
+                type: string
+                enum: [critical, high, medium, low]
+              type:
+                type: string
+              file:
+                type: string
+              line:
+                type: integer
+              message:
+                type: string
+              suggestion:
+                type: string
+        summary:
+          type: object
+          properties:
+            critical:
+              type: integer
+            high:
+              type: integer
+            medium:
+              type: integer
+            low:
+              type: integer
+
+    FixResult:
+      type: object
+      properties:
+        fixId:
+          type: string
+        status:
+          type: string
+          enum: [completed, partial, failed]
+        fixes:
+          type: array
+          items:
+            type: object
+            properties:
+              issueId:
+                type: string
+              file:
+                type: string
+              diff:
+                type: string
+              applied:
+                type: boolean
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            applied:
+              type: integer
+            skipped:
+              type: integer
+
+    AutopilotPR:
+      type: object
+      properties:
+        prId:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+          enum: [open, merged, closed]
+        branch:
+          type: string
+        commits:
+          type: integer
+        filesChanged:
+          type: integer
+
+    # Contracts API Schemas
+    Contract:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        status:
+          type: string
+          enum: [active, deprecated, draft]
+        schema:
+          type: object
+        description:
+          type: string
+        endpoints:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    # Healing API Schemas
+    HealingAnalysis:
+      type: object
+      properties:
+        analysisId:
+          type: string
+        canHeal:
+          type: boolean
+        confidence:
+          type: number
+        suggestedFixes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              description:
+                type: string
+              impact:
+                type: string
+                enum: [low, medium, high]
+              automated:
+                type: boolean
+        rootCause:
+          type: string
+
+    # Versions API Schemas
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        resourceType:
+          type: string
+        resourceId:
+          type: string
+        data:
+          type: object
+        message:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+
+    # Explain API Schemas
+    QueryExplanation:
+      type: object
+      properties:
+        queryId:
+          type: string
+        originalQuery:
+          type: string
+        explanation:
+          type: object
+          properties:
+            steps:
+              type: array
+              items:
+                type: object
+                properties:
+                  step:
+                    type: integer
+                  operation:
+                    type: string
+                  table:
+                    type: string
+                  estimatedRows:
+                    type: integer
+            totalCost:
+              type: integer
+            estimatedTime:
+              type: string
+        optimizations:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              suggestion:
+                type: string
+              impact:
+                type: string
+                enum: [low, medium, high]
+              estimatedImprovement:
+                type: string
+        createdAt:
+          type: string
+          format: date-time
 
   responses:
     BadRequest:

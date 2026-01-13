@@ -1,0 +1,198 @@
+name: Seizn CI - Trace to Test to Fix
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: '20'
+  SEIZN_CI_MODE: 'true'
+
+jobs:
+  trace-collect:
+    name: Collect Flight Recorder Traces
+    runs-on: ubuntu-latest
+    outputs:
+      trace-id: ${{ steps.collect.outputs.trace-id }}
+      has-traces: ${{ steps.collect.outputs.has-traces }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+
+      - name: Run tests with trace collection
+        id: collect
+        run: |
+          npx ts-node scripts/ci/trace-collector.ts \
+            --output=.seizn-traces \
+            --format=json
+        env:
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
+          SEIZN_CI_TOKEN: ${{ secrets.SEIZN_CI_TOKEN }}
+          CI: 'true'
+
+      - name: Upload trace artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: seizn-traces
+          path: .seizn-traces/
+          retention-days: 7
+
+  test-generate:
+    name: Generate Tests from Traces
+    runs-on: ubuntu-latest
+    needs: trace-collect
+    if: needs.trace-collect.outputs.has-traces == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download trace artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: seizn-traces
+          path: .seizn-traces/
+
+      - name: Generate tests from traces
+        id: generate
+        run: |
+          npx ts-node scripts/ci/test-generator.ts \
+            --input=.seizn-traces \
+            --output=.seizn-generated-tests \
+            --trace-id=${{ needs.trace-collect.outputs.trace-id }}
+        env:
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
+
+      - name: Upload generated tests
+        uses: actions/upload-artifact@v4
+        with:
+          name: seizn-generated-tests
+          path: .seizn-generated-tests/
+          retention-days: 7
+
+  report:
+    name: Generate CI Report
+    runs-on: ubuntu-latest
+    needs: [trace-collect, test-generate]
+    if: always() && github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download trace artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: seizn-traces
+          path: .seizn-traces/
+        continue-on-error: true
+
+      - name: Download generated tests
+        uses: actions/download-artifact@v4
+        with:
+          name: seizn-generated-tests
+          path: .seizn-generated-tests/
+        continue-on-error: true
+
+      - name: Format CI report
+        id: report
+        run: |
+          npx ts-node scripts/ci/report-formatter.ts \
+            --traces=.seizn-traces \
+            --tests=.seizn-generated-tests \
+            --output=ci-report.md \
+            --format=github
+        env:
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
+
+      - name: Post PR comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const reportPath = 'ci-report.md';
+
+            let body = '## Seizn CI Report\n\n';
+
+            if (fs.existsSync(reportPath)) {
+              body += fs.readFileSync(reportPath, 'utf8');
+            } else {
+              body += 'No traces collected for this run.\n';
+            }
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## Seizn CI Report')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      - name: Upload CI report to Seizn
+        run: |
+          npx ts-node scripts/ci/report-formatter.ts \
+            --traces=.seizn-traces \
+            --tests=.seizn-generated-tests \
+            --upload \
+            --pr-number=${{ github.event.pull_request.number }} \
+            --commit-sha=${{ github.sha }}
+        env:
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
+          SEIZN_CI_TOKEN: ${{ secrets.SEIZN_CI_TOKEN }}
+        continue-on-error: true

@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createClient } from '@supabase/supabase-js';
+import {
+  AuthErrors,
+  ValidationErrors,
+  ServerErrors,
+  ErrorCodes,
+  createApiError,
+} from '@/lib/api-error';
 
 // Helper to get user from session
 async function getUserFromToken(request: NextRequest) {
@@ -26,7 +33,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromToken(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return AuthErrors.unauthorized('organizations');
     }
 
     const supabase = createServerClient();
@@ -47,7 +54,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Fetch organizations error:', error);
-      return NextResponse.json({ error: 'Failed to fetch organizations' }, { status: 500 });
+      return ServerErrors.database('fetch_organizations');
     }
 
     const organizations = memberships?.map((m) => ({
@@ -63,7 +70,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Organizations GET error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('list_organizations');
   }
 }
 
@@ -72,14 +79,14 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getUserFromToken(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return AuthErrors.unauthorized('organizations');
     }
 
     const body = await request.json();
     const { name, slug } = body;
 
     if (!name || name.trim().length < 2) {
-      return NextResponse.json({ error: 'Organization name must be at least 2 characters' }, { status: 400 });
+      return ValidationErrors.invalidField('name', 'must be at least 2 characters');
     }
 
     // Validate and sanitize slug
@@ -91,7 +98,7 @@ export async function POST(request: NextRequest) {
       .substring(0, 50);
 
     if (cleanSlug.length < 2) {
-      return NextResponse.json({ error: 'Invalid slug' }, { status: 400 });
+      return ValidationErrors.invalidField('slug', 'must be at least 2 characters');
     }
 
     const supabase = createServerClient();
@@ -104,7 +111,12 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (existing) {
-      return NextResponse.json({ error: 'Slug already taken' }, { status: 400 });
+      return createApiError({
+        code: ErrorCodes.DUPLICATE_ENTRY,
+        message: 'This organization slug is already taken',
+        status: 409,
+        details: { slug: cleanSlug },
+      });
     }
 
     // Check org limit (free users: 1 org, paid: 5)
@@ -115,7 +127,12 @@ export async function POST(request: NextRequest) {
       .eq('role', 'owner');
 
     if ((orgCount || 0) >= 5) {
-      return NextResponse.json({ error: 'Organization limit reached' }, { status: 400 });
+      return createApiError({
+        code: ErrorCodes.QUOTA_EXCEEDED,
+        message: 'Organization limit reached (max 5)',
+        status: 429,
+        details: { limit: 5, current: orgCount },
+      });
     }
 
     // Create organization with owner
@@ -127,7 +144,7 @@ export async function POST(request: NextRequest) {
 
     if (createError) {
       console.error('Create organization error:', createError);
-      return NextResponse.json({ error: 'Failed to create organization' }, { status: 500 });
+      return ServerErrors.database('create_organization');
     }
 
     // Fetch the created org
@@ -143,7 +160,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Organizations POST error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('create_organization');
   }
 }
 
@@ -152,14 +169,14 @@ export async function PATCH(request: NextRequest) {
   try {
     const user = await getUserFromToken(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return AuthErrors.unauthorized('organizations');
     }
 
     const body = await request.json();
     const { id, name, settings } = body;
 
     if (!id) {
-      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
+      return ValidationErrors.missingField('id');
     }
 
     const supabase = createServerClient();
@@ -173,7 +190,7 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!membership || !['owner', 'admin'].includes(membership.role)) {
-      return NextResponse.json({ error: 'Not authorized to update this organization' }, { status: 403 });
+      return AuthErrors.unauthorized('organization');
     }
 
     // Build update object
@@ -193,7 +210,7 @@ export async function PATCH(request: NextRequest) {
 
     if (error) {
       console.error('Update organization error:', error);
-      return NextResponse.json({ error: 'Failed to update organization' }, { status: 500 });
+      return ServerErrors.database('update_organization');
     }
 
     return NextResponse.json({
@@ -202,7 +219,7 @@ export async function PATCH(request: NextRequest) {
     });
   } catch (error) {
     console.error('Organizations PATCH error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('update_organization');
   }
 }
 
@@ -211,14 +228,14 @@ export async function DELETE(request: NextRequest) {
   try {
     const user = await getUserFromToken(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return AuthErrors.unauthorized('organizations');
     }
 
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get('id');
 
     if (!orgId) {
-      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
+      return ValidationErrors.missingField('id');
     }
 
     const supabase = createServerClient();
@@ -232,7 +249,7 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (!membership || membership.role !== 'owner') {
-      return NextResponse.json({ error: 'Only the owner can delete the organization' }, { status: 403 });
+      return AuthErrors.unauthorized('organization');
     }
 
     // Delete organization (cascades to members, invites)
@@ -243,7 +260,7 @@ export async function DELETE(request: NextRequest) {
 
     if (error) {
       console.error('Delete organization error:', error);
-      return NextResponse.json({ error: 'Failed to delete organization' }, { status: 500 });
+      return ServerErrors.database('delete_organization');
     }
 
     return NextResponse.json({
@@ -252,6 +269,6 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error('Organizations DELETE error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('delete_organization');
   }
 }

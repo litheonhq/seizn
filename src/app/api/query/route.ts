@@ -8,6 +8,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 
 // POST /api/query - Query with memory-augmented context
 export async function POST(request: NextRequest) {
@@ -37,10 +38,7 @@ export async function POST(request: NextRequest) {
         { userId, keyId, endpoint: '/api/query', method: 'POST', startTime },
         400
       );
-      return NextResponse.json(
-        { error: 'query (string) is required' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('query');
     }
 
     const supabase = createServerClient();
@@ -105,9 +103,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Query API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('query');
   }
 }

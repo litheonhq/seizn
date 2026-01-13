@@ -823,6 +823,178 @@
           "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
         }
       ]
+    },
+    "componentsPage": {
+      "title": "UI Components",
+      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
+      "all": "All",
+      "components": "Components",
+      "props": "Props",
+      "usage": "Usage Example",
+      "propName": "Name",
+      "propType": "Type",
+      "propDefault": "Default",
+      "propDescription": "Description",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "categories": {
+        "graph": {
+          "title": "Graph Components",
+          "description": "Interactive graph visualization for permission and relationship mapping"
+        },
+        "explain": {
+          "title": "Explain Components",
+          "description": "Explainability and attribution visualization for RAG results"
+        },
+        "retops": {
+          "title": "RetOps Components",
+          "description": "Retrieval operations monitoring and analytics dashboard"
+        }
+      },
+      "components": {
+        "graphCanvas": {
+          "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
+        },
+        "nodeRenderer": {
+          "description": "Custom node renderer for graph visualization. Displays node type, status, permissions with styled appearance."
+        },
+        "edgeRenderer": {
+          "description": "Custom edge renderer for graph connections. Supports directed, undirected, and bidirectional edges with custom styling."
+        },
+        "graphControls": {
+          "description": "Control panel for graph filtering and zoom. Filter by node type, edge type, and search."
+        },
+        "permissionPanel": {
+          "description": "Side panel displaying detailed permission information for selected nodes."
+        },
+        "explainPanel": {
+          "description": "Expandable panel showing full retrieval explanation including score breakdown and attributions."
+        },
+        "scoreBreakdown": {
+          "description": "Visual breakdown of relevance score components (vector, keyword, rerank, recency)."
+        },
+        "attributionList": {
+          "description": "List of source attributions showing which documents contributed to the result."
+        },
+        "highlightedPassage": {
+          "description": "Text passage with highlighted matching spans (exact match, semantic match, keyword, entity)."
+        },
+        "retOpsDashboard": {
+          "description": "Main dashboard for retrieval operations monitoring with auto-refresh and period selection."
+        },
+        "metricsOverview": {
+          "description": "Overview cards showing key metrics: QPS, latency, cache hit rate, error rate, MRR, groundedness."
+        },
+        "queryVolumeChart": {
+          "description": "Line chart showing query volume over time with search type distribution."
+        },
+        "latencyDistribution": {
+          "description": "Latency percentile bar chart and trend visualization with SLO compliance indicator."
+        },
+        "qualityTrend": {
+          "description": "Area chart showing search quality trends (MRR, nDCG, groundedness) with precision/recall at K."
+        },
+        "topQueries": {
+          "description": "Ranked list of most frequent queries with latency, cache hit rate, and result count."
+        },
+        "alertsPanel": {
+          "description": "Alert management panel with severity filtering, acknowledgment, and status tracking."
+        }
+      }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5-Minute Quickstart | Seizn",
+        "description": "Add AI memory in 5 minutes with just 10 lines of code"
+      },
+      "badge": "5 min tutorial",
+      "noCreditCard": "No credit card required",
+      "title": "Get Started with Seizn",
+      "subtitle": "Add persistent memory to your AI in under 5 minutes. Follow along and check off each step as you complete it.",
+      "getApiKey": "Get API Key",
+      "fullExample": "Complete Example (10 lines)",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "progress": "Progress",
+      "stepsLabel": "steps",
+      "steps": {
+        "getApiKey": {
+          "title": "Get Your API Key",
+          "time": "30 sec",
+          "description": "Sign up and generate your API key from the dashboard.",
+          "actionLabel": "Go to Dashboard"
+        },
+        "install": {
+          "title": "Install the SDK",
+          "time": "30 sec",
+          "description": "Install the Seizn SDK using your preferred package manager."
+        },
+        "saveMemory": {
+          "title": "Save a Memory",
+          "time": "2 min",
+          "description": "Store information that your AI can recall later."
+        },
+        "searchMemory": {
+          "title": "Search Memories",
+          "time": "2 min",
+          "description": "Retrieve relevant memories using natural language search."
+        }
+      },
+      "completion": {
+        "title": "Congratulations!",
+        "description": "You've completed the quickstart. Your AI now has persistent memory.",
+        "readDocs": "Read the Docs",
+        "goToDashboard": "Go to Dashboard"
+      },
+      "expectedOutput": {
+        "title": "Expected Output",
+        "description": "When you search for memories, you'll receive a response like this:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API Reference",
+          "description": "Explore all endpoints and options for advanced use cases."
+        },
+        "sdkExamples": {
+          "title": "SDK Examples",
+          "description": "Copy-paste examples for Python, TypeScript, and more."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Common questions about memory types, namespaces, and best practices."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API Reference | Seizn",
+        "description": "Complete API documentation for Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, and RetOps APIs"
+      },
+      "title": "API Reference",
+      "description": "Complete documentation for all Seizn APIs including Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, and RetOps.",
+      "auth": {
+        "title": "Authentication",
+        "description": "All API endpoints require authentication via API key. Include your key in the X-API-Key header."
+      },
+      "sidebar": {
+        "title": "API Groups"
+      },
+      "endpoint": {
+        "parameters": "Parameters",
+        "requestBody": "Request Body",
+        "response": "Response",
+        "errorCodes": "Error Codes"
+      },
+      "table": {
+        "name": "Name",
+        "type": "Type",
+        "required": "Required",
+        "description": "Description",
+        "code": "Code",
+        "message": "Message"
+      },
+      "copy": "Copy",
+      "copied": "Copied!"
     }
   }
 }

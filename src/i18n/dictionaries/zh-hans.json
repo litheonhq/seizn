@@ -823,6 +823,83 @@
           "answer": "他们需要：1) 数据范围（存储/不存储什么），2) 加密（静态：AES-256，传输中：TLS），3) 租户隔离方法，4) 删除/保留策略，5) 审计日志访问，6) 密钥轮换/过期策略。在文档中保留安全与治理页面。"
         }
       ]
+    },
+    "componentsPage": {
+      "title": "UI Components",
+      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
+      "all": "All",
+      "components": {
+        "graphCanvas": {
+          "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
+        },
+        "nodeRenderer": {
+          "description": "Custom node renderer for graph visualization. Displays node type, status, permissions with styled appearance."
+        },
+        "edgeRenderer": {
+          "description": "Custom edge renderer for graph connections. Supports directed, undirected, and bidirectional edges with custom styling."
+        },
+        "graphControls": {
+          "description": "Control panel for graph filtering and zoom. Filter by node type, edge type, and search."
+        },
+        "permissionPanel": {
+          "description": "Side panel displaying detailed permission information for selected nodes."
+        },
+        "explainPanel": {
+          "description": "Expandable panel showing full retrieval explanation including score breakdown and attributions."
+        },
+        "scoreBreakdown": {
+          "description": "Visual breakdown of relevance score components (vector, keyword, rerank, recency)."
+        },
+        "attributionList": {
+          "description": "List of source attributions showing which documents contributed to the result."
+        },
+        "highlightedPassage": {
+          "description": "Text passage with highlighted matching spans (exact match, semantic match, keyword, entity)."
+        },
+        "retOpsDashboard": {
+          "description": "Main dashboard for retrieval operations monitoring with auto-refresh and period selection."
+        },
+        "metricsOverview": {
+          "description": "Overview cards showing key metrics: QPS, latency, cache hit rate, error rate, MRR, groundedness."
+        },
+        "queryVolumeChart": {
+          "description": "Line chart showing query volume over time with search type distribution."
+        },
+        "latencyDistribution": {
+          "description": "Latency percentile bar chart and trend visualization with SLO compliance indicator."
+        },
+        "qualityTrend": {
+          "description": "Area chart showing search quality trends (MRR, nDCG, groundedness) with precision/recall at K."
+        },
+        "topQueries": {
+          "description": "Ranked list of most frequent queries with latency, cache hit rate, and result count."
+        },
+        "alertsPanel": {
+          "description": "Alert management panel with severity filtering, acknowledgment, and status tracking."
+        }
+      },
+      "props": "Props",
+      "usage": "Usage Example",
+      "propName": "Name",
+      "propType": "Type",
+      "propDefault": "Default",
+      "propDescription": "Description",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "categories": {
+        "graph": {
+          "title": "Graph Components",
+          "description": "Interactive graph visualization for permission and relationship mapping"
+        },
+        "explain": {
+          "title": "Explain Components",
+          "description": "Explainability and attribution visualization for RAG results"
+        },
+        "retops": {
+          "title": "RetOps Components",
+          "description": "Retrieval operations monitoring and analytics dashboard"
+        }
+      }
     }
   }
 }
