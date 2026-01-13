@@ -18,6 +18,7 @@ interface WeaviateObject {
   properties: Record<string, unknown>;
   vector?: number[];
   _additional?: {
+    id?: string;
     certainty?: number;
     distance?: number;
     score?: number;
