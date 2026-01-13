@@ -6,7 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
-import { getSemanticCache, lookupCache, storeInCache } from '@/lib/summer/cache';
+import { getSemanticCache, lookupCache as _lookupCache, storeInCache } from '@/lib/summer/cache';
 import { getEmbeddingProvider } from '@/lib/summer/embedding';
 import type { CachedResponse } from '@/lib/summer/cache';
 

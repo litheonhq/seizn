@@ -52,7 +52,7 @@ export function SignalFeedbackForm({
     setSuccess(false);
 
     try {
-      let body: Record<string, unknown> = {
+      const body: Record<string, unknown> = {
         signal_type: signalType,
         query,
       };

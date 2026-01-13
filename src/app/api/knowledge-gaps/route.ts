@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       return authErrorResponse(authResult.authError);
     }
 
-    const { userId, keyId, plan, rateLimitHeaders } = authResult;
+    const { userId, keyId, plan: _plan, rateLimitHeaders } = authResult;
 
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;

@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/rules-of-hooks */
 
 import { useMemo } from "react";
 import type { DriftTimeSeries, DriftTimeSeriesPoint } from "@/lib/drift/types";

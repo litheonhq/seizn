@@ -325,7 +325,7 @@ function analyzeContextRelevance(trace: TraceData): RCACandidate | null {
 
 function analyzeTimeout(trace: TraceData): RCACandidate | null {
   const evidence: string[] = [];
-  let confidence = 0.7;
+  const confidence = 0.7;
 
   if (trace.latencyMs !== undefined) {
     evidence.push(`Total latency: ${trace.latencyMs}ms`);

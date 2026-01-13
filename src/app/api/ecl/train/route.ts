@@ -23,10 +23,10 @@ import type {
   AddTrainingPairsRequest,
   StartTrainingRequest,
   TrainingConfig,
-  ECLTranslationModelRow,
+  ECLTranslationModelRow as _ECLTranslationModelRow,
   ECLTrainingPairRow,
 } from '@/lib/ecl/types';
-import { rowToModel, rowToPair } from '@/lib/ecl/types';
+import { rowToModel as _rowToModel, rowToPair } from '@/lib/ecl/types';
 
 // ============================================
 // POST /api/ecl/train - Add training pairs or start training
@@ -254,7 +254,7 @@ async function handleStartTraining(
   }
 
   // Get training pairs
-  const { data: pairRows, count } = await supabase
+  const { data: pairRows, count: _count } = await supabase
     .from('ecl_training_pairs')
     .select('*', { count: 'exact' })
     .eq('model_id', body.modelId);

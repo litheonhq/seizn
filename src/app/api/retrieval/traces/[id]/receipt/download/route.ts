@@ -83,7 +83,7 @@ export async function GET(
  * Generate a simple PDF document from text content.
  * This is a basic implementation - for production, use a proper PDF library.
  */
-function generateSimplePdf(text: string, receipt: { receipt_id: string; timestamp: string }): Buffer {
+function generateSimplePdf(text: string, _receipt: { receipt_id: string; timestamp: string }): Buffer {
   // Clean and prepare text for PDF
   const lines = text.split('\n');
   const maxWidth = 80;

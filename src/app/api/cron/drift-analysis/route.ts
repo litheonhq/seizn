@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Collect snapshot and analyze
-        const { snapshot, alerts } = await collector.collectSnapshot(
+        const { snapshot: _snapshot, alerts } = await collector.collectSnapshot(
           collection.id,
           collection.user_id,
           collection.org_id

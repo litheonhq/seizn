@@ -17,7 +17,7 @@ import {
   serializeToJson,
   PolicyParseError,
 } from '@/lib/policy-simulator';
-import type { PolicyType, CreatePolicyInput } from '@/lib/policy-simulator';
+import type { PolicyType, CreatePolicyInput as _CreatePolicyInput } from '@/lib/policy-simulator';
 
 // ============================================
 // GET /api/policies - List policies

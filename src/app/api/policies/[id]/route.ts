@@ -148,7 +148,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (body.is_active !== undefined) {
       if (body.is_active === true) {
         // Use the database function to activate (deactivates others of same type)
-        const { data: activated, error: activateError } = await supabase.rpc(
+        const { data: _activated, error: activateError } = await supabase.rpc(
           'activate_policy',
           { p_policy_id: id }
         );

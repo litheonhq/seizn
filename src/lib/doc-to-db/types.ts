@@ -98,8 +98,8 @@ export interface DocumentStructure {
 /**
  * Structure for database insertion (without id and timestamps)
  */
-export interface DocumentStructureInsert
-  extends Omit<DocumentStructure, 'id' | 'created_at' | 'updated_at'> {}
+export type DocumentStructureInsert =
+  Omit<DocumentStructure, 'id' | 'created_at' | 'updated_at'>;
 
 // ============================================================
 // Structure Cells
@@ -133,7 +133,7 @@ export interface StructureCell {
 /**
  * Cell for database insertion
  */
-export interface StructureCellInsert extends Omit<StructureCell, 'id' | 'created_at'> {}
+export type StructureCellInsert = Omit<StructureCell, 'id' | 'created_at'>;
 
 // ============================================================
 // Extraction Types

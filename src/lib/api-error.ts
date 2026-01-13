@@ -27,11 +27,13 @@ export const ErrorCodes = {
 
   // Validation (3xxx)
   VALIDATION_ERROR: 'VALIDATION_ERROR',
+  VALIDATION_FAILED: 'VALIDATION_FAILED',
   MISSING_REQUIRED_FIELD: 'MISSING_REQUIRED_FIELD',
   INVALID_FIELD_VALUE: 'INVALID_FIELD_VALUE',
   INVALID_REQUEST_BODY: 'INVALID_REQUEST_BODY',
 
   // Resource (4xxx)
+  NOT_FOUND: 'NOT_FOUND',
   RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
   MEMORY_NOT_FOUND: 'MEMORY_NOT_FOUND',
   COLLECTION_NOT_FOUND: 'COLLECTION_NOT_FOUND',
@@ -86,11 +88,13 @@ const Hints: Record<ErrorCode, string> = {
 
   // Validation
   [ErrorCodes.VALIDATION_ERROR]: 'Check request body against API docs',
+  [ErrorCodes.VALIDATION_FAILED]: 'Check request parameters and constraints',
   [ErrorCodes.MISSING_REQUIRED_FIELD]: 'Add missing field to request body',
   [ErrorCodes.INVALID_FIELD_VALUE]: 'Check field type and constraints in docs',
   [ErrorCodes.INVALID_REQUEST_BODY]: 'Ensure JSON is valid and properly formatted',
 
   // Resource
+  [ErrorCodes.NOT_FOUND]: 'Verify resource ID exists and is accessible',
   [ErrorCodes.RESOURCE_NOT_FOUND]: 'Verify resource ID exists and is accessible',
   [ErrorCodes.MEMORY_NOT_FOUND]: 'Check memory ID or use GET /api/memories to search',
   [ErrorCodes.COLLECTION_NOT_FOUND]: 'Verify collection exists in your namespace',
@@ -258,6 +262,16 @@ export const ValidationErrors = {
       message: expected ? `Invalid format for ${field}: expected ${expected}` : `Invalid format for ${field}`,
       status: 400,
       details: { field, expected },
+    }),
+
+  invalidValue: (field: string, value: unknown, expected?: string) =>
+    createApiError({
+      code: ErrorCodes.INVALID_FIELD_VALUE,
+      message: expected
+        ? `Invalid value '${value}' for ${field}: expected ${expected}`
+        : `Invalid value '${value}' for ${field}`,
+      status: 400,
+      details: { field, value, expected },
     }),
 
   invalidBody: (reason?: string) =>

@@ -13,7 +13,7 @@ import {
   ServerErrors,
 } from '@/lib/api-error';
 import { explainRetrieval } from '@/lib/summer/explain';
-import type { ExplainRequest, ExplainResponse, StoredExplanation } from '@/lib/summer/explain/types';
+import type { ExplainRequest, ExplainResponse as _ExplainResponse, StoredExplanation } from '@/lib/summer/explain/types';
 
 // In-memory storage for explanations (would be Redis/DB in production)
 const explanationStore = new Map<string, StoredExplanation>();

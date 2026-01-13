@@ -9,7 +9,7 @@ import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-a
 import {
   getSimulation,
   getSimulationResults,
-  analyzeDetailedDiff,
+  analyzeDetailedDiff as _analyzeDetailedDiff,
   calculateDiffStatistics,
 } from '@/lib/policy-simulator';
 

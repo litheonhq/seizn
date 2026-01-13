@@ -172,7 +172,7 @@ function buildTimeline(
     input?: Record<string, unknown>;
     output?: Record<string, unknown>;
   }>,
-  events: Array<{
+  _events: Array<{
     type: string;
     ts: string;
     payload: Record<string, unknown>;

@@ -337,7 +337,7 @@ async function executeWhatIfReplay(params: ReplayParams): Promise<ReplayResult> 
     const rerankedResults = generateSimulatedResults(config.rerankTopN || topK, true);
 
     // Calculate deltas
-    rerankDeltas = rerankedResults.map((r, newRank) => {
+    rerankDeltas = rerankedResults.map((r, _newRank) => {
       const originalResult = results.find((or) => or.id === r.id);
       return {
         id: r.id,
