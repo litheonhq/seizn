@@ -146,7 +146,7 @@ const QuestionMarkIcon = ({ className }: { className?: string }) => (
 export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const compareTraceId = searchParams.get("compare");
+  const _compareTraceId = searchParams.get("compare");
 
   const [traceDetail, setTraceDetail] = useState<TraceDetail | null>(null);
   const [loading, setLoading] = useState(true);

@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch related traces if requested
     if (body.includeRelated && analysis.failures.length > 0) {
-      const primaryFailureType = analysis.failures[0].type;
+      const _primaryFailureType = analysis.failures[0].type;
 
       const { data: relatedTraces } = await supabase
         .from('flight_recorder_traces')

@@ -233,6 +233,7 @@ export function generateShareToken(): string {
     crypto.getRandomValues(array);
   } else {
     // Fallback for Node.js
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { randomBytes } = require('crypto');
     const bytes = randomBytes(32);
     array.set(bytes);

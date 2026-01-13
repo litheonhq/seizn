@@ -21,7 +21,7 @@ import {
 } from '@/lib/doc-to-db';
 
 // Valid structure types for extraction
-const VALID_STRUCTURE_TYPES = ['table', 'list', 'key_value', 'hierarchy'];
+const _VALID_STRUCTURE_TYPES = ['table', 'list', 'key_value', 'hierarchy'];
 
 interface ExtractRequestBody {
   document_id: string;
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
       structures_created: saveResult.structuresInserted,
       cells_created: saveResult.cellsInserted,
       duration_ms: extractionResult.metadata.processingTimeMs,
-      structures: extractionResult.structures.map((s, i) => ({
+      structures: extractionResult.structures.map((s, _i) => ({
         id: '', // Would need to track IDs from save operation
         type: s.type,
         title: s.title,

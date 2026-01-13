@@ -14,7 +14,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
-import { ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import { ValidationErrors, ServerErrors, NotFoundErrors as _NotFoundErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 
 // ============================================================

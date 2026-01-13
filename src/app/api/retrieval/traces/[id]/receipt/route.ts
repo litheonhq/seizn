@@ -5,7 +5,7 @@ import { getTraceStore } from '@/lib/fall/flight-recorder';
 import {
   generateReceipt,
   formatReceiptAsText,
-  formatReceiptAsJSON,
+  formatReceiptAsJSON as _formatReceiptAsJSON,
   QueryReceipt,
 } from '@/lib/retrieval/receipt';
 

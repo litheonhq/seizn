@@ -341,9 +341,9 @@ export async function trainAdapter(
 
   // Initialize LoRA matrices
   // A: projects from embedding_dim to rank
-  let weightsA = initializeMatrix(config.rank, embeddingDim);
+  const weightsA = initializeMatrix(config.rank, embeddingDim);
   // B: projects from rank back to embedding_dim
-  let weightsB = initializeMatrix(embeddingDim, config.rank);
+  const weightsB = initializeMatrix(embeddingDim, config.rank);
 
   // Training metrics
   const metrics: TrainingMetrics = {

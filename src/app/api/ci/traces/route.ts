@@ -10,13 +10,13 @@ import { randomUUID } from 'crypto';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import {
-  ErrorCodes,
-  createApiError,
+  ErrorCodes as _ErrorCodes,
+  createApiError as _createApiError,
   ValidationErrors,
   ServerErrors,
 } from '@/lib/api-error';
 import type {
-  CITraceCollection,
+  CITraceCollection as _CITraceCollection,
   UploadTracesRequest,
   UploadTracesResponse,
   CITraceRecord,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   TraceExplorer,
@@ -113,7 +113,7 @@ const ChevronRightIcon = ({ className }: { className?: string }) => (
 // ============================================
 
 export function DevToolsClient() {
-  const router = useRouter();
+  const _router = useRouter();
   const [selectedTraceId, setSelectedTraceId] = useState<string | null>(null);
   const [traceDetail, setTraceDetail] = useState<TraceDetail | null>(null);
   const [loading, setLoading] = useState(false);

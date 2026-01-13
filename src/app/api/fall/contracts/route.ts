@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import { createContract } from '@/lib/fall/contracts';
-import type { ContractInput, ContractRow } from '@/lib/fall/contracts';
+import type { ContractInput, ContractRow as _ContractRow } from '@/lib/fall/contracts';
 
 /**
  * GET /api/fall/contracts

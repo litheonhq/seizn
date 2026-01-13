@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import { validateContract } from '@/lib/fall/contracts';
-import { AutoHealer, analyzeFailures, executeHealingPlan } from '@/lib/fall/healing';
+import { AutoHealer as _AutoHealer, analyzeFailures, executeHealingPlan } from '@/lib/fall/healing';
 import type { Contract, ContractRow, ValidationResult } from '@/lib/fall/contracts';
 import type {
   HealingRule,

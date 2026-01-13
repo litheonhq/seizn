@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { collectionId, forceRecalculate = false } = body;
+  const { collectionId, forceRecalculate: _forceRecalculate = false } = body;
 
   if (!collectionId) {
     return NextResponse.json(

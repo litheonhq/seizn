@@ -11,7 +11,7 @@ import { getConfig, getVectorConfig, validateConfig } from './config.js';
 import { createVectorStore } from './vector-search.js';
 import { createServer } from './server.js';
 import { signCallbackRequest } from './auth.js';
-import type { RelayProtocolResponse, HealthResult } from './types.js';
+import type { RelayProtocolResponse, HealthResult as _HealthResult } from './types.js';
 
 // Initialize logger
 const logger = pino({
@@ -136,8 +136,8 @@ function startHeartbeat(
  * Process pending callback requests
  */
 async function processPendingRequests(
-  config: ReturnType<typeof getConfig>,
-  vectorStore: ReturnType<typeof createVectorStore>
+  _config: ReturnType<typeof getConfig>,
+  _vectorStore: ReturnType<typeof createVectorStore>
 ): Promise<void> {
   // In a production implementation, this would:
   // 1. Fetch pending requests from Seizn cloud
@@ -160,7 +160,7 @@ async function processPendingRequests(
 /**
  * Send a callback to Seizn cloud
  */
-async function sendCallback(
+async function _sendCallback(
   config: ReturnType<typeof getConfig>,
   requestId: string,
   response: RelayProtocolResponse

@@ -143,7 +143,7 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
 
           {/* FAQ List */}
           <div className="space-y-4">
-            {filteredFAQ.map((item: FAQItem, index: number) => {
+            {filteredFAQ.map((item: FAQItem, _index: number) => {
               const globalIndex = faqItems.indexOf(item);
               const isOpen = openIndex === globalIndex;
 
