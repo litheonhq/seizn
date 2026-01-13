@@ -1,0 +1,19 @@
+{
+  "name": "seizn-summer-rag-example",
+  "version": "1.0.0",
+  "description": "RAG pipeline example using Seizn Summer SDK",
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "index": "tsx index-documents.ts",
+    "query": "tsx query.ts"
+  },
+  "dependencies": {
+    "@seizn/summer": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
