@@ -1,0 +1,204 @@
+{
+  "items": [
+    {
+      "id": "quickstart",
+      "title": "Quick Start",
+      "section": "Getting Started",
+      "content": "Get started with Seizn Memory API. Create an API key from the dashboard and make your first request.",
+      "url": "/docs#quickstart",
+      "keywords": ["start", "begin", "setup", "install", "first", "api key", "curl"]
+    },
+    {
+      "id": "authentication",
+      "title": "Authentication",
+      "section": "Getting Started",
+      "content": "Authenticate requests using the x-api-key header. Never expose API keys in client-side code.",
+      "url": "/docs#authentication",
+      "keywords": ["auth", "api key", "header", "x-api-key", "security", "token"]
+    },
+    {
+      "id": "post-memories",
+      "title": "POST /api/memories - Store Memory",
+      "section": "API Reference",
+      "content": "Store a new memory with content, memory_type, tags, namespace, and scope. Memory types: fact, preference, experience, relationship, instruction.",
+      "url": "/docs#endpoints",
+      "keywords": ["add", "create", "store", "save", "memory", "post", "fact", "preference", "namespace", "scope", "tags"]
+    },
+    {
+      "id": "get-memories",
+      "title": "GET /api/memories - Search Memories",
+      "section": "API Reference",
+      "content": "Search stored memories using semantic similarity. Parameters: query (required), limit (default 10), threshold (0-1, default 0.7), namespace.",
+      "url": "/docs#endpoints",
+      "keywords": ["search", "find", "query", "get", "retrieve", "limit", "threshold", "similarity", "semantic"]
+    },
+    {
+      "id": "delete-memories",
+      "title": "DELETE /api/memories - Delete Memories",
+      "section": "API Reference",
+      "content": "Delete one or more memories by their IDs. Use comma-separated IDs for bulk deletion.",
+      "url": "/docs#endpoints",
+      "keywords": ["delete", "remove", "ids", "bulk", "cleanup"]
+    },
+    {
+      "id": "extract",
+      "title": "POST /api/extract - Extract Memories",
+      "section": "API Reference",
+      "content": "Automatically extract facts, preferences, and instructions from conversations using AI. Models: haiku (faster, cheaper) or sonnet (more accurate).",
+      "url": "/docs#endpoints",
+      "keywords": ["extract", "conversation", "haiku", "sonnet", "auto", "ai", "facts"]
+    },
+    {
+      "id": "query",
+      "title": "POST /api/query - Memory-Augmented Query",
+      "section": "API Reference",
+      "content": "Generate responses using relevant memories as context (RAG). Returns response, memories_used, and model_used.",
+      "url": "/docs#endpoints",
+      "keywords": ["query", "rag", "response", "context", "augmented", "generate"]
+    },
+    {
+      "id": "rate-limits",
+      "title": "Rate Limits",
+      "section": "API Reference",
+      "content": "Free: 1,000 daily calls, 10K memories. Plus: 10,000 daily calls, 100K memories. Pro: 100,000 daily calls, 1M memories. Enterprise: unlimited.",
+      "url": "/docs#rate-limits",
+      "keywords": ["rate", "limit", "quota", "daily", "calls", "free", "pro", "enterprise", "429"]
+    },
+    {
+      "id": "error-400",
+      "title": "Error 400 - Bad Request",
+      "section": "Error Codes",
+      "content": "Invalid request parameters. Check required fields and data types.",
+      "url": "/docs#errors",
+      "keywords": ["400", "bad request", "invalid", "parameters", "error"]
+    },
+    {
+      "id": "error-401",
+      "title": "Error 401 - Unauthorized",
+      "section": "Error Codes",
+      "content": "Missing or invalid API key. Ensure x-api-key header is present and valid.",
+      "url": "/docs#errors",
+      "keywords": ["401", "unauthorized", "api key", "missing", "invalid", "auth"]
+    },
+    {
+      "id": "error-429",
+      "title": "Error 429 - Too Many Requests",
+      "section": "Error Codes",
+      "content": "Rate limit exceeded. Implement exponential backoff or upgrade your plan.",
+      "url": "/docs#errors",
+      "keywords": ["429", "rate limit", "too many", "throttle", "backoff", "exceeded"]
+    },
+    {
+      "id": "error-500",
+      "title": "Error 500 - Server Error",
+      "section": "Error Codes",
+      "content": "Internal server error. Contact support if this persists.",
+      "url": "/docs#errors",
+      "keywords": ["500", "server", "internal", "error", "support"]
+    },
+    {
+      "id": "security",
+      "title": "Security & Governance",
+      "section": "Resources",
+      "content": "Data security features: AES-256 encryption at rest, TLS in transit, tenant isolation, API key management, rotation, expiration, usage tracking.",
+      "url": "/docs#security",
+      "keywords": ["security", "encryption", "aes", "tls", "tenant", "isolation", "key", "rotation", "governance"]
+    },
+    {
+      "id": "data-retention",
+      "title": "Data Retention & Compliance",
+      "section": "Resources",
+      "content": "Export all memories as JSON. Permanent deletion with GDPR forget API. SOC 2, GDPR compliance.",
+      "url": "/docs#security",
+      "keywords": ["retention", "export", "json", "delete", "gdpr", "forget", "compliance", "soc2"]
+    },
+    {
+      "id": "sdk-python",
+      "title": "Python SDK",
+      "section": "SDKs",
+      "content": "pip install seizn. Initialize with Seizn(api_key). Methods: add(), search(), extract().",
+      "url": "/docs#sdks",
+      "keywords": ["python", "sdk", "pip", "install", "library"]
+    },
+    {
+      "id": "sdk-javascript",
+      "title": "JavaScript/TypeScript SDK",
+      "section": "SDKs",
+      "content": "npm install seizn. Initialize with new Seizn({ apiKey }). Methods: add(), search(), extract().",
+      "url": "/docs#sdks",
+      "keywords": ["javascript", "typescript", "sdk", "npm", "install", "node"]
+    },
+    {
+      "id": "faq-what-is-seizn",
+      "title": "What is Seizn Memory?",
+      "section": "FAQ",
+      "content": "AI memory infrastructure providing persistent, searchable memory for AI applications with extraction, policy management, key management, and audit logs.",
+      "url": "/docs/faq",
+      "keywords": ["what", "seizn", "memory", "infrastructure", "about"]
+    },
+    {
+      "id": "faq-vs-vector-db",
+      "title": "How is Seizn different from vector databases?",
+      "section": "FAQ",
+      "content": "Seizn is a complete memory system including extraction, type classification, namespace/scope management, API keys, audit logging, SDKs, and governance.",
+      "url": "/docs/faq",
+      "keywords": ["vector", "database", "pinecone", "weaviate", "difference", "compare"]
+    },
+    {
+      "id": "faq-namespace",
+      "title": "Why is namespace important?",
+      "section": "FAQ",
+      "content": "Namespace separates memories by project/tenant/environment. Recommended format: org:acme/app:chat/env:prod. Never use default in production.",
+      "url": "/docs/faq",
+      "keywords": ["namespace", "tenant", "environment", "separation", "isolation"]
+    },
+    {
+      "id": "faq-scope",
+      "title": "When should I use scope?",
+      "section": "FAQ",
+      "content": "user: Global preferences. session: Current conversation context. agent: Rules for specific agent in multi-agent systems.",
+      "url": "/docs/faq",
+      "keywords": ["scope", "user", "session", "agent", "multi-agent"]
+    },
+    {
+      "id": "faq-memory-types",
+      "title": "What are memory_types?",
+      "section": "FAQ",
+      "content": "fact: unchanging info. preference: user choices. instruction: rules. relationship: connections. experience: events. Most powerful filtering axis.",
+      "url": "/docs/faq",
+      "keywords": ["memory_type", "fact", "preference", "instruction", "relationship", "experience", "type"]
+    },
+    {
+      "id": "faq-threshold",
+      "title": "How do threshold and limit work?",
+      "section": "FAQ",
+      "content": "limit: Number of results (too low = miss relevant). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7.",
+      "url": "/docs/faq",
+      "keywords": ["threshold", "limit", "similarity", "results", "tuning"]
+    },
+    {
+      "id": "faq-429",
+      "title": "I'm getting 429 Too Many Requests",
+      "section": "FAQ",
+      "content": "Rate limit hit. Solutions: exponential backoff, server-side queue, cache queries, batch operations, reduce extract frequency.",
+      "url": "/docs/faq",
+      "keywords": ["429", "rate limit", "too many", "backoff", "queue", "cache"]
+    },
+    {
+      "id": "faq-api-key-browser",
+      "title": "Can I use the API key in browser?",
+      "section": "FAQ",
+      "content": "Not recommended - high exposure risk. Call Seizn from server (Route Handler, Worker, serverless). Never expose keys client-side.",
+      "url": "/docs/faq",
+      "keywords": ["browser", "frontend", "client", "api key", "security", "expose"]
+    },
+    {
+      "id": "winter-forget",
+      "title": "GDPR Forget API",
+      "section": "Winter (Governance)",
+      "content": "POST /api/winter/forget - Permanently delete all user data. Right-to-be-forgotten compliance.",
+      "url": "/docs#security",
+      "keywords": ["forget", "gdpr", "delete", "right to be forgotten", "compliance", "winter"]
+    }
+  ]
+}

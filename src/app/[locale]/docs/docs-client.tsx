@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
+import { DocsSearch } from "@/components/docs/DocsSearch";
 
 type Dictionary = Record<string, unknown>;
 
@@ -51,6 +52,9 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
           <Link href={`/${locale}`} className="text-xl font-bold text-white">
             Seizn<span className="text-emerald-400">.</span>
           </Link>
+          <div className="flex-1 flex justify-center px-4">
+            <DocsSearch locale={locale} />
+          </div>
           <nav className="flex items-center gap-6">
             <Link
               href="/dashboard"
