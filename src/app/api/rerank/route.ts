@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
 
     const result = await reranker.rerank({
       query,
-      documents: documents.map((doc: { id?: string; content: string; metadata?: unknown; score?: number }, idx: number) => ({
+      documents: documents.map((doc: { id?: string; content: string; metadata?: Record<string, unknown>; score?: number }, idx: number) => ({
         id: doc.id || `doc-${idx}`,
         content: doc.content,
-        metadata: doc.metadata || {},
+        metadata: (doc.metadata || {}) as Record<string, unknown>,
         originalScore: doc.score,
       })),
       config,
