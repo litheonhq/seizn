@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     // Validate API key
     const authResult = await validateApiKey(request);
-    if (!authResult.success) {
+    if (!authResult?.success) {
       return AuthErrors.invalidKey();
     }
 
