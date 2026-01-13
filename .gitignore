@@ -49,3 +49,5 @@ sdks/*/node_modules/
 sdks/*/dist/
 sdks/*/*.egg-info/
 sdks/*/package-lock.json
+packages/*/node_modules/
+packages/*/dist/
