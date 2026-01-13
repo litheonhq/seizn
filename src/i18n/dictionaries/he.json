@@ -567,143 +567,143 @@
   },
   "docs": {
     "nav": {
-      "dashboard": "Dashboard",
-      "getStarted": "Get Started"
+      "dashboard": "לוח בקרה",
+      "getStarted": "התחל"
     },
     "sidebar": {
-      "overview": "Overview",
-      "gettingStarted": "Getting Started",
-      "whenToUse": "When to Use",
-      "quickStart": "Quick Start",
-      "authentication": "Authentication",
-      "concepts": "Concepts",
-      "memoryObject": "Memory Object",
-      "namespaceScope": "Namespace & Scope",
-      "bestPractices": "Best Practices",
-      "apiReference": "API Reference",
-      "endpoints": "Endpoints",
-      "rateLimits": "Rate Limits",
-      "errorCodes": "Error Codes",
-      "resources": "Resources",
-      "security": "Security",
-      "sdks": "SDKs",
-      "faq": "FAQ"
+      "overview": "סקירה כללית",
+      "gettingStarted": "תחילת העבודה",
+      "whenToUse": "מתי להשתמש",
+      "quickStart": "התחלה מהירה",
+      "authentication": "אימות",
+      "concepts": "מושגים",
+      "memoryObject": "אובייקט זיכרון",
+      "namespaceScope": "Namespace ו-Scope",
+      "bestPractices": "שיטות עבודה מומלצות",
+      "apiReference": "מדריך API",
+      "endpoints": "נקודות קצה",
+      "rateLimits": "מגבלות קצב",
+      "errorCodes": "קודי שגיאה",
+      "resources": "משאבים",
+      "security": "אבטחה",
+      "sdks": "SDK",
+      "faq": "שאלות נפוצות"
     },
     "hero": {
-      "title": "API Documentation",
-      "subtitle": "Everything you need to integrate Seizn into your applications. Add persistent memory to your AI with just a few lines of code."
+      "title": "תיעוד API",
+      "subtitle": "כל מה שצריך לשילוב Seizn באפליקציות שלך. הוסף זיכרון מתמיד ל-AI שלך עם כמה שורות קוד בלבד."
     },
     "quickStart": {
-      "title": "Quick Start",
-      "description": "Get your API key from the",
-      "dashboardLink": "dashboard",
-      "then": ", then start making requests:"
+      "title": "התחלה מהירה",
+      "description": "קבל את מפתח ה-API שלך מ",
+      "dashboardLink": "לוח הבקרה",
+      "then": ", ואז התחל לשלוח בקשות:"
     },
     "authentication": {
-      "title": "Authentication",
-      "description": "All API requests require an API key passed in the",
+      "title": "אימות",
+      "description": "כל בקשות ה-API דורשות מפתח API בכותרת",
       "header": "x-api-key",
-      "headerSuffix": "header.",
-      "securityTitle": "Security:",
-      "securityText": "Keep your API keys secret. Never expose them in client-side code. Use environment variables or a backend proxy."
+      "headerSuffix": ".",
+      "securityTitle": "אבטחה:",
+      "securityText": "שמור על מפתחות ה-API שלך בסוד. לעולם אל תחשוף אותם בקוד צד לקוח. השתמש במשתני סביבה או בפרוקסי בצד השרת."
     },
     "endpoints": {
-      "title": "API Endpoints",
-      "requestBody": "Request Body",
-      "queryParams": "Query Parameters",
-      "response": "Response",
+      "title": "נקודות קצה API",
+      "requestBody": "גוף הבקשה",
+      "queryParams": "פרמטרי שאילתה",
+      "response": "תגובה",
       "postMemories": {
-        "description": "Add a new memory to the user's memory store.",
-        "content": "string (required) - The memory content",
-        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
-        "tags": "string[] - Tags for categorization",
-        "namespace": "string - Namespace for organization (default: \"default\")",
-        "scope": "string - Scope: user, session, agent",
-        "sessionId": "string - Session ID for session-scoped memories",
-        "agentId": "string - Agent ID for agent-scoped memories"
+        "description": "הוסף זיכרון חדש למאגר הזיכרון של המשתמש.",
+        "content": "string (חובה) - תוכן הזיכרון",
+        "memoryType": "string - סוג: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - תגיות לקטגוריזציה",
+        "namespace": "string - מרחב שמות לארגון (ברירת מחדל: \"default\")",
+        "scope": "string - טווח: user, session, agent",
+        "sessionId": "string - מזהה סשן לזיכרונות בטווח session",
+        "agentId": "string - מזהה סוכן לזיכרונות בטווח agent"
       },
       "getMemories": {
-        "description": "Search memories using semantic similarity.",
-        "query": "string (required) - Search query",
-        "limit": "number - Max results (default: 10, max: 100)",
-        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
-        "namespace": "string - Filter by namespace"
+        "description": "חפש זיכרונות באמצעות דמיון סמנטי.",
+        "query": "string (חובה) - שאילתת חיפוש",
+        "limit": "number - מקסימום תוצאות (ברירת מחדל: 10, מקסימום: 100)",
+        "threshold": "number - סף דמיון 0-1 (ברירת מחדל: 0.7)",
+        "namespace": "string - סינון לפי namespace"
       },
       "deleteMemories": {
-        "description": "Delete memories by their IDs.",
-        "ids": "string (required) - Comma-separated memory IDs"
+        "description": "מחק זיכרונות לפי המזהים שלהם.",
+        "ids": "string (חובה) - מזהי זיכרון מופרדים בפסיק"
       },
       "extract": {
-        "description": "Extract and store memories from a conversation using AI.",
-        "conversation": "string (required) - The conversation text to extract memories from",
-        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
-        "autoStore": "boolean - Automatically store extracted memories (default: true)",
-        "namespace": "string - Namespace for stored memories (default: \"default\")"
+        "description": "חלץ ושמור זיכרונות משיחה באמצעות AI.",
+        "conversation": "string (חובה) - טקסט השיחה לחילוץ זיכרונות",
+        "model": "string - מודל AI: haiku (מהיר יותר) או sonnet (טוב יותר) (ברירת מחדל: haiku)",
+        "autoStore": "boolean - שמור אוטומטית זיכרונות שחולצו (ברירת מחדל: true)",
+        "namespace": "string - Namespace לזיכרונות השמורים (ברירת מחדל: \"default\")"
       },
       "query": {
-        "description": "Get AI-generated responses using relevant memories as context (RAG).",
-        "queryParam": "string (required) - The user's question or prompt",
-        "model": "string - AI model: haiku or sonnet (default: haiku)",
-        "topK": "number - Number of memories to use as context (default: 5)",
-        "namespace": "string - Filter memories by namespace",
-        "includeMemories": "boolean - Include used memories in response (default: true)"
+        "description": "קבל תגובות שנוצרו על ידי AI עם זיכרונות רלוונטיים כהקשר (RAG).",
+        "queryParam": "string (חובה) - שאלת המשתמש או הפרומפט",
+        "model": "string - מודל AI: haiku או sonnet (ברירת מחדל: haiku)",
+        "topK": "number - מספר הזיכרונות להקשר (ברירת מחדל: 5)",
+        "namespace": "string - סינון זיכרונות לפי namespace",
+        "includeMemories": "boolean - כלול זיכרונות ששומשו בתגובה (ברירת מחדל: true)"
       }
     },
     "rateLimits": {
-      "title": "Rate Limits",
-      "plan": "Plan",
-      "dailyApiCalls": "Daily API Calls",
-      "maxMemories": "Max Memories",
-      "apiKeys": "API Keys",
-      "free": "Free",
+      "title": "מגבלות קצב",
+      "plan": "תוכנית",
+      "dailyApiCalls": "קריאות API יומיות",
+      "maxMemories": "מקסימום זיכרונות",
+      "apiKeys": "מפתחות API",
+      "free": "חינמי",
       "plus": "Plus",
       "pro": "Pro",
-      "enterprise": "Enterprise",
-      "unlimited": "Unlimited",
-      "exceeded": "When you exceed your rate limit, the API returns a",
-      "response": "response."
+      "enterprise": "ארגוני",
+      "unlimited": "ללא הגבלה",
+      "exceeded": "כשאתה חורג ממגבלת הקצב שלך, ה-API מחזיר תגובת",
+      "response": "."
     },
     "errors": {
-      "title": "Error Codes",
-      "code": "Code",
-      "description": "Description",
-      "success": "Success",
-      "badRequest": "Bad Request - Missing or invalid parameters",
-      "unauthorized": "Unauthorized - Invalid or missing API key",
-      "tooManyRequests": "Too Many Requests - Rate limit exceeded",
-      "serverError": "Internal Server Error - Something went wrong"
+      "title": "קודי שגיאה",
+      "code": "קוד",
+      "description": "תיאור",
+      "success": "הצלחה",
+      "badRequest": "בקשה שגויה - פרמטרים חסרים או לא תקינים",
+      "unauthorized": "לא מורשה - מפתח API לא תקין או חסר",
+      "tooManyRequests": "יותר מדי בקשות - חריגה ממגבלת הקצב",
+      "serverError": "שגיאת שרת פנימית - משהו השתבש"
     },
     "security": {
-      "title": "Security & Governance",
-      "dataSecurityTitle": "Data Security",
-      "encryptionAtRest": "Encryption at rest:",
-      "encryptionAtRestDesc": "All data encrypted with AES-256",
-      "encryptionInTransit": "Encryption in transit:",
-      "encryptionInTransitDesc": "TLS 1.3 for all connections",
-      "tenantIsolation": "Tenant isolation:",
-      "tenantIsolationDesc": "Complete data separation between accounts",
-      "apiKeyManagement": "API Key Management",
-      "keyRotation": "Key rotation:",
-      "keyRotationDesc": "Rotate keys anytime from the dashboard",
-      "keyExpiration": "Key expiration:",
-      "keyExpirationDesc": "Auto-expire keys after 90 days (configurable)",
-      "usageTracking": "Usage tracking:",
-      "usageTrackingDesc": "Monitor per-key usage in real-time",
-      "dataRetention": "Data Retention & Deletion",
-      "export": "Export:",
-      "exportDesc": "Export all your data anytime via API or dashboard",
-      "deletion": "Deletion:",
-      "deletionDesc": "Hard delete with no retention after 30 days",
+      "title": "אבטחה וניהול",
+      "dataSecurityTitle": "אבטחת נתונים",
+      "encryptionAtRest": "הצפנה במנוחה:",
+      "encryptionAtRestDesc": "כל הנתונים מוצפנים עם AES-256",
+      "encryptionInTransit": "הצפנה במעבר:",
+      "encryptionInTransitDesc": "TLS 1.3 לכל החיבורים",
+      "tenantIsolation": "בידוד דיירים:",
+      "tenantIsolationDesc": "הפרדה מלאה של נתונים בין חשבונות",
+      "apiKeyManagement": "ניהול מפתחות API",
+      "keyRotation": "סיבוב מפתחות:",
+      "keyRotationDesc": "סובב מפתחות בכל עת מלוח הבקרה",
+      "keyExpiration": "פקיעת מפתחות:",
+      "keyExpirationDesc": "פקיעה אוטומטית לאחר 90 יום (ניתן להגדרה)",
+      "usageTracking": "מעקב שימוש:",
+      "usageTrackingDesc": "עקוב אחר שימוש לפי מפתח בזמן אמת",
+      "dataRetention": "שמירת נתונים ומחיקה",
+      "export": "ייצוא:",
+      "exportDesc": "ייצא את כל הנתונים שלך בכל עת דרך API או לוח הבקרה",
+      "deletion": "מחיקה:",
+      "deletionDesc": "מחיקה סופית ללא שמירה לאחר 30 יום",
       "compliance": "GDPR/CCPA:",
-      "complianceDesc": "Full compliance with data subject rights"
+      "complianceDesc": "עמידה מלאה בזכויות נושאי הנתונים"
     },
     "sdks": {
-      "title": "SDKs",
+      "title": "SDK",
       "python": "Python",
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Seizn. כל הזכויות שמורות."
     },
     "faqPage": {
       "title": "שאלות נפוצות",

@@ -567,143 +567,143 @@
   },
   "docs": {
     "nav": {
-      "dashboard": "Dashboard",
-      "getStarted": "Get Started"
+      "dashboard": "Kontrollpanel",
+      "getStarted": "Kom igång"
     },
     "sidebar": {
-      "overview": "Overview",
-      "gettingStarted": "Getting Started",
-      "whenToUse": "When to Use",
-      "quickStart": "Quick Start",
-      "authentication": "Authentication",
-      "concepts": "Concepts",
-      "memoryObject": "Memory Object",
+      "overview": "Översikt",
+      "gettingStarted": "Kom igång",
+      "whenToUse": "När ska man använda",
+      "quickStart": "Snabbstart",
+      "authentication": "Autentisering",
+      "concepts": "Koncept",
+      "memoryObject": "Minnesobjekt",
       "namespaceScope": "Namespace & Scope",
-      "bestPractices": "Best Practices",
-      "apiReference": "API Reference",
-      "endpoints": "Endpoints",
-      "rateLimits": "Rate Limits",
-      "errorCodes": "Error Codes",
-      "resources": "Resources",
-      "security": "Security",
-      "sdks": "SDKs",
+      "bestPractices": "Bästa praxis",
+      "apiReference": "API-referens",
+      "endpoints": "Slutpunkter",
+      "rateLimits": "Hastighetsbegränsningar",
+      "errorCodes": "Felkoder",
+      "resources": "Resurser",
+      "security": "Säkerhet",
+      "sdks": "SDK",
       "faq": "FAQ"
     },
     "hero": {
-      "title": "API Documentation",
-      "subtitle": "Everything you need to integrate Seizn into your applications. Add persistent memory to your AI with just a few lines of code."
+      "title": "API-dokumentation",
+      "subtitle": "Allt du behöver för att integrera Seizn i dina applikationer. Lägg till permanent minne till din AI med bara några rader kod."
     },
     "quickStart": {
-      "title": "Quick Start",
-      "description": "Get your API key from the",
-      "dashboardLink": "dashboard",
-      "then": ", then start making requests:"
+      "title": "Snabbstart",
+      "description": "Hämta din API-nyckel från",
+      "dashboardLink": "kontrollpanelen",
+      "then": ", börja sedan skicka förfrågningar:"
     },
     "authentication": {
-      "title": "Authentication",
-      "description": "All API requests require an API key passed in the",
+      "title": "Autentisering",
+      "description": "Alla API-förfrågningar kräver en API-nyckel i headern",
       "header": "x-api-key",
-      "headerSuffix": "header.",
-      "securityTitle": "Security:",
-      "securityText": "Keep your API keys secret. Never expose them in client-side code. Use environment variables or a backend proxy."
+      "headerSuffix": ".",
+      "securityTitle": "Säkerhet:",
+      "securityText": "Håll dina API-nycklar hemliga. Exponera dem aldrig i klientkod. Använd miljövariabler eller en backend-proxy."
     },
     "endpoints": {
-      "title": "API Endpoints",
-      "requestBody": "Request Body",
-      "queryParams": "Query Parameters",
-      "response": "Response",
+      "title": "API-slutpunkter",
+      "requestBody": "Förfrågningskropp",
+      "queryParams": "Frågeparametrar",
+      "response": "Svar",
       "postMemories": {
-        "description": "Add a new memory to the user's memory store.",
-        "content": "string (required) - The memory content",
-        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
-        "tags": "string[] - Tags for categorization",
-        "namespace": "string - Namespace for organization (default: \"default\")",
+        "description": "Lägg till ett nytt minne i användarens minneslagring.",
+        "content": "string (obligatorisk) - Minnesinnehållet",
+        "memoryType": "string - Typ: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Taggar för kategorisering",
+        "namespace": "string - Namespace för organisation (standard: \"default\")",
         "scope": "string - Scope: user, session, agent",
-        "sessionId": "string - Session ID for session-scoped memories",
-        "agentId": "string - Agent ID for agent-scoped memories"
+        "sessionId": "string - Sessions-ID för sessionsomfattande minnen",
+        "agentId": "string - Agent-ID för agentomfattande minnen"
       },
       "getMemories": {
-        "description": "Search memories using semantic similarity.",
-        "query": "string (required) - Search query",
-        "limit": "number - Max results (default: 10, max: 100)",
-        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
-        "namespace": "string - Filter by namespace"
+        "description": "Sök minnen med semantisk likhet.",
+        "query": "string (obligatorisk) - Sökfråga",
+        "limit": "number - Max antal resultat (standard: 10, max: 100)",
+        "threshold": "number - Likhetströskel 0-1 (standard: 0.7)",
+        "namespace": "string - Filtrera efter namespace"
       },
       "deleteMemories": {
-        "description": "Delete memories by their IDs.",
-        "ids": "string (required) - Comma-separated memory IDs"
+        "description": "Ta bort minnen efter deras ID.",
+        "ids": "string (obligatorisk) - Kommaseparerade minnes-ID"
       },
       "extract": {
-        "description": "Extract and store memories from a conversation using AI.",
-        "conversation": "string (required) - The conversation text to extract memories from",
-        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
-        "autoStore": "boolean - Automatically store extracted memories (default: true)",
-        "namespace": "string - Namespace for stored memories (default: \"default\")"
+        "description": "Extrahera och lagra minnen från en konversation med AI.",
+        "conversation": "string (obligatorisk) - Konversationstexten att extrahera minnen från",
+        "model": "string - AI-modell: haiku (snabbare) eller sonnet (bättre) (standard: haiku)",
+        "autoStore": "boolean - Lagra extraherade minnen automatiskt (standard: true)",
+        "namespace": "string - Namespace för lagrade minnen (standard: \"default\")"
       },
       "query": {
-        "description": "Get AI-generated responses using relevant memories as context (RAG).",
-        "queryParam": "string (required) - The user's question or prompt",
-        "model": "string - AI model: haiku or sonnet (default: haiku)",
-        "topK": "number - Number of memories to use as context (default: 5)",
-        "namespace": "string - Filter memories by namespace",
-        "includeMemories": "boolean - Include used memories in response (default: true)"
+        "description": "Få AI-genererade svar med relevanta minnen som kontext (RAG).",
+        "queryParam": "string (obligatorisk) - Användarens fråga eller prompt",
+        "model": "string - AI-modell: haiku eller sonnet (standard: haiku)",
+        "topK": "number - Antal minnen att använda som kontext (standard: 5)",
+        "namespace": "string - Filtrera minnen efter namespace",
+        "includeMemories": "boolean - Inkludera använda minnen i svaret (standard: true)"
       }
     },
     "rateLimits": {
-      "title": "Rate Limits",
+      "title": "Hastighetsbegränsningar",
       "plan": "Plan",
-      "dailyApiCalls": "Daily API Calls",
-      "maxMemories": "Max Memories",
-      "apiKeys": "API Keys",
-      "free": "Free",
+      "dailyApiCalls": "Dagliga API-anrop",
+      "maxMemories": "Max minnen",
+      "apiKeys": "API-nycklar",
+      "free": "Gratis",
       "plus": "Plus",
       "pro": "Pro",
-      "enterprise": "Enterprise",
-      "unlimited": "Unlimited",
-      "exceeded": "When you exceed your rate limit, the API returns a",
-      "response": "response."
+      "enterprise": "Företag",
+      "unlimited": "Obegränsat",
+      "exceeded": "När du överskrider din hastighetsbegränsning returnerar API:et ett",
+      "response": "svar."
     },
     "errors": {
-      "title": "Error Codes",
-      "code": "Code",
-      "description": "Description",
-      "success": "Success",
-      "badRequest": "Bad Request - Missing or invalid parameters",
-      "unauthorized": "Unauthorized - Invalid or missing API key",
-      "tooManyRequests": "Too Many Requests - Rate limit exceeded",
-      "serverError": "Internal Server Error - Something went wrong"
+      "title": "Felkoder",
+      "code": "Kod",
+      "description": "Beskrivning",
+      "success": "Lyckades",
+      "badRequest": "Felaktig förfrågan - Saknade eller ogiltiga parametrar",
+      "unauthorized": "Ej auktoriserad - Ogiltig eller saknad API-nyckel",
+      "tooManyRequests": "För många förfrågningar - Hastighetsbegränsning överskriden",
+      "serverError": "Internt serverfel - Något gick fel"
     },
     "security": {
-      "title": "Security & Governance",
-      "dataSecurityTitle": "Data Security",
-      "encryptionAtRest": "Encryption at rest:",
-      "encryptionAtRestDesc": "All data encrypted with AES-256",
-      "encryptionInTransit": "Encryption in transit:",
-      "encryptionInTransitDesc": "TLS 1.3 for all connections",
-      "tenantIsolation": "Tenant isolation:",
-      "tenantIsolationDesc": "Complete data separation between accounts",
-      "apiKeyManagement": "API Key Management",
-      "keyRotation": "Key rotation:",
-      "keyRotationDesc": "Rotate keys anytime from the dashboard",
-      "keyExpiration": "Key expiration:",
-      "keyExpirationDesc": "Auto-expire keys after 90 days (configurable)",
-      "usageTracking": "Usage tracking:",
-      "usageTrackingDesc": "Monitor per-key usage in real-time",
-      "dataRetention": "Data Retention & Deletion",
+      "title": "Säkerhet & styrning",
+      "dataSecurityTitle": "Datasäkerhet",
+      "encryptionAtRest": "Kryptering i vila:",
+      "encryptionAtRestDesc": "All data krypterad med AES-256",
+      "encryptionInTransit": "Kryptering under överföring:",
+      "encryptionInTransitDesc": "TLS 1.3 för alla anslutningar",
+      "tenantIsolation": "Hyresgästisolering:",
+      "tenantIsolationDesc": "Fullständig dataseparation mellan konton",
+      "apiKeyManagement": "API-nyckelhantering",
+      "keyRotation": "Nyckelrotation:",
+      "keyRotationDesc": "Rotera nycklar när som helst från kontrollpanelen",
+      "keyExpiration": "Nyckelutgång:",
+      "keyExpirationDesc": "Automatisk utgång efter 90 dagar (konfigurerbart)",
+      "usageTracking": "Användningsspårning:",
+      "usageTrackingDesc": "Övervaka användning per nyckel i realtid",
+      "dataRetention": "Datalagring & radering",
       "export": "Export:",
-      "exportDesc": "Export all your data anytime via API or dashboard",
-      "deletion": "Deletion:",
-      "deletionDesc": "Hard delete with no retention after 30 days",
+      "exportDesc": "Exportera all din data när som helst via API eller kontrollpanel",
+      "deletion": "Radering:",
+      "deletionDesc": "Permanent radering utan lagring efter 30 dagar",
       "compliance": "GDPR/CCPA:",
-      "complianceDesc": "Full compliance with data subject rights"
+      "complianceDesc": "Full överensstämmelse med dataskyddsrättigheter"
     },
     "sdks": {
-      "title": "SDKs",
+      "title": "SDK",
       "python": "Python",
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Seizn. Alla rättigheter förbehållna."
     },
     "faqPage": {
       "title": "Vanliga Frågor",

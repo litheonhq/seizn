@@ -46,6 +46,12 @@ const sentryWebpackPluginOptions = {
   // Hides source maps from generated client bundles
   hideSourceMaps: true,
 
+  // IMPORTANT: Disable source map upload entirely to avoid build failures
+  // This prevents "Project not found" errors from blocking the build
+  sourcemaps: {
+    disable: true,
+  },
+
   // Webpack-specific options (new format for v10+)
   webpack: {
     // Automatically tree-shake Sentry logger statements to reduce bundle size

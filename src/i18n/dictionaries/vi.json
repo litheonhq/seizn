@@ -567,135 +567,135 @@
   },
   "docs": {
     "nav": {
-      "dashboard": "Dashboard",
-      "getStarted": "Get Started"
+      "dashboard": "Bảng điều khiển",
+      "getStarted": "Bắt đầu"
     },
     "sidebar": {
-      "overview": "Overview",
-      "gettingStarted": "Getting Started",
-      "whenToUse": "When to Use",
-      "quickStart": "Quick Start",
-      "authentication": "Authentication",
-      "concepts": "Concepts",
+      "overview": "Tổng quan",
+      "gettingStarted": "Bắt đầu",
+      "whenToUse": "Khi nào sử dụng",
+      "quickStart": "Khởi động nhanh",
+      "authentication": "Xác thực",
+      "concepts": "Khái niệm",
       "memoryObject": "Memory Object",
       "namespaceScope": "Namespace & Scope",
-      "bestPractices": "Best Practices",
-      "apiReference": "API Reference",
+      "bestPractices": "Thực hành tốt nhất",
+      "apiReference": "Tham chiếu API",
       "endpoints": "Endpoints",
-      "rateLimits": "Rate Limits",
-      "errorCodes": "Error Codes",
-      "resources": "Resources",
-      "security": "Security",
+      "rateLimits": "Giới hạn",
+      "errorCodes": "Mã lỗi",
+      "resources": "Tài nguyên",
+      "security": "Bảo mật",
       "sdks": "SDKs",
       "faq": "FAQ"
     },
     "hero": {
-      "title": "API Documentation",
-      "subtitle": "Everything you need to integrate Seizn into your applications. Add persistent memory to your AI with just a few lines of code."
+      "title": "Tài liệu API",
+      "subtitle": "Mọi thứ bạn cần để tích hợp Seizn vào ứng dụng của mình. Thêm bộ nhớ lâu dài cho AI của bạn chỉ với vài dòng code."
     },
     "quickStart": {
-      "title": "Quick Start",
-      "description": "Get your API key from the",
-      "dashboardLink": "dashboard",
-      "then": ", then start making requests:"
+      "title": "Khởi động nhanh",
+      "description": "Lấy API key của bạn từ",
+      "dashboardLink": "bảng điều khiển",
+      "then": ", sau đó bắt đầu gửi yêu cầu:"
     },
     "authentication": {
-      "title": "Authentication",
-      "description": "All API requests require an API key passed in the",
+      "title": "Xác thực",
+      "description": "Tất cả yêu cầu API đều cần API key trong",
       "header": "x-api-key",
       "headerSuffix": "header.",
-      "securityTitle": "Security:",
-      "securityText": "Keep your API keys secret. Never expose them in client-side code. Use environment variables or a backend proxy."
+      "securityTitle": "Bảo mật:",
+      "securityText": "Giữ bí mật API key của bạn. Không bao giờ để lộ chúng trong code phía client. Sử dụng biến môi trường hoặc backend proxy."
     },
     "endpoints": {
       "title": "API Endpoints",
       "requestBody": "Request Body",
       "queryParams": "Query Parameters",
-      "response": "Response",
+      "response": "Phản hồi",
       "postMemories": {
-        "description": "Add a new memory to the user's memory store.",
-        "content": "string (required) - The memory content",
-        "memoryType": "string - Type: fact, preference, experience, relationship, instruction",
-        "tags": "string[] - Tags for categorization",
-        "namespace": "string - Namespace for organization (default: \"default\")",
+        "description": "Thêm một ký ức mới vào kho lưu trữ của người dùng.",
+        "content": "string (bắt buộc) - Nội dung ký ức",
+        "memoryType": "string - Loại: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tags để phân loại",
+        "namespace": "string - Namespace để tổ chức (mặc định: \"default\")",
         "scope": "string - Scope: user, session, agent",
-        "sessionId": "string - Session ID for session-scoped memories",
-        "agentId": "string - Agent ID for agent-scoped memories"
+        "sessionId": "string - Session ID cho ký ức phạm vi session",
+        "agentId": "string - Agent ID cho ký ức phạm vi agent"
       },
       "getMemories": {
-        "description": "Search memories using semantic similarity.",
-        "query": "string (required) - Search query",
-        "limit": "number - Max results (default: 10, max: 100)",
-        "threshold": "number - Similarity threshold 0-1 (default: 0.7)",
-        "namespace": "string - Filter by namespace"
+        "description": "Tìm kiếm ký ức bằng độ tương đồng ngữ nghĩa.",
+        "query": "string (bắt buộc) - Truy vấn tìm kiếm",
+        "limit": "number - Kết quả tối đa (mặc định: 10, max: 100)",
+        "threshold": "number - Ngưỡng tương đồng 0-1 (mặc định: 0.7)",
+        "namespace": "string - Lọc theo namespace"
       },
       "deleteMemories": {
-        "description": "Delete memories by their IDs.",
-        "ids": "string (required) - Comma-separated memory IDs"
+        "description": "Xóa ký ức theo ID.",
+        "ids": "string (bắt buộc) - ID ký ức phân cách bằng dấu phẩy"
       },
       "extract": {
-        "description": "Extract and store memories from a conversation using AI.",
-        "conversation": "string (required) - The conversation text to extract memories from",
-        "model": "string - AI model: haiku (faster) or sonnet (better) (default: haiku)",
-        "autoStore": "boolean - Automatically store extracted memories (default: true)",
-        "namespace": "string - Namespace for stored memories (default: \"default\")"
+        "description": "Trích xuất và lưu trữ ký ức từ cuộc hội thoại bằng AI.",
+        "conversation": "string (bắt buộc) - Văn bản cuộc hội thoại để trích xuất ký ức",
+        "model": "string - Mô hình AI: haiku (nhanh hơn) hoặc sonnet (tốt hơn) (mặc định: haiku)",
+        "autoStore": "boolean - Tự động lưu ký ức đã trích xuất (mặc định: true)",
+        "namespace": "string - Namespace cho ký ức đã lưu (mặc định: \"default\")"
       },
       "query": {
-        "description": "Get AI-generated responses using relevant memories as context (RAG).",
-        "queryParam": "string (required) - The user's question or prompt",
-        "model": "string - AI model: haiku or sonnet (default: haiku)",
-        "topK": "number - Number of memories to use as context (default: 5)",
-        "namespace": "string - Filter memories by namespace",
-        "includeMemories": "boolean - Include used memories in response (default: true)"
+        "description": "Nhận phản hồi từ AI sử dụng ký ức liên quan làm ngữ cảnh (RAG).",
+        "queryParam": "string (bắt buộc) - Câu hỏi hoặc prompt của người dùng",
+        "model": "string - Mô hình AI: haiku hoặc sonnet (mặc định: haiku)",
+        "topK": "number - Số lượng ký ức sử dụng làm ngữ cảnh (mặc định: 5)",
+        "namespace": "string - Lọc ký ức theo namespace",
+        "includeMemories": "boolean - Bao gồm ký ức đã sử dụng trong phản hồi (mặc định: true)"
       }
     },
     "rateLimits": {
-      "title": "Rate Limits",
-      "plan": "Plan",
-      "dailyApiCalls": "Daily API Calls",
-      "maxMemories": "Max Memories",
+      "title": "Giới hạn",
+      "plan": "Gói",
+      "dailyApiCalls": "Cuộc gọi API hàng ngày",
+      "maxMemories": "Ký ức tối đa",
       "apiKeys": "API Keys",
-      "free": "Free",
+      "free": "Miễn phí",
       "plus": "Plus",
       "pro": "Pro",
       "enterprise": "Enterprise",
-      "unlimited": "Unlimited",
-      "exceeded": "When you exceed your rate limit, the API returns a",
-      "response": "response."
+      "unlimited": "Không giới hạn",
+      "exceeded": "Khi bạn vượt quá giới hạn, API trả về",
+      "response": "phản hồi."
     },
     "errors": {
-      "title": "Error Codes",
-      "code": "Code",
-      "description": "Description",
-      "success": "Success",
-      "badRequest": "Bad Request - Missing or invalid parameters",
-      "unauthorized": "Unauthorized - Invalid or missing API key",
-      "tooManyRequests": "Too Many Requests - Rate limit exceeded",
-      "serverError": "Internal Server Error - Something went wrong"
+      "title": "Mã lỗi",
+      "code": "Mã",
+      "description": "Mô tả",
+      "success": "Thành công",
+      "badRequest": "Bad Request - Thiếu hoặc tham số không hợp lệ",
+      "unauthorized": "Unauthorized - API key không hợp lệ hoặc thiếu",
+      "tooManyRequests": "Too Many Requests - Vượt quá giới hạn",
+      "serverError": "Internal Server Error - Đã xảy ra lỗi"
     },
     "security": {
-      "title": "Security & Governance",
-      "dataSecurityTitle": "Data Security",
-      "encryptionAtRest": "Encryption at rest:",
-      "encryptionAtRestDesc": "All data encrypted with AES-256",
-      "encryptionInTransit": "Encryption in transit:",
-      "encryptionInTransitDesc": "TLS 1.3 for all connections",
-      "tenantIsolation": "Tenant isolation:",
-      "tenantIsolationDesc": "Complete data separation between accounts",
-      "apiKeyManagement": "API Key Management",
-      "keyRotation": "Key rotation:",
-      "keyRotationDesc": "Rotate keys anytime from the dashboard",
-      "keyExpiration": "Key expiration:",
-      "keyExpirationDesc": "Auto-expire keys after 90 days (configurable)",
-      "usageTracking": "Usage tracking:",
-      "usageTrackingDesc": "Monitor per-key usage in real-time",
-      "dataRetention": "Data Retention & Deletion",
-      "export": "Export:",
-      "exportDesc": "Export all your data anytime via API or dashboard",
-      "deletion": "Deletion:",
-      "deletionDesc": "Hard delete with no retention after 30 days",
+      "title": "Bảo mật & Quản trị",
+      "dataSecurityTitle": "Bảo mật dữ liệu",
+      "encryptionAtRest": "Mã hóa khi lưu trữ:",
+      "encryptionAtRestDesc": "Tất cả dữ liệu được mã hóa bằng AES-256",
+      "encryptionInTransit": "Mã hóa khi truyền tải:",
+      "encryptionInTransitDesc": "TLS 1.3 cho tất cả kết nối",
+      "tenantIsolation": "Cô lập tenant:",
+      "tenantIsolationDesc": "Tách biệt dữ liệu hoàn toàn giữa các tài khoản",
+      "apiKeyManagement": "Quản lý API Key",
+      "keyRotation": "Xoay key:",
+      "keyRotationDesc": "Xoay key bất cứ lúc nào từ bảng điều khiển",
+      "keyExpiration": "Hết hạn key:",
+      "keyExpirationDesc": "Tự động hết hạn key sau 90 ngày (có thể cấu hình)",
+      "usageTracking": "Theo dõi sử dụng:",
+      "usageTrackingDesc": "Giám sát sử dụng theo từng key theo thời gian thực",
+      "dataRetention": "Lưu giữ & Xóa dữ liệu",
+      "export": "Xuất:",
+      "exportDesc": "Xuất tất cả dữ liệu bất cứ lúc nào qua API hoặc bảng điều khiển",
+      "deletion": "Xóa:",
+      "deletionDesc": "Xóa vĩnh viễn không lưu giữ sau 30 ngày",
       "compliance": "GDPR/CCPA:",
-      "complianceDesc": "Full compliance with data subject rights"
+      "complianceDesc": "Tuân thủ đầy đủ quyền của chủ thể dữ liệu"
     },
     "sdks": {
       "title": "SDKs",
@@ -703,7 +703,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Seizn. Bảo lưu mọi quyền."
     },
     "faqPage": {
       "title": "Cau Hoi Thuong Gap",
