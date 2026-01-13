@@ -60,7 +60,7 @@ function chiSquareCDF(x: number, df: number): number {
   if (df <= 0) return 0;
 
   // Use Wilson-Hilferty transformation for approximation
-  const k = df / 2;
+  const _k = df / 2;
   const z = Math.pow(x / df, 1 / 3) - (1 - 2 / (9 * df));
   const se = Math.sqrt(2 / (9 * df));
 
@@ -295,7 +295,7 @@ function checkDuration(
 /**
  * Check for metric regression (optional, based on historical baseline)
  */
-async function checkRegression(experimentId: string): Promise<GuardrailCheck> {
+async function checkRegression(_experimentId: string): Promise<GuardrailCheck> {
   // MVP: Always pass regression check
   // Future: Compare against historical baseline metrics
   return {

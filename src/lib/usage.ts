@@ -4,7 +4,6 @@ import {
   getEffectivePlan,
   isUnlimited,
   formatLimit,
-  type PlanConfig,
 } from './plan-limits';
 
 // Re-export for backwards compatibility

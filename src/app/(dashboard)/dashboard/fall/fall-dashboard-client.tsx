@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 type TabType = "traces" | "eval" | "experiments";
@@ -53,11 +53,7 @@ export function FallDashboardClient() {
   const [minLatency, setMinLatency] = useState<number | null>(null);
   const [showErrors, setShowErrors] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, [activeTab, dateRange, minLatency, showErrors]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       if (activeTab === "traces") {
@@ -88,7 +84,11 @@ export function FallDashboardClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, minLatency, showErrors]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

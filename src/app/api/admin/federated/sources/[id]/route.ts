@@ -7,7 +7,7 @@ import {
   getSourceAccessLevel,
   logFederatedOperation,
 } from '@/lib/summer/admin';
-import { encrypt, decrypt } from '@/lib/winter/crypto';
+import { encrypt } from '@/lib/winter/crypto';
 
 /**
  * GET /api/admin/federated/sources/[id]

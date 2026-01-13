@@ -10,7 +10,6 @@ import type {
   ClaimSource,
   GroundednessResult,
   SourceReference,
-  GROUNDEDNESS_THRESHOLDS,
 } from './types';
 
 // Simple sentence splitter for claim extraction

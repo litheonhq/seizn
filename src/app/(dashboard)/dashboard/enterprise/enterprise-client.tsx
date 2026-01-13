@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type TabType = "sso" | "scim" | "settings";
 
@@ -50,11 +50,7 @@ export function EnterpriseClient() {
   const [ssoSetupStep, setSSOSetupStep] = useState(1);
   const [domains, setDomains] = useState("");
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       // Load SSO providers
@@ -75,7 +71,11 @@ export function EnterpriseClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleEnableSSO = async () => {
     // In production, this would submit the SSO configuration
@@ -602,7 +602,7 @@ function FeatureCard({
 function LimitCard({
   label,
   value,
-  max,
+  max: _max,
 }: {
   label: string;
   value: string;

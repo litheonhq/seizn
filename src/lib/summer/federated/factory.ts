@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FederatedSource } from './types';
 import { HttpAgentSource } from './connectors/http-agent';
 import { UnsupportedFederatedSource } from './connectors/unsupported';

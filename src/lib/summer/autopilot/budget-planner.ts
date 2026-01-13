@@ -12,7 +12,6 @@ import {
   type BudgetConfig,
   type TraceContext,
   type RequestBudget,
-  getDefaultBudget,
   resolveBudget,
   applyBudgetLimits,
   estimateCost,

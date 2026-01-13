@@ -139,11 +139,11 @@ export async function routeQuery(params: CollectionRouterParams): Promise<Routin
   const {
     userId,
     primaryCollectionId,
-    query,
+    query: _query,
     mode,
     budget,
     enableFederated = false,
-    preferredTags = [],
+    preferredTags: _preferredTags = [],
     maxCollections = 5,
   } = params;
 

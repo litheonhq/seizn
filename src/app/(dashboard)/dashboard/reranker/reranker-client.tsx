@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Model {
   id: string;
@@ -35,18 +35,7 @@ export function RerankerClient() {
   const [testResult, setTestResult] = useState<unknown>(null);
   const [testLoading, setTestLoading] = useState(false);
 
-  useEffect(() => {
-    loadConfig();
-  }, []);
-
-  useEffect(() => {
-    // Update threshold when domain changes
-    if (domains[selectedDomain]) {
-      setThreshold(domains[selectedDomain].defaultThreshold);
-    }
-  }, [selectedDomain, domains]);
-
-  const loadConfig = async () => {
+  const loadConfig = useCallback(async () => {
     try {
       const response = await fetch("/api/rerank");
       const data = await response.json();
@@ -59,7 +48,18 @@ export function RerankerClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadConfig();
+  }, [loadConfig]);
+
+  useEffect(() => {
+    // Update threshold when domain changes
+    if (domains[selectedDomain]) {
+      setThreshold(domains[selectedDomain].defaultThreshold);
+    }
+  }, [selectedDomain, domains]);
 
   const handleTest = async () => {
     if (!testQuery.trim() || !testDocuments.trim()) return;

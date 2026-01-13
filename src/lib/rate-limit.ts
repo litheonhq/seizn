@@ -1,7 +1,7 @@
 // Rate limiting with sliding window for burst protection
 // Uses in-memory cache with periodic cleanup
 
-import { getPlan, getLimit } from './plan-limits';
+import { getLimit } from './plan-limits';
 
 interface RateLimitEntry {
   count: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface ServiceStatus {
@@ -49,20 +49,7 @@ export function StatusClient() {
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  useEffect(() => {
-    loadStatus();
-
-    // Auto-refresh every 60 seconds
-    const interval = setInterval(() => {
-      if (autoRefresh) {
-        loadStatus();
-      }
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [autoRefresh]);
-
-  const loadStatus = async () => {
+  const loadStatus = useCallback(async () => {
     try {
       const response = await fetch("/api/status?history=true");
       const statusData = await response.json();
@@ -74,7 +61,20 @@ export function StatusClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadStatus();
+
+    // Auto-refresh every 60 seconds
+    const interval = setInterval(() => {
+      if (autoRefresh) {
+        loadStatus();
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, loadStatus]);
 
   if (loading) {
     return (
@@ -218,7 +218,7 @@ export function StatusClient() {
           </div>
           <div className="p-4">
             <div className="flex gap-1">
-              {data.status_history.map((day, i) => (
+              {data.status_history.map((day, _i) => (
                 <div
                   key={day.date}
                   className={`flex-1 h-8 rounded ${
@@ -283,7 +283,7 @@ export function StatusClient() {
 }
 
 function UptimeCard({ period, value }: { period: string; value: number }) {
-  const getColor = (v: number) => {
+  const _getColor = (v: number) => {
     if (v >= 99.9) return "text-emerald-600";
     if (v >= 99) return "text-yellow-600";
     return "text-red-600";
@@ -364,8 +364,8 @@ function IncidentCard({ incident }: { incident: Incident }) {
 
       {incident.updates.length > 0 && (
         <div className="space-y-2 mt-4 pt-4 border-t border-current/20">
-          {incident.updates.slice(0, 3).map((update, i) => (
-            <div key={i} className="text-sm">
+          {incident.updates.slice(0, 3).map((update, idx) => (
+            <div key={idx} className="text-sm">
               <span className="font-medium">
                 {new Date(update.timestamp).toLocaleString()}
               </span>

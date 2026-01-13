@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '30d';
-    const format = searchParams.get('format') || 'json'; // json, pdf, html
+    const _format = searchParams.get('format') || 'json'; // json, pdf, html
 
     const supabase = createServerClient();
 

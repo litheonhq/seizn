@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { getCachedEmbedding, setCachedEmbedding } from '@/lib/redis';
 import type { EmbeddingInputType, EmbeddingProvider } from '../types';
 
@@ -76,7 +75,7 @@ export class VoyageEmbeddingProvider implements EmbeddingProvider {
     let freshEmbeddings: number[][];
     try {
       freshEmbeddings = await callVoyage(missingTexts, inputType, this.apiKey, this.model);
-    } catch (err) {
+    } catch {
       // Fallback: per-item to reduce blast radius (rate limits / payload limits)
       freshEmbeddings = await Promise.all(
         missingTexts.map((t) => callVoyage([t], inputType, this.apiKey, this.model).then((arr) => arr[0]))

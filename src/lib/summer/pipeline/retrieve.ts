@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomUUID } from 'crypto';
 import type { RetrieveParams, RetrieveResponse, VectorSearchResult } from '../types';
 import { getEmbeddingProvider } from '../embedding';

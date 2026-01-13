@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type TabType = "audit" | "keys" | "settings";
 
@@ -34,11 +34,7 @@ export function SecurityClient() {
   const [actionFilter, setActionFilter] = useState("");
   const [dateRange, setDateRange] = useState("7d");
 
-  useEffect(() => {
-    loadData();
-  }, [activeTab, actionFilter, dateRange]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       if (activeTab === "audit") {
@@ -78,9 +74,13 @@ export function SecurityClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, actionFilter]);
 
-  const handleRotateKey = async (keyId: string) => {
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleRotateKey = async (_keyId: string) => {
     if (!confirm("Are you sure you want to rotate this API key? The old key will be invalidated.")) {
       return;
     }

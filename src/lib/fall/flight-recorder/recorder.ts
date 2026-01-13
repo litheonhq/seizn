@@ -6,6 +6,9 @@ import type {
   RetrievalEventType,
   TraceSummary,
   FlightRecorderConfig,
+  Span,
+  SpanName,
+  TraceCost,
 } from './types';
 import { SupabaseFlightRecorder } from './supabase';
 import {
@@ -25,6 +28,15 @@ export interface FlightRecorder {
   event(handle: TraceHandle, type: RetrievalEventType, payload: Record<string, unknown>): void;
   finish(handle: TraceHandle, summary?: TraceSummary): Promise<void>;
 }
+
+// Default cost rates for estimation
+const DEFAULT_COST_RATES = {
+  embeddingPerToken: 0.00001,
+  vectorSearchPerOp: 0.000001,
+  rerankPerItem: 0.00002,
+  llmInputPerToken: 0.00003,
+  llmOutputPerToken: 0.00006,
+};
 
 // Global configuration (can be set at startup)
 let globalConfig: FlightRecorderConfig = {};
@@ -95,6 +107,7 @@ export async function startTrace(
       startedAtMs,
       sampled: false,
       events: [],
+      spans: [],
       base: {
         ...params,
         queryText: undefined,
@@ -151,6 +164,7 @@ export async function startTrace(
     startedAtMs,
     sampled: true,
     events: [],
+    spans: [],
     base: {
       ...params,
       queryText,
@@ -301,6 +315,218 @@ export async function finishTrace(
       eventCount: handle.events.length,
     });
   }
+}
+
+// ============================================
+// Span Management
+// ============================================
+
+/**
+ * Start a new span in the trace
+ */
+export function startSpan(
+  handle: TraceHandle,
+  name: SpanName | string,
+  input?: Record<string, unknown>,
+  config?: FlightRecorderConfig
+): Span {
+  if (!handle.sampled) {
+    return {
+      name,
+      startedAt: new Date().toISOString(),
+      status: 'success',
+    };
+  }
+
+  const cfg = { ...globalConfig, ...config };
+  const piiConfig = { ...DEFAULT_PII_MASKING_CONFIG, ...cfg.piiMasking };
+
+  const span: Span = {
+    name,
+    startedAt: new Date().toISOString(),
+    status: 'running',
+    input: input && piiConfig.maskEventPayloads
+      ? maskPayloadPII(input, piiConfig)
+      : input,
+  };
+
+  handle.spans.push(span);
+  handle.activeSpan = span;
+
+  if (cfg.debug) {
+    console.log('[FlightRecorder] startSpan', {
+      traceId: handle.traceId,
+      spanName: name,
+    });
+  }
+
+  return span;
+}
+
+/**
+ * End an active span
+ */
+export function endSpan(
+  handle: TraceHandle,
+  span: Span,
+  output?: Record<string, unknown>,
+  error?: string,
+  config?: FlightRecorderConfig
+): void {
+  if (!handle.sampled) return;
+
+  const cfg = { ...globalConfig, ...config };
+  const piiConfig = { ...DEFAULT_PII_MASKING_CONFIG, ...cfg.piiMasking };
+
+  const endedAt = new Date();
+  span.endedAt = endedAt.toISOString();
+  span.durationMs = endedAt.getTime() - new Date(span.startedAt).getTime();
+
+  if (error) {
+    span.status = 'error';
+    span.error = error;
+  } else {
+    span.status = 'success';
+    span.output = output && piiConfig.maskEventPayloads
+      ? maskPayloadPII(output, piiConfig)
+      : output;
+  }
+
+  // Clear active span if it's the current one
+  if (handle.activeSpan === span) {
+    handle.activeSpan = undefined;
+  }
+
+  if (cfg.debug) {
+    console.log('[FlightRecorder] endSpan', {
+      traceId: handle.traceId,
+      spanName: span.name,
+      durationMs: span.durationMs,
+      status: span.status,
+    });
+  }
+}
+
+/**
+ * Create a span wrapper function for async operations
+ */
+export async function withSpan<T>(
+  handle: TraceHandle,
+  name: SpanName | string,
+  input: Record<string, unknown>,
+  fn: () => Promise<T>,
+  config?: FlightRecorderConfig
+): Promise<{ result: T; span: Span }> {
+  const span = startSpan(handle, name, input, config);
+
+  try {
+    const result = await fn();
+    const output = summarizeResult(result);
+    endSpan(handle, span, output, undefined, config);
+    return { result, span };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    endSpan(handle, span, undefined, errorMessage, config);
+    throw err;
+  }
+}
+
+/**
+ * Summarize a result for span output (avoid storing large payloads)
+ */
+function summarizeResult(result: unknown): Record<string, unknown> {
+  if (result === null || result === undefined) {
+    return { value: null };
+  }
+
+  if (typeof result !== 'object') {
+    return { value: result };
+  }
+
+  if (Array.isArray(result)) {
+    return {
+      _type: 'array',
+      length: result.length,
+      sample: result.slice(0, 3).map((item) =>
+        typeof item === 'object' ? { _type: typeof item } : item
+      ),
+    };
+  }
+
+  const obj = result as Record<string, unknown>;
+  const summary: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (Array.isArray(value)) {
+      summary[key] = { _type: 'array', length: value.length };
+    } else if (typeof value === 'object' && value !== null) {
+      summary[key] = { _type: 'object', keys: Object.keys(value).length };
+    } else if (typeof value === 'string' && value.length > 100) {
+      summary[key] = value.slice(0, 100) + '...';
+    } else {
+      summary[key] = value;
+    }
+  }
+
+  return summary;
+}
+
+// ============================================
+// Cost Calculation
+// ============================================
+
+/**
+ * Calculate estimated cost for a trace
+ */
+export function calculateTraceCost(
+  params: {
+    embeddingTokens?: number;
+    vectorSearchOps?: number;
+    rerankItems?: number;
+    llmInputTokens?: number;
+    llmOutputTokens?: number;
+  },
+  config?: FlightRecorderConfig
+): TraceCost {
+  const rates = { ...DEFAULT_COST_RATES, ...config?.costRates };
+
+  const embedding = (params.embeddingTokens || 0) * rates.embeddingPerToken;
+  const vectorSearch = (params.vectorSearchOps || 0) * rates.vectorSearchPerOp;
+  const rerank = (params.rerankItems || 0) * rates.rerankPerItem;
+  const llmInput = (params.llmInputTokens || 0) * rates.llmInputPerToken;
+  const llmOutput = (params.llmOutputTokens || 0) * rates.llmOutputPerToken;
+  const llm = llmInput + llmOutput;
+
+  return {
+    embedding,
+    vectorSearch,
+    rerank,
+    llm,
+    total: embedding + vectorSearch + rerank + llm,
+    tokens: {
+      embeddingInput: params.embeddingTokens,
+      llmInput: params.llmInputTokens,
+      llmOutput: params.llmOutputTokens,
+    },
+  };
+}
+
+/**
+ * Extract timing summary from spans
+ */
+export function extractTimingsFromSpans(spans: Span[]): Record<string, number> {
+  const timings: Record<string, number> = {};
+  let total = 0;
+
+  for (const span of spans) {
+    if (span.durationMs !== undefined) {
+      timings[span.name] = span.durationMs;
+      total += span.durationMs;
+    }
+  }
+
+  timings.total = total;
+  return timings;
 }
 
 // Re-export for convenience
