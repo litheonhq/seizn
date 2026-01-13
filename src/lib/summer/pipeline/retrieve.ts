@@ -9,6 +9,7 @@ import { federatedRetrieve } from '../federated/search';
 import { recommendEfSearch } from '../tuning/hnsw';
 
 import { startTrace, addEvent, finishTrace } from '@/lib/fall/flight-recorder';
+import { generateReceiptFromResult } from '@/lib/retrieval/receipt';
 
 function dedupeByChunkId(results: VectorSearchResult[]): VectorSearchResult[] {
   const map = new Map<string, VectorSearchResult>();
@@ -255,9 +256,39 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResponse
     armId: plan.experiment?.armId,
   });
 
+
+  // Generate query receipt
+  const receipt = generateReceiptFromResult({
+    traceId: requestId,
+    queryText: params.query,
+    collectionId: params.collectionId,
+    plan: params.plan,
+    config: {
+      searchType: plan.config.mode === 'hybrid' ? 'hybrid' : plan.config.mode === 'keyword' ? 'keyword' : 'semantic',
+      topK: plan.config.topK,
+      rerankEnabled: plan.config.rerank,
+      rerankTopN: plan.config.rerankTopN,
+    },
+    cost: {
+      total: 0,
+      tokens: {
+        embeddingInput: Math.ceil(params.query.length / 4),
+      },
+    },
+    timings: {
+      embedding: embedMs,
+      search: searchMs,
+      rerank: plan.config.rerank ? rerankMs : 0,
+      total: totalMs,
+    },
+    resultsCount: finalResults.length,
+    cacheHit: false,
+  });
+
   return {
     results: finalResults,
     config: plan.config,
     trace: params.includeTrace ? trace : undefined,
+    receipt,
   };
 }
