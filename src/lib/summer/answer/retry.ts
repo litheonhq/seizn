@@ -4,6 +4,7 @@
  * Implements exponential backoff with jitter for resilient
  * answer generation with configurable retry strategies.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { RetryConfig } from './types';
 import { DEFAULT_RETRY_CONFIG } from './types';

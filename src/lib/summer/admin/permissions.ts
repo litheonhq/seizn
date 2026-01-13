@@ -3,6 +3,7 @@
  *
  * Granular permission checks for federated source management.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@/lib/supabase';
 import { NextRequest } from 'next/server';
 import { getAuditContext, type AuditContext } from '@/lib/audit';

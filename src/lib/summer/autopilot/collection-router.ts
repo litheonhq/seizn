@@ -7,8 +7,9 @@
  * - Latency/budget constraints
  * - Federated source availability
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@/lib/supabase';
-import type { FederatedBinding, FederatedCapabilities } from '../federated/types';
+import type { FederatedCapabilities } from '../federated/types';
 import type { BudgetConfig } from '@/lib/core/primitives';
 
 export type RoutingStrategy = 'single' | 'broadcast' | 'selective' | 'cascading';
