@@ -306,7 +306,7 @@ function findDelimitedBlocks(
 
   let currentBlock: string[] = [];
   let blockStart = 0;
-  let minDelimiters = delimiter === '|' ? 2 : 1;
+  const minDelimiters = delimiter === '|' ? 2 : 1;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];

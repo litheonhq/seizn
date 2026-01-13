@@ -114,7 +114,7 @@ export async function detectConflict(
 
   try {
     // Search for similar documents
-    let query = supabase.rpc('summer_search_chunks', {
+    const query = supabase.rpc('summer_search_chunks', {
       query_embedding: queryEmbedding,
       match_user_id: userId,
       match_collection_id: collectionId,

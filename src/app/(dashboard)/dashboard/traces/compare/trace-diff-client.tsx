@@ -191,7 +191,7 @@ export function TraceDiffClient() {
         <h3 className="font-medium text-blue-800 mb-2">How to use Trace Diff</h3>
         <ul className="text-sm text-blue-700 space-y-1">
           <li>• Select two traces to compare their results, latency, and cost</li>
-          <li>• Use "Replay" to re-run a trace with modified config</li>
+          <li>• Use &quot;Replay&quot; to re-run a trace with modified config</li>
           <li>• Compare original vs replayed to see the impact of config changes</li>
           <li>• Ranking changes show how results moved between runs</li>
         </ul>
