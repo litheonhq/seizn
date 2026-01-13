@@ -21,3 +21,5 @@ export type { WhatIfLabProps, WhatIfConfig, WhatIfResult } from "./WhatIfLab";
 
 export { ReceiptTab } from "./ReceiptTab";
 export type { ReceiptTabProps } from "./ReceiptTab";
+export { WhyNotPanel } from "./WhyNotPanel";
+export type { WhyNotPanelProps, WhyNotResult, WhyNotBlocker, WhyNotStages, WhyNotStage } from "./WhyNotPanel";

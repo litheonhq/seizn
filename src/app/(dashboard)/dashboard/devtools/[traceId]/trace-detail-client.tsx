@@ -8,6 +8,7 @@ import {
   CandidateList,
   RerankDiff,
   WhatIfLab,
+  WhyNotPanel,
 } from "@/components/devtools";
 import type { TimelineStage, Candidate, WhatIfResult } from "@/components/devtools";
 
@@ -84,7 +85,7 @@ interface TraceDetailClientProps {
   traceId: string;
 }
 
-type TabId = "timeline" | "candidates" | "rerank" | "whatif" | "cost" | "raw";
+type TabId = "timeline" | "candidates" | "rerank" | "whatif" | "whynot" | "cost" | "raw";
 
 // ============================================
 // Icons
@@ -129,6 +130,12 @@ const ChartIcon = ({ className }: { className?: string }) => (
 const ReplayIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  </svg>
+);
+
+const QuestionMarkIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
@@ -199,6 +206,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
     { id: "candidates", label: "Candidates", icon: DocumentIcon },
     { id: "rerank", label: "Rerank Diff", icon: ChartIcon },
     { id: "whatif", label: "What-If Lab", icon: TerminalIcon },
+    { id: "whynot", label: "Why Not?", icon: QuestionMarkIcon },
     { id: "cost", label: "Cost Analysis", icon: CurrencyIcon },
     { id: "raw", label: "Raw", icon: DocumentIcon },
   ];
@@ -398,6 +406,10 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
             }}
             onReplayComplete={handleReplayComplete}
           />
+        )}
+
+        {activeTab === "whynot" && (
+          <WhyNotPanel traceId={traceDetail.id} />
         )}
 
         {activeTab === "cost" && (
