@@ -150,6 +150,8 @@ export interface RetrieveResponse {
   results: VectorSearchResult[];
   config: RetrievalConfig;
   trace?: RetrievalTrace;
+  /** Query receipt with cost/execution/evidence breakdown */
+  receipt?: import('@/lib/retrieval/receipt').QueryReceipt;
 }
 
 // ============================================
