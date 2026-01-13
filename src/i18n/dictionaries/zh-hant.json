@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. 保留所有權利。"
+    },
+    "faqPage": {
+      "title": "常見問題",
+      "subtitle": "關於Seizn Memory API的常見問題，從入門到進階操作。",
+      "stillHaveQuestions": "還有其他問題嗎？",
+      "stillHaveQuestionsDesc": "查看我們的文檔或聯繫支援團隊。",
+      "readDocs": "閱讀文檔",
+      "contactSupport": "聯繫支援",
+      "categories": {
+        "all": "全部",
+        "gettingStarted": "入門指南",
+        "coreConcepts": "核心概念",
+        "searchRetrieval": "搜尋與檢索",
+        "extraction": "提取",
+        "operations": "操作",
+        "securityCompliance": "安全與合規"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "什麼是Seizn Memory？它解決什麼問題？",
+          "answer": "Seizn Memory是為AI應用程式提供持久、可搜尋記憶體的AI記憶體基礎設施。與僅存儲/搜尋向量的向量資料庫不同，Seizn包含完整的產品層：記憶體提取、策略管理、密鑰管理、刪除、審計日誌和SDK。它解決了跨AI會話維護上下文和實現個人化AI體驗的問題。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn與Pinecone或Weaviate等向量資料庫有何不同？",
+          "answer": "向量資料庫是向量的存儲/搜尋基礎設施。Seizn是建構在其上的完整記憶體系統，提供：從對話中自動提取記憶體、記憶體類型分類、命名空間/範圍管理、API密鑰輪換、審計日誌、SDK和治理功能。將其視為「記憶體基礎設施」vs「搜尋基礎設施」。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "使用Seizn需要RAG嗎？",
+          "answer": "不需要。最常見的起點是：存儲記憶體 -> 搜尋 -> 注入提示。RAG（自動上下文組合 + 回應生成）是下一步。您可以從簡單開始，根據需要增加複雜性。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "構建PoC的最快方法是什麼？",
+          "answer": "1) POST /api/memories存儲用戶偏好。2) GET /api/memories搜尋。3) 將結果注入LLM提示。4) 稍後，添加/api/extract用於自動提取，/api/query用於記憶體增強回應。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "應該在/api/memories中存儲什麼？",
+          "answer": "存儲跨對話有效的資訊：偏好（語氣、語言、格式）、事實（工作、工具、專案結構）、指令（「總是用表格總結」）、關係（「Alice是團隊負責人」）。除非使用會話範圍，否則避免存儲臨時或會話特定的數據。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "不應該存儲什麼數據？",
+          "answer": "絕不存儲：密碼、API密鑰、令牌、會話cookie（認證資訊）、SSN、護照號碼、銀行帳戶（PII）、信用卡資訊（支付數據）。對於臨時數據，如需要可使用帶TTL的會話範圍。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "為什麼命名空間很重要？",
+          "answer": "命名空間按專案/租戶/環境分離記憶體。沒有它，數據會混合，搜尋品質下降，刪除/導出變得困難。建議：'org:acme/app:chat/env:prod'或'project:myapp/env:staging'。在生產環境中絕不只使用'default'。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "何時應該使用範圍（user/session/agent）？",
+          "answer": "user：全局適用於用戶的偏好。session：僅對此對話有效的目標或上下文。agent：多代理系統中特定代理的規則。正確使用範圍可減少提示長度並提高回應一致性。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什麼是memory_types，為什麼重要？",
+          "answer": "memory_type對記憶體進行分類：fact（不變的資訊）、preference（用戶選擇）、instruction（要遵循的規則）、relationship（人/組織連結）、experience（過去的事件）。這是過濾、刪除和策略應用最強大的軸心。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "threshold和limit如何運作？",
+          "answer": "limit：檢索的候選記憶體數量（太低=錯過相關的，太高=噪音上下文）。threshold：0-1相似度截止（越高=越嚴格）。從limit=10、threshold=0.7開始。如果錯過記憶體，將threshold降至0.6並將limit提高到20。如果獲得不相關的結果，將threshold提高到0.75-0.8。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "為什麼我的搜尋結果不相關？",
+          "answer": "通常是以下之一：1) 命名空間混合，2) 存儲的記憶體太多（噪音），3) threshold太低，4) 內容太抽象（「喜歡東西」vs具體事實）。修復：分離命名空間，使內容具體，提高threshold。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "記憶體增長後搜尋品質下降了。該怎麼辦？",
+          "answer": "添加重要性評分，僅保留高重要性記憶體。使用TTL自動過期舊記憶體。定期將相似記憶體合併為摘要。分離命名空間以減少搜尋範圍。"
+        },
+        {
+          "category": "extraction",
+          "question": "應該如何使用/api/extract？",
+          "answer": "建議流程：1) 使用auto_store=false調用以預覽提取的記憶體。2) 向用戶顯示結果以供確認。3) 僅存儲已批准的記憶體。4) 一旦提取品質得到證明，切換到auto_store=true進行自動化。"
+        },
+        {
+          "category": "extraction",
+          "question": "model=haiku和model=sonnet有什麼區別？",
+          "answer": "haiku：更快、更便宜，適合大多數情況。sonnet：更準確，適合重要提取（入職、合約、政策）。對大量/初始提取使用haiku，對高風險場景使用sonnet。"
+        },
+        {
+          "category": "operations",
+          "question": "存儲後可以修改記憶體嗎？",
+          "answer": "可以，但建議的模式是：創建新記憶體 + 刪除/歸檔舊的。這種方法更有利於審計追蹤並防止回歸問題。"
+        },
+        {
+          "category": "operations",
+          "question": "如何刪除記憶體？",
+          "answer": "兩種方法：1) 按ID刪除（精確），2) 按命名空間刪除（批量清理）。對於企業/合規，確保「完全刪除 + 審計日誌」。明確記錄您的刪除策略。"
+        },
+        {
+          "category": "operations",
+          "question": "我收到429 Too Many Requests。該怎麼辦？",
+          "answer": "您已達到速率限制。解決方案：1) 實施指數退避（1秒 -> 2秒 -> 4秒）。2) 在伺服器端排隊請求。3) 降低請求頻率：緩存重複查詢，批量操作，降低提取頻率。"
+        },
+        {
+          "category": "operations",
+          "question": "如何降低成本？",
+          "answer": "最大成本驅動因素：1) 提取頻率 - 減少調用。2) 搜尋範圍 - 使用命名空間縮小。3) 模型選擇 - 常規使用haiku，重要使用sonnet。4) 緩存 - 緩存重複查詢。5) 盡可能批量操作。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "可以在瀏覽器（前端）使用API密鑰嗎？",
+          "answer": "不建議 - 密鑰暴露風險高。從伺服器調用Seizn（Next.js Route Handler、Cloudflare Worker、無伺服器函數），讓瀏覽器調用您的伺服器。絕不將API密鑰暴露給客戶端程式碼。"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "我的安全/法務團隊需要什麼文檔？",
+          "answer": "他們需要：1) 數據範圍（存儲/不存儲什麼），2) 加密（靜態：AES-256，傳輸中：TLS），3) 租戶隔離方法，4) 刪除/保留策略，5) 審計日誌訪問，6) 密鑰輪換/過期策略。在您的文檔中保留安全與治理頁面。"
+        }
+      ]
     }
   }
 }

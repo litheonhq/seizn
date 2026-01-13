@@ -9,7 +9,7 @@
  */
 
 import { estimateTokens } from './utils/tokens';
-import type { ChunkingStrategy, IndexingOptions, ProcessedChunk } from './types';
+import type { IndexingOptions, ProcessedChunk } from './types';
 
 // ============================================
 // Constants

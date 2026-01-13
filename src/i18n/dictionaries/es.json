@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. Todos los derechos reservados."
+    },
+    "faqPage": {
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Preguntas comunes sobre Seizn Memory API, desde los primeros pasos hasta operaciones avanzadas.",
+      "stillHaveQuestions": "¿Aún tienes preguntas?",
+      "stillHaveQuestionsDesc": "Consulta nuestra documentación o contacta con nuestro equipo de soporte.",
+      "readDocs": "Leer Documentación",
+      "contactSupport": "Contactar Soporte",
+      "categories": {
+        "all": "Todo",
+        "gettingStarted": "Primeros Pasos",
+        "coreConcepts": "Conceptos Básicos",
+        "searchRetrieval": "Búsqueda y Recuperación",
+        "extraction": "Extracción",
+        "operations": "Operaciones",
+        "securityCompliance": "Seguridad y Cumplimiento"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "¿Qué es Seizn Memory y qué problema resuelve?",
+          "answer": "Seizn Memory es una infraestructura de memoria de IA que proporciona memoria persistente y buscable para aplicaciones de IA. A diferencia de las bases de datos vectoriales que solo almacenan/buscan vectores, Seizn incluye la capa de producto completa: extracción de memoria, gestión de políticas, gestión de claves, eliminación, registros de auditoría y SDKs. Resuelve el problema de mantener el contexto entre sesiones de IA y habilitar experiencias de IA personalizadas."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "¿En qué se diferencia Seizn de bases de datos vectoriales como Pinecone o Weaviate?",
+          "answer": "Las bases de datos vectoriales son infraestructura de almacenamiento/búsqueda para vectores. Seizn es un sistema de memoria completo construido sobre eso, que proporciona: extracción automática de memoria de conversaciones, clasificación de tipos de memoria, gestión de namespace/scope, rotación de claves API, registro de auditoría, SDKs y características de gobernanza. Piénsalo como 'infraestructura de memoria' vs 'infraestructura de búsqueda'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "¿Necesito RAG para usar Seizn?",
+          "answer": "No. El punto de partida más común es: almacenar memoria -> buscar -> inyectar en el prompt. RAG (composición automática de contexto + generación de respuesta) es el siguiente paso. Puedes empezar simple y añadir complejidad según sea necesario."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "¿Cuál es la forma más rápida de construir un PoC?",
+          "answer": "1) POST /api/memories para almacenar una preferencia de usuario. 2) GET /api/memories para buscar. 3) Inyectar los resultados en tu prompt de LLM. 4) Después, añadir /api/extract para auto-extracción y /api/query para respuestas aumentadas con memoria."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "¿Qué debería almacenar en /api/memories?",
+          "answer": "Almacena información que permanece válida entre conversaciones: preferencias (tono, idioma, formato), hechos (trabajo, herramientas, estructura del proyecto), instrucciones (\"siempre resumir en tablas\"), relaciones (\"Alice es la líder del equipo\"). Evita almacenar datos temporales o específicos de sesión a menos que uses scope de sesión."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "¿Qué datos NO debería almacenar?",
+          "answer": "Nunca almacenes: contraseñas, claves API, tokens, cookies de sesión (info de auth), números de seguro social, números de pasaporte, cuentas bancarias (PII), información de tarjetas de crédito (datos de pago). Para datos temporales, usa scope de sesión con TTL si es necesario."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "¿Por qué es importante el namespace?",
+          "answer": "Namespace separa las memorias por proyecto/tenant/entorno. Sin él, los datos se mezclan, la calidad de búsqueda baja, y la eliminación/exportación se vuelve difícil. Recomendado: 'org:acme/app:chat/env:prod' o 'project:myapp/env:staging'. Nunca uses solo 'default' en producción."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "¿Cuándo debería usar scope (user/session/agent)?",
+          "answer": "user: Preferencias que aplican globalmente a un usuario. session: Objetivos o contexto válido solo para esta conversación. agent: Reglas específicas para un agente en un sistema multi-agente. Usar scope correctamente reduce la longitud del prompt y mejora la consistencia de respuesta."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "¿Qué son los memory_types y por qué importan?",
+          "answer": "memory_type clasifica las memorias: fact (info inmutable), preference (elecciones del usuario), instruction (reglas a seguir), relationship (conexiones personas/org), experience (eventos pasados). Este es el eje más poderoso para filtrar, eliminar y aplicar políticas."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "¿Cómo funcionan threshold y limit?",
+          "answer": "limit: Número de memorias candidatas a recuperar (muy bajo = perder relevantes, muy alto = contexto ruidoso). threshold: corte de similitud 0-1 (más alto = más estricto). Empieza con limit=10, threshold=0.7. Si faltan memorias, baja threshold a 0.6 y sube limit a 20. Si hay resultados irrelevantes, sube threshold a 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "¿Por qué mis resultados de búsqueda son irrelevantes?",
+          "answer": "Usualmente es uno de: 1) namespaces mezclados, 2) demasiadas memorias almacenadas (ruido), 3) threshold muy bajo, 4) contenido muy abstracto ('le gustan cosas' vs hechos específicos). Solución: separar namespaces, hacer contenido específico, subir threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "La calidad de búsqueda bajó al crecer las memorias. ¿Qué hago?",
+          "answer": "Añade puntuación de importancia y mantén solo memorias de alta importancia. Usa TTL para auto-expirar memorias antiguas. Periódicamente fusiona memorias similares en resúmenes. Separa namespaces para reducir el alcance de búsqueda."
+        },
+        {
+          "category": "extraction",
+          "question": "¿Cómo debería usar /api/extract?",
+          "answer": "Flujo recomendado: 1) Llamar con auto_store=false para previsualizar memorias extraídas. 2) Mostrar resultados al usuario para confirmación. 3) Almacenar solo memorias aprobadas. 4) Una vez probada la calidad de extracción, cambiar a auto_store=true para automatización."
+        },
+        {
+          "category": "extraction",
+          "question": "¿Cuál es la diferencia entre model=haiku y model=sonnet?",
+          "answer": "haiku: Más rápido, más barato, bueno para la mayoría de casos. sonnet: Más preciso, mejor para extracciones importantes (onboarding, contratos, políticas). Usa haiku para extracción masiva/inicial, sonnet para escenarios de alto riesgo."
+        },
+        {
+          "category": "operations",
+          "question": "¿Puedo modificar una memoria después de almacenarla?",
+          "answer": "Sí, pero el patrón recomendado es: crear nueva memoria + eliminar/archivar la antigua. Este enfoque es mejor para pistas de auditoría y previene problemas de regresión."
+        },
+        {
+          "category": "operations",
+          "question": "¿Cómo elimino memorias?",
+          "answer": "Dos enfoques: 1) Eliminar por ID (preciso), 2) Eliminar por namespace (limpieza masiva). Para empresa/cumplimiento, asegura 'eliminación completa + registro de auditoría'. Documenta tu política de eliminación claramente."
+        },
+        {
+          "category": "operations",
+          "question": "Estoy recibiendo 429 Too Many Requests. ¿Qué debo hacer?",
+          "answer": "Has alcanzado el límite de tasa. Soluciones: 1) Implementar backoff exponencial (1s -> 2s -> 4s). 2) Encolar peticiones del lado del servidor. 3) Reducir frecuencia de peticiones: cachear consultas duplicadas, operaciones por lotes, bajar frecuencia de extracción."
+        },
+        {
+          "category": "operations",
+          "question": "¿Cómo reduzco costos?",
+          "answer": "Mayores impulsores de costo: 1) Frecuencia de extracción - reducir llamadas. 2) Alcance de búsqueda - usar namespace para acotar. 3) Elección de modelo - usar haiku para rutina, sonnet para importante. 4) Caché - cachear consultas repetidas. 5) Operaciones por lotes cuando sea posible."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "¿Puedo usar la clave API en el navegador (frontend)?",
+          "answer": "No recomendado - alto riesgo de exposición de clave. Llama a Seizn desde tu servidor (Next.js Route Handler, Cloudflare Worker, función serverless) y haz que el navegador llame a tu servidor. Nunca expongas claves API al código del lado del cliente."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "¿Qué documentación necesita mi equipo de seguridad/legal?",
+          "answer": "Querrán: 1) Alcance de datos (qué se almacena/no se almacena), 2) Cifrado (en reposo: AES-256, en tránsito: TLS), 3) Método de aislamiento de tenant, 4) Política de eliminación/retención, 5) Acceso a registro de auditoría, 6) Política de rotación/expiración de claves. Mantén una página de Seguridad y Gobernanza en tus docs."
+        }
+      ]
     }
   }
 }

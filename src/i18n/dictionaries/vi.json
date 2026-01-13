@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "Cau Hoi Thuong Gap",
+      "subtitle": "Cac cau hoi pho bien ve Seizn Memory API, tu bat dau den cac thao tac nang cao.",
+      "stillHaveQuestions": "Van con cau hoi?",
+      "stillHaveQuestionsDesc": "Xem tai lieu cua chung toi hoac lien he voi doi ngu ho tro.",
+      "readDocs": "Doc Tai Lieu",
+      "contactSupport": "Lien He Ho Tro",
+      "categories": {
+        "all": "Tat Ca",
+        "gettingStarted": "Bat Dau",
+        "coreConcepts": "Khai Niem Co Ban",
+        "searchRetrieval": "Tim Kiem va Truy Xuat",
+        "extraction": "Trich Xuat",
+        "operations": "Thao Tac",
+        "securityCompliance": "Bao Mat va Tuan Thu"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Seizn Memory la gi va no giai quyet van de gi?",
+          "answer": "Seizn Memory la co so ha tang bo nho AI cung cap bo nho lau dai, co the tim kiem cho cac ung dung AI. Khac voi cac co so du lieu vector chi luu tru/tim kiem vector, Seizn bao gom lop san pham day du: trich xuat bo nho, quan ly chinh sach, quan ly khoa, xoa, nhat ky kiem toan va SDK. No giai quyet van de duy tri ngu canh giua cac phien AI va cho phep trai nghiem AI ca nhan hoa."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn khac gi so voi cac co so du lieu vector nhu Pinecone hoac Weaviate?",
+          "answer": "Co so du lieu vector la co so ha tang luu tru/tim kiem cho vector. Seizn la mot he thong bo nho hoan chinh duoc xay dung tren do, cung cap: trich xuat bo nho tu dong tu cuoc hoi thoai, phan loai loai bo nho, quan ly namespace/scope, xoay khoa API, nhat ky kiem toan, SDK va cac tinh nang quan tri. Hay nghi ve no nhu 'co so ha tang bo nho' so voi 'co so ha tang tim kiem'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Toi co can RAG de su dung Seizn khong?",
+          "answer": "Khong. Diem bat dau pho bien nhat la: luu bo nho -> tim kiem -> chen vao prompt. RAG (to hop ngu canh tu dong + tao phan hoi) la buoc tiep theo. Ban co the bat dau don gian va them do phuc tap khi can."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Cach nhanh nhat de xay dung PoC la gi?",
+          "answer": "1) POST /api/memories de luu tuy chon nguoi dung. 2) GET /api/memories de tim kiem. 3) Chen ket qua vao prompt LLM cua ban. 4) Sau do, them /api/extract de tu dong trich xuat va /api/query de phan hoi duoc tang cuong bo nho."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Toi nen luu gi trong /api/memories?",
+          "answer": "Luu thong tin van con hieu luc giua cac cuoc hoi thoai: tuy chon (giong dieu, ngon ngu, dinh dang), su kien (cong viec, cong cu, cau truc du an), huong dan (\"luon tom tat trong bang\"), moi quan he (\"Alice la truong nhom\"). Tranh luu du lieu tam thoi hoac cu the cho phien tru khi ban su dung session scope."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Du lieu nao KHONG nen luu?",
+          "answer": "Khong bao gio luu: mat khau, khoa API, token, cookie phien (thong tin xac thuc), SSN, so ho chieu, tai khoan ngan hang (PII), thong tin the tin dung (du lieu thanh toan). Doi voi du lieu tam thoi, su dung session scope voi TTL neu can."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Tai sao namespace quan trong?",
+          "answer": "Namespace phan tach bo nho theo du an/tenant/moi truong. Khong co no, du lieu bi tron lan, chat luong tim kiem giam va xoa/xuat tro nen kho khan. De xuat: 'org:acme/app:chat/env:prod' hoac 'project:myapp/env:staging'. Khong bao gio chi su dung 'default' trong san xuat."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Khi nao nen su dung scope (user/session/agent)?",
+          "answer": "user: Tuy chon ap dung toan cau cho nguoi dung. session: Muc tieu hoac ngu canh chi hop le cho cuoc hoi thoai nay. agent: Quy tac cu the cho mot agent trong he thong nhieu agent. Su dung scope dung giam do dai prompt va cai thien tinh nhat quan cua phan hoi."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "memory_types la gi va tai sao chung quan trong?",
+          "answer": "memory_type phan loai bo nho: fact (thong tin khong thay doi), preference (lua chon nguoi dung), instruction (quy tac can tuan theo), relationship (ket noi nguoi/to chuc), experience (su kien trong qua khu). Day la truc manh nhat de loc, xoa va ap dung chinh sach."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "threshold va limit hoat dong nhu the nao?",
+          "answer": "limit: So luong bo nho ung vien de truy xuat (qua thap = bo lo lien quan, qua cao = ngu canh nhieu). threshold: Nguong tuong dong 0-1 (cao hon = nghiem ngat hon). Bat dau voi limit=10, threshold=0.7. Neu bo lo bo nho, ha threshold xuong 0.6 va tang limit len 20. Neu co ket qua khong lien quan, tang threshold len 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Tai sao ket qua tim kiem cua toi khong lien quan?",
+          "answer": "Thuong la mot trong: 1) namespace bi tron, 2) qua nhieu bo nho duoc luu (nhieu), 3) threshold qua thap, 4) noi dung qua truu tuong ('thich moi thu' so voi su kien cu the). Giai phap: phan tach namespace, lam noi dung cu the, tang threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Chat luong tim kiem giam khi bo nho tang. Toi phai lam gi?",
+          "answer": "Them diem quan trong va chi giu bo nho quan trong. Su dung TTL de tu dong het han bo nho cu. Dinh ky hop nhat bo nho tuong tu thanh tom tat. Phan tach namespace de giam pham vi tim kiem."
+        },
+        {
+          "category": "extraction",
+          "question": "Toi nen su dung /api/extract nhu the nao?",
+          "answer": "Quy trinh de xuat: 1) Goi voi auto_store=false de xem truoc bo nho duoc trich xuat. 2) Hien thi ket qua cho nguoi dung de xac nhan. 3) Chi luu bo nho da duoc phe duyet. 4) Khi chat luong trich xuat da duoc chung minh, chuyen sang auto_store=true de tu dong hoa."
+        },
+        {
+          "category": "extraction",
+          "question": "Su khac biet giua model=haiku va model=sonnet la gi?",
+          "answer": "haiku: Nhanh hon, re hon, tot cho hau het cac truong hop. sonnet: Chinh xac hon, tot hon cho cac trich xuat quan trong (onboarding, hop dong, chinh sach). Su dung haiku de trich xuat hang loat/ban dau, sonnet cho cac tinh huong rui ro cao."
+        },
+        {
+          "category": "operations",
+          "question": "Toi co the sua doi bo nho sau khi luu khong?",
+          "answer": "Co, nhung mau de xuat la: tao bo nho moi + xoa/luu tru cu. Cach tiep can nay tot hon cho duong mon kiem toan va ngan ngua cac van de hoi quy."
+        },
+        {
+          "category": "operations",
+          "question": "Lam cach nao de xoa bo nho?",
+          "answer": "Hai cach tiep can: 1) Xoa theo ID (chinh xac), 2) Xoa theo namespace (lam sach hang loat). Doi voi doanh nghiep/tuan thu, dam bao 'xoa hoan toan + nhat ky kiem toan'. Ghi lai chinh sach xoa cua ban mot cach ro rang."
+        },
+        {
+          "category": "operations",
+          "question": "Toi nhan duoc 429 Too Many Requests. Toi nen lam gi?",
+          "answer": "Ban da dat den gioi han toc do. Giai phap: 1) Trien khai lui theo ham mu (1s -> 2s -> 4s). 2) Xep hang yeu cau o phia may chu. 3) Giam tan suat yeu cau: cache cac truy van trung lap, thao tac theo lo, giam tan suat trich xuat."
+        },
+        {
+          "category": "operations",
+          "question": "Lam cach nao de giam chi phi?",
+          "answer": "Yeu to chi phi lon nhat: 1) Tan suat trich xuat - giam cac cuoc goi. 2) Pham vi tim kiem - su dung namespace de thu hep. 3) Lua chon mo hinh - su dung haiku cho thuong quy, sonnet cho quan trong. 4) Cache - cache cac truy van lap lai. 5) Thao tac theo lo khi co the."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Toi co the su dung khoa API trong trinh duyet (frontend) khong?",
+          "answer": "Khong khuyen khich - rui ro cao lo khoa. Goi Seizn tu may chu cua ban (Next.js Route Handler, Cloudflare Worker, ham serverless) va de trinh duyet goi may chu cua ban. Khong bao gio de lo khoa API cho ma phia khach hang."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Nhom bao mat/phap ly cua toi can tai lieu gi?",
+          "answer": "Ho se muon: 1) Pham vi du lieu (gi duoc/khong duoc luu), 2) Ma hoa (khi nghi: AES-256, khi truyen: TLS), 3) Phuong phap cach ly tenant, 4) Chinh sach xoa/luu giu, 5) Truy cap nhat ky kiem toan, 6) Chinh sach xoay/het han khoa. Giu mot trang Bao Mat va Quan Tri trong tai lieu cua ban."
+        }
+      ]
     }
   }
 }

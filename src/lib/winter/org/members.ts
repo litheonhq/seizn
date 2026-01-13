@@ -517,7 +517,7 @@ export async function updateMember(
     return currentMember;
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('organization_members')
     .update(updates)
     .eq('id', params.member_id)

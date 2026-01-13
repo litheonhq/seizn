@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { ragQuery, ragQueryStream } from '@/lib/summer/rag-pipeline';
 import type { RAGOptions, RAGStreamChunk } from '@/lib/summer/rag-pipeline';
-import { estimateTokens } from '@/lib/summer/utils/tokens';
 import { hasFeature } from '@/lib/plan-limits';
 
 // ===========================================

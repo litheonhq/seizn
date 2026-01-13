@@ -23,11 +23,10 @@
 import type {
   SeizRetrieverConfig,
   SeizRetrieverMetadata,
-  SeizDocument,
   Document,
   SeizError,
 } from './types';
-import type { VectorSearchResult, RetrievalMode } from '@/lib/summer/types';
+import type { VectorSearchResult } from '@/lib/summer/types';
 
 const DEFAULT_BASE_URL = 'https://seizn.com/api';
 const DEFAULT_TOP_K = 5;

@@ -5,8 +5,8 @@
  * These types bridge Seizn's memory and retrieval systems with LangChain's interfaces.
  */
 
-import type { Memory, MemoryType, MemoryScope, SearchMode } from '@/lib/spring/types';
-import type { VectorSearchResult, RetrievalMode } from '@/lib/summer/types';
+import type { Memory, SearchMode } from '@/lib/spring/types';
+import type { RetrievalMode } from '@/lib/summer/types';
 
 // ============================================
 // Retriever Types

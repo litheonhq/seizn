@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "Vanliga Frågor",
+      "subtitle": "Vanliga frågor om Seizn Memory API, från att komma igång till avancerade operationer.",
+      "stillHaveQuestions": "Har du fortfarande frågor?",
+      "stillHaveQuestionsDesc": "Kolla in vår dokumentation eller kontakta vårt supportteam.",
+      "readDocs": "Läs Dokumentation",
+      "contactSupport": "Kontakta Support",
+      "categories": {
+        "all": "Alla",
+        "gettingStarted": "Komma Igång",
+        "coreConcepts": "Kärnkoncept",
+        "searchRetrieval": "Sök och Hämtning",
+        "extraction": "Extraktion",
+        "operations": "Operationer",
+        "securityCompliance": "Säkerhet och Efterlevnad"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Vad är Seizn Memory och vilket problem löser det?",
+          "answer": "Seizn Memory är en AI-minnesinfrastruktur som tillhandahåller beständigt, sökbart minne för AI-applikationer. Till skillnad från vektordatabaser som bara lagrar/söker vektorer, inkluderar Seizn hela produktlagret: minnesextraktion, policyhantering, nyckelhantering, radering, granskningsloggar och SDKs. Det löser problemet med att bibehålla kontext över AI-sessioner och möjliggör personanpassade AI-upplevelser."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Hur skiljer sig Seizn från vektordatabaser som Pinecone eller Weaviate?",
+          "answer": "Vektordatabaser är lagrings-/sökinfrastruktur för vektorer. Seizn är ett komplett minnessystem byggt ovanpå, som tillhandahåller: automatisk minnesextraktion från konversationer, minnestypsklassificering, namespace/scope-hantering, API-nyckelrotation, granskningsloggar, SDKs och styrningsfunktioner. Tänk på det som 'minnesinfrastruktur' vs 'sökinfrastruktur'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Behöver jag RAG för att använda Seizn?",
+          "answer": "Nej. Den vanligaste startpunkten är: lagra minne -> sök -> injicera i prompt. RAG (automatisk kontextsammansättning + svargenerering) är nästa steg. Du kan börja enkelt och lägga till komplexitet efter behov."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Vad är det snabbaste sättet att bygga en PoC?",
+          "answer": "1) POST /api/memories för att lagra en användarpreferens. 2) GET /api/memories för att söka. 3) Injicera resultat i din LLM-prompt. 4) Senare, lägg till /api/extract för auto-extraktion och /api/query för minnesförstärkta svar."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Vad ska jag lagra i /api/memories?",
+          "answer": "Lagra information som förblir giltig över konversationer: preferenser (ton, språk, format), fakta (jobb, verktyg, projektstruktur), instruktioner (\"sammanfatta alltid i tabeller\"), relationer (\"Alice är teamledaren\"). Undvik att lagra tillfällig eller sessionsspecifik data om du inte använder session-scope."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Vilken data ska jag INTE lagra?",
+          "answer": "Lagra aldrig: lösenord, API-nycklar, tokens, sessionscookies (autentiseringsinfo), personnummer, passnummer, bankkonton (PII), kreditkortsinfo (betalningsdata). För tillfällig data, använd session-scope med TTL vid behov."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Varför är namespace viktigt?",
+          "answer": "Namespace separerar minnen efter projekt/hyresgäst/miljö. Utan det blandas data, sökkvaliteten sjunker, och radering/export blir svårt. Rekommenderat: 'org:acme/app:chat/env:prod' eller 'project:myapp/env:staging'. Använd aldrig bara 'default' i produktion."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "När ska jag använda scope (user/session/agent)?",
+          "answer": "user: Preferenser som gäller globalt för en användare. session: Mål eller kontext som endast är giltigt för denna konversation. agent: Regler specifika för en agent i ett multi-agent-system. Korrekt scope-användning minskar promptlängd och förbättrar svarskonsistens."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Vad är memory_types och varför är de viktiga?",
+          "answer": "memory_type klassificerar minnen: fact (oföränderlig info), preference (användarval), instruction (regler att följa), relationship (person/org-kopplingar), experience (tidigare händelser). Detta är den mest kraftfulla axeln för filtrering, radering och policytillämpning."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Hur fungerar threshold och limit?",
+          "answer": "limit: Antal kandidatminnen att hämta (för lågt = missa relevanta, för högt = brusig kontext). threshold: Likhetsgräns 0-1 (högre = striktare). Börja med limit=10, threshold=0.7. Om du missar minnen, sänk threshold till 0.6 och höj limit till 20. Om du får irrelevanta resultat, höj threshold till 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Varför är mina sökresultat irrelevanta?",
+          "answer": "Vanligtvis en av dessa: 1) blandade namespaces, 2) för många lagrade minnen (brus), 3) för låg threshold, 4) för abstrakt innehåll ('gillar saker' vs specifika fakta). Lösning: separera namespaces, gör innehåll specifikt, höj threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Sökkvaliteten sjönk när minnen växte. Vad ska jag göra?",
+          "answer": "Lägg till viktighetspoäng och behåll endast viktiga minnen. Använd TTL för att auto-förfalla gamla minnen. Slå periodiskt ihop liknande minnen till sammanfattningar. Separera namespaces för att minska sökområdet."
+        },
+        {
+          "category": "extraction",
+          "question": "Hur ska jag använda /api/extract?",
+          "answer": "Rekommenderat flöde: 1) Anropa med auto_store=false för att förhandsgranska extraherade minnen. 2) Visa resultat för användaren för bekräftelse. 3) Lagra endast godkända minnen. 4) När extraktionskvaliteten är bevisad, byt till auto_store=true för automatisering."
+        },
+        {
+          "category": "extraction",
+          "question": "Vad är skillnaden mellan model=haiku och model=sonnet?",
+          "answer": "haiku: Snabbare, billigare, bra för de flesta fall. sonnet: Mer exakt, bättre för viktiga extraktioner (onboarding, kontrakt, policyer). Använd haiku för bulk/initial extraktion, sonnet för högriskscenarion."
+        },
+        {
+          "category": "operations",
+          "question": "Kan jag ändra ett minne efter att det lagrats?",
+          "answer": "Ja, men det rekommenderade mönstret är: skapa nytt minne + radera/arkivera det gamla. Detta tillvägagångssätt är bättre för granskningsspår och förhindrar regressionsproblem."
+        },
+        {
+          "category": "operations",
+          "question": "Hur raderar jag minnen?",
+          "answer": "Två tillvägagångssätt: 1) Radera efter ID (exakt), 2) Radera efter namespace (massrensning). För enterprise/efterlevnad, säkerställ 'fullständig radering + granskningslogg'. Dokumentera din raderingspolicy tydligt."
+        },
+        {
+          "category": "operations",
+          "question": "Jag får 429 Too Many Requests. Vad ska jag göra?",
+          "answer": "Du har nått hastighetsgränsen. Lösningar: 1) Implementera exponentiell backoff (1s -> 2s -> 4s). 2) Köa förfrågningar serversidigt. 3) Minska förfrågningsfrekvens: cacha duplicerade frågor, batchoperationer, minska extraktionsfrekvens."
+        },
+        {
+          "category": "operations",
+          "question": "Hur minskar jag kostnader?",
+          "answer": "Största kostnadsdrivarna: 1) Extraktionsfrekvens - minska anrop. 2) Sökområde - använd namespace för att begränsa. 3) Modellval - använd haiku för rutin, sonnet för viktigt. 4) Cachning - cacha upprepade frågor. 5) Batchoperationer när möjligt."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Kan jag använda API-nyckeln i webbläsaren (frontend)?",
+          "answer": "Rekommenderas inte - hög risk för nyckelexponering. Anropa Seizn från din server (Next.js Route Handler, Cloudflare Worker, serverless-funktion) och låt webbläsaren anropa din server. Exponera aldrig API-nycklar i klientkod."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Vilken dokumentation behöver mitt säkerhets-/juridiska team?",
+          "answer": "De vill ha: 1) Dataomfång (vad lagras/inte lagras), 2) Kryptering (i vila: AES-256, i transit: TLS), 3) Hyresgästisoleringmetod, 4) Raderings-/bevarandepolicy, 5) Granskningsloggåtkomst, 6) Nyckelrotations-/utgångspolicy. Ha en Säkerhets- och Styrningssida i dina dokument."
+        }
+      ]
     }
   }
 }

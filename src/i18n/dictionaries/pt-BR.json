@@ -704,6 +704,125 @@
     },
     "footer": {
       "copyright": "© {year} Seizn. All rights reserved."
+    },
+    "faqPage": {
+      "title": "Perguntas Frequentes",
+      "subtitle": "Perguntas frequentes sobre a API de Memória Seizn, desde como começar até operações avançadas.",
+      "stillHaveQuestions": "Ainda tem dúvidas?",
+      "stillHaveQuestionsDesc": "Entre em contato com nossa equipe de suporte para assistência personalizada.",
+      "readDocs": "Ler Documentação",
+      "contactSupport": "Contatar Suporte",
+      "categories": {
+        "all": "Todos",
+        "gettingStarted": "Primeiros Passos",
+        "coreConcepts": "Conceitos Principais",
+        "searchRetrieval": "Busca e Recuperação",
+        "extraction": "Extração",
+        "operations": "Operações",
+        "securityCompliance": "Segurança e Conformidade"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "O que é a API de Memória Seizn?",
+          "answer": "A API de Memória Seizn é um serviço de armazenamento e recuperação de memória escalável e em tempo real, projetado para aplicações de IA. Ela permite que agentes de IA armazenem, busquem e recuperem memórias ricas em contexto usando busca avançada por similaridade de vetores."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Como eu começo?",
+          "answer": "Comece criando uma conta Seizn e gerando sua chave de API. Em seguida, instale nosso SDK (Python ou JavaScript) e siga o guia de início rápido para armazenar sua primeira memória."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Quais SDKs estão disponíveis?",
+          "answer": "Oferecemos SDKs oficiais para Python e JavaScript/TypeScript. Ambos os SDKs suportam todas as funcionalidades da API, incluindo operações CRUD de memória, busca e processamento em lote."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "O que é um objeto de memória?",
+          "answer": "Um objeto de memória é a unidade básica de armazenamento no Seizn. Ele contém conteúdo (o texto ou dados reais), metadados (pares chave-valor personalizados), um tipo de memória (fato, experiência, instrução, etc.) e embeddings gerados automaticamente para busca por similaridade."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Como as memórias são categorizadas?",
+          "answer": "As memórias podem ser categorizadas por tipo de memória (ex: fato, preferência, experiência, relacionamento, instrução), campos de metadados personalizados e tags. Isso permite organizar e filtrar memórias com base nos requisitos da sua aplicação."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "O que são embeddings e como são usados?",
+          "answer": "Embeddings são representações vetoriais do conteúdo da sua memória. O Seizn gera e indexa automaticamente embeddings quando você armazena memórias, permitindo busca por similaridade semântica. Isso significa que você pode encontrar memórias relacionadas mesmo quando o texto exato difere."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Como funciona a busca de memória?",
+          "answer": "A busca de memória combina busca por similaridade de vetores com filtragem de metadados. Quando você busca, sua consulta é convertida em um embedding e comparada com as memórias armazenadas. Você pode filtrar ainda mais os resultados por tipo de memória, metadados e intervalos de tempo."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "O que é busca híbrida?",
+          "answer": "A busca híbrida combina similaridade semântica com correspondência de palavras-chave para resultados mais precisos. Isso é especialmente útil quando você quer combinar termos específicos enquanto encontra conteúdo semanticamente relacionado."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Como eu filtro resultados de busca?",
+          "answer": "Você pode filtrar resultados de busca usando filtros de metadados (correspondência exata, intervalo, verificação de existência), filtragem por tipo de memória, filtragem por timestamp (created_at, updated_at) e limites de pontuação personalizados."
+        },
+        {
+          "category": "extraction",
+          "question": "O que é extração de memória?",
+          "answer": "A extração de memória analisa texto automaticamente para extrair memórias estruturadas. Ela identifica fatos, preferências, relacionamentos e outras informações relevantes de conteúdo não estruturado."
+        },
+        {
+          "category": "extraction",
+          "question": "Como eu salvo memórias automaticamente de conversas?",
+          "answer": "Use o endpoint /extract para analisar conversas geradas por IA ou usuários. A API identifica e extrai automaticamente memórias com base nas regras de configuração, incluindo tipos de memória para extrair e filtros de conteúdo."
+        },
+        {
+          "category": "extraction",
+          "question": "Posso personalizar as regras de extração?",
+          "answer": "Sim, você pode definir configurações de extração personalizadas, incluindo quais tipos de memória extrair, limites mínimos de confiança, filtragem de conteúdo e prompts de extração personalizados para casos de uso especializados."
+        },
+        {
+          "category": "operations",
+          "question": "Como eu atualizo uma memória existente?",
+          "answer": "Use o endpoint PUT /memories/{id} para atualizar uma memória. Você pode modificar o conteúdo, metadados e tipo de memória. O embedding é regenerado automaticamente quando o conteúdo muda."
+        },
+        {
+          "category": "operations",
+          "question": "Vocês suportam operações em lote?",
+          "answer": "Sim, suportamos criação, atualização e exclusão de memórias em lote. Operações em lote são otimizadas para desempenho e são recomendadas ao processar múltiplas memórias de uma vez."
+        },
+        {
+          "category": "operations",
+          "question": "Quais são os limites de taxa da API?",
+          "answer": "Os limites de taxa variam por nível de assinatura. O nível gratuito permite 100 requisições por minuto, enquanto os níveis pagos oferecem limites maiores e capacidade de burst. Verifique seu painel para seus limites atuais."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Como meus dados são protegidos?",
+          "answer": "Todos os dados são criptografados em repouso (AES-256) e em trânsito (TLS 1.3). Mantemos isolamento rigoroso de inquilinos e realizamos auditorias de segurança regulares. As chaves de API podem ser rotacionadas a qualquer momento pelo seu painel."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Quais padrões de conformidade vocês suportam?",
+          "answer": "O Seizn é projetado com princípios de privacidade em primeiro lugar e suporta conformidade com GDPR e CCPA. Isso inclui capacidades de exportação de dados, solicitações de exclusão e controles de retenção de dados."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Como eu gerencio chaves de API?",
+          "answer": "As chaves de API podem ser gerenciadas pelo seu painel. Você pode criar múltiplas chaves para diferentes ambientes, definir expiração de chaves, visualizar estatísticas de uso por chave e revogar chaves comprometidas imediatamente."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Qual é a política de retenção de dados?",
+          "answer": "Por padrão, as memórias são retidas indefinidamente até serem excluídas. Memórias excluídas são removidas permanentemente de nossos sistemas dentro de 30 dias. Você também pode configurar políticas de retenção personalizadas para limpeza automática."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Como eu solicito exportação ou exclusão de dados?",
+          "answer": "Você pode exportar todos os seus dados via API ou painel. Para exclusão de conta, entre em contato com o suporte e processaremos sua solicitação em conformidade com as regulamentações aplicáveis."
+        }
+      ]
     }
   }
 }

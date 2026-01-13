@@ -16,11 +16,10 @@
  */
 
 import { randomUUID } from 'crypto';
-import type { VectorSearchResult, RetrievalConfig } from './types';
+import type { VectorSearchResult } from './types';
 import { getEmbeddingProvider } from './embedding';
 import { getRerankProvider } from './rerank';
 import { getVectorStore } from './vectorstore';
-import { planRetrieval } from './autopilot/planner';
 import { federatedRetrieve } from './federated/search';
 import { buildAnswerContractSystemPrompt, buildAnswerContractUserPrompt } from './answer-contract/prompt';
 import { estimateTokens } from './utils/tokens';
@@ -820,7 +819,6 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
 export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStreamChunk> {
   const requestId = randomUUID();
   const traceId = randomUUID();
-  const startedAt = new Date().toISOString();
   const t0 = Date.now();
   const options = params.options ?? {};
 

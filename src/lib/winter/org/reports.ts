@@ -23,7 +23,7 @@ import type {
   CostAnalysisReportData,
   PaginatedResult,
 } from './types';
-import { getAuditSummary, getSecurityEvents, getDataAccessEvents } from './audit-log';
+import { getSecurityEvents, getDataAccessEvents } from './audit-log';
 import { getOrganizationUsage } from './organization';
 import { listMembers } from './members';
 
@@ -309,7 +309,7 @@ async function generateUsageReport(
 async function generateSecurityReport(
   organizationId: string,
   periodStart: Date,
-  periodEnd: Date
+  _periodEnd: Date
 ): Promise<SecurityReportData> {
   const securityEvents = await getSecurityEvents(organizationId, periodStart, 1000);
 
