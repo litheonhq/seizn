@@ -99,7 +99,7 @@ export async function GET(
     let currentStage: RolloutStage = 'candidate';
     if (analysis.winner) {
       // Check actual weights to determine stage
-      const winnerCandidate = analysis.allCandidates.find(
+      const _winnerCandidate = analysis.allCandidates.find(
         (c) => c.armId === analysis.winner?.armId
       );
       // Note: We'd need to query actual weights from DB for accurate stage

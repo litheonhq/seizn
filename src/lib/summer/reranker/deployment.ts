@@ -6,7 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
-import type { DeployedModel, TrainingRun, Checkpoint, RerankerEvaluation } from './types';
+import type { DeployedModel, Checkpoint, RerankerEvaluation } from './types';
 import { getTrainingRun, getBestCheckpoint } from './training';
 
 export interface DeployModelParams {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface ROIReport {
   period: string;
@@ -34,11 +34,7 @@ export function ROIReportClient() {
   const [period, setPeriod] = useState("30d");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadReport();
-  }, [period]);
-
-  const loadReport = async () => {
+  const loadReport = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/reports/roi?period=${period}`);
@@ -51,7 +47,11 @@ export function ROIReportClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [period]);
+
+  useEffect(() => {
+    loadReport();
+  }, [loadReport]);
 
   if (loading) {
     return (

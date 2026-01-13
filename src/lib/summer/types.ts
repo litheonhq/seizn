@@ -151,3 +151,126 @@ export interface RetrieveResponse {
   config: RetrievalConfig;
   trace?: RetrievalTrace;
 }
+
+// ============================================
+// Indexing Types
+// ============================================
+
+/**
+ * Chunking strategy for document processing
+ * - sliding_window: Fixed size chunks with overlap (default)
+ * - sentence: Split by sentences, pack into chunks
+ * - paragraph: Split by paragraphs
+ * - semantic: Semantic-aware chunking with boundary detection
+ */
+export type ChunkingStrategy = 'sliding_window' | 'sentence' | 'paragraph' | 'semantic';
+
+/**
+ * Embedding model options for indexing
+ */
+export type EmbeddingModel = 'voyage-3' | 'voyage-3-lite' | 'voyage-code-3' | 'voyage-finance-2';
+
+/**
+ * Document input for indexing API
+ */
+export interface IndexDocumentInput {
+  /** Unique identifier for the document (optional, for upsert behavior) */
+  id?: string;
+  /** Document content to be indexed */
+  content: string;
+  /** Document metadata (searchable and returned with results) */
+  metadata?: Record<string, unknown>;
+  /** Document title (stored separately for display) */
+  title?: string;
+  /** Source URL or identifier */
+  source?: string;
+  /** MIME type of the original document */
+  mime_type?: string;
+}
+
+/**
+ * Options for the indexing process
+ */
+export interface IndexingOptions {
+  /** Chunking strategy (default: sliding_window) */
+  chunking_strategy?: ChunkingStrategy;
+  /** Maximum tokens per chunk (default: 512) */
+  chunk_size?: number;
+  /** Overlap between chunks in tokens (default: 64) */
+  chunk_overlap?: number;
+  /** Embedding model to use (default: voyage-3) */
+  embedding_model?: EmbeddingModel;
+  /** Skip duplicate detection based on content hash */
+  skip_duplicates?: boolean;
+}
+
+/**
+ * Request body for POST /api/summer/index
+ */
+export interface IndexRequest {
+  /** Collection ID to index documents into */
+  collection_id: string;
+  /** Array of documents to index */
+  documents: IndexDocumentInput[];
+  /** Indexing options */
+  options?: IndexingOptions;
+}
+
+/**
+ * Response from POST /api/summer/index
+ */
+export interface IndexResponse {
+  success: boolean;
+  /** Number of documents successfully indexed */
+  indexed_count: number;
+  /** Total number of chunks created */
+  chunks_created: number;
+  /** Processing duration in milliseconds */
+  duration_ms: number;
+  /** Per-document results */
+  results?: IndexDocumentResult[];
+}
+
+/**
+ * Result for a single document indexing operation
+ */
+export interface IndexDocumentResult {
+  /** Document ID (assigned or provided) */
+  document_id: string;
+  /** External ID if provided */
+  external_id?: string;
+  /** Number of chunks created for this document */
+  chunk_count: number;
+  /** Status of the operation */
+  status: 'created' | 'updated' | 'skipped' | 'error';
+  /** Error message if status is 'error' */
+  error?: string;
+}
+
+/**
+ * Internal chunk representation after chunking
+ */
+export interface ProcessedChunk {
+  /** Chunk index within the document */
+  index: number;
+  /** Chunk text content */
+  content: string;
+  /** Estimated token count */
+  token_count: number;
+  /** Start character offset in original document */
+  start_offset: number;
+  /** End character offset in original document */
+  end_offset: number;
+  /** Chunk-specific metadata */
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Chunk with embedding ready for storage
+ */
+export interface IndexedChunk extends ProcessedChunk {
+  /** Document ID this chunk belongs to */
+  document_id: string;
+  /** Embedding vector */
+  embedding: number[];
+}

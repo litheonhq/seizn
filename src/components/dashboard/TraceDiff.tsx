@@ -69,7 +69,7 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
       } else {
         setError(data.error?.message || "Failed to load diff");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to load diff");
     } finally {
       setLoading(false);

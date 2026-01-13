@@ -11,10 +11,9 @@ import type {
   TrainingRun,
   TrainingMetrics,
   Checkpoint,
-  TrainingDataset,
 } from './types';
 import { DEFAULT_TRAINING_CONFIG } from './types';
-import { getDataset, splitDataset } from './dataset';
+import { getDataset } from './dataset';
 
 export interface StartTrainingParams {
   datasetId: string;

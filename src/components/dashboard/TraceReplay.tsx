@@ -56,7 +56,7 @@ export function TraceReplay({
       } else {
         setError(data.error?.message || "Replay failed");
       }
-    } catch (err) {
+    } catch {
       setError("Replay failed");
     } finally {
       setLoading(false);

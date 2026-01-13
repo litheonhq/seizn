@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type ConnectorType = "pinecone" | "weaviate" | "qdrant" | "milvus";
 
@@ -50,28 +50,7 @@ export function FederatedClient() {
     weaviate_className: "",
   });
 
-  useEffect(() => {
-    loadConnectors();
-  }, []);
-
-  const loadConnectors = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/federated");
-      const data = await response.json();
-      if (data.success) {
-        setConnectors(data.connectors || []);
-        // Load health status
-        await loadHealth();
-      }
-    } catch (error) {
-      console.error("Failed to load connectors:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadHealth = async () => {
+  const loadHealth = useCallback(async () => {
     try {
       const response = await fetch("/api/federated", {
         method: "POST",
@@ -90,7 +69,28 @@ export function FederatedClient() {
     } catch (error) {
       console.error("Failed to load health:", error);
     }
-  };
+  }, []);
+
+  const loadConnectors = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/federated");
+      const data = await response.json();
+      if (data.success) {
+        setConnectors(data.connectors || []);
+        // Load health status
+        await loadHealth();
+      }
+    } catch (error) {
+      console.error("Failed to load connectors:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadHealth]);
+
+  useEffect(() => {
+    loadConnectors();
+  }, [loadConnectors]);
 
   const handleAddConnector = async () => {
     try {

@@ -140,7 +140,7 @@ export class RerankerService {
     query: string,
     documents: RerankDocument[],
     model: string,
-    domain: DomainType
+    _domain: DomainType
   ): Promise<{ documents: RankedDocument[]; tokensUsed: number }> {
     const apiKey = this.apiKeys.cohere || process.env.COHERE_API_KEY;
 
@@ -198,7 +198,7 @@ export class RerankerService {
   private async rerankWithBGE(
     query: string,
     documents: RerankDocument[],
-    model: string
+    _model: string
   ): Promise<RankedDocument[]> {
     // BGE reranker would typically be called via HuggingFace Inference API
     // For now, use a similarity-based approximation
@@ -212,7 +212,7 @@ export class RerankerService {
   private async rerankWithCrossEncoder(
     query: string,
     documents: RerankDocument[],
-    model: string
+    _model: string
   ): Promise<RankedDocument[]> {
     // Cross-encoder would be called via HuggingFace Inference API
     // For now, use similarity-based approximation
@@ -224,9 +224,9 @@ export class RerankerService {
    * Rerank using custom fine-tuned model
    */
   private async rerankWithCustomModel(
-    query: string,
+    _query: string,
     documents: RerankDocument[],
-    modelId: string
+    _modelId: string
   ): Promise<RankedDocument[]> {
     // Custom model endpoint would be called here
     // For now, use fallback

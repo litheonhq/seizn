@@ -217,7 +217,7 @@ export function LocaleFAQClient({ locale }: Props) {
 
           {/* FAQ List */}
           <div className="space-y-4">
-            {filteredFAQ.map((item, index) => {
+            {filteredFAQ.map((item, _index) => {
               const globalIndex = faqData.indexOf(item);
               const isOpen = openIndex === globalIndex;
 

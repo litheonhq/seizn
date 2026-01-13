@@ -251,7 +251,7 @@ export class SSOService {
   /**
    * Generate SP metadata for SAML
    */
-  generateSPMetadata(config: SSOConfig): string {
+  generateSPMetadata(_config: SSOConfig): string {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.seizn.com';
 
     return `<?xml version="1.0"?>

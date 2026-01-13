@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import {
+  getTraceStore,
+  startTrace,
+  addEvent,
+  finishTrace,
+  startSpan,
+  endSpan,
+  calculateTraceCost,
+  extractTimingsFromSpans,
+} from '@/lib/fall/flight-recorder';
+import type { TraceConfig, TraceSummary } from '@/lib/fall/flight-recorder';
 
 /**
  * POST /api/traces/replay - Replay a trace with the same or modified config
@@ -11,6 +22,10 @@ import { AuthErrors, ValidationErrors, ServerErrors, NotFoundErrors } from '@/li
  * - A/B testing different configs
  * - Debugging issues
  * - Comparing performance over time
+ *
+ * Request Body:
+ * - trace_id: The ID of the trace to replay
+ * - config_overrides: Optional config overrides for the replay
  */
 export async function POST(request: NextRequest) {
   try {
@@ -27,77 +42,101 @@ export async function POST(request: NextRequest) {
       return ValidationErrors.missingField('trace_id');
     }
 
-    const supabase = createServerClient();
-
     // Fetch original trace
-    const { data: originalTrace, error } = await supabase
-      .from('traces')
-      .select('*')
-      .eq('id', trace_id)
-      .eq('user_id', authResult.userId)
-      .single();
+    const store = getTraceStore();
+    const originalTrace = await store.getTrace(trace_id, authResult.userId);
 
-    if (error || !originalTrace) {
+    if (!originalTrace) {
       return NotFoundErrors.resource('trace');
     }
 
     // Merge original config with overrides
-    const originalConfig = originalTrace.config || {};
-    const replayConfig = {
+    const originalConfig = originalTrace.effectiveConfig || {};
+    const replayConfig: TraceConfig = {
       ...originalConfig,
       ...config_overrides,
     };
 
-    // Execute the query with the (potentially modified) config
-    // This would call the actual retrieval pipeline
-    const startTime = Date.now();
+    // Start a new trace for the replay
+    const handle = await startTrace({
+      requestId: crypto.randomUUID(),
+      userId: authResult.userId,
+      apiKeyId: authResult.apiKeyId,
+      plan: authResult.plan || 'free',
+      collectionId: originalTrace.collectionId,
+      collectionIds: originalTrace.collectionIds,
+      queryText: originalTrace.queryText,
+      autopilotEnabled: false, // Explicit config for replay
+      config: replayConfig,
+      source: 'dashboard',
+    });
 
-    // For now, we'll simulate the replay by calling the internal retrieve function
-    // In production, this would call the actual pipeline
+    addEvent(handle, 'custom', {
+      event: 'replay_started',
+      original_trace_id: trace_id,
+      config_changes: Object.keys(config_overrides || {}),
+    });
+
+    // Execute the replay pipeline
     const replayResult = await executeReplay({
-      query: originalTrace.query,
-      collection: originalTrace.collection,
+      handle,
+      query: originalTrace.queryText || '',
+      collectionId: originalTrace.collectionId,
       config: replayConfig,
       userId: authResult.userId,
       orgId: authResult.orgId,
     });
 
-    const endTime = Date.now();
-
-    // Create new trace record
-    const newTraceId = crypto.randomUUID();
-    const { error: insertError } = await supabase.from('traces').insert({
-      id: newTraceId,
-      user_id: authResult.userId,
-      org_id: authResult.orgId,
-      query: originalTrace.query,
-      collection: originalTrace.collection,
-      config: replayConfig,
-      results: replayResult.results,
-      latency: replayResult.latency,
-      cost_usd: replayResult.cost_usd,
-      replay_of: trace_id,
-      created_at: new Date().toISOString(),
+    // Calculate cost
+    const cost = calculateTraceCost({
+      embeddingTokens: replayResult.tokens?.embedding || 0,
+      vectorSearchOps: replayResult.vectorSearchOps || 1,
+      rerankItems: replayConfig.rerankEnabled ? (replayConfig.rerankTopN || 10) : 0,
     });
 
-    if (insertError) {
-      console.error('Failed to save replay trace:', insertError);
-    }
+    // Build summary
+    const timingsMs = extractTimingsFromSpans(handle.spans);
+    const summary: TraceSummary = {
+      effectiveConfig: replayConfig,
+      timingsMs,
+      resultsCount: replayResult.results.length,
+      resultStats: {
+        count: replayResult.results.length,
+        scores: replayResult.results.length > 0 ? {
+          min: Math.min(...replayResult.results.map((r) => r.score)),
+          max: Math.max(...replayResult.results.map((r) => r.score)),
+          avg: replayResult.results.reduce((sum, r) => sum + r.score, 0) / replayResult.results.length,
+        } : undefined,
+        documentIds: replayResult.results.map((r) => r.id),
+      },
+      cost,
+    };
+
+    // Finish the trace
+    await finishTrace(handle, summary);
+
+    // Save replay reference
+    const supabase = createServerClient();
+    await supabase
+      .from('fall_retrieval_traces')
+      .update({ replay_of: trace_id })
+      .eq('request_id', handle.requestId)
+      .eq('user_id', authResult.userId);
 
     return NextResponse.json({
       success: true,
       replay: {
-        trace_id: newTraceId,
+        trace_id: handle.traceId,
+        request_id: handle.requestId,
         original_trace_id: trace_id,
-        query: originalTrace.query,
+        query: originalTrace.queryText,
         config: replayConfig,
         config_changes: Object.keys(config_overrides || {}),
         results: replayResult.results,
-        latency: replayResult.latency,
-        cost_usd: replayResult.cost_usd,
-        execution_time_ms: endTime - startTime,
+        latency: timingsMs,
+        cost_usd: cost.total,
       },
-      compare_url: `/api/traces/compare?a=${trace_id}&b=${newTraceId}`,
+      compare_url: `/dashboard/traces/compare?a=${trace_id}&b=${handle.traceId}`,
     });
   } catch (error) {
     console.error('Trace replay error:', error);
@@ -105,73 +144,80 @@ export async function POST(request: NextRequest) {
   }
 }
 
-interface ReplayConfig {
+interface ReplayParams {
+  handle: Awaited<ReturnType<typeof startTrace>>;
   query: string;
-  collection: string;
-  config: {
-    search_type?: string;
-    hybrid_alpha?: number;
-    rerank?: boolean;
-    rerank_model?: string;
-    top_k?: number;
-  };
+  collectionId?: string;
+  config: TraceConfig;
   userId: string;
   orgId?: string;
 }
 
 interface ReplayResult {
   results: Array<{ id: string; score: number; content: string }>;
-  latency: {
-    embedding_ms: number;
-    search_ms: number;
-    rerank_ms?: number;
-    total_ms: number;
-  };
-  cost_usd: number;
+  tokens?: { embedding: number };
+  vectorSearchOps?: number;
 }
 
-async function executeReplay(params: ReplayConfig): Promise<ReplayResult> {
-  // This is a simplified implementation
-  // In production, this would call the actual Summer retrieval pipeline
+async function executeReplay(params: ReplayParams): Promise<ReplayResult> {
+  const { handle, config } = params;
 
-  const { query, collection, config } = params;
+  // Embedding span
+  const embeddingSpan = startSpan(handle, 'embedding', {
+    model: config.embeddingModel || 'voyage-3',
+    query_length: params.query.length,
+  });
 
-  // Simulate pipeline execution
-  const embeddingStart = Date.now();
-  await simulateLatency(30, 80); // Embedding typically 30-80ms
-  const embeddingMs = Date.now() - embeddingStart;
+  await simulateLatency(30, 80);
+  const embeddingTokens = Math.ceil(params.query.length / 4); // Rough estimate
 
-  const searchStart = Date.now();
-  await simulateLatency(10, 50); // Vector search typically 10-50ms
-  const searchMs = Date.now() - searchStart;
+  endSpan(handle, embeddingSpan, {
+    tokens: embeddingTokens,
+    dimensions: config.embeddingDimensions || 1024,
+  });
 
-  let rerankMs = 0;
-  if (config.rerank) {
-    const rerankStart = Date.now();
-    await simulateLatency(50, 150); // Reranking typically 50-150ms
-    rerankMs = Date.now() - rerankStart;
+  // Vector search span
+  const searchSpan = startSpan(handle, 'vector_search', {
+    search_type: config.searchType || 'hybrid',
+    top_k: config.topK || 10,
+    alpha: config.hybridAlpha,
+  });
+
+  await simulateLatency(10, 50);
+
+  // Generate simulated results
+  const topK = config.topK || 10;
+  let results = generateSimulatedResults(topK, false);
+
+  endSpan(handle, searchSpan, {
+    candidates_count: results.length,
+  });
+
+  // Rerank span (if enabled)
+  if (config.rerankEnabled) {
+    const rerankSpan = startSpan(handle, 'rerank', {
+      model: config.rerankModel || 'cohere-rerank-v3',
+      input_count: results.length,
+      top_n: config.rerankTopN || topK,
+    });
+
+    await simulateLatency(50, 150);
+    results = generateSimulatedResults(config.rerankTopN || topK, true);
+
+    endSpan(handle, rerankSpan, {
+      output_count: results.length,
+    });
   }
 
-  const totalMs = embeddingMs + searchMs + rerankMs;
-
-  // Calculate estimated cost
-  const embeddingCost = 0.00001; // $0.01 per 1000 tokens
-  const searchCost = 0.000005; // $0.005 per 1000 operations
-  const rerankCost = config.rerank ? 0.00005 : 0; // $0.05 per 1000 reranks
-  const costUsd = embeddingCost + searchCost + rerankCost;
-
-  // Generate simulated results (in production, these would be real results)
-  const results = generateSimulatedResults(config.top_k || 5, config.rerank || false);
+  addEvent(handle, 'candidates', {
+    count: results.length,
+    scores: results.map((r) => r.score),
+  });
 
   return {
     results,
-    latency: {
-      embedding_ms: embeddingMs,
-      search_ms: searchMs,
-      rerank_ms: rerankMs || undefined,
-      total_ms: totalMs,
-    },
-    cost_usd: costUsd,
+    tokens: { embedding: embeddingTokens },
+    vectorSearchOps: 1,
   };
 }
 
@@ -184,8 +230,8 @@ function generateSimulatedResults(topK: number, reranked: boolean) {
   const results = [];
   for (let i = 0; i < topK; i++) {
     results.push({
-      id: `doc-${i + 1}`,
-      score: reranked ? 0.95 - i * 0.05 : 0.9 - i * 0.1,
+      id: `doc-${crypto.randomUUID().slice(0, 8)}`,
+      score: reranked ? 0.95 - i * 0.05 : 0.9 - i * 0.08,
       content: `Simulated result ${i + 1} content...`,
     });
   }

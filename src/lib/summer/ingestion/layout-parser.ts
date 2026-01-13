@@ -112,7 +112,7 @@ export function classifyZone(
 /**
  * Detect number of columns in a page
  */
-export function detectColumns(blocks: TextBlock[], pageWidth: number): number {
+export function detectColumns(blocks: TextBlock[], _pageWidth: number): number {
   if (blocks.length < 3) return 1;
 
   // Get x-coordinates of block centers
@@ -238,8 +238,8 @@ export function getReadingOrder(blocks: TextBlock[], columnCount: number): TextB
  * Parse PDF buffer to extract layout (placeholder for actual PDF library integration)
  */
 export async function parseLayoutFromBuffer(
-  buffer: Buffer,
-  options?: {
+  _buffer: Buffer,
+  _options?: {
     detectTables?: boolean;
     detectEquations?: boolean;
   }

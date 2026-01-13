@@ -51,7 +51,7 @@ const DEFAULT_OPTIONS: TableExtractionOptions = {
 /**
  * Detect if a cell contains header content
  */
-function isHeaderCell(cell: Omit<TableCell, 'isHeader'>, rowIndex: number): boolean {
+function _isHeaderCell(cell: Omit<TableCell, 'isHeader'>, rowIndex: number): boolean {
   // First row is often header
   if (rowIndex === 0) return true;
 

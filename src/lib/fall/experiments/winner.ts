@@ -175,7 +175,7 @@ export async function analyzeWinner(
   const allCandidates: WinnerCandidate[] = [controlCandidate];
 
   for (const treatment of treatmentStats) {
-    const { pValue, zScore } = twoProportionZTest(
+    const { pValue, zScore: _zScore } = twoProportionZTest(
       treatment.successes,
       treatment.trials,
       controlStats.successes,

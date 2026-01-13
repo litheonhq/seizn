@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FederatedSource, FederatedSearchParams, FederatedBinding } from '../types';
 import type { VectorSearchResult } from '../../types';
 

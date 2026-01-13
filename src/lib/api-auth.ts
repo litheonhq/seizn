@@ -5,11 +5,10 @@ import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
 import { checkRateLimit, getRateLimitHeaders } from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
 import {
-  AuthErrors,
-  RateLimitErrors,
   ErrorCodes,
-  type ApiErrorResponse,
 } from './api-error';
+// Re-export for external use
+export { AuthErrors, RateLimitErrors, type ApiErrorResponse } from './api-error';
 
 interface AuthResult {
   userId: string;

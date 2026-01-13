@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
-import { runGuardrails, monitorExperiment, sendGuardrailAlert } from '@/lib/fall/experiments';
+import { runGuardrails, monitorExperiment } from '@/lib/fall/experiments';
 import type { GuardrailConfig } from '@/lib/fall/experiments';
 
 /**

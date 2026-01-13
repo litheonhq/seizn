@@ -5,7 +5,6 @@ import { getAuditContext } from '@/lib/audit';
 import {
   getAccessibleSources,
   logFederatedOperation,
-  checkSourcePermission,
 } from '@/lib/summer/admin';
 import { encrypt } from '@/lib/winter/crypto';
 

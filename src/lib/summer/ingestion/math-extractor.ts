@@ -183,7 +183,7 @@ export function extractLatexEquations(
   options: MathExtractionOptions = DEFAULT_OPTIONS
 ): ExtractedEquation[] {
   const equations: ExtractedEquation[] = [];
-  const lines = text.split('\n');
+  const _lines = text.split('\n');
 
   // Display math: $$ ... $$ or \[ ... \]
   if (options.extractDisplay !== false) {
