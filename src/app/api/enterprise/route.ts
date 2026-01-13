@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification to sales team (non-blocking)
     sendEmail({
-      to: 'sales@seizn.com',
+      to: 'dev@kicpartners.com',
       subject: `[Enterprise Inquiry] ${body.company_name} - ${determineInquiryPriority(body).toUpperCase()}`,
       html: `
         <h2>New Enterprise Inquiry</h2>
