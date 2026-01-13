@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     const handle = await startTrace({
       requestId: crypto.randomUUID(),
       userId: authResult.userId,
-      apiKeyId: authResult.apiKeyId,
+      apiKeyId: authResult.keyId,
       plan: authResult.plan || 'free',
       collectionId: originalTrace.collectionId,
       collectionIds: originalTrace.collectionIds,
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     // Build summary
     const timingsMs = extractTimingsFromSpans(handle.spans);
     const summary: TraceSummary = {
-      effectiveConfig: replayConfig,
+      effectiveConfig: replayConfig as Record<string, unknown>,
       timingsMs,
       resultsCount: replayResult.results.length,
       resultStats: {

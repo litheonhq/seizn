@@ -63,7 +63,7 @@ export function withErrorHandler(handler: ApiRouteHandler): ApiRouteHandler {
 
       // Handle custom SeizApiError
       if (error && typeof error === 'object' && 'code' in error) {
-        return createApiErrorFromException(error as Error, traceId);
+        return createApiErrorFromException(error as unknown as Error, traceId);
       }
 
       // Handle generic errors

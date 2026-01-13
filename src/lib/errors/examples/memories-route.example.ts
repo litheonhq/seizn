@@ -72,7 +72,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   const body = parsed.data;
 
   // 3. Validate required fields
-  const validation = validateRequiredFields(body as Record<string, unknown>, ['content'], traceId);
+  const validation = validateRequiredFields(body as unknown as Record<string, unknown>, ['content'], traceId);
   if (!validation.valid) {
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },

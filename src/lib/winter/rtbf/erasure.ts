@@ -626,7 +626,7 @@ async function createErasureBackup(
 
       if (!tableConfig) continue;
 
-      let query = supabase
+      const query = supabase
         .from(tableConfig.table_name)
         .select('*')
         .eq(tableConfig.user_id_column, conditions.user_id)

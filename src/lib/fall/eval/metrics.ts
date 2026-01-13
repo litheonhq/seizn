@@ -295,7 +295,7 @@ export function computeAggregateMetrics(
 
     if (values.length > 0) {
       const avg = values.reduce((a, b) => a + b, 0) / values.length;
-      (summary as Record<string, unknown>)[`avg_${key}`] = avg;
+      (summary as unknown as Record<string, unknown>)[`avg_${key}`] = avg;
     }
   }
 
@@ -338,8 +338,8 @@ export function compareMetrics(
   const keys = Object.keys(baseline).filter((k) => k.startsWith('avg_'));
 
   for (const key of keys) {
-    const baselineVal = (baseline as Record<string, unknown>)[key];
-    const candidateVal = (candidate as Record<string, unknown>)[key];
+    const baselineVal = (baseline as unknown as Record<string, unknown>)[key];
+    const candidateVal = (candidate as unknown as Record<string, unknown>)[key];
 
     if (typeof baselineVal === 'number' && typeof candidateVal === 'number') {
       const delta = candidateVal - baselineVal;
