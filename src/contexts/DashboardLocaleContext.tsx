@@ -84,8 +84,10 @@ export function DashboardLocaleProvider({ children, initialLocale }: Props) {
     (key: string, params?: Record<string, string | number>): string => {
       const value = getNestedValue(dictionary, key);
       if (!value) {
-        // Return key as fallback (useful for debugging)
-        console.warn(`[i18n] Missing translation: ${key}`);
+        // Only warn if dictionary is loaded (not during initial render/build)
+        if (Object.keys(dictionary).length > 0) {
+          console.warn(`[i18n] Missing translation: ${key}`);
+        }
         return key.split(".").pop() || key;
       }
       return interpolate(value, params);
