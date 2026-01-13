@@ -272,7 +272,7 @@ Document 3 content here...`}
               </button>
             </div>
 
-            {testResult && (
+            {testResult !== null && (
               <div className="mt-4">
                 <h3 className="font-medium text-gray-900 mb-2">Results</h3>
                 {(testResult as { success?: boolean; documents?: Array<{ rank: number; content: string; rerankScore: number }> }).success ? (
