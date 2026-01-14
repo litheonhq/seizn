@@ -21,6 +21,11 @@ export default function ApiKeysClient() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [revokeTarget, setRevokeTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isRevoking, setIsRevoking] = useState(false);
+  const [rotateTarget, setRotateTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isRotating, setIsRotating] = useState(false);
+  const [rotatedKey, setRotatedKey] = useState<string | null>(null);
 
   const fetchApiKeys = useCallback(async () => {
     try {
@@ -68,21 +73,58 @@ export default function ApiKeysClient() {
     }
   };
 
-  const revokeApiKey = async (keyId: string, keyName: string) => {
-    if (!confirm(`Revoke API key "${keyName}"? This action cannot be undone.`)) return;
+  const confirmRevoke = async () => {
+    if (!revokeTarget) return;
+    setIsRevoking(true);
 
     try {
-      const res = await fetch(`/api/dashboard/keys?id=${keyId}`, {
+      const res = await fetch(`/api/dashboard/keys?id=${revokeTarget.id}`, {
         method: "DELETE",
       });
       const data = await res.json();
 
       if (data.success) {
-        setApiKeys(apiKeys.filter((k) => k.id !== keyId));
+        setApiKeys(apiKeys.filter((k) => k.id !== revokeTarget.id));
       }
     } catch (err) {
       console.error("Failed to revoke API key:", err);
+    } finally {
+      setIsRevoking(false);
+      setRevokeTarget(null);
     }
+  };
+
+  const confirmRotate = async () => {
+    if (!rotateTarget) return;
+    setIsRotating(true);
+
+    try {
+      const res = await fetch(`/api/dashboard/keys/rotate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyId: rotateTarget.id }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setRotatedKey(data.key);
+        // Update the key in the list
+        setApiKeys(apiKeys.map((k) =>
+          k.id === rotateTarget.id
+            ? { ...k, key_prefix: data.keyPrefix, created_at: new Date().toISOString() }
+            : k
+        ));
+      }
+    } catch (err) {
+      console.error("Failed to rotate API key:", err);
+    } finally {
+      setIsRotating(false);
+    }
+  };
+
+  const closeRotateModal = () => {
+    setRotateTarget(null);
+    setRotatedKey(null);
   };
 
   const copyToClipboard = (text: string) => {
@@ -157,43 +199,63 @@ export default function ApiKeysClient() {
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
-            {apiKeys.map((key) => (
-              <div
-                key={key.id}
-                className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-                    <KeyIcon className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{key.name}</p>
-                    <p className="text-sm text-gray-500 font-mono">{key.key_prefix}...</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-sm text-gray-600">
-                      {t("dashboard.keysPage.created")} {new Date(key.created_at).toLocaleDateString(locale)}
-                    </p>
-                    {key.last_used_at ? (
-                      <p className="text-xs text-gray-400">
-                        {t("dashboard.keysPage.lastUsed")} {new Date(key.last_used_at).toLocaleDateString(locale)}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-gray-400">{t("dashboard.keysPage.neverUsed")}</p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => revokeApiKey(key.id, key.name)}
-                    className="px-3 py-1.5 text-sm text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    {t("dashboard.keysPage.revoke")}
-                  </button>
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b theme-border text-left">
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t("dashboard.keysPage.name")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">{t("dashboard.keysPage.keyColumn")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">{t("dashboard.keysPage.created")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">{t("dashboard.keysPage.lastUsed")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">{t("dashboard.keysPage.actions")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {apiKeys.map((key) => (
+                  <tr key={key.id} className="hover:bg-white/50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm">
+                          <KeyIcon className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium text-gray-900">{key.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 hidden sm:table-cell">
+                      <code className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{key.key_prefix}...</code>
+                    </td>
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      <span className="text-sm text-gray-600">{new Date(key.created_at).toLocaleDateString(locale)}</span>
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      {key.last_used_at ? (
+                        <span className="text-sm text-gray-600">{new Date(key.last_used_at).toLocaleDateString(locale)}</span>
+                      ) : (
+                        <span className="text-sm text-gray-400">{t("dashboard.keysPage.neverUsed")}</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => setRotateTarget({ id: key.id, name: key.name })}
+                          className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                          title={t("dashboard.keysPage.rotate")}
+                        >
+                          <RotateIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setRevokeTarget({ id: key.id, name: key.name })}
+                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title={t("dashboard.keysPage.revoke")}
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
@@ -330,11 +392,169 @@ export default function ApiKeysClient() {
           </div>
         </div>
       )}
+
+      {/* Revoke Confirmation Modal */}
+      {revokeTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setRevokeTarget(null)}
+          />
+          <div className="relative glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+            <button
+              onClick={() => setRevokeTarget(null)}
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <CloseIcon className="w-5 h-5" />
+            </button>
+
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shadow-lg">
+                <AlertIcon className="w-7 h-7 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">
+                {t("dashboard.keysPage.revokeConfirm").replace("{keyName}", revokeTarget.name)}
+              </h2>
+              <p className="text-gray-500 text-sm mt-2">
+                {t("dashboard.keysPage.revokeWarning")}
+              </p>
+            </div>
+
+            <div className="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
+              <div className="flex items-center gap-3">
+                <KeyIcon className="w-5 h-5 text-red-500 flex-shrink-0" />
+                <div>
+                  <p className="font-medium text-gray-900">{revokeTarget.name}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setRevokeTarget(null)}
+                className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+              >
+                {t("dashboard.keysPage.cancel")}
+              </button>
+              <button
+                onClick={confirmRevoke}
+                disabled={isRevoking}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isRevoking ? "..." : t("dashboard.keysPage.revokeAction")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rotate Key Modal */}
+      {rotateTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={closeRotateModal}
+          />
+          <div className="relative glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+            <button
+              onClick={closeRotateModal}
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <CloseIcon className="w-5 h-5" />
+            </button>
+
+            {rotatedKey ? (
+              /* Key Rotated Success */
+              <div>
+                <div className="text-center mb-6">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+                    <CheckIcon className="w-7 h-7 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">{t("dashboard.keysPage.keyRotated")}</h2>
+                  <p className="text-gray-500 text-sm mt-1">
+                    {t("dashboard.keysPage.keyRotatedDesc")}
+                  </p>
+                </div>
+
+                <div className="bg-gray-900 rounded-xl p-4 mb-4">
+                  <code className="text-sm text-gray-300 break-all">{rotatedKey}</code>
+                </div>
+
+                <button
+                  onClick={() => copyToClipboard(rotatedKey)}
+                  className={`w-full py-3 rounded-xl font-medium transition-all ${
+                    copied
+                      ? "bg-green-500 text-white"
+                      : "theme-gradient-btn text-white"
+                  }`}
+                >
+                  {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
+                </button>
+
+                <button
+                  onClick={closeRotateModal}
+                  className="w-full mt-3 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  {t("dashboard.keysPage.done")}
+                </button>
+              </div>
+            ) : (
+              /* Rotate Confirmation */
+              <div>
+                <div className="text-center mb-6">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg">
+                    <RotateIcon className="w-7 h-7 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    {t("dashboard.keysPage.rotateConfirm").replace("{keyName}", rotateTarget.name)}
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-2">
+                    {t("dashboard.keysPage.rotateWarning")}
+                  </p>
+                </div>
+
+                <div className="bg-teal-50 border border-teal-100 rounded-xl p-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <KeyIcon className="w-5 h-5 text-teal-500 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-gray-900">{rotateTarget.name}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={closeRotateModal}
+                    className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                  >
+                    {t("dashboard.keysPage.cancel")}
+                  </button>
+                  <button
+                    onClick={confirmRotate}
+                    disabled={isRotating}
+                    className="flex-1 theme-gradient-btn text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isRotating ? "..." : t("dashboard.keysPage.rotateAction")}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // Icons
+
+function AlertIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+    </svg>
+  );
+}
 function PlusIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -363,6 +583,22 @@ function CheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  );
+}
+
+function RotateIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+    </svg>
+  );
+}
+
+function TrashIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
     </svg>
   );
 }

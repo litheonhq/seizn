@@ -6,6 +6,147 @@ import { ShareTraceModal } from "@/components/dashboard/ShareTraceModal";
 
 type TabType = "traces" | "eval" | "experiments";
 
+// Onboarding Checklist Component
+interface OnboardingStep {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  action?: {
+    label: string;
+    href?: string;
+    onClick?: () => void;
+  };
+}
+
+function OnboardingChecklist({
+  steps,
+  onDismiss,
+  onRunSample,
+}: {
+  steps: OnboardingStep[];
+  onDismiss: () => void;
+  onRunSample: () => void;
+}) {
+  const completedCount = steps.filter((s) => s.completed).length;
+  const progress = (completedCount / steps.length) * 100;
+  const allComplete = completedCount === steps.length;
+
+  if (allComplete) {
+    return null;
+  }
+
+  return (
+    <div className="mb-8 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">Getting Started</h3>
+            <p className="text-sm text-gray-600">{completedCount}/{steps.length} steps completed</p>
+          </div>
+        </div>
+        <button
+          onClick={onDismiss}
+          className="text-gray-400 hover:text-gray-600"
+          title="Dismiss"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-2 bg-emerald-100 rounded-full mb-6">
+        <div
+          className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Steps */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {steps.map((step, index) => (
+          <div
+            key={step.id}
+            className={`p-4 rounded-lg border transition-all ${
+              step.completed
+                ? "bg-emerald-50 border-emerald-200"
+                : "bg-white border-gray-200 hover:border-emerald-300"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                  step.completed
+                    ? "bg-emerald-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {step.completed ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  index + 1
+                )}
+              </div>
+              <div className="flex-1">
+                <h4 className={`font-medium text-sm ${step.completed ? "text-emerald-700" : "text-gray-900"}`}>
+                  {step.title}
+                </h4>
+                <p className="text-xs text-gray-500 mt-0.5">{step.description}</p>
+                {!step.completed && step.action && (
+                  step.action.href ? (
+                    <Link
+                      href={step.action.href}
+                      className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                    >
+                      {step.action.label}
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={step.action.onClick}
+                      className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                    >
+                      {step.action.label}
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      </svg>
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick action */}
+      <div className="mt-4 pt-4 border-t border-emerald-200">
+        <button
+          onClick={onRunSample}
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Run Sample Retrieve (generates trace instantly)
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface Trace {
   id: string;
   query: string;
@@ -50,10 +191,55 @@ export function FallDashboardClient() {
   const [loading, setLoading] = useState(true);
   const [shareModalTraceId, setShareModalTraceId] = useState<string | null>(null);
 
+  // Onboarding state
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+  const [runningSample, setRunningSample] = useState(false);
+
   // Filters
   const [dateRange, setDateRange] = useState("7d");
   const [minLatency, setMinLatency] = useState<number | null>(null);
   const [showErrors, setShowErrors] = useState(false);
+
+  // Check if onboarding was previously dismissed
+  useEffect(() => {
+    const dismissed = localStorage.getItem("seizn_onboarding_dismissed");
+    if (dismissed === "true") {
+      setOnboardingDismissed(true);
+    }
+  }, []);
+
+  // Onboarding steps - dynamically computed based on state
+  const onboardingSteps: OnboardingStep[] = [
+    {
+      id: "api-key",
+      title: "Get API Key",
+      description: "Generate your first API key",
+      completed: true, // Assume they have one if they're logged in
+      action: { label: "View Keys", href: "/dashboard/settings/api-keys" },
+    },
+    {
+      id: "first-trace",
+      title: "Run First Query",
+      description: "Execute a retrieve call to generate a trace",
+      completed: traces.length > 0,
+      action: { label: "Try Demo", href: "/" },
+    },
+    {
+      id: "view-trace",
+      title: "Inspect a Trace",
+      description: "Click into a trace to see the full timeline",
+      completed: traces.length > 0, // Will be marked complete when they view one
+      action: traces.length > 0
+        ? { label: "View Trace", href: `/trace/${traces[0]?.id}` }
+        : undefined,
+    },
+  ];
+
+  // Handle onboarding dismiss
+  const handleDismissOnboarding = useCallback(() => {
+    setOnboardingDismissed(true);
+    localStorage.setItem("seizn_onboarding_dismissed", "true");
+  }, []);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -88,6 +274,34 @@ export function FallDashboardClient() {
     }
   }, [activeTab, minLatency, showErrors]);
 
+  // Run sample trace handler
+  const handleRunSample = useCallback(async () => {
+    setRunningSample(true);
+    try {
+      const response = await fetch("/api/summer/retrieve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          collection_id: "tech-docs",
+          query: "How to authenticate API requests with Bearer tokens?",
+          top_k: 5,
+          autopilot: { enabled: true, budget_ms: 500 },
+          hybrid: true,
+          rerank: true,
+        }),
+      });
+
+      if (response.ok) {
+        // Reload traces to show the new one
+        await loadData();
+      }
+    } catch (error) {
+      console.error("Failed to run sample:", error);
+    } finally {
+      setRunningSample(false);
+    }
+  }, [loadData]);
+
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -101,6 +315,25 @@ export function FallDashboardClient() {
           Observability for your RAG pipeline
         </p>
       </div>
+
+      {/* Onboarding Checklist */}
+      {!onboardingDismissed && !loading && (
+        <OnboardingChecklist
+          steps={onboardingSteps}
+          onDismiss={handleDismissOnboarding}
+          onRunSample={handleRunSample}
+        />
+      )}
+
+      {/* Sample Running Indicator */}
+      {runningSample && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3">
+          <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+          <span className="text-blue-700 text-sm font-medium">
+            Running sample retrieve query... This will generate a trace.
+          </span>
+        </div>
+      )}
 
       {/* Stats Overview */}
       <div className="grid grid-cols-4 gap-4 mb-8">

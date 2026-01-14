@@ -31,6 +31,35 @@ interface Invite {
   expires_at: string;
 }
 
+interface OrgUsageSummary {
+  totalCalls: number;
+  totalTokens: number;
+  totalCostCents: number;
+  totalCostDollars: string;
+  totalErrors: number;
+  errorRate: number;
+  avgLatency: number;
+  p95Latency: number;
+  activeKeys: number;
+  memberCount: number;
+}
+
+interface DailyUsage {
+  date: string;
+  calls: number;
+  tokens: number;
+  cost: number;
+}
+
+interface MemberUsage {
+  userId: string;
+  email: string;
+  name: string | null;
+  calls: number;
+  tokens: number;
+  cost: number;
+}
+
 export default function OrganizationDetailClient({
   organizationId,
 }: {
@@ -41,7 +70,14 @@ export default function OrganizationDetailClient({
   const [invites, setInvites] = useState<Invite[]>([]);
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"members" | "invites" | "settings">("members");
+  const [activeTab, setActiveTab] = useState<"members" | "invites" | "usage" | "settings">("members");
+
+  // Usage state
+  const [usageSummary, setUsageSummary] = useState<OrgUsageSummary | null>(null);
+  const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
+  const [memberUsage, setMemberUsage] = useState<MemberUsage[]>([]);
+  const [usagePeriod, setUsagePeriod] = useState<"7d" | "30d" | "90d">("7d");
+  const [isLoadingUsage, setIsLoadingUsage] = useState(false);
 
   // Invite modal state
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -87,6 +123,30 @@ export default function OrganizationDetailClient({
   useEffect(() => {
     fetchOrganization();
   }, [fetchOrganization]);
+
+  const fetchOrgUsage = useCallback(async () => {
+    setIsLoadingUsage(true);
+    try {
+      const res = await fetch(`/api/organizations/usage?organization_id=${organizationId}&period=${usagePeriod}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setUsageSummary(data.usage.summary);
+        setDailyUsage(data.usage.daily);
+        setMemberUsage(data.usage.members);
+      }
+    } catch (err) {
+      console.error("Failed to fetch org usage:", err);
+    } finally {
+      setIsLoadingUsage(false);
+    }
+  }, [organizationId, usagePeriod]);
+
+  useEffect(() => {
+    if (activeTab === "usage") {
+      fetchOrgUsage();
+    }
+  }, [activeTab, fetchOrgUsage]);
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
@@ -262,6 +322,7 @@ export default function OrganizationDetailClient({
         {[
           { id: "members", label: "Members", count: members.length },
           { id: "invites", label: "Invites", count: invites.filter((i) => i.status === "pending").length },
+          { id: "usage", label: "Usage" },
           { id: "settings", label: "Settings" },
         ].map((tab) => (
           <button
@@ -402,6 +463,129 @@ export default function OrganizationDetailClient({
                 ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Usage Tab */}
+      {activeTab === "usage" && (
+        <div className="space-y-6">
+          {/* Period selector */}
+          <div className="flex justify-end">
+            <div className="flex gap-1 p-1 bg-white/50 rounded-lg">
+              {(["7d", "30d", "90d"] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setUsagePeriod(p)}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                    usagePeriod === p
+                      ? "theme-gradient-btn text-white shadow-md"
+                      : "text-gray-600 hover:bg-white/80"
+                  }`}
+                >
+                  {p === "7d" ? "7 Days" : p === "30d" ? "30 Days" : "90 Days"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* KPI Cards */}
+          {isLoadingUsage ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="glass-card rounded-2xl p-5 animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
+                  <div className="h-8 bg-gray-100 rounded w-2/3" />
+                </div>
+              ))}
+            </div>
+          ) : usageSummary ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="glass-card rounded-2xl p-5">
+                <p className="text-sm text-gray-500 mb-1">Total API Calls</p>
+                <p className="text-2xl font-bold text-gray-900">{usageSummary.totalCalls.toLocaleString()}</p>
+              </div>
+              <div className="glass-card rounded-2xl p-5">
+                <p className="text-sm text-gray-500 mb-1">Total Tokens</p>
+                <p className="text-2xl font-bold text-gray-900">{usageSummary.totalTokens.toLocaleString()}</p>
+              </div>
+              <div className="glass-card rounded-2xl p-5">
+                <p className="text-sm text-gray-500 mb-1">Estimated Cost</p>
+                <p className="text-2xl font-bold text-gray-900">${usageSummary.totalCostDollars}</p>
+              </div>
+              <div className="glass-card rounded-2xl p-5">
+                <p className="text-sm text-gray-500 mb-1">Active API Keys</p>
+                <p className="text-2xl font-bold text-gray-900">{usageSummary.activeKeys}</p>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Usage Chart */}
+          <div className="glass-card rounded-2xl p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Daily API Calls</h3>
+            {dailyUsage.length > 0 ? (
+              <div className="h-48 flex items-end gap-1">
+                {dailyUsage.map((day, i) => {
+                  const maxCalls = Math.max(...dailyUsage.map((d) => d.calls));
+                  const height = maxCalls > 0 ? (day.calls / maxCalls) * 100 : 0;
+                  return (
+                    <div
+                      key={day.date}
+                      className="flex-1 flex flex-col items-center gap-1"
+                    >
+                      <div
+                        className="w-full rounded-t theme-gradient-btn transition-all hover:opacity-80"
+                        style={{ height: `${Math.max(height, 2)}%` }}
+                        title={`${day.date}: ${day.calls} calls`}
+                      />
+                      {i % Math.ceil(dailyUsage.length / 7) === 0 && (
+                        <span className="text-[10px] text-gray-400 truncate w-full text-center">
+                          {day.date.slice(5)}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="h-48 flex items-center justify-center text-gray-400">
+                No usage data for this period
+              </div>
+            )}
+          </div>
+
+          {/* Member Usage Breakdown */}
+          <div className="glass-card rounded-2xl overflow-hidden">
+            <div className="p-4 border-b theme-border">
+              <h3 className="font-semibold text-gray-900">Usage by Member</h3>
+            </div>
+            {memberUsage.length > 0 ? (
+              <div className="divide-y divide-gray-100">
+                {memberUsage.map((member) => (
+                  <div key={member.userId} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                        <span className="text-gray-600 font-medium">
+                          {(member.name || member.email)[0].toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{member.name || member.email}</p>
+                        {member.name && <p className="text-sm text-gray-500">{member.email}</p>}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-gray-900">{member.calls.toLocaleString()} calls</p>
+                      <p className="text-sm text-gray-500">{member.tokens.toLocaleString()} tokens</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-gray-500">
+                No usage data for this period
+              </div>
+            )}
+          </div>
         </div>
       )}
 

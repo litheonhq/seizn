@@ -1,8 +1,130 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { DocsSearch } from "@/components/docs/DocsSearch";
+
+// Quickstart card component with Copy + Run buttons
+function QuickstartCard({
+  step,
+  title,
+  description,
+  code,
+  expectedOutput,
+  language = "bash",
+}: {
+  step: string;
+  title: string;
+  description: string;
+  code: string;
+  expectedOutput: string;
+  language?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+  const [showOutput, setShowOutput] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleRun = async () => {
+    setIsRunning(true);
+    // Simulate running the command
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setIsRunning(false);
+    setShowOutput(true);
+  };
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors">
+      {/* Step Badge */}
+      <div className="flex items-center gap-3 mb-4">
+        <span className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
+          {step}
+        </span>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+      </div>
+
+      <p className="text-zinc-400 text-sm mb-4">{description}</p>
+
+      {/* Code Block */}
+      <div className="relative">
+        <div className="absolute top-2 right-2 flex items-center gap-2">
+          <span className="text-xs text-zinc-500">{language}</span>
+        </div>
+        <pre className="bg-zinc-800 rounded-lg p-4 overflow-x-auto text-sm">
+          <code className="text-zinc-300">{code}</code>
+        </pre>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center gap-3 mt-4">
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-sm transition-colors"
+        >
+          {copied ? (
+            <>
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Copied!
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy
+            </>
+          )}
+        </button>
+        <button
+          onClick={handleRun}
+          disabled={isRunning}
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+        >
+          {isRunning ? (
+            <>
+              <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Running...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Run
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Expected Output */}
+      {showOutput && (
+        <div className="mt-4 p-4 bg-zinc-800/50 border border-emerald-500/20 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-emerald-400 text-sm font-medium">Success!</span>
+          </div>
+          <pre className="text-xs text-zinc-400 overflow-x-auto">
+            <code>{expectedOutput}</code>
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function DocsClient() {
   const { t } = useDashboardTranslation();
@@ -68,7 +190,82 @@ export function DocsClient() {
           </p>
         </div>
 
-        {/* Quick Start */}
+        {/* 1-Minute Quickstart Cards */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white">
+              {t("docs.quickStart.oneMinuteTitle") || "1-Minute Quickstart"}
+            </h2>
+            <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-sm font-medium rounded-full">
+              ~60 sec
+            </span>
+          </div>
+
+          <div className="grid gap-6">
+            {/* Step 1: Get API Key */}
+            <QuickstartCard
+              step="1"
+              title={t("docs.quickStart.step1Title") || "Get Your API Key"}
+              description={t("docs.quickStart.step1Desc") || "Create a free account and generate your API key from the dashboard."}
+              code={`# Go to dashboard and create API key
+open https://seizn.com/dashboard/keys
+
+# Or use CLI
+npx seizn init`}
+              expectedOutput={`API Key created: szn_live_abc123...
+Save this key securely - it won't be shown again.`}
+            />
+
+            {/* Step 2: Save First Memory */}
+            <QuickstartCard
+              step="2"
+              title={t("docs.quickStart.step2Title") || "Save Your First Memory"}
+              description={t("docs.quickStart.step2Desc") || "Store a piece of information that can be retrieved later."}
+              code={`curl -X POST https://seizn.com/api/memories \\
+  -H "x-api-key: $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"content": "User prefers dark mode"}'`}
+              expectedOutput={`{
+  "success": true,
+  "memory": {
+    "id": "mem_7x8y9z...",
+    "content": "User prefers dark mode"
+  }
+}`}
+            />
+
+            {/* Step 3: Search with Trace */}
+            <QuickstartCard
+              step="3"
+              title={t("docs.quickStart.step3Title") || "Search & See the Trace"}
+              description={t("docs.quickStart.step3Desc") || "Run a semantic search and view the full trace of what happened."}
+              code={`curl -X POST https://seizn.com/api/summer/retrieve \\
+  -H "x-api-key: $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "user preferences", "trace": true}'`}
+              expectedOutput={`{
+  "results": [...],
+  "trace": {
+    "id": "tr_abc123",
+    "latency_ms": 127,
+    "steps": ["embed", "search", "rerank"]
+  }
+}`}
+            />
+          </div>
+
+          <div className="mt-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+            <p className="text-zinc-400 text-sm">
+              <span className="text-emerald-400 font-medium">Next step:</span>{" "}
+              {t("docs.quickStart.nextStep") || "View your trace in the dashboard to debug and optimize your retrieval."}
+              <Link href="/dashboard/fall" className="ml-2 text-emerald-400 hover:underline">
+                Open Dashboard →
+              </Link>
+            </p>
+          </div>
+        </section>
+
+        {/* Quick Start (Original - now renamed) */}
         <section id="quickstart" className="mb-16">
           <h2 className="text-2xl font-bold text-white mb-6">{t("docs.quickStart.title")}</h2>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">

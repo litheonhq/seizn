@@ -472,6 +472,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const [hasRun, setHasRun] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileConsoleTab, setMobileConsoleTab] = useState<"request" | "results" | "trace" | "cost">("request");
+  const [traceId, setTraceId] = useState<string | null>(null);
+  const [shareToastVisible, setShareToastVisible] = useState(false);
 
   // Close mobile menu on resize - use passive listener
   useEffect(() => {
@@ -492,6 +494,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
     // Simulate API call - faster response (600-800ms)
     const responseTime = 600 + Math.random() * 200;
     await new Promise((resolve) => setTimeout(resolve, responseTime));
+
+    // Generate a trace ID for this request
+    const newTraceId = `tr_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 8)}`;
+    setTraceId(newTraceId);
 
     // Use mock data for demo
     setResults(MOCK_RESULTS.slice(0, config.topK));
@@ -537,6 +543,20 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const handleDismissError = useCallback(() => {
     setError(null);
   }, []);
+
+  // Handle Share Trace - copy trace link to clipboard
+  const handleShareTrace = useCallback(async () => {
+    if (!traceId) return;
+
+    const shareUrl = `${window.location.origin}/traces/${traceId}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareToastVisible(true);
+      setTimeout(() => setShareToastVisible(false), 3000);
+    } catch {
+      console.error('Failed to copy trace link');
+    }
+  }, [traceId]);
 
   // Auto-run demo on page load (once per session)
   useEffect(() => {
@@ -815,10 +835,24 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             </p>
           </div>
           <Suspense fallback={<SnippetSkeleton />}>
-            <SnippetTabs config={config} />
+            <SnippetTabs
+              config={config}
+              traceId={traceId}
+              onShareTrace={handleShareTrace}
+            />
           </Suspense>
         </div>
       </section>
+
+      {/* Share Trace Toast Notification */}
+      {shareToastVisible && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-gray-900 text-white rounded-xl shadow-lg flex items-center gap-3 animate-fade-in-up">
+          <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="text-sm">Trace link copied to clipboard!</span>
+        </div>
+      )}
 
       {/* Why Seizn Section - Memoized static content */}
       <WhySeizn t={t} />

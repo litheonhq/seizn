@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 
-// GET /api/dashboard/usage - Get detailed usage analytics
+// GET /api/organizations/usage?organization_id=xxx - Get org-level usage analytics
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
@@ -11,10 +11,27 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get('period') || '7d'; // 7d, 30d, 90d
+    const organizationId = searchParams.get('organization_id');
+    const period = searchParams.get('period') || '7d';
+
+    if (!organizationId) {
+      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
+    }
 
     const supabase = createServerClient();
     const userId = session.user.id;
+
+    // Verify user is a member of this organization
+    const { data: membership, error: membershipError } = await supabase
+      .from('organization_members')
+      .select('role')
+      .eq('organization_id', organizationId)
+      .eq('user_id', userId)
+      .single();
+
+    if (membershipError || !membership) {
+      return NextResponse.json({ error: 'Not a member of this organization' }, { status: 403 });
+    }
 
     // Calculate date range
     const now = new Date();
@@ -26,71 +43,101 @@ export async function GET(request: NextRequest) {
         break;
       case '90d':
         startDate.setDate(now.getDate() - 90);
-        
         break;
       default: // 7d
         startDate.setDate(now.getDate() - 7);
     }
 
-    // Get usage logs for the period
+    // Get all member user IDs for this organization
+    const { data: members } = await supabase
+      .from('organization_members')
+      .select('user_id')
+      .eq('organization_id', organizationId);
+
+    const memberUserIds = members?.map(m => m.user_id) || [];
+
+    if (memberUserIds.length === 0) {
+      return NextResponse.json({
+        success: true,
+        period,
+        usage: {
+          daily: [],
+          summary: {
+            totalCalls: 0,
+            totalTokens: 0,
+            totalCostCents: 0,
+            totalCostDollars: '0.00',
+            totalErrors: 0,
+            errorRate: 0,
+            avgLatency: 0,
+            p95Latency: 0,
+          },
+          members: [],
+        },
+      });
+    }
+
+    // Get usage logs for all org members
     const { data: logs, error: logsError } = await supabase
       .from('usage_logs')
-      .select('endpoint, method, status_code, embedding_tokens, cost_cents, latency_ms, created_at')
-      .eq('user_id', userId)
+      .select('user_id, endpoint, method, status_code, embedding_tokens, cost_cents, latency_ms, created_at')
+      .in('user_id', memberUserIds)
       .gte('created_at', startDate.toISOString())
       .order('created_at', { ascending: true });
 
     if (logsError) {
-      console.error('Usage logs error:', logsError);
+      console.error('Org usage logs error:', logsError);
       return NextResponse.json({ error: 'Failed to fetch usage' }, { status: 500 });
     }
 
-    // Process data for charts
+    // Process data
     const dailyUsage = processDaily(logs || [], startDate, now);
-    const endpointBreakdown = processEndpoints(logs || []);
     const summary = calculateSummary(logs || []);
+    const memberBreakdown = processMemberUsage(logs || [], memberUserIds);
 
-    // Get per-API-key usage
-    const { data: keyUsage } = await supabase
-      .from('usage_logs')
-      .select('api_key_id, endpoint')
-      .eq('user_id', userId)
-      .gte('created_at', startDate.toISOString());
+    // Get member info
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, email, name')
+      .in('id', memberUserIds);
 
-    const apiKeyBreakdown = processApiKeyUsage(keyUsage || []);
+    const profileMap = new Map(profiles?.map(p => [p.id, { email: p.email, name: p.name }]) || []);
 
-    // Get API key names
-    const { data: keys } = await supabase
-      .from('api_keys')
-      .select('id, name, key_prefix')
-      .eq('user_id', userId);
-
-    const keyMap = new Map(keys?.map(k => [k.id, { name: k.name, prefix: k.key_prefix }]) || []);
-
-    // Add names to key breakdown
-    const apiKeyStats = apiKeyBreakdown.map(k => ({
-      ...k,
-      name: keyMap.get(k.keyId)?.name || 'Unknown',
-      prefix: keyMap.get(k.keyId)?.prefix || '???',
+    // Add names to member breakdown
+    const memberStats = memberBreakdown.map(m => ({
+      ...m,
+      email: profileMap.get(m.userId)?.email || 'Unknown',
+      name: profileMap.get(m.userId)?.name || null,
     }));
+
+    // Get active API keys count for the org
+    const { count: activeKeysCount } = await supabase
+      .from('api_keys')
+      .select('*', { count: 'exact', head: true })
+      .in('user_id', memberUserIds)
+      .eq('is_active', true);
 
     return NextResponse.json({
       success: true,
       period,
       usage: {
         daily: dailyUsage,
-        endpoints: endpointBreakdown,
-        apiKeys: apiKeyStats,
-        summary,
+        summary: {
+          ...summary,
+          activeKeys: activeKeysCount || 0,
+          memberCount: memberUserIds.length,
+        },
+        members: memberStats,
       },
     });
   } catch (error) {
-    console.error('Usage analytics error:', error);
+    console.error('Org usage analytics error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 interface LogEntry {
+  user_id: string;
   endpoint: string;
   method: string;
   status_code: number | null;
@@ -101,13 +148,13 @@ interface LogEntry {
 }
 
 function processDaily(logs: LogEntry[], startDate: Date, endDate: Date) {
-  const daily: Record<string, { calls: number; tokens: number; cost: number; latencies: number[]; errors: number }> = {};
+  const daily: Record<string, { calls: number; tokens: number; cost: number }> = {};
 
   // Initialize all days
   const current = new Date(startDate);
   while (current <= endDate) {
     const key = current.toISOString().split('T')[0];
-    daily[key] = { calls: 0, tokens: 0, cost: 0, latencies: [], errors: 0 };
+    daily[key] = { calls: 0, tokens: 0, cost: 0 };
     current.setDate(current.getDate() + 1);
   }
 
@@ -118,12 +165,6 @@ function processDaily(logs: LogEntry[], startDate: Date, endDate: Date) {
       daily[key].calls += 1;
       daily[key].tokens += log.embedding_tokens || 0;
       daily[key].cost += log.cost_cents || 0;
-      if (log.latency_ms) {
-        daily[key].latencies.push(log.latency_ms);
-      }
-      if (log.status_code && log.status_code >= 400) {
-        daily[key].errors += 1;
-      }
     }
   }
 
@@ -132,52 +173,28 @@ function processDaily(logs: LogEntry[], startDate: Date, endDate: Date) {
     calls: data.calls,
     tokens: data.tokens,
     cost: data.cost,
-    avgLatency: data.latencies.length > 0
-      ? Math.round(data.latencies.reduce((a, b) => a + b, 0) / data.latencies.length)
-      : 0,
-    errors: data.errors,
   }));
 }
 
-function processEndpoints(logs: LogEntry[]) {
-  const endpoints: Record<string, { calls: number; avgLatency: number; errors: number }> = {};
+function processMemberUsage(logs: LogEntry[], memberUserIds: string[]) {
+  const members: Record<string, { calls: number; tokens: number; cost: number }> = {};
 
+  // Initialize all members
+  for (const userId of memberUserIds) {
+    members[userId] = { calls: 0, tokens: 0, cost: 0 };
+  }
+
+  // Fill in actual data
   for (const log of logs) {
-    const key = `${log.method} ${log.endpoint}`;
-    if (!endpoints[key]) {
-      endpoints[key] = { calls: 0, avgLatency: 0, errors: 0 };
-    }
-    endpoints[key].calls += 1;
-    if (log.latency_ms) {
-      endpoints[key].avgLatency += log.latency_ms;
-    }
-    if (log.status_code && log.status_code >= 400) {
-      endpoints[key].errors += 1;
+    if (members[log.user_id]) {
+      members[log.user_id].calls += 1;
+      members[log.user_id].tokens += log.embedding_tokens || 0;
+      members[log.user_id].cost += log.cost_cents || 0;
     }
   }
 
-  // Calculate averages
-  return Object.entries(endpoints)
-    .map(([endpoint, data]) => ({
-      endpoint,
-      calls: data.calls,
-      avgLatency: Math.round(data.avgLatency / data.calls),
-      errors: data.errors,
-      errorRate: Math.round((data.errors / data.calls) * 100),
-    }))
-    .sort((a, b) => b.calls - a.calls);
-}
-
-function processApiKeyUsage(logs: { api_key_id: string | null; endpoint: string }[]) {
-  const keys: Record<string, number> = {};
-
-  for (const log of logs) {
-    const keyId = log.api_key_id || 'direct';
-    keys[keyId] = (keys[keyId] || 0) + 1;
-  }
-
-  return Object.entries(keys)
-    .map(([keyId, calls]) => ({ keyId, calls }))
+  return Object.entries(members)
+    .map(([userId, data]) => ({ userId, ...data }))
     .sort((a, b) => b.calls - a.calls);
 }
 

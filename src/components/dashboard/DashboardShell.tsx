@@ -1,11 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+
+interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 const seasonConfig = {
   spring: {
@@ -84,6 +90,45 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+  const [showOrgDropdown, setShowOrgDropdown] = useState(false);
+  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+  const orgDropdownRef = useRef<HTMLDivElement>(null);
+  const createDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fetch organizations
+  const fetchOrganizations = useCallback(async () => {
+    try {
+      const res = await fetch("/api/dashboard/organizations");
+      const data = await res.json();
+      if (data.success && data.organizations) {
+        setOrganizations(data.organizations);
+      }
+    } catch (err) {
+      console.error("Failed to fetch orgs:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchOrganizations();
+    }
+  }, [status, fetchOrganizations]);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (orgDropdownRef.current && !orgDropdownRef.current.contains(e.target as Node)) {
+        setShowOrgDropdown(false);
+      }
+      if (createDropdownRef.current && !createDropdownRef.current.contains(e.target as Node)) {
+        setShowCreateDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     setSeason(getSeason());
@@ -93,6 +138,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const isSidebarExpanded = isSidebarPinned;
   // Fixed sidebar padding - sidebar overlays instead of pushing content
   const mainPaddingClass = "lg:pl-20";
+  const topBarHeight = "lg:pt-14";
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -294,8 +340,85 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         )}
       </header>
 
+      {/* Desktop Top Bar */}
+      <header className={`hidden lg:flex fixed top-0 right-0 left-20 z-30 h-14 items-center justify-between px-6 glass-card border-b theme-border`}>
+        {/* Org Selector */}
+        <div ref={orgDropdownRef} className="relative">
+          <button
+            onClick={() => setShowOrgDropdown(!showOrgDropdown)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 transition-colors text-sm font-medium text-gray-700"
+          >
+            <OrgIcon className="w-4 h-4 text-gray-400" />
+            <span>{selectedOrg?.name || t("dashboard.topBar.personal")}</span>
+            <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+          </button>
+          {showOrgDropdown && (
+            <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-1 animate-fade-in">
+              <button
+                onClick={() => { setSelectedOrg(null); setShowOrgDropdown(false); }}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${!selectedOrg ? 'bg-teal-50 text-teal-700' : 'text-gray-700'}`}
+              >
+                <UserIcon className="w-4 h-4" />
+                {t("dashboard.topBar.personal")}
+              </button>
+              {organizations.length > 0 && <div className="border-t border-gray-100 my-1" />}
+              {organizations.map((org) => (
+                <button
+                  key={org.id}
+                  onClick={() => { setSelectedOrg(org); setShowOrgDropdown(false); }}
+                  className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${selectedOrg?.id === org.id ? 'bg-teal-50 text-teal-700' : 'text-gray-700'}`}
+                >
+                  <OrgIcon className="w-4 h-4" />
+                  {org.name}
+                </button>
+              ))}
+              <div className="border-t border-gray-100 my-1" />
+              <Link
+                href="/dashboard/organizations"
+                onClick={() => setShowOrgDropdown(false)}
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:bg-gray-50"
+              >
+                <SettingsIcon className="w-4 h-4" />
+                {t("dashboard.topBar.manageOrgs")}
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Create Button */}
+        <div ref={createDropdownRef} className="relative">
+          <button
+            onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl theme-gradient-btn text-white text-sm font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            <PlusIcon className="w-4 h-4" />
+            {t("dashboard.topBar.create")}
+          </button>
+          {showCreateDropdown && (
+            <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 animate-fade-in">
+              <Link
+                href="/dashboard/keys"
+                onClick={() => setShowCreateDropdown(false)}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+              >
+                <KeyIcon className="w-4 h-4 text-amber-500" />
+                {t("dashboard.topBar.createApiKey")}
+              </Link>
+              <Link
+                href="/dashboard/organizations"
+                onClick={() => setShowCreateDropdown(false)}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+              >
+                <UsersIcon className="w-4 h-4 text-teal-500" />
+                {t("dashboard.topBar.createOrg")}
+              </Link>
+            </div>
+          )}
+        </div>
+      </header>
+
       {/* Main Content */}
-      <main className={`pt-16 lg:pt-0 min-h-screen relative z-10 ${mainPaddingClass}`}>
+      <main className={`pt-16 ${topBarHeight} min-h-screen relative z-10 ${mainPaddingClass}`}>
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
@@ -396,6 +519,38 @@ function SettingsIcon({ className }: { className?: string }) {
         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.757.426 1.757 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.757-2.924 1.757-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.757-.426-1.757-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.065z"
       />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
+}
+
+function OrgIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    </svg>
+  );
+}
+
+function UserIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+    </svg>
+  );
+}
+
+function PlusIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
   );
 }
