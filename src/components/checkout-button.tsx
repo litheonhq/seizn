@@ -1,61 +1,116 @@
 "use client";
 
+// Paddle.js TypeScript definitions
 declare global {
   interface Window {
-    LemonSqueezy?: {
-      Url: {
-        Open: (url: string) => void;
+    Paddle?: {
+      Checkout: {
+        open: (options: PaddleCheckoutOptions) => void;
       };
+      Environment: {
+        set: (env: "sandbox" | "production") => void;
+      };
+      Initialize: (options: PaddleInitOptions) => void;
     };
-    createLemonSqueezy?: () => void;
   }
 }
 
+interface PaddleInitOptions {
+  token: string;
+  checkout?: {
+    settings?: PaddleCheckoutSettings;
+  };
+}
+
+interface PaddleCheckoutSettings {
+  displayMode?: "overlay" | "inline";
+  theme?: "light" | "dark";
+  locale?: string;
+  allowLogout?: boolean;
+  showAddDiscounts?: boolean;
+  showAddTaxId?: boolean;
+  frameTarget?: string;
+  frameInitialHeight?: number;
+  frameStyle?: string;
+  successUrl?: string;
+}
+
+interface PaddleCheckoutOptions {
+  items: PaddleCheckoutItem[];
+  customer?: {
+    email?: string;
+    address?: {
+      countryCode?: string;
+      postalCode?: string;
+    };
+  };
+  customData?: Record<string, string>;
+  settings?: PaddleCheckoutSettings;
+}
+
+interface PaddleCheckoutItem {
+  priceId: string;
+  quantity?: number;
+}
+
 interface CheckoutButtonProps {
-  variantId: string;
+  priceId: string;
   children: React.ReactNode;
   className?: string;
   email?: string;
   userId?: string;
+  quantity?: number;
+  successUrl?: string;
 }
 
 export function CheckoutButton({
-  variantId,
+  priceId,
   children,
   className = "",
   email,
   userId,
+  quantity = 1,
+  successUrl,
 }: CheckoutButtonProps) {
   const handleCheckout = () => {
-    // Build checkout URL with optional prefill data
-    let checkoutUrl = `https://seizn.lemonsqueezy.com/checkout/buy/${variantId}`;
+    // Build checkout options for Paddle
+    const checkoutOptions: PaddleCheckoutOptions = {
+      items: [
+        {
+          priceId,
+          quantity,
+        },
+      ],
+    };
 
-    const params = new URLSearchParams();
-
-    // Prefill email if available
+    // Prefill customer email if available
     if (email) {
-      params.append("checkout[email]", email);
+      checkoutOptions.customer = {
+        email,
+      };
     }
 
-    // Add custom data for webhook handling
+    // Add custom data for webhook handling (e.g., user ID)
     if (userId) {
-      params.append("checkout[custom][user_id]", userId);
+      checkoutOptions.customData = {
+        user_id: userId,
+      };
     }
 
-    // Enable overlay mode
-    params.append("embed", "1");
-
-    const queryString = params.toString();
-    if (queryString) {
-      checkoutUrl += `?${queryString}`;
+    // Add success URL if provided
+    if (successUrl) {
+      checkoutOptions.settings = {
+        successUrl,
+      };
     }
 
-    // Use Lemon Squeezy overlay if available, otherwise redirect
-    if (window.LemonSqueezy?.Url?.Open) {
-      window.LemonSqueezy.Url.Open(checkoutUrl);
+    // Use Paddle overlay checkout if available
+    if (window.Paddle?.Checkout?.open) {
+      window.Paddle.Checkout.open(checkoutOptions);
     } else {
-      // Fallback to redirect
-      window.location.href = checkoutUrl;
+      console.error(
+        "Paddle.js not loaded. Please check that the Paddle script is included in the page."
+      );
     }
   };
 
@@ -66,8 +121,22 @@ export function CheckoutButton({
   );
 }
 
-// Variant IDs for each plan
+// Price IDs for each plan (Paddle uses pri_* format)
+// Replace these with actual Paddle price IDs after account setup
+export const PLAN_PRICES = {
+  plus: {
+    monthly: "pri_placeholder_plus_monthly",
+    yearly: "pri_placeholder_plus_yearly",
+  },
+  pro: {
+    monthly: "pri_placeholder_pro_monthly",
+    yearly: "pri_placeholder_pro_yearly",
+  },
+} as const;
+
+// Legacy variant mapping for backward compatibility during migration
+// Can be removed after full migration to Paddle
 export const PLAN_VARIANTS = {
-  plus: "1201299",
-  pro: "1201303",
+  plus: PLAN_PRICES.plus.monthly,
+  pro: PLAN_PRICES.pro.monthly,
 } as const;

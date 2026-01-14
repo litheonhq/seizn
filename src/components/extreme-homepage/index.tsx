@@ -1,16 +1,59 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense, memo } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { RequestBuilder, type RequestConfig, type RequestBuilderTranslations } from "./request-builder";
-import { ResultsPanel, type SearchResult, type ResultsPanelTranslations } from "./results-panel";
-import { TracePanel, type TraceSummary, type TracePanelTranslations } from "./trace-panel";
-import { CostPanel, type CostBreakdown, type CostPanelTranslations } from "./cost-panel";
-import { ErrorDisplay, type PlaygroundError, type ErrorDisplayTranslations } from "./error-display";
-import { SnippetTabs } from "./snippet-tabs";
+import { type SearchResult, type ResultsPanelTranslations } from "./results-panel";
+import { type TraceSummary, type TracePanelTranslations } from "./trace-panel";
+import { type CostBreakdown, type CostPanelTranslations } from "./cost-panel";
+import { type PlaygroundError, type ErrorDisplayTranslations } from "./error-display";
+import { PanelSkeleton, SnippetSkeleton } from "./loading-skeleton";
+import {
+  DocsIcon,
+  PricingIcon,
+  EnterpriseIcon,
+  MenuIcon,
+  CloseIcon,
+  CheckIcon,
+  TracingIcon,
+  AutopilotIcon,
+  GovernanceIcon,
+  LessGlueIcon,
+  SecurityIcon,
+  RateLimitIcon,
+  AuditIcon,
+} from "./icons";
+
+// Dynamic imports for below-the-fold and heavy components (code-split for better LCP)
+const ResultsPanel = dynamic(
+  () => import("./results-panel").then((mod) => ({ default: mod.ResultsPanel })),
+  { loading: () => <PanelSkeleton />, ssr: false }
+);
+
+const TracePanel = dynamic(
+  () => import("./trace-panel").then((mod) => ({ default: mod.TracePanel })),
+  { loading: () => <PanelSkeleton />, ssr: false }
+);
+
+const CostPanel = dynamic(
+  () => import("./cost-panel").then((mod) => ({ default: mod.CostPanel })),
+  { loading: () => <PanelSkeleton />, ssr: false }
+);
+
+const ErrorDisplay = dynamic(
+  () => import("./error-display").then((mod) => ({ default: mod.ErrorDisplay })),
+  { ssr: false }
+);
+
+// SnippetTabs uses react-syntax-highlighter which is heavy - lazy load it
+const SnippetTabs = dynamic(
+  () => import("./snippet-tabs").then((mod) => ({ default: mod.SnippetTabs })),
+  { loading: () => <SnippetSkeleton />, ssr: false }
+);
 
 interface ExtremeHomepageClientProps {
   dict: Dictionary;
@@ -143,6 +186,281 @@ const MOCK_COST: CostBreakdown = {
   queryUnits: 1.5,
 };
 
+// Memoized Navigation component to prevent unnecessary re-renders
+const Navigation = memo(function Navigation({
+  locale,
+  mobileMenuOpen,
+  setMobileMenuOpen,
+  t,
+}: {
+  locale: Locale;
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+  t: Dictionary;
+}) {
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <Link href={`/${locale}`} className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/seizn-icon.svg"
+            alt="Seizn"
+            className="w-8 h-8"
+            width={32}
+            height={32}
+          />
+          <span className="font-semibold text-xl tracking-tight">Seizn</span>
+        </Link>
+
+        {/* Desktop Nav - Centered Links with Memoized Icons */}
+        <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
+          <Link href="/docs" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+              <DocsIcon className="w-4 h-4" />
+            </div>
+            {t.extremeHome?.nav?.docs || "Docs"}
+          </Link>
+          <Link href={`/${locale}/pricing`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+              <PricingIcon className="w-4 h-4" />
+            </div>
+            {t.extremeHome?.nav?.pricing || "Pricing"}
+          </Link>
+          <Link href={`/${locale}/enterprise`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+              <EnterpriseIcon className="w-4 h-4" />
+            </div>
+            {t.extremeHome?.nav?.enterprise || "Enterprise"}
+          </Link>
+        </div>
+
+        {/* Desktop Nav - Right Side */}
+        <div className="hidden md:flex items-center gap-4">
+          <LanguageSwitcher currentLocale={locale} />
+          <Link
+            href="/dashboard/keys"
+            className="text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+          >
+            {t.extremeHome?.nav?.getApiKey || "Get API Key"}
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 text-gray-600"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {mobileMenuOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100">
+          <div className="px-4 py-4 space-y-4">
+            <div className="flex justify-center gap-8 py-2">
+              <Link href="/docs" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                <DocsIcon className="w-5 h-5" />
+                <span className="text-xs">{t.extremeHome?.nav?.docs || "Docs"}</span>
+              </Link>
+              <Link href={`/${locale}/pricing`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                <PricingIcon className="w-5 h-5" />
+                <span className="text-xs">{t.extremeHome?.nav?.pricing || "Pricing"}</span>
+              </Link>
+              <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                <EnterpriseIcon className="w-5 h-5" />
+                <span className="text-xs">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
+              </Link>
+            </div>
+            <LanguageSwitcher currentLocale={locale} />
+            <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full">
+              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+});
+
+// Memoized Why Seizn section - static content that doesn't need re-renders
+const WhySeizn = memo(function WhySeizn({ t }: { t: Dictionary }) {
+  return (
+    <section className="py-16 px-4 sm:px-6 bg-gray-50">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+            {t.extremeHome?.whySeizn?.title || "Why Seizn vs LangChain + Pinecone?"}
+          </h2>
+          <p className="text-gray-500 max-w-xl mx-auto">
+            {t.extremeHome?.whySeizn?.subtitle || "Stop gluing together fragmented tools. Get everything you need in one integrated stack."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Built-in Tracing */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100">
+            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+              <TracingIcon className="w-5 h-5 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {t.extremeHome?.whySeizn?.tracingDesc || "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging."}
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
+            </div>
+          </div>
+
+          {/* Budget-aware Planning */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100">
+            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+              <AutopilotIcon className="w-5 h-5 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {t.extremeHome?.whySeizn?.autopilotDesc || "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required."}
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
+            </div>
+          </div>
+
+          {/* Governance */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100">
+            <div className="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center mb-4">
+              <GovernanceIcon className="w-5 h-5 text-rose-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {t.extremeHome?.whySeizn?.governanceDesc || "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later."}
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
+            </div>
+          </div>
+
+          {/* Less Glue Code */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100">
+            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+              <LessGlueIcon className="w-5 h-5 text-amber-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {t.extremeHome?.whySeizn?.lessGlueDesc || "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill."}
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+});
+
+// Memoized Trust Badges section
+const TrustBadges = memo(function TrustBadges({ t }: { t: Dictionary }) {
+  return (
+    <section className="py-12 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+          <div className="flex items-center gap-3 text-gray-600">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+              <SecurityIcon className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
+              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 text-gray-600">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <RateLimitIcon className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
+              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 text-gray-600">
+            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+              <AuditIcon className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
+              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+});
+
+// Memoized Pricing CTA section
+const PricingCTA = memo(function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
+  return (
+    <section className="py-16 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF]">
+      <div className="max-w-4xl mx-auto text-center">
+        <h2 className="text-3xl font-semibold mb-4">{t.extremeHome?.pricingCta?.title || "Simple, transparent pricing"}</h2>
+        <p className="text-[#EAF0FF]/70 mb-8">
+          {t.extremeHome?.pricingCta?.subtitle || "Start free, scale as you grow. No hidden fees."}
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href={`/${locale}/pricing`}
+            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-full hover:opacity-90 transition-opacity"
+          >
+            {t.extremeHome?.pricingCta?.viewPricing || "View Pricing"}
+          </Link>
+          <Link
+            href={`/${locale}/enterprise`}
+            className="px-8 py-3 border border-[#EAF0FF]/20 text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 transition-colors"
+          >
+            {t.extremeHome?.pricingCta?.contactSales || "Contact Sales"}
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+});
+
+// Memoized Footer section
+const Footer = memo(function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
+  return (
+    <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <Link href={`/${locale}`} className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/seizn-icon.svg"
+            alt="Seizn"
+            className="w-6 h-6"
+            width={24}
+            height={24}
+            loading="lazy"
+          />
+          <span className="font-medium">Seizn</span>
+        </Link>
+        <div className="text-sm text-gray-500">
+          {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
+        </div>
+        <nav className="flex items-center gap-6">
+          <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
+          <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
+          <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
+          <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
+          <Link href="/refund" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Refund</Link>
+          <a href="mailto:support@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+        </nav>
+      </div>
+    </footer>
+  );
+});
+
 export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientProps) {
   const [config, setConfig] = useState<RequestConfig>(DEFAULT_CONFIG);
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -155,14 +473,14 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileConsoleTab, setMobileConsoleTab] = useState<"request" | "results" | "trace" | "cost">("request");
 
-  // Close mobile menu on resize
+  // Close mobile menu on resize - use passive listener
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setMobileMenuOpen(false);
       }
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -250,103 +568,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Sticky Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href={`/${locale}`} className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8" />
-            <span className="font-semibold text-xl tracking-tight">Seizn</span>
-          </Link>
-
-          {/* Desktop Nav - Centered Links with Icons */}
-          <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <Link href="/docs" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-              <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                </svg>
-              </div>
-              {t.extremeHome?.nav?.docs || "Docs"}
-            </Link>
-            <Link href={`/${locale}/pricing`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-              <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              {t.extremeHome?.nav?.pricing || "Pricing"}
-            </Link>
-            <Link href={`/${locale}/enterprise`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-              <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                </svg>
-              </div>
-              {t.extremeHome?.nav?.enterprise || "Enterprise"}
-            </Link>
-          </div>
-
-          {/* Desktop Nav - Right Side */}
-          <div className="hidden md:flex items-center gap-4">
-            <LanguageSwitcher currentLocale={locale} />
-            <Link
-              href="/dashboard/keys"
-              className="text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
-            >
-              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-gray-600"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100">
-            <div className="px-4 py-4 space-y-4">
-              <div className="flex justify-center gap-8 py-2">
-                <Link href="/docs" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                  </svg>
-                  <span className="text-xs">{t.extremeHome?.nav?.docs || "Docs"}</span>
-                </Link>
-                <Link href={`/${locale}/pricing`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-xs">{t.extremeHome?.nav?.pricing || "Pricing"}</span>
-                </Link>
-                <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                  </svg>
-                  <span className="text-xs">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
-                </Link>
-              </div>
-              <LanguageSwitcher currentLocale={locale} />
-              <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full">
-                {t.extremeHome?.nav?.getApiKey || "Get API Key"}
-              </Link>
-            </div>
-          </div>
-        )}
-      </nav>
+      {/* Sticky Navigation - Memoized */}
+      <Navigation
+        locale={locale}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+        t={t}
+      />
 
       {/* Hero = Live Console */}
       <section id="demo" className="pt-24 pb-8 px-4 sm:px-6">
@@ -366,9 +594,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <CheckIcon className="w-4 h-4 text-emerald-600" />
                 </div>
                 <span className="text-sm text-gray-600">{t.extremeHome?.firstRetrievalComplete || "First retrieval complete"}</span>
               </div>
@@ -443,39 +669,47 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   </button>
                 </div>
 
-                {/* Error Display */}
+                {/* Error Display - Lazy loaded */}
                 {error && (
-                  <ErrorDisplay
-                    error={error}
-                    onRetry={handleRetry}
-                    onDismiss={handleDismissError}
-                    translations={t.extremeHome?.errorDisplay as ErrorDisplayTranslations}
-                  />
+                  <Suspense fallback={null}>
+                    <ErrorDisplay
+                      error={error}
+                      onRetry={handleRetry}
+                      onDismiss={handleDismissError}
+                      translations={t.extremeHome?.errorDisplay as ErrorDisplayTranslations}
+                    />
+                  </Suspense>
                 )}
 
-                {/* Tab Content */}
+                {/* Tab Content - Lazy loaded panels */}
                 <div className="flex-1">
                   {activeTab === "results" && (
-                    <ResultsPanel
-                      results={results}
-                      isLoading={isLoading}
-                      showRerankDelta={config.rerank}
-                      translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
-                    />
+                    <Suspense fallback={<PanelSkeleton />}>
+                      <ResultsPanel
+                        results={results}
+                        isLoading={isLoading}
+                        showRerankDelta={config.rerank}
+                        translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
+                      />
+                    </Suspense>
                   )}
                   {activeTab === "trace" && (
-                    <TracePanel
-                      trace={trace}
-                      isLoading={isLoading}
-                      translations={t.extremeHome?.tracePanel as TracePanelTranslations}
-                    />
+                    <Suspense fallback={<PanelSkeleton />}>
+                      <TracePanel
+                        trace={trace}
+                        isLoading={isLoading}
+                        translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                      />
+                    </Suspense>
                   )}
                   {activeTab === "cost" && (
-                    <CostPanel
-                      cost={cost}
-                      isLoading={isLoading}
-                      translations={t.extremeHome?.costPanel as CostPanelTranslations}
-                    />
+                    <Suspense fallback={<PanelSkeleton />}>
+                      <CostPanel
+                        cost={cost}
+                        isLoading={isLoading}
+                        translations={t.extremeHome?.costPanel as CostPanelTranslations}
+                      />
+                    </Suspense>
                   )}
                 </div>
               </div>
@@ -539,33 +773,39 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 />
               )}
               {mobileConsoleTab === "results" && (
-                <ResultsPanel
-                  results={results}
-                  isLoading={isLoading}
-                  showRerankDelta={config.rerank}
-                  translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
-                />
+                <Suspense fallback={<PanelSkeleton />}>
+                  <ResultsPanel
+                    results={results}
+                    isLoading={isLoading}
+                    showRerankDelta={config.rerank}
+                    translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
+                  />
+                </Suspense>
               )}
               {mobileConsoleTab === "trace" && (
-                <TracePanel
-                  trace={trace}
-                  isLoading={isLoading}
-                  translations={t.extremeHome?.tracePanel as TracePanelTranslations}
-                />
+                <Suspense fallback={<PanelSkeleton />}>
+                  <TracePanel
+                    trace={trace}
+                    isLoading={isLoading}
+                    translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                  />
+                </Suspense>
               )}
               {mobileConsoleTab === "cost" && (
-                <CostPanel
-                  cost={cost}
-                  isLoading={isLoading}
-                  translations={t.extremeHome?.costPanel as CostPanelTranslations}
-                />
+                <Suspense fallback={<PanelSkeleton />}>
+                  <CostPanel
+                    cost={cost}
+                    isLoading={isLoading}
+                    translations={t.extremeHome?.costPanel as CostPanelTranslations}
+                  />
+                </Suspense>
               )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Copy Snippet Section */}
+      {/* Copy Snippet Section - Lazy loaded */}
       <section className="py-8 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-6">
@@ -574,175 +814,23 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               {t.extremeHome?.copySnippetSubtitle || "Generated from your exact settings above"}
             </p>
           </div>
-          <SnippetTabs config={config} />
+          <Suspense fallback={<SnippetSkeleton />}>
+            <SnippetTabs config={config} />
+          </Suspense>
         </div>
       </section>
 
-      {/* Why Seizn Section */}
-      <section className="py-16 px-4 sm:px-6 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-              {t.extremeHome?.whySeizn?.title || "Why Seizn vs LangChain + Pinecone?"}
-            </h2>
-            <p className="text-gray-500 max-w-xl mx-auto">
-              {t.extremeHome?.whySeizn?.subtitle || "Stop gluing together fragmented tools. Get everything you need in one integrated stack."}
-            </p>
-          </div>
+      {/* Why Seizn Section - Memoized static content */}
+      <WhySeizn t={t} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Built-in Tracing */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100">
-              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.extremeHome?.whySeizn?.tracingDesc || "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging."}
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
-              </div>
-            </div>
+      {/* Trust Badges - Memoized */}
+      <TrustBadges t={t} />
 
-            {/* Budget-aware Planning */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.extremeHome?.whySeizn?.autopilotDesc || "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required."}
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
-              </div>
-            </div>
+      {/* Pricing CTA - Memoized */}
+      <PricingCTA locale={locale} t={t} />
 
-            {/* Governance */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100">
-              <div className="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.extremeHome?.whySeizn?.governanceDesc || "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later."}
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
-              </div>
-            </div>
-
-            {/* Less Glue Code */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100">
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.extremeHome?.whySeizn?.lessGlueDesc || "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill."}
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Badges */}
-      <section className="py-12 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
-                <div className="text-xs text-gray-500">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
-                <div className="text-xs text-gray-500">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
-                <div className="text-xs text-gray-500">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing CTA */}
-      <section className="py-16 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-4">{t.extremeHome?.pricingCta?.title || "Simple, transparent pricing"}</h2>
-          <p className="text-[#EAF0FF]/70 mb-8">
-            {t.extremeHome?.pricingCta?.subtitle || "Start free, scale as you grow. No hidden fees."}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href={`/${locale}/pricing`}
-              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-full hover:opacity-90 transition-opacity"
-            >
-              {t.extremeHome?.pricingCta?.viewPricing || "View Pricing"}
-            </Link>
-            <Link
-              href={`/${locale}/enterprise`}
-              className="px-8 py-3 border border-[#EAF0FF]/20 text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 transition-colors"
-            >
-              {t.extremeHome?.pricingCta?.contactSales || "Contact Sales"}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <Link href={`/${locale}`} className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-6 h-6" />
-            <span className="font-medium">Seizn</span>
-          </Link>
-          <div className="text-sm text-gray-500">
-            {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
-          </div>
-          <nav className="flex items-center gap-6">
-            <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
-            <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
-            <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</a>
-            <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</a>
-            <a href="mailto:info@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
-          </nav>
-        </div>
-      </footer>
+      {/* Footer - Memoized */}
+      <Footer locale={locale} t={t} />
     </div>
   );
 }
