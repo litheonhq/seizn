@@ -6,6 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { ThemeToggleSidebar } from "@/components/ui/ThemeToggle";
+import MobileSidebar from "./MobileSidebar";
 
 interface Organization {
   id: string;
@@ -87,7 +89,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     router.refresh();
     await signOut({ callbackUrl: "/", redirect: true });
   };
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
@@ -246,6 +248,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           })}
         </nav>
 
+        {/* Theme Toggle */}
+        <div className="px-3 pb-2">
+          <ThemeToggleSidebar expanded={isSidebarExpanded} />
+        </div>
+
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
           <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 ${isSidebarExpanded ? 'hover:bg-white/80' : 'justify-center'} transition-all duration-300`}>
@@ -290,54 +297,37 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
       </aside>
 
+
+      {/* Mobile Sidebar Drawer */}
+      <MobileSidebar
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        session={session}
+        navigationConfig={navigationConfig}
+        t={t}
+        seasonConfig={config}
+        onSignOut={handleSignOut}
+      />
+
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 inset-x-0 z-40 glass-card border-b theme-border">
-        <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2">
+      <header className="lg:hidden fixed top-0 inset-x-0 z-30 glass-card border-b theme-border">
+        <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
+          <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 rounded-xl" />
-            <span className="text-lg font-bold text-gray-900">Seizn</span>
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md" />
+            <span className="text-base sm:text-lg font-bold text-gray-900">Seizn</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-lg">{config.icon}</span>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <span className="text-base sm:text-lg">{config.icon}</span>
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-white/60 rounded-xl transition-colors"
+              onClick={() => setIsMobileSidebarOpen(true)}
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-white/60 active:bg-white/80 rounded-xl transition-colors"
+              aria-label={t("dashboard.menu") || "Open menu"}
             >
-              {isMobileMenuOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+              <MenuIcon className="w-6 h-6" />
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <nav className="px-4 pb-4 space-y-1 animate-fade-in">
-            {navigationConfig.map((item) => {
-              const active = isActive(item.href);
-              const label = t(item.key);
-              return (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                    active ? "theme-gradient-btn text-white" : "text-gray-600 hover:bg-white/60"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {label}
-                </Link>
-              );
-            })}
-            <button
-              onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/60"
-            >
-              <LogoutIcon className="w-5 h-5" />
-              {t("dashboard.signOut")}
-            </button>
-          </nav>
-        )}
       </header>
 
       {/* Desktop Top Bar */}
@@ -418,7 +408,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       </header>
 
       {/* Main Content */}
-      <main className={`pt-16 ${topBarHeight} min-h-screen relative z-10 ${mainPaddingClass}`}>
+      <main className={`pt-14 sm:pt-16 ${topBarHeight} min-h-screen relative z-10 ${mainPaddingClass}`}>
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
@@ -490,13 +480,6 @@ function MenuIcon({ className }: { className?: string }) {
   );
 }
 
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  );
-}
 
 function LogoutIcon({ className }: { className?: string }) {
   return (

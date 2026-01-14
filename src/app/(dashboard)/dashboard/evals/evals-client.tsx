@@ -1,11 +1,32 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+} from "recharts";
 
 // ============================================
 // Types
 // ============================================
+
+type ViewTab = "comparison" | "charts" | "timeline";
 
 interface EvalRun {
   id: string;
@@ -45,6 +66,14 @@ interface MetricSet {
   mrr: number;
   avg_latency_ms: number;
   avg_cost_usd: number;
+}
+
+interface HistoricalTrend {
+  date: string;
+  f1: number;
+  ndcg: number;
+  mrr: number;
+  latency: number;
 }
 
 // ============================================
@@ -163,7 +192,67 @@ const MOCK_EVAL_RUNS: EvalRun[] = [
     status: "running",
     created_at: "2026-01-14T10:00:00Z",
   },
+  {
+    id: "eval-004",
+    name: "Top-K Optimization",
+    dataset_id: "ds-002",
+    dataset_name: "Support Tickets",
+    config_a: {
+      label: "Top-K 5",
+      search_type: "hybrid",
+      embedding_model: "text-embedding-3-small",
+      top_k: 5,
+      rerank_enabled: true,
+      rerank_model: "cohere-rerank-v3",
+      hybrid_alpha: 0.6,
+    },
+    config_b: {
+      label: "Top-K 20",
+      search_type: "hybrid",
+      embedding_model: "text-embedding-3-small",
+      top_k: 20,
+      rerank_enabled: true,
+      rerank_model: "cohere-rerank-v3",
+      hybrid_alpha: 0.6,
+    },
+    status: "completed",
+    metrics: {
+      config_a: {
+        precision: 0.89,
+        recall: 0.71,
+        f1: 0.79,
+        ndcg: 0.86,
+        mrr: 0.91,
+        avg_latency_ms: 178,
+        avg_cost_usd: 0.0009,
+      },
+      config_b: {
+        precision: 0.82,
+        recall: 0.88,
+        f1: 0.85,
+        ndcg: 0.91,
+        mrr: 0.89,
+        avg_latency_ms: 298,
+        avg_cost_usd: 0.0016,
+      },
+      winner: "B",
+      confidence: 0.87,
+    },
+    created_at: "2026-01-12T14:00:00Z",
+    completed_at: "2026-01-12T14:35:00Z",
+  },
 ];
+
+const HISTORICAL_TRENDS: HistoricalTrend[] = [
+  { date: "Jan 8", f1: 0.72, ndcg: 0.78, mrr: 0.80, latency: 280 },
+  { date: "Jan 9", f1: 0.74, ndcg: 0.79, mrr: 0.82, latency: 265 },
+  { date: "Jan 10", f1: 0.76, ndcg: 0.82, mrr: 0.84, latency: 258 },
+  { date: "Jan 11", f1: 0.78, ndcg: 0.84, mrr: 0.86, latency: 252 },
+  { date: "Jan 12", f1: 0.79, ndcg: 0.86, mrr: 0.87, latency: 245 },
+  { date: "Jan 13", f1: 0.81, ndcg: 0.87, mrr: 0.89, latency: 238 },
+  { date: "Jan 14", f1: 0.83, ndcg: 0.89, mrr: 0.91, latency: 232 },
+];
+
 
 // ============================================
 // Icons
@@ -217,6 +306,25 @@ const ArrowDownIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const DownloadIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+  </svg>
+);
+
+const TrophyIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+  </svg>
+);
+
+const TrendingUpIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+  </svg>
+);
+
+
 // ============================================
 // Component
 // ============================================
@@ -226,6 +334,7 @@ export default function EvalsClient() {
   const [evalRuns, setEvalRuns] = useState<EvalRun[]>([]);
   const [selectedRun, setSelectedRun] = useState<EvalRun | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<ViewTab>("comparison");
 
   useEffect(() => {
     // Simulate API fetch
@@ -246,9 +355,105 @@ export default function EvalsClient() {
     });
   }, []);
 
-  const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
+  const formatPercent = (value: number) => `${(Number(value) * 100).toFixed(1)}%`;
   const formatLatency = (ms: number) => `${ms}ms`;
   const formatCost = (usd: number) => `$${(usd * 1000).toFixed(2)}m`;
+
+  // Prepare bar chart data
+  const barChartData = useMemo(() => {
+    if (!selectedRun?.metrics) return [];
+    const metrics = ["precision", "recall", "f1", "ndcg", "mrr"];
+    return metrics.map((metric) => ({
+      name: metric.toUpperCase(),
+      "Config A": Math.round((selectedRun.metrics!.config_a[metric as keyof MetricSet] as number) * 100),
+      "Config B": selectedRun.metrics!.config_b
+        ? Math.round((selectedRun.metrics!.config_b[metric as keyof MetricSet] as number) * 100)
+        : 0,
+    }));
+  }, [selectedRun]);
+
+  // Prepare radar chart data
+  const radarChartData = useMemo(() => {
+    if (!selectedRun?.metrics) return [];
+    const metrics = ["precision", "recall", "f1", "ndcg", "mrr"];
+    return metrics.map((metric) => ({
+      subject: metric.toUpperCase(),
+      A: Math.round((selectedRun.metrics!.config_a[metric as keyof MetricSet] as number) * 100),
+      B: selectedRun.metrics!.config_b
+        ? Math.round((selectedRun.metrics!.config_b[metric as keyof MetricSet] as number) * 100)
+        : 0,
+      fullMark: 100,
+    }));
+  }, [selectedRun]);
+
+  // Export as CSV
+  const exportAsCSV = useCallback(() => {
+    if (!selectedRun?.metrics) return;
+
+    const headers = ["Metric", "Config A", "Config B", "Difference", "Winner"];
+    const metrics = [
+      { name: "Precision", key: "precision" },
+      { name: "Recall", key: "recall" },
+      { name: "F1 Score", key: "f1" },
+      { name: "NDCG", key: "ndcg" },
+      { name: "MRR", key: "mrr" },
+      { name: "Avg Latency (ms)", key: "avg_latency_ms" },
+      { name: "Avg Cost (USD)", key: "avg_cost_usd" },
+    ];
+
+    const rows = metrics.map(({ name, key }) => {
+      const valueA = selectedRun.metrics!.config_a[key as keyof MetricSet];
+      const valueB = selectedRun.metrics!.config_b?.[key as keyof MetricSet] ?? "-";
+      const diff = typeof valueB === "number" ? ((valueA as number) - valueB).toFixed(4) : "-";
+      const isHigherBetter = !["avg_latency_ms", "avg_cost_usd"].includes(key);
+      const winner =
+        typeof valueB === "number"
+          ? isHigherBetter
+            ? (valueA as number) > valueB
+              ? "A"
+              : "B"
+            : (valueA as number) < valueB
+              ? "A"
+              : "B"
+          : "-";
+      return [name, valueA, valueB, diff, winner].join(",");
+    });
+
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `eval-${selectedRun.id}-metrics.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [selectedRun]);
+
+  // Export as JSON
+  const exportAsJSON = useCallback(() => {
+    if (!selectedRun) return;
+
+    const data = {
+      id: selectedRun.id,
+      name: selectedRun.name,
+      dataset: selectedRun.dataset_name,
+      status: selectedRun.status,
+      config_a: selectedRun.config_a,
+      config_b: selectedRun.config_b,
+      metrics: selectedRun.metrics,
+      created_at: selectedRun.created_at,
+      completed_at: selectedRun.completed_at,
+    };
+
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `eval-${selectedRun.id}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [selectedRun]);
 
   const getStatusBadge = (status: EvalRun["status"]) => {
     switch (status) {
@@ -256,61 +461,107 @@ export default function EvalsClient() {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
             <CheckCircleIcon className="w-3 h-3" />
-            Completed
+            {t("dashboard.evals.completed") || "Completed"}
           </span>
         );
       case "running":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
             <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            Running
+            {t("dashboard.evals.running") || "Running"}
           </span>
         );
       case "failed":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">
             <XCircleIcon className="w-3 h-3" />
-            Failed
+            {t("dashboard.evals.failed") || "Failed"}
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">
             <ClockIcon className="w-3 h-3" />
-            Pending
+            {t("dashboard.evals.pending") || "Pending"}
           </span>
         );
     }
   };
 
-  const MetricComparison = ({ label, valueA, valueB, format, higherIsBetter = true }: {
+  // Winner Badge Component
+  const WinnerBadge = ({ winner }: { winner: "A" | "B" | "tie" }) => (
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+      <TrophyIcon className="w-3 h-3" />
+      {winner === "tie" ? t("dashboard.evals.tie") || "Tie" : `${t("dashboard.evals.winner") || "Winner"}: ${winner}`}
+    </span>
+  );
+
+
+  const MetricComparison = ({
+    label,
+    valueA,
+    valueB,
+    format,
+    higherIsBetter = true,
+    winner,
+  }: {
     label: string;
     valueA: number;
     valueB?: number;
     format: (v: number) => string;
     higherIsBetter?: boolean;
+    winner?: "A" | "B" | "tie";
   }) => {
     const diff = valueB !== undefined ? valueA - valueB : 0;
-    const isWinner = higherIsBetter ? diff > 0 : diff < 0;
+    const percentDiff = valueB !== undefined && valueB !== 0 ? Math.abs(diff / valueB) * 100 : 0;
+    const isWinnerA = higherIsBetter ? diff > 0 : diff < 0;
     const showComparison = valueB !== undefined && diff !== 0;
 
     return (
-      <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-        <span className="text-sm text-gray-600">{label}</span>
+      <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-700">{label}</span>
+          {showComparison && (
+            <span
+              className={`text-xs px-1.5 py-0.5 rounded ${
+                isWinnerA ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+              }`}
+            >
+              {isWinnerA ? "+" : "-"}{percentDiff.toFixed(1)}%
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-4">
-          <span className={`text-sm font-medium ${showComparison && isWinner ? "text-green-600" : "text-gray-900"}`}>
-            {format(valueA)}
-          </span>
+          <div className="flex items-center gap-1">
+            {winner === "A" && showComparison && isWinnerA && (
+              <TrophyIcon className="w-4 h-4 text-yellow-500" />
+            )}
+            <span
+              className={`text-sm font-semibold ${
+                showComparison && isWinnerA ? "text-green-600" : "text-gray-900"
+              }`}
+            >
+              {format(valueA)}
+            </span>
+          </div>
           {valueB !== undefined && (
             <>
-              <span className="text-gray-400">vs</span>
-              <span className={`text-sm font-medium ${showComparison && !isWinner ? "text-green-600" : "text-gray-900"}`}>
-                {format(valueB)}
-              </span>
+              <span className="text-gray-400 text-xs">vs</span>
+              <div className="flex items-center gap-1">
+                <span
+                  className={`text-sm font-semibold ${
+                    showComparison && !isWinnerA ? "text-green-600" : "text-gray-900"
+                  }`}
+                >
+                  {format(valueB)}
+                </span>
+                {winner === "B" && showComparison && !isWinnerA && (
+                  <TrophyIcon className="w-4 h-4 text-yellow-500" />
+                )}
+              </div>
               {showComparison && (
-                <span className={`inline-flex items-center text-xs ${isWinner ? "text-green-500" : "text-red-500"}`}>
-                  {isWinner ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
-                  {formatPercent(Math.abs(diff))}
+                <span className={`inline-flex items-center text-xs ${isWinnerA ? "text-green-500" : "text-red-500"}`}>
+                  {isWinnerA ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
                 </span>
               )}
             </>
@@ -319,6 +570,24 @@ export default function EvalsClient() {
       </div>
     );
   };
+
+  // Custom tooltip for charts
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg p-3">
+          <p className="font-medium text-gray-900 mb-2">{label}</p>
+          {payload.map((entry, index) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {entry.name}: {entry.value}%
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
 
   return (
     <div className="space-y-6">
@@ -375,8 +644,9 @@ export default function EvalsClient() {
                     <ClockIcon className="w-3 h-3" />
                     {formatDate(run.created_at)}
                     {run.metrics?.winner && (
-                      <span className="ml-auto px-2 py-0.5 bg-green-100 text-green-700 rounded-full">
-                        Winner: {run.metrics.winner}
+                      <span className="ml-auto px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full inline-flex items-center gap-1">
+                        <TrophyIcon className="w-3 h-3" />
+                        {run.metrics.winner}
                       </span>
                     )}
                   </div>
@@ -385,6 +655,7 @@ export default function EvalsClient() {
             )}
           </div>
         </div>
+
 
         {/* Eval Details */}
         <div className="lg:col-span-2">
@@ -397,8 +668,31 @@ export default function EvalsClient() {
                     <h2 className="text-xl font-bold text-gray-900">{selectedRun.name}</h2>
                     <p className="text-gray-500">{selectedRun.dataset_name}</p>
                   </div>
-                  {getStatusBadge(selectedRun.status)}
+                  <div className="flex items-center gap-2">
+                    {selectedRun.metrics?.winner && <WinnerBadge winner={selectedRun.metrics.winner} />}
+                    {getStatusBadge(selectedRun.status)}
+                  </div>
                 </div>
+
+                {/* Export Buttons */}
+                {selectedRun.metrics && (
+                  <div className="flex gap-2 mb-4">
+                    <button
+                      onClick={exportAsCSV}
+                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                    >
+                      <DownloadIcon className="w-4 h-4" />
+                      {t("dashboard.evals.exportCSV") || "Export CSV"}
+                    </button>
+                    <button
+                      onClick={exportAsJSON}
+                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                    >
+                      <DownloadIcon className="w-4 h-4" />
+                      {t("dashboard.evals.exportJSON") || "Export JSON"}
+                    </button>
+                  </div>
+                )}
 
                 {/* Config Comparison */}
                 <div className="grid grid-cols-2 gap-4">
@@ -429,117 +723,237 @@ export default function EvalsClient() {
                 </div>
               </div>
 
-              {/* Metrics */}
+
+              {/* Tab Navigation */}
               {selectedRun.metrics && (
-                <div className="glass-card rounded-2xl p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <ChartIcon className="w-5 h-5 text-purple-500" />
-                    <h2 className="font-semibold text-gray-900">{t("dashboard.evals.metrics") || "Metrics"}</h2>
-                    {selectedRun.metrics.winner && (
-                      <span className="ml-auto text-sm text-gray-500">
-                        Winner: <span className="font-bold text-green-600">{selectedRun.metrics.winner}</span>
-                        {selectedRun.metrics.confidence && (
-                          <span className="text-gray-400 ml-1">
-                            ({formatPercent(selectedRun.metrics.confidence)} confidence)
-                          </span>
-                        )}
-                      </span>
-                    )}
+                <div className="glass-card rounded-2xl overflow-hidden">
+                  <div className="flex border-b border-gray-100">
+                    {(["comparison", "charts", "timeline"] as ViewTab[]).map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                          activeTab === tab
+                            ? "text-purple-600 border-b-2 border-purple-500 bg-purple-50/50"
+                            : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                        }`}
+                      >
+                        {tab === "comparison" && (t("dashboard.evals.tabComparison") || "Comparison")}
+                        {tab === "charts" && (t("dashboard.evals.tabCharts") || "Charts")}
+                        {tab === "timeline" && (t("dashboard.evals.tabTimeline") || "Timeline")}
+                      </button>
+                    ))}
                   </div>
 
-                  <div className="space-y-1">
-                    <MetricComparison
-                      label="Precision"
-                      valueA={selectedRun.metrics.config_a.precision}
-                      valueB={selectedRun.metrics.config_b?.precision}
-                      format={formatPercent}
-                    />
-                    <MetricComparison
-                      label="Recall"
-                      valueA={selectedRun.metrics.config_a.recall}
-                      valueB={selectedRun.metrics.config_b?.recall}
-                      format={formatPercent}
-                    />
-                    <MetricComparison
-                      label="F1 Score"
-                      valueA={selectedRun.metrics.config_a.f1}
-                      valueB={selectedRun.metrics.config_b?.f1}
-                      format={formatPercent}
-                    />
-                    <MetricComparison
-                      label="NDCG"
-                      valueA={selectedRun.metrics.config_a.ndcg}
-                      valueB={selectedRun.metrics.config_b?.ndcg}
-                      format={formatPercent}
-                    />
-                    <MetricComparison
-                      label="MRR"
-                      valueA={selectedRun.metrics.config_a.mrr}
-                      valueB={selectedRun.metrics.config_b?.mrr}
-                      format={formatPercent}
-                    />
-                    <MetricComparison
-                      label="Avg Latency"
-                      valueA={selectedRun.metrics.config_a.avg_latency_ms}
-                      valueB={selectedRun.metrics.config_b?.avg_latency_ms}
-                      format={formatLatency}
-                      higherIsBetter={false}
-                    />
-                    <MetricComparison
-                      label="Avg Cost"
-                      valueA={selectedRun.metrics.config_a.avg_cost_usd}
-                      valueB={selectedRun.metrics.config_b?.avg_cost_usd}
-                      format={formatCost}
-                      higherIsBetter={false}
-                    />
+                  <div className="p-6">
+                    {/* Comparison Tab */}
+                    {activeTab === "comparison" && (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 mb-4">
+                          <ChartIcon className="w-5 h-5 text-purple-500" />
+                          <h2 className="font-semibold text-gray-900">{t("dashboard.evals.metrics") || "Metrics"}</h2>
+                          {selectedRun.metrics.winner && selectedRun.metrics.confidence && (
+                            <span className="ml-auto text-sm text-gray-500">
+                              {formatPercent(selectedRun.metrics.confidence)} {t("dashboard.evals.confidence") || "confidence"}
+                            </span>
+                          )}
+                        </div>
+                        <MetricComparison
+                          label={t("dashboard.evals.precision") || "Precision"}
+                          valueA={selectedRun.metrics.config_a.precision}
+                          valueB={selectedRun.metrics.config_b?.precision}
+                          format={formatPercent}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label={t("dashboard.evals.recall") || "Recall"}
+                          valueA={selectedRun.metrics.config_a.recall}
+                          valueB={selectedRun.metrics.config_b?.recall}
+                          format={formatPercent}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label={t("dashboard.evals.f1Score") || "F1 Score"}
+                          valueA={selectedRun.metrics.config_a.f1}
+                          valueB={selectedRun.metrics.config_b?.f1}
+                          format={formatPercent}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label="NDCG"
+                          valueA={selectedRun.metrics.config_a.ndcg}
+                          valueB={selectedRun.metrics.config_b?.ndcg}
+                          format={formatPercent}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label="MRR"
+                          valueA={selectedRun.metrics.config_a.mrr}
+                          valueB={selectedRun.metrics.config_b?.mrr}
+                          format={formatPercent}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label={t("dashboard.evals.avgLatency") || "Avg Latency"}
+                          valueA={selectedRun.metrics.config_a.avg_latency_ms}
+                          valueB={selectedRun.metrics.config_b?.avg_latency_ms}
+                          format={formatLatency}
+                          higherIsBetter={false}
+                          winner={selectedRun.metrics.winner}
+                        />
+                        <MetricComparison
+                          label={t("dashboard.evals.avgCost") || "Avg Cost"}
+                          valueA={selectedRun.metrics.config_a.avg_cost_usd}
+                          valueB={selectedRun.metrics.config_b?.avg_cost_usd}
+                          format={formatCost}
+                          higherIsBetter={false}
+                          winner={selectedRun.metrics.winner}
+                        />
+                      </div>
+                    )}
+
+
+                    {/* Charts Tab */}
+                    {activeTab === "charts" && (
+                      <div className="space-y-8">
+                        {/* Bar Chart */}
+                        <div>
+                          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.evals.barChart") || "Metric Comparison"}</h3>
+                          <div className="h-80">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[0, 100]} />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Legend />
+                                <Bar dataKey="Config A" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                                {selectedRun.config_b && (
+                                  <Bar dataKey="Config B" fill="#60a5fa" radius={[4, 4, 0, 0]} />
+                                )}
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+
+                        {/* Radar Chart */}
+                        <div>
+                          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.evals.radarChart") || "Multi-Metric Overview"}</h3>
+                          <div className="h-80">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <RadarChart data={radarChartData}>
+                                <PolarGrid stroke="#e5e7eb" />
+                                <PolarAngleAxis dataKey="subject" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#9ca3af", fontSize: 10 }} />
+                                <Radar name="Config A" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                                {selectedRun.config_b && (
+                                  <Radar name="Config B" dataKey="B" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.5} />
+                                )}
+                                <Legend />
+                              </RadarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+
+                    {/* Timeline Tab */}
+                    {activeTab === "timeline" && (
+                      <div className="space-y-8">
+                        {/* Metrics Trend Line Chart */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <TrendingUpIcon className="w-5 h-5 text-purple-500" />
+                            <h3 className="font-semibold text-gray-900">{t("dashboard.evals.metricsTrend") || "Metrics Trend"}</h3>
+                          </div>
+                          <div className="h-64">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <LineChart data={HISTORICAL_TRENDS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis dataKey="date" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[0.6, 1]} tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} />
+                                <Tooltip
+                                  formatter={(value) => [`${(Number(value) * 100).toFixed(1)}%`]}
+                                  contentStyle={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                                    borderRadius: "8px",
+                                    border: "1px solid #e5e7eb",
+                                  }}
+                                />
+                                <Legend />
+                                <Line type="monotone" dataKey="f1" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: "#8b5cf6" }} name="F1 Score" />
+                                <Line type="monotone" dataKey="ndcg" stroke="#10b981" strokeWidth={2} dot={{ fill: "#10b981" }} name="NDCG" />
+                                <Line type="monotone" dataKey="mrr" stroke="#f59e0b" strokeWidth={2} dot={{ fill: "#f59e0b" }} name="MRR" />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+
+                        {/* Latency Area Chart */}
+                        <div>
+                          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.evals.latencyTrend") || "Latency Trend"}</h3>
+                          <div className="h-48">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart data={HISTORICAL_TRENDS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis dataKey="date" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[200, 300]} tickFormatter={(v) => `${v}ms`} />
+                                <Tooltip
+                                  formatter={(value) => value !== undefined ? [`${value}ms`] : [""]}
+                                  contentStyle={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                                    borderRadius: "8px",
+                                    border: "1px solid #e5e7eb",
+                                  }}
+                                />
+                                <Area type="monotone" dataKey="latency" stroke="#ef4444" fill="#fecaca" strokeWidth={2} name="Latency" />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+
+                        {/* Recent Runs */}
+                        <div>
+                          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.evals.recentRuns") || "Recent Completed Runs"}</h3>
+                          <div className="space-y-2">
+                            {evalRuns
+                              .filter((run) => run.status === "completed")
+                              .slice(0, 5)
+                              .map((run) => (
+                                <div
+                                  key={run.id}
+                                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                                  onClick={() => setSelectedRun(run)}
+                                >
+                                  <div>
+                                    <p className="font-medium text-gray-900">{run.name}</p>
+                                    <p className="text-xs text-gray-500">{formatDate(run.created_at)}</p>
+                                  </div>
+                                  {run.metrics?.winner && (
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                                      <TrophyIcon className="w-3 h-3" />
+                                      {run.metrics.winner}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* Visual Chart */}
-              {selectedRun.metrics && (
+
+              {/* Visual Chart (Simple bars - kept for non-metric runs) */}
+              {!selectedRun.metrics && (
                 <div className="glass-card rounded-2xl p-6">
                   <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.evals.comparison") || "Visual Comparison"}</h2>
-                  <div className="space-y-4">
-                    {["precision", "recall", "f1", "ndcg", "mrr"].map((metric) => {
-                      const valueA = selectedRun.metrics!.config_a[metric as keyof MetricSet] as number;
-                      const valueB = selectedRun.metrics!.config_b?.[metric as keyof MetricSet] as number | undefined;
-                      return (
-                        <div key={metric}>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="capitalize text-gray-600">{metric.toUpperCase()}</span>
-                            <span className="text-gray-400">
-                              {formatPercent(valueA)} {valueB !== undefined && `vs ${formatPercent(valueB)}`}
-                            </span>
-                          </div>
-                          <div className="flex gap-2 h-4">
-                            <div
-                              className="h-full bg-purple-500 rounded-full transition-all"
-                              style={{ width: `${valueA * 100}%` }}
-                            />
-                            {valueB !== undefined && (
-                              <div
-                                className="h-full bg-blue-400 rounded-full transition-all"
-                                style={{ width: `${valueB * 100}%` }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-purple-500 rounded-full" />
-                      <span className="text-xs text-gray-500">Config A</span>
-                    </div>
-                    {selectedRun.config_b && (
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-400 rounded-full" />
-                        <span className="text-xs text-gray-500">Config B</span>
-                      </div>
-                    )}
-                  </div>
+                  <p className="text-gray-500 text-center py-8">
+                    {t("dashboard.evals.waitingForMetrics") || "Waiting for evaluation to complete..."}
+                  </p>
                 </div>
               )}
             </div>

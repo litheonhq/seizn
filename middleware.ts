@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 
-// Paths that should not be locale-prefixed
+// Paths that should not be locale-prefixed (completely skip middleware)
 const publicPaths = [
   '/api',
   '/_next',
@@ -16,7 +16,7 @@ const publicPaths = [
   '/dashboard',  // Dashboard routes (separate route group, not locale-prefixed)
   '/login',      // Auth routes
   '/signup',
-  '/docs',       // Documentation
+  // Note: /docs removed - now uses locale-prefixed routes (/en/docs, /ko/docs, etc.)
 ];
 
 function getLocaleFromPath(pathname: string): Locale | null {

@@ -221,27 +221,68 @@
       "progress": "{completed}/{total} steps completed",
       "dismiss": "Dismiss",
       "doLater": "I'll do this later",
+      "takeTour": "Take a tour",
       "steps": {
+        "createOrg": {
+          "title": "Create Organization",
+          "description": "Set up your team workspace for collaboration",
+          "action": "Create Org"
+        },
         "apiKey": {
-          "title": "Create API Key",
-          "description": "Generate your first API key to authenticate requests",
+          "title": "Generate API Key",
+          "description": "Create your first API key to authenticate requests",
           "action": "Create Key"
+        },
+        "installSdk": {
+          "title": "Copy SDK Install Command",
+          "description": "Add Seizn to your project with npm, pip, or REST",
+          "action": "Copy SDK"
+        },
+        "firstQuery": {
+          "title": "Run First Query",
+          "description": "Test the API in the playground with a sample query",
+          "action": "Try Query"
+        },
+        "viewTrace": {
+          "title": "View Trace Results",
+          "description": "See the full trace of your query execution",
+          "action": "View Trace"
         },
         "demoQuery": {
           "title": "Make Your First Query",
           "description": "Try the demo query or make an API request",
           "action": "Try Demo"
-        },
-        "viewTrace": {
-          "title": "View a Trace",
-          "description": "Understand how search works with full tracing",
-          "action": "View Traces"
-        },
-        "installSdk": {
-          "title": "Install SDK",
-          "description": "Add Seizn to your project with npm or pip",
-          "action": "View SDKs"
         }
+      },
+      "sdkModal": {
+        "title": "Install Seizn SDK",
+        "description": "Choose your preferred installation method and copy the command.",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "viewDocs": "View full documentation",
+        "done": "Done"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Welcome to Seizn!",
+          "description": "Let's take a quick tour to help you get started."
+        },
+        "sidebar": {
+          "title": "Navigation",
+          "description": "Use the sidebar to navigate between dashboard sections."
+        },
+        "stats": {
+          "title": "Your Stats",
+          "description": "Monitor your API usage, memories stored, and current plan."
+        },
+        "quickStart": {
+          "title": "Quick Actions",
+          "description": "Use these cards for common tasks like creating API keys."
+        },
+        "next": "Next",
+        "skip": "Skip tour",
+        "finish": "Finish",
+        "stepOf": "Step {current} of {total}"
       }
     },
     "keys": {
@@ -444,6 +485,30 @@
       "removed": "Removed",
       "rankChanges": "Rank Changes"
     },
+    "share": {
+      "title": "Share Trace",
+      "button": "Share",
+      "createLink": "Create Share Link",
+      "creating": "Creating...",
+      "done": "Done",
+      "linkExpiration": "Link Expiration",
+      "hour": "1H",
+      "day": "24H",
+      "week": "7D",
+      "never": "Never",
+      "privacyOptions": "Privacy Options",
+      "maskPii": "Mask PII (emails, phones, IPs)",
+      "maskSecrets": "Mask API keys and secrets",
+      "shareUrl": "Share URL",
+      "copyLink": "Copy Link",
+      "linkCopied": "Copied!",
+      "expiresIn": "This link expires in {duration}.",
+      "neverExpires": "This link never expires.",
+      "error": "Failed to create share link",
+      "revoke": "Revoke Link",
+      "revokeConfirm": "Are you sure you want to revoke this link?",
+      "linkRevoked": "Link revoked successfully"
+    },
     "settingsPage": {
       "title": "Settings",
       "subtitle": "Profile & Preferences",
@@ -458,6 +523,7 @@
       "loginRequired": "Login required.",
       "tabs": {
         "profile": "Profile",
+        "billing": "Billing",
         "budget": "Budget",
         "notifications": "Notifications",
         "security": "Security",
@@ -525,12 +591,41 @@
         "deleteAccountDesc": "Permanently delete your account and all data",
         "deleteAccountButton": "Delete Account",
         "confirmDelete": "Type DELETE to confirm"
+      },
+      "billing": {
+        "title": "Billing & Usage",
+        "subtitle": "Manage your plan and monitor usage",
+        "currentPlan": "Current Plan",
+        "monthlyPrice": "Monthly Price",
+        "upgradePlan": "Upgrade Plan",
+        "quotaWarningTitle": "Approaching Quota Limit",
+        "quotaWarningDesc": "You're using {percent}% of your {resource} quota. Consider upgrading your plan.",
+        "upgradeNow": "Upgrade Now",
+        "memoriesUsage": "Memories Usage",
+        "apiCallsUsage": "API Calls Usage",
+        "apiKeysUsage": "API Keys Usage",
+        "unlimited": "Unlimited",
+        "planComparison": "Plan Comparison",
+        "feature": "Feature",
+        "memoriesLabel": "Memories",
+        "apiCallsLabel": "API Calls/Month",
+        "apiKeysLabel": "API Keys",
+        "priceLabel": "Price",
+        "contactUs": "Contact Us",
+        "used": "used",
+        "of": "of"
       }
     },
     "greeting": {
       "morning": "Good morning",
       "afternoon": "Good afternoon",
       "evening": "Good evening"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle": "Toggle theme"
     },
     "overviewPage": {
       "subtitle": "Here's an overview of your AI memory usage",
@@ -583,7 +678,30 @@
       "metrics": "Metrics",
       "comparison": "Visual Comparison",
       "selectRun": "Select an evaluation run",
-      "selectRunHint": "Choose a run from the list to view detailed metrics"
+      "selectRunHint": "Choose a run from the list to view detailed metrics",
+      "completed": "Completed",
+      "running": "Running",
+      "failed": "Failed",
+      "pending": "Pending",
+      "winner": "Winner",
+      "tie": "Tie",
+      "confidence": "confidence",
+      "exportCSV": "Export CSV",
+      "exportJSON": "Export JSON",
+      "tabComparison": "Comparison",
+      "tabCharts": "Charts",
+      "tabTimeline": "Timeline",
+      "precision": "Precision",
+      "recall": "Recall",
+      "f1Score": "F1 Score",
+      "avgLatency": "Avg Latency",
+      "avgCost": "Avg Cost",
+      "barChart": "Metric Comparison",
+      "radarChart": "Multi-Metric Overview",
+      "metricsTrend": "Metrics Trend",
+      "latencyTrend": "Latency Trend",
+      "recentRuns": "Recent Completed Runs",
+      "waitingForMetrics": "Waiting for evaluation to complete..."
     },
     "autopilot": {
       "title": "Autopilot",
@@ -706,6 +824,28 @@
         "events": "Events to Subscribe",
         "cancel": "Cancel",
         "create": "Create Webhook"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "First Search Tutorial",
+      "subtitle": "Learn how to use the playground",
+      "dismiss": "Dismiss",
+      "tryExamples": "Try an example query:",
+      "hint": "Click any example to auto-fill the query input",
+      "gotIt": "Got it!",
+      "tips": {
+        "welcome": {
+          "title": "Welcome to the Debug Console",
+          "description": "Test your queries here with full tracing to understand exactly how search works under the hood."
+        },
+        "query": {
+          "title": "Natural Language Queries",
+          "description": "Enter any natural language query. Our AI will find semantically similar memories from your stored data."
+        },
+        "trace": {
+          "title": "Full Execution Trace",
+          "description": "See every step of the pipeline - from embedding creation to result ranking - with timing and cost breakdowns."
+        }
       }
     }
   },
@@ -978,7 +1118,8 @@
       "resources": "Resources",
       "security": "Security",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "5-Min Tutorial"
     },
     "hero": {
       "title": "API Documentation",
@@ -1269,29 +1410,6 @@
       "title": "UI Components",
       "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
       "all": "All",
-      "components": "Components",
-      "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
-      "categories": {
-        "graph": {
-          "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
-        },
-        "explain": {
-          "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
-        },
-        "retops": {
-          "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
-        }
-      },
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -1340,6 +1458,28 @@
         },
         "alertsPanel": {
           "description": "Alert management panel with severity filtering, acknowledgment, and status tracking."
+        }
+      },
+      "props": "Props",
+      "usage": "Usage Example",
+      "propName": "Name",
+      "propType": "Type",
+      "propDefault": "Default",
+      "propDescription": "Description",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "categories": {
+        "graph": {
+          "title": "Graph Components",
+          "description": "Interactive graph visualization for permission and relationship mapping"
+        },
+        "explain": {
+          "title": "Explain Components",
+          "description": "Explainability and attribution visualization for RAG results"
+        },
+        "retops": {
+          "title": "RetOps Components",
+          "description": "Retrieval operations monitoring and analytics dashboard"
         }
       }
     },
@@ -1436,6 +1576,137 @@
       },
       "copy": "Copy",
       "copied": "Copied!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5-Minute Tutorial | Seizn",
+        "description": "Learn how to add AI memory in 5 minutes with step-by-step interactive guide"
+      },
+      "breadcrumb": "Tutorial",
+      "badge": "5-Minute Tutorial",
+      "noCreditCard": "No credit card required",
+      "title": "Add AI Memory in 5 Minutes",
+      "subtitle": "Follow this step-by-step guide to give your AI persistent memory. Check each step as you complete it.",
+      "getApiKey": "Get API Key",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "progress": "Progress",
+      "stepsLabel": "steps",
+      "steps": {
+        "step1": {
+          "title": "Get Your API Key",
+          "time": "30 sec",
+          "description": "Sign up for free and generate your API key from the dashboard.",
+          "instruction1": "Sign up or log in to your Seizn account",
+          "instruction2": "Navigate to API Keys in the dashboard",
+          "instruction3": "Click 'Create New Key' and copy your key",
+          "actionLabel": "Go to Dashboard"
+        },
+        "step2": {
+          "title": "Install the SDK",
+          "time": "30 sec",
+          "description": "Choose your preferred language and install the Seizn SDK."
+        },
+        "step3": {
+          "title": "Save Your First Memory",
+          "time": "2 min",
+          "description": "Store information that your AI should remember across sessions."
+        },
+        "step4": {
+          "title": "Search Memories",
+          "time": "2 min",
+          "description": "Retrieve relevant memories using natural language queries."
+        },
+        "step5": {
+          "title": "Verify Results",
+          "time": "30 sec",
+          "description": "Check that your memory was stored and retrieved successfully.",
+          "hint": "You should see a response like this when searching for memories:",
+          "successTitle": "Success!",
+          "successDescription": "Your AI now has persistent memory. Use the search results to enhance your AI's context and responses."
+        }
+      },
+      "completion": {
+        "title": "Congratulations!",
+        "description": "You've completed the tutorial. Your AI now has persistent memory that works across sessions.",
+        "readDocs": "Read the Docs",
+        "goToDashboard": "Go to Dashboard"
+      },
+      "nextSteps": {
+        "title": "What's Next?",
+        "apiReference": {
+          "title": "API Reference",
+          "description": "Explore all endpoints for memories, extraction, and RAG queries."
+        },
+        "sdkExamples": {
+          "title": "SDK Examples",
+          "description": "Copy-paste examples for Python, TypeScript, and REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Learn about memory types, namespaces, and best practices."
+        }
+      }
     }
+  },
+  "demoQuery": {
+    "title": "Live Demo",
+    "subtitle": "Experience Seizn's retrieval pipeline with full tracing and cost transparency.",
+    "tryItNow": "Try it now - No signup required",
+    "queryPlaceholder": "Search Query",
+    "runDemo": "Run Demo",
+    "running": "Running...",
+    "results": "Results",
+    "trace": "Trace",
+    "cost": "Cost",
+    "noResults": "Run the demo to see results",
+    "errorTitle": "Error",
+    "rateLimitError": "Rate limit exceeded. Please wait.",
+    "retryIn": "Retry in",
+    "seconds": "seconds",
+    "score": "Score",
+    "rerankScore": "Rerank",
+    "latency": "Latency",
+    "tokens": "Tokens",
+    "cached": "cached",
+    "model": "Model",
+    "input": "Input",
+    "output": "Output",
+    "costBreakdown": "Breakdown",
+    "total": "Total Cost",
+    "embedding": "Embedding",
+    "vectorSearch": "Vector Search",
+    "rerank": "Rerank",
+    "answerContract": "Answer Contract",
+    "tokensIn": "Tokens In",
+    "tokensOut": "Tokens Out",
+    "queryUnits": "Query Units",
+    "prefilledQueries": [
+      "Try examples"
+    ]
+  },
+  "publicTrace": {
+    "title": "Shared Trace",
+    "subtitle": "View shared retrieval trace details",
+    "sharedBy": "Shared trace",
+    "expired": "This link has expired",
+    "expiredDesc": "The share link is no longer valid. Ask the owner to create a new link.",
+    "notFound": "Trace not found",
+    "notFoundDesc": "This shared trace could not be found. It may have been revoked or deleted.",
+    "backToHome": "Back to Home",
+    "requestId": "Request ID",
+    "collection": "Collection",
+    "createdAt": "Created",
+    "totalLatency": "Total Latency",
+    "totalCost": "Total Cost",
+    "resultsCount": "Results",
+    "query": "Query",
+    "timeline": "Timeline",
+    "candidates": "Candidates",
+    "rerankDiff": "Rerank Diff",
+    "costAnalysis": "Cost Analysis",
+    "redacted": "[REDACTED]",
+    "piiMasked": "PII masked for privacy",
+    "readOnlyNote": "This is a read-only view of a shared trace."
   }
 }

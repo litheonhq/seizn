@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { PlaygroundTutorial } from "@/components/dashboard/PlaygroundTutorial";
 
 interface TraceStep {
   name: string;
@@ -46,6 +47,17 @@ export function PlaygroundClient() {
   const [totalLatency, setTotalLatency] = useState(0);
   const [totalCost, setTotalCost] = useState("$0.00000");
   const [activeTab, setActiveTab] = useState<"results" | "trace" | "cost">("results");
+
+  const handleTryExample = useCallback((exampleQuery: string) => {
+    setQuery(exampleQuery);
+    // Auto-run after a brief delay to show the query was filled
+    setTimeout(() => {
+      const runButton = document.querySelector('[data-action="run-query"]') as HTMLButtonElement;
+      if (runButton && !runButton.disabled) {
+        runButton.click();
+      }
+    }, 300);
+  }, []);
 
   const runQuery = useCallback(async () => {
     if (!query.trim()) return;
@@ -126,6 +138,14 @@ export function PlaygroundClient() {
       setTotalLatency(totalTime);
       setTotalCost(data.trace?.estimated_cost || "$0.00000");
 
+      // Mark first query as complete for onboarding
+      if (typeof window !== "undefined") {
+        localStorage.setItem("seizn_first_query", "true");
+        if ((window as any).seiznOnboarding) {
+          (window as any).seiznOnboarding.markComplete("first_query");
+        }
+      }
+
     } catch (err) {
       updateStep("error");
       setError(err instanceof Error ? err.message : "Query failed");
@@ -136,6 +156,9 @@ export function PlaygroundClient() {
 
   return (
     <div className="space-y-6">
+      {/* Playground Tutorial */}
+      <PlaygroundTutorial onTryExample={handleTryExample} />
+
       {/* Header */}
       <header>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -260,6 +283,7 @@ export function PlaygroundClient() {
           <button
             onClick={runQuery}
             disabled={isLoading || !query.trim()}
+            data-action="run-query"
             className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? (

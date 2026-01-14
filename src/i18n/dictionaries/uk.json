@@ -1073,6 +1073,14 @@
           "description": "Retrieval operations monitoring and analytics dashboard"
         }
       }
+    },
+    "search": {
+      "placeholder": "Пошук документації...",
+      "buttonText": "Пошук...",
+      "noResults": "Результати не знайдені для",
+      "hint": "Швидкий пошук:",
+      "navigate": "навігація",
+      "select": "вибрати"
     }
   }
 }

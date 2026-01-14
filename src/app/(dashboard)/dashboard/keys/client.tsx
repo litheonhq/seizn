@@ -234,21 +234,21 @@ export default function ApiKeysClient() {
                         <span className="text-sm text-gray-400">{t("dashboard.keysPage.neverUsed")}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1">
+                    <td className="px-2 sm:px-4 py-3">
+                      <div className="flex items-center justify-end gap-0.5 sm:gap-1">
                         <button
                           onClick={() => setRotateTarget({ id: key.id, name: key.name })}
-                          className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:bg-teal-50 active:bg-teal-100 rounded-lg transition-colors"
                           title={t("dashboard.keysPage.rotate")}
                         >
-                          <RotateIcon className="w-4 h-4" />
+                          <RotateIcon className="w-5 h-5 sm:w-4 sm:h-4" />
                         </button>
                         <button
                           onClick={() => setRevokeTarget({ id: key.id, name: key.name })}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 rounded-lg transition-colors"
                           title={t("dashboard.keysPage.revoke")}
                         >
-                          <TrashIcon className="w-4 h-4" />
+                          <TrashIcon className="w-5 h-5 sm:w-4 sm:h-4" />
                         </button>
                       </div>
                     </td>
