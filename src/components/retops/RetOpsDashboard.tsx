@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { MetricsOverview } from "./MetricsOverview";
-import { QueryVolumeChart } from "./QueryVolumeChart";
-import { LatencyDistribution } from "./LatencyDistribution";
-import { QualityTrend } from "./QualityTrend";
+import {
+  DynamicQueryVolumeChart,
+  DynamicLatencyDistribution,
+  DynamicQualityTrend,
+} from "./dynamic";
 import { TopQueries } from "./TopQueries";
 import { AlertsPanel } from "./AlertsPanel";
 import { DriftDashboard } from "@/components/drift";
@@ -240,14 +242,14 @@ export function RetOpsDashboard({
           {/* Charts Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Query Volume Chart */}
-            <QueryVolumeChart
+            <DynamicQueryVolumeChart
               stats={data.stats}
               timeSeries={data.timeSeries}
               loading={data.loading}
             />
 
             {/* Latency Distribution */}
-            <LatencyDistribution
+            <DynamicLatencyDistribution
               metrics={data.metrics}
               timeSeries={data.timeSeries}
               loading={data.loading}
@@ -255,7 +257,7 @@ export function RetOpsDashboard({
           </div>
 
           {/* Quality Trend */}
-          <QualityTrend
+          <DynamicQualityTrend
             quality={data.quality}
             trend={data.qualityTrend}
             loading={data.loading}

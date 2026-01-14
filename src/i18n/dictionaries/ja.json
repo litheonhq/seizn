@@ -619,6 +619,36 @@
           "description": "トレースタブで検索パイプラインの各ステップとレイテンシを確認できます。"
         }
       }
+    },
+    "analytics": "分析",
+    "analyticsPage": {
+      "title": "分析",
+      "subtitle": "詳細な使用量分析とインサイト",
+      "allOrganizations": "すべての組織",
+      "days7": "7日間",
+      "days30": "30日間",
+      "days90": "90日間",
+      "exportCSV": "CSVエクスポート",
+      "dailyActiveUsers": "日次アクティブユーザー",
+      "activeUsers": "アクティブユーザー",
+      "apiCalls": "API呼び出し",
+      "apiCallsOverTime": "時間別API呼び出し",
+      "memoryOperations": "メモリ操作",
+      "memoryUsage": "メモリ使用量",
+      "stores": "保存",
+      "searches": "検索",
+      "avgLatency": "平均レイテンシ",
+      "latencyTrend": "レイテンシ推移",
+      "errorRate": "エラー率",
+      "errors": "エラー",
+      "hourlyDistribution": "時間帯別分布",
+      "calls": "呼び出し",
+      "peakHour": "ピーク時間",
+      "endpointBreakdown": "エンドポイント内訳",
+      "topQueries": "人気検索クエリ",
+      "noQueries": "クエリがありません",
+      "noData": "分析データなし",
+      "noDataDescription": "API呼び出しを開始すると、詳細な分析がここに表示されます。"
     }
   },
   "pricingPage": {
