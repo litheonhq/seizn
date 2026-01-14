@@ -107,3 +107,34 @@ export {
   errorBoundary,
   type ApiRouteHandler,
 } from './middleware';
+
+// Middleware utilities V2 (with request_id support)
+export {
+  // ID Generation
+  generateRequestId,
+  getOrCreateRequestId,
+  // Request Context
+  createRequestContext,
+  calculateLatency,
+  type RequestContext,
+  // Handler Wrapper
+  withRequestContext,
+  type ApiRouteHandlerWithContext,
+  // Response Helpers
+  successResponse,
+  errorResponse,
+  type ApiSuccessResponse,
+  type ApiErrorResponse,
+  type ErrorOptions,
+  // Middleware Utilities
+  parseJsonBody as parseJsonBodyV2,
+  validateRequiredFields as validateRequiredFieldsV2,
+  validateFieldType as validateFieldTypeV2,
+  errorBoundary as errorBoundaryV2,
+  // Pre-built Error Helpers (V2)
+  AuthErrors as AuthErrorsV2,
+  RateLimitErrors as RateLimitErrorsV2,
+  ValidationErrors as ValidationErrorsV2,
+  ResourceErrors as ResourceErrorsV2,
+  InternalErrors as InternalErrorsV2,
+} from './middleware-v2';

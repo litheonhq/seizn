@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { Providers } from "@/components/providers";
+import { PaddleInit } from "@/components/paddle-init";
 import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import "../globals.css";
@@ -137,15 +137,20 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir}>
+      <head>
+        {/* Preconnect to critical domains for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.paddle.com" />
+        {/* DNS prefetch for API endpoints */}
+        <link rel="dns-prefetch" href="https://api.seizn.com" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>{children}</Providers>
-        {/* Lemon Squeezy Checkout Overlay */}
-        <Script
-          src="https://app.lemonsqueezy.com/js/lemon.js"
-          strategy="lazyOnload"
-        />
+        {/* Paddle.js Checkout */}
+        <PaddleInit />
       </body>
     </html>
   );

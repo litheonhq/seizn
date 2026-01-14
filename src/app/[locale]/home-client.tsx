@@ -7,11 +7,6 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
-declare global {
-  interface Window {
-    createLemonSqueezy?: () => void;
-  }
-}
 
 interface HomeClientProps {
   dict: Dictionary;
@@ -23,12 +18,6 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Initialize Lemon Squeezy on mount
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.createLemonSqueezy) {
-      window.createLemonSqueezy();
-    }
-  }, []);
 
   // Close mobile menu on resize
   useEffect(() => {
@@ -329,7 +318,7 @@ const memories = await seizn.search({
                 ))}
               </ul>
               <CheckoutButton
-                variantId={PLAN_VARIANTS.plus}
+                priceId={PLAN_VARIANTS.plus}
                 className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center"
               >
                 {t.pricing.plus.cta}
@@ -355,7 +344,7 @@ const memories = await seizn.search({
                 ))}
               </ul>
               <CheckoutButton
-                variantId={PLAN_VARIANTS.pro}
+                priceId={PLAN_VARIANTS.pro}
                 className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center"
               >
                 {t.pricing.pro.cta}

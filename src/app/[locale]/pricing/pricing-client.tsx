@@ -262,7 +262,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
         )}
         {type === "plus" && (
           <CheckoutButton
-            variantId={PLAN_VARIANTS.plus}
+            priceId={PLAN_VARIANTS.plus}
             className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-white/50 hover:border-gray-300 transition-all text-center"
           >
             {plan.cta}
@@ -270,7 +270,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
         )}
         {type === "pro" && (
           <CheckoutButton
-            variantId={PLAN_VARIANTS.pro}
+            priceId={PLAN_VARIANTS.pro}
             className="block w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg transition-all text-center"
           >
             {plan.cta}

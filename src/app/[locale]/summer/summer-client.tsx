@@ -361,7 +361,7 @@ const memories = await seizn.search({
                 ))}
               </ul>
               <CheckoutButton
-                variantId={PLAN_VARIANTS.plus}
+                priceId={PLAN_VARIANTS.plus}
                 className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8"
               >
                 {t.pricing.plus.cta}
@@ -391,7 +391,7 @@ const memories = await seizn.search({
                   ))}
                 </ul>
                 <CheckoutButton
-                  variantId={PLAN_VARIANTS.pro}
+                  priceId={PLAN_VARIANTS.pro}
                   className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg mt-8"
                 >
                   {t.pricing.pro.cta}
