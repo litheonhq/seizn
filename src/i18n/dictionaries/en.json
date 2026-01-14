@@ -847,6 +847,36 @@
           "description": "See every step of the pipeline - from embedding creation to result ranking - with timing and cost breakdowns."
         }
       }
+    },
+    "analytics": "Analytics",
+    "analyticsPage": {
+      "title": "Analytics",
+      "subtitle": "Detailed usage analytics and insights",
+      "allOrganizations": "All Organizations",
+      "days7": "7 Days",
+      "days30": "30 Days",
+      "days90": "90 Days",
+      "exportCSV": "Export CSV",
+      "dailyActiveUsers": "Daily Active Users",
+      "activeUsers": "Active Users",
+      "apiCalls": "API Calls",
+      "apiCallsOverTime": "API Calls Over Time",
+      "memoryOperations": "Memory Operations",
+      "memoryUsage": "Memory Usage",
+      "stores": "Stores",
+      "searches": "Searches",
+      "avgLatency": "Avg Latency",
+      "latencyTrend": "Latency Trend",
+      "errorRate": "Error Rate",
+      "errors": "Errors",
+      "hourlyDistribution": "Hourly Distribution",
+      "calls": "calls",
+      "peakHour": "Peak Hour",
+      "endpointBreakdown": "Endpoint Breakdown",
+      "topQueries": "Top Queries",
+      "noQueries": "No queries yet",
+      "noData": "No analytics data",
+      "noDataDescription": "Start making API calls to see detailed analytics here."
     }
   },
   "pricingPage": {

@@ -1,0 +1,379 @@
+
+> seizn@0.1.0 build
+> node scripts/check-route-conflicts.js && next build
+
+🔍 Checking for Next.js route conflicts...
+
+✅ No route conflicts found!
+
+   ▲ Next.js 15.5.9
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · clientTraceMetadata
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 21.1s
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+ ⚠ Using edge runtime on a page currently disables static generation for that page
+   Generating static pages (0/421) ...
+   Generating static pages (105/421) 
+   Generating static pages (210/421) 
+   Generating static pages (315/421) 
+ ✓ Generating static pages (421/421)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                             Size  First Load JS
+┌ ƒ /                                                  682 B         221 kB
+├ ○ /_not-found                                        682 B         221 kB
+├ ● /[locale]                                          12 kB         234 kB
+├   ├ /en
+├   ├ /ko
+├   ├ /ja
+├   └ [+15 more paths]
+├ ● /[locale]/docs                                   7.92 kB         230 kB
+├   ├ /en/docs
+├   ├ /ko/docs
+├   ├ /ja/docs
+├   └ [+15 more paths]
+├ ● /[locale]/docs/api-reference                     5.13 kB         227 kB
+├   ├ /en/docs/api-reference
+├   ├ /ko/docs/api-reference
+├   ├ /ja/docs/api-reference
+├   └ [+15 more paths]
+├ ● /[locale]/docs/components                        19.9 kB         242 kB
+├   ├ /en/docs/components
+├   ├ /ko/docs/components
+├   ├ /ja/docs/components
+├   └ [+15 more paths]
+├ ● /[locale]/docs/errors                             151 kB         379 kB
+├   ├ /en/docs/errors
+├   ├ /ko/docs/errors
+├   ├ /ja/docs/errors
+├   └ [+15 more paths]
+├ ● /[locale]/docs/faq                               3.29 kB         225 kB
+├   ├ /en/docs/faq
+├   ├ /ko/docs/faq
+├   ├ /ja/docs/faq
+├   └ [+15 more paths]
+├ ● /[locale]/docs/quickstart                        5.02 kB         227 kB
+├   ├ /en/docs/quickstart
+├   ├ /ko/docs/quickstart
+├   ├ /ja/docs/quickstart
+├   └ [+15 more paths]
+├ ● /[locale]/docs/tutorial                          5.51 kB         227 kB
+├   ├ /en/docs/tutorial
+├   ├ /ko/docs/tutorial
+├   ├ /ja/docs/tutorial
+├   └ [+15 more paths]
+├ ● /[locale]/enterprise                             1.86 kB         224 kB
+├   ├ /en/enterprise
+├   ├ /ko/enterprise
+├   ├ /ja/enterprise
+├   └ [+15 more paths]
+├ ● /[locale]/pricing                                4.37 kB         226 kB
+├   ├ /en/pricing
+├   ├ /ko/pricing
+├   ├ /ja/pricing
+├   └ [+15 more paths]
+├ ● /[locale]/summer                                 5.36 kB         227 kB
+├   ├ /en/summer
+├   ├ /ko/summer
+├   ├ /ja/summer
+├   └ [+15 more paths]
+├ ƒ /api/adapters                                      682 B         221 kB
+├ ƒ /api/adapters/[id]                                 682 B         221 kB
+├ ƒ /api/adapters/[id]/apply                           682 B         221 kB
+├ ƒ /api/adapters/[id]/signals                         682 B         221 kB
+├ ƒ /api/adapters/[id]/train                           682 B         221 kB
+├ ƒ /api/admin/federated/access                        682 B         221 kB
+├ ƒ /api/admin/federated/audit                         682 B         221 kB
+├ ƒ /api/admin/federated/sources                       682 B         221 kB
+├ ƒ /api/admin/federated/sources/[id]                  682 B         221 kB
+├ ƒ /api/answer-contract/history                       682 B         221 kB
+├ ƒ /api/answer-contract/policies                      682 B         221 kB
+├ ƒ /api/answer-contract/verify                        682 B         221 kB
+├ ƒ /api/audit-logs                                    682 B         221 kB
+├ ƒ /api/auth/[...nextauth]                            682 B         221 kB
+├ ƒ /api/auth/signup                                   682 B         221 kB
+├ ƒ /api/auto-pr/analyze                               682 B         221 kB
+├ ƒ /api/auto-pr/create-pr                             682 B         221 kB
+├ ƒ /api/auto-pr/suggest                               682 B         221 kB
+├ ƒ /api/autopilot/analyze                             682 B         221 kB
+├ ƒ /api/autopilot/config                              682 B         221 kB
+├ ƒ /api/autopilot/decide                              682 B         221 kB
+├ ƒ /api/autopilot/feedback                            682 B         221 kB
+├ ƒ /api/autopilot/fix                                 682 B         221 kB
+├ ƒ /api/autopilot/pr                                  682 B         221 kB
+├ ƒ /api/autopilot/stats                               682 B         221 kB
+├ ƒ /api/autopilot/status/[prId]                       682 B         221 kB
+├ ƒ /api/budget                                        682 B         221 kB
+├ ƒ /api/budget/alerts                                 682 B         221 kB
+├ ƒ /api/budget/degrade-events                         682 B         221 kB
+├ ƒ /api/budget/estimate                               682 B         221 kB
+├ ƒ /api/budget/optimize                               682 B         221 kB
+├ ƒ /api/budget/settings                               682 B         221 kB
+├ ƒ /api/budget/stats                                  682 B         221 kB
+├ ƒ /api/budget/usage                                  682 B         221 kB
+├ ƒ /api/canary/action                                 682 B         221 kB
+├ ƒ /api/canary/deploy                                 682 B         221 kB
+├ ƒ /api/ci/report                                     682 B         221 kB
+├ ƒ /api/ci/tests/[traceId]                            682 B         221 kB
+├ ƒ /api/ci/traces                                     682 B         221 kB
+├ ƒ /api/compression/compress                          682 B         221 kB
+├ ƒ /api/compression/expand                            682 B         221 kB
+├ ƒ /api/cost-engineering/optimize                     682 B         221 kB
+├ ƒ /api/cost-engineering/recommendations              682 B         221 kB
+├ ƒ /api/cost-engineering/stats                        682 B         221 kB
+├ ƒ /api/cron/drift-analysis                           682 B         221 kB
+├ ƒ /api/cron/monthly-reset                            682 B         221 kB
+├ ƒ /api/cron/subscription-expiry                      682 B         221 kB
+├ ƒ /api/cron/usage-alerts                             682 B         221 kB
+├ ƒ /api/cron/usage-cleanup                            682 B         221 kB
+├ ƒ /api/cron/weekly-summary                           682 B         221 kB
+├ ƒ /api/dashboard/activity                            682 B         221 kB
+├ ƒ /api/dashboard/keys                                682 B         221 kB
+├ ƒ /api/dashboard/keys/rotate                         682 B         221 kB
+├ ƒ /api/dashboard/stats                               682 B         221 kB
+├ ƒ /api/dashboard/usage                               682 B         221 kB
+├ ƒ /api/demo/query                                    682 B         221 kB
+├ ƒ /api/demo/session                                  682 B         221 kB
+├ ƒ /api/doc-to-db/extract                             682 B         221 kB
+├ ƒ /api/doc-to-db/search                              682 B         221 kB
+├ ƒ /api/doc-to-db/structures                          682 B         221 kB
+├ ƒ /api/doc-to-db/structures/[id]                     682 B         221 kB
+├ ƒ /api/drift/alerts                                  682 B         221 kB
+├ ƒ /api/drift/alerts/[id]/acknowledge                 682 B         221 kB
+├ ƒ /api/drift/analyze                                 682 B         221 kB
+├ ƒ /api/drift/snapshots                               682 B         221 kB
+├ ƒ /api/ecl/models                                    682 B         221 kB
+├ ƒ /api/ecl/train                                     682 B         221 kB
+├ ƒ /api/ecl/translate                                 682 B         221 kB
+├ ƒ /api/enterprise                                    682 B         221 kB
+├ ƒ /api/enterprise/sso                                682 B         221 kB
+├ ƒ /api/extract                                       682 B         221 kB
+├ ƒ /api/extract/image                                 682 B         221 kB
+├ ƒ /api/fall/contracts                                682 B         221 kB
+├ ƒ /api/fall/contracts/[id]                           682 B         221 kB
+├ ƒ /api/fall/contracts/validate                       682 B         221 kB
+├ ƒ /api/fall/eval/datasets                            682 B         221 kB
+├ ƒ /api/fall/eval/datasets/[id]                       682 B         221 kB
+├ ƒ /api/fall/eval/generate-from-traffic               682 B         221 kB
+├ ƒ /api/fall/eval/results/[id]                        682 B         221 kB
+├ ƒ /api/fall/eval/run                                 682 B         221 kB
+├ ƒ /api/fall/eval/runs                                682 B         221 kB
+├ ƒ /api/fall/experiments                              682 B         221 kB
+├ ƒ /api/fall/experiments/[id]/guardrails              682 B         221 kB
+├ ƒ /api/fall/experiments/[id]/rollout                 682 B         221 kB
+├ ƒ /api/fall/experiments/[id]/winner                  682 B         221 kB
+├ ƒ /api/fall/healing/analyze                          682 B         221 kB
+├ ƒ /api/fall/healing/fix                              682 B         221 kB
+├ ƒ /api/fall/healing/history                          682 B         221 kB
+├ ƒ /api/fall/traces                                   682 B         221 kB
+├ ƒ /api/fall/tuning/hnsw                              682 B         221 kB
+├ ƒ /api/fall/tuning/hnsw/apply                        682 B         221 kB
+├ ƒ /api/federated                                     682 B         221 kB
+├ ƒ /api/feedback                                      682 B         221 kB
+├ ƒ /api/firewall/scan                                 682 B         221 kB
+├ ƒ /api/gateway/proxy                                 682 B         221 kB
+├ ƒ /api/graph-rag/extract                             682 B         221 kB
+├ ƒ /api/graph-rag/search                              682 B         221 kB
+├ ƒ /api/healing/health                                682 B         221 kB
+├ ƒ /api/healing/jobs                                  682 B         221 kB
+├ ƒ /api/healing/rules                                 682 B         221 kB
+├ ƒ /api/healing/scan                                  682 B         221 kB
+├ ƒ /api/health                                        682 B         221 kB
+├ ƒ /api/hybrid/compare                                682 B         221 kB
+├ ƒ /api/hybrid/config                                 682 B         221 kB
+├ ƒ /api/hybrid/config/[id]                            682 B         221 kB
+├ ƒ /api/hybrid/retrieve                               682 B         221 kB
+├ ƒ /api/internal/optimize                             682 B         221 kB
+├ ƒ /api/internal/seed-demo                            682 B         221 kB
+├ ƒ /api/internal/webhooks                             682 B         221 kB
+├ ƒ /api/keys                                          682 B         221 kB
+├ ƒ /api/knowledge-gaps                                682 B         221 kB
+├ ƒ /api/knowledge-gaps/[id]                           682 B         221 kB
+├ ƒ /api/knowledge-gaps/[id]/actions                   682 B         221 kB
+├ ƒ /api/knowledge-gaps/analyze                        682 B         221 kB
+├ ƒ /api/me                                            682 B         221 kB
+├ ƒ /api/memories                                      682 B         221 kB
+├ ƒ /api/memories/[id]                                 682 B         221 kB
+├ ƒ /api/memories/compact                              682 B         221 kB
+├ ƒ /api/memories/export                               682 B         221 kB
+├ ƒ /api/memories/import                               682 B         221 kB
+├ ƒ /api/memories/profile                              682 B         221 kB
+├ ƒ /api/memories/slots                                682 B         221 kB
+├ ƒ /api/monitoring/slo                                682 B         221 kB
+├ ƒ /api/multimodal/blocks                             682 B         221 kB
+├ ƒ /api/multimodal/parse                              682 B         221 kB
+├ ƒ /api/multimodal/search                             682 B         221 kB
+├ ƒ /api/network-learning/consent                      682 B         221 kB
+├ ƒ /api/network-learning/insights                     682 B         221 kB
+├ ƒ /api/network-learning/policy                       682 B         221 kB
+├ ƒ /api/onboarding/analyze                            682 B         221 kB
+├ ƒ /api/organizations                                 682 B         221 kB
+├ ƒ /api/organizations/invite/accept                   682 B         221 kB
+├ ƒ /api/organizations/members                         682 B         221 kB
+├ ƒ /api/organizations/usage                           682 B         221 kB
+├ ƒ /api/pcr/create                                    682 B         221 kB
+├ ƒ /api/pcr/export                                    682 B         221 kB
+├ ƒ /api/planner/optimize                              682 B         221 kB
+├ ƒ /api/planner/plans                                 682 B         221 kB
+├ ƒ /api/planner/select                                682 B         221 kB
+├ ƒ /api/plans                                         682 B         221 kB
+├ ƒ /api/playground/query                              682 B         221 kB
+├ ƒ /api/playground/replay                             682 B         221 kB
+├ ƒ /api/policies                                      682 B         221 kB
+├ ƒ /api/policies/[id]                                 682 B         221 kB
+├ ƒ /api/policies/simulate                             682 B         221 kB
+├ ƒ /api/policies/simulations/[id]                     682 B         221 kB
+├ ƒ /api/policies/validate                             682 B         221 kB
+├ ƒ /api/profile/language                              682 B         221 kB
+├ ƒ /api/public/demo-search                            682 B         221 kB
+├ ƒ /api/query                                         682 B         221 kB
+├ ƒ /api/quota                                         682 B         221 kB
+├ ƒ /api/relay/agents                                  682 B         221 kB
+├ ƒ /api/relay/agents/[id]                             682 B         221 kB
+├ ƒ /api/relay/agents/[id]/key                         682 B         221 kB
+├ ƒ /api/relay/callback                                682 B         221 kB
+├ ƒ /api/relay/health                                  682 B         221 kB
+├ ƒ /api/reports/roi                                   682 B         221 kB
+├ ƒ /api/rerank                                        682 B         221 kB
+├ ƒ /api/retrieval/replay/[id]                         682 B         221 kB
+├ ƒ /api/retrieval/traces                              682 B         221 kB
+├ ƒ /api/retrieval/traces/[id]                         682 B         221 kB
+├ ƒ /api/retrieval/traces/[id]/receipt                 682 B         221 kB
+├ ƒ /api/retrieval/traces/[id]/receipt/download        682 B         221 kB
+├ ƒ /api/retrieval/traces/[id]/share                   682 B         221 kB
+├ ƒ /api/retrieval/traces/[id]/why-not                 682 B         221 kB
+├ ƒ /api/retrieval/why-not                             682 B         221 kB
+├ ƒ /api/scim/v2/Users                                 682 B         221 kB
+├ ƒ /api/scim/v2/Users/[id]                            682 B         221 kB
+├ ƒ /api/security/audit                                682 B         221 kB
+├ ƒ /api/sentry/incidents                              682 B         221 kB
+├ ƒ /api/sentry/incidents/[id]                         682 B         221 kB
+├ ƒ /api/sentry/incidents/[id]/ignore                  682 B         221 kB
+├ ƒ /api/sentry/incidents/[id]/resolve                 682 B         221 kB
+├ ƒ /api/sentry/trigger                                682 B         221 kB
+├ ƒ /api/settings/provider-keys                        682 B         221 kB
+├ ƒ /api/status                                        682 B         221 kB
+├ ƒ /api/summarize                                     682 B         221 kB
+├ ƒ /api/summer/cache                                  682 B         221 kB
+├ ƒ /api/summer/cache/invalidate                       682 B         221 kB
+├ ƒ /api/summer/cache/query                            682 B         221 kB
+├ ƒ /api/summer/cache/stats                            682 B         221 kB
+├ ƒ /api/summer/collections                            682 B         221 kB
+├ ƒ /api/summer/explain                                682 B         221 kB
+├ ƒ /api/summer/explain/[queryId]                      682 B         221 kB
+├ ƒ /api/summer/feedback                               682 B         221 kB
+├ ƒ /api/summer/index                                  682 B         221 kB
+├ ƒ /api/summer/rag                                    682 B         221 kB
+├ ƒ /api/summer/rerank                                 682 B         221 kB
+├ ƒ /api/summer/rerank/batch                           682 B         221 kB
+├ ƒ /api/summer/rerank/estimate                        682 B         221 kB
+├ ƒ /api/summer/retops/alerts                          682 B         221 kB
+├ ƒ /api/summer/retops/alerts/[alertId]/acknowledge    682 B         221 kB
+├ ƒ /api/summer/retops/alerts/[alertId]/resolve        682 B         221 kB
+├ ƒ /api/summer/retops/metrics                         682 B         221 kB
+├ ƒ /api/summer/retops/quality                         682 B         221 kB
+├ ƒ /api/summer/retops/stats                           682 B         221 kB
+├ ƒ /api/summer/retrieve                               682 B         221 kB
+├ ƒ /api/summer/search                                 682 B         221 kB
+├ ƒ /api/summer/versions                               682 B         221 kB
+├ ƒ /api/summer/versions/[id]                          682 B         221 kB
+├ ƒ /api/summer/versions/[id]/diff/[compareId]         682 B         221 kB
+├ ƒ /api/summer/versions/[id]/restore                  682 B         221 kB
+├ ƒ /api/t/[token]                                     682 B         221 kB
+├ ƒ /api/tenant-policy                                 682 B         221 kB
+├ ƒ /api/tenant-policy/enforce                         682 B         221 kB
+├ ƒ /api/testing/cases                                 682 B         221 kB
+├ ƒ /api/testing/cases/[id]                            682 B         221 kB
+├ ƒ /api/testing/suites                                682 B         221 kB
+├ ƒ /api/testing/suites/[id]                           682 B         221 kB
+├ ƒ /api/testing/suites/[id]/generate                  682 B         221 kB
+├ ƒ /api/testing/suites/[id]/results                   682 B         221 kB
+├ ƒ /api/testing/suites/[id]/run                       682 B         221 kB
+├ ƒ /api/traces                                        682 B         221 kB
+├ ƒ /api/traces/[id]                                   682 B         221 kB
+├ ƒ /api/traces/compare                                682 B         221 kB
+├ ƒ /api/traces/replay                                 682 B         221 kB
+├ ƒ /api/traces/share                                  682 B         221 kB
+├ ƒ /api/traces/share/[shareId]                        682 B         221 kB
+├ ƒ /api/traces/shared/[shareId]                       682 B         221 kB
+├ ƒ /api/waitlist                                      682 B         221 kB
+├ ƒ /api/webhooks                                      682 B         221 kB
+├ ƒ /api/webhooks/deliveries                           682 B         221 kB
+├ ƒ /api/webhooks/github                               682 B         221 kB
+├ ƒ /api/webhooks/lemonsqueezy                         682 B         221 kB
+├ ƒ /api/webhooks/paddle                               682 B         221 kB
+├ ƒ /api/winter/cleanup                                682 B         221 kB
+├ ƒ /api/winter/forget                                 682 B         221 kB
+├ ƒ /api/winter/graph/data                             682 B         221 kB
+├ ƒ /api/winter/graph/federated/query                  682 B         221 kB
+├ ƒ /api/winter/graph/permissions/[nodeId]             682 B         221 kB
+├ ƒ /api/winter/org                                    682 B         221 kB
+├ ƒ /api/winter/org/[orgId]                            682 B         221 kB
+├ ƒ /api/winter/org/[orgId]/audit                      682 B         221 kB
+├ ƒ /api/winter/org/[orgId]/members                    682 B         221 kB
+├ ƒ /api/winter/org/[orgId]/policies                   682 B         221 kB
+├ ƒ /api/winter/org/[orgId]/reports                    682 B         221 kB
+├ ƒ /api/winter/org/[orgId]/roles                      682 B         221 kB
+├ ƒ /api/winter/rtbf                                   682 B         221 kB
+├ ƒ /api/winter/rtbf/[requestId]                       682 B         221 kB
+├ ƒ /api/winter/rtbf/[requestId]/execute               682 B         221 kB
+├ ƒ /api/winter/rtbf/audit                             682 B         221 kB
+├ ƒ /api/winter/rtbf/request                           682 B         221 kB
+├ ƒ /dashboard                                       8.58 kB         298 kB
+├ ƒ /dashboard/autopilot                             4.14 kB         237 kB
+├ ƒ /dashboard/budget                                4.48 kB         237 kB
+├ ƒ /dashboard/calculator                            3.14 kB         236 kB
+├ ƒ /dashboard/devtools                              2.82 kB         345 kB
+├ ƒ /dashboard/devtools/[traceId]                    4.62 kB         349 kB
+├ ƒ /dashboard/enterprise                            3.48 kB         224 kB
+├ ƒ /dashboard/evals                                 23.9 kB         368 kB
+├ ƒ /dashboard/fall                                  6.42 kB         228 kB
+├ ƒ /dashboard/federated                             5.59 kB         226 kB
+├ ƒ /dashboard/governance                            4.09 kB         237 kB
+├ ƒ /dashboard/integrations                          3.72 kB         237 kB
+├ ƒ /dashboard/keys                                  4.11 kB         237 kB
+├ ƒ /dashboard/memories                              4.34 kB         237 kB
+├ ƒ /dashboard/organizations                         3.76 kB         237 kB
+├ ƒ /dashboard/organizations/[id]                    4.63 kB         238 kB
+├ ƒ /dashboard/playground                            5.73 kB         239 kB
+├ ƒ /dashboard/reports                               1.99 kB         222 kB
+├ ƒ /dashboard/reranker                              6.16 kB         226 kB
+├ ƒ /dashboard/security                              5.82 kB         226 kB
+├ ƒ /dashboard/settings                              7.13 kB         240 kB
+├ ƒ /dashboard/traces/compare                         4.6 kB         225 kB
+├ ƒ /dashboard/usage                                 3.47 kB         236 kB
+├ ƒ /dashboard/webhooks                              4.08 kB         237 kB
+├ ○ /docs                                            9.03 kB         231 kB
+├ ○ /docs/api-reference                              3.85 kB         226 kB
+├ ○ /docs/byok                                       3.15 kB         225 kB
+├ ○ /docs/errors                                     6.84 kB         229 kB
+├ ○ /docs/faq                                        5.57 kB         227 kB
+├ ○ /docs/quickstart                                 3.72 kB         225 kB
+├ ƒ /invite/[token]                                   2.8 kB         228 kB
+├ ○ /login                                           3.46 kB         229 kB
+├ ○ /privacy                                           179 B         222 kB
+├ ○ /refund                                            179 B         222 kB
+├ ○ /robots.txt                                        682 B         221 kB
+├ ○ /signup                                           4.2 kB         229 kB
+├ ○ /sitemap.xml                                       682 B         221 kB
+├ ○ /status                                          2.36 kB         224 kB
+├ ƒ /t/[token]                                       2.76 kB         225 kB
+├ ○ /terms                                             179 B         222 kB
+└ ƒ /trace/[shareId]                                 2.23 kB         224 kB
++ First Load JS shared by all                         220 kB
+  ├ chunks/2450-c7476d312c5c9833.js                   125 kB
+  ├ chunks/4bd1b696-2cc0a4770f76d793.js              54.2 kB
+  ├ chunks/52774a7f-a44b6277ac777af0.js                37 kB
+  └ other shared chunks (total)                      3.54 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

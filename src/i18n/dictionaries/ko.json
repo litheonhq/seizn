@@ -848,6 +848,36 @@
           "description": "트레이스 탭에서 검색 파이프라인의 각 단계와 지연시간을 확인할 수 있습니다."
         }
       }
+    },
+    "analytics": "분석",
+    "analyticsPage": {
+      "title": "분석",
+      "subtitle": "상세 사용량 분석 및 인사이트",
+      "allOrganizations": "모든 조직",
+      "days7": "7일",
+      "days30": "30일",
+      "days90": "90일",
+      "exportCSV": "CSV 내보내기",
+      "dailyActiveUsers": "일간 활성 사용자",
+      "activeUsers": "활성 사용자",
+      "apiCalls": "API 호출",
+      "apiCallsOverTime": "시간별 API 호출",
+      "memoryOperations": "메모리 작업",
+      "memoryUsage": "메모리 사용량",
+      "stores": "저장",
+      "searches": "검색",
+      "avgLatency": "평균 지연시간",
+      "latencyTrend": "지연시간 추이",
+      "errorRate": "오류율",
+      "errors": "오류",
+      "hourlyDistribution": "시간대별 분포",
+      "calls": "호출",
+      "peakHour": "피크 시간",
+      "endpointBreakdown": "엔드포인트 분석",
+      "topQueries": "인기 검색어",
+      "noQueries": "검색어 없음",
+      "noData": "분석 데이터 없음",
+      "noDataDescription": "API 호출을 시작하면 상세 분석이 여기에 표시됩니다."
     }
   },
   "pricingPage": {

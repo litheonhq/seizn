@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import EvalsClient from "./evals-client";
+import { DynamicEvalsClient } from "./dynamic";
 
 export default async function EvalsPage() {
   const session = await auth();
@@ -12,7 +12,7 @@ export default async function EvalsPage() {
 
   return (
     <DashboardShell>
-      <EvalsClient />
+      <DynamicEvalsClient />
     </DashboardShell>
   );
 }
