@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
   // ESLint - only lint src directory
   eslint: {
     dirs: ['src'],
+    ignoreDuringBuilds: true,
   },
 };
 

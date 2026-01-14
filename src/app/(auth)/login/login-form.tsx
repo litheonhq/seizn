@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Turnstile from "@/components/auth/Turnstile";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -15,6 +16,15 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(error);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   // Reset loading state when page becomes visible (user came back)
   useEffect(() => {
@@ -42,12 +52,17 @@ export default function LoginForm() {
     const result = await signIn("credentials", {
       email,
       password,
+      turnstileToken: turnstileToken || "",
       redirect: false,
       callbackUrl,
     });
 
     if (result?.error) {
-      setAuthError("Invalid email or password");
+      if (result.error.includes('CAPTCHA')) {
+        setAuthError("CAPTCHA verification failed. Please try again.");
+      } else {
+        setAuthError("Invalid email or password");
+      }
       setIsLoading(false);
     } else {
       router.push(callbackUrl);
@@ -176,6 +191,18 @@ export default function LoginForm() {
                 placeholder="Enter your password"
               />
             </div>
+
+            {/* Cloudflare Turnstile CAPTCHA */}
+            {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+              <div className="flex justify-center">
+                <Turnstile
+                  onVerify={handleTurnstileVerify}
+                  onExpire={handleTurnstileExpire}
+                  theme="light"
+                  size="normal"
+                />
+              </div>
+            )}
 
             <button
               type="submit"

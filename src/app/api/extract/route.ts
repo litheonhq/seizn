@@ -8,6 +8,12 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import {
+  extractSlots,
+  upsertSlots,
+  getAllSlots,
+  type SlotData,
+} from '@/lib/memory/slot';
 
 // POST /api/extract - Extract and store memories from conversation
 export async function POST(request: NextRequest) {
@@ -29,6 +35,7 @@ export async function POST(request: NextRequest) {
       model = 'haiku',
       auto_store = true,
       namespace = 'default',
+      extract_slots = true, // New option to enable slot extraction
     } = body;
 
     if (!conversation || typeof conversation !== 'string') {
@@ -61,16 +68,49 @@ export async function POST(request: NextRequest) {
       existingMemories: existingContents,
     });
 
-    if (extracted.length === 0) {
+    // Extract slots in parallel (if enabled)
+    let slotResult: { success: number; failed: number; slots: SlotData[] } = {
+      success: 0,
+      failed: 0,
+      slots: [],
+    };
+
+    if (extract_slots && auto_store) {
+      // Get existing slots for context
+      const existingSlots = await getAllSlots(userId, namespace);
+      const existingSlotsMap = new Map(
+        existingSlots.map((s) => [s.slot_key, s.slot_value])
+      );
+
+      // Extract slots from conversation
+      const extractedSlots = await extractSlots(conversation, existingSlotsMap);
+
+      if (extractedSlots.slots.length > 0) {
+        // Upsert extracted slots
+        const upsertResult = await upsertSlots(userId, extractedSlots.slots, {
+          namespace,
+          source: 'extract',
+        });
+
+        slotResult = {
+          success: upsertResult.success,
+          failed: upsertResult.failed,
+          slots: extractedSlots.slots,
+        };
+      }
+    }
+
+    if (extracted.length === 0 && slotResult.slots.length === 0) {
       await logRequest(
         { userId, keyId, endpoint: '/api/extract', method: 'POST', startTime },
         200,
         { input: conversation.length, output: 0 }
       );
       return NextResponse.json({
-        message: 'No significant memories found in the conversation',
+        message: 'No significant memories or slots found in the conversation',
         extracted: [],
         stored: 0,
+        slots: { extracted: 0, stored: 0 },
       });
     }
 
@@ -124,7 +164,7 @@ export async function POST(request: NextRequest) {
     );
 
     return NextResponse.json({
-      message: `Extracted ${extracted.length} memories, stored ${storedCount}`,
+      message: `Extracted ${extracted.length} memories, stored ${storedCount}. Slots: ${slotResult.success} stored.`,
       extracted: extracted.map((m) => ({
         content: m.content,
         memory_type: m.memory_type,
@@ -133,6 +173,16 @@ export async function POST(request: NextRequest) {
         importance: m.importance,
       })),
       stored: auto_store ? storedMemories : null,
+      slots: {
+        extracted: slotResult.slots.length,
+        stored: slotResult.success,
+        failed: slotResult.failed,
+        items: slotResult.slots.map((s) => ({
+          key: s.slot_key,
+          value: s.slot_value,
+          confidence: s.confidence,
+        })),
+      },
     });
   } catch (error) {
     console.error('Extract API error:', error);
