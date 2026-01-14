@@ -35,21 +35,31 @@ interface RecentMemory {
   created_at: string;
 }
 
+interface DailyUsage {
+  date: string;
+  calls: number;
+  tokens: number;
+  cost: number;
+}
+
 export default function DashboardOverviewClient({ user }: { user: User }) {
   const { t, locale } = useDashboardTranslation();
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentMemories, setRecentMemories] = useState<RecentMemory[]>([]);
+  const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
-      const [statsRes, memoriesRes] = await Promise.all([
+      const [statsRes, memoriesRes, usageRes] = await Promise.all([
         fetch("/api/dashboard/stats"),
         fetch("/api/memories?limit=5"),
+        fetch("/api/dashboard/usage?period=7d"),
       ]);
 
       const statsData = await statsRes.json();
       const memoriesData = await memoriesRes.json();
+      const usageData = await usageRes.json();
 
       if (statsData.success) {
         setStats(statsData.stats);
@@ -57,6 +67,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
       if (memoriesData.success) {
         setRecentMemories(memoriesData.memories || []);
+      }
+
+      if (usageData.success && usageData.usage?.daily) {
+        setDailyUsage(usageData.usage.daily);
       }
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -240,6 +254,38 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
       </div>
 
+      {/* 7-Day API Usage Chart */}
+      <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="p-4 border-b theme-border flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+              <ChartIcon className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.apiUsageChart")}</h2>
+              <p className="text-xs text-gray-500">{t("dashboard.overviewPage.last7days")}</p>
+            </div>
+          </div>
+          <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
+            {t("dashboard.overviewPage.viewDetails")}
+          </Link>
+        </div>
+        <div className="p-6">
+          {isLoading ? (
+            <div className="h-48 flex items-center justify-center">
+              <div className="animate-pulse w-full h-32 bg-gray-100 rounded-lg" />
+            </div>
+          ) : dailyUsage.length === 0 ? (
+            <div className="h-48 flex flex-col items-center justify-center text-gray-500">
+              <ChartIcon className="w-12 h-12 text-gray-300 mb-2" />
+              <p>{t("dashboard.overviewPage.noUsageData")}</p>
+            </div>
+          ) : (
+            <UsageChart data={dailyUsage} locale={locale} />
+          )}
+        </div>
+      </div>
+
       {/* Recent Memories & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Memories */}
@@ -411,5 +457,113 @@ function UsersIcon({ className }: { className?: string }) {
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
     </svg>
+  );
+}
+
+function ChartIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
+  );
+}
+
+// Usage Chart Component
+function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
+  const maxCalls = Math.max(...data.map(d => d.calls), 1);
+  const chartHeight = 120;
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(locale, { weekday: 'short' });
+  };
+
+  const formatFullDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="text-center p-3 bg-gray-50 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900">
+            {data.reduce((sum, d) => sum + d.calls, 0).toLocaleString()}
+          </p>
+          <p className="text-xs text-gray-500">Total Calls</p>
+        </div>
+        <div className="text-center p-3 bg-gray-50 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900">
+            {Math.round(data.reduce((sum, d) => sum + d.calls, 0) / data.length).toLocaleString()}
+          </p>
+          <p className="text-xs text-gray-500">Avg/Day</p>
+        </div>
+        <div className="text-center p-3 bg-gray-50 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900">
+            {data[data.length - 1]?.calls.toLocaleString() || 0}
+          </p>
+          <p className="text-xs text-gray-500">Today</p>
+        </div>
+      </div>
+
+      {/* Bar Chart */}
+      <div className="relative">
+        <svg width="100%" height={chartHeight + 40} className="overflow-visible">
+          {data.map((day, i) => {
+            const barWidth = 100 / data.length;
+            const barHeight = (day.calls / maxCalls) * chartHeight;
+            const x = i * barWidth + barWidth / 2;
+
+            return (
+              <g key={day.date}>
+                {/* Bar */}
+                <rect
+                  x={`${x - barWidth / 3}%`}
+                  y={chartHeight - barHeight}
+                  width={`${barWidth * 0.6}%`}
+                  height={barHeight}
+                  rx={4}
+                  className="fill-cyan-400 hover:fill-cyan-500 transition-colors cursor-pointer"
+                />
+                {/* Value on hover area */}
+                <title>{`${formatFullDate(day.date)}: ${day.calls.toLocaleString()} calls`}</title>
+                {/* Day label */}
+                <text
+                  x={`${x}%`}
+                  y={chartHeight + 20}
+                  textAnchor="middle"
+                  className="fill-gray-500 text-xs"
+                  fontSize="11"
+                >
+                  {formatDate(day.date)}
+                </text>
+                {/* Call count (only show if > 0) */}
+                {day.calls > 0 && (
+                  <text
+                    x={`${x}%`}
+                    y={chartHeight - barHeight - 5}
+                    textAnchor="middle"
+                    className="fill-gray-700 text-xs font-medium"
+                    fontSize="10"
+                  >
+                    {day.calls.toLocaleString()}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+          {/* Baseline */}
+          <line
+            x1="0"
+            y1={chartHeight}
+            x2="100%"
+            y2={chartHeight}
+            stroke="#e5e7eb"
+            strokeWidth={1}
+          />
+        </svg>
+      </div>
+    </div>
   );
 }

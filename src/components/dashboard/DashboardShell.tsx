@@ -70,9 +70,17 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/en/login");
+      // Full page redirect to ensure no stale cache
+      window.location.href = "/login";
     }
-  }, [status, router]);
+  }, [status]);
+
+  // Handle sign out with cache invalidation
+  const handleSignOut = async () => {
+    // Clear any client-side cached data
+    router.refresh();
+    await signOut({ callbackUrl: "/", redirect: true });
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [season, setSeason] = useState<Season>("winter");
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
@@ -225,7 +233,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 <p className="text-xs text-gray-500 truncate whitespace-nowrap">{session?.user?.email}</p>
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
+                onClick={handleSignOut}
                 className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white/60 rounded-xl transition-all duration-200 flex-shrink-0"
                 title={t("dashboard.signOut")}
               >
@@ -276,7 +284,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               );
             })}
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={handleSignOut}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/60"
             >
               <LogoutIcon className="w-5 h-5" />

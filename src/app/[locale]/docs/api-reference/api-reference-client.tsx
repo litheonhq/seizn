@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 import type { Locale } from "@/i18n/config";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Dictionary = Record<string, unknown>;
 
@@ -59,7 +60,8 @@ export function ApiReferenceClient({ locale, dictionary }: Props) {
             <span className="text-zinc-600">/</span>
             <span className="text-white">API Reference</span>
           </div>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-4">
+            <LanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/dashboard`}
               className="text-zinc-400 hover:text-white transition-colors"

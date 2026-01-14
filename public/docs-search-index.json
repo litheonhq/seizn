@@ -6,7 +6,15 @@
       "section": "Getting Started",
       "content": "Get started with Seizn Memory API. Create an API key from the dashboard and make your first request.",
       "url": "/docs#quickstart",
-      "keywords": ["start", "begin", "setup", "install", "first", "api key", "curl"]
+      "keywords": [
+        "start",
+        "begin",
+        "setup",
+        "install",
+        "first",
+        "api key",
+        "curl"
+      ]
     },
     {
       "id": "authentication",
@@ -14,7 +22,14 @@
       "section": "Getting Started",
       "content": "Authenticate requests using the x-api-key header. Never expose API keys in client-side code.",
       "url": "/docs#authentication",
-      "keywords": ["auth", "api key", "header", "x-api-key", "security", "token"]
+      "keywords": [
+        "auth",
+        "api key",
+        "header",
+        "x-api-key",
+        "security",
+        "token"
+      ]
     },
     {
       "id": "post-memories",
@@ -22,7 +37,19 @@
       "section": "API Reference",
       "content": "Store a new memory with content, memory_type, tags, namespace, and scope. Memory types: fact, preference, experience, relationship, instruction.",
       "url": "/docs#endpoints",
-      "keywords": ["add", "create", "store", "save", "memory", "post", "fact", "preference", "namespace", "scope", "tags"]
+      "keywords": [
+        "add",
+        "create",
+        "store",
+        "save",
+        "memory",
+        "post",
+        "fact",
+        "preference",
+        "namespace",
+        "scope",
+        "tags"
+      ]
     },
     {
       "id": "get-memories",
@@ -30,7 +57,17 @@
       "section": "API Reference",
       "content": "Search stored memories using semantic similarity. Parameters: query (required), limit (default 10), threshold (0-1, default 0.7), namespace.",
       "url": "/docs#endpoints",
-      "keywords": ["search", "find", "query", "get", "retrieve", "limit", "threshold", "similarity", "semantic"]
+      "keywords": [
+        "search",
+        "find",
+        "query",
+        "get",
+        "retrieve",
+        "limit",
+        "threshold",
+        "similarity",
+        "semantic"
+      ]
     },
     {
       "id": "delete-memories",
@@ -38,7 +75,13 @@
       "section": "API Reference",
       "content": "Delete one or more memories by their IDs. Use comma-separated IDs for bulk deletion.",
       "url": "/docs#endpoints",
-      "keywords": ["delete", "remove", "ids", "bulk", "cleanup"]
+      "keywords": [
+        "delete",
+        "remove",
+        "ids",
+        "bulk",
+        "cleanup"
+      ]
     },
     {
       "id": "extract",
@@ -46,7 +89,15 @@
       "section": "API Reference",
       "content": "Automatically extract facts, preferences, and instructions from conversations using AI. Models: haiku (faster, cheaper) or sonnet (more accurate).",
       "url": "/docs#endpoints",
-      "keywords": ["extract", "conversation", "haiku", "sonnet", "auto", "ai", "facts"]
+      "keywords": [
+        "extract",
+        "conversation",
+        "haiku",
+        "sonnet",
+        "auto",
+        "ai",
+        "facts"
+      ]
     },
     {
       "id": "query",
@@ -54,7 +105,14 @@
       "section": "API Reference",
       "content": "Generate responses using relevant memories as context (RAG). Returns response, memories_used, and model_used.",
       "url": "/docs#endpoints",
-      "keywords": ["query", "rag", "response", "context", "augmented", "generate"]
+      "keywords": [
+        "query",
+        "rag",
+        "response",
+        "context",
+        "augmented",
+        "generate"
+      ]
     },
     {
       "id": "rate-limits",
@@ -62,7 +120,17 @@
       "section": "API Reference",
       "content": "Free: 1,000 daily calls, 10K memories. Plus: 10,000 daily calls, 100K memories. Pro: 100,000 daily calls, 1M memories. Enterprise: unlimited.",
       "url": "/docs#rate-limits",
-      "keywords": ["rate", "limit", "quota", "daily", "calls", "free", "pro", "enterprise", "429"]
+      "keywords": [
+        "rate",
+        "limit",
+        "quota",
+        "daily",
+        "calls",
+        "free",
+        "pro",
+        "enterprise",
+        "429"
+      ]
     },
     {
       "id": "error-400",
@@ -70,7 +138,13 @@
       "section": "Error Codes",
       "content": "Invalid request parameters. Check required fields and data types.",
       "url": "/docs#errors",
-      "keywords": ["400", "bad request", "invalid", "parameters", "error"]
+      "keywords": [
+        "400",
+        "bad request",
+        "invalid",
+        "parameters",
+        "error"
+      ]
     },
     {
       "id": "error-401",
@@ -78,7 +152,14 @@
       "section": "Error Codes",
       "content": "Missing or invalid API key. Ensure x-api-key header is present and valid.",
       "url": "/docs#errors",
-      "keywords": ["401", "unauthorized", "api key", "missing", "invalid", "auth"]
+      "keywords": [
+        "401",
+        "unauthorized",
+        "api key",
+        "missing",
+        "invalid",
+        "auth"
+      ]
     },
     {
       "id": "error-429",
@@ -86,7 +167,14 @@
       "section": "Error Codes",
       "content": "Rate limit exceeded. Implement exponential backoff or upgrade your plan.",
       "url": "/docs#errors",
-      "keywords": ["429", "rate limit", "too many", "throttle", "backoff", "exceeded"]
+      "keywords": [
+        "429",
+        "rate limit",
+        "too many",
+        "throttle",
+        "backoff",
+        "exceeded"
+      ]
     },
     {
       "id": "error-500",
@@ -94,7 +182,13 @@
       "section": "Error Codes",
       "content": "Internal server error. Contact support if this persists.",
       "url": "/docs#errors",
-      "keywords": ["500", "server", "internal", "error", "support"]
+      "keywords": [
+        "500",
+        "server",
+        "internal",
+        "error",
+        "support"
+      ]
     },
     {
       "id": "security",
@@ -102,7 +196,17 @@
       "section": "Resources",
       "content": "Data security features: AES-256 encryption at rest, TLS in transit, tenant isolation, API key management, rotation, expiration, usage tracking.",
       "url": "/docs#security",
-      "keywords": ["security", "encryption", "aes", "tls", "tenant", "isolation", "key", "rotation", "governance"]
+      "keywords": [
+        "security",
+        "encryption",
+        "aes",
+        "tls",
+        "tenant",
+        "isolation",
+        "key",
+        "rotation",
+        "governance"
+      ]
     },
     {
       "id": "data-retention",
@@ -110,7 +214,16 @@
       "section": "Resources",
       "content": "Export all memories as JSON. Permanent deletion with GDPR forget API. SOC 2, GDPR compliance.",
       "url": "/docs#security",
-      "keywords": ["retention", "export", "json", "delete", "gdpr", "forget", "compliance", "soc2"]
+      "keywords": [
+        "retention",
+        "export",
+        "json",
+        "delete",
+        "gdpr",
+        "forget",
+        "compliance",
+        "soc2"
+      ]
     },
     {
       "id": "sdk-python",
@@ -118,7 +231,13 @@
       "section": "SDKs",
       "content": "pip install seizn. Initialize with Seizn(api_key). Methods: add(), search(), extract().",
       "url": "/docs#sdks",
-      "keywords": ["python", "sdk", "pip", "install", "library"]
+      "keywords": [
+        "python",
+        "sdk",
+        "pip",
+        "install",
+        "library"
+      ]
     },
     {
       "id": "sdk-javascript",
@@ -126,7 +245,14 @@
       "section": "SDKs",
       "content": "npm install seizn. Initialize with new Seizn({ apiKey }). Methods: add(), search(), extract().",
       "url": "/docs#sdks",
-      "keywords": ["javascript", "typescript", "sdk", "npm", "install", "node"]
+      "keywords": [
+        "javascript",
+        "typescript",
+        "sdk",
+        "npm",
+        "install",
+        "node"
+      ]
     },
     {
       "id": "faq-what-is-seizn",
@@ -134,7 +260,13 @@
       "section": "FAQ",
       "content": "AI memory infrastructure providing persistent, searchable memory for AI applications with extraction, policy management, key management, and audit logs.",
       "url": "/docs/faq",
-      "keywords": ["what", "seizn", "memory", "infrastructure", "about"]
+      "keywords": [
+        "what",
+        "seizn",
+        "memory",
+        "infrastructure",
+        "about"
+      ]
     },
     {
       "id": "faq-vs-vector-db",
@@ -142,7 +274,14 @@
       "section": "FAQ",
       "content": "Seizn is a complete memory system including extraction, type classification, namespace/scope management, API keys, audit logging, SDKs, and governance.",
       "url": "/docs/faq",
-      "keywords": ["vector", "database", "pinecone", "weaviate", "difference", "compare"]
+      "keywords": [
+        "vector",
+        "database",
+        "pinecone",
+        "weaviate",
+        "difference",
+        "compare"
+      ]
     },
     {
       "id": "faq-namespace",
@@ -150,7 +289,13 @@
       "section": "FAQ",
       "content": "Namespace separates memories by project/tenant/environment. Recommended format: org:acme/app:chat/env:prod. Never use default in production.",
       "url": "/docs/faq",
-      "keywords": ["namespace", "tenant", "environment", "separation", "isolation"]
+      "keywords": [
+        "namespace",
+        "tenant",
+        "environment",
+        "separation",
+        "isolation"
+      ]
     },
     {
       "id": "faq-scope",
@@ -158,7 +303,13 @@
       "section": "FAQ",
       "content": "user: Global preferences. session: Current conversation context. agent: Rules for specific agent in multi-agent systems.",
       "url": "/docs/faq",
-      "keywords": ["scope", "user", "session", "agent", "multi-agent"]
+      "keywords": [
+        "scope",
+        "user",
+        "session",
+        "agent",
+        "multi-agent"
+      ]
     },
     {
       "id": "faq-memory-types",
@@ -166,7 +317,15 @@
       "section": "FAQ",
       "content": "fact: unchanging info. preference: user choices. instruction: rules. relationship: connections. experience: events. Most powerful filtering axis.",
       "url": "/docs/faq",
-      "keywords": ["memory_type", "fact", "preference", "instruction", "relationship", "experience", "type"]
+      "keywords": [
+        "memory_type",
+        "fact",
+        "preference",
+        "instruction",
+        "relationship",
+        "experience",
+        "type"
+      ]
     },
     {
       "id": "faq-threshold",
@@ -174,7 +333,13 @@
       "section": "FAQ",
       "content": "limit: Number of results (too low = miss relevant). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7.",
       "url": "/docs/faq",
-      "keywords": ["threshold", "limit", "similarity", "results", "tuning"]
+      "keywords": [
+        "threshold",
+        "limit",
+        "similarity",
+        "results",
+        "tuning"
+      ]
     },
     {
       "id": "faq-429",
@@ -182,7 +347,14 @@
       "section": "FAQ",
       "content": "Rate limit hit. Solutions: exponential backoff, server-side queue, cache queries, batch operations, reduce extract frequency.",
       "url": "/docs/faq",
-      "keywords": ["429", "rate limit", "too many", "backoff", "queue", "cache"]
+      "keywords": [
+        "429",
+        "rate limit",
+        "too many",
+        "backoff",
+        "queue",
+        "cache"
+      ]
     },
     {
       "id": "faq-api-key-browser",
@@ -190,7 +362,14 @@
       "section": "FAQ",
       "content": "Not recommended - high exposure risk. Call Seizn from server (Route Handler, Worker, serverless). Never expose keys client-side.",
       "url": "/docs/faq",
-      "keywords": ["browser", "frontend", "client", "api key", "security", "expose"]
+      "keywords": [
+        "browser",
+        "frontend",
+        "client",
+        "api key",
+        "security",
+        "expose"
+      ]
     },
     {
       "id": "winter-forget",
@@ -198,7 +377,14 @@
       "section": "Winter (Governance)",
       "content": "POST /api/winter/forget - Permanently delete all user data. Right-to-be-forgotten compliance.",
       "url": "/docs#security",
-      "keywords": ["forget", "gdpr", "delete", "right to be forgotten", "compliance", "winter"]
+      "keywords": [
+        "forget",
+        "gdpr",
+        "delete",
+        "right to be forgotten",
+        "compliance",
+        "winter"
+      ]
     },
     {
       "id": "error-semantics",
@@ -206,7 +392,14 @@
       "section": "API Reference",
       "content": "All errors include: code (machine-readable), message (human-readable), trace_id, suggested_fix, docs_url. Use trace_id when contacting support.",
       "url": "/docs#errors",
-      "keywords": ["error", "trace_id", "suggested_fix", "request_id", "debug", "troubleshoot"]
+      "keywords": [
+        "error",
+        "trace_id",
+        "suggested_fix",
+        "request_id",
+        "debug",
+        "troubleshoot"
+      ]
     },
     {
       "id": "error-auth-missing",
@@ -214,7 +407,13 @@
       "section": "Error Codes",
       "content": "No API key provided. Fix: Add x-api-key header to your request. Get API key from Dashboard → API Keys.",
       "url": "/docs#errors",
-      "keywords": ["AUTH_MISSING_KEY", "api key", "header", "x-api-key", "401"]
+      "keywords": [
+        "AUTH_MISSING_KEY",
+        "api key",
+        "header",
+        "x-api-key",
+        "401"
+      ]
     },
     {
       "id": "error-auth-invalid",
@@ -222,7 +421,13 @@
       "section": "Error Codes",
       "content": "API key not found or inactive. Fix: Verify key in Dashboard → API Keys. Check for typos or regenerate if needed.",
       "url": "/docs#errors",
-      "keywords": ["AUTH_INVALID_KEY", "invalid", "inactive", "key", "401"]
+      "keywords": [
+        "AUTH_INVALID_KEY",
+        "invalid",
+        "inactive",
+        "key",
+        "401"
+      ]
     },
     {
       "id": "error-rate-limit",
@@ -230,7 +435,13 @@
       "section": "Error Codes",
       "content": "Too many requests per minute. Fix: Implement exponential backoff (1s→2s→4s). Check X-RateLimit-Reset header.",
       "url": "/docs#rate-limits",
-      "keywords": ["RATE_LIMIT_EXCEEDED", "throttle", "backoff", "429", "retry"]
+      "keywords": [
+        "RATE_LIMIT_EXCEEDED",
+        "throttle",
+        "backoff",
+        "429",
+        "retry"
+      ]
     },
     {
       "id": "demo-query",
@@ -238,7 +449,1116 @@
       "section": "Getting Started",
       "content": "Try Seizn without an API key. POST /api/demo/query with { query: 'your question' }. Limited to 3 free queries per IP per day.",
       "url": "/docs#quickstart",
-      "keywords": ["demo", "try", "free", "no api key", "test", "sample"]
+      "keywords": [
+        "demo",
+        "try",
+        "free",
+        "no api key",
+        "test",
+        "sample"
+      ]
+    },
+    {
+      "id": "api-post--api-extract-image",
+      "title": "POST /api/extract/image - POST /api/extract/image",
+      "section": "API Reference",
+      "content": "Endpoint for /api/extract/image",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "extract",
+        "image",
+        "post",
+        "/api/extract/image"
+      ]
+    },
+    {
+      "id": "api-put--api-extract-image",
+      "title": "PUT /api/extract/image - PUT /api/extract/image",
+      "section": "API Reference",
+      "content": "Endpoint for /api/extract/image",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "put",
+        "api",
+        "extract",
+        "image",
+        "put",
+        "/api/extract/image"
+      ]
+    },
+    {
+      "id": "api-post--api-extract",
+      "title": "POST /api/extract - POST /api/extract",
+      "section": "API Reference",
+      "content": "Endpoint for /api/extract",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "extract",
+        "post",
+        "/api/extract"
+      ]
+    },
+    {
+      "id": "api-get--api-health",
+      "title": "GET /api/health - GET /api/health",
+      "section": "API Reference",
+      "content": "Endpoint for /api/health",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "health",
+        "get",
+        "/api/health"
+      ]
+    },
+    {
+      "id": "api-get--api-keys",
+      "title": "GET /api/keys - GET /api/keys",
+      "section": "API Reference",
+      "content": "Endpoint for /api/keys",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "keys",
+        "get",
+        "/api/keys"
+      ]
+    },
+    {
+      "id": "api-post--api-keys",
+      "title": "POST /api/keys - POST /api/keys",
+      "section": "API Reference",
+      "content": "Endpoint for /api/keys",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "keys",
+        "post",
+        "/api/keys"
+      ]
+    },
+    {
+      "id": "api-delete--api-keys",
+      "title": "DELETE /api/keys - DELETE /api/keys",
+      "section": "API Reference",
+      "content": "Endpoint for /api/keys",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "keys",
+        "delete",
+        "/api/keys"
+      ]
+    },
+    {
+      "id": "api-get--api-memories-export",
+      "title": "GET /api/memories/export - GET /api/memories/export",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories/export",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "memories",
+        "export",
+        "get",
+        "/api/memories/export"
+      ]
+    },
+    {
+      "id": "api-post--api-memories-import",
+      "title": "POST /api/memories/import - POST /api/memories/import",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories/import",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "memories",
+        "import",
+        "post",
+        "/api/memories/import"
+      ]
+    },
+    {
+      "id": "api-post--api-memories",
+      "title": "POST /api/memories - POST /api/memories",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "memories",
+        "post",
+        "/api/memories"
+      ]
+    },
+    {
+      "id": "api-get--api-memories",
+      "title": "GET /api/memories - GET /api/memories",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "memories",
+        "get",
+        "/api/memories"
+      ]
+    },
+    {
+      "id": "api-delete--api-memories",
+      "title": "DELETE /api/memories - DELETE /api/memories",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "memories",
+        "delete",
+        "/api/memories"
+      ]
+    },
+    {
+      "id": "api-get--api-memories--id",
+      "title": "GET /api/memories/:id - GET /api/memories/:id",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories/:id",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "memories",
+        ":id",
+        "get",
+        "/api/memories/:id"
+      ]
+    },
+    {
+      "id": "api-patch--api-memories--id",
+      "title": "PATCH /api/memories/:id - PATCH /api/memories/:id",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories/:id",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "patch",
+        "api",
+        "memories",
+        ":id",
+        "patch",
+        "/api/memories/:id"
+      ]
+    },
+    {
+      "id": "api-delete--api-memories--id",
+      "title": "DELETE /api/memories/:id - DELETE /api/memories/:id",
+      "section": "API Reference",
+      "content": "Endpoint for /api/memories/:id",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "memories",
+        ":id",
+        "delete",
+        "/api/memories/:id"
+      ]
+    },
+    {
+      "id": "api-post--api-query",
+      "title": "POST /api/query - POST /api/query",
+      "section": "API Reference",
+      "content": "Endpoint for /api/query",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "query",
+        "post",
+        "/api/query"
+      ]
+    },
+    {
+      "id": "api-post--api-rerank",
+      "title": "POST /api/rerank - POST /api/rerank",
+      "section": "API Reference",
+      "content": " GET /api/rerank - Get available models and domains",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "rerank",
+        "post",
+        "/api/rerank"
+      ]
+    },
+    {
+      "id": "api-get--api-rerank",
+      "title": "GET /api/rerank - GET /api/rerank",
+      "section": "API Reference",
+      "content": " GET /api/rerank - Get available models and domains",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "rerank",
+        "get",
+        "/api/rerank"
+      ]
+    },
+    {
+      "id": "api-get--api-status",
+      "title": "GET /api/status - GET /api/status",
+      "section": "API Reference",
+      "content": " GET /api/status - Get system status  Returns overall system health and service statuses This endpoint is public (no auth required)",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "status",
+        "get",
+        "/api/status"
+      ]
+    },
+    {
+      "id": "api-delete--api-summer-cache-invalidate",
+      "title": "DELETE /api/summer/cache/invalidate - DELETE /api/summer/cache/invalidate",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "summer",
+        "cache",
+        "invalidate",
+        "delete",
+        "/api/summer/cache/invalidate"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-cache-invalidate",
+      "title": "POST /api/summer/cache/invalidate - POST /api/summer/cache/invalidate",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "cache",
+        "invalidate",
+        "post",
+        "/api/summer/cache/invalidate"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-cache-invalidate",
+      "title": "GET /api/summer/cache/invalidate - GET /api/summer/cache/invalidate",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "cache",
+        "invalidate",
+        "get",
+        "/api/summer/cache/invalidate"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-cache-query",
+      "title": "POST /api/summer/cache/query - POST /api/summer/cache/query",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache/query  Returns API documentation for the cache query endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "cache",
+        "query",
+        "post",
+        "/api/summer/cache/query"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-cache-query",
+      "title": "GET /api/summer/cache/query - GET /api/summer/cache/query",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache/query  Returns API documentation for the cache query endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "cache",
+        "query",
+        "get",
+        "/api/summer/cache/query"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-cache",
+      "title": "GET /api/summer/cache - GET /api/summer/cache",
+      "section": "API Reference",
+      "content": " GET /api/summer/cache  Semantic Cache API Documentation  Returns overview of all cache-related endpoints.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "cache",
+        "get",
+        "/api/summer/cache"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-cache-stats",
+      "title": "GET /api/summer/cache/stats - GET /api/summer/cache/stats",
+      "section": "API Reference",
+      "content": " POST /api/summer/cache/stats  Reset cache statistics (admin operation)  Request Body: { \"reset\": true, \"reset_router\": false               // Optional: also reset router stats }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "cache",
+        "stats",
+        "get",
+        "/api/summer/cache/stats"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-cache-stats",
+      "title": "POST /api/summer/cache/stats - POST /api/summer/cache/stats",
+      "section": "API Reference",
+      "content": " POST /api/summer/cache/stats  Reset cache statistics (admin operation)  Request Body: { \"reset\": true, \"reset_router\": false               // Optional: also reset router stats }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "cache",
+        "stats",
+        "post",
+        "/api/summer/cache/stats"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-collections",
+      "title": "GET /api/summer/collections - GET /api/summer/collections",
+      "section": "API Reference",
+      "content": "Endpoint for /api/summer/collections",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "collections",
+        "get",
+        "/api/summer/collections"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-collections",
+      "title": "POST /api/summer/collections - POST /api/summer/collections",
+      "section": "API Reference",
+      "content": "Endpoint for /api/summer/collections",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "collections",
+        "post",
+        "/api/summer/collections"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-explain",
+      "title": "POST /api/summer/explain - POST /api/summer/explain",
+      "section": "API Reference",
+      "content": " Clean up expired explanations from the store",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "explain",
+        "post",
+        "/api/summer/explain"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-explain",
+      "title": "GET /api/summer/explain - GET /api/summer/explain",
+      "section": "API Reference",
+      "content": " Clean up expired explanations from the store",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "explain",
+        "get",
+        "/api/summer/explain"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-explain--queryId",
+      "title": "GET /api/summer/explain/:queryId - GET /api/summer/explain/:queryId",
+      "section": "API Reference",
+      "content": " DELETE /api/summer/explain/:queryId  Delete a stored explanation.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "explain",
+        ":queryId",
+        "get",
+        "/api/summer/explain/:queryid"
+      ]
+    },
+    {
+      "id": "api-delete--api-summer-explain--queryId",
+      "title": "DELETE /api/summer/explain/:queryId - DELETE /api/summer/explain/:queryId",
+      "section": "API Reference",
+      "content": " DELETE /api/summer/explain/:queryId  Delete a stored explanation.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "summer",
+        "explain",
+        ":queryId",
+        "delete",
+        "/api/summer/explain/:queryid"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-feedback",
+      "title": "POST /api/summer/feedback - POST /api/summer/feedback",
+      "section": "API Reference",
+      "content": "Endpoint for /api/summer/feedback",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "feedback",
+        "post",
+        "/api/summer/feedback"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-index",
+      "title": "POST /api/summer/index - POST /api/summer/index",
+      "section": "API Reference",
+      "content": " POST /api/summer/index  Index documents into the Summer RAG vector store.  Request body: { \"collection_id\": \"uuid\", \"documents\": [ { \"id\": \"optional-external-id\", \"content\": \"document content to index\", \"metadata\": { \"key\": \"value\" }, \"title\": \"optional title\", \"source\": \"optional source url\" } ], \"options\": { \"chunking_strategy\": \"sliding_window\" | \"sentence\" | \"paragraph\" | \"semantic\", \"chunk_size\": 512, \"chunk_overlap\": 64, \"embedding_model\": \"voyage-3\" | \"voyage-3-lite\" | \"voyage-code-3\" | \"voyage-finance-2\", \"skip_duplicates\": false } }  Response: { \"success\": true, \"indexed_count\": 5, \"chunks_created\": 25, \"duration_ms\": 1234, \"results\": [ { \"document_id\": \"uuid\", \"external_id\": \"optional-external-id\", \"chunk_count\": 5, \"status\": \"created\" | \"updated\" | \"skipped\" | \"error\" } ] }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "index",
+        "post",
+        "/api/summer/index"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-rag",
+      "title": "POST /api/summer/rag - POST /api/summer/rag",
+      "section": "API Reference",
+      "content": " RAG Query Endpoint  Full RAG pipeline: search -> rerank -> context -> LLM -> answer with sources  Request: { \"query\": \"What is the capital of France?\", \"collection_id\": \"uuid\", \"options\": { \"search_type\": \"hybrid\",      // semantic | keyword | hybrid \"rerank\": true,               // Enable reranking (requires plan support) \"llm_model\": \"claude-3-5-haiku\", // claude-3-5-sonnet | claude-3-5-haiku | gpt-4o | gpt-4o-mini \"max_tokens\": 2048,           // Max output tokens \"stream\": false,              // Enable streaming (SSE) \"temperature\": 0.3,           // LLM temperature \"top_k\": 10,                  // Top-K results \"rerank_top_n\": 20,           // Rerank top-N candidates \"federated\": false,           // Enable federated search \"system_prompt\": \"...\",       // Custom system prompt \"include_trace\": false        // Include detailed trace in response } }  Response: { \"success\": true, \"answer\": \"The capital of France is Paris [chunk_123].\", \"sources\": [ { \"id\": \"chunk_123\", \"content\": \"...\", \"score\": 0.92, \"documentId\": \"...\", \"metadata\": {...} } ], \"usage\": { \"embedding_tokens\": 12, \"llm_input_tokens\": 1500, \"llm_output_tokens\": 150, \"total_cost_credits\": 0.0045 }, \"latency_ms\": 1234, \"trace_id\": \"uuid\", \"trace\": {...}  // If include_trace is true }  Streaming Response (SSE): data: {\"type\":\"content\",\"content\":\"The capital\"} data: {\"type\":\"content\",\"content\":\" of France\"} data: {\"type\":\"content\",\"content\":\" is Paris\"} data: {\"type\":\"sources\",\"sources\":[...]} data: {\"type\":\"usage\",\"usage\":{...},\"latency_ms\":1234,\"trace_id\":\"uuid\"} data: {\"type\":\"done\"}",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "rag",
+        "post",
+        "/api/summer/rag"
+      ]
+    },
+    {
+      "id": "api-options--api-summer-rag",
+      "title": "OPTIONS /api/summer/rag - OPTIONS /api/summer/rag",
+      "section": "API Reference",
+      "content": " RAG Query Endpoint  Full RAG pipeline: search -> rerank -> context -> LLM -> answer with sources  Request: { \"query\": \"What is the capital of France?\", \"collection_id\": \"uuid\", \"options\": { \"search_type\": \"hybrid\",      // semantic | keyword | hybrid \"rerank\": true,               // Enable reranking (requires plan support) \"llm_model\": \"claude-3-5-haiku\", // claude-3-5-sonnet | claude-3-5-haiku | gpt-4o | gpt-4o-mini \"max_tokens\": 2048,           // Max output tokens \"stream\": false,              // Enable streaming (SSE) \"temperature\": 0.3,           // LLM temperature \"top_k\": 10,                  // Top-K results \"rerank_top_n\": 20,           // Rerank top-N candidates \"federated\": false,           // Enable federated search \"system_prompt\": \"...\",       // Custom system prompt \"include_trace\": false        // Include detailed trace in response } }  Response: { \"success\": true, \"answer\": \"The capital of France is Paris [chunk_123].\", \"sources\": [ { \"id\": \"chunk_123\", \"content\": \"...\", \"score\": 0.92, \"documentId\": \"...\", \"metadata\": {...} } ], \"usage\": { \"embedding_tokens\": 12, \"llm_input_tokens\": 1500, \"llm_output_tokens\": 150, \"total_cost_credits\": 0.0045 }, \"latency_ms\": 1234, \"trace_id\": \"uuid\", \"trace\": {...}  // If include_trace is true }  Streaming Response (SSE): data: {\"type\":\"content\",\"content\":\"The capital\"} data: {\"type\":\"content\",\"content\":\" of France\"} data: {\"type\":\"content\",\"content\":\" is Paris\"} data: {\"type\":\"sources\",\"sources\":[...]} data: {\"type\":\"usage\",\"usage\":{...},\"latency_ms\":1234,\"trace_id\":\"uuid\"} data: {\"type\":\"done\"}",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "options",
+        "api",
+        "summer",
+        "rag",
+        "options",
+        "/api/summer/rag"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-rerank-batch",
+      "title": "POST /api/summer/rerank/batch - POST /api/summer/rerank/batch",
+      "section": "API Reference",
+      "content": " POST /api/summer/rerank/batch  Batch rerank multiple query-document sets  Request Body: { \"requests\": [ { \"query\": \"string\", \"documents\": [{ \"id\": \"string\", \"content\": \"string\", \"metadata\"?: object }] } ], \"options\"?: { \"model\"?: \"cohere\" | \"voyage\" | \"cross_encoder\" | \"bm25\", \"top_k\"?: number } }  Response: { \"success\": true, \"results\": [ RerankResponse, ... ], \"total_latency_ms\": number, \"total_cost_usd\": number }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "rerank",
+        "batch",
+        "post",
+        "/api/summer/rerank/batch"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-rerank-estimate",
+      "title": "POST /api/summer/rerank/estimate - POST /api/summer/rerank/estimate",
+      "section": "API Reference",
+      "content": " GET /api/summer/rerank/estimate  Get pricing information for all models  Response: { \"success\": true, \"models\": [ { \"id\": \"string\", \"name\": \"string\", \"description\": \"string\", \"costPerQuery\": number, \"costPerDocument\": number } ] }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "rerank",
+        "estimate",
+        "post",
+        "/api/summer/rerank/estimate"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-rerank-estimate",
+      "title": "GET /api/summer/rerank/estimate - GET /api/summer/rerank/estimate",
+      "section": "API Reference",
+      "content": " GET /api/summer/rerank/estimate  Get pricing information for all models  Response: { \"success\": true, \"models\": [ { \"id\": \"string\", \"name\": \"string\", \"description\": \"string\", \"costPerQuery\": number, \"costPerDocument\": number } ] }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "rerank",
+        "estimate",
+        "get",
+        "/api/summer/rerank/estimate"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-rerank",
+      "title": "POST /api/summer/rerank - POST /api/summer/rerank",
+      "section": "API Reference",
+      "content": " Get available reranker models and pricing info",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "rerank",
+        "post",
+        "/api/summer/rerank"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-rerank",
+      "title": "GET /api/summer/rerank - GET /api/summer/rerank",
+      "section": "API Reference",
+      "content": " Get available reranker models and pricing info",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "rerank",
+        "get",
+        "/api/summer/rerank"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-retops-alerts",
+      "title": "GET /api/summer/retops/alerts - GET /api/summer/retops/alerts",
+      "section": "API Reference",
+      "content": " POST /api/summer/retops/alerts  Trigger alert detection for the authenticated user. This runs anomaly detection and threshold checks.  Request Body: { \"detectAnomalies\": true,    // Run anomaly detection \"checkThresholds\": true     // Check threshold alerts }  Response: { \"success\": true, \"anomaliesDetected\": 2, \"alertsCreated\": 1 }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "retops",
+        "alerts",
+        "get",
+        "/api/summer/retops/alerts"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-retops-alerts",
+      "title": "POST /api/summer/retops/alerts - POST /api/summer/retops/alerts",
+      "section": "API Reference",
+      "content": " POST /api/summer/retops/alerts  Trigger alert detection for the authenticated user. This runs anomaly detection and threshold checks.  Request Body: { \"detectAnomalies\": true,    // Run anomaly detection \"checkThresholds\": true     // Check threshold alerts }  Response: { \"success\": true, \"anomaliesDetected\": 2, \"alertsCreated\": 1 }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "retops",
+        "alerts",
+        "post",
+        "/api/summer/retops/alerts"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-retops-alerts--alertId-acknowledge",
+      "title": "POST /api/summer/retops/alerts/:alertId/acknowledge - POST /api/summer/retops/alerts/:alertId/acknowledge",
+      "section": "API Reference",
+      "content": " POST /api/summer/retops/alerts/[alertId]/acknowledge  Acknowledge an alert for the authenticated user.  Response: { \"success\": true, \"alertId\": \"alert_xxx\", \"acknowledgedAt\": \"2024-01-01T00:00:00Z\" }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "retops",
+        "alerts",
+        ":alertId",
+        "acknowledge",
+        "post",
+        "/api/summer/retops/alerts/:alertid/acknowledge"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-retops-alerts--alertId-resolve",
+      "title": "POST /api/summer/retops/alerts/:alertId/resolve - POST /api/summer/retops/alerts/:alertId/resolve",
+      "section": "API Reference",
+      "content": " POST /api/summer/retops/alerts/[alertId]/resolve  Resolve an alert for the authenticated user.  Response: { \"success\": true, \"alertId\": \"alert_xxx\", \"resolvedAt\": \"2024-01-01T00:00:00Z\" }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "retops",
+        "alerts",
+        ":alertId",
+        "resolve",
+        "post",
+        "/api/summer/retops/alerts/:alertid/resolve"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-retops-metrics",
+      "title": "GET /api/summer/retops/metrics - GET /api/summer/retops/metrics",
+      "section": "API Reference",
+      "content": " GET /api/summer/retops/metrics  Get RetOps metrics snapshot for the authenticated user.  Query Parameters: - period: Time period for metrics (1h, 6h, 24h, 7d, 30d) - default: 1h - collectionId: Filter by collection ID (optional) - granularity: Granularity for time series (1m, 5m, 15m, 1h, 1d) - optional - includeTimeSeries: Include time series data (true/false) - default: true  Response: { \"success\": true, \"metrics\": { \"timestamp\": \"2024-01-01T00:00:00Z\", \"userId\": \"user_xxx\", \"qps\": 1.25, \"totalQueries\": 1500, \"latency\": { \"p50\": 45, \"p75\": 78, \"p90\": 120, \"p95\": 180, \"p99\": 350, \"avg\": 65, \"max\": 890 }, \"cache\": { \"hits\": 800, \"misses\": 700, \"hitRate\": 0.533, \"semanticHitRate\": 0.426, \"avgTimeSavedMs\": 58 }, \"errors\": { \"total\": 12, \"rate\": 0.008, \"byType\": { \"RATE_LIMIT\": 8, \"NOT_FOUND\": 4 } }, \"quality\": { \"mrr\": 0.75, \"ndcg\": 0.68, ... } }, \"timeSeries\": { \"timestamps\": [...], \"qps\": [...], \"latencyP50\": [...], \"latencyP99\": [...], \"errorRate\": [...], \"cacheHitRate\": [...] } }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "retops",
+        "metrics",
+        "get",
+        "/api/summer/retops/metrics"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-retops-quality",
+      "title": "GET /api/summer/retops/quality - GET /api/summer/retops/quality",
+      "section": "API Reference",
+      "content": " GET /api/summer/retops/quality  Get search quality metrics for the authenticated user.  Query Parameters: - period: Time period for metrics (1h, 6h, 24h, 7d, 30d) - default: 24h - collectionId: Filter by collection ID (optional) - includeTrend: Include quality trend data (true/false) - default: false  Response: { \"success\": true, \"quality\": { \"mrr\": 0.75, \"ndcg\": 0.68, \"precisionAtK\": { \"p1\": 0.85, \"p3\": 0.72, \"p5\": 0.65, \"p10\": 0.55 }, \"recallAtK\": { \"r1\": 0.35, \"r3\": 0.55, \"r5\": 0.68, \"r10\": 0.82 }, \"groundedness\": 0.88, \"rerankImprovement\": 0.12 }, \"trend\": [ { \"timestamp\": \"2024-01-01T00:00:00Z\", \"mrr\": 0.74, \"ndcg\": 0.67, \"groundedness\": 0.87 }, ... ] }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "retops",
+        "quality",
+        "get",
+        "/api/summer/retops/quality"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-retops-stats",
+      "title": "GET /api/summer/retops/stats - GET /api/summer/retops/stats",
+      "section": "API Reference",
+      "content": " GET /api/summer/retops/stats  Get comprehensive retrieval statistics for the authenticated user.  Query Parameters: - period: Time period for stats (1h, 6h, 24h, 7d, 30d) - default: 24h - collectionId: Filter by collection ID (optional) - includeTopQueries: Include top queries list (true/false) - default: true - topQueriesLimit: Number of top queries to return (1-50) - default: 10  Response: { \"success\": true, \"stats\": { \"period\": \"24h\", \"startTime\": \"2024-01-01T00:00:00Z\", \"endTime\": \"2024-01-02T00:00:00Z\", \"queryVolume\": { \"total\": 15000, \"avgQps\": 0.17, \"peakQps\": 2.5, \"timeSeries\": [...] }, \"searchTypes\": { \"vector\": 5000, \"keyword\": 1000, \"hybrid\": 9000, \"federated\": 0 }, \"topQueries\": [...], \"collectionBreakdown\": [...], \"embeddingUsage\": {...}, \"rerankUsage\": {...} } }",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "retops",
+        "stats",
+        "get",
+        "/api/summer/retops/stats"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-retrieve",
+      "title": "POST /api/summer/retrieve - POST /api/summer/retrieve",
+      "section": "API Reference",
+      "content": "Endpoint for /api/summer/retrieve",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "retrieve",
+        "post",
+        "/api/summer/retrieve"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-search",
+      "title": "POST /api/summer/search - POST /api/summer/search",
+      "section": "API Reference",
+      "content": " GET /api/summer/search  Returns API documentation for the search endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "search",
+        "post",
+        "/api/summer/search"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-search",
+      "title": "GET /api/summer/search - GET /api/summer/search",
+      "section": "API Reference",
+      "content": " GET /api/summer/search  Returns API documentation for the search endpoint",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "search",
+        "get",
+        "/api/summer/search"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-versions",
+      "title": "POST /api/summer/versions - POST /api/summer/versions",
+      "section": "API Reference",
+      "content": " API: /api/summer/versions  POST - Create a new version GET - List versions for a collection",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "versions",
+        "post",
+        "/api/summer/versions"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-versions",
+      "title": "GET /api/summer/versions - GET /api/summer/versions",
+      "section": "API Reference",
+      "content": " API: /api/summer/versions  POST - Create a new version GET - List versions for a collection",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "versions",
+        "get",
+        "/api/summer/versions"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-versions--id-diff--compareId",
+      "title": "GET /api/summer/versions/:id/diff/:compareId - GET /api/summer/versions/:id/diff/:compareId",
+      "section": "API Reference",
+      "content": " API: /api/summer/versions/:id/diff/:compareId  GET - Compare two versions and return diff",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "versions",
+        ":id",
+        "diff",
+        ":compareId",
+        "get",
+        "/api/summer/versions/:id/diff/:compareid"
+      ]
+    },
+    {
+      "id": "api-post--api-summer-versions--id-restore",
+      "title": "POST /api/summer/versions/:id/restore - POST /api/summer/versions/:id/restore",
+      "section": "API Reference",
+      "content": " API: /api/summer/versions/:id/restore  POST - Restore (rollback) to a specific version",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "summer",
+        "versions",
+        ":id",
+        "restore",
+        "post",
+        "/api/summer/versions/:id/restore"
+      ]
+    },
+    {
+      "id": "api-get--api-summer-versions--id",
+      "title": "GET /api/summer/versions/:id - GET /api/summer/versions/:id",
+      "section": "API Reference",
+      "content": " API: /api/summer/versions/:id  GET - Get version details",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "summer",
+        "versions",
+        ":id",
+        "get",
+        "/api/summer/versions/:id"
+      ]
+    },
+    {
+      "id": "api-post--api-traces-compare",
+      "title": "POST /api/traces/compare - POST /api/traces/compare",
+      "section": "API Reference",
+      "content": " GET /api/traces/compare - Compare traces via query params  Query Parameters: - a: First trace ID - b: Second trace ID",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "traces",
+        "compare",
+        "post",
+        "/api/traces/compare"
+      ]
+    },
+    {
+      "id": "api-get--api-traces-compare",
+      "title": "GET /api/traces/compare - GET /api/traces/compare",
+      "section": "API Reference",
+      "content": " GET /api/traces/compare - Compare traces via query params  Query Parameters: - a: First trace ID - b: Second trace ID",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "traces",
+        "compare",
+        "get",
+        "/api/traces/compare"
+      ]
+    },
+    {
+      "id": "api-post--api-traces-replay",
+      "title": "POST /api/traces/replay - POST /api/traces/replay",
+      "section": "API Reference",
+      "content": " POST /api/traces/replay - Replay a trace with the same or modified config  Re-executes a previous query and creates a new trace. Useful for: - A/B testing different configs - Debugging issues - Comparing performance over time  Request Body: - trace_id: The ID of the trace to replay - config_overrides: Optional config overrides for the replay",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "traces",
+        "replay",
+        "post",
+        "/api/traces/replay"
+      ]
+    },
+    {
+      "id": "api-get--api-traces",
+      "title": "GET /api/traces - GET /api/traces",
+      "section": "API Reference",
+      "content": " GET /api/traces - List user's traces  Returns paginated list of traces for the authenticated user. Supports filtering by collection, date range, errors, and search query.  Query Parameters: - limit: Number of traces to return (max 100, default 20) - offset: Pagination offset (default 0) - collection: Filter by collection ID - start_date: Filter by start date (ISO string) - end_date: Filter by end date (ISO string) - has_error: Filter by error presence (true/false) - experiment_id: Filter by experiment ID - search: Search query text - order_by: Sort field (created_at, latency, cost) - order_dir: Sort direction (asc, desc)",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "traces",
+        "get",
+        "/api/traces"
+      ]
+    },
+    {
+      "id": "api-post--api-traces-share",
+      "title": "POST /api/traces/share - POST /api/traces/share",
+      "section": "API Reference",
+      "content": " Generate a short, URL-safe share ID",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "traces",
+        "share",
+        "post",
+        "/api/traces/share"
+      ]
+    },
+    {
+      "id": "api-get--api-traces-shared--shareId",
+      "title": "GET /api/traces/shared/:shareId - GET /api/traces/shared/:shareId",
+      "section": "API Reference",
+      "content": " GET /api/traces/shared/[shareId] - Get a shared trace (public, no auth required)  Returns the trace snapshot if the share link is valid and not expired",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "traces",
+        "shared",
+        ":shareId",
+        "get",
+        "/api/traces/shared/:shareid"
+      ]
+    },
+    {
+      "id": "api-get--api-traces--id",
+      "title": "GET /api/traces/:id - GET /api/traces/:id",
+      "section": "API Reference",
+      "content": " DELETE /api/traces/[id] - Delete a trace",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "traces",
+        ":id",
+        "get",
+        "/api/traces/:id"
+      ]
+    },
+    {
+      "id": "api-delete--api-traces--id",
+      "title": "DELETE /api/traces/:id - DELETE /api/traces/:id",
+      "section": "API Reference",
+      "content": " DELETE /api/traces/[id] - Delete a trace",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "traces",
+        ":id",
+        "delete",
+        "/api/traces/:id"
+      ]
+    },
+    {
+      "id": "api-post--api-winter-forget",
+      "title": "POST /api/winter/forget - POST /api/winter/forget",
+      "section": "API Reference",
+      "content": "Endpoint for /api/winter/forget",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "winter",
+        "forget",
+        "post",
+        "/api/winter/forget"
+      ]
+    },
+    {
+      "id": "api-get--api-winter-rtbf-audit",
+      "title": "GET /api/winter/rtbf/audit - GET /api/winter/rtbf/audit",
+      "section": "API Reference",
+      "content": " GET /api/winter/rtbf/audit  Query RTBF audit logs for compliance reporting.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "winter",
+        "rtbf",
+        "audit",
+        "get",
+        "/api/winter/rtbf/audit"
+      ]
+    },
+    {
+      "id": "api-post--api-winter-rtbf-request",
+      "title": "POST /api/winter/rtbf/request - POST /api/winter/rtbf/request",
+      "section": "API Reference",
+      "content": " POST /api/winter/rtbf/request  Create a new RTBF (Right to Be Forgotten) erasure request. GDPR Article 17 compliant data deletion.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "winter",
+        "rtbf",
+        "request",
+        "post",
+        "/api/winter/rtbf/request"
+      ]
+    },
+    {
+      "id": "api-delete--api-winter-rtbf",
+      "title": "DELETE /api/winter/rtbf - DELETE /api/winter/rtbf",
+      "section": "API Reference",
+      "content": " GET /api/winter/rtbf  List RTBF requests for the authenticated user.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "delete",
+        "api",
+        "winter",
+        "rtbf",
+        "delete",
+        "/api/winter/rtbf"
+      ]
+    },
+    {
+      "id": "api-get--api-winter-rtbf",
+      "title": "GET /api/winter/rtbf - GET /api/winter/rtbf",
+      "section": "API Reference",
+      "content": " GET /api/winter/rtbf  List RTBF requests for the authenticated user.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "winter",
+        "rtbf",
+        "get",
+        "/api/winter/rtbf"
+      ]
+    },
+    {
+      "id": "api-post--api-winter-rtbf--requestId-execute",
+      "title": "POST /api/winter/rtbf/:requestId/execute - POST /api/winter/rtbf/:requestId/execute",
+      "section": "API Reference",
+      "content": " POST /api/winter/rtbf/[requestId]/execute  Execute an RTBF erasure request. This performs the actual data deletion.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "post",
+        "api",
+        "winter",
+        "rtbf",
+        ":requestId",
+        "execute",
+        "post",
+        "/api/winter/rtbf/:requestid/execute"
+      ]
+    },
+    {
+      "id": "api-get--api-winter-rtbf--requestId",
+      "title": "GET /api/winter/rtbf/:requestId - GET /api/winter/rtbf/:requestId",
+      "section": "API Reference",
+      "content": " GET /api/winter/rtbf/[requestId]  Get status of an RTBF erasure request.",
+      "url": "/docs/api-reference",
+      "keywords": [
+        "get",
+        "api",
+        "winter",
+        "rtbf",
+        ":requestId",
+        "get",
+        "/api/winter/rtbf/:requestid"
+      ]
     }
   ]
 }

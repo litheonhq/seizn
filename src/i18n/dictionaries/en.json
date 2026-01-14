@@ -54,34 +54,36 @@
       "period": "Forever free",
       "features": [
         "10,000 memories",
-        "1,000 API calls/mo",
+        "1,000 API calls/day",
         "Community support"
       ],
       "cta": "Get Started"
     },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "per month",
       "features": [
-        "50,000 memories",
-        "10,000 API calls/mo",
+        "100,000 memories",
+        "10,000 API calls/day",
         "Email support",
-        "Basic analytics"
+        "Analytics dashboard",
+        "Webhooks"
       ],
       "cta": "Subscribe"
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "per month",
       "badge": "Popular",
       "features": [
-        "200,000 memories",
-        "50,000 API calls/mo",
+        "1,000,000 memories",
+        "100,000 API calls/day",
         "Priority support",
         "Advanced analytics",
-        "Webhooks"
+        "Webhooks",
+        "Federated search"
       ],
       "cta": "Subscribe"
     },
@@ -93,6 +95,7 @@
         "Unlimited memories",
         "Unlimited API calls",
         "Dedicated support",
+        "SSO / SAML",
         "Custom SLA",
         "On-premise option"
       ],
@@ -205,6 +208,34 @@
       "apiCalls": "API Calls Today",
       "plan": "Current Plan",
       "unlimited": "Unlimited"
+    },
+    "onboarding": {
+      "title": "Get Started with Seizn",
+      "progress": "{completed}/{total} steps completed",
+      "dismiss": "Dismiss",
+      "doLater": "I'll do this later",
+      "steps": {
+        "apiKey": {
+          "title": "Create API Key",
+          "description": "Generate your first API key to authenticate requests",
+          "action": "Create Key"
+        },
+        "demoQuery": {
+          "title": "Make Your First Query",
+          "description": "Try the demo query or make an API request",
+          "action": "Try Demo"
+        },
+        "viewTrace": {
+          "title": "View a Trace",
+          "description": "Understand how search works with full tracing",
+          "action": "View Traces"
+        },
+        "installSdk": {
+          "title": "Install SDK",
+          "description": "Add Seizn to your project with npm or pip",
+          "action": "View SDKs"
+        }
+      }
     },
     "keys": {
       "title": "Your API Keys",
@@ -344,7 +375,145 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "API Usage",
+      "last7days": "Last 7 days",
+      "viewDetails": "View Details",
+      "noUsageData": "No usage data yet"
+    },
+    "evals": {
+      "title": "Evaluations",
+      "subtitle": "A/B test and measure retrieval quality",
+      "newRun": "New Eval Run",
+      "runs": "Evaluation Runs",
+      "noRuns": "No evaluation runs yet",
+      "metrics": "Metrics",
+      "comparison": "Visual Comparison",
+      "selectRun": "Select an evaluation run",
+      "selectRunHint": "Choose a run from the list to view detailed metrics"
+    },
+    "autopilot": {
+      "title": "Autopilot",
+      "subtitle": "AI-powered retrieval optimization",
+      "settings": "Settings",
+      "decisionLogs": "Decision Logs",
+      "operationMode": "Operation Mode",
+      "parameters": "Parameters",
+      "recentDecisions": "Recent Decisions",
+      "noLogs": "No decision logs yet"
+    },
+    "governance": {
+      "title": "Governance",
+      "subtitle": "Manage data policies, retention rules, and compliance settings",
+      "tabs": {
+        "retention": "Data Retention",
+        "access": "Access Control",
+        "pii": "PII Detection",
+        "compliance": "Compliance"
+      },
+      "stats": {
+        "retentionPolicies": "Retention Policies",
+        "accessRules": "Access Rules",
+        "piiRules": "PII Rules Active",
+        "complianceScore": "Compliance Score"
+      }
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Connect Seizn with your favorite tools and frameworks",
+      "searchPlaceholder": "Search integrations...",
+      "stats": {
+        "total": "Total Integrations",
+        "available": "Available",
+        "beta": "In Beta",
+        "comingSoon": "Coming Soon"
+      }
+    },
+    "calculator": {
+      "title": "Usage Calculator",
+      "subtitle": "Estimate your monthly costs based on expected usage",
+      "stats": {
+        "apiCalls": "API Calls",
+        "memories": "Memories",
+        "extractions": "Extractions",
+        "estimated": "Estimated Cost"
+      },
+      "presets": {
+        "title": "Quick Presets",
+        "startup": "Startup",
+        "growing": "Growing",
+        "scale": "Scale",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Customize Usage"
+      },
+      "labels": {
+        "apiCalls": "Monthly API Calls",
+        "memories": "Memories Stored",
+        "extractions": "Extractions"
+      },
+      "recommended": {
+        "title": "Recommended Plan",
+        "base": "Base Price",
+        "overage": "Overage",
+        "cta": "Get Started"
+      },
+      "comparison": {
+        "title": "All Plans",
+        "best": "Best Value"
+      },
+      "details": {
+        "title": "Detailed Pricing Breakdown",
+        "plan": "Plan",
+        "base": "Base Price",
+        "includedCalls": "Included Calls",
+        "overageRate": "Overage Rate",
+        "yourOverage": "Your Overage",
+        "total": "Total"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Configure HTTP callbacks for real-time event notifications",
+      "create": "Create Webhook",
+      "stats": {
+        "total": "Total Webhooks",
+        "active": "Active",
+        "failing": "Failing",
+        "deliveries": "Total Deliveries"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "Recent Deliveries"
+      },
+      "success": "succeeded",
+      "failed": "failed",
+      "lastTriggered": "Last triggered",
+      "edit": "Edit",
+      "delete": "Delete",
+      "retry": "Retry",
+      "deleteConfirm": "Are you sure you want to delete this webhook? This action cannot be undone.",
+      "empty": {
+        "title": "No webhooks configured",
+        "description": "Create a webhook to receive real-time notifications about events.",
+        "cta": "Create Your First Webhook"
+      },
+      "table": {
+        "event": "Event",
+        "status": "Status",
+        "response": "Response",
+        "time": "Time",
+        "actions": "Actions"
+      },
+      "modal": {
+        "title": "Create Webhook",
+        "name": "Name",
+        "url": "Endpoint URL",
+        "events": "Events to Subscribe",
+        "cancel": "Cancel",
+        "create": "Create Webhook"
+      }
     }
   },
   "pricingPage": {
@@ -562,7 +731,36 @@
     },
     "tabs": {
       "results": "Results",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Cost"
+    },
+    "costPanel": {
+      "calculating": "Calculating costs...",
+      "noCost": "Run a query to see cost breakdown",
+      "costBreakdown": "Cost Breakdown",
+      "component": "Component",
+      "cost": "Cost",
+      "embedding": "Embedding",
+      "vectorSearch": "Vector Search",
+      "rerank": "Rerank",
+      "answerContract": "Answer Contract",
+      "total": "Total Cost",
+      "usage": "Usage",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Out",
+      "queryUnits": "Query Units",
+      "estimatedMonthly": "Estimated Monthly",
+      "basedOn": "Based on",
+      "queriesPerDay": "queries/day"
+    },
+    "errorDisplay": {
+      "error": "Error",
+      "errorCode": "Code",
+      "traceId": "Trace",
+      "hint": "Hint",
+      "tryAgain": "Try Again",
+      "copyTraceId": "Copy trace ID",
+      "copied": "Copied!"
     }
   },
   "docs": {
@@ -821,6 +1019,56 @@
           "category": "securityCompliance",
           "question": "What documentation does my security/legal team need?",
           "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "What SDKs are available?",
+          "answer": "We provide official SDKs for TypeScript/JavaScript (npm install @seizn/sdk), Python (pip install seizn), and REST API for any language. All SDKs include TypeScript types, automatic retries, and streaming support."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "What's the typical integration timeline?",
+          "answer": "Basic integration (store/search memories) takes 1-2 hours. Adding extraction takes another 2-4 hours. Full production deployment with governance policies typically takes 1-2 weeks including testing and security review."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "How do I handle multi-language content?",
+          "answer": "Seizn's embeddings support 100+ languages. Store content in any language and search will work cross-lingually. For best results, keep a 'language' metadata field and filter by it when you want language-specific results."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Can I combine semantic search with keyword filtering?",
+          "answer": "Yes. Use the 'filters' parameter to narrow by metadata (namespace, scope, memory_type, custom fields) before semantic ranking. This hybrid approach gives you both precision and recall."
+        },
+        {
+          "category": "extraction",
+          "question": "How do I handle extraction failures?",
+          "answer": "Check the 'status' field in the response. If extraction fails: 1) Verify input format is correct, 2) Check if content is too short (<50 chars often fails), 3) Try a different model. Set up retry logic with exponential backoff for transient errors."
+        },
+        {
+          "category": "extraction",
+          "question": "Can I customize what gets extracted?",
+          "answer": "Yes. Use the 'extraction_prompt' parameter to guide the model. You can specify: which memory types to extract, minimum importance threshold, specific fields to look for, and custom output schema."
+        },
+        {
+          "category": "operations",
+          "question": "How do I migrate from another memory/RAG system?",
+          "answer": "Export your existing data to JSON with fields: content, metadata, created_at. Use our bulk import API (POST /api/memories/bulk) with batches of 100-500 items. Run a parallel validation query set to ensure quality matches."
+        },
+        {
+          "category": "operations",
+          "question": "What's the recommended backup strategy?",
+          "answer": "Use the export API (GET /api/memories/export) to create periodic backups. Schedule daily exports for critical namespaces. Store exports in your own object storage (S3, GCS) with versioning enabled."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Is Seizn SOC 2 compliant?",
+          "answer": "Yes, Seizn maintains SOC 2 Type II compliance. We also support GDPR data residency requirements with EU region deployment. Request our security questionnaire or SOC 2 report through your account dashboard."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "How do I implement user data deletion for GDPR/CCPA?",
+          "answer": "Use DELETE /api/memories with user_id filter to remove all memories for a user. Enable audit logging to prove deletion. Set retention policies to auto-delete after a period. Export user data with GET /api/memories/export?user_id=xxx for data portability requests."
         }
       ]
     },
@@ -929,26 +1177,26 @@
           "time": "30 sec",
           "description": "Install the Seizn SDK using your preferred package manager."
         },
-        "saveMemory": {
-          "title": "Save a Memory",
-          "time": "2 min",
-          "description": "Store information that your AI can recall later."
+        "ingest": {
+          "title": "Ingest Documents",
+          "time": "30 sec",
+          "description": "Upload documents to your dataset for retrieval."
         },
-        "searchMemory": {
-          "title": "Search Memories",
-          "time": "2 min",
-          "description": "Retrieve relevant memories using natural language search."
+        "query": {
+          "title": "Run Your First Query",
+          "time": "10 sec",
+          "description": "Search your documents with a natural language query."
         }
       },
       "completion": {
         "title": "Congratulations!",
-        "description": "You've completed the quickstart. Your AI now has persistent memory.",
+        "description": "You've completed the quickstart. Your retrieval pipeline is ready with built-in tracing.",
         "readDocs": "Read the Docs",
         "goToDashboard": "Go to Dashboard"
       },
       "expectedOutput": {
         "title": "Expected Output",
-        "description": "When you search for memories, you'll receive a response like this:"
+        "description": "Each query returns results, trace, and cost breakdown:"
       },
       "nextSteps": {
         "apiReference": {

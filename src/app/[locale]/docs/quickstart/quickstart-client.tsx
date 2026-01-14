@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Dictionary = Record<string, unknown>;
 
@@ -87,62 +88,79 @@ export function QuickstartClient({ locale, dictionary }: Props) {
       description: t("docs.quickstartPage.steps.install.description"),
       code: {
         tabs: [
-          { lang: "npm", code: "npm install seizn" },
-          { lang: "yarn", code: "yarn add seizn" },
-          { lang: "pnpm", code: "pnpm add seizn" },
+          { lang: "npm", code: "npm install @seizn/sdk" },
+          { lang: "yarn", code: "yarn add @seizn/sdk" },
+          { lang: "pnpm", code: "pnpm add @seizn/sdk" },
         ],
       },
     },
     {
-      title: t("docs.quickstartPage.steps.saveMemory.title"),
-      time: t("docs.quickstartPage.steps.saveMemory.time"),
-      description: t("docs.quickstartPage.steps.saveMemory.description"),
+      title: t("docs.quickstartPage.steps.ingest.title") || "Ingest Documents",
+      time: t("docs.quickstartPage.steps.ingest.time") || "30 sec",
+      description: t("docs.quickstartPage.steps.ingest.description") || "Upload documents to your dataset for retrieval",
       code: {
         tabs: [
           {
             lang: "TypeScript",
-            code: `import { Seizn } from 'seizn';
+            code: `import { Seizn } from '@seizn/sdk';
 
 const seizn = new Seizn({ apiKey: process.env.SEIZN_API_KEY });
 
-// Save a memory
-await seizn.add({
-  content: "User prefers dark mode and minimal UI",
-  type: "preference",
-  tags: ["settings", "ui"]
+// Ingest documents
+await seizn.ingest({
+  dataset: "my-docs",
+  documents: [
+    { id: "doc-1", content: "Authentication best practices..." },
+    { id: "doc-2", content: "OAuth 2.0 implementation guide..." }
+  ]
 });`,
           },
           {
             lang: "curl",
-            code: `curl -X POST https://seizn.com/api/memories \\
-  -H "x-api-key: YOUR_API_KEY" \\
+            code: `curl -X POST https://api.seizn.com/v1/ingest \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
-  -d '{"content": "User prefers dark mode"}'`,
+  -d '{
+    "dataset": "my-docs",
+    "documents": [
+      {"id": "doc-1", "content": "Authentication best practices..."}
+    ]
+  }'`,
           },
         ],
       },
     },
     {
-      title: t("docs.quickstartPage.steps.searchMemory.title"),
-      time: t("docs.quickstartPage.steps.searchMemory.time"),
-      description: t("docs.quickstartPage.steps.searchMemory.description"),
+      title: t("docs.quickstartPage.steps.query.title") || "Run Your First Query",
+      time: t("docs.quickstartPage.steps.query.time") || "10 sec",
+      description: t("docs.quickstartPage.steps.query.description") || "Search your documents with a natural language query",
       code: {
         tabs: [
           {
             lang: "TypeScript",
-            code: `// Search memories
-const results = await seizn.search({
-  query: "What are the user's UI preferences?",
-  limit: 5
+            code: `// Search with built-in tracing
+const response = await seizn.query({
+  dataset: "my-docs",
+  query: "How do I implement secure authentication?",
+  topK: 5,
+  rerank: true,      // Cross-encoder reranking
+  hybridSearch: true // Vector + keyword fusion
 });
 
-console.log(results);
-// [{ content: "User prefers dark mode...", similarity: 0.92 }]`,
+console.log(response.results);
+// Returns: results + trace + cost breakdown`,
           },
           {
             lang: "curl",
-            code: `curl "https://seizn.com/api/memories?query=UI+preferences" \\
-  -H "x-api-key: YOUR_API_KEY"`,
+            code: `curl -X POST https://api.seizn.com/v1/query \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "dataset": "my-docs",
+    "query": "How do I implement secure authentication?",
+    "topK": 5,
+    "rerank": true
+  }'`,
           },
         ],
       },
@@ -153,16 +171,21 @@ console.log(results);
   const currentYear = new Date().getFullYear();
 
   // Full 10-line example code
-  const fullExampleCode = `import { Seizn } from 'seizn';
+  const fullExampleCode = `import { Seizn } from '@seizn/sdk';
 
 const seizn = new Seizn({ apiKey: process.env.SEIZN_API_KEY });
 
-// Save
-await seizn.add({ content: "User prefers dark mode", type: "preference" });
+// Query with automatic tracing
+const response = await seizn.query({
+  dataset: "my-docs",
+  query: "How do I implement authentication?",
+  topK: 5,
+  rerank: true
+});
 
-// Search
-const results = await seizn.search({ query: "user preferences" });
-console.log(results);`;
+console.log(response.results); // Results
+console.log(response.trace);   // Pipeline trace
+console.log(response.cost);    // Cost breakdown`;
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -180,12 +203,15 @@ console.log(results);`;
             <span className="text-zinc-600">/</span>
             <span className="text-white">Quickstart</span>
           </div>
-          <Link
-            href="/dashboard/keys"
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-sm"
-          >
-            {t("docs.quickstartPage.getApiKey")}
-          </Link>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher currentLocale={locale} />
+            <Link
+              href="/dashboard/keys"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-sm"
+            >
+              {t("docs.quickstartPage.getApiKey")}
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -390,17 +416,24 @@ console.log(results);`;
             <p className="text-zinc-400 mb-4">{t("docs.quickstartPage.expectedOutput.description")}</p>
             <pre className="bg-zinc-800 rounded-lg p-4 overflow-x-auto">
               <code className="text-sm text-zinc-300">{`{
-  "success": true,
   "results": [
     {
-      "id": "mem_abc123",
-      "content": "User prefers dark mode and minimal UI",
-      "memory_type": "preference",
-      "similarity": 0.92,
-      "created_at": "2026-01-13T10:30:00Z"
+      "id": "doc-1",
+      "content": "Authentication best practices: Use JWT tokens...",
+      "score": 0.92,
+      "rerankScore": 0.95,
+      "metadata": { "source": "docs", "section": "security" }
     }
   ],
-  "count": 1
+  "trace": {
+    "totalLatencyMs": 347,
+    "steps": [
+      { "name": "Embedding", "latencyMs": 45, "model": "voyage-3" },
+      { "name": "Vector Search", "latencyMs": 53 },
+      { "name": "Rerank", "latencyMs": 170, "model": "rerank-v3.5" }
+    ]
+  },
+  "cost": { "total": 0.0023, "embedding": 0.0001, "rerank": 0.0018 }
 }`}</code>
             </pre>
           </div>

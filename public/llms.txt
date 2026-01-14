@@ -18,10 +18,10 @@ Seizn provides persistent memory APIs for AI applications. Store, search, extrac
 
 ## Documentation
 - Overview: https://seizn.com/docs
-- Quick Start: https://seizn.com/docs#quickstart
-- API Reference: https://seizn.com/docs#endpoints
+- Quick Start: https://seizn.com/docs/quickstart
+- API Reference: https://seizn.com/docs/api-reference
 - FAQ: https://seizn.com/docs/faq
-- Security: https://seizn.com/docs#security
+- Pricing: https://seizn.com/pricing
 
 ## API
 - Base URL: https://seizn.com/api
@@ -34,10 +34,16 @@ Seizn provides persistent memory APIs for AI applications. Store, search, extrac
 - DELETE /api/memories - Delete memories by ID
 - POST /api/extract - Extract memories from conversation
 - POST /api/query - Query with memory-augmented response
+- POST /api/summer/search - Hybrid search with reranking
+- POST /api/summer/retrieve - Retrieve by document ID
+- POST /api/rerank - Domain-aware reranking
+- POST /api/winter/forget - GDPR right-to-be-forgotten
 
 ## SDKs
-- JavaScript/TypeScript: https://www.npmjs.com/package/seizn
-- Python: https://pypi.org/project/seizn
+- JavaScript/TypeScript: npm install @seizn/sdk
+- Python: pip install seizn
+- NPM: https://www.npmjs.com/package/@seizn/sdk
+- PyPI: https://pypi.org/project/seizn
 
 ## Key Concepts
 - **namespace**: Isolate memories by project/tenant/environment
@@ -45,14 +51,39 @@ Seizn provides persistent memory APIs for AI applications. Store, search, extrac
 - **memory_type**: fact | preference | instruction | relationship | experience
 - **threshold**: 0-1 similarity cutoff for search (default: 0.7)
 
-## Security
+## Security & Compliance
 - AES-256 encryption at rest
 - TLS 1.3 encryption in transit
 - Tenant isolation via Row Level Security
 - API key rotation and expiration
 - Audit logging for compliance
+- SOC 2 Type II certified
+- GDPR compliant
+- CCPA compliant
+
+## Pricing
+- Free: 1,000 API calls/month, 100 memories
+- Pro: $29/month - 50,000 calls, 5,000 memories
+- Team: $99/month - 200,000 calls, 25,000 memories
+- Enterprise: Custom pricing, unlimited usage
+- Calculator: https://seizn.com/dashboard/calculator
+
+## Integrations
+Seizn works with:
+- LangChain
+- LlamaIndex
+- Vercel AI SDK
+- OpenAI GPT-4
+- Anthropic Claude
+- Google Gemini
+- Azure OpenAI
+- Pinecone
+- Weaviate
+- Supabase
+- PostgreSQL
 
 ## Contact
 - Website: https://seizn.com
 - Dashboard: https://seizn.com/dashboard
 - Support: support@seizn.com
+- Status: https://seizn.com/status
