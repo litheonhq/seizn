@@ -4,6 +4,34 @@ import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { createServerClient } from './supabase';
 
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
+async function verifyTurnstileToken(token: string): Promise<boolean> {
+  if (!TURNSTILE_SECRET_KEY) {
+    // Skip verification if not configured (development)
+    return true;
+  }
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('secret', TURNSTILE_SECRET_KEY);
+    formData.append('response', token);
+
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error('Turnstile verification error:', error);
+    return false;
+  }
+}
+
 const useSecureCookies = process.env.NODE_ENV === 'production';
 const cookiePrefix = useSecureCookies ? '__Secure-' : '';
 
@@ -52,10 +80,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        turnstileToken: { label: 'Turnstile Token', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
+        }
+
+        // Verify Turnstile CAPTCHA if configured and token provided
+        if (TURNSTILE_SECRET_KEY && credentials.turnstileToken) {
+          const isValidCaptcha = await verifyTurnstileToken(credentials.turnstileToken as string);
+          if (!isValidCaptcha) {
+            throw new Error('CAPTCHA verification failed');
+          }
         }
 
         const supabase = createServerClient();

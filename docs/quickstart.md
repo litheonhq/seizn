@@ -1,148 +1,152 @@
-# Seizn - 5분 Quickstart
+# Seizn - 5-Minute Quickstart
 
-AI 애플리케이션을 위한 메모리 레이어. 5분 안에 시작하세요.
+Semantic memory layer for AI applications. Get started in 5 minutes.
 
-## 설치
+## Installation
+
+### JavaScript/TypeScript
 
 ```bash
-# Node.js
-npm install @seizn/memory-sdk
+# Memory Layer (Spring)
+npm install @seizn/spring
 
-# Python
+# RAG/Document Search (Summer)
+npm install @seizn/summer
+```
+
+### Python
+
+```bash
 pip install seizn
 ```
 
-## API 키 설정
+## Get API Key
+
+1. Sign up at [seizn.com/signup](https://seizn.com/signup)
+2. Copy your API key from the dashboard
+3. Set as environment variable:
 
 ```bash
-# 환경변수 (권장)
+# Linux/Mac
 export SEIZN_API_KEY=szn_your_api_key
 
-# Windows
+# Windows (PowerShell)
+$env:SEIZN_API_KEY="szn_your_api_key"
+
+# Windows (CMD)
 set SEIZN_API_KEY=szn_your_api_key
 ```
 
-## 첫 메모리 저장
+## Quick Start
+
+### TypeScript (Spring SDK)
+
+```typescript
+import { SpringClient } from '@seizn/spring';
+
+const client = new SpringClient({
+  apiKey: process.env.SEIZN_API_KEY!,
+});
+
+// Add a memory
+await client.add({
+  content: 'User prefers dark mode and quiet notifications',
+  userId: 'user123',
+});
+
+// Search memories
+const results = await client.search({
+  query: 'user preferences',
+  userId: 'user123',
+});
+
+results.forEach(r => console.log(`${r.score}: ${r.content}`));
+```
+
+### Python (seizn SDK)
+
+```python
+from seizn import SeizClient
+
+client = SeizClient(api_key="szn_your_api_key")
+
+# Add a memory
+memory = client.add(
+    "User prefers dark mode and quiet notifications",
+    user_id="user123"
+)
+
+# Search memories
+results = client.search("user preferences", user_id="user123")
+for r in results:
+    print(f"{r.score:.2f}: {r.content}")
+```
+
+## Extract Memories from Conversations
 
 ### TypeScript
 
 ```typescript
-import { SeiznClient } from '@seizn/memory-sdk';
+const messages = [
+  { role: 'user', content: 'I love hiking in the mountains' },
+  { role: 'assistant', content: 'Great! Do you have a favorite trail?' },
+  { role: 'user', content: 'Yes, I really enjoy the Pacific Crest Trail' },
+];
 
-const seizn = new SeiznClient({
-  apiKey: process.env.SEIZN_API_KEY!,
-});
-
-// 간단하게
-await seizn.save('사용자가 한국어를 선호함');
-
-// 상세하게
-await seizn.save({
-  content: '다크 모드와 컴팩트 레이아웃을 선호함',
-  memoryType: 'preference',
-  tags: ['ui', 'settings'],
+const memories = await client.addMessages({
+  messages,
+  userId: 'user123',
 });
 ```
 
 ### Python
 
 ```python
-from seizn import SeiznClient
+from seizn import MemoryMessage
 
-seizn = SeiznClient(api_key="szn_your_api_key")
+messages = [
+    MemoryMessage(role="user", content="I love hiking in the mountains"),
+    MemoryMessage(role="assistant", content="Great! Do you have a favorite trail?"),
+    MemoryMessage(role="user", content="Yes, I really enjoy the Pacific Crest Trail"),
+]
 
-# 간단하게
-seizn.save("사용자가 한국어를 선호함")
-
-# 상세하게
-seizn.save(
-    content="다크 모드와 컴팩트 레이아웃을 선호함",
-    memory_type="preference",
-    tags=["ui", "settings"]
-)
+memories = client.add_messages(messages, user_id="user123")
 ```
 
-## 메모리 검색
+## Core Features
 
-### TypeScript
+| Feature | Description |
+|---------|-------------|
+| **Semantic Search** | Find relevant memories using natural language |
+| **Auto-extraction** | Automatically extract memories from conversations |
+| **Multi-tenant** | Organize by user_id, agent_id, or namespace |
+| **Metadata** | Attach custom metadata to memories |
 
-```typescript
-// 간단하게
-const memories = await seizn.search('사용자 선호');
+## Memory Types
 
-// 상세하게
-const memories = await seizn.search({
-  query: 'UI 설정',
-  limit: 5,
-  threshold: 0.7,
-});
+| Type | Use Case |
+|------|----------|
+| `fact` | Objective information |
+| `preference` | User preferences |
+| `experience` | Events, experiences |
+| `instruction` | Rules, directives |
 
-memories.forEach(m => console.log(m.content));
-```
+## SDKs
 
-### Python
+| Package | Platform | Purpose |
+|---------|----------|---------|
+| `@seizn/spring` | npm | Memory Layer |
+| `@seizn/summer` | npm | RAG/Document Search |
+| `seizn` | PyPI | Python SDK (Memory) |
 
-```python
-# 간단하게
-memories = seizn.search("사용자 선호")
+## Next Steps
 
-# 상세하게
-memories = seizn.search(
-    query="UI 설정",
-    limit=5,
-    threshold=0.7
-)
+- [Spring SDK Guide](./spring-sdk-quickstart.md) - Detailed memory management
+- [Summer SDK Guide](./summer-sdk-quickstart.md) - Document search & RAG
+- [API Reference](./openapi.yaml) - Full API documentation
+- [Dashboard](https://seizn.com/dashboard) - Manage API keys & usage
 
-for m in memories:
-    print(m.content)
-```
+## Support
 
-## 메모리 타입
-
-| Type | 용도 |
-|------|------|
-| `fact` | 객관적 사실 (기본값) |
-| `preference` | 사용자 선호 |
-| `experience` | 경험, 이벤트 |
-| `instruction` | 규칙, 지시사항 |
-| `conversation` | 대화 컨텍스트 |
-
-## 전체 예제
-
-```typescript
-import { SeiznClient } from '@seizn/memory-sdk';
-
-const seizn = new SeiznClient({
-  apiKey: process.env.SEIZN_API_KEY!,
-  namespace: 'my-app',
-});
-
-// 저장
-await seizn.save({
-  content: '프로젝트 마감일: 2025년 3월 15일',
-  memoryType: 'fact',
-  tags: ['project', 'deadline'],
-});
-
-// 검색
-const results = await seizn.search({
-  query: '프로젝트 일정',
-  limit: 10,
-});
-
-// 삭제
-await seizn.delete(results[0].id);
-```
-
-## 다음 단계
-
-- [Spring SDK (Memory Layer)](./spring-sdk-quickstart.md) - 상세 메모리 관리
-- [Summer SDK (RAG)](./summer-sdk-quickstart.md) - 문서 검색 및 RAG
-- [API Reference](./openapi.yaml) - 전체 API 문서
-- [Dashboard](https://seizn.com/dashboard) - API 키 발급
-
-## 지원
-
-- Docs: https://docs.seizn.com
-- GitHub: https://github.com/seizn/sdk/issues
-- Discord: https://discord.gg/seizn
+- Docs: [docs.seizn.com](https://docs.seizn.com)
+- GitHub: [github.com/iruhana/seizn](https://github.com/iruhana/seizn)

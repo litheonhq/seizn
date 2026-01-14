@@ -1,0 +1,93 @@
+{
+  "name": "@seizn/langchain",
+  "version": "0.1.0",
+  "description": "LangChain adapter for Seizn AI Infrastructure",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./retriever": {
+      "types": "./dist/retriever.d.ts",
+      "import": "./dist/retriever.mjs",
+      "require": "./dist/retriever.js"
+    },
+    "./callbacks": {
+      "types": "./dist/callbacks.d.ts",
+      "import": "./dist/callbacks.mjs",
+      "require": "./dist/callbacks.js"
+    },
+    "./memory": {
+      "types": "./dist/memory.d.ts",
+      "import": "./dist/memory.mjs",
+      "require": "./dist/memory.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts --format cjs,esm --dts --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "langchain",
+    "ai",
+    "rag",
+    "retrieval",
+    "llm",
+    "embeddings",
+    "vector-search",
+    "citations",
+    "traceability",
+    "callbacks",
+    "memory"
+  ],
+  "author": "Seizn <support@seizn.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seizn/seizn-sdk.git",
+    "directory": "packages/langchain"
+  },
+  "homepage": "https://seizn.com/docs/sdk/langchain",
+  "bugs": {
+    "url": "https://github.com/seizn/seizn-sdk/issues"
+  },
+  "peerDependencies": {
+    "@langchain/core": ">=0.2.0",
+    "langchain": ">=0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "langchain": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@seizn/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@langchain/core": "^0.2.0",
+    "@types/node": "^20.0.0",
+    "langchain": "^0.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

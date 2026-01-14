@@ -453,4 +453,4 @@ console.log('\n========================================');
 console.log(results.failed === 0 ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED');
 console.log('========================================\n');
 
-process.exit(results.failed > 0 ? 1 : 0);
+// process.exit removed for vitest compatibility

@@ -4,11 +4,44 @@ import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { welcomeEmail } from '@/lib/email/templates';
 
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
+/**
+ * Verify Cloudflare Turnstile token
+ */
+async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean> {
+  if (!TURNSTILE_SECRET_KEY) {
+    // Skip verification if not configured (development)
+    console.warn('TURNSTILE_SECRET_KEY not configured, skipping CAPTCHA verification');
+    return true;
+  }
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('secret', TURNSTILE_SECRET_KEY);
+    formData.append('response', token);
+    if (ip) formData.append('remoteip', ip);
+
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error('Turnstile verification error:', error);
+    return false;
+  }
+}
+
 // POST /api/auth/signup - Create a new user account
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, name } = body;
+    const { email, password, name, turnstileToken } = body;
 
     // Validate input
     if (!email || !password) {
@@ -31,6 +64,19 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid email address' },
         { status: 400 }
       );
+    }
+
+    // Verify Turnstile CAPTCHA (if configured)
+    if (TURNSTILE_SECRET_KEY && turnstileToken) {
+      const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
+                 request.headers.get('x-real-ip') || undefined;
+      const isValidCaptcha = await verifyTurnstileToken(turnstileToken, ip);
+      if (!isValidCaptcha) {
+        return NextResponse.json(
+          { error: 'CAPTCHA verification failed. Please try again.' },
+          { status: 400 }
+        );
+      }
     }
 
     const supabase = createServerClient();

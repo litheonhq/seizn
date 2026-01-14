@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Turnstile from "@/components/auth/Turnstile";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -19,6 +20,15 @@ export default function SignupForm() {
   const [success, setSuccess] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +51,7 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password, name, turnstileToken }),
       });
 
       const data = await res.json();
@@ -283,6 +293,18 @@ export default function SignupForm() {
                     placeholder="Confirm your password"
                   />
                 </div>
+
+                {/* Cloudflare Turnstile CAPTCHA */}
+                {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+                  <div className="flex justify-center">
+                    <Turnstile
+                      onVerify={handleTurnstileVerify}
+                      onExpire={handleTurnstileExpire}
+                      theme="light"
+                      size="normal"
+                    />
+                  </div>
+                )}
 
                 <button
                   type="submit"

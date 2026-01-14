@@ -10,6 +10,14 @@ import {
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
+import {
+  getCachedQueryResults,
+  setCachedQueryResults,
+  incrementMemoryVersion,
+  type CachedMemory,
+} from '@/lib/memory/query-cache';
+import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
+import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import type { AddMemoryRequest } from '@/types/database';
 
 // POST /api/memories - Add a new memory
@@ -17,7 +25,6 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Authenticate and check usage limits
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
@@ -35,11 +42,8 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
-
-    // Create embedding for the memory content
     const embedding = await createEmbedding(body.content);
 
-    // Insert memory
     const { data: memory, error: insertError } = await supabase
       .from('memories')
       .insert({
@@ -68,11 +72,13 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('insert_memory');
     }
 
-    // Log successful request
+    // Invalidate cache for this namespace
+    incrementMemoryVersion(userId, body.namespace || 'default').catch(console.error);
+
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
       200,
-      { embedding: body.content.length } // Approximate token count
+      { embedding: body.content.length }
     );
 
     return NextResponse.json({
@@ -86,12 +92,11 @@ export async function POST(request: NextRequest) {
 }
 
 // GET /api/memories - Search memories
-// Supports: mode=vector (default), mode=hybrid, mode=keyword
+// Supports: mode=auto (default), mode=vector, mode=hybrid, mode=keyword, mode=slot
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Authenticate and check usage limits
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
@@ -109,52 +114,144 @@ export async function GET(request: NextRequest) {
       return ValidationErrors.missingField('query');
     }
 
-    // Parse search parameters
     const limit = parseInt(searchParams.get('limit') || '10');
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
-    const namespace = searchParams.get('namespace') || null;
-    const mode = searchParams.get('mode') || 'vector'; // vector, hybrid, keyword
+    const namespace = searchParams.get('namespace') || 'default';
+    const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
 
+    // Auto router: determine best search strategy
+    let actualMode: Exclude<SearchMode, 'auto'>;
+    let routerDecision = null;
+
+    if (requestedMode === 'auto') {
+      routerDecision = routeQuery(query);
+      actualMode = routerDecision.strategy;
+    } else {
+      actualMode = requestedMode as Exclude<SearchMode, 'auto'>;
+    }
+
+    // Handle slot lookups (O(1) deterministic)
+    if (actualMode === 'slot') {
+      const slotKey = detectSlotQuery(query);
+      if (slotKey) {
+        const slotValues = await getSlots(userId, [slotKey], namespace);
+        const slotValue = slotValues.get(slotKey);
+
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+          200,
+          { embedding: 0 }
+        );
+
+        logMemoryAccess(request, userId, keyId, 'read', {
+          memoryId: `slot:${slotKey}`,
+          query,
+        }).catch(console.error);
+
+        if (slotValue) {
+          return NextResponse.json({
+            success: true,
+            mode: 'slot',
+            requestedMode,
+            results: [
+              {
+                id: `slot:${slotKey}`,
+                content: slotValue,
+                memory_type: 'fact',
+                slot_key: slotKey,
+                similarity: 1.0,
+              },
+            ],
+            count: 1,
+            cached: false,
+            slot: { key: slotKey, value: slotValue },
+            routerDecision: routerDecision
+              ? {
+                  strategy: routerDecision.strategy,
+                  confidence: routerDecision.confidence,
+                  reason: routerDecision.reason,
+                }
+              : null,
+          });
+        }
+
+        // Slot not found, fall back to keyword search
+        actualMode = 'keyword';
+      } else {
+        // No slot key detected, fall back to keyword
+        actualMode = 'keyword';
+      }
+    }
+
+    // Check query cache first
+    const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
+    if (cacheResult.hit && cacheResult.results.length > 0) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+        200,
+        { embedding: 0 }
+      );
+      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
+      logMemoryAccess(request, userId, keyId, 'search', {
+        memoryCount: cacheResult.results.length,
+        query,
+      }).catch(console.error);
+
+      return NextResponse.json({
+        success: true,
+        mode: actualMode,
+        requestedMode,
+        results: cacheResult.results,
+        count: cacheResult.results.length,
+        cached: true,
+        routerDecision: routerDecision
+          ? {
+              strategy: routerDecision.strategy,
+              confidence: routerDecision.confidence,
+              reason: routerDecision.reason,
+            }
+          : null,
+      });
+    }
+
+    // Cache miss - perform search
     const supabase = createServerClient();
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
     let searchError: Error | null = null;
+    const nsParam = namespace === 'default' ? null : namespace;
 
-    if (mode === 'keyword') {
-      // Keyword-only search (no embedding needed)
+    if (actualMode === 'keyword') {
       const { data, error } = await supabase.rpc('keyword_search_memories', {
         query_text: query,
         match_user_id: userId,
         match_count: limit,
-        match_namespace: namespace,
+        match_namespace: nsParam,
       });
       results = data;
       searchError = error;
-    } else if (mode === 'hybrid') {
-      // Hybrid search (keyword + vector)
+    } else if (actualMode === 'hybrid') {
       const queryEmbedding = await createQueryEmbedding(query);
       const { data, error } = await supabase.rpc('hybrid_search_memories', {
         query_text: query,
         query_embedding: queryEmbedding,
         match_user_id: userId,
         match_count: limit,
-        match_threshold: threshold,
-        match_namespace: namespace,
+        match_threshold: routerDecision?.suggestedParams.threshold || threshold,
+        match_namespace: nsParam,
         keyword_weight: 0.3,
         vector_weight: 0.7,
       });
       results = data;
       searchError = error;
     } else {
-      // Default: vector-only search
       const queryEmbedding = await createQueryEmbedding(query);
       const { data, error } = await supabase.rpc('search_memories', {
         query_embedding: queryEmbedding,
         match_user_id: userId,
         match_count: limit,
-        match_threshold: threshold,
-        match_namespace: namespace,
+        match_threshold: routerDecision?.suggestedParams.threshold || threshold,
+        match_namespace: nsParam,
       });
       results = data;
       searchError = error;
@@ -169,21 +266,33 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
-    // Log successful request
+    // Cache results for future queries
+    if (results && results.length > 0) {
+      const cacheableResults: CachedMemory[] = results.map((r) => ({
+        id: r.id,
+        content: r.content,
+        memory_type: r.memory_type,
+        importance: r.importance || 5,
+        similarity: r.similarity,
+        rrf_score: r.rrf_score,
+      }));
+      setCachedQueryResults(userId, query, namespace, actualMode, cacheableResults).catch(
+        console.error
+      );
+    }
+
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
       200,
-      { embedding: mode !== 'keyword' ? query.length : 0 }
+      { embedding: actualMode !== 'keyword' ? query.length : 0 }
     );
 
-    // Track access for returned memories (background, non-blocking)
     if (results && results.length > 0) {
-      Promise.all(
-        results.map((m: { id: string }) => trackMemoryAccess(m.id))
-      ).catch(console.error);
+      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
+        console.error
+      );
     }
 
-    // Audit log: memory search
     logMemoryAccess(request, userId, keyId, 'search', {
       memoryCount: results?.length || 0,
       query,
@@ -191,9 +300,18 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      mode,
+      mode: actualMode,
+      requestedMode,
       results: results || [],
       count: results?.length || 0,
+      cached: false,
+      routerDecision: routerDecision
+        ? {
+            strategy: routerDecision.strategy,
+            confidence: routerDecision.confidence,
+            reason: routerDecision.reason,
+          }
+        : null,
     });
   } catch (error) {
     console.error('Search memory error:', error);
@@ -206,7 +324,6 @@ export async function DELETE(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Authenticate
     const authResult = await authenticateRequest(request, { skipUsageCheck: true });
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
@@ -220,9 +337,9 @@ export async function DELETE(request: NextRequest) {
       return ValidationErrors.missingField('ids');
     }
 
+    const namespace = searchParams.get('namespace') || 'default';
     const supabase = createServerClient();
 
-    // Soft delete memories (only user's own)
     const { error } = await supabase
       .from('memories')
       .update({ is_deleted: true, deleted_at: new Date().toISOString() })
@@ -237,6 +354,9 @@ export async function DELETE(request: NextRequest) {
       );
       return ServerErrors.database('delete_memories');
     }
+
+    // Invalidate cache
+    incrementMemoryVersion(userId, namespace).catch(console.error);
 
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },

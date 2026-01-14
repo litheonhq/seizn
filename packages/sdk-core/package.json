@@ -1,0 +1,61 @@
+{
+  "name": "@seizn/core",
+  "version": "0.1.0",
+  "description": "Core SDK for Seizn AI Infrastructure - A1 Drop-in Adoption Layer",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "ai",
+    "rag",
+    "retrieval",
+    "llm",
+    "embeddings",
+    "vector-search",
+    "citations",
+    "traceability"
+  ],
+  "author": "Seizn <support@seizn.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seizn/seizn-sdk.git",
+    "directory": "packages/sdk-core"
+  },
+  "homepage": "https://seizn.com/docs/sdk",
+  "bugs": {
+    "url": "https://github.com/seizn/seizn-sdk/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

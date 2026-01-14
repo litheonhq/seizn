@@ -23,6 +23,7 @@ const steps = [
         { lang: "npm", code: "npm install @seizn/spring" },
         { lang: "yarn", code: "yarn add @seizn/spring" },
         { lang: "pnpm", code: "pnpm add @seizn/spring" },
+        { lang: "Python", code: "pip install seizn" },
       ],
     },
   },
@@ -47,6 +48,12 @@ const spring = new SpringClient({
 const spring = new SpringClient({
   apiKey: process.env.SEIZN_API_KEY,
 });`,
+        },
+        {
+          lang: "Python",
+          code: `from seizn import SeizClient
+
+client = SeizClient(api_key="szn_your_api_key")`,
         },
       ],
     },
@@ -73,6 +80,21 @@ await spring.add({
   tags: ["profile", "work"],
 });`,
         },
+        {
+          lang: "Python",
+          code: `# Add a user preference
+client.add(
+    "User prefers dark mode and minimal animations",
+    user_id="user123"
+)
+
+# Add with metadata
+client.add(
+    "User is a senior engineer at TechCorp",
+    user_id="user123",
+    metadata={"category": "profile"}
+)`,
+        },
       ],
     },
   },
@@ -93,6 +115,18 @@ const results = await spring.search({
 
 console.log(results);
 // [{ content: "User prefers dark mode...", similarity: 0.92 }]`,
+        },
+        {
+          lang: "Python",
+          code: `# Search memories
+results = client.search(
+    "What are the user's UI preferences?",
+    user_id="user123",
+    top_k=5
+)
+
+for r in results:
+    print(f"{r.score:.2f}: {r.content}")`,
         },
       ],
     },
@@ -121,6 +155,27 @@ const response = await openai.chat.completions.create({
 });
 
 // AI response will be personalized based on stored memories`,
+        },
+        {
+          lang: "Python",
+          code: `# Get relevant context for AI
+memories = client.search("user preferences", user_id="user123")
+
+# Use with your AI (OpenAI example)
+from openai import OpenAI
+openai = OpenAI()
+
+context = "\\n".join([m.content for m in memories])
+
+response = openai.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": f"You know this about the user:\\n{context}"},
+        {"role": "user", "content": "Recommend a code editor setup"},
+    ],
+)
+
+# AI response will be personalized based on stored memories`,
         },
       ],
     },
