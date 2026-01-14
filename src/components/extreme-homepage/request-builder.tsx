@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export interface RequestConfig {
   query: string;
@@ -32,6 +32,12 @@ export interface RequestBuilderTranslations {
   answerContractDesc?: string;
   running?: string;
   runQuery?: string;
+  estimatedLatency?: string;
+  estimatedCost?: string;
+  p50?: string;
+  p95?: string;
+  perRequest?: string;
+  per1000?: string;
   datasets?: {
     techDocs?: string;
     legalContracts?: string;
@@ -48,11 +54,53 @@ interface RequestBuilderProps {
   translations?: RequestBuilderTranslations;
 }
 
+// Curated example queries that always return results
 const SAMPLE_QUERIES = [
-  "How do I implement authentication with JWT?",
-  "What are the best practices for error handling?",
-  "Explain the difference between REST and GraphQL",
+  "How to authenticate API requests with Bearer tokens?",
+  "Configure autopilot for hybrid search optimization",
+  "What tracing data does Summer collect for debugging?",
 ];
+
+// Estimate latency and cost based on configuration
+function estimateLatencyAndCost(config: RequestConfig): {
+  latencyP50: number;
+  latencyP95: number;
+  costPerRequest: number;
+  costPer1000: number;
+} {
+  // Base latency in ms
+  let baseLatency = 50;
+
+  // Add latency for features
+  if (config.hybridSearch) baseLatency += 30;
+  if (config.rerank) baseLatency += 80;
+  if (config.answerContract) baseLatency += 40;
+
+  // Adjust for topK
+  baseLatency += config.topK * 2;
+
+  // Cap at budget
+  const latencyP50 = Math.min(baseLatency, config.budgetMs * 0.7);
+  const latencyP95 = Math.min(baseLatency * 1.4, config.budgetMs * 0.95);
+
+  // Base cost per request in USD
+  let baseCost = 0.0001;
+
+  // Add cost for features
+  if (config.hybridSearch) baseCost += 0.0002;
+  if (config.rerank) baseCost += 0.0008;
+  if (config.answerContract) baseCost += 0.0005;
+
+  // Adjust for topK
+  baseCost += config.topK * 0.00002;
+
+  return {
+    latencyP50: Math.round(latencyP50),
+    latencyP95: Math.round(latencyP95),
+    costPerRequest: baseCost,
+    costPer1000: baseCost * 1000,
+  };
+}
 
 export function RequestBuilder({
   config,
@@ -67,6 +115,9 @@ export function RequestBuilder({
   const updateConfig = (updates: Partial<RequestConfig>) => {
     onConfigChange({ ...config, ...updates });
   };
+
+  // Calculate estimated latency and cost in real-time
+  const estimates = useMemo(() => estimateLatencyAndCost(config), [config]);
 
   const SAMPLE_DATASETS = [
     { id: "tech-docs", name: t?.datasets?.techDocs || "Tech Documentation", count: "2.4K docs" },
@@ -230,6 +281,53 @@ export function RequestBuilder({
             disabled={disabled}
           />
         </label>
+      </div>
+
+      {/* Estimated Latency & Cost Preview */}
+      <div className="mb-6 grid grid-cols-2 gap-3">
+        {/* Latency Card */}
+        <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-xs font-medium text-blue-800">
+              {t?.estimatedLatency || "Est. Latency"}
+            </span>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-blue-600">{t?.p50 || "p50"}</span>
+              <span className="text-lg font-bold text-blue-900">{estimates.latencyP50}ms</span>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-blue-600">{t?.p95 || "p95"}</span>
+              <span className="text-sm font-medium text-blue-700">{estimates.latencyP95}ms</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Cost Card */}
+        <div className="p-3 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-100">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-xs font-medium text-emerald-800">
+              {t?.estimatedCost || "Est. Cost"}
+            </span>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-emerald-600">{t?.perRequest || "/req"}</span>
+              <span className="text-lg font-bold text-emerald-900">${estimates.costPerRequest.toFixed(4)}</span>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-emerald-600">{t?.per1000 || "/1K"}</span>
+              <span className="text-sm font-medium text-emerald-700">${estimates.costPer1000.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Run Button */}

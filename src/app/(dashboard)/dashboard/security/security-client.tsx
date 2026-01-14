@@ -2,7 +2,18 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-type TabType = "audit" | "keys" | "settings";
+type TabType = "audit" | "keys" | "policies" | "settings";
+
+// Security policy types
+interface SecurityPolicy {
+  id: string;
+  name: string;
+  description: string;
+  status: "active" | "inactive" | "pending";
+  type: "access" | "data" | "compliance";
+  lastUpdated: string;
+  conditions: string[];
+}
 
 interface AuditLog {
   id: string;
@@ -28,7 +39,9 @@ export function SecurityClient() {
   const [activeTab, setActiveTab] = useState<TabType>("audit");
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [policies, setPolicies] = useState<SecurityPolicy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
 
   // Filters
   const [actionFilter, setActionFilter] = useState("");
@@ -68,6 +81,55 @@ export function SecurityClient() {
             permissions: ["read", "write"],
           },
         ]);
+      } else if (activeTab === "policies") {
+        // Mock security policies
+        setPolicies([
+          {
+            id: "pol-1",
+            name: "API Rate Limiting",
+            description: "Limit API requests per minute to prevent abuse",
+            status: "active",
+            type: "access",
+            lastUpdated: new Date(Date.now() - 86400000 * 3).toISOString(),
+            conditions: ["Max 1000 req/min", "Burst: 2000 req/10s"],
+          },
+          {
+            id: "pol-2",
+            name: "Data Encryption at Rest",
+            description: "All stored data must be encrypted using AES-256",
+            status: "active",
+            type: "data",
+            lastUpdated: new Date(Date.now() - 86400000 * 30).toISOString(),
+            conditions: ["AES-256 encryption", "Key rotation every 90 days"],
+          },
+          {
+            id: "pol-3",
+            name: "GDPR Compliance",
+            description: "Ensure data handling complies with GDPR requirements",
+            status: "active",
+            type: "compliance",
+            lastUpdated: new Date(Date.now() - 86400000 * 7).toISOString(),
+            conditions: ["Data retention: 30 days", "Right to deletion", "Export on request"],
+          },
+          {
+            id: "pol-4",
+            name: "IP Whitelist",
+            description: "Restrict API access to approved IP addresses only",
+            status: "inactive",
+            type: "access",
+            lastUpdated: new Date(Date.now() - 86400000 * 14).toISOString(),
+            conditions: ["Approved IPs only", "Block suspicious regions"],
+          },
+          {
+            id: "pol-5",
+            name: "SOC 2 Type II",
+            description: "Security controls for SOC 2 Type II certification",
+            status: "pending",
+            type: "compliance",
+            lastUpdated: new Date(Date.now() - 86400000 * 2).toISOString(),
+            conditions: ["Access logging", "Incident response", "Change management"],
+          },
+        ]);
       }
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -75,6 +137,47 @@ export function SecurityClient() {
       setLoading(false);
     }
   }, [activeTab, actionFilter]);
+
+  // Export audit logs to CSV
+  const handleExportCSV = useCallback(async () => {
+    setExporting(true);
+    try {
+      // Fetch all logs for export
+      const response = await fetch(`/api/security/audit?limit=10000`);
+      const data = await response.json();
+      const logs = data.logs || auditLogs;
+
+      // Generate CSV content
+      const headers = ["ID", "Action", "Resource", "Details", "IP Address", "User Agent", "Timestamp"];
+      const rows = logs.map((log: AuditLog) => [
+        log.id,
+        log.action,
+        log.resource,
+        JSON.stringify(log.details).replace(/"/g, '""'),
+        log.ip_address,
+        log.user_agent,
+        new Date(log.created_at).toISOString(),
+      ]);
+
+      const csvContent = [
+        headers.join(","),
+        ...rows.map((row: string[]) => row.map((cell: string) => `"${cell}"`).join(",")),
+      ].join("\n");
+
+      // Download file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `seizn-audit-logs-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Failed to export:", error);
+    } finally {
+      setExporting(false);
+    }
+  }, [auditLogs]);
 
   useEffect(() => {
     loadData();
@@ -145,7 +248,7 @@ export function SecurityClient() {
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
-        {(["audit", "keys", "settings"] as TabType[]).map((tab) => (
+        {(["audit", "keys", "policies", "settings"] as TabType[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -157,6 +260,7 @@ export function SecurityClient() {
           >
             {tab === "audit" && "Audit Log"}
             {tab === "keys" && "API Keys"}
+            {tab === "policies" && "Policies"}
             {tab === "settings" && "Settings"}
           </button>
         ))}
@@ -176,6 +280,8 @@ export function SecurityClient() {
               onActionFilterChange={setActionFilter}
               dateRange={dateRange}
               onDateRangeChange={setDateRange}
+              onExport={handleExportCSV}
+              exporting={exporting}
             />
           )}
           {activeTab === "keys" && (
@@ -184,6 +290,13 @@ export function SecurityClient() {
               onRotate={handleRotateKey}
               onRevoke={handleRevokeKey}
             />
+          )}
+          {activeTab === "policies" && (
+            <PoliciesPanel policies={policies} onToggle={(id) => {
+              setPolicies(prev => prev.map(p =>
+                p.id === id ? { ...p, status: p.status === "active" ? "inactive" : "active" } : p
+              ));
+            }} />
           )}
           {activeTab === "settings" && <SecuritySettings />}
         </>
@@ -198,12 +311,16 @@ function AuditLogTable({
   onActionFilterChange,
   dateRange,
   onDateRangeChange,
+  onExport,
+  exporting,
 }: {
   logs: AuditLog[];
   actionFilter: string;
   onActionFilterChange: (v: string) => void;
   dateRange: string;
   onDateRangeChange: (v: string) => void;
+  onExport: () => void;
+  exporting: boolean;
 }) {
   // Get unique actions for filter
   const actions = [...new Set(logs.map((l) => l.action))];
@@ -251,8 +368,27 @@ function AuditLogTable({
           <option value="7d">Last 7 days</option>
           <option value="30d">Last 30 days</option>
         </select>
-        <button className="ml-auto px-4 py-2 border rounded-lg text-sm hover:bg-gray-50">
-          Export CSV
+        <button
+          onClick={onExport}
+          disabled={exporting || logs.length === 0}
+          className="ml-auto px-4 py-2 border rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 flex items-center gap-2"
+        >
+          {exporting ? (
+            <>
+              <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Exporting...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Export CSV
+            </>
+          )}
         </button>
       </div>
 
@@ -609,6 +745,195 @@ function SecuritySettings() {
             Delete All Data
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function PoliciesPanel({
+  policies,
+  onToggle,
+}: {
+  policies: SecurityPolicy[];
+  onToggle: (id: string) => void;
+}) {
+  const getStatusBadge = (status: SecurityPolicy["status"]) => {
+    switch (status) {
+      case "active":
+        return (
+          <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 border border-green-200">
+            Active
+          </span>
+        );
+      case "inactive":
+        return (
+          <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+            Inactive
+          </span>
+        );
+      case "pending":
+        return (
+          <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+            Pending
+          </span>
+        );
+    }
+  };
+
+  const getTypeIcon = (type: SecurityPolicy["type"]) => {
+    switch (type) {
+      case "access":
+        return (
+          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+        );
+      case "data":
+        return (
+          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+            </svg>
+          </div>
+        );
+      case "compliance":
+        return (
+          <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+        );
+    }
+  };
+
+  // Group policies by type
+  const groupedPolicies = {
+    access: policies.filter((p) => p.type === "access"),
+    data: policies.filter((p) => p.type === "data"),
+    compliance: policies.filter((p) => p.type === "compliance"),
+  };
+
+  const activePolicies = policies.filter((p) => p.status === "active").length;
+  const totalPolicies = policies.length;
+
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-green-700">Active Policies</p>
+              <p className="text-2xl font-bold text-green-900">{activePolicies}/{totalPolicies}</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-blue-700">Access Policies</p>
+              <p className="text-2xl font-bold text-blue-900">{groupedPolicies.access.length}</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-purple-700">Compliance Policies</p>
+              <p className="text-2xl font-bold text-purple-900">{groupedPolicies.compliance.length}</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Policies List */}
+      <div className="space-y-4">
+        {policies.map((policy) => (
+          <div
+            key={policy.id}
+            className={`bg-white rounded-xl border p-5 transition-all ${
+              policy.status === "active" ? "border-green-200" : "border-gray-200"
+            }`}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                {getTypeIcon(policy.type)}
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <h3 className="font-semibold text-gray-900">{policy.name}</h3>
+                    {getStatusBadge(policy.status)}
+                  </div>
+                  <p className="text-sm text-gray-500 mb-3">{policy.description}</p>
+
+                  {/* Conditions */}
+                  <div className="flex flex-wrap gap-2">
+                    {policy.conditions.map((condition, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md"
+                      >
+                        {condition}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-400">
+                  Updated {new Date(policy.lastUpdated).toLocaleDateString()}
+                </span>
+                {policy.status !== "pending" && (
+                  <button
+                    onClick={() => onToggle(policy.id)}
+                    className={`w-12 h-6 rounded-full transition-colors ${
+                      policy.status === "active" ? "bg-emerald-500" : "bg-gray-200"
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                        policy.status === "active" ? "translate-x-6" : "translate-x-0.5"
+                      }`}
+                    />
+                  </button>
+                )}
+                {policy.status === "pending" && (
+                  <span className="text-xs text-amber-600">Awaiting approval</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Add Policy Button */}
+      <div className="flex justify-center">
+        <button className="px-6 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-emerald-500 hover:text-emerald-600 transition-colors flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add Custom Policy
+        </button>
       </div>
     </div>
   );

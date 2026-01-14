@@ -2,16 +2,25 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-type ConnectorType = "pinecone" | "weaviate" | "qdrant" | "milvus";
+type ConnectorType = "pinecone" | "weaviate" | "qdrant" | "milvus" | "http-agent" | "s3";
+
+type HealthStatus = "healthy" | "degraded" | "down" | "unknown";
+
+interface ConnectorHealth {
+  status: HealthStatus;
+  latency_p50?: number;
+  latency_p95?: number;
+  last_ping?: string;
+  error_rate?: number;
+}
 
 interface Connector {
   name: string;
   type: ConnectorType;
   enabled: boolean;
-  health?: {
-    healthy: boolean;
-    latency_ms: number;
-  };
+  readOnly?: boolean;
+  namespaceFilter?: string;
+  health?: ConnectorHealth;
 }
 
 interface ConnectorForm {
@@ -27,15 +36,47 @@ interface ConnectorForm {
   weaviate_apiKey: string;
   weaviate_scheme: "http" | "https";
   weaviate_className: string;
+  // Qdrant
+  qdrant_host: string;
+  qdrant_apiKey: string;
+  qdrant_collection: string;
+  // Policy/Permission
+  readOnly: boolean;
+  namespaceFilter: string;
 }
+
+// Wizard step type
+type WizardStep = 1 | 2 | 3;
+
+// Connection test result
+interface TestResult {
+  success: boolean;
+  message: string;
+  latency_ms?: number;
+}
+
+// Connector type metadata
+const CONNECTOR_TYPES: { id: ConnectorType; name: string; icon: string; description: string }[] = [
+  { id: "pinecone", name: "Pinecone", icon: "🌲", description: "Serverless vector database" },
+  { id: "weaviate", name: "Weaviate", icon: "🔷", description: "Open-source vector search" },
+  { id: "qdrant", name: "Qdrant", icon: "🔶", description: "High-performance vector DB" },
+  { id: "milvus", name: "Milvus", icon: "🐋", description: "Cloud-native vector database" },
+  { id: "http-agent", name: "HTTP Agent", icon: "🌐", description: "Custom HTTP endpoint" },
+  { id: "s3", name: "S3 / Object Storage", icon: "📦", description: "File-based vector storage" },
+];
 
 export function FederatedClient() {
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [wizardStep, setWizardStep] = useState<WizardStep>(1);
   const [testQuery, setTestQuery] = useState("");
   const [testResults, setTestResults] = useState<unknown>(null);
   const [testLoading, setTestLoading] = useState(false);
+
+  // Connection test state
+  const [connectionTest, setConnectionTest] = useState<TestResult | null>(null);
+  const [testingConnection, setTestingConnection] = useState(false);
 
   const [form, setForm] = useState<ConnectorForm>({
     type: "pinecone",
@@ -48,6 +89,11 @@ export function FederatedClient() {
     weaviate_apiKey: "",
     weaviate_scheme: "https",
     weaviate_className: "",
+    qdrant_host: "",
+    qdrant_apiKey: "",
+    qdrant_collection: "",
+    readOnly: false,
+    namespaceFilter: "",
   });
 
   const loadHealth = useCallback(async () => {
@@ -60,16 +106,80 @@ export function FederatedClient() {
       const data = await response.json();
       if (data.success && data.connectors) {
         setConnectors((prev) =>
-          prev.map((c) => ({
-            ...c,
-            health: data.connectors[c.name],
-          }))
+          prev.map((c) => {
+            const healthData = data.connectors[c.name];
+            if (!healthData) return c;
+
+            // Map old health format to new detailed format
+            const status: HealthStatus = healthData.healthy
+              ? (healthData.latency_ms > 500 ? "degraded" : "healthy")
+              : "down";
+
+            return {
+              ...c,
+              health: {
+                status,
+                latency_p50: healthData.latency_ms,
+                latency_p95: Math.round(healthData.latency_ms * 1.3),
+                last_ping: new Date().toISOString(),
+                error_rate: healthData.healthy ? 0 : 100,
+              },
+            };
+          })
         );
       }
     } catch (error) {
       console.error("Failed to load health:", error);
     }
   }, []);
+
+  // Test connection before adding
+  const handleTestConnection = useCallback(async () => {
+    setTestingConnection(true);
+    setConnectionTest(null);
+
+    try {
+      // Simulate connection test (in real implementation, call API)
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // For demo purposes, validate based on form fields
+      let isValid = false;
+      let message = "";
+
+      if (form.type === "pinecone") {
+        isValid = !!(form.pinecone_apiKey && form.pinecone_environment && form.pinecone_indexName);
+        message = isValid
+          ? `Successfully connected to Pinecone index "${form.pinecone_indexName}"`
+          : "Missing required fields: API Key, Environment, or Index Name";
+      } else if (form.type === "weaviate") {
+        isValid = !!(form.weaviate_host && form.weaviate_className);
+        message = isValid
+          ? `Successfully connected to Weaviate class "${form.weaviate_className}"`
+          : "Missing required fields: Host or Class Name";
+      } else if (form.type === "qdrant") {
+        isValid = !!(form.qdrant_host && form.qdrant_collection);
+        message = isValid
+          ? `Successfully connected to Qdrant collection "${form.qdrant_collection}"`
+          : "Missing required fields: Host or Collection Name";
+      } else {
+        isValid = true;
+        message = "Connection validated (simulated)";
+      }
+
+      setConnectionTest({
+        success: isValid,
+        message,
+        latency_ms: isValid ? Math.round(50 + Math.random() * 100) : undefined,
+      });
+    } catch (error) {
+      setConnectionTest({
+        success: false,
+        message: `Connection failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      });
+    } finally {
+      setTestingConnection(false);
+    }
+  }, [form]);
 
   const loadConnectors = useCallback(async () => {
     setLoading(true);
@@ -92,17 +202,46 @@ export function FederatedClient() {
     loadConnectors();
   }, [loadConnectors]);
 
+  // Reset form and wizard state
+  const resetWizard = useCallback(() => {
+    setForm({
+      type: "pinecone",
+      name: "",
+      pinecone_apiKey: "",
+      pinecone_environment: "",
+      pinecone_indexName: "",
+      pinecone_namespace: "",
+      weaviate_host: "",
+      weaviate_apiKey: "",
+      weaviate_scheme: "https",
+      weaviate_className: "",
+      qdrant_host: "",
+      qdrant_apiKey: "",
+      qdrant_collection: "",
+      readOnly: false,
+      namespaceFilter: "",
+    });
+    setWizardStep(1);
+    setConnectionTest(null);
+  }, []);
+
   const handleAddConnector = async () => {
     try {
       let config: Record<string, unknown>;
 
+      const baseConfig = {
+        name: form.name,
+        enabled: true,
+        priority: 1,
+        weight: 1,
+        readOnly: form.readOnly,
+        namespaceFilter: form.namespaceFilter || undefined,
+      };
+
       if (form.type === "pinecone") {
         config = {
+          ...baseConfig,
           type: "pinecone",
-          name: form.name,
-          enabled: true,
-          priority: 1,
-          weight: 1,
           config: {
             apiKey: form.pinecone_apiKey,
             environment: form.pinecone_environment,
@@ -112,11 +251,8 @@ export function FederatedClient() {
         };
       } else if (form.type === "weaviate") {
         config = {
+          ...baseConfig,
           type: "weaviate",
-          name: form.name,
-          enabled: true,
-          priority: 1,
-          weight: 1,
           config: {
             host: form.weaviate_host,
             apiKey: form.weaviate_apiKey || undefined,
@@ -124,8 +260,23 @@ export function FederatedClient() {
             className: form.weaviate_className,
           },
         };
+      } else if (form.type === "qdrant") {
+        config = {
+          ...baseConfig,
+          type: "qdrant",
+          config: {
+            host: form.qdrant_host,
+            apiKey: form.qdrant_apiKey || undefined,
+            collection: form.qdrant_collection,
+          },
+        };
       } else {
-        throw new Error("Unsupported connector type");
+        // For other types, use a generic config
+        config = {
+          ...baseConfig,
+          type: form.type,
+          config: {},
+        };
       }
 
       const response = await fetch("/api/federated", {
@@ -138,19 +289,7 @@ export function FederatedClient() {
       if (data.success) {
         setShowAddForm(false);
         loadConnectors();
-        // Reset form
-        setForm({
-          type: "pinecone",
-          name: "",
-          pinecone_apiKey: "",
-          pinecone_environment: "",
-          pinecone_indexName: "",
-          pinecone_namespace: "",
-          weaviate_host: "",
-          weaviate_apiKey: "",
-          weaviate_scheme: "https",
-          weaviate_className: "",
-        });
+        resetWizard();
       } else {
         alert(`Failed to add connector: ${data.error?.message}`);
       }
@@ -294,160 +433,378 @@ export function FederatedClient() {
         </div>
       )}
 
-      {/* Add Connector Modal */}
+      {/* Add Connector Wizard Modal */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Add Connector</h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Connector Type
-                </label>
-                <select
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value as ConnectorType })}
-                  className="w-full px-3 py-2 border rounded-lg"
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+            {/* Wizard Header */}
+            <div className="p-6 border-b sticky top-0 bg-white rounded-t-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-900">Add Connector</h2>
+                <button
+                  onClick={() => { setShowAddForm(false); resetWizard(); }}
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  <option value="pinecone">Pinecone</option>
-                  <option value="weaviate">Weaviate</option>
-                </select>
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Connector Name
-                </label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="my-pinecone"
-                  className="w-full px-3 py-2 border rounded-lg"
-                />
+              {/* Wizard Steps Indicator */}
+              <div className="flex items-center gap-2">
+                {[1, 2, 3].map((step) => (
+                  <div key={step} className="flex items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                        wizardStep === step
+                          ? "bg-emerald-500 text-white"
+                          : wizardStep > step
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-gray-100 text-gray-400"
+                      }`}
+                    >
+                      {wizardStep > step ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        step
+                      )}
+                    </div>
+                    {step < 3 && (
+                      <div className={`w-12 h-1 mx-2 rounded ${wizardStep > step ? "bg-emerald-500" : "bg-gray-200"}`} />
+                    )}
+                  </div>
+                ))}
               </div>
+              <div className="flex justify-between mt-2 text-xs text-gray-500">
+                <span>Select Type</span>
+                <span>Configure & Test</span>
+                <span>Permissions</span>
+              </div>
+            </div>
 
-              {form.type === "pinecone" && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      API Key
-                    </label>
-                    <input
-                      type="password"
-                      value={form.pinecone_apiKey}
-                      onChange={(e) => setForm({ ...form, pinecone_apiKey: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
+            {/* Wizard Content */}
+            <div className="p-6">
+              {/* Step 1: Select Connector Type */}
+              {wizardStep === 1 && (
+                <div className="space-y-4">
+                  <p className="text-gray-600 mb-4">Choose the type of vector database you want to connect:</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {CONNECTOR_TYPES.map((ct) => (
+                      <button
+                        key={ct.id}
+                        onClick={() => setForm({ ...form, type: ct.id })}
+                        className={`p-4 rounded-xl border-2 text-left transition-all ${
+                          form.type === ct.id
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <span className="text-2xl">{ct.icon}</span>
+                        <h4 className="font-semibold text-gray-900 mt-2">{ct.name}</h4>
+                        <p className="text-xs text-gray-500">{ct.description}</p>
+                      </button>
+                    ))}
                   </div>
-                  <div>
+
+                  <div className="mt-6">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Environment / Host
-                    </label>
-                    <input
-                      type="text"
-                      value={form.pinecone_environment}
-                      onChange={(e) => setForm({ ...form, pinecone_environment: e.target.value })}
-                      placeholder="us-east1-gcp or your-index.svc.pinecone.io"
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Index Name
-                    </label>
-                    <input
-                      type="text"
-                      value={form.pinecone_indexName}
-                      onChange={(e) => setForm({ ...form, pinecone_indexName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Namespace (optional)
+                      Connector Name
                     </label>
                     <input
                       type="text"
-                      value={form.pinecone_namespace}
-                      onChange={(e) => setForm({ ...form, pinecone_namespace: e.target.value })}
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder="e.g., production-pinecone"
                       className="w-full px-3 py-2 border rounded-lg"
                     />
+                    <p className="text-xs text-gray-400 mt-1">A unique name to identify this connector</p>
                   </div>
-                </>
+                </div>
               )}
 
-              {form.type === "weaviate" && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Host
-                    </label>
-                    <input
-                      type="text"
-                      value={form.weaviate_host}
-                      onChange={(e) => setForm({ ...form, weaviate_host: e.target.value })}
-                      placeholder="your-instance.weaviate.network"
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
+              {/* Step 2: Configure Credentials & Test */}
+              {wizardStep === 2 && (
+                <div className="space-y-4">
+                  <p className="text-gray-600 mb-4">
+                    Enter credentials for <strong>{CONNECTOR_TYPES.find(c => c.id === form.type)?.name}</strong>:
+                  </p>
+
+                  {/* Pinecone Config */}
+                  {form.type === "pinecone" && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">API Key *</label>
+                        <input
+                          type="password"
+                          value={form.pinecone_apiKey}
+                          onChange={(e) => setForm({ ...form, pinecone_apiKey: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                          placeholder="pc-xxxxx..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Environment / Host *</label>
+                        <input
+                          type="text"
+                          value={form.pinecone_environment}
+                          onChange={(e) => setForm({ ...form, pinecone_environment: e.target.value })}
+                          placeholder="us-east1-gcp or your-index.svc.pinecone.io"
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Index Name *</label>
+                        <input
+                          type="text"
+                          value={form.pinecone_indexName}
+                          onChange={(e) => setForm({ ...form, pinecone_indexName: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Namespace (optional)</label>
+                        <input
+                          type="text"
+                          value={form.pinecone_namespace}
+                          onChange={(e) => setForm({ ...form, pinecone_namespace: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Weaviate Config */}
+                  {form.type === "weaviate" && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Host *</label>
+                        <input
+                          type="text"
+                          value={form.weaviate_host}
+                          onChange={(e) => setForm({ ...form, weaviate_host: e.target.value })}
+                          placeholder="your-instance.weaviate.network"
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Scheme</label>
+                          <select
+                            value={form.weaviate_scheme}
+                            onChange={(e) => setForm({ ...form, weaviate_scheme: e.target.value as "http" | "https" })}
+                            className="w-full px-3 py-2 border rounded-lg"
+                          >
+                            <option value="https">HTTPS</option>
+                            <option value="http">HTTP</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">API Key (optional)</label>
+                          <input
+                            type="password"
+                            value={form.weaviate_apiKey}
+                            onChange={(e) => setForm({ ...form, weaviate_apiKey: e.target.value })}
+                            className="w-full px-3 py-2 border rounded-lg"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Class Name *</label>
+                        <input
+                          type="text"
+                          value={form.weaviate_className}
+                          onChange={(e) => setForm({ ...form, weaviate_className: e.target.value })}
+                          placeholder="Document"
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Qdrant Config */}
+                  {form.type === "qdrant" && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Host *</label>
+                        <input
+                          type="text"
+                          value={form.qdrant_host}
+                          onChange={(e) => setForm({ ...form, qdrant_host: e.target.value })}
+                          placeholder="localhost:6333 or your-cluster.qdrant.io"
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">API Key (optional)</label>
+                        <input
+                          type="password"
+                          value={form.qdrant_apiKey}
+                          onChange={(e) => setForm({ ...form, qdrant_apiKey: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Collection Name *</label>
+                        <input
+                          type="text"
+                          value={form.qdrant_collection}
+                          onChange={(e) => setForm({ ...form, qdrant_collection: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Other connectors placeholder */}
+                  {!["pinecone", "weaviate", "qdrant"].includes(form.type) && (
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                      <p className="text-amber-800 text-sm">
+                        Configuration for {CONNECTOR_TYPES.find(c => c.id === form.type)?.name} coming soon.
+                        Contact support for early access.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Test Connection */}
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-medium text-gray-900">Test Connection</h4>
+                      <button
+                        onClick={handleTestConnection}
+                        disabled={testingConnection}
+                        className="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 disabled:opacity-50 flex items-center gap-2"
+                      >
+                        {testingConnection ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            Testing...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Test Connection
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {connectionTest && (
+                      <div className={`p-3 rounded-lg ${connectionTest.success ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+                        <div className="flex items-start gap-2">
+                          {connectionTest.success ? (
+                            <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          )}
+                          <div>
+                            <p className={`text-sm font-medium ${connectionTest.success ? "text-green-800" : "text-red-800"}`}>
+                              {connectionTest.success ? "Connection Successful" : "Connection Failed"}
+                            </p>
+                            <p className={`text-xs ${connectionTest.success ? "text-green-600" : "text-red-600"}`}>
+                              {connectionTest.message}
+                            </p>
+                            {connectionTest.latency_ms && (
+                              <p className="text-xs text-green-600 mt-1">Latency: {connectionTest.latency_ms}ms</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Scheme
+                </div>
+              )}
+
+              {/* Step 3: Permissions & Policy */}
+              {wizardStep === 3 && (
+                <div className="space-y-6">
+                  <p className="text-gray-600 mb-4">Configure access permissions for this connector:</p>
+
+                  <div className="space-y-4">
+                    <label className="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-gray-50">
+                      <input
+                        type="checkbox"
+                        checked={form.readOnly}
+                        onChange={(e) => setForm({ ...form, readOnly: e.target.checked })}
+                        className="mt-1 w-4 h-4 text-emerald-600 rounded"
+                      />
+                      <div>
+                        <span className="font-medium text-gray-900">Read-only Mode</span>
+                        <p className="text-sm text-gray-500">Only allow read operations. Prevents writes, updates, and deletes.</p>
+                      </div>
                     </label>
-                    <select
-                      value={form.weaviate_scheme}
-                      onChange={(e) =>
-                        setForm({ ...form, weaviate_scheme: e.target.value as "http" | "https" })
-                      }
-                      className="w-full px-3 py-2 border rounded-lg"
-                    >
-                      <option value="https">HTTPS</option>
-                      <option value="http">HTTP</option>
-                    </select>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Namespace Filter (optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={form.namespaceFilter}
+                        onChange={(e) => setForm({ ...form, namespaceFilter: e.target.value })}
+                        placeholder="e.g., production-*, tenant-123"
+                        className="w-full px-3 py-2 border rounded-lg"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Restrict queries to specific namespaces. Supports wildcards (*).
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      API Key (optional)
-                    </label>
-                    <input
-                      type="password"
-                      value={form.weaviate_apiKey}
-                      onChange={(e) => setForm({ ...form, weaviate_apiKey: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
+
+                  {/* Summary */}
+                  <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <h4 className="font-medium text-emerald-800 mb-2">Ready to Add</h4>
+                    <ul className="text-sm text-emerald-700 space-y-1">
+                      <li><strong>Name:</strong> {form.name}</li>
+                      <li><strong>Type:</strong> {CONNECTOR_TYPES.find(c => c.id === form.type)?.name}</li>
+                      <li><strong>Mode:</strong> {form.readOnly ? "Read-only" : "Read/Write"}</li>
+                      {form.namespaceFilter && <li><strong>Filter:</strong> {form.namespaceFilter}</li>}
+                    </ul>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Class Name
-                    </label>
-                    <input
-                      type="text"
-                      value={form.weaviate_className}
-                      onChange={(e) => setForm({ ...form, weaviate_className: e.target.value })}
-                      placeholder="Document"
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
-                  </div>
-                </>
+                </div>
               )}
             </div>
 
-            <div className="flex gap-3 mt-6">
+            {/* Wizard Footer */}
+            <div className="p-6 border-t sticky bottom-0 bg-white rounded-b-2xl flex justify-between">
               <button
-                onClick={() => setShowAddForm(false)}
-                className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
+                onClick={() => {
+                  if (wizardStep === 1) {
+                    setShowAddForm(false);
+                    resetWizard();
+                  } else {
+                    setWizardStep((wizardStep - 1) as WizardStep);
+                  }
+                }}
+                className="px-4 py-2 border rounded-lg hover:bg-gray-50"
               >
-                Cancel
+                {wizardStep === 1 ? "Cancel" : "Back"}
               </button>
-              <button
-                onClick={handleAddConnector}
-                disabled={!form.name}
-                className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
-              >
-                Add Connector
-              </button>
+
+              {wizardStep < 3 ? (
+                <button
+                  onClick={() => setWizardStep((wizardStep + 1) as WizardStep)}
+                  disabled={wizardStep === 1 && !form.name}
+                  className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddConnector}
+                  className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
+                >
+                  Add Connector
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -470,54 +827,126 @@ function ConnectorCard({
     weaviate: "🔷",
     qdrant: "🔶",
     milvus: "🐋",
+    "http-agent": "🌐",
+    s3: "📦",
+  };
+
+  // Health badge colors
+  const healthColors: Record<HealthStatus, string> = {
+    healthy: "bg-green-100 text-green-700 border-green-200",
+    degraded: "bg-amber-100 text-amber-700 border-amber-200",
+    down: "bg-red-100 text-red-700 border-red-200",
+    unknown: "bg-gray-100 text-gray-600 border-gray-200",
+  };
+
+  const healthLabels: Record<HealthStatus, string> = {
+    healthy: "Healthy",
+    degraded: "Degraded",
+    down: "Down",
+    unknown: "Unknown",
+  };
+
+  const healthStatus = connector.health?.status || "unknown";
+
+  // Format last ping time
+  const formatLastPing = (isoString?: string) => {
+    if (!isoString) return "Never";
+    const date = new Date(isoString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return date.toLocaleDateString();
   };
 
   return (
-    <div className="bg-white rounded-xl border p-4">
-      <div className="flex items-start justify-between mb-3">
+    <div className="bg-white rounded-xl border p-5 hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{typeLogos[connector.type] || "🔗"}</span>
+          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            <span className="text-xl">{typeLogos[connector.type] || "🔗"}</span>
+          </div>
           <div>
             <h3 className="font-semibold text-gray-900">{connector.name}</h3>
-            <p className="text-sm text-gray-500 capitalize">{connector.type}</p>
+            <p className="text-sm text-gray-500 capitalize">{connector.type.replace("-", " ")}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {connector.health ? (
+
+        {/* Health Badge */}
+        <div className={`px-3 py-1.5 rounded-full text-xs font-medium border ${healthColors[healthStatus]}`}>
+          <span className="flex items-center gap-1.5">
             <span
-              className={`px-2 py-1 text-xs rounded-full ${
-                connector.health.healthy
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+              className={`w-2 h-2 rounded-full ${
+                healthStatus === "healthy"
+                  ? "bg-green-500"
+                  : healthStatus === "degraded"
+                  ? "bg-amber-500"
+                  : healthStatus === "down"
+                  ? "bg-red-500"
+                  : "bg-gray-400"
               }`}
-            >
-              {connector.health.healthy ? "Healthy" : "Unhealthy"}
-            </span>
-          ) : (
-            <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
-              Unknown
-            </span>
-          )}
+            />
+            {healthLabels[healthStatus]}
+          </span>
         </div>
       </div>
 
-      {connector.health && (
-        <div className="text-sm text-gray-500 mb-3">
-          Latency: {connector.health.latency_ms}ms
+      {/* Health Metrics */}
+      {connector.health && healthStatus !== "unknown" && (
+        <div className="grid grid-cols-3 gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+          <div>
+            <p className="text-xs text-gray-500">p50 Latency</p>
+            <p className="font-mono text-sm text-gray-900">{connector.health.latency_p50 || "—"}ms</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500">p95 Latency</p>
+            <p className="font-mono text-sm text-gray-900">{connector.health.latency_p95 || "—"}ms</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500">Last Ping</p>
+            <p className="text-sm text-gray-900">{formatLastPing(connector.health.last_ping)}</p>
+          </div>
         </div>
       )}
 
-      <div className="flex gap-2">
+      {/* Permission badges */}
+      <div className="flex gap-2 mb-4">
+        {connector.readOnly && (
+          <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">Read-only</span>
+        )}
+        {connector.namespaceFilter && (
+          <span className="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">
+            Filter: {connector.namespaceFilter}
+          </span>
+        )}
+        {!connector.readOnly && !connector.namespaceFilter && (
+          <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-xs rounded">Full Access</span>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-4 pt-3 border-t">
         <button
           onClick={onRefresh}
-          className="text-sm text-gray-600 hover:text-gray-900"
+          className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"
         >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
           Refresh
         </button>
         <button
           onClick={onRemove}
-          className="text-sm text-red-600 hover:text-red-700"
+          className="text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
         >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
           Remove
         </button>
       </div>

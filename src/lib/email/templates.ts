@@ -107,6 +107,32 @@ export function apiKeyCreatedEmail(keyName: string, keyPreview: string) {
   return baseTemplate(content, `New API Key: ${keyName}`);
 }
 
+// API Key rotated notification
+export function apiKeyRotatedEmail(keyName: string, keyPreview: string) {
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">API Key Rotated</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
+      Your API key has been rotated. The old key is no longer valid.
+    </p>
+    <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin:0 0 24px;">
+      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">Key Name</p>
+      <p style="margin:0;font-size:16px;font-weight:500;color:#111827;">${keyName}</p>
+      <p style="margin:16px 0 8px;font-size:14px;color:#6b7280;">New Key Preview</p>
+      <p style="margin:0;font-size:16px;font-family:monospace;color:#111827;">${keyPreview}...</p>
+    </div>
+    <p style="margin:0 0 24px;font-size:14px;color:#f59e0b;">
+      Please update your applications with the new key immediately.
+    </p>
+    <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">
+      If you didn't rotate this key, please secure your account immediately.
+    </p>
+    <a href="https://seizn.com/dashboard/keys" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+      View API Keys
+    </a>
+  `;
+  return baseTemplate(content, `API Key Rotated: ${keyName}`);
+}
+
 // Usage alert email
 export function usageAlertEmail(
   usagePercent: number,

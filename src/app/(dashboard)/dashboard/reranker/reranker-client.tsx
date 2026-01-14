@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 
+type TabType = "overview" | "data" | "train" | "evaluate";
+
 interface Model {
   id: string;
   name: string;
@@ -18,10 +20,56 @@ interface DomainConfig {
   specializations: string[];
 }
 
+interface DetectedDomain {
+  label: string;
+  confidence: number;
+  isOverridden: boolean;
+}
+
+interface DataCollectionStats {
+  clicks: number;
+  adoptions: number;
+  corrections: number;
+  totalQueries: number;
+  lastUpdated: string;
+}
+
+interface TrainingJob {
+  id: string;
+  status: "idle" | "running" | "completed" | "failed";
+  progress?: number;
+  startedAt?: string;
+  completedAt?: string;
+  modelVersion?: string;
+  error?: string;
+}
+
+interface EvalResult {
+  id: string;
+  name: string;
+  dataset: string;
+  metrics: {
+    precision_at_1: number;
+    precision_at_5: number;
+    precision_at_10: number;
+    mrr: number;
+    ndcg: number;
+  };
+  baseline?: {
+    precision_at_1: number;
+    precision_at_5: number;
+    precision_at_10: number;
+    mrr: number;
+    ndcg: number;
+  };
+  runAt: string;
+}
+
 export function RerankerClient() {
   const [models, setModels] = useState<Model[]>([]);
   const [domains, setDomains] = useState<Record<string, DomainConfig>>({});
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
 
   // Configuration
   const [selectedModel, setSelectedModel] = useState("cohere-rerank-v3");
@@ -29,11 +77,62 @@ export function RerankerClient() {
   const [threshold, setThreshold] = useState(0.3);
   const [autoDetect, setAutoDetect] = useState(true);
 
+  // Auto-detected domain result
+  const [detectedDomain, setDetectedDomain] = useState<DetectedDomain>({
+    label: "Technical Documentation",
+    confidence: 0.87,
+    isOverridden: false,
+  });
+
+  // Data collection stats (simulated)
+  const [dataStats, setDataStats] = useState<DataCollectionStats>({
+    clicks: 1234,
+    adoptions: 892,
+    corrections: 45,
+    totalQueries: 5678,
+    lastUpdated: new Date().toISOString(),
+  });
+
+  // Training job state
+  const [trainingJob, setTrainingJob] = useState<TrainingJob>({
+    id: "job-001",
+    status: "idle",
+    modelVersion: "v1.2.3",
+  });
+
+  // Evaluation results (sample data)
+  const [evalResults, setEvalResults] = useState<EvalResult[]>([
+    {
+      id: "eval-1",
+      name: "Production Baseline",
+      dataset: "tech-docs-golden",
+      metrics: {
+        precision_at_1: 0.82,
+        precision_at_5: 0.91,
+        precision_at_10: 0.95,
+        mrr: 0.87,
+        ndcg: 0.89,
+      },
+      baseline: {
+        precision_at_1: 0.75,
+        precision_at_5: 0.85,
+        precision_at_10: 0.90,
+        mrr: 0.80,
+        ndcg: 0.82,
+      },
+      runAt: new Date(Date.now() - 86400000).toISOString(),
+    },
+  ]);
+
   // Test panel
   const [testQuery, setTestQuery] = useState("");
   const [testDocuments, setTestDocuments] = useState("");
   const [testResult, setTestResult] = useState<unknown>(null);
   const [testLoading, setTestLoading] = useState(false);
+
+  // Suppress unused variable warnings
+  void setDataStats;
+  void setEvalResults;
 
   const loadConfig = useCallback(async () => {
     try {
@@ -110,17 +209,121 @@ export function RerankerClient() {
     );
   }
 
+  // Start training job
+  const handleStartTraining = async () => {
+    setTrainingJob((prev) => ({
+      ...prev,
+      status: "running",
+      progress: 0,
+      startedAt: new Date().toISOString(),
+      completedAt: undefined,
+      error: undefined,
+    }));
+
+    // Simulate training progress
+    const interval = setInterval(() => {
+      setTrainingJob((prev) => {
+        if (prev.progress !== undefined && prev.progress >= 100) {
+          clearInterval(interval);
+          return {
+            ...prev,
+            status: "completed",
+            progress: 100,
+            completedAt: new Date().toISOString(),
+            modelVersion: `v1.${Math.floor(Math.random() * 10)}.0`,
+          };
+        }
+        return {
+          ...prev,
+          progress: (prev.progress || 0) + Math.random() * 15,
+        };
+      });
+    }, 500);
+  };
+
+  // Run evaluation
+  const handleRunEvaluation = async () => {
+    const newEval: EvalResult = {
+      id: `eval-${Date.now()}`,
+      name: `Eval Run ${evalResults.length + 1}`,
+      dataset: "tech-docs-golden",
+      metrics: {
+        precision_at_1: 0.8 + Math.random() * 0.15,
+        precision_at_5: 0.88 + Math.random() * 0.1,
+        precision_at_10: 0.93 + Math.random() * 0.05,
+        mrr: 0.85 + Math.random() * 0.1,
+        ndcg: 0.87 + Math.random() * 0.1,
+      },
+      baseline: evalResults[0]?.metrics,
+      runAt: new Date().toISOString(),
+    };
+    setEvalResults((prev) => [newEval, ...prev]);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Domain-adaptive Reranker</h1>
         <p className="text-gray-500 mt-1">
           Configure reranking models optimized for your content domain
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-8">
+      {/* Tab Navigation */}
+      <div className="flex items-center gap-1 mb-6 border-b">
+        {(["overview", "data", "train", "evaluate"] as TabType[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === tab
+                ? "border-emerald-500 text-emerald-600"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Auto-detected Domain Banner */}
+      {autoDetect && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-blue-700">
+                  <span className="font-medium">Auto-detected Domain:</span>{" "}
+                  <span className="font-semibold text-blue-900">{detectedDomain.label}</span>
+                </p>
+                <p className="text-xs text-blue-600">
+                  Confidence: {(detectedDomain.confidence * 100).toFixed(0)}%
+                  {detectedDomain.isOverridden && " (overridden)"}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setAutoDetect(false);
+                setDetectedDomain((prev) => ({ ...prev, isOverridden: true }));
+              }}
+              className="px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
+            >
+              Override
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Overview Tab */}
+      {activeTab === "overview" && (
+        <div className="grid grid-cols-2 gap-8">
         {/* Configuration Panel */}
         <div className="space-y-6">
           {/* Model Selection */}
@@ -351,6 +554,450 @@ Document 3 content here...`}
           </div>
         </div>
       </div>
+      )}
+
+      {/* Data Tab - Data Collection Stats */}
+      {activeTab === "data" && (
+        <div className="space-y-6">
+          {/* Stats Overview */}
+          <div className="grid grid-cols-4 gap-4">
+            <div className="bg-white rounded-2xl border p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Clicks</p>
+                  <p className="text-2xl font-bold text-gray-900">{dataStats.clicks.toLocaleString()}</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400">User click signals</p>
+            </div>
+
+            <div className="bg-white rounded-2xl border p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Adoptions</p>
+                  <p className="text-2xl font-bold text-gray-900">{dataStats.adoptions.toLocaleString()}</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400">Result used in context</p>
+            </div>
+
+            <div className="bg-white rounded-2xl border p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Corrections</p>
+                  <p className="text-2xl font-bold text-gray-900">{dataStats.corrections}</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400">User re-ordered results</p>
+            </div>
+
+            <div className="bg-white rounded-2xl border p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Queries</p>
+                  <p className="text-2xl font-bold text-gray-900">{dataStats.totalQueries.toLocaleString()}</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400">Rerank API calls</p>
+            </div>
+          </div>
+
+          {/* Data Quality Indicators */}
+          <div className="bg-white rounded-2xl border p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Data Quality</h3>
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Click-through Rate</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {((dataStats.clicks / dataStats.totalQueries) * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 rounded-full"
+                    style={{ width: `${(dataStats.clicks / dataStats.totalQueries) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Adoption Rate</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {((dataStats.adoptions / dataStats.clicks) * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${(dataStats.adoptions / dataStats.clicks) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Correction Rate</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {((dataStats.corrections / dataStats.clicks) * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-500 rounded-full"
+                    style={{ width: `${(dataStats.corrections / dataStats.clicks) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-4 text-xs text-gray-400">
+              Last updated: {new Date(dataStats.lastUpdated).toLocaleString()}
+            </p>
+          </div>
+
+          {/* Recommendation */}
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-medium text-emerald-900 mb-1">Ready for Training</h4>
+                <p className="text-sm text-emerald-700">
+                  You have collected enough feedback data ({dataStats.clicks.toLocaleString()} clicks) to train a custom reranker model.
+                  Training typically takes 10-15 minutes.
+                </p>
+                <button
+                  onClick={() => setActiveTab("train")}
+                  className="mt-3 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Start Training
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Train Tab */}
+      {activeTab === "train" && (
+        <div className="space-y-6">
+          {/* Current Model Info */}
+          <div className="bg-white rounded-2xl border p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-900">Current Model</h3>
+              <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-full">
+                {trainingJob.modelVersion || "v1.0.0"}
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500">Base Model</p>
+                <p className="font-medium text-gray-900">{selectedModel}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">Domain</p>
+                <p className="font-medium text-gray-900">{domains[selectedDomain]?.name || selectedDomain}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">Training Data</p>
+                <p className="font-medium text-gray-900">{dataStats.clicks.toLocaleString()} samples</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Training Controls */}
+          <div className="bg-white rounded-2xl border p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Training Job</h3>
+
+            {trainingJob.status === "idle" && (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 mb-4">No training job running</p>
+                <button
+                  onClick={handleStartTraining}
+                  className="px-6 py-3 bg-emerald-500 text-white font-medium rounded-xl hover:bg-emerald-600 transition-colors"
+                >
+                  Start Training
+                </button>
+              </div>
+            )}
+
+            {trainingJob.status === "running" && (
+              <div className="py-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Training in progress</p>
+                      <p className="text-sm text-gray-500">
+                        Started {trainingJob.startedAt ? new Date(trainingJob.startedAt).toLocaleTimeString() : "now"}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-2xl font-bold text-blue-600">
+                    {Math.min(100, Math.round(trainingJob.progress || 0))}%
+                  </span>
+                </div>
+                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, trainingJob.progress || 0)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {trainingJob.status === "completed" && (
+              <div className="py-4">
+                <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl mb-4">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-emerald-900">Training completed!</p>
+                    <p className="text-sm text-emerald-700">
+                      New model version: {trainingJob.modelVersion}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setActiveTab("evaluate")}
+                    className="flex-1 px-4 py-2 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+                  >
+                    Run Evaluation
+                  </button>
+                  <button
+                    onClick={() => setTrainingJob({ id: "job-new", status: "idle", modelVersion: trainingJob.modelVersion })}
+                    className="px-4 py-2 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Train Again
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {trainingJob.status === "failed" && (
+              <div className="py-4">
+                <div className="flex items-center gap-3 p-4 bg-red-50 rounded-xl mb-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-red-900">Training failed</p>
+                    <p className="text-sm text-red-700">{trainingJob.error || "Unknown error"}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleStartTraining}
+                  className="w-full px-4 py-2 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Retry Training
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Training Tips */}
+          <div className="bg-amber-50 rounded-2xl border border-amber-200 p-6">
+            <h4 className="font-medium text-amber-900 mb-3">Training Tips</h4>
+            <ul className="space-y-2 text-sm text-amber-800">
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>More click data leads to better model performance</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>Correction signals are especially valuable for training</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>Training runs automatically update the production model</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* Evaluate Tab */}
+      {activeTab === "evaluate" && (
+        <div className="space-y-6">
+          {/* Run New Evaluation */}
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900">Evaluation Results</h3>
+            <button
+              onClick={handleRunEvaluation}
+              className="px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Run Evaluation
+            </button>
+          </div>
+
+          {/* Results Table */}
+          <div className="bg-white rounded-2xl border overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Run
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    P@1
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    P@5
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    P@10
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    MRR
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    nDCG
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {evalResults.map((result, idx) => (
+                  <tr key={result.id} className={idx === 0 ? "bg-emerald-50" : ""}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{result.name}</p>
+                        <p className="text-xs text-gray-500">{result.dataset}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <MetricCell
+                        value={result.metrics.precision_at_1}
+                        baseline={result.baseline?.precision_at_1}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <MetricCell
+                        value={result.metrics.precision_at_5}
+                        baseline={result.baseline?.precision_at_5}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <MetricCell
+                        value={result.metrics.precision_at_10}
+                        baseline={result.baseline?.precision_at_10}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <MetricCell
+                        value={result.metrics.mrr}
+                        baseline={result.baseline?.mrr}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <MetricCell
+                        value={result.metrics.ndcg}
+                        baseline={result.baseline?.ndcg}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(result.runAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Metrics Explanation */}
+          <div className="bg-gray-50 rounded-2xl border p-6">
+            <h4 className="font-medium text-gray-900 mb-3">Metrics Explained</h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="font-medium text-gray-700">Precision@K (P@K)</p>
+                <p className="text-gray-500">Percentage of relevant documents in top K results</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">MRR (Mean Reciprocal Rank)</p>
+                <p className="text-gray-500">Average of reciprocal ranks of first relevant result</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">nDCG (Normalized DCG)</p>
+                <p className="text-gray-500">Measures ranking quality with graded relevance</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">Baseline Comparison</p>
+                <p className="text-gray-500">Green = improvement, Red = regression vs baseline</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Helper component for metric cells with delta indicators
+function MetricCell({ value, baseline }: { value: number; baseline?: number }) {
+  const delta = baseline ? value - baseline : 0;
+  const isImproved = delta > 0;
+  const isRegressed = delta < 0;
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm font-medium text-gray-900">{(value * 100).toFixed(1)}%</span>
+      {baseline !== undefined && delta !== 0 && (
+        <span
+          className={`text-xs font-medium ${
+            isImproved ? "text-emerald-600" : isRegressed ? "text-red-600" : "text-gray-400"
+          }`}
+        >
+          {isImproved ? "+" : ""}{(delta * 100).toFixed(1)}%
+        </span>
+      )}
     </div>
   );
 }

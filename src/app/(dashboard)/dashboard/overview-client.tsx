@@ -42,24 +42,40 @@ interface DailyUsage {
   cost: number;
 }
 
+interface RecentActivity {
+  id: string;
+  endpoint: string;
+  method: string;
+  status: number;
+  statusCategory: 'success' | 'redirect' | 'client_error' | 'server_error';
+  latencyMs: number | null;
+  costCents: number;
+  keyPrefix: string;
+  timestamp: string;
+  tokens: number;
+}
+
 export default function DashboardOverviewClient({ user }: { user: User }) {
   const { t, locale } = useDashboardTranslation();
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentMemories, setRecentMemories] = useState<RecentMemory[]>([]);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
-      const [statsRes, memoriesRes, usageRes] = await Promise.all([
+      const [statsRes, memoriesRes, usageRes, activityRes] = await Promise.all([
         fetch("/api/dashboard/stats"),
         fetch("/api/memories?limit=5"),
         fetch("/api/dashboard/usage?period=7d"),
+        fetch("/api/dashboard/activity?limit=10"),
       ]);
 
       const statsData = await statsRes.json();
       const memoriesData = await memoriesRes.json();
       const usageData = await usageRes.json();
+      const activityData = await activityRes.json();
 
       if (statsData.success) {
         setStats(statsData.stats);
@@ -71,6 +87,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
       if (usageData.success && usageData.usage?.daily) {
         setDailyUsage(usageData.usage.daily);
+      }
+
+      if (activityData.success) {
+        setRecentActivity(activityData.activity || []);
       }
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -286,6 +306,144 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
       </div>
 
+      {/* Recent Activity */}
+      <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="p-4 border-b theme-border flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+              <ActivityIcon className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.recentActivity")}</h2>
+              <p className="text-xs text-gray-500">{t("dashboard.overviewPage.last10Requests")}</p>
+            </div>
+          </div>
+          <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
+            {t("dashboard.overviewPage.viewAllActivity")}
+          </Link>
+        </div>
+        <div className="overflow-x-auto">
+          {isLoading ? (
+            <div className="p-6">
+              <div className="animate-pulse space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-16 h-6 bg-gray-200 rounded" />
+                    <div className="flex-1 h-4 bg-gray-100 rounded" />
+                    <div className="w-12 h-4 bg-gray-100 rounded" />
+                    <div className="w-16 h-4 bg-gray-100 rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : recentActivity.length === 0 ? (
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
+                <ActivityIcon className="w-8 h-8 text-emerald-400" />
+              </div>
+              <h3 className="text-gray-900 font-medium mb-2">{t("dashboard.overviewPage.noActivityYet")}</h3>
+              <p className="text-sm text-gray-500 mb-4">
+                {t("dashboard.overviewPage.noActivityDescription")}
+              </p>
+              <Link
+                href="/dashboard/keys"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium hover:from-emerald-600 hover:to-teal-600 transition-all"
+              >
+                <KeyIcon className="w-4 h-4" />
+                {t("dashboard.overviewPage.sendFirstRequest")}
+              </Link>
+            </div>
+          ) : (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50/50">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.endpoint")}
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.status")}
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.latency")}
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.cost")}
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.key")}
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("dashboard.activity.time")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {recentActivity.map((activity) => (
+                  <tr key={activity.id} className="hover:bg-white/50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${
+                          activity.method === 'GET' ? 'bg-blue-100 text-blue-700' :
+                          activity.method === 'POST' ? 'bg-green-100 text-green-700' :
+                          activity.method === 'PUT' ? 'bg-amber-100 text-amber-700' :
+                          activity.method === 'DELETE' ? 'bg-red-100 text-red-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {activity.method}
+                        </span>
+                        <span className="text-gray-900 font-mono text-xs truncate max-w-[200px]">
+                          {activity.endpoint}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full ${
+                        activity.statusCategory === 'success' ? 'bg-green-100 text-green-700' :
+                        activity.statusCategory === 'redirect' ? 'bg-blue-100 text-blue-700' :
+                        activity.statusCategory === 'client_error' ? 'bg-amber-100 text-amber-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        {activity.statusCategory === 'success' && <SuccessIcon className="w-3 h-3" />}
+                        {activity.statusCategory === 'client_error' && <WarningIcon className="w-3 h-3" />}
+                        {activity.statusCategory === 'server_error' && <ErrorIcon className="w-3 h-3" />}
+                        {activity.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`text-xs font-mono ${
+                        (activity.latencyMs || 0) > 1000 ? 'text-red-600' :
+                        (activity.latencyMs || 0) > 500 ? 'text-amber-600' :
+                        'text-gray-600'
+                      }`}>
+                        {activity.latencyMs ? `${activity.latencyMs}ms` : '-'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs text-gray-600">
+                        {activity.costCents > 0 ? `$${(activity.costCents / 100).toFixed(4)}` : '-'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                        {activity.keyPrefix}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-gray-500">
+                      {new Date(activity.timestamp).toLocaleString(locale, {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
       {/* Recent Memories & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Memories */}
@@ -464,6 +622,38 @@ function ChartIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
+  );
+}
+
+function ActivityIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+    </svg>
+  );
+}
+
+function SuccessIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  );
+}
+
+function WarningIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+    </svg>
+  );
+}
+
+function ErrorIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
     </svg>
   );
 }
