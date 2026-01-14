@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ttfsEvents } from "@/lib/analytics";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface OnboardingStep {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   action: {
-    label: string;
+    labelKey: string;
     href: string;
     external?: boolean;
   };
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export function OnboardingWizard({ userId }: Props) {
+  const { t, isLoading: translationLoading } = useDashboardTranslation();
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -29,10 +31,10 @@ export function OnboardingWizard({ userId }: Props) {
   const steps: OnboardingStep[] = [
     {
       id: "api_key",
-      title: "Create API Key",
-      description: "Generate your first API key to authenticate requests",
+      titleKey: "dashboard.onboarding.steps.apiKey.title",
+      descriptionKey: "dashboard.onboarding.steps.apiKey.description",
       action: {
-        label: "Create Key",
+        labelKey: "dashboard.onboarding.steps.apiKey.action",
         href: "/dashboard/keys",
       },
       checkCompleted: async () => {
@@ -43,10 +45,10 @@ export function OnboardingWizard({ userId }: Props) {
     },
     {
       id: "demo_query",
-      title: "Make Your First Query",
-      description: "Try the demo query or make an API request",
+      titleKey: "dashboard.onboarding.steps.demoQuery.title",
+      descriptionKey: "dashboard.onboarding.steps.demoQuery.description",
       action: {
-        label: "Try Demo",
+        labelKey: "dashboard.onboarding.steps.demoQuery.action",
         href: "/docs#quickstart",
       },
       checkCompleted: async () => {
@@ -58,10 +60,10 @@ export function OnboardingWizard({ userId }: Props) {
     },
     {
       id: "view_trace",
-      title: "View a Trace",
-      description: "Understand how search works with full tracing",
+      titleKey: "dashboard.onboarding.steps.viewTrace.title",
+      descriptionKey: "dashboard.onboarding.steps.viewTrace.description",
       action: {
-        label: "View Traces",
+        labelKey: "dashboard.onboarding.steps.viewTrace.action",
         href: "/dashboard/usage",
       },
       checkCompleted: async () => {
@@ -72,10 +74,10 @@ export function OnboardingWizard({ userId }: Props) {
     },
     {
       id: "install_sdk",
-      title: "Install SDK",
-      description: "Add Seizn to your project with npm or pip",
+      titleKey: "dashboard.onboarding.steps.installSdk.title",
+      descriptionKey: "dashboard.onboarding.steps.installSdk.description",
       action: {
-        label: "View SDKs",
+        labelKey: "dashboard.onboarding.steps.installSdk.action",
         href: "/docs#sdks",
       },
       checkCompleted: async () => {
@@ -150,8 +152,36 @@ export function OnboardingWizard({ userId }: Props) {
     };
   }
 
-  if (isDismissed || isLoading) {
+  if (isDismissed) {
     return null;
+  }
+
+  // Show skeleton loader during loading
+  if (isLoading || translationLoading) {
+    return (
+      <div className="glass-card rounded-2xl overflow-hidden mb-6 border-2 border-emerald-500/20 animate-pulse">
+        <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gray-200" />
+            <div className="space-y-2">
+              <div className="h-4 w-40 bg-gray-200 rounded" />
+              <div className="h-3 w-24 bg-gray-200 rounded" />
+            </div>
+          </div>
+        </div>
+        <div className="p-4 space-y-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-gray-50">
+              <div className="w-8 h-8 rounded-full bg-gray-200" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-32 bg-gray-200 rounded" />
+                <div className="h-3 w-48 bg-gray-200 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   const completionPercentage = Math.round((completedSteps.size / steps.length) * 100);
@@ -173,9 +203,9 @@ export function OnboardingWizard({ userId }: Props) {
             <RocketIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Get Started with Seizn</h3>
+            <h3 className="font-semibold text-gray-900">{t("dashboard.onboarding.title")}</h3>
             <p className="text-sm text-gray-500">
-              {completedSteps.size}/{steps.length} steps completed
+              {t("dashboard.onboarding.progress", { completed: completedSteps.size, total: steps.length })}
             </p>
           </div>
         </div>
@@ -215,7 +245,7 @@ export function OnboardingWizard({ userId }: Props) {
               handleDismiss();
             }}
             className="text-gray-400 hover:text-gray-600 p-1"
-            title="Dismiss"
+            title={t("dashboard.onboarding.dismiss")}
           >
             <XIcon className="w-5 h-5" />
           </button>
@@ -259,10 +289,10 @@ export function OnboardingWizard({ userId }: Props) {
                       isComplete ? "text-emerald-700" : "text-gray-900"
                     }`}
                   >
-                    {step.title}
+                    {t(step.titleKey)}
                   </p>
                   <p className="text-sm text-gray-500 truncate">
-                    {step.description}
+                    {t(step.descriptionKey)}
                   </p>
                 </div>
 
@@ -273,7 +303,7 @@ export function OnboardingWizard({ userId }: Props) {
                     onClick={() => handleStepClick(step, index)}
                     className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors flex-shrink-0"
                   >
-                    {step.action.label}
+                    {t(step.action.labelKey)}
                   </Link>
                 )}
               </div>
@@ -286,7 +316,7 @@ export function OnboardingWizard({ userId }: Props) {
               onClick={handleDismiss}
               className="text-sm text-gray-400 hover:text-gray-600"
             >
-              I&apos;ll do this later
+              {t("dashboard.onboarding.doLater")}
             </button>
           </div>
         </div>

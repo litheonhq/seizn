@@ -54,34 +54,36 @@
       "period": "영구 무료",
       "features": [
         "10,000 메모리",
-        "월 1,000 API 호출",
+        "일 1,000 API 호출",
         "커뮤니티 지원"
       ],
       "cta": "시작하기"
     },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "월",
       "features": [
-        "50,000 메모리",
-        "월 10,000 API 호출",
+        "100,000 메모리",
+        "일 10,000 API 호출",
         "이메일 지원",
-        "기본 분석"
+        "분석 대시보드",
+        "웹훅"
       ],
       "cta": "구독하기"
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "월",
       "badge": "인기",
       "features": [
-        "200,000 메모리",
-        "월 50,000 API 호출",
+        "1,000,000 메모리",
+        "일 100,000 API 호출",
         "우선 지원",
         "고급 분석",
-        "웹훅"
+        "웹훅",
+        "페더레이티드 검색"
       ],
       "cta": "구독하기"
     },
@@ -93,6 +95,7 @@
         "무제한 메모리",
         "무제한 API 호출",
         "전담 지원",
+        "SSO / SAML",
         "맞춤 SLA",
         "온프레미스 옵션"
       ],
@@ -206,6 +209,34 @@
       "plan": "현재 요금제",
       "unlimited": "무제한"
     },
+    "onboarding": {
+      "title": "Seizn 시작하기",
+      "progress": "{completed}/{total} 단계 완료",
+      "dismiss": "닫기",
+      "doLater": "나중에 할게요",
+      "steps": {
+        "apiKey": {
+          "title": "API 키 생성",
+          "description": "첫 번째 API 키를 생성하여 요청 인증하기",
+          "action": "키 생성"
+        },
+        "demoQuery": {
+          "title": "첫 쿼리 실행",
+          "description": "데모 쿼리를 시도하거나 API 요청 보내기",
+          "action": "데모 시도"
+        },
+        "viewTrace": {
+          "title": "트레이스 보기",
+          "description": "전체 추적으로 검색 작동 방식 이해하기",
+          "action": "트레이스 보기"
+        },
+        "installSdk": {
+          "title": "SDK 설치",
+          "description": "npm 또는 pip로 프로젝트에 Seizn 추가하기",
+          "action": "SDK 보기"
+        }
+      }
+    },
     "keys": {
       "title": "API 키 관리",
       "create": "새 키 생성",
@@ -289,7 +320,145 @@
       "collaborateTeam": "팀과 협업하기",
       "quickExample": "빠른 예제",
       "manageKeys": "키 관리",
-      "upgradePlan": "요금제 업그레이드"
+      "upgradePlan": "요금제 업그레이드",
+      "apiUsageChart": "API 사용량",
+      "last7days": "최근 7일",
+      "viewDetails": "상세 보기",
+      "noUsageData": "아직 사용 데이터가 없습니다"
+    },
+    "evals": {
+      "title": "평가",
+      "subtitle": "A/B 테스트로 검색 품질 측정",
+      "newRun": "새 평가 실행",
+      "runs": "평가 실행 목록",
+      "noRuns": "아직 평가 실행 기록이 없습니다",
+      "metrics": "메트릭",
+      "comparison": "비교 차트",
+      "selectRun": "평가 실행을 선택하세요",
+      "selectRunHint": "목록에서 실행을 선택하여 상세 메트릭을 확인하세요"
+    },
+    "autopilot": {
+      "title": "오토파일럿",
+      "subtitle": "AI 기반 검색 최적화",
+      "settings": "설정",
+      "decisionLogs": "결정 로그",
+      "operationMode": "작동 모드",
+      "parameters": "파라미터",
+      "recentDecisions": "최근 결정",
+      "noLogs": "아직 결정 로그가 없습니다"
+    },
+    "governance": {
+      "title": "거버넌스",
+      "subtitle": "데이터 정책, 보존 규칙, 규정 준수 설정 관리",
+      "tabs": {
+        "retention": "데이터 보존",
+        "access": "접근 제어",
+        "pii": "PII 탐지",
+        "compliance": "규정 준수"
+      },
+      "stats": {
+        "retentionPolicies": "보존 정책",
+        "accessRules": "접근 규칙",
+        "piiRules": "활성 PII 규칙",
+        "complianceScore": "규정 준수 점수"
+      }
+    },
+    "integrations": {
+      "title": "연동",
+      "subtitle": "선호하는 도구 및 프레임워크와 Seizn 연결",
+      "searchPlaceholder": "연동 검색...",
+      "stats": {
+        "total": "총 연동 수",
+        "available": "사용 가능",
+        "beta": "베타",
+        "comingSoon": "출시 예정"
+      }
+    },
+    "calculator": {
+      "title": "사용량 계산기",
+      "subtitle": "예상 사용량을 기반으로 월 비용을 계산합니다",
+      "stats": {
+        "apiCalls": "API 호출",
+        "memories": "메모리",
+        "extractions": "추출",
+        "estimated": "예상 비용"
+      },
+      "presets": {
+        "title": "빠른 프리셋",
+        "startup": "스타트업",
+        "growing": "성장",
+        "scale": "스케일",
+        "enterprise": "엔터프라이즈"
+      },
+      "customize": {
+        "title": "사용량 설정"
+      },
+      "labels": {
+        "apiCalls": "월간 API 호출",
+        "memories": "저장된 메모리",
+        "extractions": "추출 횟수"
+      },
+      "recommended": {
+        "title": "추천 플랜",
+        "base": "기본 가격",
+        "overage": "초과 요금",
+        "cta": "시작하기"
+      },
+      "comparison": {
+        "title": "전체 플랜",
+        "best": "최적 가치"
+      },
+      "details": {
+        "title": "상세 가격 내역",
+        "plan": "플랜",
+        "base": "기본 가격",
+        "includedCalls": "포함 호출",
+        "overageRate": "초과 요율",
+        "yourOverage": "초과 요금",
+        "total": "합계"
+      }
+    },
+    "webhooks": {
+      "title": "웹훅",
+      "subtitle": "실시간 이벤트 알림을 위한 HTTP 콜백 설정",
+      "create": "웹훅 생성",
+      "stats": {
+        "total": "전체 웹훅",
+        "active": "활성",
+        "failing": "실패 중",
+        "deliveries": "전체 전송"
+      },
+      "tabs": {
+        "endpoints": "엔드포인트",
+        "deliveries": "최근 전송"
+      },
+      "success": "성공",
+      "failed": "실패",
+      "lastTriggered": "마지막 실행",
+      "edit": "수정",
+      "delete": "삭제",
+      "retry": "재시도",
+      "deleteConfirm": "이 웹훅을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "empty": {
+        "title": "설정된 웹훅이 없습니다",
+        "description": "웹훅을 생성하여 이벤트에 대한 실시간 알림을 받으세요.",
+        "cta": "첫 웹훅 생성하기"
+      },
+      "table": {
+        "event": "이벤트",
+        "status": "상태",
+        "response": "응답",
+        "time": "시간",
+        "actions": "작업"
+      },
+      "modal": {
+        "title": "웹훅 생성",
+        "name": "이름",
+        "url": "엔드포인트 URL",
+        "events": "구독할 이벤트",
+        "cancel": "취소",
+        "create": "웹훅 생성"
+      }
     },
     "keysPage": {
       "title": "API 키",
@@ -562,7 +731,36 @@
     },
     "tabs": {
       "results": "결과",
-      "trace": "트레이스"
+      "trace": "트레이스",
+      "cost": "비용"
+    },
+    "costPanel": {
+      "calculating": "비용 계산 중...",
+      "noCost": "쿼리를 실행하면 비용 내역을 확인할 수 있습니다",
+      "costBreakdown": "비용 분석",
+      "component": "구성 요소",
+      "cost": "비용",
+      "embedding": "임베딩",
+      "vectorSearch": "벡터 검색",
+      "rerank": "재순위화",
+      "answerContract": "응답 검증",
+      "total": "총 비용",
+      "usage": "사용량",
+      "tokensIn": "입력 토큰",
+      "tokensOut": "출력 토큰",
+      "queryUnits": "쿼리 단위",
+      "estimatedMonthly": "월간 예상",
+      "basedOn": "기준",
+      "queriesPerDay": "일 쿼리"
+    },
+    "errorDisplay": {
+      "error": "오류",
+      "errorCode": "코드",
+      "traceId": "추적 ID",
+      "hint": "힌트",
+      "tryAgain": "다시 시도",
+      "copyTraceId": "추적 ID 복사",
+      "copied": "복사됨!"
     }
   },
   "docs": {
@@ -821,6 +1019,56 @@
           "category": "securityCompliance",
           "question": "보안/법무팀에 필요한 문서는 무엇인가요?",
           "answer": "필요한 것: 1) 데이터 범위(저장되는/안 되는 것), 2) 암호화(저장 시: AES-256, 전송 중: TLS), 3) 테넌트 격리 방법, 4) 삭제/보존 정책, 5) 감사 로그 접근, 6) 키 순환/만료 정책. 문서에 보안 및 거버넌스 페이지를 유지하세요."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "어떤 SDK를 사용할 수 있나요?",
+          "answer": "TypeScript/JavaScript (npm install @seizn/sdk), Python (pip install seizn), 그리고 모든 언어를 위한 REST API의 공식 SDK를 제공합니다. 모든 SDK에는 TypeScript 타입, 자동 재시도, 스트리밍 지원이 포함됩니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "일반적인 통합 기간은 얼마나 되나요?",
+          "answer": "기본 통합(메모리 저장/검색)은 1-2시간이 소요됩니다. 추출 기능 추가는 2-4시간 추가됩니다. 거버넌스 정책을 포함한 전체 프로덕션 배포는 테스트와 보안 검토를 포함하여 일반적으로 1-2주가 소요됩니다."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "다국어 콘텐츠는 어떻게 처리하나요?",
+          "answer": "Seizn의 임베딩은 100개 이상의 언어를 지원합니다. 어떤 언어로든 콘텐츠를 저장하면 교차 언어 검색이 작동합니다. 최상의 결과를 위해 'language' 메타데이터 필드를 유지하고 언어별 결과가 필요할 때 필터링하세요."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "시맨틱 검색과 키워드 필터링을 결합할 수 있나요?",
+          "answer": "예. 'filters' 파라미터를 사용하여 시맨틱 랭킹 전에 메타데이터(네임스페이스, 스코프, memory_type, 커스텀 필드)로 범위를 좁히세요. 이 하이브리드 접근 방식은 정밀도와 재현율을 모두 제공합니다."
+        },
+        {
+          "category": "extraction",
+          "question": "추출 실패는 어떻게 처리하나요?",
+          "answer": "응답의 'status' 필드를 확인하세요. 추출이 실패하면: 1) 입력 형식이 올바른지 확인, 2) 콘텐츠가 너무 짧지 않은지 확인(<50자는 종종 실패), 3) 다른 모델 시도. 일시적 오류에 대해 지수 백오프로 재시도 로직을 설정하세요."
+        },
+        {
+          "category": "extraction",
+          "question": "추출 내용을 커스터마이즈할 수 있나요?",
+          "answer": "예. 'extraction_prompt' 파라미터를 사용하여 모델을 안내하세요. 추출할 메모리 유형, 최소 중요도 임계값, 찾을 특정 필드, 커스텀 출력 스키마를 지정할 수 있습니다."
+        },
+        {
+          "category": "operations",
+          "question": "다른 메모리/RAG 시스템에서 어떻게 마이그레이션하나요?",
+          "answer": "기존 데이터를 content, metadata, created_at 필드가 있는 JSON으로 내보내세요. 100-500개 항목 배치로 대량 가져오기 API(POST /api/memories/bulk)를 사용하세요. 품질이 일치하는지 확인하기 위해 병렬 검증 쿼리 세트를 실행하세요."
+        },
+        {
+          "category": "operations",
+          "question": "권장되는 백업 전략은 무엇인가요?",
+          "answer": "내보내기 API(GET /api/memories/export)를 사용하여 정기적인 백업을 생성하세요. 중요한 네임스페이스에 대해 일일 내보내기를 예약하세요. 버전 관리가 활성화된 자체 객체 스토리지(S3, GCS)에 내보내기를 저장하세요."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Seizn은 SOC 2를 준수하나요?",
+          "answer": "예, Seizn은 SOC 2 Type II 규정 준수를 유지합니다. EU 리전 배포로 GDPR 데이터 거주 요구 사항도 지원합니다. 계정 대시보드를 통해 보안 설문지 또는 SOC 2 보고서를 요청하세요."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "GDPR/CCPA를 위한 사용자 데이터 삭제는 어떻게 구현하나요?",
+          "answer": "DELETE /api/memories와 user_id 필터를 사용하여 사용자의 모든 메모리를 제거하세요. 삭제를 증명하기 위해 감사 로깅을 활성화하세요. 일정 기간 후 자동 삭제를 위한 보존 정책을 설정하세요. 데이터 이동성 요청을 위해 GET /api/memories/export?user_id=xxx로 사용자 데이터를 내보내세요."
         }
       ]
     },
@@ -928,15 +1176,15 @@
           "time": "30초",
           "description": "선호하는 패키지 매니저로 Seizn SDK를 설치하세요."
         },
-        "saveMemory": {
-          "title": "메모리 저장",
-          "time": "2분",
-          "description": "AI가 나중에 불러올 수 있는 정보를 저장하세요."
+        "ingest": {
+          "title": "문서 인제스트",
+          "time": "30초",
+          "description": "검색을 위한 문서를 데이터셋에 업로드하세요."
         },
-        "searchMemory": {
-          "title": "메모리 검색",
-          "time": "2분",
-          "description": "자연어 검색으로 관련 메모리를 불러오세요."
+        "query": {
+          "title": "첫 번째 쿼리 실행",
+          "time": "10초",
+          "description": "자연어 쿼리로 문서를 검색하세요."
         }
       },
       "completion": {

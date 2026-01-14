@@ -8,6 +8,8 @@ import type { Locale } from "@/i18n/config";
 import { RequestBuilder, type RequestConfig, type RequestBuilderTranslations } from "./request-builder";
 import { ResultsPanel, type SearchResult, type ResultsPanelTranslations } from "./results-panel";
 import { TracePanel, type TraceSummary, type TracePanelTranslations } from "./trace-panel";
+import { CostPanel, type CostBreakdown, type CostPanelTranslations } from "./cost-panel";
+import { ErrorDisplay, type PlaygroundError, type ErrorDisplayTranslations } from "./error-display";
 import { SnippetTabs } from "./snippet-tabs";
 
 interface ExtremeHomepageClientProps {
@@ -15,7 +17,7 @@ interface ExtremeHomepageClientProps {
   locale: Locale;
 }
 
-type ResultTab = "results" | "trace";
+type ResultTab = "results" | "trace" | "cost";
 
 const DEFAULT_CONFIG: RequestConfig = {
   query: "",
@@ -130,15 +132,28 @@ const MOCK_TRACE: TraceSummary = {
   ],
 };
 
+const MOCK_COST: CostBreakdown = {
+  embedding: 0.0001,
+  vectorSearch: 0.0,
+  rerank: 0.0018,
+  answerContract: 0.0004,
+  total: 0.0023,
+  tokensIn: 1024,
+  tokensOut: 823,
+  queryUnits: 1.5,
+};
+
 export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientProps) {
   const [config, setConfig] = useState<RequestConfig>(DEFAULT_CONFIG);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [trace, setTrace] = useState<TraceSummary | null>(null);
+  const [cost, setCost] = useState<CostBreakdown | null>(null);
+  const [error, setError] = useState<PlaygroundError | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<ResultTab>("results");
   const [hasRun, setHasRun] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileConsoleTab, setMobileConsoleTab] = useState<"request" | "results" | "trace">("request");
+  const [mobileConsoleTab, setMobileConsoleTab] = useState<"request" | "results" | "trace" | "cost">("request");
 
   // Close mobile menu on resize
   useEffect(() => {
@@ -154,27 +169,56 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const handleRun = useCallback(async () => {
     setIsLoading(true);
     setHasRun(true);
+    setError(null);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Simulate API call - faster response (600-800ms)
+    const responseTime = 600 + Math.random() * 200;
+    await new Promise((resolve) => setTimeout(resolve, responseTime));
 
     // Use mock data for demo
     setResults(MOCK_RESULTS.slice(0, config.topK));
+
+    // Calculate trace based on config
+    const filteredSteps = MOCK_TRACE.steps.filter((step) => {
+      if (step.name.includes("Rerank") && !config.rerank) return false;
+      if (step.name.includes("Hybrid") && !config.hybridSearch) return false;
+      if (step.name.includes("Contract") && !config.answerContract) return false;
+      return true;
+    });
+
+    const totalLatency = config.budgetMs * 0.7 + Math.random() * 100;
     setTrace({
       ...MOCK_TRACE,
-      totalLatencyMs: config.budgetMs * 0.7 + Math.random() * 100,
-      steps: MOCK_TRACE.steps.filter((step) => {
-        if (step.name.includes("Rerank") && !config.rerank) return false;
-        if (step.name.includes("Hybrid") && !config.hybridSearch) return false;
-        if (step.name.includes("Contract") && !config.answerContract) return false;
-        return true;
-      }),
+      totalLatencyMs: totalLatency,
+      steps: filteredSteps,
     });
+
+    // Calculate cost based on config
+    const costData: CostBreakdown = {
+      embedding: MOCK_COST.embedding,
+      vectorSearch: MOCK_COST.vectorSearch,
+      rerank: config.rerank ? MOCK_COST.rerank : 0,
+      answerContract: config.answerContract ? MOCK_COST.answerContract : 0,
+      total: MOCK_COST.embedding + (config.rerank ? MOCK_COST.rerank : 0) + (config.answerContract ? MOCK_COST.answerContract : 0),
+      tokensIn: MOCK_COST.tokensIn,
+      tokensOut: config.answerContract ? MOCK_COST.tokensOut : 0,
+      queryUnits: 1 + (config.hybridSearch ? 0.5 : 0) + (config.rerank ? 1 : 0),
+    };
+    setCost(costData);
 
     setIsLoading(false);
     setActiveTab("results");
     setMobileConsoleTab("results");
   }, [config]);
+
+  const handleRetry = useCallback(() => {
+    setError(null);
+    handleRun();
+  }, [handleRun]);
+
+  const handleDismissError = useCallback(() => {
+    setError(null);
+  }, []);
 
   // Auto-run demo on page load (once per session)
   useEffect(() => {
@@ -382,22 +426,55 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                       </span>
                     )}
                   </button>
+                  <button
+                    onClick={() => setActiveTab("cost")}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      activeTab === "cost"
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    {t.extremeHome?.tabs?.cost || "Cost"}
+                    {cost && (
+                      <span className="ml-2 text-xs bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full">
+                        ${cost.total.toFixed(4)}
+                      </span>
+                    )}
+                  </button>
                 </div>
+
+                {/* Error Display */}
+                {error && (
+                  <ErrorDisplay
+                    error={error}
+                    onRetry={handleRetry}
+                    onDismiss={handleDismissError}
+                    translations={t.extremeHome?.errorDisplay as ErrorDisplayTranslations}
+                  />
+                )}
 
                 {/* Tab Content */}
                 <div className="flex-1">
-                  {activeTab === "results" ? (
+                  {activeTab === "results" && (
                     <ResultsPanel
                       results={results}
                       isLoading={isLoading}
                       showRerankDelta={config.rerank}
                       translations={t.extremeHome?.resultsPanel as ResultsPanelTranslations}
                     />
-                  ) : (
+                  )}
+                  {activeTab === "trace" && (
                     <TracePanel
                       trace={trace}
                       isLoading={isLoading}
                       translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                    />
+                  )}
+                  {activeTab === "cost" && (
+                    <CostPanel
+                      cost={cost}
+                      isLoading={isLoading}
+                      translations={t.extremeHome?.costPanel as CostPanelTranslations}
                     />
                   )}
                 </div>
@@ -439,6 +516,16 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               >
                 {t.extremeHome?.tabs?.trace || "Trace"}
               </button>
+              <button
+                onClick={() => setMobileConsoleTab("cost")}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  mobileConsoleTab === "cost"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                {t.extremeHome?.tabs?.cost || "Cost"}
+              </button>
             </div>
 
             <div className="bg-white rounded-xl p-4 border border-gray-100 min-h-[400px]">
@@ -464,6 +551,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   trace={trace}
                   isLoading={isLoading}
                   translations={t.extremeHome?.tracePanel as TracePanelTranslations}
+                />
+              )}
+              {mobileConsoleTab === "cost" && (
+                <CostPanel
+                  cost={cost}
+                  isLoading={isLoading}
+                  translations={t.extremeHome?.costPanel as CostPanelTranslations}
                 />
               )}
             </div>

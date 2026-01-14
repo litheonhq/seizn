@@ -1,356 +1,1774 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
-    "title": "Seizn Memory API",
-    "description": "Persistent memory infrastructure for AI applications. Store, search, extract, and query memories with built-in governance and auditability.",
+    "title": "Seizn API",
+    "description": "AI Memory Infrastructure API",
     "version": "1.0.0",
     "contact": {
       "name": "Seizn Support",
-      "email": "support@seizn.com",
-      "url": "https://seizn.com"
-    },
-    "license": {
-      "name": "Proprietary",
-      "url": "https://seizn.com/terms"
+      "url": "https://seizn.com",
+      "email": "support@seizn.com"
     }
   },
   "servers": [
     {
-      "url": "https://seizn.com/api",
-      "description": "Production server"
-    }
-  ],
-  "security": [
+      "url": "https://seizn.com",
+      "description": "Production"
+    },
     {
-      "ApiKeyAuth": []
+      "url": "http://localhost:3000",
+      "description": "Development"
     }
   ],
   "paths": {
-    "/memories": {
+    "/api/extract/image": {
       "post": {
-        "summary": "Store a memory",
-        "description": "Store a new memory with optional metadata like memory_type, tags, namespace, and scope.",
-        "operationId": "createMemory",
-        "tags": ["Memories"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMemoryRequest"
-              },
-              "example": {
-                "content": "User prefers dark mode interfaces",
-                "memory_type": "preference",
-                "tags": ["ui", "settings"],
-                "namespace": "default"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Memory created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateMemoryResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - missing or invalid parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - invalid or missing API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "summary": "Search memories",
-        "description": "Search stored memories using semantic similarity. Returns memories ranked by relevance to the query.",
-        "operationId": "searchMemories",
-        "tags": ["Memories"],
-        "parameters": [
+        "summary": "POST /api/extract/image",
+        "description": "Endpoint for /api/extract/image",
+        "tags": [
+          "General"
+        ],
+        "security": [
           {
-            "name": "query",
-            "in": "query",
-            "required": true,
-            "description": "The search query for semantic matching",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "default": 10,
-              "minimum": 1,
-              "maximum": 100
-            }
-          },
-          {
-            "name": "threshold",
-            "in": "query",
-            "required": false,
-            "description": "Minimum similarity score (0-1) for results",
-            "schema": {
-              "type": "number",
-              "default": 0.7,
-              "minimum": 0,
-              "maximum": 1
-            }
-          },
-          {
-            "name": "namespace",
-            "in": "query",
-            "required": false,
-            "description": "Filter by namespace",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "memory_type",
-            "in": "query",
-            "required": false,
-            "description": "Filter by memory type",
-            "schema": {
-              "type": "string",
-              "enum": ["fact", "preference", "experience", "relationship", "instruction"]
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "description": "Filter by scope",
-            "schema": {
-              "type": "string",
-              "enum": ["user", "session", "agent"]
-            }
+            "ApiKeyAuth": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Search results",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchMemoriesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Success"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "put": {
+        "summary": "PUT /api/extract/image",
+        "description": "Endpoint for /api/extract/image",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/extract": {
+      "post": {
+        "summary": "POST /api/extract",
+        "description": "Endpoint for /api/extract",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "GET /api/health",
+        "description": "Endpoint for /api/health",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/keys": {
+      "get": {
+        "summary": "GET /api/keys",
+        "description": "Endpoint for /api/keys",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/keys",
+        "description": "Endpoint for /api/keys",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
           }
         }
       },
       "delete": {
-        "summary": "Delete memories",
-        "description": "Delete one or more memories by their IDs.",
-        "operationId": "deleteMemories",
-        "tags": ["Memories"],
-        "parameters": [
+        "summary": "DELETE /api/keys",
+        "description": "Endpoint for /api/keys",
+        "tags": [
+          "General"
+        ],
+        "security": [
           {
-            "name": "ids",
-            "in": "query",
-            "required": true,
-            "description": "Comma-separated list of memory IDs to delete",
-            "schema": {
-              "type": "string"
-            }
+            "ApiKeyAuth": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Memories deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteMemoriesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Success"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
           }
         }
       }
     },
-    "/extract": {
-      "post": {
-        "summary": "Extract memories from conversation",
-        "description": "Automatically extract facts, preferences, and instructions from a conversation using AI.",
-        "operationId": "extractMemories",
-        "tags": ["Extraction"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExtractRequest"
-              },
-              "example": {
-                "conversation": "User: I prefer using dark mode. Also, I write mostly in Python.\nAssistant: Got it! I'll remember that.",
-                "model": "haiku",
-                "auto_store": true,
-                "namespace": "default"
-              }
-            }
+    "/api/memories/export": {
+      "get": {
+        "summary": "GET /api/memories/export",
+        "description": "Endpoint for /api/memories/export",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Extraction completed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExtractResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Success"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
           }
         }
       }
     },
-    "/query": {
+    "/api/memories/import": {
       "post": {
-        "summary": "Query with memory-augmented response",
-        "description": "Generate a response to a query using relevant memories as context (RAG).",
-        "operationId": "queryMemories",
-        "tags": ["Query"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/QueryRequest"
-              },
-              "example": {
-                "query": "What are my preferences for code editors?",
-                "model": "haiku",
-                "top_k": 5,
-                "include_memories": true
-              }
-            }
+        "summary": "POST /api/memories/import",
+        "description": "Endpoint for /api/memories/import",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Query response with memories",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Success"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/memories": {
+      "post": {
+        "summary": "POST /api/memories",
+        "description": "Endpoint for /api/memories",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/memories",
+        "description": "Endpoint for /api/memories",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE /api/memories",
+        "description": "Endpoint for /api/memories",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/memories/{id}": {
+      "get": {
+        "summary": "GET /api/memories/:id",
+        "description": "Endpoint for /api/memories/:id",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "patch": {
+        "summary": "PATCH /api/memories/:id",
+        "description": "Endpoint for /api/memories/:id",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE /api/memories/:id",
+        "description": "Endpoint for /api/memories/:id",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/query": {
+      "post": {
+        "summary": "POST /api/query",
+        "description": "Endpoint for /api/query",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/rerank": {
+      "post": {
+        "summary": "POST /api/rerank",
+        "description": " GET /api/rerank - Get available models and domains",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/rerank",
+        "description": " GET /api/rerank - Get available models and domains",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "summary": "GET /api/status",
+        "description": " GET /api/status - Get system status  Returns overall system health and service statuses This endpoint is public (no auth required)",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/cache/invalidate": {
+      "delete": {
+        "summary": "DELETE /api/summer/cache/invalidate",
+        "description": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/summer/cache/invalidate",
+        "description": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/cache/invalidate",
+        "description": " GET /api/summer/cache/invalidate  Returns API documentation for the cache invalidation endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/cache/query": {
+      "post": {
+        "summary": "POST /api/summer/cache/query",
+        "description": " GET /api/summer/cache/query  Returns API documentation for the cache query endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/cache/query",
+        "description": " GET /api/summer/cache/query  Returns API documentation for the cache query endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/cache": {
+      "get": {
+        "summary": "GET /api/summer/cache",
+        "description": " GET /api/summer/cache  Semantic Cache API Documentation  Returns overview of all cache-related endpoints.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/cache/stats": {
+      "get": {
+        "summary": "GET /api/summer/cache/stats",
+        "description": " POST /api/summer/cache/stats  Reset cache statistics (admin operation)  Request Body: { \"reset\": true, \"reset_router\": false               // Optional: also reset router stats }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/summer/cache/stats",
+        "description": " POST /api/summer/cache/stats  Reset cache statistics (admin operation)  Request Body: { \"reset\": true, \"reset_router\": false               // Optional: also reset router stats }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/collections": {
+      "get": {
+        "summary": "GET /api/summer/collections",
+        "description": "Endpoint for /api/summer/collections",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/summer/collections",
+        "description": "Endpoint for /api/summer/collections",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/explain": {
+      "post": {
+        "summary": "POST /api/summer/explain",
+        "description": " Clean up expired explanations from the store",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/explain",
+        "description": " Clean up expired explanations from the store",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/explain/{queryId}": {
+      "get": {
+        "summary": "GET /api/summer/explain/:queryId",
+        "description": " DELETE /api/summer/explain/:queryId  Delete a stored explanation.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE /api/summer/explain/:queryId",
+        "description": " DELETE /api/summer/explain/:queryId  Delete a stored explanation.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/feedback": {
+      "post": {
+        "summary": "POST /api/summer/feedback",
+        "description": "Endpoint for /api/summer/feedback",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/index": {
+      "post": {
+        "summary": "POST /api/summer/index",
+        "description": " POST /api/summer/index  Index documents into the Summer RAG vector store.  Request body: { \"collection_id\": \"uuid\", \"documents\": [ { \"id\": \"optional-external-id\", \"content\": \"document content to index\", \"metadata\": { \"key\": \"value\" }, \"title\": \"optional title\", \"source\": \"optional source url\" } ], \"options\": { \"chunking_strategy\": \"sliding_window\" | \"sentence\" | \"paragraph\" | \"semantic\", \"chunk_size\": 512, \"chunk_overlap\": 64, \"embedding_model\": \"voyage-3\" | \"voyage-3-lite\" | \"voyage-code-3\" | \"voyage-finance-2\", \"skip_duplicates\": false } }  Response: { \"success\": true, \"indexed_count\": 5, \"chunks_created\": 25, \"duration_ms\": 1234, \"results\": [ { \"document_id\": \"uuid\", \"external_id\": \"optional-external-id\", \"chunk_count\": 5, \"status\": \"created\" | \"updated\" | \"skipped\" | \"error\" } ] }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/rag": {
+      "post": {
+        "summary": "POST /api/summer/rag",
+        "description": " RAG Query Endpoint  Full RAG pipeline: search -> rerank -> context -> LLM -> answer with sources  Request: { \"query\": \"What is the capital of France?\", \"collection_id\": \"uuid\", \"options\": { \"search_type\": \"hybrid\",      // semantic | keyword | hybrid \"rerank\": true,               // Enable reranking (requires plan support) \"llm_model\": \"claude-3-5-haiku\", // claude-3-5-sonnet | claude-3-5-haiku | gpt-4o | gpt-4o-mini \"max_tokens\": 2048,           // Max output tokens \"stream\": false,              // Enable streaming (SSE) \"temperature\": 0.3,           // LLM temperature \"top_k\": 10,                  // Top-K results \"rerank_top_n\": 20,           // Rerank top-N candidates \"federated\": false,           // Enable federated search \"system_prompt\": \"...\",       // Custom system prompt \"include_trace\": false        // Include detailed trace in response } }  Response: { \"success\": true, \"answer\": \"The capital of France is Paris [chunk_123].\", \"sources\": [ { \"id\": \"chunk_123\", \"content\": \"...\", \"score\": 0.92, \"documentId\": \"...\", \"metadata\": {...} } ], \"usage\": { \"embedding_tokens\": 12, \"llm_input_tokens\": 1500, \"llm_output_tokens\": 150, \"total_cost_credits\": 0.0045 }, \"latency_ms\": 1234, \"trace_id\": \"uuid\", \"trace\": {...}  // If include_trace is true }  Streaming Response (SSE): data: {\"type\":\"content\",\"content\":\"The capital\"} data: {\"type\":\"content\",\"content\":\" of France\"} data: {\"type\":\"content\",\"content\":\" is Paris\"} data: {\"type\":\"sources\",\"sources\":[...]} data: {\"type\":\"usage\",\"usage\":{...},\"latency_ms\":1234,\"trace_id\":\"uuid\"} data: {\"type\":\"done\"}",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "options": {
+        "summary": "OPTIONS /api/summer/rag",
+        "description": " RAG Query Endpoint  Full RAG pipeline: search -> rerank -> context -> LLM -> answer with sources  Request: { \"query\": \"What is the capital of France?\", \"collection_id\": \"uuid\", \"options\": { \"search_type\": \"hybrid\",      // semantic | keyword | hybrid \"rerank\": true,               // Enable reranking (requires plan support) \"llm_model\": \"claude-3-5-haiku\", // claude-3-5-sonnet | claude-3-5-haiku | gpt-4o | gpt-4o-mini \"max_tokens\": 2048,           // Max output tokens \"stream\": false,              // Enable streaming (SSE) \"temperature\": 0.3,           // LLM temperature \"top_k\": 10,                  // Top-K results \"rerank_top_n\": 20,           // Rerank top-N candidates \"federated\": false,           // Enable federated search \"system_prompt\": \"...\",       // Custom system prompt \"include_trace\": false        // Include detailed trace in response } }  Response: { \"success\": true, \"answer\": \"The capital of France is Paris [chunk_123].\", \"sources\": [ { \"id\": \"chunk_123\", \"content\": \"...\", \"score\": 0.92, \"documentId\": \"...\", \"metadata\": {...} } ], \"usage\": { \"embedding_tokens\": 12, \"llm_input_tokens\": 1500, \"llm_output_tokens\": 150, \"total_cost_credits\": 0.0045 }, \"latency_ms\": 1234, \"trace_id\": \"uuid\", \"trace\": {...}  // If include_trace is true }  Streaming Response (SSE): data: {\"type\":\"content\",\"content\":\"The capital\"} data: {\"type\":\"content\",\"content\":\" of France\"} data: {\"type\":\"content\",\"content\":\" is Paris\"} data: {\"type\":\"sources\",\"sources\":[...]} data: {\"type\":\"usage\",\"usage\":{...},\"latency_ms\":1234,\"trace_id\":\"uuid\"} data: {\"type\":\"done\"}",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/rerank/batch": {
+      "post": {
+        "summary": "POST /api/summer/rerank/batch",
+        "description": " POST /api/summer/rerank/batch  Batch rerank multiple query-document sets  Request Body: { \"requests\": [ { \"query\": \"string\", \"documents\": [{ \"id\": \"string\", \"content\": \"string\", \"metadata\"?: object }] } ], \"options\"?: { \"model\"?: \"cohere\" | \"voyage\" | \"cross_encoder\" | \"bm25\", \"top_k\"?: number } }  Response: { \"success\": true, \"results\": [ RerankResponse, ... ], \"total_latency_ms\": number, \"total_cost_usd\": number }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/rerank/estimate": {
+      "post": {
+        "summary": "POST /api/summer/rerank/estimate",
+        "description": " GET /api/summer/rerank/estimate  Get pricing information for all models  Response: { \"success\": true, \"models\": [ { \"id\": \"string\", \"name\": \"string\", \"description\": \"string\", \"costPerQuery\": number, \"costPerDocument\": number } ] }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/rerank/estimate",
+        "description": " GET /api/summer/rerank/estimate  Get pricing information for all models  Response: { \"success\": true, \"models\": [ { \"id\": \"string\", \"name\": \"string\", \"description\": \"string\", \"costPerQuery\": number, \"costPerDocument\": number } ] }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/rerank": {
+      "post": {
+        "summary": "POST /api/summer/rerank",
+        "description": " Get available reranker models and pricing info",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/rerank",
+        "description": " Get available reranker models and pricing info",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/alerts": {
+      "get": {
+        "summary": "GET /api/summer/retops/alerts",
+        "description": " POST /api/summer/retops/alerts  Trigger alert detection for the authenticated user. This runs anomaly detection and threshold checks.  Request Body: { \"detectAnomalies\": true,    // Run anomaly detection \"checkThresholds\": true     // Check threshold alerts }  Response: { \"success\": true, \"anomaliesDetected\": 2, \"alertsCreated\": 1 }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/summer/retops/alerts",
+        "description": " POST /api/summer/retops/alerts  Trigger alert detection for the authenticated user. This runs anomaly detection and threshold checks.  Request Body: { \"detectAnomalies\": true,    // Run anomaly detection \"checkThresholds\": true     // Check threshold alerts }  Response: { \"success\": true, \"anomaliesDetected\": 2, \"alertsCreated\": 1 }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/alerts/{alertId}/acknowledge": {
+      "post": {
+        "summary": "POST /api/summer/retops/alerts/:alertId/acknowledge",
+        "description": " POST /api/summer/retops/alerts/[alertId]/acknowledge  Acknowledge an alert for the authenticated user.  Response: { \"success\": true, \"alertId\": \"alert_xxx\", \"acknowledgedAt\": \"2024-01-01T00:00:00Z\" }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/alerts/{alertId}/resolve": {
+      "post": {
+        "summary": "POST /api/summer/retops/alerts/:alertId/resolve",
+        "description": " POST /api/summer/retops/alerts/[alertId]/resolve  Resolve an alert for the authenticated user.  Response: { \"success\": true, \"alertId\": \"alert_xxx\", \"resolvedAt\": \"2024-01-01T00:00:00Z\" }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/metrics": {
+      "get": {
+        "summary": "GET /api/summer/retops/metrics",
+        "description": " GET /api/summer/retops/metrics  Get RetOps metrics snapshot for the authenticated user.  Query Parameters: - period: Time period for metrics (1h, 6h, 24h, 7d, 30d) - default: 1h - collectionId: Filter by collection ID (optional) - granularity: Granularity for time series (1m, 5m, 15m, 1h, 1d) - optional - includeTimeSeries: Include time series data (true/false) - default: true  Response: { \"success\": true, \"metrics\": { \"timestamp\": \"2024-01-01T00:00:00Z\", \"userId\": \"user_xxx\", \"qps\": 1.25, \"totalQueries\": 1500, \"latency\": { \"p50\": 45, \"p75\": 78, \"p90\": 120, \"p95\": 180, \"p99\": 350, \"avg\": 65, \"max\": 890 }, \"cache\": { \"hits\": 800, \"misses\": 700, \"hitRate\": 0.533, \"semanticHitRate\": 0.426, \"avgTimeSavedMs\": 58 }, \"errors\": { \"total\": 12, \"rate\": 0.008, \"byType\": { \"RATE_LIMIT\": 8, \"NOT_FOUND\": 4 } }, \"quality\": { \"mrr\": 0.75, \"ndcg\": 0.68, ... } }, \"timeSeries\": { \"timestamps\": [...], \"qps\": [...], \"latencyP50\": [...], \"latencyP99\": [...], \"errorRate\": [...], \"cacheHitRate\": [...] } }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/quality": {
+      "get": {
+        "summary": "GET /api/summer/retops/quality",
+        "description": " GET /api/summer/retops/quality  Get search quality metrics for the authenticated user.  Query Parameters: - period: Time period for metrics (1h, 6h, 24h, 7d, 30d) - default: 24h - collectionId: Filter by collection ID (optional) - includeTrend: Include quality trend data (true/false) - default: false  Response: { \"success\": true, \"quality\": { \"mrr\": 0.75, \"ndcg\": 0.68, \"precisionAtK\": { \"p1\": 0.85, \"p3\": 0.72, \"p5\": 0.65, \"p10\": 0.55 }, \"recallAtK\": { \"r1\": 0.35, \"r3\": 0.55, \"r5\": 0.68, \"r10\": 0.82 }, \"groundedness\": 0.88, \"rerankImprovement\": 0.12 }, \"trend\": [ { \"timestamp\": \"2024-01-01T00:00:00Z\", \"mrr\": 0.74, \"ndcg\": 0.67, \"groundedness\": 0.87 }, ... ] }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retops/stats": {
+      "get": {
+        "summary": "GET /api/summer/retops/stats",
+        "description": " GET /api/summer/retops/stats  Get comprehensive retrieval statistics for the authenticated user.  Query Parameters: - period: Time period for stats (1h, 6h, 24h, 7d, 30d) - default: 24h - collectionId: Filter by collection ID (optional) - includeTopQueries: Include top queries list (true/false) - default: true - topQueriesLimit: Number of top queries to return (1-50) - default: 10  Response: { \"success\": true, \"stats\": { \"period\": \"24h\", \"startTime\": \"2024-01-01T00:00:00Z\", \"endTime\": \"2024-01-02T00:00:00Z\", \"queryVolume\": { \"total\": 15000, \"avgQps\": 0.17, \"peakQps\": 2.5, \"timeSeries\": [...] }, \"searchTypes\": { \"vector\": 5000, \"keyword\": 1000, \"hybrid\": 9000, \"federated\": 0 }, \"topQueries\": [...], \"collectionBreakdown\": [...], \"embeddingUsage\": {...}, \"rerankUsage\": {...} } }",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/retrieve": {
+      "post": {
+        "summary": "POST /api/summer/retrieve",
+        "description": "Endpoint for /api/summer/retrieve",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/search": {
+      "post": {
+        "summary": "POST /api/summer/search",
+        "description": " GET /api/summer/search  Returns API documentation for the search endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/search",
+        "description": " GET /api/summer/search  Returns API documentation for the search endpoint",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/versions": {
+      "post": {
+        "summary": "POST /api/summer/versions",
+        "description": " API: /api/summer/versions  POST - Create a new version GET - List versions for a collection",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/summer/versions",
+        "description": " API: /api/summer/versions  POST - Create a new version GET - List versions for a collection",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/versions/{id}/diff/{compareId}": {
+      "get": {
+        "summary": "GET /api/summer/versions/:id/diff/:compareId",
+        "description": " API: /api/summer/versions/:id/diff/:compareId  GET - Compare two versions and return diff",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/versions/{id}/restore": {
+      "post": {
+        "summary": "POST /api/summer/versions/:id/restore",
+        "description": " API: /api/summer/versions/:id/restore  POST - Restore (rollback) to a specific version",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/summer/versions/{id}": {
+      "get": {
+        "summary": "GET /api/summer/versions/:id",
+        "description": " API: /api/summer/versions/:id  GET - Get version details",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces/compare": {
+      "post": {
+        "summary": "POST /api/traces/compare",
+        "description": " GET /api/traces/compare - Compare traces via query params  Query Parameters: - a: First trace ID - b: Second trace ID",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/traces/compare",
+        "description": " GET /api/traces/compare - Compare traces via query params  Query Parameters: - a: First trace ID - b: Second trace ID",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces/replay": {
+      "post": {
+        "summary": "POST /api/traces/replay",
+        "description": " POST /api/traces/replay - Replay a trace with the same or modified config  Re-executes a previous query and creates a new trace. Useful for: - A/B testing different configs - Debugging issues - Comparing performance over time  Request Body: - trace_id: The ID of the trace to replay - config_overrides: Optional config overrides for the replay",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces": {
+      "get": {
+        "summary": "GET /api/traces",
+        "description": " GET /api/traces - List user's traces  Returns paginated list of traces for the authenticated user. Supports filtering by collection, date range, errors, and search query.  Query Parameters: - limit: Number of traces to return (max 100, default 20) - offset: Pagination offset (default 0) - collection: Filter by collection ID - start_date: Filter by start date (ISO string) - end_date: Filter by end date (ISO string) - has_error: Filter by error presence (true/false) - experiment_id: Filter by experiment ID - search: Search query text - order_by: Sort field (created_at, latency, cost) - order_dir: Sort direction (asc, desc)",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces/share": {
+      "post": {
+        "summary": "POST /api/traces/share",
+        "description": " Generate a short, URL-safe share ID",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces/shared/{shareId}": {
+      "get": {
+        "summary": "GET /api/traces/shared/:shareId",
+        "description": " GET /api/traces/shared/[shareId] - Get a shared trace (public, no auth required)  Returns the trace snapshot if the share link is valid and not expired",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/traces/{id}": {
+      "get": {
+        "summary": "GET /api/traces/:id",
+        "description": " DELETE /api/traces/[id] - Delete a trace",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE /api/traces/:id",
+        "description": " DELETE /api/traces/[id] - Delete a trace",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/forget": {
+      "post": {
+        "summary": "POST /api/winter/forget",
+        "description": "Endpoint for /api/winter/forget",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/rtbf/audit": {
+      "get": {
+        "summary": "GET /api/winter/rtbf/audit",
+        "description": " GET /api/winter/rtbf/audit  Query RTBF audit logs for compliance reporting.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/rtbf/request": {
+      "post": {
+        "summary": "POST /api/winter/rtbf/request",
+        "description": " POST /api/winter/rtbf/request  Create a new RTBF (Right to Be Forgotten) erasure request. GDPR Article 17 compliant data deletion.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/rtbf": {
+      "delete": {
+        "summary": "DELETE /api/winter/rtbf",
+        "description": " GET /api/winter/rtbf  List RTBF requests for the authenticated user.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/winter/rtbf",
+        "description": " GET /api/winter/rtbf  List RTBF requests for the authenticated user.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/rtbf/{requestId}/execute": {
+      "post": {
+        "summary": "POST /api/winter/rtbf/:requestId/execute",
+        "description": " POST /api/winter/rtbf/[requestId]/execute  Execute an RTBF erasure request. This performs the actual data deletion.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
+          }
+        }
+      }
+    },
+    "/api/winter/rtbf/{requestId}": {
+      "get": {
+        "summary": "GET /api/winter/rtbf/:requestId",
+        "description": " GET /api/winter/rtbf/[requestId]  Get status of an RTBF erasure request.",
+        "tags": [
+          "General"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Rate Limited"
           }
         }
       }
@@ -361,292 +1779,13 @@
       "ApiKeyAuth": {
         "type": "apiKey",
         "in": "header",
-        "name": "x-api-key",
-        "description": "API key for authentication. Get your key from the dashboard."
-      }
-    },
-    "schemas": {
-      "Memory": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the memory"
-          },
-          "content": {
-            "type": "string",
-            "description": "The memory content"
-          },
-          "memory_type": {
-            "type": "string",
-            "enum": ["fact", "preference", "experience", "relationship", "instruction"],
-            "description": "Type of memory"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Tags for categorization"
-          },
-          "namespace": {
-            "type": "string",
-            "description": "Namespace for isolation"
-          },
-          "scope": {
-            "type": "string",
-            "enum": ["user", "session", "agent"],
-            "description": "Scope of the memory"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Creation timestamp"
-          },
-          "similarity": {
-            "type": "number",
-            "description": "Similarity score (only in search results)"
-          }
-        }
-      },
-      "CreateMemoryRequest": {
-        "type": "object",
-        "required": ["content"],
-        "properties": {
-          "content": {
-            "type": "string",
-            "description": "The memory content to store",
-            "minLength": 1,
-            "maxLength": 10000
-          },
-          "memory_type": {
-            "type": "string",
-            "enum": ["fact", "preference", "experience", "relationship", "instruction"],
-            "default": "fact",
-            "description": "Type classification for the memory"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Optional tags for categorization"
-          },
-          "namespace": {
-            "type": "string",
-            "default": "default",
-            "description": "Namespace for memory isolation"
-          },
-          "scope": {
-            "type": "string",
-            "enum": ["user", "session", "agent"],
-            "default": "user",
-            "description": "Scope determines when the memory applies"
-          },
-          "session_id": {
-            "type": "string",
-            "description": "Session identifier (for session scope)"
-          },
-          "agent_id": {
-            "type": "string",
-            "description": "Agent identifier (for agent scope)"
-          }
-        }
-      },
-      "CreateMemoryResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "memory": {
-            "$ref": "#/components/schemas/Memory"
-          }
-        }
-      },
-      "SearchMemoriesResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "results": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Memory"
-            }
-          },
-          "count": {
-            "type": "integer",
-            "description": "Number of results returned"
-          }
-        }
-      },
-      "DeleteMemoriesResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "deleted": {
-            "type": "integer",
-            "description": "Number of memories deleted"
-          }
-        }
-      },
-      "ExtractRequest": {
-        "type": "object",
-        "required": ["conversation"],
-        "properties": {
-          "conversation": {
-            "type": "string",
-            "description": "The conversation text to extract memories from"
-          },
-          "model": {
-            "type": "string",
-            "enum": ["haiku", "sonnet"],
-            "default": "haiku",
-            "description": "AI model for extraction"
-          },
-          "auto_store": {
-            "type": "boolean",
-            "default": true,
-            "description": "Automatically store extracted memories"
-          },
-          "namespace": {
-            "type": "string",
-            "default": "default",
-            "description": "Namespace for stored memories"
-          }
-        }
-      },
-      "ExtractedMemory": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "string"
-          },
-          "memory_type": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "confidence": {
-            "type": "number",
-            "description": "Extraction confidence score"
-          },
-          "importance": {
-            "type": "integer",
-            "description": "Importance score (1-10)"
-          }
-        }
-      },
-      "ExtractResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "extracted": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExtractedMemory"
-            }
-          },
-          "stored": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Memory"
-            }
-          }
-        }
-      },
-      "QueryRequest": {
-        "type": "object",
-        "required": ["query"],
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "The question or query"
-          },
-          "model": {
-            "type": "string",
-            "enum": ["haiku", "sonnet"],
-            "default": "haiku",
-            "description": "AI model for response generation"
-          },
-          "top_k": {
-            "type": "integer",
-            "default": 5,
-            "description": "Number of memories to use as context"
-          },
-          "namespace": {
-            "type": "string",
-            "description": "Namespace to search within"
-          },
-          "include_memories": {
-            "type": "boolean",
-            "default": true,
-            "description": "Include used memories in response"
-          }
-        }
-      },
-      "QueryResponse": {
-        "type": "object",
-        "properties": {
-          "response": {
-            "type": "string",
-            "description": "Generated response"
-          },
-          "memories_used": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Memory"
-            },
-            "description": "Memories used to generate the response"
-          },
-          "model_used": {
-            "type": "string",
-            "description": "Model used for generation"
-          }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": false
-          },
-          "error": {
-            "type": "string",
-            "description": "Error message"
-          },
-          "code": {
-            "type": "string",
-            "description": "Error code"
-          }
-        }
+        "name": "x-api-key"
       }
     }
   },
-  "tags": [
+  "security": [
     {
-      "name": "Memories",
-      "description": "Store, search, and delete memories"
-    },
-    {
-      "name": "Extraction",
-      "description": "Extract memories from conversations"
-    },
-    {
-      "name": "Query",
-      "description": "Query with memory-augmented responses"
+      "ApiKeyAuth": []
     }
   ]
 }

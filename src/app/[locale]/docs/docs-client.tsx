@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { DocsSearch } from "@/components/docs/DocsSearch";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Dictionary = Record<string, unknown>;
 
@@ -55,7 +56,8 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
           <div className="flex-1 flex justify-center px-4">
             <DocsSearch locale={locale} />
           </div>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-4">
+            <LanguageSwitcher currentLocale={locale} />
             <Link
               href="/dashboard"
               className="text-zinc-400 hover:text-white transition-colors"

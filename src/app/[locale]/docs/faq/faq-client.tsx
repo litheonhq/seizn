@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import Script from "next/script";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface FAQItem {
   question: string;
@@ -90,7 +91,8 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
             <Link href={`/${locale}`} className="text-xl font-bold text-white">
               Seizn<span className="text-emerald-400">.</span>
             </Link>
-            <nav className="flex items-center gap-6">
+            <nav className="flex items-center gap-4">
+              <LanguageSwitcher currentLocale={locale} />
               <Link
                 href={`/${locale}/docs`}
                 className="text-zinc-400 hover:text-white transition-colors"

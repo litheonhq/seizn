@@ -4,43 +4,77 @@ import { locales } from '@/i18n/config';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.seizn.com';
 
-  // Define all routes
-  const routes = [
-    '',
-    '/enterprise',
+  // Define locale-specific routes with priorities
+  const localeRoutes = [
+    { path: '', priority: 1.0, changeFreq: 'weekly' as const },
+    { path: '/enterprise', priority: 0.8, changeFreq: 'monthly' as const },
+    { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
   ];
 
   // Generate sitemap entries for each locale
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
-  for (const route of routes) {
+  for (const route of localeRoutes) {
     for (const locale of locales) {
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}${route}`,
+        url: `${baseUrl}/${locale}${route.path}`,
         lastModified: new Date(),
-        changeFrequency: route === '' ? 'weekly' : 'monthly',
-        priority: route === '' ? 1.0 : 0.8,
+        changeFrequency: route.changeFreq,
+        priority: route.priority,
         alternates: {
           languages: {
-            en: `${baseUrl}/en${route}`,
-            ko: `${baseUrl}/ko${route}`,
-            ja: `${baseUrl}/ja${route}`,
+            en: `${baseUrl}/en${route.path}`,
+            ko: `${baseUrl}/ko${route.path}`,
+            ja: `${baseUrl}/ja${route.path}`,
           },
         },
       });
     }
   }
 
-  // Add non-locale routes
-  const staticRoutes = ['/docs', '/login', '/signup'];
-  for (const route of staticRoutes) {
+  // Add static docs routes (non-locale)
+  const docsRoutes = [
+    { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
+    { path: '/docs/quickstart', priority: 0.85, changeFreq: 'monthly' as const },
+    { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
+    { path: '/docs/faq', priority: 0.7, changeFreq: 'monthly' as const },
+  ];
+
+  for (const route of docsRoutes) {
+    sitemapEntries.push({
+      url: `${baseUrl}${route.path}`,
+      lastModified: new Date(),
+      changeFrequency: route.changeFreq,
+      priority: route.priority,
+    });
+  }
+
+  // Add auth routes
+  const authRoutes = ['/login', '/signup'];
+  for (const route of authRoutes) {
     sitemapEntries.push({
       url: `${baseUrl}${route}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.4,
     });
   }
+
+  // Add API spec
+  sitemapEntries.push({
+    url: `${baseUrl}/openapi.json`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  });
+
+  // Add llms.txt for AI crawlers
+  sitemapEntries.push({
+    url: `${baseUrl}/llms.txt`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.5,
+  });
 
   return sitemapEntries;
 }
