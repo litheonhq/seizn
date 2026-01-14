@@ -345,6 +345,34 @@
         "admin": "admin",
         "member": "member"
       }
+    },
+    "onboarding": {
+      "title": "התחל עם Seizn",
+      "progress": "{completed}/{total} צעדים הושלמו",
+      "dismiss": "סגור",
+      "doLater": "אעשה זאת מאוחר יותר",
+      "steps": {
+        "apiKey": {
+          "title": "צור מפתח API",
+          "description": "צור את מפתח ה-API הראשון שלך לאימות בקשות",
+          "action": "צור מפתח"
+        },
+        "demoQuery": {
+          "title": "בצע את השאילתה הראשונה שלך",
+          "description": "נסה את שאילתת ההדגמה או בצע בקשת API",
+          "action": "נסה הדגמה"
+        },
+        "viewTrace": {
+          "title": "צפה במעקב",
+          "description": "הבן כיצד החיפוש עובד עם מעקב מלא",
+          "action": "צפה במעקבים"
+        },
+        "installSdk": {
+          "title": "התקן SDK",
+          "description": "הוסף את Seizn לפרויקט שלך עם npm או pip",
+          "action": "צפה ב-SDK"
+        }
+      }
     }
   },
   "pricingPage": {

@@ -345,6 +345,34 @@
         "admin": "admin",
         "member": "member"
       }
+    },
+    "onboarding": {
+      "title": "Kom igång med Seizn",
+      "progress": "{completed}/{total} steg slutförda",
+      "dismiss": "Stäng",
+      "doLater": "Jag gör det senare",
+      "steps": {
+        "apiKey": {
+          "title": "Skapa API-nyckel",
+          "description": "Generera din första API-nyckel för att autentisera förfrågningar",
+          "action": "Skapa nyckel"
+        },
+        "demoQuery": {
+          "title": "Gör din första fråga",
+          "description": "Prova demofrågan eller gör en API-förfrågan",
+          "action": "Testa demo"
+        },
+        "viewTrace": {
+          "title": "Visa en spårning",
+          "description": "Förstå hur sökning fungerar med fullständig spårning",
+          "action": "Visa spårningar"
+        },
+        "installSdk": {
+          "title": "Installera SDK",
+          "description": "Lägg till Seizn i ditt projekt med npm eller pip",
+          "action": "Visa SDK"
+        }
+      }
     }
   },
   "pricingPage": {

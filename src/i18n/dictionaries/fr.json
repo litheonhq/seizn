@@ -345,6 +345,34 @@
         "admin": "admin",
         "member": "membre"
       }
+    },
+    "onboarding": {
+      "title": "Démarrer avec Seizn",
+      "progress": "{completed}/{total} étapes terminées",
+      "dismiss": "Fermer",
+      "doLater": "Plus tard",
+      "steps": {
+        "apiKey": {
+          "title": "Créer une clé API",
+          "description": "Générez votre première clé API pour authentifier les requêtes",
+          "action": "Créer une clé"
+        },
+        "demoQuery": {
+          "title": "Faire votre première requête",
+          "description": "Essayez la requête démo ou faites une requête API",
+          "action": "Essayer la démo"
+        },
+        "viewTrace": {
+          "title": "Voir une trace",
+          "description": "Comprenez le fonctionnement de la recherche avec le traçage complet",
+          "action": "Voir les traces"
+        },
+        "installSdk": {
+          "title": "Installer le SDK",
+          "description": "Ajoutez Seizn à votre projet avec npm ou pip",
+          "action": "Voir les SDK"
+        }
+      }
     }
   },
   "pricingPage": {

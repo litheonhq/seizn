@@ -202,6 +202,34 @@
       "plan": "Aktueller Plan",
       "unlimited": "Unbegrenzt"
     },
+    "onboarding": {
+      "title": "Erste Schritte mit Seizn",
+      "progress": "{completed}/{total} Schritte abgeschlossen",
+      "dismiss": "Schließen",
+      "doLater": "Später erledigen",
+      "steps": {
+        "apiKey": {
+          "title": "API-Schlüssel erstellen",
+          "description": "Generieren Sie Ihren ersten API-Schlüssel zur Authentifizierung von Anfragen",
+          "action": "Schlüssel erstellen"
+        },
+        "demoQuery": {
+          "title": "Erste Abfrage durchführen",
+          "description": "Probieren Sie die Demo-Abfrage aus oder stellen Sie eine API-Anfrage",
+          "action": "Demo testen"
+        },
+        "viewTrace": {
+          "title": "Trace anzeigen",
+          "description": "Verstehen Sie mit vollständigem Tracing, wie die Suche funktioniert",
+          "action": "Traces anzeigen"
+        },
+        "installSdk": {
+          "title": "SDK installieren",
+          "description": "Fügen Sie Seizn mit npm oder pip zu Ihrem Projekt hinzu",
+          "action": "SDKs anzeigen"
+        }
+      }
+    },
     "keys": {
       "title": "Ihre API-Schlüssel",
       "create": "Neuen Schlüssel erstellen",

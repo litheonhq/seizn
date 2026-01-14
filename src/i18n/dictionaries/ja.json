@@ -202,6 +202,34 @@
       "plan": "現在のプラン",
       "unlimited": "無制限"
     },
+    "onboarding": {
+      "title": "Seiznを始めよう",
+      "progress": "{completed}/{total} ステップ完了",
+      "dismiss": "閉じる",
+      "doLater": "後でやる",
+      "steps": {
+        "apiKey": {
+          "title": "APIキーを作成",
+          "description": "最初のAPIキーを生成してリクエストを認証する",
+          "action": "キーを作成"
+        },
+        "demoQuery": {
+          "title": "最初のクエリを実行",
+          "description": "デモクエリを試すかAPIリクエストを送信する",
+          "action": "デモを試す"
+        },
+        "viewTrace": {
+          "title": "トレースを表示",
+          "description": "完全なトレースで検索の仕組みを理解する",
+          "action": "トレースを見る"
+        },
+        "installSdk": {
+          "title": "SDKをインストール",
+          "description": "npmまたはpipでプロジェクトにSeiznを追加する",
+          "action": "SDKを見る"
+        }
+      }
+    },
     "keys": {
       "title": "APIキー管理",
       "create": "新しいキーを作成",

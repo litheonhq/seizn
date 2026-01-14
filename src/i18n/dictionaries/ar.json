@@ -202,6 +202,34 @@
       "plan": "الخطة الحالية",
       "unlimited": "غير محدود"
     },
+    "onboarding": {
+      "title": "ابدأ مع Seizn",
+      "progress": "{completed}/{total} خطوات مكتملة",
+      "dismiss": "تجاهل",
+      "doLater": "سأفعل هذا لاحقاً",
+      "steps": {
+        "apiKey": {
+          "title": "إنشاء مفتاح API",
+          "description": "أنشئ مفتاح API الأول الخاص بك للمصادقة على الطلبات",
+          "action": "إنشاء مفتاح"
+        },
+        "demoQuery": {
+          "title": "قم بأول استعلام",
+          "description": "جرب الاستعلام التجريبي أو أرسل طلب API",
+          "action": "جرب العرض التجريبي"
+        },
+        "viewTrace": {
+          "title": "عرض التتبع",
+          "description": "افهم كيف يعمل البحث مع التتبع الكامل",
+          "action": "عرض التتبعات"
+        },
+        "installSdk": {
+          "title": "تثبيت SDK",
+          "description": "أضف Seizn إلى مشروعك باستخدام npm أو pip",
+          "action": "عرض SDKs"
+        }
+      }
+    },
     "keys": {
       "title": "مفاتيح API الخاصة بك",
       "create": "إنشاء مفتاح جديد",
