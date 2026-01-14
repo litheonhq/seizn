@@ -202,6 +202,34 @@
       "plan": "目前方案",
       "unlimited": "無限"
     },
+    "onboarding": {
+      "title": "開始使用 Seizn",
+      "progress": "已完成 {completed}/{total} 步",
+      "dismiss": "關閉",
+      "doLater": "稍後再說",
+      "steps": {
+        "apiKey": {
+          "title": "建立 API 金鑰",
+          "description": "產生您的第一個 API 金鑰以驗證請求",
+          "action": "建立金鑰"
+        },
+        "demoQuery": {
+          "title": "進行首次查詢",
+          "description": "嘗試示範查詢或發起 API 請求",
+          "action": "試用示範"
+        },
+        "viewTrace": {
+          "title": "檢視追蹤",
+          "description": "透過完整追蹤了解搜尋的運作方式",
+          "action": "檢視追蹤"
+        },
+        "installSdk": {
+          "title": "安裝 SDK",
+          "description": "使用 npm 或 pip 將 Seizn 加入您的專案",
+          "action": "檢視 SDK"
+        }
+      }
+    },
     "keys": {
       "title": "您的API金鑰",
       "create": "建立新金鑰",

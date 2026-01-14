@@ -202,6 +202,34 @@
       "plan": "Plano Atual",
       "unlimited": "Ilimitado"
     },
+    "onboarding": {
+      "title": "Comece com o Seizn",
+      "progress": "{completed}/{total} passos concluídos",
+      "dismiss": "Dispensar",
+      "doLater": "Farei isso depois",
+      "steps": {
+        "apiKey": {
+          "title": "Criar Chave API",
+          "description": "Gere sua primeira chave API para autenticar requisições",
+          "action": "Criar Chave"
+        },
+        "demoQuery": {
+          "title": "Faça Sua Primeira Consulta",
+          "description": "Experimente a consulta demo ou faça uma requisição API",
+          "action": "Testar Demo"
+        },
+        "viewTrace": {
+          "title": "Visualizar um Rastreamento",
+          "description": "Entenda como a busca funciona com rastreamento completo",
+          "action": "Ver Rastreamentos"
+        },
+        "installSdk": {
+          "title": "Instalar SDK",
+          "description": "Adicione o Seizn ao seu projeto com npm ou pip",
+          "action": "Ver SDKs"
+        }
+      }
+    },
     "keys": {
       "title": "Suas Chaves API",
       "create": "Criar Nova Chave",

@@ -345,6 +345,34 @@
         "admin": "admin",
         "member": "member"
       }
+    },
+    "onboarding": {
+      "title": "Bắt đầu với Seizn",
+      "progress": "{completed}/{total} bước đã hoàn thành",
+      "dismiss": "Đóng",
+      "doLater": "Tôi sẽ làm sau",
+      "steps": {
+        "apiKey": {
+          "title": "Tạo khóa API",
+          "description": "Tạo khóa API đầu tiên để xác thực yêu cầu",
+          "action": "Tạo khóa"
+        },
+        "demoQuery": {
+          "title": "Thực hiện truy vấn đầu tiên",
+          "description": "Thử truy vấn demo hoặc thực hiện yêu cầu API",
+          "action": "Thử demo"
+        },
+        "viewTrace": {
+          "title": "Xem theo dõi",
+          "description": "Hiểu cách tìm kiếm hoạt động với theo dõi đầy đủ",
+          "action": "Xem theo dõi"
+        },
+        "installSdk": {
+          "title": "Cài đặt SDK",
+          "description": "Thêm Seizn vào dự án của bạn với npm hoặc pip",
+          "action": "Xem SDK"
+        }
+      }
     }
   },
   "pricingPage": {

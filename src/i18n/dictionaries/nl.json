@@ -345,6 +345,34 @@
         "admin": "admin",
         "member": "member"
       }
+    },
+    "onboarding": {
+      "title": "Aan de slag met Seizn",
+      "progress": "{completed}/{total} stappen voltooid",
+      "dismiss": "Sluiten",
+      "doLater": "Ik doe dit later",
+      "steps": {
+        "apiKey": {
+          "title": "API-sleutel aanmaken",
+          "description": "Genereer je eerste API-sleutel om verzoeken te authenticeren",
+          "action": "Sleutel aanmaken"
+        },
+        "demoQuery": {
+          "title": "Doe je eerste zoekopdracht",
+          "description": "Probeer de demo-zoekopdracht of doe een API-verzoek",
+          "action": "Demo proberen"
+        },
+        "viewTrace": {
+          "title": "Bekijk een trace",
+          "description": "Begrijp hoe zoeken werkt met volledige tracing",
+          "action": "Traces bekijken"
+        },
+        "installSdk": {
+          "title": "SDK installeren",
+          "description": "Voeg Seizn toe aan je project met npm of pip",
+          "action": "SDKs bekijken"
+        }
+      }
     }
   },
   "pricingPage": {
