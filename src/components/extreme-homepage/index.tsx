@@ -55,6 +55,12 @@ const SnippetTabs = dynamic(
   { loading: () => <SnippetSkeleton />, ssr: false }
 );
 
+// DemoQuery component for public demo section
+const DemoQuery = dynamic(
+  () => import("@/components/landing/DemoQuery").then((mod) => ({ default: mod.DemoQuery })),
+  { loading: () => <PanelSkeleton />, ssr: false }
+);
+
 interface ExtremeHomepageClientProps {
   dict: Dictionary;
   locale: Locale;
@@ -855,6 +861,11 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       )}
 
       {/* Why Seizn Section - Memoized static content */}
+      {/* Public Demo Query Section */}
+      <Suspense fallback={<PanelSkeleton />}>
+        <DemoQuery dict={t} />
+      </Suspense>
+
       <WhySeizn t={t} />
 
       {/* Trust Badges - Memoized */}

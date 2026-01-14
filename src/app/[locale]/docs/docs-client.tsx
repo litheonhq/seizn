@@ -54,7 +54,17 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             Seizn<span className="text-emerald-400">.</span>
           </Link>
           <div className="flex-1 flex justify-center px-4">
-            <DocsSearch locale={locale} />
+            <DocsSearch
+              locale={locale}
+              translations={{
+                placeholder: t("docs.search.placeholder"),
+                buttonText: t("docs.search.buttonText"),
+                noResults: t("docs.search.noResults"),
+                hint: t("docs.search.hint"),
+                navigate: t("docs.search.navigate"),
+                select: t("docs.search.select"),
+              }}
+            />
           </div>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
@@ -79,7 +89,8 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
         <nav className="hidden lg:block w-56 shrink-0">
           <div className="sticky top-24 space-y-1">
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">{t("docs.sidebar.overview")}</p>
-            <Link href={`/${locale}/docs/quickstart`} className="block py-1.5 text-sm text-emerald-400 font-medium hover:text-emerald-300 transition-colors">{t("docs.sidebar.quickStart")}</Link>
+            <Link href={`/${locale}/docs/tutorial`} className="block py-1.5 text-sm text-emerald-400 font-medium hover:text-emerald-300 transition-colors">{t("docs.sidebar.tutorial")}</Link>
+            <Link href={`/${locale}/docs/quickstart`} className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">{t("docs.sidebar.quickStart")}</Link>
             <a href="#authentication" className="block py-1.5 text-sm text-zinc-400 hover:text-emerald-400 transition-colors">{t("docs.sidebar.authentication")}</a>
 
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{t("docs.sidebar.apiReference")}</p>

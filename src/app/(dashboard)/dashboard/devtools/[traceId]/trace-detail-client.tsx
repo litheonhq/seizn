@@ -11,6 +11,7 @@ import {
   WhyNotPanel,
 } from "@/components/devtools";
 import type { TimelineStage, Candidate, WhatIfResult } from "@/components/devtools";
+import { ShareTraceModal, ShareIcon } from "@/components/devtools/ShareTraceModal";
 
 // ============================================
 // Types
@@ -152,6 +153,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("timeline");
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Fetch trace detail
   useEffect(() => {
@@ -297,6 +299,16 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
                 </div>
               </div>
             </div>
+
+            {/* Share Button */}
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+              title="Share trace"
+            >
+              <ShareIcon className="w-4 h-4" />
+              <span className="text-sm">Share</span>
+            </button>
           </div>
         </div>
 
@@ -489,6 +501,13 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      <ShareTraceModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        traceId={traceId}
+      />
     </div>
   );
 }

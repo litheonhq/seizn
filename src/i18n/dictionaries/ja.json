@@ -227,6 +227,48 @@
           "title": "SDKをインストール",
           "description": "npmまたはpipでプロジェクトにSeiznを追加する",
           "action": "SDKを見る"
+        },
+        "createOrg": {
+          "title": "組織を作成",
+          "description": "チームと協力するために最初の組織を作成しましょう",
+          "action": "組織を作成"
+        },
+        "firstQuery": {
+          "title": "最初のクエリを実行",
+          "description": "サンプルクエリで検索機能を試してみましょう",
+          "action": "クエリを実行"
+        }
+      },
+      "sdkModal": {
+        "title": "SDKをインストール",
+        "subtitle": "プロジェクトにSeizn SDKをインストールしてください",
+        "npm": "npm install @seizn/sdk",
+        "pip": "pip install seizn",
+        "curl": "curlを使用",
+        "copy": "コピー",
+        "copied": "コピーしました！",
+        "close": "閉じる"
+      },
+      "tour": {
+        "stepOf": "{current} / {total}",
+        "skip": "スキップ",
+        "next": "次へ",
+        "finish": "完了",
+        "welcome": {
+          "title": "Seiznへようこそ！",
+          "description": "AIメモリインフラの使い方をご案内します。"
+        },
+        "sidebar": {
+          "title": "サイドバーナビゲーション",
+          "description": "ここからダッシュボードのすべてのセクションにアクセスできます。"
+        },
+        "stats": {
+          "title": "使用統計",
+          "description": "メモリ使用量とAPI呼び出しをリアルタイムで監視できます。"
+        },
+        "quickStart": {
+          "title": "クイックスタートガイド",
+          "description": "これらのカードに従ってSeizinをすばやく設定しましょう。"
         }
       }
     },
@@ -341,6 +383,30 @@
       "removed": "削除",
       "rankChanges": "順位変動"
     },
+    "share": {
+      "title": "トレースを共有",
+      "button": "共有",
+      "createLink": "共有リンクを作成",
+      "creating": "作成中...",
+      "done": "完了",
+      "linkExpiration": "リンクの有効期限",
+      "hour": "1時間",
+      "day": "24時間",
+      "week": "7日間",
+      "never": "無期限",
+      "privacyOptions": "プライバシー設定",
+      "maskPii": "PII（メール、電話番号、IP）をマスク",
+      "maskSecrets": "APIキーとシークレットをマスク",
+      "shareUrl": "共有URL",
+      "copyLink": "リンクをコピー",
+      "linkCopied": "コピーしました！",
+      "expiresIn": "このリンクは{duration}で期限切れになります。",
+      "neverExpires": "このリンクは期限切れになりません。",
+      "error": "共有リンクの作成に失敗しました",
+      "revoke": "リンクを取り消す",
+      "revokeConfirm": "このリンクを取り消しますか？",
+      "linkRevoked": "リンクが取り消されました"
+    },
     "settingsPage": {
       "title": "設定",
       "subtitle": "プロフィールと環境設定",
@@ -355,6 +421,7 @@
       "loginRequired": "ログインが必要です。",
       "tabs": {
         "profile": "プロフィール",
+        "billing": "料金",
         "budget": "予算",
         "notifications": "通知",
         "security": "セキュリティ",
@@ -422,6 +489,29 @@
         "deleteAccountDesc": "アカウントとすべてのデータを完全に削除",
         "deleteAccountButton": "アカウントを削除",
         "confirmDelete": "確認のためDELETEと入力"
+      },
+      "billing": {
+        "title": "料金と使用量",
+        "subtitle": "プランの管理と使用量のモニタリング",
+        "currentPlan": "現在のプラン",
+        "monthlyPrice": "月額料金",
+        "upgradePlan": "プランをアップグレード",
+        "quotaWarningTitle": "使用量の上限に近づいています",
+        "quotaWarningDesc": "{resource}の{percent}%を使用中です。プランのアップグレードをご検討ください。",
+        "upgradeNow": "今すぐアップグレード",
+        "memoriesUsage": "メモリ使用量",
+        "apiCallsUsage": "API呼び出し使用量",
+        "apiKeysUsage": "APIキー使用量",
+        "unlimited": "無制限",
+        "planComparison": "プラン比較",
+        "feature": "機能",
+        "memoriesLabel": "メモリ",
+        "apiCallsLabel": "月間API呼び出し",
+        "apiKeysLabel": "APIキー",
+        "priceLabel": "価格",
+        "contactUs": "お問い合わせ",
+        "used": "使用",
+        "of": "中"
       }
     },
     "greeting": {
@@ -506,6 +596,28 @@
         "owner": "オーナー",
         "admin": "管理者",
         "member": "メンバー"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "プレイグラウンドを始めよう",
+      "subtitle": "メモリ検索のテスト方法",
+      "dismiss": "閉じる",
+      "gotIt": "了解しました",
+      "hint": "いつでもヘルプから再度確認できます",
+      "tryExamples": "サンプルクエリを試す：",
+      "tips": {
+        "welcome": {
+          "title": "プレイグラウンドへようこそ！",
+          "description": "ここでメモリ検索をリアルタイムでテストし、結果を確認できます。"
+        },
+        "query": {
+          "title": "クエリを入力",
+          "description": "自然言語で検索クエリを入力してください。例：「ユーザー設定」を検索します。"
+        },
+        "trace": {
+          "title": "トレースを確認",
+          "description": "トレースタブで検索パイプラインの各ステップとレイテンシを確認できます。"
+        }
       }
     }
   },
@@ -749,7 +861,8 @@
       "resources": "リソース",
       "security": "セキュリティ",
       "sdks": "SDK",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "5分チュートリアル"
     },
     "hero": {
       "title": "APIドキュメント",
@@ -1156,6 +1269,145 @@
       },
       "copy": "コピー",
       "copied": "コピーしました！"
+    },
+    "search": {
+      "placeholder": "ドキュメントを検索...",
+      "buttonText": "ドキュメント検索...",
+      "noResults": "検索結果が見つかりません:",
+      "hint": "クイック検索:",
+      "navigate": "ナビゲート",
+      "select": "選択"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5分チュートリアル | Seizn",
+        "description": "5分でAIメモリを追加するステップバイステップのインタラクティブガイド"
+      },
+      "breadcrumb": "チュートリアル",
+      "badge": "5分チュートリアル",
+      "noCreditCard": "クレジットカード不要",
+      "title": "5分でAIメモリを追加",
+      "subtitle": "このステップバイステップガイドに従って、AIに永続メモリを追加しましょう。各ステップを完了するたびにチェックしてください。",
+      "getApiKey": "APIキーを取得",
+      "copy": "コピー",
+      "copied": "コピーしました！",
+      "progress": "進捗",
+      "stepsLabel": "ステップ",
+      "steps": {
+        "step1": {
+          "title": "APIキーを取得",
+          "time": "30秒",
+          "description": "無料でサインアップし、ダッシュボードからAPIキーを生成します。",
+          "instruction1": "Seiznアカウントにサインアップまたはログイン",
+          "instruction2": "ダッシュボードでAPIキーに移動",
+          "instruction3": "「新しいキーを作成」をクリックしてキーをコピー",
+          "actionLabel": "ダッシュボードへ"
+        },
+        "step2": {
+          "title": "SDKをインストール",
+          "time": "30秒",
+          "description": "お好みの言語を選択し、Seizn SDKをインストールします。"
+        },
+        "step3": {
+          "title": "最初のメモリを保存",
+          "time": "2分",
+          "description": "AIがセッション間で覚えておくべき情報を保存します。"
+        },
+        "step4": {
+          "title": "メモリを検索",
+          "time": "2分",
+          "description": "自然言語クエリを使用して関連するメモリを取得します。"
+        },
+        "step5": {
+          "title": "結果を確認",
+          "time": "30秒",
+          "description": "メモリが正常に保存され、取得されたことを確認します。",
+          "hint": "メモリを検索すると、次のようなレスポンスが表示されます：",
+          "successTitle": "成功！",
+          "successDescription": "AIに永続メモリが追加されました。検索結果を使用して、AIのコンテキストとレスポンスを向上させましょう。"
+        }
+      },
+      "completion": {
+        "title": "おめでとうございます！",
+        "description": "チュートリアルを完了しました。AIにはセッション間で機能する永続メモリが追加されました。",
+        "readDocs": "ドキュメントを読む",
+        "goToDashboard": "ダッシュボードへ"
+      },
+      "nextSteps": {
+        "title": "次のステップ",
+        "apiReference": {
+          "title": "APIリファレンス",
+          "description": "メモリ、抽出、RAGクエリのすべてのエンドポイントを探索します。"
+        },
+        "sdkExamples": {
+          "title": "SDK例",
+          "description": "Python、TypeScript、REST用のコピー＆ペースト例。"
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "メモリタイプ、名前空間、ベストプラクティスについて学びます。"
+        }
+      }
     }
+  },
+  "demoQuery": {
+    "title": "ライブデモ",
+    "subtitle": "フルトレーシングとコスト透明性を備えたSeiznの検索パイプラインを体験してください。",
+    "tryItNow": "今すぐお試しください - 登録不要",
+    "queryPlaceholder": "検索クエリ",
+    "runDemo": "デモを実行",
+    "running": "実行中...",
+    "results": "結果",
+    "trace": "トレース",
+    "cost": "コスト",
+    "noResults": "デモを実行して結果を確認してください",
+    "errorTitle": "エラー",
+    "rateLimitError": "レート制限を超過しました。しばらくお待ちください。",
+    "retryIn": "再試行まで",
+    "seconds": "秒",
+    "score": "スコア",
+    "rerankScore": "再ランク",
+    "latency": "レイテンシ",
+    "tokens": "トークン",
+    "cached": "キャッシュ済み",
+    "model": "モデル",
+    "input": "入力",
+    "output": "出力",
+    "costBreakdown": "内訳",
+    "total": "合計コスト",
+    "embedding": "埋め込み",
+    "vectorSearch": "ベクトル検索",
+    "rerank": "再ランク",
+    "answerContract": "回答検証",
+    "tokensIn": "入力トークン",
+    "tokensOut": "出力トークン",
+    "queryUnits": "クエリユニット",
+    "prefilledQueries": [
+      "例を見る"
+    ]
+  },
+  "publicTrace": {
+    "title": "共有トレース",
+    "subtitle": "共有された検索トレースの詳細を表示",
+    "sharedBy": "共有トレース",
+    "expired": "このリンクは期限切れです",
+    "expiredDesc": "共有リンクは無効になりました。所有者に新しいリンクを依頼してください。",
+    "notFound": "トレースが見つかりません",
+    "notFoundDesc": "この共有トレースは見つかりませんでした。取り消されたか削除された可能性があります。",
+    "backToHome": "ホームに戻る",
+    "requestId": "リクエストID",
+    "collection": "コレクション",
+    "createdAt": "作成日時",
+    "totalLatency": "合計レイテンシ",
+    "totalCost": "合計コスト",
+    "resultsCount": "結果数",
+    "query": "クエリ",
+    "timeline": "タイムライン",
+    "candidates": "候補",
+    "rerankDiff": "再ランク比較",
+    "costAnalysis": "コスト分析",
+    "redacted": "[削除済み]",
+    "piiMasked": "プライバシー保護のためマスク済み",
+    "readOnlyNote": "これは共有トレースの読み取り専用ビューです。"
   }
 }

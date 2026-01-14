@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { createShareLink, getTraceShareLinks } from '@/lib/share-token';
+import type { ExpiresIn, RedactionProfile } from '@/lib/share-token';
+import type { TraceSnapshot } from '@/lib/sharing/types';
 
 /**
  * POST /api/traces/share - Create a shareable link for a trace
- * Body: { trace_id: string, expires_in?: number }
+ * Body: {
+ *   trace_id: string,
+ *   expires_in?: '1h' | '24h' | '7d' | 'never',
+ *   redaction?: { pii?: boolean, secrets?: boolean, raw_content?: boolean }
+ * }
  *
- * Returns: { share_url: string, share_id: string, expires_at: string }
+ * Returns: { success: true, share_id: string, share_url: string, expires_at: string | null }
  */
 export async function POST(request: NextRequest) {
   try {
@@ -25,10 +32,10 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Verify the trace belongs to this user
+    // Fetch the full trace with all data for sharing
     const { data: trace, error: traceError } = await supabase
       .from('fall_retrieval_traces')
-      .select('id, request_id, plan, query_hash, autopilot_reason, effective_config, timings_ms, results_count, created_at')
+      .select('*')
       .eq('id', body.trace_id)
       .eq('user_id', userId)
       .single();
@@ -37,43 +44,58 @@ export async function POST(request: NextRequest) {
       return ValidationErrors.invalidField('trace_id', 'Trace not found or not accessible');
     }
 
-    // Generate share ID (Base62-like short ID)
-    const shareId = generateShareId();
+    // Parse expiration option
+    const expiresIn: ExpiresIn = validateExpiresIn(body.expires_in) || '7d';
 
-    // Default expiration: 7 days
-    const expiresInSeconds = body.expires_in || 7 * 24 * 60 * 60;
-    const expiresAt = new Date(Date.now() + expiresInSeconds * 1000);
+    // Parse redaction profile
+    const redactionProfile: Partial<RedactionProfile> = {
+      pii: body.redaction?.pii ?? true,
+      secrets: body.redaction?.secrets ?? true,
+      raw_content: body.redaction?.raw_content ?? false,
+    };
 
-    // Create shared trace record
-    const { error: insertError } = await supabase.from('shared_traces').insert({
-      share_id: shareId,
-      trace_id: body.trace_id,
-      user_id: userId,
-      trace_snapshot: {
-        request_id: trace.request_id,
-        plan: trace.plan,
-        query_hash: trace.query_hash,
-        autopilot_reason: trace.autopilot_reason,
-        effective_config: trace.effective_config,
-        timings_ms: trace.timings_ms,
-        results_count: trace.results_count,
-        created_at: trace.created_at,
+    // Build trace snapshot with full data
+    const traceData = trace.trace as Record<string, unknown> || {};
+    const traceSnapshot: TraceSnapshot = {
+      id: trace.id,
+      request_id: trace.request_id,
+      plan: trace.plan,
+      collection_id: trace.collection_id,
+      query_text: trace.query_text,
+      query_hash: trace.query_hash,
+      autopilot_reason: trace.autopilot_reason,
+      effective_config: trace.effective_config || {},
+      timings_ms: trace.timings_ms || {},
+      results_count: trace.results_count || 0,
+      error: trace.error,
+      sampled: trace.sampled ?? true,
+      created_at: trace.created_at,
+      trace: {
+        events: traceData.events as TraceSnapshot['trace']['events'],
+        candidates: traceData.candidates as TraceSnapshot['trace']['candidates'],
+        rerank_deltas: traceData.rerank_deltas as TraceSnapshot['trace']['rerank_deltas'],
+        context: traceData.context as TraceSnapshot['trace']['context'],
+        // Include spans for timeline visualization
+        spans: traceData.spans as unknown[],
+        cost: traceData.cost as Record<string, unknown>,
+        result_stats: traceData.result_stats as Record<string, unknown>,
       },
-      expires_at: expiresAt.toISOString(),
+    };
+
+    // Create the share link with redaction applied
+    const shareResult = await createShareLink({
+      traceId: body.trace_id,
+      userId,
+      traceSnapshot,
+      expiresIn,
+      redactionProfile,
     });
-
-    if (insertError) {
-      console.error('Share trace insert error:', insertError);
-      return ServerErrors.database('create_share');
-    }
-
-    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com'}/trace/${shareId}`;
 
     return NextResponse.json({
       success: true,
-      share_id: shareId,
-      share_url: shareUrl,
-      expires_at: expiresAt.toISOString(),
+      share_id: shareResult.token,
+      share_url: shareResult.shareUrl,
+      expires_at: shareResult.expiresAt,
     });
   } catch (error) {
     console.error('Share trace error:', error);
@@ -82,17 +104,51 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Generate a short, URL-safe share ID
+ * GET /api/traces/share - List share links for a trace
+ * Query: trace_id (required)
  */
-function generateShareId(): string {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  let result = '';
-  const randomValues = new Uint8Array(8);
-  crypto.getRandomValues(randomValues);
+export async function GET(request: NextRequest) {
+  try {
+    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
+    }
 
-  for (let i = 0; i < 8; i++) {
-    result += chars[randomValues[i] % chars.length];
+    const { userId } = authResult;
+    const { searchParams } = new URL(request.url);
+    const traceId = searchParams.get('trace_id');
+
+    if (!traceId) {
+      return ValidationErrors.missingField('trace_id');
+    }
+
+    const shares = await getTraceShareLinks({ traceId, userId });
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com';
+
+    return NextResponse.json({
+      success: true,
+      shares: shares.map((share) => ({
+        share_id: share.share_id,
+        share_url: `${baseUrl}/t/${share.share_id}`,
+        expires_at: share.expires_at,
+        view_count: share.view_count,
+        created_at: share.created_at,
+        redaction: share.redaction_profile,
+      })),
+    });
+  } catch (error) {
+    console.error('List share links error:', error);
+    return ServerErrors.internal('list_share_links');
   }
+}
 
-  return result;
+/**
+ * Validate and normalize expires_in parameter
+ */
+function validateExpiresIn(value: unknown): ExpiresIn | null {
+  const validOptions: ExpiresIn[] = ['1h', '24h', '7d', 'never'];
+  if (typeof value === 'string' && validOptions.includes(value as ExpiresIn)) {
+    return value as ExpiresIn;
+  }
+  return null;
 }

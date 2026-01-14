@@ -1073,6 +1073,14 @@
           "description": "Retrieval operations monitoring and analytics dashboard"
         }
       }
+    },
+    "search": {
+      "placeholder": "Tim kiem tai lieu...",
+      "buttonText": "Tim kiem...",
+      "noResults": "Khong tim thay ket qua cho",
+      "hint": "Tim kiem nhanh:",
+      "navigate": "di chuyen",
+      "select": "chon"
     }
   }
 }

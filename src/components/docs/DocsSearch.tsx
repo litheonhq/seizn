@@ -16,11 +16,31 @@ interface SearchIndex {
   items: SearchItem[];
 }
 
-interface Props {
-  locale?: string;
+interface SearchTranslations {
+  placeholder?: string;
+  buttonText?: string;
+  noResults?: string;
+  hint?: string;
+  navigate?: string;
+  select?: string;
 }
 
-export function DocsSearch({ locale = "en" }: Props) {
+interface Props {
+  locale?: string;
+  translations?: SearchTranslations;
+}
+
+const defaultTranslations: SearchTranslations = {
+  placeholder: "Search documentation...",
+  buttonText: "Search docs...",
+  noResults: "No results found for",
+  hint: "Quick searches:",
+  navigate: "to navigate",
+  select: "to select",
+};
+
+export function DocsSearch({ locale = "en", translations = {} }: Props) {
+  const t = { ...defaultTranslations, ...translations };
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchItem[]>([]);
@@ -143,8 +163,9 @@ export function DocsSearch({ locale = "en" }: Props) {
   };
 
   const getLocalizedUrl = (url: string) => {
+    // Always use locale-prefixed URLs for docs
     if (url.startsWith("/docs")) {
-      return locale !== "en" ? `/${locale}${url}` : url;
+      return `/${locale}${url}`;
     }
     return url;
   };
@@ -171,7 +192,7 @@ export function DocsSearch({ locale = "en" }: Props) {
         className="flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-400 bg-zinc-800 border border-zinc-700 rounded-lg hover:bg-zinc-700 hover:text-white transition-colors"
       >
         <SearchIcon className="w-4 h-4" />
-        <span className="hidden sm:inline">Search docs...</span>
+        <span className="hidden sm:inline">{t.buttonText}</span>
         <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-zinc-700 rounded">⌘K</kbd>
       </button>
 
@@ -191,7 +212,7 @@ export function DocsSearch({ locale = "en" }: Props) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Search documentation..."
+                placeholder={t.placeholder}
                 className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none"
               />
               <kbd className="px-2 py-1 text-xs text-zinc-500 bg-zinc-800 rounded">ESC</kbd>
@@ -201,7 +222,7 @@ export function DocsSearch({ locale = "en" }: Props) {
             <div className="max-h-96 overflow-y-auto">
               {query && results.length === 0 ? (
                 <div className="px-4 py-8 text-center text-zinc-500">
-                  No results found for &quot;{query}&quot;
+                  {t.noResults} &quot;{query}&quot;
                 </div>
               ) : results.length > 0 ? (
                 <div className="py-2">
@@ -231,7 +252,7 @@ export function DocsSearch({ locale = "en" }: Props) {
               ) : (
                 <div className="px-4 py-6">
                   <p className="text-sm text-zinc-500 mb-4">
-                    Quick searches:
+                    {t.hint}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {["API Key", "threshold", "429", "namespace", "forget", "SDK"].map((term) => (
@@ -254,11 +275,11 @@ export function DocsSearch({ locale = "en" }: Props) {
                 <span className="flex items-center gap-1">
                   <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↑</kbd>
                   <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↓</kbd>
-                  to navigate
+                  {t.navigate}
                 </span>
                 <span className="flex items-center gap-1">
                   <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↵</kbd>
-                  to select
+                  {t.select}
                 </span>
               </div>
             </div>
