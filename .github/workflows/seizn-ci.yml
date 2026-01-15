@@ -81,12 +81,15 @@ jobs:
         run: npm ci
 
       - name: Download trace artifacts
+        id: download-traces
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: seizn-traces
           path: .seizn-traces/
 
       - name: Generate tests from traces
+        if: steps.download-traces.outcome == 'success'
         id: generate
         run: |
           npx tsx scripts/ci/test-generator.ts \
