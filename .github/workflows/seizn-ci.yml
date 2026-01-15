@@ -43,6 +43,8 @@ jobs:
         id: collect
         continue-on-error: true
         run: |
+          echo "[DEBUG] Starting trace collection..."
+          echo "[DEBUG] SEIZN_TEST_COMMAND=$SEIZN_TEST_COMMAND"
           npx tsx scripts/ci/trace-collector.ts \
             --output=.seizn-traces \
             --format=json
@@ -51,6 +53,14 @@ jobs:
           SEIZN_CI_TOKEN: ${{ secrets.SEIZN_CI_TOKEN }}
           SEIZN_TEST_COMMAND: 'npm run test:run'
           CI: 'true'
+
+      - name: Debug trace output
+        if: always()
+        run: |
+          echo "=== .seizn-traces directory ==="
+          ls -la .seizn-traces/ || true
+          echo "=== traces.json content ==="
+          head -50 .seizn-traces/traces.json || true
 
       - name: Upload trace artifacts
         uses: actions/upload-artifact@v4
