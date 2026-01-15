@@ -5,8 +5,8 @@ import type {
   ContractPolicy,
   FailAction,
   PolicyRequest,
-  DEFAULT_POLICY,
 } from "@/lib/answer-contract/types";
+
 
 /**
  * Props for PolicyEditor component

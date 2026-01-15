@@ -26,9 +26,9 @@ import type {
   GraphNode,
   GraphEdge,
   GraphFilter,
-  PermissionLevel,
   GraphNodeType,
 } from "@/lib/winter/graph/types";
+
 import { GraphNodeRenderer } from "./NodeRenderer";
 import { GraphEdgeRenderer } from "./EdgeRenderer";
 import { GraphControls } from "./GraphControls";
@@ -140,7 +140,8 @@ function toReactFlowEdge(edge: GraphEdge): Edge {
 /**
  * Apply dagre layout to nodes
  */
-function applyDagreLayout(nodes: Node[], edges: Edge[]): Node[] {
+function applyDagreLayout(nodes: Node[], _edges: Edge[]): Node[] {
+
   // Simple layout algorithm - positions nodes in a grid
   // In production, you'd use dagre or elk.js
   const SPACING_X = 250;

@@ -3,6 +3,14 @@
 import { useState, useEffect } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
+declare global {
+  interface Window {
+    seiznOnboarding?: {
+      markComplete: (step: string) => void;
+    };
+  }
+}
+
 const STORAGE_KEY = "seizn_playground_tutorial_completed";
 
 interface Props {
@@ -52,8 +60,8 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
     onTryExample(query);
     // Mark first query step as complete
     localStorage.setItem("seizn_first_query", "true");
-    if (typeof window !== "undefined" && (window as any).seiznOnboarding) {
-      (window as any).seiznOnboarding.markComplete("first_query");
+    if (typeof window !== "undefined" && window.seiznOnboarding) {
+      window.seiznOnboarding.markComplete("first_query");
     }
   };
 

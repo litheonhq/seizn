@@ -4,7 +4,8 @@
  * HybridConfigEditor - Configure hybrid retrieval strategies and weights
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 import type {
   HybridConfig,
   StrategyConfig,
@@ -81,19 +82,14 @@ export function HybridConfigEditor({
   const [error, setError] = useState<string | null>(null);
   const [loadingConfig, setLoadingConfig] = useState(!!configId);
 
-  // Load existing config if editing
-  useEffect(() => {
-    if (configId) {
-      fetchConfig();
-    }
-  }, [configId]);
-
-  const fetchConfig = async () => {
+  const fetchConfig = useCallback(async () => {
+    if (!configId) return;
     try {
       setLoadingConfig(true);
       const response = await fetch(`/api/hybrid/config/${configId}`, {
         headers: { 'x-api-key': apiKey },
       });
+
 
       if (!response.ok) {
         throw new Error('Failed to load config');
@@ -112,7 +108,15 @@ export function HybridConfigEditor({
     } finally {
       setLoadingConfig(false);
     }
-  };
+  }, [apiKey, configId]);
+
+  // Load existing config if editing
+  useEffect(() => {
+    if (configId) {
+      fetchConfig();
+    }
+  }, [configId, fetchConfig]);
+
 
   const handleSave = async () => {
     if (!name.trim()) {

@@ -183,7 +183,7 @@ function SdkModal({ onClose, onCopy, copiedSdk, t }: { onClose: () => void; onCo
             </div>
           ))}
         </div>
-        <div className="p-4 border-t bg-gray-50 rounded-b-2xl"><div className="flex items-center justify-between"><a href="/docs#sdks" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">{t("dashboard.onboarding.sdkModal.viewDocs")}</a><button onClick={onClose} className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">{t("dashboard.onboarding.sdkModal.done")}</button></div></div>
+        <div className="p-4 border-t bg-gray-50 rounded-b-2xl"><div className="flex items-center justify-between"><Link href="/docs#sdks" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">{t("dashboard.onboarding.sdkModal.viewDocs")}</Link><button onClick={onClose} className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">{t("dashboard.onboarding.sdkModal.done")}</button></div></div>
       </div>
     </div>
   );

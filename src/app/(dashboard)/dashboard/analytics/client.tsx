@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import {
   LineChart,
@@ -165,13 +165,25 @@ export function AnalyticsClient() {
     return num.toString();
   };
 
+  type TooltipPayload = {
+    color?: string;
+    name?: string;
+    value?: number | string;
+  };
+
+  type TooltipProps = {
+    active?: boolean;
+    payload?: TooltipPayload[];
+    label?: string;
+  };
+
   // Custom tooltip for charts
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="glass-card bg-white/95 dark:bg-gray-800/95 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
           <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} className="text-xs" style={{ color: entry.color }}>
               {entry.name}: {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
             </p>

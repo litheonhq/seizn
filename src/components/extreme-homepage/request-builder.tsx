@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useId } from "react";
+
 
 export interface RequestConfig {
   query: string;
@@ -111,6 +112,14 @@ export function RequestBuilder({
   translations: t,
 }: RequestBuilderProps) {
   const [showSampleQueries, setShowSampleQueries] = useState(false);
+  const idPrefix = useId();
+  const queryId = `${idPrefix}-query`;
+  const datasetId = `${idPrefix}-dataset`;
+  const budgetId = `${idPrefix}-budget`;
+  const budgetHelpId = `${idPrefix}-budget-help`;
+  const topKId = `${idPrefix}-topk`;
+  const topKHelpId = `${idPrefix}-topk-help`;
+
 
   const updateConfig = (updates: Partial<RequestConfig>) => {
     onConfigChange({ ...config, ...updates });
@@ -129,11 +138,12 @@ export function RequestBuilder({
     <div className="flex flex-col h-full">
       {/* Query Input */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor={queryId} className="block text-sm font-medium text-gray-700 mb-2">
           {t?.query || "Query"}
         </label>
         <div className="relative">
           <textarea
+            id={queryId}
             value={config.query}
             onChange={(e) => updateConfig({ query: e.target.value })}
             placeholder={t?.queryPlaceholder || "Enter your search query..."}
@@ -141,6 +151,7 @@ export function RequestBuilder({
             rows={3}
             disabled={disabled}
           />
+
           <button
             type="button"
             onClick={() => setShowSampleQueries(!showSampleQueries)}
@@ -169,16 +180,18 @@ export function RequestBuilder({
 
       {/* Dataset Selector */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor={datasetId} className="block text-sm font-medium text-gray-700 mb-2">
           {t?.dataset || "Dataset"}
         </label>
         <div className="relative">
           <select
+            id={datasetId}
             value={config.dataset}
             onChange={(e) => updateConfig({ dataset: e.target.value })}
             className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900 appearance-none cursor-pointer"
             disabled={disabled}
           >
+
             {SAMPLE_DATASETS.map((ds) => (
               <option key={ds.id} value={ds.id}>
                 {ds.name} ({ds.count})
@@ -196,12 +209,14 @@ export function RequestBuilder({
       {/* Budget Slider */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm font-medium text-gray-700">
+          <label htmlFor={budgetId} className="text-sm font-medium text-gray-700">
             {t?.latencyBudget || "Latency Budget"}
           </label>
+
           <span className="text-sm text-gray-500">{config.budgetMs}ms</span>
         </div>
         <input
+          id={budgetId}
           type="range"
           min={50}
           max={2000}
@@ -209,9 +224,11 @@ export function RequestBuilder({
           value={config.budgetMs}
           onChange={(e) => updateConfig({ budgetMs: Number(e.target.value) })}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+          aria-describedby={budgetHelpId}
           disabled={disabled}
         />
-        <div className="flex justify-between text-xs text-gray-400 mt-1">
+        <div id={budgetHelpId} className="flex justify-between text-xs text-gray-400 mt-1">
+
           <span>50ms ({t?.fast || "fast"})</span>
           <span>2000ms ({t?.thorough || "thorough"})</span>
         </div>
@@ -220,18 +237,25 @@ export function RequestBuilder({
       {/* Top K */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
+          <label htmlFor={topKId} className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
+
           <span className="text-sm text-gray-500">{config.topK} {t?.results || "results"}</span>
         </div>
         <input
+          id={topKId}
           type="range"
           min={1}
           max={20}
           value={config.topK}
           onChange={(e) => updateConfig({ topK: Number(e.target.value) })}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+          aria-describedby={topKHelpId}
           disabled={disabled}
         />
+        <div id={topKHelpId} className="sr-only">
+          {t?.topK || "Top K"}
+        </div>
+
       </div>
 
       {/* Feature Toggles */}

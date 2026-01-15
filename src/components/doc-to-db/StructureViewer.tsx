@@ -165,7 +165,7 @@ export function StructureViewer({
 function TableView({
   headers,
   rows,
-  cells,
+  cells: _cells,
   onCellClick,
   getCell,
 }: {
@@ -220,7 +220,7 @@ function TableView({
 
 function ListView({
   rows,
-  onCellClick,
+  onCellClick: _onCellClick,
 }: {
   rows: (string | number | boolean | null)[][];
   onCellClick?: (cell: StructureCell) => void;

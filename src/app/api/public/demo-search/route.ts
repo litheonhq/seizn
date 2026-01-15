@@ -242,8 +242,9 @@ function simulateRerank(results: SearchResult[], query: string): SearchResult[] 
  */
 function generateTrace(
   options: DemoSearchRequest,
-  resultCount: number
+  _resultCount: number
 ): TraceSummary {
+
   const steps: TraceStep[] = [];
   let currentMs = 0;
   let totalCost = 0;

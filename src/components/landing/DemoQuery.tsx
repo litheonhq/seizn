@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useMemo, memo, Suspense } from "react";
-import dynamic from "next/dynamic";
+import { useState, useCallback, memo } from "react";
+import Link from "next/link";
 import type { Dictionary } from "@/i18n/get-dictionary";
+
 
 // =============================================================================
 // Types
@@ -485,9 +486,10 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
       setCost(data.cost);
       setTraceId(data.traceId);
       setActiveTab("results");
-    } catch (err) {
+    } catch {
       setError({ message: "Network error. Please try again." });
     } finally {
+
       setIsLoading(false);
     }
   }, [config, t.rateLimitError]);
@@ -706,7 +708,7 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
           <p className="text-sm text-gray-500 mb-4">
             Ready to integrate? Get your API key in seconds.
           </p>
-          <a
+          <Link
             href="/dashboard/keys"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
           >
@@ -714,7 +716,8 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </a>
+          </Link>
+
         </div>
       </div>
     </section>

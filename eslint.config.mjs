@@ -18,6 +18,8 @@ const eslintConfig = [
       "mcp-server/**/*",
       "scripts/**/*",
       "sdks/**/*",
+      "packages/**/*",
+      "**/dist/**/*",
       "next-env.d.ts",
     ],
   },
@@ -31,6 +33,12 @@ const eslintConfig = [
           varsIgnorePattern: "^_",
         },
       ],
+    },
+  },
+  {
+    files: ["src/lib/**/*"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ];

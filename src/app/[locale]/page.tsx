@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { type Locale } from "@/i18n/config";
-import { ExtremeHomepageClient } from "@/components/extreme-homepage";
+import { ExtremeHomepage } from "@/components/extreme-homepage/server";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -27,5 +27,5 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
-  return <ExtremeHomepageClient dict={dict} locale={locale} />;
+  return <ExtremeHomepage dict={dict} locale={locale} />;
 }

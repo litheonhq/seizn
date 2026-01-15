@@ -6,7 +6,8 @@
  * Create and edit individual test cases
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
 
 interface TestCase {
   id?: string;

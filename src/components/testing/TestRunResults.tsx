@@ -6,7 +6,8 @@
  * Displays test run results with pass/fail chart and details
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 
 interface TestRunResult {
   case_id: string;
@@ -57,13 +58,7 @@ export function TestRunResults({
   const [error, setError] = useState<string | null>(null);
   const [expandedCase, setExpandedCase] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (runId) {
-      fetchRunDetails();
-    }
-  }, [runId, apiKey, suiteId]);
-
-  const fetchRunDetails = async () => {
+  const fetchRunDetails = useCallback(async () => {
     if (!runId) return;
 
     setLoading(true);
@@ -78,17 +73,24 @@ export function TestRunResults({
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error?.message || 'Failed to fetch results');
+        throw new Error(data.error || 'Failed to fetch results');
       }
 
-      setRun(data.data.run);
-      setCaseResults(data.data.case_results || []);
+      setRun(data.run);
+      setCaseResults(data.results || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : 'Failed to fetch results');
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiKey, runId, showDetails, suiteId]);
+
+  useEffect(() => {
+    if (runId) {
+      fetchRunDetails();
+    }
+  }, [fetchRunDetails, runId]);
+
 
   const getResultColor = (result: string) => {
     switch (result) {

@@ -114,7 +114,6 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
   const getTooltipPosition = () => {
     if (!targetRect) return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
 
-    const padding = step.spotlightPadding || 8;
     const tooltipWidth = 320;
     const tooltipHeight = 180;
     const offset = 16;

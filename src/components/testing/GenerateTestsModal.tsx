@@ -30,9 +30,10 @@ export function GenerateTestsModal({
   onSuccess,
 }: GenerateTestsModalProps) {
   const [step, setStep] = useState<'config' | 'generating' | 'done'>('config');
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
-  const [loadingDocs, setLoadingDocs] = useState(false);
+  const [_documents, _setDocuments] = useState<Document[]>([]);
+  const [selectedDocs, _setSelectedDocs] = useState<string[]>([]);
+  const [_loadingDocs, _setLoadingDocs] = useState(false);
+
 
   // Generation options
   const [count, setCount] = useState(10);
@@ -44,7 +45,8 @@ export function GenerateTestsModal({
   const [model, setModel] = useState<'haiku' | 'sonnet'>('haiku');
 
   // Results
-  const [generating, setGenerating] = useState(false);
+  const [_generating, setGenerating] = useState(false);
+
   const [result, setResult] = useState<{
     generated: number;
     saved: number;

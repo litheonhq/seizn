@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { PaddleInit } from "@/components/paddle-init";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -32,6 +33,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
 
   return (
     <div className="min-h-screen gradient-hero relative overflow-hidden">
+      <PaddleInit />
       {/* Decorative Floating Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float" />

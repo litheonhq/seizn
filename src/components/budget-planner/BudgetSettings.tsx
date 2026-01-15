@@ -46,15 +46,16 @@ export function BudgetSettings({
   // Update form when initial settings change
   useEffect(() => {
     if (initialSettings) {
-      setForm({
-        dailyBudgetUsd: initialSettings.dailyBudgetUsd?.toString() ?? form.dailyBudgetUsd,
-        monthlyBudgetUsd: initialSettings.monthlyBudgetUsd?.toString() ?? form.monthlyBudgetUsd,
-        perQueryMaxUsd: initialSettings.perQueryMaxUsd?.toString() ?? form.perQueryMaxUsd,
-        alertAtPercent: initialSettings.alertAtPercent?.toString() ?? form.alertAtPercent,
-        mode: initialSettings.mode ?? form.mode,
-        fallbackStrategy: initialSettings.fallbackStrategy ?? form.fallbackStrategy,
-      });
+      setForm((prev) => ({
+        dailyBudgetUsd: initialSettings.dailyBudgetUsd?.toString() ?? prev.dailyBudgetUsd,
+        monthlyBudgetUsd: initialSettings.monthlyBudgetUsd?.toString() ?? prev.monthlyBudgetUsd,
+        perQueryMaxUsd: initialSettings.perQueryMaxUsd?.toString() ?? prev.perQueryMaxUsd,
+        alertAtPercent: initialSettings.alertAtPercent?.toString() ?? prev.alertAtPercent,
+        mode: initialSettings.mode ?? prev.mode,
+        fallbackStrategy: initialSettings.fallbackStrategy ?? prev.fallbackStrategy,
+      }));
     }
+
   }, [initialSettings]);
 
   const handleSubmit = async (e: React.FormEvent) => {

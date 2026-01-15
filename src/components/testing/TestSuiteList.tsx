@@ -6,7 +6,8 @@
  * Displays a list of retrieval test suites with actions
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 
 interface TestSuite {
   id: string;
@@ -36,11 +37,7 @@ export function TestSuiteList({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSuites();
-  }, [apiKey, collectionId]);
-
-  const fetchSuites = async () => {
+  const fetchSuites = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -66,7 +63,12 @@ export function TestSuiteList({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiKey, collectionId]);
+
+  useEffect(() => {
+    fetchSuites();
+  }, [fetchSuites]);
+
 
   const getStatusColor = (result?: string) => {
     switch (result) {

@@ -227,7 +227,8 @@ export function ScoreContributionChart({ result }: ScoreContributionChartProps) 
 
   return (
     <div className="flex h-4 rounded-full overflow-hidden">
-      {Object.entries(result.strategyScores).map(([strategy, score], index) => {
+      {Object.entries(result.strategyScores).map(([strategy, score]) => {
+
         const percentage = (score / total) * 100;
         return (
           <div

@@ -81,8 +81,9 @@ const permissionLevelConfig: Record<
 export function PermissionPanel({
   node,
   onClose,
-  onPermissionChange,
+  onPermissionChange: _onPermissionChange,
 }: PermissionPanelProps) {
+
   const [activeTab, setActiveTab] = useState<"direct" | "inherited" | "effective">("direct");
   const [effectivePermissions, setEffectivePermissions] = useState<Record<string, EffectivePermission>>({});
   const [loading, setLoading] = useState(false);

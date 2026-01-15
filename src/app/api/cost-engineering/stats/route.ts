@@ -14,7 +14,8 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
-import { ServerErrors, ValidationErrors } from '@/lib/api-error';
+import { ServerErrors } from '@/lib/api-error';
+
 import { getCostEngineeringStats } from '@/lib/cost-engineering';
 
 export async function GET(request: NextRequest) {

@@ -19,16 +19,6 @@ interface ClaimBreakdownProps {
   showHighlights?: boolean;
 }
 
-/**
- * Claim type configuration
- */
-const claimTypeConfig = {
-  factual: { label: "Factual", color: "blue" },
-  opinion: { label: "Opinion", color: "purple" },
-  comparison: { label: "Comparison", color: "cyan" },
-  temporal: { label: "Temporal", color: "amber" },
-  quantitative: { label: "Quantitative", color: "emerald" },
-};
 
 /**
  * Support strength badge
@@ -230,11 +220,12 @@ function ContradictionItem({ contradiction }: { contradiction: Contradiction }) 
  */
 export default function ClaimBreakdown({
   claims,
-  unsupportedClaims,
+  unsupportedClaims: _unsupportedClaims,
   contradictions,
-  answerText,
-  showHighlights = false,
+  answerText: _answerText,
+  showHighlights: _showHighlights = false,
 }: ClaimBreakdownProps) {
+
   const [expandedClaims, setExpandedClaims] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<"all" | "supported" | "unsupported" | "contradicted">("all");
   const [sortBy, setSortBy] = useState<"order" | "confidence" | "support">("order");

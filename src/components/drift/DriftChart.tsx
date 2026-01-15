@@ -51,7 +51,6 @@ export function DriftChart({
 
     // Calculate min/max for scaling
     const centroidValues = points.map((p) => p.centroidShift ?? 0).filter(Boolean);
-    const scoreValues = points.map((p) => p.avgScore ?? 0).filter(Boolean);
     const queryValues = points.map((p) => p.queryCount ?? 0);
 
     const maxCentroid = Math.max(...centroidValues, 0.1);
@@ -87,11 +86,7 @@ export function DriftChart({
   }
 
   const { points, maxCentroid, maxQuery } = chartData;
-  const chartWidth = 100; // Percentage
   const chartHeight = height - 40; // Leave room for labels
-  const padding = { top: 20, right: 20, bottom: 30, left: 50 };
-  const innerWidth = chartWidth;
-  const innerHeight = chartHeight - padding.top - padding.bottom;
 
   // Generate path data
   const generatePath = (
@@ -123,7 +118,7 @@ export function DriftChart({
     const step = Math.ceil(points.length / 5);
     return points
       .filter((_, i) => i % step === 0 || i === points.length - 1)
-      .map((p, i, arr) => ({
+      .map((p) => ({
         label: formatDate(p.date),
         x: (points.indexOf(p) / (points.length - 1)) * 100,
       }));
