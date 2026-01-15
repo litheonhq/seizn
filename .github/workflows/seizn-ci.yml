@@ -73,11 +73,11 @@ jobs:
           chmod -R 755 .seizn-traces/
 
       - name: Upload trace artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: seizn-traces
-          path: ${{ github.workspace }}/.seizn-traces/*
+          path: .seizn-traces/traces.json
           retention-days: 7
           if-no-files-found: warn
 
@@ -102,7 +102,7 @@ jobs:
 
       - name: Download trace artifacts
         id: download-traces
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         continue-on-error: true
         with:
           name: seizn-traces
@@ -120,7 +120,7 @@ jobs:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
 
       - name: Upload generated tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/
@@ -146,14 +146,14 @@ jobs:
         run: npm ci
 
       - name: Download trace artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: seizn-traces
           path: .seizn-traces/
         continue-on-error: true
 
       - name: Download generated tests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/
