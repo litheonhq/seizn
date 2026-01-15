@@ -67,15 +67,17 @@ jobs:
         run: |
           echo "=== Pre-upload verification ==="
           echo "Current directory: $(pwd)"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           find .seizn-traces -type f 2>/dev/null || echo "No files found"
-          du -h .seizn-traces/* 2>/dev/null || echo "Cannot check sizes"
+          ls -la .seizn-traces/
+          chmod -R 755 .seizn-traces/
 
       - name: Upload trace artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: seizn-traces
-          path: .seizn-traces/
+          path: ${{ github.workspace }}/.seizn-traces/*
           retention-days: 7
           if-no-files-found: warn
 
