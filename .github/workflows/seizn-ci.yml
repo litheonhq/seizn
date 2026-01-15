@@ -45,6 +45,7 @@ jobs:
         env:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
           SEIZN_CI_TOKEN: ${{ secrets.SEIZN_CI_TOKEN }}
+          SEIZN_TEST_COMMAND: 'npm run test:run'
           CI: 'true'
 
       - name: Upload trace artifacts
