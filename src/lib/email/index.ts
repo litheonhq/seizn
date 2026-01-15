@@ -1,6 +1,18 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors when API key is not set
+let _resend: Resend | null = null;
+
+function getResend(): Resend {
+  if (!_resend) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    _resend = new Resend(apiKey);
+  }
+  return _resend;
+}
 
 const FROM_EMAIL = 'Seizn <noreply@seizn.com>';
 
@@ -14,6 +26,7 @@ export interface SendEmailOptions {
 
 export async function sendEmail(options: SendEmailOptions) {
   try {
+    const resend = getResend();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: options.to,
@@ -44,6 +57,7 @@ export async function sendBatchEmails(
   }>
 ) {
   try {
+    const resend = getResend();
     const { data, error } = await resend.batch.send(
       emails.map((email) => ({
         from: FROM_EMAIL,
@@ -63,7 +77,8 @@ export async function sendBatchEmails(
   }
 }
 
-export { resend };
+// Export getter function for advanced use cases
+export { getResend };
 
 // Re-export templates for convenience
 export * from './templates';
