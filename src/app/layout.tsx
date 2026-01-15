@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { WebVitalsReporter } from "@/components/rum/WebVitalsReporter";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -20,5 +21,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return (
+    <>
+      {children}
+      <WebVitalsReporter />
+    </>
+  );
 }

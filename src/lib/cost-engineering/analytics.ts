@@ -14,6 +14,20 @@ import type {
   CacheStats,
 } from './types';
 
+type CacheAccessRow = {
+  chunk_id: string;
+  collection_id: string | null;
+  access_count: number | null;
+  query_percent: number | null;
+};
+
+type QueryTrendRow = {
+  bucket: string;
+  query_count: number | null;
+  avg_latency_ms: number | null;
+};
+
+
 /**
  * Usage Analytics Manager
  *
@@ -221,12 +235,14 @@ export class UsageAnalyticsManager {
       }));
     }
 
-    return data.map((item: any) => ({
+    const rows = data as CacheAccessRow[];
+    return rows.map((item) => ({
       chunkId: item.chunk_id,
       collectionId: item.collection_id,
       accessCount: item.access_count,
       queryPercent: item.query_percent,
     }));
+
   }
 
   /**
@@ -308,11 +324,13 @@ export class UsageAnalyticsManager {
       return [];
     }
 
-    return data.map((item: any) => ({
+    const rows = data as QueryTrendRow[];
+    return rows.map((item) => ({
       timestamp: item.bucket,
-      count: item.query_count,
-      avgLatency: item.avg_latency_ms,
+      count: item.query_count ?? 0,
+      avgLatency: item.avg_latency_ms ?? 0,
     }));
+
   }
 
   /**

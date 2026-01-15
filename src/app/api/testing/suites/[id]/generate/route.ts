@@ -12,7 +12,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
-import { ValidationErrors, NotFoundErrors, ServerErrors } from '@/lib/api-error';
+import { NotFoundErrors, ServerErrors } from '@/lib/api-error';
 import {
   generateTestsFromDocs,
   generateTestsFromTemplate,

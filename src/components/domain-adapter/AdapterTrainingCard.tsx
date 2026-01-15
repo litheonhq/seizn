@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
 
 // =============================================================================
 // Types
@@ -65,33 +66,36 @@ export function AdapterTrainingCard({
   const [batchSize, setBatchSize] = useState(32);
   const [learningRate, setLearningRate] = useState(0.001);
 
-  const fetchRuns = async () => {
+  const fetchRuns = useCallback(async () => {
     try {
       const response = await fetch(`/api/adapters/${adapterId}/train?limit=5`);
       if (!response.ok) throw new Error("Failed to fetch training runs");
 
       const data = await response.json();
-      setRuns(data.runs);
+      const nextRuns = data.runs as TrainingRun[];
+
+      setRuns((prevRuns) => {
+        if (
+          nextRuns[0]?.status === "completed" &&
+          prevRuns[0]?.status === "training"
+        ) {
+          onTrainingComplete?.();
+        }
+        return nextRuns;
+      });
 
       // Check if currently training
-      const activeRun = data.runs.find(
-        (r: TrainingRun) => r.status === "training" || r.status === "pending"
+      const activeRun = nextRuns.find(
+        (r) => r.status === "training" || r.status === "pending"
       );
       setIsTraining(!!activeRun);
-
-      // Notify on completion
-      if (
-        data.runs[0]?.status === "completed" &&
-        runs[0]?.status === "training"
-      ) {
-        onTrainingComplete?.();
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
-  };
+  }, [adapterId, onTrainingComplete]);
+
 
   useEffect(() => {
     fetchRuns();
@@ -101,7 +105,8 @@ export function AdapterTrainingCard({
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [adapterId, isTraining]);
+  }, [fetchRuns, isTraining]);
+
 
   const handleStartTraining = async () => {
     setError(null);

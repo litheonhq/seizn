@@ -40,7 +40,7 @@ function interpolate(str: string, params?: Record<string, string | number>): str
 
 // Copy button component with animation
 function CopyButton({
-  text,
+  text: _text,
   copiedText,
   defaultText,
   onCopy,
@@ -54,6 +54,7 @@ function CopyButton({
   isCopied: boolean;
   size?: "default" | "small";
 }) {
+
   const baseClasses = size === "small"
     ? "px-2 py-1 text-xs"
     : "px-3 py-1.5 text-sm";

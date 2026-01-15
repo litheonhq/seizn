@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { AdapterStatus, DomainType } from "@/lib/domain-adapter/types";
+import type { AdapterStatus } from "@/lib/domain-adapter/types";
+
 
 // =============================================================================
 // Types

@@ -4,6 +4,14 @@ import { useState, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { PlaygroundTutorial } from "@/components/dashboard/PlaygroundTutorial";
 
+declare global {
+  interface Window {
+    seiznOnboarding?: {
+      markComplete: (step: string) => void;
+    };
+  }
+}
+
 interface TraceStep {
   name: string;
   latencyMs: number;
@@ -141,8 +149,8 @@ export function PlaygroundClient() {
       // Mark first query as complete for onboarding
       if (typeof window !== "undefined") {
         localStorage.setItem("seizn_first_query", "true");
-        if ((window as any).seiznOnboarding) {
-          (window as any).seiznOnboarding.markComplete("first_query");
+        if (window.seiznOnboarding) {
+          window.seiznOnboarding.markComplete("first_query");
         }
       }
 

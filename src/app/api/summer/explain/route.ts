@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
       return authErrorResponse(authResult.authError);
     }
 
-    const { userId, keyId, plan, rateLimitHeaders } = authResult;
+    const { userId, keyId, plan: _plan, rateLimitHeaders } = authResult;
+
 
     // Parse request body
     let body: Record<string, unknown>;

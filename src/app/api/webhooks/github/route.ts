@@ -344,11 +344,12 @@ async function handleCheckSuiteEvent(
  */
 async function handleCheckRunEvent(
   payload: Record<string, unknown>,
-  owner: string,
-  repo: string,
+  _owner: string,
+  _repo: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: any
+  _supabase: any
 ): Promise<{ processed: boolean; action?: string; error?: string }> {
+
   const action = payload.action as string;
 
   if (action !== 'completed') {

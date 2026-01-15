@@ -19,13 +19,6 @@ import {
   MenuIcon,
   CloseIcon,
   CheckIcon,
-  TracingIcon,
-  AutopilotIcon,
-  GovernanceIcon,
-  LessGlueIcon,
-  SecurityIcon,
-  RateLimitIcon,
-  AuditIcon,
 } from "./icons";
 
 // Dynamic imports for below-the-fold and heavy components (code-split for better LCP)
@@ -291,182 +284,6 @@ const Navigation = memo(function Navigation({
   );
 });
 
-// Memoized Why Seizn section - static content that doesn't need re-renders
-const WhySeizn = memo(function WhySeizn({ t }: { t: Dictionary }) {
-  return (
-    <section className="py-16 px-4 sm:px-6 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-            {t.extremeHome?.whySeizn?.title || "Why Seizn vs LangChain + Pinecone?"}
-          </h2>
-          <p className="text-gray-500 max-w-xl mx-auto">
-            {t.extremeHome?.whySeizn?.subtitle || "Stop gluing together fragmented tools. Get everything you need in one integrated stack."}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Built-in Tracing */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-              <TracingIcon className="w-5 h-5 text-purple-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.tracingDesc || "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging."}
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
-            </div>
-          </div>
-
-          {/* Budget-aware Planning */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-              <AutopilotIcon className="w-5 h-5 text-blue-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.autopilotDesc || "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required."}
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
-            </div>
-          </div>
-
-          {/* Governance */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center mb-4">
-              <GovernanceIcon className="w-5 h-5 text-rose-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.governanceDesc || "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later."}
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
-            </div>
-          </div>
-
-          {/* Less Glue Code */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-              <LessGlueIcon className="w-5 h-5 text-amber-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.lessGlueDesc || "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill."}
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-});
-
-// Memoized Trust Badges section
-const TrustBadges = memo(function TrustBadges({ t }: { t: Dictionary }) {
-  return (
-    <section className="py-12 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-              <SecurityIcon className="w-5 h-5 text-emerald-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <RateLimitIcon className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-              <AuditIcon className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-});
-
-// Memoized Pricing CTA section
-const PricingCTA = memo(function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
-  return (
-    <section className="py-16 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF]">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl font-semibold mb-4">{t.extremeHome?.pricingCta?.title || "Simple, transparent pricing"}</h2>
-        <p className="text-[#EAF0FF]/70 mb-8">
-          {t.extremeHome?.pricingCta?.subtitle || "Start free, scale as you grow. No hidden fees."}
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href={`/${locale}/pricing`}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-full hover:opacity-90 transition-opacity"
-          >
-            {t.extremeHome?.pricingCta?.viewPricing || "View Pricing"}
-          </Link>
-          <Link
-            href={`/${locale}/enterprise`}
-            className="px-8 py-3 border border-[#EAF0FF]/20 text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 transition-colors"
-          >
-            {t.extremeHome?.pricingCta?.contactSales || "Contact Sales"}
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-});
-
-// Memoized Footer section
-const Footer = memo(function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
-  return (
-    <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <Link href={`/${locale}`} className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/seizn-icon.svg"
-            alt="Seizn"
-            className="w-6 h-6"
-            width={24}
-            height={24}
-            loading="lazy"
-          />
-          <span className="font-medium">Seizn</span>
-        </Link>
-        <div className="text-sm text-gray-500">
-          {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
-        </div>
-        <nav className="flex items-center gap-6">
-          <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
-          <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
-          <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
-          <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
-          <Link href="/refund" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Refund</Link>
-          <a href="mailto:support@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
-        </nav>
-      </div>
-    </footer>
-  );
-});
-
 export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientProps) {
   const [config, setConfig] = useState<RequestConfig>(DEFAULT_CONFIG);
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -593,7 +410,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const t = dict;
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
       {/* Sticky Navigation - Memoized */}
       <Navigation
         locale={locale}
@@ -860,22 +677,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         </div>
       )}
 
-      {/* Why Seizn Section - Memoized static content */}
       {/* Public Demo Query Section */}
       <Suspense fallback={<PanelSkeleton />}>
         <DemoQuery dict={t} />
       </Suspense>
-
-      <WhySeizn t={t} />
-
-      {/* Trust Badges - Memoized */}
-      <TrustBadges t={t} />
-
-      {/* Pricing CTA - Memoized */}
-      <PricingCTA locale={locale} t={t} />
-
-      {/* Footer - Memoized */}
-      <Footer locale={locale} t={t} />
-    </div>
+    </>
   );
 }

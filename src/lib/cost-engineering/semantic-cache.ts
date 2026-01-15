@@ -16,6 +16,17 @@ import {
   type CacheHitResult,
 } from './types';
 
+type CacheRow = {
+  cache_key: string;
+  query_embedding_hash: string;
+  index_version: string;
+  policy_hash: string;
+  result: CachedQueryResult;
+  hit_count: number | null;
+  created_at: string;
+  expires_at: string;
+};
+
 // Re-export default config
 export { DEFAULT_CACHE_CONFIG };
 
@@ -465,14 +476,14 @@ export class SemanticCache {
   /**
    * Map database row to cache entry
    */
-  private mapToEntry(row: any): CostCacheEntry {
+  private mapToEntry(row: CacheRow): CostCacheEntry {
     return {
       key: row.cache_key,
       queryEmbeddingHash: row.query_embedding_hash,
       indexVersion: row.index_version,
       policyHash: row.policy_hash,
-      result: row.result as CachedQueryResult,
-      hitCount: row.hit_count,
+      result: row.result,
+      hitCount: row.hit_count ?? 0,
       createdAt: new Date(row.created_at),
       expiresAt: new Date(row.expires_at),
     };

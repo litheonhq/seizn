@@ -54,9 +54,8 @@ export function RerankDiff({
   // Merge before/after data
   const diffData = useMemo(() => {
     const beforeMap = new Map(beforeCandidates.map((c) => [c.id, c]));
-    const afterMap = new Map(afterCandidates.map((c) => [c.id, c]));
-
     // Get all IDs from after (reranked results)
+
     const result: RerankCandidate[] = [];
     for (const after of afterCandidates) {
       const before = beforeMap.get(after.id);
@@ -156,12 +155,8 @@ export function RerankDiff({
             </div>
             <div className="space-y-1">
               {beforeCandidates.slice(0, 10).map((candidate) => {
-                const afterItem = afterCandidates.find((c) => c.id === candidate.id);
-                const rankDelta = afterItem
-                  ? candidate.rank - afterItem.rank
-                  : 0;
-
                 return (
+
                   <div
                     key={candidate.id}
                     className="flex items-center gap-2 p-2 rounded bg-gray-800/30"

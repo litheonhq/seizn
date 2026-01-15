@@ -4,20 +4,19 @@ import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import {
   extractEntities,
   extractRelations,
-  createEntities,
-  createRelations,
   findEntityByName,
   mergeEntitySources,
 } from '@/lib/graph-rag';
+
 import type {
   ChunkInput,
   ExtractionOptions,
-  EntityInput,
   RelationInput,
   Entity,
   Relation,
   EntityType,
 } from '@/lib/graph-rag';
+
 
 /**
  * POST /api/graph-rag/extract

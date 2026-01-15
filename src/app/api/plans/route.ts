@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PLANS as PLAN_CONFIG, formatLimit, isUnlimited } from '@/lib/plan-limits';
+import { PLANS as PLAN_CONFIG, formatLimit } from '@/lib/plan-limits';
 
 /**
  * GET /api/plans - Single Source of Truth for pricing

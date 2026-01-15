@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
@@ -7,6 +8,29 @@ const nextConfig: NextConfig = {
 
   // Disable devtools indicator in development
   devIndicators: false,
+
+  async headers() {
+    return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|woff2?)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 
   // Exclude mcp-server from build process
   webpack: (config) => {
@@ -23,6 +47,10 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 };
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 // Sentry configuration options (updated for v10+)
 const sentryWebpackPluginOptions = {
@@ -68,4 +96,7 @@ const sentryWebpackPluginOptions = {
   },
 };
 
-export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+export default withSentryConfig(
+  withBundleAnalyzer(nextConfig),
+  sentryWebpackPluginOptions
+);

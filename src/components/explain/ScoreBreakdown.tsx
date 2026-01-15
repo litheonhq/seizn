@@ -117,19 +117,14 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
 
 export function ScoreBreakdownChart({
   scoreBreakdown,
-  visualization,
+  visualization: _visualization,
   className = "",
 }: ScoreBreakdownChartProps) {
+
   const maxValue = useMemo(() => {
     return Math.max(...scoreBreakdown.components.map((c) => c.normalizedValue), 1);
   }, [scoreBreakdown.components]);
 
-  const totalWeightedScore = useMemo(() => {
-    return scoreBreakdown.components.reduce(
-      (sum, c) => sum + c.normalizedValue * c.weight,
-      0
-    );
-  }, [scoreBreakdown.components]);
 
   return (
     <div className={`space-y-6 ${className}`}>

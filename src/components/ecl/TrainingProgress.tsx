@@ -252,14 +252,7 @@ export function TrainingProgress({
     fetchStatus();
   }, [fetchStatus]);
 
-  // Auto-start if requested
-  useEffect(() => {
-    if (autoStart && pairCount >= 10 && modelStatus === "pending") {
-      startTraining();
-    }
-  }, [autoStart, pairCount, modelStatus]);
-
-  const startTraining = async () => {
+  const startTraining = useCallback(async () => {
     if (pairCount < 10) {
       setState({
         status: "failed",
@@ -289,32 +282,35 @@ export function TrainingProgress({
         setState({
           status: "failed",
           progress: 0,
-          message: data.error?.message || "Training failed to start",
-          error: data.error?.hint,
+          message: "Training failed",
+          error: data?.error || "Failed to start training",
         });
-        onError?.(data.error?.message || "Training failed");
         return;
       }
 
+      setModelStatus(data?.status || "training");
       setState({
-        status: "completed",
-        progress: 100,
-        message: "Training completed successfully!",
-        metrics: data.metrics,
+        status: data?.status || "training",
+        progress: data?.progress || 10,
+        message: data?.message || "Training started",
       });
-
-      // Fetch updated model
-      await fetchStatus();
     } catch (err) {
       setState({
         status: "failed",
         progress: 0,
-        message: "Training request failed",
+        message: "Training failed",
         error: err instanceof Error ? err.message : "Unknown error",
       });
-      onError?.(err instanceof Error ? err.message : "Training failed");
     }
-  };
+  }, [pairCount, headers, modelId]);
+
+  // Auto-start if requested
+  useEffect(() => {
+    if (autoStart && pairCount >= 10 && modelStatus === "pending") {
+      startTraining();
+    }
+  }, [autoStart, pairCount, modelStatus, startTraining]);
+
 
   // Status indicator
   const StatusIcon = () => {

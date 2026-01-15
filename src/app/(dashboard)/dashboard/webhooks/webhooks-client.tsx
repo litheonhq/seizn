@@ -117,8 +117,8 @@ export default function WebhooksClient() {
   const [deliveries, setDeliveries] = useState<WebhookDelivery[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
   const [activeTab, setActiveTab] = useState<"webhooks" | "deliveries">("webhooks");
+
 
   // Form state
   const [formName, setFormName] = useState("");

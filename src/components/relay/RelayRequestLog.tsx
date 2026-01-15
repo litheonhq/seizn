@@ -4,7 +4,8 @@
  * RelayRequestLog - View recent relay requests
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 import type { RelayRequestLog as RelayRequestLogType } from '@/lib/relay/types';
 
 interface RelayRequestLogProps {
@@ -24,7 +25,7 @@ export function RelayRequestLog({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       // Note: This would need a corresponding API endpoint
       // For now, this is a placeholder showing the UI structure
@@ -51,7 +52,7 @@ export function RelayRequestLog({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiKey, relayId, limit]);
 
   useEffect(() => {
     fetchRequests();
@@ -59,7 +60,8 @@ export function RelayRequestLog({
       const interval = setInterval(fetchRequests, 10000);
       return () => clearInterval(interval);
     }
-  }, [relayId, limit]);
+  }, [autoRefresh, fetchRequests]);
+
 
   if (loading) {
     return (

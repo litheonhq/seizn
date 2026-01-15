@@ -4,8 +4,9 @@
  * RelayAgentList - Display and manage relay agents
  */
 
-import { useState, useEffect } from 'react';
-import { type RelayAgent, type RelayAgentStatus } from '@/lib/relay/types';
+import { useState, useEffect, useCallback } from 'react';
+import { type RelayAgent } from '@/lib/relay/types';
+
 
 interface RelayAgentListProps {
   apiKey: string;
@@ -17,11 +18,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchAgents();
-  }, []);
-
-  const fetchAgents = async () => {
+  const fetchAgents = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/relay/agents', {
@@ -42,7 +39,13 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiKey]);
+
+  useEffect(() => {
+    fetchAgents();
+  }, [fetchAgents]);
+
+
 
   const handleDelete = async (agentId: string, agentName: string) => {
     if (!confirm(`Are you sure you want to delete relay agent "${agentName}"?`)) {

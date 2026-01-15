@@ -8,11 +8,10 @@ import {
 } from "@/lib/errors";
 import {
   encryptApiKey,
-  decryptApiKey,
   generateKeyHint,
   validateKeyFormat,
-  maskApiKey,
 } from "@/lib/byok/encryption";
+
 
 const VALID_PROVIDERS = ["openai", "anthropic", "cohere", "voyage", "google", "azure"];
 

@@ -22,6 +22,20 @@ import {
   type CacheStats,
 } from './types';
 
+type RecommendationRow = {
+  id: string;
+  type: CostRecommendation['type'];
+  title: string;
+  description: string;
+  estimated_savings_usd: number | null;
+  impact: CostRecommendation['impact'];
+  confidence: number | null;
+  action: CostRecommendation['action'];
+  applied: boolean | null;
+  applied_at?: string | null;
+  created_at?: string | null;
+};
+
 // Re-export default config
 export { DEFAULT_AUTOPILOT_CONFIG };
 
@@ -735,19 +749,19 @@ export class CostAutopilot {
     return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   }
 
-  private mapToRecommendation(row: any): CostRecommendation {
+  private mapToRecommendation(row: RecommendationRow): CostRecommendation {
     return {
       id: row.id,
       type: row.type,
       title: row.title,
       description: row.description,
-      estimatedSavingsUsd: row.estimated_savings_usd,
+      estimatedSavingsUsd: row.estimated_savings_usd ?? 0,
       impact: row.impact,
-      confidence: row.confidence,
+      confidence: row.confidence ?? 0,
       action: row.action,
-      applied: row.applied,
-      appliedAt: row.applied_at,
-      createdAt: row.created_at,
+      applied: row.applied ?? false,
+      appliedAt: row.applied_at ?? null,
+      createdAt: row.created_at ?? null,
     };
   }
 }

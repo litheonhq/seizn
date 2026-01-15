@@ -5,7 +5,8 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
-import { getEffectivePlan, getPlan } from "@/lib/plan-limits";
+import { getEffectivePlan } from "@/lib/plan-limits";
+
 
 // Plan display limits for UI
 const UI_PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number }> = {
@@ -49,8 +50,8 @@ export async function GET() {
       subscription_ends_at: profile?.subscription_ends_at,
     });
 
-    const planConfig = getPlan(effectivePlan);
     const uiLimits = UI_PLAN_LIMITS[effectivePlan] || UI_PLAN_LIMITS.free;
+
 
     // Get API call count for this month
     const now = new Date();

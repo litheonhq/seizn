@@ -109,7 +109,8 @@ export default function MemoriesClient() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>("date_desc");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [page, setPage] = useState(1);
+  const [_page, setPage] = useState(1);
+
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [namespace, setNamespace] = useState("default");
@@ -120,8 +121,8 @@ export default function MemoriesClient() {
   const fetchMemories = useCallback(async (reset = false) => {
     setIsLoading(true);
     try {
-      const currentPage = reset ? 1 : page;
       const limit = ITEMS_PER_PAGE;
+
 
       // Build query params
       const params = new URLSearchParams();
@@ -161,12 +162,14 @@ export default function MemoriesClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, selectedTags, selectedTypes, namespace, page]);
+  }, [searchQuery, selectedTags, selectedTypes, namespace]);
+
 
   // Initial fetch
   useEffect(() => {
     fetchMemories(true);
-  }, [searchQuery, selectedTags, selectedTypes, namespace]);
+  }, [fetchMemories]);
+
 
   // Load more
   const loadMore = () => {

@@ -4,8 +4,9 @@
  * RelayHealthCard - Display relay agent health and metrics
  */
 
-import { useState, useEffect } from 'react';
-import type { RelayHealthStatus, RelayMetrics, RelayHealthDetails } from '@/lib/relay/health';
+import { useState, useEffect, useCallback } from 'react';
+import type { RelayHealthStatus } from '@/lib/relay/health';
+
 
 interface RelayHealthCardProps {
   apiKey: string;
@@ -32,7 +33,7 @@ export function RelayHealthCard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchHealth = async () => {
+  const fetchHealth = useCallback(async () => {
     try {
       const url = relayId
         ? `/api/relay/agents/${relayId}`
@@ -56,13 +57,14 @@ export function RelayHealthCard({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiKey, relayId]);
 
   useEffect(() => {
     fetchHealth();
     const interval = setInterval(fetchHealth, refreshInterval);
     return () => clearInterval(interval);
-  }, [relayId, refreshInterval]);
+  }, [fetchHealth, refreshInterval]);
+
 
   if (loading) {
     return (

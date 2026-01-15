@@ -16,8 +16,8 @@ import { createClient } from "@supabase/supabase-js";
 import {
   getTenantPolicy,
   getTenantBudgetState,
-  savePolicyToDB,
   invalidatePolicyCache,
+
   listPresets,
   createTenantPolicy,
   applyDegradeLadder,
@@ -50,7 +50,8 @@ async function getUserFromToken(request: NextRequest) {
 }
 
 // Helper to check admin access
-async function checkAdminAccess(userId: string, tenantId: string): Promise<boolean> {
+async function checkAdminAccess(_userId: string, _tenantId: string): Promise<boolean> {
+
   // TODO: Implement proper org/tenant role check
   // For now, allow all authenticated users
   return true;
