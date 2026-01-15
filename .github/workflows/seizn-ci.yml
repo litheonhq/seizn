@@ -39,7 +39,7 @@ jobs:
       - name: Run tests with trace collection
         id: collect
         run: |
-          npx ts-node scripts/ci/trace-collector.ts \
+          npx tsx scripts/ci/trace-collector.ts \
             --output=.seizn-traces \
             --format=json
         env:
@@ -83,7 +83,7 @@ jobs:
       - name: Generate tests from traces
         id: generate
         run: |
-          npx ts-node scripts/ci/test-generator.ts \
+          npx tsx scripts/ci/test-generator.ts \
             --input=.seizn-traces \
             --output=.seizn-generated-tests \
             --trace-id=${{ needs.trace-collect.outputs.trace-id }}
@@ -133,7 +133,7 @@ jobs:
       - name: Format CI report
         id: report
         run: |
-          npx ts-node scripts/ci/report-formatter.ts \
+          npx tsx scripts/ci/report-formatter.ts \
             --traces=.seizn-traces \
             --tests=.seizn-generated-tests \
             --output=ci-report.md \
@@ -187,7 +187,7 @@ jobs:
 
       - name: Upload CI report to Seizn
         run: |
-          npx ts-node scripts/ci/report-formatter.ts \
+          npx tsx scripts/ci/report-formatter.ts \
             --traces=.seizn-traces \
             --tests=.seizn-generated-tests \
             --upload \
