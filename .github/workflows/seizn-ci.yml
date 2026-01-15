@@ -62,6 +62,14 @@ jobs:
           echo "=== traces.json content ==="
           head -50 .seizn-traces/traces.json || true
 
+      - name: Verify files before upload
+        if: always()
+        run: |
+          echo "=== Pre-upload verification ==="
+          echo "Current directory: $(pwd)"
+          find .seizn-traces -type f 2>/dev/null || echo "No files found"
+          du -h .seizn-traces/* 2>/dev/null || echo "Cannot check sizes"
+
       - name: Upload trace artifacts
         uses: actions/upload-artifact@v4
         if: always()
@@ -69,7 +77,7 @@ jobs:
           name: seizn-traces
           path: .seizn-traces/
           retention-days: 7
-          if-no-files-found: ignore
+          if-no-files-found: warn
 
   test-generate:
     name: Generate Tests from Traces
