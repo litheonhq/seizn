@@ -62,24 +62,28 @@ jobs:
           echo "=== traces.json content ==="
           head -50 .seizn-traces/traces.json || true
 
-      - name: Verify files before upload
+      - name: Prepare artifacts for upload
         if: always()
         run: |
-          echo "=== Pre-upload verification ==="
-          echo "Current directory: $(pwd)"
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          find .seizn-traces -type f 2>/dev/null || echo "No files found"
-          ls -la .seizn-traces/
-          chmod -R 755 .seizn-traces/
+          echo "=== Preparing artifacts ==="
+          mkdir -p artifact-upload
+          if [ -f .seizn-traces/traces.json ]; then
+            cp .seizn-traces/traces.json artifact-upload/
+            echo "File copied successfully"
+            ls -la artifact-upload/
+          else
+            echo "traces.json not found, creating empty placeholder"
+            echo '{"traces":[],"metadata":{}}' > artifact-upload/traces.json
+          fi
 
       - name: Upload trace artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: seizn-traces
-          path: .seizn-traces/traces.json
+          path: artifact-upload/traces.json
           retention-days: 7
-          if-no-files-found: warn
+          if-no-files-found: error
 
   test-generate:
     name: Generate Tests from Traces
@@ -102,7 +106,7 @@ jobs:
 
       - name: Download trace artifacts
         id: download-traces
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         continue-on-error: true
         with:
           name: seizn-traces
@@ -120,7 +124,7 @@ jobs:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
 
       - name: Upload generated tests
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/
@@ -146,14 +150,14 @@ jobs:
         run: npm ci
 
       - name: Download trace artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: seizn-traces
           path: .seizn-traces/
         continue-on-error: true
 
       - name: Download generated tests
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/
