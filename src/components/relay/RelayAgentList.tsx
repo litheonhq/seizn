@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { type RelayAgent } from '@/lib/relay/types';
+import { type RelayAgent, type RelayAgentStatus } from '@/lib/relay/types';
 
 
 interface RelayAgentListProps {
