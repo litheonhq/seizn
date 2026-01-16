@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -146,6 +147,7 @@ export default async function LocaleLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
