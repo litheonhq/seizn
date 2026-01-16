@@ -2,10 +2,11 @@
 
 export interface PlaygroundError {
   message: string;
-  errorCode: string;
-  traceId: string;
+  errorCode?: string;
+  traceId?: string;
   hint?: string;
-  timestamp: string;
+  timestamp?: string;
+  details?: string;
 }
 
 export interface ErrorDisplayTranslations {
