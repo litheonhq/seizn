@@ -92,9 +92,12 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
     } catch (err) { console.error("Failed to copy:", err); }
   };
 
-  if (typeof window !== "undefined") {
-    (window as typeof window & { seiznOnboarding?: { markComplete: (stepId: StepId) => void } }).seiznOnboarding = { markComplete: markStepComplete };
-  }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).seiznOnboarding = { markComplete: markStepComplete };
+    }
+  }, [markStepComplete]);
 
   if (isDismissed) return null;
 
