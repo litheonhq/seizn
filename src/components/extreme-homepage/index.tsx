@@ -48,11 +48,7 @@ const SnippetTabs = dynamic(
   { loading: () => <SnippetSkeleton />, ssr: false }
 );
 
-// DemoQuery component for public demo section
-const DemoQuery = dynamic(
-  () => import("@/components/landing/DemoQuery").then((mod) => ({ default: mod.DemoQuery })),
-  { loading: () => <PanelSkeleton />, ssr: false }
-);
+// DemoQuery removed - integrated into main hero section with Mock/Real mode
 
 interface ExtremeHomepageClientProps {
   dict: Dictionary;
@@ -60,6 +56,7 @@ interface ExtremeHomepageClientProps {
 }
 
 type ResultTab = "results" | "trace" | "cost";
+type DemoMode = "mock" | "real";
 
 const DEFAULT_CONFIG: RequestConfig = {
   query: "",
@@ -285,6 +282,7 @@ const Navigation = memo(function Navigation({
 });
 
 export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientProps) {
+  const [mode, setMode] = useState<DemoMode>("mock");
   const [config, setConfig] = useState<RequestConfig>(DEFAULT_CONFIG);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [trace, setTrace] = useState<TraceSummary | null>(null);
@@ -297,6 +295,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const [mobileConsoleTab, setMobileConsoleTab] = useState<"request" | "results" | "trace" | "cost">("request");
   const [traceId, setTraceId] = useState<string | null>(null);
   const [shareToastVisible, setShareToastVisible] = useState(false);
+  const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
 
   // Close mobile menu on resize - use passive listener
   useEffect(() => {
@@ -313,50 +312,111 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
     setIsLoading(true);
     setHasRun(true);
     setError(null);
+    setRateLimitRetryAfter(null);
 
-    // Simulate API call - faster response (600-800ms)
-    const responseTime = 600 + Math.random() * 200;
-    await new Promise((resolve) => setTimeout(resolve, responseTime));
+    if (mode === "mock") {
+      // Mock mode - simulate API call
+      const responseTime = 600 + Math.random() * 200;
+      await new Promise((resolve) => setTimeout(resolve, responseTime));
 
-    // Generate a trace ID for this request
-    const newTraceId = `tr_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 8)}`;
-    setTraceId(newTraceId);
+      // Generate a trace ID for this request
+      const newTraceId = `tr_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 8)}`;
+      setTraceId(newTraceId);
 
-    // Use mock data for demo
-    setResults(MOCK_RESULTS.slice(0, config.topK));
+      // Use mock data for demo
+      setResults(MOCK_RESULTS.slice(0, config.topK));
 
-    // Calculate trace based on config
-    const filteredSteps = MOCK_TRACE.steps.filter((step) => {
-      if (step.name.includes("Rerank") && !config.rerank) return false;
-      if (step.name.includes("Hybrid") && !config.hybridSearch) return false;
-      if (step.name.includes("Contract") && !config.answerContract) return false;
-      return true;
-    });
+      // Calculate trace based on config
+      const filteredSteps = MOCK_TRACE.steps.filter((step) => {
+        if (step.name.includes("Rerank") && !config.rerank) return false;
+        if (step.name.includes("Hybrid") && !config.hybridSearch) return false;
+        if (step.name.includes("Contract") && !config.answerContract) return false;
+        return true;
+      });
 
-    const totalLatency = config.budgetMs * 0.7 + Math.random() * 100;
-    setTrace({
-      ...MOCK_TRACE,
-      totalLatencyMs: totalLatency,
-      steps: filteredSteps,
-    });
+      const totalLatency = config.budgetMs * 0.7 + Math.random() * 100;
+      setTrace({
+        ...MOCK_TRACE,
+        totalLatencyMs: totalLatency,
+        steps: filteredSteps,
+      });
 
-    // Calculate cost based on config
-    const costData: CostBreakdown = {
-      embedding: MOCK_COST.embedding,
-      vectorSearch: MOCK_COST.vectorSearch,
-      rerank: config.rerank ? MOCK_COST.rerank : 0,
-      answerContract: config.answerContract ? MOCK_COST.answerContract : 0,
-      total: MOCK_COST.embedding + (config.rerank ? MOCK_COST.rerank : 0) + (config.answerContract ? MOCK_COST.answerContract : 0),
-      tokensIn: MOCK_COST.tokensIn,
-      tokensOut: config.answerContract ? MOCK_COST.tokensOut : 0,
-      queryUnits: 1 + (config.hybridSearch ? 0.5 : 0) + (config.rerank ? 1 : 0),
-    };
-    setCost(costData);
+      // Calculate cost based on config
+      const costData: CostBreakdown = {
+        embedding: MOCK_COST.embedding,
+        vectorSearch: MOCK_COST.vectorSearch,
+        rerank: config.rerank ? MOCK_COST.rerank : 0,
+        answerContract: config.answerContract ? MOCK_COST.answerContract : 0,
+        total: MOCK_COST.embedding + (config.rerank ? MOCK_COST.rerank : 0) + (config.answerContract ? MOCK_COST.answerContract : 0),
+        tokensIn: MOCK_COST.tokensIn,
+        tokensOut: config.answerContract ? MOCK_COST.tokensOut : 0,
+        queryUnits: 1 + (config.hybridSearch ? 0.5 : 0) + (config.rerank ? 1 : 0),
+      };
+      setCost(costData);
 
-    setIsLoading(false);
-    setActiveTab("results");
-    setMobileConsoleTab("results");
-  }, [config]);
+      setIsLoading(false);
+      setActiveTab("results");
+      setMobileConsoleTab("results");
+    } else {
+      // Real API mode
+      if (!config.query.trim()) {
+        setError({ message: "Please enter a query", details: "" });
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/public/demo-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: config.query,
+            topK: config.topK,
+            hybridSearch: config.hybridSearch,
+            rerank: config.rerank,
+            answerContract: config.answerContract,
+            budgetMs: config.budgetMs,
+          }),
+        });
+
+        if (response.status === 429) {
+          const data = await response.json();
+          setError({
+            message: "Rate limit exceeded. Please wait before trying again.",
+            details: data.message || "",
+          });
+          setRateLimitRetryAfter(data.retryAfter || 60);
+          setIsLoading(false);
+          return;
+        }
+
+        if (!response.ok) {
+          const data = await response.json();
+          setError({
+            message: data.message || "An error occurred",
+            details: data.details || "",
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        const data = await response.json();
+        setResults(data.results || []);
+        setTrace(data.trace || null);
+        setCost(data.cost || null);
+        setTraceId(data.traceId || `tr_${Date.now().toString(36)}`);
+        setActiveTab("results");
+        setMobileConsoleTab("results");
+      } catch (err) {
+        setError({
+          message: "Network error. Please check your connection and try again.",
+          details: err instanceof Error ? err.message : "",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [config, mode]);
 
   const handleRetry = useCallback(() => {
     setError(null);
@@ -430,6 +490,46 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               {t.extremeHome?.heroSubtitle || "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost."}
             </p>
+            {/* Mode Toggle */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-xl">
+                <button
+                  onClick={() => setMode("mock")}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                    mode === "mock"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Mock Demo
+                  </span>
+                </button>
+                <button
+                  onClick={() => setMode("real")}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                    mode === "real"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Real API
+                  </span>
+                </button>
+              </div>
+              {mode === "real" && (
+                <span className="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">
+                  Rate limited
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Progress Indicator */}
@@ -677,10 +777,6 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         </div>
       )}
 
-      {/* Public Demo Query Section */}
-      <Suspense fallback={<PanelSkeleton />}>
-        <DemoQuery dict={t} />
-      </Suspense>
     </>
   );
 }
