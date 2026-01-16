@@ -760,8 +760,8 @@ export class CostAutopilot {
       confidence: row.confidence ?? 0,
       action: row.action,
       applied: row.applied ?? false,
-      appliedAt: row.applied_at ?? null,
-      createdAt: row.created_at ?? null,
+      appliedAt: row.applied_at ,
+      createdAt: row.created_at ,
     };
   }
 }
