@@ -492,11 +492,11 @@ export interface HotSpot {
   /** Chunk ID */
   chunkId: string;
   /** Collection ID */
-  collectionId: string;
+  collectionId: string | null;
   /** Access count */
-  accessCount: number;
+  accessCount: number | null;
   /** Percentage of total queries */
-  queryPercent: number;
+  queryPercent: number | null;
 }
 
 export interface CacheEffectiveness {
