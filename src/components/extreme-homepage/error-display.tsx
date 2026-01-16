@@ -7,7 +7,6 @@ export interface PlaygroundError {
   hint?: string;
   timestamp?: string;
   details?: string;
-  details?: string;
 }
 
 export interface ErrorDisplayTranslations {
@@ -30,8 +29,10 @@ interface ErrorDisplayProps {
 export function ErrorDisplay({ error, onRetry, onDismiss, translations: t }: ErrorDisplayProps) {
   if (!error) return null;
 
-    if (error.traceId) await navigator.clipboard.writeText(error.traceId);
-    await navigator.clipboard.writeText(error.traceId);
+  const handleCopyTraceId = async () => {
+    if (error.traceId) {
+      await navigator.clipboard.writeText(error.traceId);
+    }
   };
 
   return (
@@ -51,25 +52,32 @@ export function ErrorDisplay({ error, onRetry, onDismiss, translations: t }: Err
               {error.message}
             </p>
 
-            <div className="flex flex-wrap gap-3 text-xs">
-              {error.errorCode && (
-                <div className="flex items-center gap-1.5 bg-red-100 px-2 py-1 rounded">
-                  <span className="text-red-600 font-medium">{t?.errorCode || "Code"}:</span>
-                  <code className="text-red-800">{error.errorCode}</code>
-                </div>
-              )}
-              {error.traceId && (
-                <div className="flex items-center gap-1.5 bg-red-100 px-2 py-1 rounded">
-                  <span className="text-red-600 font-medium">{t?.traceId || "Trace"}:</span>
-                  <code className="text-red-800 font-mono">{error.traceId}</code>
-                  <button onClick={handleCopyTraceId} className="text-red-500 hover:text-red-700 transition-colors" title={t?.copyTraceId || "Copy trace ID"}>
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                  </button>
-                </div>
-              )}
-            </div>
+            {/* Error Details */}
+            {(error.errorCode || error.traceId) && (
+              <div className="flex flex-wrap gap-3 text-xs">
+                {error.errorCode && (
+                  <div className="flex items-center gap-1.5 bg-red-100 px-2 py-1 rounded">
+                    <span className="text-red-600 font-medium">{t?.errorCode || "Code"}:</span>
+                    <code className="text-red-800">{error.errorCode}</code>
+                  </div>
+                )}
+                {error.traceId && (
+                  <div className="flex items-center gap-1.5 bg-red-100 px-2 py-1 rounded">
+                    <span className="text-red-600 font-medium">{t?.traceId || "Trace"}:</span>
+                    <code className="text-red-800 font-mono">{error.traceId}</code>
+                    <button
+                      onClick={handleCopyTraceId}
+                      className="text-red-500 hover:text-red-700 transition-colors"
+                      title={t?.copyTraceId || "Copy trace ID"}
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             {/* Hint */}
             {error.hint && (
