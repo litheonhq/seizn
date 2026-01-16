@@ -78,12 +78,18 @@ interface AnalyticsData {
 
 const CHART_COLORS = {
   primary: "#14b8a6",
+  primaryLight: "#5eead4",
   secondary: "#06b6d4",
+  secondaryLight: "#67e8f9",
   tertiary: "#3b82f6",
+  tertiaryLight: "#93c5fd",
   quaternary: "#8b5cf6",
+  quaternaryLight: "#c4b5fd",
   error: "#ef4444",
-  success: "#22c55e",
+  errorLight: "#fca5a5",
+  success: "#10b981",
   warning: "#f59e0b",
+  warningLight: "#fcd34d",
 };
 
 const PIE_COLORS = ["#14b8a6", "#06b6d4", "#3b82f6", "#8b5cf6", "#f59e0b", "#ec4899"];
@@ -177,17 +183,30 @@ export function AnalyticsClient() {
     label?: string;
   };
 
-  // Custom tooltip for charts
+  // Enhanced Custom tooltip for charts
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="glass-card bg-white/95 dark:bg-gray-800/95 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
-          <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} className="text-xs" style={{ color: entry.color }}>
-              {entry.name}: {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
-            </p>
-          ))}
+        <div className="backdrop-blur-md bg-white/95 dark:bg-gray-800/95 border border-gray-200/60 dark:border-gray-700/60 rounded-xl p-4 shadow-xl">
+          <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{label}</p>
+          <div className="space-y-1">
+            {payload.map((entry, index) => (
+              <div key={index} className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                    {entry.name}
+                  </span>
+                </div>
+                <span className="text-xs font-bold" style={{ color: entry.color }}>
+                  {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
@@ -299,145 +318,184 @@ export function AnalyticsClient() {
             />
           </div>
 
-          {/* Main Charts */}
+          {/* Main Charts - with improvements */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Daily Active Users Chart */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.dailyActiveUsers")}
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={analytics.daily}>
-                    <defs>
-                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.3} />
-                        <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      stroke="#9ca3af"
-                      fontSize={12}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Area
-                      type="monotone"
-                      dataKey="activeUsers"
-                      name={t("dashboard.analyticsPage.activeUsers")}
-                      stroke={CHART_COLORS.primary}
-                      fill="url(#colorUsers)"
-                      strokeWidth={2}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-teal-100/10 to-transparent dark:from-teal-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-1 w-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {t("dashboard.analyticsPage.dailyActiveUsers")}
+                  </h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={analytics.daily}>
+                      <defs>
+                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.4} />
+                          <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.05} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <XAxis
+                        dataKey="date"
+                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        stroke="#9ca3af"
+                        fontSize={12}
+                      />
+                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="activeUsers"
+                        name={t("dashboard.analyticsPage.activeUsers")}
+                        stroke={CHART_COLORS.primary}
+                        fill="url(#colorUsers)"
+                        strokeWidth={3}
+                        dot={false}
+                        activeDot={{ r: 6, strokeWidth: 2, stroke: "#fff" }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* API Calls Over Time */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.apiCallsOverTime")}
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analytics.daily}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      stroke="#9ca3af"
-                      fontSize={12}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="apiCalls"
-                      name={t("dashboard.analyticsPage.apiCalls")}
-                      stroke={CHART_COLORS.secondary}
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="errors"
-                      name={t("dashboard.analyticsPage.errors")}
-                      stroke={CHART_COLORS.error}
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-cyan-100/10 to-transparent dark:from-cyan-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-1 w-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {t("dashboard.analyticsPage.apiCallsOverTime")}
+                  </h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={analytics.daily}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <XAxis
+                        dataKey="date"
+                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        stroke="#9ca3af"
+                        fontSize={12}
+                      />
+                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="apiCalls"
+                        name={t("dashboard.analyticsPage.apiCalls")}
+                        stroke={CHART_COLORS.secondary}
+                        strokeWidth={3}
+                        dot={false}
+                        activeDot={{ r: 6, strokeWidth: 2, stroke: "#fff" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="errors"
+                        name={t("dashboard.analyticsPage.errors")}
+                        stroke={CHART_COLORS.error}
+                        strokeWidth={3}
+                        dot={false}
+                        activeDot={{ r: 6, strokeWidth: 2, stroke: "#fff" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Memory Usage Chart */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.memoryUsage")}
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analytics.daily}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      stroke="#9ca3af"
-                      fontSize={12}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar
-                      dataKey="memoryStores"
-                      name={t("dashboard.analyticsPage.stores")}
-                      fill={CHART_COLORS.tertiary}
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar
-                      dataKey="memorySearches"
-                      name={t("dashboard.analyticsPage.searches")}
-                      fill={CHART_COLORS.quaternary}
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-blue-100/10 to-transparent dark:from-blue-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {t("dashboard.analyticsPage.memoryUsage")}
+                  </h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={analytics.daily}>
+                      <defs>
+                        <linearGradient id="colorMemoryStores" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={CHART_COLORS.tertiary} stopOpacity={0.9} />
+                          <stop offset="95%" stopColor={CHART_COLORS.tertiary} stopOpacity={0.6} />
+                        </linearGradient>
+                        <linearGradient id="colorMemorySearches" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={CHART_COLORS.quaternary} stopOpacity={0.9} />
+                          <stop offset="95%" stopColor={CHART_COLORS.quaternary} stopOpacity={0.6} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <XAxis
+                        dataKey="date"
+                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        stroke="#9ca3af"
+                        fontSize={12}
+                      />
+                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar
+                        dataKey="memoryStores"
+                        name={t("dashboard.analyticsPage.stores")}
+                        fill="url(#colorMemoryStores)"
+                        radius={[6, 6, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="memorySearches"
+                        name={t("dashboard.analyticsPage.searches")}
+                        fill="url(#colorMemorySearches)"
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
 
             {/* Latency Trend */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.latencyTrend")}
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analytics.daily}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      stroke="#9ca3af"
-                      fontSize={12}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={12} unit="ms" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Line
-                      type="monotone"
-                      dataKey="avgLatency"
-                      name={t("dashboard.analyticsPage.avgLatency")}
-                      stroke={CHART_COLORS.warning}
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-amber-100/10 to-transparent dark:from-amber-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-1 w-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {t("dashboard.analyticsPage.latencyTrend")}
+                  </h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={analytics.daily}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <XAxis
+                        dataKey="date"
+                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        stroke="#9ca3af"
+                        fontSize={12}
+                      />
+                      <YAxis stroke="#9ca3af" fontSize={12} unit="ms" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Line
+                        type="monotone"
+                        dataKey="avgLatency"
+                        name={t("dashboard.analyticsPage.avgLatency")}
+                        stroke={CHART_COLORS.warning}
+                        strokeWidth={3}
+                        dot={false}
+                        activeDot={{ r: 6, strokeWidth: 2, stroke: "#fff" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
@@ -445,104 +503,121 @@ export function AnalyticsClient() {
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Hourly Distribution */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.hourlyDistribution")}
-              </h3>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analytics.hourlyDistribution}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="hour"
-                      tickFormatter={(value) => `${value}:00`}
-                      stroke="#9ca3af"
-                      fontSize={10}
-                    />
-                    <YAxis stroke="#9ca3af" fontSize={10} />
-                    <Tooltip
-                      formatter={(value) => [typeof value === 'number' ? value.toLocaleString() : String(value), t("dashboard.analyticsPage.calls")]}
-                      labelFormatter={(label) => `${label}:00 - ${label}:59`}
-                    />
-                    <Bar dataKey="calls" fill={CHART_COLORS.primary} radius={[2, 2, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-100/10 to-transparent dark:from-teal-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+              <div className="relative">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  {t("dashboard.analyticsPage.hourlyDistribution")}
+                </h3>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={analytics.hourlyDistribution}>
+                      <defs>
+                        <linearGradient id="colorHourly" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.9} />
+                          <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.6} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
+                      <XAxis
+                        dataKey="hour"
+                        tickFormatter={(value) => `${value}:00`}
+                        stroke="#9ca3af"
+                        fontSize={10}
+                      />
+                      <YAxis stroke="#9ca3af" fontSize={10} />
+                      <Tooltip
+                        formatter={(value) => [typeof value === 'number' ? value.toLocaleString() : String(value), t("dashboard.analyticsPage.calls")]}
+                        labelFormatter={(label) => `${label}:00 - ${label}:59`}
+                      />
+                      <Bar dataKey="calls" fill="url(#colorHourly)" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-3 p-3 bg-teal-50 dark:bg-teal-900/10 rounded-xl border border-teal-100 dark:border-teal-900/20">
+                  <p className="text-xs text-teal-700 dark:text-teal-400 text-center font-medium">
+                    {t("dashboard.analyticsPage.peakHour")}: {analytics.summary.peakHour}:00
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                {t("dashboard.analyticsPage.peakHour")}: {analytics.summary.peakHour}:00
-              </p>
             </div>
 
             {/* Endpoint Breakdown */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.endpointBreakdown")}
-              </h3>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={analytics.endpointBreakdown}
-                      dataKey="calls"
-                      nameKey="endpoint"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={40}
-                      outerRadius={70}
-                      paddingAngle={2}
-                    >
-                      {analytics.endpointBreakdown.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => typeof value === 'number' ? value.toLocaleString() : String(value)} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="space-y-1 mt-2">
-                {analytics.endpointBreakdown.slice(0, 4).map((ep, index) => (
-                  <div key={ep.endpoint} className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
-                      />
-                      <span className="text-gray-600 dark:text-gray-400 truncate max-w-[100px]">
-                        {ep.endpoint}
-                      </span>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100/10 to-transparent dark:from-purple-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+              <div className="relative">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  {t("dashboard.analyticsPage.endpointBreakdown")}
+                </h3>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={analytics.endpointBreakdown}
+                        dataKey="calls"
+                        nameKey="endpoint"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={45}
+                        outerRadius={75}
+                        paddingAngle={3}
+                      >
+                        {analytics.endpointBreakdown.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value) => typeof value === 'number' ? value.toLocaleString() : String(value)} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-2 mt-3">
+                  {analytics.endpointBreakdown.slice(0, 4).map((ep, index) => (
+                    <div key={ep.endpoint} className="flex items-center justify-between text-xs p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
+                        />
+                        <span className="text-gray-600 dark:text-gray-400 truncate max-w-[100px] font-medium">
+                          {ep.endpoint}
+                        </span>
+                      </div>
+                      <span className="text-gray-900 dark:text-white font-bold">{ep.percentage}%</span>
                     </div>
-                    <span className="text-gray-900 dark:text-white font-medium">{ep.percentage}%</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Top Queries */}
-            <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t("dashboard.analyticsPage.topQueries")}
-              </h3>
-              <div className="space-y-3">
-                {analytics.topQueries.slice(0, 5).map((query, index) => (
-                  <div key={index} className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-900 dark:text-white truncate" title={query.query}>
-                        {query.query}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {query.avgLatency}ms avg
-                      </p>
+            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100/10 to-transparent dark:from-emerald-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+              <div className="relative">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  {t("dashboard.analyticsPage.topQueries")}
+                </h3>
+                <div className="space-y-3">
+                  {analytics.topQueries.slice(0, 5).map((query, index) => (
+                    <div key={index} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-900 dark:text-white truncate font-medium" title={query.query}>
+                          {query.query}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {query.avgLatency}ms avg
+                        </p>
+                      </div>
+                      <span className="text-sm font-bold text-teal-600 dark:text-teal-400 whitespace-nowrap">
+                        {query.count.toLocaleString()}
+                      </span>
                     </div>
-                    <span className="text-sm font-medium text-teal-600 dark:text-teal-400 whitespace-nowrap">
-                      {query.count.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-                {analytics.topQueries.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-                    {t("dashboard.analyticsPage.noQueries")}
-                  </p>
-                )}
+                  ))}
+                  {analytics.topQueries.length === 0 && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                      {t("dashboard.analyticsPage.noQueries")}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -566,7 +641,7 @@ export function AnalyticsClient() {
   );
 }
 
-// KPI Card Component
+// Enhanced KPI Card Component
 function KpiCard({
   title,
   value,
@@ -584,26 +659,49 @@ function KpiCard({
 }) {
   const isPositive = invertChange ? change <= 0 : change >= 0;
   const changeColor = isError
-    ? "text-red-500"
+    ? "text-red-600 dark:text-red-400"
     : isPositive
-    ? "text-green-500"
-    : "text-red-500";
+    ? "text-emerald-600 dark:text-emerald-400"
+    : "text-red-600 dark:text-red-400";
+
+  const bgGradient = isError
+    ? "from-red-50 to-rose-50 dark:from-red-900/10 dark:to-rose-900/10"
+    : "from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-800/30";
+
+  const iconBgColor = isError
+    ? "bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400"
+    : "bg-gradient-to-br from-teal-100 to-emerald-100 dark:from-teal-900/20 dark:to-emerald-900/20 text-teal-600 dark:text-teal-400";
 
   return (
-    <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-gray-400 dark:text-gray-500">{icon}</span>
-        {change !== 0 && (
-          <span className={`text-xs font-medium ${changeColor}`}>
-            {change > 0 ? "+" : ""}
-            {change.toFixed(1)}%
-          </span>
-        )}
+    <div className={`relative overflow-hidden rounded-2xl border border-gray-200/60 dark:border-gray-700/60 bg-gradient-to-br ${bgGradient} p-5 transition-all hover:shadow-lg hover:scale-[1.02] hover:border-gray-300 dark:hover:border-gray-600`}>
+      {/* Background decoration blur effect */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-100/20 to-transparent dark:from-teal-500/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+
+      <div className="relative">
+        <div className="flex items-center justify-between mb-3">
+          <div className={`w-10 h-10 rounded-xl ${iconBgColor} flex items-center justify-center shadow-sm`}>
+            {icon}
+          </div>
+          {change !== 0 && (
+            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${changeColor} bg-white/80 dark:bg-gray-800/80 shadow-sm`}>
+              {isPositive ? (
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                </svg>
+              ) : (
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              )}
+              {Math.abs(change).toFixed(1)}%
+            </div>
+          )}
+        </div>
+        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white"}`}>
+          {value}
+        </p>
+        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
       </div>
-      <p className={`text-2xl font-bold ${isError ? "text-red-500" : "text-gray-900 dark:text-white"}`}>
-        {value}
-      </p>
-      <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{title}</p>
     </div>
   );
 }
