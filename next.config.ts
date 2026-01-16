@@ -10,25 +10,26 @@ const nextConfig: NextConfig = {
   devIndicators: false,
 
   async headers() {
+    const cacheHeader = {
+      key: 'Cache-Control',
+      value: 'public, max-age=31536000, immutable',
+    };
+
     return [
       {
         source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
+        headers: [cacheHeader],
       },
-      {
-        source: '/:path*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|woff2?)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
+      // Split static asset caching into individual patterns (Next.js doesn't support regex groups)
+      { source: '/:path*.png', headers: [cacheHeader] },
+      { source: '/:path*.jpg', headers: [cacheHeader] },
+      { source: '/:path*.jpeg', headers: [cacheHeader] },
+      { source: '/:path*.gif', headers: [cacheHeader] },
+      { source: '/:path*.webp', headers: [cacheHeader] },
+      { source: '/:path*.svg', headers: [cacheHeader] },
+      { source: '/:path*.ico', headers: [cacheHeader] },
+      { source: '/:path*.woff', headers: [cacheHeader] },
+      { source: '/:path*.woff2', headers: [cacheHeader] },
     ];
   },
 
