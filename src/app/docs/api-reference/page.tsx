@@ -15,29 +15,29 @@ export default function ApiReferencePage() {
   }, [isLoaded]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-50">
+      <header className="border-b border-gray-200 sticky top-0 bg-white/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-white">
-            Seizn<span className="text-emerald-400">.</span>
+          <Link href="/" className="text-xl font-bold text-gray-900">
+            Seizn<span className="text-emerald-600">.</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link
               href="/docs"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Docs
             </Link>
             <Link
               href="/dashboard"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Dashboard
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
             >
               Get Started
             </Link>

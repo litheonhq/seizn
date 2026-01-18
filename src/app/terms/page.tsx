@@ -18,23 +18,23 @@ export default function TermsOfServicePage() {
   const lastUpdated = "January 14, 2026";
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-10">
+      <header className="border-b border-gray-200 sticky top-0 bg-white/80 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-white">
-            Seizn<span className="text-emerald-400">.</span>
+          <Link href="/" className="text-xl font-bold text-gray-900">
+            Seizn<span className="text-emerald-600">.</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link
               href="/docs"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Docs
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
             >
               Get Started
             </Link>
@@ -45,24 +45,24 @@ export default function TermsOfServicePage() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-12">
         <div className="mb-12">
-          <p className="text-zinc-500 text-sm mb-2">
+          <p className="text-gray-400 text-sm mb-2">
             Last updated: {lastUpdated}
           </p>
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Terms of Service
           </h1>
-          <p className="text-xl text-zinc-400">
+          <p className="text-xl text-gray-500">
             Please read these terms carefully before using our services.
           </p>
         </div>
 
-        <div className="prose prose-invert prose-zinc max-w-none">
+        <div className="prose prose prose-gray max-w-none">
           {/* 1. Introduction */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               1. Introduction
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
               <p>
                 Welcome to Seizn. These Terms of Service (&quot;Terms&quot;)
                 govern your access to and use of the Seizn platform, including
@@ -85,13 +85,13 @@ export default function TermsOfServicePage() {
 
           {/* 2. Definitions */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               2. Definitions
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700">
               <ul className="space-y-3 list-none pl-0">
                 <li className="flex items-start gap-3">
-                  <span className="text-emerald-400 font-semibold min-w-fit">
+                  <span className="text-emerald-600 font-semibold min-w-fit">
                     &quot;Service&quot;
                   </span>
                   <span>
@@ -100,7 +100,7 @@ export default function TermsOfServicePage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-emerald-400 font-semibold min-w-fit">
+                  <span className="text-emerald-600 font-semibold min-w-fit">
                     &quot;User&quot;
                   </span>
                   <span>
@@ -109,7 +109,7 @@ export default function TermsOfServicePage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-emerald-400 font-semibold min-w-fit">
+                  <span className="text-emerald-600 font-semibold min-w-fit">
                     &quot;API&quot;
                   </span>
                   <span>
@@ -118,7 +118,7 @@ export default function TermsOfServicePage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-emerald-400 font-semibold min-w-fit">
+                  <span className="text-emerald-600 font-semibold min-w-fit">
                     &quot;Content&quot;
                   </span>
                   <span>
@@ -127,7 +127,7 @@ export default function TermsOfServicePage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-emerald-400 font-semibold min-w-fit">
+                  <span className="text-emerald-600 font-semibold min-w-fit">
                     &quot;API Key&quot;
                   </span>
                   <span>
@@ -141,11 +141,11 @@ export default function TermsOfServicePage() {
 
           {/* 3. Account Terms */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               3. Account Terms
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 3.1 Account Registration
               </h3>
               <p>
@@ -154,7 +154,7 @@ export default function TermsOfServicePage() {
                 current, and complete information about yourself.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 3.2 Account Security
               </h3>
               <p>
@@ -176,7 +176,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 3.3 Age Requirements
               </h3>
               <p>
@@ -189,11 +189,11 @@ export default function TermsOfServicePage() {
 
           {/* 4. User Obligations and Acceptable Use */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               4. User Obligations and Acceptable Use
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 4.1 Acceptable Use
               </h3>
               <p>You agree to use the Service only for lawful purposes. You will not:</p>
@@ -226,7 +226,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 4.2 Prohibited Content
               </h3>
               <p>
@@ -245,7 +245,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 4.3 Compliance
               </h3>
               <p>
@@ -258,11 +258,11 @@ export default function TermsOfServicePage() {
 
           {/* 5. API Usage Terms and Rate Limits */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               5. API Usage Terms and Rate Limits
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 5.1 API Access
               </h3>
               <p>
@@ -270,7 +270,7 @@ export default function TermsOfServicePage() {
                 key is subject to usage limits based on your subscription plan.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 5.2 Rate Limits
               </h3>
               <p>
@@ -279,64 +279,64 @@ export default function TermsOfServicePage() {
               </p>
               <div className="overflow-x-auto mt-4">
                 <table className="w-full text-sm">
-                  <thead className="bg-zinc-800">
+                  <thead className="bg-gray-100">
                     <tr>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-300">
+                      <th className="px-4 py-2 text-left font-medium text-gray-700">
                         Plan
                       </th>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-300">
+                      <th className="px-4 py-2 text-left font-medium text-gray-700">
                         Daily API Calls
                       </th>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-300">
+                      <th className="px-4 py-2 text-left font-medium text-gray-700">
                         Max Memories
                       </th>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-300">
+                      <th className="px-4 py-2 text-left font-medium text-gray-700">
                         API Keys
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-700">
+                  <tbody className="divide-y divide-gray-200">
                     <tr>
                       <td className="px-4 py-2">Free</td>
-                      <td className="px-4 py-2 text-zinc-400">1,000</td>
-                      <td className="px-4 py-2 text-zinc-400">10,000</td>
-                      <td className="px-4 py-2 text-zinc-400">2</td>
+                      <td className="px-4 py-2 text-gray-500">1,000</td>
+                      <td className="px-4 py-2 text-gray-500">10,000</td>
+                      <td className="px-4 py-2 text-gray-500">2</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-2">Plus</td>
-                      <td className="px-4 py-2 text-zinc-400">10,000</td>
-                      <td className="px-4 py-2 text-zinc-400">100,000</td>
-                      <td className="px-4 py-2 text-zinc-400">5</td>
+                      <td className="px-4 py-2 text-gray-500">10,000</td>
+                      <td className="px-4 py-2 text-gray-500">100,000</td>
+                      <td className="px-4 py-2 text-gray-500">5</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-2">Pro</td>
-                      <td className="px-4 py-2 text-zinc-400">100,000</td>
-                      <td className="px-4 py-2 text-zinc-400">1,000,000</td>
-                      <td className="px-4 py-2 text-zinc-400">10</td>
+                      <td className="px-4 py-2 text-gray-500">100,000</td>
+                      <td className="px-4 py-2 text-gray-500">1,000,000</td>
+                      <td className="px-4 py-2 text-gray-500">10</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-2">Enterprise</td>
-                      <td className="px-4 py-2 text-zinc-400">Unlimited</td>
-                      <td className="px-4 py-2 text-zinc-400">Unlimited</td>
-                      <td className="px-4 py-2 text-zinc-400">100</td>
+                      <td className="px-4 py-2 text-gray-500">Unlimited</td>
+                      <td className="px-4 py-2 text-gray-500">Unlimited</td>
+                      <td className="px-4 py-2 text-gray-500">100</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 5.3 Exceeding Limits
               </h3>
               <p>
                 If you exceed your rate limits, you will receive a{" "}
-                <code className="px-2 py-1 bg-zinc-800 rounded text-red-400">
+                <code className="px-2 py-1 bg-gray-100 rounded text-red-400">
                   429 Too Many Requests
                 </code>{" "}
                 response. Repeated violations may result in temporary or
                 permanent suspension of API access.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 5.4 API Key Management
               </h3>
               <p>
@@ -349,11 +349,11 @@ export default function TermsOfServicePage() {
 
           {/* 6. Intellectual Property Rights */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               6. Intellectual Property Rights
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 6.1 Seizn Intellectual Property
               </h3>
               <p>
@@ -363,7 +363,7 @@ export default function TermsOfServicePage() {
                 intellectual property laws.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 6.2 Your Content
               </h3>
               <p>
@@ -374,7 +374,7 @@ export default function TermsOfServicePage() {
                 the Service.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 6.3 Feedback
               </h3>
               <p>
@@ -383,7 +383,7 @@ export default function TermsOfServicePage() {
                 restriction or compensation to you.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 6.4 Trademarks
               </h3>
               <p>
@@ -396,11 +396,11 @@ export default function TermsOfServicePage() {
 
           {/* 7. Payment Terms */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               7. Payment Terms
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 7.1 Subscription Plans
               </h3>
               <p>
@@ -409,7 +409,7 @@ export default function TermsOfServicePage() {
                 pricing page.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 7.2 Payment Processing
               </h3>
               <p>
@@ -418,7 +418,7 @@ export default function TermsOfServicePage() {
                 Paddle&apos;s terms of service and privacy policy.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 7.3 Billing Cycle
               </h3>
               <p>
@@ -428,7 +428,7 @@ export default function TermsOfServicePage() {
                 current billing period.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 7.4 Refunds
               </h3>
               <p>
@@ -437,7 +437,7 @@ export default function TermsOfServicePage() {
                 your initial purchase to request a refund.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 7.5 Price Changes
               </h3>
               <p>
@@ -446,7 +446,7 @@ export default function TermsOfServicePage() {
                 days before taking effect.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 7.6 Taxes
               </h3>
               <p>
@@ -458,11 +458,11 @@ export default function TermsOfServicePage() {
 
           {/* 8. Data and Privacy */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               8. Data and Privacy
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 8.1 Data Processing
               </h3>
               <p>
@@ -471,7 +471,7 @@ export default function TermsOfServicePage() {
                 storage, semantic search, and data extraction features.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 8.2 Data Security
               </h3>
               <p>
@@ -485,7 +485,7 @@ export default function TermsOfServicePage() {
                 <li>Regular security audits</li>
               </ul>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 8.3 Data Retention
               </h3>
               <p>
@@ -494,7 +494,7 @@ export default function TermsOfServicePage() {
                 unless retention is required by law.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 8.4 Privacy Policy
               </h3>
               <p>
@@ -507,11 +507,11 @@ export default function TermsOfServicePage() {
 
           {/* 9. Limitation of Liability */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               9. Limitation of Liability
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 9.1 Disclaimer of Warranties
               </h3>
               <p>
@@ -522,7 +522,7 @@ export default function TermsOfServicePage() {
                 NON-INFRINGEMENT.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 9.2 Limitation of Liability
               </h3>
               <p>
@@ -533,7 +533,7 @@ export default function TermsOfServicePage() {
                 THE SERVICE.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 9.3 Maximum Liability
               </h3>
               <p>
@@ -542,7 +542,7 @@ export default function TermsOfServicePage() {
                 ONE HUNDRED DOLLARS ($100), WHICHEVER IS GREATER.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 9.4 Service Availability
               </h3>
               <p>
@@ -556,10 +556,10 @@ export default function TermsOfServicePage() {
 
           {/* 10. Indemnification */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               10. Indemnification
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700">
               <p>
                 You agree to defend, indemnify, and hold harmless Seizn and its
                 officers, directors, employees, and agents from and against any
@@ -584,11 +584,11 @@ export default function TermsOfServicePage() {
 
           {/* 11. Termination */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               11. Termination
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 11.1 Termination by You
               </h3>
               <p>
@@ -597,7 +597,7 @@ export default function TermsOfServicePage() {
                 your right to use the Service will immediately cease.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 11.2 Termination by Seizn
               </h3>
               <p>
@@ -606,7 +606,7 @@ export default function TermsOfServicePage() {
                 reason, including if you breach these Terms.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 11.3 Effect of Termination
               </h3>
               <p>Upon termination:</p>
@@ -626,7 +626,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 11.4 Data Export
               </h3>
               <p>
@@ -639,10 +639,10 @@ export default function TermsOfServicePage() {
 
           {/* 12. Modifications to Terms */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               12. Modifications to Terms
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
               <p>
                 We reserve the right to modify these Terms at any time. If we
                 make material changes, we will provide notice through the
@@ -660,10 +660,10 @@ export default function TermsOfServicePage() {
 
           {/* 13. Governing Law */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               13. Governing Law
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
               <p>
                 These Terms shall be governed by and construed in accordance
                 with the laws of the Republic of Korea, without regard to its
@@ -680,11 +680,11 @@ export default function TermsOfServicePage() {
 
           {/* 14. General Provisions */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               14. General Provisions
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300 space-y-4">
-              <h3 className="text-lg font-semibold text-white">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">
                 14.1 Entire Agreement
               </h3>
               <p>
@@ -693,7 +693,7 @@ export default function TermsOfServicePage() {
                 and understandings.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 14.2 Severability
               </h3>
               <p>
@@ -701,7 +701,7 @@ export default function TermsOfServicePage() {
                 the remaining provisions will continue in full force and effect.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 14.3 Waiver
               </h3>
               <p>
@@ -709,7 +709,7 @@ export default function TermsOfServicePage() {
                 Terms will not be deemed a waiver of such right or provision.
               </p>
 
-              <h3 className="text-lg font-semibold text-white mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mt-6">
                 14.4 Assignment
               </h3>
               <p>
@@ -722,29 +722,29 @@ export default function TermsOfServicePage() {
 
           {/* 15. Contact Information */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               15. Contact Information
             </h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-zinc-300">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700">
               <p className="mb-4">
                 If you have any questions about these Terms of Service, please
                 contact us:
               </p>
               <div className="space-y-2">
                 <p>
-                  <span className="text-zinc-500">Email:</span>{" "}
+                  <span className="text-gray-400">Email:</span>{" "}
                   <a
                     href="mailto:support@seizn.com"
-                    className="text-emerald-400 hover:underline"
+                    className="text-emerald-600 hover:underline"
                   >
                     support@seizn.com
                   </a>
                 </p>
                 <p>
-                  <span className="text-zinc-500">Website:</span>{" "}
+                  <span className="text-gray-400">Website:</span>{" "}
                   <a
                     href="https://seizn.com"
-                    className="text-emerald-400 hover:underline"
+                    className="text-emerald-600 hover:underline"
                   >
                     https://seizn.com
                   </a>
@@ -756,27 +756,27 @@ export default function TermsOfServicePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 py-8">
+      <footer className="border-t border-gray-200 py-8">
         <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-zinc-500 text-sm">
+          <div className="text-gray-400 text-sm">
             &copy; {currentYear} Seizn. All rights reserved.
           </div>
           <div className="flex items-center gap-6 text-sm">
             <Link
               href="/privacy"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="text-emerald-600 hover:text-emerald-500 transition-colors"
             >
               Terms of Service
             </Link>
             <Link
               href="/docs"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Documentation
             </Link>
