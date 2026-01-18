@@ -152,29 +152,29 @@ export function FAQClient() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <div className="min-h-screen bg-zinc-950">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-10">
+        <header className="border-b border-gray-200 sticky top-0 bg-white/80 backdrop-blur-sm z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-white">
-              Seizn<span className="text-emerald-400">.</span>
+            <Link href="/" className="text-xl font-bold text-gray-900">
+              Seizn<span className="text-emerald-600">.</span>
             </Link>
             <nav className="flex items-center gap-6">
               <Link
                 href="/docs"
-                className="text-zinc-400 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
               >
                 Docs
               </Link>
               <Link
                 href="/dashboard"
-                className="text-zinc-400 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
               >
                 Dashboard
               </Link>
               <Link
                 href="/login"
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
               >
                 Get Started
               </Link>
@@ -185,10 +185,10 @@ export function FAQClient() {
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Hero */}
           <div className="mb-12 text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Frequently Asked Questions
             </h1>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">
               Common questions about Seizn Memory API, from getting started to advanced operations.
             </p>
           </div>
@@ -201,8 +201,8 @@ export function FAQClient() {
                 onClick={() => setActiveCategory(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
-                    ? "bg-emerald-600 text-white"
-                    : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                    ? "bg-emerald-600 text-gray-900"
+                    : "bg-gray-100 text-gray-500 hover:bg-zinc-700 hover:text-gray-900"
                 }`}
               >
                 {cat}
@@ -219,30 +219,30 @@ export function FAQClient() {
               return (
                 <div
                   key={globalIndex}
-                  className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden"
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden"
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : globalIndex)}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-zinc-800/50 transition-colors"
+                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 font-mono text-sm">
+                      <span className="text-emerald-600 font-mono text-sm">
                         Q{globalIndex + 1}
                       </span>
-                      <span className="text-white font-medium">
+                      <span className="text-gray-900 font-medium">
                         {item.question}
                       </span>
                     </div>
-                    <ChevronIcon className={`w-5 h-5 text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                    <ChevronIcon className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {isOpen && (
                     <div className="px-6 pb-4">
-                      <div className="pl-10 text-zinc-400 leading-relaxed">
+                      <div className="pl-10 text-gray-500 leading-relaxed">
                         {item.answer}
                       </div>
                       <div className="pl-10 mt-3">
-                        <span className="text-xs px-2 py-1 bg-zinc-800 text-zinc-500 rounded">
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">
                           {item.category}
                         </span>
                       </div>
@@ -255,23 +255,23 @@ export function FAQClient() {
 
           {/* CTA */}
           <div className="mt-16 text-center">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-4">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Still have questions?
               </h2>
-              <p className="text-zinc-400 mb-6">
+              <p className="text-gray-500 mb-6">
                 Check out our documentation or get in touch with our support team.
               </p>
               <div className="flex gap-4 justify-center">
                 <Link
                   href="/docs"
-                  className="px-6 py-3 bg-zinc-800 text-white font-medium rounded-lg hover:bg-zinc-700 transition-colors"
+                  className="px-6 py-3 bg-gray-100 text-gray-900 font-medium rounded-lg hover:bg-zinc-700 transition-colors"
                 >
                   Read Docs
                 </Link>
                 <Link
                   href="mailto:support@seizn.com"
-                  className="px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-500 transition-colors"
+                  className="px-6 py-3 bg-emerald-600 text-gray-900 font-medium rounded-lg hover:bg-emerald-500 transition-colors"
                 >
                   Contact Support
                 </Link>
@@ -281,8 +281,8 @@ export function FAQClient() {
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800 py-8">
-          <div className="max-w-6xl mx-auto px-6 text-center text-zinc-500 text-sm">
+        <footer className="border-t border-gray-200 py-8">
+          <div className="max-w-6xl mx-auto px-6 text-center text-gray-400 text-sm">
             &copy; {currentYear} Seizn. All rights reserved.
           </div>
         </footer>

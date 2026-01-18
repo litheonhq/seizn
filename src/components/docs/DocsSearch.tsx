@@ -189,7 +189,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
       {/* Search Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-400 bg-zinc-800 border border-zinc-700 rounded-lg hover:bg-zinc-700 hover:text-white transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors"
       >
         <SearchIcon className="w-4 h-4" />
         <span className="hidden sm:inline">{t.buttonText}</span>
@@ -201,11 +201,11 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm">
           <div
             ref={dialogRef}
-            className="w-full max-w-xl bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden"
+            className="w-full max-w-xl bg-white border border-gray-300 rounded-xl shadow-2xl overflow-hidden"
           >
             {/* Search Input */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-700">
-              <SearchIcon className="w-5 h-5 text-zinc-400" />
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-300">
+              <SearchIcon className="w-5 h-5 text-gray-500" />
               <input
                 ref={inputRef}
                 type="text"
@@ -213,15 +213,15 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t.placeholder}
-                className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none"
+                className="flex-1 bg-transparent text-gray-900 placeholder-zinc-500 outline-none"
               />
-              <kbd className="px-2 py-1 text-xs text-zinc-500 bg-zinc-800 rounded">ESC</kbd>
+              <kbd className="px-2 py-1 text-xs text-gray-400 bg-gray-100 rounded">ESC</kbd>
             </div>
 
             {/* Results */}
             <div className="max-h-96 overflow-y-auto">
               {query && results.length === 0 ? (
-                <div className="px-4 py-8 text-center text-zinc-500">
+                <div className="px-4 py-8 text-center text-gray-400">
                   {t.noResults} &quot;{query}&quot;
                 </div>
               ) : results.length > 0 ? (
@@ -234,16 +234,16 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                       className={`flex flex-col gap-1 px-4 py-3 ${
                         index === selectedIndex
                           ? "bg-emerald-600/20 border-l-2 border-emerald-500"
-                          : "hover:bg-zinc-800"
+                          : "hover:bg-gray-100"
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-xs px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded">
+                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded">
                           {item.section}
                         </span>
-                        <span className="text-white font-medium">{item.title}</span>
+                        <span className="text-gray-900 font-medium">{item.title}</span>
                       </div>
-                      <p className="text-sm text-zinc-400 line-clamp-1">
+                      <p className="text-sm text-gray-500 line-clamp-1">
                         {item.content}
                       </p>
                     </Link>
@@ -251,7 +251,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                 </div>
               ) : (
                 <div className="px-4 py-6">
-                  <p className="text-sm text-zinc-500 mb-4">
+                  <p className="text-sm text-gray-400 mb-4">
                     {t.hint}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -259,7 +259,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                       <button
                         key={term}
                         onClick={() => setQuery(term)}
-                        className="px-3 py-1.5 text-sm text-zinc-400 bg-zinc-800 rounded-full hover:bg-zinc-700 hover:text-white transition-colors"
+                        className="px-3 py-1.5 text-sm text-gray-500 bg-gray-100 rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
                       >
                         {term}
                       </button>
@@ -270,15 +270,15 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-700 text-xs text-zinc-500">
+            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-300 text-xs text-gray-400">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↑</kbd>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↓</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↑</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↓</kbd>
                   {t.navigate}
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded">↵</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↵</kbd>
                   {t.select}
                 </span>
               </div>

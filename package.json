@@ -44,6 +44,8 @@
     "yaml": "^2.8.2"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.14.0",
+    "@next/bundle-analyzer": "^15.5.9",
     "@tailwindcss/postcss": "^4",
     "@testing-library/react": "^16.3.1",
     "@types/node": "^20",
@@ -52,8 +54,6 @@
     "@types/react-dom": "^18.3.7",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^10.0.0",
-    "@next/bundle-analyzer": "^15.5.9",
-    "@lhci/cli": "^0.14.0",
     "@vitejs/plugin-react": "^5.1.2",
     "eslint": "^9",
     "eslint-config-next": "^15.5.9",
