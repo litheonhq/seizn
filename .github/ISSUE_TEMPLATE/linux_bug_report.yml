@@ -1,0 +1,132 @@
+name: Linux Bug Report
+description: Report an issue specifically related to Linux (Ubuntu, Fedora, Arch, etc.)
+title: "[Linux] "
+labels: ["bug", "linux", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a Linux-specific issue! Please fill out the information below to help us reproduce and fix the problem.
+
+  - type: dropdown
+    id: distro
+    attributes:
+      label: Linux Distribution
+      description: Which Linux distribution are you using?
+      options:
+        - Ubuntu 24.04 LTS
+        - Ubuntu 22.04 LTS
+        - Ubuntu (other version)
+        - Fedora 40+
+        - Fedora (other version)
+        - Debian 12+
+        - Debian (other version)
+        - Arch Linux
+        - Linux Mint
+        - Pop!_OS
+        - openSUSE
+        - CentOS/RHEL
+        - Other (please specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using?
+      options:
+        - Chrome/Chromium (latest)
+        - Chrome/Chromium (older version)
+        - Firefox (latest)
+        - Firefox ESR
+        - Firefox (older version)
+        - Brave
+        - Edge (Linux)
+        - Other (please specify)
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser Version
+      description: "What version of the browser? (Find via Help > About)"
+      placeholder: "e.g., 122.0.6261.94"
+    validations:
+      required: true
+
+  - type: input
+    id: page-url
+    attributes:
+      label: Page URL
+      description: "Which page did you experience the issue on?"
+      placeholder: "https://seizn.com/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem Description
+      description: "What happened? What did you expect to happen?"
+      placeholder: |
+        What happened:
+        - ...
+
+        What I expected:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: "How can we reproduce this issue?"
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: console-logs
+    attributes:
+      label: Console Logs
+      description: "Open DevTools (F12) → Console tab → Copy any error messages"
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: network-errors
+    attributes:
+      label: Network Errors
+      description: "Open DevTools (F12) → Network tab → Look for failed requests (red)"
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: "If applicable, add screenshots to help explain the problem"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to ensure this isn't a duplicate
+          required: true
+        - label: I have tried clearing browser cache and cookies
+          required: false
+        - label: I have tried in a private/incognito window
+          required: false
+        - label: The issue does NOT occur on Windows/macOS (Linux-specific)
+          required: false

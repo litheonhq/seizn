@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import type { RequestConfig } from "./request-builder";
+import { copyToClipboard } from "@/lib/clipboard";
 
 interface SnippetTabsProps {
   config: RequestConfig;
@@ -27,9 +28,11 @@ export function SnippetTabs({ config, traceId, onShareTrace }: SnippetTabsProps)
   const snippet = generateSnippet(config, activeTab);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(snippet);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const result = await copyToClipboard(snippet);
+    if (result.success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
