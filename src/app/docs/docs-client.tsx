@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { DocsSearch } from "@/components/docs/DocsSearch";
+import { copyToClipboard } from "@/lib/clipboard";
 
 // Quickstart card component with Copy + Run buttons
 function QuickstartCard({
@@ -26,9 +27,14 @@ function QuickstartCard({
   const [isRunning, setIsRunning] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const result = await copyToClipboard(code);
+    if (result.success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      // Show manual copy hint for Linux/Firefox permission issues
+      alert(result.error);
+    }
   };
 
   const handleRun = async () => {
@@ -645,6 +651,61 @@ const results = await client.search('preferences');
 // Extract from conversation
 await client.extract({ conversation: '...' });`}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Supported Browsers */}
+        <section id="supported-browsers" className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Supported Browsers
+          </h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <p className="text-gray-700 mb-4">
+              Seizn is tested and supported on the latest versions of the following browsers across Windows, macOS, and Linux:
+            </p>
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <svg className="w-6 h-6 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-3.953 6.848c.062.004.124.006.187.01.062.004.125.006.188.006a12 12 0 0 0 10.814-17.568H15.273z"/>
+                </svg>
+                <div>
+                  <span className="font-medium text-gray-900">Chrome / Chromium</span>
+                  <span className="text-sm text-gray-500 block">Latest 2 versions</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <svg className="w-6 h-6 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 0 1-.13-.24 2.118 2.118 0 0 1-.172-.46.03.03 0 0 0-.027-.03.038.038 0 0 0-.021 0l-.006.001a.037.037 0 0 0-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 0 0-2.305.587.297.297 0 0 0-.147.37c.057.162.24.24.396.17a5.622 5.622 0 0 1 2.008-.523l.067-.005a5.847 5.847 0 0 1 1.957.222l.095.03a5.816 5.816 0 0 1 .616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 0 1 .368.211 5.953 5.953 0 0 1 2.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 0 1-1.513-.292 4.42 4.42 0 0 1-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 0 0-.301-.227 5.388 5.388 0 0 1-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 0 0-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 0 0-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.014-.076.026-.153.038-.229a10.016 10.016 0 0 0 .26-4.062z"/>
+                </svg>
+                <div>
+                  <span className="font-medium text-gray-900">Firefox</span>
+                  <span className="text-sm text-gray-500 block">Latest 2 versions + ESR</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12h-9.29c-.409 1.792-2.026 3.13-3.96 3.13-2.247 0-4.069-1.82-4.069-4.066S8.503 6.998 10.75 6.998c1.885 0 3.47 1.28 3.925 3.014H24C24 4.383 18.627 0 12 0S0 4.383 0 12z"/>
+                </svg>
+                <div>
+                  <span className="font-medium text-gray-900">Edge</span>
+                  <span className="text-sm text-gray-500 block">Latest 2 versions</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <svg className="w-6 h-6 text-gray-800" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 24C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12zm-1.95-3.645v-1.2c-.393 0-1.073-.02-1.691-.178a4.59 4.59 0 0 1-1.471-.646l.396-1.236a4.18 4.18 0 0 0 1.32.591c.477.124.966.168 1.446.168.834 0 1.481-.168 1.927-.507.444-.337.667-.813.667-1.423 0-.5-.157-.894-.474-1.183-.315-.29-.876-.55-1.68-.782l-.899-.262c-.997-.282-1.738-.685-2.22-1.206-.484-.52-.726-1.173-.726-1.956 0-.918.304-1.656.912-2.214.607-.558 1.446-.862 2.517-.912V6.12h1.2v1.2c.702.05 1.302.182 1.8.396a4.096 4.096 0 0 1 1.224.726l-.648 1.152a3.694 3.694 0 0 0-1.068-.594 3.672 3.672 0 0 0-1.308-.228c-.768 0-1.358.163-1.77.49-.41.328-.616.782-.616 1.362 0 .46.149.836.449 1.125.3.29.802.534 1.507.732l.96.276c1.069.306 1.855.717 2.359 1.233.504.516.756 1.188.756 2.016 0 .94-.319 1.695-.957 2.268-.638.573-1.533.898-2.682.973v1.308h-1.2z"/>
+                </svg>
+                <div>
+                  <span className="font-medium text-gray-900">Safari</span>
+                  <span className="text-sm text-gray-500 block">Latest 2 versions (macOS/iOS)</span>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <p className="text-emerald-700 text-sm">
+                <strong>Linux Users:</strong> Seizn is fully tested on Ubuntu (24.04, 22.04), Fedora, and Arch Linux with both Chromium and Firefox. All features including clipboard operations, keyboard shortcuts, and file uploads are supported.
+              </p>
             </div>
           </div>
         </section>

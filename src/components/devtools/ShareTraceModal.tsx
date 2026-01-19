@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { copyToClipboard } from "@/lib/clipboard";
 
 // Icons
 const ShareIcon = ({ className }: { className?: string }) => (
@@ -74,11 +75,13 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
     }
   };
 
-  const copyToClipboard = async () => {
+  const handleCopyToClipboard = async () => {
     if (shareUrl) {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      const result = await copyToClipboard(shareUrl);
+      if (result.success) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
     }
   };
 
@@ -111,7 +114,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                   {shareUrl}
                 </code>
                 <button
-                  onClick={copyToClipboard}
+                  onClick={handleCopyToClipboard}
                   className="p-1.5 bg-gray-700 rounded hover:bg-gray-600 transition-colors"
                 >
                   {copied ? (
