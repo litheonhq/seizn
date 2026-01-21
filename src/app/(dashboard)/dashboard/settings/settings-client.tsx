@@ -303,7 +303,7 @@ export function SettingsClient() {
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white">{t("dashboard.language")}</h3>
-                <span className="text-xs text-gray-900 dark:text-gray-100">{t("dashboard.settingsPage.languageHint")}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.languageHint")}</span>
               </div>
               <select
                 value={language}
@@ -343,7 +343,7 @@ export function SettingsClient() {
             </div>
 
             {quotaLoading ? (
-              <div className="py-12 text-center text-gray-900 dark:text-gray-100">
+              <div className="py-12 text-center text-gray-500 dark:text-gray-400">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
@@ -486,7 +486,7 @@ export function SettingsClient() {
             </div>
 
             {budgetLoading ? (
-              <div className="py-12 text-center text-gray-900 dark:text-gray-100">
+              <div className="py-12 text-center text-gray-500 dark:text-gray-400">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
@@ -600,7 +600,7 @@ export function SettingsClient() {
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                           {t("dashboard.settingsPage.modeSoft")}
                         </span>
-                        <p className="text-xs text-gray-900 dark:text-gray-100">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           {t("dashboard.settingsPage.modeSoftDesc")}
                         </p>
                       </div>
@@ -618,7 +618,7 @@ export function SettingsClient() {
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                           {t("dashboard.settingsPage.modeHard")}
                         </span>
-                        <p className="text-xs text-gray-900 dark:text-gray-100">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           {t("dashboard.settingsPage.modeHardDesc")}
                         </p>
                       </div>
@@ -711,7 +711,7 @@ export function SettingsClient() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">Telegram</p>
-                    <p className="text-xs text-gray-900 dark:text-gray-100">{t("dashboard.settingsPage.telegramDesc")}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.telegramDesc")}</p>
                   </div>
                 </div>
                 <button
@@ -744,7 +744,7 @@ export function SettingsClient() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {t("dashboard.settingsPage.password")}
                   </p>
-                  <p className="text-xs text-gray-900 dark:text-gray-100">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {t("dashboard.settingsPage.passwordDesc")}
                   </p>
                 </div>
@@ -761,7 +761,7 @@ export function SettingsClient() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {t("dashboard.settingsPage.twoFactor")}
                   </p>
-                  <p className="text-xs text-gray-900 dark:text-gray-100">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {t("dashboard.settingsPage.twoFactorDesc")}
                   </p>
                 </div>
@@ -781,7 +781,7 @@ export function SettingsClient() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {t("dashboard.settingsPage.activeSessions")}
                   </p>
-                  <p className="text-xs text-gray-900 dark:text-gray-100">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {t("dashboard.settingsPage.activeSessionsDesc")}
                   </p>
                 </div>
@@ -812,7 +812,7 @@ export function SettingsClient() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {t("dashboard.settingsPage.exportData")}
                   </p>
-                  <p className="text-xs text-gray-900 dark:text-gray-100">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {t("dashboard.settingsPage.exportDataDesc")}
                   </p>
                 </div>
@@ -897,7 +897,7 @@ function UsageCard({
         <span className="text-2xl font-bold text-gray-900 dark:text-white">
           {used.toLocaleString()}
         </span>
-        <span className="text-sm text-gray-900 dark:text-gray-100">
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           / {limit === -1 ? (t("dashboard.settingsPage.billing.unlimited") || "Unlimited") : limit.toLocaleString()}
         </span>
       </div>
@@ -930,7 +930,7 @@ function NotificationToggle({
     <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
       <div>
         <p className="text-sm font-medium text-gray-900 dark:text-white">{title}</p>
-        <p className="text-xs text-gray-900 dark:text-gray-100">{description}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
