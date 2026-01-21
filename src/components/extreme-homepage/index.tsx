@@ -206,7 +206,7 @@ const Navigation = memo(function Navigation({
             width={32}
             height={32}
           />
-          <span className="font-semibold text-xl tracking-tight">Seizn</span>
+          <span className="font-semibold text-xl tracking-tight text-gray-900">Seizn</span>
         </Link>
 
         {/* Desktop Nav - Centered Links with Memoized Icons */}
