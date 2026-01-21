@@ -33,6 +33,22 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Redirect non-locale docs paths to default locale
+  async redirects() {
+    return [
+      {
+        source: '/docs',
+        destination: '/en/docs',
+        permanent: false,
+      },
+      {
+        source: '/docs/:path*',
+        destination: '/en/docs/:path*',
+        permanent: false,
+      },
+    ];
+  },
+
   // Exclude mcp-server from build process
   webpack: (config) => {
     // Ignore mcp-server directory during watch
