@@ -1081,6 +1081,49 @@
       "hint": "Tim kiem nhanh:",
       "navigate": "di chuyen",
       "select": "chon"
+    },
+    "quickstartTutorial": {
+      "badge": "Hướng dẫn 5 phút",
+      "noCreditCard": "Không cần thẻ tín dụng",
+      "title": "Bắt đầu với Seizn",
+      "subtitle": "Thêm bộ nhớ lâu dài cho AI của bạn trong vòng chưa đầy 5 phút. Làm theo các bước và đánh dấu mỗi bước khi hoàn thành.",
+      "progress": "Tiến độ",
+      "steps": "bước",
+      "congratulations": "Chúc mừng!",
+      "completionText": "Bạn đã hoàn thành hướng dẫn nhanh. AI của bạn giờ đã có bộ nhớ lâu dài.",
+      "continueReading": "Tiếp tục đọc",
+      "goToDashboard": "Đi tới bảng điều khiển",
+      "step1": {
+        "title": "Lấy API Key của bạn",
+        "time": "30 giây",
+        "description": "Đăng ký và tạo API Key từ bảng điều khiển.",
+        "action": "Đi tới bảng điều khiển"
+      },
+      "step2": {
+        "title": "Cài đặt SDK",
+        "time": "30 giây",
+        "description": "Cài đặt Seizn SDK bằng trình quản lý gói ưa thích của bạn."
+      },
+      "step3": {
+        "title": "Khởi tạo client",
+        "time": "1 phút",
+        "description": "Tạo một instance client với API Key của bạn."
+      },
+      "step4": {
+        "title": "Thêm ký ức đầu tiên",
+        "time": "1 phút",
+        "description": "Lưu trữ thông tin mà AI của bạn có thể nhớ lại sau."
+      },
+      "step5": {
+        "title": "Tìm kiếm và nhớ lại",
+        "time": "1 phút",
+        "description": "Truy xuất các ký ức liên quan bằng tìm kiếm ngôn ngữ tự nhiên."
+      },
+      "step6": {
+        "title": "Sử dụng trong AI của bạn",
+        "time": "1 phút",
+        "description": "Đưa ký ức vào làm ngữ cảnh cho các phản hồi AI cá nhân hóa."
+      }
     }
   }
 }

@@ -1081,6 +1081,49 @@
       "hint": "Pencarian cepat:",
       "navigate": "navigasi",
       "select": "pilih"
+    },
+    "quickstartTutorial": {
+      "badge": "Tutorial 5 menit",
+      "noCreditCard": "Tidak perlu kartu kredit",
+      "title": "Mulai dengan Seizn",
+      "subtitle": "Tambahkan memori persisten ke AI Anda dalam waktu kurang dari 5 menit. Ikuti langkah-langkahnya dan centang setiap langkah yang selesai.",
+      "progress": "Kemajuan",
+      "steps": "langkah",
+      "congratulations": "Selamat!",
+      "completionText": "Anda telah menyelesaikan quickstart. AI Anda sekarang memiliki memori persisten.",
+      "continueReading": "Lanjut membaca",
+      "goToDashboard": "Ke dasbor",
+      "step1": {
+        "title": "Dapatkan API Key Anda",
+        "time": "30 detik",
+        "description": "Daftar dan buat API Key Anda dari dasbor.",
+        "action": "Ke dasbor"
+      },
+      "step2": {
+        "title": "Instal SDK",
+        "time": "30 detik",
+        "description": "Instal Seizn SDK menggunakan manajer paket pilihan Anda."
+      },
+      "step3": {
+        "title": "Inisialisasi klien",
+        "time": "1 menit",
+        "description": "Buat instance klien dengan API Key Anda."
+      },
+      "step4": {
+        "title": "Tambahkan memori pertama",
+        "time": "1 menit",
+        "description": "Simpan informasi yang dapat diingat AI Anda nanti."
+      },
+      "step5": {
+        "title": "Cari dan ingat",
+        "time": "1 menit",
+        "description": "Ambil memori yang relevan menggunakan pencarian bahasa alami."
+      },
+      "step6": {
+        "title": "Gunakan di AI Anda",
+        "time": "1 menit",
+        "description": "Masukkan memori sebagai konteks untuk respons AI yang dipersonalisasi."
+      }
     }
   }
 }

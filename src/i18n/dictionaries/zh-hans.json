@@ -1081,6 +1081,49 @@
       "hint": "快速搜索:",
       "navigate": "导航",
       "select": "选择"
+    },
+    "quickstartTutorial": {
+      "badge": "5分钟教程",
+      "noCreditCard": "无需信用卡",
+      "title": "开始使用 Seizn",
+      "subtitle": "在5分钟内为您的AI添加持久记忆。按步骤完成并逐一勾选。",
+      "progress": "进度",
+      "steps": "步骤",
+      "congratulations": "恭喜！",
+      "completionText": "您已完成快速入门。您的AI现在拥有持久记忆。",
+      "continueReading": "继续阅读",
+      "goToDashboard": "前往仪表板",
+      "step1": {
+        "title": "获取API密钥",
+        "time": "30秒",
+        "description": "注册并从仪表板生成您的API密钥。",
+        "action": "前往仪表板"
+      },
+      "step2": {
+        "title": "安装SDK",
+        "time": "30秒",
+        "description": "使用您喜欢的包管理器安装Seizn SDK。"
+      },
+      "step3": {
+        "title": "初始化客户端",
+        "time": "1分钟",
+        "description": "使用API密钥创建客户端实例。"
+      },
+      "step4": {
+        "title": "添加第一个记忆",
+        "time": "1分钟",
+        "description": "存储AI以后可以回忆的信息。"
+      },
+      "step5": {
+        "title": "搜索和回忆",
+        "time": "1分钟",
+        "description": "使用自然语言搜索检索相关记忆。"
+      },
+      "step6": {
+        "title": "在AI中使用",
+        "time": "1分钟",
+        "description": "将记忆作为上下文注入以获得个性化的AI响应。"
+      }
     }
   }
 }

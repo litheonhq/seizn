@@ -2,71 +2,89 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
-const steps = [
-  {
-    title: "Get Your API Key",
-    time: "30 seconds",
-    description: "Sign up and generate your API key from the dashboard.",
-    action: {
-      label: "Go to Dashboard",
-      href: "/dashboard/keys",
+interface Step {
+  title: string;
+  time: string;
+  description: string;
+  action?: {
+    label: string;
+    href: string;
+  };
+  code?: {
+    tabs: { lang: string; code: string }[];
+  };
+}
+
+export function QuickstartTutorial() {
+  const { t } = useDashboardTranslation();
+  const [activeTab, setActiveTab] = useState<Record<number, number>>({});
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+
+  const steps: Step[] = [
+    {
+      title: t("docs.quickstartTutorial.step1.title"),
+      time: t("docs.quickstartTutorial.step1.time"),
+      description: t("docs.quickstartTutorial.step1.description"),
+      action: {
+        label: t("docs.quickstartTutorial.step1.action"),
+        href: "/dashboard/keys",
+      },
     },
-    code: null,
-  },
-  {
-    title: "Install the SDK",
-    time: "30 seconds",
-    description: "Install the Seizn SDK using your preferred package manager.",
-    code: {
-      tabs: [
-        { lang: "npm", code: "npm install @seizn/spring" },
-        { lang: "yarn", code: "yarn add @seizn/spring" },
-        { lang: "pnpm", code: "pnpm add @seizn/spring" },
-        { lang: "Python", code: "pip install seizn" },
-      ],
+    {
+      title: t("docs.quickstartTutorial.step2.title"),
+      time: t("docs.quickstartTutorial.step2.time"),
+      description: t("docs.quickstartTutorial.step2.description"),
+      code: {
+        tabs: [
+          { lang: "npm", code: "npm install @seizn/spring" },
+          { lang: "yarn", code: "yarn add @seizn/spring" },
+          { lang: "pnpm", code: "pnpm add @seizn/spring" },
+          { lang: "Python", code: "pip install seizn" },
+        ],
+      },
     },
-  },
-  {
-    title: "Initialize the Client",
-    time: "1 minute",
-    description: "Create a client instance with your API key.",
-    code: {
-      tabs: [
-        {
-          lang: "TypeScript",
-          code: `import { SpringClient } from '@seizn/spring';
+    {
+      title: t("docs.quickstartTutorial.step3.title"),
+      time: t("docs.quickstartTutorial.step3.time"),
+      description: t("docs.quickstartTutorial.step3.description"),
+      code: {
+        tabs: [
+          {
+            lang: "TypeScript",
+            code: `import { SpringClient } from '@seizn/spring';
 
 const spring = new SpringClient({
   apiKey: process.env.SEIZN_API_KEY!,
 });`,
-        },
-        {
-          lang: "JavaScript",
-          code: `const { SpringClient } = require('@seizn/spring');
+          },
+          {
+            lang: "JavaScript",
+            code: `const { SpringClient } = require('@seizn/spring');
 
 const spring = new SpringClient({
   apiKey: process.env.SEIZN_API_KEY,
 });`,
-        },
-        {
-          lang: "Python",
-          code: `from seizn import SeizClient
+          },
+          {
+            lang: "Python",
+            code: `from seizn import SeizClient
 
 client = SeizClient(api_key="szn_your_api_key")`,
-        },
-      ],
+          },
+        ],
+      },
     },
-  },
-  {
-    title: "Add Your First Memory",
-    time: "1 minute",
-    description: "Store information that your AI can recall later.",
-    code: {
-      tabs: [
-        {
-          lang: "TypeScript",
-          code: `// Add a user preference
+    {
+      title: t("docs.quickstartTutorial.step4.title"),
+      time: t("docs.quickstartTutorial.step4.time"),
+      description: t("docs.quickstartTutorial.step4.description"),
+      code: {
+        tabs: [
+          {
+            lang: "TypeScript",
+            code: `// Add a user preference
 await spring.add({
   content: "User prefers dark mode and minimal animations",
   type: "preference",
@@ -79,10 +97,10 @@ await spring.add({
   type: "fact",
   tags: ["profile", "work"],
 });`,
-        },
-        {
-          lang: "Python",
-          code: `# Add a user preference
+          },
+          {
+            lang: "Python",
+            code: `# Add a user preference
 client.add(
     "User prefers dark mode and minimal animations",
     user_id="user123"
@@ -94,19 +112,19 @@ client.add(
     user_id="user123",
     metadata={"category": "profile"}
 )`,
-        },
-      ],
+          },
+        ],
+      },
     },
-  },
-  {
-    title: "Search and Recall",
-    time: "1 minute",
-    description: "Retrieve relevant memories using natural language search.",
-    code: {
-      tabs: [
-        {
-          lang: "TypeScript",
-          code: `// Search memories
+    {
+      title: t("docs.quickstartTutorial.step5.title"),
+      time: t("docs.quickstartTutorial.step5.time"),
+      description: t("docs.quickstartTutorial.step5.description"),
+      code: {
+        tabs: [
+          {
+            lang: "TypeScript",
+            code: `// Search memories
 const results = await spring.search({
   query: "What are the user's UI preferences?",
   topK: 5,
@@ -115,10 +133,10 @@ const results = await spring.search({
 
 console.log(results);
 // [{ content: "User prefers dark mode...", similarity: 0.92 }]`,
-        },
-        {
-          lang: "Python",
-          code: `# Search memories
+          },
+          {
+            lang: "Python",
+            code: `# Search memories
 results = client.search(
     "What are the user's UI preferences?",
     user_id="user123",
@@ -127,19 +145,19 @@ results = client.search(
 
 for r in results:
     print(f"{r.score:.2f}: {r.content}")`,
-        },
-      ],
+          },
+        ],
+      },
     },
-  },
-  {
-    title: "Use in Your AI",
-    time: "1 minute",
-    description: "Inject memories as context for personalized AI responses.",
-    code: {
-      tabs: [
-        {
-          lang: "TypeScript",
-          code: `// Get relevant context for AI
+    {
+      title: t("docs.quickstartTutorial.step6.title"),
+      time: t("docs.quickstartTutorial.step6.time"),
+      description: t("docs.quickstartTutorial.step6.description"),
+      code: {
+        tabs: [
+          {
+            lang: "TypeScript",
+            code: `// Get relevant context for AI
 const memories = await spring.recall("user preferences");
 
 // Use with your AI (OpenAI example)
@@ -155,10 +173,10 @@ const response = await openai.chat.completions.create({
 });
 
 // AI response will be personalized based on stored memories`,
-        },
-        {
-          lang: "Python",
-          code: `# Get relevant context for AI
+          },
+          {
+            lang: "Python",
+            code: `# Get relevant context for AI
 memories = client.search("user preferences", user_id="user123")
 
 # Use with your AI (OpenAI example)
@@ -176,15 +194,11 @@ response = openai.chat.completions.create(
 )
 
 # AI response will be personalized based on stored memories`,
-        },
-      ],
+          },
+        ],
+      },
     },
-  },
-];
-
-export function QuickstartTutorial() {
-  const [activeTab, setActiveTab] = useState<Record<number, number>>({});
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+  ];
 
   const toggleStep = (index: number) => {
     setCompletedSteps((prev) => {
@@ -210,24 +224,24 @@ export function QuickstartTutorial() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <span className="px-3 py-1 bg-emerald-400/10 text-emerald-600 text-sm font-medium rounded-full">
-            5 min tutorial
+            {t("docs.quickstartTutorial.badge")}
           </span>
           <span className="text-gray-400">•</span>
-          <span className="text-gray-500 text-sm">No credit card required</span>
+          <span className="text-gray-500 text-sm">{t("docs.quickstartTutorial.noCreditCard")}</span>
         </div>
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Get Started with Seizn
+          {t("docs.quickstartTutorial.title")}
         </h2>
         <p className="text-lg text-gray-500 max-w-2xl">
-          Add persistent memory to your AI in under 5 minutes. Follow along and check off each step as you complete it.
+          {t("docs.quickstartTutorial.subtitle")}
         </p>
       </div>
 
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-500">Progress</span>
-          <span className="text-sm text-gray-500">{completedSteps.size} / {steps.length} steps</span>
+          <span className="text-sm text-gray-500">{t("docs.quickstartTutorial.progress")}</span>
+          <span className="text-sm text-gray-500">{completedSteps.size} / {steps.length} {t("docs.quickstartTutorial.steps")}</span>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
@@ -340,22 +354,22 @@ export function QuickstartTutorial() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Congratulations!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t("docs.quickstartTutorial.congratulations")}</h2>
           <p className="text-gray-500 mb-6">
-            You&apos;ve completed the quickstart. Your AI now has persistent memory.
+            {t("docs.quickstartTutorial.completionText")}
           </p>
           <div className="flex items-center justify-center gap-4">
             <a
               href="#authentication"
               className="px-6 py-3 bg-gray-100 hover:bg-zinc-700 text-gray-900 font-medium rounded-lg transition-colors"
             >
-              Continue Reading
+              {t("docs.quickstartTutorial.continueReading")}
             </a>
             <Link
               href="/dashboard"
               className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
             >
-              Go to Dashboard
+              {t("docs.quickstartTutorial.goToDashboard")}
             </Link>
           </div>
         </div>

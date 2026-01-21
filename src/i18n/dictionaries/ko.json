@@ -1686,6 +1686,49 @@
           "description": "메모리 유형, 네임스페이스 및 모범 사례에 대해 알아보세요."
         }
       }
+    },
+    "quickstartTutorial": {
+      "badge": "5분 튜토리얼",
+      "noCreditCard": "신용카드 불필요",
+      "title": "Seizn 시작하기",
+      "subtitle": "5분 안에 AI에 영구 메모리를 추가하세요. 각 단계를 완료하면서 체크해 보세요.",
+      "progress": "진행률",
+      "steps": "단계",
+      "congratulations": "축하합니다!",
+      "completionText": "빠른 시작을 완료했습니다. 이제 AI에 영구 메모리가 있습니다.",
+      "continueReading": "계속 읽기",
+      "goToDashboard": "대시보드로 이동",
+      "step1": {
+        "title": "API 키 받기",
+        "time": "30초",
+        "description": "가입하고 대시보드에서 API 키를 생성하세요.",
+        "action": "대시보드로 이동"
+      },
+      "step2": {
+        "title": "SDK 설치",
+        "time": "30초",
+        "description": "선호하는 패키지 매니저로 Seizn SDK를 설치하세요."
+      },
+      "step3": {
+        "title": "클라이언트 초기화",
+        "time": "1분",
+        "description": "API 키로 클라이언트 인스턴스를 생성하세요."
+      },
+      "step4": {
+        "title": "첫 번째 메모리 추가",
+        "time": "1분",
+        "description": "AI가 나중에 기억할 수 있는 정보를 저장하세요."
+      },
+      "step5": {
+        "title": "검색 및 회상",
+        "time": "1분",
+        "description": "자연어 검색으로 관련 메모리를 검색하세요."
+      },
+      "step6": {
+        "title": "AI에서 사용",
+        "time": "1분",
+        "description": "개인화된 AI 응답을 위해 메모리를 컨텍스트로 주입하세요."
+      }
     }
   },
   "demoQuery": {

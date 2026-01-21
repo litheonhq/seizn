@@ -1,0 +1,1752 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\admin\\Projects\\seizn\\playwright.config.ts",
+    "rootDir": "C:/Users/admin/Projects/seizn/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/admin/Projects/seizn/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/admin/Projects/seizn/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/admin/Projects/seizn/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/admin/Projects/seizn/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/admin/Projects/seizn/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/admin/Projects/seizn/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/admin/Projects/seizn/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "C:/Users/admin/Projects/seizn/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/admin/Projects/seizn/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "C:/Users/admin/Projects/seizn/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 16,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "api-key.spec.ts",
+      "file": "api-key.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Key Management",
+          "file": "api-key.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Dashboard redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-0d5ce84321c462e78715",
+              "file": "api-key.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "API documentation shows correct endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-4692be1555bb2855cc31",
+              "file": "api-key.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "Quickstart shows API usage example",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-79eac3f958bd86c57b40",
+              "file": "api-key.spec.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "Dashboard redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-cdfbc822bbebaf12533a",
+              "file": "api-key.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "API documentation shows correct endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-ad6fbd2843da221c91b7",
+              "file": "api-key.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "Quickstart shows API usage example",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-9586ee3a0a1741b1608d",
+              "file": "api-key.spec.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "Dashboard redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-870370eb3801c16af3ed",
+              "file": "api-key.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "API documentation shows correct endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-d2556dd2b38ab566cc7e",
+              "file": "api-key.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "Quickstart shows API usage example",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-cdfff4bd9a1b1e85e46e",
+              "file": "api-key.spec.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "Dashboard redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-5d3a78222d1e23d3451e",
+              "file": "api-key.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "API documentation shows correct endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-f2330c282701584d711c",
+              "file": "api-key.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "Quickstart shows API usage example",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-be222d9255083772eb8f",
+              "file": "api-key.spec.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "Dashboard redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-0ca3b9aab91ebeac2dba",
+              "file": "api-key.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "API documentation shows correct endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-d395795c3cb569771fee",
+              "file": "api-key.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "Quickstart shows API usage example",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "234e4e426c9d9167e72b-1b7293b4ee8c303cd130",
+              "file": "api-key.spec.ts",
+              "line": 33,
+              "column": 7
+            }
+          ],
+          "suites": [
+            {
+              "title": "Authenticated Flow",
+              "file": "api-key.spec.ts",
+              "line": 44,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Can access dashboard after login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Requires test credentials",
+                          "location": {
+                            "file": "C:\\Users\\admin\\Projects\\seizn\\e2e\\api-key.spec.ts",
+                            "line": 45,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "234e4e426c9d9167e72b-9a2142bc48583f66e35b",
+                  "file": "api-key.spec.ts",
+                  "line": 47,
+                  "column": 9
+                },
+                {
+                  "title": "Can access dashboard after login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Requires test credentials",
+                          "location": {
+                            "file": "C:\\Users\\admin\\Projects\\seizn\\e2e\\api-key.spec.ts",
+                            "line": 45,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "234e4e426c9d9167e72b-fe4bf5103d04b5fd8dd5",
+                  "file": "api-key.spec.ts",
+                  "line": 47,
+                  "column": 9
+                },
+                {
+                  "title": "Can access dashboard after login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Requires test credentials",
+                          "location": {
+                            "file": "C:\\Users\\admin\\Projects\\seizn\\e2e\\api-key.spec.ts",
+                            "line": 45,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "234e4e426c9d9167e72b-a325a2fc00c0cb0aa04f",
+                  "file": "api-key.spec.ts",
+                  "line": 47,
+                  "column": 9
+                },
+                {
+                  "title": "Can access dashboard after login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Requires test credentials",
+                          "location": {
+                            "file": "C:\\Users\\admin\\Projects\\seizn\\e2e\\api-key.spec.ts",
+                            "line": 45,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile-chrome",
+                      "projectName": "mobile-chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "234e4e426c9d9167e72b-de92a2395ba34c8f3d99",
+                  "file": "api-key.spec.ts",
+                  "line": 47,
+                  "column": 9
+                },
+                {
+                  "title": "Can access dashboard after login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Requires test credentials",
+                          "location": {
+                            "file": "C:\\Users\\admin\\Projects\\seizn\\e2e\\api-key.spec.ts",
+                            "line": 45,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile-safari",
+                      "projectName": "mobile-safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "234e4e426c9d9167e72b-1b026e8febff2bea7430",
+                  "file": "api-key.spec.ts",
+                  "line": 47,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "core-pages.spec.ts",
+      "file": "core-pages.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Core Pages - Rendering",
+          "file": "core-pages.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Homepage loads correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-97413cad3dc5fad0320c",
+              "file": "core-pages.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Docs page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-4bf28a87c3bcfba720d1",
+              "file": "core-pages.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Pricing page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-f3d66a1dde66f52c957b",
+              "file": "core-pages.spec.ts",
+              "line": 38,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-754d6b5c859594660c33",
+              "file": "core-pages.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Docs page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-7b8ebaaeb952e87c2c17",
+              "file": "core-pages.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Pricing page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-2a04540b7a62c29c2696",
+              "file": "core-pages.spec.ts",
+              "line": 38,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-5676f65c27c1dcde908f",
+              "file": "core-pages.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Docs page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-c2d3910521f2d7daeb37",
+              "file": "core-pages.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Pricing page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-ab47818dc88426d7437c",
+              "file": "core-pages.spec.ts",
+              "line": 38,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-345086358c514b13dab7",
+              "file": "core-pages.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Docs page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-6c2dc46142afa7479358",
+              "file": "core-pages.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Pricing page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-e61dbb6771cef8b07de8",
+              "file": "core-pages.spec.ts",
+              "line": 38,
+              "column": 7
+            },
+            {
+              "title": "Homepage loads correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-5fec9c906c91f7829fb1",
+              "file": "core-pages.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "Docs page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-af6f03972d0a12aac4bc",
+              "file": "core-pages.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Pricing page renders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-fa3a856c61d4ec849dfd",
+              "file": "core-pages.spec.ts",
+              "line": 38,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Authentication Flow",
+          "file": "core-pages.spec.ts",
+          "line": 46,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Login page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-6b225979c2d5b955090e",
+              "file": "core-pages.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Signup page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-c6f20a459b71182fc3a4",
+              "file": "core-pages.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "Login page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-d04f03e0776a5fa9ba2e",
+              "file": "core-pages.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Signup page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-f146fe128d992d94af89",
+              "file": "core-pages.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "Login page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-c08ca4e09c717dc29f4b",
+              "file": "core-pages.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Signup page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-4a1f41a99499c79059c3",
+              "file": "core-pages.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "Login page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-ffe2beccad40d4bc545f",
+              "file": "core-pages.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Signup page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-7f050520fd13f5e4a482",
+              "file": "core-pages.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "Login page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-a2ef17dad219ee026403",
+              "file": "core-pages.spec.ts",
+              "line": 47,
+              "column": 7
+            },
+            {
+              "title": "Signup page accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-1a02885802a0ad777213",
+              "file": "core-pages.spec.ts",
+              "line": 57,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Linux-Specific Features",
+          "file": "core-pages.spec.ts",
+          "line": 65,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Copy button functionality (clipboard fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-7224816b79192fa51289",
+              "file": "core-pages.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "Keyboard shortcut display adapts to platform",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-781fc91d12f2bc97190a",
+              "file": "core-pages.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "Font rendering - no layout shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-c87cff8c4cf35faddf4f",
+              "file": "core-pages.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "File input is available (upload fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-d2ed5b3581eabdf9f674",
+              "file": "core-pages.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "Copy button functionality (clipboard fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-ed526920614cea4de048",
+              "file": "core-pages.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "Keyboard shortcut display adapts to platform",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-75a1fbd65749f4f42f1f",
+              "file": "core-pages.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "Font rendering - no layout shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-6f81a7998c1ef5a50346",
+              "file": "core-pages.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "File input is available (upload fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-8ecf7f1787479eb08ae4",
+              "file": "core-pages.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "Copy button functionality (clipboard fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-fd0ea284489c015eff8a",
+              "file": "core-pages.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "Keyboard shortcut display adapts to platform",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-3be41a3dbf00a1be5b3c",
+              "file": "core-pages.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "Font rendering - no layout shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-6c1ffbe8ce3cef82b8a7",
+              "file": "core-pages.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "File input is available (upload fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-1d2715bd24b237e4f2ed",
+              "file": "core-pages.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "Copy button functionality (clipboard fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-b0883db8679da5c4dcb2",
+              "file": "core-pages.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "Keyboard shortcut display adapts to platform",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-dbcc7e8f29e25306fcd9",
+              "file": "core-pages.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "Font rendering - no layout shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-49f423a001648f8e5ee5",
+              "file": "core-pages.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "File input is available (upload fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-68c8b66c6e83172bb7da",
+              "file": "core-pages.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "Copy button functionality (clipboard fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-e4b19214eafc65d98f81",
+              "file": "core-pages.spec.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "Keyboard shortcut display adapts to platform",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-c0e4308ad12d76f9e994",
+              "file": "core-pages.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "Font rendering - no layout shift",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-ae376032c8a0200ca591",
+              "file": "core-pages.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "File input is available (upload fallback)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-6cfd268136a86ee2c305",
+              "file": "core-pages.spec.ts",
+              "line": 111,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Responsive Design",
+          "file": "core-pages.spec.ts",
+          "line": 124,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Mobile viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-ed0fef0e6a58824be7d4",
+              "file": "core-pages.spec.ts",
+              "line": 125,
+              "column": 7
+            },
+            {
+              "title": "Desktop viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-4bc86c011d6f179061d3",
+              "file": "core-pages.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "Mobile viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-2baecc9e07d71468e402",
+              "file": "core-pages.spec.ts",
+              "line": 125,
+              "column": 7
+            },
+            {
+              "title": "Desktop viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-9b8e149d724737a42472",
+              "file": "core-pages.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "Mobile viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-acfe620823099f907f4a",
+              "file": "core-pages.spec.ts",
+              "line": 125,
+              "column": 7
+            },
+            {
+              "title": "Desktop viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-603371872d8e1406d70d",
+              "file": "core-pages.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "Mobile viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-8bc61dba4a4dcd643861",
+              "file": "core-pages.spec.ts",
+              "line": 125,
+              "column": 7
+            },
+            {
+              "title": "Desktop viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-980c70e98adb7197890f",
+              "file": "core-pages.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "Mobile viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-3552fae021d211fffaec",
+              "file": "core-pages.spec.ts",
+              "line": 125,
+              "column": 7
+            },
+            {
+              "title": "Desktop viewport renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-safari",
+                  "projectName": "mobile-safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4c22544915626d90cd7a-cbef7fcd97e5ade0a59d",
+              "file": "core-pages.spec.ts",
+              "line": 136,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-19T11:32:40.902Z",
+    "duration": 58.28500000000008,
+    "expected": 0,
+    "skipped": 75,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

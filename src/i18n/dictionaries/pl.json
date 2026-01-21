@@ -1081,6 +1081,49 @@
       "hint": "Szybkie wyszukiwanie:",
       "navigate": "nawigacja",
       "select": "wybor"
+    },
+    "quickstartTutorial": {
+      "badge": "5-min samouczek",
+      "noCreditCard": "Bez karty kredytowej",
+      "title": "Zacznij z Seizn",
+      "subtitle": "Dodaj trwałą pamięć do swojej AI w mniej niż 5 minut. Postępuj zgodnie z krokami i zaznaczaj każdy po ukończeniu.",
+      "progress": "Postęp",
+      "steps": "kroków",
+      "congratulations": "Gratulacje!",
+      "completionText": "Ukończyłeś szybki start. Twoja AI ma teraz trwałą pamięć.",
+      "continueReading": "Czytaj dalej",
+      "goToDashboard": "Przejdź do panelu",
+      "step1": {
+        "title": "Pobierz klucz API",
+        "time": "30 sekund",
+        "description": "Zarejestruj się i wygeneruj klucz API z panelu.",
+        "action": "Przejdź do panelu"
+      },
+      "step2": {
+        "title": "Zainstaluj SDK",
+        "time": "30 sekund",
+        "description": "Zainstaluj Seizn SDK za pomocą preferowanego menedżera pakietów."
+      },
+      "step3": {
+        "title": "Zainicjuj klienta",
+        "time": "1 minuta",
+        "description": "Utwórz instancję klienta z kluczem API."
+      },
+      "step4": {
+        "title": "Dodaj pierwsze wspomnienie",
+        "time": "1 minuta",
+        "description": "Przechowaj informacje, które Twoja AI może później przywołać."
+      },
+      "step5": {
+        "title": "Szukaj i przypomnij",
+        "time": "1 minuta",
+        "description": "Pobieraj istotne wspomnienia za pomocą wyszukiwania w języku naturalnym."
+      },
+      "step6": {
+        "title": "Użyj w swojej AI",
+        "time": "1 minuta",
+        "description": "Wstrzykuj wspomnienia jako kontekst dla spersonalizowanych odpowiedzi AI."
+      }
     }
   }
 }
