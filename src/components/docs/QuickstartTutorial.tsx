@@ -298,7 +298,7 @@ response = openai.chat.completions.create(
               {step.action && (
                 <Link
                   href={step.action.href}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors text-sm"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:opacity-90 font-medium rounded-lg transition-colors text-sm"
                 >
                   {step.action.label}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,7 +367,7 @@ response = openai.chat.completions.create(
             </a>
             <Link
               href="/dashboard"
-              className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
+              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:opacity-90 font-medium rounded-lg transition-colors"
             >
               {t("docs.quickstartTutorial.goToDashboard")}
             </Link>
