@@ -230,7 +230,7 @@ export function SettingsClient() {
   return (
     <div className="space-y-6">
       {sessionStatus === "loading" && (
-        <div className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.loading")</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.loading")}</div>
       )}
       {sessionStatus === "unauthenticated" && (
         <div className="text-sm text-red-600">{t("dashboard.settingsPage.loginRequired")}</div>
@@ -239,10 +239,10 @@ export function SettingsClient() {
       {/* Header */}
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.title")</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.title")}</p>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{t("dashboard.settingsPage.subtitle")}</h1>
         </div>
-        {saveStatus === "saving" && <span className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.saving")</span>}
+        {saveStatus === "saving" && <span className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.saving")}</span>}
         {saveStatus === "saved" && <span className="text-sm text-emerald-600">{t("dashboard.settingsPage.saved")}</span>}
         {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
