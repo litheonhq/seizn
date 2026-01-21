@@ -1,0 +1,1086 @@
+{
+  "metadata": {
+    "title": "Seizn - Infrastruttura di Memoria AI",
+    "description": "Dai alla tua IA una memoria duratura. Seizn archivia e recupera il contesto automaticamente, affinche la tua IA ricordi le conversazioni passate."
+  },
+  "nav": {
+    "features": "Funzionalita",
+    "pricing": "Prezzi",
+    "docs": "Docs",
+    "login": "Accedi",
+    "getStarted": "Inizia"
+  },
+  "hero": {
+    "badge": "Disponibile Q1 2026",
+    "title": "Infrastruttura di memoria",
+    "titleHighlight": "per applicazioni IA",
+    "subtitle": "Dai alla tua IA una memoria duratura. Seizn archivia e recupera il contesto automaticamente, affinche la tua IA ricordi le conversazioni passate.",
+    "emailPlaceholder": "Inserisci la tua email",
+    "joinWaitlist": "Iscriviti alla Lista d'Attesa",
+    "joining": "Iscrizione in corso...",
+    "onTheList": "Sei nella lista!",
+    "stats": {
+      "tokenSavings": "Risparmio Token",
+      "retrievalTime": "Tempo di Recupero",
+      "uptimeSla": "SLA di Disponibilita"
+    }
+  },
+  "features": {
+    "title": "Creato per gli sviluppatori",
+    "subtitle": "API semplici, infrastruttura potente. Aggiungi memoria persistente a qualsiasi IA in pochi minuti.",
+    "smartExtraction": {
+      "title": "Estrazione Intelligente",
+      "description": "Estrae automaticamente fatti chiave, preferenze e contesto dalle conversazioni usando Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Recupero Istantaneo",
+      "description": "La ricerca ibrida vettoriale + grafo restituisce memorie rilevanti in millisecondi, sempre."
+    },
+    "enterpriseSecurity": {
+      "title": "Sicurezza Enterprise",
+      "description": "Crittografia end-to-end, conforme SOC 2, con controlli di accesso granulari e log di audit."
+    }
+  },
+  "codePreview": {
+    "title": "Integrazione semplice",
+    "subtitle": "Aggiungi memoria alla tua IA con poche righe di codice."
+  },
+  "pricing": {
+    "title": "Prezzi semplici e trasparenti",
+    "subtitle": "Inizia gratis, scala man mano che cresci.",
+    "free": {
+      "name": "Gratuito",
+      "price": "$0",
+      "period": "Gratuito per sempre",
+      "features": [
+        "10.000 memorie",
+        "1.000 chiamate API/mese",
+        "Supporto community"
+      ],
+      "cta": "Inizia"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "al mese",
+      "features": [
+        "50.000 memorie",
+        "10.000 chiamate API/mese",
+        "Supporto via email",
+        "Analytics base"
+      ],
+      "cta": "Abbonati"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "al mese",
+      "badge": "Popolare",
+      "features": [
+        "200.000 memorie",
+        "50.000 chiamate API/mese",
+        "Supporto prioritario",
+        "Analytics avanzate",
+        "Webhooks"
+      ],
+      "cta": "Abbonati"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Personalizzato",
+      "period": "Contattaci",
+      "features": [
+        "Memorie illimitate",
+        "Chiamate API illimitate",
+        "Supporto dedicato",
+        "SLA personalizzato",
+        "Opzione on-premise"
+      ],
+      "cta": "Contatta le Vendite"
+    }
+  },
+  "enterprisePage": {
+    "title": "Contatta le Vendite",
+    "subtitle": "Ottieni un piano personalizzato per le tue esigenze aziendali con supporto dedicato, garanzie SLA e integrazioni personalizzate.",
+    "includes": "Enterprise include:",
+    "includesList": [
+      "SLA di disponibilita 99,9%",
+      "Supporto prioritario (24h)",
+      "Account manager dedicato",
+      "Integrazioni personalizzate",
+      "Autenticazione SSO / SAML",
+      "Politica di conservazione dati",
+      "Report di audit di sicurezza",
+      "Contratti personalizzati"
+    ],
+    "form": {
+      "companyName": "Nome Azienda",
+      "yourName": "Il Tuo Nome",
+      "workEmail": "Email di Lavoro",
+      "phone": "Telefono",
+      "jobTitle": "Ruolo",
+      "companySize": "Dimensione Azienda",
+      "useCase": "Raccontaci il tuo caso d'uso",
+      "useCasePlaceholder": "Cosa stai costruendo? Come userai Seizn?",
+      "expectedVolume": "Chiamate API Mensili Previste",
+      "timeline": "Tempistica",
+      "requirements": "Requisiti Specifici",
+      "requirementsPlaceholder": "SSO, SLA specifico, residenza dati, requisiti di conformita, ecc.",
+      "submit": "Contatta le Vendite",
+      "submitting": "Invio in corso...",
+      "privacyNote": "Inviando questo modulo, accetti la nostra"
+    },
+    "companySizes": {
+      "select": "Seleziona...",
+      "1-10": "1-10 dipendenti",
+      "11-50": "11-50 dipendenti",
+      "51-200": "51-200 dipendenti",
+      "201-500": "201-500 dipendenti",
+      "500+": "500+ dipendenti"
+    },
+    "volumes": {
+      "select": "Seleziona...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Seleziona...",
+      "immediate": "Pronto a iniziare ora",
+      "1-3months": "1-3 mesi",
+      "3-6months": "3-6 mesi",
+      "6+months": "6+ mesi"
+    },
+    "success": {
+      "title": "Grazie!",
+      "message": "Abbiamo ricevuto la tua richiesta. Il nostro team ti contattera entro 1-2 giorni lavorativi.",
+      "backHome": "Torna alla Home"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bentornato",
+      "subtitle": "Accedi al tuo account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Accedi",
+      "noAccount": "Non hai un account?",
+      "signUp": "Registrati",
+      "or": "o continua con"
+    },
+    "signup": {
+      "title": "Crea un account",
+      "subtitle": "Inizia a costruire con Seizn",
+      "name": "Nome completo",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Crea account",
+      "hasAccount": "Hai gia un account?",
+      "signIn": "Accedi",
+      "or": "o continua con"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Tutti i diritti riservati.",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "contact": "Contatti"
+  },
+  "dashboard": {
+    "title": "Pannello di Controllo",
+    "welcome": "Bentornato",
+    "overview": "Panoramica",
+    "usage": "Utilizzo",
+    "apiKeys": "Chiavi API",
+    "settings": "Impostazioni",
+    "signOut": "Esci",
+    "stats": {
+      "memories": "Memorie",
+      "apiCalls": "Chiamate API Oggi",
+      "plan": "Piano Attuale",
+      "unlimited": "Illimitato"
+    },
+    "keys": {
+      "title": "Le Tue Chiavi API",
+      "create": "Crea Nuova Chiave",
+      "name": "Nome Chiave",
+      "namePlaceholder": "La Mia Chiave API",
+      "created": "Creata",
+      "lastUsed": "Ultimo Utilizzo",
+      "never": "Mai",
+      "copy": "Copia",
+      "copied": "Copiato!",
+      "delete": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questa chiave API?",
+      "warning": "Salva questa chiave in modo sicuro. Non verra mostrata di nuovo.",
+      "noKeys": "Non hai ancora chiavi API. Creane una per iniziare."
+    },
+    "usagePage": {
+      "title": "Analisi Utilizzo",
+      "period": "Periodo Attuale",
+      "memoriesUsed": "Memorie Utilizzate",
+      "apiCallsUsed": "Chiamate API Utilizzate",
+      "remaining": "Rimanente",
+      "upgrade": "Aggiorna Piano",
+      "subtitle": "Monitora il tuo utilizzo API e i costi.",
+      "days7": "7 Giorni",
+      "days30": "30 Giorni",
+      "days90": "90 Giorni",
+      "loading": "Caricamento...",
+      "totalApiCalls": "Chiamate API Totali",
+      "totalTokens": "Token Totali",
+      "estimatedCost": "Costo Stimato",
+      "avgLatency": "Latenza Media",
+      "dailyApiCalls": "Chiamate API Giornaliere",
+      "calls": "chiamate",
+      "endpointUsage": "Utilizzo Endpoint",
+      "noData": "Nessun dato",
+      "avg": "media",
+      "errors": "errori",
+      "usageByApiKey": "Utilizzo per Chiave API",
+      "errorsTitle": "Errori",
+      "errorRate": "tasso di errore",
+      "noUsageData": "Nessun dato di utilizzo disponibile"
+    },
+    "language": "Lingua",
+    "organizations": "Organizzazioni",
+    "docs": "Documentazione",
+    "pinSidebar": "Fissa barra laterale",
+    "unpinSidebar": "Comprimi barra laterale",
+    "playground": "Playground",
+    "playgroundPage": {
+      "title": "Console di debug",
+      "subtitle": "Testa le tue query con tracciamento e regolazione parametri",
+      "queryInput": "Input query",
+      "queryPlaceholder": "Inserisci la tua query di test...",
+      "parameters": "Parametri",
+      "topK": "Top K",
+      "topKHint": "Numero di risultati da restituire",
+      "threshold": "Soglia",
+      "thresholdHint": "Punteggio di similarita minimo",
+      "filters": "Filtri",
+      "filtersHint": "Filtri metadati in formato JSON",
+      "runQuery": "Esegui query",
+      "running": "In esecuzione...",
+      "results": "Risultati",
+      "noResults": "Nessun risultato trovato",
+      "noResultsHint": "Regola i parametri o prova una query diversa",
+      "resultCount": "{count} risultati trovati",
+      "score": "Punteggio",
+      "metadata": "Metadati",
+      "content": "Contenuto",
+      "tracing": "Tracciamento",
+      "tracingEnabled": "Tracciamento attivato",
+      "tracingDisabled": "Tracciamento disattivato",
+      "executionTime": "Tempo di esecuzione",
+      "tokensUsed": "Token utilizzati",
+      "steps": "Passaggi",
+      "embedding": "Embedding",
+      "vectorSearch": "Ricerca vettoriale",
+      "reranking": "Riordinamento",
+      "response": "Risposta",
+      "rawResponse": "Risposta grezza",
+      "formattedResponse": "Risposta formattata",
+      "copyResponse": "Copia risposta",
+      "copied": "Copiato!",
+      "history": "Cronologia",
+      "clearHistory": "Cancella cronologia",
+      "noHistory": "Nessuna cronologia",
+      "noHistoryHint": "La tua cronologia delle query apparira qui",
+      "savedQueries": "Query salvate",
+      "saveQuery": "Salva query",
+      "querySaved": "Query salvata",
+      "deleteQuery": "Elimina query",
+      "queryDeleted": "Query eliminata",
+      "noSavedQueries": "Nessuna query salvata",
+      "apiKeyRequired": "Chiave API richiesta per eseguire le query",
+      "selectApiKey": "Seleziona chiave API",
+      "createApiKeyFirst": "Prima crea una chiave API",
+      "invalidJson": "Formato JSON non valido",
+      "queryError": "Errore nella query",
+      "networkError": "Errore di rete. Verifica la tua connessione.",
+      "timeout": "Timeout della query. Riprova.",
+      "compare": "Confronta",
+      "compareMode": "Modalita confronto",
+      "compareModeHint": "Confronta diversi parametri fianco a fianco",
+      "addComparison": "Aggiungi confronto",
+      "removeComparison": "Rimuovi confronto",
+      "comparisonResults": "Risultati del confronto",
+      "export": "Esporta",
+      "exportResults": "Esporta risultati",
+      "exportFormat": "Formato di esportazione",
+      "exportSuccess": "Esportazione riuscita"
+    },
+    "settingsPage": {
+      "title": "Impostazioni",
+      "subtitle": "Profilo e preferenze",
+      "saving": "Salvataggio...",
+      "saved": "Salvato",
+      "saveFailed": "Salvataggio fallito",
+      "account": "Account",
+      "email": "Email",
+      "name": "Nome",
+      "languageHint": "Influisce sull'interfaccia e sul pannello",
+      "loading": "Caricamento...",
+      "loginRequired": "Accesso richiesto.",
+      "tabs": {
+        "profile": "Profilo",
+        "budget": "Budget",
+        "notifications": "Notifiche",
+        "security": "Sicurezza"
+      },
+      "budget": {
+        "title": "Gestione budget",
+        "description": "Imposta limiti di utilizzo API e notifiche",
+        "monthlyLimit": "Limite mensile",
+        "monthlyLimitHint": "Imposta il limite di utilizzo mensile",
+        "dailyLimit": "Limite giornaliero",
+        "dailyLimitHint": "Imposta il limite di utilizzo giornaliero",
+        "currentUsage": "Utilizzo attuale",
+        "remainingBudget": "Budget rimanente",
+        "usageHistory": "Cronologia utilizzo",
+        "alertThreshold": "Soglia di avviso",
+        "alertThresholdHint": "Ricevi un avviso al raggiungimento di questa percentuale del limite",
+        "alertEnabled": "Avvisi budget attivati",
+        "alertDisabled": "Avvisi budget disattivati",
+        "unlimited": "Illimitato",
+        "setLimit": "Imposta limite",
+        "removeLimit": "Rimuovi limite"
+      },
+      "notifications": {
+        "title": "Impostazioni notifiche",
+        "description": "Gestisci le tue preferenze di notifica",
+        "email": "Notifiche email",
+        "emailHint": "Ricevi email sull'attivita dell'account",
+        "usage": "Avvisi utilizzo",
+        "usageHint": "Ricevi notifiche all'avvicinarsi dei limiti di utilizzo",
+        "security": "Avvisi sicurezza",
+        "securityHint": "Ricevi notifiche sulla sicurezza dell'account",
+        "marketing": "Aggiornamenti prodotto",
+        "marketingHint": "Ricevi notifiche sulle nuove funzionalita",
+        "weekly": "Riepilogo settimanale",
+        "weeklyHint": "Ricevi il riepilogo di utilizzo settimanale",
+        "allEnabled": "Tutte le notifiche attivate",
+        "allDisabled": "Tutte le notifiche disattivate",
+        "enableAll": "Attiva tutte",
+        "disableAll": "Disattiva tutte"
+      },
+      "security": {
+        "title": "Impostazioni sicurezza",
+        "description": "Gestisci la sicurezza del tuo account",
+        "twoFactor": "Autenticazione a due fattori",
+        "twoFactorHint": "Aggiungi un ulteriore livello di sicurezza al tuo account",
+        "twoFactorEnabled": "Autenticazione a due fattori attivata",
+        "twoFactorDisabled": "Autenticazione a due fattori disattivata",
+        "enableTwoFactor": "Attiva autenticazione a due fattori",
+        "disableTwoFactor": "Disattiva autenticazione a due fattori",
+        "sessions": "Sessioni attive",
+        "sessionsHint": "Gestisci i tuoi dispositivi e le sessioni attive",
+        "currentSession": "Sessione corrente",
+        "lastActive": "Ultima attivita",
+        "revokeSession": "Revoca sessione",
+        "revokeAllSessions": "Revoca tutte le altre sessioni",
+        "changePassword": "Cambia password",
+        "changePasswordHint": "Aggiorna regolarmente la tua password per maggiore sicurezza",
+        "currentPassword": "Password attuale",
+        "newPassword": "Nuova password",
+        "confirmPassword": "Conferma password",
+        "passwordChanged": "Password cambiata",
+        "passwordMismatch": "Le password non corrispondono",
+        "passwordTooShort": "Password troppo corta",
+        "apiKeysSecurity": "Sicurezza chiavi API",
+        "apiKeysSecurityHint": "Monitora e gestisci le tue chiavi API"
+      },
+      "dangerZone": {
+        "title": "Zona pericolosa",
+        "description": "Azioni irreversibili",
+        "deleteAccount": "Elimina account",
+        "deleteAccountHint": "Elimina permanentemente il tuo account e tutti i tuoi dati",
+        "deleteAccountConfirm": "Sei sicuro di voler eliminare il tuo account? Questa azione non puo essere annullata.",
+        "deleteAccountButton": "Elimina il mio account",
+        "exportData": "Esporta dati",
+        "exportDataHint": "Scarica una copia di tutti i tuoi dati",
+        "exportDataButton": "Esporta dati",
+        "exportInProgress": "Esportazione in corso...",
+        "exportComplete": "Esportazione completata"
+      }
+    },
+    "greeting": {
+      "morning": "Buongiorno",
+      "afternoon": "Buon pomeriggio",
+      "evening": "Buonasera"
+    },
+    "overviewPage": {
+      "subtitle": "Ecco una panoramica del tuo utilizzo della memoria IA",
+      "totalMemories": "Memorie Totali",
+      "apiCalls": "Chiamate API",
+      "activeKeys": "Chiavi API Attive",
+      "currentPlan": "Piano Attuale",
+      "usage": "Utilizzo",
+      "today": "Oggi",
+      "dailyLimit": "Limite Giornaliero",
+      "recentMemories": "Memorie Recenti",
+      "viewAll": "Visualizza Tutto",
+      "noMemories": "Nessuna memoria ancora",
+      "noMemoriesHint": "Inizia aggiungendo la tua prima memoria tramite API",
+      "quickStart": "Avvio Rapido",
+      "createApiKey": "Crea Chiave API",
+      "getStartedApi": "Inizia con l'API",
+      "viewDocumentation": "Visualizza Documentazione",
+      "learnSeizn": "Scopri come usare Seizn",
+      "createOrganization": "Crea Organizzazione",
+      "collaborateTeam": "Collabora con il tuo team",
+      "quickExample": "Esempio Rapido",
+      "manageKeys": "Gestisci Chiavi",
+      "upgradePlan": "Aggiorna Piano"
+    },
+    "keysPage": {
+      "title": "Chiavi API",
+      "subtitle": "Gestisci le tue chiavi API per accedere ai servizi Seizn",
+      "createNewKey": "Crea Nuova Chiave",
+      "activeKeys": "Chiavi Attive",
+      "noKeysTitle": "Nessuna chiave API",
+      "noKeysDesc": "Crea la tua prima chiave API per iniziare a integrare con Seizn",
+      "createApiKey": "Crea Chiave API",
+      "created": "Creata",
+      "neverUsed": "Mai utilizzata",
+      "lastUsed": "Ultimo utilizzo",
+      "revoke": "Revoca",
+      "revokeConfirm": "Revocare la chiave API \"{keyName}\"? Questa azione non puo essere annullata.",
+      "usageGuide": "Guida all'Utilizzo",
+      "authentication": "Autenticazione",
+      "authDesc": "Includi la tua chiave API nell'header della richiesta:",
+      "exampleRequest": "Esempio di Richiesta",
+      "keyCreated": "Chiave API Creata!",
+      "keyCreatedDesc": "Copia questa chiave ora. Non verra mostrata di nuovo.",
+      "copyToClipboard": "Copia negli Appunti",
+      "copied": "Copiato!",
+      "done": "Fatto",
+      "createKeyTitle": "Crea Chiave API",
+      "createKeyDesc": "Dai alla tua chiave un nome descrittivo",
+      "keyName": "Nome Chiave",
+      "keyNamePlaceholder": "es: Produzione, Sviluppo, Test",
+      "cancel": "Annulla",
+      "creating": "Creazione...",
+      "createKey": "Crea Chiave"
+    },
+    "organizationsPage": {
+      "title": "Organizzazioni",
+      "subtitle": "Gestisci i tuoi team e collabora con altri",
+      "newOrganization": "Nuova Organizzazione",
+      "noOrgsTitle": "Nessuna organizzazione",
+      "noOrgsDesc": "Crea la tua prima organizzazione per iniziare a collaborare",
+      "createOrganization": "Crea Organizzazione",
+      "created": "Creata",
+      "plan": "Piano",
+      "freePlan": "Gratuito",
+      "createOrgTitle": "Crea Organizzazione",
+      "createOrgDesc": "Configura un nuovo spazio di lavoro",
+      "orgName": "Nome Organizzazione",
+      "orgNamePlaceholder": "es: La Mia Azienda",
+      "urlSlug": "URL Slug",
+      "urlSlugPlaceholder": "la-mia-azienda",
+      "cancel": "Annulla",
+      "creating": "Creazione...",
+      "create": "Crea",
+      "roles": {
+        "owner": "proprietario",
+        "admin": "admin",
+        "member": "membro"
+      }
+    },
+    "onboarding": {
+      "title": "Inizia con Seizn",
+      "progress": "{completed}/{total} passaggi completati",
+      "dismiss": "Chiudi",
+      "doLater": "Lo faro dopo",
+      "steps": {
+        "apiKey": {
+          "title": "Crea chiave API",
+          "description": "Genera la tua prima chiave API per autenticare le richieste",
+          "action": "Crea chiave"
+        },
+        "demoQuery": {
+          "title": "Fai la tua prima query",
+          "description": "Prova la query demo o fai una richiesta API",
+          "action": "Prova demo"
+        },
+        "viewTrace": {
+          "title": "Visualizza una traccia",
+          "description": "Comprendi come funziona la ricerca con il tracciamento completo",
+          "action": "Visualizza tracce"
+        },
+        "installSdk": {
+          "title": "Installa SDK",
+          "description": "Aggiungi Seizn al tuo progetto con npm o pip",
+          "action": "Visualizza SDK"
+        }
+      }
+    }
+  },
+  "pricingPage": {
+    "title": "Prezzi",
+    "subtitle": "Prezzi semplici e trasparenti. Inizia gratis, scala man mano che cresci.",
+    "faq": {
+      "title": "Domande Frequenti",
+      "subtitle": "Tutto quello che devi sapere su Seizn",
+      "questions": [
+        {
+          "q": "Cos'e la Memoria IA e in cosa differisce da RAG?",
+          "a": "La Memoria IA e un archivio persistente che ricorda preferenze utente, fatti e contesto tra le sessioni. A differenza di RAG che recupera documenti statici, Seizn estrae e aggiorna dinamicamente le memorie dalle conversazioni, creando una base di conoscenza vivente."
+        },
+        {
+          "q": "Dove vengono archiviati i miei dati?",
+          "a": "Tutti i dati sono archiviati su server sicuri negli USA (AWS) con crittografia end-to-end. Siamo conformi a GDPR e CCPA. Puoi richiedere la cancellazione completa dei dati in qualsiasi momento."
+        },
+        {
+          "q": "Come inizio?",
+          "a": "1) Registrati gratis, 2) Crea una chiave API, 3) Installa l'SDK (npm install @seizn/sdk), 4) Aggiungi memorie con 3 righe di codice."
+        },
+        {
+          "q": "Cosa succede se supero i limiti del mio piano?",
+          "a": "Ti avvisiamo all'80%. Se superi, le chiamate API continuano con priorita ridotta. Aggiorna in qualsiasi momento per un aumento istantaneo del limite."
+        },
+        {
+          "q": "Posso eliminare memorie specifiche?",
+          "a": "Si. Elimina singole memorie, elimina in massa per tag o cancella tutto. I dati eliminati vengono rimossi entro 24 ore."
+        },
+        {
+          "q": "Quali modelli IA sono supportati?",
+          "a": "Qualsiasi modello: GPT-4, Claude, Gemini, Llama. SDK per JS/TS, Python, API REST. Funziona con LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "C'e una prova gratuita?",
+          "a": "Il piano gratuito e permanente: 10.000 memorie, 1.000 chiamate API/mese. Nessuna carta di credito richiesta."
+        },
+        {
+          "q": "Quanto e veloce il recupero?",
+          "a": "Meno di 50ms in media. Ricerca ibrida vettoriale + grafo con indici ottimizzati."
+        }
+      ],
+      "stillQuestions": "Hai ancora domande?",
+      "contactUs": "Contattaci a"
+    }
+  },
+  "serviceSelector": {
+    "title": "Scegli la Tua Esperienza",
+    "subtitle": "Due modi per sfruttare la potenza della memoria IA",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Chat Multi-IA",
+      "description": "Chatta con GPT-4, Claude, Gemini e altri - tutti con memoria persistente che ti ricorda.",
+      "features": [
+        "Accedi a tutti i principali modelli IA in un unico posto",
+        "Le tue preferenze ricordate tra le sessioni",
+        "Cambio di contesto senza problemi tra i modelli"
+      ],
+      "cta": "Prova Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API di Memoria",
+      "description": "Dai alle tue applicazioni IA memoria persistente con la nostra API pensata per sviluppatori.",
+      "features": [
+        "API REST e SDK semplici",
+        "Tempo di recupero inferiore a 50ms",
+        "Sicurezza di livello enterprise"
+      ],
+      "cta": "Esplora API",
+      "badge": "Disponibile Ora"
+    },
+    "footer": "Parte delle stagioni di Seizn - memoria IA per ogni esigenza"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Una Chat.",
+    "titleHighlight": "Tutta l'IA.",
+    "subtitle": "Indipendentemente da quale scegli,\ntutti ti ricordano.",
+    "startChatting": "Inizia a Chattare",
+    "viewPricing": "Visualizza Prezzi",
+    "features": {
+      "title": "Perche Spring?",
+      "subtitle": "Il meglio di ogni IA, unificato.",
+      "multiModel": {
+        "title": "Accesso Multi-Modello",
+        "description": "Passa tra GPT-4, Claude, Gemini, Llama e altri. Scegli il modello migliore per ogni attivita."
+      },
+      "persistentMemory": {
+        "title": "Memoria Persistente",
+        "description": "Le tue preferenze, contesto e cronologia sono mantenuti in ogni conversazione e ogni modello."
+      },
+      "freeGenerosity": {
+        "title": "Piano Gratuito Livello Cursor",
+        "description": "Utilizzo gratuito generoso. La maggior parte degli utenti non ha mai bisogno di pagare. Pro a $9,99/mese per utenti avanzati."
+      }
+    },
+    "pricing": {
+      "title": "Prezzi Semplici",
+      "free": {
+        "name": "Gratuito",
+        "price": "$0",
+        "period": "Per sempre",
+        "features": [
+          "Tutti i modelli IA",
+          "Memoria tra le sessioni",
+          "App web e mobile"
+        ],
+        "cta": "Inizia Gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "al mese",
+        "badge": "Miglior Valore",
+        "features": [
+          "Tutto del Gratuito",
+          "Accesso prioritario",
+          "Controlli memoria avanzati",
+          "Accesso API"
+        ],
+        "cta": "Passa a Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Ricerca che puoi debuggare.",
+    "heroSubtitle": "Stack di ricerca integrato con tracciabilita, valutazione e governance incorporate. Una richiesta = risultati + traccia + costo.",
+    "firstRetrievalComplete": "Primo recupero completato",
+    "copySnippetHint": "Copia lo snippet qui sotto per riprodurre",
+    "copySnippetTitle": "Copia questo snippet",
+    "copySnippetSubtitle": "Generato dalle tue impostazioni esatte sopra",
+    "whySeizn": {
+      "title": "Perche Seizn vs LangChain + Pinecone?",
+      "subtitle": "Smetti di incollare insieme strumenti frammentati. Ottieni tutto cio di cui hai bisogno in uno stack integrato.",
+      "tracingTitle": "Tracing + Eval Integrati",
+      "tracingDesc": "Ogni richiesta viene tracciata di default. Esegui valutazioni, rileva regressioni e debugga problemi in produzione senza aggiungere LangSmith o logging personalizzato.",
+      "tracingBadge": "Default ON",
+      "autopilotTitle": "Autopilot Consapevole del Budget",
+      "autopilotDesc": "Imposta un budget di latenza o costo, e Autopilot sceglie automaticamente la strategia di recupero ottimale. Nessuna regolazione manuale richiesta.",
+      "autopilotBadge": "Opzionale",
+      "governanceTitle": "Governance + Log di Audit",
+      "governanceDesc": "Rilevamento PII, forget conforme GDPR e tracce di audit complete. Costruito per team che necessitano conformita, non aggiunto dopo.",
+      "governanceBadge": "Default per Team",
+      "lessGlueTitle": "Meno Parti Mobili",
+      "lessGlueDesc": "Niente piu giocoleria tra LangChain + Pinecone + LangSmith + filtri PII personalizzati. Un SDK, una dashboard, una fattura.",
+      "lessGlueBadge": "Meno Codice Colla"
+    },
+    "trust": {
+      "security": "RLS + Hashing Chiavi",
+      "securityDesc": "Sicuro di default",
+      "rateLimits": "Limiti di Frequenza",
+      "rateLimitsDesc": "Avvisi utilizzo",
+      "auditLogs": "Log di Audit",
+      "auditLogsDesc": "Tracciabilita completa"
+    },
+    "pricingCta": {
+      "title": "Prezzi semplici e trasparenti",
+      "subtitle": "Inizia gratis, scala man mano che cresci. Nessun costo nascosto.",
+      "viewPricing": "Visualizza Prezzi",
+      "contactSales": "Contatta le Vendite"
+    },
+    "nav": {
+      "docs": "Documentazione",
+      "pricing": "Prezzi",
+      "enterprise": "Enterprise",
+      "getApiKey": "Ottieni Chiave API",
+      "tryDemo": "Prova Demo"
+    },
+    "requestBuilder": {
+      "title": "Costruttore di Richieste",
+      "query": "Query",
+      "queryPlaceholder": "Inserisci la tua query di ricerca...",
+      "tryExamples": "Vedi esempi",
+      "dataset": "Dataset",
+      "latencyBudget": "Budget latenza",
+      "fast": "veloce",
+      "thorough": "approfondito",
+      "topK": "Top K",
+      "results": "risultati",
+      "features": "Funzionalita",
+      "hybridSearch": "Ricerca Ibrida",
+      "hybridSearchDesc": "Combina vettoriale + parola chiave",
+      "rerank": "Riordina",
+      "rerankDesc": "Ri-punteggia con cross-encoder",
+      "answerContract": "Contratto Risposta",
+      "answerContractDesc": "Valida qualita risposta",
+      "running": "In esecuzione...",
+      "runQuery": "Esegui Query",
+      "datasets": {
+        "techDocs": "Documentazione Tecnica",
+        "legalContracts": "Contratti Legali",
+        "researchPapers": "Articoli di Ricerca"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Ricerca in corso...",
+      "noResults": "Esegui una query per vedere i risultati",
+      "score": "Punteggio"
+    },
+    "tracePanel": {
+      "tracing": "Tracciamento pipeline...",
+      "noTrace": "Esegui una query per vedere il tracciamento",
+      "latency": "Latenza",
+      "cost": "Costo",
+      "tokens": "Token",
+      "vectorOps": "Ops Vettoriali",
+      "cached": "in cache",
+      "model": "Modello",
+      "input": "Input",
+      "output": "Output"
+    },
+    "tabs": {
+      "results": "Risultati",
+      "trace": "Traccia"
+    }
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "Pannello di Controllo",
+      "getStarted": "Inizia"
+    },
+    "sidebar": {
+      "overview": "Panoramica",
+      "gettingStarted": "Primi passi",
+      "whenToUse": "Quando usare",
+      "quickStart": "Avvio rapido",
+      "authentication": "Autenticazione",
+      "concepts": "Concetti",
+      "memoryObject": "Oggetto memoria",
+      "namespaceScope": "Namespace e Scope",
+      "bestPractices": "Best practice",
+      "apiReference": "Riferimento API",
+      "endpoints": "Endpoint",
+      "rateLimits": "Limiti di frequenza",
+      "errorCodes": "Codici di errore",
+      "resources": "Risorse",
+      "security": "Sicurezza",
+      "sdks": "SDK",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "title": "Documentazione API",
+      "subtitle": "Tutto cio di cui hai bisogno per integrare Seizn nelle tue applicazioni. Aggiungi memoria persistente alla tua IA con poche righe di codice."
+    },
+    "quickStart": {
+      "title": "Avvio Rapido",
+      "description": "Ottieni la tua chiave API dal",
+      "dashboardLink": "pannello di controllo",
+      "then": ", poi inizia a fare richieste:"
+    },
+    "authentication": {
+      "title": "Autenticazione",
+      "description": "Tutte le richieste API richiedono una chiave API passata nell'header",
+      "header": "x-api-key",
+      "headerSuffix": ".",
+      "securityTitle": "Sicurezza:",
+      "securityText": "Mantieni segrete le tue chiavi API. Non esporle mai nel codice lato client. Usa variabili d'ambiente o un proxy backend."
+    },
+    "endpoints": {
+      "title": "Endpoint API",
+      "requestBody": "Corpo della richiesta",
+      "queryParams": "Parametri query",
+      "response": "Risposta",
+      "postMemories": {
+        "description": "Aggiungi un nuovo ricordo all'archivio memoria dell'utente.",
+        "content": "string (obbligatorio) - Il contenuto della memoria",
+        "memoryType": "string - Tipo: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tag per la categorizzazione",
+        "namespace": "string - Namespace per l'organizzazione (default: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - ID sessione per memorie con scope sessione",
+        "agentId": "string - ID agente per memorie con scope agente"
+      },
+      "getMemories": {
+        "description": "Cerca memorie usando similarita semantica.",
+        "query": "string (obbligatorio) - Query di ricerca",
+        "limit": "number - Risultati max (default: 10, max: 100)",
+        "threshold": "number - Soglia di similarita 0-1 (default: 0.7)",
+        "namespace": "string - Filtra per namespace"
+      },
+      "deleteMemories": {
+        "description": "Elimina memorie tramite i loro ID.",
+        "ids": "string (obbligatorio) - ID memorie separati da virgola"
+      },
+      "extract": {
+        "description": "Estrae e archivia memorie da una conversazione usando IA.",
+        "conversation": "string (obbligatorio) - Il testo della conversazione da cui estrarre memorie",
+        "model": "string - Modello IA: haiku (piu veloce) o sonnet (migliore) (default: haiku)",
+        "autoStore": "boolean - Archivia automaticamente le memorie estratte (default: true)",
+        "namespace": "string - Namespace per le memorie archiviate (default: \"default\")"
+      },
+      "query": {
+        "description": "Ottieni risposte generate dall'IA usando memorie rilevanti come contesto (RAG).",
+        "queryParam": "string (obbligatorio) - La domanda o prompt dell'utente",
+        "model": "string - Modello IA: haiku o sonnet (default: haiku)",
+        "topK": "number - Numero di memorie da usare come contesto (default: 5)",
+        "namespace": "string - Filtra memorie per namespace",
+        "includeMemories": "boolean - Includi memorie usate nella risposta (default: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "Limiti di Frequenza",
+      "plan": "Piano",
+      "dailyApiCalls": "Chiamate API giornaliere",
+      "maxMemories": "Memorie massime",
+      "apiKeys": "Chiavi API",
+      "free": "Gratuito",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "Enterprise",
+      "unlimited": "Illimitato",
+      "exceeded": "Quando superi il tuo limite di frequenza, l'API restituisce una risposta",
+      "response": "."
+    },
+    "errors": {
+      "title": "Codici di Errore",
+      "code": "Codice",
+      "description": "Descrizione",
+      "success": "Successo",
+      "badRequest": "Richiesta errata - Parametri mancanti o non validi",
+      "unauthorized": "Non autorizzato - Chiave API non valida o mancante",
+      "tooManyRequests": "Troppe richieste - Limite di frequenza superato",
+      "serverError": "Errore interno del server - Qualcosa e andato storto"
+    },
+    "security": {
+      "title": "Sicurezza e Governance",
+      "dataSecurityTitle": "Sicurezza dei dati",
+      "encryptionAtRest": "Crittografia a riposo:",
+      "encryptionAtRestDesc": "Tutti i dati crittografati con AES-256",
+      "encryptionInTransit": "Crittografia in transito:",
+      "encryptionInTransitDesc": "TLS 1.3 per tutte le connessioni",
+      "tenantIsolation": "Isolamento tenant:",
+      "tenantIsolationDesc": "Separazione completa dei dati tra account",
+      "apiKeyManagement": "Gestione chiavi API",
+      "keyRotation": "Rotazione chiavi:",
+      "keyRotationDesc": "Ruota le chiavi in qualsiasi momento dal pannello",
+      "keyExpiration": "Scadenza chiavi:",
+      "keyExpirationDesc": "Scadenza automatica dopo 90 giorni (configurabile)",
+      "usageTracking": "Monitoraggio utilizzo:",
+      "usageTrackingDesc": "Monitora l'utilizzo per chiave in tempo reale",
+      "dataRetention": "Conservazione ed eliminazione dati",
+      "export": "Esporta:",
+      "exportDesc": "Esporta tutti i tuoi dati in qualsiasi momento tramite API o pannello",
+      "deletion": "Eliminazione:",
+      "deletionDesc": "Eliminazione permanente senza conservazione dopo 30 giorni",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "Piena conformita con i diritti del soggetto dei dati"
+    },
+    "sdks": {
+      "title": "SDK",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. Tutti i diritti riservati."
+    },
+    "faqPage": {
+      "title": "Domande Frequenti",
+      "subtitle": "Domande comuni sull'API Seizn Memory, dai primi passi alle operazioni avanzate.",
+      "stillHaveQuestions": "Hai ancora domande?",
+      "stillHaveQuestionsDesc": "Consulta la nostra documentazione o contatta il nostro team di supporto.",
+      "readDocs": "Leggi Documentazione",
+      "contactSupport": "Contatta Supporto",
+      "categories": {
+        "all": "Tutto",
+        "gettingStarted": "Primi Passi",
+        "coreConcepts": "Concetti Base",
+        "searchRetrieval": "Ricerca e Recupero",
+        "extraction": "Estrazione",
+        "operations": "Operazioni",
+        "securityCompliance": "Sicurezza e Conformita"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Cos'e Seizn Memory e quale problema risolve?",
+          "answer": "Seizn Memory e un'infrastruttura di memoria IA che fornisce memoria persistente e ricercabile per applicazioni IA. A differenza dei database vettoriali che archiviano/ricercano solo vettori, Seizn include il layer di prodotto completo: estrazione memoria, gestione policy, gestione chiavi, eliminazione, log di audit e SDK. Risolve il problema di mantenere il contesto tra sessioni IA e abilitare esperienze IA personalizzate."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "In cosa differisce Seizn da database vettoriali come Pinecone o Weaviate?",
+          "answer": "I database vettoriali sono infrastruttura di archiviazione/ricerca per vettori. Seizn e un sistema di memoria completo costruito sopra, che fornisce: estrazione automatica di memoria dalle conversazioni, classificazione tipi di memoria, gestione namespace/scope, rotazione chiavi API, logging di audit, SDK e funzionalita di governance. Pensalo come 'infrastruttura di memoria' vs 'infrastruttura di ricerca'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Devo usare RAG per usare Seizn?",
+          "answer": "No. Il punto di partenza piu comune e: archivia memoria -> cerca -> inietta nel prompt. RAG (composizione automatica contesto + generazione risposta) e il passo successivo. Puoi iniziare semplice e aggiungere complessita secondo necessita."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Qual e il modo piu veloce per costruire un PoC?",
+          "answer": "1) POST /api/memories per archiviare una preferenza utente. 2) GET /api/memories per cercare. 3) Inietta i risultati nel tuo prompt LLM. 4) Dopo, aggiungi /api/extract per auto-estrazione e /api/query per risposte aumentate con memoria."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Cosa dovrei archiviare in /api/memories?",
+          "answer": "Archivia informazioni che rimangono valide tra conversazioni: preferenze (tono, lingua, formato), fatti (lavoro, strumenti, struttura progetto), istruzioni (\"riassumi sempre in tabelle\"), relazioni (\"Alice e la team leader\"). Evita di archiviare dati temporanei o specifici della sessione a meno che tu non usi scope sessione."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Quali dati NON dovrei archiviare?",
+          "answer": "Non archiviare mai: password, chiavi API, token, cookie di sessione (info auth), numeri previdenza sociale, numeri passaporto, conti bancari (PII), informazioni carte di credito (dati pagamento). Per dati temporanei, usa scope sessione con TTL se necessario."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Perche il namespace e importante?",
+          "answer": "Il namespace separa le memorie per progetto/tenant/ambiente. Senza, i dati si mescolano, la qualita di ricerca cala, e eliminazione/esportazione diventano difficili. Raccomandato: 'org:acme/app:chat/env:prod' o 'project:myapp/env:staging'. Non usare mai solo 'default' in produzione."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Quando dovrei usare scope (user/session/agent)?",
+          "answer": "user: Preferenze che si applicano globalmente a un utente. session: Obiettivi o contesto validi solo per questa conversazione. agent: Regole specifiche per un agente in un sistema multi-agente. Usare scope correttamente riduce la lunghezza del prompt e migliora la consistenza delle risposte."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Cosa sono i memory_types e perche sono importanti?",
+          "answer": "memory_type classifica le memorie: fact (info immutabile), preference (scelte utente), instruction (regole da seguire), relationship (connessioni persone/org), experience (eventi passati). Questo e l'asse piu potente per filtrare, eliminare e applicare policy."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Come funzionano threshold e limit?",
+          "answer": "limit: Numero di memorie candidate da recuperare (troppo basso = perdi rilevanti, troppo alto = contesto rumoroso). threshold: cutoff similarita 0-1 (piu alto = piu rigoroso). Inizia con limit=10, threshold=0.7. Se mancano memorie, abbassa threshold a 0.6 e alza limit a 20. Se risultati irrilevanti, alza threshold a 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Perche i miei risultati di ricerca sono irrilevanti?",
+          "answer": "Di solito e uno di: 1) namespace mescolati, 2) troppe memorie archiviate (rumore), 3) threshold troppo basso, 4) contenuto troppo astratto ('gli piacciono cose' vs fatti specifici). Soluzione: separa namespace, rendi contenuto specifico, alza threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "La qualita di ricerca e calata con la crescita delle memorie. Cosa faccio?",
+          "answer": "Aggiungi punteggio di importanza e mantieni solo memorie ad alta importanza. Usa TTL per auto-scadenza memorie vecchie. Periodicamente unisci memorie simili in riassunti. Separa namespace per ridurre l'ambito di ricerca."
+        },
+        {
+          "category": "extraction",
+          "question": "Come dovrei usare /api/extract?",
+          "answer": "Flusso raccomandato: 1) Chiama con auto_store=false per anteprima memorie estratte. 2) Mostra risultati all'utente per conferma. 3) Archivia solo memorie approvate. 4) Una volta testata la qualita di estrazione, passa a auto_store=true per automazione."
+        },
+        {
+          "category": "extraction",
+          "question": "Qual e la differenza tra model=haiku e model=sonnet?",
+          "answer": "haiku: Piu veloce, piu economico, buono per la maggior parte dei casi. sonnet: Piu preciso, migliore per estrazioni importanti (onboarding, contratti, policy). Usa haiku per estrazione massiva/iniziale, sonnet per scenari ad alto rischio."
+        },
+        {
+          "category": "operations",
+          "question": "Posso modificare una memoria dopo averla archiviata?",
+          "answer": "Si, ma il pattern raccomandato e: crea nuova memoria + elimina/archivia la vecchia. Questo approccio e migliore per tracce di audit e previene problemi di regressione."
+        },
+        {
+          "category": "operations",
+          "question": "Come elimino le memorie?",
+          "answer": "Due approcci: 1) Elimina per ID (preciso), 2) Elimina per namespace (pulizia massiva). Per enterprise/conformita, assicura 'eliminazione completa + log di audit'. Documenta chiaramente la tua policy di eliminazione."
+        },
+        {
+          "category": "operations",
+          "question": "Sto ricevendo 429 Too Many Requests. Cosa devo fare?",
+          "answer": "Hai raggiunto il limite di frequenza. Soluzioni: 1) Implementa backoff esponenziale (1s -> 2s -> 4s). 2) Metti in coda le richieste lato server. 3) Riduci frequenza richieste: cache query duplicate, operazioni batch, abbassa frequenza estrazione."
+        },
+        {
+          "category": "operations",
+          "question": "Come riduco i costi?",
+          "answer": "Maggiori driver di costo: 1) Frequenza estrazione - riduci chiamate. 2) Ambito ricerca - usa namespace per restringere. 3) Scelta modello - usa haiku per routine, sonnet per importante. 4) Cache - cache query ripetute. 5) Operazioni batch quando possibile."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Posso usare la chiave API nel browser (frontend)?",
+          "answer": "Non raccomandato - alto rischio di esposizione chiave. Chiama Seizn dal tuo server (Next.js Route Handler, Cloudflare Worker, funzione serverless) e fai che il browser chiami il tuo server. Non esporre mai chiavi API al codice lato client."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Quale documentazione necessita il mio team sicurezza/legale?",
+          "answer": "Vorranno: 1) Ambito dati (cosa viene archiviato/non archiviato), 2) Crittografia (a riposo: AES-256, in transito: TLS), 3) Metodo isolamento tenant, 4) Policy eliminazione/conservazione, 5) Accesso log di audit, 6) Policy rotazione/scadenza chiavi. Mantieni una pagina Sicurezza e Governance nei tuoi docs."
+        }
+      ]
+    },
+    "componentsPage": {
+      "title": "Componenti UI",
+      "subtitle": "Documentazione completa per la libreria di componenti UI di Seizn. Ogni componente include Props, esempi di utilizzo e best practice.",
+      "all": "Tutto",
+      "components": {
+        "graphCanvas": {
+          "description": "Componente canvas grafo principale usando React Flow. Renderizza nodi e archi con controlli interattivi, minimappa e pannello permessi."
+        },
+        "nodeRenderer": {
+          "description": "Renderer nodo personalizzato per visualizzazione grafi. Mostra tipo nodo, stato, permessi con aspetto stilizzato."
+        },
+        "edgeRenderer": {
+          "description": "Renderer arco personalizzato per connessioni grafo. Supporta archi diretti, non diretti e bidirezionali con styling personalizzato."
+        },
+        "graphControls": {
+          "description": "Pannello di controllo per filtraggio grafo e zoom. Filtra per tipo nodo, tipo arco e ricerca."
+        },
+        "permissionPanel": {
+          "description": "Pannello laterale che mostra informazioni dettagliate sui permessi per i nodi selezionati."
+        },
+        "explainPanel": {
+          "description": "Pannello espandibile che mostra spiegazione completa del recupero inclusa scomposizione punteggio e attribuzioni."
+        },
+        "scoreBreakdown": {
+          "description": "Scomposizione visiva dei componenti del punteggio di rilevanza (vettoriale, keyword, rerank, recency)."
+        },
+        "attributionList": {
+          "description": "Lista di attribuzioni sorgente che mostra quali documenti hanno contribuito al risultato."
+        },
+        "highlightedPassage": {
+          "description": "Passaggio testuale con span corrispondenti evidenziati (corrispondenza esatta, corrispondenza semantica, keyword, entita)."
+        },
+        "retOpsDashboard": {
+          "description": "Dashboard principale per monitoraggio operazioni di recupero con auto-refresh e selezione periodo."
+        },
+        "metricsOverview": {
+          "description": "Card panoramica che mostrano metriche chiave: QPS, latenza, cache hit rate, error rate, MRR, groundedness."
+        },
+        "queryVolumeChart": {
+          "description": "Grafico a linee che mostra volume query nel tempo con distribuzione tipi di ricerca."
+        },
+        "latencyDistribution": {
+          "description": "Grafico a barre percentili latenza e visualizzazione trend con indicatore conformita SLO."
+        },
+        "qualityTrend": {
+          "description": "Grafico ad area che mostra trend qualita ricerca (MRR, nDCG, groundedness) con precision/recall a K."
+        },
+        "topQueries": {
+          "description": "Lista classificata delle query piu frequenti con latenza, cache hit rate e conteggio risultati."
+        },
+        "alertsPanel": {
+          "description": "Pannello gestione alert con filtraggio severita, acknowledgment e tracking stato."
+        }
+      },
+      "props": "Props",
+      "usage": "Esempio di Utilizzo",
+      "propName": "Nome",
+      "propType": "Tipo",
+      "propDefault": "Default",
+      "propDescription": "Descrizione",
+      "copy": "Copia",
+      "copied": "Copiato!",
+      "categories": {
+        "graph": {
+          "title": "Componenti Grafo",
+          "description": "Visualizzazione grafo interattiva per mappatura permessi e relazioni"
+        },
+        "explain": {
+          "title": "Componenti Explain",
+          "description": "Visualizzazione spiegabilita e attribuzione per risultati RAG"
+        },
+        "retops": {
+          "title": "Componenti RetOps",
+          "description": "Dashboard monitoraggio operazioni di recupero e analytics"
+        }
+      }
+    },
+    "search": {
+      "placeholder": "Cerca nella documentazione...",
+      "buttonText": "Cerca docs...",
+      "noResults": "Nessun risultato trovato per",
+      "hint": "Ricerche rapide:",
+      "navigate": "naviga",
+      "select": "seleziona"
+    }
+  }
+}
