@@ -1126,120 +1126,105 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
-      "nav": {
-        "dashboard": "Dashboard"
-      },
       "categories": {
-        "all": "All",
-        "gettingStarted": "Getting Started",
-        "coreConcepts": "Core Concepts",
-        "searchRetrieval": "Search & Retrieval",
-        "extraction": "Extraction",
-        "operations": "Operations",
-        "security": "Security & Compliance"
+        "gettingStarted": "Bat dau",
+        "coreConcepts": "Khai niem cot loi",
+        "searchRetrieval": "Tim kiem va truy xuat",
+        "extraction": "Trich xuat du lieu",
+        "operations": "Thao tac",
+        "security": "Bao mat va quyen rieng tu"
       },
       "gettingStarted": {
         "q1": {
-          "question": "What is Seizn Memory and what problem does it solve?",
-          "answer": "Seizn Memory is an AI memory infrastructure that provides persistent, searchable memory for AI applications. Unlike vector databases that only store/search vectors, Seizn includes the full product layer: memory extraction, policy management, key management, deletion, audit logs, and SDKs. It solves the problem of maintaining context across AI sessions and enabling personalized AI experiences."
+          "question": "Seizn Spring la gi?",
+          "answer": "Seizn Spring la mot lop bo nho AI cho phep ung dung cua ban ghi nho tuy chon nguoi dung, cuoc tro chuyen va ngu canh. No cung cap API don gian de luu tru, tim kiem va truy xuat ky uc."
         },
         "q2": {
-          "question": "How is Seizn different from vector databases like Pinecone or Weaviate?",
-          "answer": "Vector databases are storage/search infrastructure for vectors. Seizn is a complete memory system built on top of that, providing: automatic memory extraction from conversations, memory type classification, namespace/scope management, API key rotation, audit logging, SDKs, and governance features. Think of it as 'memory infrastructure' vs 'search infrastructure'."
+          "question": "Lam the nao de bat dau voi Spring?",
+          "answer": "Truoc tien tao khoa API trong bang dieu khien. Sau do cai dat SDK voi npm, yarn hoac pip. Khoi tao client voi khoa API cua ban va ban da san sang."
         },
         "q3": {
-          "question": "Do I need RAG to use Seizn?",
-          "answer": "No. The most common starting point is: store memory → search → inject into prompt. RAG (automatic context composition + response generation) is the next step. You can start simple and add complexity as needed."
-        },
-        "q4": {
-          "question": "What's the fastest way to build a PoC?",
-          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
+          "question": "Nhung ngon ngu lap trinh nao duoc ho tro?",
+          "answer": "Chung toi chinh thuc ho tro JavaScript/TypeScript (Node.js) va Python. Doi voi cac ngon ngu khac, ban co the su dung truc tiep REST API."
         }
       },
       "coreConcepts": {
         "q1": {
-          "question": "What should I store in /api/memories?",
-          "answer": "Store information that remains valid across conversations: preferences (tone, language, format), facts (job, tools, project structure), instructions (\"always summarize in tables\"), relationships (\"Alice is the team lead\"). Avoid storing temporary or session-specific data unless using session scope."
+          "question": "Ky uc la gi?",
+          "answer": "Ky uc la mot don vi thong tin duoc luu tru trong Spring. No co the la tuy chon nguoi dung, su kien, doan hoi thoai hoac bat ky noi dung van ban nao."
         },
         "q2": {
-          "question": "What data should I NOT store?",
-          "answer": "Never store: passwords, API keys, tokens, session cookies (auth info), SSN, passport numbers, bank accounts (PII), credit card info (payment data). For temporary data, use session scope with TTL if needed."
+          "question": "The hoat dong nhu the nao?",
+          "answer": "The giup to chuc va loc ky uc. Ban co the gan the khi them ky uc va su dung chung de loc ket qua tim kiem."
         },
         "q3": {
-          "question": "Why is namespace important?",
-          "answer": "Namespace separates memories by project/tenant/environment. Without it, data gets mixed, search quality drops, and deletion/export becomes painful. Recommended: 'org:acme/app:chat/env:prod' or 'project:myapp/env:staging'. Never use just 'default' in production."
-        },
-        "q4": {
-          "question": "When should I use scope (user/session/agent)?",
-          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
-        },
-        "q5": {
-          "question": "What are memory_types and why do they matter?",
-          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
+          "question": "Tham so user_id la gi?",
+          "answer": "user_id lien ket ky uc voi mot nguoi dung cu the, cho phep trai nghiem ca nhan hoa cho moi nguoi dung."
         }
       },
       "searchRetrieval": {
         "q1": {
-          "question": "How do threshold and limit work?",
-          "answer": "limit: Number of candidate memories to retrieve (too low = miss relevant ones, too high = noisy context). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7. If missing memories, lower threshold to 0.6 and raise limit to 20. If getting irrelevant results, raise threshold to 0.75-0.8."
+          "question": "Tim kiem ngu nghia hoat dong nhu the nao?",
+          "answer": "Spring su dung nhung vector de hieu y nghia cua ky uc. Tim kiem tim thay noi dung tuong tu ve mat ngu nghia ngay ca khi cac tu chinh xac khong khop."
         },
         "q2": {
-          "question": "Why are my search results irrelevant?",
-          "answer": "Usually one of: 1) namespaces are mixed, 2) too many memories stored (noise), 3) threshold too low, 4) content is too abstract ('likes things' vs specific facts). Fix: separate namespaces, make content specific, raise threshold."
+          "question": "Cac tham so topK va threshold la gi?",
+          "answer": "topK gioi han so luong ket qua. threshold thiet lap diem tuong dong toi thieu (0-1) de loc cac ket qua it lien quan hon."
         },
         "q3": {
-          "question": "Search quality dropped as memories grew. What do I do?",
-          "answer": "Add importance scoring and keep only high-importance memories. Use TTL to auto-expire old memories. Periodically merge similar memories into summaries. Separate namespaces to reduce search scope."
+          "question": "Toi co the ket hop tim kiem va loc the khong?",
+          "answer": "Co, ban co the su dung tim kiem ngu nghia va loc the cung nhau de tinh chinh ket qua."
         }
       },
       "extraction": {
         "q1": {
-          "question": "How should I use /api/extract?",
-          "answer": "Recommended flow: 1) Call with auto_store=false to preview extracted memories. 2) Show results to user for confirmation. 3) Store only approved memories. 4) Once extraction quality is proven, switch to auto_store=true for automation."
+          "question": "Trich xuat tu dong la gi?",
+          "answer": "Trich xuat tu dong phan tich cac cuoc tro chuyen va tu dong xac dinh thong tin dang nho nhu tuy chon va su kien quan trong."
         },
         "q2": {
-          "question": "What's the difference between model=haiku and model=sonnet?",
-          "answer": "haiku: Faster, cheaper, good for most cases. sonnet: More accurate, better for important extractions (onboarding, contracts, policies). Use haiku for bulk/initial extraction, sonnet for high-stakes scenarios."
+          "question": "Trich xuat ho tro nhung loai noi dung nao?",
+          "answer": "Trich xuat hoat dong tren cac cuoc tro chuyen, email va bat ky noi dung van ban nao. No xac dinh tuy chon, su kien, y kien va cac muc co the hanh dong."
+        },
+        "q3": {
+          "question": "Toi co the tuy chinh cac quy tac trich xuat khong?",
+          "answer": "Co, ban co the xac dinh cac mau trich xuat tuy chinh cho cac truong hop su dung cu the cua ban."
         }
       },
       "operations": {
         "q1": {
-          "question": "Can I modify a memory after storing it?",
-          "answer": "Yes, but the recommended pattern is: create new memory + delete/archive old one. This approach is better for audit trails and prevents regression issues."
+          "question": "Lam the nao de cap nhat ky uc hien co?",
+          "answer": "Su dung phuong thuc update voi ID ky uc va noi dung moi. Ban cung co the cap nhat the va metadata."
         },
         "q2": {
-          "question": "How do I delete memories?",
-          "answer": "Two approaches: 1) Delete by ID (precise), 2) Delete by namespace (bulk cleanup). For enterprise/compliance, ensure 'complete deletion + audit log'. Document your deletion policy clearly."
+          "question": "Lam the nao de xoa ky uc?",
+          "answer": "Su dung phuong thuc delete voi ID ky uc. Ban cung co the su dung xoa hang loat voi cac bo loc."
         },
         "q3": {
-          "question": "I'm getting 429 Too Many Requests. What should I do?",
-          "answer": "You've hit the rate limit. Solutions: 1) Implement exponential backoff (1s → 2s → 4s). 2) Queue requests server-side. 3) Reduce request frequency: cache duplicate queries, batch operations, lower extract frequency."
-        },
-        "q4": {
-          "question": "How do I reduce costs?",
-          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
+          "question": "Co gioi han toc do khong?",
+          "answer": "Co, gioi han khac nhau tuy theo goi. Goi mien phi cho phep 100 yeu cau moi phut. Xem trang gia de biet chi tiet."
         }
       },
       "security": {
         "q1": {
-          "question": "Can I use the API key in browser (frontend)?",
-          "answer": "Not recommended - high risk of key exposure. Call Seizn from your server (Next.js Route Handler, Cloudflare Worker, serverless function) and have the browser call your server. Never expose API keys to client-side code."
+          "question": "Du lieu cua toi duoc luu tru o dau?",
+          "answer": "Du lieu duoc luu tru trong co so ha tang dam may an toan voi ma hoa khi nghi va khi truyen."
         },
         "q2": {
-          "question": "What documentation does my security/legal team need?",
-          "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+          "question": "Spring co tuan thu GDPR khong?",
+          "answer": "Co, chung toi cung cap cac cong cu tuan thu GDPR bao gom xuat du lieu, yeu cau xoa va thoa thuan xu ly."
+        },
+        "q3": {
+          "question": "Lam the nao de bao mat khoa API cua toi?",
+          "answer": "Khong bao gio de lo khoa API trong ma client. Su dung bien moi truong va chi thuc hien cac cuoc goi API phia may chu."
+        },
+        "q4": {
+          "question": "Nguoi dung co the yeu cau xoa du lieu khong?",
+          "answer": "Co, ban co the xoa tat ca ky uc theo user_id qua API de ho tro cac yeu cau quyen rieng tu."
+        },
+        "q5": {
+          "question": "Ban co chung nhan SOC 2 khong?",
+          "answer": "Chung toi dang trong qua trinh chung nhan SOC 2. Lien he voi nhom ban hang cua chung toi de biet them thong tin."
         }
-      },
-      "cta": {
-        "title": "Still have questions?",
-        "subtitle": "Check out our documentation or get in touch with our support team.",
-        "readDocs": "Read Docs",
-        "contactSupport": "Contact Support"
-      },
-      "footer": {
-        "rights": "All rights reserved."
       }
     }
   }

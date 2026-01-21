@@ -1126,120 +1126,105 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
-      "nav": {
-        "dashboard": "Dashboard"
-      },
       "categories": {
-        "all": "All",
-        "gettingStarted": "Getting Started",
-        "coreConcepts": "Core Concepts",
-        "searchRetrieval": "Search & Retrieval",
-        "extraction": "Extraction",
-        "operations": "Operations",
-        "security": "Security & Compliance"
+        "gettingStarted": "Pierwsze kroki",
+        "coreConcepts": "Kluczowe koncepcje",
+        "searchRetrieval": "Wyszukiwanie i pobieranie",
+        "extraction": "Ekstrakcja danych",
+        "operations": "Operacje",
+        "security": "Bezpieczenstwo i prywatnosc"
       },
       "gettingStarted": {
         "q1": {
-          "question": "What is Seizn Memory and what problem does it solve?",
-          "answer": "Seizn Memory is an AI memory infrastructure that provides persistent, searchable memory for AI applications. Unlike vector databases that only store/search vectors, Seizn includes the full product layer: memory extraction, policy management, key management, deletion, audit logs, and SDKs. It solves the problem of maintaining context across AI sessions and enabling personalized AI experiences."
+          "question": "Czym jest Seizn Spring?",
+          "answer": "Seizn Spring to warstwa pamieci AI, ktora pozwala aplikacjom zapamietywac preferencje uzytkownikow, rozmowy i kontekst. Zapewnia proste API do przechowywania, wyszukiwania i pobierania wspomnien."
         },
         "q2": {
-          "question": "How is Seizn different from vector databases like Pinecone or Weaviate?",
-          "answer": "Vector databases are storage/search infrastructure for vectors. Seizn is a complete memory system built on top of that, providing: automatic memory extraction from conversations, memory type classification, namespace/scope management, API key rotation, audit logging, SDKs, and governance features. Think of it as 'memory infrastructure' vs 'search infrastructure'."
+          "question": "Jak zaczac ze Spring?",
+          "answer": "Najpierw utworz klucz API w panelu. Nastepnie zainstaluj SDK przez npm, yarn lub pip. Zainicjuj klienta kluczem API i jestes gotowy."
         },
         "q3": {
-          "question": "Do I need RAG to use Seizn?",
-          "answer": "No. The most common starting point is: store memory → search → inject into prompt. RAG (automatic context composition + response generation) is the next step. You can start simple and add complexity as needed."
-        },
-        "q4": {
-          "question": "What's the fastest way to build a PoC?",
-          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
+          "question": "Jakie jezyki programowania sa obslugiwane?",
+          "answer": "Oficjalnie wspieramy JavaScript/TypeScript (Node.js) i Python. Dla innych jezykow mozna uzywac REST API bezposrednio."
         }
       },
       "coreConcepts": {
         "q1": {
-          "question": "What should I store in /api/memories?",
-          "answer": "Store information that remains valid across conversations: preferences (tone, language, format), facts (job, tools, project structure), instructions (\"always summarize in tables\"), relationships (\"Alice is the team lead\"). Avoid storing temporary or session-specific data unless using session scope."
+          "question": "Czym jest wspomnienie?",
+          "answer": "Wspomnienie to jednostka informacji przechowywana w Spring. Moze to byc preferencja uzytkownika, fakt, fragment rozmowy lub dowolna tresc tekstowa."
         },
         "q2": {
-          "question": "What data should I NOT store?",
-          "answer": "Never store: passwords, API keys, tokens, session cookies (auth info), SSN, passport numbers, bank accounts (PII), credit card info (payment data). For temporary data, use session scope with TTL if needed."
+          "question": "Jak dzialaja tagi?",
+          "answer": "Tagi pomagaja organizowac i filtrowac wspomnienia. Mozesz przypisywac tagi podczas dodawania wspomnien i uzywac ich do filtrowania wynikow wyszukiwania."
         },
         "q3": {
-          "question": "Why is namespace important?",
-          "answer": "Namespace separates memories by project/tenant/environment. Without it, data gets mixed, search quality drops, and deletion/export becomes painful. Recommended: 'org:acme/app:chat/env:prod' or 'project:myapp/env:staging'. Never use just 'default' in production."
-        },
-        "q4": {
-          "question": "When should I use scope (user/session/agent)?",
-          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
-        },
-        "q5": {
-          "question": "What are memory_types and why do they matter?",
-          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
+          "question": "Czym jest parametr user_id?",
+          "answer": "user_id laczy wspomnienia z konkretnym uzytkownikiem, umozliwiajac spersonalizowane doswiadczenia dla kazdego uzytkownika."
         }
       },
       "searchRetrieval": {
         "q1": {
-          "question": "How do threshold and limit work?",
-          "answer": "limit: Number of candidate memories to retrieve (too low = miss relevant ones, too high = noisy context). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7. If missing memories, lower threshold to 0.6 and raise limit to 20. If getting irrelevant results, raise threshold to 0.75-0.8."
+          "question": "Jak dziala wyszukiwanie semantyczne?",
+          "answer": "Spring uzywa embeddingw wektorowych do zrozumienia znaczenia wspomnien. Wyszukiwanie znajduje semantycznie podobna tresc, nawet jesli dokladne slowa nie pasuja."
         },
         "q2": {
-          "question": "Why are my search results irrelevant?",
-          "answer": "Usually one of: 1) namespaces are mixed, 2) too many memories stored (noise), 3) threshold too low, 4) content is too abstract ('likes things' vs specific facts). Fix: separate namespaces, make content specific, raise threshold."
+          "question": "Czym sa parametry topK i threshold?",
+          "answer": "topK ogranicza liczbe wynikow. threshold ustawia minimalny prog podobienstwa (0-1) do filtrowania mniej istotnych wynikow."
         },
         "q3": {
-          "question": "Search quality dropped as memories grew. What do I do?",
-          "answer": "Add importance scoring and keep only high-importance memories. Use TTL to auto-expire old memories. Periodically merge similar memories into summaries. Separate namespaces to reduce search scope."
+          "question": "Czy moge laczyc wyszukiwanie z filtrowaniem tagow?",
+          "answer": "Tak, mozesz uzyc wyszukiwania semantycznego i filtrowania tagow razem, aby zawezic wyniki."
         }
       },
       "extraction": {
         "q1": {
-          "question": "How should I use /api/extract?",
-          "answer": "Recommended flow: 1) Call with auto_store=false to preview extracted memories. 2) Show results to user for confirmation. 3) Store only approved memories. 4) Once extraction quality is proven, switch to auto_store=true for automation."
+          "question": "Czym jest automatyczna ekstrakcja?",
+          "answer": "Automatyczna ekstrakcja analizuje rozmowy i automatycznie identyfikuje pamietne informacje, takie jak preferencje i wazne fakty."
         },
         "q2": {
-          "question": "What's the difference between model=haiku and model=sonnet?",
-          "answer": "haiku: Faster, cheaper, good for most cases. sonnet: More accurate, better for important extractions (onboarding, contracts, policies). Use haiku for bulk/initial extraction, sonnet for high-stakes scenarios."
+          "question": "Jakie typy tresci obsluguje ekstrakcja?",
+          "answer": "Ekstrakcja dziala na rozmowach, e-mailach i dowolnej tresci tekstowej. Identyfikuje preferencje, fakty, opinie i elementy do dzialania."
+        },
+        "q3": {
+          "question": "Czy moge dostosowac reguly ekstrakcji?",
+          "answer": "Tak, mozesz zdefiniowac wlasne wzorce ekstrakcji dla swoich konkretnych przypadkow uzycia."
         }
       },
       "operations": {
         "q1": {
-          "question": "Can I modify a memory after storing it?",
-          "answer": "Yes, but the recommended pattern is: create new memory + delete/archive old one. This approach is better for audit trails and prevents regression issues."
+          "question": "Jak zaktualizowac istniejace wspomnienie?",
+          "answer": "Uzyj metody update z ID wspomnienia i nowa trescia. Mozesz takze aktualizowac tagi i metadane."
         },
         "q2": {
-          "question": "How do I delete memories?",
-          "answer": "Two approaches: 1) Delete by ID (precise), 2) Delete by namespace (bulk cleanup). For enterprise/compliance, ensure 'complete deletion + audit log'. Document your deletion policy clearly."
+          "question": "Jak usunac wspomnienia?",
+          "answer": "Uzyj metody delete z ID wspomnienia. Mozesz takze uzyc usuwania masowego z filtrami."
         },
         "q3": {
-          "question": "I'm getting 429 Too Many Requests. What should I do?",
-          "answer": "You've hit the rate limit. Solutions: 1) Implement exponential backoff (1s → 2s → 4s). 2) Queue requests server-side. 3) Reduce request frequency: cache duplicate queries, batch operations, lower extract frequency."
-        },
-        "q4": {
-          "question": "How do I reduce costs?",
-          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
+          "question": "Czy sa limity zapytan?",
+          "answer": "Tak, limity roznia sie w zaleznosci od planu. Darmowy plan pozwala na 100 zapytan na minute. Zobacz strone cennika po szczegoly."
         }
       },
       "security": {
         "q1": {
-          "question": "Can I use the API key in browser (frontend)?",
-          "answer": "Not recommended - high risk of key exposure. Call Seizn from your server (Next.js Route Handler, Cloudflare Worker, serverless function) and have the browser call your server. Never expose API keys to client-side code."
+          "question": "Gdzie przechowywane sa moje dane?",
+          "answer": "Dane sa przechowywane w bezpiecznej infrastrukturze chmurowej z szyfrowaniem w spoczynku i podczas przesylania."
         },
         "q2": {
-          "question": "What documentation does my security/legal team need?",
-          "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+          "question": "Czy Spring jest zgodny z RODO?",
+          "answer": "Tak, zapewniamy narzedzia zgodnosci z RODO, w tym eksport danych, zadania usuniecia i umowy o przetwarzaniu."
+        },
+        "q3": {
+          "question": "Jak zabezpieczyc moj klucz API?",
+          "answer": "Nigdy nie eksponuj kluczy API w kodzie klienta. Uzywaj zmiennych srodowiskowych i wykonuj tylko wywolania API po stronie serwera."
+        },
+        "q4": {
+          "question": "Czy uzytkownicy moga zadac usuniecia danych?",
+          "answer": "Tak, mozesz usunac wszystkie wspomnienia wedlug user_id przez API, aby obslugiwac zadania prywatnosci."
+        },
+        "q5": {
+          "question": "Czy macie certyfikat SOC 2?",
+          "answer": "Jestesmy w trakcie certyfikacji SOC 2. Skontaktuj sie z naszym zespolem sprzedazy po wiecej informacji."
         }
-      },
-      "cta": {
-        "title": "Still have questions?",
-        "subtitle": "Check out our documentation or get in touch with our support team.",
-        "readDocs": "Read Docs",
-        "contactSupport": "Contact Support"
-      },
-      "footer": {
-        "rights": "All rights reserved."
       }
     }
   }
