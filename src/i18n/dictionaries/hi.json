@@ -1126,120 +1126,105 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
-      "nav": {
-        "dashboard": "Dashboard"
-      },
       "categories": {
-        "all": "All",
-        "gettingStarted": "Getting Started",
-        "coreConcepts": "Core Concepts",
-        "searchRetrieval": "Search & Retrieval",
-        "extraction": "Extraction",
-        "operations": "Operations",
-        "security": "Security & Compliance"
+        "gettingStarted": "शुरू करें",
+        "coreConcepts": "मुख्य अवधारणाएं",
+        "searchRetrieval": "खोज और पुनर्प्राप्ति",
+        "extraction": "डेटा निष्कर्षण",
+        "operations": "संचालन",
+        "security": "सुरक्षा और गोपनीयता"
       },
       "gettingStarted": {
         "q1": {
-          "question": "What is Seizn Memory and what problem does it solve?",
-          "answer": "Seizn Memory is an AI memory infrastructure that provides persistent, searchable memory for AI applications. Unlike vector databases that only store/search vectors, Seizn includes the full product layer: memory extraction, policy management, key management, deletion, audit logs, and SDKs. It solves the problem of maintaining context across AI sessions and enabling personalized AI experiences."
+          "question": "Seizn Spring क्या है?",
+          "answer": "Seizn Spring एक AI मेमोरी लेयर है जो आपके एप्लिकेशन को उपयोगकर्ता वरीयताओं, वार्तालापों और संदर्भ को याद रखने देती है। यह मेमोरी स्टोर, सर्च और रिट्रीव करने के लिए सरल APIs प्रदान करती है।"
         },
         "q2": {
-          "question": "How is Seizn different from vector databases like Pinecone or Weaviate?",
-          "answer": "Vector databases are storage/search infrastructure for vectors. Seizn is a complete memory system built on top of that, providing: automatic memory extraction from conversations, memory type classification, namespace/scope management, API key rotation, audit logging, SDKs, and governance features. Think of it as 'memory infrastructure' vs 'search infrastructure'."
+          "question": "Spring के साथ कैसे शुरू करें?",
+          "answer": "पहले डैशबोर्ड में API की बनाएं। फिर npm, yarn या pip के साथ SDK इंस्टॉल करें। अपनी API की के साथ क्लाइंट को इनिशियलाइज़ करें और आप तैयार हैं।"
         },
         "q3": {
-          "question": "Do I need RAG to use Seizn?",
-          "answer": "No. The most common starting point is: store memory → search → inject into prompt. RAG (automatic context composition + response generation) is the next step. You can start simple and add complexity as needed."
-        },
-        "q4": {
-          "question": "What's the fastest way to build a PoC?",
-          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
+          "question": "कौन सी प्रोग्रामिंग भाषाएं समर्थित हैं?",
+          "answer": "हम आधिकारिक रूप से JavaScript/TypeScript (Node.js) और Python का समर्थन करते हैं। अन्य भाषाओं के लिए, आप सीधे REST API का उपयोग कर सकते हैं।"
         }
       },
       "coreConcepts": {
         "q1": {
-          "question": "What should I store in /api/memories?",
-          "answer": "Store information that remains valid across conversations: preferences (tone, language, format), facts (job, tools, project structure), instructions (\"always summarize in tables\"), relationships (\"Alice is the team lead\"). Avoid storing temporary or session-specific data unless using session scope."
+          "question": "मेमोरी क्या है?",
+          "answer": "मेमोरी Spring में संग्रहीत जानकारी की एक इकाई है। यह उपयोगकर्ता वरीयता, तथ्य, वार्तालाप स्निपेट या कोई भी टेक्स्ट सामग्री हो सकती है।"
         },
         "q2": {
-          "question": "What data should I NOT store?",
-          "answer": "Never store: passwords, API keys, tokens, session cookies (auth info), SSN, passport numbers, bank accounts (PII), credit card info (payment data). For temporary data, use session scope with TTL if needed."
+          "question": "टैग कैसे काम करते हैं?",
+          "answer": "टैग मेमोरी को व्यवस्थित और फ़िल्टर करने में मदद करते हैं। आप मेमोरी जोड़ते समय टैग असाइन कर सकते हैं और खोज परिणामों को फ़िल्टर करने के लिए उनका उपयोग कर सकते हैं।"
         },
         "q3": {
-          "question": "Why is namespace important?",
-          "answer": "Namespace separates memories by project/tenant/environment. Without it, data gets mixed, search quality drops, and deletion/export becomes painful. Recommended: 'org:acme/app:chat/env:prod' or 'project:myapp/env:staging'. Never use just 'default' in production."
-        },
-        "q4": {
-          "question": "When should I use scope (user/session/agent)?",
-          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
-        },
-        "q5": {
-          "question": "What are memory_types and why do they matter?",
-          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
+          "question": "user_id पैरामीटर क्या है?",
+          "answer": "user_id मेमोरी को किसी विशिष्ट उपयोगकर्ता से जोड़ता है, प्रत्येक उपयोगकर्ता के लिए व्यक्तिगत अनुभव सक्षम करता है।"
         }
       },
       "searchRetrieval": {
         "q1": {
-          "question": "How do threshold and limit work?",
-          "answer": "limit: Number of candidate memories to retrieve (too low = miss relevant ones, too high = noisy context). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7. If missing memories, lower threshold to 0.6 and raise limit to 20. If getting irrelevant results, raise threshold to 0.75-0.8."
+          "question": "सिमेंटिक सर्च कैसे काम करती है?",
+          "answer": "Spring मेमोरी के अर्थ को समझने के लिए वेक्टर एम्बेडिंग का उपयोग करता है। सर्च सिमेंटिक रूप से समान सामग्री खोजती है भले ही सटीक शब्द मेल न खाएं।"
         },
         "q2": {
-          "question": "Why are my search results irrelevant?",
-          "answer": "Usually one of: 1) namespaces are mixed, 2) too many memories stored (noise), 3) threshold too low, 4) content is too abstract ('likes things' vs specific facts). Fix: separate namespaces, make content specific, raise threshold."
+          "question": "topK और threshold पैरामीटर क्या हैं?",
+          "answer": "topK परिणामों की संख्या सीमित करता है। threshold न्यूनतम समानता स्कोर (0-1) सेट करता है कम प्रासंगिक परिणामों को फ़िल्टर करने के लिए।"
         },
         "q3": {
-          "question": "Search quality dropped as memories grew. What do I do?",
-          "answer": "Add importance scoring and keep only high-importance memories. Use TTL to auto-expire old memories. Periodically merge similar memories into summaries. Separate namespaces to reduce search scope."
+          "question": "क्या मैं सर्च और टैग फ़िल्टरिंग को जोड़ सकता हूं?",
+          "answer": "हां, आप परिणामों को परिष्कृत करने के लिए सिमेंटिक सर्च और टैग फ़िल्टरिंग का एक साथ उपयोग कर सकते हैं।"
         }
       },
       "extraction": {
         "q1": {
-          "question": "How should I use /api/extract?",
-          "answer": "Recommended flow: 1) Call with auto_store=false to preview extracted memories. 2) Show results to user for confirmation. 3) Store only approved memories. 4) Once extraction quality is proven, switch to auto_store=true for automation."
+          "question": "स्वचालित निष्कर्षण क्या है?",
+          "answer": "स्वचालित निष्कर्षण वार्तालापों का विश्लेषण करता है और स्वचालित रूप से याद रखने योग्य जानकारी जैसे वरीयताएं और महत्वपूर्ण तथ्यों की पहचान करता है।"
         },
         "q2": {
-          "question": "What's the difference between model=haiku and model=sonnet?",
-          "answer": "haiku: Faster, cheaper, good for most cases. sonnet: More accurate, better for important extractions (onboarding, contracts, policies). Use haiku for bulk/initial extraction, sonnet for high-stakes scenarios."
+          "question": "निष्कर्षण किस प्रकार की सामग्री का समर्थन करता है?",
+          "answer": "निष्कर्षण वार्तालापों, ईमेल और किसी भी टेक्स्ट सामग्री पर काम करता है। यह वरीयताओं, तथ्यों, राय और कार्रवाई योग्य आइटम की पहचान करता है।"
+        },
+        "q3": {
+          "question": "क्या मैं निष्कर्षण नियमों को अनुकूलित कर सकता हूं?",
+          "answer": "हां, आप अपने विशिष्ट उपयोग मामलों के लिए कस्टम निष्कर्षण पैटर्न परिभाषित कर सकते हैं।"
         }
       },
       "operations": {
         "q1": {
-          "question": "Can I modify a memory after storing it?",
-          "answer": "Yes, but the recommended pattern is: create new memory + delete/archive old one. This approach is better for audit trails and prevents regression issues."
+          "question": "मौजूदा मेमोरी को कैसे अपडेट करें?",
+          "answer": "मेमोरी ID और नई सामग्री के साथ update मेथड का उपयोग करें। आप टैग और मेटाडेटा भी अपडेट कर सकते हैं।"
         },
         "q2": {
-          "question": "How do I delete memories?",
-          "answer": "Two approaches: 1) Delete by ID (precise), 2) Delete by namespace (bulk cleanup). For enterprise/compliance, ensure 'complete deletion + audit log'. Document your deletion policy clearly."
+          "question": "मेमोरी कैसे डिलीट करें?",
+          "answer": "मेमोरी ID के साथ delete मेथड का उपयोग करें। आप फ़िल्टर के साथ बल्क डिलीट भी कर सकते हैं।"
         },
         "q3": {
-          "question": "I'm getting 429 Too Many Requests. What should I do?",
-          "answer": "You've hit the rate limit. Solutions: 1) Implement exponential backoff (1s → 2s → 4s). 2) Queue requests server-side. 3) Reduce request frequency: cache duplicate queries, batch operations, lower extract frequency."
-        },
-        "q4": {
-          "question": "How do I reduce costs?",
-          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
+          "question": "क्या रेट लिमिट हैं?",
+          "answer": "हां, लिमिट प्लान के अनुसार भिन्न होती हैं। फ्री प्लान प्रति मिनट 100 रिक्वेस्ट की अनुमति देता है। विवरण के लिए मूल्य निर्धारण पेज देखें।"
         }
       },
       "security": {
         "q1": {
-          "question": "Can I use the API key in browser (frontend)?",
-          "answer": "Not recommended - high risk of key exposure. Call Seizn from your server (Next.js Route Handler, Cloudflare Worker, serverless function) and have the browser call your server. Never expose API keys to client-side code."
+          "question": "मेरा डेटा कहां स्टोर होता है?",
+          "answer": "डेटा आराम और ट्रांज़िट में एन्क्रिप्शन के साथ सुरक्षित क्लाउड इंफ्रास्ट्रक्चर में स्टोर होता है।"
         },
         "q2": {
-          "question": "What documentation does my security/legal team need?",
-          "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+          "question": "क्या Spring GDPR अनुपालक है?",
+          "answer": "हां, हम डेटा एक्सपोर्ट, डिलीट रिक्वेस्ट और प्रोसेसिंग एग्रीमेंट सहित GDPR अनुपालन टूल प्रदान करते हैं।"
+        },
+        "q3": {
+          "question": "मेरी API की को कैसे सुरक्षित रखें?",
+          "answer": "क्लाइंट कोड में API कीज़ कभी एक्सपोज़ न करें। एनवायरनमेंट वेरिएबल्स का उपयोग करें और केवल सर्वर-साइड API कॉल करें।"
+        },
+        "q4": {
+          "question": "क्या उपयोगकर्ता डेटा डिलीट का अनुरोध कर सकते हैं?",
+          "answer": "हां, आप प्राइवेसी रिक्वेस्ट को सपोर्ट करने के लिए API के माध्यम से user_id द्वारा सभी मेमोरी डिलीट कर सकते हैं।"
+        },
+        "q5": {
+          "question": "क्या आपके पास SOC 2 प्रमाणन है?",
+          "answer": "हम SOC 2 प्रमाणन की प्रक्रिया में हैं। अधिक जानकारी के लिए हमारी सेल्स टीम से संपर्क करें।"
         }
-      },
-      "cta": {
-        "title": "Still have questions?",
-        "subtitle": "Check out our documentation or get in touch with our support team.",
-        "readDocs": "Read Docs",
-        "contactSupport": "Contact Support"
-      },
-      "footer": {
-        "rights": "All rights reserved."
       }
     }
   }

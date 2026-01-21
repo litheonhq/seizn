@@ -1126,120 +1126,105 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
-      "nav": {
-        "dashboard": "Dashboard"
-      },
       "categories": {
-        "all": "All",
-        "gettingStarted": "Getting Started",
-        "coreConcepts": "Core Concepts",
-        "searchRetrieval": "Search & Retrieval",
-        "extraction": "Extraction",
-        "operations": "Operations",
-        "security": "Security & Compliance"
+        "gettingStarted": "入门指南",
+        "coreConcepts": "核心概念",
+        "searchRetrieval": "搜索与检索",
+        "extraction": "数据提取",
+        "operations": "操作管理",
+        "security": "安全与隐私"
       },
       "gettingStarted": {
         "q1": {
-          "question": "What is Seizn Memory and what problem does it solve?",
-          "answer": "Seizn Memory is an AI memory infrastructure that provides persistent, searchable memory for AI applications. Unlike vector databases that only store/search vectors, Seizn includes the full product layer: memory extraction, policy management, key management, deletion, audit logs, and SDKs. It solves the problem of maintaining context across AI sessions and enabling personalized AI experiences."
+          "question": "什么是Seizn Spring？",
+          "answer": "Seizn Spring是一个AI记忆层，让您的应用程序能够记住用户偏好、对话和上下文。它提供简单的API来存储、搜索和检索记忆，使AI交互更加个性化和相关。"
         },
         "q2": {
-          "question": "How is Seizn different from vector databases like Pinecone or Weaviate?",
-          "answer": "Vector databases are storage/search infrastructure for vectors. Seizn is a complete memory system built on top of that, providing: automatic memory extraction from conversations, memory type classification, namespace/scope management, API key rotation, audit logging, SDKs, and governance features. Think of it as 'memory infrastructure' vs 'search infrastructure'."
+          "question": "如何开始使用Spring？",
+          "answer": "首先在仪表板中创建一个API密钥。然后使用npm、yarn或pip安装SDK。使用您的API密钥初始化客户端，您就可以开始存储和搜索记忆了。"
         },
         "q3": {
-          "question": "Do I need RAG to use Seizn?",
-          "answer": "No. The most common starting point is: store memory → search → inject into prompt. RAG (automatic context composition + response generation) is the next step. You can start simple and add complexity as needed."
-        },
-        "q4": {
-          "question": "What's the fastest way to build a PoC?",
-          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
+          "question": "支持哪些编程语言？",
+          "answer": "我们官方支持JavaScript/TypeScript（Node.js）和Python SDK。对于其他语言，您可以直接使用REST API。"
         }
       },
       "coreConcepts": {
         "q1": {
-          "question": "What should I store in /api/memories?",
-          "answer": "Store information that remains valid across conversations: preferences (tone, language, format), facts (job, tools, project structure), instructions (\"always summarize in tables\"), relationships (\"Alice is the team lead\"). Avoid storing temporary or session-specific data unless using session scope."
+          "question": "什么是记忆？",
+          "answer": "记忆是您存储在Spring中的信息单位。它可以是用户偏好、事实、对话片段或任何您希望AI稍后记住的文本内容。"
         },
         "q2": {
-          "question": "What data should I NOT store?",
-          "answer": "Never store: passwords, API keys, tokens, session cookies (auth info), SSN, passport numbers, bank accounts (PII), credit card info (payment data). For temporary data, use session scope with TTL if needed."
+          "question": "标签如何工作？",
+          "answer": "标签帮助组织和筛选记忆。您可以在添加记忆时分配标签，然后使用标签筛选搜索结果，以获得更精确的检索。"
         },
         "q3": {
-          "question": "Why is namespace important?",
-          "answer": "Namespace separates memories by project/tenant/environment. Without it, data gets mixed, search quality drops, and deletion/export becomes painful. Recommended: 'org:acme/app:chat/env:prod' or 'project:myapp/env:staging'. Never use just 'default' in production."
-        },
-        "q4": {
-          "question": "When should I use scope (user/session/agent)?",
-          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
-        },
-        "q5": {
-          "question": "What are memory_types and why do they matter?",
-          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
+          "question": "user_id参数是什么？",
+          "answer": "user_id将记忆与应用程序中的特定用户关联。这使您能够为每个用户维护单独的记忆存储，实现个性化体验。"
         }
       },
       "searchRetrieval": {
         "q1": {
-          "question": "How do threshold and limit work?",
-          "answer": "limit: Number of candidate memories to retrieve (too low = miss relevant ones, too high = noisy context). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7. If missing memories, lower threshold to 0.6 and raise limit to 20. If getting irrelevant results, raise threshold to 0.75-0.8."
+          "question": "语义搜索是如何工作的？",
+          "answer": "Spring使用向量嵌入来理解记忆的含义。当您搜索时，它会找到语义相似的内容，即使确切的词语不匹配。"
         },
         "q2": {
-          "question": "Why are my search results irrelevant?",
-          "answer": "Usually one of: 1) namespaces are mixed, 2) too many memories stored (noise), 3) threshold too low, 4) content is too abstract ('likes things' vs specific facts). Fix: separate namespaces, make content specific, raise threshold."
+          "question": "topK和threshold参数是什么？",
+          "answer": "topK限制返回结果的数量（例如，前5个最相关的记忆）。threshold设置最小相似度分数（0-1），过滤掉不太相关的结果。"
         },
         "q3": {
-          "question": "Search quality dropped as memories grew. What do I do?",
-          "answer": "Add importance scoring and keep only high-importance memories. Use TTL to auto-expire old memories. Periodically merge similar memories into summaries. Separate namespaces to reduce search scope."
+          "question": "我可以组合搜索和标签筛选吗？",
+          "answer": "可以，您可以同时使用语义搜索和标签筛选来缩小结果范围。这有助于在大型记忆集合中找到特定上下文的信息。"
         }
       },
       "extraction": {
         "q1": {
-          "question": "How should I use /api/extract?",
-          "answer": "Recommended flow: 1) Call with auto_store=false to preview extracted memories. 2) Show results to user for confirmation. 3) Store only approved memories. 4) Once extraction quality is proven, switch to auto_store=true for automation."
+          "question": "自动提取是什么？",
+          "answer": "自动提取会分析对话并自动识别值得记忆的信息，如用户偏好、事实和重要细节，无需手动标记。"
         },
         "q2": {
-          "question": "What's the difference between model=haiku and model=sonnet?",
-          "answer": "haiku: Faster, cheaper, good for most cases. sonnet: More accurate, better for important extractions (onboarding, contracts, policies). Use haiku for bulk/initial extraction, sonnet for high-stakes scenarios."
+          "question": "提取支持哪些类型的内容？",
+          "answer": "提取适用于对话、聊天记录、电子邮件和任何文本内容。它识别偏好、事实、意见和可操作项目等模式。"
+        },
+        "q3": {
+          "question": "我可以自定义提取规则吗？",
+          "answer": "可以，您可以定义自定义提取模式和规则来匹配您的特定用例。这允许您针对领域特定的信息类型进行定制。"
         }
       },
       "operations": {
         "q1": {
-          "question": "Can I modify a memory after storing it?",
-          "answer": "Yes, but the recommended pattern is: create new memory + delete/archive old one. This approach is better for audit trails and prevents regression issues."
+          "question": "如何更新现有记忆？",
+          "answer": "使用update方法并提供记忆ID和新内容。您还可以更新标签和元数据，同时保留原始创建时间戳。"
         },
         "q2": {
-          "question": "How do I delete memories?",
-          "answer": "Two approaches: 1) Delete by ID (precise), 2) Delete by namespace (bulk cleanup). For enterprise/compliance, ensure 'complete deletion + audit log'. Document your deletion policy clearly."
+          "question": "如何删除记忆？",
+          "answer": "使用delete方法并提供记忆ID来删除单个记忆。您还可以使用带筛选器的批量删除来删除多个记忆。"
         },
         "q3": {
-          "question": "I'm getting 429 Too Many Requests. What should I do?",
-          "answer": "You've hit the rate limit. Solutions: 1) Implement exponential backoff (1s → 2s → 4s). 2) Queue requests server-side. 3) Reduce request frequency: cache duplicate queries, batch operations, lower extract frequency."
-        },
-        "q4": {
-          "question": "How do I reduce costs?",
-          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
+          "question": "有速率限制吗？",
+          "answer": "有，速率限制因计划而异。免费层每分钟允许100个请求，付费计划限制更高。查看定价页面了解详情。"
         }
       },
       "security": {
         "q1": {
-          "question": "Can I use the API key in browser (frontend)?",
-          "answer": "Not recommended - high risk of key exposure. Call Seizn from your server (Next.js Route Handler, Cloudflare Worker, serverless function) and have the browser call your server. Never expose API keys to client-side code."
+          "question": "我的数据存储在哪里？",
+          "answer": "数据存储在安全的云基础设施中，具有静态和传输加密。我们使用行业标准的安全实践来保护您的信息。"
         },
         "q2": {
-          "question": "What documentation does my security/legal team need?",
-          "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+          "question": "Spring符合GDPR吗？",
+          "answer": "是的，我们提供GDPR合规工具，包括数据导出、删除请求和处理协议。联系我们获取数据处理协议。"
+        },
+        "q3": {
+          "question": "如何保护我的API密钥安全？",
+          "answer": "切勿在客户端代码中暴露API密钥。使用环境变量并仅进行服务器端API调用。如果密钥泄露，请立即在仪表板中轮换。"
+        },
+        "q4": {
+          "question": "用户可以请求删除数据吗？",
+          "answer": "可以，您可以使用API按user_id删除所有记忆。这支持用户隐私请求和账户删除工作流程。"
+        },
+        "q5": {
+          "question": "你们有SOC 2认证吗？",
+          "answer": "我们正在进行SOC 2认证。联系我们的销售团队获取有关我们安全实践和合规路线图的最新信息。"
         }
-      },
-      "cta": {
-        "title": "Still have questions?",
-        "subtitle": "Check out our documentation or get in touch with our support team.",
-        "readDocs": "Read Docs",
-        "contactSupport": "Contact Support"
-      },
-      "footer": {
-        "rights": "All rights reserved."
       }
     }
   }

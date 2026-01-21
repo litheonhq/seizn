@@ -1126,120 +1126,105 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
-      "nav": {
-        "dashboard": "Dashboard"
-      },
       "categories": {
-        "all": "All",
-        "gettingStarted": "Getting Started",
-        "coreConcepts": "Core Concepts",
-        "searchRetrieval": "Search & Retrieval",
-        "extraction": "Extraction",
-        "operations": "Operations",
-        "security": "Security & Compliance"
+        "gettingStarted": "เริ่มต้นใช้งาน",
+        "coreConcepts": "แนวคิดหลัก",
+        "searchRetrieval": "การค้นหาและการดึงข้อมูล",
+        "extraction": "การสกัดข้อมูล",
+        "operations": "การดำเนินการ",
+        "security": "ความปลอดภัยและความเป็นส่วนตัว"
       },
       "gettingStarted": {
         "q1": {
-          "question": "What is Seizn Memory and what problem does it solve?",
-          "answer": "Seizn Memory is an AI memory infrastructure that provides persistent, searchable memory for AI applications. Unlike vector databases that only store/search vectors, Seizn includes the full product layer: memory extraction, policy management, key management, deletion, audit logs, and SDKs. It solves the problem of maintaining context across AI sessions and enabling personalized AI experiences."
+          "question": "Seizn Spring คืออะไร?",
+          "answer": "Seizn Spring เป็นเลเยอร์หน่วยความจำ AI ที่ช่วยให้แอปพลิเคชันของคุณจดจำการตั้งค่าผู้ใช้ การสนทนา และบริบท มี API ง่ายๆ สำหรับจัดเก็บ ค้นหา และดึงความทรงจำ"
         },
         "q2": {
-          "question": "How is Seizn different from vector databases like Pinecone or Weaviate?",
-          "answer": "Vector databases are storage/search infrastructure for vectors. Seizn is a complete memory system built on top of that, providing: automatic memory extraction from conversations, memory type classification, namespace/scope management, API key rotation, audit logging, SDKs, and governance features. Think of it as 'memory infrastructure' vs 'search infrastructure'."
+          "question": "เริ่มต้นใช้งาน Spring ได้อย่างไร?",
+          "answer": "ก่อนอื่นสร้างคีย์ API ในแดชบอร์ด จากนั้นติดตั้ง SDK ด้วย npm, yarn หรือ pip เริ่มต้นไคลเอนต์ด้วยคีย์ API ของคุณและคุณพร้อมแล้ว"
         },
         "q3": {
-          "question": "Do I need RAG to use Seizn?",
-          "answer": "No. The most common starting point is: store memory → search → inject into prompt. RAG (automatic context composition + response generation) is the next step. You can start simple and add complexity as needed."
-        },
-        "q4": {
-          "question": "What's the fastest way to build a PoC?",
-          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
+          "question": "รองรับภาษาโปรแกรมอะไรบ้าง?",
+          "answer": "เรารองรับ JavaScript/TypeScript (Node.js) และ Python อย่างเป็นทางการ สำหรับภาษาอื่น คุณสามารถใช้ REST API โดยตรง"
         }
       },
       "coreConcepts": {
         "q1": {
-          "question": "What should I store in /api/memories?",
-          "answer": "Store information that remains valid across conversations: preferences (tone, language, format), facts (job, tools, project structure), instructions (\"always summarize in tables\"), relationships (\"Alice is the team lead\"). Avoid storing temporary or session-specific data unless using session scope."
+          "question": "หน่วยความจำคืออะไร?",
+          "answer": "หน่วยความจำคือหน่วยข้อมูลที่เก็บไว้ใน Spring อาจเป็นการตั้งค่าผู้ใช้ ข้อเท็จจริง ส่วนของการสนทนา หรือเนื้อหาข้อความใดๆ"
         },
         "q2": {
-          "question": "What data should I NOT store?",
-          "answer": "Never store: passwords, API keys, tokens, session cookies (auth info), SSN, passport numbers, bank accounts (PII), credit card info (payment data). For temporary data, use session scope with TTL if needed."
+          "question": "แท็กทำงานอย่างไร?",
+          "answer": "แท็กช่วยจัดระเบียบและกรองความทรงจำ คุณสามารถกำหนดแท็กเมื่อเพิ่มความทรงจำและใช้เพื่อกรองผลการค้นหา"
         },
         "q3": {
-          "question": "Why is namespace important?",
-          "answer": "Namespace separates memories by project/tenant/environment. Without it, data gets mixed, search quality drops, and deletion/export becomes painful. Recommended: 'org:acme/app:chat/env:prod' or 'project:myapp/env:staging'. Never use just 'default' in production."
-        },
-        "q4": {
-          "question": "When should I use scope (user/session/agent)?",
-          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
-        },
-        "q5": {
-          "question": "What are memory_types and why do they matter?",
-          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
+          "question": "พารามิเตอร์ user_id คืออะไร?",
+          "answer": "user_id เชื่อมโยงความทรงจำกับผู้ใช้เฉพาะ ทำให้สามารถสร้างประสบการณ์ส่วนบุคคลสำหรับผู้ใช้แต่ละคน"
         }
       },
       "searchRetrieval": {
         "q1": {
-          "question": "How do threshold and limit work?",
-          "answer": "limit: Number of candidate memories to retrieve (too low = miss relevant ones, too high = noisy context). threshold: 0-1 similarity cutoff (higher = stricter). Start with limit=10, threshold=0.7. If missing memories, lower threshold to 0.6 and raise limit to 20. If getting irrelevant results, raise threshold to 0.75-0.8."
+          "question": "การค้นหาเชิงความหมายทำงานอย่างไร?",
+          "answer": "Spring ใช้การฝังเวกเตอร์เพื่อเข้าใจความหมายของความทรงจำ การค้นหาจะค้นหาเนื้อหาที่คล้ายกันทางความหมายแม้ว่าคำที่แน่นอนจะไม่ตรงกัน"
         },
         "q2": {
-          "question": "Why are my search results irrelevant?",
-          "answer": "Usually one of: 1) namespaces are mixed, 2) too many memories stored (noise), 3) threshold too low, 4) content is too abstract ('likes things' vs specific facts). Fix: separate namespaces, make content specific, raise threshold."
+          "question": "พารามิเตอร์ topK และ threshold คืออะไร?",
+          "answer": "topK จำกัดจำนวนผลลัพธ์ threshold กำหนดคะแนนความคล้ายคลึงขั้นต่ำ (0-1) เพื่อกรองผลลัพธ์ที่เกี่ยวข้องน้อยกว่า"
         },
         "q3": {
-          "question": "Search quality dropped as memories grew. What do I do?",
-          "answer": "Add importance scoring and keep only high-importance memories. Use TTL to auto-expire old memories. Periodically merge similar memories into summaries. Separate namespaces to reduce search scope."
+          "question": "สามารถรวมการค้นหาและการกรองแท็กได้หรือไม่?",
+          "answer": "ได้ คุณสามารถใช้การค้นหาเชิงความหมายและการกรองแท็กร่วมกันเพื่อปรับแต่งผลลัพธ์"
         }
       },
       "extraction": {
         "q1": {
-          "question": "How should I use /api/extract?",
-          "answer": "Recommended flow: 1) Call with auto_store=false to preview extracted memories. 2) Show results to user for confirmation. 3) Store only approved memories. 4) Once extraction quality is proven, switch to auto_store=true for automation."
+          "question": "การสกัดอัตโนมัติคืออะไร?",
+          "answer": "การสกัดอัตโนมัติวิเคราะห์การสนทนาและระบุข้อมูลที่ควรจดจำโดยอัตโนมัติ เช่น การตั้งค่าและข้อเท็จจริงสำคัญ"
         },
         "q2": {
-          "question": "What's the difference between model=haiku and model=sonnet?",
-          "answer": "haiku: Faster, cheaper, good for most cases. sonnet: More accurate, better for important extractions (onboarding, contracts, policies). Use haiku for bulk/initial extraction, sonnet for high-stakes scenarios."
+          "question": "การสกัดรองรับเนื้อหาประเภทใดบ้าง?",
+          "answer": "การสกัดทำงานกับการสนทนา อีเมล และเนื้อหาข้อความใดๆ มันระบุการตั้งค่า ข้อเท็จจริง ความคิดเห็น และรายการที่ดำเนินการได้"
+        },
+        "q3": {
+          "question": "สามารถปรับแต่งกฎการสกัดได้หรือไม่?",
+          "answer": "ได้ คุณสามารถกำหนดรูปแบบการสกัดแบบกำหนดเองสำหรับกรณีการใช้งานเฉพาะของคุณ"
         }
       },
       "operations": {
         "q1": {
-          "question": "Can I modify a memory after storing it?",
-          "answer": "Yes, but the recommended pattern is: create new memory + delete/archive old one. This approach is better for audit trails and prevents regression issues."
+          "question": "อัปเดตหน่วยความจำที่มีอยู่ได้อย่างไร?",
+          "answer": "ใช้เมธอด update พร้อม ID ของหน่วยความจำและเนื้อหาใหม่ คุณยังสามารถอัปเดตแท็กและเมตาดาต้า"
         },
         "q2": {
-          "question": "How do I delete memories?",
-          "answer": "Two approaches: 1) Delete by ID (precise), 2) Delete by namespace (bulk cleanup). For enterprise/compliance, ensure 'complete deletion + audit log'. Document your deletion policy clearly."
+          "question": "ลบหน่วยความจำได้อย่างไร?",
+          "answer": "ใช้เมธอด delete พร้อม ID ของหน่วยความจำ คุณยังสามารถใช้การลบจำนวนมากพร้อมตัวกรอง"
         },
         "q3": {
-          "question": "I'm getting 429 Too Many Requests. What should I do?",
-          "answer": "You've hit the rate limit. Solutions: 1) Implement exponential backoff (1s → 2s → 4s). 2) Queue requests server-side. 3) Reduce request frequency: cache duplicate queries, batch operations, lower extract frequency."
-        },
-        "q4": {
-          "question": "How do I reduce costs?",
-          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
+          "question": "มีการจำกัดอัตราหรือไม่?",
+          "answer": "มี การจำกัดแตกต่างกันตามแผน แผนฟรีอนุญาต 100 คำขอต่อนาที ดูหน้าราคาสำหรับรายละเอียด"
         }
       },
       "security": {
         "q1": {
-          "question": "Can I use the API key in browser (frontend)?",
-          "answer": "Not recommended - high risk of key exposure. Call Seizn from your server (Next.js Route Handler, Cloudflare Worker, serverless function) and have the browser call your server. Never expose API keys to client-side code."
+          "question": "ข้อมูลของฉันถูกเก็บไว้ที่ไหน?",
+          "answer": "ข้อมูลถูกเก็บไว้ในโครงสร้างพื้นฐานคลาวด์ที่ปลอดภัยพร้อมการเข้ารหัสขณะพักและระหว่างการส่ง"
         },
         "q2": {
-          "question": "What documentation does my security/legal team need?",
-          "answer": "They'll want: 1) Data scope (what's stored/not stored), 2) Encryption (at rest: AES-256, in transit: TLS), 3) Tenant isolation method, 4) Deletion/retention policy, 5) Audit log access, 6) Key rotation/expiration policy. Keep a Security & Governance page in your docs."
+          "question": "Spring สอดคล้องกับ GDPR หรือไม่?",
+          "answer": "ใช่ เรามีเครื่องมือการปฏิบัติตาม GDPR รวมถึงการส่งออกข้อมูล คำขอลบ และข้อตกลงการประมวลผล"
+        },
+        "q3": {
+          "question": "รักษาความปลอดภัยคีย์ API ของฉันได้อย่างไร?",
+          "answer": "อย่าเปิดเผยคีย์ API ในโค้ดไคลเอนต์ ใช้ตัวแปรสภาพแวดล้อมและทำการเรียก API ฝั่งเซิร์ฟเวอร์เท่านั้น"
+        },
+        "q4": {
+          "question": "ผู้ใช้สามารถขอลบข้อมูลได้หรือไม่?",
+          "answer": "ได้ คุณสามารถลบหน่วยความจำทั้งหมดตาม user_id ผ่าน API เพื่อรองรับคำขอความเป็นส่วนตัว"
+        },
+        "q5": {
+          "question": "คุณมีใบรับรอง SOC 2 หรือไม่?",
+          "answer": "เราอยู่ในขั้นตอนการรับรอง SOC 2 ติดต่อทีมขายของเราสำหรับข้อมูลเพิ่มเติม"
         }
-      },
-      "cta": {
-        "title": "Still have questions?",
-        "subtitle": "Check out our documentation or get in touch with our support team.",
-        "readDocs": "Read Docs",
-        "contactSupport": "Contact Support"
-      },
-      "footer": {
-        "rights": "All rights reserved."
       }
     }
   }
