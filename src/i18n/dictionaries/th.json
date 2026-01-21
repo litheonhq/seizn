@@ -1,0 +1,1086 @@
+{
+  "metadata": {
+    "title": "Seizn - โครงสร้างพื้นฐานหน่วยความจำ AI",
+    "description": "มอบหน่วยความจำถาวรให้กับ AI ของคุณ Seizn จัดเก็บและเรียกค้นบริบทโดยอัตโนมัติ เพื่อให้ AI ของคุณจดจำการสนทนาก่อนหน้า"
+  },
+  "nav": {
+    "features": "ฟีเจอร์",
+    "pricing": "ราคา",
+    "docs": "เอกสาร",
+    "login": "เข้าสู่ระบบ",
+    "getStarted": "เริ่มต้นใช้งาน"
+  },
+  "hero": {
+    "badge": "เปิดตัว Q1 2026",
+    "title": "โครงสร้างพื้นฐานหน่วยความจำ",
+    "titleHighlight": "สำหรับแอปพลิเคชัน AI",
+    "subtitle": "มอบหน่วยความจำถาวรให้กับ AI ของคุณ Seizn จัดเก็บและเรียกค้นบริบทโดยอัตโนมัติ เพื่อให้ AI ของคุณจดจำการสนทนาก่อนหน้า",
+    "emailPlaceholder": "กรอกอีเมลของคุณ",
+    "joinWaitlist": "เข้าร่วมรายการรอ",
+    "joining": "กำลังเข้าร่วม...",
+    "onTheList": "คุณอยู่ในรายการแล้ว!",
+    "stats": {
+      "tokenSavings": "ประหยัด Token",
+      "retrievalTime": "เวลาเรียกค้น",
+      "uptimeSla": "SLA Uptime"
+    }
+  },
+  "features": {
+    "title": "สร้างมาเพื่อนักพัฒนา",
+    "subtitle": "API ที่เรียบง่าย โครงสร้างพื้นฐานที่ทรงพลัง เพิ่มหน่วยความจำถาวรให้กับ AI ใดก็ได้ภายในไม่กี่นาที",
+    "smartExtraction": {
+      "title": "การดึงข้อมูลอัจฉริยะ",
+      "description": "ดึงเหตุการณ์สำคัญ ความชอบ และบริบทจากการสนทนาโดยอัตโนมัติด้วย Claude AI"
+    },
+    "instantRetrieval": {
+      "title": "เรียกค้นทันที",
+      "description": "การค้นหาแบบไฮบริด vector + graph ส่งคืนความทรงจำที่เกี่ยวข้องในมิลลิวินาที"
+    },
+    "enterpriseSecurity": {
+      "title": "ความปลอดภัยระดับองค์กร",
+      "description": "เข้ารหัสแบบ end-to-end รองรับ SOC 2 พร้อมการควบคุมการเข้าถึงแบบละเอียดและบันทึกการตรวจสอบ"
+    }
+  },
+  "codePreview": {
+    "title": "การผสานรวมที่เรียบง่าย",
+    "subtitle": "เพิ่มหน่วยความจำให้กับ AI ของคุณด้วยโค้ดเพียงไม่กี่บรรทัด"
+  },
+  "pricing": {
+    "title": "ราคาที่เรียบง่ายและโปร่งใส",
+    "subtitle": "เริ่มต้นฟรี ขยายได้เมื่อเติบโต",
+    "free": {
+      "name": "ฟรี",
+      "price": "$0",
+      "period": "ฟรีตลอดไป",
+      "features": [
+        "10,000 ความทรงจำ",
+        "1,000 การเรียก API/เดือน",
+        "การสนับสนุนจากชุมชน"
+      ],
+      "cta": "เริ่มต้นใช้งาน"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "ต่อเดือน",
+      "features": [
+        "50,000 ความทรงจำ",
+        "10,000 การเรียก API/เดือน",
+        "การสนับสนุนทางอีเมล",
+        "การวิเคราะห์พื้นฐาน"
+      ],
+      "cta": "สมัครสมาชิก"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "ต่อเดือน",
+      "badge": "ยอดนิยม",
+      "features": [
+        "200,000 ความทรงจำ",
+        "50,000 การเรียก API/เดือน",
+        "การสนับสนุนลำดับความสำคัญ",
+        "การวิเคราะห์ขั้นสูง",
+        "Webhooks"
+      ],
+      "cta": "สมัครสมาชิก"
+    },
+    "enterprise": {
+      "name": "องค์กร",
+      "price": "กำหนดเอง",
+      "period": "ติดต่อเรา",
+      "features": [
+        "ความทรงจำไม่จำกัด",
+        "การเรียก API ไม่จำกัด",
+        "การสนับสนุนเฉพาะ",
+        "SLA แบบกำหนดเอง",
+        "ตัวเลือก On-premise"
+      ],
+      "cta": "ติดต่อฝ่ายขาย"
+    }
+  },
+  "enterprisePage": {
+    "title": "ติดต่อฝ่ายขาย",
+    "subtitle": "รับแพ็กเกจที่กำหนดเองสำหรับความต้องการองค์กรพร้อมการสนับสนุนเฉพาะ การรับประกัน SLA และการผสานรวมแบบกำหนดเอง",
+    "includes": "องค์กรรวมถึง:",
+    "includesList": [
+      "SLA 99.9% uptime",
+      "การสนับสนุนลำดับความสำคัญ (24 ชม.)",
+      "ผู้จัดการบัญชีเฉพาะ",
+      "การผสานรวมแบบกำหนดเอง",
+      "การยืนยันตัวตน SSO / SAML",
+      "นโยบายการเก็บรักษาข้อมูล",
+      "รายงานการตรวจสอบความปลอดภัย",
+      "สัญญาแบบกำหนดเอง"
+    ],
+    "form": {
+      "companyName": "ชื่อบริษัท",
+      "yourName": "ชื่อของคุณ",
+      "workEmail": "อีเมลที่ทำงาน",
+      "phone": "โทรศัพท์",
+      "jobTitle": "ตำแหน่งงาน",
+      "companySize": "ขนาดบริษัท",
+      "useCase": "บอกเราเกี่ยวกับ use case ของคุณ",
+      "useCasePlaceholder": "คุณกำลังสร้างอะไร? คุณจะใช้ Seizn อย่างไร?",
+      "expectedVolume": "การเรียก API ต่อเดือนที่คาดไว้",
+      "timeline": "ไทม์ไลน์",
+      "requirements": "ข้อกำหนดเฉพาะ",
+      "requirementsPlaceholder": "SSO, SLA เฉพาะ, ตำแหน่งข้อมูล, ข้อกำหนดการปฏิบัติตาม ฯลฯ",
+      "submit": "ติดต่อฝ่ายขาย",
+      "submitting": "กำลังส่ง...",
+      "privacyNote": "โดยการส่งแบบฟอร์มนี้ คุณยอมรับ"
+    },
+    "companySizes": {
+      "select": "เลือก...",
+      "1-10": "1-10 พนักงาน",
+      "11-50": "11-50 พนักงาน",
+      "51-200": "51-200 พนักงาน",
+      "201-500": "201-500 พนักงาน",
+      "500+": "500+ พนักงาน"
+    },
+    "volumes": {
+      "select": "เลือก...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "เลือก...",
+      "immediate": "พร้อมเริ่มทันที",
+      "1-3months": "1-3 เดือน",
+      "3-6months": "3-6 เดือน",
+      "6+months": "6+ เดือน"
+    },
+    "success": {
+      "title": "ขอบคุณ!",
+      "message": "เราได้รับคำขอของคุณแล้ว ทีมของเราจะติดต่อกลับภายใน 1-2 วันทำการ",
+      "backHome": "กลับหน้าหลัก"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "ยินดีต้อนรับกลับ",
+      "subtitle": "เข้าสู่ระบบบัญชีของคุณ",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "submit": "เข้าสู่ระบบ",
+      "noAccount": "ยังไม่มีบัญชี?",
+      "signUp": "สมัครสมาชิก",
+      "or": "หรือดำเนินการต่อด้วย"
+    },
+    "signup": {
+      "title": "สร้างบัญชี",
+      "subtitle": "เริ่มสร้างด้วย Seizn",
+      "name": "ชื่อ-นามสกุล",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "submit": "สร้างบัญชี",
+      "hasAccount": "มีบัญชีแล้ว?",
+      "signIn": "เข้าสู่ระบบ",
+      "or": "หรือดำเนินการต่อด้วย"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. สงวนลิขสิทธิ์",
+    "privacy": "ความเป็นส่วนตัว",
+    "terms": "ข้อกำหนด",
+    "contact": "ติดต่อ"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ด",
+    "welcome": "ยินดีต้อนรับกลับ",
+    "overview": "ภาพรวม",
+    "usage": "การใช้งาน",
+    "apiKeys": "คีย์ API",
+    "settings": "การตั้งค่า",
+    "signOut": "ออกจากระบบ",
+    "stats": {
+      "memories": "ความทรงจำ",
+      "apiCalls": "การเรียก API วันนี้",
+      "plan": "แผนปัจจุบัน",
+      "unlimited": "ไม่จำกัด"
+    },
+    "keys": {
+      "title": "คีย์ API ของคุณ",
+      "create": "สร้างคีย์ใหม่",
+      "name": "ชื่อคีย์",
+      "namePlaceholder": "คีย์ API ของฉัน",
+      "created": "สร้างแล้ว",
+      "lastUsed": "ใช้ล่าสุด",
+      "never": "ไม่เคย",
+      "copy": "คัดลอก",
+      "copied": "คัดลอกแล้ว!",
+      "delete": "ลบ",
+      "deleteConfirm": "คุณแน่ใจหรือไม่ว่าต้องการลบคีย์ API นี้?",
+      "warning": "เก็บรักษาคีย์นี้อย่างปลอดภัย จะไม่แสดงอีกครั้ง",
+      "noKeys": "ยังไม่มีคีย์ API สร้างคีย์เพื่อเริ่มต้น"
+    },
+    "usagePage": {
+      "title": "การวิเคราะห์การใช้งาน",
+      "period": "ช่วงเวลาปัจจุบัน",
+      "memoriesUsed": "ความทรงจำที่ใช้",
+      "apiCallsUsed": "การเรียก API ที่ใช้",
+      "remaining": "คงเหลือ",
+      "upgrade": "อัพเกรดแผน",
+      "subtitle": "ตรวจสอบการใช้งาน API และค่าใช้จ่ายของคุณ",
+      "days7": "7 วัน",
+      "days30": "30 วัน",
+      "days90": "90 วัน",
+      "loading": "กำลังโหลด...",
+      "totalApiCalls": "การเรียก API ทั้งหมด",
+      "totalTokens": "Token ทั้งหมด",
+      "estimatedCost": "ค่าใช้จ่ายโดยประมาณ",
+      "avgLatency": "Latency เฉลี่ย",
+      "dailyApiCalls": "การเรียก API รายวัน",
+      "calls": "การเรียก",
+      "endpointUsage": "การใช้งาน Endpoint",
+      "noData": "ยังไม่มีข้อมูล",
+      "avg": "เฉลี่ย",
+      "errors": "ข้อผิดพลาด",
+      "usageByApiKey": "การใช้งานตามคีย์ API",
+      "errorsTitle": "ข้อผิดพลาด",
+      "errorRate": "อัตราข้อผิดพลาด",
+      "noUsageData": "ไม่มีข้อมูลการใช้งาน"
+    },
+    "language": "ภาษา",
+    "organizations": "องค์กร",
+    "docs": "เอกสาร",
+    "pinSidebar": "ปักหมุดแถบด้านข้าง",
+    "unpinSidebar": "ยุบแถบด้านข้าง",
+    "playground": "Playground",
+    "playgroundPage": {
+      "title": "แดชบอร์ดการดีบัก",
+      "subtitle": "ทดสอบคำค้นหาพร้อมการติดตามและปรับแต่งพารามิเตอร์",
+      "queryInput": "ป้อนคำค้นหา",
+      "queryPlaceholder": "ป้อนคำค้นหาทดสอบ...",
+      "parameters": "พารามิเตอร์",
+      "topK": "Top K",
+      "topKHint": "จำนวนผลลัพธ์ที่ส่งคืน",
+      "threshold": "เกณฑ์",
+      "thresholdHint": "คะแนนความคล้ายคลึงขั้นต่ำ",
+      "filters": "ตัวกรอง",
+      "filtersHint": "ตัวกรอง metadata ในรูปแบบ JSON",
+      "runQuery": "รันคำค้นหา",
+      "running": "กำลังรัน...",
+      "results": "ผลลัพธ์",
+      "noResults": "ไม่พบผลลัพธ์",
+      "noResultsHint": "ปรับพารามิเตอร์หรือลองคำค้นหาอื่น",
+      "resultCount": "พบ {count} ผลลัพธ์",
+      "score": "คะแนน",
+      "metadata": "Metadata",
+      "content": "เนื้อหา",
+      "tracing": "การติดตาม",
+      "tracingEnabled": "เปิดการติดตามแล้ว",
+      "tracingDisabled": "ปิดการติดตามแล้ว",
+      "executionTime": "เวลาดำเนินการ",
+      "tokensUsed": "Token ที่ใช้",
+      "steps": "ขั้นตอน",
+      "embedding": "Embedding",
+      "vectorSearch": "การค้นหา Vector",
+      "reranking": "การจัดอันดับใหม่",
+      "response": "การตอบกลับ",
+      "rawResponse": "การตอบกลับดิบ",
+      "formattedResponse": "การตอบกลับที่จัดรูปแบบแล้ว",
+      "copyResponse": "คัดลอกการตอบกลับ",
+      "copied": "คัดลอกแล้ว!",
+      "history": "ประวัติ",
+      "clearHistory": "ล้างประวัติ",
+      "noHistory": "ไม่มีประวัติ",
+      "noHistoryHint": "ประวัติคำค้นหาของคุณจะแสดงที่นี่",
+      "savedQueries": "คำค้นหาที่บันทึกไว้",
+      "saveQuery": "บันทึกคำค้นหา",
+      "querySaved": "บันทึกคำค้นหาแล้ว",
+      "deleteQuery": "ลบคำค้นหา",
+      "queryDeleted": "ลบคำค้นหาแล้ว",
+      "noSavedQueries": "ไม่มีคำค้นหาที่บันทึกไว้",
+      "apiKeyRequired": "ต้องการคีย์ API เพื่อรันคำค้นหา",
+      "selectApiKey": "เลือกคีย์ API",
+      "createApiKeyFirst": "กรุณาสร้างคีย์ API ก่อน",
+      "invalidJson": "รูปแบบ JSON ไม่ถูกต้อง",
+      "queryError": "คำค้นหาล้มเหลว",
+      "networkError": "ข้อผิดพลาดเครือข่าย กรุณาตรวจสอบการเชื่อมต่อ",
+      "timeout": "คำค้นหาหมดเวลา กรุณาลองใหม่",
+      "compare": "เปรียบเทียบ",
+      "compareMode": "โหมดเปรียบเทียบ",
+      "compareModeHint": "เปรียบเทียบพารามิเตอร์ต่างๆ เคียงข้างกัน",
+      "addComparison": "เพิ่มการเปรียบเทียบ",
+      "removeComparison": "ลบการเปรียบเทียบ",
+      "comparisonResults": "ผลลัพธ์การเปรียบเทียบ",
+      "export": "ส่งออก",
+      "exportResults": "ส่งออกผลลัพธ์",
+      "exportFormat": "รูปแบบการส่งออก",
+      "exportSuccess": "ส่งออกสำเร็จ"
+    },
+    "settingsPage": {
+      "title": "การตั้งค่า",
+      "subtitle": "โปรไฟล์และตัวเลือก",
+      "saving": "กำลังบันทึก...",
+      "saved": "บันทึกแล้ว",
+      "saveFailed": "บันทึกล้มเหลว",
+      "account": "บัญชี",
+      "email": "อีเมล",
+      "name": "ชื่อ",
+      "languageHint": "มีผลต่ออินเทอร์เฟซและแดชบอร์ด",
+      "loading": "กำลังโหลด...",
+      "loginRequired": "ต้องเข้าสู่ระบบ",
+      "tabs": {
+        "profile": "โปรไฟล์",
+        "budget": "งบประมาณ",
+        "notifications": "การแจ้งเตือน",
+        "security": "ความปลอดภัย"
+      },
+      "budget": {
+        "title": "การจัดการงบประมาณ",
+        "description": "ตั้งค่าขีดจำกัดการใช้งาน API และการแจ้งเตือน",
+        "monthlyLimit": "ขีดจำกัดรายเดือน",
+        "monthlyLimitHint": "ตั้งขีดจำกัดการใช้งานรายเดือน",
+        "dailyLimit": "ขีดจำกัดรายวัน",
+        "dailyLimitHint": "ตั้งขีดจำกัดการใช้งานรายวัน",
+        "currentUsage": "การใช้งานปัจจุบัน",
+        "remainingBudget": "งบประมาณคงเหลือ",
+        "usageHistory": "ประวัติการใช้งาน",
+        "alertThreshold": "เกณฑ์การแจ้งเตือน",
+        "alertThresholdHint": "รับการแจ้งเตือนเมื่อถึงเปอร์เซ็นต์นี้ของขีดจำกัด",
+        "alertEnabled": "เปิดการแจ้งเตือนงบประมาณแล้ว",
+        "alertDisabled": "ปิดการแจ้งเตือนงบประมาณแล้ว",
+        "unlimited": "ไม่จำกัด",
+        "setLimit": "ตั้งขีดจำกัด",
+        "removeLimit": "ลบขีดจำกัด"
+      },
+      "notifications": {
+        "title": "การตั้งค่าการแจ้งเตือน",
+        "description": "จัดการตัวเลือกการแจ้งเตือนของคุณ",
+        "email": "การแจ้งเตือนทางอีเมล",
+        "emailHint": "รับอีเมลเกี่ยวกับกิจกรรมบัญชี",
+        "usage": "การแจ้งเตือนการใช้งาน",
+        "usageHint": "รับการแจ้งเตือนเมื่อใกล้ถึงขีดจำกัดการใช้งาน",
+        "security": "การแจ้งเตือนความปลอดภัย",
+        "securityHint": "รับการแจ้งเตือนเกี่ยวกับความปลอดภัยบัญชี",
+        "marketing": "อัปเดตผลิตภัณฑ์",
+        "marketingHint": "รับการแจ้งเตือนเกี่ยวกับฟีเจอร์ใหม่และอัปเดต",
+        "weekly": "สรุปรายสัปดาห์",
+        "weeklyHint": "รับสรุปการใช้งานรายสัปดาห์",
+        "allEnabled": "เปิดการแจ้งเตือนทั้งหมดแล้ว",
+        "allDisabled": "ปิดการแจ้งเตือนทั้งหมดแล้ว",
+        "enableAll": "เปิดทั้งหมด",
+        "disableAll": "ปิดทั้งหมด"
+      },
+      "security": {
+        "title": "การตั้งค่าความปลอดภัย",
+        "description": "จัดการความปลอดภัยบัญชีของคุณ",
+        "twoFactor": "การยืนยันตัวตนสองขั้นตอน",
+        "twoFactorHint": "เพิ่มชั้นความปลอดภัยให้บัญชีของคุณ",
+        "twoFactorEnabled": "เปิดการยืนยันตัวตนสองขั้นตอนแล้ว",
+        "twoFactorDisabled": "ปิดการยืนยันตัวตนสองขั้นตอนแล้ว",
+        "enableTwoFactor": "เปิดการยืนยันตัวตนสองขั้นตอน",
+        "disableTwoFactor": "ปิดการยืนยันตัวตนสองขั้นตอน",
+        "sessions": "เซสชันที่ใช้งานอยู่",
+        "sessionsHint": "จัดการอุปกรณ์และเซสชันที่ใช้งานอยู่ของคุณ",
+        "currentSession": "เซสชันปัจจุบัน",
+        "lastActive": "ใช้งานล่าสุด",
+        "revokeSession": "เพิกถอนเซสชัน",
+        "revokeAllSessions": "เพิกถอนเซสชันอื่นทั้งหมด",
+        "changePassword": "เปลี่ยนรหัสผ่าน",
+        "changePasswordHint": "อัปเดตรหัสผ่านเป็นประจำเพื่อความปลอดภัย",
+        "currentPassword": "รหัสผ่านปัจจุบัน",
+        "newPassword": "รหัสผ่านใหม่",
+        "confirmPassword": "ยืนยันรหัสผ่าน",
+        "passwordChanged": "เปลี่ยนรหัสผ่านแล้ว",
+        "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
+        "passwordTooShort": "รหัสผ่านสั้นเกินไป",
+        "apiKeysSecurity": "ความปลอดภัยคีย์ API",
+        "apiKeysSecurityHint": "ตรวจสอบและจัดการคีย์ API ของคุณ"
+      },
+      "dangerZone": {
+        "title": "โซนอันตราย",
+        "description": "การดำเนินการที่ไม่สามารถย้อนกลับได้",
+        "deleteAccount": "ลบบัญชี",
+        "deleteAccountHint": "ลบบัญชีและข้อมูลทั้งหมดของคุณอย่างถาวร",
+        "deleteAccountConfirm": "คุณแน่ใจหรือไม่ว่าต้องการลบบัญชี? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+        "deleteAccountButton": "ลบบัญชีของฉัน",
+        "exportData": "ส่งออกข้อมูล",
+        "exportDataHint": "ดาวน์โหลดสำเนาข้อมูลทั้งหมดของคุณ",
+        "exportDataButton": "ส่งออกข้อมูล",
+        "exportInProgress": "กำลังส่งออก...",
+        "exportComplete": "ส่งออกเสร็จสิ้น"
+      }
+    },
+    "greeting": {
+      "morning": "สวัสดีตอนเช้า",
+      "afternoon": "สวัสดีตอนบ่าย",
+      "evening": "สวัสดีตอนเย็น"
+    },
+    "overviewPage": {
+      "subtitle": "นี่คือภาพรวมการใช้งานหน่วยความจำ AI ของคุณ",
+      "totalMemories": "ความทรงจำทั้งหมด",
+      "apiCalls": "การเรียก API",
+      "activeKeys": "คีย์ API ที่ใช้งานอยู่",
+      "currentPlan": "แผนปัจจุบัน",
+      "usage": "การใช้งาน",
+      "today": "วันนี้",
+      "dailyLimit": "ขีดจำกัดรายวัน",
+      "recentMemories": "ความทรงจำล่าสุด",
+      "viewAll": "ดูทั้งหมด",
+      "noMemories": "ยังไม่มีความทรงจำ",
+      "noMemoriesHint": "เริ่มต้นโดยเพิ่มความทรงจำแรกผ่าน API",
+      "quickStart": "เริ่มต้นอย่างรวดเร็ว",
+      "createApiKey": "สร้างคีย์ API",
+      "getStartedApi": "เริ่มต้นใช้งาน API",
+      "viewDocumentation": "ดูเอกสาร",
+      "learnSeizn": "เรียนรู้วิธีใช้ Seizn",
+      "createOrganization": "สร้างองค์กร",
+      "collaborateTeam": "ทำงานร่วมกับทีมของคุณ",
+      "quickExample": "ตัวอย่างด่วน",
+      "manageKeys": "จัดการคีย์",
+      "upgradePlan": "อัพเกรดแผน"
+    },
+    "keysPage": {
+      "title": "คีย์ API",
+      "subtitle": "จัดการคีย์ API สำหรับการเข้าถึงบริการ Seizn",
+      "createNewKey": "สร้างคีย์ใหม่",
+      "activeKeys": "คีย์ที่ใช้งานอยู่",
+      "noKeysTitle": "ยังไม่มีคีย์ API",
+      "noKeysDesc": "สร้างคีย์ API แรกของคุณเพื่อเริ่มผสานรวมกับ Seizn",
+      "createApiKey": "สร้างคีย์ API",
+      "created": "สร้างแล้ว",
+      "neverUsed": "ไม่เคยใช้",
+      "lastUsed": "ใช้ล่าสุด",
+      "revoke": "เพิกถอน",
+      "revokeConfirm": "เพิกถอนคีย์ API \"{keyName}\"? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "usageGuide": "คู่มือการใช้งาน",
+      "authentication": "การยืนยันตัวตน",
+      "authDesc": "รวมคีย์ API ของคุณใน request header:",
+      "exampleRequest": "ตัวอย่าง Request",
+      "keyCreated": "สร้างคีย์ API แล้ว!",
+      "keyCreatedDesc": "คัดลอกคีย์นี้ตอนนี้ คุณจะไม่เห็นมันอีก",
+      "copyToClipboard": "คัดลอกไปคลิปบอร์ด",
+      "copied": "คัดลอกแล้ว!",
+      "done": "เสร็จ",
+      "createKeyTitle": "สร้างคีย์ API",
+      "createKeyDesc": "ตั้งชื่อที่สื่อความหมายให้กับคีย์ของคุณ",
+      "keyName": "ชื่อคีย์",
+      "keyNamePlaceholder": "เช่น Production, Development, Testing",
+      "cancel": "ยกเลิก",
+      "creating": "กำลังสร้าง...",
+      "createKey": "สร้างคีย์"
+    },
+    "organizationsPage": {
+      "title": "องค์กร",
+      "subtitle": "จัดการทีมและทำงานร่วมกับผู้อื่น",
+      "newOrganization": "องค์กรใหม่",
+      "noOrgsTitle": "ยังไม่มีองค์กร",
+      "noOrgsDesc": "สร้างองค์กรแรกของคุณเพื่อเริ่มทำงานร่วมกับทีม",
+      "createOrganization": "สร้างองค์กร",
+      "created": "สร้างแล้ว",
+      "plan": "แผน",
+      "freePlan": "ฟรี",
+      "createOrgTitle": "สร้างองค์กร",
+      "createOrgDesc": "ตั้งค่าพื้นที่ทำงานทีมใหม่",
+      "orgName": "ชื่อองค์กร",
+      "orgNamePlaceholder": "บริษัท Acme",
+      "urlSlug": "URL Slug",
+      "urlSlugPlaceholder": "acme-corp",
+      "cancel": "ยกเลิก",
+      "creating": "กำลังสร้าง...",
+      "create": "สร้าง",
+      "roles": {
+        "owner": "เจ้าของ",
+        "admin": "ผู้ดูแล",
+        "member": "สมาชิก"
+      }
+    },
+    "onboarding": {
+      "title": "เริ่มต้นใช้งาน Seizn",
+      "progress": "{completed}/{total} ขั้นตอนเสร็จสิ้น",
+      "dismiss": "ปิด",
+      "doLater": "ฉันจะทำภายหลัง",
+      "steps": {
+        "apiKey": {
+          "title": "สร้างคีย์ API",
+          "description": "สร้างคีย์ API แรกเพื่อยืนยันคำขอ",
+          "action": "สร้างคีย์"
+        },
+        "demoQuery": {
+          "title": "ทำคำค้นหาแรก",
+          "description": "ลองคำค้นหาสาธิตหรือทำคำขอ API",
+          "action": "ลองสาธิต"
+        },
+        "viewTrace": {
+          "title": "ดูการติดตาม",
+          "description": "เข้าใจวิธีการทำงานของการค้นหาด้วยการติดตามแบบเต็ม",
+          "action": "ดูการติดตาม"
+        },
+        "installSdk": {
+          "title": "ติดตั้ง SDK",
+          "description": "เพิ่ม Seizn ในโปรเจกต์ของคุณด้วย npm หรือ pip",
+          "action": "ดู SDK"
+        }
+      }
+    }
+  },
+  "pricingPage": {
+    "title": "ราคา",
+    "subtitle": "ราคาที่เรียบง่ายและโปร่งใส เริ่มต้นฟรี ขยายได้เมื่อเติบโต",
+    "faq": {
+      "title": "คำถามที่พบบ่อย",
+      "subtitle": "ทุกสิ่งที่คุณต้องการทราบเกี่ยวกับ Seizn",
+      "questions": [
+        {
+          "q": "หน่วยความจำ AI คืออะไรและแตกต่างจาก RAG อย่างไร?",
+          "a": "หน่วยความจำ AI คือที่เก็บข้อมูลถาวรที่จดจำความชอบของผู้ใช้ เหตุการณ์ และบริบทข้ามเซสชัน ต่างจาก RAG ที่ดึงเอกสารคงที่ Seizn ดึงและอัปเดตความทรงจำแบบไดนามิกจากการสนทนา สร้างฐานความรู้ที่มีชีวิต"
+        },
+        {
+          "q": "ข้อมูลของฉันถูกเก็บไว้ที่ไหน?",
+          "a": "ข้อมูลทั้งหมดถูกเก็บบนเซิร์ฟเวอร์ที่ปลอดภัยในสหรัฐอเมริกา (AWS) พร้อมการเข้ารหัสแบบ end-to-end เราปฏิบัติตาม GDPR และ CCPA คุณสามารถขอลบข้อมูลทั้งหมดได้ตลอดเวลา"
+        },
+        {
+          "q": "ฉันจะเริ่มต้นได้อย่างไร?",
+          "a": "1) สมัครฟรี, 2) สร้างคีย์ API, 3) ติดตั้ง SDK (npm install @seizn/sdk), 4) เพิ่มความทรงจำด้วยโค้ด 3 บรรทัด"
+        },
+        {
+          "q": "จะเกิดอะไรขึ้นถ้าฉันเกินขีดจำกัดแผน?",
+          "a": "เราจะแจ้งเตือนที่ 80% หากเกิน การเรียก API จะดำเนินต่อไปด้วยลำดับความสำคัญที่ลดลง อัพเกรดได้ตลอดเวลาเพื่อเพิ่มขีดจำกัดทันที"
+        },
+        {
+          "q": "ฉันสามารถลบความทรงจำเฉพาะได้หรือไม่?",
+          "a": "ได้ ลบความทรงจำแต่ละรายการ ลบเป็นกลุ่มตามแท็ก หรือลบทั้งหมด ข้อมูลที่ลบจะถูกลบออกภายใน 24 ชั่วโมง"
+        },
+        {
+          "q": "รองรับโมเดล AI ใดบ้าง?",
+          "a": "โมเดลใดก็ได้: GPT-4, Claude, Gemini, Llama SDK สำหรับ JS/TS, Python, REST API ทำงานกับ LangChain, LlamaIndex, Vercel AI"
+        },
+        {
+          "q": "มีการทดลองใช้ฟรีหรือไม่?",
+          "a": "แผนฟรีเป็นแบบถาวร: 10,000 ความทรงจำ, 1,000 การเรียก API/เดือน ไม่ต้องใช้บัตรเครดิต"
+        },
+        {
+          "q": "การเรียกค้นเร็วแค่ไหน?",
+          "a": "ต่ำกว่า 50ms โดยเฉลี่ย การค้นหาแบบไฮบริด vector + graph พร้อม index ที่ปรับแต่งแล้ว"
+        }
+      ],
+      "stillQuestions": "ยังมีคำถาม?",
+      "contactUs": "ติดต่อเราได้ที่"
+    }
+  },
+  "serviceSelector": {
+    "title": "เลือกประสบการณ์ของคุณ",
+    "subtitle": "สองวิธีในการใช้พลังของหน่วยความจำ AI",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "แชท Multi-AI",
+      "description": "แชทกับ GPT-4, Claude, Gemini และอีกมากมาย - ทั้งหมดพร้อมหน่วยความจำถาวรที่จดจำคุณ",
+      "features": [
+        "เข้าถึงโมเดล AI ชั้นนำทั้งหมดในที่เดียว",
+        "ความชอบของคุณถูกจดจำข้ามเซสชัน",
+        "สลับบริบทอย่างราบรื่นระหว่างโมเดล"
+      ],
+      "cta": "ลอง Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Memory API",
+      "description": "มอบหน่วยความจำถาวรให้กับแอปพลิเคชัน AI ของคุณด้วย API ที่เป็นมิตรกับนักพัฒนา",
+      "features": [
+        "REST API และ SDK ที่เรียบง่าย",
+        "เวลาเรียกค้นต่ำกว่า 50ms",
+        "ความปลอดภัยระดับองค์กร"
+      ],
+      "cta": "สำรวจ API",
+      "badge": "พร้อมใช้งาน"
+    },
+    "footer": "ส่วนหนึ่งของ Seizn Seasons - หน่วยความจำ AI สำหรับทุกความต้องการ"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "หนึ่งแชท",
+    "titleHighlight": "ทุก AI",
+    "subtitle": "ไม่ว่าคุณจะเลือก AI ใด\nทั้งหมดจดจำคุณ",
+    "startChatting": "เริ่มแชท",
+    "viewPricing": "ดูราคา",
+    "features": {
+      "title": "ทำไมต้องเลือก Spring?",
+      "subtitle": "สิ่งที่ดีที่สุดจากทุก AI รวมเป็นหนึ่ง",
+      "multiModel": {
+        "title": "เข้าถึงหลายโมเดล",
+        "description": "สลับระหว่าง GPT-4, Claude, Gemini, Llama และอื่นๆ เลือกโมเดลที่ดีที่สุดสำหรับแต่ละงาน"
+      },
+      "persistentMemory": {
+        "title": "หน่วยความจำถาวร",
+        "description": "ความชอบ บริบท และประวัติของคุณถูกเก็บไว้ในทุกการสนทนาและทุกโมเดล"
+      },
+      "freeGenerosity": {
+        "title": "แผนฟรีระดับ Cursor",
+        "description": "การใช้งานฟรีอย่างใจกว้าง ผู้ใช้ส่วนใหญ่ไม่ต้องจ่ายเงิน Pro ราคา $9.99/เดือนสำหรับผู้ใช้ระดับสูง"
+      }
+    },
+    "pricing": {
+      "title": "ราคาเรียบง่าย",
+      "free": {
+        "name": "ฟรี",
+        "price": "$0",
+        "period": "ตลอดไป",
+        "features": [
+          "โมเดล AI ทั้งหมด",
+          "หน่วยความจำข้ามเซสชัน",
+          "แอปเว็บและมือถือ"
+        ],
+        "cta": "เริ่มต้นฟรี"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "ต่อเดือน",
+        "badge": "คุ้มค่าที่สุด",
+        "features": [
+          "ทุกอย่างในแผนฟรี",
+          "การเข้าถึงลำดับความสำคัญ",
+          "การควบคุมหน่วยความจำขั้นสูง",
+          "การเข้าถึง API"
+        ],
+        "cta": "อัพเกรดเป็น Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "การค้นหาที่ดีบักได้",
+    "heroSubtitle": "สแต็กการค้นหาแบบบูรณาการพร้อมการติดตาม การประเมิน และการกำกับดูแลในตัว หนึ่งคำขอ = ผลลัพธ์ + การติดตาม + ค่าใช้จ่าย",
+    "firstRetrievalComplete": "การเรียกค้นแรกเสร็จสิ้น",
+    "copySnippetHint": "คัดลอกโค้ดด้านล่างเพื่อทำซ้ำ",
+    "copySnippetTitle": "คัดลอกโค้ดนี้",
+    "copySnippetSubtitle": "สร้างจากการตั้งค่าที่แน่นอนของคุณด้านบน",
+    "whySeizn": {
+      "title": "ทำไม Seizn ถึงดีกว่า LangChain + Pinecone?",
+      "subtitle": "หยุดประกอบเครื่องมือที่กระจัดกระจาย รับทุกอย่างที่คุณต้องการในสแต็กเดียว",
+      "tracingTitle": "การติดตาม + การประเมินในตัว",
+      "tracingDesc": "ทุกคำขอถูกติดตามโดยค่าเริ่มต้น รันการประเมิน ตรวจจับการถดถอย และดีบักปัญหาการผลิตโดยไม่ต้องเพิ่ม LangSmith หรือการบันทึกที่กำหนดเอง",
+      "tracingBadge": "เปิดค่าเริ่มต้น",
+      "autopilotTitle": "Autopilot ที่คำนึงถึงงบประมาณ",
+      "autopilotDesc": "ตั้งค่างบประมาณ latency หรือค่าใช้จ่าย และ Autopilot จะเลือกกลยุทธ์การเรียกค้นที่เหมาะสมที่สุดโดยอัตโนมัติ ไม่ต้องปรับแต่งด้วยตนเอง",
+      "autopilotBadge": "ตัวเลือก",
+      "governanceTitle": "การกำกับดูแล + บันทึกการตรวจสอบ",
+      "governanceDesc": "การตรวจจับ PII การลืมที่สอดคล้องกับ GDPR และเส้นทางการตรวจสอบที่สมบูรณ์ สร้างมาสำหรับทีมที่ต้องการการปฏิบัติตาม ไม่ใช่ติดตั้งเพิ่มภายหลัง",
+      "governanceBadge": "ค่าเริ่มต้นสำหรับทีม",
+      "lessGlueTitle": "ส่วนประกอบน้อยลง",
+      "lessGlueDesc": "ไม่ต้องจัดการ LangChain + Pinecone + LangSmith + ตัวกรอง PII ที่กำหนดเองอีกต่อไป SDK เดียว แดชบอร์ดเดียว ใบแจ้งหนี้เดียว",
+      "lessGlueBadge": "โค้ดเชื่อมต่อน้อยลง"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "ปลอดภัยโดยค่าเริ่มต้น",
+      "rateLimits": "Rate Limits",
+      "rateLimitsDesc": "การแจ้งเตือนการใช้งาน",
+      "auditLogs": "บันทึกการตรวจสอบ",
+      "auditLogsDesc": "ความสามารถในการติดตามแบบเต็ม"
+    },
+    "pricingCta": {
+      "title": "ราคาที่เรียบง่ายและโปร่งใส",
+      "subtitle": "เริ่มต้นฟรี ขยายได้เมื่อเติบโต ไม่มีค่าธรรมเนียมแอบแฝง",
+      "viewPricing": "ดูราคา",
+      "contactSales": "ติดต่อฝ่ายขาย"
+    },
+    "nav": {
+      "docs": "เอกสาร",
+      "pricing": "ราคา",
+      "enterprise": "องค์กร",
+      "getApiKey": "รับคีย์ API",
+      "tryDemo": "ลองสาธิต"
+    },
+    "requestBuilder": {
+      "title": "ตัวสร้างคำขอ",
+      "query": "คำค้นหา",
+      "queryPlaceholder": "ป้อนคำค้นหาของคุณ...",
+      "tryExamples": "ลองตัวอย่าง",
+      "dataset": "ชุดข้อมูล",
+      "latencyBudget": "งบประมาณ Latency",
+      "fast": "เร็ว",
+      "thorough": "ละเอียด",
+      "topK": "Top K",
+      "results": "ผลลัพธ์",
+      "features": "ฟีเจอร์",
+      "hybridSearch": "การค้นหาแบบไฮบริด",
+      "hybridSearchDesc": "รวม vector + keyword",
+      "rerank": "จัดอันดับใหม่",
+      "rerankDesc": "ให้คะแนนใหม่ด้วย cross-encoder",
+      "answerContract": "สัญญาคำตอบ",
+      "answerContractDesc": "ตรวจสอบคุณภาพคำตอบ",
+      "running": "กำลังรัน...",
+      "runQuery": "รันคำค้นหา",
+      "datasets": {
+        "techDocs": "เอกสารเทคนิค",
+        "legalContracts": "สัญญาทางกฎหมาย",
+        "researchPapers": "เอกสารวิจัย"
+      }
+    },
+    "resultsPanel": {
+      "searching": "กำลังค้นหา...",
+      "noResults": "รันคำค้นหาเพื่อดูผลลัพธ์",
+      "score": "คะแนน"
+    },
+    "tracePanel": {
+      "tracing": "กำลังติดตาม pipeline...",
+      "noTrace": "รันคำค้นหาเพื่อดูการติดตาม",
+      "latency": "Latency",
+      "cost": "ค่าใช้จ่าย",
+      "tokens": "Token",
+      "vectorOps": "Vector Ops",
+      "cached": "แคช",
+      "model": "โมเดล",
+      "input": "อินพุต",
+      "output": "เอาต์พุต"
+    },
+    "tabs": {
+      "results": "ผลลัพธ์",
+      "trace": "การติดตาม"
+    }
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "แดชบอร์ด",
+      "getStarted": "เริ่มต้นใช้งาน"
+    },
+    "sidebar": {
+      "overview": "ภาพรวม",
+      "gettingStarted": "เริ่มต้น",
+      "whenToUse": "เมื่อไหร่ควรใช้",
+      "quickStart": "เริ่มต้นอย่างรวดเร็ว",
+      "authentication": "การยืนยันตัวตน",
+      "concepts": "แนวคิด",
+      "memoryObject": "Memory Object",
+      "namespaceScope": "Namespace & Scope",
+      "bestPractices": "แนวปฏิบัติที่ดี",
+      "apiReference": "อ้างอิง API",
+      "endpoints": "Endpoints",
+      "rateLimits": "ขีดจำกัด",
+      "errorCodes": "รหัสข้อผิดพลาด",
+      "resources": "ทรัพยากร",
+      "security": "ความปลอดภัย",
+      "sdks": "SDKs",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "title": "เอกสาร API",
+      "subtitle": "ทุกอย่างที่คุณต้องการเพื่อผสานรวม Seizn เข้ากับแอปพลิเคชันของคุณ เพิ่มหน่วยความจำถาวรให้กับ AI ของคุณด้วยโค้ดเพียงไม่กี่บรรทัด"
+    },
+    "quickStart": {
+      "title": "เริ่มต้นอย่างรวดเร็ว",
+      "description": "รับคีย์ API ของคุณจาก",
+      "dashboardLink": "แดชบอร์ด",
+      "then": " จากนั้นเริ่มส่งคำขอ:"
+    },
+    "authentication": {
+      "title": "การยืนยันตัวตน",
+      "description": "คำขอ API ทั้งหมดต้องการคีย์ API ใน",
+      "header": "x-api-key",
+      "headerSuffix": "header",
+      "securityTitle": "ความปลอดภัย:",
+      "securityText": "เก็บรักษาคีย์ API ของคุณเป็นความลับ อย่าเปิดเผยในโค้ดฝั่ง client ใช้ตัวแปรสภาพแวดล้อมหรือ backend proxy"
+    },
+    "endpoints": {
+      "title": "API Endpoints",
+      "requestBody": "Request Body",
+      "queryParams": "Query Parameters",
+      "response": "การตอบกลับ",
+      "postMemories": {
+        "description": "เพิ่มความทรงจำใหม่ลงในที่เก็บของผู้ใช้",
+        "content": "string (ต้องระบุ) - เนื้อหาความทรงจำ",
+        "memoryType": "string - ประเภท: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - แท็กสำหรับการจัดหมวดหมู่",
+        "namespace": "string - Namespace สำหรับการจัดระเบียบ (ค่าเริ่มต้น: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - Session ID สำหรับความทรงจำระดับ session",
+        "agentId": "string - Agent ID สำหรับความทรงจำระดับ agent"
+      },
+      "getMemories": {
+        "description": "ค้นหาความทรงจำด้วยความคล้ายคลึงทางความหมาย",
+        "query": "string (ต้องระบุ) - คำค้นหา",
+        "limit": "number - ผลลัพธ์สูงสุด (ค่าเริ่มต้น: 10, สูงสุด: 100)",
+        "threshold": "number - เกณฑ์ความคล้ายคลึง 0-1 (ค่าเริ่มต้น: 0.7)",
+        "namespace": "string - กรองตาม namespace"
+      },
+      "deleteMemories": {
+        "description": "ลบความทรงจำตาม ID",
+        "ids": "string (ต้องระบุ) - ID ความทรงจำคั่นด้วยเครื่องหมายจุลภาค"
+      },
+      "extract": {
+        "description": "ดึงและจัดเก็บความทรงจำจากการสนทนาด้วย AI",
+        "conversation": "string (ต้องระบุ) - ข้อความการสนทนาเพื่อดึงความทรงจำ",
+        "model": "string - โมเดล AI: haiku (เร็วกว่า) หรือ sonnet (ดีกว่า) (ค่าเริ่มต้น: haiku)",
+        "autoStore": "boolean - จัดเก็บความทรงจำที่ดึงมาโดยอัตโนมัติ (ค่าเริ่มต้น: true)",
+        "namespace": "string - Namespace สำหรับความทรงจำที่จัดเก็บ (ค่าเริ่มต้น: \"default\")"
+      },
+      "query": {
+        "description": "รับการตอบกลับจาก AI โดยใช้ความทรงจำที่เกี่ยวข้องเป็นบริบท (RAG)",
+        "queryParam": "string (ต้องระบุ) - คำถามหรือ prompt ของผู้ใช้",
+        "model": "string - โมเดล AI: haiku หรือ sonnet (ค่าเริ่มต้น: haiku)",
+        "topK": "number - จำนวนความทรงจำที่ใช้เป็นบริบท (ค่าเริ่มต้น: 5)",
+        "namespace": "string - กรองความทรงจำตาม namespace",
+        "includeMemories": "boolean - รวมความทรงจำที่ใช้ในการตอบกลับ (ค่าเริ่มต้น: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "ขีดจำกัด",
+      "plan": "แผน",
+      "dailyApiCalls": "การเรียก API รายวัน",
+      "maxMemories": "ความทรงจำสูงสุด",
+      "apiKeys": "คีย์ API",
+      "free": "ฟรี",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "องค์กร",
+      "unlimited": "ไม่จำกัด",
+      "exceeded": "เมื่อคุณเกินขีดจำกัด API จะส่งคืน",
+      "response": "การตอบกลับ"
+    },
+    "errors": {
+      "title": "รหัสข้อผิดพลาด",
+      "code": "รหัส",
+      "description": "คำอธิบาย",
+      "success": "สำเร็จ",
+      "badRequest": "Bad Request - ขาดหรือพารามิเตอร์ไม่ถูกต้อง",
+      "unauthorized": "Unauthorized - คีย์ API ไม่ถูกต้องหรือขาด",
+      "tooManyRequests": "Too Many Requests - เกินขีดจำกัด",
+      "serverError": "Internal Server Error - เกิดข้อผิดพลาด"
+    },
+    "security": {
+      "title": "ความปลอดภัยและการกำกับดูแล",
+      "dataSecurityTitle": "ความปลอดภัยข้อมูล",
+      "encryptionAtRest": "การเข้ารหัสขณะเก็บ:",
+      "encryptionAtRestDesc": "ข้อมูลทั้งหมดถูกเข้ารหัสด้วย AES-256",
+      "encryptionInTransit": "การเข้ารหัสขณะส่ง:",
+      "encryptionInTransitDesc": "TLS 1.3 สำหรับการเชื่อมต่อทั้งหมด",
+      "tenantIsolation": "การแยกผู้เช่า:",
+      "tenantIsolationDesc": "การแยกข้อมูลอย่างสมบูรณ์ระหว่างบัญชี",
+      "apiKeyManagement": "การจัดการคีย์ API",
+      "keyRotation": "การหมุนเวียนคีย์:",
+      "keyRotationDesc": "หมุนเวียนคีย์ได้ตลอดเวลาจากแดชบอร์ด",
+      "keyExpiration": "การหมดอายุคีย์:",
+      "keyExpirationDesc": "คีย์หมดอายุอัตโนมัติหลัง 90 วัน (กำหนดค่าได้)",
+      "usageTracking": "การติดตามการใช้งาน:",
+      "usageTrackingDesc": "การตรวจสอบการใช้งานแบบเรียลไทม์ต่อคีย์",
+      "dataRetention": "การเก็บรักษาและลบข้อมูล",
+      "export": "ส่งออก:",
+      "exportDesc": "ส่งออกข้อมูลทั้งหมดได้ตลอดเวลาผ่าน API หรือแดชบอร์ด",
+      "deletion": "การลบ:",
+      "deletionDesc": "การลบถาวรไม่มีการเก็บรักษาหลัง 30 วัน",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "ปฏิบัติตามสิทธิ์ของเจ้าของข้อมูลอย่างสมบูรณ์"
+    },
+    "sdks": {
+      "title": "SDKs",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. สงวนลิขสิทธิ์"
+    },
+    "faqPage": {
+      "title": "คำถามที่พบบ่อย",
+      "subtitle": "คำถามทั่วไปเกี่ยวกับ Seizn Memory API ตั้งแต่การเริ่มต้นจนถึงการดำเนินการขั้นสูง",
+      "stillHaveQuestions": "ยังมีคำถาม?",
+      "stillHaveQuestionsDesc": "ดูเอกสารของเราหรือติดต่อทีมสนับสนุน",
+      "readDocs": "อ่านเอกสาร",
+      "contactSupport": "ติดต่อสนับสนุน",
+      "categories": {
+        "all": "ทั้งหมด",
+        "gettingStarted": "เริ่มต้น",
+        "coreConcepts": "แนวคิดหลัก",
+        "searchRetrieval": "การค้นหาและเรียกค้น",
+        "extraction": "การดึงข้อมูล",
+        "operations": "การดำเนินการ",
+        "securityCompliance": "ความปลอดภัยและการปฏิบัติตาม"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Seizn Memory คืออะไรและแก้ปัญหาอะไร?",
+          "answer": "Seizn Memory คือโครงสร้างพื้นฐานหน่วยความจำ AI ที่ให้หน่วยความจำถาวรที่ค้นหาได้สำหรับแอปพลิเคชัน AI ต่างจากฐานข้อมูล vector ที่เพียงจัดเก็บ/ค้นหา vector Seizn รวมเลเยอร์ผลิตภัณฑ์เต็มรูปแบบ: การดึงหน่วยความจำ การจัดการนโยบาย การจัดการคีย์ การลบ บันทึกการตรวจสอบ และ SDK มันแก้ปัญหาการรักษาบริบทข้ามเซสชัน AI และเปิดใช้งานประสบการณ์ AI แบบเฉพาะบุคคล"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn แตกต่างจากฐานข้อมูล vector เช่น Pinecone หรือ Weaviate อย่างไร?",
+          "answer": "ฐานข้อมูล vector เป็นโครงสร้างพื้นฐานการจัดเก็บ/ค้นหาสำหรับ vector Seizn เป็นระบบหน่วยความจำที่สมบูรณ์ที่สร้างบนนั้น โดยมี: การดึงหน่วยความจำอัตโนมัติจากการสนทนา การจัดหมวดหมู่ประเภทหน่วยความจำ การจัดการ namespace/scope การหมุนเวียนคีย์ API บันทึกการตรวจสอบ SDK และคุณสมบัติการกำกับดูแล คิดว่ามันเหมือน 'โครงสร้างพื้นฐานหน่วยความจำ' เทียบกับ 'โครงสร้างพื้นฐานการค้นหา'"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "ฉันต้องใช้ RAG เพื่อใช้ Seizn หรือไม่?",
+          "answer": "ไม่ จุดเริ่มต้นที่พบบ่อยที่สุดคือ: บันทึกหน่วยความจำ -> ค้นหา -> แทรกใน prompt RAG (การรวมบริบทอัตโนมัติ + การสร้างการตอบกลับ) เป็นขั้นตอนถัดไป คุณสามารถเริ่มต้นอย่างง่ายและเพิ่มความซับซ้อนเมื่อจำเป็น"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "วิธีที่เร็วที่สุดในการสร้าง PoC คืออะไร?",
+          "answer": "1) POST /api/memories เพื่อบันทึกการตั้งค่าผู้ใช้ 2) GET /api/memories เพื่อค้นหา 3) แทรกผลลัพธ์ใน prompt LLM ของคุณ 4) จากนั้นเพิ่ม /api/extract สำหรับการดึงอัตโนมัติ และ /api/query สำหรับการตอบกลับที่เสริมด้วยหน่วยความจำ"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "ฉันควรบันทึกอะไรใน /api/memories?",
+          "answer": "บันทึกข้อมูลที่ยังคงถูกต้องข้ามการสนทนา: การตั้งค่า (โทน ภาษา รูปแบบ) ข้อเท็จจริง (งาน เครื่องมือ โครงสร้างโปรเจกต์) คำแนะนำ (\"สรุปในตารางเสมอ\") ความสัมพันธ์ (\"Alice เป็นหัวหน้าทีม\") หลีกเลี่ยงการบันทึกข้อมูลชั่วคราวหรือเฉพาะเซสชันเว้นแต่คุณจะใช้ session scope"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "ข้อมูลใดที่ไม่ควรบันทึก?",
+          "answer": "อย่าบันทึก: รหัสผ่าน คีย์ API token cookie เซสชัน (ข้อมูลรับรอง) SSN หมายเลขหนังสือเดินทาง บัญชีธนาคาร (PII) ข้อมูลบัตรเครดิต (ข้อมูลการชำระเงิน) สำหรับข้อมูลชั่วคราว ใช้ session scope พร้อม TTL หากจำเป็น"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "ทำไม namespace ถึงสำคัญ?",
+          "answer": "Namespace แยกหน่วยความจำตามโปรเจกต์/ผู้เช่า/สภาพแวดล้อม หากไม่มี ข้อมูลจะผสมกัน คุณภาพการค้นหาลดลง และการลบ/ส่งออกจะยาก แนะนำ: 'org:acme/app:chat/env:prod' หรือ 'project:myapp/env:staging' อย่าใช้เพียง 'default' ในการผลิต"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "ควรใช้ scope (user/session/agent) เมื่อไหร่?",
+          "answer": "user: การตั้งค่าที่ใช้ทั่วโลกสำหรับผู้ใช้ session: เป้าหมายหรือบริบทที่ถูกต้องเฉพาะสำหรับการสนทนานี้ agent: กฎเฉพาะสำหรับ agent ใน ระบบหลาย agent การใช้ scope ที่ถูกต้องลดความยาว prompt และปรับปรุงความสอดคล้องของการตอบกลับ"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "memory_types คืออะไรและทำไมถึงสำคัญ?",
+          "answer": "memory_type จัดหมวดหมู่หน่วยความจำ: fact (ข้อมูลที่ไม่เปลี่ยนแปลง) preference (ตัวเลือกของผู้ใช้) instruction (กฎที่ต้องปฏิบัติตาม) relationship (การเชื่อมต่อคน/องค์กร) experience (เหตุการณ์ในอดีต) นี่คือแกนที่ทรงพลังที่สุดสำหรับการกรอง การลบ และการใช้นโยบาย"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "threshold และ limit ทำงานอย่างไร?",
+          "answer": "limit: จำนวนหน่วยความจำผู้สมัครที่จะเรียกค้น (ต่ำเกินไป = พลาดสิ่งที่เกี่ยวข้อง สูงเกินไป = บริบทรก) threshold: เกณฑ์ความคล้ายคลึง 0-1 (สูงกว่า = เข้มงวดกว่า) เริ่มด้วย limit=10, threshold=0.7 หากพลาดหน่วยความจำ ลด threshold เป็น 0.6 และเพิ่ม limit เป็น 20 หากมีผลลัพธ์ไม่เกี่ยวข้อง เพิ่ม threshold เป็น 0.75-0.8"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "ทำไมผลการค้นหาของฉันไม่เกี่ยวข้อง?",
+          "answer": "มักจะเป็นหนึ่งใน: 1) namespace ผสมกัน 2) บันทึกหน่วยความจำมากเกินไป (รก) 3) threshold ต่ำเกินไป 4) เนื้อหาเป็นนามธรรมเกินไป ('ชอบทุกอย่าง' เทียบกับข้อเท็จจริงที่เฉพาะเจาะจง) วิธีแก้: แยก namespace ทำเนื้อหาให้เฉพาะเจาะจง เพิ่ม threshold"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "คุณภาพการค้นหาลดลงเมื่อหน่วยความจำเพิ่มขึ้น ฉันควรทำอย่างไร?",
+          "answer": "เพิ่มคะแนนความสำคัญและเก็บเฉพาะหน่วยความจำที่สำคัญ ใช้ TTL เพื่อหมดอายุหน่วยความจำเก่าโดยอัตโนมัติ รวมหน่วยความจำที่คล้ายกันเป็นสรุปเป็นระยะ แยก namespace เพื่อลดขอบเขตการค้นหา"
+        },
+        {
+          "category": "extraction",
+          "question": "ฉันควรใช้ /api/extract อย่างไร?",
+          "answer": "กระบวนการที่แนะนำ: 1) เรียกด้วย auto_store=false เพื่อดูตัวอย่างหน่วยความจำที่ดึงมา 2) แสดงผลลัพธ์ให้ผู้ใช้ยืนยัน 3) บันทึกเฉพาะหน่วยความจำที่ได้รับการอนุมัติ 4) เมื่อคุณภาพการดึงได้รับการพิสูจน์แล้ว สลับไปใช้ auto_store=true สำหรับการทำงานอัตโนมัติ"
+        },
+        {
+          "category": "extraction",
+          "question": "ความแตกต่างระหว่าง model=haiku และ model=sonnet คืออะไร?",
+          "answer": "haiku: เร็วกว่า ถูกกว่า ดีสำหรับกรณีส่วนใหญ่ sonnet: แม่นยำกว่า ดีกว่าสำหรับการดึงที่สำคัญ (onboarding สัญญา นโยบาย) ใช้ haiku สำหรับการดึงเป็นกลุ่ม/เริ่มต้น sonnet สำหรับสถานการณ์ที่มีความเสี่ยงสูง"
+        },
+        {
+          "category": "operations",
+          "question": "ฉันสามารถแก้ไขหน่วยความจำหลังจากบันทึกได้หรือไม่?",
+          "answer": "ได้ แต่รูปแบบที่แนะนำคือ: สร้างหน่วยความจำใหม่ + ลบ/เก็บถาวรอันเก่า แนวทางนี้ดีกว่าสำหรับเส้นทางการตรวจสอบและป้องกันปัญหาการถดถอย"
+        },
+        {
+          "category": "operations",
+          "question": "ฉันจะลบหน่วยความจำได้อย่างไร?",
+          "answer": "สองแนวทาง: 1) ลบตาม ID (แม่นยำ) 2) ลบตาม namespace (ล้างเป็นกลุ่ม) สำหรับองค์กร/การปฏิบัติตาม ตรวจสอบให้แน่ใจว่า 'ลบสมบูรณ์ + บันทึกการตรวจสอบ' บันทึกนโยบายการลบของคุณอย่างชัดเจน"
+        },
+        {
+          "category": "operations",
+          "question": "ฉันได้รับ 429 Too Many Requests ฉันควรทำอย่างไร?",
+          "answer": "คุณถึงขีดจำกัดอัตรา วิธีแก้: 1) ใช้การถอยกลับแบบเลขชี้กำลัง (1s -> 2s -> 4s) 2) คิวคำขอฝั่งเซิร์ฟเวอร์ 3) ลดความถี่คำขอ: แคชคำค้นหาที่ซ้ำกัน การดำเนินการเป็นกลุ่ม ลดความถี่การดึง"
+        },
+        {
+          "category": "operations",
+          "question": "ฉันจะลดค่าใช้จ่ายได้อย่างไร?",
+          "answer": "ปัจจัยค่าใช้จ่ายที่ใหญ่ที่สุด: 1) ความถี่การดึง - ลดการเรียก 2) ขอบเขตการค้นหา - ใช้ namespace เพื่อจำกัด 3) การเลือกโมเดล - ใช้ haiku สำหรับงานปกติ sonnet สำหรับงานสำคัญ 4) แคช - แคชคำค้นหาที่ซ้ำ 5) การดำเนินการเป็นกลุ่มเมื่อเป็นไปได้"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "ฉันสามารถใช้คีย์ API ในเบราว์เซอร์ (frontend) ได้หรือไม่?",
+          "answer": "ไม่แนะนำ - มีความเสี่ยงสูงในการรั่วไหลคีย์ เรียก Seizn จากเซิร์ฟเวอร์ของคุณ (Next.js Route Handler, Cloudflare Worker, serverless function) และให้เบราว์เซอร์เรียกเซิร์ฟเวอร์ของคุณ อย่าเปิดเผยคีย์ API ให้กับโค้ดฝั่งไคลเอนต์"
+        },
+        {
+          "category": "securityCompliance",
+          "question": "ทีมความปลอดภัย/กฎหมายของฉันต้องการเอกสารอะไร?",
+          "answer": "พวกเขาจะต้องการ: 1) ขอบเขตข้อมูล (อะไรถูก/ไม่ถูกบันทึก) 2) การเข้ารหัส (ขณะเก็บ: AES-256 ขณะส่ง: TLS) 3) วิธีการแยกผู้เช่า 4) นโยบายการลบ/เก็บรักษา 5) การเข้าถึงบันทึกการตรวจสอบ 6) นโยบายการหมุนเวียน/หมดอายุคีย์ เก็บหน้าความปลอดภัยและการกำกับดูแลไว้ในเอกสารของคุณ"
+        }
+      ]
+    },
+    "componentsPage": {
+      "title": "UI Components",
+      "subtitle": "เอกสารที่ครอบคลุมสำหรับไลบรารี UI component ของ Seizn แต่ละ component รวมถึง Props ตัวอย่างการใช้งาน และแนวปฏิบัติที่ดี",
+      "all": "ทั้งหมด",
+      "components": {
+        "graphCanvas": {
+          "description": "Main graph canvas component โดยใช้ React Flow แสดง nodes และ edges พร้อมตัวควบคุมแบบโต้ตอบ minimap และแผงสิทธิ์"
+        },
+        "nodeRenderer": {
+          "description": "Custom node renderer สำหรับการแสดงภาพกราฟ แสดงประเภท node สถานะ สิทธิ์พร้อมรูปลักษณ์ที่มีสไตล์"
+        },
+        "edgeRenderer": {
+          "description": "Custom edge renderer สำหรับการเชื่อมต่อกราฟ รองรับ edges แบบมีทิศทาง ไม่มีทิศทาง และสองทิศทางพร้อมสไตล์ที่กำหนดเอง"
+        },
+        "graphControls": {
+          "description": "แผงควบคุมสำหรับการกรองกราฟและซูม กรองตามประเภท node ประเภท edge และค้นหา"
+        },
+        "permissionPanel": {
+          "description": "แผงด้านข้างแสดงข้อมูลสิทธิ์โดยละเอียดสำหรับ nodes ที่เลือก"
+        },
+        "explainPanel": {
+          "description": "แผงขยายได้แสดงคำอธิบายการเรียกค้นแบบเต็มรวมถึงการแยกคะแนนและการระบุแหล่งที่มา"
+        },
+        "scoreBreakdown": {
+          "description": "การแยกองค์ประกอบคะแนนความเกี่ยวข้องแบบเห็นภาพ (vector, keyword, rerank, recency)"
+        },
+        "attributionList": {
+          "description": "รายการการระบุแหล่งที่มาแสดงเอกสารใดที่มีส่วนร่วมในผลลัพธ์"
+        },
+        "highlightedPassage": {
+          "description": "ข้อความที่มีช่วงที่ตรงกันที่ไฮไลต์ (exact match, semantic match, keyword, entity)"
+        },
+        "retOpsDashboard": {
+          "description": "แดชบอร์ดหลักสำหรับการตรวจสอบการดำเนินการเรียกค้นพร้อมการรีเฟรชอัตโนมัติและการเลือกช่วงเวลา"
+        },
+        "metricsOverview": {
+          "description": "การ์ดภาพรวมแสดงตัวชี้วัดหลัก: QPS, latency, cache hit rate, error rate, MRR, groundedness"
+        },
+        "queryVolumeChart": {
+          "description": "กราฟเส้นแสดงปริมาณคำค้นหาตลอดเวลาพร้อมการกระจายประเภทการค้นหา"
+        },
+        "latencyDistribution": {
+          "description": "กราฟแท่ง latency percentile และการแสดงภาพแนวโน้มพร้อมตัวบ่งชี้ความสอดคล้องกับ SLO"
+        },
+        "qualityTrend": {
+          "description": "กราฟพื้นที่แสดงแนวโน้มคุณภาพการค้นหา (MRR, nDCG, groundedness) พร้อม precision/recall ที่ K"
+        },
+        "topQueries": {
+          "description": "รายการจัดอันดับของคำค้นหาที่พบบ่อยที่สุดพร้อม latency, cache hit rate และจำนวนผลลัพธ์"
+        },
+        "alertsPanel": {
+          "description": "แผงการจัดการการแจ้งเตือนพร้อมการกรองความรุนแรง การรับทราบ และการติดตามสถานะ"
+        }
+      },
+      "props": "Props",
+      "usage": "ตัวอย่างการใช้งาน",
+      "propName": "ชื่อ",
+      "propType": "ประเภท",
+      "propDefault": "ค่าเริ่มต้น",
+      "propDescription": "คำอธิบาย",
+      "copy": "คัดลอก",
+      "copied": "คัดลอกแล้ว!",
+      "categories": {
+        "graph": {
+          "title": "Graph Components",
+          "description": "การแสดงภาพกราฟแบบโต้ตอบสำหรับการแมปสิทธิ์และความสัมพันธ์"
+        },
+        "explain": {
+          "title": "Explain Components",
+          "description": "การแสดงภาพความสามารถในการอธิบายและการระบุแหล่งที่มาสำหรับผลลัพธ์ RAG"
+        },
+        "retops": {
+          "title": "RetOps Components",
+          "description": "แดชบอร์ดการตรวจสอบและวิเคราะห์การดำเนินการเรียกค้น"
+        }
+      }
+    },
+    "search": {
+      "placeholder": "ค้นหาเอกสาร...",
+      "buttonText": "ค้นหา...",
+      "noResults": "ไม่พบผลลัพธ์สำหรับ",
+      "hint": "ค้นหาด่วน:",
+      "navigate": "นำทาง",
+      "select": "เลือก"
+    }
+  }
+}

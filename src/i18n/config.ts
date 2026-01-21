@@ -16,10 +16,15 @@ export const locales = [
   // Western European
   'fr',
   'de',
+  'it',
   'sv',
   'nl',
-  'vi',
   'pl',
+  // South/Southeast Asian
+  'hi',
+  'th',
+  'id',
+  'vi',
   // Portuguese (split by region)
   'pt-BR',
   'pt-PT',
@@ -42,10 +47,14 @@ export const localeNames: Record<Locale, string> = {
   ar: 'العربية',
   fr: 'Français',
   de: 'Deutsch',
+  it: 'Italiano',
   sv: 'Svenska',
   nl: 'Nederlands',
-  vi: 'Tiếng Việt',
   pl: 'Polski',
+  hi: 'हिन्दी',
+  th: 'ไทย',
+  id: 'Bahasa Indonesia',
+  vi: 'Tiếng Việt',
   'pt-BR': 'Português (Brasil)',
   'pt-PT': 'Português (Portugal)',
 };
@@ -87,10 +96,15 @@ export const countryToLocale: Record<string, Locale> = {
   // CA/BE/CH: Accept-Language takes priority, these are multilingual
   DE: 'de',
   AT: 'de',
+  IT: 'it',
   SE: 'sv',
   NL: 'nl',
-  VN: 'vi',
   PL: 'pl',
+  // South/Southeast Asian
+  IN: 'hi',
+  TH: 'th',
+  ID: 'id',
+  VN: 'vi',
   // Portuguese-speaking
   BR: 'pt-BR',
   PT: 'pt-PT',

@@ -47,10 +47,15 @@ const dictionaryLoaders: Record<Locale, () => Promise<Record<string, unknown>>> 
   // Western European
   fr: () => import('./dictionaries/fr.json').then((module) => module.default),
   de: () => import('./dictionaries/de.json').then((module) => module.default),
+  it: () => import('./dictionaries/it.json').then((module) => module.default),
   sv: () => import('./dictionaries/sv.json').then((module) => module.default),
   nl: () => import('./dictionaries/nl.json').then((module) => module.default),
-  vi: () => import('./dictionaries/vi.json').then((module) => module.default),
   pl: () => import('./dictionaries/pl.json').then((module) => module.default),
+  // South/Southeast Asian
+  hi: () => import('./dictionaries/hi.json').then((module) => module.default),
+  th: () => import('./dictionaries/th.json').then((module) => module.default),
+  id: () => import('./dictionaries/id.json').then((module) => module.default),
+  vi: () => import('./dictionaries/vi.json').then((module) => module.default),
   // Portuguese (split by region)
   'pt-BR': () => import('./dictionaries/pt-BR.json').then((module) => module.default),
   'pt-PT': () => import('./dictionaries/pt-PT.json').then((module) => module.default),

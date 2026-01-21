@@ -1,0 +1,1086 @@
+{
+  "metadata": {
+    "title": "Seizn - Infrastruktur Memori AI",
+    "description": "Berikan AI Anda memori jangka panjang. Seizn secara otomatis menyimpan dan mengambil konteks, sehingga AI Anda mengingat percakapan sebelumnya."
+  },
+  "nav": {
+    "features": "Fitur",
+    "pricing": "Harga",
+    "docs": "Dokumentasi",
+    "login": "Masuk",
+    "getStarted": "Mulai"
+  },
+  "hero": {
+    "badge": "Peluncuran Q1 2026",
+    "title": "Infrastruktur memori",
+    "titleHighlight": "untuk aplikasi AI",
+    "subtitle": "Berikan AI Anda memori jangka panjang. Seizn secara otomatis menyimpan dan mengambil konteks, sehingga AI Anda mengingat percakapan sebelumnya.",
+    "emailPlaceholder": "Masukkan email Anda",
+    "joinWaitlist": "Bergabung dengan daftar tunggu",
+    "joining": "Bergabung...",
+    "onTheList": "Anda sudah terdaftar!",
+    "stats": {
+      "tokenSavings": "Penghematan Token",
+      "retrievalTime": "Waktu Pengambilan",
+      "uptimeSla": "SLA Uptime"
+    }
+  },
+  "features": {
+    "title": "Dibangun untuk pengembang",
+    "subtitle": "API sederhana, infrastruktur yang kuat. Tambahkan memori persisten ke AI mana pun dalam hitungan menit.",
+    "smartExtraction": {
+      "title": "Ekstraksi Cerdas",
+      "description": "Secara otomatis mengekstrak fakta penting, preferensi, dan konteks dari percakapan menggunakan Claude AI."
+    },
+    "instantRetrieval": {
+      "title": "Pengambilan Instan",
+      "description": "Pencarian hybrid vektor + graf mengembalikan memori yang relevan dalam milidetik."
+    },
+    "enterpriseSecurity": {
+      "title": "Keamanan Enterprise",
+      "description": "Enkripsi end-to-end, kepatuhan SOC 2, dengan kontrol akses granular dan log audit."
+    }
+  },
+  "codePreview": {
+    "title": "Integrasi Sederhana",
+    "subtitle": "Tambahkan memori ke AI Anda hanya dengan beberapa baris kode."
+  },
+  "pricing": {
+    "title": "Harga sederhana dan transparan",
+    "subtitle": "Mulai gratis, skalakan seiring pertumbuhan.",
+    "free": {
+      "name": "Gratis",
+      "price": "$0",
+      "period": "Gratis selamanya",
+      "features": [
+        "10.000 memori",
+        "1.000 panggilan API/bulan",
+        "Dukungan komunitas"
+      ],
+      "cta": "Mulai"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": "$9",
+      "period": "per bulan",
+      "features": [
+        "50.000 memori",
+        "10.000 panggilan API/bulan",
+        "Dukungan email",
+        "Analitik dasar"
+      ],
+      "cta": "Daftar"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "per bulan",
+      "badge": "Populer",
+      "features": [
+        "200.000 memori",
+        "50.000 panggilan API/bulan",
+        "Dukungan prioritas",
+        "Analitik lanjutan",
+        "Webhook"
+      ],
+      "cta": "Daftar"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Kustom",
+      "period": "Hubungi kami",
+      "features": [
+        "Memori tidak terbatas",
+        "Panggilan API tidak terbatas",
+        "Dukungan khusus",
+        "SLA kustom",
+        "Opsi On-premise"
+      ],
+      "cta": "Hubungi penjualan"
+    }
+  },
+  "enterprisePage": {
+    "title": "Hubungi Penjualan",
+    "subtitle": "Dapatkan paket kustom untuk kebutuhan enterprise dengan dukungan khusus, jaminan SLA, dan integrasi kustom.",
+    "includes": "Enterprise termasuk:",
+    "includesList": [
+      "SLA uptime 99,9%",
+      "Dukungan prioritas (24 jam)",
+      "Manajer akun khusus",
+      "Integrasi kustom",
+      "Autentikasi SSO / SAML",
+      "Kebijakan retensi data",
+      "Laporan audit keamanan",
+      "Kontrak kustom"
+    ],
+    "form": {
+      "companyName": "Nama Perusahaan",
+      "yourName": "Nama Anda",
+      "workEmail": "Email Kerja",
+      "phone": "Telepon",
+      "jobTitle": "Jabatan",
+      "companySize": "Ukuran Perusahaan",
+      "useCase": "Ceritakan tentang use case Anda",
+      "useCasePlaceholder": "Apa yang sedang Anda bangun? Bagaimana Anda akan menggunakan Seizn?",
+      "expectedVolume": "Perkiraan panggilan API bulanan",
+      "timeline": "Timeline",
+      "requirements": "Persyaratan khusus",
+      "requirementsPlaceholder": "SSO, SLA spesifik, lokasi data, persyaratan kepatuhan, dll.",
+      "submit": "Hubungi penjualan",
+      "submitting": "Mengirim...",
+      "privacyNote": "Dengan mengirim formulir ini, Anda menyetujui"
+    },
+    "companySizes": {
+      "select": "Pilih...",
+      "1-10": "1-10 karyawan",
+      "11-50": "11-50 karyawan",
+      "51-200": "51-200 karyawan",
+      "201-500": "201-500 karyawan",
+      "500+": "500+ karyawan"
+    },
+    "volumes": {
+      "select": "Pilih...",
+      "lt100k": "< 100K",
+      "100k-500k": "100K - 500K",
+      "500k-1m": "500K - 1M",
+      "1m-5m": "1M - 5M",
+      "5m+": "5M+"
+    },
+    "timelines": {
+      "select": "Pilih...",
+      "immediate": "Siap mulai sekarang",
+      "1-3months": "1-3 bulan",
+      "3-6months": "3-6 bulan",
+      "6+months": "6+ bulan"
+    },
+    "success": {
+      "title": "Terima kasih!",
+      "message": "Kami telah menerima permintaan Anda. Tim kami akan menghubungi dalam 1-2 hari kerja.",
+      "backHome": "Kembali ke beranda"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Selamat datang kembali",
+      "subtitle": "Masuk ke akun Anda",
+      "email": "Email",
+      "password": "Kata sandi",
+      "submit": "Masuk",
+      "noAccount": "Belum punya akun?",
+      "signUp": "Daftar",
+      "or": "atau lanjutkan dengan"
+    },
+    "signup": {
+      "title": "Buat akun",
+      "subtitle": "Mulai membangun dengan Seizn",
+      "name": "Nama lengkap",
+      "email": "Email",
+      "password": "Kata sandi",
+      "submit": "Buat akun",
+      "hasAccount": "Sudah punya akun?",
+      "signIn": "Masuk",
+      "or": "atau lanjutkan dengan"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Seizn. Hak cipta dilindungi.",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "contact": "Kontak"
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "welcome": "Selamat datang kembali",
+    "overview": "Ringkasan",
+    "usage": "Penggunaan",
+    "apiKeys": "Kunci API",
+    "settings": "Pengaturan",
+    "signOut": "Keluar",
+    "stats": {
+      "memories": "Memori",
+      "apiCalls": "Panggilan API hari ini",
+      "plan": "Paket saat ini",
+      "unlimited": "Tidak terbatas"
+    },
+    "keys": {
+      "title": "Kunci API Anda",
+      "create": "Buat kunci baru",
+      "name": "Nama kunci",
+      "namePlaceholder": "Kunci API saya",
+      "created": "Dibuat",
+      "lastUsed": "Terakhir digunakan",
+      "never": "Belum pernah",
+      "copy": "Salin",
+      "copied": "Disalin!",
+      "delete": "Hapus",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus kunci API ini?",
+      "warning": "Simpan kunci ini dengan aman. Kunci tidak akan ditampilkan lagi.",
+      "noKeys": "Belum ada kunci API. Buat satu untuk memulai."
+    },
+    "usagePage": {
+      "title": "Analitik Penggunaan",
+      "period": "Periode Saat Ini",
+      "memoriesUsed": "Memori Digunakan",
+      "apiCallsUsed": "Panggilan API Digunakan",
+      "remaining": "Tersisa",
+      "upgrade": "Upgrade Paket",
+      "subtitle": "Pantau penggunaan API dan biaya Anda.",
+      "days7": "7 Hari",
+      "days30": "30 Hari",
+      "days90": "90 Hari",
+      "loading": "Memuat...",
+      "totalApiCalls": "Total Panggilan API",
+      "totalTokens": "Total Token",
+      "estimatedCost": "Perkiraan Biaya",
+      "avgLatency": "Rata-rata Latensi",
+      "dailyApiCalls": "Panggilan API Harian",
+      "calls": "panggilan",
+      "endpointUsage": "Penggunaan Endpoint",
+      "noData": "Belum ada data",
+      "avg": "rata-rata",
+      "errors": "error",
+      "usageByApiKey": "Penggunaan per Kunci API",
+      "errorsTitle": "Error",
+      "errorRate": "tingkat error",
+      "noUsageData": "Tidak ada data penggunaan tersedia"
+    },
+    "language": "Bahasa",
+    "organizations": "Organisasi",
+    "docs": "Dokumentasi",
+    "pinSidebar": "Sematkan sidebar",
+    "unpinSidebar": "Tutup sidebar",
+    "playground": "Playground",
+    "playgroundPage": {
+      "title": "Panel Debug",
+      "subtitle": "Uji query dengan pelacakan dan penyesuaian parameter",
+      "queryInput": "Masukkan query",
+      "queryPlaceholder": "Masukkan query pengujian...",
+      "parameters": "Parameter",
+      "topK": "Top K",
+      "topKHint": "Jumlah hasil yang dikembalikan",
+      "threshold": "Threshold",
+      "thresholdHint": "Skor kesamaan minimum",
+      "filters": "Filter",
+      "filtersHint": "Filter metadata format JSON",
+      "runQuery": "Jalankan Query",
+      "running": "Menjalankan...",
+      "results": "Hasil",
+      "noResults": "Tidak ada hasil ditemukan",
+      "noResultsHint": "Sesuaikan parameter atau coba query lain",
+      "resultCount": "Ditemukan {count} hasil",
+      "score": "Skor",
+      "metadata": "Metadata",
+      "content": "Konten",
+      "tracing": "Pelacakan",
+      "tracingEnabled": "Pelacakan diaktifkan",
+      "tracingDisabled": "Pelacakan dinonaktifkan",
+      "executionTime": "Waktu eksekusi",
+      "tokensUsed": "Token digunakan",
+      "steps": "Langkah",
+      "embedding": "Embedding",
+      "vectorSearch": "Pencarian vektor",
+      "reranking": "Perangkingan ulang",
+      "response": "Respons",
+      "rawResponse": "Respons mentah",
+      "formattedResponse": "Respons terformat",
+      "copyResponse": "Salin respons",
+      "copied": "Disalin!",
+      "history": "Riwayat",
+      "clearHistory": "Hapus riwayat",
+      "noHistory": "Tidak ada riwayat",
+      "noHistoryHint": "Riwayat query Anda akan muncul di sini",
+      "savedQueries": "Query tersimpan",
+      "saveQuery": "Simpan query",
+      "querySaved": "Query tersimpan",
+      "deleteQuery": "Hapus query",
+      "queryDeleted": "Query dihapus",
+      "noSavedQueries": "Tidak ada query tersimpan",
+      "apiKeyRequired": "Kunci API diperlukan untuk menjalankan query",
+      "selectApiKey": "Pilih kunci API",
+      "createApiKeyFirst": "Buat kunci API terlebih dahulu",
+      "invalidJson": "Format JSON tidak valid",
+      "queryError": "Query gagal",
+      "networkError": "Error jaringan. Silakan periksa koneksi.",
+      "timeout": "Query timeout. Silakan coba lagi.",
+      "compare": "Bandingkan",
+      "compareMode": "Mode perbandingan",
+      "compareModeHint": "Bandingkan parameter berbeda secara berdampingan",
+      "addComparison": "Tambah perbandingan",
+      "removeComparison": "Hapus perbandingan",
+      "comparisonResults": "Hasil perbandingan",
+      "export": "Ekspor",
+      "exportResults": "Ekspor hasil",
+      "exportFormat": "Format ekspor",
+      "exportSuccess": "Ekspor berhasil"
+    },
+    "settingsPage": {
+      "title": "Pengaturan",
+      "subtitle": "Profil dan preferensi",
+      "saving": "Menyimpan...",
+      "saved": "Tersimpan",
+      "saveFailed": "Gagal menyimpan",
+      "account": "Akun",
+      "email": "Email",
+      "name": "Nama",
+      "languageHint": "Mempengaruhi antarmuka dan dasbor",
+      "loading": "Memuat...",
+      "loginRequired": "Login diperlukan.",
+      "tabs": {
+        "profile": "Profil",
+        "budget": "Anggaran",
+        "notifications": "Notifikasi",
+        "security": "Keamanan"
+      },
+      "budget": {
+        "title": "Manajemen Anggaran",
+        "description": "Atur batas penggunaan API dan notifikasi",
+        "monthlyLimit": "Batas bulanan",
+        "monthlyLimitHint": "Atur batas penggunaan bulanan",
+        "dailyLimit": "Batas harian",
+        "dailyLimitHint": "Atur batas penggunaan harian",
+        "currentUsage": "Penggunaan saat ini",
+        "remainingBudget": "Anggaran tersisa",
+        "usageHistory": "Riwayat penggunaan",
+        "alertThreshold": "Ambang peringatan",
+        "alertThresholdHint": "Terima peringatan saat mencapai persentase batas ini",
+        "alertEnabled": "Peringatan anggaran diaktifkan",
+        "alertDisabled": "Peringatan anggaran dinonaktifkan",
+        "unlimited": "Tidak terbatas",
+        "setLimit": "Atur batas",
+        "removeLimit": "Hapus batas"
+      },
+      "notifications": {
+        "title": "Pengaturan Notifikasi",
+        "description": "Kelola preferensi notifikasi Anda",
+        "email": "Notifikasi email",
+        "emailHint": "Terima email tentang aktivitas akun",
+        "usage": "Peringatan penggunaan",
+        "usageHint": "Terima notifikasi saat mendekati batas penggunaan",
+        "security": "Peringatan keamanan",
+        "securityHint": "Terima notifikasi tentang keamanan akun",
+        "marketing": "Pembaruan produk",
+        "marketingHint": "Terima notifikasi tentang fitur baru dan pembaruan",
+        "weekly": "Ringkasan mingguan",
+        "weeklyHint": "Terima ringkasan penggunaan mingguan",
+        "allEnabled": "Semua notifikasi diaktifkan",
+        "allDisabled": "Semua notifikasi dinonaktifkan",
+        "enableAll": "Aktifkan semua",
+        "disableAll": "Nonaktifkan semua"
+      },
+      "security": {
+        "title": "Pengaturan Keamanan",
+        "description": "Kelola keamanan akun Anda",
+        "twoFactor": "Autentikasi dua faktor",
+        "twoFactorHint": "Tambahkan lapisan keamanan ekstra ke akun Anda",
+        "twoFactorEnabled": "Autentikasi dua faktor diaktifkan",
+        "twoFactorDisabled": "Autentikasi dua faktor dinonaktifkan",
+        "enableTwoFactor": "Aktifkan autentikasi dua faktor",
+        "disableTwoFactor": "Nonaktifkan autentikasi dua faktor",
+        "sessions": "Sesi aktif",
+        "sessionsHint": "Kelola perangkat dan sesi aktif Anda",
+        "currentSession": "Sesi saat ini",
+        "lastActive": "Terakhir aktif",
+        "revokeSession": "Cabut sesi",
+        "revokeAllSessions": "Cabut semua sesi lain",
+        "changePassword": "Ubah kata sandi",
+        "changePasswordHint": "Perbarui kata sandi Anda secara berkala untuk keamanan",
+        "currentPassword": "Kata sandi saat ini",
+        "newPassword": "Kata sandi baru",
+        "confirmPassword": "Konfirmasi kata sandi",
+        "passwordChanged": "Kata sandi diubah",
+        "passwordMismatch": "Kata sandi tidak cocok",
+        "passwordTooShort": "Kata sandi terlalu pendek",
+        "apiKeysSecurity": "Keamanan kunci API",
+        "apiKeysSecurityHint": "Pantau dan kelola kunci API Anda"
+      },
+      "dangerZone": {
+        "title": "Zona Berbahaya",
+        "description": "Tindakan yang tidak dapat dibatalkan",
+        "deleteAccount": "Hapus akun",
+        "deleteAccountHint": "Hapus akun dan semua data Anda secara permanen",
+        "deleteAccountConfirm": "Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.",
+        "deleteAccountButton": "Hapus akun saya",
+        "exportData": "Ekspor data",
+        "exportDataHint": "Unduh salinan semua data Anda",
+        "exportDataButton": "Ekspor data",
+        "exportInProgress": "Mengekspor...",
+        "exportComplete": "Ekspor selesai"
+      }
+    },
+    "greeting": {
+      "morning": "Selamat pagi",
+      "afternoon": "Selamat siang",
+      "evening": "Selamat malam"
+    },
+    "overviewPage": {
+      "subtitle": "Berikut ringkasan penggunaan memori AI Anda",
+      "totalMemories": "Total Memori",
+      "apiCalls": "Panggilan API",
+      "activeKeys": "Kunci API Aktif",
+      "currentPlan": "Paket Saat Ini",
+      "usage": "Penggunaan",
+      "today": "Hari ini",
+      "dailyLimit": "Batas Harian",
+      "recentMemories": "Memori Terbaru",
+      "viewAll": "Lihat Semua",
+      "noMemories": "Belum ada memori",
+      "noMemoriesHint": "Mulai dengan menambahkan memori pertama Anda melalui API",
+      "quickStart": "Mulai Cepat",
+      "createApiKey": "Buat Kunci API",
+      "getStartedApi": "Mulai dengan API",
+      "viewDocumentation": "Lihat Dokumentasi",
+      "learnSeizn": "Pelajari cara menggunakan Seizn",
+      "createOrganization": "Buat Organisasi",
+      "collaborateTeam": "Berkolaborasi dengan tim Anda",
+      "quickExample": "Contoh Cepat",
+      "manageKeys": "Kelola Kunci",
+      "upgradePlan": "Upgrade Paket"
+    },
+    "keysPage": {
+      "title": "Kunci API",
+      "subtitle": "Kelola kunci API Anda untuk mengakses layanan Seizn",
+      "createNewKey": "Buat Kunci Baru",
+      "activeKeys": "Kunci Aktif",
+      "noKeysTitle": "Belum ada kunci API",
+      "noKeysDesc": "Buat kunci API pertama Anda untuk mulai mengintegrasikan dengan Seizn",
+      "createApiKey": "Buat Kunci API",
+      "created": "Dibuat",
+      "neverUsed": "Belum pernah digunakan",
+      "lastUsed": "Terakhir digunakan",
+      "revoke": "Cabut",
+      "revokeConfirm": "Cabut kunci API \"{keyName}\"? Tindakan ini tidak dapat dibatalkan.",
+      "usageGuide": "Panduan Penggunaan",
+      "authentication": "Autentikasi",
+      "authDesc": "Sertakan kunci API Anda di header permintaan:",
+      "exampleRequest": "Contoh Permintaan",
+      "keyCreated": "Kunci API Dibuat!",
+      "keyCreatedDesc": "Salin kunci ini sekarang. Anda tidak akan melihatnya lagi.",
+      "copyToClipboard": "Salin ke Clipboard",
+      "copied": "Disalin!",
+      "done": "Selesai",
+      "createKeyTitle": "Buat Kunci API",
+      "createKeyDesc": "Berikan nama deskriptif untuk kunci Anda",
+      "keyName": "Nama Kunci",
+      "keyNamePlaceholder": "mis., Produksi, Pengembangan, Pengujian",
+      "cancel": "Batal",
+      "creating": "Membuat...",
+      "createKey": "Buat Kunci"
+    },
+    "organizationsPage": {
+      "title": "Organisasi",
+      "subtitle": "Kelola tim Anda dan berkolaborasi dengan yang lain",
+      "newOrganization": "Organisasi Baru",
+      "noOrgsTitle": "Belum ada organisasi",
+      "noOrgsDesc": "Buat organisasi pertama Anda untuk mulai berkolaborasi dengan tim",
+      "createOrganization": "Buat Organisasi",
+      "created": "Dibuat",
+      "plan": "Paket",
+      "freePlan": "Gratis",
+      "createOrgTitle": "Buat Organisasi",
+      "createOrgDesc": "Siapkan ruang kerja tim baru",
+      "orgName": "Nama Organisasi",
+      "orgNamePlaceholder": "Acme Corp",
+      "urlSlug": "Slug URL",
+      "urlSlugPlaceholder": "acme-corp",
+      "cancel": "Batal",
+      "creating": "Membuat...",
+      "create": "Buat",
+      "roles": {
+        "owner": "pemilik",
+        "admin": "admin",
+        "member": "anggota"
+      }
+    },
+    "onboarding": {
+      "title": "Mulai dengan Seizn",
+      "progress": "{completed}/{total} langkah selesai",
+      "dismiss": "Tutup",
+      "doLater": "Nanti saja",
+      "steps": {
+        "apiKey": {
+          "title": "Buat kunci API",
+          "description": "Buat kunci API pertama Anda untuk mengautentikasi permintaan",
+          "action": "Buat kunci"
+        },
+        "demoQuery": {
+          "title": "Jalankan query pertama",
+          "description": "Coba query demo atau buat permintaan API",
+          "action": "Coba demo"
+        },
+        "viewTrace": {
+          "title": "Lihat pelacakan",
+          "description": "Pahami cara kerja pencarian dengan pelacakan lengkap",
+          "action": "Lihat pelacakan"
+        },
+        "installSdk": {
+          "title": "Instal SDK",
+          "description": "Tambahkan Seizn ke proyek Anda dengan npm atau pip",
+          "action": "Lihat SDK"
+        }
+      }
+    }
+  },
+  "pricingPage": {
+    "title": "Harga",
+    "subtitle": "Harga sederhana dan transparan. Mulai gratis, skalakan seiring pertumbuhan.",
+    "faq": {
+      "title": "Pertanyaan yang Sering Diajukan",
+      "subtitle": "Semua yang perlu Anda ketahui tentang Seizn",
+      "questions": [
+        {
+          "q": "Apa itu memori AI dan bagaimana perbedaannya dengan RAG?",
+          "a": "Memori AI adalah penyimpanan persisten yang mengingat preferensi pengguna, fakta, dan konteks lintas sesi. Berbeda dengan RAG yang mengambil dokumen statis, Seizn mengekstrak dan memperbarui memori secara dinamis dari percakapan, menciptakan basis pengetahuan yang hidup."
+        },
+        {
+          "q": "Di mana data saya disimpan?",
+          "a": "Semua data disimpan di server aman di AS (AWS) dengan enkripsi end-to-end. Kami mematuhi GDPR dan CCPA. Anda dapat meminta penghapusan data lengkap kapan saja."
+        },
+        {
+          "q": "Bagaimana cara memulai?",
+          "a": "1) Daftar gratis, 2) Buat kunci API, 3) Instal SDK (npm install @seizn/sdk), 4) Tambahkan memori dengan 3 baris kode."
+        },
+        {
+          "q": "Apa yang terjadi jika saya melebihi batas paket?",
+          "a": "Kami memberi tahu di 80%. Jika melebihi, panggilan API dilanjutkan dengan prioritas lebih rendah. Upgrade kapan saja untuk meningkatkan batas secara instan."
+        },
+        {
+          "q": "Bisakah saya menghapus memori tertentu?",
+          "a": "Ya. Hapus memori individual, hapus batch berdasarkan tag, atau hapus semua. Data yang dihapus dihapus dalam 24 jam."
+        },
+        {
+          "q": "Model AI apa yang didukung?",
+          "a": "Model apa pun: GPT-4, Claude, Gemini, Llama. SDK untuk JS/TS, Python, REST API. Bekerja dengan LangChain, LlamaIndex, Vercel AI."
+        },
+        {
+          "q": "Apakah ada uji coba gratis?",
+          "a": "Paket gratis adalah selamanya: 10.000 memori, 1.000 panggilan API/bulan. Tidak perlu kartu kredit."
+        },
+        {
+          "q": "Seberapa cepat pengambilan?",
+          "a": "Di bawah 50ms rata-rata. Pencarian hybrid vektor + graf dengan indeks yang dioptimalkan."
+        }
+      ],
+      "stillQuestions": "Masih ada pertanyaan?",
+      "contactUs": "Hubungi kami di"
+    }
+  },
+  "serviceSelector": {
+    "title": "Pilih pengalaman Anda",
+    "subtitle": "Dua cara untuk memanfaatkan kekuatan memori AI",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌸",
+      "tagline": "Chat multi-AI",
+      "description": "Chat dengan GPT-4, Claude, Gemini, dan lainnya — semuanya dengan memori persisten yang mengingat Anda.",
+      "features": [
+        "Akses semua model AI besar di satu tempat",
+        "Preferensi Anda diingat lintas sesi",
+        "Peralihan konteks mulus antar model"
+      ],
+      "cta": "Coba Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API Memori",
+      "description": "Berikan aplikasi AI Anda memori persisten dengan API yang ramah pengembang.",
+      "features": [
+        "REST API dan SDK sederhana",
+        "Waktu pengambilan di bawah 50ms",
+        "Keamanan tingkat enterprise"
+      ],
+      "cta": "Jelajahi API",
+      "badge": "Tersedia sekarang"
+    },
+    "footer": "Bagian dari musim Seizn — memori AI untuk setiap kebutuhan"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Satu chat.",
+    "titleHighlight": "Semua AI.",
+    "subtitle": "AI mana pun yang Anda pilih,\nsemuanya mengingat Anda.",
+    "startChatting": "Mulai chat",
+    "viewPricing": "Lihat harga",
+    "features": {
+      "title": "Mengapa memilih Spring?",
+      "subtitle": "Terbaik dari setiap AI, disatukan.",
+      "multiModel": {
+        "title": "Akses multi-model",
+        "description": "Beralih antara GPT-4, Claude, Gemini, Llama, dan lainnya. Pilih model terbaik untuk setiap tugas."
+      },
+      "persistentMemory": {
+        "title": "Memori persisten",
+        "description": "Preferensi, konteks, dan riwayat Anda dipertahankan di setiap percakapan dan setiap model."
+      },
+      "freeGenerosity": {
+        "title": "Paket gratis setara Cursor",
+        "description": "Penggunaan gratis yang murah hati. Sebagian besar pengguna tidak pernah perlu membayar. Pro $9,99/bulan untuk pengguna tingkat lanjut."
+      }
+    },
+    "pricing": {
+      "title": "Harga sederhana",
+      "free": {
+        "name": "Gratis",
+        "price": "$0",
+        "period": "Selamanya",
+        "features": [
+          "Semua model AI",
+          "Memori lintas sesi",
+          "Aplikasi web & mobile"
+        ],
+        "cta": "Mulai gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "per bulan",
+        "badge": "Nilai terbaik",
+        "features": [
+          "Semua yang ada di Gratis",
+          "Akses prioritas",
+          "Kontrol memori lanjutan",
+          "Akses API"
+        ],
+        "cta": "Upgrade ke Pro"
+      }
+    }
+  },
+  "extremeHome": {
+    "heroTitle": "Pencarian yang bisa di-debug.",
+    "heroSubtitle": "Stack pencarian terintegrasi dengan tracing, evaluasi, dan tata kelola bawaan. Satu permintaan = hasil + trace + biaya.",
+    "firstRetrievalComplete": "Pengambilan pertama selesai",
+    "copySnippetHint": "Salin snippet di bawah untuk mereproduksi",
+    "copySnippetTitle": "Salin snippet ini",
+    "copySnippetSubtitle": "Dihasilkan dari pengaturan Anda di atas",
+    "whySeizn": {
+      "title": "Mengapa Seizn vs LangChain + Pinecone?",
+      "subtitle": "Berhenti menempelkan alat yang terfragmentasi. Dapatkan semua yang Anda butuhkan dalam satu stack terintegrasi.",
+      "tracingTitle": "Tracing + Eval Bawaan",
+      "tracingDesc": "Setiap permintaan dilacak secara default. Jalankan eval, deteksi regresi, dan debug masalah produksi tanpa menambahkan LangSmith atau logging kustom.",
+      "tracingBadge": "Default AKTIF",
+      "autopilotTitle": "Autopilot Sadar Anggaran",
+      "autopilotDesc": "Tetapkan anggaran latensi atau biaya, dan Autopilot secara otomatis memilih strategi pengambilan optimal. Tidak perlu tuning manual.",
+      "autopilotBadge": "Opsional",
+      "governanceTitle": "Tata Kelola + Log Audit",
+      "governanceDesc": "Deteksi PII, forget sesuai GDPR, dan jejak audit lengkap. Dibangun untuk tim yang membutuhkan kepatuhan, bukan ditambahkan belakangan.",
+      "governanceBadge": "Default untuk Tim",
+      "lessGlueTitle": "Lebih Sedikit Bagian Bergerak",
+      "lessGlueDesc": "Tidak perlu lagi menyulap LangChain + Pinecone + LangSmith + filter PII kustom. Satu SDK, satu dasbor, satu tagihan.",
+      "lessGlueBadge": "Lebih Sedikit Kode Perekat"
+    },
+    "trust": {
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Aman secara default",
+      "rateLimits": "Batas Rate",
+      "rateLimitsDesc": "Peringatan penggunaan",
+      "auditLogs": "Log Audit",
+      "auditLogsDesc": "Keterlacakan penuh"
+    },
+    "pricingCta": {
+      "title": "Harga sederhana dan transparan",
+      "subtitle": "Mulai gratis, skalakan seiring pertumbuhan. Tanpa biaya tersembunyi.",
+      "viewPricing": "Lihat Harga",
+      "contactSales": "Hubungi Penjualan"
+    },
+    "nav": {
+      "docs": "Dokumentasi",
+      "pricing": "Harga",
+      "enterprise": "Enterprise",
+      "getApiKey": "Dapatkan Kunci API",
+      "tryDemo": "Coba Demo"
+    },
+    "requestBuilder": {
+      "title": "Pembuat Permintaan",
+      "query": "Query",
+      "queryPlaceholder": "Masukkan query pencarian Anda...",
+      "tryExamples": "Coba contoh",
+      "dataset": "Dataset",
+      "latencyBudget": "Anggaran Latensi",
+      "fast": "cepat",
+      "thorough": "menyeluruh",
+      "topK": "Top K",
+      "results": "hasil",
+      "features": "Fitur",
+      "hybridSearch": "Pencarian Hybrid",
+      "hybridSearchDesc": "Gabungkan vektor + kata kunci",
+      "rerank": "Rerank",
+      "rerankDesc": "Re-score dengan cross-encoder",
+      "answerContract": "Kontrak Jawaban",
+      "answerContractDesc": "Validasi kualitas jawaban",
+      "running": "Menjalankan...",
+      "runQuery": "Jalankan Query",
+      "datasets": {
+        "techDocs": "Dokumentasi Teknis",
+        "legalContracts": "Kontrak Hukum",
+        "researchPapers": "Makalah Penelitian"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Mencari...",
+      "noResults": "Jalankan query untuk melihat hasil",
+      "score": "Skor"
+    },
+    "tracePanel": {
+      "tracing": "Melacak pipeline...",
+      "noTrace": "Jalankan query untuk melihat trace",
+      "latency": "Latensi",
+      "cost": "Biaya",
+      "tokens": "Token",
+      "vectorOps": "Operasi Vektor",
+      "cached": "tersimpan",
+      "model": "Model",
+      "input": "Input",
+      "output": "Output"
+    },
+    "tabs": {
+      "results": "Hasil",
+      "trace": "Trace"
+    }
+  },
+  "docs": {
+    "nav": {
+      "dashboard": "Dasbor",
+      "getStarted": "Mulai"
+    },
+    "sidebar": {
+      "overview": "Ringkasan",
+      "gettingStarted": "Memulai",
+      "whenToUse": "Kapan menggunakan",
+      "quickStart": "Mulai Cepat",
+      "authentication": "Autentikasi",
+      "concepts": "Konsep",
+      "memoryObject": "Objek Memory",
+      "namespaceScope": "Namespace & Scope",
+      "bestPractices": "Praktik Terbaik",
+      "apiReference": "Referensi API",
+      "endpoints": "Endpoint",
+      "rateLimits": "Batas",
+      "errorCodes": "Kode Error",
+      "resources": "Sumber Daya",
+      "security": "Keamanan",
+      "sdks": "SDK",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "title": "Dokumentasi API",
+      "subtitle": "Semua yang Anda butuhkan untuk mengintegrasikan Seizn ke aplikasi Anda. Tambahkan memori jangka panjang ke AI Anda hanya dengan beberapa baris kode."
+    },
+    "quickStart": {
+      "title": "Mulai Cepat",
+      "description": "Dapatkan kunci API Anda dari",
+      "dashboardLink": "dasbor",
+      "then": ", lalu mulai mengirim permintaan:"
+    },
+    "authentication": {
+      "title": "Autentikasi",
+      "description": "Semua permintaan API memerlukan kunci API di",
+      "header": "x-api-key",
+      "headerSuffix": "header.",
+      "securityTitle": "Keamanan:",
+      "securityText": "Jaga kerahasiaan kunci API Anda. Jangan pernah mengeksposnya di kode sisi klien. Gunakan variabel lingkungan atau proxy backend."
+    },
+    "endpoints": {
+      "title": "Endpoint API",
+      "requestBody": "Body Permintaan",
+      "queryParams": "Parameter Query",
+      "response": "Respons",
+      "postMemories": {
+        "description": "Tambahkan memori baru ke penyimpanan pengguna.",
+        "content": "string (wajib) - Konten memori",
+        "memoryType": "string - Tipe: fact, preference, experience, relationship, instruction",
+        "tags": "string[] - Tag untuk kategorisasi",
+        "namespace": "string - Namespace untuk organisasi (default: \"default\")",
+        "scope": "string - Scope: user, session, agent",
+        "sessionId": "string - ID sesi untuk memori scope sesi",
+        "agentId": "string - ID agent untuk memori scope agent"
+      },
+      "getMemories": {
+        "description": "Cari memori berdasarkan kesamaan semantik.",
+        "query": "string (wajib) - Query pencarian",
+        "limit": "number - Hasil maksimum (default: 10, maks: 100)",
+        "threshold": "number - Ambang kesamaan 0-1 (default: 0.7)",
+        "namespace": "string - Filter berdasarkan namespace"
+      },
+      "deleteMemories": {
+        "description": "Hapus memori berdasarkan ID.",
+        "ids": "string (wajib) - ID memori dipisahkan koma"
+      },
+      "extract": {
+        "description": "Ekstrak dan simpan memori dari percakapan menggunakan AI.",
+        "conversation": "string (wajib) - Teks percakapan untuk ekstraksi memori",
+        "model": "string - Model AI: haiku (lebih cepat) atau sonnet (lebih baik) (default: haiku)",
+        "autoStore": "boolean - Simpan memori yang diekstrak secara otomatis (default: true)",
+        "namespace": "string - Namespace untuk memori yang disimpan (default: \"default\")"
+      },
+      "query": {
+        "description": "Dapatkan respons dari AI menggunakan memori relevan sebagai konteks (RAG).",
+        "queryParam": "string (wajib) - Pertanyaan atau prompt pengguna",
+        "model": "string - Model AI: haiku atau sonnet (default: haiku)",
+        "topK": "number - Jumlah memori untuk digunakan sebagai konteks (default: 5)",
+        "namespace": "string - Filter memori berdasarkan namespace",
+        "includeMemories": "boolean - Sertakan memori yang digunakan dalam respons (default: true)"
+      }
+    },
+    "rateLimits": {
+      "title": "Batas",
+      "plan": "Paket",
+      "dailyApiCalls": "Panggilan API harian",
+      "maxMemories": "Memori maksimum",
+      "apiKeys": "Kunci API",
+      "free": "Gratis",
+      "plus": "Plus",
+      "pro": "Pro",
+      "enterprise": "Enterprise",
+      "unlimited": "Tidak terbatas",
+      "exceeded": "Ketika Anda melebihi batas, API mengembalikan",
+      "response": "respons."
+    },
+    "errors": {
+      "title": "Kode Error",
+      "code": "Kode",
+      "description": "Deskripsi",
+      "success": "Sukses",
+      "badRequest": "Bad Request - Parameter hilang atau tidak valid",
+      "unauthorized": "Unauthorized - Kunci API tidak valid atau hilang",
+      "tooManyRequests": "Too Many Requests - Melebihi batas",
+      "serverError": "Internal Server Error - Terjadi kesalahan"
+    },
+    "security": {
+      "title": "Keamanan & Tata Kelola",
+      "dataSecurityTitle": "Keamanan Data",
+      "encryptionAtRest": "Enkripsi saat istirahat:",
+      "encryptionAtRestDesc": "Semua data dienkripsi dengan AES-256",
+      "encryptionInTransit": "Enkripsi saat transit:",
+      "encryptionInTransitDesc": "TLS 1.3 untuk semua koneksi",
+      "tenantIsolation": "Isolasi tenant:",
+      "tenantIsolationDesc": "Pemisahan data lengkap antar akun",
+      "apiKeyManagement": "Manajemen Kunci API",
+      "keyRotation": "Rotasi kunci:",
+      "keyRotationDesc": "Rotasi kunci kapan saja dari dasbor",
+      "keyExpiration": "Kedaluwarsa kunci:",
+      "keyExpirationDesc": "Kunci kedaluwarsa otomatis setelah 90 hari (dapat dikonfigurasi)",
+      "usageTracking": "Pelacakan penggunaan:",
+      "usageTrackingDesc": "Pantau penggunaan per kunci secara real-time",
+      "dataRetention": "Retensi & Penghapusan Data",
+      "export": "Ekspor:",
+      "exportDesc": "Ekspor semua data kapan saja melalui API atau dasbor",
+      "deletion": "Penghapusan:",
+      "deletionDesc": "Penghapusan permanen tanpa retensi setelah 30 hari",
+      "compliance": "GDPR/CCPA:",
+      "complianceDesc": "Kepatuhan penuh terhadap hak subjek data"
+    },
+    "sdks": {
+      "title": "SDK",
+      "python": "Python",
+      "javascript": "JavaScript"
+    },
+    "footer": {
+      "copyright": "© {year} Seizn. Hak cipta dilindungi."
+    },
+    "faqPage": {
+      "title": "Pertanyaan yang Sering Diajukan",
+      "subtitle": "Pertanyaan umum tentang Seizn Memory API, dari memulai hingga operasi lanjutan.",
+      "stillHaveQuestions": "Masih ada pertanyaan?",
+      "stillHaveQuestionsDesc": "Lihat dokumentasi kami atau hubungi tim dukungan.",
+      "readDocs": "Baca Dokumentasi",
+      "contactSupport": "Hubungi Dukungan",
+      "categories": {
+        "all": "Semua",
+        "gettingStarted": "Memulai",
+        "coreConcepts": "Konsep Inti",
+        "searchRetrieval": "Pencarian dan Pengambilan",
+        "extraction": "Ekstraksi",
+        "operations": "Operasi",
+        "securityCompliance": "Keamanan dan Kepatuhan"
+      },
+      "items": [
+        {
+          "category": "gettingStarted",
+          "question": "Apa itu Seizn Memory dan masalah apa yang dipecahkannya?",
+          "answer": "Seizn Memory adalah infrastruktur memori AI yang menyediakan memori jangka panjang yang dapat dicari untuk aplikasi AI. Berbeda dengan database vektor yang hanya menyimpan/mencari vektor, Seizn mencakup lapisan produk lengkap: ekstraksi memori, manajemen kebijakan, manajemen kunci, penghapusan, log audit, dan SDK. Ini memecahkan masalah mempertahankan konteks lintas sesi AI dan memungkinkan pengalaman AI yang dipersonalisasi."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Apa perbedaan Seizn dengan database vektor seperti Pinecone atau Weaviate?",
+          "answer": "Database vektor adalah infrastruktur penyimpanan/pencarian untuk vektor. Seizn adalah sistem memori lengkap yang dibangun di atasnya, menyediakan: ekstraksi memori otomatis dari percakapan, kategorisasi tipe memori, manajemen namespace/scope, rotasi kunci API, log audit, SDK, dan fitur tata kelola. Anggap sebagai 'infrastruktur memori' vs 'infrastruktur pencarian'."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Apakah saya perlu RAG untuk menggunakan Seizn?",
+          "answer": "Tidak. Titik awal paling umum adalah: simpan memori -> cari -> masukkan ke prompt. RAG (komposisi konteks otomatis + pembuatan respons) adalah langkah selanjutnya. Anda dapat memulai sederhana dan menambahkan kompleksitas sesuai kebutuhan."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Apa cara tercepat untuk membangun PoC?",
+          "answer": "1) POST /api/memories untuk menyimpan preferensi pengguna. 2) GET /api/memories untuk mencari. 3) Masukkan hasil ke prompt LLM Anda. 4) Kemudian, tambahkan /api/extract untuk ekstraksi otomatis dan /api/query untuk respons yang ditingkatkan memori."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Apa yang harus saya simpan di /api/memories?",
+          "answer": "Simpan informasi yang masih valid lintas percakapan: preferensi (nada, bahasa, format), fakta (pekerjaan, alat, struktur proyek), instruksi (\"selalu rangkum dalam tabel\"), hubungan (\"Alice adalah pemimpin tim\"). Hindari menyimpan data sementara atau spesifik sesi kecuali Anda menggunakan session scope."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Data apa yang TIDAK boleh disimpan?",
+          "answer": "Jangan pernah menyimpan: kata sandi, kunci API, token, cookie sesi (kredensial), SSN, nomor paspor, rekening bank (PII), informasi kartu kredit (data pembayaran). Untuk data sementara, gunakan session scope dengan TTL jika diperlukan."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Mengapa namespace penting?",
+          "answer": "Namespace memisahkan memori berdasarkan proyek/tenant/lingkungan. Tanpanya, data tercampur, kualitas pencarian menurun, dan penghapusan/ekspor menjadi sulit. Rekomendasi: 'org:acme/app:chat/env:prod' atau 'project:myapp/env:staging'. Jangan pernah hanya menggunakan 'default' di produksi."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Kapan harus menggunakan scope (user/session/agent)?",
+          "answer": "user: Preferensi yang berlaku global untuk pengguna. session: Tujuan atau konteks yang hanya valid untuk percakapan ini. agent: Aturan khusus untuk satu agent dalam sistem multi-agent. Menggunakan scope yang benar mengurangi panjang prompt dan meningkatkan konsistensi respons."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Apa itu memory_types dan mengapa penting?",
+          "answer": "memory_type mengkategorikan memori: fact (informasi tidak berubah), preference (pilihan pengguna), instruction (aturan yang harus diikuti), relationship (koneksi orang/organisasi), experience (peristiwa masa lalu). Ini adalah sumbu paling kuat untuk pemfilteran, penghapusan, dan penerapan kebijakan."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Bagaimana threshold dan limit bekerja?",
+          "answer": "limit: Jumlah kandidat memori yang diambil (terlalu rendah = melewatkan yang relevan, terlalu tinggi = konteks berisik). threshold: Ambang kesamaan 0-1 (lebih tinggi = lebih ketat). Mulai dengan limit=10, threshold=0.7. Jika melewatkan memori, turunkan threshold ke 0.6 dan naikkan limit ke 20. Jika ada hasil tidak relevan, naikkan threshold ke 0.75-0.8."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Mengapa hasil pencarian saya tidak relevan?",
+          "answer": "Biasanya salah satu dari: 1) namespace tercampur, 2) terlalu banyak memori disimpan (berisik), 3) threshold terlalu rendah, 4) konten terlalu abstrak ('suka segalanya' vs fakta spesifik). Solusi: pisahkan namespace, buat konten spesifik, naikkan threshold."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Kualitas pencarian menurun seiring bertambahnya memori. Apa yang harus saya lakukan?",
+          "answer": "Tambahkan skor kepentingan dan hanya simpan memori penting. Gunakan TTL untuk kedaluwarsa otomatis memori lama. Gabungkan memori serupa secara berkala menjadi ringkasan. Pisahkan namespace untuk mengurangi cakupan pencarian."
+        },
+        {
+          "category": "extraction",
+          "question": "Bagaimana cara menggunakan /api/extract?",
+          "answer": "Alur yang direkomendasikan: 1) Panggil dengan auto_store=false untuk pratinjau memori yang diekstrak. 2) Tampilkan hasil ke pengguna untuk konfirmasi. 3) Hanya simpan memori yang disetujui. 4) Setelah kualitas ekstraksi terbukti, beralih ke auto_store=true untuk otomatisasi."
+        },
+        {
+          "category": "extraction",
+          "question": "Apa perbedaan antara model=haiku dan model=sonnet?",
+          "answer": "haiku: Lebih cepat, lebih murah, baik untuk sebagian besar kasus. sonnet: Lebih akurat, lebih baik untuk ekstraksi penting (onboarding, kontrak, kebijakan). Gunakan haiku untuk ekstraksi batch/awal, sonnet untuk situasi berisiko tinggi."
+        },
+        {
+          "category": "operations",
+          "question": "Bisakah saya memodifikasi memori setelah menyimpan?",
+          "answer": "Ya, tetapi pola yang direkomendasikan adalah: buat memori baru + hapus/arsipkan yang lama. Pendekatan ini lebih baik untuk jejak audit dan mencegah masalah regresi."
+        },
+        {
+          "category": "operations",
+          "question": "Bagaimana cara menghapus memori?",
+          "answer": "Dua pendekatan: 1) Hapus berdasarkan ID (presisi), 2) Hapus berdasarkan namespace (pembersihan batch). Untuk enterprise/kepatuhan, pastikan 'penghapusan lengkap + log audit'. Dokumentasikan kebijakan penghapusan Anda dengan jelas."
+        },
+        {
+          "category": "operations",
+          "question": "Saya mendapat 429 Too Many Requests. Apa yang harus saya lakukan?",
+          "answer": "Anda telah mencapai batas rate. Solusi: 1) Implementasikan backoff eksponensial (1s -> 2s -> 4s). 2) Antrean permintaan di sisi server. 3) Kurangi frekuensi permintaan: cache query duplikat, operasi batch, kurangi frekuensi ekstraksi."
+        },
+        {
+          "category": "operations",
+          "question": "Bagaimana cara mengurangi biaya?",
+          "answer": "Faktor biaya terbesar: 1) Frekuensi ekstraksi - kurangi panggilan. 2) Cakupan pencarian - gunakan namespace untuk mempersempit. 3) Pemilihan model - gunakan haiku untuk rutin, sonnet untuk penting. 4) Cache - cache query berulang. 5) Operasi batch jika memungkinkan."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Bisakah saya menggunakan kunci API di browser (frontend)?",
+          "answer": "Tidak disarankan - risiko tinggi kebocoran kunci. Panggil Seizn dari server Anda (Next.js Route Handler, Cloudflare Worker, fungsi serverless) dan biarkan browser memanggil server Anda. Jangan pernah mengekspos kunci API ke kode sisi klien."
+        },
+        {
+          "category": "securityCompliance",
+          "question": "Dokumentasi apa yang dibutuhkan tim keamanan/hukum saya?",
+          "answer": "Mereka akan menginginkan: 1) Cakupan data (apa yang disimpan/tidak disimpan), 2) Enkripsi (saat istirahat: AES-256, saat transit: TLS), 3) Metode isolasi tenant, 4) Kebijakan penghapusan/retensi, 5) Akses log audit, 6) Kebijakan rotasi/kedaluwarsa kunci. Simpan halaman Keamanan dan Tata Kelola di dokumentasi Anda."
+        }
+      ]
+    },
+    "componentsPage": {
+      "title": "Komponen UI",
+      "subtitle": "Dokumentasi komprehensif untuk library komponen UI Seizn. Setiap komponen mencakup Props, contoh penggunaan, dan praktik terbaik.",
+      "all": "Semua",
+      "components": {
+        "graphCanvas": {
+          "description": "Komponen kanvas graf utama menggunakan React Flow. Merender node dan edge dengan kontrol interaktif, minimap, dan panel izin."
+        },
+        "nodeRenderer": {
+          "description": "Renderer node kustom untuk visualisasi graf. Menampilkan tipe node, status, izin dengan tampilan bergaya."
+        },
+        "edgeRenderer": {
+          "description": "Renderer edge kustom untuk koneksi graf. Mendukung edge terarah, tidak terarah, dan dua arah dengan styling kustom."
+        },
+        "graphControls": {
+          "description": "Panel kontrol untuk pemfilteran graf dan zoom. Filter berdasarkan tipe node, tipe edge, dan pencarian."
+        },
+        "permissionPanel": {
+          "description": "Panel samping menampilkan informasi izin detail untuk node yang dipilih."
+        },
+        "explainPanel": {
+          "description": "Panel yang dapat diperluas menampilkan penjelasan pengambilan lengkap termasuk breakdown skor dan atribusi."
+        },
+        "scoreBreakdown": {
+          "description": "Breakdown visual komponen skor relevansi (vektor, kata kunci, rerank, recency)."
+        },
+        "attributionList": {
+          "description": "Daftar atribusi sumber menampilkan dokumen mana yang berkontribusi pada hasil."
+        },
+        "highlightedPassage": {
+          "description": "Bagian teks dengan span pencocokan yang disorot (kecocokan persis, kecocokan semantik, kata kunci, entitas)."
+        },
+        "retOpsDashboard": {
+          "description": "Dasbor utama untuk pemantauan operasi pengambilan dengan refresh otomatis dan pemilihan periode."
+        },
+        "metricsOverview": {
+          "description": "Kartu ringkasan menampilkan metrik kunci: QPS, latensi, hit rate cache, error rate, MRR, groundedness."
+        },
+        "queryVolumeChart": {
+          "description": "Grafik garis menampilkan volume query dari waktu ke waktu dengan distribusi tipe pencarian."
+        },
+        "latencyDistribution": {
+          "description": "Grafik batang persentil latensi dan visualisasi tren dengan indikator kepatuhan SLO."
+        },
+        "qualityTrend": {
+          "description": "Grafik area menampilkan tren kualitas pencarian (MRR, nDCG, groundedness) dengan presisi/recall pada K."
+        },
+        "topQueries": {
+          "description": "Daftar peringkat query paling sering dengan latensi, hit rate cache, dan jumlah hasil."
+        },
+        "alertsPanel": {
+          "description": "Panel manajemen peringatan dengan pemfilteran severity, pengakuan, dan pelacakan status."
+        }
+      },
+      "props": "Props",
+      "usage": "Contoh Penggunaan",
+      "propName": "Nama",
+      "propType": "Tipe",
+      "propDefault": "Default",
+      "propDescription": "Deskripsi",
+      "copy": "Salin",
+      "copied": "Disalin!",
+      "categories": {
+        "graph": {
+          "title": "Komponen Graf",
+          "description": "Visualisasi graf interaktif untuk pemetaan izin dan hubungan"
+        },
+        "explain": {
+          "title": "Komponen Penjelasan",
+          "description": "Visualisasi explainability dan atribusi untuk hasil RAG"
+        },
+        "retops": {
+          "title": "Komponen RetOps",
+          "description": "Pemantauan operasi pengambilan dan dasbor analitik"
+        }
+      }
+    },
+    "search": {
+      "placeholder": "Cari dokumentasi...",
+      "buttonText": "Cari...",
+      "noResults": "Tidak ada hasil ditemukan untuk",
+      "hint": "Pencarian cepat:",
+      "navigate": "navigasi",
+      "select": "pilih"
+    }
+  }
+}
