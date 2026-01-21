@@ -188,10 +188,16 @@ body {
 }
 
 /* Glass morphism card */
+/* Glass morphism card */
 .glass-card {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(244, 114, 182, 0.1);
+}
+
+.dark .glass-card {
+  background: rgba(31, 41, 55, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.3);
 }
 
 /* Sakura button */
@@ -372,6 +378,15 @@ body {
     0 4px 24px -1px rgba(0, 0, 0, 0.05),
     0 2px 8px -1px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dark .glass-card-premium {
+  background: rgba(31, 41, 55, 0.85);
+  border: 1px solid rgba(75, 85, 99, 0.4);
+  box-shadow:
+    0 4px 24px -1px rgba(0, 0, 0, 0.2),
+    0 2px 8px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .glass-card-hover {
