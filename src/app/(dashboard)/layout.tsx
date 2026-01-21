@@ -43,7 +43,7 @@ export default async function DashboardLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 min-h-screen`}
       >
         <Providers>
           <DashboardLocaleProvider initialLocale={locale}>
