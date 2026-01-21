@@ -77,22 +77,22 @@ interface AnalyticsData {
 }
 
 const CHART_COLORS = {
-  primary: "#14b8a6",
-  primaryLight: "#5eead4",
-  secondary: "#06b6d4",
-  secondaryLight: "#67e8f9",
+  primary: "#2563eb",
+  primaryLight: "#93c5fd",
+  secondary: "#0ea5e9",
+  secondaryLight: "#7dd3fc",
   tertiary: "#3b82f6",
-  tertiaryLight: "#93c5fd",
-  quaternary: "#8b5cf6",
-  quaternaryLight: "#c4b5fd",
+  tertiaryLight: "#bfdbfe",
+  quaternary: "#60a5fa",
+  quaternaryLight: "#dbeafe",
   error: "#ef4444",
-  errorLight: "#fca5a5",
-  success: "#10b981",
+  errorLight: "#fecaca",
+  success: "#22c55e",
   warning: "#f59e0b",
-  warningLight: "#fcd34d",
+  warningLight: "#fde68a",
 };
 
-const PIE_COLORS = ["#14b8a6", "#06b6d4", "#3b82f6", "#8b5cf6", "#f59e0b", "#ec4899"];
+const PIE_COLORS = ["#2563eb", "#0ea5e9", "#3b82f6", "#60a5fa", "#93c5fd", "#f59e0b"];
 
 export function AnalyticsClient() {
   const { t } = useDashboardTranslation();
@@ -187,21 +187,21 @@ export function AnalyticsClient() {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="backdrop-blur-md bg-white/95 dark:bg-gray-800/95 border border-gray-200/60 dark:border-gray-700/60 rounded-xl p-4 shadow-xl">
-          <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{label}</p>
-          <div className="space-y-1">
+        <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)]">
+          <p className="text-xs font-semibold text-slate-500">{label}</p>
+          <div className="mt-2 space-y-1">
             {payload.map((entry, index) => (
               <div key={index} className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-2 h-2 rounded-full"
+                    className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: entry.color }}
                   />
-                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                  <span className="text-xs font-medium text-slate-700">
                     {entry.name}
                   </span>
                 </div>
-                <span className="text-xs font-bold" style={{ color: entry.color }}>
+                <span className="text-xs font-semibold text-slate-900" style={{ color: entry.color || "#0f172a" }}>
                   {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
                 </span>
               </div>
@@ -214,18 +214,24 @@ export function AnalyticsClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] sm:p-8">
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/60 to-white" />
+        <div className="absolute top-[-180px] right-[-120px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08),transparent_70%)]" />
+        <div className="absolute bottom-[-200px] left-[-120px] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)]" />
+      </div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+      <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+        <div className="absolute -z-10 left-0 top-2 h-12 w-full rounded-full bg-slate-50/80" />
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center shadow-lg">
-            <AnalyticsHeaderIcon className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-2xl bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 flex items-center justify-center">
+            <AnalyticsHeaderIcon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-2xl font-bold text-slate-900">
               {t("dashboard.analyticsPage.title")}
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-sm text-slate-600 mt-0.5">
               {t("dashboard.analyticsPage.subtitle")}
             </p>
           </div>
@@ -237,7 +243,7 @@ export function AnalyticsClient() {
           <select
             value={selectedOrg}
             onChange={(e) => setSelectedOrg(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+            className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">{t("dashboard.analyticsPage.allOrganizations")}</option>
             {organizations.map((org) => (
@@ -248,15 +254,15 @@ export function AnalyticsClient() {
           </select>
 
           {/* Period Selector */}
-          <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+          <div className="flex gap-1 p-1 bg-slate-100 rounded-xl">
             {(["7d", "30d", "90d"] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   period === p
-                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {p === "7d"
@@ -272,7 +278,7 @@ export function AnalyticsClient() {
           <button
             onClick={handleExportCSV}
             disabled={!analytics}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors disabled:opacity-50"
           >
             <DownloadIcon className="w-4 h-4" />
             {t("dashboard.analyticsPage.exportCSV")}
@@ -282,7 +288,7 @@ export function AnalyticsClient() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
       ) : analytics ? (
         <>
@@ -326,32 +332,32 @@ export function AnalyticsClient() {
           {/* Main Charts - with improvements */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Daily Active Users Chart */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-teal-100/10 to-transparent dark:from-teal-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="h-1 w-12 bg-gradient-to-r from-blue-600 to-sky-400 rounded-full" />
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {t("dashboard.analyticsPage.dailyActiveUsers")}
                   </h3>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={analytics.daily}>
-                      <defs>
-                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.4} />
-                          <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.05} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                       <defs>
+                         <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.4} />
+                           <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.05} />
+                         </linearGradient>
+                       </defs>
+                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
                       <XAxis
                         dataKey="date"
                         tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#9ca3af"
+                        stroke="#64748b"
                         fontSize={12}
                       />
-                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <YAxis stroke="#64748b" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Area
                         type="monotone"
@@ -370,26 +376,26 @@ export function AnalyticsClient() {
             </div>
 
             {/* API Calls Over Time */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-cyan-100/10 to-transparent dark:from-cyan-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="h-1 w-12 bg-gradient-to-r from-sky-500 to-blue-600 rounded-full" />
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {t("dashboard.analyticsPage.apiCallsOverTime")}
                   </h3>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
                       <XAxis
                         dataKey="date"
                         tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#9ca3af"
+                        stroke="#64748b"
                         fontSize={12}
                       />
-                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <YAxis stroke="#64748b" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Line
@@ -417,12 +423,12 @@ export function AnalyticsClient() {
             </div>
 
             {/* Memory Usage Chart */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-blue-100/10 to-transparent dark:from-blue-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="h-1 w-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full" />
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {t("dashboard.analyticsPage.memoryUsage")}
                   </h3>
                 </div>
@@ -439,14 +445,14 @@ export function AnalyticsClient() {
                           <stop offset="95%" stopColor={CHART_COLORS.quaternary} stopOpacity={0.6} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                       <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
                       <XAxis
                         dataKey="date"
                         tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#9ca3af"
+                        stroke="#64748b"
                         fontSize={12}
                       />
-                      <YAxis stroke="#9ca3af" fontSize={12} />
+                      <YAxis stroke="#64748b" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar
@@ -468,26 +474,26 @@ export function AnalyticsClient() {
             </div>
 
             {/* Latency Trend */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-shadow">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-amber-100/10 to-transparent dark:from-amber-500/5 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="h-1 w-12 bg-gradient-to-r from-amber-500 to-orange-400 rounded-full" />
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {t("dashboard.analyticsPage.latencyTrend")}
                   </h3>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
                       <XAxis
                         dataKey="date"
                         tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#9ca3af"
+                        stroke="#64748b"
                         fontSize={12}
                       />
-                      <YAxis stroke="#9ca3af" fontSize={12} unit="ms" />
+                      <YAxis stroke="#64748b" fontSize={12} unit="ms" />
                       <Tooltip content={<CustomTooltip />} />
                       <Line
                         type="monotone"
@@ -508,10 +514,10 @@ export function AnalyticsClient() {
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Hourly Distribution */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-100/10 to-transparent dark:from-teal-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">
                   {t("dashboard.analyticsPage.hourlyDistribution")}
                 </h3>
                 <div className="h-48">
@@ -523,14 +529,14 @@ export function AnalyticsClient() {
                           <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.6} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.5} />
                       <XAxis
                         dataKey="hour"
                         tickFormatter={(value) => `${value}:00`}
-                        stroke="#9ca3af"
+                        stroke="#64748b"
                         fontSize={10}
                       />
-                      <YAxis stroke="#9ca3af" fontSize={10} />
+                      <YAxis stroke="#64748b" fontSize={10} />
                       <Tooltip
                         formatter={(value) => [typeof value === 'number' ? value.toLocaleString() : String(value), t("dashboard.analyticsPage.calls")]}
                         labelFormatter={(label) => `${label}:00 - ${label}:59`}
@@ -539,8 +545,8 @@ export function AnalyticsClient() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="mt-3 p-3 bg-teal-50 dark:bg-teal-900/10 rounded-xl border border-teal-100 dark:border-teal-900/20">
-                  <p className="text-xs text-teal-700 dark:text-teal-400 text-center font-medium">
+                <div className="mt-3 p-3 bg-blue-50/80 rounded-xl border border-blue-100">
+                  <p className="text-xs text-blue-700 text-center font-medium">
                     {t("dashboard.analyticsPage.peakHour")}: {analytics.summary.peakHour}:00
                   </p>
                 </div>
@@ -548,10 +554,10 @@ export function AnalyticsClient() {
             </div>
 
             {/* Endpoint Breakdown */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100/10 to-transparent dark:from-purple-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">
                   {t("dashboard.analyticsPage.endpointBreakdown")}
                 </h3>
                 <div className="h-48">
@@ -577,17 +583,17 @@ export function AnalyticsClient() {
                 </div>
                 <div className="space-y-2 mt-3">
                   {analytics.endpointBreakdown.slice(0, 4).map((ep, index) => (
-                    <div key={ep.endpoint} className="flex items-center justify-between text-xs p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                    <div key={ep.endpoint} className="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-50">
                       <div className="flex items-center gap-2">
                         <div
                           className="w-2.5 h-2.5 rounded-full"
                           style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
                         />
-                        <span className="text-gray-600 dark:text-gray-400 truncate max-w-[100px] font-medium">
+                        <span className="text-slate-700 truncate max-w-[100px] font-medium">
                           {ep.endpoint}
                         </span>
                       </div>
-                      <span className="text-gray-900 dark:text-white font-bold">{ep.percentage}%</span>
+                      <span className="text-slate-900 font-bold">{ep.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -595,30 +601,30 @@ export function AnalyticsClient() {
             </div>
 
             {/* Top Queries */}
-            <div className="relative overflow-hidden glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100/10 to-transparent dark:from-emerald-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+              <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.12),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">
                   {t("dashboard.analyticsPage.topQueries")}
                 </h3>
                 <div className="space-y-3">
                   {analytics.topQueries.slice(0, 5).map((query, index) => (
-                    <div key={index} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <div key={index} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900 dark:text-white truncate font-medium" title={query.query}>
+                        <p className="text-sm text-slate-900 truncate font-medium" title={query.query}>
                           {query.query}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-xs text-slate-600 mt-1">
                           {query.avgLatency}ms avg
                         </p>
                       </div>
-                      <span className="text-sm font-bold text-teal-600 dark:text-teal-400 whitespace-nowrap">
+                      <span className="text-sm font-bold text-blue-600 whitespace-nowrap">
                         {query.count.toLocaleString()}
                       </span>
                     </div>
                   ))}
                   {analytics.topQueries.length === 0 && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                    <p className="text-sm text-slate-500 text-center py-8">
                       {t("dashboard.analyticsPage.noQueries")}
                     </p>
                   )}
@@ -628,15 +634,15 @@ export function AnalyticsClient() {
           </div>
         </>
       ) : (
-        <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-12">
+        <div className="rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-12">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 flex items-center justify-center">
-              <ChartIcon className="w-10 h-10 text-teal-400" />
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center">
+              <ChartIcon className="w-10 h-10 text-blue-500" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">
               {t("dashboard.analyticsPage.noData")}
             </h3>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-slate-600">
               {t("dashboard.analyticsPage.noDataDescription")}
             </p>
           </div>
@@ -664,31 +670,31 @@ function KpiCard({
 }) {
   const isPositive = invertChange ? change <= 0 : change >= 0;
   const changeColor = isError
-    ? "text-red-600 dark:text-red-400"
+    ? "text-red-500"
     : isPositive
-    ? "text-emerald-600 dark:text-emerald-400"
-    : "text-red-600 dark:text-red-400";
+    ? "text-blue-500"
+    : "text-red-500";
 
   const bgGradient = isError
-    ? "from-red-50 to-rose-50 dark:from-red-900/10 dark:to-rose-900/10"
-    : "from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-800/30";
+    ? "from-white via-red-50/30 to-white"
+    : "from-white via-slate-50 to-white";
 
   const iconBgColor = isError
-    ? "bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400"
-    : "bg-gradient-to-br from-teal-100 to-emerald-100 dark:from-teal-900/20 dark:to-emerald-900/20 text-teal-600 dark:text-teal-400";
+    ? "bg-red-50 text-red-500"
+    : "bg-blue-50 text-blue-600";
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-gray-200/60 dark:border-gray-700/60 bg-gradient-to-br ${bgGradient} p-5 transition-all hover:shadow-lg hover:scale-[1.02] hover:border-gray-300 dark:hover:border-gray-600`}>
-      {/* Background decoration blur effect */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-100/20 to-transparent dark:from-teal-500/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+    <div className={`relative rounded-2xl border border-slate-200/70 bg-gradient-to-br ${bgGradient} p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] hover:border-slate-300`}>
+      <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)] -mr-12 -mt-12" />
 
       <div className="relative">
         <div className="flex items-center justify-between mb-3">
-          <div className={`w-10 h-10 rounded-xl ${iconBgColor} flex items-center justify-center shadow-sm`}>
+          <div className={`w-10 h-10 rounded-xl ${iconBgColor} flex items-center justify-center shadow-sm ring-1 ring-white`}>
             {icon}
           </div>
           {change !== 0 && (
-            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${changeColor} bg-white/80 dark:bg-gray-800/80 shadow-sm`}>
+            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${changeColor} bg-white shadow-sm ring-1 ring-slate-200/70`}
+            >
               {isPositive ? (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
@@ -702,10 +708,10 @@ function KpiCard({
             </div>
           )}
         </div>
-        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white"}`}>
+        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600" : "text-slate-900"}`}>
           {value}
         </p>
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
+        <p className="text-sm font-medium text-slate-500">{title}</p>
       </div>
     </div>
   );
