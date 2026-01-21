@@ -1081,6 +1081,49 @@
       "hint": "Snabbsokningar:",
       "navigate": "navigera",
       "select": "valja"
+    },
+    "quickstartTutorial": {
+      "badge": "5-min tutorial",
+      "noCreditCard": "Inget kreditkort krävs",
+      "title": "Kom igång med Seizn",
+      "subtitle": "Lägg till beständigt minne till din AI på under 5 minuter. Följ stegen och bocka av varje när du är klar.",
+      "progress": "Framsteg",
+      "steps": "steg",
+      "congratulations": "Grattis!",
+      "completionText": "Du har slutfört snabbstarten. Din AI har nu beständigt minne.",
+      "continueReading": "Fortsätt läsa",
+      "goToDashboard": "Gå till instrumentpanelen",
+      "step1": {
+        "title": "Hämta din API-nyckel",
+        "time": "30 sekunder",
+        "description": "Registrera dig och generera din API-nyckel från instrumentpanelen.",
+        "action": "Gå till instrumentpanelen"
+      },
+      "step2": {
+        "title": "Installera SDK",
+        "time": "30 sekunder",
+        "description": "Installera Seizn SDK med din föredragna pakethanterare."
+      },
+      "step3": {
+        "title": "Initiera klienten",
+        "time": "1 minut",
+        "description": "Skapa en klientinstans med din API-nyckel."
+      },
+      "step4": {
+        "title": "Lägg till ditt första minne",
+        "time": "1 minut",
+        "description": "Lagra information som din AI kan komma ihåg senare."
+      },
+      "step5": {
+        "title": "Sök och återkalla",
+        "time": "1 minut",
+        "description": "Hämta relevanta minnen med naturlig språksökning."
+      },
+      "step6": {
+        "title": "Använd i din AI",
+        "time": "1 minut",
+        "description": "Injicera minnen som kontext för personliga AI-svar."
+      }
     }
   }
 }

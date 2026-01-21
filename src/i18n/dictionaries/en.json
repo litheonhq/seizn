@@ -1677,6 +1677,49 @@
           "description": "Learn about memory types, namespaces, and best practices."
         }
       }
+    },
+    "quickstartTutorial": {
+      "badge": "5 min tutorial",
+      "noCreditCard": "No credit card required",
+      "title": "Get Started with Seizn",
+      "subtitle": "Add persistent memory to your AI in under 5 minutes. Follow along and check off each step as you complete it.",
+      "progress": "Progress",
+      "steps": "steps",
+      "congratulations": "Congratulations!",
+      "completionText": "You've completed the quickstart. Your AI now has persistent memory.",
+      "continueReading": "Continue Reading",
+      "goToDashboard": "Go to Dashboard",
+      "step1": {
+        "title": "Get Your API Key",
+        "time": "30 seconds",
+        "description": "Sign up and generate your API key from the dashboard.",
+        "action": "Go to Dashboard"
+      },
+      "step2": {
+        "title": "Install the SDK",
+        "time": "30 seconds",
+        "description": "Install the Seizn SDK using your preferred package manager."
+      },
+      "step3": {
+        "title": "Initialize the Client",
+        "time": "1 minute",
+        "description": "Create a client instance with your API key."
+      },
+      "step4": {
+        "title": "Add Your First Memory",
+        "time": "1 minute",
+        "description": "Store information that your AI can recall later."
+      },
+      "step5": {
+        "title": "Search and Recall",
+        "time": "1 minute",
+        "description": "Retrieve relevant memories using natural language search."
+      },
+      "step6": {
+        "title": "Use in Your AI",
+        "time": "1 minute",
+        "description": "Inject memories as context for personalized AI responses."
+      }
     }
   },
   "demoQuery": {

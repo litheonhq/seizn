@@ -1378,6 +1378,49 @@
           "description": "メモリタイプ、名前空間、ベストプラクティスについて学びます。"
         }
       }
+    },
+    "quickstartTutorial": {
+      "badge": "5分チュートリアル",
+      "noCreditCard": "クレジットカード不要",
+      "title": "Seiznを始めよう",
+      "subtitle": "5分以内にAIに永続メモリを追加できます。各ステップを完了しながらチェックしてください。",
+      "progress": "進捗",
+      "steps": "ステップ",
+      "congratulations": "おめでとうございます！",
+      "completionText": "クイックスタートを完了しました。AIに永続メモリが追加されました。",
+      "continueReading": "続きを読む",
+      "goToDashboard": "ダッシュボードへ",
+      "step1": {
+        "title": "APIキーを取得",
+        "time": "30秒",
+        "description": "サインアップしてダッシュボードからAPIキーを生成します。",
+        "action": "ダッシュボードへ"
+      },
+      "step2": {
+        "title": "SDKをインストール",
+        "time": "30秒",
+        "description": "お好みのパッケージマネージャーでSeizn SDKをインストールします。"
+      },
+      "step3": {
+        "title": "クライアントを初期化",
+        "time": "1分",
+        "description": "APIキーでクライアントインスタンスを作成します。"
+      },
+      "step4": {
+        "title": "最初のメモリを追加",
+        "time": "1分",
+        "description": "AIが後で思い出せる情報を保存します。"
+      },
+      "step5": {
+        "title": "検索と想起",
+        "time": "1分",
+        "description": "自然言語検索で関連するメモリを取得します。"
+      },
+      "step6": {
+        "title": "AIで使用",
+        "time": "1分",
+        "description": "パーソナライズされたAI応答のためにメモリをコンテキストとして注入します。"
+      }
     }
   },
   "demoQuery": {

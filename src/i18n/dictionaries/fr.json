@@ -1081,6 +1081,49 @@
       "hint": "Recherches rapides:",
       "navigate": "naviguer",
       "select": "selectionner"
+    },
+    "quickstartTutorial": {
+      "badge": "Tutoriel 5 min",
+      "noCreditCard": "Sans carte de crédit",
+      "title": "Démarrer avec Seizn",
+      "subtitle": "Ajoutez une mémoire persistante à votre IA en moins de 5 minutes. Suivez les étapes et cochez-les au fur et à mesure.",
+      "progress": "Progression",
+      "steps": "étapes",
+      "congratulations": "Félicitations !",
+      "completionText": "Vous avez terminé le démarrage rapide. Votre IA dispose maintenant d'une mémoire persistante.",
+      "continueReading": "Continuer la lecture",
+      "goToDashboard": "Aller au tableau de bord",
+      "step1": {
+        "title": "Obtenez votre clé API",
+        "time": "30 secondes",
+        "description": "Inscrivez-vous et générez votre clé API depuis le tableau de bord.",
+        "action": "Aller au tableau de bord"
+      },
+      "step2": {
+        "title": "Installez le SDK",
+        "time": "30 secondes",
+        "description": "Installez le SDK Seizn avec votre gestionnaire de paquets préféré."
+      },
+      "step3": {
+        "title": "Initialisez le client",
+        "time": "1 minute",
+        "description": "Créez une instance client avec votre clé API."
+      },
+      "step4": {
+        "title": "Ajoutez votre premier souvenir",
+        "time": "1 minute",
+        "description": "Stockez des informations que votre IA pourra rappeler plus tard."
+      },
+      "step5": {
+        "title": "Recherchez et rappelez",
+        "time": "1 minute",
+        "description": "Récupérez les souvenirs pertinents avec une recherche en langage naturel."
+      },
+      "step6": {
+        "title": "Utilisez dans votre IA",
+        "time": "1 minute",
+        "description": "Injectez les souvenirs comme contexte pour des réponses IA personnalisées."
+      }
     }
   }
 }

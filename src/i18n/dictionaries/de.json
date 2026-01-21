@@ -1081,6 +1081,49 @@
       "hint": "Schnellsuche:",
       "navigate": "navigieren",
       "select": "auswaehlen"
+    },
+    "quickstartTutorial": {
+      "badge": "5-Min-Tutorial",
+      "noCreditCard": "Keine Kreditkarte erforderlich",
+      "title": "Erste Schritte mit Seizn",
+      "subtitle": "Fügen Sie Ihrer KI in unter 5 Minuten persistenten Speicher hinzu. Folgen Sie den Schritten und haken Sie jeden ab.",
+      "progress": "Fortschritt",
+      "steps": "Schritte",
+      "congratulations": "Herzlichen Glückwunsch!",
+      "completionText": "Sie haben den Schnellstart abgeschlossen. Ihre KI hat jetzt persistenten Speicher.",
+      "continueReading": "Weiterlesen",
+      "goToDashboard": "Zum Dashboard",
+      "step1": {
+        "title": "API-Schlüssel erhalten",
+        "time": "30 Sekunden",
+        "description": "Registrieren Sie sich und generieren Sie Ihren API-Schlüssel im Dashboard.",
+        "action": "Zum Dashboard"
+      },
+      "step2": {
+        "title": "SDK installieren",
+        "time": "30 Sekunden",
+        "description": "Installieren Sie das Seizn SDK mit Ihrem bevorzugten Paketmanager."
+      },
+      "step3": {
+        "title": "Client initialisieren",
+        "time": "1 Minute",
+        "description": "Erstellen Sie eine Client-Instanz mit Ihrem API-Schlüssel."
+      },
+      "step4": {
+        "title": "Erste Erinnerung hinzufügen",
+        "time": "1 Minute",
+        "description": "Speichern Sie Informationen, die Ihre KI später abrufen kann."
+      },
+      "step5": {
+        "title": "Suchen und Abrufen",
+        "time": "1 Minute",
+        "description": "Rufen Sie relevante Erinnerungen mit natürlicher Sprachsuche ab."
+      },
+      "step6": {
+        "title": "In Ihrer KI verwenden",
+        "time": "1 Minute",
+        "description": "Injizieren Sie Erinnerungen als Kontext für personalisierte KI-Antworten."
+      }
     }
   }
 }

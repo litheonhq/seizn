@@ -1081,6 +1081,49 @@
       "hint": "快速搜尋:",
       "navigate": "導航",
       "select": "選擇"
+    },
+    "quickstartTutorial": {
+      "badge": "5分鐘教學",
+      "noCreditCard": "無需信用卡",
+      "title": "開始使用 Seizn",
+      "subtitle": "在5分鐘內為您的AI添加持久記憶。按步驟完成並逐一勾選。",
+      "progress": "進度",
+      "steps": "步驟",
+      "congratulations": "恭喜！",
+      "completionText": "您已完成快速入門。您的AI現在擁有持久記憶。",
+      "continueReading": "繼續閱讀",
+      "goToDashboard": "前往儀表板",
+      "step1": {
+        "title": "取得API金鑰",
+        "time": "30秒",
+        "description": "註冊並從儀表板產生您的API金鑰。",
+        "action": "前往儀表板"
+      },
+      "step2": {
+        "title": "安裝SDK",
+        "time": "30秒",
+        "description": "使用您偏好的套件管理器安裝Seizn SDK。"
+      },
+      "step3": {
+        "title": "初始化客戶端",
+        "time": "1分鐘",
+        "description": "使用API金鑰建立客戶端實例。"
+      },
+      "step4": {
+        "title": "新增第一個記憶",
+        "time": "1分鐘",
+        "description": "儲存AI以後可以回想的資訊。"
+      },
+      "step5": {
+        "title": "搜尋和回想",
+        "time": "1分鐘",
+        "description": "使用自然語言搜尋擷取相關記憶。"
+      },
+      "step6": {
+        "title": "在AI中使用",
+        "time": "1分鐘",
+        "description": "將記憶作為上下文注入以獲得個人化的AI回應。"
+      }
     }
   }
 }

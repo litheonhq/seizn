@@ -1081,6 +1081,49 @@
       "hint": "Snelle zoekopdrachten:",
       "navigate": "navigeren",
       "select": "selecteren"
+    },
+    "quickstartTutorial": {
+      "badge": "5-min tutorial",
+      "noCreditCard": "Geen creditcard nodig",
+      "title": "Aan de slag met Seizn",
+      "subtitle": "Voeg permanent geheugen toe aan je AI in minder dan 5 minuten. Volg de stappen en vink elke af wanneer voltooid.",
+      "progress": "Voortgang",
+      "steps": "stappen",
+      "congratulations": "Gefeliciteerd!",
+      "completionText": "Je hebt de snelstart voltooid. Je AI heeft nu permanent geheugen.",
+      "continueReading": "Verder lezen",
+      "goToDashboard": "Naar dashboard",
+      "step1": {
+        "title": "Haal je API-sleutel op",
+        "time": "30 seconden",
+        "description": "Meld je aan en genereer je API-sleutel vanuit het dashboard.",
+        "action": "Naar dashboard"
+      },
+      "step2": {
+        "title": "Installeer de SDK",
+        "time": "30 seconden",
+        "description": "Installeer de Seizn SDK met je favoriete pakketbeheerder."
+      },
+      "step3": {
+        "title": "Initialiseer de client",
+        "time": "1 minuut",
+        "description": "Maak een client-instantie aan met je API-sleutel."
+      },
+      "step4": {
+        "title": "Voeg je eerste herinnering toe",
+        "time": "1 minuut",
+        "description": "Sla informatie op die je AI later kan ophalen."
+      },
+      "step5": {
+        "title": "Zoeken en ophalen",
+        "time": "1 minuut",
+        "description": "Haal relevante herinneringen op met natuurlijke taalzoekopdrachten."
+      },
+      "step6": {
+        "title": "Gebruik in je AI",
+        "time": "1 minuut",
+        "description": "Injecteer herinneringen als context voor gepersonaliseerde AI-antwoorden."
+      }
     }
   }
 }
