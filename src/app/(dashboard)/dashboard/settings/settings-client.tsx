@@ -230,7 +230,7 @@ export function SettingsClient() {
   return (
     <div className="space-y-6">
       {sessionStatus === "loading" && (
-        <div className="text-sm text-gray-500">{t("dashboard.settingsPage.loading")}</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.loading")</div>
       )}
       {sessionStatus === "unauthenticated" && (
         <div className="text-sm text-red-600">{t("dashboard.settingsPage.loginRequired")}</div>
@@ -239,10 +239,10 @@ export function SettingsClient() {
       {/* Header */}
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-gray-500">{t("dashboard.settingsPage.title")}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.title")</p>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{t("dashboard.settingsPage.subtitle")}</h1>
         </div>
-        {saveStatus === "saving" && <span className="text-sm text-gray-500">{t("dashboard.settingsPage.saving")}</span>}
+        {saveStatus === "saving" && <span className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.saving")</span>}
         {saveStatus === "saved" && <span className="text-sm text-emerald-600">{t("dashboard.settingsPage.saved")}</span>}
         {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
@@ -256,7 +256,7 @@ export function SettingsClient() {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
             }`}
           >
             {tab.icon}
@@ -337,7 +337,7 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.settingsPage.billing.title") || "Billing & Quota"}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {t("dashboard.settingsPage.billing.subtitle") || "Manage your subscription and usage limits"}
               </p>
             </div>
@@ -427,7 +427,7 @@ export function SettingsClient() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                        <tr className="text-left text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                           <th className="pb-3 font-medium">{t("dashboard.settingsPage.billing.feature") || "Feature"}</th>
                           <th className="pb-3 font-medium">Free</th>
                           <th className="pb-3 font-medium">Plus</th>
@@ -480,7 +480,7 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.settingsPage.budgetTitle")}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {t("dashboard.settingsPage.budgetDesc")}
               </p>
             </div>
@@ -576,7 +576,7 @@ export function SettingsClient() {
                       {budgetSettings.alertAtPercent}%
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                     {t("dashboard.settingsPage.alertThresholdHint")}
                   </p>
                 </div>
@@ -667,7 +667,7 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.settingsPage.notificationsTitle")}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {t("dashboard.settingsPage.notificationsDesc")}
               </p>
             </div>
@@ -732,7 +732,7 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.settingsPage.securityTitle")}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {t("dashboard.settingsPage.securityDesc")}
               </p>
             </div>
@@ -800,7 +800,7 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-red-600 mb-2">
                 {t("dashboard.settingsPage.dangerZone")}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {t("dashboard.settingsPage.dangerZoneDesc")}
               </p>
             </div>
