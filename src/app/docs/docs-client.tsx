@@ -28,7 +28,7 @@ export function DocsClient() {
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:opacity-90 font-medium rounded-lg transition-colors"
             >
               {t("docs.nav.getStarted")}
             </Link>
