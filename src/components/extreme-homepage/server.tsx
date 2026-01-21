@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { SVGProps } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
@@ -201,14 +202,14 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
     <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <Link href={`/${locale}`} className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          
+          <Image
             src="/seizn-icon.svg"
             alt="Seizn"
             className="w-6 h-6"
             width={24}
             height={24}
-            loading="lazy"
+            priority={false}
           />
           <span className="font-medium">Seizn</span>
         </Link>
