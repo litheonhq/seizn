@@ -376,20 +376,22 @@ const memories = await seizn.search({
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-gray-100" role="contentinfo">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <Link href={`/${locale}`} className="flex items-center gap-2" aria-label="Seizn Home">
-            <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs">S</span>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
+          <div className="flex flex-col gap-2">
+            <Link href={`/${locale}`} className="flex items-center gap-2" aria-label="Seizn Home">
+              <div className="w-6 h-6 bg-black rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs">S</span>
+              </div>
+              <span className="font-medium">Seizn</span>
+            </Link>
+            <div className="text-sm text-gray-500">
+              {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
             </div>
-            <span className="font-medium">Seizn</span>
-          </Link>
-          <div className="text-sm text-gray-500">
-            {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
-          <nav className="flex items-center gap-6" aria-label="Footer navigation">
+          <nav className="flex flex-wrap items-center gap-6" aria-label="Footer navigation">
             <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.privacy}</a>
             <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.terms}</a>
-            <a href="mailto:info@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
+            <a href={`/${locale}/docs/faq`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
           </nav>
         </div>
       </footer>

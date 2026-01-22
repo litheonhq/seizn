@@ -441,6 +441,7 @@
       "saving": "저장 중...",
       "saved": "저장됨",
       "saveFailed": "저장 실패",
+      "save": "변경사항 저장",
       "account": "계정",
       "email": "이메일",
       "name": "이름",
@@ -472,7 +473,8 @@
         "fallbackDesc": "예산 초과 시 동작",
         "reject": "요청 거부",
         "cache": "캐시 반환",
-        "degrade": "품질 저하"
+        "degrade": "품질 저하",
+        "queue": "요청 대기열"
       },
       "notifications": {
         "title": "알림 설정",
@@ -493,6 +495,8 @@
         "title": "보안 설정",
         "subtitle": "계정 보안 관리",
         "changePassword": "비밀번호 변경",
+        "passwordDesc": "비밀번호 보안 관리",
+        "save": "변경사항 저장",
         "currentPassword": "현재 비밀번호",
         "newPassword": "새 비밀번호",
         "confirmPassword": "비밀번호 확인",
@@ -663,7 +667,8 @@
         "total": "총 연동 수",
         "available": "사용 가능",
         "beta": "베타",
-        "comingSoon": "출시 예정"
+        "comingSoon": "출시 예정",
+        "integrations": "연동 서비스"
       }
     },
     "calculator": {

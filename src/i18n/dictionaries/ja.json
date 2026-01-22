@@ -413,6 +413,7 @@
       "saving": "保存中...",
       "saved": "保存済み",
       "saveFailed": "保存失敗",
+      "save": "Save Changes",
       "account": "アカウント",
       "email": "メール",
       "name": "名前",
@@ -444,7 +445,8 @@
         "fallbackDesc": "予算超過時の動作",
         "reject": "リクエスト拒否",
         "cache": "キャッシュを返す",
-        "degrade": "品質を下げる"
+        "degrade": "品質を下げる",
+        "queue": "Queue Request"
       },
       "notifications": {
         "title": "通知設定",
@@ -459,12 +461,14 @@
         "securityAlertsDesc": "不審な活動の通知を受信",
         "telegram": "Telegram",
         "telegramDesc": "Telegramボットでアラートを受信",
-        "comingSoon": "近日公開"
+        "comingSoon": "近日公開",
+        "integrations": "Integrations"
       },
       "security": {
         "title": "セキュリティ設定",
         "subtitle": "アカウントのセキュリティを管理",
         "changePassword": "パスワード変更",
+        "passwordDesc": "Manage your password security",
         "currentPassword": "現在のパスワード",
         "newPassword": "新しいパスワード",
         "confirmPassword": "パスワード確認",

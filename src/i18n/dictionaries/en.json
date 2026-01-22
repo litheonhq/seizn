@@ -515,6 +515,7 @@
       "saving": "Saving...",
       "saved": "Saved",
       "saveFailed": "Save failed",
+      "save": "Save Changes",
       "account": "Account",
       "email": "Email",
       "name": "Name",
@@ -546,7 +547,8 @@
         "fallbackDesc": "What to do when budget is exceeded",
         "reject": "Reject Request",
         "cache": "Return Cached",
-        "degrade": "Degrade Quality"
+        "degrade": "Degrade Quality",
+        "queue": "Queue Request"
       },
       "notifications": {
         "title": "Notification Settings",
@@ -561,12 +563,15 @@
         "securityAlertsDesc": "Get notified of suspicious activity",
         "telegram": "Telegram",
         "telegramDesc": "Receive alerts via Telegram bot",
-        "comingSoon": "Coming Soon"
+        "comingSoon": "Coming Soon",
+        "integrations": "Integrations"
       },
       "security": {
         "title": "Security Settings",
         "subtitle": "Manage your account security",
         "changePassword": "Change Password",
+        "passwordDesc": "Manage your password security",
+        "save": "Save Changes",
         "currentPassword": "Current Password",
         "newPassword": "New Password",
         "confirmPassword": "Confirm Password",
