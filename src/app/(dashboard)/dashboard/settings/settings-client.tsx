@@ -748,8 +748,11 @@ export function SettingsClient() {
                     {t("dashboard.settingsPage.security.changePasswordDesc")}
                   </p>
                 </div>
-                <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.security.updatePassword")}
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                >
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -785,8 +788,11 @@ export function SettingsClient() {
                     {t("dashboard.settingsPage.security.sessionsDesc")}
                   </p>
                 </div>
-                <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.security.viewSessions")}
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                >
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -816,8 +822,11 @@ export function SettingsClient() {
                     {t("dashboard.settingsPage.dangerZone.exportDataDesc")}
                   </p>
                 </div>
-                <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.dangerZone.exportButton")}
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                >
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -833,8 +842,11 @@ export function SettingsClient() {
                     {t("dashboard.settingsPage.dangerZone.deleteMemoriesDesc")}
                   </p>
                 </div>
-                <button className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">
-                  {t("dashboard.settingsPage.dangerZone.deleteMemoriesButton")}
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                >
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -850,8 +862,11 @@ export function SettingsClient() {
                     {t("dashboard.settingsPage.dangerZone.deleteAccountDesc")}
                   </p>
                 </div>
-                <button className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">
-                  {t("dashboard.settingsPage.dangerZone.deleteAccountButton")}
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                >
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
