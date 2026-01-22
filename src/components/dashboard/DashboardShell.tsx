@@ -151,8 +151,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   // Show loading or redirect if not authenticated
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
       </div>
     );
   }
@@ -197,10 +197,10 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <div className={`flex-1 min-w-0 transition-all duration-300 ease-out ${
               isSidebarExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 w-0'
             }`}>
-              <span className="text-xl font-bold text-gray-900 block truncate whitespace-nowrap">
+              <span className="text-xl font-bold text-gray-900 dark:text-white block truncate whitespace-nowrap">
                 Seizn<span className="theme-primary">.</span>
               </span>
-              <p className="text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
+              <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
                 {config.icon} {config.name}
               </p>
             </div>
@@ -232,12 +232,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 } ${
                   active
                     ? "theme-gradient-btn text-white shadow-lg theme-shadow"
-                    : "text-gray-600 hover:bg-white/60 hover:text-gray-900 hover:shadow-md"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-white/60 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white hover:shadow-md"
                 }`}
               >
                 <item.icon
                   className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-                    active ? "text-white" : "text-gray-400 group-hover:text-gray-600"
+                    active ? "text-white" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                   }`}
                 />
                 <span className={`truncate whitespace-nowrap transition-all duration-300 ease-out ${
@@ -281,14 +281,14 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               isSidebarExpanded ? 'flex-1 opacity-100' : 'w-0 opacity-0'
             }`}>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate whitespace-nowrap">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate whitespace-nowrap">
                   {session?.user?.name || "User"}
                 </p>
-                <p className="text-xs text-gray-500 truncate whitespace-nowrap">{session?.user?.email}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate whitespace-nowrap">{session?.user?.email}</p>
               </div>
               <button
                 onClick={handleSignOut}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white/60 rounded-xl transition-all duration-200 flex-shrink-0"
+                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 rounded-xl transition-all duration-200 flex-shrink-0"
                 title={t("dashboard.signOut")}
               >
                 <LogoutIcon className="w-5 h-5" />
@@ -316,13 +316,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md" />
-            <span className="text-base sm:text-lg font-bold text-gray-900">Seizn</span>
+            <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Seizn</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-base sm:text-lg">{config.icon}</span>
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-white/60 active:bg-white/80 rounded-xl transition-colors"
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-gray-700/60 active:bg-white/80 dark:active:bg-gray-700/80 rounded-xl transition-colors"
               aria-label={t("dashboard.menu") || "Open menu"}
             >
               <MenuIcon className="w-6 h-6" />
@@ -337,37 +337,37 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <div ref={orgDropdownRef} className="relative">
           <button
             onClick={() => setShowOrgDropdown(!showOrgDropdown)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 transition-colors text-sm font-medium text-gray-700"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200"
           >
-            <OrgIcon className="w-4 h-4 text-gray-400" />
+            <OrgIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
             <span>{selectedOrg?.name || t("dashboard.topBar.personal")}</span>
-            <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+            <ChevronDownIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </button>
           {showOrgDropdown && (
-            <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-1 animate-fade-in">
+            <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
               <button
                 onClick={() => { setSelectedOrg(null); setShowOrgDropdown(false); }}
-                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${!selectedOrg ? 'bg-teal-50 text-teal-700' : 'text-gray-700'}`}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${!selectedOrg ? 'bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300' : 'text-gray-700 dark:text-gray-300'}`}
               >
                 <UserIcon className="w-4 h-4" />
                 {t("dashboard.topBar.personal")}
               </button>
-              {organizations.length > 0 && <div className="border-t border-gray-100 my-1" />}
+              {organizations.length > 0 && <div className="border-t border-gray-100 dark:border-gray-700 my-1" />}
               {organizations.map((org) => (
                 <button
                   key={org.id}
                   onClick={() => { setSelectedOrg(org); setShowOrgDropdown(false); }}
-                  className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 ${selectedOrg?.id === org.id ? 'bg-teal-50 text-teal-700' : 'text-gray-700'}`}
+                  className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedOrg?.id === org.id ? 'bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300' : 'text-gray-700 dark:text-gray-300'}`}
                 >
                   <OrgIcon className="w-4 h-4" />
                   {org.name}
                 </button>
               ))}
-              <div className="border-t border-gray-100 my-1" />
+              <div className="border-t border-gray-100 dark:border-gray-700 my-1" />
               <Link
                 href="/dashboard/organizations"
                 onClick={() => setShowOrgDropdown(false)}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:bg-gray-50"
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <SettingsIcon className="w-4 h-4" />
                 {t("dashboard.topBar.manageOrgs")}
@@ -386,11 +386,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             {t("dashboard.topBar.create")}
           </button>
           {showCreateDropdown && (
-            <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 animate-fade-in">
+            <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
               <Link
                 href="/dashboard/keys"
                 onClick={() => setShowCreateDropdown(false)}
-                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <KeyIcon className="w-4 h-4 text-amber-500" />
                 {t("dashboard.topBar.createApiKey")}
@@ -398,7 +398,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               <Link
                 href="/dashboard/organizations"
                 onClick={() => setShowCreateDropdown(false)}
-                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <UsersIcon className="w-4 h-4 text-teal-500" />
                 {t("dashboard.topBar.createOrg")}
