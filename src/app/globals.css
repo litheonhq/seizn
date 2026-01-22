@@ -7,18 +7,10 @@
   --foreground: #171717;
 }
 
-/* Dark mode using class strategy (takes precedence) */
+/* Dark mode using class strategy */
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
-}
-
-/* Fallback to system preference if no class is set */
-@media (prefers-color-scheme: dark) {
-  :root:not(.dark):not(.light) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 @theme inline {
