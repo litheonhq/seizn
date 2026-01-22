@@ -84,10 +84,10 @@ export function UsageClient() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               {t("dashboard.usagePage.title")}
             </h2>
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {t("dashboard.usagePage.subtitle")}
             </p>
           </div>
@@ -100,8 +100,8 @@ export function UsageClient() {
                 onClick={() => setPeriod(p)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   period === p
-                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-gray-900"
-                    : "bg-gray-100 text-gray-500 hover:text-gray-900"
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-gray-900 dark:text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white"
                 }`}
               >
                 {p === "7d" ? t("dashboard.usagePage.days7") : p === "30d" ? t("dashboard.usagePage.days30") : t("dashboard.usagePage.days90")}
@@ -111,43 +111,43 @@ export function UsageClient() {
         </div>
 
         {isLoading ? (
-          <div className="text-gray-500 text-center py-12">{t("dashboard.usagePage.loading")}</div>
+          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-12">{t("dashboard.usagePage.loading")}</div>
         ) : usage ? (
           <>
             {/* Summary Cards - 2 rows of 3 */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.totalCalls.toLocaleString()}
                 </p>
               </div>
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.totalTokens.toLocaleString()}
                 </p>
               </div>
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent">
                   ${usage.summary.totalCostDollars}
                 </p>
               </div>
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.avgLatency}ms
                 </p>
               </div>
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.p95Latency")}</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.p95Latency")}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.p95Latency}ms
                 </p>
               </div>
-              <div className="glass-card border border-gray-200 rounded-2xl p-4">
-                <p className="text-gray-500 text-sm">{t("dashboard.usagePage.errorRateKpi")}</p>
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.errorRateKpi")}</p>
                 <p className={`text-2xl font-bold ${usage.summary.errorRate > 5 ? 'text-red-500' : usage.summary.errorRate > 0 ? 'text-amber-500' : 'text-green-500'}`}>
                   {usage.summary.errorRate}%
                 </p>
@@ -155,21 +155,21 @@ export function UsageClient() {
             </div>
 
             {/* Daily Usage Chart with Tabs */}
-            <div className="glass-card border border-gray-200 rounded-2xl p-6 mb-8">
+            <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-6 mb-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {t("dashboard.usagePage.dailyTrends")}
                 </h3>
                 {/* Chart Tabs */}
-                <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
+                <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
                   {(["calls", "cost", "latency", "errors"] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setChartTab(tab)}
                       className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                         chartTab === tab
-                          ? "bg-white text-gray-900 shadow-sm"
-                          : "text-gray-500 hover:text-gray-700"
+                          ? "bg-white text-gray-900 dark:text-white shadow-sm"
+                          : "text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-200"
                       }`}
                     >
                       {t(`dashboard.usagePage.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`)}
@@ -224,7 +224,7 @@ export function UsageClient() {
                     >
                       <div className="relative w-full">
                         {/* Tooltip */}
-                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-100 px-2 py-1 rounded text-xs text-gray-900 whitespace-nowrap z-10">
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs text-gray-900 dark:text-white whitespace-nowrap z-10">
                           {getLabel()}
                           <br />
                           {day.date}
@@ -241,7 +241,7 @@ export function UsageClient() {
                       {(i === 0 ||
                         i === usage.daily.length - 1 ||
                         i % Math.ceil(usage.daily.length / 7) === 0) && (
-                        <span className="text-gray-400 text-xs mt-2 transform -rotate-45 origin-left">
+                        <span className="text-gray-400 dark:text-gray-500 text-xs mt-2 transform -rotate-45 origin-left">
                           {new Date(day.date).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
@@ -257,8 +257,8 @@ export function UsageClient() {
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Endpoint Breakdown */}
-              <div className="glass-card border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {t("dashboard.usagePage.endpointUsage")}
                 </h3>
                 {usage.endpoints.length === 0 ? (
@@ -276,14 +276,14 @@ export function UsageClient() {
                     {usage.endpoints.slice(0, 5).map((ep) => (
                       <div key={ep.endpoint}>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-gray-700 font-mono truncate max-w-[200px]">
+                          <span className="text-gray-700 dark:text-gray-200 font-mono truncate max-w-[200px]">
                             {ep.endpoint}
                           </span>
-                          <span className="text-gray-500">
+                          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {ep.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-teal-400 to-cyan-500 rounded-full"
                             style={{
@@ -291,7 +291,7 @@ export function UsageClient() {
                             }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
                           <span>{ep.avgLatency}ms {t("dashboard.usagePage.avg")}</span>
                           {ep.errors > 0 && (
                             <span className="text-red-500">
@@ -306,8 +306,8 @@ export function UsageClient() {
               </div>
 
               {/* API Key Breakdown */}
-              <div className="glass-card border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {t("dashboard.usagePage.usageByApiKey")}
                 </h3>
                 {usage.apiKeys.length === 0 ? (
@@ -325,14 +325,14 @@ export function UsageClient() {
                     {usage.apiKeys.slice(0, 5).map((key) => (
                       <div key={key.keyId}>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-gray-700">
+                          <span className="text-gray-700 dark:text-gray-200">
                             {key.name || key.prefix + "..."}
                           </span>
-                          <span className="text-gray-500">
+                          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {key.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-blue-500 rounded-full"
                             style={{
@@ -353,7 +353,7 @@ export function UsageClient() {
                 <h3 className="text-lg font-semibold text-red-500 mb-2">
                   {t("dashboard.usagePage.errorsTitle")}
                 </h3>
-                <p className="text-gray-700">
+                <p className="text-gray-700 dark:text-gray-200">
                   {usage.summary.totalErrors} {t("dashboard.usagePage.errors")} (
                   {usage.summary.errorRate}% {t("dashboard.usagePage.errorRate")})
                 </p>
@@ -361,15 +361,15 @@ export function UsageClient() {
             )}
           </>
         ) : (
-          <div className="glass-card border border-gray-200 rounded-2xl p-12">
+          <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-12">
             <div className="max-w-md mx-auto text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-teal-50 to-cyan-50 flex items-center justify-center">
                 <ChartIcon className="w-10 h-10 text-teal-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.usagePage.noUsageTitle")}
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
                 {t("dashboard.usagePage.noUsageDescription")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -382,13 +382,13 @@ export function UsageClient() {
                 </Link>
                 <Link
                   href="/docs/quickstart"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-200 dark:bg-gray-600 transition-all"
                 >
                   <BookIcon className="w-4 h-4" />
                   {t("dashboard.usagePage.viewDocs")}
                 </Link>
               </div>
-              <p className="mt-6 text-xs text-gray-400">
+              <p className="mt-6 text-xs text-gray-400 dark:text-gray-500">
                 {t("dashboard.usagePage.noUsageExpected")}
               </p>
             </div>
@@ -411,11 +411,11 @@ function EmptyState({
 }) {
   return (
     <div className="py-8 text-center">
-      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-50 flex items-center justify-center">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         {icon}
       </div>
-      <h4 className="text-gray-900 font-medium mb-1">{title}</h4>
-      <p className="text-sm text-gray-500 mb-4">{description}</p>
+      <h4 className="text-gray-900 dark:text-white font-medium mb-1">{title}</h4>
+      <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{description}</p>
       {cta && (
         <Link
           href={cta.href}
