@@ -282,7 +282,43 @@ body {
   --theme-bg-gradient: linear-gradient(135deg, #F5F3FF 0%, #FFF 50%, #EEF2FF 100%);
   --theme-particle-color: rgba(139, 92, 246, 0.3);
 }
-/* ========== Dark Mode Seasonal Themes ========== *//* Dark Spring Theme */.dark .theme-spring {  --theme-primary: #F472B6;  --theme-secondary: #EC4899;  --theme-accent: #9f1239;  --theme-bg-gradient: linear-gradient(135deg, #1f1721 0%, #0a0a0a 50%, #1f1523 100%);  --theme-particle-color: rgba(244, 114, 182, 0.2);}/* Dark Summer Theme */.dark .theme-summer {  --theme-primary: #06B6D4;  --theme-secondary: #0EA5E9;  --theme-accent: #0e7490;  --theme-bg-gradient: linear-gradient(135deg, #0c1929 0%, #0a0a0a 50%, #0c1f29 100%);  --theme-particle-color: rgba(6, 182, 212, 0.2);}/* Dark Autumn Theme */.dark .theme-autumn {  --theme-primary: #F59E0B;  --theme-secondary: #EA580C;  --theme-accent: #b45309;  --theme-bg-gradient: linear-gradient(135deg, #1f1a0f 0%, #0a0a0a 50%, #1f160d 100%);  --theme-particle-color: rgba(245, 158, 11, 0.2);}/* Dark Winter Theme */.dark .theme-winter {  --theme-primary: #8B5CF6;  --theme-secondary: #6366F1;  --theme-accent: #5b21b6;  --theme-bg-gradient: linear-gradient(135deg, #1a1625 0%, #0a0a0a 50%, #171a2e 100%);  --theme-particle-color: rgba(139, 92, 246, 0.2);}
+/* ========== Dark Mode Seasonal Themes ========== */
+
+/* Dark Spring Theme */
+.dark .theme-spring {
+  --theme-primary: #F472B6;
+  --theme-secondary: #EC4899;
+  --theme-accent: #9f1239;
+  --theme-bg-gradient: linear-gradient(135deg, #1f1721 0%, #0a0a0a 50%, #1f1523 100%);
+  --theme-particle-color: rgba(244, 114, 182, 0.2);
+}
+
+/* Dark Summer Theme */
+.dark .theme-summer {
+  --theme-primary: #06B6D4;
+  --theme-secondary: #0EA5E9;
+  --theme-accent: #0e7490;
+  --theme-bg-gradient: linear-gradient(135deg, #0c1929 0%, #0a0a0a 50%, #0c1f29 100%);
+  --theme-particle-color: rgba(6, 182, 212, 0.2);
+}
+
+/* Dark Autumn Theme */
+.dark .theme-autumn {
+  --theme-primary: #F59E0B;
+  --theme-secondary: #EA580C;
+  --theme-accent: #b45309;
+  --theme-bg-gradient: linear-gradient(135deg, #1f1a0f 0%, #0a0a0a 50%, #1f160d 100%);
+  --theme-particle-color: rgba(245, 158, 11, 0.2);
+}
+
+/* Dark Winter Theme */
+.dark .theme-winter {
+  --theme-primary: #8B5CF6;
+  --theme-secondary: #6366F1;
+  --theme-accent: #5b21b6;
+  --theme-bg-gradient: linear-gradient(135deg, #1a1625 0%, #0a0a0a 50%, #171a2e 100%);
+  --theme-particle-color: rgba(139, 92, 246, 0.2);
+}
 
 /* Theme-aware components */
 .theme-gradient-bg {
