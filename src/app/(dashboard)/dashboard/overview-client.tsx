@@ -138,10 +138,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="relative">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {greeting}, {user.name || user.email?.split("@")[0]}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {t("dashboard.overviewPage.subtitle")}
           </p>
         </div>

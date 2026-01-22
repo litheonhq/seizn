@@ -184,7 +184,7 @@ export default function MobileSidebar({
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md"
+                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md object-cover"
               />
             ) : (
               <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">

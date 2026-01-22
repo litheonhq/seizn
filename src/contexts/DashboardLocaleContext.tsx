@@ -79,6 +79,23 @@ export function DashboardLocaleProvider({ children, initialLocale }: Props) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Listen for locale changes via custom event (triggered by language switcher)
+  useEffect(() => {
+    const handleLocaleChange = (event: CustomEvent<{ locale: Locale }>) => {
+      const newLocale = event.detail.locale;
+      setLocale(newLocale);
+      setIsLoading(true);
+      loadDictionary(newLocale)
+        .then(setDictionary)
+        .finally(() => setIsLoading(false));
+    };
+
+    window.addEventListener("localeChange", handleLocaleChange as EventListener);
+    return () => {
+      window.removeEventListener("localeChange", handleLocaleChange as EventListener);
+    };
+  }, []);
+
   // Translation function
   const t = useCallback(
     (key: string, params?: Record<string, string | number>): string => {

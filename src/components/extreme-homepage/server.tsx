@@ -181,13 +181,13 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-full hover:opacity-90 transition-opacity"
+            className="px-8 py-3 bg-gradient-to-r from-emerald-500/90 to-teal-600/90 backdrop-blur-sm text-white font-medium rounded-full hover:from-emerald-500 hover:to-teal-600 transition-all shadow-lg shadow-emerald-500/20"
           >
             {t.extremeHome?.pricingCta?.viewPricing || "View Pricing"}
           </Link>
           <Link
             href={`/${locale}/enterprise`}
-            className="px-8 py-3 border border-[#EAF0FF]/20 text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 transition-colors"
+            className="px-8 py-3 border border-[#EAF0FF]/30 bg-white/5 backdrop-blur-sm text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/15 hover:border-[#EAF0FF]/40 transition-all"
           >
             {t.extremeHome?.pricingCta?.contactSales || "Contact Sales"}
           </Link>
@@ -200,29 +200,30 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
 function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
     <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <Link href={`/${locale}`} className="flex items-center gap-2">
-          
-          <Image
-            src="/seizn-icon.svg"
-            alt="Seizn"
-            className="w-6 h-6"
-            width={24}
-            height={24}
-            priority={false}
-          />
-          <span className="font-medium">Seizn</span>
-        </Link>
-        <div className="text-sm text-gray-500">
-          {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
+        <div className="flex flex-col gap-2">
+          <Link href={`/${locale}`} className="flex items-center gap-2">
+            <Image
+              src="/seizn-icon.svg"
+              alt="Seizn"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+              priority={false}
+            />
+            <span className="font-medium">Seizn</span>
+          </Link>
+          <div className="text-sm text-gray-500">
+            {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
+          </div>
         </div>
-        <nav className="flex items-center gap-6">
+        <nav className="flex flex-wrap items-center gap-6">
           <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
           <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
           <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
           <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
           <Link href="/refund" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Refund</Link>
-          <a href="mailto:support@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+          <Link href={`/${locale}/docs/faq`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Help</Link>
         </nav>
       </div>
     </footer>

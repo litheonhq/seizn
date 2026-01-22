@@ -262,7 +262,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className={`rounded-full ring-2 ring-white shadow-md transition-all duration-300 ${
+                className={`rounded-full ring-2 ring-white shadow-md transition-all duration-300 object-cover ${
                   isSidebarExpanded ? 'w-11 h-11' : 'w-8 h-8'
                 }`}
               />

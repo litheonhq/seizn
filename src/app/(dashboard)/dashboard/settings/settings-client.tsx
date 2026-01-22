@@ -478,10 +478,10 @@ export function SettingsClient() {
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t("dashboard.settingsPage.budgetTitle")}
+                {t("dashboard.settingsPage.budget.title")}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                {t("dashboard.settingsPage.budgetDesc")}
+                {t("dashboard.settingsPage.budget.subtitle")}
               </p>
             </div>
 
@@ -495,7 +495,7 @@ export function SettingsClient() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      {t("dashboard.settingsPage.dailyBudget")}
+                      {t("dashboard.settingsPage.budget.dailyLimit")}
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
@@ -514,7 +514,7 @@ export function SettingsClient() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      {t("dashboard.settingsPage.monthlyBudget")}
+                      {t("dashboard.settingsPage.budget.monthlyLimit")}
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
@@ -536,7 +536,7 @@ export function SettingsClient() {
                 {/* Per-Query Limit */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("dashboard.settingsPage.perQueryMax")}
+                    {t("dashboard.settingsPage.budget.perQueryMax")}
                   </label>
                   <div className="relative max-w-xs">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
@@ -557,7 +557,7 @@ export function SettingsClient() {
                 {/* Alert Threshold */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("dashboard.settingsPage.alertThreshold")}
+                    {t("dashboard.settingsPage.budget.alertThreshold")}
                   </label>
                   <div className="flex items-center gap-4">
                     <input
@@ -577,14 +577,14 @@ export function SettingsClient() {
                     </span>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    {t("dashboard.settingsPage.alertThresholdHint")}
+                    {t("dashboard.settingsPage.budget.alertThresholdHint")}
                   </p>
                 </div>
 
                 {/* Budget Mode */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t("dashboard.settingsPage.budgetMode")}
+                    {t("dashboard.settingsPage.budget.budgetMode")}
                   </label>
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -598,10 +598,10 @@ export function SettingsClient() {
                       />
                       <div>
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("dashboard.settingsPage.modeSoft")}
+                          {t("dashboard.settingsPage.budget.soft")}
                         </span>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {t("dashboard.settingsPage.modeSoftDesc")}
+                          {t("dashboard.settingsPage.budget.softDesc")}
                         </p>
                       </div>
                     </label>
@@ -616,10 +616,10 @@ export function SettingsClient() {
                       />
                       <div>
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("dashboard.settingsPage.modeHard")}
+                          {t("dashboard.settingsPage.budget.hard")}
                         </span>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {t("dashboard.settingsPage.modeHardDesc")}
+                          {t("dashboard.settingsPage.budget.hardDesc")}
                         </p>
                       </div>
                     </label>
@@ -629,7 +629,7 @@ export function SettingsClient() {
                 {/* Fallback Strategy */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t("dashboard.settingsPage.fallbackStrategy")}
+                    {t("dashboard.settingsPage.budget.fallbackStrategy")}
                   </label>
                   <select
                     value={budgetSettings.fallbackStrategy}
@@ -639,9 +639,9 @@ export function SettingsClient() {
                     }))}
                     className="w-full max-w-xs rounded-xl border border-gray-200 dark:border-gray-600 px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                   >
-                    <option value="degrade">{t("dashboard.settingsPage.strategyDegrade")}</option>
-                    <option value="reject">{t("dashboard.settingsPage.strategyReject")}</option>
-                    <option value="queue">{t("dashboard.settingsPage.strategyQueue")}</option>
+                    <option value="degrade">{t("dashboard.settingsPage.budget.degrade")}</option>
+                    <option value="reject">{t("dashboard.settingsPage.budget.reject")}</option>
+                    <option value="queue">{t("dashboard.settingsPage.budget.queue")}</option>
                   </select>
                 </div>
 
@@ -652,7 +652,7 @@ export function SettingsClient() {
                     disabled={saveStatus === "saving"}
                     className="px-6 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 transition-all"
                   >
-                    {saveStatus === "saving" ? t("dashboard.settingsPage.saving") : t("dashboard.settingsPage.saveChanges")}
+                    {saveStatus === "saving" ? t("dashboard.settingsPage.saving") : t("dashboard.settingsPage.save")}
                   </button>
                 </div>
               </>
@@ -665,35 +665,35 @@ export function SettingsClient() {
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t("dashboard.settingsPage.notificationsTitle")}
+                {t("dashboard.settingsPage.notifications.title")}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                {t("dashboard.settingsPage.notificationsDesc")}
+                {t("dashboard.settingsPage.notifications.subtitle")}
               </p>
             </div>
 
             <div className="space-y-4">
               <NotificationToggle
-                title={t("dashboard.settingsPage.emailAlerts")}
-                description={t("dashboard.settingsPage.emailAlertsDesc")}
+                title={t("dashboard.settingsPage.notifications.emailAlerts")}
+                description={t("dashboard.settingsPage.notifications.emailAlertsDesc")}
                 checked={notifications.emailAlerts}
                 onChange={(checked) => setNotifications(prev => ({ ...prev, emailAlerts: checked }))}
               />
               <NotificationToggle
-                title={t("dashboard.settingsPage.usageAlerts")}
-                description={t("dashboard.settingsPage.usageAlertsDesc")}
+                title={t("dashboard.settingsPage.notifications.usageAlerts")}
+                description={t("dashboard.settingsPage.notifications.usageAlertsDesc")}
                 checked={notifications.usageAlerts}
                 onChange={(checked) => setNotifications(prev => ({ ...prev, usageAlerts: checked }))}
               />
               <NotificationToggle
-                title={t("dashboard.settingsPage.weeklyDigest")}
-                description={t("dashboard.settingsPage.weeklyDigestDesc")}
+                title={t("dashboard.settingsPage.notifications.weeklyDigest")}
+                description={t("dashboard.settingsPage.notifications.weeklyDigestDesc")}
                 checked={notifications.weeklyDigest}
                 onChange={(checked) => setNotifications(prev => ({ ...prev, weeklyDigest: checked }))}
               />
               <NotificationToggle
-                title={t("dashboard.settingsPage.securityAlerts")}
-                description={t("dashboard.settingsPage.securityAlertsDesc")}
+                title={t("dashboard.settingsPage.notifications.securityAlerts")}
+                description={t("dashboard.settingsPage.notifications.securityAlertsDesc")}
                 checked={notifications.securityAlerts}
                 onChange={(checked) => setNotifications(prev => ({ ...prev, securityAlerts: checked }))}
               />
@@ -702,7 +702,7 @@ export function SettingsClient() {
             {/* Telegram Connection (Future) */}
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <h3 className="text-base font-medium text-gray-900 dark:text-white mb-3">
-                {t("dashboard.settingsPage.integrations")}
+                {t("dashboard.settingsPage.notifications.integrations")}
               </h3>
               <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3">
@@ -711,14 +711,14 @@ export function SettingsClient() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">Telegram</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.telegramDesc")}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.notifications.telegramDesc")}</p>
                   </div>
                 </div>
                 <button
                   disabled
                   className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
                 >
-                  {t("dashboard.settingsPage.comingSoon")}
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -730,10 +730,10 @@ export function SettingsClient() {
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t("dashboard.settingsPage.securityTitle")}
+                {t("dashboard.settingsPage.security.title")}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                {t("dashboard.settingsPage.securityDesc")}
+                {t("dashboard.settingsPage.security.subtitle")}
               </p>
             </div>
 
@@ -742,14 +742,14 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {t("dashboard.settingsPage.password")}
+                    {t("dashboard.settingsPage.security.changePassword")}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t("dashboard.settingsPage.passwordDesc")}
+                    {t("dashboard.settingsPage.security.changePasswordDesc")}
                   </p>
                 </div>
                 <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.changePassword")}
+                  {t("dashboard.settingsPage.security.updatePassword")}
                 </button>
               </div>
             </div>
@@ -759,17 +759,17 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {t("dashboard.settingsPage.twoFactor")}
+                    {t("dashboard.settingsPage.security.twoFactor")}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t("dashboard.settingsPage.twoFactorDesc")}
+                    {t("dashboard.settingsPage.security.twoFactorDesc")}
                   </p>
                 </div>
                 <button
                   disabled
                   className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
                 >
-                  {t("dashboard.settingsPage.comingSoon")}
+                  {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
               </div>
             </div>
@@ -779,14 +779,14 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {t("dashboard.settingsPage.activeSessions")}
+                    {t("dashboard.settingsPage.security.sessions")}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t("dashboard.settingsPage.activeSessionsDesc")}
+                    {t("dashboard.settingsPage.security.sessionsDesc")}
                   </p>
                 </div>
                 <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.manageSessions")}
+                  {t("dashboard.settingsPage.security.viewSessions")}
                 </button>
               </div>
             </div>
@@ -798,10 +798,10 @@ export function SettingsClient() {
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-red-600 mb-2">
-                {t("dashboard.settingsPage.dangerZone")}
+                {t("dashboard.settingsPage.dangerZone.title")}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                {t("dashboard.settingsPage.dangerZoneDesc")}
+                {t("dashboard.settingsPage.dangerZone.titleDesc")}
               </p>
             </div>
 
@@ -810,14 +810,14 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {t("dashboard.settingsPage.exportData")}
+                    {t("dashboard.settingsPage.dangerZone.exportData")}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t("dashboard.settingsPage.exportDataDesc")}
+                    {t("dashboard.settingsPage.dangerZone.exportDataDesc")}
                   </p>
                 </div>
                 <button className="px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {t("dashboard.settingsPage.export")}
+                  {t("dashboard.settingsPage.dangerZone.exportButton")}
                 </button>
               </div>
             </div>
@@ -827,14 +827,14 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-red-700 dark:text-red-400">
-                    {t("dashboard.settingsPage.deleteMemories")}
+                    {t("dashboard.settingsPage.dangerZone.deleteMemories")}
                   </p>
                   <p className="text-xs text-red-600 dark:text-red-500">
-                    {t("dashboard.settingsPage.deleteMemoriesDesc")}
+                    {t("dashboard.settingsPage.dangerZone.deleteMemoriesDesc")}
                   </p>
                 </div>
                 <button className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">
-                  {t("dashboard.settingsPage.deleteAll")}
+                  {t("dashboard.settingsPage.dangerZone.deleteMemoriesButton")}
                 </button>
               </div>
             </div>
@@ -844,14 +844,14 @@ export function SettingsClient() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-red-700 dark:text-red-400">
-                    {t("dashboard.settingsPage.deleteAccount")}
+                    {t("dashboard.settingsPage.dangerZone.deleteAccount")}
                   </p>
                   <p className="text-xs text-red-600 dark:text-red-500">
-                    {t("dashboard.settingsPage.deleteAccountDesc")}
+                    {t("dashboard.settingsPage.dangerZone.deleteAccountDesc")}
                   </p>
                 </div>
                 <button className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">
-                  {t("dashboard.settingsPage.delete")}
+                  {t("dashboard.settingsPage.dangerZone.deleteAccountButton")}
                 </button>
               </div>
             </div>
