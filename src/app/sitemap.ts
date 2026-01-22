@@ -35,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Add static docs routes (non-locale)
   const docsRoutes = [
     { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
-    { path: '/docs/quickstart', priority: 0.85, changeFreq: 'monthly' as const },
+    { path: '/docs/tutorial', priority: 0.85, changeFreq: 'monthly' as const },
     { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
     { path: '/docs/faq', priority: 0.7, changeFreq: 'monthly' as const },
   ];
