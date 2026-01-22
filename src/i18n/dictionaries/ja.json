@@ -426,7 +426,7 @@
         "budget": "予算",
         "notifications": "通知",
         "security": "セキュリティ",
-        "danger": "危険ゾーン"
+        "danger": "データ管理"
       },
       "budget": {
         "title": "予算設定",
@@ -481,7 +481,7 @@
         "viewSessions": "セッションを表示"
       },
       "dangerZone": {
-        "title": "危険ゾーン",
+        "title": "データ管理",
         "subtitle": "元に戻せない操作",
         "exportData": "データエクスポート",
         "exportDataDesc": "すべてのデータをダウンロード",
