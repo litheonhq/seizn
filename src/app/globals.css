@@ -1,4 +1,7 @@
 @import "tailwindcss";
+
+/* Tailwind v4: Custom dark mode variant for class-based toggling */
+@custom-variant dark (&:where(.dark, .dark *));
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
 
@@ -27,8 +30,21 @@ html {
 
 body {
   background: var(--background);
-  color: var(--foreground);
   font-family: "Pretendard Variable", var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Default text colors for light mode */
+:root:not(.dark) {
+  color-scheme: light;
+}
+
+:root:not(.dark) body {
+  color: #171717;
+}
+
+/* Dark mode text color */
+.dark body {
+  color: #ededed;
 }
 
 /* Focus styles for accessibility */
