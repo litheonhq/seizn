@@ -424,7 +424,7 @@
         "apiKeysSecurityHint": "監控和管理您的API金鑰"
       },
       "dangerZone": {
-        "title": "危險區域",
+        "title": "資料管理",
         "description": "不可逆操作",
         "deleteAccount": "刪除帳戶",
         "deleteAccountHint": "永久刪除您的帳戶和所有資料",

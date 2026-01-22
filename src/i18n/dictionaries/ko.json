@@ -454,7 +454,7 @@
         "budget": "예산",
         "notifications": "알림",
         "security": "보안",
-        "danger": "위험 영역"
+        "danger": "데이터 정리"
       },
       "budget": {
         "title": "예산 설정",
@@ -509,8 +509,8 @@
         "viewSessions": "세션 보기"
       },
       "dangerZone": {
-        "title": "위험 영역",
-        "subtitle": "되돌릴 수 없는 작업",
+        "title": "데이터 정리",
+        "subtitle": "계정 데이터 관리 및 삭제",
         "exportData": "데이터 내보내기",
         "exportDataDesc": "모든 데이터 다운로드",
         "exportButton": "모든 데이터 내보내기",

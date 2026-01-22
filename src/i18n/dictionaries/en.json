@@ -528,7 +528,7 @@
         "budget": "Budget",
         "notifications": "Notifications",
         "security": "Security",
-        "danger": "Danger Zone"
+        "danger": "Data Management"
       },
       "budget": {
         "title": "Budget Settings",
@@ -584,8 +584,8 @@
         "viewSessions": "View Sessions"
       },
       "dangerZone": {
-        "title": "Danger Zone",
-        "subtitle": "Irreversible actions",
+        "title": "Data Management",
+        "subtitle": "Manage and delete your account data",
         "exportData": "Export Data",
         "exportDataDesc": "Download all your data",
         "exportButton": "Export All Data",
