@@ -188,7 +188,7 @@ console.log(response.trace);   // Pipeline trace
 console.log(response.cost);    // Cost breakdown`;
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="dark min-h-screen bg-zinc-950">
       {/* Header */}
       <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">

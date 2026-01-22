@@ -256,7 +256,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 ${isSidebarExpanded ? 'hover:bg-white/80' : 'justify-center'} transition-all duration-300`}>
+          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50 ${isSidebarExpanded ? 'hover:bg-white/80 dark:hover:bg-gray-700/80' : 'justify-center'} transition-all duration-300`}>
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img

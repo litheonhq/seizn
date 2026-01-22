@@ -41,7 +41,7 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
       <select
         value={currentLocale}
         onChange={(e) => handleChange(e.target.value as Locale)}
-        className="appearance-none bg-transparent border border-gray-200 rounded-full px-3 py-1.5 pr-8 text-sm text-gray-600 hover:border-gray-400 focus:outline-none focus:border-gray-400 cursor-pointer"
+        className="appearance-none bg-transparent border border-gray-200 dark:border-gray-600 rounded-full px-3 py-1.5 pr-8 text-sm text-gray-600 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 cursor-pointer"
         aria-label="Select language"
       >
         {locales.map((locale) => (

@@ -78,7 +78,7 @@ export default function OrganizationsClient() {
       case "admin":
         return "bg-gradient-to-r from-purple-400 to-indigo-500 text-white";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300";
     }
   };
 
@@ -87,8 +87,8 @@ export default function OrganizationsClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.organizationsPage.title")}</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t("dashboard.organizationsPage.title")}</h1>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
             {t("dashboard.organizationsPage.subtitle")}
           </p>
         </div>
@@ -106,9 +106,9 @@ export default function OrganizationsClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="glass-card rounded-2xl p-6 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded w-2/3 mb-3" />
-              <div className="h-4 bg-gray-100 rounded w-1/2 mb-4" />
-              <div className="h-8 bg-gray-100 rounded w-1/3" />
+              <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-2/3 mb-3" />
+              <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded w-1/2 mb-4" />
+              <div className="h-8 bg-gray-100 dark:bg-gray-700 rounded w-1/3" />
             </div>
           ))}
         </div>
@@ -118,49 +118,49 @@ export default function OrganizationsClient() {
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center">
               <UsersIcon className="w-10 h-10 text-purple-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               {t("dashboard.organizationsPage.noOrgsTitle")}
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
               {t("dashboard.organizationsPage.noOrgsDesc")}
             </p>
 
             {/* Feature list */}
             <div className="grid grid-cols-2 gap-4 mb-8 text-left max-w-md mx-auto">
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
                   <KeyIcon className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{t("dashboard.organizationsPage.featureSharedKeys")}</p>
-                  <p className="text-xs text-gray-500">{t("dashboard.organizationsPage.featureSharedKeysDesc")}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{t("dashboard.organizationsPage.featureSharedKeys")}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("dashboard.organizationsPage.featureSharedKeysDesc")}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center flex-shrink-0">
                   <TeamIcon className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{t("dashboard.organizationsPage.featureTeamMembers")}</p>
-                  <p className="text-xs text-gray-500">{t("dashboard.organizationsPage.featureTeamMembersDesc")}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{t("dashboard.organizationsPage.featureTeamMembers")}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("dashboard.organizationsPage.featureTeamMembersDesc")}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center flex-shrink-0">
                   <BudgetIcon className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{t("dashboard.organizationsPage.featureBudget")}</p>
-                  <p className="text-xs text-gray-500">{t("dashboard.organizationsPage.featureBudgetDesc")}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{t("dashboard.organizationsPage.featureBudget")}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("dashboard.organizationsPage.featureBudgetDesc")}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center flex-shrink-0">
                   <AuditIcon className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{t("dashboard.organizationsPage.featureAudit")}</p>
-                  <p className="text-xs text-gray-500">{t("dashboard.organizationsPage.featureAuditDesc")}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{t("dashboard.organizationsPage.featureAudit")}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("dashboard.organizationsPage.featureAuditDesc")}</p>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function OrganizationsClient() {
             >
               {t("dashboard.organizationsPage.createOrganization")}
             </button>
-            <p className="mt-4 text-xs text-gray-400">
+            <p className="mt-4 text-xs text-gray-400 dark:text-gray-500">
               {t("dashboard.organizationsPage.noOrgsExpected")}
             </p>
           </div>
@@ -194,12 +194,12 @@ export default function OrganizationsClient() {
                   {t(`dashboard.organizationsPage.roles.${org.role}`)}
                 </span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:theme-gradient-text transition-all">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:theme-gradient-text transition-all">
                 {org.name}
               </h3>
-              <p className="text-sm text-gray-500 mb-4">/{org.slug}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">/{org.slug}</p>
               <div className="flex items-center justify-between pt-4 border-t theme-border">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
                   {t("dashboard.organizationsPage.created")} {new Date(org.created_at).toLocaleDateString(locale)}
                 </span>
                 <span className="text-xs font-medium theme-primary">
@@ -221,7 +221,7 @@ export default function OrganizationsClient() {
           <div className="relative glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowCreateModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-700 rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -230,8 +230,8 @@ export default function OrganizationsClient() {
               <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
                 <UsersIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">{t("dashboard.organizationsPage.createOrgTitle")}</h2>
-              <p className="text-gray-500 text-sm mt-1">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("dashboard.organizationsPage.createOrgTitle")}</h2>
+              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
                 {t("dashboard.organizationsPage.createOrgDesc")}
               </p>
             </div>
@@ -244,7 +244,7 @@ export default function OrganizationsClient() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1.5">
                   {t("dashboard.organizationsPage.orgName")}
                 </label>
                 <input
@@ -262,15 +262,15 @@ export default function OrganizationsClient() {
                     }
                   }}
                   placeholder={t("dashboard.organizationsPage.orgNamePlaceholder")}
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1.5">
                   {t("dashboard.organizationsPage.urlSlug")}
                 </label>
                 <div className="flex items-center">
-                  <span className="text-gray-400 text-sm mr-1">seizn.com/</span>
+                  <span className="text-gray-400 dark:text-gray-500 text-sm mr-1">seizn.com/</span>
                   <input
                     type="text"
                     value={newOrgSlug}
@@ -282,7 +282,7 @@ export default function OrganizationsClient() {
                       )
                     }
                     placeholder={t("dashboard.organizationsPage.urlSlugPlaceholder")}
-                    className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
+                    className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
@@ -291,7 +291,7 @@ export default function OrganizationsClient() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
               >
                 {t("dashboard.organizationsPage.cancel")}
               </button>
