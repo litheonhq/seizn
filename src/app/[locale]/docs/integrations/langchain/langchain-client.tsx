@@ -188,14 +188,14 @@ pip install seizn langchain`}
             <CodeBlock
               language="typescript"
               title="TypeScript"
-              code={`import { SeizinRetriever } from 'seizn/langchain';
+              code={`import { SeiznRetriever } from 'seizn/langchain';
 import { ChatOpenAI } from '@langchain/openai';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 
 // Initialize the Seizn retriever
-const retriever = new SeizinRetriever({
+const retriever = new SeiznRetriever({
   apiKey: process.env.SEIZN_API_KEY,
   dataset: 'my-docs',
   topK: 5,
@@ -231,7 +231,7 @@ console.log('Trace:', response.seiznTrace);`}
             <CodeBlock
               language="python"
               title="Python"
-              code={`from seizn.langchain import SeizinRetriever
+              code={`from seizn.langchain import SeiznRetriever
 from langchain_openai import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -286,7 +286,7 @@ print("Trace:", response.get("seizn_trace"))`}
               </p>
               <CodeBlock
                 language="typescript"
-                code={`const retriever = new SeizinRetriever({
+                code={`const retriever = new SeiznRetriever({
   apiKey: process.env.SEIZN_API_KEY,
   dataset: 'my-docs',
   cache: {
@@ -306,7 +306,7 @@ print("Trace:", response.get("seizn_trace"))`}
               </p>
               <CodeBlock
                 language="typescript"
-                code={`const retriever = new SeizinRetriever({
+                code={`const retriever = new SeiznRetriever({
   apiKey: process.env.SEIZN_API_KEY,
   dataset: 'my-docs',
   rerank: {
@@ -327,7 +327,7 @@ print("Trace:", response.get("seizn_trace"))`}
               </p>
               <CodeBlock
                 language="typescript"
-                code={`const retriever = new SeizinRetriever({
+                code={`const retriever = new SeiznRetriever({
   apiKey: process.env.SEIZN_API_KEY,
   dataset: 'my-docs',
   filter: {

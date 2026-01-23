@@ -421,7 +421,7 @@ export class SeiznRetriever {
  *
  * @example
  * ```typescript
- * const retriever = createSeizinRetriever({
+ * const retriever = createSeiznRetriever({
  *   apiKey: process.env.SEIZN_API_KEY!,
  *   collectionId: 'my-collection',
  * });

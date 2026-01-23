@@ -57,7 +57,7 @@ Seizn provides persistent memory APIs for AI applications. Store, search, extrac
 - Tenant isolation via Row Level Security
 - API key rotation and expiration
 - Audit logging for compliance
-- SOC 2 Type II certified
+- Built on SOC 2 Type II compliant infrastructure
 - GDPR compliant
 - CCPA compliant
 
