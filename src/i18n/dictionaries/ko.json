@@ -1137,6 +1137,14 @@
       "dashboard": "대시보드",
       "getStarted": "시작하기"
     },
+    "search": {
+      "placeholder": "문서 검색...",
+      "buttonText": "검색",
+      "noResults": "검색 결과 없음:",
+      "hint": "빠른 검색:",
+      "navigate": "이동",
+      "select": "선택"
+    },
     "sidebar": {
       "overview": "개요",
       "gettingStarted": "시작하기",
