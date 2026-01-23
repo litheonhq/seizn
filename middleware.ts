@@ -32,6 +32,19 @@ function isPublicPath(pathname: string): boolean {
   return publicPaths.some((path) => pathname.startsWith(path));
 }
 
+// Check if path is a dashboard route (P0-4: security headers required)
+function isDashboardPath(pathname: string): boolean {
+  return pathname.startsWith('/dashboard');
+}
+
+// Add security headers for dashboard routes (P0-4: review_token leak prevention)
+function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  return response;
+}
+
 // Parse Accept-Language header with q-value support
 function parseAcceptLanguage(header: string): string[] {
   // Example: "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7"
@@ -90,7 +103,13 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip public paths (API routes, static files, etc.)
+  // But still apply security headers for dashboard routes
   if (isPublicPath(pathname)) {
+    // P0-4: Apply security headers to dashboard routes even for public paths
+    if (isDashboardPath(pathname)) {
+      const response = NextResponse.next();
+      return addDashboardSecurityHeaders(response);
+    }
     return NextResponse.next();
   }
 

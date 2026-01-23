@@ -15,7 +15,34 @@ const nextConfig: NextConfig = {
       value: 'public, max-age=31536000, immutable',
     };
 
+    // Security headers for all routes
+    const securityHeaders = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains',
+      },
+    ];
+
+    // Dashboard-specific security headers (stricter Referrer-Policy to protect review_token)
+    const dashboardSecurityHeaders = [
+      { key: 'Referrer-Policy', value: 'no-referrer' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-Frame-Options', value: 'DENY' },
+    ];
+
     return [
+      // Dashboard security headers (P0-4: review_token leak prevention)
+      {
+        source: '/dashboard/:path*',
+        headers: dashboardSecurityHeaders,
+      },
+      // Global security headers
+      {
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+      // Cache headers for static assets
       {
         source: '/_next/static/:path*',
         headers: [cacheHeader],

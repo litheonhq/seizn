@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers";
 import { locales, isRtl, type Locale } from "@/i18n/config";
 import { DashboardLocaleProvider } from "@/contexts/DashboardLocaleContext";
 
+import { DashboardClientWrapper } from "@/components/dashboard/DashboardClientWrapper";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -47,7 +48,7 @@ export default async function DashboardLayout({
       >
         <Providers>
           <DashboardLocaleProvider initialLocale={locale}>
-            {children}
+            <DashboardClientWrapper>{children}</DashboardClientWrapper>
           </DashboardLocaleProvider>
         </Providers>
       </body>

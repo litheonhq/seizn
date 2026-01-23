@@ -152,7 +152,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">Money-Back Guarantee</div>
-                  <div className="text-xs text-gray-500">30-day refund policy</div>
+                  <div className="text-xs text-gray-500">14-day refund policy</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 text-gray-600">
