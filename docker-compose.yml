@@ -3,12 +3,14 @@
 #
 # Usage:
 #   docker-compose up -d
+#   docker-compose --profile observability up -d  # Include Jaeger for tracing
 #
 # Services:
 #   - seizn: Main Next.js application (port 3000)
 #   - db: PostgreSQL with pgvector (port 5432)
 #   - redis: Cache and rate limiting (port 6379)
 #   - studio: Supabase Studio UI (port 3001)
+#   - jaeger: Distributed tracing UI (port 16686, OTLP: 4318)
 
 version: '3.9'
 
@@ -49,6 +51,12 @@ services:
       # Optional: Email
       - RESEND_API_KEY=${RESEND_API_KEY:-}
       - EMAIL_FROM=${EMAIL_FROM:-noreply@example.com}
+
+      # Optional: OTEL Export (enable with observability profile)
+      - OTEL_EXPORTER_ENABLED=${OTEL_EXPORTER_ENABLED:-false}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://jaeger:4318/v1/traces}
+      - OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME:-seizn}
+      - OTEL_ENVIRONMENT=${OTEL_ENVIRONMENT:-docker}
     depends_on:
       db:
         condition: service_healthy
@@ -136,6 +144,33 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+
+  # ========================================
+  # Jaeger (Distributed Tracing)
+  # ========================================
+  # Usage: docker-compose --profile observability up -d
+  # Access UI: http://localhost:16686
+  # OTLP endpoint: http://jaeger:4318/v1/traces (internal)
+  #                http://localhost:4318/v1/traces (external)
+  jaeger:
+    image: jaegertracing/jaeger:2.5
+    profiles:
+      - observability
+    ports:
+      # Jaeger UI
+      - "16686:16686"
+      # OTLP HTTP (for trace ingestion)
+      - "4318:4318"
+      # OTLP gRPC (optional, for gRPC clients)
+      - "4317:4317"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:16686"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   postgres_data:
