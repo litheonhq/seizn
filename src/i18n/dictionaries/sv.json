@@ -539,7 +539,7 @@
         },
         {
           "q": "Hur kommer jag igång?",
-          "a": "1) Registrera dig gratis, 2) Skapa API-nyckel, 3) Installera SDK (npm install @seizn/sdk), 4) Lägg till minnen med 3 rader kod."
+          "a": "1) Registrera dig gratis, 2) Skapa API-nyckel, 3) Installera SDK (npm install seizn), 4) Lägg till minnen med 3 rader kod."
         },
         {
           "q": "Vad händer om jag överskrider mina plangränser?",

@@ -234,13 +234,13 @@ export function TutorialClient({ locale, dictionary }: Props) {
 
   // Code snippets
   const installCode = {
-    npm: "npm install @seizn/sdk",
+    npm: "npm install seizn",
     pip: "pip install seizn",
     curl: "# No installation needed - use curl directly",
   };
 
   const saveMemoryCode = {
-    typescript: `import { Seizn } from '@seizn/sdk';
+    typescript: `import { Seizn } from 'seizn';
 
 const client = new Seizn({ apiKey: process.env.SEIZN_API_KEY });
 

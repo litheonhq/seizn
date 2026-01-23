@@ -40,9 +40,9 @@ Seizn provides persistent memory APIs for AI applications. Store, search, extrac
 - POST /api/winter/forget - GDPR right-to-be-forgotten
 
 ## SDKs
-- JavaScript/TypeScript: npm install @seizn/sdk
+- JavaScript/TypeScript: npm install seizn
 - Python: pip install seizn
-- NPM: https://www.npmjs.com/package/@seizn/sdk
+- NPM: https://www.npmjs.com/package/seizn
 - PyPI: https://pypi.org/project/seizn
 
 ## Key Concepts

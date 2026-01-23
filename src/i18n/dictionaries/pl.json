@@ -539,7 +539,7 @@
         },
         {
           "q": "Jak zacząć?",
-          "a": "1) Zarejestruj się za darmo, 2) Utwórz klucz API, 3) Zainstaluj SDK (npm install @seizn/sdk), 4) Dodaj wspomnienia w 3 liniach kodu."
+          "a": "1) Zarejestruj się za darmo, 2) Utwórz klucz API, 3) Zainstaluj SDK (npm install seizn), 4) Dodaj wspomnienia w 3 liniach kodu."
         },
         {
           "q": "Co się stanie, jeśli przekroczę limity planu?",

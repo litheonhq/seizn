@@ -44,9 +44,13 @@ interface StatusData {
   last_updated: string;
 }
 
-export function StatusClient() {
-  const [data, setData] = useState<StatusData | null>(null);
-  const [loading, setLoading] = useState(true);
+interface StatusClientProps {
+  initialData?: StatusData | null;
+}
+
+export function StatusClient({ initialData }: StatusClientProps) {
+  const [data, setData] = useState<StatusData | null>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   const loadStatus = useCallback(async () => {

@@ -256,7 +256,7 @@
       "sdkModal": {
         "title": "SDK 설치",
         "subtitle": "프로젝트에 Seizn SDK를 설치하세요",
-        "npm": "npm install @seizn/sdk",
+        "npm": "npm install seizn",
         "pip": "pip install seizn",
         "curl": "curl 사용하기",
         "copy": "복사",
@@ -902,7 +902,7 @@
         },
         {
           "q": "어떻게 시작하나요?",
-          "a": "1) 무료 계정 가입, 2) 대시보드에서 API 키 생성, 3) SDK 설치 (npm install @seizn/sdk), 4) 3줄의 코드로 메모리 추가 시작. 자세한 가이드는 문서를 확인하세요."
+          "a": "1) 무료 계정 가입, 2) 대시보드에서 API 키 생성, 3) SDK 설치 (npm install seizn), 4) 3줄의 코드로 메모리 추가 시작. 자세한 가이드는 문서를 확인하세요."
         },
         {
           "q": "플랜 한도를 초과하면 어떻게 되나요?",
@@ -1401,7 +1401,7 @@
         {
           "category": "gettingStarted",
           "question": "어떤 SDK를 사용할 수 있나요?",
-          "answer": "TypeScript/JavaScript (npm install @seizn/sdk), Python (pip install seizn), 그리고 모든 언어를 위한 REST API의 공식 SDK를 제공합니다. 모든 SDK에는 TypeScript 타입, 자동 재시도, 스트리밍 지원이 포함됩니다."
+          "answer": "TypeScript/JavaScript (npm install seizn), Python (pip install seizn), 그리고 모든 언어를 위한 REST API의 공식 SDK를 제공합니다. 모든 SDK에는 TypeScript 타입, 자동 재시도, 스트리밍 지원이 포함됩니다."
         },
         {
           "category": "gettingStarted",
@@ -1431,7 +1431,7 @@
         {
           "category": "operations",
           "question": "다른 메모리/RAG 시스템에서 어떻게 마이그레이션하나요?",
-          "answer": "기존 데이터를 content, metadata, created_at 필드가 있는 JSON으로 내보내세요. 100-500개 항목 배치로 대량 가져오기 API(POST /api/memories/bulk)를 사용하세요. 품질이 일치하는지 확인하기 위해 병렬 검증 쿼리 세트를 실행하세요."
+          "answer": "기존 데이터를 content, metadata, created_at 필드가 있는 JSON으로 내보내세요. 100-500개 항목 배치로 대량 가져오기 API(POST /api/memories/import)를 사용하세요. 품질이 일치하는지 확인하기 위해 병렬 검증 쿼리 세트를 실행하세요."
         },
         {
           "category": "operations",

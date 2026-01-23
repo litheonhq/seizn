@@ -539,7 +539,7 @@
         },
         {
           "q": "Come inizio?",
-          "a": "1) Registrati gratis, 2) Crea una chiave API, 3) Installa l'SDK (npm install @seizn/sdk), 4) Aggiungi memorie con 3 righe di codice."
+          "a": "1) Registrati gratis, 2) Crea una chiave API, 3) Installa l'SDK (npm install seizn), 4) Aggiungi memorie con 3 righe di codice."
         },
         {
           "q": "Cosa succede se supero i limiti del mio piano?",

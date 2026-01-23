@@ -539,7 +539,7 @@
         },
         {
           "q": "Hoe begin ik?",
-          "a": "1) Registreer gratis, 2) Maak API-sleutel, 3) Installeer SDK (npm install @seizn/sdk), 4) Voeg herinneringen toe met 3 regels code."
+          "a": "1) Registreer gratis, 2) Maak API-sleutel, 3) Installeer SDK (npm install seizn), 4) Voeg herinneringen toe met 3 regels code."
         },
         {
           "q": "Wat gebeurt er als ik mijn planlimieten overschrijd?",

@@ -1,7 +1,7 @@
 /**
  * Seizn Policy Configuration (SSOT)
  *
- * WP-P0-04: 법무/가격/정책 문구 SSOT
+ * WP-P0-04: 정책 SSOT
  * All policy-related values MUST be defined here.
  * Pages should import and use these values, never hardcode.
  *
@@ -9,20 +9,167 @@
  */
 
 // ============================================
+// Plan Limits (SSOT for all pricing/limits)
+// ============================================
+
+export interface PlanLimitsConfig {
+  name: string;
+  memories: number;
+  apiCallsPerMonth: number;
+  apiKeys: number;
+  collections: number;
+  rateLimit: number;
+  priceMonthly: number;
+  priceYearly: number;
+  features: {
+    hybridSearch: boolean;
+    reranking: boolean;
+    federatedSearch: boolean;
+    ragQuery: boolean;
+    bulkOperations: boolean;
+    analytics: boolean;
+    webhooks: boolean;
+    sso: boolean;
+    prioritySupport: boolean;
+  };
+}
+
+export const PLAN_LIMITS: Record<string, PlanLimitsConfig> = {
+  free: {
+    name: 'Free',
+    memories: 10_000,
+    apiCallsPerMonth: 1_000,
+    apiKeys: 2,
+    collections: 3,
+    rateLimit: 60,
+    priceMonthly: 0,
+    priceYearly: 0,
+    features: {
+      hybridSearch: true,
+      reranking: false,
+      federatedSearch: false,
+      ragQuery: true,
+      bulkOperations: false,
+      analytics: false,
+      webhooks: false,
+      sso: false,
+      prioritySupport: false,
+    },
+  },
+  starter: {
+    name: 'Starter',
+    memories: 50_000,
+    apiCallsPerMonth: 5_000,
+    apiKeys: 3,
+    collections: 10,
+    rateLimit: 120,
+    priceMonthly: 9,
+    priceYearly: 90,
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: false,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: false,
+      webhooks: false,
+      sso: false,
+      prioritySupport: false,
+    },
+  },
+  plus: {
+    name: 'Plus',
+    memories: 100_000,
+    apiCallsPerMonth: 10_000,
+    apiKeys: 5,
+    collections: 25,
+    rateLimit: 300,
+    priceMonthly: 29,
+    priceYearly: 290,
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: true,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: true,
+      webhooks: true,
+      sso: false,
+      prioritySupport: false,
+    },
+  },
+  pro: {
+    name: 'Pro',
+    memories: 1_000_000,
+    apiCallsPerMonth: 100_000,
+    apiKeys: 10,
+    collections: 100,
+    rateLimit: 600,
+    priceMonthly: 99,
+    priceYearly: 990,
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: true,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: true,
+      webhooks: true,
+      sso: false,
+      prioritySupport: true,
+    },
+  },
+  enterprise: {
+    name: 'Enterprise',
+    memories: -1,
+    apiCallsPerMonth: -1,
+    apiKeys: 100,
+    collections: -1,
+    rateLimit: 3000,
+    priceMonthly: 499,
+    priceYearly: 4990,
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: true,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: true,
+      webhooks: true,
+      sso: true,
+      prioritySupport: true,
+    },
+  },
+} as const;
+
+export function getPlanLimits(planName: string): PlanLimitsConfig {
+  return PLAN_LIMITS[planName] || PLAN_LIMITS.free;
+}
+
+export function isUnlimited(limit: number): boolean {
+  return limit === -1;
+}
+
+export function formatLimit(limit: number): string {
+  if (isUnlimited(limit)) return 'Unlimited';
+  return limit.toLocaleString();
+}
+
+export const SDK_INFO = {
+  packageName: 'seizn',
+  installCommand: 'npm install seizn',
+  pythonPackage: 'seizn',
+  pythonInstallCommand: 'pip install seizn',
+} as const;
+
+// ============================================
 // Data Retention Policies
 // ============================================
 
 export const DATA_RETENTION = {
-  /** How long user data is kept after account deletion */
   ACCOUNT_DELETION_DAYS: 30,
-
-  /** How long raw logs are retained */
   RAW_LOGS_DAYS: 30,
-
-  /** How long memories are kept after last access */
   INACTIVE_MEMORIES_DAYS: 90,
-
-  /** Grace period for data export before permanent deletion */
   EXPORT_GRACE_DAYS: 30,
 } as const;
 
@@ -31,13 +178,8 @@ export const DATA_RETENTION = {
 // ============================================
 
 export const REFUND_POLICY = {
-  /** Money-back guarantee period in days */
   GUARANTEE_DAYS: 14,
-
-  /** Processing time for refunds in business days */
   PROCESSING_DAYS: 5,
-
-  /** Maximum refund requests per year */
   MAX_REQUESTS_PER_YEAR: 2,
 } as const;
 
@@ -46,13 +188,8 @@ export const REFUND_POLICY = {
 // ============================================
 
 export const COMMUNICATION = {
-  /** Days notice before policy changes take effect */
   POLICY_CHANGE_NOTICE_DAYS: 7,
-
-  /** Maximum response time for privacy inquiries */
   PRIVACY_RESPONSE_DAYS: 30,
-
-  /** Maximum response time for data requests */
   DATA_REQUEST_RESPONSE_DAYS: 30,
 } as const;
 
@@ -61,13 +198,8 @@ export const COMMUNICATION = {
 // ============================================
 
 export const TOKENS = {
-  /** Days until organization invite expires */
   INVITE_EXPIRY_DAYS: 7,
-
-  /** Days until review token expires */
   REVIEW_TOKEN_EXPIRY_DAYS: 7,
-
-  /** Days until password reset token expires */
   PASSWORD_RESET_EXPIRY_HOURS: 24,
 } as const;
 
@@ -76,13 +208,8 @@ export const TOKENS = {
 // ============================================
 
 export const SUPPORT = {
-  /** Standard support response time in hours */
   STANDARD_RESPONSE_HOURS: 48,
-
-  /** Priority support response time in hours */
   PRIORITY_RESPONSE_HOURS: 24,
-
-  /** Enterprise support response time in hours */
   ENTERPRISE_RESPONSE_HOURS: 4,
 } as const;
 
@@ -90,34 +217,18 @@ export const SUPPORT = {
 // Utility Functions
 // ============================================
 
-/**
- * Format days as human-readable string
- * @example formatDays(14) -> "14 days"
- * @example formatDays(1) -> "1 day"
- */
 export function formatDays(days: number): string {
   return days === 1 ? '1 day' : `${days} days`;
 }
 
-/**
- * Format hours as human-readable string
- * @example formatHours(24) -> "24 hours"
- * @example formatHours(1) -> "1 hour"
- */
 export function formatHours(hours: number): string {
   return hours === 1 ? '1 hour' : `${hours} hours`;
 }
 
-/**
- * Get formatted data retention string for privacy policy
- */
 export function getDataRetentionText(): string {
   return `${DATA_RETENTION.ACCOUNT_DELETION_DAYS} days after deletion request`;
 }
 
-/**
- * Get formatted refund guarantee string
- */
 export function getRefundGuaranteeText(): string {
   return `${REFUND_POLICY.GUARANTEE_DAYS}-day money-back guarantee`;
 }
@@ -132,6 +243,8 @@ export const POLICY = {
   COMMUNICATION,
   TOKENS,
   SUPPORT,
+  PLAN_LIMITS,
+  SDK_INFO,
 } as const;
 
 export type PolicyConfig = typeof POLICY;

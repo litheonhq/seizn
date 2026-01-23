@@ -170,7 +170,7 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
 function SdkModal({ onClose, onCopy, copiedSdk, t }: { onClose: () => void; onCopy: (sdk: SdkType, command: string) => void; copiedSdk: SdkType | null; t: (key: string) => string }) {
   const sdkOptions: { id: SdkType; name: string; command: string }[] = [
-    { id: "npm", name: "JavaScript / TypeScript", command: "npm install @seizn/sdk" },
+    { id: "npm", name: "JavaScript / TypeScript", command: "npm install seizn" },
     { id: "pip", name: "Python", command: "pip install seizn" },
     { id: "curl", name: "REST API (cURL)", command: 'curl -X POST https://seizn.com/api/memories \\\n  -H "x-api-key: YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"content": "test memory"}\'' },
   ];

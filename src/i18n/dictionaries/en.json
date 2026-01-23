@@ -901,7 +901,7 @@
         },
         {
           "q": "How do I get started?",
-          "a": "1) Sign up free, 2) Create API key, 3) Install SDK (npm install @seizn/sdk), 4) Add memories with 3 lines of code."
+          "a": "1) Sign up free, 2) Create API key, 3) Install SDK (npm install seizn), 4) Add memories with 3 lines of code."
         },
         {
           "q": "What happens if I exceed my plan limits?",
@@ -1400,7 +1400,7 @@
         {
           "category": "gettingStarted",
           "question": "What SDKs are available?",
-          "answer": "We provide official SDKs for TypeScript/JavaScript (npm install @seizn/sdk), Python (pip install seizn), and REST API for any language. All SDKs include TypeScript types, automatic retries, and streaming support."
+          "answer": "We provide official SDKs for TypeScript/JavaScript (npm install seizn), Python (pip install seizn), and REST API for any language. All SDKs include TypeScript types, automatic retries, and streaming support."
         },
         {
           "category": "gettingStarted",
@@ -1430,7 +1430,7 @@
         {
           "category": "operations",
           "question": "How do I migrate from another memory/RAG system?",
-          "answer": "Export your existing data to JSON with fields: content, metadata, created_at. Use our bulk import API (POST /api/memories/bulk) with batches of 100-500 items. Run a parallel validation query set to ensure quality matches."
+          "answer": "Export your existing data to JSON with fields: content, metadata, created_at. Use our bulk import API (POST /api/memories/import) with batches of 100-500 items. Run a parallel validation query set to ensure quality matches."
         },
         {
           "category": "operations",

@@ -42,6 +42,11 @@ const POLICY_PATTERNS = [
 
   // Hours patterns for response times
   { pattern: /\b(\d+)\s*hours?\s*(response|support)/gi, description: 'Response time' },
+
+  // Plan limits patterns (detect hardcoded plan values)
+  { pattern: /\b(10|50|100|1000)[,\s]*000\s*(memories|API\s*calls)/gi, description: 'Plan limit' },
+  { pattern: /\$\s*(9|29|99|499)\s*(\/mo|per\s*month)/gi, description: 'Plan pricing' },
+  { pattern: /\b(2|3|5|10|100)\s*(API\s*keys|collections)/gi, description: 'Plan feature limit' },
 ];
 
 // Files/directories to scan
@@ -125,7 +130,11 @@ function scanFile(filePath) {
             line.includes('REFUND_POLICY.') ||
             line.includes('COMMUNICATION.') ||
             line.includes('formatDays(') ||
-            line.includes('formatHours(')) {
+            line.includes('formatHours(') ||
+            line.includes('PLAN_LIMITS.') ||
+            line.includes('getPlanLimits(') ||
+            line.includes('formatLimit(') ||
+            line.includes('SDK_INFO.')) {
           continue;
         }
 
