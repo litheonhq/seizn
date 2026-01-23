@@ -90,50 +90,40 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="bg-white border border-gray-200 rounded-xl p-6 text-gray-700">
               <ul className="space-y-3 list-none pl-0">
-                <li className="flex items-start gap-3">
-                  <span className="text-emerald-600 font-semibold min-w-fit">
+                <li>
+                  <span className="text-emerald-600 font-semibold">
                     &quot;Service&quot;
-                  </span>
-                  <span>
-                    refers to the Seizn platform, API, website, and all related
-                    services.
-                  </span>
+                  </span>{" "}
+                  — refers to the Seizn platform, API, website, and all related
+                  services.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-emerald-600 font-semibold min-w-fit">
+                <li>
+                  <span className="text-emerald-600 font-semibold">
                     &quot;User&quot;
-                  </span>
-                  <span>
-                    refers to any individual or entity that accesses or uses the
-                    Service.
-                  </span>
+                  </span>{" "}
+                  — refers to any individual or entity that accesses or uses the
+                  Service.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-emerald-600 font-semibold min-w-fit">
+                <li>
+                  <span className="text-emerald-600 font-semibold">
                     &quot;API&quot;
-                  </span>
-                  <span>
-                    refers to the Application Programming Interface provided by
-                    Seizn.
-                  </span>
+                  </span>{" "}
+                  — refers to the Application Programming Interface provided by
+                  Seizn.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-emerald-600 font-semibold min-w-fit">
+                <li>
+                  <span className="text-emerald-600 font-semibold">
                     &quot;Content&quot;
-                  </span>
-                  <span>
-                    refers to any data, text, or information submitted to or
-                    processed by the Service.
-                  </span>
+                  </span>{" "}
+                  — refers to any data, text, or information submitted to or
+                  processed by the Service.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-emerald-600 font-semibold min-w-fit">
+                <li>
+                  <span className="text-emerald-600 font-semibold">
                     &quot;API Key&quot;
-                  </span>
-                  <span>
-                    refers to the unique authentication credential issued to
-                    Users for API access.
-                  </span>
+                  </span>{" "}
+                  — refers to the unique authentication credential issued to
+                  Users for API access.
                 </li>
               </ul>
             </div>
