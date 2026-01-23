@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { LocaleFAQClient } from "./faq-client";
+import { FAQServer } from "./faq-server";
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -38,5 +38,5 @@ export default async function LocaleFAQPage({ params }: Props) {
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
   const dictionary = await getDictionary(locale);
 
-  return <LocaleFAQClient locale={locale} dictionary={dictionary} />;
+  return <FAQServer locale={locale} dictionary={dictionary} />;
 }
