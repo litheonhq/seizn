@@ -74,7 +74,7 @@ export function welcomeEmail(name: string) {
     </p>
     <ol style="margin:0 0 24px;padding-left:20px;font-size:16px;color:#4b5563;line-height:1.8;">
       <li>Create your first API key in the dashboard</li>
-      <li>Install our SDK: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">npm install @seizn/sdk</code></li>
+      <li>Install our SDK: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">npm install seizn</code></li>
       <li>Start adding memories to your AI</li>
     </ol>
     <a href="https://seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">

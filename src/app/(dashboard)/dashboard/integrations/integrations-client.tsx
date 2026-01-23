@@ -507,7 +507,7 @@ const result = await streamText({
   memory: seizn({ apiKey: 'szn_xxx' }),
 });`,
     nextjs: `// app/api/chat/route.ts
-import { Seizn } from '@seizn/sdk';
+import { Seizn } from 'seizn';
 
 const seizn = new Seizn({ apiKey: process.env.SEIZN_API_KEY });
 

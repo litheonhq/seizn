@@ -539,7 +539,7 @@
         },
         {
           "q": "Làm thế nào để bắt đầu?",
-          "a": "1) Đăng ký miễn phí, 2) Tạo khóa API, 3) Cài SDK (npm install @seizn/sdk), 4) Thêm ký ức với 3 dòng code."
+          "a": "1) Đăng ký miễn phí, 2) Tạo khóa API, 3) Cài SDK (npm install seizn), 4) Thêm ký ức với 3 dòng code."
         },
         {
           "q": "Điều gì xảy ra nếu tôi vượt quá giới hạn gói?",

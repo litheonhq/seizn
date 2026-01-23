@@ -287,7 +287,7 @@ export function SummerClient({ dict, locale }: SummerClientProps) {
                 <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
               <pre className="text-sm text-gray-300 overflow-x-auto">
-                <code>{`import { Seizn } from '@seizn/sdk';
+                <code>{`import { Seizn } from 'seizn';
 
 const seizn = new Seizn({ apiKey: process.env.SEIZN_API_KEY });
 

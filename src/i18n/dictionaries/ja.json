@@ -242,7 +242,7 @@
       "sdkModal": {
         "title": "SDKをインストール",
         "subtitle": "プロジェクトにSeizn SDKをインストールしてください",
-        "npm": "npm install @seizn/sdk",
+        "npm": "npm install seizn",
         "pip": "pip install seizn",
         "curl": "curlを使用",
         "copy": "コピー",
@@ -672,7 +672,7 @@
         },
         {
           "q": "始め方は？",
-          "a": "1) 無料アカウント登録、2) ダッシュボードでAPIキー作成、3) SDKインストール（npm install @seizn/sdk）、4) たった3行のコードでメモリ追加開始。詳しいガイドはドキュメントをご覧ください。"
+          "a": "1) 無料アカウント登録、2) ダッシュボードでAPIキー作成、3) SDKインストール（npm install seizn）、4) たった3行のコードでメモリ追加開始。詳しいガイドはドキュメントをご覧ください。"
         },
         {
           "q": "プランの制限を超えるとどうなりますか？",

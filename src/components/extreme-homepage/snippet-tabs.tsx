@@ -139,7 +139,7 @@ function generateSnippet(config: RequestConfig, language: Language): string {
   -d '${JSON.stringify(options, null, 2)}'`;
 
     case "javascript":
-      return `import { Seizn } from '@seizn/sdk';
+      return `import { Seizn } from 'seizn';
 
 const seizn = new Seizn({
   apiKey: process.env.SEIZN_API_KEY,

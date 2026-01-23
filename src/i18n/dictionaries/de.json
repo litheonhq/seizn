@@ -539,7 +539,7 @@
         },
         {
           "q": "Wie starte ich?",
-          "a": "1) Kostenlos registrieren, 2) API-Schlüssel erstellen, 3) SDK installieren (npm install @seizn/sdk), 4) Erinnerungen mit 3 Zeilen Code hinzufügen."
+          "a": "1) Kostenlos registrieren, 2) API-Schlüssel erstellen, 3) SDK installieren (npm install seizn), 4) Erinnerungen mit 3 Zeilen Code hinzufügen."
         },
         {
           "q": "Was passiert, wenn ich meine Plan-Limits überschreite?",

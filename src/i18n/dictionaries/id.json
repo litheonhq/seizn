@@ -539,7 +539,7 @@
         },
         {
           "q": "Bagaimana cara memulai?",
-          "a": "1) Daftar gratis, 2) Buat kunci API, 3) Instal SDK (npm install @seizn/sdk), 4) Tambahkan memori dengan 3 baris kode."
+          "a": "1) Daftar gratis, 2) Buat kunci API, 3) Instal SDK (npm install seizn), 4) Tambahkan memori dengan 3 baris kode."
         },
         {
           "q": "Apa yang terjadi jika saya melebihi batas paket?",
