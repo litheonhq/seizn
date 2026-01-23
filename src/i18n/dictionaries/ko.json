@@ -1442,7 +1442,7 @@
         {
           "category": "securityCompliance",
           "question": "Seizn은 SOC 2를 준수하나요?",
-          "answer": "예, Seizn은 SOC 2 Type II 규정 준수를 유지합니다. EU 리전 배포로 GDPR 데이터 거주 요구 사항도 지원합니다. 계정 대시보드를 통해 보안 설문지 또는 SOC 2 보고서를 요청하세요."
+          "answer": "Seizn은 SOC 2 Type II 준수 인프라(Supabase) 위에 구축되었습니다. 자체 SOC 2 인증은 진행 중입니다(예상 2026년 3분기). EU 리전 배포는 Enterprise 고객에게 요청 시 제공됩니다. 보안 설문지 또는 규정 준수 문서는 영업팀에 문의하세요."
         },
         {
           "category": "securityCompliance",
