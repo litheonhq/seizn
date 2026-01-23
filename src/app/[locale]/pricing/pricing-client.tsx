@@ -293,25 +293,33 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
 }
 
 function FaqItem({ item, index, openFaq, setOpenFaq }: { item: { q: string; a: string }; index: number; openFaq: number | null; setOpenFaq: (n: number | null) => void }) {
+  const isOpen = openFaq === index;
+  const previewText = item.a.length > 80 ? item.a.slice(0, 80) + "..." : item.a;
+
   return (
     <div className="glass-card-premium rounded-2xl overflow-hidden">
       <button
-        onClick={() => setOpenFaq(openFaq === index ? null : index)}
-        className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/30 transition-colors"
+        onClick={() => setOpenFaq(isOpen ? null : index)}
+        className="w-full px-6 py-5 text-left hover:bg-white/30 transition-colors"
       >
-        <span className="font-medium text-gray-900 pr-4">{item.q}</span>
-        <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 transition-transform ${openFaq === index ? "rotate-180" : ""}`}>
-          <svg
-            className="w-4 h-4 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+        <div className="flex items-center justify-between">
+          <span className="font-medium text-gray-900 pr-4">{item.q}</span>
+          <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}>
+            <svg
+              className="w-4 h-4 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
         </div>
+        {!isOpen && (
+          <p className="mt-2 text-sm text-gray-500 line-clamp-2">{previewText}</p>
+        )}
       </button>
-      {openFaq === index && (
+      {isOpen && (
         <div className="px-6 pb-5 text-gray-600 leading-relaxed">
           {item.a}
         </div>
