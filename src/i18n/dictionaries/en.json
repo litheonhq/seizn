@@ -1136,6 +1136,14 @@
       "dashboard": "Dashboard",
       "getStarted": "Get Started"
     },
+    "search": {
+      "placeholder": "Search documentation...",
+      "buttonText": "Search",
+      "noResults": "No results found for",
+      "hint": "Quick searches:",
+      "navigate": "to navigate",
+      "select": "to select"
+    },
     "sidebar": {
       "overview": "Overview",
       "gettingStarted": "Getting Started",

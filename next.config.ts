@@ -61,6 +61,7 @@ const nextConfig: NextConfig = {
   },
 
   // Redirect non-locale docs paths to default locale
+  // Also redirect locale-prefixed legal pages to root (they exist without locale prefix)
   async redirects() {
     return [
       {
@@ -71,6 +72,22 @@ const nextConfig: NextConfig = {
       {
         source: '/docs/:path*',
         destination: '/en/docs/:path*',
+        permanent: false,
+      },
+      // Legal pages exist at root level, redirect locale-prefixed versions
+      {
+        source: '/:locale(en|ko|ja|zh-hans|zh-hant|es|ru|uk|he|ar|fr|de|it|sv|nl|pl|hi|th|id|vi|pt-BR|pt-PT)/terms',
+        destination: '/terms',
+        permanent: false,
+      },
+      {
+        source: '/:locale(en|ko|ja|zh-hans|zh-hant|es|ru|uk|he|ar|fr|de|it|sv|nl|pl|hi|th|id|vi|pt-BR|pt-PT)/privacy',
+        destination: '/privacy',
+        permanent: false,
+      },
+      {
+        source: '/:locale(en|ko|ja|zh-hans|zh-hant|es|ru|uk|he|ar|fr|de|it|sv|nl|pl|hi|th|id|vi|pt-BR|pt-PT)/refund',
+        destination: '/refund',
         permanent: false,
       },
     ];
