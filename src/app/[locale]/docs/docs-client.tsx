@@ -101,6 +101,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{t("docs.sidebar.resources")}</p>
             <a href="#security" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.security")}</a>
             <a href="#sdks" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.sdks")}</a>
+            <Link href={`/${locale}/docs/integrations`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.integrations")}</Link>
             <Link href={`/${locale}/docs/faq`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.faq")}</Link>
           </div>
         </nav>

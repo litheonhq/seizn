@@ -1139,10 +1139,10 @@
     },
     "search": {
       "placeholder": "문서 검색...",
-      "buttonText": "검색",
-      "noResults": "검색 결과 없음:",
+      "buttonText": "문서 검색...",
+      "noResults": "검색 결과가 없습니다:",
       "hint": "빠른 검색:",
-      "navigate": "이동",
+      "navigate": "탐색",
       "select": "선택"
     },
     "sidebar": {
@@ -1163,7 +1163,8 @@
       "security": "보안",
       "sdks": "SDK",
       "faq": "FAQ",
-      "tutorial": "5분 튜토리얼"
+      "tutorial": "5분 튜토리얼",
+      "integrations": "연동"
     },
     "hero": {
       "title": "API 문서",
@@ -1621,14 +1622,6 @@
       "copy": "복사",
       "copied": "복사됨!"
     },
-    "search": {
-      "placeholder": "문서 검색...",
-      "buttonText": "문서 검색...",
-      "noResults": "검색 결과가 없습니다:",
-      "hint": "빠른 검색:",
-      "navigate": "탐색",
-      "select": "선택"
-    },
     "tutorialPage": {
       "meta": {
         "title": "5분 튜토리얼 | Seizn",
@@ -1858,6 +1851,241 @@
       },
       "footer": {
         "rights": "All rights reserved."
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "연동 가이드 | Seizn",
+        "description": "LangChain, LlamaIndex 어댑터 및 OpenTelemetry 익스포트 통합"
+      },
+      "title": "연동 가이드",
+      "subtitle": "LangChain, LlamaIndex, OpenTelemetry와 같은 인기 프레임워크에 Seizn을 연결하세요.",
+      "cards": {
+        "langchain": {
+          "title": "LangChain 어댑터",
+          "description": "LangChain RAG 파이프라인을 위한 SeizRetriever",
+          "badge": "인기",
+          "cta": "가이드 보기"
+        },
+        "llamaindex": {
+          "title": "LlamaIndex 어댑터",
+          "description": "LlamaIndex 쿼리 엔진을 위한 SeizRetriever",
+          "badge": "",
+          "cta": "가이드 보기"
+        },
+        "opentelemetry": {
+          "title": "OpenTelemetry",
+          "description": "Datadog, Grafana, Jaeger로 트레이스 익스포트",
+          "badge": "",
+          "cta": "가이드 보기"
+        }
+      },
+      "comingSoon": {
+        "title": "곧 제공 예정",
+        "vercel": {
+          "title": "Vercel AI SDK",
+          "description": "useChat 훅을 위한 메모리"
+        },
+        "llamaparse": {
+          "title": "LlamaParse",
+          "description": "문서 파싱을 위한 직접 인제스트"
+        }
+      }
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain 연동 | Seizn",
+        "description": "SeizRetriever를 LangChain RAG 파이프라인에 사용하는 방법"
+      },
+      "title": "LangChain 어댑터",
+      "subtitle": "SeizRetriever는 LangChain 표준 Retriever 인터페이스를 구현하여 기존 RAG 체인에 바로 연결할 수 있습니다.",
+      "overview": {
+        "title": "60초 개요",
+        "description": "SeizRetriever는 LangChain의 BaseRetriever를 상속하여 retrieval_chain, ConversationalRetrievalChain, 또는 커스텀 LCEL 체인과 호환됩니다. 한 줄만 교체하면 Pinecone/Weaviate에서 전환할 수 있습니다."
+      },
+      "installation": {
+        "title": "설치",
+        "npm": "npm install seizn @langchain/core",
+        "pip": "pip install seizn langchain"
+      },
+      "example": {
+        "title": "5분 예제",
+        "tabs": {
+          "typescript": "TypeScript",
+          "python": "Python"
+        }
+      },
+      "productionTips": {
+        "title": "프로덕션 팁",
+        "caching": {
+          "title": "캐싱",
+          "description": "반복 쿼리에 대해 캐싱을 활성화하여 지연시간과 비용을 줄이세요."
+        },
+        "reranking": {
+          "title": "재순위",
+          "description": "재순위를 활성화하여 검색 정확도를 향상시키세요."
+        },
+        "filtering": {
+          "title": "필터링",
+          "description": "네임스페이스와 메타데이터 필터를 사용하여 검색 범위를 좁히세요."
+        }
+      },
+      "troubleshooting": {
+        "title": "문제 해결",
+        "columns": {
+          "issue": "문제",
+          "solution": "해결책"
+        },
+        "rows": {
+          "noResults": {
+            "issue": "결과가 반환되지 않음",
+            "solution": "threshold를 0.5로 낮추고 네임스페이스가 올바른지 확인하세요"
+          },
+          "slowQueries": {
+            "issue": "쿼리가 느림",
+            "solution": "캐싱 활성화, topK 축소, 또는 재순위 비활성화를 시도하세요"
+          },
+          "authError": {
+            "issue": "인증 오류",
+            "solution": "SEIZN_API_KEY 환경변수가 올바르게 설정되었는지 확인하세요"
+          }
+        }
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex 연동 | Seizn",
+        "description": "LlamaIndex RAG 파이프라인을 위한 네이티브 리트리버"
+      },
+      "title": "LlamaIndex 어댑터",
+      "subtitle": "SeizRetriever는 LlamaIndex의 BaseRetriever를 상속하여 query_engine, chat_engine, 또는 커스텀 파이프라인에 바로 사용할 수 있습니다.",
+      "overview": {
+        "title": "60초 개요",
+        "description": "네이티브 LlamaIndex 리트리버로 기존 워크플로우에 원활하게 통합됩니다. 하이브리드 검색, 재순위, 스트리밍을 지원합니다."
+      },
+      "installation": {
+        "title": "설치",
+        "npm": "npm install seizn llamaindex",
+        "pip": "pip install seizn llama-index"
+      },
+      "example": {
+        "title": "5분 예제",
+        "tabs": {
+          "typescript": "TypeScript",
+          "python": "Python"
+        }
+      },
+      "advancedUsage": {
+        "title": "고급 사용법",
+        "streaming": {
+          "title": "스트리밍 응답",
+          "description": "대용량 결과 세트에 대해 스트리밍을 활성화합니다."
+        },
+        "hybridSearch": {
+          "title": "하이브리드 검색",
+          "description": "벡터와 키워드 검색을 결합합니다."
+        },
+        "nodePostprocessors": {
+          "title": "노드 후처리기",
+          "description": "커스텀 후처리기와 함께 사용합니다."
+        }
+      },
+      "troubleshooting": {
+        "title": "문제 해결",
+        "columns": {
+          "issue": "문제",
+          "solution": "해결책"
+        },
+        "rows": {
+          "noResults": {
+            "issue": "결과가 반환되지 않음",
+            "solution": "similarity_threshold를 0.5로 낮추고 데이터셋에 문서가 있는지 확인하세요"
+          },
+          "streamingIssues": {
+            "issue": "스트리밍이 작동하지 않음",
+            "solution": "Python 3.9+ 및 최신 LlamaIndex 버전인지 확인하세요"
+          },
+          "memoryIssues": {
+            "issue": "메모리 문제",
+            "solution": "대용량 데이터셋에는 배치 처리를 사용하고 top_k를 줄이세요"
+          }
+        }
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry 연동 | Seizn",
+        "description": "OTLP를 통해 Datadog, Grafana, Jaeger로 트레이스 익스포트"
+      },
+      "title": "OpenTelemetry 익스포트",
+      "subtitle": "Seizn 트레이스를 선호하는 관측성 플랫폼으로 익스포트하여 통합 모니터링을 구현하세요.",
+      "overview": {
+        "title": "60초 개요",
+        "description": "Seizn은 모든 검색 작업에 대해 상세 트레이스를 생성합니다. OpenTelemetry 익스포터를 설정하면 이러한 트레이스가 자동으로 선호하는 백엔드로 전송됩니다."
+      },
+      "collectors": {
+        "title": "지원되는 수집기",
+        "datadog": "Datadog",
+        "grafana": "Grafana Tempo",
+        "jaeger": "Jaeger"
+      },
+      "setup": {
+        "title": "설정",
+        "envVars": {
+          "title": "환경 변수",
+          "description": "OTLP 익스포터를 구성하려면 다음 환경 변수를 설정하세요."
+        }
+      },
+      "examples": {
+        "title": "설정 예제",
+        "datadog": {
+          "title": "Datadog",
+          "description": "Seizn 트레이스를 Datadog APM으로 전송합니다."
+        },
+        "grafana": {
+          "title": "Grafana Tempo",
+          "description": "Seizn 트레이스를 Grafana Tempo로 전송합니다."
+        },
+        "jaeger": {
+          "title": "Jaeger",
+          "description": "Seizn 트레이스를 Jaeger로 전송합니다."
+        }
+      },
+      "productionTips": {
+        "title": "프로덕션 팁",
+        "sampling": {
+          "title": "샘플링",
+          "description": "고트래픽 환경에서는 샘플링을 사용하여 비용을 관리하세요."
+        },
+        "customAttributes": {
+          "title": "커스텀 속성",
+          "description": "트레이스에 커스텀 속성을 추가하여 디버깅을 용이하게 합니다."
+        },
+        "batching": {
+          "title": "배칭",
+          "description": "배치 익스포터를 사용하여 네트워크 오버헤드를 줄이세요."
+        }
+      },
+      "troubleshooting": {
+        "title": "문제 해결",
+        "columns": {
+          "issue": "문제",
+          "solution": "해결책"
+        },
+        "rows": {
+          "noTraces": {
+            "issue": "트레이스가 표시되지 않음",
+            "solution": "OTEL_EXPORTER_OTLP_ENDPOINT가 올바른지, 네트워크 연결을 확인하세요"
+          },
+          "highLatency": {
+            "issue": "익스포트 지연시간이 높음",
+            "solution": "배치 익스포터를 사용하고 배치 크기를 조정하세요"
+          },
+          "authError": {
+            "issue": "인증 실패",
+            "solution": "OTEL_EXPORTER_OTLP_HEADERS에 올바른 API 키가 설정되었는지 확인하세요"
+          }
+        }
       }
     }
   },

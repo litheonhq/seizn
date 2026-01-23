@@ -1,0 +1,162 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-23",
+  "claims": [
+    {
+      "claim_id": "soc2",
+      "claim_text": "SOC 2 Type II compliance",
+      "keywords": ["SOC 2", "SOC2", "soc 2", "soc2"],
+      "status": "roadmap",
+      "evidence": null,
+      "owner": "security",
+      "last_verified_at": null,
+      "target_date": "2026-Q3",
+      "notes": "Planned for enterprise tier"
+    },
+    {
+      "claim_id": "penetration_testing",
+      "claim_text": "Annual penetration testing",
+      "keywords": ["penetration testing", "pentest", "pen test", "security audit"],
+      "status": "roadmap",
+      "evidence": null,
+      "owner": "security",
+      "last_verified_at": null,
+      "target_date": "2026-Q2",
+      "notes": "Will be conducted by third-party security firm"
+    },
+    {
+      "claim_id": "eu_region",
+      "claim_text": "EU data residency option",
+      "keywords": ["EU region", "EU data", "European data", "EU residency", "data residency"],
+      "status": "partial",
+      "evidence": null,
+      "owner": "infrastructure",
+      "last_verified_at": null,
+      "target_date": "2026-Q2",
+      "notes": "Infrastructure ready, needs customer-facing configuration"
+    },
+    {
+      "claim_id": "gdpr_compliant",
+      "claim_text": "GDPR compliance",
+      "keywords": ["GDPR compliant", "GDPR", "data protection"],
+      "status": "verified",
+      "evidence": "/docs/compliance/gdpr-policy.md",
+      "owner": "legal",
+      "last_verified_at": "2026-01-15",
+      "notes": "Data processing agreements available on request"
+    },
+    {
+      "claim_id": "hipaa_compliant",
+      "claim_text": "HIPAA compliance",
+      "keywords": ["HIPAA", "healthcare", "PHI", "protected health"],
+      "status": "roadmap",
+      "evidence": null,
+      "owner": "compliance",
+      "last_verified_at": null,
+      "target_date": "2026-Q4",
+      "notes": "Requires BAA and additional security controls"
+    },
+    {
+      "claim_id": "encryption_at_rest",
+      "claim_text": "Encryption at rest (AES-256)",
+      "keywords": ["encryption at rest", "AES-256", "data encryption"],
+      "status": "verified",
+      "evidence": "Supabase provides AES-256 encryption by default",
+      "owner": "infrastructure",
+      "last_verified_at": "2026-01-01",
+      "notes": "Inherited from Supabase infrastructure"
+    },
+    {
+      "claim_id": "encryption_in_transit",
+      "claim_text": "Encryption in transit (TLS 1.3)",
+      "keywords": ["encryption in transit", "TLS", "SSL", "HTTPS"],
+      "status": "verified",
+      "evidence": "Vercel and Supabase enforce TLS 1.3",
+      "owner": "infrastructure",
+      "last_verified_at": "2026-01-01",
+      "notes": "All API traffic uses HTTPS"
+    },
+    {
+      "claim_id": "sso_saml",
+      "claim_text": "SSO/SAML integration",
+      "keywords": ["SSO", "SAML", "single sign-on", "enterprise SSO"],
+      "status": "verified",
+      "evidence": "/src/lib/enterprise/scim.ts",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-10",
+      "notes": "Available for enterprise tier"
+    },
+    {
+      "claim_id": "audit_logs",
+      "claim_text": "Comprehensive audit logs",
+      "keywords": ["audit log", "audit trail", "compliance log"],
+      "status": "verified",
+      "evidence": "/src/lib/audit.ts",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-10",
+      "notes": "90-day retention on pro, unlimited on enterprise"
+    },
+    {
+      "claim_id": "data_retention",
+      "claim_text": "Configurable data retention policies",
+      "keywords": ["data retention", "retention policy", "data lifecycle"],
+      "status": "verified",
+      "evidence": "/src/lib/winter/policy.ts",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-10",
+      "notes": "Winter module handles data governance"
+    },
+    {
+      "claim_id": "uptime_sla",
+      "claim_text": "99.9% uptime SLA",
+      "keywords": ["99.9%", "uptime", "SLA", "availability"],
+      "status": "partial",
+      "evidence": null,
+      "owner": "operations",
+      "last_verified_at": null,
+      "target_date": "2026-Q2",
+      "notes": "Tracking uptime, formal SLA in progress"
+    },
+    {
+      "claim_id": "iso27001",
+      "claim_text": "ISO 27001 certification",
+      "keywords": ["ISO 27001", "ISO27001", "information security"],
+      "status": "roadmap",
+      "evidence": null,
+      "owner": "compliance",
+      "last_verified_at": null,
+      "target_date": "2026-Q4",
+      "notes": "Will pursue after SOC 2"
+    },
+    {
+      "claim_id": "byok",
+      "claim_text": "Bring Your Own Key (BYOK) encryption",
+      "keywords": ["BYOK", "bring your own key", "customer-managed key"],
+      "status": "verified",
+      "evidence": "/docs/byok.md",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-14",
+      "notes": "Available for enterprise tier"
+    },
+    {
+      "claim_id": "zero_data_retention",
+      "claim_text": "Zero data retention option",
+      "keywords": ["zero retention", "no data storage", "stateless"],
+      "status": "verified",
+      "evidence": "/src/lib/winter/forget.ts",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-10",
+      "notes": "Winter forget module supports immediate deletion"
+    },
+    {
+      "claim_id": "pii_detection",
+      "claim_text": "Automatic PII detection and masking",
+      "keywords": ["PII", "personal information", "data masking", "anonymization"],
+      "status": "verified",
+      "evidence": "/src/lib/winter/pii.ts",
+      "owner": "engineering",
+      "last_verified_at": "2026-01-10",
+      "notes": "Configurable PII patterns"
+    }
+  ]
+}
