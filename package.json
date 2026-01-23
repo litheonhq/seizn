@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "check:policy": "node scripts/policy-consistency-check.mjs",
     "build": "node scripts/check-route-conflicts.js && next build",
     "analyze": "ANALYZE=true npm run build",
     "start": "next start",
