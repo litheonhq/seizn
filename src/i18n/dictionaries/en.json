@@ -1162,7 +1162,8 @@
       "security": "Security",
       "sdks": "SDKs",
       "faq": "FAQ",
-      "tutorial": "5-Min Tutorial"
+      "tutorial": "5-Min Tutorial",
+      "integrations": "Integrations"
     },
     "hero": {
       "title": "API Documentation",
@@ -1850,6 +1851,216 @@
       "footer": {
         "rights": "All rights reserved."
       }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integrations | Seizn",
+        "description": "Integrate Seizn with LangChain, LlamaIndex, OpenTelemetry, and more"
+      },
+      "breadcrumb": "Integrations",
+      "title": "Integrations",
+      "subtitle": "Connect Seizn with your favorite AI frameworks and observability tools.",
+      "cards": {
+        "langchain": {
+          "badge": "Official",
+          "title": "LangChain",
+          "description": "Drop-in retriever for LangChain RAG pipelines. Works with Python and TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Official",
+          "title": "LlamaIndex",
+          "description": "Native retriever for LlamaIndex query engines. Supports streaming and hybrid search."
+        },
+        "opentelemetry": {
+          "badge": "Official",
+          "title": "OpenTelemetry",
+          "description": "Export traces to Datadog, Grafana, Jaeger, and any OTLP-compatible backend."
+        }
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "More integrations are on the way. Let us know what you need!"
+      },
+      "backToDocs": "Back to Documentation"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain Integration | Seizn",
+        "description": "Drop-in retriever for LangChain RAG pipelines"
+      },
+      "badge": "Official",
+      "title": "LangChain Integration",
+      "subtitle": "Drop-in retriever for LangChain RAG pipelines with full tracing support.",
+      "overview": {
+        "title": "60-Second Overview",
+        "description": "SeiznRetriever is a drop-in replacement for any LangChain retriever. It provides vector search with built-in tracing, caching, and reranking.",
+        "feature1": "Compatible with all LangChain chains and agents",
+        "feature2": "Built-in tracing for every retrieval operation",
+        "feature3": "Supports filtering, reranking, and hybrid search"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Install the Seizn SDK alongside LangChain."
+      },
+      "example": {
+        "title": "5-Minute Example",
+        "description": "Create a RAG chain with SeiznRetriever in just a few lines of code."
+      },
+      "production": {
+        "title": "Production Tips",
+        "caching": {
+          "title": "Enable Caching",
+          "description": "Reduce latency and costs by caching repeated queries."
+        },
+        "reranking": {
+          "title": "Enable Reranking",
+          "description": "Improve result quality with cross-encoder reranking."
+        },
+        "filtering": {
+          "title": "Metadata Filtering",
+          "description": "Filter results by metadata fields before vector search."
+        }
+      },
+      "troubleshooting": {
+        "title": "Troubleshooting",
+        "errorColumn": "Error",
+        "causeColumn": "Cause",
+        "solutionColumn": "Solution",
+        "authCause": "Invalid or missing API key",
+        "authSolution": "Check SEIZN_API_KEY environment variable",
+        "rateCause": "Too many requests per second",
+        "rateSolution": "Implement exponential backoff or upgrade plan",
+        "emptyCause": "Threshold too high or no matching documents",
+        "emptySolution": "Lower threshold or check dataset contents"
+      },
+      "nav": {
+        "backToIntegrations": "Back to Integrations",
+        "nextLlamaIndex": "LlamaIndex Integration"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex Integration | Seizn",
+        "description": "Native retriever for LlamaIndex RAG pipelines"
+      },
+      "badge": "Official",
+      "title": "LlamaIndex Integration",
+      "subtitle": "Native retriever for LlamaIndex query engines with streaming and hybrid search.",
+      "overview": {
+        "title": "60-Second Overview",
+        "description": "SeiznRetriever implements the LlamaIndex BaseRetriever interface, making it compatible with all LlamaIndex query engines and pipelines.",
+        "feature1": "Native integration with LlamaIndex query engines",
+        "feature2": "Supports streaming responses out of the box",
+        "feature3": "Compatible with LlamaIndex node postprocessors"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Install the Seizn SDK alongside LlamaIndex."
+      },
+      "example": {
+        "title": "5-Minute Example",
+        "description": "Build a query engine with SeizinRetriever for your RAG application."
+      },
+      "production": {
+        "title": "Production Tips",
+        "streaming": {
+          "title": "Streaming Responses",
+          "description": "Enable streaming for better user experience with long responses."
+        },
+        "hybrid": {
+          "title": "Hybrid Search",
+          "description": "Combine vector and keyword search for better recall."
+        },
+        "nodePostprocessors": {
+          "title": "Node Postprocessors",
+          "description": "Chain postprocessors for advanced filtering and reranking."
+        }
+      },
+      "troubleshooting": {
+        "title": "Troubleshooting",
+        "errorColumn": "Error",
+        "causeColumn": "Cause",
+        "solutionColumn": "Solution",
+        "authCause": "Invalid or missing API key",
+        "authSolution": "Check SEIZN_API_KEY environment variable",
+        "datasetCause": "Dataset name not found",
+        "datasetSolution": "Verify dataset exists in dashboard",
+        "relevanceCause": "Query-document mismatch",
+        "relevanceSolution": "Try hybrid search or adjust threshold"
+      },
+      "nav": {
+        "prevLangChain": "LangChain Integration",
+        "nextOpenTelemetry": "OpenTelemetry Integration"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry Integration | Seizn",
+        "description": "Export traces to Datadog, Grafana, Jaeger via OTLP"
+      },
+      "badge": "Official",
+      "title": "OpenTelemetry Integration",
+      "subtitle": "Export retrieval traces to your observability stack via OTLP.",
+      "overview": {
+        "title": "60-Second Overview",
+        "description": "Seizn natively exports OpenTelemetry traces for every retrieval operation. Connect to any OTLP-compatible backend for end-to-end observability.",
+        "feature1": "Zero-config OTLP export with automatic span creation",
+        "feature2": "Rich attributes including latency, token counts, and costs",
+        "feature3": "Context propagation for distributed tracing",
+        "supportedBackends": "Supported Backends"
+      },
+      "installation": {
+        "title": "Setup",
+        "description": "Configure OTLP export via environment variables."
+      },
+      "examples": {
+        "title": "Backend Examples",
+        "datadog": {
+          "description": "Export traces to Datadog APM via the Datadog Agent or direct API."
+        },
+        "grafana": {
+          "description": "Send traces to Grafana Tempo (Cloud or self-hosted)."
+        },
+        "jaeger": {
+          "description": "Export to Jaeger with native OTLP receiver support."
+        }
+      },
+      "production": {
+        "title": "Production Tips",
+        "sampling": {
+          "title": "Sampling Strategy",
+          "description": "Control trace volume with head-based or tail-based sampling."
+        },
+        "attributes": {
+          "title": "Custom Attributes",
+          "description": "Add resource and span attributes for better filtering."
+        },
+        "batching": {
+          "title": "Batch Configuration",
+          "description": "Optimize export performance with batch settings."
+        }
+      },
+      "troubleshooting": {
+        "title": "Troubleshooting",
+        "issueColumn": "Issue",
+        "causeColumn": "Cause",
+        "solutionColumn": "Solution",
+        "noTracesIssue": "No traces appearing",
+        "noTracesCause": "Telemetry disabled or endpoint wrong",
+        "noTracesSolution": "Set SEIZN_TELEMETRY_ENABLED=true and verify endpoint",
+        "connectionIssue": "Connection refused",
+        "connectionCause": "Collector not running or wrong port",
+        "connectionSolution": "Check collector status and port 4318",
+        "missingSpansIssue": "Missing spans in trace",
+        "missingSpansCause": "Sampling rate too low",
+        "missingSpansSolution": "Increase sampling rate or disable sampling",
+        "debugTitle": "Debug Mode",
+        "debugDescription": "Enable debug logging to troubleshoot telemetry issues."
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex Integration",
+        "backToIntegrations": "Back to Integrations"
+      }
     }
   },
   "demoQuery": {
@@ -1911,5 +2122,192 @@
     "redacted": "[REDACTED]",
     "piiMasked": "PII masked for privacy",
     "readOnlyNote": "This is a read-only view of a shared trace."
+  },
+  "trustPage": {
+    "title": "Trust Center",
+    "subtitle": "Security and data practices at Seizn",
+    "heroDescription": "We build with privacy and security at the core. This page documents exactly what we do with your data.",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "dataFlow": {
+        "title": "Data Flow",
+        "description": "What we store and what we don't",
+        "stored": {
+          "title": "What We Store",
+          "items": [
+            "Memory content and embeddings",
+            "Query logs (hashed, not plaintext)",
+            "API usage metrics per key",
+            "Trace data for debugging (configurable retention)"
+          ]
+        },
+        "notStored": {
+          "title": "What We DON'T Store",
+          "items": [
+            "Raw API keys (only hashed)",
+            "User passwords (OAuth only)",
+            "Query results beyond cache TTL",
+            "Third-party LLM request/response logs"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Encryption",
+        "description": "Data protection in transit and at rest",
+        "transit": {
+          "title": "In Transit",
+          "items": [
+            "TLS 1.3 enforced for all connections",
+            "HSTS enabled with 1-year max-age",
+            "Certificate transparency logging"
+          ]
+        },
+        "atRest": {
+          "title": "At Rest",
+          "items": [
+            "AES-256 encryption for all stored data",
+            "Database-level encryption (Supabase)",
+            "Encrypted backups with separate keys"
+          ]
+        },
+        "keyManagement": {
+          "title": "Key Management",
+          "items": [
+            "API keys hashed with SHA-256 + salt",
+            "Automatic key rotation reminders (90 days)",
+            "Instant key revocation capability"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Tenant Isolation",
+        "description": "How we keep your data separate",
+        "items": [
+          "Row-Level Security (RLS) enforced at database level",
+          "All queries filtered by user_id/org_id automatically",
+          "No shared indexes across tenants",
+          "Namespace separation for memory collections"
+        ],
+        "rbac": {
+          "title": "Access Control",
+          "items": [
+            "Role-based access (Owner, Admin, Member)",
+            "Per-organization API key scoping",
+            "Audit logs for all permission changes"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Retention & Deletion",
+        "description": "How long we keep data and how to delete it",
+        "periods": [
+          {
+            "type": "Memories",
+            "period": "Until deleted by user"
+          },
+          {
+            "type": "API Logs",
+            "period": "90 days rolling"
+          },
+          {
+            "type": "Traces",
+            "period": "30 days (configurable)"
+          },
+          {
+            "type": "Audit Logs",
+            "period": "1 year"
+          },
+          {
+            "type": "Backups",
+            "period": "30 days encrypted"
+          }
+        ],
+        "deletion": {
+          "title": "Deletion Process",
+          "items": [
+            "DELETE /api/memories removes immediately",
+            "Account deletion: 30-day grace period",
+            "Hard delete from backups within 30 days",
+            "GDPR/CCPA data export available on request"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Audit Logs & Access Controls",
+        "description": "Tracking who does what",
+        "logged": {
+          "title": "Events We Log",
+          "items": [
+            "API key creation, rotation, revocation",
+            "Permission changes (RBAC)",
+            "Data export requests",
+            "Failed authentication attempts",
+            "Admin actions on organization"
+          ]
+        },
+        "access": {
+          "title": "Log Access",
+          "items": [
+            "Available to organization admins",
+            "Exportable via API (Pro+ plans)",
+            "Searchable by user, action, timestamp"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Subprocessors",
+        "description": "Third parties that process your data",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Database & Auth",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting & CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Payments",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Product Analytics",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Error Monitoring",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (optional)",
+            "location": "US/Canada"
+          }
+        ],
+        "note": "We only share the minimum data required for each service to function."
+      },
+      "disclosure": {
+        "title": "What We Don't Do Yet",
+        "description": "Honest gaps in our security posture",
+        "items": [
+          "SOC 2 Type II certification (in progress, ETA Q2 2026)",
+          "HIPAA compliance (planned for Enterprise)",
+          "On-premise deployment option (evaluating)",
+          "Hardware security modules (HSM) for key storage",
+          "Bug bounty program (planned Q3 2026)"
+        ],
+        "cta": "Have security questions? Contact us at security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Questions?",
+      "description": "Our team is happy to answer security questions.",
+      "email": "security@seizn.com"
+    }
   }
 }

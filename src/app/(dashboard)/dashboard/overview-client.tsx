@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
+import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
 
 interface User {
   id: string;
@@ -273,6 +274,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           </Link>
         </div>
       </div>
+
+
+      {/* North Star Metrics */}
+      <NorthStarMetrics />
 
       {/* 7-Day API Usage Chart */}
       <div className="glass-card rounded-2xl overflow-hidden">
