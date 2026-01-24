@@ -217,7 +217,8 @@ console.log('Trace:', response.metadata?.seiznTrace);`}
             <CodeBlock
               language="python"
               title="Python"
-              code={`from seizn.llamaindex import SeiznRetriever
+              code={`import os
+from seizn.llamaindex import SeiznRetriever
 from llama_index.llms.openai import OpenAI
 from llama_index.core.query_engine import RetrieverQueryEngine
 

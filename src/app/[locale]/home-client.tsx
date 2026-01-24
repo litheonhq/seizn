@@ -366,7 +366,7 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <a href="mailto:info@seizn.com" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
+              <a href="mailto:enterprise@seizn.com" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
                 {t.pricing.enterprise.cta}
               </a>
             </div>

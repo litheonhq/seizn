@@ -256,6 +256,169 @@ paths:
         '200':
           description: Memory deleted
 
+  /api/memories/export:
+    get:
+      tags: [Memories]
+      summary: Export all memories
+      description: |
+        Export all memories for the authenticated user.
+        Supports JSON and CSV formats with optional filtering by namespace and memory_type.
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+          description: Export format
+        - name: namespace
+          in: query
+          schema:
+            type: string
+          description: Filter by namespace
+        - name: memory_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/MemoryType'
+          description: Filter by memory type
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10000
+            maximum: 10000
+          description: Maximum memories to export per request
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: Export successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  export:
+                    type: object
+                    properties:
+                      format:
+                        type: string
+                      exported_at:
+                        type: string
+                        format: date-time
+                      count:
+                        type: integer
+                      total_count:
+                        type: integer
+                      offset:
+                        type: integer
+                      limit:
+                        type: integer
+                      has_more:
+                        type: boolean
+                  memories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExportedMemory'
+            text/csv:
+              schema:
+                type: string
+                description: CSV file with headers
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/memories/import:
+    post:
+      tags: [Memories]
+      summary: Bulk import memories
+      description: |
+        Import multiple memories at once with automatic embedding generation.
+        Maximum 100 memories per request. Duplicates can be skipped automatically.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [memories]
+              properties:
+                memories:
+                  type: array
+                  maxItems: 100
+                  items:
+                    type: object
+                    required: [content]
+                    properties:
+                      content:
+                        type: string
+                        description: Memory content
+                      memory_type:
+                        $ref: '#/components/schemas/MemoryType'
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                      namespace:
+                        type: string
+                        default: default
+                      importance:
+                        type: integer
+                        minimum: 1
+                        maximum: 10
+                      source:
+                        type: string
+                skip_duplicates:
+                  type: boolean
+                  default: true
+                  description: Skip memories with duplicate content
+            example:
+              memories:
+                - content: "User prefers dark mode"
+                  memory_type: "preference"
+                  tags: ["ui", "settings"]
+                - content: "User works at Google"
+                  memory_type: "fact"
+              skip_duplicates: true
+      responses:
+        '200':
+          description: Import results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  results:
+                    type: object
+                    properties:
+                      imported:
+                        type: integer
+                        description: Number of memories successfully imported
+                      skipped:
+                        type: integer
+                        description: Number of duplicates skipped
+                      failed:
+                        type: integer
+                        description: Number of failed imports
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                        description: Error messages for failed imports
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
   /api/extract:
     post:
       tags: [AI]
@@ -2215,6 +2378,37 @@ components:
           type: number
         importance:
           type: integer
+
+    ExportedMemory:
+      type: object
+      description: Memory data for export (without embedding)
+      properties:
+        id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        memory_type:
+          $ref: '#/components/schemas/MemoryType'
+        tags:
+          type: array
+          items:
+            type: string
+        namespace:
+          type: string
+        importance:
+          type: integer
+          minimum: 1
+          maximum: 10
+        source:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
 
     WebhookEvent:
       type: string

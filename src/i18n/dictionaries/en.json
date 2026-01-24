@@ -905,7 +905,7 @@
         },
         {
           "q": "What happens if I exceed my plan limits?",
-          "a": "We notify you at 80%. If you exceed, API calls continue at reduced priority. Upgrade anytime for instant limit increase."
+          "a": "Monthly quota: We notify you at 80%. After exceeding, API calls continue at reduced priority. Rate limit (RPS): You'll receive a 429 error - use exponential backoff. Upgrade anytime for instant limit increase."
         },
         {
           "q": "Can I delete specific memories?",
@@ -1095,7 +1095,10 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Limits",
+      "status": "Status",
+      "help": "Help"
     },
     "tabs": {
       "results": "Results",
@@ -2308,6 +2311,221 @@
       "title": "Questions?",
       "description": "Our team is happy to answer security questions.",
       "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Limits & Billing",
+    "subtitle": "Understand your plan limits, quotas, and billing information.",
+    "unlimited": "Unlimited",
+    "custom": "Custom",
+    "requestsPerSecond": "requests/second",
+    "sidebar": {
+      "onThisPage": "On This Page",
+      "quotas": "Monthly Quotas",
+      "rateLimits": "Rate Limits",
+      "overage": "Overage Behavior",
+      "reset": "Reset Times",
+      "headers": "Response Headers"
+    },
+    "table": {
+      "plan": "Plan",
+      "monthlyQuota": "Monthly Quota",
+      "rps": "RPS Limit"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "overage": "Soft throttle after limit"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Soft throttle, email alert"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Soft throttle, priority queue"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Custom SLA, no throttle"
+      }
+    },
+    "quotas": {
+      "title": "Monthly Quotas",
+      "description": "Each plan includes a monthly API call quota. Quotas reset on the 1st of each month at 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Rate Limits (RPS)",
+      "description": "Rate limits protect our infrastructure and ensure fair usage. Limits are applied per API key."
+    },
+    "overage": {
+      "title": "Overage Behavior",
+      "softThrottle": {
+        "title": "Soft Throttle (Quota Exceeded)",
+        "description": "When you exceed your monthly quota:",
+        "point1": "API calls continue at reduced priority",
+        "point2": "Response times may increase by 2-5x",
+        "point3": "Email notification at 80% and 100% usage"
+      },
+      "hard429": {
+        "title": "Hard 429 (Rate Limit)",
+        "description": "When you exceed the RPS rate limit:",
+        "recommendation": "Implement exponential backoff (1s, 2s, 4s, 8s) and retry with jitter."
+      }
+    },
+    "reset": {
+      "title": "Reset Times",
+      "monthly": {
+        "title": "Monthly Quota Reset",
+        "description": "Quotas reset on the first day of each month.",
+        "time": "1st of month, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Rate Limit Window",
+        "description": "Rate limits use a sliding window.",
+        "time": "Rolling 1-second window"
+      }
+    },
+    "headers": {
+      "limit": "Maximum requests allowed per window",
+      "remaining": "Remaining requests in current window",
+      "reset": "Unix timestamp when window resets",
+      "quotaLimit": "Monthly quota limit",
+      "quotaRemaining": "Remaining API calls this month",
+      "quotaReset": "ISO 8601 date when quota resets"
+    },
+    "headersSection": {
+      "title": "Response Headers",
+      "description": "Every API response includes headers to help you track your usage and limits.",
+      "header": "Header",
+      "headerDescription": "Description",
+      "example": "Example Response Headers:"
+    },
+    "upgrade": {
+      "title": "Need Higher Limits?",
+      "description": "Upgrade your plan for increased quotas, higher rate limits, and priority support.",
+      "viewPlans": "View Plans",
+      "contactSales": "Contact Sales"
+    }
+  },
+  "help": {
+    "title": "Help Hub",
+    "subtitle": "Find answers, get support, and access resources.",
+    "search": {
+      "placeholder": "Search for help...",
+      "noResults": "No results found"
+    },
+    "sections": {
+      "support": {
+        "title": "Support Channels",
+        "description": "Get help from our team",
+        "email": {
+          "title": "Email Support",
+          "description": "Get help via email within 24 hours",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord Community",
+          "description": "Join our community for real-time help",
+          "action": "Join Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Report bugs and request features",
+          "action": "Open Issue"
+        }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "description": "Quick answers to common questions",
+        "viewAll": "View All FAQs"
+      },
+      "status": {
+        "title": "System Status",
+        "description": "Check current system status and incidents",
+        "viewStatus": "View Status Page",
+        "operational": "All Systems Operational",
+        "degraded": "Degraded Performance",
+        "outage": "Service Outage"
+      },
+      "billing": {
+        "title": "Billing & Plans",
+        "description": "Manage your subscription and payments",
+        "items": {
+          "plans": "View pricing plans",
+          "usage": "Check your usage",
+          "invoices": "Download invoices",
+          "upgrade": "Upgrade your plan"
+        }
+      },
+      "docs": {
+        "title": "Documentation",
+        "description": "Quick links to popular docs",
+        "links": {
+          "quickstart": "Quick Start Guide",
+          "apiReference": "API Reference",
+          "sdks": "SDKs & Libraries",
+          "limits": "Limits & Billing",
+          "security": "Security"
+        }
+      }
+    },
+    "contact": {
+      "title": "Still Need Help?",
+      "description": "Our support team is here to help you succeed.",
+      "cta": "Contact Support"
+    }
+  },
+  "status": {
+    "title": "System Status",
+    "subtitle": "Real-time system status and incident history",
+    "lastUpdated": "Last updated",
+    "overall": {
+      "operational": "All Systems Operational",
+      "degraded": "Degraded Performance",
+      "partialOutage": "Partial System Outage",
+      "majorOutage": "Major System Outage"
+    },
+    "uptime": {
+      "title": "Uptime",
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days",
+      "90d": "90 days"
+    },
+    "services": {
+      "title": "Service Status",
+      "operational": "Operational",
+      "degraded": "Degraded",
+      "down": "Down"
+    },
+    "incidents": {
+      "active": "Active Incidents",
+      "history": "Incident History",
+      "noActive": "No active incidents",
+      "noHistory": "No past incidents",
+      "status": {
+        "investigating": "Investigating",
+        "identified": "Identified",
+        "monitoring": "Monitoring",
+        "resolved": "Resolved"
+      },
+      "severity": {
+        "minor": "Minor",
+        "major": "Major",
+        "critical": "Critical"
+      },
+      "affected": "Affected Services",
+      "timeline": "Timeline",
+      "started": "Started",
+      "resolved": "Resolved",
+      "duration": "Duration",
+      "viewDetails": "View Details"
+    },
+    "subscribe": {
+      "title": "Subscribe to Updates",
+      "rss": "RSS Feed",
+      "email": "Email Notifications"
     }
   }
 }

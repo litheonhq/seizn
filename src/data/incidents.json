@@ -1,0 +1,149 @@
+{
+  "incidents": [
+    {
+      "id": "inc-2026-001",
+      "title": "API Latency Degradation",
+      "status": "resolved",
+      "severity": "minor",
+      "affected_services": ["API", "Search"],
+      "started_at": "2026-01-15T14:30:00Z",
+      "resolved_at": "2026-01-15T15:45:00Z",
+      "impact": "Some users experienced increased API response times (2-3x normal)",
+      "root_cause": "Database connection pool saturation during traffic spike",
+      "updates": [
+        {
+          "timestamp": "2026-01-15T14:30:00Z",
+          "status": "investigating",
+          "message": "We are investigating reports of increased API latency."
+        },
+        {
+          "timestamp": "2026-01-15T14:45:00Z",
+          "status": "identified",
+          "message": "The issue has been identified as database connection pool saturation. Working on mitigation."
+        },
+        {
+          "timestamp": "2026-01-15T15:30:00Z",
+          "status": "monitoring",
+          "message": "Connection pool size increased. Monitoring for stability."
+        },
+        {
+          "timestamp": "2026-01-15T15:45:00Z",
+          "status": "resolved",
+          "message": "Issue resolved. All systems operating normally."
+        }
+      ]
+    },
+    {
+      "id": "inc-2026-002",
+      "title": "Scheduled Maintenance - Database Migration",
+      "status": "resolved",
+      "severity": "minor",
+      "affected_services": ["Database"],
+      "started_at": "2026-01-10T03:00:00Z",
+      "resolved_at": "2026-01-10T04:30:00Z",
+      "impact": "Brief read-only mode during migration window",
+      "root_cause": "Planned maintenance for database schema updates",
+      "updates": [
+        {
+          "timestamp": "2026-01-10T03:00:00Z",
+          "status": "investigating",
+          "message": "Starting scheduled maintenance. Database entering read-only mode."
+        },
+        {
+          "timestamp": "2026-01-10T04:15:00Z",
+          "status": "monitoring",
+          "message": "Migration completed successfully. Verifying data integrity."
+        },
+        {
+          "timestamp": "2026-01-10T04:30:00Z",
+          "status": "resolved",
+          "message": "Maintenance completed. All systems back to normal operation."
+        }
+      ]
+    },
+    {
+      "id": "inc-2025-012",
+      "title": "Authentication Service Partial Outage",
+      "status": "resolved",
+      "severity": "major",
+      "affected_services": ["API", "Dashboard", "Authentication"],
+      "started_at": "2025-12-28T09:15:00Z",
+      "resolved_at": "2025-12-28T10:45:00Z",
+      "impact": "Some users unable to log in or authenticate API requests",
+      "root_cause": "OAuth provider rate limiting triggered by unusual traffic pattern",
+      "updates": [
+        {
+          "timestamp": "2025-12-28T09:15:00Z",
+          "status": "investigating",
+          "message": "We are aware of authentication issues affecting some users."
+        },
+        {
+          "timestamp": "2025-12-28T09:30:00Z",
+          "status": "identified",
+          "message": "Issue traced to OAuth provider rate limiting. Implementing fallback."
+        },
+        {
+          "timestamp": "2025-12-28T10:00:00Z",
+          "status": "monitoring",
+          "message": "Fallback authentication enabled. Monitoring login success rates."
+        },
+        {
+          "timestamp": "2025-12-28T10:45:00Z",
+          "status": "resolved",
+          "message": "Authentication fully restored. Implementing permanent rate limit handling."
+        }
+      ]
+    },
+    {
+      "id": "inc-2025-011",
+      "title": "Search Index Rebuild",
+      "status": "resolved",
+      "severity": "minor",
+      "affected_services": ["Search"],
+      "started_at": "2025-12-20T02:00:00Z",
+      "resolved_at": "2025-12-20T05:30:00Z",
+      "impact": "Search results may have been slightly stale during rebuild",
+      "root_cause": "Scheduled index optimization and rebuild",
+      "updates": [
+        {
+          "timestamp": "2025-12-20T02:00:00Z",
+          "status": "investigating",
+          "message": "Starting scheduled search index rebuild."
+        },
+        {
+          "timestamp": "2025-12-20T05:30:00Z",
+          "status": "resolved",
+          "message": "Index rebuild completed successfully."
+        }
+      ]
+    },
+    {
+      "id": "inc-2025-010",
+      "title": "CDN Cache Invalidation Issue",
+      "status": "resolved",
+      "severity": "minor",
+      "affected_services": ["Dashboard"],
+      "started_at": "2025-12-15T11:00:00Z",
+      "resolved_at": "2025-12-15T11:45:00Z",
+      "impact": "Some users seeing stale dashboard content",
+      "root_cause": "CDN cache invalidation job failed silently",
+      "updates": [
+        {
+          "timestamp": "2025-12-15T11:00:00Z",
+          "status": "investigating",
+          "message": "Investigating reports of stale content in dashboard."
+        },
+        {
+          "timestamp": "2025-12-15T11:30:00Z",
+          "status": "identified",
+          "message": "CDN cache invalidation issue identified. Manually purging cache."
+        },
+        {
+          "timestamp": "2025-12-15T11:45:00Z",
+          "status": "resolved",
+          "message": "Cache purged. Adding monitoring for cache invalidation jobs."
+        }
+      ]
+    }
+  ]
+}

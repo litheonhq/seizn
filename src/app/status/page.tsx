@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import Link from 'next/link';
 import { StatusClient } from './status-client';
 
@@ -29,8 +28,10 @@ interface Incident {
   updates: Array<{ message: string; timestamp: string; }>;
 }
 
+type OverallStatus = 'operational' | 'degraded' | 'partial_outage' | 'major_outage';
+
 interface StatusData {
-  status: 'operational' | 'degraded' | 'partial_outage' | 'major_outage';
+  status: OverallStatus;
   services: ServiceStatus[];
   incidents: Incident[];
   uptime: {
@@ -42,6 +43,24 @@ interface StatusData {
   incident_history?: Incident[];
   status_history?: Array<{ date: string; status: string; uptime_percent: number; }>;
   last_updated: string;
+}
+
+/**
+ * Compute overall status from services (SSOT - same logic as status-client.tsx)
+ * Rules:
+ * - 3+ services down = major_outage
+ * - 1+ services down = partial_outage
+ * - 1+ services degraded = degraded
+ * - All operational = operational
+ */
+function computeOverallStatus(services: ServiceStatus[]): OverallStatus {
+  const downCount = services.filter((s) => s.status === 'down').length;
+  const degradedCount = services.filter((s) => s.status === 'degraded').length;
+
+  if (downCount >= 3) return 'major_outage';
+  if (downCount >= 1) return 'partial_outage';
+  if (degradedCount >= 1) return 'degraded';
+  return 'operational';
 }
 
 async function getStatusData(): Promise<StatusData | null> {
@@ -95,10 +114,13 @@ function getStatusColors(status: StatusData['status']) {
 }
 
 function SSRStatusContent({ data }: { data: StatusData }) {
-  const statusLabel = getStatusLabel(data.status);
-  const colors = getStatusColors(data.status);
-  const statusIcon = data.status === 'operational' ? '\u2713' : '!';
-  const iconBg = data.status === 'operational' ? 'bg-emerald-500' : 'bg-orange-500';
+  // Use computed status from services (ensures consistency with client)
+  const computedStatus = computeOverallStatus(data.services);
+  const statusLabel = getStatusLabel(computedStatus);
+  const colors = getStatusColors(computedStatus);
+  const statusIcon = computedStatus === 'operational' ? '\u2713' : '!';
+  const iconBg = computedStatus === 'operational' ? 'bg-emerald-500' :
+    computedStatus === 'major_outage' ? 'bg-red-500' : 'bg-orange-500';
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -152,7 +174,8 @@ function SSRStatusContent({ data }: { data: StatusData }) {
           {data.services.map((service) => {
             const dotColor = service.status === 'operational' ? 'bg-emerald-500' :
               service.status === 'degraded' ? 'bg-yellow-500' : 'bg-red-500';
-            const textColor = service.status === 'operational' ? 'text-emerald-600' : 'text-yellow-600';
+            const textColor = service.status === 'operational' ? 'text-emerald-600' :
+              service.status === 'degraded' ? 'text-yellow-600' : 'text-red-600';
             const statusText = service.status === 'operational' ? 'Operational' :
               service.status === 'degraded' ? 'Degraded' : 'Down';
             return (
@@ -202,19 +225,13 @@ export default async function StatusPage() {
         </noscript>
       )}
 
-      <Suspense
-        fallback={
-          data ? (
-            <SSRStatusContent data={data} />
-          ) : (
-            <div className="p-8 text-center">
-              <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
-            </div>
-          )
-        }
-      >
-        <StatusClient initialData={data} />
-      </Suspense>
+      {/*
+        StatusClient receives initialData and renders immediately without loading state
+        when data is available. No Suspense wrapper needed since client handles loading.
+        This eliminates duplicate "Service Status" headings that occurred when Suspense
+        fallback also rendered SSRStatusContent before hydration completed.
+      */}
+      <StatusClient initialData={data} />
     </div>
   );
 }
