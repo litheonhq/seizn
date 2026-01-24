@@ -167,7 +167,8 @@ function calculateOverallStatus(
 
   if (downCount >= 3) return 'major_outage';
   if (downCount >= 1) return 'partial_outage';
-  if (degradedCount >= 2) return 'degraded';
+  // Any degraded service should reflect in overall status
+  if (degradedCount >= 1) return 'degraded';
   return 'operational';
 }
 

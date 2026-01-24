@@ -48,6 +48,22 @@ interface StatusClientProps {
   initialData?: StatusData | null;
 }
 
+/**
+ * Compute overall status from services (defensive - ensures consistency)
+ * Even if API returns inconsistent data, UI will show correct status
+ */
+function computeOverallStatus(
+  services: ServiceStatus[]
+): StatusData['status'] {
+  const downCount = services.filter((s) => s.status === 'down').length;
+  const degradedCount = services.filter((s) => s.status === 'degraded').length;
+
+  if (downCount >= 3) return 'major_outage';
+  if (downCount >= 1) return 'partial_outage';
+  if (degradedCount >= 1) return 'degraded';
+  return 'operational';
+}
+
 export function StatusClient({ initialData }: StatusClientProps) {
   const [data, setData] = useState<StatusData | null>(initialData || null);
   const [loading, setLoading] = useState(!initialData);
@@ -131,7 +147,9 @@ export function StatusClient({ initialData }: StatusClientProps) {
     },
   };
 
-  const currentStatus = statusConfig[data.status];
+  // Use computed status from services (ensures consistency)
+  const computedStatus = computeOverallStatus(data.services);
+  const currentStatus = statusConfig[computedStatus];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -162,7 +180,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
       {/* Overall Status Banner */}
       <div
         className={`${currentStatus.bgColor} rounded-2xl p-6 mb-8 border ${
-          data.status === "operational" ? "border-emerald-200" : "border-orange-200"
+          computedStatus === "operational" ? "border-emerald-200" : "border-orange-200"
         }`}
       >
         <div className="flex items-center gap-4">
