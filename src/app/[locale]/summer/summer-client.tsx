@@ -416,7 +416,7 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <a href="mailto:info@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
+              <a href="mailto:enterprise@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
                 {t.pricing.enterprise.cta}
               </a>
             </div>
@@ -439,7 +439,7 @@ const memories = await seizn.search({
           <nav className="flex items-center gap-6" aria-label="Footer navigation">
             <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.privacy}</a>
             <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.terms}</a>
-            <a href="mailto:info@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
+            <a href="mailto:support@seizn.com" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
           </nav>
         </div>
       </footer>

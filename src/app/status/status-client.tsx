@@ -258,34 +258,8 @@ export function StatusClient({ initialData }: StatusClientProps) {
         </div>
       )}
 
-      {/* Incident History */}
-      {data.incident_history && data.incident_history.length > 0 && (
-        <div className="bg-white rounded-2xl border">
-          <div className="p-4 border-b">
-            <h2 className="font-semibold text-gray-900">Past Incidents</h2>
-          </div>
-          <div className="divide-y">
-            {data.incident_history.map((incident) => (
-              <div key={incident.id} className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{incident.title}</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {new Date(incident.started_at).toLocaleDateString()} -{" "}
-                      {incident.resolved_at
-                        ? new Date(incident.resolved_at).toLocaleDateString()
-                        : "Ongoing"}
-                    </p>
-                  </div>
-                  <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">
-                    Resolved
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Incident History - Enhanced */}
+      <IncidentHistory incidents={data.incident_history} />
 
       {/* Footer */}
       <div className="mt-8 text-center text-sm text-gray-500">
@@ -344,7 +318,8 @@ function ServiceRow({ service }: { service: ServiceStatus }) {
         )}
         <span
           className={`text-sm ${
-            service.status === "operational" ? "text-emerald-600" : "text-yellow-600"
+            service.status === "operational" ? "text-emerald-600" :
+            service.status === "degraded" ? "text-yellow-600" : "text-red-600"
           }`}
         >
           {statusLabels[service.status]}
@@ -396,6 +371,147 @@ function IncidentCard({ incident }: { incident: Incident }) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// Extended Incident interface for history with additional fields
+interface HistoryIncident extends Incident {
+  impact?: string;
+  root_cause?: string;
+}
+
+function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  if (!incidents || incidents.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl border">
+        <div className="p-4 border-b">
+          <h2 className="font-semibold text-gray-900">Past Incidents</h2>
+        </div>
+        <div className="p-8 text-center text-gray-500">
+          <p>No past incidents to display.</p>
+          <p className="text-sm mt-1">All systems have been running smoothly.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const severityBadge = {
+    minor: "bg-yellow-100 text-yellow-700",
+    major: "bg-orange-100 text-orange-700",
+    critical: "bg-red-100 text-red-700",
+  };
+
+  const statusBadge = {
+    investigating: "bg-red-100 text-red-700",
+    identified: "bg-orange-100 text-orange-700",
+    monitoring: "bg-blue-100 text-blue-700",
+    resolved: "bg-green-100 text-green-700",
+  };
+
+  const formatDuration = (start: string, end?: string) => {
+    if (!end) return "Ongoing";
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffMs = endDate.getTime() - startDate.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 60) return `${diffMins}m`;
+    const diffHours = Math.floor(diffMins / 60);
+    const remainingMins = diffMins % 60;
+    if (diffHours < 24) return `${diffHours}h ${remainingMins}m`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ${diffHours % 24}h`;
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border">
+      <div className="p-4 border-b">
+        <h2 className="font-semibold text-gray-900">Past Incidents</h2>
+      </div>
+      <div className="divide-y">
+        {incidents.map((incident) => {
+          const isExpanded = expandedId === incident.id;
+          return (
+            <div key={incident.id} className="p-4">
+              {/* Header Row */}
+              <button
+                onClick={() => setExpandedId(isExpanded ? null : incident.id)}
+                className="w-full text-left"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-gray-900">{incident.title}</h3>
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${severityBadge[incident.severity]}`}>
+                        {incident.severity}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                      <span>{new Date(incident.started_at).toLocaleDateString()}</span>
+                      <span>Duration: {formatDuration(incident.started_at, incident.resolved_at)}</span>
+                      <span>Affected: {incident.affected_services.join(", ")}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 text-xs rounded-full ${statusBadge[incident.status]}`}>
+                      {incident.status}
+                    </span>
+                    <svg
+                      className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+
+              {/* Expanded Details */}
+              {isExpanded && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  {/* Impact */}
+                  {incident.impact && (
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Impact</h4>
+                      <p className="text-sm text-gray-600">{incident.impact}</p>
+                    </div>
+                  )}
+
+                  {/* Root Cause */}
+                  {incident.root_cause && (
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Root Cause</h4>
+                      <p className="text-sm text-gray-600">{incident.root_cause}</p>
+                    </div>
+                  )}
+
+                  {/* Timeline */}
+                  {incident.updates && incident.updates.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">Timeline</h4>
+                      <div className="relative pl-4 border-l-2 border-gray-200 space-y-3">
+                        {incident.updates.map((update, idx) => (
+                          <div key={idx} className="relative">
+                            <div className="absolute -left-[21px] w-3 h-3 bg-white border-2 border-gray-300 rounded-full" />
+                            <div className="text-xs text-gray-500">
+                              {new Date(update.timestamp).toLocaleString()}
+                            </div>
+                            <p className="text-sm text-gray-700 mt-0.5">{update.message}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

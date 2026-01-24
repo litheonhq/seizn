@@ -9,6 +9,13 @@
 // Plan Configuration
 // ============================================
 
+export interface PlanThrottle {
+  /** Requests per second */
+  rps: number;
+  /** Burst limit */
+  burst: number;
+}
+
 export interface PlanConfig {
   // Display name
   name: string;
@@ -16,10 +23,14 @@ export interface PlanConfig {
   // Quotas
   memories: number;           // Max memories (-1 = unlimited)
   apiCallsDaily: number;      // Daily API calls (-1 = unlimited)
+  apiCallsMonthly: number;    // Monthly API calls (-1 = unlimited)
   apiKeys: number;            // Max API keys
 
   // Rate limits (requests per minute)
   rateLimit: number;
+
+  // Throttle configuration (rps and burst)
+  throttle: PlanThrottle;
 
   // Features
   features: {
@@ -48,8 +59,10 @@ export const PLANS: Record<string, PlanConfig> = {
     name: 'Free',
     memories: 10_000,
     apiCallsDaily: 1_000,
+    apiCallsMonthly: 1_000,
     apiKeys: 2,
     rateLimit: 60,           // 1 req/sec
+    throttle: { rps: 3, burst: 10 },
     features: {
       hybridSearch: true,
       reranking: false,
@@ -71,8 +84,10 @@ export const PLANS: Record<string, PlanConfig> = {
     name: 'Starter',
     memories: 50_000,
     apiCallsDaily: 5_000,
+    apiCallsMonthly: 5_000,
     apiKeys: 3,
     rateLimit: 120,          // 2 req/sec
+    throttle: { rps: 5, burst: 15 },
     features: {
       hybridSearch: true,
       reranking: true,
@@ -94,8 +109,10 @@ export const PLANS: Record<string, PlanConfig> = {
     name: 'Plus',
     memories: 100_000,
     apiCallsDaily: 10_000,
+    apiCallsMonthly: 10_000,
     apiKeys: 5,
     rateLimit: 300,          // 5 req/sec
+    throttle: { rps: 10, burst: 30 },
     features: {
       hybridSearch: true,
       reranking: true,
@@ -117,8 +134,10 @@ export const PLANS: Record<string, PlanConfig> = {
     name: 'Pro',
     memories: 1_000_000,
     apiCallsDaily: 100_000,
+    apiCallsMonthly: 100_000,
     apiKeys: 10,
     rateLimit: 600,          // 10 req/sec
+    throttle: { rps: 30, burst: 100 },
     features: {
       hybridSearch: true,
       reranking: true,
@@ -140,8 +159,10 @@ export const PLANS: Record<string, PlanConfig> = {
     name: 'Enterprise',
     memories: -1,            // Unlimited
     apiCallsDaily: -1,       // Unlimited
+    apiCallsMonthly: -1,     // Unlimited
     apiKeys: 100,
     rateLimit: 3000,         // 50 req/sec
+    throttle: { rps: 200, burst: 500 },
     features: {
       hybridSearch: true,
       reranking: true,

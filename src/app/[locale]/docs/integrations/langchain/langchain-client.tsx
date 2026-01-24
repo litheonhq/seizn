@@ -231,7 +231,8 @@ console.log('Trace:', response.seiznTrace);`}
             <CodeBlock
               language="python"
               title="Python"
-              code={`from seizn.langchain import SeiznRetriever
+              code={`import os
+from seizn.langchain import SeiznRetriever
 from langchain_openai import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain

@@ -219,11 +219,13 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
         </div>
         <nav className="flex flex-wrap items-center gap-6">
           <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
+          <Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link>
+          <Link href="/status" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link>
+          <Link href={`/${locale}/help`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link>
           <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
           <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
           <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
           <Link href="/refund" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Refund</Link>
-          <Link href={`/${locale}/docs/faq`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Help</Link>
         </nav>
       </div>
     </footer>
