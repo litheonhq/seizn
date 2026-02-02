@@ -65,6 +65,8 @@ const navigationConfig = [
   { key: "dashboard.organizations", href: "/dashboard/organizations", icon: UsersIcon },
   { key: "dashboard.usage", href: "/dashboard/usage", icon: ChartIcon },
   { key: "dashboard.analytics", href: "/dashboard/analytics", icon: AnalyticsIcon },
+  { key: "dashboard.governance", href: "/dashboard/governance", icon: ShieldIcon },
+  { key: "dashboard.privacy", href: "/dashboard/privacy", icon: LockIcon },
   { key: "dashboard.apiKeys", href: "/dashboard/keys", icon: KeyIcon },
   { key: "dashboard.docs", href: "/docs", icon: BookIcon },
   { key: "dashboard.settings", href: "/dashboard/settings", icon: SettingsIcon },
@@ -560,6 +562,30 @@ function AnalyticsIcon({ className }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+      />
+    </svg>
+  );
+}
+
+function ShieldIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+      />
+    </svg>
+  );
+}
+
+function LockIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
       />
     </svg>
   );

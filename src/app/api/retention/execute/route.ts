@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     const limit = parseInt(searchParams.get('limit') || '50');
 
-    const history = await getExecutionHistory(orgId, scheduleId || undefined, limit);
+    const history = await getExecutionHistory(orgId, { limit });
 
     return NextResponse.json({
       success: true,
@@ -121,32 +121,34 @@ export async function POST(request: NextRequest) {
 
     // Preview mode - just show what would be affected
     if (preview_only) {
-      const preview = await previewRetention(schedule_id);
+      const preview = await previewRetention(schedule.organization_id, schedule.data_type);
       return NextResponse.json({
         success: true,
         preview: true,
-        affected_count: preview.affectedCount,
+        affected_count: preview.eligible_for_deletion,
         data_type: schedule.data_type,
         deletion_type: schedule.deletion_type,
-        message: `Would process ${preview.affectedCount} records`,
+        message: `Would process ${preview.eligible_for_deletion} records`,
       });
     }
 
     // Check retention status before executing
-    const status = await checkRetentionStatus(
-      schedule.organization_id,
-      schedule.data_type
-    );
+    const status = await checkRetentionStatus({
+      organization_id: schedule.organization_id,
+      data_type: schedule.data_type,
+    });
 
-    if (status.underLegalHold) {
+    if (!status.can_delete && status.legal_holds.length > 0) {
       return NextResponse.json({
         error: 'Cannot execute retention - organization or data type is under legal hold',
-        legal_hold_info: status.legalHoldDetails,
+        legal_hold_info: status.legal_holds,
       }, { status: 400 });
     }
 
     // Execute retention
-    const result = await executeRetention(schedule_id, {
+    const result = await executeRetention({
+      organization_id: schedule.organization_id,
+      data_type: schedule.data_type,
       triggered_by: user.id,
       batch_size: batch_size || 1000,
     });

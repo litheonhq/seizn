@@ -170,7 +170,8 @@ export class AwsKmsClient implements KmsProviderClient {
   /**
    * Create AWS KMS client with proper credentials
    */
-  private createClient<T extends new (...args: unknown[]) => unknown>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private createClient<T extends new (config: any) => any>(
     ClientClass: T
   ): InstanceType<T> {
     const clientConfig: Record<string, unknown> = {

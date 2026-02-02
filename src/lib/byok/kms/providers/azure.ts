@@ -88,13 +88,14 @@ export class AzureKeyVaultClient implements KmsProviderClient {
    * Wrap a Data Encryption Key (DEK) using Azure Key Vault
    */
   async wrapKey(dek: Buffer): Promise<string> {
-    const { CryptographyClient, KnownKeyWrapAlgorithm } = await import('@azure/keyvault-keys');
+    const { CryptographyClient } = await import('@azure/keyvault-keys');
     const { DefaultAzureCredential, ClientSecretCredential } = await import('@azure/identity');
 
     const credential = this.createCredential(ClientSecretCredential, DefaultAzureCredential);
     const cryptoClient = new CryptographyClient(this.keyReference, credential);
 
-    const result = await cryptoClient.wrapKey(KnownKeyWrapAlgorithm.A256KW, dek);
+    // Use A256KW algorithm string directly
+    const result = await cryptoClient.wrapKey('A256KW', dek);
 
     return Buffer.from(result.result).toString('base64');
   }
@@ -103,14 +104,15 @@ export class AzureKeyVaultClient implements KmsProviderClient {
    * Unwrap a Data Encryption Key (DEK)
    */
   async unwrapKey(wrappedKey: string): Promise<Buffer> {
-    const { CryptographyClient, KnownKeyWrapAlgorithm } = await import('@azure/keyvault-keys');
+    const { CryptographyClient } = await import('@azure/keyvault-keys');
     const { DefaultAzureCredential, ClientSecretCredential } = await import('@azure/identity');
 
     const credential = this.createCredential(ClientSecretCredential, DefaultAzureCredential);
     const cryptoClient = new CryptographyClient(this.keyReference, credential);
 
+    // Use A256KW algorithm string directly
     const result = await cryptoClient.unwrapKey(
-      KnownKeyWrapAlgorithm.A256KW,
+      'A256KW',
       Buffer.from(wrappedKey, 'base64')
     );
 
@@ -171,14 +173,15 @@ export class AzureKeyVaultClient implements KmsProviderClient {
   /**
    * Create Azure credential based on configuration
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private createCredential(
     ClientSecretCredential: new (
       tenantId: string,
       clientId: string,
       clientSecret: string
-    ) => unknown,
-    DefaultAzureCredential: new () => unknown
-  ): unknown {
+    ) => any,
+    DefaultAzureCredential: new () => any
+  ): any {
     // Use Service Principal if client_secret is provided
     if (this.config.client_secret && !this.config.use_managed_identity) {
       return new ClientSecretCredential(

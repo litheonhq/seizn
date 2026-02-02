@@ -4,7 +4,8 @@
  * Types for managing failed jobs that have exceeded max retries.
  */
 
-import type { HealingJobType, IssueType, TriggerSource, IssuesSummary, ActionSummary, JobError } from '../types';
+import type { HealingJobType, TriggerSource, IssuesSummary, ActionSummary, JobError, IssueType } from '../types';
+export type { IssueType } from '../types';
 
 // ============================================
 // Core Enums

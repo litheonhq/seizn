@@ -46,7 +46,7 @@ async function checkOrgAdmin(userId: string, orgId: string): Promise<boolean> {
     .eq('user_id', userId)
     .single();
 
-  return membership && ['owner', 'admin'].includes(membership.role);
+  return !!(membership && ['owner', 'admin'].includes(membership.role));
 }
 
 interface RouteParams {

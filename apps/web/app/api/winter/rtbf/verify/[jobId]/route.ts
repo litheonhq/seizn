@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/lib/supabase'
 import { z } from 'zod'
 
 // Validation schemas
@@ -20,7 +20,7 @@ export async function GET(
   { params }: { params: { jobId: string } }
 ) {
   try {
-    const supabase = await createClient()
+    const supabase = createServerClient()
 
     // Validate job ID
     const jobIdResult = jobIdSchema.safeParse(params.jobId)
@@ -93,7 +93,7 @@ export async function POST(
   { params }: { params: { jobId: string } }
 ) {
   try {
-    const supabase = await createClient()
+    const supabase = createServerClient()
 
     // Validate job ID
     const jobIdResult = jobIdSchema.safeParse(params.jobId)
