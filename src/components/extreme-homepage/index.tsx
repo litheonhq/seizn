@@ -199,50 +199,38 @@ const Navigation = memo(function Navigation({
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href={`/${locale}`} className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/seizn-icon.svg"
-            alt="Seizn"
-            className="w-8 h-8"
-            width={32}
-            height={32}
-          />
-          <span className="font-semibold text-xl tracking-tight text-gray-900">Seizn</span>
-        </Link>
+        {/* Left: Logo + Navigation Links */}
+        <div className="flex items-center gap-8">
+          <Link href={`/${locale}`} className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/seizn-icon.svg"
+              alt="Seizn"
+              className="w-8 h-8"
+              width={32}
+              height={32}
+            />
+            <span className="font-semibold text-xl tracking-tight text-gray-900">Seizn</span>
+          </Link>
 
-        {/* Desktop Nav - Centered Links with Memoized Icons */}
-        <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
-          <Link href="/docs" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-              <DocsIcon className="w-4 h-4" />
-            </div>
-            {t.extremeHome?.nav?.docs || "Docs"}
-          </Link>
-          <Link href={`/${locale}/pricing`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-              <PricingIcon className="w-4 h-4" />
-            </div>
-            {t.extremeHome?.nav?.pricing || "Pricing"}
-          </Link>
-          <Link href={`/${locale}/enterprise`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-              <EnterpriseIcon className="w-4 h-4" />
-            </div>
-            {t.extremeHome?.nav?.enterprise || "Enterprise"}
-          </Link>
-          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-              <GitHubIcon className="w-4 h-4" />
-            </div>
-            {t.extremeHome?.nav?.github || "OSS"}
-          </a>
-          <Link href="/status" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-              <StatusIcon className="w-4 h-4" />
-            </div>
-            {t.extremeHome?.nav?.status || "Status"}
-          </Link>
+          {/* Desktop Nav - Links next to logo */}
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/docs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.docs || "Docs"}
+            </Link>
+            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.pricing || "Pricing"}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.enterprise || "Enterprise"}
+            </Link>
+            <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.github || "GitHub"}
+            </a>
+            <Link href="/status" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.status || "Status"}
+            </Link>
+          </div>
         </div>
 
         {/* Desktop Nav - Right Side */}
@@ -269,31 +257,26 @@ const Navigation = memo(function Navigation({
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100">
-          <div className="px-4 py-4 space-y-4">
-            <div className="flex justify-center gap-8 py-2">
-              <Link href="/docs" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                <DocsIcon className="w-5 h-5" />
-                <span className="text-xs">{t.extremeHome?.nav?.docs || "Docs"}</span>
-              </Link>
-              <Link href={`/${locale}/pricing`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                <PricingIcon className="w-5 h-5" />
-                <span className="text-xs">{t.extremeHome?.nav?.pricing || "Pricing"}</span>
-              </Link>
-              <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                <EnterpriseIcon className="w-5 h-5" />
-                <span className="text-xs">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
-              </Link>
-              <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                <GitHubIcon className="w-5 h-5" />
-                <span className="text-xs">{t.extremeHome?.nav?.github || "OSS"}</span>
-              </a>
-              <Link href="/status" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
-                <StatusIcon className="w-5 h-5" />
-                <span className="text-xs">{t.extremeHome?.nav?.status || "Status"}</span>
-              </Link>
+          <div className="px-4 py-4 space-y-3">
+            <Link href="/docs" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.docs || "Docs"}
+            </Link>
+            <Link href={`/${locale}/pricing`} className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.pricing || "Pricing"}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.enterprise || "Enterprise"}
+            </Link>
+            <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.github || "GitHub"}
+            </a>
+            <Link href="/status" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              {t.extremeHome?.nav?.status || "Status"}
+            </Link>
+            <div className="pt-2 border-t border-gray-100">
+              <LanguageSwitcher currentLocale={locale} />
             </div>
-            <LanguageSwitcher currentLocale={locale} />
-            <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full">
+            <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full mt-3">
               {t.extremeHome?.nav?.getApiKey || "Get API Key"}
             </Link>
           </div>
@@ -502,7 +485,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       />
 
       {/* Hero Section - Separated from Playground */}
-      <section className="pt-16 lg:pt-24 pb-10 lg:pb-16 px-4 sm:px-6">
+      <section className="pt-24 lg:pt-32 pb-10 lg:pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto text-center">
           {/* H1 - Concise tagline */}
           <h1 className="text-[clamp(36px,4vw,56px)] font-semibold tracking-tight text-gray-900 mb-4 leading-tight">
