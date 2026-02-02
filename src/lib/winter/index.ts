@@ -9,3 +9,6 @@ export * from './rtbf';
 
 // Organization Governance
 export * as org from './org';
+
+// OPA Policy Engine (Rego-compatible)
+export * as opa from './opa';

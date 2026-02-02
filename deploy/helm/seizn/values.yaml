@@ -1,256 +1,123 @@
 # Seizn Helm Chart Values
-# Default configuration for Kubernetes deployment
-
-# ============================================
-# Global Settings
-# ============================================
 global:
   imageRegistry: ""
   imagePullSecrets: []
   storageClass: ""
 
-# ============================================
-# Seizn Application
-# ============================================
-seizn:
+apiGateway:
+  enabled: true
   replicaCount: 2
-
   image:
-    repository: seizn/seizn
-    tag: "latest"
-    pullPolicy: IfNotPresent
-
+    repository: ghcr.io/seizn/api-gateway
+    tag: "1.0.0"
   service:
     type: ClusterIP
     port: 3000
-
-  ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    hosts:
-      - host: seizn.example.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: seizn-tls
-        hosts:
-          - seizn.example.com
-
   resources:
-    limits:
-      cpu: 2000m
-      memory: 4Gi
     requests:
-      cpu: 500m
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
       memory: 1Gi
-
   autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
 
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+spring:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/seizn/spring-service
+    tag: "1.0.0"
 
-  # Pod disruption budget
-  podDisruptionBudget:
-    enabled: true
-    minAvailable: 1
+summer:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/seizn/summer-service
+    tag: "1.0.0"
 
-  # Environment variables
-  env:
-    NODE_ENV: production
-    NEXT_TELEMETRY_DISABLED: "1"
+winter:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/seizn/winter-service
+    tag: "1.0.0"
 
-  # Secrets (create separately or use external secrets)
-  secrets:
-    # Set to true to create secret from values below
-    create: false
-    # Or reference existing secret
-    existingSecret: "seizn-secrets"
-
-  # Health checks
-  livenessProbe:
-    httpGet:
-      path: /api/health
-      port: http
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
-
-  readinessProbe:
-    httpGet:
-      path: /api/health
-      port: http
-    initialDelaySeconds: 10
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-  # Persistent storage for app data
-  persistence:
-    enabled: true
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    size: 10Gi
-
-# ============================================
-# PostgreSQL Configuration
-# ============================================
 postgresql:
   enabled: true
   auth:
-    username: seizn
     database: seizn
-    existingSecret: seizn-postgres-secret
+    username: seizn
   primary:
     persistence:
       enabled: true
-      size: 50Gi
-    resources:
-      limits:
-        cpu: 2000m
-        memory: 4Gi
-      requests:
-        cpu: 500m
-        memory: 1Gi
-  metrics:
-    enabled: true
+      size: 100Gi
 
-# External PostgreSQL (if postgresql.enabled = false)
-externalPostgresql:
-  host: ""
-  port: 5432
-  database: seizn
-  username: seizn
-  existingSecret: ""
-  existingSecretPasswordKey: password
-
-# ============================================
-# Redis Configuration
-# ============================================
 redis:
   enabled: true
-  architecture: standalone
   auth:
     enabled: true
-    existingSecret: seizn-redis-secret
-  master:
-    persistence:
-      enabled: true
-      size: 10Gi
-    resources:
-      limits:
-        cpu: 1000m
-        memory: 2Gi
-      requests:
-        cpu: 250m
-        memory: 512Mi
-  metrics:
-    enabled: true
 
-# External Redis (if redis.enabled = false)
-externalRedis:
-  host: ""
-  port: 6379
-  existingSecret: ""
-  existingSecretPasswordKey: password
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
 
-# ============================================
-# Qdrant Vector Database
-# ============================================
-qdrant:
-  enabled: true
-  replicaCount: 1
-
-  image:
-    repository: qdrant/qdrant
-    tag: "v1.7.4"
-    pullPolicy: IfNotPresent
-
-  service:
-    type: ClusterIP
-    httpPort: 6333
-    grpcPort: 6334
-
-  persistence:
-    enabled: true
-    size: 50Gi
-
-  resources:
-    limits:
-      cpu: 2000m
-      memory: 4Gi
-    requests:
-      cpu: 500m
-      memory: 1Gi
-
-# External Qdrant (if qdrant.enabled = false)
-externalQdrant:
-  host: ""
-  httpPort: 6333
-  grpcPort: 6334
-  apiKey: ""
-  existingSecret: ""
-
-# ============================================
-# Monitoring
-# ============================================
-monitoring:
+# Ingress Configuration
+ingress:
   enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: seizn.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: seizn-tls
+      hosts:
+        - seizn.example.com
 
-  prometheus:
-    enabled: true
-
-  grafana:
-    enabled: true
-    adminUser: admin
-    adminPassword: ""
-    existingSecret: ""
-
-  serviceMonitor:
-    enabled: true
-    interval: 30s
-
-# ============================================
-# Security
-# ============================================
-security:
-  # Pod security context
-  podSecurityContext:
-    fsGroup: 1001
-    runAsUser: 1001
-    runAsNonRoot: true
-
-  # Container security context
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-
-  # Network policies
-  networkPolicy:
-    enabled: true
-    ingress:
-      enabled: true
-    egress:
-      enabled: true
-
-# ============================================
 # Service Account
-# ============================================
 serviceAccount:
   create: true
-  name: ""
   annotations: {}
+  name: ""
+
+# Application Configuration
+config:
+  nodeEnv: "production"
+  logLevel: "info"
+  enableAuditLogging: "true"
+  enableRateLimiting: "true"
+  enableToolGating: "true"
+  otelEndpoint: ""
+
+# Secrets (set via --set or separate values file)
+secrets:
+  create: false
+  databaseUrl: ""
+  redisUrl: ""
+  jwtSecret: ""
+  encryptionKey: ""
+  openaiApiKey: ""
+  anthropicApiKey: ""
+
+# External Secrets Operator Integration
+externalSecrets:
+  enabled: false
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: "vault-backend"
+    kind: "ClusterSecretStore"
+  data: []
+
+# Network Policies
+networkPolicy:
+  enabled: true
+  allowExternal: false

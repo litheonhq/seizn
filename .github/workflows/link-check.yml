@@ -1,0 +1,212 @@
+name: Link Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.md'
+      - '**.mdx'
+      - 'docs/**'
+      - 'src/app/**'
+      - '.github/workflows/link-check.yml'
+      - '.lychee.toml'
+  schedule:
+    # Run weekly on Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  link-check:
+    name: Check Dead Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: Run lychee link checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v1
+        with:
+          # Check markdown files and docs
+          args: >-
+            --verbose
+            --no-progress
+            --cache
+            --max-cache-age 1d
+            './docs/**/*.md'
+            './README.md'
+            './CLAUDE.md'
+            './PROGRESS.md'
+            './examples/**/README.md'
+            './deploy/README.md'
+          # Output file for results
+          output: ./lychee-report.md
+          # Fail the action on broken links
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload lychee report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lychee-report
+          path: ./lychee-report.md
+          retention-days: 30
+
+      - name: Post PR comment on failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const reportPath = './lychee-report.md';
+
+            let reportContent = '';
+            if (fs.existsSync(reportPath)) {
+              reportContent = fs.readFileSync(reportPath, 'utf8');
+              // Truncate if too long
+              if (reportContent.length > 60000) {
+                reportContent = reportContent.substring(0, 60000) + '\n\n... (truncated)';
+              }
+            }
+
+            const body = `## :link: Link Check Report
+
+            :warning: **Broken links detected in this PR**
+
+            <details>
+            <summary>Click to expand full report</summary>
+
+            \`\`\`
+            ${reportContent}
+            \`\`\`
+
+            </details>
+
+            ### How to fix
+            1. Review the broken links listed above
+            2. Update or remove dead links
+            3. For external links that are temporarily down, consider adding them to \`.lychee.toml\` exclude list
+
+            ---
+            *This check runs on PRs and weekly to catch broken links early.*`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## :link: Link Check Report')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      - name: Post success comment
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Find existing failure comment and update it to success
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## :link: Link Check Report')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: `## :link: Link Check Report\n\n:white_check_mark: **All links are valid!**\n\n---\n*This check runs on PRs and weekly to catch broken links early.*`
+              });
+            }
+
+  # Separate job for Next.js pages (requires build)
+  nextjs-link-check:
+    name: Check Next.js Page Links
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+
+      - name: Start Next.js server
+        run: |
+          npm run start &
+          sleep 10
+        env:
+          PORT: 3000
+
+      - name: Check internal links with lychee
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: >-
+            --verbose
+            --no-progress
+            --include-fragments
+            --base 'http://localhost:3000'
+            --exclude-path 'node_modules'
+            --exclude '^https?://(localhost|127\.0\.0\.1)'
+            'http://localhost:3000'
+          output: ./nextjs-link-report.md
+          fail: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Next.js link report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextjs-link-report
+          path: ./nextjs-link-report.md
+          retention-days: 30

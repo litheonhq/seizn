@@ -1,21 +1,21 @@
-{{- if .Values.seizn.ingress.enabled -}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "seizn.fullname" . }}
   labels:
     {{- include "seizn.labels" . | nindent 4 }}
-  {{- with .Values.seizn.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.seizn.ingress.className }}
-  ingressClassName: {{ .Values.seizn.ingress.className }}
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
-  {{- if .Values.seizn.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.seizn.ingress.tls }}
+    {{- range .Values.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -24,18 +24,23 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.seizn.ingress.hosts }}
+    {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: /api
+            pathType: Prefix
             backend:
               service:
-                name: {{ include "seizn.fullname" $ }}
+                name: {{ include "seizn.fullname" $ }}-api-gateway
                 port:
-                  number: {{ $.Values.seizn.service.port }}
-          {{- end }}
+                  number: {{ $.Values.apiGateway.service.port }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "seizn.fullname" $ }}-api-gateway
+                port:
+                  number: {{ $.Values.apiGateway.service.port }}
     {{- end }}
 {{- end }}

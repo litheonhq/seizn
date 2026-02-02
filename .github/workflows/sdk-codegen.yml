@@ -1,0 +1,444 @@
+name: SDK Code Generation
+
+on:
+  push:
+    paths:
+      - 'docs/openapi.yaml'
+      - 'public/docs/openapi.yaml'
+    branches:
+      - main
+      - develop
+  pull_request:
+    paths:
+      - 'docs/openapi.yaml'
+      - 'public/docs/openapi.yaml'
+  workflow_dispatch:
+    inputs:
+      create_pr:
+        description: 'Create PR with generated code (true/false)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      openapi_path:
+        description: 'OpenAPI spec path (relative to repo root)'
+        required: false
+        default: 'docs/openapi.yaml'
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  OUTPUT_DIR: 'packages/sdk-typescript'
+  OPENAPI_PATH: ${{ github.event.inputs.openapi_path || 'docs/openapi.yaml' }}
+
+jobs:
+  validate-spec:
+    name: Validate OpenAPI Spec
+    runs-on: ubuntu-latest
+    outputs:
+      spec_valid: ${{ steps.validate.outputs.valid }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install validation tools
+        run: npm install -g @redocly/cli
+
+      - name: Validate OpenAPI spec
+        id: validate
+        run: |
+          if redocly lint ${{ env.OPENAPI_PATH }} --skip-rule=no-server-example.com; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+            echo "OpenAPI spec is valid"
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+            echo "OpenAPI spec validation failed"
+            exit 1
+          fi
+
+  generate-typescript-sdk:
+    name: Generate TypeScript SDK
+    runs-on: ubuntu-latest
+    needs: validate-spec
+    if: needs.validate-spec.outputs.spec_valid == 'true'
+    outputs:
+      changes_detected: ${{ steps.check-changes.outputs.changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install code generation tools
+        run: |
+          npm install -g openapi-typescript-codegen@0.29.0
+          npm install -g prettier
+
+      - name: Create output directory
+        run: mkdir -p ${{ env.OUTPUT_DIR }}/src/generated
+
+      - name: Generate TypeScript SDK from OpenAPI
+        run: |
+          openapi \
+            --input ${{ env.OPENAPI_PATH }} \
+            --output ${{ env.OUTPUT_DIR }}/src/generated \
+            --client fetch \
+            --useOptions \
+            --useUnionTypes \
+            --exportCore true \
+            --exportServices true \
+            --exportModels true \
+            --exportSchemas true
+
+      - name: Format generated code
+        run: |
+          cd ${{ env.OUTPUT_DIR }}
+          if [ -f "package.json" ]; then
+            npm install --ignore-scripts || true
+          fi
+          npx prettier --write "src/generated/**/*.ts" || prettier --write "src/generated/**/*.ts"
+
+      - name: Generate package.json if not exists
+        run: |
+          if [ ! -f "${{ env.OUTPUT_DIR }}/package.json" ]; then
+            cat > ${{ env.OUTPUT_DIR }}/package.json << 'EOF'
+          {
+            "name": "@seizn/sdk-typescript",
+            "version": "0.1.0",
+            "description": "Auto-generated TypeScript SDK for Seizn API",
+            "main": "dist/index.js",
+            "module": "dist/index.mjs",
+            "types": "dist/index.d.ts",
+            "exports": {
+              ".": {
+                "types": "./dist/index.d.ts",
+                "import": "./dist/index.mjs",
+                "require": "./dist/index.js"
+              },
+              "./models": {
+                "types": "./dist/models/index.d.ts",
+                "import": "./dist/models/index.mjs",
+                "require": "./dist/models/index.js"
+              },
+              "./services": {
+                "types": "./dist/services/index.d.ts",
+                "import": "./dist/services/index.mjs",
+                "require": "./dist/services/index.js"
+              }
+            },
+            "files": [
+              "dist",
+              "README.md"
+            ],
+            "scripts": {
+              "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+              "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+              "lint": "eslint src/",
+              "test": "vitest run",
+              "prepublishOnly": "npm run build"
+            },
+            "keywords": [
+              "seizn",
+              "api",
+              "sdk",
+              "typescript",
+              "openapi",
+              "codegen"
+            ],
+            "author": "Seizn <support@seizn.com>",
+            "license": "MIT",
+            "repository": {
+              "type": "git",
+              "url": "https://github.com/iruhana/seizn.git",
+              "directory": "packages/sdk-typescript"
+            },
+            "homepage": "https://docs.seizn.com/sdk/typescript",
+            "bugs": {
+              "url": "https://github.com/iruhana/seizn/issues"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            },
+            "devDependencies": {
+              "@types/node": "^20.0.0",
+              "tsup": "^8.0.0",
+              "typescript": "^5.0.0",
+              "vitest": "^1.0.0",
+              "prettier": "^3.0.0"
+            },
+            "publishConfig": {
+              "access": "public"
+            }
+          }
+          EOF
+          fi
+
+      - name: Generate index.ts if not exists
+        run: |
+          if [ ! -f "${{ env.OUTPUT_DIR }}/src/index.ts" ]; then
+            cat > ${{ env.OUTPUT_DIR }}/src/index.ts << 'EOF'
+          // Auto-generated SDK entry point
+          // Generated from OpenAPI specification
+
+          // Re-export generated types and services
+          export * from './generated';
+
+          // Re-export core client
+          export { OpenAPI, type OpenAPIConfig } from './generated/core/OpenAPI';
+          export { ApiError } from './generated/core/ApiError';
+          export { CancelablePromise, CancelError } from './generated/core/CancelablePromise';
+
+          // SDK version
+          export const SDK_VERSION = '0.1.0';
+
+          // Default configuration helper
+          export interface SeizndkConfig {
+            apiKey: string;
+            baseUrl?: string;
+            timeout?: number;
+          }
+
+          export function configureSDK(config: SeizndkConfig): void {
+            const { OpenAPI } = require('./generated/core/OpenAPI');
+            OpenAPI.BASE = config.baseUrl || 'https://api.seizn.dev';
+            OpenAPI.HEADERS = {
+              'X-API-Key': config.apiKey,
+            };
+            if (config.timeout) {
+              OpenAPI.TIMEOUT = config.timeout;
+            }
+          }
+          EOF
+          fi
+
+      - name: Generate tsconfig.json if not exists
+        run: |
+          if [ ! -f "${{ env.OUTPUT_DIR }}/tsconfig.json" ]; then
+            cat > ${{ env.OUTPUT_DIR }}/tsconfig.json << 'EOF'
+          {
+            "compilerOptions": {
+              "target": "ES2020",
+              "module": "ESNext",
+              "moduleResolution": "bundler",
+              "lib": ["ES2020", "DOM"],
+              "strict": true,
+              "esModuleInterop": true,
+              "skipLibCheck": true,
+              "forceConsistentCasingInFileNames": true,
+              "declaration": true,
+              "declarationMap": true,
+              "sourceMap": true,
+              "outDir": "./dist",
+              "rootDir": "./src",
+              "resolveJsonModule": true,
+              "isolatedModules": true
+            },
+            "include": ["src/**/*"],
+            "exclude": ["node_modules", "dist", "**/*.test.ts"]
+          }
+          EOF
+          fi
+
+      - name: Generate README.md
+        run: |
+          cat > ${{ env.OUTPUT_DIR }}/README.md << 'EOF'
+          # @seizn/sdk-typescript
+
+          Auto-generated TypeScript SDK for Seizn Memory API.
+
+          ## Installation
+
+          ```bash
+          npm install @seizn/sdk-typescript
+          # or
+          pnpm add @seizn/sdk-typescript
+          # or
+          yarn add @seizn/sdk-typescript
+          ```
+
+          ## Quick Start
+
+          ```typescript
+          import { configureSDK, MemoriesService } from '@seizn/sdk-typescript';
+
+          // Configure the SDK with your API key
+          configureSDK({
+            apiKey: 'your-api-key',
+            baseUrl: 'https://api.seizn.dev', // optional, defaults to production
+          });
+
+          // Use the generated services
+          async function main() {
+            // Add a memory
+            const result = await MemoriesService.postApiMemories({
+              requestBody: {
+                content: 'User prefers dark mode',
+                memory_type: 'preference',
+                tags: ['ui', 'settings'],
+              },
+            });
+
+            console.log('Memory created:', result.memory);
+
+            // Search memories
+            const searchResult = await MemoriesService.getApiMemories({
+              query: 'dark mode',
+              mode: 'vector',
+              limit: 10,
+            });
+
+            console.log('Found memories:', searchResult.results);
+          }
+
+          main();
+          ```
+
+          ## API Reference
+
+          This SDK is generated from the [Seizn OpenAPI specification](https://docs.seizn.com/api).
+
+          ### Available Services
+
+          - `MemoriesService` - Memory CRUD operations
+          - `AiService` - AI-powered memory operations (extract, query, summarize)
+          - `WebhooksService` - Webhook management
+          - `CiService` - CI tracing and test management
+          - `AutopilotService` - Code analysis and automated fixes
+          - `CacheService` - Semantic caching
+          - `ContractsService` - API contract validation
+          - `HealingService` - Self-healing system
+          - `GraphService` - Knowledge graph operations
+          - `VersionsService` - Version control
+          - `ExplainService` - Query explanation
+          - `RetopsService` - Retrieval operations monitoring
+
+          ## Documentation
+
+          - [Full API Documentation](https://docs.seizn.com/api)
+          - [SDK Guide](https://docs.seizn.com/sdk/typescript)
+
+          ## License
+
+          MIT
+          EOF
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in generated SDK"
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in generated SDK"
+            git diff --staged --stat
+          fi
+
+      - name: Upload generated SDK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-typescript-generated
+          path: ${{ env.OUTPUT_DIR }}
+          retention-days: 7
+
+  create-pr:
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    needs: generate-typescript-sdk
+    if: |
+      needs.generate-typescript-sdk.outputs.changes_detected == 'true' &&
+      (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_pr == 'true'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download generated SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: sdk-typescript-generated
+          path: ${{ env.OUTPUT_DIR }}
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore(sdk): regenerate TypeScript SDK from OpenAPI spec'
+          title: '[SDK Codegen] Update TypeScript SDK - ${{ steps.date.outputs.date }}'
+          body: |
+            ## SDK Code Generation
+
+            This PR was automatically generated from changes to the OpenAPI specification.
+
+            ### Changes
+            - Regenerated TypeScript SDK from `${{ env.OPENAPI_PATH }}`
+            - Updated types, models, and service definitions
+
+            ### Trigger
+            - **Event:** ${{ github.event_name }}
+            - **Commit:** ${{ github.sha }}
+            - **Branch:** ${{ github.ref_name }}
+
+            ### Review Checklist
+            - [ ] Verify generated types are correct
+            - [ ] Check for breaking changes
+            - [ ] Run SDK tests locally if needed
+            - [ ] Update SDK version if publishing
+
+            ---
+            *Auto-generated by [SDK Codegen Workflow](.github/workflows/sdk-codegen.yml)*
+          branch: sdk-codegen/update-${{ steps.date.outputs.date }}
+          delete-branch: true
+          labels: |
+            sdk
+            codegen
+            automated
+
+  auto-commit:
+    name: Auto-commit Changes
+    runs-on: ubuntu-latest
+    needs: generate-typescript-sdk
+    if: |
+      needs.generate-typescript-sdk.outputs.changes_detected == 'true' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.create_pr == 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download generated SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: sdk-typescript-generated
+          path: ${{ env.OUTPUT_DIR }}
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ${{ env.OUTPUT_DIR }}
+          git commit -m "chore(sdk): regenerate TypeScript SDK from OpenAPI spec
+
+          Triggered by: ${{ github.event_name }}
+          Commit: ${{ github.sha }}"
+          git push

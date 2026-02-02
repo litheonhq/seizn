@@ -1,0 +1,101 @@
+# Lychee link checker configuration
+# Documentation: https://lychee.cli.rs/
+
+# Cache settings
+cache = true
+max_cache_age = "1d"
+
+# Request settings
+max_concurrency = 32
+max_retries = 3
+timeout = 30
+retry_wait_time = 2
+
+# Accept these status codes as valid (200-299 + some redirects)
+accept = [200, 201, 202, 203, 204, 206, 301, 302, 307, 308]
+
+# User agent to avoid being blocked
+user_agent = "Mozilla/5.0 (compatible; Seizn-LinkChecker/1.0; +https://seizn.com)"
+
+# Exclude patterns (regex)
+exclude = [
+    # Localhost and internal URLs
+    "^https?://(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0)",
+
+    # Example/placeholder URLs
+    "^https?://example\\.(com|org|net)",
+    "^https?://your-domain\\.",
+    "^https?://your-.*\\.",
+    "^https?://.*\\.example\\.",
+
+    # Common false positives
+    "^mailto:",
+    "^tel:",
+    "^javascript:",
+
+    # URLs that require authentication
+    "^https://github\\.com/.*/settings",
+    "^https://console\\.(cloud\\.google|firebase\\.google|aws\\.amazon)",
+    "^https://vercel\\.com/.*/(settings|analytics)",
+    "^https://dashboard\\.",
+
+    # Rate-limited services
+    "^https://twitter\\.com",
+    "^https://x\\.com",
+    "^https://linkedin\\.com",
+
+    # Package registries (often rate-limited)
+    "^https://www\\.npmjs\\.com/package/",
+    "^https://pypi\\.org/project/",
+
+    # Seizn internal URLs (check separately)
+    "^https://seizn\\.com/api/",
+    "^https://app\\.seizn\\.com",
+
+    # Temporary exclusions (add URLs that are temporarily down)
+    # "^https://some-flaky-service\\.com",
+]
+
+# File extensions to check
+include_mail = false
+
+# Exclude files matching these patterns
+exclude_path = [
+    "node_modules",
+    ".git",
+    "dist",
+    ".next",
+    "coverage",
+    "__pycache__",
+    ".pytest_cache",
+    "*.min.js",
+    "*.bundle.js",
+]
+
+# Include these file types
+include = [
+    "*.md",
+    "*.mdx",
+    "*.txt",
+    "*.html",
+]
+
+# GitHub-specific settings
+github_token = "$GITHUB_TOKEN"
+
+# Output format
+format = "markdown"
+
+# Skip fragments (anchor links) check for better performance
+# Set to false if you want to validate anchor links
+skip_missing = false
+include_fragments = true
+
+# Base URL for relative links (optional, useful for local testing)
+# base = "https://seizn.com"
+
+# Require HTTPS
+require_https = false
+
+# Verbose output
+verbose = true
