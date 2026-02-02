@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
+import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
 
 // Paths that should not be locale-prefixed (completely skip middleware)
 const publicPaths = [
@@ -99,7 +100,69 @@ function getLocaleFromAcceptLanguage(header: string): Locale | null {
   return null;
 }
 
-export function middleware(request: NextRequest) {
+// Handle review token validation for dashboard routes
+async function handleReviewToken(
+  request: NextRequest,
+  pathname: string
+): Promise<NextResponse | null> {
+  const reviewToken = request.nextUrl.searchParams.get('review_token');
+
+  if (!reviewToken) {
+    return null; // No token, proceed with normal flow
+  }
+
+  // Verify the token
+  const result = await verifyReviewToken(reviewToken);
+
+  if (!result.valid || !result.payload) {
+    // Invalid token - redirect to login or show error
+    console.warn('Invalid review token:', result.error);
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('review_token');
+    url.pathname = '/login';
+    url.searchParams.set('error', 'invalid_review_token');
+    return NextResponse.redirect(url);
+  }
+
+  // Check if path is allowed
+  if (!isPathAllowed(pathname, result.payload.paths)) {
+    console.warn('Path not allowed for review token:', pathname);
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('review_token');
+    url.pathname = '/login';
+    url.searchParams.set('error', 'path_not_allowed');
+    return NextResponse.redirect(url);
+  }
+
+  // Token is valid - set review_mode cookie and remove token from URL
+  const url = request.nextUrl.clone();
+  url.searchParams.delete('review_token');
+
+  const response = NextResponse.redirect(url);
+
+  // Set review_mode cookie (valid for token duration)
+  const expiresInSeconds = Math.floor((result.payload.exp - Date.now()) / 1000);
+  response.cookies.set('review_mode', 'true', {
+    maxAge: expiresInSeconds > 0 ? expiresInSeconds : 3600,
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  });
+
+  // Store allowed paths for client-side use
+  response.cookies.set('review_paths', JSON.stringify(result.payload.paths), {
+    maxAge: expiresInSeconds > 0 ? expiresInSeconds : 3600,
+    path: '/',
+    httpOnly: false, // Client needs to read this
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  });
+
+  return addDashboardSecurityHeaders(response);
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip public paths (API routes, static files, etc.)
@@ -107,6 +170,12 @@ export function middleware(request: NextRequest) {
   if (isPublicPath(pathname)) {
     // P0-4: Apply security headers to dashboard routes even for public paths
     if (isDashboardPath(pathname)) {
+      // Check for review_token in URL
+      const reviewTokenResponse = await handleReviewToken(request, pathname);
+      if (reviewTokenResponse) {
+        return reviewTokenResponse;
+      }
+
       const response = NextResponse.next();
       return addDashboardSecurityHeaders(response);
     }
