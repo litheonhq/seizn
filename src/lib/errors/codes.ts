@@ -77,6 +77,14 @@ export const VALIDATION_CODES = {
   INVALID_EMAIL: 'SEIZN_214',
   /** Invalid date/time format */
   INVALID_DATETIME: 'SEIZN_215',
+  /** Idempotency key missing for non-idempotent request */
+  IDEMPOTENCY_KEY_REQUIRED: 'SEIZN_220',
+  /** Idempotency key format is invalid */
+  INVALID_IDEMPOTENCY_KEY: 'SEIZN_221',
+  /** Idempotency key already used with different request body */
+  IDEMPOTENCY_KEY_CONFLICT: 'SEIZN_222',
+  /** Request is still being processed (retry later) */
+  IDEMPOTENCY_REQUEST_IN_PROGRESS: 'SEIZN_223',
 } as const;
 
 // ============================================
@@ -242,6 +250,9 @@ export function getHttpStatus(code: SeizErrorCode): number {
       return 401;
     case 'SEIZN_11': // Rate limit errors (110-119)
       return 429;
+    case 'SEIZN_22': // Idempotency errors (220-229)
+      if (code === 'SEIZN_222' || code === 'SEIZN_223') return 409; // Conflict
+      return 400;
     case 'SEIZN_2': // Validation errors
       return 400;
     case 'SEIZN_30': // Not found errors (300-309)

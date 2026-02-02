@@ -1,98 +1,115 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSCIMService, SCIMService } from '@/lib/enterprise';
-
 /**
  * SCIM 2.0 Users Endpoint
  *
- * RFC 7644 compliant user management
+ * GET  /api/scim/v2/Users - List users with filtering and pagination
+ * POST /api/scim/v2/Users - Create a new user
+ *
+ * RFC 7644 Section 3.4 - Querying Resources
+ * RFC 7644 Section 3.3 - Creating Resources
  */
 
-// Extract org from SCIM URL path (e.g., /api/scim/v2/Users?org=xxx)
-function getOrgId(request: NextRequest): string | null {
-  const { searchParams } = new URL(request.url);
-  return searchParams.get('org');
-}
+import { NextRequest, NextResponse } from 'next/server';
+import { authenticateSCIMRequest } from '@/lib/scim/auth';
+import { listUsers, createUser, findUserByUserName } from '@/lib/scim/service';
+import {
+  createUnauthorizedError,
+  createBadRequestError,
+  createConflictError,
+  createSCIMError,
+} from '@/lib/scim/utils';
+import type { CreateSCIMUserRequest } from '@/types/scim';
 
-// Validate SCIM bearer token
-function validateSCIMAuth(request: NextRequest, orgId: string): boolean {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return false;
-  }
-
-  const token = authHeader.slice(7);
-  const scimService = getSCIMService();
-  return scimService.validateToken(orgId, token);
-}
+const SCIM_CONTENT_TYPE = 'application/scim+json';
 
 /**
- * GET /api/scim/v2/Users - List users
+ * GET /api/scim/v2/Users
+ * List users with optional filtering, sorting, and pagination
  */
 export async function GET(request: NextRequest) {
-  const orgId = getOrgId(request);
-  if (!orgId) {
-    return NextResponse.json(
-      SCIMService.createError(400, 'Organization ID required'),
-      { status: 400 }
-    );
-  }
-
-  if (!validateSCIMAuth(request, orgId)) {
-    return NextResponse.json(
-      SCIMService.createError(401, 'Unauthorized'),
-      { status: 401 }
-    );
-  }
-
-  const { searchParams } = new URL(request.url);
-  const startIndex = parseInt(searchParams.get('startIndex') || '1');
-  const count = parseInt(searchParams.get('count') || '100');
-  const filter = searchParams.get('filter') || undefined;
-
-  const scimService = getSCIMService();
-  const response = scimService.listUsers(orgId, { startIndex, count, filter });
-
-  return NextResponse.json(response);
-}
-
-/**
- * POST /api/scim/v2/Users - Create user
- */
-export async function POST(request: NextRequest) {
-  const orgId = getOrgId(request);
-  if (!orgId) {
-    return NextResponse.json(
-      SCIMService.createError(400, 'Organization ID required'),
-      { status: 400 }
-    );
-  }
-
-  if (!validateSCIMAuth(request, orgId)) {
-    return NextResponse.json(
-      SCIMService.createError(401, 'Unauthorized'),
-      { status: 401 }
-    );
+  // Authenticate request
+  const auth = await authenticateSCIMRequest(request);
+  if (!auth.success) {
+    return NextResponse.json(createUnauthorizedError(), {
+      status: auth.status,
+      headers: { 'Content-Type': SCIM_CONTENT_TYPE },
+    });
   }
 
   try {
-    const body = await request.json();
+    const { searchParams } = new URL(request.url);
 
+    const options = {
+      filter: searchParams.get('filter') || undefined,
+      startIndex: parseInt(searchParams.get('startIndex') || '1', 10),
+      count: parseInt(searchParams.get('count') || '100', 10),
+      sortBy: searchParams.get('sortBy') || undefined,
+      sortOrder: (searchParams.get('sortOrder') as 'ascending' | 'descending') || undefined,
+      attributes: searchParams.get('attributes')?.split(',') || undefined,
+      excludedAttributes: searchParams.get('excludedAttributes')?.split(',') || undefined,
+    };
+
+    const response = await listUsers(auth.organizationId, auth.configId, options);
+
+    return NextResponse.json(response, {
+      headers: { 'Content-Type': SCIM_CONTENT_TYPE },
+    });
+  } catch (error) {
+    console.error('SCIM GET /Users error:', error);
+    return NextResponse.json(
+      createSCIMError(500, `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}`),
+      { status: 500, headers: { 'Content-Type': SCIM_CONTENT_TYPE } }
+    );
+  }
+}
+
+/**
+ * POST /api/scim/v2/Users
+ * Create a new user
+ */
+export async function POST(request: NextRequest) {
+  // Authenticate request
+  const auth = await authenticateSCIMRequest(request);
+  if (!auth.success) {
+    return NextResponse.json(createUnauthorizedError(), {
+      status: auth.status,
+      headers: { 'Content-Type': SCIM_CONTENT_TYPE },
+    });
+  }
+
+  try {
+    const body = (await request.json()) as CreateSCIMUserRequest;
+
+    // Validate required fields
     if (!body.userName) {
       return NextResponse.json(
-        SCIMService.createError(400, 'userName is required'),
-        { status: 400 }
+        createBadRequestError('userName is required', 'invalidValue'),
+        { status: 400, headers: { 'Content-Type': SCIM_CONTENT_TYPE } }
       );
     }
 
-    const scimService = getSCIMService();
-    const user = scimService.createUser(orgId, body);
+    // Check for duplicate userName
+    const existing = await findUserByUserName(body.userName, auth.organizationId, auth.configId);
+    if (existing) {
+      return NextResponse.json(
+        createConflictError(`User with userName '${body.userName}' already exists`),
+        { status: 409, headers: { 'Content-Type': SCIM_CONTENT_TYPE } }
+      );
+    }
 
-    return NextResponse.json(user, { status: 201 });
+    const user = await createUser(auth.organizationId, auth.configId, body);
+
+    return NextResponse.json(user, {
+      status: 201,
+      headers: {
+        'Content-Type': SCIM_CONTENT_TYPE,
+        Location: user.meta.location,
+      },
+    });
   } catch (error) {
-    console.error('SCIM create user error:', error);
+    console.error('SCIM POST /Users error:', error);
     return NextResponse.json(
-      SCIMService.createError(500, 'Internal server error'),
-      { status: 500 }
+      createSCIMError(500, `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}`),
+      { status: 500, headers: { 'Content-Type': SCIM_CONTENT_TYPE } }
     );
   }
 }

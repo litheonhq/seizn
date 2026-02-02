@@ -116,6 +116,37 @@ export type {
   ListPoliciesParams,
 } from './policies';
 
+// Policy Versioning
+export {
+  createPolicyVersion,
+  getPolicyVersion,
+  getCurrentVersion,
+  getDraftVersion,
+  listPolicyVersions,
+  updateDraftVersion,
+  deleteDraftVersion,
+  publishVersion,
+  rollbackToVersion,
+  compareVersions,
+  compareWithCurrent,
+  getVersionHistory,
+  getVersionAtTime,
+  hasDraftChanges,
+  getVersionChangeSummary,
+  discardDraftChanges,
+} from './policy-versions';
+
+export type {
+  PolicyVersion,
+  PolicyVersionState,
+  PolicyVersionChangeType,
+  PolicyVersionDiff,
+  CreateVersionParams,
+  ListVersionsParams,
+  RollbackParams,
+  UpdateDraftParams,
+} from './policy-versions';
+
 // Audit Log Management
 export {
   logAuditEvent,

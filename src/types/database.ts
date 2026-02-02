@@ -5,6 +5,9 @@ export type MemoryType = 'fact' | 'preference' | 'experience' | 'relationship' |
 export type MemoryScope = 'user' | 'session' | 'agent';
 export type SupportedLocale = 'en' | 'ko' | 'ja';
 
+// Data Residency Regions
+export type DataRegion = 'us-east' | 'us-west' | 'eu-west' | 'eu-central' | 'ap-northeast' | 'ap-southeast';
+
 export interface Profile {
   id: string;
   email: string | null;
@@ -26,6 +29,7 @@ export interface Profile {
 
   // Preferences
   language: SupportedLocale;
+  default_region?: DataRegion | null;
 
   created_at: string;
   updated_at: string;
@@ -147,6 +151,56 @@ export interface WebhookDelivery {
   delivered_at: string | null;
 }
 
+// Organization types
+export interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+
+  // Billing
+  plan: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+
+  // Limits
+  memory_limit: number;
+  api_calls_limit: number;
+
+  // Data Residency
+  data_region: DataRegion;
+  region_locked: boolean;
+  region_changed_at: string | null;
+
+  // Settings
+  settings: Record<string, unknown>;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrganizationMember {
+  id: string;
+  organization_id: string;
+  user_id: string;
+  role: 'owner' | 'admin' | 'member';
+  permissions: Record<string, unknown>;
+  invited_by: string | null;
+  invited_at: string | null;
+  accepted_at: string;
+  created_at: string;
+}
+
+export interface OrganizationRegionHistory {
+  id: string;
+  organization_id: string;
+  from_region: DataRegion | null;
+  to_region: DataRegion;
+  reason: string | null;
+  changed_by: string;
+  change_type: 'initial_setup' | 'user_initiated' | 'admin_migration' | 'compliance_requirement';
+  created_at: string;
+}
+
 // API Request/Response types
 export interface AddMemoryRequest {
   content: string;
@@ -225,6 +279,23 @@ export interface Database {
         Insert: Omit<WaitlistEntry, 'id' | 'created_at'>;
         Update: Partial<WaitlistEntry>;
       };
+      organizations: {
+        Row: Organization;
+        Insert: Omit<Organization, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+        };
+        Update: Partial<Organization>;
+      };
+      organization_members: {
+        Row: OrganizationMember;
+        Insert: Omit<OrganizationMember, 'id' | 'created_at'>;
+        Update: Partial<OrganizationMember>;
+      };
+      organization_region_history: {
+        Row: OrganizationRegionHistory;
+        Insert: Omit<OrganizationRegionHistory, 'id' | 'created_at'>;
+        Update: Partial<OrganizationRegionHistory>;
+      };
     };
     Functions: {
       search_memories: {
@@ -236,6 +307,20 @@ export interface Database {
           match_namespace?: string;
         };
         Returns: MemorySearchResult[];
+      };
+      change_organization_region: {
+        Args: {
+          p_org_id: string;
+          p_user_id: string;
+          p_new_region: DataRegion;
+          p_reason?: string;
+        };
+        Returns: {
+          success: boolean;
+          error?: string;
+          previous_region?: DataRegion;
+          new_region?: DataRegion;
+        };
       };
     };
   };
