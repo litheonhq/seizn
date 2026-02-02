@@ -101,7 +101,7 @@ export async function verifyReviewToken(token: string): Promise<TokenVerifyResul
  */
 export function isPathAllowed(pathname: string, allowedPaths: string[]): boolean {
   // 로케일 프리픽스 제거 (예: /ko/dashboard -> /dashboard)
-  const normalizedPath = pathname.replace(/^\/(en|ko|ja|zh-hans|zh-hant|es|fr|de|pt-BR|pt-PT|it|ru|ar|hi|vi|th|id|tr|pl|nl|sv|da|nb|fi|cs|uk|he|el|hu|ro|bg|sk|sl|hr|lt|lv|et|ms|tl)/, '') || '/';
+  const normalizedPath = pathname.replace(/^\/(en|ko|ja|zh-hans|zh-hant|es|fr|de|pt-BR|pt-PT|it|ru|ar|hi|vi|th|id|tr|pl|nl|sv|da|nb|fi|cs|uk|he|el|hu|ro|bg|sk|sl|hr|lt|lv|et|ms|tl)(?=\/|$)/, '') || '/';
 
   return allowedPaths.some((allowed) => {
     // 와일드카드 패턴 지원 (예: /dashboard/*)
