@@ -2,7 +2,10 @@
  * Seizn Plan Limits Configuration
  *
  * Centralized configuration for all plan limits and quotas.
- * Connected to billing (Lemon Squeezy) via profiles.plan field.
+ * Connected to billing (Paddle) via profiles.plan field.
+ *
+ * IMPORTANT: All quotas are MONTHLY (reset at UTC midnight on 1st of month)
+ * Rate limits are per-minute (RPM) for burst protection
  */
 
 // ============================================
@@ -20,13 +23,12 @@ export interface PlanConfig {
   // Display name
   name: string;
 
-  // Quotas
+  // Quotas (ALL MONTHLY - no daily limits)
   memories: number;           // Max memories (-1 = unlimited)
-  apiCallsDaily: number;      // Daily API calls (-1 = unlimited)
   apiCallsMonthly: number;    // Monthly API calls (-1 = unlimited)
   apiKeys: number;            // Max API keys
 
-  // Rate limits (requests per minute)
+  // Rate limits (requests per minute for burst protection)
   rateLimit: number;
 
   // Throttle configuration (rps and burst)
@@ -57,11 +59,10 @@ export interface PlanConfig {
 export const PLANS: Record<string, PlanConfig> = {
   free: {
     name: 'Free',
-    memories: 10_000,
-    apiCallsDaily: 1_000,
-    apiCallsMonthly: 1_000,
+    memories: 100,              // 100 memories
+    apiCallsMonthly: 1_000,     // 1K/month
     apiKeys: 2,
-    rateLimit: 60,           // 1 req/sec
+    rateLimit: 60,              // 60 RPM (1 req/sec)
     throttle: { rps: 3, burst: 10 },
     features: {
       hybridSearch: true,
@@ -82,11 +83,10 @@ export const PLANS: Record<string, PlanConfig> = {
 
   starter: {
     name: 'Starter',
-    memories: 50_000,
-    apiCallsDaily: 5_000,
-    apiCallsMonthly: 5_000,
+    memories: 5_000,            // 5K memories
+    apiCallsMonthly: 50_000,    // 50K/month
     apiKeys: 3,
-    rateLimit: 120,          // 2 req/sec
+    rateLimit: 120,             // 120 RPM (2 req/sec)
     throttle: { rps: 5, burst: 15 },
     features: {
       hybridSearch: true,
@@ -107,11 +107,10 @@ export const PLANS: Record<string, PlanConfig> = {
 
   plus: {
     name: 'Plus',
-    memories: 100_000,
-    apiCallsDaily: 10_000,
-    apiCallsMonthly: 10_000,
+    memories: 50_000,           // 50K memories
+    apiCallsMonthly: 500_000,   // 500K/month
     apiKeys: 5,
-    rateLimit: 300,          // 5 req/sec
+    rateLimit: 300,             // 300 RPM (5 req/sec)
     throttle: { rps: 10, burst: 30 },
     features: {
       hybridSearch: true,
@@ -132,11 +131,10 @@ export const PLANS: Record<string, PlanConfig> = {
 
   pro: {
     name: 'Pro',
-    memories: 1_000_000,
-    apiCallsDaily: 100_000,
-    apiCallsMonthly: 100_000,
+    memories: -1,               // Unlimited
+    apiCallsMonthly: 2_000_000, // 2M/month
     apiKeys: 10,
-    rateLimit: 600,          // 10 req/sec
+    rateLimit: 600,             // 600 RPM (10 req/sec)
     throttle: { rps: 30, burst: 100 },
     features: {
       hybridSearch: true,
@@ -157,11 +155,10 @@ export const PLANS: Record<string, PlanConfig> = {
 
   enterprise: {
     name: 'Enterprise',
-    memories: -1,            // Unlimited
-    apiCallsDaily: -1,       // Unlimited
-    apiCallsMonthly: -1,     // Unlimited
+    memories: -1,               // Unlimited
+    apiCallsMonthly: -1,        // Unlimited
     apiKeys: 100,
-    rateLimit: 3000,         // 50 req/sec
+    rateLimit: 3000,            // 3000 RPM (50 req/sec)
     throttle: { rps: 200, burst: 500 },
     features: {
       hybridSearch: true,
@@ -208,10 +205,65 @@ export function hasFeature(
  */
 export function getLimit(
   planName: string,
-  limitType: 'memories' | 'apiCallsDaily' | 'apiKeys' | 'rateLimit'
+  limitType: 'memories' | 'apiCallsMonthly' | 'apiKeys' | 'rateLimit'
 ): number {
   const plan = getPlan(planName);
   return plan[limitType];
+}
+
+// ============================================
+// Quota Headers (RFC Draft Standard)
+// ============================================
+
+/**
+ * Quota information for response headers
+ */
+export interface QuotaInfo {
+  limit: number;
+  remaining: number;
+  reset: Date;      // UTC midnight on 1st of next month
+  used: number;
+}
+
+/**
+ * Get the next monthly reset date (1st of next month, UTC midnight)
+ */
+export function getNextMonthlyReset(): Date {
+  const now = new Date();
+  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 0, 0, 0, 0));
+  return nextMonth;
+}
+
+/**
+ * Generate standardized quota headers
+ * Following RFC draft pattern for rate limits
+ */
+export function getQuotaHeaders(info: QuotaInfo): Record<string, string> {
+  const resetTimestamp = Math.floor(info.reset.getTime() / 1000);
+
+  return {
+    'X-Quota-Limit': String(info.limit),
+    'X-Quota-Remaining': String(Math.max(0, info.remaining)),
+    'X-Quota-Reset': info.reset.toISOString(),
+    'X-Quota-Reset-Unix': String(resetTimestamp),
+    'X-Quota-Used': String(info.used),
+  };
+}
+
+/**
+ * Generate standardized rate limit headers
+ * Following RFC 6585 / IETF draft-ietf-httpapi-ratelimit-headers
+ */
+export function getRateLimitHeaders(info: {
+  limit: number;
+  remaining: number;
+  reset: number;  // seconds until reset
+}): Record<string, string> {
+  return {
+    'RateLimit-Limit': String(info.limit),
+    'RateLimit-Remaining': String(Math.max(0, info.remaining)),
+    'RateLimit-Reset': String(info.reset),
+  };
 }
 
 /**

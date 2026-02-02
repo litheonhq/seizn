@@ -19,6 +19,8 @@ import {
   MenuIcon,
   CloseIcon,
   CheckIcon,
+  GitHubIcon,
+  StatusIcon,
 } from "./icons";
 
 // Dynamic imports for below-the-fold and heavy components (code-split for better LCP)
@@ -229,6 +231,18 @@ const Navigation = memo(function Navigation({
             </div>
             {t.extremeHome?.nav?.enterprise || "Enterprise"}
           </Link>
+          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+              <GitHubIcon className="w-4 h-4" />
+            </div>
+            {t.extremeHome?.nav?.github || "OSS"}
+          </a>
+          <Link href="/status" className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group">
+            <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+              <StatusIcon className="w-4 h-4" />
+            </div>
+            {t.extremeHome?.nav?.status || "Status"}
+          </Link>
         </div>
 
         {/* Desktop Nav - Right Side */}
@@ -268,6 +282,14 @@ const Navigation = memo(function Navigation({
               <Link href={`/${locale}/enterprise`} className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
                 <EnterpriseIcon className="w-5 h-5" />
                 <span className="text-xs">{t.extremeHome?.nav?.enterprise || "Enterprise"}</span>
+              </Link>
+              <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                <GitHubIcon className="w-5 h-5" />
+                <span className="text-xs">{t.extremeHome?.nav?.github || "OSS"}</span>
+              </a>
+              <Link href="/status" className="flex flex-col items-center gap-1 text-gray-600 hover:text-emerald-600 transition-colors">
+                <StatusIcon className="w-5 h-5" />
+                <span className="text-xs">{t.extremeHome?.nav?.status || "Status"}</span>
               </Link>
             </div>
             <LanguageSwitcher currentLocale={locale} />
@@ -485,11 +507,16 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           {/* Hero Text */}
           <div className="text-center mb-8">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 mb-4">
-              {t.extremeHome?.heroTitle || "Search you can debug."}
+              {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
             </h1>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              {t.extremeHome?.heroSubtitle || "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost."}
+              {t.extremeHome?.heroSubtitle || "Debuggable by default: traces, evals, policy decisions, and costs in one place."}
             </p>
+            {t.extremeHome?.heroTagline && (
+              <p className="text-sm text-emerald-600 font-medium mt-3">
+                {t.extremeHome.heroTagline}
+              </p>
+            )}
             {/* Mode Toggle */}
             <div className="flex items-center justify-center gap-2 mt-6">
               <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-xl">

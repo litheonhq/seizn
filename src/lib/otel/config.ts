@@ -143,3 +143,10 @@ export function validateOTelConfig(config: OTelConfig): { valid: boolean; errors
     errors,
   };
 }
+
+/**
+ * Get the current OTEL configuration (alias for loadOTelConfig)
+ */
+export function getOTelConfig(): OTelConfig {
+  return loadOTelConfig();
+}

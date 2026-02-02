@@ -29,15 +29,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Get API call count for today
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Get API call count for this month
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
 
-  const { count: apiCallsToday } = await supabase
+  const { count: apiCallsThisMonth } = await supabase
     .from('usage_logs')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', auth.userId)
-    .gte('created_at', today.toISOString());
+    .gte('created_at', startOfMonth.toISOString());
 
   // Get active API keys count
   const { count: apiKeysCount } = await supabase
@@ -62,19 +63,19 @@ export async function GET(request: NextRequest) {
       name: plan,
       limits: {
         memories: limits.memories,
-        apiCallsDaily: limits.apiCallsDaily,
+        apiCallsMonthly: limits.apiCallsMonthly,
         apiKeys: limits.apiKeys,
         rateLimit: rateLimit,
       },
     },
     usage: {
       memories: profile.memory_count || 0,
-      apiCallsToday: apiCallsToday || 0,
+      apiCallsThisMonth: apiCallsThisMonth || 0,
       apiKeys: apiKeysCount || 0,
     },
     remaining: {
       memories: limits.memories === -1 ? -1 : Math.max(0, limits.memories - (profile.memory_count || 0)),
-      apiCallsToday: limits.apiCallsDaily === -1 ? -1 : Math.max(0, limits.apiCallsDaily - (apiCallsToday || 0)),
+      apiCallsThisMonth: limits.apiCallsMonthly === -1 ? -1 : Math.max(0, limits.apiCallsMonthly - (apiCallsThisMonth || 0)),
       apiKeys: Math.max(0, limits.apiKeys - (apiKeysCount || 0)),
     },
   });

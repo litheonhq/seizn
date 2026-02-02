@@ -10,11 +10,78 @@ import {
 // Re-export for external use
 export { AuthErrors, RateLimitErrors, type ApiErrorResponse } from './api-error';
 
+// ============================================
+// Auth Header Configuration
+// ============================================
+
+/**
+ * Supported authentication methods
+ * - bearer: Authorization: Bearer szn_xxx (canonical, recommended)
+ * - x-api-key: x-api-key: szn_xxx (legacy, deprecated)
+ */
+export type AuthMethod = 'bearer' | 'x-api-key';
+
+/**
+ * x-api-key deprecation configuration
+ * After sunset date, x-api-key will return 401
+ */
+const X_API_KEY_DEPRECATION = {
+  enabled: true,
+  sunsetDate: '2026-05-01T00:00:00Z', // 90 days from now
+  docsUrl: 'https://seizn.com/docs/auth#migration',
+};
+
+/**
+ * Extract API key from request headers
+ * Supports both Bearer token and x-api-key (legacy)
+ * Returns the key and which method was used
+ */
+export function extractApiKey(request: NextRequest): {
+  apiKey: string | null;
+  method: AuthMethod | null;
+  isLegacy: boolean;
+} {
+  // Try Authorization: Bearer first (canonical)
+  const authHeader = request.headers.get('authorization');
+  if (authHeader) {
+    const match = authHeader.match(/^Bearer\s+(.+)$/i);
+    if (match) {
+      return { apiKey: match[1], method: 'bearer', isLegacy: false };
+    }
+  }
+
+  // Fall back to x-api-key (legacy/deprecated)
+  const xApiKey = request.headers.get('x-api-key');
+  if (xApiKey) {
+    return { apiKey: xApiKey, method: 'x-api-key', isLegacy: true };
+  }
+
+  return { apiKey: null, method: null, isLegacy: false };
+}
+
+/**
+ * Get deprecation headers for legacy auth methods
+ */
+export function getDeprecationHeaders(method: AuthMethod | null): Record<string, string> {
+  if (method !== 'x-api-key' || !X_API_KEY_DEPRECATION.enabled) {
+    return {};
+  }
+
+  return {
+    'Deprecation': 'true',
+    'Sunset': X_API_KEY_DEPRECATION.sunsetDate,
+    'Link': `<${X_API_KEY_DEPRECATION.docsUrl}>; rel="deprecation"`,
+    'X-Deprecation-Notice': 'x-api-key header is deprecated. Use Authorization: Bearer instead.',
+  };
+}
+
 interface AuthResult {
   userId: string;
   keyId: string;
   plan: string;
   rateLimitHeaders?: Record<string, string>;
+  authMethod?: AuthMethod;
+  deprecationHeaders?: Record<string, string>;
 }
 
 interface AuthError {
@@ -28,12 +95,17 @@ type AuthResponse = AuthResult | { authError: AuthError };
 
 /**
  * Authenticate API request and check usage limits
+ * Supports both Bearer token (canonical) and x-api-key (legacy/deprecated)
  */
 export async function authenticateRequest(
   request: NextRequest,
   options?: { skipUsageCheck?: boolean }
 ): Promise<AuthResponse> {
-  const apiKey = request.headers.get('x-api-key');
+  // Extract API key using the new unified method
+  const { apiKey, method: authMethod, isLegacy } = extractApiKey(request);
+
+  // Get deprecation headers if using legacy auth
+  const deprecationHeaders = getDeprecationHeaders(authMethod);
 
   if (!apiKey) {
     // Log auth failure (no key provided)
@@ -41,8 +113,11 @@ export async function authenticateRequest(
     return {
       authError: {
         code: ErrorCodes.AUTH_MISSING_KEY,
-        error: 'API key required. Pass your API key in the x-api-key header.',
+        error: 'API key required. Use Authorization: Bearer <your-api-key> header.',
         status: 401,
+        headers: {
+          'WWW-Authenticate': 'Bearer realm="Seizn API", charset="UTF-8"',
+        },
       },
     };
   }
@@ -131,7 +206,9 @@ export async function authenticateRequest(
     userId: keyData.user_id,
     keyId: keyData.id,
     plan,
-    rateLimitHeaders,
+    rateLimitHeaders: { ...rateLimitHeaders, ...deprecationHeaders },
+    authMethod: authMethod || undefined,
+    deprecationHeaders: Object.keys(deprecationHeaders).length > 0 ? deprecationHeaders : undefined,
   };
 }
 
@@ -146,11 +223,11 @@ export function isAuthError(result: AuthResponse): result is { authError: AuthEr
  * Hints for auth errors
  */
 const AuthHints: Record<string, string> = {
-  [ErrorCodes.AUTH_MISSING_KEY]: 'Add x-api-key header to your request',
+  [ErrorCodes.AUTH_MISSING_KEY]: 'Add Authorization: Bearer <your-api-key> header',
   [ErrorCodes.AUTH_INVALID_KEY]: 'Check API key in Dashboard → API Keys',
   [ErrorCodes.AUTH_EXPIRED_KEY]: 'Generate new API key in Dashboard',
   [ErrorCodes.RATE_LIMIT_EXCEEDED]: 'Implement exponential backoff (1s→2s→4s)',
-  [ErrorCodes.QUOTA_EXCEEDED]: 'Upgrade plan or wait for quota reset',
+  [ErrorCodes.QUOTA_EXCEEDED]: 'Upgrade plan or wait for monthly quota reset',
 };
 
 /**

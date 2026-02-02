@@ -1012,8 +1012,9 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "디버깅 가능한 검색.",
-    "heroSubtitle": "트레이싱, 평가, 거버넌스가 내장된 통합 검색 스택. 한 번의 요청 = 결과 + 트레이스 + 비용.",
+    "heroTitle": "에이전트를 위한 관리형 메모리 & 검색.",
+    "heroTagline": "디버깅 가능한 검색.",
+    "heroSubtitle": "기본 설정으로 디버깅 가능: 트레이스, 평가, 정책 결정, 비용을 한 곳에서.",
     "firstRetrievalComplete": "첫 번째 검색 완료",
     "copySnippetHint": "아래 코드를 복사해 재현하세요",
     "copySnippetTitle": "코드 복사",
@@ -1056,7 +1057,8 @@
       "tryDemo": "데모 체험",
       "limits": "한도",
       "status": "상태",
-      "help": "도움말"
+      "help": "도움말",
+      "github": "오픈소스"
     },
     "requestBuilder": {
       "title": "요청 빌더",
@@ -1182,7 +1184,7 @@
     "authentication": {
       "title": "인증",
       "description": "모든 API 요청에는",
-      "header": "x-api-key",
+      "header": "Authorization: Bearer",
       "headerSuffix": "헤더에 API 키가 필요합니다.",
       "securityTitle": "보안:",
       "securityText": "API 키를 안전하게 보관하세요. 클라이언트 측 코드에 노출하지 마세요. 환경 변수나 백엔드 프록시를 사용하세요."
@@ -1232,7 +1234,7 @@
     "rateLimits": {
       "title": "요청 제한",
       "plan": "플랜",
-      "dailyApiCalls": "일일 API 호출",
+      "monthlyApiCalls": "월간 API 호출",
       "maxMemories": "최대 메모리",
       "apiKeys": "API 키",
       "free": "무료",
@@ -1241,7 +1243,8 @@
       "enterprise": "엔터프라이즈",
       "unlimited": "무제한",
       "exceeded": "요청 제한을 초과하면 API가",
-      "response": "응답을 반환합니다."
+      "response": "응답을 반환합니다.",
+      "starter": "Starter"
     },
     "errors": {
       "title": "오류 코드",

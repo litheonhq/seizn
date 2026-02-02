@@ -19,8 +19,8 @@ export async function GET() {
     limits: {
       memories: config.memories,
       memoriesDisplay: formatLimit(config.memories),
-      apiCallsDaily: config.apiCallsDaily,
-      apiCallsDailyDisplay: formatLimit(config.apiCallsDaily),
+      apiCallsMonthly: config.apiCallsMonthly,
+      apiCallsMonthlyDisplay: formatLimit(config.apiCallsMonthly),
       apiKeys: config.apiKeys,
       rateLimit: config.rateLimit,
       maxInputTokens: config.maxInputTokens,
