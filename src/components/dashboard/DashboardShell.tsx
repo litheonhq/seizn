@@ -75,14 +75,27 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const { data: session, status } = useSession();
   const router = useRouter();
   const { t } = useDashboardTranslation();
+  const [isReviewMode, setIsReviewMode] = useState(false);
+  const [reviewModeChecked, setReviewModeChecked] = useState(false);
 
-  // Redirect to login if not authenticated
+  // Check for review_mode cookie on mount
   useEffect(() => {
-    if (status === "unauthenticated") {
+    const reviewCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("review_mode="));
+    if (reviewCookie?.split("=")[1] === "true") {
+      setIsReviewMode(true);
+    }
+    setReviewModeChecked(true);
+  }, []);
+
+  // Redirect to login if not authenticated AND not in review mode
+  useEffect(() => {
+    if (reviewModeChecked && status === "unauthenticated" && !isReviewMode) {
       // Full page redirect to ensure no stale cache
       window.location.href = "/login";
     }
-  }, [status]);
+  }, [status, isReviewMode, reviewModeChecked]);
 
   // Handle sign out with cache invalidation
   const handleSignOut = async () => {
@@ -149,7 +162,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   };
 
   // Show loading or redirect if not authenticated
-  if (status === "loading" || status === "unauthenticated") {
+  if (status === "loading" || (status === "unauthenticated" && !isReviewMode && reviewModeChecked)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
