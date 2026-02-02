@@ -359,7 +359,7 @@
       "avgLatency": "Avg Latency",
       "p95Latency": "p95 Latency",
       "errorRateKpi": "Error Rate",
-      "dailyApiCalls": "Daily API Calls",
+      "monthlyApiCalls": "Monthly API Calls",
       "dailyTrends": "Daily Trends",
       "tabCalls": "Calls",
       "tabCost": "Cost",
@@ -1011,8 +1011,9 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Search you can debug.",
-    "heroSubtitle": "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    "heroTitle": "Governed memory & retrieval for agents.",
+    "heroTagline": "Search you can debug.",
+    "heroSubtitle": "Debuggable by default: traces, evals, policy decisions, and costs in one place.",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
@@ -1098,7 +1099,8 @@
       "tryDemo": "Try Demo",
       "limits": "Limits",
       "status": "Status",
-      "help": "Help"
+      "help": "Help",
+      "github": "OSS"
     },
     "tabs": {
       "results": "Results",
@@ -1181,7 +1183,7 @@
     "authentication": {
       "title": "Authentication",
       "description": "All API requests require an API key passed in the",
-      "header": "x-api-key",
+      "header": "Authorization: Bearer",
       "headerSuffix": "header.",
       "securityTitle": "Security:",
       "securityText": "Keep your API keys secret. Never expose them in client-side code. Use environment variables or a backend proxy."
@@ -1231,7 +1233,7 @@
     "rateLimits": {
       "title": "Rate Limits",
       "plan": "Plan",
-      "dailyApiCalls": "Daily API Calls",
+      "monthlyApiCalls": "Monthly API Calls",
       "maxMemories": "Max Memories",
       "apiKeys": "API Keys",
       "free": "Free",
@@ -1240,7 +1242,8 @@
       "enterprise": "Enterprise",
       "unlimited": "Unlimited",
       "exceeded": "When you exceed your rate limit, the API returns a",
-      "response": "response."
+      "response": "response.",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Error Codes",

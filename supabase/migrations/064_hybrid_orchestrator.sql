@@ -151,7 +151,7 @@ CREATE INDEX IF NOT EXISTS idx_hybrid_results_collection ON hybrid_results(colle
 -- multi_query_cache indexes
 CREATE INDEX IF NOT EXISTS idx_mq_cache_user ON multi_query_cache(user_id);
 CREATE INDEX IF NOT EXISTS idx_mq_cache_hash ON multi_query_cache(original_query_hash);
-CREATE INDEX IF NOT EXISTS idx_mq_cache_expires ON multi_query_cache(expires_at) WHERE expires_at > NOW();
+CREATE INDEX IF NOT EXISTS idx_mq_cache_expires ON multi_query_cache(expires_at) ;
 
 -- hybrid_strategy_stats indexes
 CREATE INDEX IF NOT EXISTS idx_hybrid_stats_user ON hybrid_strategy_stats(user_id);

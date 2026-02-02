@@ -12,17 +12,17 @@ export { getPlan, formatLimit } from './plan-limits';
 // Legacy interface (kept for backwards compatibility)
 interface PlanLimits {
   memories: number;
-  apiCallsDaily: number;
+  apiCallsMonthly: number;
   apiKeys: number;
 }
 
 // Legacy export (kept for backwards compatibility)
 export const PLAN_LIMITS: Record<string, PlanLimits> = {
-  free: { memories: 10000, apiCallsDaily: 1000, apiKeys: 2 },
-  starter: { memories: 50000, apiCallsDaily: 5000, apiKeys: 3 },
-  plus: { memories: 100000, apiCallsDaily: 10000, apiKeys: 5 },
-  pro: { memories: 1000000, apiCallsDaily: 100000, apiKeys: 10 },
-  enterprise: { memories: -1, apiCallsDaily: -1, apiKeys: 100 }, // -1 = unlimited
+  free: { memories: 10000, apiCallsMonthly: 1000, apiKeys: 2 },
+  starter: { memories: 50000, apiCallsMonthly: 50000, apiKeys: 3 },
+  plus: { memories: 100000, apiCallsMonthly: 500000, apiKeys: 5 },
+  pro: { memories: 1000000, apiCallsMonthly: 2000000, apiKeys: 10 },
+  enterprise: { memories: -1, apiCallsMonthly: -1, apiKeys: 100 }, // -1 = unlimited
 };
 
 interface UsageCheck {
@@ -30,7 +30,7 @@ interface UsageCheck {
   reason?: string;
   usage?: {
     memories: number;
-    apiCallsToday: number;
+    apiCallsThisMonth: number;
   };
   limits?: PlanLimits;
   plan?: string;
@@ -59,40 +59,41 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
   const planConfig = getPlan(effectivePlan);
   const limits: PlanLimits = {
     memories: planConfig.memories,
-    apiCallsDaily: planConfig.apiCallsDaily,
+    apiCallsMonthly: planConfig.apiCallsMonthly,
     apiKeys: planConfig.apiKeys,
   };
 
-  // Count API calls today
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Count API calls this month
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
 
-  const { count: apiCallsToday } = await supabase
+  const { count: apiCallsThisMonth } = await supabase
     .from('usage_logs')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId)
-    .gte('created_at', today.toISOString());
+    .gte('created_at', startOfMonth.toISOString());
 
   const memoryCount = profile?.memory_count || 0;
-  const callsToday = apiCallsToday || 0;
+  const callsThisMonth = apiCallsThisMonth || 0;
 
   // Check memory limit (only if not unlimited)
   if (!isUnlimited(limits.memories) && memoryCount >= limits.memories) {
     return {
       allowed: false,
       reason: `Memory limit reached (${formatLimit(limits.memories)} for ${effectivePlan} plan). Upgrade your plan for more storage.`,
-      usage: { memories: memoryCount, apiCallsToday: callsToday },
+      usage: { memories: memoryCount, apiCallsThisMonth: callsThisMonth },
       limits,
       plan: effectivePlan,
     };
   }
 
   // Check API call limit (only if not unlimited)
-  if (!isUnlimited(limits.apiCallsDaily) && callsToday >= limits.apiCallsDaily) {
+  if (!isUnlimited(limits.apiCallsMonthly) && callsThisMonth >= limits.apiCallsMonthly) {
     return {
       allowed: false,
-      reason: `Daily API call limit reached (${formatLimit(limits.apiCallsDaily)} for ${effectivePlan} plan). Upgrade your plan for higher limits.`,
-      usage: { memories: memoryCount, apiCallsToday: callsToday },
+      reason: `Monthly API call limit reached (${formatLimit(limits.apiCallsMonthly)} for ${effectivePlan} plan). Upgrade your plan for higher limits.`,
+      usage: { memories: memoryCount, apiCallsThisMonth: callsThisMonth },
       limits,
       plan: effectivePlan,
     };
@@ -100,7 +101,7 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
 
   return {
     allowed: true,
-    usage: { memories: memoryCount, apiCallsToday: callsToday },
+    usage: { memories: memoryCount, apiCallsThisMonth: callsThisMonth },
     limits,
     plan: effectivePlan,
   };

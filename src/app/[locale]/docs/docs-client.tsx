@@ -91,7 +91,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">{t("docs.sidebar.overview")}</p>
             <Link href={`/${locale}/docs/tutorial`} className="block py-1.5 text-sm text-emerald-600 dark:text-emerald-400 font-medium hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors">{t("docs.sidebar.tutorial")}</Link>
             <a href="#quickstart" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.quickStart")}</a>
-            <a href="#authentication" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.authentication")}</a>
+            <Link href={`/${locale}/docs/auth`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.authentication")}</Link>
 
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{t("docs.sidebar.apiReference")}</p>
             <a href="#endpoints" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.endpoints")}</a>
@@ -99,7 +99,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             <a href="#errors" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.errorCodes")}</a>
 
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{t("docs.sidebar.resources")}</p>
-            <a href="#security" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.security")}</a>
+            <Link href={`/${locale}/docs/security`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.security")}</Link>
             <a href="#sdks" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.sdks")}</a>
             <Link href={`/${locale}/docs/integrations`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.integrations")}</Link>
             <Link href={`/${locale}/docs/faq`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.faq")}</Link>
@@ -133,13 +133,13 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
               language="bash"
               code={`# Add a memory
 curl -X POST https://seizn.com/api/memories \\
-  -H "x-api-key: YOUR_API_KEY" \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"content": "User prefers dark mode interfaces"}'
 
 # Search memories
 curl "https://seizn.com/api/memories?query=user+preferences" \\
-  -H "x-api-key: YOUR_API_KEY"`}
+  -H "Authorization: Bearer YOUR_API_KEY"`}
             />
           </div>
         </section>
@@ -157,7 +157,7 @@ curl "https://seizn.com/api/memories?query=user+preferences" \\
             </p>
             <CodeBlock
               language="bash"
-              code={`curl -H "x-api-key: szn_your_api_key_here" \\
+              code={`curl -H "Authorization: Bearer szn_your_api_key_here" \\
   https://seizn.com/api/memories?query=test`}
             />
             <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
@@ -309,7 +309,7 @@ curl "https://seizn.com/api/memories?query=user+preferences" \\
               <thead className="bg-zinc-200 dark:bg-zinc-800">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.plan")}</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.dailyApiCalls")}</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.monthlyApiCalls")}</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.maxMemories")}</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.apiKeys")}</th>
                 </tr>
@@ -318,19 +318,25 @@ curl "https://seizn.com/api/memories?query=user+preferences" \\
                 <tr>
                   <td className="px-6 py-4 text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.free")}</td>
                   <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">1,000</td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">10,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">100</td>
                   <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">2</td>
                 </tr>
                 <tr>
+                  <td className="px-6 py-4 text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.starter")}</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">50,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">5,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">3</td>
+                </tr>
+                <tr>
                   <td className="px-6 py-4 text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.plus")}</td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">10,000</td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">100,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">500,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">50,000</td>
                   <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">5</td>
                 </tr>
                 <tr>
                   <td className="px-6 py-4 text-zinc-700 dark:text-zinc-300">{t("docs.rateLimits.pro")}</td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">100,000</td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">1,000,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">2,000,000</td>
+                  <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{t("docs.rateLimits.unlimited")}</td>
                   <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">10</td>
                 </tr>
                 <tr>

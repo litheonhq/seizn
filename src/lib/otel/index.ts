@@ -37,6 +37,7 @@ export {
   setOTelConfig,
   isOTelEnabled,
   validateOTelConfig,
+  getOTelConfig,
 } from './config';
 
 // Exporter
@@ -74,3 +75,55 @@ export type {
 } from './types';
 
 export { DEFAULT_SEIZN_TO_OTEL_MAPPING } from './types';
+
+// GenAI Semantic Conventions
+export {
+  GenAIAttributes,
+  LLMAttributes,
+  EmbeddingAttributes,
+  RerankAttributes,
+  VectorDBAttributes,
+  mapModelToSystem,
+  mapSpanToOperation,
+  buildGenAIAttributes,
+  buildEmbeddingAttributes,
+  buildRerankAttributes,
+  buildVectorSearchAttributes,
+} from './genai-conventions';
+
+export type {
+  GenAIOperationType,
+  GenAISystem,
+  GenAISpanAttributes,
+} from './genai-conventions';
+
+// Active Tracing / Instrumentation
+export {
+  getTracer,
+  createSpan,
+  withSpan,
+  withSpanSync,
+  withLLMSpan,
+  withEmbeddingSpan,
+  withRerankSpan,
+  withVectorSearchSpan,
+  withMemorySpan,
+  withToolCallSpan,
+  withHTTPSpan,
+  buildHTTPAttributes,
+  extractContextFromHeaders,
+  injectContextToHeaders,
+  recordPromptEvent,
+  recordCompletionEvent,
+  recordUsage,
+} from './instrumentation';
+
+export type {
+  LLMSpanParams,
+  EmbeddingSpanParams,
+  RerankSpanParams,
+  VectorSearchSpanParams,
+  MemorySpanParams,
+  ToolCallSpanParams,
+  HTTPSpanParams,
+} from './instrumentation';

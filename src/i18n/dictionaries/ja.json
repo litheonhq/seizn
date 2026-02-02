@@ -303,7 +303,7 @@
       "totalTokens": "トークン合計",
       "estimatedCost": "推定コスト",
       "avgLatency": "平均レイテンシ",
-      "dailyApiCalls": "日別API呼び出し",
+      "monthlyApiCalls": "日別API呼び出し",
       "calls": "回",
       "endpointUsage": "エンドポイント使用量",
       "noData": "データなし",
@@ -782,8 +782,9 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "デバッグ可能な検索。",
-    "heroSubtitle": "トレース、評価、ガバナンスを内蔵した統合検索スタック。1リクエスト = 結果 + トレース + コスト。",
+    "heroTitle": "エージェントのための管理されたメモリ & 検索。",
+    "heroTagline": "デバッグ可能な検索。",
+    "heroSubtitle": "デフォルトでデバッグ可能: トレース、評価、ポリシー、コストを一箇所に。",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
@@ -823,7 +824,9 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "github": "OSS",
+      "status": "ステータス"
     },
     "requestBuilder": {
       "title": "リクエストビルダー",
@@ -911,7 +914,7 @@
     "authentication": {
       "title": "認証",
       "description": "すべてのAPIリクエストには",
-      "header": "x-api-key",
+      "header": "Authorization: Bearer",
       "headerSuffix": "ヘッダーにAPIキーが必要です。",
       "securityTitle": "セキュリティ:",
       "securityText": "APIキーを安全に保管してください。クライアント側のコードに公開しないでください。環境変数またはバックエンドプロキシを使用してください。"
@@ -961,7 +964,7 @@
     "rateLimits": {
       "title": "レート制限",
       "plan": "プラン",
-      "dailyApiCalls": "日次API呼び出し",
+      "monthlyApiCalls": "日次API呼び出し",
       "maxMemories": "最大メモリ",
       "apiKeys": "APIキー",
       "free": "無料",
@@ -970,7 +973,8 @@
       "enterprise": "エンタープライズ",
       "unlimited": "無制限",
       "exceeded": "レート制限を超えると、APIは",
-      "response": "レスポンスを返します。"
+      "response": "レスポンスを返します。",
+      "starter": "Starter"
     },
     "errors": {
       "title": "エラーコード",
