@@ -145,7 +145,7 @@ async function handleReviewToken(
   response.cookies.set('review_mode', 'true', {
     maxAge: expiresInSeconds > 0 ? expiresInSeconds : 3600,
     path: '/',
-    httpOnly: true,
+    httpOnly: false, // Client-side needs to read this
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
   });
