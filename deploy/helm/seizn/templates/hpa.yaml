@@ -1,32 +1,29 @@
-{{- if .Values.seizn.autoscaling.enabled }}
+{{- if .Values.apiGateway.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "seizn.fullname" . }}
+  name: {{ include "seizn.fullname" . }}-api-gateway
   labels:
     {{- include "seizn.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api-gateway
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "seizn.fullname" . }}
-  minReplicas: {{ .Values.seizn.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.seizn.autoscaling.maxReplicas }}
+    name: {{ include "seizn.fullname" . }}-api-gateway
+  minReplicas: {{ .Values.apiGateway.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.apiGateway.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.seizn.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.seizn.autoscaling.targetCPUUtilizationPercentage }}
-    {{- end }}
-    {{- if .Values.seizn.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.apiGateway.autoscaling.targetCPUUtilizationPercentage | default 70 }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.seizn.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
+          averageUtilization: {{ .Values.apiGateway.autoscaling.targetMemoryUtilizationPercentage | default 80 }}
 {{- end }}

@@ -1,15 +1,79 @@
+{{- if .Values.apiGateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "seizn.fullname" . }}
+  name: {{ include "seizn.fullname" . }}-api-gateway
   labels:
     {{- include "seizn.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api-gateway
 spec:
-  type: {{ .Values.seizn.service.type }}
+  type: {{ .Values.apiGateway.service.type }}
   ports:
-    - port: {{ .Values.seizn.service.port }}
+    - port: {{ .Values.apiGateway.service.port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
     {{- include "seizn.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api-gateway
+{{- end }}
+---
+{{- if .Values.spring.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seizn.fullname" . }}-spring
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+    app.kubernetes.io/component: spring
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3001
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "seizn.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: spring
+{{- end }}
+---
+{{- if .Values.summer.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seizn.fullname" . }}-summer
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+    app.kubernetes.io/component: summer
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3002
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "seizn.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: summer
+{{- end }}
+---
+{{- if .Values.winter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seizn.fullname" . }}-winter
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+    app.kubernetes.io/component: winter
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3003
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "seizn.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: winter
+{{- end }}

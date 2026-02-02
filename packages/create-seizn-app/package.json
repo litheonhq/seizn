@@ -1,0 +1,63 @@
+{
+  "name": "create-seizn-app",
+  "version": "0.1.0",
+  "description": "CLI to scaffold new projects with Seizn AI Infrastructure integration",
+  "bin": {
+    "create-seizn-app": "./dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --dts --clean",
+    "dev": "tsup src/index.ts --format cjs --dts --watch",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "cli",
+    "scaffold",
+    "create-app",
+    "ai",
+    "rag",
+    "next.js",
+    "express"
+  ],
+  "author": "Seizn <support@seizn.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seizn/seizn.git",
+    "directory": "packages/create-seizn-app"
+  },
+  "homepage": "https://seizn.com/docs/quickstart",
+  "bugs": {
+    "url": "https://github.com/seizn/seizn/issues"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.3.7",
+    "ora": "^8.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

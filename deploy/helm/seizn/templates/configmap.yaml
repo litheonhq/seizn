@@ -5,10 +5,33 @@ metadata:
   labels:
     {{- include "seizn.labels" . | nindent 4 }}
 data:
-  NODE_ENV: {{ .Values.seizn.env.NODE_ENV | default "production" | quote }}
-  NEXT_TELEMETRY_DISABLED: {{ .Values.seizn.env.NEXT_TELEMETRY_DISABLED | default "1" | quote }}
-  {{- range $key, $value := .Values.seizn.env }}
-  {{- if not (or (eq $key "NODE_ENV") (eq $key "NEXT_TELEMETRY_DISABLED")) }}
-  {{ $key }}: {{ $value | quote }}
+  # Application Configuration
+  NODE_ENV: {{ .Values.config.nodeEnv | default "production" | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | default "info" | quote }}
+  
+  # Service Discovery
+  SPRING_SERVICE_URL: "http://{{ include "seizn.fullname" . }}-spring:3001"
+  SUMMER_SERVICE_URL: "http://{{ include "seizn.fullname" . }}-summer:3002"
+  WINTER_SERVICE_URL: "http://{{ include "seizn.fullname" . }}-winter:3003"
+  
+  # Database Configuration (non-sensitive)
+  {{- if .Values.postgresql.enabled }}
+  DATABASE_HOST: "{{ .Release.Name }}-postgresql"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: {{ .Values.postgresql.auth.database | quote }}
   {{- end }}
+  
+  # Redis Configuration (non-sensitive)
+  {{- if .Values.redis.enabled }}
+  REDIS_HOST: "{{ .Release.Name }}-redis-master"
+  REDIS_PORT: "6379"
   {{- end }}
+  
+  # Feature Flags
+  ENABLE_AUDIT_LOGGING: {{ .Values.config.enableAuditLogging | default "true" | quote }}
+  ENABLE_RATE_LIMITING: {{ .Values.config.enableRateLimiting | default "true" | quote }}
+  ENABLE_TOOL_GATING: {{ .Values.config.enableToolGating | default "true" | quote }}
+  
+  # Telemetry
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.config.otelEndpoint | default "" | quote }}
+  OTEL_SERVICE_NAME: "seizn"
