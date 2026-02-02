@@ -109,19 +109,19 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       name,
       description,
       reason,
-      legal_case_id,
+      legal_matter_id,
       custodian_email,
-      expires_at,
+      effective_until,
     } = body;
 
-    // Validate expires_at if provided
-    if (expires_at !== undefined && expires_at !== null) {
-      const expiresDate = new Date(expires_at);
+    // Validate effective_until if provided
+    if (effective_until !== undefined && effective_until !== null) {
+      const expiresDate = new Date(effective_until);
       if (isNaN(expiresDate.getTime())) {
-        return NextResponse.json({ error: 'Invalid expires_at date format' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid effective_until date format' }, { status: 400 });
       }
       if (expiresDate <= new Date()) {
-        return NextResponse.json({ error: 'expires_at must be in the future' }, { status: 400 });
+        return NextResponse.json({ error: 'effective_until must be in the future' }, { status: 400 });
       }
     }
 
@@ -131,9 +131,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         name,
         description,
         reason,
-        legal_case_id,
+        legal_matter_id,
         custodian_email,
-        expires_at,
+        effective_until,
       },
       user.id
     );

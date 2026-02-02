@@ -45,7 +45,8 @@ export class GcpKmsClient implements KmsProviderClient {
         };
       }
 
-      const enabled = cryptoKey.primary?.state === 'ENABLED';
+      const stateValue = cryptoKey.primary?.state;
+      const enabled = stateValue === 'ENABLED' || stateValue === 2; // 2 is ENABLED enum value
 
       return {
         valid: enabled,
@@ -53,13 +54,13 @@ export class GcpKmsClient implements KmsProviderClient {
         key_reference: this.keyReference,
         key_metadata: {
           key_id: cryptoKey.name || '',
-          key_state: cryptoKey.primary?.state || 'Unknown',
+          key_state: String(stateValue || 'Unknown'),
           creation_date: cryptoKey.createTime
             ? new Date(cryptoKey.createTime as string).toISOString()
             : undefined,
           description: cryptoKey.labels?.description,
           enabled,
-          key_spec: cryptoKey.versionTemplate?.algorithm,
+          key_spec: cryptoKey.versionTemplate?.algorithm ? String(cryptoKey.versionTemplate.algorithm) : undefined,
         },
         error: enabled ? undefined : 'Key is not enabled',
       };
@@ -169,7 +170,8 @@ export class GcpKmsClient implements KmsProviderClient {
   /**
    * Create GCP KMS client with proper credentials
    */
-  private async createClient<T extends new (...args: unknown[]) => unknown>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async createClient<T extends new (opts?: any) => any>(
     ClientClass: T
   ): Promise<InstanceType<T>> {
     const options: Record<string, unknown> = {

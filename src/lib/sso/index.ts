@@ -14,6 +14,8 @@ import type {
   SSOAttributeMapping,
   SSODomainVerification,
   SAMLServiceProviderMetadata,
+} from '@/types/sso';
+import {
   DEFAULT_SSO_SETTINGS,
   DEFAULT_ATTRIBUTE_MAPPING,
 } from '@/types/sso';

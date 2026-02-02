@@ -10,7 +10,8 @@ import { createClient } from '@supabase/supabase-js';
 import {
   listLegalHolds,
   createLegalHold,
-  type LegalHoldScope,
+  type LegalHoldScopeType,
+  type LegalHoldScopeConfig,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
 
@@ -35,7 +36,7 @@ async function getUserFromToken(request: NextRequest) {
   return user;
 }
 
-const VALID_SCOPES: LegalHoldScope[] = ['organization', 'user', 'data_type', 'specific_record'];
+const VALID_SCOPE_TYPES: LegalHoldScopeType[] = ['all', 'collection', 'user', 'tag', 'date_range'];
 
 /**
  * GET /api/retention/holds
@@ -61,14 +62,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Not a member of this organization' }, { status: 403 });
     }
 
-    const scope = searchParams.get('scope') as LegalHoldScope | undefined;
+    const scope_type = searchParams.get('scope_type') as LegalHoldScopeType | undefined;
     const status = searchParams.get('status') as 'active' | 'released' | 'expired' | undefined;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
     const holds = await listLegalHolds({
       organization_id: orgId,
-      scope,
+      scope_type,
       status,
       limit,
       offset,
@@ -104,14 +105,13 @@ export async function POST(request: NextRequest) {
       organization_id,
       name,
       description,
-      scope,
-      target_user_id,
-      target_data_type,
-      target_record_id,
+      scope_type,
+      scope_config,
       reason,
-      legal_case_id,
+      legal_matter_id,
       custodian_email,
-      expires_at,
+      effective_from,
+      effective_until,
     } = body;
 
     // Validate required fields
@@ -123,8 +123,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'name is required' }, { status: 400 });
     }
 
-    if (!scope) {
-      return NextResponse.json({ error: 'scope is required' }, { status: 400 });
+    if (!scope_type) {
+      return NextResponse.json({ error: 'scope_type is required' }, { status: 400 });
     }
 
     if (!reason) {
@@ -137,35 +137,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Not authorized to manage legal holds' }, { status: 403 });
     }
 
-    // Validate scope
-    if (!VALID_SCOPES.includes(scope)) {
+    // Validate scope_type
+    if (!VALID_SCOPE_TYPES.includes(scope_type)) {
       return NextResponse.json({
-        error: 'Invalid scope',
-        valid_scopes: VALID_SCOPES,
+        error: 'Invalid scope_type',
+        valid_scope_types: VALID_SCOPE_TYPES,
       }, { status: 400 });
     }
 
-    // Validate scope-specific requirements
-    if (scope === 'user' && !target_user_id) {
-      return NextResponse.json({ error: 'target_user_id is required for user scope' }, { status: 400 });
+    // Validate scope_config based on scope_type
+    const validatedScopeConfig: LegalHoldScopeConfig = scope_config || {};
+
+    if (scope_type === 'collection' && (!validatedScopeConfig.collection_ids || validatedScopeConfig.collection_ids.length === 0)) {
+      return NextResponse.json({ error: 'collection_ids is required for collection scope' }, { status: 400 });
     }
 
-    if (scope === 'data_type' && !target_data_type) {
-      return NextResponse.json({ error: 'target_data_type is required for data_type scope' }, { status: 400 });
+    if (scope_type === 'user' && (!validatedScopeConfig.user_ids || validatedScopeConfig.user_ids.length === 0)) {
+      return NextResponse.json({ error: 'user_ids is required for user scope' }, { status: 400 });
     }
 
-    if (scope === 'specific_record' && !target_record_id) {
-      return NextResponse.json({ error: 'target_record_id is required for specific_record scope' }, { status: 400 });
+    if (scope_type === 'tag' && (!validatedScopeConfig.tags || validatedScopeConfig.tags.length === 0)) {
+      return NextResponse.json({ error: 'tags is required for tag scope' }, { status: 400 });
     }
 
-    // Validate expires_at if provided
-    if (expires_at) {
-      const expiresDate = new Date(expires_at);
+    if (scope_type === 'date_range' && (!validatedScopeConfig.start_date || !validatedScopeConfig.end_date)) {
+      return NextResponse.json({ error: 'start_date and end_date are required for date_range scope' }, { status: 400 });
+    }
+
+    // Validate effective_until if provided
+    if (effective_until) {
+      const expiresDate = new Date(effective_until);
       if (isNaN(expiresDate.getTime())) {
-        return NextResponse.json({ error: 'Invalid expires_at date format' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid effective_until date format' }, { status: 400 });
       }
       if (expiresDate <= new Date()) {
-        return NextResponse.json({ error: 'expires_at must be in the future' }, { status: 400 });
+        return NextResponse.json({ error: 'effective_until must be in the future' }, { status: 400 });
       }
     }
 
@@ -173,14 +179,13 @@ export async function POST(request: NextRequest) {
       organization_id,
       name,
       description,
-      scope,
-      target_user_id,
-      target_data_type,
-      target_record_id,
+      scope_type,
+      scope_config: validatedScopeConfig,
       reason,
-      legal_case_id,
+      legal_matter_id,
       custodian_email,
-      expires_at,
+      effective_from,
+      effective_until,
       created_by: user.id,
     });
 
