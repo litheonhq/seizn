@@ -1,14 +1,24 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import type { Metadata } from "next";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import ApiKeysClient from "./client";
 
-export default async function ApiKeysPage() {
-  const session = await auth();
+export const metadata: Metadata = {
+  title: "API Keys - Seizn Dashboard",
+  description: "Create and manage your Seizn API keys. Securely access the AI memory API for your applications.",
+  openGraph: {
+    title: "API Keys - Seizn Dashboard",
+    description: "Create and manage your Seizn API keys. Securely access the AI memory API for your applications.",
+    type: "website",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+export default async function ApiKeysPage() {
+  await getAuthOrReview();
 
   return (
     <DashboardShell>

@@ -1,14 +1,24 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import type { Metadata } from "next";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import OrganizationsClient from "./client";
 
-export default async function OrganizationsPage() {
-  const session = await auth();
+export const metadata: Metadata = {
+  title: "Organizations - Seizn Dashboard",
+  description: "Manage your organizations and team members. Collaborate on AI memory projects with your team.",
+  openGraph: {
+    title: "Organizations - Seizn Dashboard",
+    description: "Manage your organizations and team members. Collaborate on AI memory projects with your team.",
+    type: "website",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+export default async function OrganizationsPage() {
+  await getAuthOrReview();
 
   return (
     <DashboardShell>

@@ -1,18 +1,28 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import type { Metadata } from "next";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import DashboardOverviewClient from "./overview-client";
 
-export default async function DashboardPage() {
-  const session = await auth();
+export const metadata: Metadata = {
+  title: "Dashboard - Seizn",
+  description: "Manage your AI memories, API keys, and usage. Monitor your Seizn account activity and access developer tools.",
+  openGraph: {
+    title: "Dashboard - Seizn",
+    description: "Manage your AI memories, API keys, and usage. Monitor your Seizn account activity and access developer tools.",
+    type: "website",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+export default async function DashboardPage() {
+  const { user } = await getAuthOrReview();
 
   return (
     <DashboardShell>
-      <DashboardOverviewClient user={session.user} />
+      <DashboardOverviewClient user={user} />
     </DashboardShell>
   );
 }
