@@ -1,14 +1,24 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import type { Metadata } from "next";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import MemoriesClient from "./memories-client";
 
-export default async function MemoriesPage() {
-  const session = await auth();
+export const metadata: Metadata = {
+  title: "Memories - Seizn Dashboard",
+  description: "Browse and manage your AI memories. View, search, and organize stored context for your applications.",
+  openGraph: {
+    title: "Memories - Seizn Dashboard",
+    description: "Browse and manage your AI memories. View, search, and organize stored context for your applications.",
+    type: "website",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+export default async function MemoriesPage() {
+  await getAuthOrReview();
 
   return (
     <DashboardShell>
