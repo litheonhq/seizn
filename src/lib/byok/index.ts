@@ -8,6 +8,11 @@
  * - Cost control: Pay providers directly
  * - Compliance: Keep API traffic within existing agreements
  * - Flexibility: Switch providers without code changes
+ *
+ * Also includes enterprise KMS integration for:
+ * - AWS KMS
+ * - Google Cloud KMS
+ * - Azure Key Vault
  */
 
 export {
@@ -35,3 +40,38 @@ export {
   getGoogleKey,
   hasUserBYOKKeys,
 } from "./provider-factory";
+
+// KMS (Key Management Service) exports
+export {
+  // Types
+  type KmsConfig,
+  type KmsProvider,
+  type AwsKmsConfig,
+  type GcpKmsConfig,
+  type AzureKeyVaultConfig,
+  type ProviderConfig,
+  type RotationHistory,
+  type DataEncryptionKey,
+  type EncryptionRequest,
+  type EncryptionResult,
+  type DecryptionRequest,
+  type DecryptionResult,
+  // Functions
+  createKmsConfig,
+  getKmsConfig,
+  listKmsConfigs,
+  updateKmsConfig,
+  deleteKmsConfig,
+  validateKmsConfig,
+  rotateKmsKey,
+  getRotationHistory,
+  getOrCreateDek,
+  getDek,
+  encryptWithByok,
+  decryptWithByok,
+  getProviderDisplayName,
+  // Validation helpers
+  isValidAwsKmsKeyReference,
+  isValidGcpKmsKeyReference,
+  isValidAzureKeyVaultUrl,
+} from "./kms";

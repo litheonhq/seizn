@@ -221,6 +221,10 @@ export interface OrgPolicy {
   is_active: boolean;
   priority: number;
 
+  // Versioning
+  current_version?: number;
+  draft_version_id?: string;
+
   // Metadata
   created_by: string;
   created_at: string;
@@ -411,6 +415,12 @@ export type AuditAction =
   | 'policy.delete'
   | 'policy.activate'
   | 'policy.deactivate'
+  // Policy versioning actions
+  | 'policy.version_create'
+  | 'policy.version_update'
+  | 'policy.version_publish'
+  | 'policy.version_delete'
+  | 'policy.version_rollback'
   // Webhook actions
   | 'webhook.create'
   | 'webhook.update'

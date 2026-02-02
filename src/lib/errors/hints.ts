@@ -81,6 +81,16 @@ export const ERROR_HINTS: Record<SeizErrorCode, string> = {
   [SEIZN_ERROR_CODES.INVALID_DATETIME]:
     'Invalid date/time format. Use ISO 8601 format (YYYY-MM-DDTHH:mm:ssZ).',
 
+  // Idempotency errors (220-229)
+  [SEIZN_ERROR_CODES.IDEMPOTENCY_KEY_REQUIRED]:
+    'Add Idempotency-Key header with a unique value (e.g., UUID). Required for safe retries.',
+  [SEIZN_ERROR_CODES.INVALID_IDEMPOTENCY_KEY]:
+    'Idempotency-Key must be 8-256 printable ASCII characters. Use UUID or similar unique ID.',
+  [SEIZN_ERROR_CODES.IDEMPOTENCY_KEY_CONFLICT]:
+    'This Idempotency-Key was used with a different request body. Use a new key or same body.',
+  [SEIZN_ERROR_CODES.IDEMPOTENCY_REQUEST_IN_PROGRESS]:
+    'Request with this Idempotency-Key is still processing. Wait and check Retry-After header.',
+
   // ============================================
   // Resource Errors (SEIZN_3xx)
   // ============================================
@@ -213,6 +223,7 @@ export const DOCS_URLS: Record<string, string> = {
   auth: 'https://seizn.com/docs/api/authentication',
   rate_limit: 'https://seizn.com/docs/api/rate-limits',
   validation: 'https://seizn.com/docs/api/errors#validation',
+  idempotency: 'https://seizn.com/docs/api/idempotency',
   resource: 'https://seizn.com/docs/api/errors#resources',
   external: 'https://seizn.com/docs/api/errors#external',
   internal: 'https://seizn.com/docs/api/errors#internal',
@@ -225,6 +236,7 @@ export const DOCS_URLS: Record<string, string> = {
 export function getDocsUrl(code: string): string {
   if (code.startsWith('SEIZN_10')) return DOCS_URLS.auth;
   if (code.startsWith('SEIZN_11')) return DOCS_URLS.rate_limit;
+  if (code.startsWith('SEIZN_22')) return DOCS_URLS.idempotency;
   if (code.startsWith('SEIZN_2')) return DOCS_URLS.validation;
   if (code.startsWith('SEIZN_3')) return DOCS_URLS.resource;
   if (code.startsWith('SEIZN_4')) return DOCS_URLS.external;
