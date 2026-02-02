@@ -18,6 +18,7 @@ export interface RequestBuilderTranslations {
   query?: string;
   queryPlaceholder?: string;
   tryExamples?: string;
+  advanced?: string;
   dataset?: string;
   latencyBudget?: string;
   fast?: string;
@@ -112,6 +113,7 @@ export function RequestBuilder({
   translations: t,
 }: RequestBuilderProps) {
   const [showSampleQueries, setShowSampleQueries] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const idPrefix = useId();
   const queryId = `${idPrefix}-query`;
   const datasetId = `${idPrefix}-dataset`;
@@ -178,84 +180,109 @@ export function RequestBuilder({
         )}
       </div>
 
-      {/* Dataset Selector */}
+      {/* Advanced Settings Accordion */}
       <div className="mb-4">
-        <label htmlFor={datasetId} className="block text-sm font-medium text-gray-700 mb-2">
-          {t?.dataset || "Dataset"}
-        </label>
-        <div className="relative">
-          <select
-            id={datasetId}
-            value={config.dataset}
-            onChange={(e) => updateConfig({ dataset: e.target.value })}
-            className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900 appearance-none cursor-pointer"
-            disabled={disabled}
-          >
-
-            {SAMPLE_DATASETS.map((ds) => (
-              <option key={ds.id} value={ds.id}>
-                {ds.name} ({ds.count})
-              </option>
-            ))}
-          </select>
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="flex items-center justify-between w-full py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
+            {t?.advanced || "Advanced"}
+          </span>
+          <svg
+            className={`w-4 h-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {/* Advanced Content */}
+        {showAdvanced && (
+          <div className="mt-3 p-4 bg-gray-50 rounded-xl space-y-4">
+            {/* Dataset Selector */}
+            <div>
+              <label htmlFor={datasetId} className="block text-sm font-medium text-gray-700 mb-2">
+                {t?.dataset || "Dataset"}
+              </label>
+              <div className="relative">
+                <select
+                  id={datasetId}
+                  value={config.dataset}
+                  onChange={(e) => updateConfig({ dataset: e.target.value })}
+                  className="w-full px-4 py-2.5 pr-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900 text-sm appearance-none cursor-pointer"
+                  disabled={disabled}
+                >
+                  {SAMPLE_DATASETS.map((ds) => (
+                    <option key={ds.id} value={ds.id}>
+                      {ds.name} ({ds.count})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Budget Slider */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor={budgetId} className="text-sm font-medium text-gray-700">
+                  {t?.latencyBudget || "Latency Budget"}
+                </label>
+                <span className="text-sm text-gray-500">{config.budgetMs}ms</span>
+              </div>
+              <input
+                id={budgetId}
+                type="range"
+                min={50}
+                max={2000}
+                step={50}
+                value={config.budgetMs}
+                onChange={(e) => updateConfig({ budgetMs: Number(e.target.value) })}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                aria-describedby={budgetHelpId}
+                disabled={disabled}
+              />
+              <div id={budgetHelpId} className="flex justify-between text-xs text-gray-400 mt-1">
+                <span>50ms ({t?.fast || "fast"})</span>
+                <span>2000ms ({t?.thorough || "thorough"})</span>
+              </div>
+            </div>
+
+            {/* Top K */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor={topKId} className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
+                <span className="text-sm text-gray-500">{config.topK} {t?.results || "results"}</span>
+              </div>
+              <input
+                id={topKId}
+                type="range"
+                min={1}
+                max={20}
+                value={config.topK}
+                onChange={(e) => updateConfig({ topK: Number(e.target.value) })}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                aria-describedby={topKHelpId}
+                disabled={disabled}
+              />
+              <div id={topKHelpId} className="sr-only">
+                {t?.topK || "Top K"}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Budget Slider */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <label htmlFor={budgetId} className="text-sm font-medium text-gray-700">
-            {t?.latencyBudget || "Latency Budget"}
-          </label>
-
-          <span className="text-sm text-gray-500">{config.budgetMs}ms</span>
-        </div>
-        <input
-          id={budgetId}
-          type="range"
-          min={50}
-          max={2000}
-          step={50}
-          value={config.budgetMs}
-          onChange={(e) => updateConfig({ budgetMs: Number(e.target.value) })}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
-          aria-describedby={budgetHelpId}
-          disabled={disabled}
-        />
-        <div id={budgetHelpId} className="flex justify-between text-xs text-gray-400 mt-1">
-
-          <span>50ms ({t?.fast || "fast"})</span>
-          <span>2000ms ({t?.thorough || "thorough"})</span>
-        </div>
-      </div>
-
-      {/* Top K */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <label htmlFor={topKId} className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
-
-          <span className="text-sm text-gray-500">{config.topK} {t?.results || "results"}</span>
-        </div>
-        <input
-          id={topKId}
-          type="range"
-          min={1}
-          max={20}
-          value={config.topK}
-          onChange={(e) => updateConfig({ topK: Number(e.target.value) })}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
-          aria-describedby={topKHelpId}
-          disabled={disabled}
-        />
-        <div id={topKHelpId} className="sr-only">
-          {t?.topK || "Top K"}
-        </div>
-
+        )}
       </div>
 
       {/* Feature Toggles */}

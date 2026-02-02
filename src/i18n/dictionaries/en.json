@@ -1013,7 +1013,13 @@
   "extremeHome": {
     "heroTitle": "Governed memory & retrieval for agents.",
     "heroTagline": "Search you can debug.",
-    "heroSubtitle": "Debuggable by default: traces, evals, policy decisions, and costs in one place.",
+    "heroSubtitle": "Debuggable by default.",
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Policy"
+    },
+    "playgroundTitle": "Try it now",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
@@ -1023,6 +1029,7 @@
       "query": "Query",
       "queryPlaceholder": "Enter your search query...",
       "tryExamples": "Try examples",
+      "advanced": "Advanced",
       "dataset": "Dataset",
       "latencyBudget": "Latency Budget",
       "fast": "fast",
