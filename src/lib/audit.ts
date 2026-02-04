@@ -2,6 +2,10 @@ import { NextRequest } from 'next/server';
 import { createServerClient } from './supabase';
 import { alertAuthFailure, alertSuspiciousActivity } from './telegram';
 
+// Re-export all from audit folder for centralized access
+export * from './audit/logger';
+export * from './audit/tamper-evident';
+
 export interface AuditLogParams {
   userId: string;
   organizationId?: string;

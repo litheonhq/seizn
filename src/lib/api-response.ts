@@ -588,3 +588,39 @@ export function createRequestContext(request?: Request | { headers?: Headers }):
 export function calculateLatency(startTime: number): number {
   return Date.now() - startTime;
 }
+
+// ============================================
+// Legacy Aliases (for backward compatibility)
+// ============================================
+
+/**
+ * @deprecated Use errorResponse instead
+ */
+export function createApiError(
+  status: number,
+  code: string,
+  message: string,
+  details?: unknown
+): NextResponse<ApiErrorResponse> {
+  const traceId = generateTraceId();
+  const requestId = generateRequestId();
+  return errorResponse(
+    {
+      code,
+      message,
+      status,
+      details: details as Record<string, unknown>,
+    },
+    traceId,
+    requestId
+  );
+}
+
+/**
+ * @deprecated Use successResponse instead
+ */
+export function createApiResponse<T>(data: T): NextResponse<ApiSuccessResponse<T>> {
+  const traceId = generateTraceId();
+  const requestId = generateRequestId();
+  return successResponse(data, traceId, requestId);
+}

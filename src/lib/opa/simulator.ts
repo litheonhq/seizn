@@ -322,7 +322,7 @@ export class PolicySimulator {
     let passed = true;
 
     for (const [key, expectedValue] of Object.entries(test.expected)) {
-      const actualValue = (response.result as Record<string, unknown>)[key];
+      const actualValue = (response.result as unknown as Record<string, unknown>)[key];
 
       if (JSON.stringify(expectedValue) !== JSON.stringify(actualValue)) {
         diff[key] = { expected: expectedValue, actual: actualValue };

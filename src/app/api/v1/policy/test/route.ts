@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { PolicySimulator, BUILTIN_TEST_CASES, runBuiltinTests } from '@/lib/opa/simulator';
-import { getApiKeyFromRequest, validateApiKey } from '@/lib/api-auth';
+import { validateApiKey } from '@/lib/auth/api-key';
 import { createApiResponse, createApiError } from '@/lib/api-response';
 import type { PolicyTestSuite, PolicyTestSuiteResult } from '@/lib/opa/types';
 
@@ -46,22 +46,20 @@ const TestSuiteRequestSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // Authenticate request
-    const apiKey = getApiKeyFromRequest(request);
-    if (!apiKey) {
-      return createApiError(401, 'UNAUTHORIZED', 'Missing API key');
+    const auth = await validateApiKey(request);
+    if (!auth.valid) {
+      return createApiError(401, 'UNAUTHORIZED', auth.error || 'Invalid API key');
     }
 
-    const authResult = await validateApiKey(apiKey);
-    if (!authResult.valid) {
-      return createApiError(401, 'UNAUTHORIZED', authResult.error || 'Invalid API key');
-    }
-
-    // Check permission for policy testing
-    if (!['owner', 'admin'].includes(authResult.user?.role || '')) {
+    // Check permission for policy testing (requires admin scope)
+    const hasPermission =
+      auth.scopes?.includes('admin') ||
+      auth.scopes?.includes('*');
+    if (!hasPermission) {
       return createApiError(
         403,
         'FORBIDDEN',
-        'Policy testing requires admin or owner role'
+        'Policy testing requires admin scope'
       );
     }
 
@@ -130,14 +128,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // Authenticate request
-    const apiKey = getApiKeyFromRequest(request);
-    if (!apiKey) {
-      return createApiError(401, 'UNAUTHORIZED', 'Missing API key');
-    }
-
-    const authResult = await validateApiKey(apiKey);
-    if (!authResult.valid) {
-      return createApiError(401, 'UNAUTHORIZED', authResult.error || 'Invalid API key');
+    const auth = await validateApiKey(request);
+    if (!auth.valid) {
+      return createApiError(401, 'UNAUTHORIZED', auth.error || 'Invalid API key');
     }
 
     // Return available test cases

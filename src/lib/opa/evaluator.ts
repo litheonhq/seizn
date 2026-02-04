@@ -179,7 +179,7 @@ export class PolicyEvaluator {
 
     try {
       // Try WASM evaluation first
-      const decision = await this.evaluateWasm(input, entrypoint);
+      const decision = await this.evaluateWasm<PolicyDecision>(input, entrypoint);
       const endTime = performance.now();
 
       return {
