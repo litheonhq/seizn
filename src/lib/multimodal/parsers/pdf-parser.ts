@@ -11,9 +11,6 @@
  * Uses pdf-parse for text extraction with layout analysis
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const pdfParse = require('pdf-parse');
-
 import type {
   DocumentBlock,
   ParsedDocument,
@@ -59,6 +56,11 @@ export async function parsePdf(
 ): Promise<ParsedDocument> {
   const opts = { ...DEFAULT_OPTIONS, ...options };
   const documentId = randomUUID();
+
+  // Dynamically import pdf-parse to avoid DOMMatrix issues during build
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pdfParseModule = await import('pdf-parse') as any;
+  const pdfParse = pdfParseModule.default ?? pdfParseModule;
 
   // Parse PDF with pdf-parse
   const pdfData = await pdfParse(buffer, {
