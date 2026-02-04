@@ -2,9 +2,13 @@ import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 
+// Disable standalone on Windows due to Turbopack file naming issue with node: prefix
+// See: https://github.com/vercel/next.js/issues - colons in filenames not supported on Windows
+const isWindows = process.platform === 'win32';
+
 const nextConfig: NextConfig = {
-  // Enable standalone output for Docker
-  output: 'standalone',
+  // Enable standalone output for Docker (disabled on Windows due to Turbopack compatibility)
+  output: isWindows ? undefined : 'standalone',
 
   // Disable devtools indicator in development
   devIndicators: false,
@@ -108,11 +112,7 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
-  // ESLint - only lint src directory
-  eslint: {
-    dirs: ['src'],
-    ignoreDuringBuilds: true,
-  },
+  // Note: ESLint config moved to eslint.config.mjs (Next.js 16+ no longer supports eslint in next.config)
 };
 
 const withBundleAnalyzer = bundleAnalyzer({
