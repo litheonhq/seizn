@@ -125,7 +125,7 @@ export async function GET() {
     endpoint: '/api/summer/cache/invalidate',
     methods: ['DELETE', 'POST'],
     description: 'Cache Invalidation - Remove cache entries by various criteria',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     note: 'Invalidation is always scoped to the authenticated user\'s entries',
     request_body: {
       entry_id: {

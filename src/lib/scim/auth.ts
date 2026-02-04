@@ -167,7 +167,7 @@ export async function createSCIMToken(
   }
 
   // Create new config
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
   const { data, error } = await supabase
     .from('scim_configs')
     .insert({

@@ -5,10 +5,11 @@ info:
     AI Memory Infrastructure for Developers.
 
     ## Authentication
-    All API requests require an API key passed via the `X-API-Key` header.
+    All API requests require an API key passed via the `Authorization: Bearer` header.
+    Legacy `X-API-Key` is accepted until 2026-05-01.
 
     ```bash
-    curl -H "X-API-Key: sk_your_api_key" https://api.seizn.dev/api/memories
+    curl -H "Authorization: Bearer szn_your_api_key" https://www.seizn.com/api/memories
     ```
 
     ## Models Used
@@ -24,18 +25,18 @@ info:
   version: 1.0.0
   contact:
     name: Seizn Support
-    email: support@seizn.dev
+    email: support@seizn.com
   license:
     name: Proprietary
 
 servers:
-  - url: https://api.seizn.dev
+  - url: https://www.seizn.com
     description: Production
   - url: http://localhost:3000
     description: Local development
 
 security:
-  - ApiKeyAuth: []
+  - BearerAuth: []
 
 tags:
   - name: Memories
@@ -2279,10 +2280,10 @@ paths:
 
 components:
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: APIKey
 
   schemas:
     MemoryType:

@@ -217,7 +217,7 @@ export async function GET() {
     endpoint: '/api/graph-rag/search',
     method: 'POST',
     description: 'Graph-augmented retrieval combining vector search with graph traversal',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       query: {
         type: 'string',

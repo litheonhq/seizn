@@ -42,7 +42,7 @@ import type {
   MemoryStats,
 } from './types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api';
 const DEFAULT_TIMEOUT = 30000;
 const DEFAULT_RETRIES = 3;
 

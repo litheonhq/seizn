@@ -16,7 +16,7 @@ interface RouteParams {
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   // Find the resource type
   const resourceTypes = getResourceTypes(baseUrl);

@@ -14,7 +14,7 @@ pip install seizn
 from seizn import Seizn
 
 # Initialize client
-client = Seizn(api_key="sk_your_api_key")
+client = Seizn(api_key="szn_your_api_key")
 
 # Add a memory
 memory = client.add(
@@ -106,7 +106,7 @@ client.delete_webhook("webhook-uuid")
 ```python
 from seizn import Seizn, SeiznError
 
-client = Seizn(api_key="sk_...")
+client = Seizn(api_key="szn_...")
 
 try:
     memory = client.get("invalid-uuid")
@@ -118,7 +118,7 @@ except SeiznError as e:
 ## Context Manager
 
 ```python
-with Seizn(api_key="sk_...") as client:
+with Seizn(api_key="szn_...") as client:
     client.add("Memory content")
 # Connection automatically closed
 ```
@@ -127,8 +127,8 @@ with Seizn(api_key="sk_...") as client:
 
 ```python
 client = Seizn(
-    api_key="sk_...",
-    base_url="https://api.seizn.dev",  # Custom endpoint
+    api_key="szn_...",
+    base_url="https://www.seizn.com",  # Custom endpoint
     timeout=30.0,  # Request timeout
 )
 
@@ -141,7 +141,7 @@ from seizn import AsyncSeizn
 import asyncio
 
 async def main():
-    async with AsyncSeizn(api_key="sk_...") as client:
+    async with AsyncSeizn(api_key="szn_...") as client:
         # Add a single memory
         memory = await client.add("User prefers dark mode")
 
@@ -168,7 +168,7 @@ asyncio.run(main())
 ```python
 # Configure retries
 client = AsyncSeizn(
-    api_key="sk_...",
+    api_key="szn_...",
     retries=5,          # Number of retry attempts
     retry_delay=1.0,    # Base delay (uses exponential backoff)
 )

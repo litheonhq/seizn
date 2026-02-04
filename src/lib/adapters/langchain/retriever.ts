@@ -50,7 +50,7 @@ import type {
 } from './types';
 import type { SearchRequest, SearchResponse, SearchResult } from '@/lib/summer/sdk/types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api/summer';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api/summer';
 const DEFAULT_TOP_K = 4;
 const DEFAULT_TIMEOUT = 60000;
 const DEFAULT_RETRIES = 3;

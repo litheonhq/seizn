@@ -147,7 +147,7 @@ export async function GET() {
     endpoint: '/api/multimodal/parse',
     method: 'POST',
     description: 'Parse PDF documents with layout preservation',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     content_type: 'multipart/form-data',
     request_fields: {
       file: {

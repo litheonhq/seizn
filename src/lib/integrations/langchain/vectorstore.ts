@@ -31,7 +31,7 @@ import type {
   SeizError,
 } from './types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api';
 const DEFAULT_TOP_K = 5;
 const DEFAULT_TIMEOUT = 30000;
 

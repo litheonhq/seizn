@@ -44,9 +44,9 @@ function baseTemplate(content: string, previewText?: string) {
                 &copy; ${new Date().getFullYear()} Seizn. All rights reserved.
               </p>
               <p style="margin:8px 0 0;font-size:12px;color:#6b7280;text-align:center;">
-                <a href="https://seizn.com/privacy" style="color:#6b7280;">Privacy</a> &middot;
-                <a href="https://seizn.com/terms" style="color:#6b7280;">Terms</a> &middot;
-                <a href="https://seizn.com" style="color:#6b7280;">seizn.com</a>
+                <a href="https://www.seizn.com/privacy" style="color:#6b7280;">Privacy</a> &middot;
+                <a href="https://www.seizn.com/terms" style="color:#6b7280;">Terms</a> &middot;
+                <a href="https://www.seizn.com" style="color:#6b7280;">seizn.com</a>
               </p>
             </td>
           </tr>
@@ -77,7 +77,7 @@ export function welcomeEmail(name: string) {
       <li>Install our SDK: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">npm install seizn</code></li>
       <li>Start adding memories to your AI</li>
     </ol>
-    <a href="https://seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       Go to Dashboard
     </a>
   `;
@@ -100,7 +100,7 @@ export function apiKeyCreatedEmail(keyName: string, keyPreview: string) {
     <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">
       If you didn't create this key, please secure your account immediately.
     </p>
-    <a href="https://seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       View API Keys
     </a>
   `;
@@ -126,7 +126,7 @@ export function apiKeyRotatedEmail(keyName: string, keyPreview: string) {
     <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">
       If you didn't rotate this key, please secure your account immediately.
     </p>
-    <a href="https://seizn.com/dashboard/keys" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/dashboard/keys" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       View API Keys
     </a>
   `;
@@ -164,7 +164,7 @@ export function usageAlertEmail(
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
       Consider upgrading your plan to avoid service interruptions.
     </p>
-    <a href="https://seizn.com/pricing" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/pricing" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       Upgrade Plan
     </a>
   `;
@@ -244,7 +244,7 @@ export function weeklyUsageSummaryEmail(
       ${topTags.map(tag => `<span style="display:inline-block;background:#e5e7eb;padding:4px 12px;border-radius:9999px;margin:4px 4px 4px 0;">${tag}</span>`).join('')}
     </p>
     ` : ''}
-    <a href="https://seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       View Dashboard
     </a>
   `;
@@ -265,7 +265,7 @@ export function enterpriseInquiryConfirmationEmail(companyName: string, contactN
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
       In the meantime, feel free to explore our documentation or try our free tier.
     </p>
-    <a href="https://seizn.com/docs" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/docs" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       View Documentation
     </a>
   `;

@@ -484,24 +484,49 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         t={t}
       />
 
-      {/* Hero Section - Separated from Playground */}
-      <section className="pt-24 lg:pt-32 pb-10 lg:pb-16 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto text-center">
+      {/* Hero Section - Clean, focused above-the-fold with proper spacing */}
+      <section className="min-h-[70vh] flex items-center pt-20 lg:pt-24 pb-16 lg:pb-24 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* H1 - Concise tagline */}
-          <h1 className="text-[clamp(36px,4vw,56px)] font-semibold tracking-tight text-gray-900 mb-4 leading-tight">
+          <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 leading-[1.08]">
             {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
           </h1>
 
-          {/* Subtitle - Simplified */}
-          <p className="text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto mb-6">
-            {t.extremeHome?.heroSubtitle || "Debuggable by default."}
+          {/* Subtitle - Single sentence, clear value prop */}
+          <p className="text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
+            {t.extremeHome?.heroSubtitle || "Trace, evaluate, and enforce policies — all in one request."}
           </p>
 
-          {/* Feature Chips - Replaces verbose tagline */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
+          {/* CTAs - Primary and Secondary */}
+          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
+            <Link
+              href={`/${locale}/signup`}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-colors shadow-sm"
+            >
+              {t.extremeHome?.cta?.getApiKey || "Get API Key"}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+            <button
+              onClick={() => {
+                document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-medium rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {t.extremeHome?.cta?.tryDemo || "Try Demo"}
+            </button>
+          </div>
+
+          {/* Feature Chips - Trust signals below CTAs */}
+          <div className="flex items-center justify-center gap-3 flex-wrap pt-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-sm font-medium rounded-full">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               {t.extremeHome?.chips?.trace || "Trace"}
             </span>
@@ -521,14 +546,19 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         </div>
       </section>
 
-      {/* Playground Section - Separated with its own header */}
-      <section id="demo" className="pb-8 px-4 sm:px-6">
+      {/* Playground Section - Visually distinct with subtle background */}
+      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-gray-50/50 to-white">
         <div className="max-w-7xl mx-auto">
           {/* Playground Header with Mode Toggle */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-medium text-gray-900">
-              {t.extremeHome?.playgroundTitle || "Try it now"}
-            </h2>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t.extremeHome?.playgroundTitle || "Playground"}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                {t.extremeHome?.playgroundSubtitle || "Test the API with your own queries"}
+              </p>
+            </div>
 
             {/* Mode Toggle - Moved here */}
             <div className="flex items-center gap-2">

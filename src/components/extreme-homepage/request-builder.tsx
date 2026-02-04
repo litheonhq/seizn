@@ -40,12 +40,48 @@ export interface RequestBuilderTranslations {
   p95?: string;
   perRequest?: string;
   per1000?: string;
+  presets?: {
+    label?: string;
+    fast?: string;
+    fastDesc?: string;
+    balanced?: string;
+    balancedDesc?: string;
+    precise?: string;
+    preciseDesc?: string;
+  };
   datasets?: {
     techDocs?: string;
     legalContracts?: string;
     researchPapers?: string;
   };
 }
+
+// Preset configurations to reduce cognitive load (Hick's Law)
+type PresetType = "fast" | "balanced" | "precise";
+
+const PRESETS: Record<PresetType, Omit<RequestConfig, "query" | "dataset">> = {
+  fast: {
+    budgetMs: 200,
+    hybridSearch: false,
+    rerank: false,
+    answerContract: false,
+    topK: 3,
+  },
+  balanced: {
+    budgetMs: 500,
+    hybridSearch: true,
+    rerank: true,
+    answerContract: false,
+    topK: 5,
+  },
+  precise: {
+    budgetMs: 1500,
+    hybridSearch: true,
+    rerank: true,
+    answerContract: true,
+    topK: 10,
+  },
+};
 
 interface RequestBuilderProps {
   config: RequestConfig;
@@ -104,6 +140,22 @@ function estimateLatencyAndCost(config: RequestConfig): {
   };
 }
 
+// Helper to detect current preset from config
+function detectPreset(config: RequestConfig): PresetType | null {
+  for (const [key, preset] of Object.entries(PRESETS) as [PresetType, typeof PRESETS.fast][]) {
+    if (
+      config.budgetMs === preset.budgetMs &&
+      config.hybridSearch === preset.hybridSearch &&
+      config.rerank === preset.rerank &&
+      config.answerContract === preset.answerContract &&
+      config.topK === preset.topK
+    ) {
+      return key;
+    }
+  }
+  return null;
+}
+
 export function RequestBuilder({
   config,
   onConfigChange,
@@ -122,9 +174,15 @@ export function RequestBuilder({
   const topKId = `${idPrefix}-topk`;
   const topKHelpId = `${idPrefix}-topk-help`;
 
+  // Detect current preset based on config
+  const currentPreset = useMemo(() => detectPreset(config), [config]);
 
   const updateConfig = (updates: Partial<RequestConfig>) => {
     onConfigChange({ ...config, ...updates });
+  };
+
+  const applyPreset = (preset: PresetType) => {
+    onConfigChange({ ...config, ...PRESETS[preset] });
   };
 
   // Calculate estimated latency and cost in real-time
@@ -178,6 +236,77 @@ export function RequestBuilder({
             ))}
           </div>
         )}
+      </div>
+
+      {/* Preset Selector - Reduces cognitive load per Hick's Law */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t?.presets?.label || "Mode"}
+        </label>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={() => applyPreset("fast")}
+            className={`p-3 rounded-xl border text-left transition-all ${
+              currentPreset === "fast"
+                ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
+                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            }`}
+            disabled={disabled}
+          >
+            <div className="flex items-center gap-1.5 mb-1">
+              <svg className={`w-4 h-4 ${currentPreset === "fast" ? "text-emerald-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className={`text-sm font-medium ${currentPreset === "fast" ? "text-emerald-700" : "text-gray-700"}`}>
+                {t?.presets?.fast || "Fast"}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">{t?.presets?.fastDesc || "~200ms, basic"}</p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyPreset("balanced")}
+            className={`p-3 rounded-xl border text-left transition-all ${
+              currentPreset === "balanced"
+                ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
+                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            }`}
+            disabled={disabled}
+          >
+            <div className="flex items-center gap-1.5 mb-1">
+              <svg className={`w-4 h-4 ${currentPreset === "balanced" ? "text-blue-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+              </svg>
+              <span className={`text-sm font-medium ${currentPreset === "balanced" ? "text-blue-700" : "text-gray-700"}`}>
+                {t?.presets?.balanced || "Balanced"}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">{t?.presets?.balancedDesc || "~500ms, rerank"}</p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyPreset("precise")}
+            className={`p-3 rounded-xl border text-left transition-all ${
+              currentPreset === "precise"
+                ? "border-purple-500 bg-purple-50 ring-1 ring-purple-500"
+                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            }`}
+            disabled={disabled}
+          >
+            <div className="flex items-center gap-1.5 mb-1">
+              <svg className={`w-4 h-4 ${currentPreset === "precise" ? "text-purple-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+              <span className={`text-sm font-medium ${currentPreset === "precise" ? "text-purple-700" : "text-gray-700"}`}>
+                {t?.presets?.precise || "Precise"}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">{t?.presets?.preciseDesc || "~1.5s, full suite"}</p>
+          </button>
+        </div>
       </div>
 
       {/* Advanced Settings Accordion */}

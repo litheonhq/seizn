@@ -44,6 +44,14 @@
     {
       "path": "/api/cron/usage-cleanup",
       "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/internal/eval-processor",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/audit-batch",
+      "schedule": "0 * * * *"
     }
   ]
 }

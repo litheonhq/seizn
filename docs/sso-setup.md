@@ -58,8 +58,8 @@ Download the Seizn SP (Service Provider) metadata from your connection settings,
 
 | Setting | Value |
 |---------|-------|
-| SP Entity ID | `https://seizn.com/api/sso/saml/{org-slug}/metadata` |
-| ACS URL | `https://seizn.com/api/sso/saml/{org-slug}/acs` |
+| SP Entity ID | `https://www.seizn.com/api/sso/saml/{org-slug}/metadata` |
+| ACS URL | `https://www.seizn.com/api/sso/saml/{org-slug}/acs` |
 | NameID Format | `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` |
 
 Replace `{org-slug}` with your organization's slug.
@@ -73,8 +73,8 @@ Replace `{org-slug}` with your organization's slug.
 2. Select **SAML 2.0**
 3. Configure:
    - App name: `Seizn`
-   - Single sign-on URL: `https://seizn.com/api/sso/saml/{org-slug}/acs`
-   - Audience URI: `https://seizn.com/api/sso/saml/{org-slug}/metadata`
+   - Single sign-on URL: `https://www.seizn.com/api/sso/saml/{org-slug}/acs`
+   - Audience URI: `https://www.seizn.com/api/sso/saml/{org-slug}/metadata`
    - Name ID format: `EmailAddress`
 4. Add attribute statements:
    | Name | Value |
@@ -94,8 +94,8 @@ Replace `{org-slug}` with your organization's slug.
 3. Select **Integrate any other application (Non-gallery)**
 4. Go to **Single sign-on > SAML**
 5. Configure Basic SAML Configuration:
-   - Identifier: `https://seizn.com/api/sso/saml/{org-slug}/metadata`
-   - Reply URL: `https://seizn.com/api/sso/saml/{org-slug}/acs`
+   - Identifier: `https://www.seizn.com/api/sso/saml/{org-slug}/metadata`
+   - Reply URL: `https://www.seizn.com/api/sso/saml/{org-slug}/acs`
 6. Download the Federation Metadata XML
 
 </details>
@@ -106,8 +106,8 @@ Replace `{org-slug}` with your organization's slug.
 1. In Google Admin Console, go to **Apps > Web and mobile apps**
 2. Click **Add app > Add custom SAML app**
 3. Configure:
-   - ACS URL: `https://seizn.com/api/sso/saml/{org-slug}/acs`
-   - Entity ID: `https://seizn.com/api/sso/saml/{org-slug}/metadata`
+   - ACS URL: `https://www.seizn.com/api/sso/saml/{org-slug}/acs`
+   - Entity ID: `https://www.seizn.com/api/sso/saml/{org-slug}/metadata`
    - Name ID: Primary email
 4. Add attribute mappings as needed
 5. Download the IdP metadata
@@ -296,4 +296,4 @@ This will log detailed SAML request/response information.
 
 For SSO configuration assistance:
 - Email: support@seizn.com
-- Documentation: https://seizn.com/docs/sso
+- Documentation: https://www.seizn.com/docs/sso

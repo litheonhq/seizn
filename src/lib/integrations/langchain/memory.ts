@@ -33,7 +33,7 @@ import type {
 } from './types';
 import type { Memory, MemorySearchResult } from '@/lib/spring/types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api';
 const DEFAULT_TIMEOUT = 30000;
 const DEFAULT_K = 5;
 const DEFAULT_THRESHOLD = 0.7;

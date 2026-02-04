@@ -365,7 +365,7 @@ Ready to make your AI platform enterprise-ready?
 - [ ] Data residency controls
 - [ ] Custom policy creation
 
-**[Get Started with Seizn Governance →](https://seizn.com/enterprise)**
+**[Get Started with Seizn Governance →](https://www.seizn.com/enterprise)**
 
 ---
 

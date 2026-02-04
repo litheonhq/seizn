@@ -343,8 +343,8 @@ Real-time alerts for:
 ## Appendix A: Security Contacts
 
 - **Security Team**: security@seizn.com
-- **Bug Bounty**: https://seizn.com/security/bounty
-- **Vulnerability Disclosure**: https://seizn.com/security/disclosure
+- **Bug Bounty**: https://www.seizn.com/security/bounty
+- **Vulnerability Disclosure**: https://www.seizn.com/security/disclosure
 - **PGP Key Fingerprint**: `XXXX XXXX XXXX XXXX`
 
 ---

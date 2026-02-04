@@ -238,25 +238,25 @@ async function main() {
       version: "1.0.0",
       contact: {
         name: "Seizn Support",
-        url: "https://seizn.com",
+        url: "https://www.seizn.com",
         email: "support@seizn.com",
       },
     },
     servers: [
-      { url: "https://seizn.com", description: "Production" },
+      { url: "https://www.seizn.com", description: "Production" },
       { url: "http://localhost:3000", description: "Development" },
     ],
     paths: {} as Record<string, Record<string, unknown>>,
     components: {
       securitySchemes: {
-        ApiKeyAuth: {
-          type: "apiKey",
-          in: "header",
-          name: "x-api-key",
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "APIKey",
         },
       },
     },
-    security: [{ ApiKeyAuth: [] }],
+    security: [{ BearerAuth: [] }],
   };
 
   for (const ep of endpoints) {

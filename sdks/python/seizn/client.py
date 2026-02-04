@@ -17,6 +17,7 @@ from .types import (
 
 class SeiznError(Exception):
     """Base exception for Seizn errors."""
+
     def __init__(self, message: str, status_code: Optional[int] = None):
         self.message = message
         self.status_code = status_code
@@ -28,12 +29,12 @@ class Seizn:
     Seizn Memory API Client.
 
     Usage:
-        client = Seizn(api_key="sk_...")
+        client = Seizn(api_key="szn_...")
         client.add("User prefers TypeScript")
         results = client.search("programming preferences")
     """
 
-    DEFAULT_BASE_URL = "https://seizn.com"
+    DEFAULT_BASE_URL = "https://www.seizn.com"
 
     def __init__(
         self,
@@ -45,7 +46,7 @@ class Seizn:
         Initialize the Seizn client.
 
         Args:
-            api_key: Your Seizn API key (starts with sk_)
+            api_key: Your Seizn API key (starts with szn_)
             base_url: Override the API base URL (for testing)
             timeout: Request timeout in seconds
         """
@@ -54,7 +55,7 @@ class Seizn:
         self.timeout = timeout
         self._client = httpx.Client(
             base_url=self.base_url,
-            headers={"X-API-Key": api_key},
+            headers={"Authorization": f"Bearer {api_key}"},
             timeout=timeout,
         )
 
@@ -103,7 +104,9 @@ class Seizn:
         """
         data = {
             "content": content,
-            "memory_type": memory_type.value if isinstance(memory_type, MemoryType) else memory_type,
+            "memory_type": memory_type.value
+            if isinstance(memory_type, MemoryType)
+            else memory_type,
             "tags": tags or [],
             "namespace": namespace,
             **kwargs,
@@ -145,7 +148,9 @@ class Seizn:
         """
         data = {}
         if memory_type:
-            data["memory_type"] = memory_type.value if isinstance(memory_type, MemoryType) else memory_type
+            data["memory_type"] = (
+                memory_type.value if isinstance(memory_type, MemoryType) else memory_type
+            )
         if tags is not None:
             data["tags"] = tags
         if importance is not None:
@@ -242,7 +247,6 @@ class Seizn:
         }
         result = self._request("POST", "/api/extract", json=data)
         return [ExtractedMemory.from_dict(m) for m in result.get("extracted", [])]
-
 
     def extract_image(
         self,

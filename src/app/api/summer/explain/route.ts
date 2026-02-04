@@ -235,7 +235,7 @@ export async function GET() {
     endpoint: '/api/summer/explain',
     method: 'POST',
     description: 'Generate explanations for search results',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       query: {
         type: 'string',

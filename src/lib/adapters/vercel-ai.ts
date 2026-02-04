@@ -28,7 +28,7 @@ export class SeizVercelAIAdapter {
     if (!this.config.traceRequests && !this.config.traceResponses) return;
 
     try {
-      const response = await fetch(`${this.config.baseUrl || 'https://seizn.com'}/api/traces`, {
+      const response = await fetch(`${this.config.baseUrl || 'https://www.seizn.com'}/api/traces`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export class SeizVercelAIAdapter {
   private async saveMemory(payload: MemoryPayload): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories`,
         {
           method: 'POST',
           headers: {
@@ -403,7 +403,7 @@ export class SeizVercelAIAdapter {
   async searchMemories(query: string, options?: { limit?: number; threshold?: number }) {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories/search`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories/search`,
         {
           method: 'POST',
           headers: {
@@ -440,7 +440,7 @@ export class SeizVercelAIAdapter {
   async getConversationHistory(options?: { limit?: number }) {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories/history`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories/history`,
         {
           method: 'POST',
           headers: {

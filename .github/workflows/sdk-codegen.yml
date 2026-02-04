@@ -212,9 +212,9 @@ jobs:
 
           export function configureSDK(config: SeizndkConfig): void {
             const { OpenAPI } = require('./generated/core/OpenAPI');
-            OpenAPI.BASE = config.baseUrl || 'https://api.seizn.dev';
+            OpenAPI.BASE = config.baseUrl || 'https://www.seizn.com';
             OpenAPI.HEADERS = {
-              'X-API-Key': config.apiKey,
+              Authorization: `Bearer ${config.apiKey}`,
             };
             if (config.timeout) {
               OpenAPI.TIMEOUT = config.timeout;
@@ -276,7 +276,7 @@ jobs:
           // Configure the SDK with your API key
           configureSDK({
             apiKey: 'your-api-key',
-            baseUrl: 'https://api.seizn.dev', // optional, defaults to production
+            baseUrl: 'https://www.seizn.com', // optional, defaults to production
           });
 
           // Use the generated services

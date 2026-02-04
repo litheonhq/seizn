@@ -67,7 +67,7 @@ function validateRequestBody(
  *
  * @example
  * ```bash
- * curl -X POST https://api.seizn.com/api/onboarding/analyze \
+ * curl -X POST https://www.seizn.com/api/onboarding/analyze \
  *   -H "Authorization: Bearer szn_xxx" \
  *   -H "Content-Type: application/json" \
  *   -d '{

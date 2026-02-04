@@ -27,7 +27,7 @@ export class SeizLlamaIndexCallbackHandler implements SeizCallbackHandler {
 
   private async sendTrace(payload: TracePayload): Promise<void> {
     try {
-      const response = await fetch(`${this.config.baseUrl || 'https://seizn.com'}/api/traces`, {
+      const response = await fetch(`${this.config.baseUrl || 'https://www.seizn.com'}/api/traces`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -421,7 +421,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   ): Promise<string[]> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/documents`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/documents`,
         {
           method: 'POST',
           headers: {
@@ -464,7 +464,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   ): Promise<Array<{ content: string; metadata?: Record<string, unknown>; score: number }>> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/search`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/search`,
         {
           method: 'POST',
           headers: {
@@ -505,7 +505,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   async delete(ids: string[]): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/documents`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/documents`,
         {
           method: 'DELETE',
           headers: {
@@ -534,7 +534,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   async getNodes(ids: string[]): Promise<Array<{ id: string; content: string; metadata?: Record<string, unknown> }>> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/nodes`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/nodes`,
         {
           method: 'POST',
           headers: {
@@ -565,7 +565,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   async createCollection(name: string, options?: { dimension?: number; metric?: string }): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/collections`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/collections`,
         {
           method: 'POST',
           headers: {
@@ -594,7 +594,7 @@ export class SeizLlamaIndexVectorStore implements SeizVectorStoreInterface {
   async deleteCollection(name: string): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/vectors/collections/${name}`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/vectors/collections/${name}`,
         {
           method: 'DELETE',
           headers: {

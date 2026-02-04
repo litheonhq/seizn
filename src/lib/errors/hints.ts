@@ -20,7 +20,7 @@ export const ERROR_HINTS: Record<SeizErrorCode, string> = {
 
   // Auth errors (100-109)
   [SEIZN_ERROR_CODES.MISSING_API_KEY]:
-    'Add the x-api-key header to your request. Get your API key from Dashboard > API Keys.',
+    'Add the Authorization: Bearer <api-key> header to your request. Get your API key from Dashboard > API Keys.',
   [SEIZN_ERROR_CODES.INVALID_API_KEY]:
     'Verify your API key is correct and active in Dashboard > API Keys. Regenerate if necessary.',
   [SEIZN_ERROR_CODES.EXPIRED_API_KEY]:
@@ -220,14 +220,14 @@ export function getErrorHint(code: string): string {
  * Documentation URL for each error category
  */
 export const DOCS_URLS: Record<string, string> = {
-  auth: 'https://seizn.com/docs/api/authentication',
-  rate_limit: 'https://seizn.com/docs/api/rate-limits',
-  validation: 'https://seizn.com/docs/api/errors#validation',
-  idempotency: 'https://seizn.com/docs/api/idempotency',
-  resource: 'https://seizn.com/docs/api/errors#resources',
-  external: 'https://seizn.com/docs/api/errors#external',
-  internal: 'https://seizn.com/docs/api/errors#internal',
-  default: 'https://seizn.com/docs/api/errors',
+  auth: 'https://www.seizn.com/docs/api/authentication',
+  rate_limit: 'https://www.seizn.com/docs/api/rate-limits',
+  validation: 'https://www.seizn.com/docs/api/errors#validation',
+  idempotency: 'https://www.seizn.com/docs/api/idempotency',
+  resource: 'https://www.seizn.com/docs/api/errors#resources',
+  external: 'https://www.seizn.com/docs/api/errors#external',
+  internal: 'https://www.seizn.com/docs/api/errors#internal',
+  default: 'https://www.seizn.com/docs/api/errors',
 };
 
 /**

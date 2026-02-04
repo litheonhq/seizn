@@ -285,7 +285,7 @@ async function createProject(config: ProjectConfig): Promise<void> {
 
     if (!config.seiznApiKey) {
       console.log(chalk.yellow('\n  Note: Remember to add your SEIZN_API_KEY to .env.local'));
-      console.log(chalk.gray('  Get your API key at https://seizn.com/dashboard/api-keys\n'));
+      console.log(chalk.gray('  Get your API key at https://www.seizn.com/dashboard/api-keys\n'));
     }
   } catch (error) {
     spinner.fail('Failed to create project');
@@ -420,7 +420,7 @@ export default function RootLayout({
         <h2 className="text-xl font-semibold mb-2">Getting Started</h2>
         <ul className="list-disc list-inside space-y-2 text-gray-700">
           <li>Add your <code className="bg-gray-200 px-1 rounded">SEIZN_API_KEY</code> to <code className="bg-gray-200 px-1 rounded">.env.local</code></li>
-          <li>Check out the <a href="https://seizn.com/docs" className="text-blue-600 hover:underline">Seizn documentation</a></li>
+          <li>Check out the <a href="https://www.seizn.com/docs" className="text-blue-600 hover:underline">Seizn documentation</a></li>
           <li>Start building with RAG-powered AI features</li>
         </ul>
       </div>
@@ -659,7 +659,7 @@ SEIZN_PROJECT_ID=${config.seiznProjectId || ''}
 
 function generateEnvExample(): string {
   return `# Seizn Configuration
-# Get your API key at https://seizn.com/dashboard/api-keys
+# Get your API key at https://www.seizn.com/dashboard/api-keys
 SEIZN_API_KEY=
 SEIZN_PROJECT_ID=
 

@@ -16,7 +16,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:security": "vitest run security/llm-top10/"
+    "test:security": "vitest run src/__tests__/security/llm-top10/",
+    "test:security:strict": "SECURITY_STRICT_MODE=true vitest run src/__tests__/security/llm-top10/"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

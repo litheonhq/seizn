@@ -132,7 +132,7 @@ function extractErrorLogs(trace: TraceSnapshot, profile: RedactionProfile): stri
  * Generate replay commands for the trace
  */
 function generateReplayCommands(trace: TraceSnapshot): ReplayCommand[] {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com';
   const query = trace.query_text || 'YOUR_QUERY_HERE';
   const config = trace.effective_config || {};
 
@@ -144,7 +144,7 @@ function generateReplayCommands(trace: TraceSnapshot): ReplayCommand[] {
     description: 'Replay this exact request using curl',
     code: `curl -X POST "${baseUrl}/api/retrieval/query" \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: YOUR_API_KEY" \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -d '{
     "query": "${query.replace(/"/g, '\\"')}",
     "top_k": ${config.topK || 10},

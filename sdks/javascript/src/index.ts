@@ -5,7 +5,7 @@
  * ```typescript
  * import { Seizn } from 'seizn';
  *
- * const client = new Seizn({ apiKey: 'sk_...' });
+ * const client = new Seizn({ apiKey: 'szn_...' });
  *
  * // Add a memory
  * await client.add('User prefers dark mode');

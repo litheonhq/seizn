@@ -28,7 +28,7 @@ export type AuthMethod = 'bearer' | 'x-api-key';
 const X_API_KEY_DEPRECATION = {
   enabled: true,
   sunsetDate: '2026-05-01T00:00:00Z', // 90 days from now
-  docsUrl: 'https://seizn.com/docs/auth#migration',
+  docsUrl: 'https://www.seizn.com/docs/auth#migration',
 };
 
 /**
@@ -239,8 +239,8 @@ export function authErrorResponse(authError: AuthError): NextResponse {
 
   // Determine docs URL based on error type
   const docsUrl = authError.code.startsWith('RATE_') || authError.code.startsWith('QUOTA_')
-    ? 'https://seizn.com/docs#rate-limits'
-    : 'https://seizn.com/docs#authentication';
+    ? 'https://www.seizn.com/docs#rate-limits'
+    : 'https://www.seizn.com/docs#authentication';
 
   const response = NextResponse.json(
     {

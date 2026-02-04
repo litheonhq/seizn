@@ -18,6 +18,7 @@ from .types import (
 
 class SeiznAsyncError(Exception):
     """Base exception for Seizn async client errors."""
+
     def __init__(self, message: str, status_code: Optional[int] = None):
         self.message = message
         self.status_code = status_code
@@ -29,12 +30,12 @@ class AsyncSeizn:
     Async Seizn Memory API Client.
 
     Usage:
-        async with AsyncSeizn(api_key="sk_...") as client:
+        async with AsyncSeizn(api_key="szn_...") as client:
             await client.add("User prefers TypeScript")
             results = await client.search("programming preferences")
     """
 
-    DEFAULT_BASE_URL = "https://seizn.com"
+    DEFAULT_BASE_URL = "https://www.seizn.com"
     DEFAULT_RETRIES = 3
     DEFAULT_RETRY_DELAY = 1.0
 
@@ -50,7 +51,7 @@ class AsyncSeizn:
         Initialize the async Seizn client.
 
         Args:
-            api_key: Your Seizn API key (starts with sk_)
+            api_key: Your Seizn API key (starts with szn_)
             base_url: Override the API base URL (for testing)
             timeout: Request timeout in seconds
             retries: Number of retry attempts for transient failures
@@ -68,7 +69,7 @@ class AsyncSeizn:
         if self._client is None or self._client.is_closed:
             self._client = httpx.AsyncClient(
                 base_url=self.base_url,
-                headers={"X-API-Key": self.api_key},
+                headers={"Authorization": f"Bearer {self.api_key}"},
                 timeout=self.timeout,
             )
         return self._client
@@ -90,7 +91,9 @@ class AsyncSeizn:
 
                 if response.status_code >= 500:
                     # Server error - retry
-                    raise SeiznAsyncError(f"Server error: {response.status_code}", response.status_code)
+                    raise SeiznAsyncError(
+                        f"Server error: {response.status_code}", response.status_code
+                    )
 
                 if response.status_code >= 400:
                     # Client error - don't retry
@@ -106,7 +109,7 @@ class AsyncSeizn:
             except (httpx.TimeoutException, httpx.ConnectError) as e:
                 last_exception = SeiznAsyncError(str(e))
                 if attempt < self.retries - 1:
-                    delay = self.retry_delay * (2 ** attempt)
+                    delay = self.retry_delay * (2**attempt)
                     await asyncio.sleep(delay)
                 continue
 
@@ -114,7 +117,7 @@ class AsyncSeizn:
                 if e.status_code and e.status_code >= 500:
                     last_exception = e
                     if attempt < self.retries - 1:
-                        delay = self.retry_delay * (2 ** attempt)
+                        delay = self.retry_delay * (2**attempt)
                         await asyncio.sleep(delay)
                     continue
                 raise
@@ -136,7 +139,9 @@ class AsyncSeizn:
         """Add a new memory."""
         data = {
             "content": content,
-            "memory_type": memory_type.value if isinstance(memory_type, MemoryType) else memory_type,
+            "memory_type": memory_type.value
+            if isinstance(memory_type, MemoryType)
+            else memory_type,
             "tags": tags or [],
             "namespace": namespace,
             **kwargs,
@@ -185,7 +190,9 @@ class AsyncSeizn:
         """Update a memory."""
         data = {}
         if memory_type:
-            data["memory_type"] = memory_type.value if isinstance(memory_type, MemoryType) else memory_type
+            data["memory_type"] = (
+                memory_type.value if isinstance(memory_type, MemoryType) else memory_type
+            )
         if tags is not None:
             data["tags"] = tags
         if importance is not None:
@@ -201,7 +208,9 @@ class AsyncSeizn:
 
     async def delete_many(self, memory_ids: List[str]) -> int:
         """Delete multiple memories."""
-        result = await self._request("DELETE", "/api/memories", params={"ids": ",".join(memory_ids)})
+        result = await self._request(
+            "DELETE", "/api/memories", params={"ids": ",".join(memory_ids)}
+        )
         return result.get("deleted", 0)
 
     async def search(
@@ -243,7 +252,6 @@ class AsyncSeizn:
         }
         result = await self._request("POST", "/api/extract", json=data)
         return [ExtractedMemory.from_dict(m) for m in result.get("extracted", [])]
-
 
     async def extract_image(
         self,

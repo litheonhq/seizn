@@ -151,7 +151,7 @@ export const AuthErrors = {
   missingApiKey: (traceId?: string) =>
     createApiError({
       code: SEIZN_ERROR_CODES.MISSING_API_KEY,
-      message: 'API key required. Include x-api-key header in your request.',
+      message: 'API key required. Include Authorization: Bearer header in your request.',
       traceId,
     }),
 

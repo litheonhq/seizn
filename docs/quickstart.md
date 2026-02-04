@@ -22,7 +22,7 @@ pip install seizn
 
 ## Get API Key
 
-1. Sign up at [seizn.com/signup](https://seizn.com/signup)
+1. Sign up at [www.seizn.com/signup](https://www.seizn.com/signup)
 2. Copy your API key from the dashboard
 3. Set as environment variable:
 
@@ -144,7 +144,7 @@ memories = client.add_messages(messages, user_id="user123")
 - [Spring SDK Guide](./spring-sdk-quickstart.md) - Detailed memory management
 - [Summer SDK Guide](./summer-sdk-quickstart.md) - Document search & RAG
 - [API Reference](./openapi.yaml) - Full API documentation
-- [Dashboard](https://seizn.com/dashboard) - Manage API keys & usage
+- [Dashboard](https://www.seizn.com/dashboard) - Manage API keys & usage
 
 ## Support
 

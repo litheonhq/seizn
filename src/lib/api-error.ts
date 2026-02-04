@@ -75,7 +75,7 @@ export interface ApiErrorResponse {
 
 const Hints: Record<ErrorCode, string> = {
   // Auth
-  [ErrorCodes.AUTH_MISSING_KEY]: 'Add x-api-key header to your request',
+  [ErrorCodes.AUTH_MISSING_KEY]: 'Add Authorization: Bearer <api-key> header to your request',
   [ErrorCodes.AUTH_INVALID_KEY]: 'Check API key in Dashboard → API Keys',
   [ErrorCodes.AUTH_EXPIRED_KEY]: 'Generate new API key in Dashboard',
   [ErrorCodes.AUTH_UNAUTHORIZED]: 'Verify resource ownership or permissions',
@@ -130,7 +130,7 @@ function generateTraceId(): string {
 }
 
 function getDocsUrl(code: ErrorCode): string {
-  const baseUrl = 'https://seizn.com/docs';
+  const baseUrl = 'https://www.seizn.com/docs';
 
   // Map error codes to relevant documentation sections
   if (code.startsWith('AUTH_')) return `${baseUrl}#authentication`;
@@ -183,7 +183,7 @@ export const AuthErrors = {
   missingApiKey: () =>
     createApiError({
       code: ErrorCodes.AUTH_MISSING_KEY,
-      message: 'API key required. Pass your API key in the x-api-key header.',
+      message: 'API key required. Pass your API key in the Authorization: Bearer header.',
       status: 401,
     }),
 

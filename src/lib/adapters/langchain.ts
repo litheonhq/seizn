@@ -29,7 +29,7 @@ export class SeizLangChainCallbackHandler implements SeizCallbackHandler {
 
   private async sendTrace(payload: TracePayload): Promise<void> {
     try {
-      const response = await fetch(`${this.config.baseUrl || 'https://seizn.com'}/api/traces`, {
+      const response = await fetch(`${this.config.baseUrl || 'https://www.seizn.com'}/api/traces`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -360,7 +360,7 @@ export class SeizLangChainMemory implements SeizMemoryInterface {
   private async searchMemories(query: string): Promise<MemoryResult[]> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories/search`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories/search`,
         {
           method: 'POST',
           headers: {
@@ -394,7 +394,7 @@ export class SeizLangChainMemory implements SeizMemoryInterface {
   private async addMemory(payload: MemoryPayload): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories`,
         {
           method: 'POST',
           headers: {
@@ -488,7 +488,7 @@ export class SeizLangChainMemory implements SeizMemoryInterface {
   async clear(): Promise<void> {
     try {
       const response = await fetch(
-        `${this.config.baseUrl || 'https://seizn.com'}/api/memories/clear`,
+        `${this.config.baseUrl || 'https://www.seizn.com'}/api/memories/clear`,
         {
           method: 'POST',
           headers: {

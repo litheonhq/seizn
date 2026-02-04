@@ -711,7 +711,7 @@ export class RateLimitHandler {
       },
       effort: 'large',
       requiresReview: true,
-      docsUrl: 'https://seizn.com/docs/troubleshooting',
+      docsUrl: 'https://www.seizn.com/docs/troubleshooting',
     };
   }
 

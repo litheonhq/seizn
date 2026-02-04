@@ -49,9 +49,9 @@ function baseTemplate(content: string, previewText?: string) {
                 &copy; ${new Date().getFullYear()} Seizn. All rights reserved.
               </p>
               <p style="margin:8px 0 0;font-size:12px;color:#6b7280;text-align:center;">
-                <a href="https://seizn.com/privacy" style="color:#6b7280;">Privacy</a> &middot;
-                <a href="https://seizn.com/terms" style="color:#6b7280;">Terms</a> &middot;
-                <a href="https://seizn.com" style="color:#6b7280;">seizn.com</a>
+                <a href="https://www.seizn.com/privacy" style="color:#6b7280;">Privacy</a> &middot;
+                <a href="https://www.seizn.com/terms" style="color:#6b7280;">Terms</a> &middot;
+                <a href="https://www.seizn.com" style="color:#6b7280;">seizn.com</a>
               </p>
             </td>
           </tr>
@@ -149,7 +149,7 @@ export function rtbfDeletionConfirmationEmail(params: RTBFDeletionConfirmationPa
       If you have any questions about this deletion or need additional documentation for compliance purposes,
       please contact our support team.
     </p>
-    <a href="https://seizn.com/support" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/support" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       Contact Support
     </a>
   `;
@@ -215,7 +215,7 @@ export function rtbfRequestReceivedEmail(params: RTBFRequestReceivedParams) {
     <p style="margin:0 0 24px;font-size:14px;color:#6b7280;">
       You can check the status of your request at any time in your dashboard.
     </p>
-    <a href="https://seizn.com/dashboard/privacy" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="https://www.seizn.com/dashboard/privacy" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       View Request Status
     </a>
   `;

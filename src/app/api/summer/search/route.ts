@@ -323,7 +323,7 @@ export async function GET() {
     endpoint: '/api/summer/search',
     method: 'POST',
     description: 'Summer RAG Gateway - Unified Search API',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       query: {
         type: 'string',

@@ -179,7 +179,7 @@ ${JSON.stringify(metadata, null, 2)}
 
 ---
 
-*This PR was generated automatically by [Seizn Auto-PR Fixer](https://seizn.com/docs/auto-pr)*
+*This PR was generated automatically by [Seizn Auto-PR Fixer](https://www.seizn.com/docs/auto-pr)*
 *Review the changes carefully before merging.*
 `);
 

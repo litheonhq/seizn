@@ -186,7 +186,7 @@ export async function GET() {
     endpoint: '/api/summer/cache/query',
     method: 'POST',
     description: 'Semantic Cache Query - Check for cached responses by semantic similarity',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       query: {
         type: 'string',

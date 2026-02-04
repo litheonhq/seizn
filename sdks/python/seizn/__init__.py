@@ -4,7 +4,7 @@ Seizn - AI Memory Infrastructure for Developers
 Sync Usage:
     from seizn import Seizn
 
-    client = Seizn(api_key="sk_...")
+    client = Seizn(api_key="szn_...")
 
     # Add a memory
     client.add("User prefers dark mode")
@@ -21,7 +21,7 @@ Sync Usage:
 Async Usage:
     from seizn import AsyncSeizn
 
-    async with AsyncSeizn(api_key="sk_...") as client:
+    async with AsyncSeizn(api_key="szn_...") as client:
         await client.add("User prefers dark mode")
         results = await client.search("user preferences")
 

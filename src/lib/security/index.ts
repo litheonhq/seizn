@@ -136,6 +136,77 @@ export {
 } from './pii-audit';
 
 // =============================================================================
+// Secret Patterns
+// =============================================================================
+
+export {
+  // Types
+  type SecretType,
+  type SecretPatternDefinition,
+
+  // Pattern registry
+  SECRET_PATTERNS,
+
+  // Utilities
+  getPatternsBySeverity,
+  getPatternsByType as getSecretPatternsByType,
+  getAllSecretTypes,
+  getCriticalPatterns,
+  getHighConfidencePatterns,
+} from './secret-patterns';
+
+// =============================================================================
+// PII Pipeline (Unified Detection)
+// =============================================================================
+
+export {
+  // Types
+  type PipelineMode,
+  type PIIAction,
+  type PipelineConfig,
+  type PIIEntity,
+  type PipelineResult,
+  type PIIAuditEntry as PipelineAuditEntry,
+
+  // Class
+  PIIPipeline,
+
+  // Functions
+  getPIIPipeline,
+  configurePIIPipeline,
+  processPII,
+  scanPII,
+} from './pii-pipeline';
+
+// =============================================================================
+// Presidio Integration (NER-based Detection)
+// =============================================================================
+
+export {
+  // Types
+  type PresidioEntityType,
+  type PresidioRecognizerResult,
+  type PresidioAnalyzeRequest,
+  type PresidioAnonymizeRequest,
+  type PresidioAnonymizeResponse,
+  type PresidioClientConfig,
+  type AdHocRecognizer,
+  type AnonymizeOperator,
+
+  // Class
+  PresidioClient,
+
+  // Functions
+  getPresidioClient,
+  configurePresidioClient,
+  analyzeText,
+  anonymizeText,
+
+  // Recognizers
+  KOREAN_RECOGNIZERS,
+} from './presidio-client';
+
+// =============================================================================
 // Convenience Functions
 // =============================================================================
 
@@ -249,3 +320,30 @@ export function redact(text: string): string {
 
   return redacted;
 }
+
+// =============================================================================
+// Red Team Harness
+// =============================================================================
+
+export {
+  // Types
+  type AttackCategory,
+  type AttackSeverity,
+  type AttackVector,
+  type RedTeamResult,
+  type RedTeamRun,
+  type RedTeamConfig,
+  type VulnerabilityReport,
+
+  // Classes
+  AttackGenerator,
+  RedTeamRunner,
+
+  // Factory functions
+  createAttackGenerator,
+  createRedTeamRunner,
+
+  // Attack vectors
+  ATTACK_VECTORS,
+  attackVectors,
+} from './red-team';

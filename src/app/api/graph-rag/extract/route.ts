@@ -250,7 +250,7 @@ export async function GET() {
     endpoint: '/api/graph-rag/extract',
     method: 'POST',
     description: 'Extract entities and relations from text chunks',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       collection_id: {
         type: 'string (UUID)',
