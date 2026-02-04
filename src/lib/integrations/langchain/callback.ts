@@ -47,7 +47,7 @@ import type {
   TraceResult,
 } from './types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api';
 
 /**
  * SeizCallbackHandler - LangChain BaseCallbackHandler implementation

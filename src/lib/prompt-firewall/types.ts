@@ -19,6 +19,10 @@ export type ThreatCategory =
   | 'context_manipulation' // Manipulating conversation context
   | 'indirect_injection'  // Injection via external content
   | 'denial_of_service'   // Resource exhaustion attempts
+  | 'excessive_agency'    // LLM08: Unauthorized autonomous actions
+  | 'insecure_output'     // LLM02: XSS/SQL/command injection via output
+  | 'sensitive_disclosure' // LLM06: PII/credentials extraction
+  | 'unbounded_consumption' // LLM10: API/token/storage exhaustion
   | 'unknown';
 
 export interface ThreatPattern {

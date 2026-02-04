@@ -50,9 +50,25 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run LLM Security Tests
-        run: pnpm test:security
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ] || [ "${{ github.event_name }}" == "release" ]; then
+            echo "Running in STRICT MODE for main/release"
+            pnpm test:security:strict
+          else
+            pnpm test:security
+          fi
         env:
           NODE_ENV: test
+          SECURITY_LOG_RESULTS: true
+
+      - name: Generate Security Report
+        if: always()
+        run: |
+          mkdir -p security-reports
+          echo "# OWASP LLM Top 10 Security Test Report" > security-reports/report.md
+          echo "Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> security-reports/report.md
+          echo "Ref: ${{ github.ref }}" >> security-reports/report.md
+          echo "Commit: ${{ github.sha }}" >> security-reports/report.md
 
       - name: Upload Security Test Results
         if: always()
@@ -60,7 +76,7 @@ jobs:
         with:
           name: security-test-results
           path: |
-            security/llm-top10/results/
+            security-reports/
             coverage/
           retention-days: 30
 

@@ -7,7 +7,7 @@
  * ```typescript
  * import { Seizn } from 'seizn';
  *
- * const client = new Seizn({ apiKey: 'sk_...' });
+ * const client = new Seizn({ apiKey: 'szn_...' });
  *
  * // Add a memory
  * await client.add('User prefers dark mode');
@@ -50,7 +50,7 @@ export class Seizn {
   private baseUrl: string;
   private timeout: number;
 
-  static DEFAULT_BASE_URL = 'https://seizn.com';
+  static DEFAULT_BASE_URL = 'https://www.seizn.com';
 
   constructor(config: SeiznConfig) {
     this.apiKey = config.apiKey;
@@ -84,7 +84,7 @@ export class Seizn {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': this.apiKey,
+          Authorization: `Bearer ${this.apiKey}`,
         },
         body: options?.body ? JSON.stringify(options.body) : undefined,
         signal: controller.signal,

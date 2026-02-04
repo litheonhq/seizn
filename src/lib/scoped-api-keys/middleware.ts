@@ -82,7 +82,7 @@ export async function authenticateScopedRequest(
         code: ScopedApiKeyErrorCodes.MISSING_KEY,
         message: 'API key required. Use Authorization: Bearer <your-api-key> header.',
         status: 401,
-        hint: 'Obtain an API key from your dashboard at https://seizn.com/dashboard/keys',
+        hint: 'Obtain an API key from your dashboard at https://www.seizn.com/dashboard/keys',
       },
     };
   }
@@ -197,7 +197,7 @@ export function scopedAuthErrorResponse(error: ScopedAuthError['error']): NextRe
         message: error.message,
         trace_id: traceId,
         hint: error.hint,
-        docs_url: 'https://seizn.com/docs/scoped-api-keys',
+        docs_url: 'https://www.seizn.com/docs/scoped-api-keys',
       },
     },
     {

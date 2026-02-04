@@ -17,7 +17,7 @@ export function getConfig(): RelayAgentConfig {
     throw new Error('SEIZN_RELAY_AGENT_KEY is required');
   }
 
-  const seiznCallbackUrl = process.env.SEIZN_CALLBACK_URL || 'https://seizn.com/api/relay/callback';
+  const seiznCallbackUrl = process.env.SEIZN_CALLBACK_URL || 'https://www.seizn.com/api/relay/callback';
   const collections = (process.env.SEIZN_RELAY_COLLECTIONS || '').split(',').filter(Boolean);
 
   return {

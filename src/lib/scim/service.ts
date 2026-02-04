@@ -45,7 +45,7 @@ export async function listUsers(
   options: SCIMFilterOptions = {}
 ): Promise<SCIMListResponse<SCIMUser>> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   // Build query
   let query = supabase
@@ -125,7 +125,7 @@ export async function getUser(
   organizationId: string
 ): Promise<SCIMUser | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   const { data, error } = await supabase
     .from('scim_users')
@@ -150,7 +150,7 @@ export async function findUserByUserName(
   configId: string
 ): Promise<SCIMUser | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   const { data, error } = await supabase
     .from('scim_users')
@@ -176,7 +176,7 @@ export async function createUser(
   userData: CreateSCIMUserRequest
 ): Promise<SCIMUser> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   if (!validateUserName(userData.userName)) {
     throw new Error('Invalid userName');
@@ -233,7 +233,7 @@ export async function updateUser(
   userData: CreateSCIMUserRequest
 ): Promise<SCIMUser | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   // Check if user exists
   const existing = await getUser(userId, organizationId);
@@ -286,7 +286,7 @@ export async function patchUser(
   operations: SCIMPatchOperation[]
 ): Promise<SCIMUser | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   // Get current user
   const { data: current, error: fetchError } = await supabase
@@ -447,7 +447,7 @@ export async function listGroups(
   options: SCIMFilterOptions = {}
 ): Promise<SCIMListResponse<SCIMGroup>> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   let query = supabase
     .from('scim_groups')
@@ -496,7 +496,7 @@ export async function getGroup(
   organizationId: string
 ): Promise<SCIMGroup | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   const { data, error } = await supabase
     .from('scim_groups')
@@ -521,7 +521,7 @@ export async function createGroup(
   groupData: CreateSCIMGroupRequest
 ): Promise<SCIMGroup> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
   const now = new Date().toISOString();
 
   // Create group
@@ -569,7 +569,7 @@ export async function updateGroup(
   groupData: CreateSCIMGroupRequest
 ): Promise<SCIMGroup | null> {
   const supabase = createServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
   // Check if group exists
   const existing = await getGroup(groupId, organizationId);

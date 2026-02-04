@@ -239,7 +239,7 @@ export async function GET() {
     endpoint: '/api/multimodal/search',
     method: 'POST',
     description: 'Multimodal search with layout-aware retrieval',
-    authentication: 'x-api-key header required',
+    authentication: 'Authorization: Bearer <api-key> header required',
     request_body: {
       query: {
         type: 'string',

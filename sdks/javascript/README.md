@@ -18,7 +18,7 @@ pnpm add seizn
 import { Seizn } from 'seizn';
 
 // Initialize client
-const client = new Seizn({ apiKey: 'sk_your_api_key' });
+const client = new Seizn({ apiKey: 'szn_your_api_key' });
 
 // Add a memory
 const memory = await client.add('User prefers dark mode and uses TypeScript', {
@@ -117,7 +117,7 @@ await client.deleteWebhook('webhook-uuid');
 ```typescript
 import { Seizn, SeiznError } from 'seizn';
 
-const client = new Seizn({ apiKey: 'sk_...' });
+const client = new Seizn({ apiKey: 'szn_...' });
 
 try {
   const memory = await client.get('invalid-uuid');
@@ -133,8 +133,8 @@ try {
 
 ```typescript
 const client = new Seizn({
-  apiKey: 'sk_...',
-  baseUrl: 'https://api.seizn.dev', // Custom endpoint
+  apiKey: 'szn_...',
+  baseUrl: 'https://www.seizn.com', // Custom endpoint
   timeout: 30000, // Request timeout in ms
 });
 ```

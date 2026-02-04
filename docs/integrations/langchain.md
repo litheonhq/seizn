@@ -90,7 +90,7 @@ interface SeizRetrieverConfig {
   apiKey: string;           // Required: Seizn API key
   collectionId: string;     // Required: Collection to search
   userId: string;           // Required: User ID for scoping
-  baseUrl?: string;         // Default: https://seizn.com/api
+  baseUrl?: string;         // Default: https://www.seizn.com/api
   mode?: 'vector' | 'keyword' | 'hybrid';  // Default: hybrid
   topK?: number;            // Default: 5
   threshold?: number;       // Default: 0.7 (0-1)
@@ -204,7 +204,7 @@ A LangChain-compatible chat memory backed by Seizn's Spring Memory API.
 ```typescript
 interface SeizMemoryConfig {
   apiKey: string;           // Required: Seizn API key
-  baseUrl?: string;         // Default: https://seizn.com/api
+  baseUrl?: string;         // Default: https://www.seizn.com/api
   namespace?: string;       // Default: 'default'
   userId?: string;          // User ID for user-scoped memory
   sessionId?: string;       // Session ID for session-scoped memory
@@ -334,7 +334,7 @@ A LangChain callback handler that sends execution traces to Seizn's Flight Recor
 interface SeizCallbackConfig {
   apiKey: string;           // Required: Seizn API key
   userId: string;           // Required: User ID for tracing
-  baseUrl?: string;         // Default: https://seizn.com/api
+  baseUrl?: string;         // Default: https://www.seizn.com/api
   plan?: string;            // User's plan tier
   collectionId?: string;    // Collection ID if applicable
   verbose?: boolean;        // Enable detailed logging

@@ -308,7 +308,7 @@ Date: _________________________
 
 ## ANNEX III: APPROVED SUB-PROCESSORS
 
-See current list at: https://seizn.com/legal/subprocessors
+See current list at: https://www.seizn.com/legal/subprocessors
 
 Or refer to: `docs/compliance/SUBPROCESSOR_LIST.md`
 
@@ -320,7 +320,7 @@ For transfers to third countries, the EU Standard Contractual Clauses (Commissio
 
 **Module 2 (Controller to Processor)** applies.
 
-Available at: https://seizn.com/legal/scc
+Available at: https://www.seizn.com/legal/scc
 
 ---
 
@@ -328,7 +328,7 @@ Available at: https://seizn.com/legal/scc
 
 For transfers from the UK, the UK International Data Transfer Addendum is incorporated.
 
-Available at: https://seizn.com/legal/uk-addendum
+Available at: https://www.seizn.com/legal/uk-addendum
 
 ---
 

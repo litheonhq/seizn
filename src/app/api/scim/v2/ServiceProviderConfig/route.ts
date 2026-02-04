@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServiceProviderConfig } from '@/lib/scim/schemas';
 
 export async function GET(_request: NextRequest) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
   const config = getServiceProviderConfig(baseUrl);
 
   return NextResponse.json(config, {

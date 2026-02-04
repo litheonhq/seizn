@@ -51,7 +51,7 @@ import type {
   SearchAnalytics,
 } from './types';
 
-const DEFAULT_BASE_URL = 'https://seizn.com/api/summer';
+const DEFAULT_BASE_URL = 'https://www.seizn.com/api/summer';
 const DEFAULT_TIMEOUT = 60000;
 const DEFAULT_RETRIES = 3;
 

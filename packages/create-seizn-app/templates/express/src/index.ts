@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
   res.json({
     name: 'My Seizn API',
     version: '0.1.0',
-    docs: 'https://seizn.com/docs',
+    docs: 'https://www.seizn.com/docs',
   });
 });
 

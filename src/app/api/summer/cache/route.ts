@@ -14,7 +14,7 @@ export async function GET() {
     description:
       'Intelligent caching layer that uses embedding similarity to serve cached responses for semantically similar queries.',
     base_path: '/api/summer/cache',
-    authentication: 'x-api-key header required for all endpoints',
+    authentication: 'Authorization: Bearer <api-key> header required for all endpoints',
     endpoints: {
       '/api/summer/cache/query': {
         methods: ['POST', 'GET'],

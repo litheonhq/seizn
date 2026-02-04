@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error: 'Free plan is limited to 20 documents per rerank request. Upgrade for higher limits.',
-            docs_url: 'https://seizn.com/docs#pricing',
+            docs_url: 'https://www.seizn.com/docs#pricing',
           },
           { status: 403 }
         );
@@ -264,7 +264,7 @@ export async function GET(request: NextRequest) {
           pro: { max_documents: 500 },
           enterprise: { max_documents: 1000 },
         },
-        docs_url: 'https://seizn.com/docs/summer/rerank',
+        docs_url: 'https://www.seizn.com/docs/summer/rerank',
       },
       { status: 200 }
     );

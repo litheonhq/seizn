@@ -86,7 +86,7 @@ function getRequestId(request?: Request): string | undefined {
  * Map ErrorCodeV2 to suggested fixes
  */
 const SuggestedFixes: Record<ErrorCodeV2, string> = {
-  [ErrorCodeV2.AUTH_MISSING_KEY]: 'Add x-api-key header with your API key',
+  [ErrorCodeV2.AUTH_MISSING_KEY]: 'Add Authorization: Bearer <api-key> header with your API key',
   [ErrorCodeV2.AUTH_INVALID_KEY]: 'Check your API key in Dashboard → API Keys',
   [ErrorCodeV2.AUTH_EXPIRED_KEY]: 'Generate a new API key from the dashboard',
   [ErrorCodeV2.RATE_LIMITED]: 'Implement exponential backoff (1s → 2s → 4s)',
@@ -100,7 +100,7 @@ const SuggestedFixes: Record<ErrorCodeV2, string> = {
  * Map ErrorCodeV2 to docs URLs
  */
 function getDocsUrl(code: ErrorCodeV2): string {
-  const baseUrl = 'https://seizn.com/docs';
+  const baseUrl = 'https://www.seizn.com/docs';
 
   switch (code) {
     case ErrorCodeV2.AUTH_MISSING_KEY:
@@ -302,7 +302,7 @@ export const AuthErrors = {
   missingKey: (request?: Request) =>
     createApiError({
       code: ErrorCodeV2.AUTH_MISSING_KEY,
-      message: 'API key required. Pass your API key in the x-api-key header.',
+      message: 'API key required. Pass your API key in the Authorization: Bearer header.',
       request,
     }),
 

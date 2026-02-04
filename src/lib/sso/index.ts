@@ -25,7 +25,7 @@ import { randomUUID } from 'crypto';
 // Constants
 // ============================================
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
 // ============================================
 // SSO Connection Management

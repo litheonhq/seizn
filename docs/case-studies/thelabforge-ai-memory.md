@@ -213,4 +213,4 @@ const memories = await seizn.memories.search({
 });
 ```
 
-**[Start Free Trial →](https://seizn.com/signup)**
+**[Start Free Trial →](https://www.seizn.com/signup)**

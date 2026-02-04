@@ -102,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       success: true,
       traceId: traces.metadata.traceId,
       uploadedCount: traces.traces.length,
-      url: `https://seizn.com/dashboard/ci/traces/${recordId}`,
+      url: `https://www.seizn.com/dashboard/ci/traces/${recordId}`,
     };
 
     return NextResponse.json(response, { status: 201 });

@@ -283,4 +283,4 @@ export async function POST(req: Request) {
 }
 ```
 
-**[Start Free Trial →](https://seizn.com/signup)**
+**[Start Free Trial →](https://www.seizn.com/signup)**

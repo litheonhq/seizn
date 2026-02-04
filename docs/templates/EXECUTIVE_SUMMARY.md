@@ -100,9 +100,9 @@ Use of funds:
 
 ## Contact
 
-- Website: [seizn.com](https://seizn.com)
+- Website: [www.seizn.com](https://www.seizn.com)
 - Email: [founders@seizn.com](mailto:founders@seizn.com)
-- Demo: [seizn.com/demo](https://seizn.com/demo)
+- Demo: [www.seizn.com/demo](https://www.seizn.com/demo)
 
 ---
 

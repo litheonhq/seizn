@@ -429,7 +429,7 @@ export async function runPostEvalRegressionCheck(params: {
   }
 
   if (!config.dashboardUrl) {
-    config.dashboardUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://seizn.com';
+    config.dashboardUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.seizn.com';
   }
 
   const events = await checkAndPersistRegressions({

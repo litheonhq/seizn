@@ -122,4 +122,4 @@ Before Seizn, [Company] faced:
 
 ---
 
-*Want similar results? [Start your free trial](https://seizn.com/signup) or [contact sales](mailto:sales@seizn.com).*
+*Want similar results? [Start your free trial](https://www.seizn.com/signup) or [contact sales](mailto:sales@seizn.com).*

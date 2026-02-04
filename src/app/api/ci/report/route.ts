@@ -105,7 +105,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       success: true,
       reportId,
       status,
-      url: `https://seizn.com/dashboard/ci/reports/${reportId}`,
+      url: `https://www.seizn.com/dashboard/ci/reports/${reportId}`,
     };
 
     return NextResponse.json(response, { status: 201 });

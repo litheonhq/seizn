@@ -4,3 +4,4 @@ export * from './experiments';
 export * from './contracts';
 export * from './healing';
 export * from './canary';
+export * from './time-travel';

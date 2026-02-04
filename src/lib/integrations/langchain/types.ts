@@ -15,7 +15,7 @@ import type { RetrievalMode } from '@/lib/summer/types';
 export interface SeizRetrieverConfig {
   /** Seizn API key */
   apiKey: string;
-  /** Base URL for Seizn API (default: https://seizn.com/api) */
+  /** Base URL for Seizn API (default: https://www.seizn.com/api) */
   baseUrl?: string;
   /** Collection ID for retrieval */
   collectionId: string;

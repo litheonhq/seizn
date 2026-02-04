@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
           error: {
             code: 'FEATURE_NOT_AVAILABLE',
             message: 'RAG query is not available on your current plan. Please upgrade to access this feature.',
-            docs_url: 'https://seizn.com/docs#pricing',
+            docs_url: 'https://www.seizn.com/docs#pricing',
           },
         },
         { status: 403 }

@@ -26,7 +26,7 @@ import { randomUUID } from 'crypto';
 // Configuration
 // ============================================
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
 
 // ============================================
 // SAML Request Generation
@@ -355,7 +355,7 @@ export function generateFullSPMetadataXML(connection: SSOConnection): string {
   <md:Organization>
     <md:OrganizationName xml:lang="en">Seizn</md:OrganizationName>
     <md:OrganizationDisplayName xml:lang="en">Seizn AI Memory</md:OrganizationDisplayName>
-    <md:OrganizationURL xml:lang="en">https://seizn.com</md:OrganizationURL>
+    <md:OrganizationURL xml:lang="en">https://www.seizn.com</md:OrganizationURL>
   </md:Organization>
 
   <md:ContactPerson contactType="technical">

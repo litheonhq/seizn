@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     });
 
     // 리뷰 URL 생성
-    const baseUrl = process.env.NEXTAUTH_URL || 'https://seizn.com';
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://www.seizn.com';
     const reviewUrl = `${baseUrl}/dashboard?review_token=${encodeURIComponent(token)}`;
 
     return NextResponse.json({

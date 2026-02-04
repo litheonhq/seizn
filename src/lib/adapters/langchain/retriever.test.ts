@@ -76,7 +76,7 @@ describe('SeiznRetriever', () => {
       const config = retriever.getConfig();
 
       expect(config.apiKey).toBe('***'); // masked
-      expect(config.baseUrl).toBe('https://seizn.com/api/summer');
+      expect(config.baseUrl).toBe('https://www.seizn.com/api/summer');
       expect(config.topK).toBe(4);
       expect(config.searchMode).toBe('hybrid');
       expect(config.rerank).toBe(false);
@@ -124,7 +124,7 @@ describe('SeiznRetriever', () => {
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://seizn.com/api/summer/search',
+        'https://www.seizn.com/api/summer/search',
         expect.objectContaining({
           method: 'POST',
           headers: {

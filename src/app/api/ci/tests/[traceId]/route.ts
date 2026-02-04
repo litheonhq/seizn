@@ -238,7 +238,7 @@ describe('API: ${endpoint}', () => {
   it('should handle ${method} request', async () => {
     const response = await fetch('${endpoint}', {
       method: '${method}',
-      headers: { 'x-api-key': process.env.SEIZN_API_KEY },
+      headers: { Authorization: 'Bearer ' + process.env.SEIZN_API_KEY },
       ${trace.io?.input ? `body: JSON.stringify(${JSON.stringify(trace.io.input)}),` : ''}
     });
 

@@ -11,7 +11,7 @@ import { getSchemas } from '@/lib/scim/schemas';
 import { SCIM_SCHEMAS } from '@/types/scim';
 
 export async function GET(_request: NextRequest) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seizn.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
   const schemas = getSchemas(baseUrl);
 
   const response = {

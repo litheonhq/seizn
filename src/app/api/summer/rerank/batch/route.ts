@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: `Batch size (${validatedRequests.length}) exceeds plan limit (${maxBatchSize} for ${plan} plan)`,
-          docs_url: 'https://seizn.com/docs#pricing',
+          docs_url: 'https://www.seizn.com/docs#pricing',
         },
         { status: 403 }
       );
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Free plan is limited to 50 total documents per batch request. Upgrade for higher limits.',
-          docs_url: 'https://seizn.com/docs#pricing',
+          docs_url: 'https://www.seizn.com/docs#pricing',
         },
         { status: 403 }
       );

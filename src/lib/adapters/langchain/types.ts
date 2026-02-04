@@ -28,7 +28,7 @@ import type { SearchMode, SearchResult, SearchResponse } from '@/lib/summer/sdk/
 export interface SeiznRetrieverConfig {
   /**
    * Seizn API key for authentication.
-   * Get your key at https://seizn.com/dashboard/api-keys
+   * Get your key at https://www.seizn.com/dashboard/api-keys
    */
   apiKey: string;
 
@@ -40,7 +40,7 @@ export interface SeiznRetrieverConfig {
 
   /**
    * Base URL for Seizn API.
-   * Defaults to 'https://seizn.com/api/summer'
+   * Defaults to 'https://www.seizn.com/api/summer'
    */
   baseUrl?: string;
 

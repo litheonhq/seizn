@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NotFoundErrors.resource('share link');
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com';
     const expired = isShareExpired(sharedTrace);
 
     return NextResponse.json({

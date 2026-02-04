@@ -125,11 +125,11 @@ export function maskApiKey(apiKey: string): string {
 }
 
 /**
- * Build authorization header
+ * Build authorization header (canonical)
  */
 export function buildAuthHeader(apiKey: string): Record<string, string> {
   return {
-    'x-api-key': apiKey,
+    Authorization: `Bearer ${apiKey}`,
   };
 }
 

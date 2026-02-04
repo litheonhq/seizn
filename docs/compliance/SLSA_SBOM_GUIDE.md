@@ -99,7 +99,7 @@ on:
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "seizn-v2.1.0",
-  "documentNamespace": "https://seizn.com/sbom/v2.1.0",
+  "documentNamespace": "https://www.seizn.com/sbom/v2.1.0",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-seizn",

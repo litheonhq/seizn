@@ -122,7 +122,7 @@ export async function POST(
     }
 
     // Build share URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com';
     const shareUrl = `${baseUrl}/t/${shareToken}`;
 
     return NextResponse.json({
@@ -177,7 +177,7 @@ export async function GET(
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seizn.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com';
 
     return NextResponse.json({
       success: true,

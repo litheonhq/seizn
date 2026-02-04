@@ -190,8 +190,8 @@ export function successResponse<T>(
  *   "error": {
  *     "code": "AUTH_001",
  *     "message": "API key required",
- *     "hint": "Add x-api-key header",
- *     "docs_url": "https://seizn.com/docs/api/authentication"
+ *     "hint": "Add Authorization: Bearer <api-key> header",
+ *     "docs_url": "https://www.seizn.com/docs/api/authentication"
  *   },
  *   "trace_id": "szn_trc_xxxxxxxxxx",
  *   "request_id": "req_xxxxxxxxxx"
@@ -262,7 +262,7 @@ export const AuthErrorResponses = {
     errorResponse(
       {
         code: 'SEIZN_100',
-        message: 'API key required. Include x-api-key header in your request.',
+        message: 'API key required. Include Authorization: Bearer header in your request.',
       },
       traceId,
       requestId

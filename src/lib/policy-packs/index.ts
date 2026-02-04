@@ -7,3 +7,4 @@
 export * from './types';
 export * from './service';
 export * from './signing';
+export * from './auto-eval-integration';

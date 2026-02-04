@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { hashApiKey } from '@/lib/api-key';
 import { logMemoryAccess } from '@/lib/audit';
+import { extractApiKey } from '@/lib/api-auth';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -37,10 +38,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const apiKey = request.headers.get('x-api-key');
+    const { apiKey } = extractApiKey(request);
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key required' },
+        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
         { status: 401 }
       );
     }
@@ -96,10 +97,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const body = await request.json();
 
-    const apiKey = request.headers.get('x-api-key');
+    const { apiKey } = extractApiKey(request);
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key required' },
+        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
         { status: 401 }
       );
     }
@@ -163,10 +164,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const apiKey = request.headers.get('x-api-key');
+    const { apiKey } = extractApiKey(request);
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key required' },
+        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
         { status: 401 }
       );
     }
