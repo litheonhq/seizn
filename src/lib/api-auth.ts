@@ -339,3 +339,12 @@ export async function validateApiKey(
     orgId: profile?.organization_id ?? undefined,
   };
 }
+
+/**
+ * Get API key string from request headers
+ * @deprecated Use extractApiKey instead for more details
+ */
+export function getApiKeyFromRequest(request: NextRequest): string | null {
+  const { apiKey } = extractApiKey(request);
+  return apiKey;
+}

@@ -122,7 +122,7 @@ async function getSecurityTestCases(): Promise<SecurityTestCase[]> {
     const { ALL_SECURITY_TESTS } = await import(
       '@/__tests__/security/llm-top10/payloads'
     );
-    return ALL_SECURITY_TESTS as SecurityTestCase[];
+    return ALL_SECURITY_TESTS as unknown as SecurityTestCase[];
   } catch {
     // Fallback to built-in minimal test set
     return getBuiltInTestCases();

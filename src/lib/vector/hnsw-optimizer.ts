@@ -376,7 +376,7 @@ export async function checkIndexHealth(
   const { data: indexStats, error: statsError } = await supabase.rpc('get_index_stats', {
     p_table_name: tableName,
     p_index_name: indexName,
-  }).single();
+  }).single() as { data: { idx_tup_read?: number; idx_tup_fetch?: number } | null; error: unknown };
 
   // Get recent query performance
   const lastDay = new Date();

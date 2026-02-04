@@ -16,18 +16,18 @@ import { getEmbeddingProvider } from '@/lib/summer/embedding';
 /**
  * Compute embedding for a single text
  */
-export async function computeEmbedding(text: string): Promise<number[]> {
+export async function computeEmbedding(text: string, inputType: 'document' | 'query' = 'document'): Promise<number[]> {
   const provider = getEmbeddingProvider();
-  const result = await provider.embed([text]);
+  const result = await provider.embed([text], inputType);
   return result[0] || [];
 }
 
 /**
  * Compute embeddings for multiple texts
  */
-export async function computeEmbeddings(texts: string[]): Promise<number[][]> {
+export async function computeEmbeddings(texts: string[], inputType: 'document' | 'query' = 'document'): Promise<number[][]> {
   const provider = getEmbeddingProvider();
-  return provider.embed(texts);
+  return provider.embed(texts, inputType);
 }
 
 // ============================================

@@ -9,7 +9,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { processPII, scanPII, type PipelineResult, type PipelineConfig } from '@/lib/security/pii-pipeline';
 import { SECRET_PATTERNS, type SecretType } from '@/lib/security/secret-patterns';
-import { getApiKeyFromRequest, validateApiKey } from '@/lib/api-auth';
+import { validateApiKey } from '@/lib/auth/api-key';
 import { createApiResponse, createApiError } from '@/lib/api-response';
 
 // ============================================
@@ -260,14 +260,9 @@ export async function POST(request: NextRequest) {
 
   try {
     // Authenticate request
-    const apiKey = getApiKeyFromRequest(request);
-    if (!apiKey) {
-      return createApiError(401, 'UNAUTHORIZED', 'Missing API key');
-    }
-
-    const authResult = await validateApiKey(apiKey);
-    if (!authResult.valid) {
-      return createApiError(401, 'UNAUTHORIZED', authResult.error || 'Invalid API key');
+    const auth = await validateApiKey(request);
+    if (!auth.valid) {
+      return createApiError(401, 'UNAUTHORIZED', auth.error || 'Invalid API key');
     }
 
     // Parse and validate request body
@@ -389,14 +384,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // Authenticate request
-    const apiKey = getApiKeyFromRequest(request);
-    if (!apiKey) {
-      return createApiError(401, 'UNAUTHORIZED', 'Missing API key');
-    }
-
-    const authResult = await validateApiKey(apiKey);
-    if (!authResult.valid) {
-      return createApiError(401, 'UNAUTHORIZED', authResult.error || 'Invalid API key');
+    const auth = await validateApiKey(request);
+    if (!auth.valid) {
+      return createApiError(401, 'UNAUTHORIZED', auth.error || 'Invalid API key');
     }
 
     // Return scan capabilities

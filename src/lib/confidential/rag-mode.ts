@@ -10,7 +10,7 @@
  * @module confidential/rag-mode
  */
 
-import { createCipheriv, createDecipheriv, randomBytes, createHash } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes, createHash, type CipherGCM, type DecipherGCM } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
 
 // ============================================
@@ -131,7 +131,7 @@ export class EncryptionService {
    */
   encrypt(content: string, key: Buffer): { encrypted: string; iv: string; authTag: string } {
     const iv = randomBytes(16);
-    const cipher = createCipheriv(this.algorithm, key, iv);
+    const cipher = createCipheriv(this.algorithm, key, iv) as CipherGCM;
 
     let encrypted = cipher.update(content, 'utf8', 'base64');
     encrypted += cipher.final('base64');
@@ -153,7 +153,7 @@ export class EncryptionService {
       this.algorithm,
       key,
       Buffer.from(iv, 'base64')
-    );
+    ) as DecipherGCM;
     decipher.setAuthTag(Buffer.from(authTag, 'base64'));
 
     let decrypted = decipher.update(encrypted, 'base64', 'utf8');

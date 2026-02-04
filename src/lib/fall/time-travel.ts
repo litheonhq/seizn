@@ -387,7 +387,7 @@ export class TimeTravelDebugger {
     const newRun = await this.startRun({
       organizationId: parentRun.organization_id,
       traceId: `fork-${parentRun.trace_id}-${Date.now()}`,
-      initialInput: forkedState as Record<string, unknown>,
+      initialInput: forkedState as unknown as Record<string, unknown>,
       agentConfig: parentRun.agent_config,
       modelId: modifiedModel ? (options.patches.model as string) : parentRun.model_id,
       systemPrompt: modifiedSystemPrompt
@@ -560,7 +560,7 @@ export class TimeTravelDebugger {
       } else if (key === 'toolCalls' && Array.isArray(value)) {
         result.toolCalls = value as ToolCall[];
       } else if (key in result) {
-        (result as Record<string, unknown>)[key] = value;
+        (result as unknown as Record<string, unknown>)[key] = value;
       }
     }
 
