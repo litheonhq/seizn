@@ -37,11 +37,13 @@ interface QuotaData {
   apiKeys: { used: number; limit: number };
 }
 
+// Plan limits for UI display. Keep in sync with src/lib/plan-limits.ts (canonical source).
 const PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number; price: string }> = {
-  free: { memories: 10000, apiCalls: 1000, apiKeys: 3, price: "$0" },
-  plus: { memories: 100000, apiCalls: 10000, apiKeys: 10, price: "$29" },
-  pro: { memories: 1000000, apiCalls: 100000, apiKeys: 50, price: "$99" },
-  enterprise: { memories: -1, apiCalls: -1, apiKeys: -1, price: "Custom" },
+  free: { memories: 100, apiCalls: 1_000, apiKeys: 2, price: "$0" },
+  starter: { memories: 5_000, apiCalls: 50_000, apiKeys: 3, price: "$9" },
+  plus: { memories: 50_000, apiCalls: 500_000, apiKeys: 5, price: "$29" },
+  pro: { memories: -1, apiCalls: 2_000_000, apiKeys: 10, price: "$99" },
+  enterprise: { memories: -1, apiCalls: -1, apiKeys: 100, price: "Custom" },
 };
 
 function getUsagePercent(used: number, limit: number): number {

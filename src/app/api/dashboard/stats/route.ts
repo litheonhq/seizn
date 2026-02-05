@@ -2,18 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
-
-interface PlanLimits {
-  memories: number;
-  apiCalls: number;
-}
-
-const PLAN_LIMITS: Record<string, PlanLimits> = {
-  free: { memories: 10000, apiCalls: 1000 },
-  plus: { memories: 100000, apiCalls: 10000 },
-  pro: { memories: 1000000, apiCalls: 100000 },
-  enterprise: { memories: -1, apiCalls: -1 }, // unlimited
-};
+import { getPlan } from '@/lib/plan-limits';
 
 // GET /api/dashboard/stats - Get user statistics
 export async function GET() {
@@ -33,7 +22,8 @@ export async function GET() {
       .single();
 
     const plan = profile?.plan || 'free';
-    const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
+    const planConfig = getPlan(plan);
+    const limits = { memories: planConfig.memories, apiCalls: planConfig.apiCallsMonthly };
 
     // Count memories
     const { count: memoriesCount } = await supabase
