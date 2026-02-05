@@ -238,7 +238,7 @@ const Navigation = memo(function Navigation({
 
           {/* Desktop Nav - Links next to logo */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/docs" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <Link href={`/${locale}/docs`} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.docs || "Docs"}
             </Link>
             <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
@@ -284,7 +284,7 @@ const Navigation = memo(function Navigation({
         }`}
       >
         <div className="px-4 py-4 space-y-3">
-          <Link href="/docs" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
             {t.extremeHome?.nav?.docs || "Docs"}
           </Link>
           <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
@@ -567,7 +567,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             {/* CTAs - Primary and Secondary */}
             <div className="flex items-center justify-center gap-4 flex-wrap pt-2 animate-fade-in-up animate-delay-300">
               <Link
-                href={`/${locale}/signup`}
+                href="/signup"
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 {t.extremeHome?.nav?.getApiKey || "Get API Key"}
