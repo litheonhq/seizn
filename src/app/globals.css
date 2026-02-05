@@ -655,3 +655,41 @@ body {
 .react-flow__minimap {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
+
+/* ========== Memory Flow Pipeline Animation ========== */
+
+/* Node activation glow — uses seasonal theme variables */
+@keyframes flow-node-activate {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--theme-primary) 40%, transparent);
+    border-color: transparent;
+  }
+  50% {
+    box-shadow: 0 0 20px 4px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+    border-color: var(--theme-primary);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--theme-primary) 0%, transparent);
+    border-color: var(--theme-accent);
+  }
+}
+
+.animate-flow-activate {
+  animation: flow-node-activate 0.8s ease-out forwards;
+}
+
+/* Data particle traveling along SVG offset-path */
+@keyframes flow-particle-continuous {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-flow-activate,
+  .flow-particle {
+    animation: none !important;
+  }
+}
