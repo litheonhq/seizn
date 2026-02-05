@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Pencarian yang bisa di-debug.",
-    "heroSubtitle": "Stack pencarian terintegrasi dengan tracing, evaluasi, dan tata kelola bawaan. Satu permintaan = hasil + trace + biaya.",
+    "heroTitle": "OS produksi untuk agen AI.",
+    "heroSubtitle": "Bawa agen dari pilot ke produksi dengan memori yang dikelola, observabilitas bawaan, dan kepatuhan yang dapat dibuktikan.",
+    "ctaStart": "Mulai Gratis",
+    "ctaDemo": "Tonton Demo 2 Menit",
+    "socialProof": "Dipercaya oleh tim yang menjalankan agen dalam skala besar",
+    "liveDemo": "Demo Langsung",
+    "heroTagline": "Coba API secara langsung — tanpa pendaftaran",
     "firstRetrievalComplete": "Pengambilan pertama selesai",
     "copySnippetHint": "Salin snippet di bawah untuk mereproduksi",
     "copySnippetTitle": "Salin snippet ini",

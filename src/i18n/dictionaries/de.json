@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Suche, die Sie debuggen können.",
-    "heroSubtitle": "Integrierter Retrieval-Stack mit eingebautem Tracing, Evaluation und Governance. Eine Anfrage = Ergebnisse + Trace + Kosten.",
+    "heroTitle": "Das Produktions-OS für KI-Agenten.",
+    "heroSubtitle": "Bringen Sie Agenten mit verwalteter Erinnerung, integrierter Observability und nachweisbarer Compliance vom Piloten in die Produktion.",
+    "ctaStart": "Kostenlos Starten",
+    "ctaDemo": "2-Min-Demo Ansehen",
+    "socialProof": "Vertraut von Teams, die Agenten im großen Maßstab betreiben",
+    "liveDemo": "Live-Demo",
+    "heroTagline": "Testen Sie die API live — ohne Anmeldung",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

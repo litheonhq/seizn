@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Zoeken dat je kunt debuggen.",
-    "heroSubtitle": "Geïntegreerde retrieval-stack met ingebouwde tracing, evaluatie en governance. Eén verzoek = resultaten + trace + kosten.",
+    "heroTitle": "Het productie-OS voor AI-agenten.",
+    "heroSubtitle": "Breng agenten van pilot naar productie met beheerd geheugen, ingebouwde observeerbaarheid en aantoonbare compliance.",
+    "ctaStart": "Gratis Beginnen",
+    "ctaDemo": "Bekijk 2-Min Demo",
+    "socialProof": "Vertrouwd door teams die agenten op schaal draaien",
+    "liveDemo": "Live Demo",
+    "heroTagline": "Probeer de API live — geen registratie nodig",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

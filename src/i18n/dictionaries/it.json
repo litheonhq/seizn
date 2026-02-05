@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Ricerca che puoi debuggare.",
-    "heroSubtitle": "Stack di ricerca integrato con tracciabilita, valutazione e governance incorporate. Una richiesta = risultati + traccia + costo.",
+    "heroTitle": "L'OS di produzione per agenti IA.",
+    "heroSubtitle": "Porta gli agenti dal pilota alla produzione con memoria governata, osservabilità integrata e conformità dimostrabile.",
+    "ctaStart": "Inizia Gratis",
+    "ctaDemo": "Guarda la Demo di 2 Min",
+    "socialProof": "Scelto dai team che gestiscono agenti su larga scala",
+    "liveDemo": "Demo dal Vivo",
+    "heroTagline": "Prova l'API dal vivo — senza registrazione",
     "firstRetrievalComplete": "Primo recupero completato",
     "copySnippetHint": "Copia lo snippet qui sotto per riprodurre",
     "copySnippetTitle": "Copia questo snippet",

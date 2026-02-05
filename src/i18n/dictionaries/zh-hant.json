@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "可除錯的搜尋。",
-    "heroSubtitle": "內建追蹤、評估和治理的整合檢索堆疊。一次請求 = 結果 + 追蹤 + 成本。",
+    "heroTitle": "AI代理的生產作業系統。",
+    "heroSubtitle": "透過治理記憶、內建可觀測性和可驗證的合規性，將代理從試驗推進到生產。",
+    "ctaStart": "免費開始建構",
+    "ctaDemo": "觀看2分鐘演示",
+    "socialProof": "受到大規模運營代理團隊的信賴",
+    "liveDemo": "線上演示",
+    "heroTagline": "直接試用API — 無需註冊",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

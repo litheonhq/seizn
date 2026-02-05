@@ -782,9 +782,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "エージェントのための管理されたメモリ & 検索。",
-    "heroTagline": "デバッグ可能な検索。",
-    "heroSubtitle": "デフォルトでデバッグ可能: トレース、評価、ポリシー、コストを一箇所に。",
+    "heroTitle": "AIエージェントのためのプロダクションOS。",
+    "heroSubtitle": "ガバナンスメモリ、組み込みオブザーバビリティ、証明可能なコンプライアンスで、エージェントをパイロットからプロダクションへ。",
+    "ctaStart": "無料で始める",
+    "ctaDemo": "2分デモを見る",
+    "socialProof": "大規模にエージェントを運用するチームに信頼されています",
+    "liveDemo": "ライブデモ",
+    "heroTagline": "APIをお試しください — サインアップ不要",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

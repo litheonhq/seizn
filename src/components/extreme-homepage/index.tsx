@@ -556,12 +556,12 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
             <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08] animate-fade-in">
-              {"The production OS for AI agents."}
+              {t.extremeHome?.heroTitle || "The production OS for AI agents."}
             </h1>
 
             {/* Subtitle - Value prop */}
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
-              {"Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove."}
+              {t.extremeHome?.heroSubtitle || "Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove."}
             </p>
 
             {/* CTAs - Primary and Secondary */}
@@ -570,7 +570,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 href="/signup"
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                {"Start Building Free"}
+                {t.extremeHome?.ctaStart || "Start Building Free"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -585,7 +585,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {"Watch 2-Min Demo"}
+                {t.extremeHome?.ctaDemo || "Watch 2-Min Demo"}
               </button>
             </div>
 
@@ -596,7 +596,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
               </span>
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {"Trusted by teams shipping agents at scale"}
+                {t.extremeHome?.socialProof || "Trusted by teams shipping agents at scale"}
               </span>
             </div>
 
@@ -620,7 +620,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               </svg>
-              {"Live Demo"}
+              {t.extremeHome?.liveDemo || "Live Demo"}
             </div>
             <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               <span className="theme-gradient-text">{t.extremeHome?.playgroundTitle || "Playground"}</span>

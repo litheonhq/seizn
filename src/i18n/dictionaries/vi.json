@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Tìm kiếm có thể gỡ lỗi.",
-    "heroSubtitle": "Stack tìm kiếm tích hợp với truy vết, đánh giá và quản trị tích hợp sẵn. Một yêu cầu = kết quả + truy vết + chi phí.",
+    "heroTitle": "Hệ điều hành production cho AI agent.",
+    "heroSubtitle": "Đưa agent từ thử nghiệm sang production với bộ nhớ được quản trị, khả năng quan sát tích hợp và tuân thủ có thể chứng minh.",
+    "ctaStart": "Bắt Đầu Miễn Phí",
+    "ctaDemo": "Xem Demo 2 Phút",
+    "socialProof": "Được tin tưởng bởi các đội vận hành agent quy mô lớn",
+    "liveDemo": "Demo Trực Tiếp",
+    "heroTagline": "Thử API trực tiếp — không cần đăng ký",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

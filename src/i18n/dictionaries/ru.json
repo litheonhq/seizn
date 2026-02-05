@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Поиск, который можно отлаживать.",
-    "heroSubtitle": "Интегрированный поисковый стек с встроенной трассировкой, оценкой и управлением. Один запрос = результаты + трассировка + стоимость.",
+    "heroTitle": "Продакшн-ОС для ИИ-агентов.",
+    "heroSubtitle": "Переведите агентов из пилота в продакшн с управляемой памятью, встроенной наблюдаемостью и доказуемым соответствием.",
+    "ctaStart": "Начать Бесплатно",
+    "ctaDemo": "Смотреть 2-Мин Демо",
+    "socialProof": "Доверяют команды, работающие с агентами в масштабе",
+    "liveDemo": "Живое Демо",
+    "heroTagline": "Попробуйте API вживую — без регистрации",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

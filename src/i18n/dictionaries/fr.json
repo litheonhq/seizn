@@ -649,12 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Recherche que vous pouvez déboguer.",
-    "heroSubtitle": "Stack de recherche intégré avec traçage, évaluation et gouvernance intégrés. Une requête = résultats + trace + coût.",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "heroTitle": "L'OS de production pour les agents IA.",
+    "heroSubtitle": "Déployez vos agents du pilote à la production avec une mémoire gouvernée, une observabilité intégrée et une conformité démontrable.",
+    "ctaStart": "Commencer Gratuitement",
+    "ctaDemo": "Voir la Démo de 2 Min",
+    "socialProof": "Adopté par les équipes qui opèrent des agents à grande échelle",
+    "liveDemo": "Démo en Direct",
+    "heroTagline": "Essayez l'API en direct — sans inscription",
     "whySeizn": {
       "title": "Why Seizn vs LangChain + Pinecone?",
       "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
