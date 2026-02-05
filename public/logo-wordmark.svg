@@ -1,7 +1,20 @@
 <svg width="180" height="48" viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Wordmark -->
-  <text x="10" y="34" font-family="'Inter', 'Geist', -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5" fill="#0A0A0A">Seizn</text>
+  <!-- S -->
+  <path d="M 22 16 C 22 13.5, 20 12, 17 12 C 13.5 12, 11.5 13.5, 11.5 16.5 C 11.5 19, 13.5 20.5, 17 22 C 20.5 23.5, 22.5 25, 22.5 28 C 22.5 31, 20.5 33, 17 33 C 13.5 33, 11.5 31, 11.5 28.5"
+    fill="none" stroke="#0A0A0A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- e -->
+  <path d="M 29 24.5 L 41 24.5 C 41 20, 38 18, 35 18 C 31.5 18, 29 20.5, 29 24 C 29 28, 31.5 30.5, 35 30.5 C 37.5 30.5, 39.5 29.5, 41 28"
+    fill="none" stroke="#0A0A0A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- i -->
+  <circle cx="47" cy="13.5" r="1.8" fill="#0A0A0A"/>
+  <path d="M 47 18.5 L 47 30" fill="none" stroke="#0A0A0A" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- z -->
+  <path d="M 53 18.5 L 63 18.5 L 53 30 L 63 30"
+    fill="none" stroke="#0A0A0A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- n -->
+  <path d="M 69 30 L 69 18.5 C 69 18.5, 69 18, 72 18 C 76 18, 78 20.5, 78 23 L 78 30"
+    fill="none" stroke="#0A0A0A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Green Square Dot (period position) -->
-  <rect x="88" y="27" width="6" height="6" rx="1.5" fill="#34D399"/>
+  <!-- Green Square Dot -->
+  <rect x="83" y="27" width="5" height="5" rx="1.2" fill="#34D399"/>
 </svg>

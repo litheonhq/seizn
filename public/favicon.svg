@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <!-- S Lettermark -->
-  <text x="13" y="24" font-family="'Inter', 'SF Pro Display', -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="24" font-weight="800" fill="#0A0A0A" text-anchor="middle">S</text>
+  <!-- S Lettermark (path-based) -->
+  <path d="M 19.5 10 C 19.5 7.8, 17.8 6.5, 15 6.5 C 11.8 6.5, 10 8, 10 10.5 C 10 12.8, 11.8 14, 15 15.5 C 18.2 17, 20 18.5, 20 21 C 20 23.5, 18 25.5, 15 25.5 C 12.2 25.5, 10 24, 10 21.5"
+    fill="none" stroke="#0A0A0A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Green Square Dot -->
-  <rect x="22" y="19" width="5" height="5" rx="1" fill="#34D399"/>
+  <rect x="23" y="19" width="4.5" height="4.5" rx="1" fill="#34D399"/>
 </svg>
