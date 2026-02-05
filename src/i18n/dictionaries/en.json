@@ -208,6 +208,38 @@
       "createApiKey": "New API Key",
       "createOrg": "New Organization"
     },
+    "nav": {
+      "overview": "Overview",
+      "memories": "Memories",
+      "mindMap": "Mind Map",
+      "candidates": "Candidates",
+      "devTools": "DevTools",
+      "playground": "Playground",
+      "evals": "Evals",
+      "analytics": "Analytics",
+      "governance": "Governance",
+      "privacy": "Privacy",
+      "security": "Security",
+      "enterprise": "Enterprise",
+      "usage": "Usage",
+      "budget": "Budget",
+      "reports": "Reports",
+      "calculator": "Calculator",
+      "apiKeys": "API Keys",
+      "integrations": "Integrations",
+      "webhooks": "Webhooks",
+      "docs": "Docs",
+      "organizations": "Organizations",
+      "settings": "Settings",
+      "groups": {
+        "memory": "MEMORY",
+        "observe": "OBSERVE",
+        "govern": "GOVERN",
+        "finops": "FINOPS",
+        "connect": "CONNECT",
+        "system": "SYSTEM"
+      }
+    },
     "pinSidebar": "Pin sidebar",
     "unpinSidebar": "Collapse sidebar",
     "stats": {

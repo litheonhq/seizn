@@ -147,9 +147,9 @@ export default function MobileSidebar({
         {/* Navigation */}
         <nav className="flex-1 p-3 overflow-y-auto scrollbar-thin">
           {navigationGroups.map((group, groupIdx) => (
-            <div key={group.label || `group-${groupIdx}`}>
+            <div key={group.key || `group-${groupIdx}`}>
               {/* Group header (skip for empty-label top group) */}
-              {group.label && (
+              {group.key && (
                 <>
                   {groupIdx > 0 && (
                     <div className="mx-3 my-2 border-t border-gray-200/60 dark:border-gray-700/60" />

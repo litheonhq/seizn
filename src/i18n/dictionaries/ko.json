@@ -208,6 +208,38 @@
       "createApiKey": "새 API 키",
       "createOrg": "새 조직"
     },
+    "nav": {
+      "overview": "개요",
+      "memories": "메모리",
+      "mindMap": "마인드맵",
+      "candidates": "후보",
+      "devTools": "개발자 도구",
+      "playground": "플레이그라운드",
+      "evals": "평가",
+      "analytics": "분석",
+      "governance": "거버넌스",
+      "privacy": "개인정보",
+      "security": "보안",
+      "enterprise": "엔터프라이즈",
+      "usage": "사용량",
+      "budget": "예산",
+      "reports": "리포트",
+      "calculator": "계산기",
+      "apiKeys": "API 키",
+      "integrations": "통합",
+      "webhooks": "웹훅",
+      "docs": "문서",
+      "organizations": "조직",
+      "settings": "설정",
+      "groups": {
+        "memory": "메모리",
+        "observe": "모니터링",
+        "govern": "거버넌스",
+        "finops": "비용관리",
+        "connect": "연동",
+        "system": "시스템"
+      }
+    },
     "pinSidebar": "사이드바 고정",
     "unpinSidebar": "사이드바 접기",
     "stats": {

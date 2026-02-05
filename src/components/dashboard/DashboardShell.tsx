@@ -26,6 +26,7 @@ export interface NavItem {
 }
 
 export interface NavGroup {
+  key: string;
   label: string;
   items: NavItem[];
   defaultOpen?: boolean;
@@ -84,72 +85,81 @@ function getSeason(): Season {
 // Navigation Groups
 // =============================================================================
 
-export const navigationGroups: NavGroup[] = [
-  {
-    label: "",
-    defaultOpen: true,
-    items: [
-      { label: "Overview", href: "/dashboard", icon: HomeIcon },
-    ],
-  },
-  {
-    label: "MEMORY",
-    defaultOpen: true,
-    items: [
-      { label: "Memories", href: "/dashboard/memories", icon: BrainIcon },
-      { label: "Mind Map", href: "/dashboard/memories/mindmap", icon: MapIcon },
-      { label: "Candidates", href: "/dashboard/memories/candidates", icon: InboxIcon },
-    ],
-  },
-  {
-    label: "OBSERVE",
-    defaultOpen: true,
-    items: [
-      { label: "DevTools", href: "/dashboard/devtools", icon: TerminalIcon },
-      { label: "Playground", href: "/dashboard/playground", icon: PlayIcon },
-      { label: "Evals", href: "/dashboard/evals", icon: FlaskIcon },
-      { label: "Analytics", href: "/dashboard/analytics", icon: AnalyticsIcon },
-    ],
-  },
-  {
-    label: "GOVERN",
-    defaultOpen: true,
-    items: [
-      { label: "Governance", href: "/dashboard/governance", icon: ShieldIcon },
-      { label: "Privacy", href: "/dashboard/privacy", icon: LockIcon },
-      { label: "Security", href: "/dashboard/security", icon: ShieldCheckIcon },
-      { label: "Enterprise", href: "/dashboard/enterprise", icon: BuildingIcon },
-    ],
-  },
-  {
-    label: "FINOPS",
-    defaultOpen: false,
-    items: [
-      { label: "Usage", href: "/dashboard/usage", icon: ChartIcon },
-      { label: "Budget", href: "/dashboard/budget", icon: WalletIcon },
-      { label: "Reports", href: "/dashboard/reports", icon: FileTextIcon },
-      { label: "Calculator", href: "/dashboard/calculator", icon: CalculatorIcon },
-    ],
-  },
-  {
-    label: "CONNECT",
-    defaultOpen: false,
-    items: [
-      { label: "API Keys", href: "/dashboard/keys", icon: KeyIcon },
-      { label: "Integrations", href: "/dashboard/integrations", icon: PlugIcon },
-      { label: "Webhooks", href: "/dashboard/webhooks", icon: WebhookIcon },
-      { label: "Docs", href: "/docs", icon: BookIcon },
-    ],
-  },
-  {
-    label: "SYSTEM",
-    defaultOpen: false,
-    items: [
-      { label: "Organizations", href: "/dashboard/organizations", icon: UsersIcon },
-      { label: "Settings", href: "/dashboard/settings", icon: SettingsIcon },
-    ],
-  },
-];
+function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
+  return [
+    {
+      key: "",
+      label: "",
+      defaultOpen: true,
+      items: [
+        { label: t("dashboard.nav.overview"), href: "/dashboard", icon: HomeIcon },
+      ],
+    },
+    {
+      key: "memory",
+      label: t("dashboard.nav.groups.memory"),
+      defaultOpen: true,
+      items: [
+        { label: t("dashboard.nav.memories"), href: "/dashboard/memories", icon: BrainIcon },
+        { label: t("dashboard.nav.mindMap"), href: "/dashboard/memories/mindmap", icon: MapIcon },
+        { label: t("dashboard.nav.candidates"), href: "/dashboard/memories/candidates", icon: InboxIcon },
+      ],
+    },
+    {
+      key: "observe",
+      label: t("dashboard.nav.groups.observe"),
+      defaultOpen: true,
+      items: [
+        { label: t("dashboard.nav.devTools"), href: "/dashboard/devtools", icon: TerminalIcon },
+        { label: t("dashboard.nav.playground"), href: "/dashboard/playground", icon: PlayIcon },
+        { label: t("dashboard.nav.evals"), href: "/dashboard/evals", icon: FlaskIcon },
+        { label: t("dashboard.nav.analytics"), href: "/dashboard/analytics", icon: AnalyticsIcon },
+      ],
+    },
+    {
+      key: "govern",
+      label: t("dashboard.nav.groups.govern"),
+      defaultOpen: true,
+      items: [
+        { label: t("dashboard.nav.governance"), href: "/dashboard/governance", icon: ShieldIcon },
+        { label: t("dashboard.nav.privacy"), href: "/dashboard/privacy", icon: LockIcon },
+        { label: t("dashboard.nav.security"), href: "/dashboard/security", icon: ShieldCheckIcon },
+        { label: t("dashboard.nav.enterprise"), href: "/dashboard/enterprise", icon: BuildingIcon },
+      ],
+    },
+    {
+      key: "finops",
+      label: t("dashboard.nav.groups.finops"),
+      defaultOpen: false,
+      items: [
+        { label: t("dashboard.nav.usage"), href: "/dashboard/usage", icon: ChartIcon },
+        { label: t("dashboard.nav.budget"), href: "/dashboard/budget", icon: WalletIcon },
+        { label: t("dashboard.nav.reports"), href: "/dashboard/reports", icon: FileTextIcon },
+        { label: t("dashboard.nav.calculator"), href: "/dashboard/calculator", icon: CalculatorIcon },
+      ],
+    },
+    {
+      key: "connect",
+      label: t("dashboard.nav.groups.connect"),
+      defaultOpen: false,
+      items: [
+        { label: t("dashboard.nav.apiKeys"), href: "/dashboard/keys", icon: KeyIcon },
+        { label: t("dashboard.nav.integrations"), href: "/dashboard/integrations", icon: PlugIcon },
+        { label: t("dashboard.nav.webhooks"), href: "/dashboard/webhooks", icon: WebhookIcon },
+        { label: t("dashboard.nav.docs"), href: "/docs", icon: BookIcon },
+      ],
+    },
+    {
+      key: "system",
+      label: t("dashboard.nav.groups.system"),
+      defaultOpen: false,
+      items: [
+        { label: t("dashboard.nav.organizations"), href: "/dashboard/organizations", icon: UsersIcon },
+        { label: t("dashboard.nav.settings"), href: "/dashboard/settings", icon: SettingsIcon },
+      ],
+    },
+  ];
+}
 
 // =============================================================================
 // Component
@@ -160,6 +170,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const { data: session, status } = useSession();
   const router = useRouter();
   const { t } = useDashboardTranslation();
+  const navigationGroups = useMemo(() => buildNavigationGroups(t), [t]);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const [reviewModeChecked, setReviewModeChecked] = useState(false);
 
@@ -198,8 +209,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     for (const group of navigationGroups) {
-      if (group.label) {
-        initial[group.label] = group.defaultOpen ?? false;
+      if (group.key) {
+        initial[group.key] = group.defaultOpen ?? false;
       }
     }
     return initial;
@@ -208,13 +219,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   // Auto-expand group containing active page
   useEffect(() => {
     for (const group of navigationGroups) {
-      if (!group.label) continue;
+      if (!group.key) continue;
       const hasActive = group.items.some((item) => {
         if (item.href === "/dashboard") return pathname === "/dashboard";
         return pathname.startsWith(item.href);
       });
       if (hasActive) {
-        setOpenGroups((prev) => ({ ...prev, [group.label]: true }));
+        setOpenGroups((prev) => ({ ...prev, [group.key]: true }));
       }
     }
   }, [pathname]);
@@ -335,12 +346,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-thin">
           {isSidebarExpanded ? (
             navigationGroups.map((group) => {
-              const isOpen = group.label ? (openGroups[group.label] ?? true) : true;
+              const isOpen = group.key ? (openGroups[group.key] ?? true) : true;
               return (
-                <div key={group.label || "__top"} className={group.label ? "mt-1" : ""}>
-                  {group.label && (
+                <div key={group.key || "__top"} className={group.key ? "mt-1" : ""}>
+                  {group.key && (
                     <button
-                      onClick={() => toggleGroup(group.label)}
+                      onClick={() => toggleGroup(group.key)}
                       className="flex items-center justify-between w-full px-3 pt-4 pb-1.5 text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                     >
                       <span>{group.label}</span>
