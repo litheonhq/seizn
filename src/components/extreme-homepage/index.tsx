@@ -51,6 +51,12 @@ const SnippetTabs = dynamic(
   { loading: () => <SnippetSkeleton />, ssr: false }
 );
 
+// Memory pipeline flow animation for hero section
+const MemoryFlowAnimation = dynamic(
+  () => import("./memory-flow-animation").then((mod) => ({ default: mod.MemoryFlowAnimation })),
+  { loading: () => <div className="h-24" />, ssr: false }
+);
+
 // DemoQuery removed - integrated into main hero section with Mock/Real mode
 
 interface ExtremeHomepageClientProps {
@@ -535,26 +541,9 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             </button>
           </div>
 
-          {/* Feature Chips - Trust signals below CTAs */}
-          <div className="flex items-center justify-center gap-3 flex-wrap pt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-sm font-medium rounded-full">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              {t.extremeHome?.chips?.trace || "Trace"}
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {t.extremeHome?.chips?.eval || "Eval"}
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-700 text-sm font-medium rounded-full">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              {t.extremeHome?.chips?.policy || "Policy"}
-            </span>
+          {/* Memory Flow Pipeline Animation */}
+          <div className="pt-6">
+            <MemoryFlowAnimation />
           </div>
         </div>
       </section>
