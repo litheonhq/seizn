@@ -15,6 +15,14 @@ import type {
 } from './types';
 import { normalize, normalizeForSearch } from './normalizer';
 import { createTokenizer, type Tokenizer } from './tokenizer/base';
+import {
+  zhLanguagePack,
+  koLanguagePack,
+  jaLanguagePack,
+  hiLanguagePack,
+  arLanguagePack,
+  ukLanguagePack,
+} from './packs';
 
 // =============================================================================
 // Default Language Pack Implementation
@@ -138,6 +146,16 @@ class LanguagePackRegistry {
     this.register(createBasicLanguagePack('vi', 'Vietnamese', 'Tiếng Việt', 'latin'));
     this.register(createBasicLanguagePack('id', 'Indonesian', 'Bahasa Indonesia', 'latin'));
     this.register(createBasicLanguagePack('tr', 'Turkish', 'Türkçe', 'latin'));
+
+    // -------------------------------------------------------------------------
+    // Enhanced Language Packs (override basic packs with full implementations)
+    // -------------------------------------------------------------------------
+    this.register(zhLanguagePack);
+    this.register(koLanguagePack);
+    this.register(jaLanguagePack);
+    this.register(hiLanguagePack);
+    this.register(arLanguagePack);
+    this.register(ukLanguagePack);
   }
 
   /**

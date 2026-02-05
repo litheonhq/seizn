@@ -6,24 +6,14 @@ import {
   formatLimit,
 } from './plan-limits';
 
-// Re-export for backwards compatibility
+// Re-export canonical plan functions (single source of truth: plan-limits.ts)
 export { getPlan, formatLimit } from './plan-limits';
 
-// Legacy interface (kept for backwards compatibility)
-interface PlanLimits {
+interface UsageLimits {
   memories: number;
   apiCallsMonthly: number;
   apiKeys: number;
 }
-
-// Legacy export (kept for backwards compatibility)
-export const PLAN_LIMITS: Record<string, PlanLimits> = {
-  free: { memories: 10000, apiCallsMonthly: 1000, apiKeys: 2 },
-  starter: { memories: 50000, apiCallsMonthly: 50000, apiKeys: 3 },
-  plus: { memories: 100000, apiCallsMonthly: 500000, apiKeys: 5 },
-  pro: { memories: 1000000, apiCallsMonthly: 2000000, apiKeys: 10 },
-  enterprise: { memories: -1, apiCallsMonthly: -1, apiKeys: 100 }, // -1 = unlimited
-};
 
 interface UsageCheck {
   allowed: boolean;
@@ -32,7 +22,7 @@ interface UsageCheck {
     memories: number;
     apiCallsThisMonth: number;
   };
-  limits?: PlanLimits;
+  limits?: UsageLimits;
   plan?: string;
 }
 
@@ -57,7 +47,7 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
   });
 
   const planConfig = getPlan(effectivePlan);
-  const limits: PlanLimits = {
+  const limits: UsageLimits = {
     memories: planConfig.memories,
     apiCallsMonthly: planConfig.apiCallsMonthly,
     apiKeys: planConfig.apiKeys,

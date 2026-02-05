@@ -53,3 +53,7 @@ export {
   createRetryWrapper,
   DEFAULT_RETRY_CONFIG,
 } from './retry';
+
+// Policy Router
+export type { PolicyDecision, PolicyRouterConfig } from './policy-router';
+export { PolicyRouter, getPolicyRouter, resetPolicyRouter } from './policy-router';

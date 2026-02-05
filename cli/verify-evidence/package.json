@@ -1,0 +1,17 @@
+{
+  "name": "seizn-verify-evidence",
+  "version": "1.0.0",
+  "description": "Verify Seizn Evidence Pack integrity",
+  "bin": {
+    "seizn-verify": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

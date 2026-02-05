@@ -25,14 +25,19 @@
       "types": "./dist/memory.d.ts",
       "import": "./dist/memory.mjs",
       "require": "./dist/memory.js"
+    },
+    "./checkpointer": {
+      "types": "./dist/checkpointer.d.ts",
+      "import": "./dist/checkpointer.mjs",
+      "require": "./dist/checkpointer.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts --format cjs,esm --dts --clean",
-    "dev": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts --format cjs,esm --dts --watch",
+    "build": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts src/checkpointer.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts src/retriever.ts src/callbacks.ts src/memory.ts src/checkpointer.ts --format cjs,esm --dts --watch",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .ts",
@@ -51,7 +56,10 @@
     "citations",
     "traceability",
     "callbacks",
-    "memory"
+    "memory",
+    "checkpointer",
+    "langgraph",
+    "time-travel"
   ],
   "author": "Seizn <support@seizn.com>",
   "license": "MIT",
@@ -66,9 +74,13 @@
   },
   "peerDependencies": {
     "@langchain/core": ">=0.2.0",
+    "@supabase/supabase-js": ">=2.0.0",
     "langchain": ">=0.2.0"
   },
   "peerDependenciesMeta": {
+    "@supabase/supabase-js": {
+      "optional": true
+    },
     "langchain": {
       "optional": true
     }
