@@ -51,6 +51,12 @@ const SnippetTabs = dynamic(
   { loading: () => <SnippetSkeleton />, ssr: false }
 );
 
+// Knowledge graph background animation for hero section
+const HeroGraphAnimation = dynamic(
+  () => import("./hero-graph-animation").then((mod) => ({ default: mod.HeroGraphAnimation })),
+  { ssr: false }
+);
+
 // Memory pipeline flow animation for hero section
 const MemoryFlowAnimation = dynamic(
   () => import("./memory-flow-animation").then((mod) => ({ default: mod.MemoryFlowAnimation })),
@@ -538,6 +544,11 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
 
           {/* Dark overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80 dark:from-gray-950/70 dark:via-gray-950/50 dark:to-gray-950/90" />
+        </div>
+
+        {/* Knowledge Graph Animation Layer */}
+        <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden="true">
+          <HeroGraphAnimation />
         </div>
 
         {/* Content Layer */}
