@@ -1,14 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
-  <defs>
-    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#000000"/>
-      <stop offset="100%" stop-color="#000000"/>
-    </linearGradient>
-  </defs>
-  <path d="M 296.0 328.0 H 728.0 L 296.0 696.0 H 728.0" fill="none" stroke="url(#stroke)" stroke-width="96.0" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="296.0" cy="328.0" r="32.0" fill="#FFFFFF" stroke="url(#stroke)" stroke-width="14.0"/>
-  <circle cx="728.0" cy="328.0" r="32.0" fill="#FFFFFF" stroke="url(#stroke)" stroke-width="14.0"/>
-  <circle cx="296.0" cy="696.0" r="32.0" fill="#FFFFFF" stroke="url(#stroke)" stroke-width="14.0"/>
-  <circle cx="728.0" cy="696.0" r="32.0" fill="#FFFFFF" stroke="url(#stroke)" stroke-width="14.0"/>
-  <circle cx="512.0" cy="512.0" r="16.0" fill="url(#stroke)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <!-- S Lettermark -->
+  <text x="13" y="24" font-family="'Inter', 'SF Pro Display', -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="24" font-weight="800" fill="#0A0A0A" text-anchor="middle">S</text>
+
+  <!-- Green Square Dot -->
+  <rect x="22" y="19" width="5" height="5" rx="1" fill="#34D399"/>
 </svg>

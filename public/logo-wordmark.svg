@@ -1,22 +1,7 @@
 <svg width="180" height="48" viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="seiznGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#3DDC84"/>
-      <stop offset="35%" stop-color="#00A3FF"/>
-      <stop offset="70%" stop-color="#FF8A00"/>
-      <stop offset="100%" stop-color="#A855F7"/>
-    </linearGradient>
-    <mask id="cutout">
-      <rect width="40" height="48" fill="white"/>
-      <circle cx="20" cy="24" r="3" fill="black"/>
-    </mask>
-  </defs>
-
-  <!-- Z-Trace Mark with breakpoint cutout -->
-  <g mask="url(#cutout)">
-    <path d="M8 12 H32 L8 36 H32" stroke="url(#seiznGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </g>
-
   <!-- Wordmark -->
-  <text x="52" y="33" font-family="Geist, Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" letter-spacing="-0.5" fill="#0A0A0A">Seizn</text>
+  <text x="10" y="34" font-family="'Inter', 'Geist', -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5" fill="#0A0A0A">Seizn</text>
+
+  <!-- Green Square Dot (period position) -->
+  <rect x="88" y="27" width="6" height="6" rx="1.5" fill="#34D399"/>
 </svg>
