@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 type TabType = "audit" | "keys" | "policies" | "settings";
 
@@ -46,6 +47,8 @@ export function SecurityClient() {
   // Filters
   const [actionFilter, setActionFilter] = useState("");
   const [dateRange, setDateRange] = useState("7d");
+
+  const { t } = useDashboardTranslation();
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -184,16 +187,16 @@ export function SecurityClient() {
   }, [loadData]);
 
   const handleRotateKey = async (_keyId: string) => {
-    if (!confirm("Are you sure you want to rotate this API key? The old key will be invalidated.")) {
+    if (!confirm(t("dashboard.securityPage.keys.confirmRotate"))) {
       return;
     }
     // Would call /api/keys/rotate endpoint
-    alert("Key rotated successfully! Please copy your new key.");
+    alert(t("dashboard.securityPage.keys.rotateSuccess"));
     loadData();
   };
 
   const handleRevokeKey = async (keyId: string) => {
-    if (!confirm("Are you sure you want to revoke this API key? This action cannot be undone.")) {
+    if (!confirm(t("dashboard.securityPage.keys.confirmRevoke"))) {
       return;
     }
     // Would call /api/keys/revoke endpoint
@@ -204,9 +207,9 @@ export function SecurityClient() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Security</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.securityPage.title")}</h1>
         <p className="text-gray-500 mt-1">
-          Manage API keys and view security audit logs
+          {t("dashboard.securityPage.subtitle")}
         </p>
       </div>
 
@@ -215,14 +218,14 @@ export function SecurityClient() {
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔐</span>
-            <span className="text-sm text-gray-500">Active API Keys</span>
+            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.activeKeys")}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{apiKeys.length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">📋</span>
-            <span className="text-sm text-gray-500">Audit Events (24h)</span>
+            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.auditEvents")}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">
             {auditLogs.filter(
@@ -233,14 +236,14 @@ export function SecurityClient() {
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🛡️</span>
-            <span className="text-sm text-gray-500">Security Score</span>
+            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.securityScore")}</span>
           </div>
           <p className="text-2xl font-bold text-green-600">A+</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⚠️</span>
-            <span className="text-sm text-gray-500">Alerts</span>
+            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.alerts")}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">0</p>
         </div>
@@ -258,10 +261,10 @@ export function SecurityClient() {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {tab === "audit" && "Audit Log"}
-            {tab === "keys" && "API Keys"}
-            {tab === "policies" && "Policies"}
-            {tab === "settings" && "Settings"}
+            {tab === "audit" && t("dashboard.securityPage.tabs.audit")}
+            {tab === "keys" && t("dashboard.securityPage.tabs.keys")}
+            {tab === "policies" && t("dashboard.securityPage.tabs.policies")}
+            {tab === "settings" && t("dashboard.securityPage.tabs.settings")}
           </button>
         ))}
       </div>
@@ -322,6 +325,8 @@ function AuditLogTable({
   onExport: () => void;
   exporting: boolean;
 }) {
+  const { t } = useDashboardTranslation();
+
   // Get unique actions for filter
   const actions = [...new Set(logs.map((l) => l.action))];
 
@@ -351,7 +356,7 @@ function AuditLogTable({
           onChange={(e) => onActionFilterChange(e.target.value)}
           className="px-3 py-2 border rounded-lg text-sm"
         >
-          <option value="">All Actions</option>
+          <option value="">{t("dashboard.securityPage.audit.allActions")}</option>
           {actions.map((action) => (
             <option key={action} value={action}>
               {action}
@@ -363,10 +368,10 @@ function AuditLogTable({
           onChange={(e) => onDateRangeChange(e.target.value)}
           className="px-3 py-2 border rounded-lg text-sm"
         >
-          <option value="1h">Last hour</option>
-          <option value="24h">Last 24 hours</option>
-          <option value="7d">Last 7 days</option>
-          <option value="30d">Last 30 days</option>
+          <option value="1h">{t("dashboard.securityPage.audit.lastHour")}</option>
+          <option value="24h">{t("dashboard.securityPage.audit.last24Hours")}</option>
+          <option value="7d">{t("dashboard.securityPage.audit.last7Days")}</option>
+          <option value="30d">{t("dashboard.securityPage.audit.last30Days")}</option>
         </select>
         <button
           onClick={onExport}
@@ -379,14 +384,14 @@ function AuditLogTable({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              Exporting...
+              {t("dashboard.securityPage.audit.exporting")}
             </>
           ) : (
             <>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Export CSV
+              {t("dashboard.securityPage.audit.exportCSV")}
             </>
           )}
         </button>
@@ -397,19 +402,19 @@ function AuditLogTable({
         <thead className="bg-gray-50 border-b">
           <tr>
             <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-              Action
+              {t("dashboard.securityPage.audit.action")}
             </th>
             <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-              Resource
+              {t("dashboard.securityPage.audit.resource")}
             </th>
             <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-              Details
+              {t("dashboard.securityPage.audit.details")}
             </th>
             <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-              IP Address
+              {t("dashboard.securityPage.audit.ipAddress")}
             </th>
             <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-              Time
+              {t("dashboard.securityPage.audit.time")}
             </th>
           </tr>
         </thead>
@@ -444,7 +449,7 @@ function AuditLogTable({
       </table>
 
       {logs.length === 0 && (
-        <div className="p-8 text-center text-gray-500">No audit logs found</div>
+        <div className="p-8 text-center text-gray-500">{t("dashboard.securityPage.audit.noLogs")}</div>
       )}
     </div>
   );
@@ -459,19 +464,20 @@ function ApiKeysTable({
   onRotate: (id: string) => void;
   onRevoke: (id: string) => void;
 }) {
+  const { t } = useDashboardTranslation();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-500">
-          API keys are used to authenticate requests to the Seizn API
+          {t("dashboard.securityPage.keys.description")}
         </p>
         <button
           onClick={() => setShowCreateModal(true)}
           className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
         >
-          Create New Key
+          {t("dashboard.securityPage.keys.createNew")}
         </button>
       </div>
 
@@ -501,34 +507,34 @@ function ApiKeysTable({
                   onClick={() => onRotate(key.id)}
                   className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
                 >
-                  Rotate
+                  {t("dashboard.securityPage.keys.rotate")}
                 </button>
                 <button
                   onClick={() => onRevoke(key.id)}
                   className="px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50"
                 >
-                  Revoke
+                  {t("dashboard.securityPage.keys.revoke")}
                 </button>
               </div>
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-gray-500">Created</span>
+                <span className="text-gray-500">{t("dashboard.securityPage.keys.created")}</span>
                 <p className="text-gray-900">
                   {new Date(key.created_at).toLocaleDateString()}
                 </p>
               </div>
               <div>
-                <span className="text-gray-500">Last Used</span>
+                <span className="text-gray-500">{t("dashboard.securityPage.keys.lastUsed")}</span>
                 <p className="text-gray-900">
                   {key.last_used_at
                     ? new Date(key.last_used_at).toLocaleString()
-                    : "Never"}
+                    : t("dashboard.securityPage.keys.never")}
                 </p>
               </div>
               <div>
-                <span className="text-gray-500">Permissions</span>
+                <span className="text-gray-500">{t("dashboard.securityPage.keys.permissions")}</span>
                 <p className="text-gray-900">{key.permissions.join(", ")}</p>
               </div>
             </div>
@@ -544,37 +550,38 @@ function ApiKeysTable({
 }
 
 function CreateKeyModal({ onClose }: { onClose: () => void }) {
+  const { t } = useDashboardTranslation();
   const [name, setName] = useState("");
   const [type, setType] = useState<"live" | "test">("test");
 
   const handleCreate = () => {
     // Would call /api/keys/create endpoint
-    alert("API key created! Copy it now as it won't be shown again.");
+    alert(t("dashboard.securityPage.keys.createSuccess"));
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-md w-full p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Create API Key</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">{t("dashboard.securityPage.keys.createTitle")}</h2>
 
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Key Name
+              {t("dashboard.securityPage.keys.keyName")}
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Production Backend"
+              placeholder={t("dashboard.securityPage.keys.keyNamePlaceholder")}
               className="w-full px-3 py-2 border rounded-lg"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Key Type
+              {t("dashboard.securityPage.keys.keyType")}
             </label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2">
@@ -584,7 +591,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
                   checked={type === "test"}
                   onChange={() => setType("test")}
                 />
-                <span className="text-sm">Test</span>
+                <span className="text-sm">{t("dashboard.securityPage.keys.test")}</span>
               </label>
               <label className="flex items-center gap-2">
                 <input
@@ -593,11 +600,11 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
                   checked={type === "live"}
                   onChange={() => setType("live")}
                 />
-                <span className="text-sm">Live</span>
+                <span className="text-sm">{t("dashboard.securityPage.keys.live")}</span>
               </label>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              Test keys only work in sandbox mode
+              {t("dashboard.securityPage.keys.testKeysNote")}
             </p>
           </div>
         </div>
@@ -607,14 +614,14 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
           >
-            Cancel
+            {t("dashboard.securityPage.keys.cancel")}
           </button>
           <button
             onClick={handleCreate}
             disabled={!name}
             className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
           >
-            Create Key
+            {t("dashboard.securityPage.keys.createKey")}
           </button>
         </div>
       </div>
@@ -623,6 +630,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
 }
 
 function SecuritySettings() {
+  const { t } = useDashboardTranslation();
   const [settings, setSettings] = useState({
     twoFactorEnabled: false,
     ipWhitelist: false,
@@ -633,14 +641,14 @@ function SecuritySettings() {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl border p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">Authentication</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.securityPage.settings.authentication")}</h3>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">Two-Factor Authentication</p>
+              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.twoFactor")}</p>
               <p className="text-sm text-gray-500">
-                Require 2FA for all team members
+                {t("dashboard.securityPage.settings.twoFactorDescription")}
               </p>
             </div>
             <button
@@ -661,9 +669,9 @@ function SecuritySettings() {
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">Session Timeout</p>
+              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.sessionTimeout")}</p>
               <p className="text-sm text-gray-500">
-                Automatically log out after inactivity
+                {t("dashboard.securityPage.settings.sessionTimeoutDescription")}
               </p>
             </div>
             <select
@@ -673,24 +681,24 @@ function SecuritySettings() {
               }
               className="px-3 py-2 border rounded-lg"
             >
-              <option value={15}>15 minutes</option>
-              <option value={30}>30 minutes</option>
-              <option value={60}>1 hour</option>
-              <option value={240}>4 hours</option>
+              <option value={15}>{t("dashboard.securityPage.settings.15minutes")}</option>
+              <option value={30}>{t("dashboard.securityPage.settings.30minutes")}</option>
+              <option value={60}>{t("dashboard.securityPage.settings.1hour")}</option>
+              <option value={240}>{t("dashboard.securityPage.settings.4hours")}</option>
             </select>
           </div>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">API Security</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.securityPage.settings.apiSecurity")}</h3>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">IP Whitelist</p>
+              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.ipWhitelist")}</p>
               <p className="text-sm text-gray-500">
-                Only allow API access from specific IPs
+                {t("dashboard.securityPage.settings.ipWhitelistDescription")}
               </p>
             </div>
             <button
@@ -711,9 +719,9 @@ function SecuritySettings() {
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">Rate Limit</p>
+              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.rateLimit")}</p>
               <p className="text-sm text-gray-500">
-                Maximum requests per minute
+                {t("dashboard.securityPage.settings.rateLimitDescription")}
               </p>
             </div>
             <select
@@ -723,26 +731,26 @@ function SecuritySettings() {
               }
               className="px-3 py-2 border rounded-lg"
             >
-              <option value={100}>100/min</option>
-              <option value={500}>500/min</option>
-              <option value={1000}>1,000/min</option>
-              <option value={5000}>5,000/min</option>
+              <option value={100}>{t("dashboard.securityPage.settings.rate100")}</option>
+              <option value={500}>{t("dashboard.securityPage.settings.rate500")}</option>
+              <option value={1000}>{t("dashboard.securityPage.settings.rate1000")}</option>
+              <option value={5000}>{t("dashboard.securityPage.settings.rate5000")}</option>
             </select>
           </div>
         </div>
       </div>
 
       <div className="bg-yellow-50 rounded-2xl border border-yellow-200 p-6">
-        <h3 className="font-semibold text-yellow-800 mb-2">Danger Zone</h3>
+        <h3 className="font-semibold text-yellow-800 mb-2">{t("dashboard.securityPage.settings.dangerZone")}</h3>
         <p className="text-sm text-yellow-700 mb-4">
-          These actions are irreversible. Please proceed with caution.
+          {t("dashboard.securityPage.settings.dangerZoneDescription")}
         </p>
         <div className="flex gap-4">
           <button className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50">
-            Revoke All API Keys
+            {t("dashboard.securityPage.settings.revokeAllKeys")}
           </button>
           <button className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50">
-            Delete All Data
+            {t("dashboard.securityPage.settings.deleteAllData")}
           </button>
         </div>
       </div>
@@ -757,24 +765,26 @@ function PoliciesPanel({
   policies: SecurityPolicy[];
   onToggle: (id: string) => void;
 }) {
+  const { t } = useDashboardTranslation();
+
   const getStatusBadge = (status: SecurityPolicy["status"]) => {
     switch (status) {
       case "active":
         return (
           <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 border border-green-200">
-            Active
+            {t("dashboard.securityPage.policies.active")}
           </span>
         );
       case "inactive":
         return (
           <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600 border border-gray-200">
-            Inactive
+            {t("dashboard.securityPage.policies.inactive")}
           </span>
         );
       case "pending":
         return (
           <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700 border border-amber-200">
-            Pending
+            {t("dashboard.securityPage.policies.pending")}
           </span>
         );
     }
@@ -826,7 +836,7 @@ function PoliciesPanel({
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-green-700">Active Policies</p>
+              <p className="text-sm text-green-700">{t("dashboard.securityPage.policies.activePolicies")}</p>
               <p className="text-2xl font-bold text-green-900">{activePolicies}/{totalPolicies}</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -840,7 +850,7 @@ function PoliciesPanel({
         <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-700">Access Policies</p>
+              <p className="text-sm text-blue-700">{t("dashboard.securityPage.policies.accessPolicies")}</p>
               <p className="text-2xl font-bold text-blue-900">{groupedPolicies.access.length}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -854,7 +864,7 @@ function PoliciesPanel({
         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-purple-700">Compliance Policies</p>
+              <p className="text-sm text-purple-700">{t("dashboard.securityPage.policies.compliancePolicies")}</p>
               <p className="text-2xl font-bold text-purple-900">{groupedPolicies.compliance.length}</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -918,7 +928,7 @@ function PoliciesPanel({
                   </button>
                 )}
                 {policy.status === "pending" && (
-                  <span className="text-xs text-amber-600">Awaiting approval</span>
+                  <span className="text-xs text-amber-600">{t("dashboard.securityPage.policies.awaitingApproval")}</span>
                 )}
               </div>
             </div>
@@ -932,7 +942,7 @@ function PoliciesPanel({
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Add Custom Policy
+          {t("dashboard.securityPage.policies.addCustom")}
         </button>
       </div>
     </div>

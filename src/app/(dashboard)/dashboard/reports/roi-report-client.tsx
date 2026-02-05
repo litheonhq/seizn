@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface ROIReport {
   period: string;
@@ -33,6 +34,7 @@ export function ROIReportClient() {
   const [report, setReport] = useState<ROIReport | null>(null);
   const [period, setPeriod] = useState("30d");
   const [loading, setLoading] = useState(true);
+  const { t } = useDashboardTranslation();
 
   const loadReport = useCallback(async () => {
     setLoading(true);
@@ -67,7 +69,7 @@ export function ROIReportClient() {
   if (!report) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <p className="text-gray-500">Failed to load report</p>
+        <p className="text-gray-500">{t("dashboard.reportsPage.loadError")}</p>
       </div>
     );
   }
@@ -77,9 +79,9 @@ export function ROIReportClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">ROI Report</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.reportsPage.title")}</h1>
           <p className="text-gray-500 mt-1">
-            Generated {new Date(report.generated_at).toLocaleString()}
+            {t("dashboard.reportsPage.generated")} {new Date(report.generated_at).toLocaleString()}
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -88,15 +90,15 @@ export function ROIReportClient() {
             onChange={(e) => setPeriod(e.target.value)}
             className="px-4 py-2 border rounded-lg"
           >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
+            <option value="7d">{t("dashboard.reportsPage.period7d")}</option>
+            <option value="30d">{t("dashboard.reportsPage.period30d")}</option>
+            <option value="90d">{t("dashboard.reportsPage.period90d")}</option>
           </select>
           <button
             onClick={() => window.print()}
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
           >
-            Export PDF
+            {t("dashboard.reportsPage.exportPdf")}
           </button>
         </div>
       </div>
@@ -104,22 +106,22 @@ export function ROIReportClient() {
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
         <SummaryCard
-          label="Total Queries"
+          label={t("dashboard.reportsPage.totalQueries")}
           value={report.summary.total_queries.toLocaleString()}
           icon="📊"
         />
         <SummaryCard
-          label="Total Cost"
+          label={t("dashboard.reportsPage.totalCost")}
           value={`$${report.summary.total_cost_usd.toFixed(2)}`}
           icon="💰"
         />
         <SummaryCard
-          label="Avg Latency"
+          label={t("dashboard.reportsPage.avgLatency")}
           value={`${report.summary.avg_latency_ms}ms`}
           icon="⚡"
         />
         <SummaryCard
-          label="Cost/Query"
+          label={t("dashboard.reportsPage.costPerQuery")}
           value={`$${report.summary.avg_cost_per_query_usd.toFixed(6)}`}
           icon="📈"
         />
@@ -129,19 +131,19 @@ export function ROIReportClient() {
       <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl p-6 mb-8 text-white">
         <div className="grid grid-cols-3 gap-8">
           <div>
-            <p className="text-emerald-100 text-sm">Estimated Annual Cost</p>
+            <p className="text-emerald-100 text-sm">{t("dashboard.reportsPage.estAnnualCost")}</p>
             <p className="text-3xl font-bold">
               ${report.projections.estimated_annual_cost_usd.toFixed(0)}
             </p>
           </div>
           <div>
-            <p className="text-emerald-100 text-sm">Projected Annual Savings</p>
+            <p className="text-emerald-100 text-sm">{t("dashboard.reportsPage.projAnnualSavings")}</p>
             <p className="text-3xl font-bold">
               ${report.projections.estimated_annual_savings_usd.toFixed(0)}
             </p>
           </div>
           <div>
-            <p className="text-emerald-100 text-sm">Savings Rate</p>
+            <p className="text-emerald-100 text-sm">{t("dashboard.reportsPage.savingsRate")}</p>
             <p className="text-3xl font-bold">
               {report.projections.savings_percent.toFixed(0)}%
             </p>
@@ -153,25 +155,25 @@ export function ROIReportClient() {
       <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Rerank Comparison */}
         <div className="bg-white rounded-2xl border p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Rerank Impact</h3>
+          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.reportsPage.rerankImpact")}</h3>
 
           <div className="space-y-4">
             <ComparisonRow
-              label="Avg Latency"
+              label={t("dashboard.reportsPage.avgLatency")}
               valueA={`${report.rerank_comparison.disabled.avg_latency_ms}ms`}
               valueB={`${report.rerank_comparison.enabled.avg_latency_ms}ms`}
               delta={`+${report.rerank_comparison.impact.latency_delta_ms}ms`}
               deltaPositive={false}
             />
             <ComparisonRow
-              label="Avg Cost"
+              label={t("dashboard.reportsPage.avgCost")}
               valueA={`$${report.rerank_comparison.disabled.avg_cost_usd.toFixed(6)}`}
               valueB={`$${report.rerank_comparison.enabled.avg_cost_usd.toFixed(6)}`}
               delta={`+$${report.rerank_comparison.impact.cost_delta_usd.toFixed(6)}`}
               deltaPositive={false}
             />
             <ComparisonRow
-              label="MRR Score"
+              label={t("dashboard.reportsPage.mrrScore")}
               valueA={report.rerank_comparison.disabled.avg_mrr.toFixed(2)}
               valueB={report.rerank_comparison.enabled.avg_mrr.toFixed(2)}
               delta={`+${(report.rerank_comparison.impact.mrr_improvement * 100).toFixed(1)}%`}
@@ -181,27 +183,27 @@ export function ROIReportClient() {
 
           <div className="mt-4 pt-4 border-t">
             <p className="text-sm text-gray-500">
-              <span className="font-medium text-gray-900">Queries:</span>{" "}
-              {report.rerank_comparison.disabled.count} without /{" "}
-              {report.rerank_comparison.enabled.count} with rerank
+              <span className="font-medium text-gray-900">{t("dashboard.reportsPage.queries")}</span>{" "}
+              {report.rerank_comparison.disabled.count} {t("dashboard.reportsPage.without")} /{" "}
+              {report.rerank_comparison.enabled.count} {t("dashboard.reportsPage.withRerank")}
             </p>
           </div>
         </div>
 
         {/* Autopilot Comparison */}
         <div className="bg-white rounded-2xl border p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Autopilot Savings</h3>
+          <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.reportsPage.autopilotSavings")}</h3>
 
           <div className="space-y-4">
             <ComparisonRow
-              label="Avg Latency"
+              label={t("dashboard.reportsPage.avgLatency")}
               valueA={`${report.autopilot_comparison.disabled.avg_latency_ms}ms`}
               valueB={`${report.autopilot_comparison.enabled.avg_latency_ms}ms`}
               delta={`-${report.autopilot_comparison.disabled.avg_latency_ms - report.autopilot_comparison.enabled.avg_latency_ms}ms`}
               deltaPositive={true}
             />
             <ComparisonRow
-              label="Avg Cost"
+              label={t("dashboard.reportsPage.avgCost")}
               valueA={`$${report.autopilot_comparison.disabled.avg_cost_usd.toFixed(6)}`}
               valueB={`$${report.autopilot_comparison.enabled.avg_cost_usd.toFixed(6)}`}
               delta={`-${report.autopilot_comparison.savings.cost_saved_percent.toFixed(0)}%`}
@@ -214,15 +216,15 @@ export function ROIReportClient() {
               <span className="font-bold text-emerald-900">
                 ${report.autopilot_comparison.savings.cost_saved_usd.toFixed(2)}
               </span>{" "}
-              saved this period with Autopilot
+              {t("dashboard.reportsPage.savedThisPeriod")}
             </p>
           </div>
 
           <div className="mt-4 pt-4 border-t">
             <p className="text-sm text-gray-500">
-              <span className="font-medium text-gray-900">Queries:</span>{" "}
-              {report.autopilot_comparison.disabled.count} without /{" "}
-              {report.autopilot_comparison.enabled.count} with autopilot
+              <span className="font-medium text-gray-900">{t("dashboard.reportsPage.queries")}</span>{" "}
+              {report.autopilot_comparison.disabled.count} {t("dashboard.reportsPage.without")} /{" "}
+              {report.autopilot_comparison.enabled.count} {t("dashboard.reportsPage.withAutopilot")}
             </p>
           </div>
         </div>
@@ -230,7 +232,7 @@ export function ROIReportClient() {
 
       {/* Recommendations */}
       <div className="bg-white rounded-2xl border p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">Recommendations</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.reportsPage.recommendations")}</h3>
         <div className="space-y-3">
           {report.recommendations.map((rec, i) => (
             <div

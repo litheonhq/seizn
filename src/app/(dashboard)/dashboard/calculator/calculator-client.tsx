@@ -136,10 +136,10 @@ export default function CalculatorClient() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {t("calculator.title")}
+          {t("dashboard.calculator.title")}
         </h1>
         <p className="mt-1 text-gray-500 dark:text-gray-400">
-          {t("calculator.subtitle")}
+          {t("dashboard.calculator.subtitle")}
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export default function CalculatorClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("calculator.stats.apiCalls")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.calculator.stats.apiCalls")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatNumber(apiCalls)}</p>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function CalculatorClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("calculator.stats.memories")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.calculator.stats.memories")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatNumber(memories)}</p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function CalculatorClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("calculator.stats.extractions")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.calculator.stats.extractions")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatNumber(extractions)}</p>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function CalculatorClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("calculator.stats.estimated")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.calculator.stats.estimated")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatCurrency(recommendedTier.totalCost)}/mo</p>
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function CalculatorClient() {
           {/* Presets */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t("calculator.presets.title")}
+              {t("dashboard.calculator.presets.title")}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {usagePresets.map((preset) => (
@@ -232,14 +232,14 @@ export default function CalculatorClient() {
           {/* Sliders */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-              {t("calculator.customize.title")}
+              {t("dashboard.calculator.customize.title")}
             </h3>
             <div className="space-y-8">
               {/* API Calls Slider */}
               <div>
                 <div className="flex justify-between mb-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {t("calculator.labels.apiCalls")}
+                    {t("dashboard.calculator.labels.apiCalls")}
                   </label>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     {formatNumber(apiCalls)} / mo
@@ -270,7 +270,7 @@ export default function CalculatorClient() {
               <div>
                 <div className="flex justify-between mb-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {t("calculator.labels.memories")}
+                    {t("dashboard.calculator.labels.memories")}
                   </label>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     {formatNumber(memories)} / mo
@@ -301,7 +301,7 @@ export default function CalculatorClient() {
               <div>
                 <div className="flex justify-between mb-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {t("calculator.labels.extractions")}
+                    {t("dashboard.calculator.labels.extractions")}
                   </label>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     {formatNumber(extractions)} / mo
@@ -339,7 +339,7 @@ export default function CalculatorClient() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
-              <span className="text-sm font-medium opacity-90">{t("calculator.recommended.title")}</span>
+              <span className="text-sm font-medium opacity-90">{t("dashboard.calculator.recommended.title")}</span>
             </div>
             <h3 className="text-3xl font-bold mb-2">{recommendedTier.tier.name}</h3>
             <p className="text-4xl font-bold mb-4">
@@ -348,23 +348,23 @@ export default function CalculatorClient() {
             </p>
             <div className="space-y-2 text-sm opacity-90">
               <div className="flex justify-between">
-                <span>{t("calculator.recommended.base")}</span>
+                <span>{t("dashboard.calculator.recommended.base")}</span>
                 <span>{formatCurrency(recommendedTier.tier.basePrice)}</span>
               </div>
               <div className="flex justify-between">
-                <span>{t("calculator.recommended.overage")}</span>
+                <span>{t("dashboard.calculator.recommended.overage")}</span>
                 <span>{formatCurrency(recommendedTier.overageCost)}</span>
               </div>
             </div>
             <button className="w-full mt-6 bg-white text-blue-600 font-semibold py-2.5 px-4 rounded-lg hover:bg-blue-50 transition-colors">
-              {t("calculator.recommended.cta")}
+              {t("dashboard.calculator.recommended.cta")}
             </button>
           </div>
 
           {/* All Plans Comparison */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t("calculator.comparison.title")}
+              {t("dashboard.calculator.comparison.title")}
             </h3>
             <div className="space-y-3">
               {calculations.map((calc) => (
@@ -382,7 +382,7 @@ export default function CalculatorClient() {
                         {calc.tier.name}
                         {calc.tier.id === recommendedTier.tier.id && (
                           <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">
-                            {t("calculator.comparison.best")}
+                            {t("dashboard.calculator.comparison.best")}
                           </span>
                         )}
                       </p>
@@ -412,7 +412,7 @@ export default function CalculatorClient() {
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {t("calculator.details.title")}
+            {t("dashboard.calculator.details.title")}
           </h3>
         </div>
         <div className="overflow-x-auto">
@@ -420,22 +420,22 @@ export default function CalculatorClient() {
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.plan")}
+                  {t("dashboard.calculator.details.plan")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.base")}
+                  {t("dashboard.calculator.details.base")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.includedCalls")}
+                  {t("dashboard.calculator.details.includedCalls")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.overageRate")}
+                  {t("dashboard.calculator.details.overageRate")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.yourOverage")}
+                  {t("dashboard.calculator.details.yourOverage")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("calculator.details.total")}
+                  {t("dashboard.calculator.details.total")}
                 </th>
               </tr>
             </thead>

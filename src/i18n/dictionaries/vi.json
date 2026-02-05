@@ -242,7 +242,26 @@
       "usageByApiKey": "Usage by API Key",
       "errorsTitle": "Errors",
       "errorRate": "error rate",
-      "noUsageData": "No usage data available"
+      "noUsageData": "No usage data available",
+      "p95Latency": "p95 Latency",
+      "errorRateKpi": "Tỷ lệ Lỗi",
+      "monthlyApiCalls": "Lượt gọi API Hàng tháng",
+      "dailyTrends": "Xu hướng Hàng ngày",
+      "tabCalls": "Lượt gọi",
+      "tabCost": "Chi phí",
+      "tabLatency": "Latency",
+      "tabErrors": "Lỗi",
+      "noUsageTitle": "Chưa có dữ liệu sử dụng",
+      "noUsageDescription": "Gửi yêu cầu API đầu tiên của bạn để xem phân tích sử dụng. Dữ liệu sẽ xuất hiện ở đây trong vòng 5 giây.",
+      "noUsageExpected": "Dự kiến: Lượt gọi, token, chi phí và phân tích latency",
+      "getApiKey": "Lấy API Key",
+      "viewDocs": "Xem Tài liệu",
+      "noEndpointData": "Không có dữ liệu endpoint",
+      "noEndpointDescription": "Phân tích endpoint sẽ xuất hiện sau lượt gọi API đầu tiên của bạn",
+      "sendTestRequest": "Gửi Yêu cầu Kiểm tra",
+      "noKeyData": "Không có dữ liệu sử dụng API key",
+      "noKeyDescription": "Tạo và sử dụng API key để xem phân tích theo từng key",
+      "createApiKey": "Tạo API Key"
     },
     "language": "Ngôn ngữ",
     "organizations": "Organizations",
@@ -343,7 +362,49 @@
       "export": "Xuat",
       "exportResults": "Xuat ket qua",
       "exportFormat": "Dinh dang xuat",
-      "exportSuccess": "Xuat thanh cong"
+      "exportSuccess": "Xuat thanh cong",
+      "queryBuilder": "Trình tạo Query",
+      "namespace": "Namespace",
+      "namespacePlaceholder": "default",
+      "searchMode": "Chế độ Tìm kiếm",
+      "vector": "Vector",
+      "hybrid": "Hybrid",
+      "keyword": "Keyword",
+      "rerank": "Bật Rerank",
+      "trace": "Trace",
+      "cost": "Chi phí",
+      "similarity": "Độ tương tự",
+      "memoryType": "Loại",
+      "rerankScore": "Điểm Rerank",
+      "traceTimeline": "Timeline Trace",
+      "noTrace": "Chạy query để xem trace",
+      "step": "Bước",
+      "completed": "Hoàn thành",
+      "pending": "Đang chờ",
+      "error": "Lỗi",
+      "costBreakdown": "Phân tích Chi phí",
+      "noCost": "Chạy query để xem phân tích chi phí",
+      "component": "Thành phần",
+      "search": "Tìm kiếm",
+      "total": "Tổng",
+      "monthlyEstimate": "Ước tính Hàng tháng",
+      "basedOn": "Dựa trên",
+      "queriesPerDay": "query/ngày",
+      "rerankBefore": "Trước Rerank",
+      "rerankAfter": "Sau Rerank",
+      "rank": "Xếp hạng",
+      "replayFromLog": "Phát lại từ Log",
+      "selectLog": "Chọn log để phát lại",
+      "replaySettings": "Cài đặt Phát lại",
+      "compareResults": "So sánh Kết quả",
+      "original": "Gốc",
+      "replay": "Phát lại",
+      "diff": "Khác biệt",
+      "hitAtK": "Hit@K",
+      "overlap": "Trùng lặp",
+      "added": "Đã thêm",
+      "removed": "Đã xóa",
+      "rankChanges": "Thay đổi Xếp hạng"
     },
     "settingsPage": {
       "title": "Cai dat",
@@ -362,7 +423,9 @@
         "profile": "Ho so",
         "budget": "Ngan sach",
         "notifications": "Thong bao",
-        "security": "Bao mat"
+        "security": "Bao mat",
+        "billing": "Thanh toán",
+        "danger": "Quản lý Dữ liệu"
       },
       "budget": {
         "title": "Quan ly ngan sach",
@@ -380,7 +443,21 @@
         "alertDisabled": "Canh bao ngan sach da tat",
         "unlimited": "Khong gioi han",
         "setLimit": "Dat gioi han",
-        "removeLimit": "Xoa gioi han"
+        "removeLimit": "Xoa gioi han",
+        "subtitle": "Đặt giới hạn chi tiêu và cảnh báo",
+        "perQueryMax": "Tối đa Mỗi Query",
+        "alertThresholdDesc": "Nhận cảnh báo khi mức sử dụng đạt đến tỷ lệ phần trăm này",
+        "budgetMode": "Chế độ Ngân sách",
+        "soft": "Giới hạn Mềm",
+        "softDesc": "Cảnh báo nhưng cho phép vượt mức",
+        "hard": "Giới hạn Cứng",
+        "hardDesc": "Chặn yêu cầu tại giới hạn",
+        "fallbackStrategy": "Chiến lược Dự phòng",
+        "fallbackDesc": "Làm gì khi ngân sách bị vượt quá",
+        "reject": "Từ chối Yêu cầu",
+        "cache": "Trả về Cache",
+        "degrade": "Giảm Chất lượng",
+        "queue": "Xếp hàng Yêu cầu"
       },
       "notifications": {
         "title": "Cai dat thong bao",
@@ -398,7 +475,20 @@
         "allEnabled": "Tat ca thong bao da bat",
         "allDisabled": "Tat ca thong bao da tat",
         "enableAll": "Bat tat ca",
-        "disableAll": "Tat tat ca"
+        "disableAll": "Tat tat ca",
+        "subtitle": "Cấu hình cách bạn nhận cảnh báo",
+        "emailAlerts": "Cảnh báo Email",
+        "emailAlertsDesc": "Nhận cảnh báo quan trọng qua email",
+        "usageAlerts": "Cảnh báo Sử dụng",
+        "usageAlertsDesc": "Nhận thông báo khi sắp đạt giới hạn",
+        "weeklyDigest": "Tóm tắt Hàng tuần",
+        "weeklyDigestDesc": "Nhận tóm tắt sử dụng hàng tuần",
+        "securityAlerts": "Cảnh báo Bảo mật",
+        "securityAlertsDesc": "Nhận thông báo về hoạt động đáng ngờ",
+        "telegram": "Telegram",
+        "telegramDesc": "Nhận cảnh báo qua bot Telegram",
+        "comingSoon": "Sắp ra mắt",
+        "integrations": "Tích hợp"
       },
       "security": {
         "title": "Cai dat bao mat",
@@ -425,7 +515,14 @@
         "passwordMismatch": "Mat khau khong khop",
         "passwordTooShort": "Mat khau qua ngan",
         "apiKeysSecurity": "Bao mat khoa API",
-        "apiKeysSecurityHint": "Giam sat va quan ly khoa API cua ban"
+        "apiKeysSecurityHint": "Giam sat va quan ly khoa API cua ban",
+        "subtitle": "Quản lý bảo mật tài khoản của bạn",
+        "save": "Lưu Thay đổi",
+        "updatePassword": "Cập nhật Mật khẩu",
+        "twoFactorDesc": "Thêm lớp bảo mật bổ sung",
+        "enable2FA": "Bật 2FA",
+        "sessionsDesc": "Quản lý các phiên hoạt động của bạn",
+        "viewSessions": "Xem Phiên"
       },
       "dangerZone": {
         "title": "Vung nguy hiem",
@@ -438,7 +535,38 @@
         "exportDataHint": "Tai ban sao cua tat ca du lieu cua ban",
         "exportDataButton": "Xuat du lieu",
         "exportInProgress": "Dang xuat...",
-        "exportComplete": "Xuat hoan tat"
+        "exportComplete": "Xuat hoan tat",
+        "subtitle": "Quản lý và xóa dữ liệu tài khoản của bạn",
+        "exportDataDesc": "Tải xuống tất cả dữ liệu của bạn",
+        "exportButton": "Xuất Tất cả Dữ liệu",
+        "deleteMemories": "Xóa Tất cả Bộ nhớ",
+        "deleteMemoriesDesc": "Xóa vĩnh viễn tất cả bộ nhớ đã lưu trữ",
+        "deleteMemoriesButton": "Xóa Bộ nhớ",
+        "deleteAccountDesc": "Xóa vĩnh viễn tài khoản và tất cả dữ liệu của bạn",
+        "confirmDelete": "Nhập DELETE để xác nhận"
+      },
+      "billing": {
+        "title": "Thanh toán & Sử dụng",
+        "subtitle": "Quản lý gói của bạn và theo dõi việc sử dụng",
+        "currentPlan": "Gói Hiện tại",
+        "monthlyPrice": "Giá Hàng tháng",
+        "upgradePlan": "Nâng cấp Gói",
+        "quotaWarningTitle": "Sắp đạt Giới hạn Hạn ngạch",
+        "quotaWarningDesc": "Bạn đang sử dụng {percent}% hạn ngạch {resource} của mình. Hãy cân nhắc nâng cấp gói của bạn.",
+        "upgradeNow": "Nâng cấp Ngay",
+        "memoriesUsage": "Sử dụng Bộ nhớ",
+        "apiCallsUsage": "Sử dụng Lượt gọi API",
+        "apiKeysUsage": "Sử dụng API Keys",
+        "unlimited": "Không giới hạn",
+        "planComparison": "So sánh Gói",
+        "feature": "Tính năng",
+        "memoriesLabel": "Bộ nhớ",
+        "apiCallsLabel": "Lượt gọi API/Tháng",
+        "apiKeysLabel": "API Keys",
+        "priceLabel": "Giá",
+        "contactUs": "Liên hệ Chúng tôi",
+        "used": "đã sử dụng",
+        "of": "trong số"
       }
     },
     "greeting": {
@@ -468,7 +596,17 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "Sử dụng API",
+      "last7days": "7 ngày qua",
+      "viewDetails": "Xem Chi tiết",
+      "noUsageData": "Chưa có dữ liệu sử dụng",
+      "recentActivity": "Hoạt động Gần đây",
+      "last10Requests": "10 yêu cầu API gần nhất",
+      "viewAllActivity": "Xem Tất cả",
+      "noActivityYet": "Chưa có hoạt động API",
+      "noActivityDescription": "Gửi yêu cầu API đầu tiên của bạn để xem hoạt động ở đây",
+      "sendFirstRequest": "Gửi Yêu cầu Đầu tiên"
     },
     "keysPage": {
       "title": "API Keys",
@@ -498,7 +636,18 @@
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
       "cancel": "Cancel",
       "creating": "Creating...",
-      "createKey": "Create Key"
+      "createKey": "Create Key",
+      "name": "Tên",
+      "keyColumn": "Key",
+      "actions": "Thao tác",
+      "revokeWarning": "Tất cả ứng dụng sử dụng key này sẽ ngừng hoạt động ngay lập tức.",
+      "revokeAction": "Thu hồi",
+      "rotate": "Xoay vòng",
+      "rotateConfirm": "Xoay vòng API key \"{keyName}\"?",
+      "rotateWarning": "Key mới sẽ được tạo. Cập nhật ứng dụng của bạn với key mới trước khi key cũ hết hạn.",
+      "rotateAction": "Xoay vòng Key",
+      "keyRotated": "API Key Đã Xoay vòng!",
+      "keyRotatedDesc": "Sao chép key mới này ngay bây giờ. Key cũ không còn hợp lệ."
     },
     "organizationsPage": {
       "title": "Organizations",
@@ -523,7 +672,16 @@
         "owner": "owner",
         "admin": "admin",
         "member": "member"
-      }
+      },
+      "noOrgsExpected": "Mất ít hơn 30 giây để thiết lập",
+      "featureSharedKeys": "API Keys Chia sẻ",
+      "featureSharedKeysDesc": "Quản lý key toàn nhóm",
+      "featureTeamMembers": "Thành viên Nhóm",
+      "featureTeamMembersDesc": "Mời với vai trò",
+      "featureBudget": "Ngân sách Chia sẻ",
+      "featureBudgetDesc": "Theo dõi chi phí thống nhất",
+      "featureAudit": "Nhật ký Audit",
+      "featureAuditDesc": "Lịch sử hoạt động"
     },
     "onboarding": {
       "title": "Bắt đầu với Seizn",
@@ -550,8 +708,772 @@
           "title": "Cài đặt SDK",
           "description": "Thêm Seizn vào dự án của bạn với npm hoặc pip",
           "action": "Xem SDK"
+        },
+        "createOrg": {
+          "title": "Tạo Tổ chức",
+          "description": "Thiết lập không gian làm việc cho nhóm của bạn để cộng tác",
+          "action": "Tạo Tổ chức"
+        },
+        "firstQuery": {
+          "title": "Chạy Query Đầu tiên",
+          "description": "Kiểm tra API trong playground với query mẫu",
+          "action": "Thử Query"
+        }
+      },
+      "takeTour": "Tham quan",
+      "sdkModal": {
+        "title": "Cài đặt Seizn SDK",
+        "description": "Chọn phương thức cài đặt ưa thích của bạn và sao chép lệnh.",
+        "copy": "Sao chép",
+        "copied": "Đã sao chép!",
+        "viewDocs": "Xem tài liệu đầy đủ",
+        "done": "Xong"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Chào mừng đến với Seizn!",
+          "description": "Hãy tham quan nhanh để giúp bạn bắt đầu."
+        },
+        "sidebar": {
+          "title": "Điều hướng",
+          "description": "Sử dụng thanh bên để điều hướng giữa các phần của dashboard."
+        },
+        "stats": {
+          "title": "Thống kê của Bạn",
+          "description": "Theo dõi việc sử dụng API, bộ nhớ đã lưu trữ và gói hiện tại của bạn."
+        },
+        "quickStart": {
+          "title": "Thao tác Nhanh",
+          "description": "Sử dụng các thẻ này cho các tác vụ phổ biến như tạo API keys."
+        },
+        "next": "Tiếp theo",
+        "skip": "Bỏ qua tour",
+        "finish": "Hoàn thành",
+        "stepOf": "Bước {current} trong {total}"
+      }
+    },
+    "governance": {
+      "title": "Quản trị",
+      "subtitle": "Quản lý chính sách dữ liệu, quy tắc lưu giữ và cài đặt tuân thủ",
+      "tabs": {
+        "retention": "Lưu giữ dữ liệu",
+        "access": "Kiểm soát truy cập",
+        "pii": "Phát hiện PII",
+        "compliance": "Tuân thủ"
+      },
+      "stats": {
+        "retentionPolicies": "Chính sách lưu giữ",
+        "accessRules": "Quy tắc truy cập",
+        "piiRules": "Quy tắc PII đang hoạt động",
+        "complianceScore": "Điểm tuân thủ"
+      },
+      "addPolicy": "Thêm chính sách",
+      "addRule": "Thêm quy tắc",
+      "deleteConfirm": "Bạn có chắc muốn xóa chính sách lưu giữ này?",
+      "retention": {
+        "description": "Cấu hình thời gian lưu giữ ký ức trong mỗi namespace",
+        "namespace": "Namespace",
+        "memoryTypes": "Loại ký ức",
+        "ttl": "TTL",
+        "autoArchive": "Tự động lưu trữ",
+        "actions": "Hành động",
+        "days": "ngày",
+        "enabled": "Đã bật",
+        "disabled": "Đã tắt",
+        "delete": "Xóa",
+        "addTitle": "Thêm chính sách lưu giữ",
+        "namespacePattern": "Mẫu namespace",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Sử dụng * để khớp ký tự đại diện",
+        "ttlDays": "TTL (Ngày)",
+        "autoArchiveToggle": "Tự động lưu trữ",
+        "autoArchiveDesc": "Lưu trữ trước khi xóa",
+        "cancel": "Hủy"
+      },
+      "access": {
+        "description": "Xác định kiểm soát truy cập dựa trên vai trò cho nhóm của bạn",
+        "namespaces": "Namespace:",
+        "permissions": "Quyền:"
+      },
+      "pii": {
+        "description": "Tự động phát hiện và xử lý thông tin nhận dạng cá nhân",
+        "pattern": "Mẫu",
+        "type": "Loại",
+        "action": "Hành động",
+        "status": "Trạng thái",
+        "aiDetection": "Phát hiện AI",
+        "regex": "Regex",
+        "betaTitle": "Phát hiện AI đang ở giai đoạn Beta",
+        "betaDesc": "Phát hiện PII bằng AI có thể có kết quả dương tính giả. Xem xét nội dung được đánh dấu trước khi thực hiện hành động."
+      },
+      "compliance": {
+        "description": "Theo dõi tuân thủ với các khung quy định chính",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "requirementsMet": "Yêu cầu đã đáp ứng",
+        "fullyCompliant": "Tuân thủ đầy đủ",
+        "enableCheck": "Bật kiểm tra tuân thủ",
+        "reports": "Báo cáo tuân thủ",
+        "soc2Report": "Báo cáo SOC 2 Type II",
+        "soc2Date": "Được tạo tháng 12 năm 2024",
+        "dpa": "Thỏa thuận xử lý dữ liệu",
+        "dpaDesc": "Mẫu DPA tuân thủ GDPR",
+        "securityQuestionnaire": "Bảng câu hỏi bảo mật",
+        "securityQuestionnaireDesc": "Đánh giá bảo mật đã điền sẵn",
+        "download": "Tải xuống"
+      }
+    },
+    "integrations": {
+      "title": "Tích hợp",
+      "subtitle": "Kết nối Seizn với các công cụ và framework yêu thích của bạn",
+      "searchPlaceholder": "Tìm kiếm tích hợp...",
+      "stats": {
+        "total": "Tổng số tích hợp",
+        "available": "Có sẵn",
+        "beta": "Đang thử nghiệm",
+        "comingSoon": "Sắp ra mắt"
+      },
+      "categories": {
+        "all": "Tất cả",
+        "frameworks": "Framework",
+        "llms": "LLM",
+        "databases": "Cơ sở dữ liệu",
+        "platforms": "Nền tảng"
+      },
+      "status": {
+        "available": "Có sẵn",
+        "beta": "Beta",
+        "comingSoon": "Sắp ra mắt"
+      },
+      "docs": "Tài liệu",
+      "copyInstall": "Sao chép lệnh cài đặt",
+      "noResults": "Không tìm thấy tích hợp phù hợp với tiêu chí của bạn",
+      "installation": "Cài đặt",
+      "copied": "Đã sao chép!",
+      "copy": "Sao chép",
+      "quickStart": "Bắt đầu nhanh",
+      "comingSoonMsg": "Tích hợp này hiện đang được phát triển. Đăng ký để nhận thông báo khi có sẵn.",
+      "notifyMe": "Thông báo cho tôi",
+      "betaMsg": "Tích hợp này đang ở giai đoạn beta. Một số tính năng có thể thay đổi trước khi phát hành chính thức.",
+      "close": "Đóng",
+      "viewDocs": "Xem tài liệu"
+    },
+    "memoriesPage": {
+      "title": "Ký ức",
+      "subtitle": "Duyệt và tìm kiếm ký ức AI của bạn",
+      "totalMemories": "Tổng số ký ức",
+      "search": "Tìm kiếm",
+      "searchPlaceholder": "Tìm kiếm ký ức...",
+      "namespace": "Namespace",
+      "memoryTypes": "Loại ký ức",
+      "tags": "Thẻ",
+      "noTags": "Không có thẻ nào",
+      "clearFilters": "Xóa bộ lọc",
+      "showing": "Đang hiển thị",
+      "of": "trong",
+      "results": "kết quả",
+      "sortNewest": "Mới nhất trước",
+      "sortOldest": "Cũ nhất trước",
+      "sortRelevance": "Liên quan nhất",
+      "activeFilters": "Bộ lọc đang áp dụng",
+      "loading": "Đang tải ký ức...",
+      "noMemories": "Không tìm thấy ký ức",
+      "noMatchingMemories": "Thử điều chỉnh bộ lọc hoặc truy vấn tìm kiếm",
+      "noMemoriesHint": "Bắt đầu thêm ký ức qua API để xem chúng ở đây",
+      "match": "khớp",
+      "loadMore": "Tải thêm"
+    },
+    "budgetPage": {
+      "title": "Ngân sách & Kiểm soát chi phí",
+      "subtitle": "Quản lý giới hạn chi tiêu, cảnh báo và tối ưu hóa chi phí tự động",
+      "loadError": "Không thể tải dữ liệu ngân sách",
+      "todaysSpend": "Chi tiêu hôm nay",
+      "ofDailyLimit": "của giới hạn hàng ngày",
+      "monthlySpend": "Chi tiêu hàng tháng",
+      "ofMonthlyLimit": "của giới hạn hàng tháng",
+      "apiCalls": "Lệnh gọi API",
+      "thisMonth": "tháng này",
+      "autoDegrades": "Tự động giảm chất lượng",
+      "noRecentDegrades": "Không có giảm chất lượng gần đây",
+      "protectionActive": "Bảo vệ ngân sách đang hoạt động",
+      "protectionDesc": "Truy vấn của bạn đang được tự động tối ưu hóa để nằm trong ngân sách. Điều này có thể giảm chất lượng kết quả. Hãy xem xét tăng giới hạn ngân sách.",
+      "settings": "Cài đặt ngân sách",
+      "recentEvents": "Sự kiện giảm chất lượng gần đây",
+      "time": "Thời gian",
+      "reason": "Lý do",
+      "changes": "Thay đổi",
+      "saved": "Đã tiết kiệm",
+      "howItWorks": "Cách hoạt động của truy xuất nhận biết ngân sách",
+      "step1": "Khi gần đạt giới hạn ngân sách, Seizn tự động tối ưu hóa truy vấn của bạn",
+      "step2": "Tối ưu hóa bao gồm: tắt xếp hạng lại, giảm topK, ưu tiên sử dụng bộ nhớ đệm",
+      "step3": "Ở chế độ cứng, các truy vấn vượt ngân sách sẽ bị từ chối hoàn toàn",
+      "step4": "Tất cả sự kiện giảm chất lượng được ghi lại kèm chi phí tiết kiệm để đảm bảo minh bạch"
+    },
+    "devtoolsPage": {
+      "title": "Công cụ phát triển truy xuất",
+      "subtitle": "Gỡ lỗi và phân tích pipeline RAG của bạn",
+      "query": "Truy vấn",
+      "noQueryText": "Không có văn bản truy vấn",
+      "results": "kết quả",
+      "error": "Lỗi",
+      "rerank": "xếp hạng lại",
+      "optimizationHints": "Gợi ý tối ưu hóa",
+      "tabs": {
+        "timeline": "Dòng thời gian",
+        "candidates": "Ứng viên",
+        "rerank": "Xếp hạng lại",
+        "whatIf": "Phòng thí nghiệm What-If",
+        "raw": "Dữ liệu thô"
+      },
+      "finalResults": "Kết quả cuối cùng",
+      "initialCandidates": "Ứng viên ban đầu (Trước khi xếp hạng lại)",
+      "rawTraceData": "Dữ liệu theo dõi thô",
+      "emptyTitle": "Chọn một theo dõi để kiểm tra",
+      "emptyDesc": "Chọn một theo dõi từ danh sách bên trái để xem dòng thời gian, ứng viên, phân tích xếp hạng lại và chạy thí nghiệm what-if."
+    },
+    "enterpriseDashboard": {
+      "title": "Doanh nghiệp",
+      "badge": "Gói doanh nghiệp",
+      "subtitle": "Cấu hình SSO, SCIM và cài đặt doanh nghiệp",
+      "tabs": {
+        "sso": "Đăng nhập một lần",
+        "scim": "Cấp phát người dùng",
+        "settings": "Cài đặt"
+      },
+      "sso": {
+        "enabled": "SSO đã bật",
+        "provider": "Nhà cung cấp:",
+        "domains": "Tên miền:",
+        "testConnection": "Kiểm tra kết nối",
+        "disable": "Tắt",
+        "defaultRole": "Vai trò mặc định",
+        "status": "Trạng thái",
+        "active": "Đang hoạt động",
+        "lastLogin": "Đăng nhập lần cuối",
+        "hoursAgo": "2 giờ trước",
+        "notConfigured": "Đăng nhập một lần chưa được cấu hình",
+        "notConfiguredDesc": "Bật SSO để cho phép thành viên nhóm đăng nhập bằng nhà cung cấp danh tính doanh nghiệp",
+        "configure": "Cấu hình SSO",
+        "supportedProviders": "Nhà cung cấp được hỗ trợ",
+        "selectProvider": "Chọn nhà cung cấp",
+        "configureDomains": "Cấu hình tên miền",
+        "emailDomains": "Tên miền email",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Người dùng có tên miền email này sẽ được chuyển hướng đến SSO",
+        "idpConfig": "Cấu hình IdP",
+        "idpCopyHint": "Sao chép các giá trị này vào Nhà cung cấp danh tính của bạn:",
+        "acsUrl": "URL ACS:",
+        "entityId": "ID thực thể:",
+        "back": "Quay lại",
+        "continue": "Tiếp tục",
+        "enableSSO": "Bật SSO",
+        "configSaved": "Cấu hình SSO đã được lưu!"
+      },
+      "scim": {
+        "title": "Cấp phát SCIM",
+        "subtitle": "Tự động đồng bộ người dùng và nhóm từ nhà cung cấp danh tính của bạn",
+        "endpoint": "Điểm cuối SCIM",
+        "bearerToken": "Token xác thực",
+        "regenerate": "Tạo lại",
+        "generate": "Tạo",
+        "tokenWarning": "Sao chép token này ngay. Nó sẽ không được hiển thị lại.",
+        "syncUsers": "Đồng bộ người dùng",
+        "syncUsersDesc": "Nhập và đồng bộ tài khoản người dùng",
+        "syncGroups": "Đồng bộ nhóm",
+        "syncGroupsDesc": "Nhập và đồng bộ thành viên nhóm",
+        "autoProvision": "Tự động cấp phát",
+        "autoProvisionDesc": "Tự động tạo người dùng mới",
+        "autoDeprovision": "Tự động thu hồi",
+        "autoDeprovisionDesc": "Tự động vô hiệu hóa người dùng bị xóa"
+      },
+      "features": {
+        "title": "Tính năng doanh nghiệp",
+        "sso": "SSO",
+        "ssoDesc": "Đăng nhập một lần với SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Cấp phát người dùng tự động",
+        "auditLogs": "Nhật ký kiểm toán",
+        "auditLogsDesc": "Lịch sử hoạt động đầy đủ",
+        "customDomains": "Tên miền tùy chỉnh",
+        "customDomainsDesc": "Sử dụng tên miền riêng của bạn",
+        "ipWhitelist": "Danh sách IP cho phép",
+        "ipWhitelistDesc": "Giới hạn truy cập theo IP",
+        "dataRetention": "Lưu giữ dữ liệu",
+        "dataRetentionDesc": "Chính sách lưu giữ tùy chỉnh",
+        "advancedAnalytics": "Phân tích nâng cao",
+        "advancedAnalyticsDesc": "Báo cáo sử dụng chi tiết",
+        "sla": "SLA",
+        "slaDesc": "Cam kết uptime 99,9%",
+        "enabled": "Đã bật",
+        "disabled": "Đã tắt"
+      },
+      "limits": {
+        "title": "Giới hạn gói",
+        "users": "Người dùng",
+        "unlimited": "Không giới hạn",
+        "apiCalls": "Lệnh gọi API",
+        "apiCallsValue": "10M / tháng",
+        "storage": "Lưu trữ",
+        "storageValue": "1TB",
+        "collections": "Bộ sưu tập",
+        "documents": "Tài liệu",
+        "retention": "Lưu giữ",
+        "retentionValue": "365 ngày"
+      },
+      "support": {
+        "title": "Hỗ trợ chuyên dụng",
+        "subtitle": "Hỗ trợ ưu tiên với quản lý tài khoản chuyên dụng",
+        "contact": "Liên hệ hỗ trợ"
+      }
+    },
+    "securityPage": {
+      "title": "Bảo mật",
+      "subtitle": "Quản lý khóa API và xem nhật ký kiểm toán bảo mật",
+      "stats": {
+        "activeKeys": "Khóa API đang hoạt động",
+        "auditEvents": "Sự kiện kiểm toán (24h)",
+        "securityScore": "Điểm bảo mật",
+        "alerts": "Cảnh báo"
+      },
+      "tabs": {
+        "audit": "Nhật ký kiểm toán",
+        "keys": "Khóa API",
+        "policies": "Chính sách",
+        "settings": "Cài đặt"
+      },
+      "audit": {
+        "allActions": "Tất cả hành động",
+        "lastHour": "Giờ trước",
+        "last24Hours": "24 giờ qua",
+        "last7Days": "7 ngày qua",
+        "last30Days": "30 ngày qua",
+        "exporting": "Đang xuất...",
+        "exportCSV": "Xuất CSV",
+        "action": "Hành động",
+        "resource": "Tài nguyên",
+        "details": "Chi tiết",
+        "ipAddress": "Địa chỉ IP",
+        "time": "Thời gian",
+        "noLogs": "Không tìm thấy nhật ký kiểm toán"
+      },
+      "keys": {
+        "description": "Khóa API được sử dụng để xác thực các yêu cầu đến Seizn API",
+        "createNew": "Tạo khóa mới",
+        "rotate": "Xoay khóa",
+        "revoke": "Thu hồi",
+        "created": "Đã tạo",
+        "lastUsed": "Sử dụng lần cuối",
+        "never": "Chưa bao giờ",
+        "permissions": "Quyền",
+        "rotateConfirm": "Bạn có chắc muốn xoay khóa API này? Khóa cũ sẽ bị vô hiệu hóa.",
+        "rotateSuccess": "Xoay khóa thành công! Vui lòng sao chép khóa mới.",
+        "revokeConfirm": "Bạn có chắc muốn thu hồi khóa API này? Hành động này không thể hoàn tác.",
+        "createTitle": "Tạo khóa API",
+        "keyName": "Tên khóa",
+        "keyNamePlaceholder": "Production Backend",
+        "keyType": "Loại khóa",
+        "test": "Thử nghiệm",
+        "live": "Chính thức",
+        "testHint": "Khóa thử nghiệm chỉ hoạt động ở chế độ sandbox",
+        "testKeysNote": "Khóa thử nghiệm chỉ hoạt động ở chế độ sandbox",
+        "cancel": "Hủy",
+        "createKey": "Tạo khóa"
+      },
+      "settings": {
+        "authentication": "Xác thực",
+        "twoFactor": "Xác thực hai yếu tố",
+        "twoFactorDesc": "Yêu cầu 2FA cho tất cả thành viên nhóm",
+        "twoFactorDescription": "Yêu cầu 2FA cho tất cả thành viên nhóm",
+        "sessionTimeout": "Hết phiên",
+        "sessionTimeoutDesc": "Tự động đăng xuất sau khi không hoạt động",
+        "sessionTimeoutDescription": "Tự động đăng xuất sau khi không hoạt động",
+        "min15": "15 phút",
+        "15minutes": "15 phút",
+        "min30": "30 phút",
+        "30minutes": "30 phút",
+        "hour1": "1 giờ",
+        "1hour": "1 giờ",
+        "hour4": "4 giờ",
+        "4hours": "4 giờ",
+        "apiSecurity": "Bảo mật API",
+        "ipWhitelist": "Danh sách IP cho phép",
+        "ipWhitelistDesc": "Chỉ cho phép truy cập API từ các IP cụ thể",
+        "ipWhitelistDescription": "Chỉ cho phép truy cập API từ các IP cụ thể",
+        "rateLimit": "Giới hạn tốc độ",
+        "rateLimitDesc": "Số yêu cầu tối đa mỗi phút",
+        "rateLimitDescription": "Số yêu cầu tối đa mỗi phút",
+        "rate100": "100/phút",
+        "rate500": "500/phút",
+        "rate1000": "1.000/phút",
+        "rate5000": "5.000/phút",
+        "dangerZone": "Vùng nguy hiểm",
+        "dangerWarning": "Những hành động này không thể hoàn tác. Vui lòng tiến hành cẩn thận.",
+        "dangerZoneDescription": "Những hành động này không thể hoàn tác. Vui lòng tiến hành cẩn thận.",
+        "revokeAll": "Thu hồi tất cả khóa API",
+        "revokeAllKeys": "Thu hồi tất cả khóa API",
+        "deleteAllData": "Xóa tất cả dữ liệu"
+      },
+      "policies": {
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "pending": "Đang chờ",
+        "activePolicies": "Chính sách đang hoạt động",
+        "accessPolicies": "Chính sách truy cập",
+        "compliancePolicies": "Chính sách tuân thủ",
+        "awaitingApproval": "Đang chờ phê duyệt",
+        "addCustom": "Thêm chính sách tùy chỉnh"
+      }
+    },
+    "reportsPage": {
+      "title": "Báo cáo ROI",
+      "generated": "Được tạo",
+      "period7d": "7 ngày qua",
+      "period30d": "30 ngày qua",
+      "period90d": "90 ngày qua",
+      "exportPdf": "Xuất PDF",
+      "loadError": "Không thể tải báo cáo",
+      "totalQueries": "Tổng số truy vấn",
+      "totalCost": "Tổng chi phí",
+      "avgLatency": "Độ trễ trung bình",
+      "costPerQuery": "Chi phí/Truy vấn",
+      "estAnnualCost": "Chi phí hàng năm ước tính",
+      "projAnnualSavings": "Tiết kiệm hàng năm dự kiến",
+      "savingsRate": "Tỷ lệ tiết kiệm",
+      "rerankImpact": "Tác động xếp hạng lại",
+      "mrrScore": "Điểm MRR",
+      "without": "không có",
+      "withRerank": "có xếp hạng lại",
+      "autopilotSavings": "Tiết kiệm Autopilot",
+      "savedThisPeriod": "đã tiết kiệm trong kỳ này với Autopilot",
+      "withAutopilot": "với autopilot",
+      "recommendations": "Khuyến nghị",
+      "queries": "Truy vấn:",
+      "avgCost": "Chi phí trung bình"
+    },
+    "privacy": {
+      "title": "Quyền riêng tư & RTBF",
+      "subtitle": "Quản lý yêu cầu Quyền được quên theo GDPR và quyền chủ thể dữ liệu",
+      "tabs": {
+        "requests": "Yêu cầu RTBF",
+        "subjects": "Chủ thể dữ liệu",
+        "certificates": "Chứng chỉ",
+        "settings": "Cài đặt"
+      },
+      "stats": {
+        "pending": "Đang chờ",
+        "inProgress": "Đang xử lý",
+        "completed": "Đã hoàn thành",
+        "overdue": "Quá hạn"
+      },
+      "requests": {
+        "description": "Quản lý yêu cầu Quyền được quên theo Điều 17 GDPR",
+        "newRequest": "Yêu cầu mới",
+        "subject": "Chủ thể",
+        "status": "Trạng thái",
+        "phase": "Giai đoạn",
+        "dueDate": "Ngày hạn",
+        "scope": "Phạm vi",
+        "actions": "Hành động",
+        "daysOverdue": "ngày quá hạn",
+        "daysLeft": "ngày còn lại",
+        "view": "Xem",
+        "certificate": "Chứng chỉ",
+        "verify": "Xác minh"
+      },
+      "detail": {
+        "title": "Chi tiết yêu cầu RTBF",
+        "dataSubject": "Chủ thể dữ liệu",
+        "requestedAt": "Yêu cầu lúc",
+        "dueDate": "Ngày hạn",
+        "status": "Trạng thái",
+        "dataCategories": "Danh mục dữ liệu",
+        "deletionScope": "Phạm vi xóa",
+        "completionDetails": "Chi tiết hoàn thành",
+        "completed": "Đã hoàn thành:",
+        "verified": "Đã xác minh:",
+        "close": "Đóng",
+        "runVerification": "Chạy xác minh",
+        "downloadCertificate": "Tải chứng chỉ"
+      },
+      "newRequest": {
+        "title": "Yêu cầu RTBF mới",
+        "description": "Tạo yêu cầu Quyền được quên mới. Thời hạn sẽ được đặt là 30 ngày kể từ bây giờ theo yêu cầu GDPR.",
+        "emailLabel": "Email chủ thể dữ liệu",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Phạm vi xóa",
+        "cancel": "Hủy",
+        "creating": "Đang tạo...",
+        "create": "Tạo yêu cầu"
+      },
+      "subjects": {
+        "description": "Xem và quản lý chủ thể dữ liệu đã tương tác với hệ thống của bạn",
+        "email": "Email",
+        "externalId": "ID bên ngoài",
+        "requests": "Yêu cầu",
+        "dataCategories": "Danh mục dữ liệu",
+        "actions": "Hành động",
+        "viewData": "Xem dữ liệu"
+      },
+      "certificates": {
+        "description": "Bằng chứng mật mã về việc xóa dữ liệu cho kiểm toán tuân thủ",
+        "noTitle": "Chưa có chứng chỉ",
+        "noDesc": "Chứng chỉ được tạo khi yêu cầu RTBF được xác minh",
+        "request": "Yêu cầu:",
+        "issued": "Ngày cấp:",
+        "gdprCompliant": "Tuân thủ GDPR",
+        "download": "Tải xuống",
+        "hash": "Mã băm chứng chỉ"
+      },
+      "settings": {
+        "description": "Cấu hình xử lý RTBF và cài đặt tuân thủ",
+        "autoDiscovery": "Tự động khám phá",
+        "autoDiscoveryDesc": "Tự động khám phá tất cả dữ liệu liên quan đến chủ thể",
+        "verificationRequired": "Yêu cầu xác minh",
+        "verificationRequiredDesc": "Yêu cầu xác minh trước khi cấp chứng chỉ xóa",
+        "responseDeadline": "Thời hạn phản hồi (Ngày)",
+        "responseDeadlineHint": "GDPR yêu cầu phản hồi trong vòng 30 ngày (có thể gia hạn đến 90 ngày cho yêu cầu phức tạp)",
+        "notificationEmail": "Email thông báo",
+        "notificationEmailHint": "Địa chỉ email để nhận thông báo yêu cầu RTBF",
+        "auditLogRetention": "Lưu giữ nhật ký kiểm toán (Ngày)",
+        "auditLogRetentionHint": "Thời gian lưu giữ nhật ký kiểm toán cho mục đích tuân thủ",
+        "years": "năm",
+        "saving": "Đang lưu...",
+        "save": "Lưu cài đặt"
+      },
+      "gdprNotes": {
+        "title": "Ghi chú tuân thủ GDPR",
+        "note1": "Yêu cầu RTBF phải được thực hiện trong vòng 30 ngày",
+        "note2": "Yêu cầu phức tạp có thể được gia hạn đến 90 ngày",
+        "note3": "Nhật ký kiểm toán nên được lưu giữ cho mục đích tuân thủ",
+        "note4": "Chứng chỉ xóa cung cấp bằng chứng mật mã"
+      }
+    },
+    "topBar": {
+      "personal": "Tài khoản Cá nhân",
+      "manageOrgs": "Quản lý Tổ chức",
+      "create": "Tạo",
+      "createApiKey": "API Key Mới",
+      "createOrg": "Tổ chức Mới"
+    },
+    "share": {
+      "title": "Chia sẻ Trace",
+      "button": "Chia sẻ",
+      "createLink": "Tạo Link Chia sẻ",
+      "creating": "Đang tạo...",
+      "done": "Xong",
+      "linkExpiration": "Hết hạn Link",
+      "hour": "1G",
+      "day": "24G",
+      "week": "7N",
+      "never": "Không bao giờ",
+      "privacyOptions": "Tùy chọn Quyền riêng tư",
+      "maskPii": "Che PII (email, điện thoại, IP)",
+      "maskSecrets": "Che API keys và secrets",
+      "shareUrl": "URL Chia sẻ",
+      "copyLink": "Sao chép Link",
+      "linkCopied": "Đã sao chép!",
+      "expiresIn": "Link này hết hạn trong {duration}.",
+      "neverExpires": "Link này không bao giờ hết hạn.",
+      "error": "Không thể tạo link chia sẻ",
+      "revoke": "Thu hồi Link",
+      "revokeConfirm": "Bạn có chắc chắn muốn thu hồi link này không?",
+      "linkRevoked": "Link đã được thu hồi thành công"
+    },
+    "theme": {
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Hệ thống",
+      "toggle": "Chuyển đổi chủ đề"
+    },
+    "activity": {
+      "endpoint": "Endpoint",
+      "status": "Trạng thái",
+      "latency": "Latency",
+      "cost": "Chi phí",
+      "key": "Key",
+      "time": "Thời gian"
+    },
+    "evals": {
+      "title": "Đánh giá",
+      "subtitle": "Kiểm tra A/B và đo lường chất lượng truy xuất",
+      "newRun": "Chạy Đánh giá Mới",
+      "runs": "Lần Chạy Đánh giá",
+      "noRuns": "Chưa có lần chạy đánh giá",
+      "metrics": "Chỉ số",
+      "comparison": "So sánh Trực quan",
+      "selectRun": "Chọn lần chạy đánh giá",
+      "selectRunHint": "Chọn lần chạy từ danh sách để xem chỉ số chi tiết",
+      "completed": "Hoàn thành",
+      "running": "Đang chạy",
+      "failed": "Thất bại",
+      "pending": "Đang chờ",
+      "winner": "Người thắng",
+      "tie": "Hòa",
+      "confidence": "độ tin cậy",
+      "exportCSV": "Xuất CSV",
+      "exportJSON": "Xuất JSON",
+      "tabComparison": "So sánh",
+      "tabCharts": "Biểu đồ",
+      "tabTimeline": "Timeline",
+      "precision": "Độ chính xác",
+      "recall": "Recall",
+      "f1Score": "Điểm F1",
+      "avgLatency": "Latency Trung bình",
+      "avgCost": "Chi phí Trung bình",
+      "barChart": "So sánh Chỉ số",
+      "radarChart": "Tổng quan Đa Chỉ số",
+      "metricsTrend": "Xu hướng Chỉ số",
+      "latencyTrend": "Xu hướng Latency",
+      "recentRuns": "Lần Chạy Hoàn thành Gần đây",
+      "waitingForMetrics": "Đang chờ đánh giá hoàn thành..."
+    },
+    "autopilot": {
+      "title": "Tự động hóa",
+      "subtitle": "Tối ưu hóa truy xuất được hỗ trợ bởi AI",
+      "settings": "Cài đặt",
+      "decisionLogs": "Nhật ký Quyết định",
+      "operationMode": "Chế độ Hoạt động",
+      "parameters": "Tham số",
+      "recentDecisions": "Quyết định Gần đây",
+      "noLogs": "Chưa có nhật ký quyết định"
+    },
+    "calculator": {
+      "title": "Máy tính Sử dụng",
+      "subtitle": "Ước tính chi phí hàng tháng dựa trên mức sử dụng dự kiến",
+      "stats": {
+        "apiCalls": "Lượt gọi API",
+        "memories": "Bộ nhớ",
+        "extractions": "Trích xuất",
+        "estimated": "Chi phí Ước tính"
+      },
+      "presets": {
+        "title": "Mẫu Nhanh",
+        "startup": "Khởi nghiệp",
+        "growing": "Đang phát triển",
+        "scale": "Mở rộng",
+        "enterprise": "Doanh nghiệp"
+      },
+      "customize": {
+        "title": "Tùy chỉnh Sử dụng"
+      },
+      "labels": {
+        "apiCalls": "Lượt gọi API Hàng tháng",
+        "memories": "Bộ nhớ Đã lưu",
+        "extractions": "Trích xuất"
+      },
+      "recommended": {
+        "title": "Gói Đề xuất",
+        "base": "Giá Cơ bản",
+        "overage": "Vượt mức",
+        "cta": "Bắt đầu"
+      },
+      "comparison": {
+        "title": "Tất cả Gói",
+        "best": "Giá trị Tốt nhất"
+      },
+      "details": {
+        "title": "Phân tích Giá Chi tiết",
+        "plan": "Gói",
+        "base": "Giá Cơ bản",
+        "includedCalls": "Lượt gọi Bao gồm",
+        "overageRate": "Tỷ lệ Vượt mức",
+        "yourOverage": "Vượt mức của Bạn",
+        "total": "Tổng"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Cấu hình HTTP callbacks cho thông báo sự kiện theo thời gian thực",
+      "create": "Tạo Webhook",
+      "stats": {
+        "total": "Tổng Webhooks",
+        "active": "Hoạt động",
+        "failing": "Đang lỗi",
+        "deliveries": "Tổng Lần gửi"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "Lần gửi Gần đây"
+      },
+      "success": "thành công",
+      "failed": "thất bại",
+      "lastTriggered": "Kích hoạt lần cuối",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "retry": "Thử lại",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa webhook này không? Hành động này không thể hoàn tác.",
+      "empty": {
+        "title": "Chưa cấu hình webhooks",
+        "description": "Tạo webhook để nhận thông báo theo thời gian thực về các sự kiện.",
+        "cta": "Tạo Webhook Đầu tiên của Bạn"
+      },
+      "table": {
+        "event": "Sự kiện",
+        "status": "Trạng thái",
+        "response": "Phản hồi",
+        "time": "Thời gian",
+        "actions": "Thao tác"
+      },
+      "modal": {
+        "title": "Tạo Webhook",
+        "name": "Tên",
+        "url": "URL Endpoint",
+        "events": "Sự kiện Đăng ký",
+        "cancel": "Hủy",
+        "create": "Tạo Webhook"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Hướng dẫn Tìm kiếm Đầu tiên",
+      "subtitle": "Tìm hiểu cách sử dụng playground",
+      "dismiss": "Đóng",
+      "tryExamples": "Thử query mẫu:",
+      "hint": "Nhấp vào bất kỳ mẫu nào để tự động điền vào ô nhập query",
+      "gotIt": "Hiểu rồi!",
+      "tips": {
+        "welcome": {
+          "title": "Chào mừng đến với Debug Console",
+          "description": "Kiểm tra các query của bạn ở đây với tính năng theo dõi đầy đủ để hiểu chính xác cách tìm kiếm hoạt động."
+        },
+        "query": {
+          "title": "Query Ngôn ngữ Tự nhiên",
+          "description": "Nhập bất kỳ query ngôn ngữ tự nhiên nào. AI của chúng tôi sẽ tìm các bộ nhớ tương tự về mặt ngữ nghĩa từ dữ liệu đã lưu của bạn."
+        },
+        "trace": {
+          "title": "Theo dõi Thực thi Đầy đủ",
+          "description": "Xem từng bước của pipeline - từ tạo embedding đến xếp hạng kết quả - với phân tích thời gian và chi phí."
         }
       }
+    },
+    "analytics": "Phân tích",
+    "analyticsPage": {
+      "title": "Phân tích",
+      "subtitle": "Phân tích và thông tin chi tiết về việc sử dụng",
+      "allOrganizations": "Tất cả Tổ chức",
+      "days7": "7 Ngày",
+      "days30": "30 Ngày",
+      "days90": "90 Ngày",
+      "exportCSV": "Xuất CSV",
+      "dailyActiveUsers": "Người dùng Hoạt động Hàng ngày",
+      "activeUsers": "Người dùng Hoạt động",
+      "apiCalls": "Lượt gọi API",
+      "apiCallsOverTime": "Lượt gọi API Theo Thời gian",
+      "memoryOperations": "Thao tác Bộ nhớ",
+      "memoryUsage": "Sử dụng Bộ nhớ",
+      "stores": "Lưu trữ",
+      "searches": "Tìm kiếm",
+      "avgLatency": "Latency Trung bình",
+      "latencyTrend": "Xu hướng Latency",
+      "errorRate": "Tỷ lệ Lỗi",
+      "errors": "Lỗi",
+      "hourlyDistribution": "Phân bổ Theo Giờ",
+      "calls": "lượt gọi",
+      "peakHour": "Giờ Cao điểm",
+      "endpointBreakdown": "Phân tích Endpoint",
+      "topQueries": "Query Hàng đầu",
+      "noQueries": "Chưa có query",
+      "noData": "Không có dữ liệu phân tích",
+      "noDataDescription": "Bắt đầu thực hiện lượt gọi API để xem phân tích chi tiết ở đây."
     }
   },
   "pricingPage": {
@@ -727,7 +1649,11 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Giới hạn",
+      "status": "Trạng thái",
+      "help": "Trợ giúp",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Request Builder",
@@ -753,7 +1679,8 @@
         "techDocs": "Tech Documentation",
         "legalContracts": "Legal Contracts",
         "researchPapers": "Research Papers"
-      }
+      },
+      "advanced": "Nâng cao"
     },
     "resultsPanel": {
       "searching": "Searching...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "Results",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Chi phí"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Chính sách"
+    },
+    "playgroundTitle": "Thử ngay",
+    "costPanel": {
+      "calculating": "Đang tính chi phí...",
+      "noCost": "Chạy truy vấn để xem chi tiết chi phí",
+      "costBreakdown": "Chi tiết chi phí",
+      "component": "Thành phần",
+      "cost": "Chi phí",
+      "embedding": "Embedding",
+      "vectorSearch": "Tìm kiếm vector",
+      "rerank": "Xếp hạng lại",
+      "answerContract": "Hợp đồng câu trả lời",
+      "total": "Tổng chi phí",
+      "usage": "Sử dụng",
+      "tokensIn": "Token vào",
+      "tokensOut": "Token ra",
+      "queryUnits": "Đơn vị truy vấn",
+      "estimatedMonthly": "Ước tính hàng tháng",
+      "basedOn": "Dựa trên",
+      "queriesPerDay": "truy vấn/ngày"
+    },
+    "errorDisplay": {
+      "error": "Lỗi",
+      "errorCode": "Mã",
+      "traceId": "Trace",
+      "hint": "Gợi ý",
+      "tryAgain": "Thử lại",
+      "copyTraceId": "Sao chép Trace ID",
+      "copied": "Đã sao chép!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "Tài nguyên",
       "security": "Bảo mật",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "Hướng dẫn 5 phút",
+      "integrations": "Tích hợp"
     },
     "hero": {
       "title": "Tài liệu API",
@@ -873,7 +1837,9 @@
       "enterprise": "Enterprise",
       "unlimited": "Không giới hạn",
       "exceeded": "Khi bạn vượt quá giới hạn, API trả về",
-      "response": "phản hồi."
+      "response": "phản hồi.",
+      "monthlyApiCalls": "Lượt gọi API hàng tháng",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Mã lỗi",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "Tim kiem va truy xuat",
         "extraction": "Trich xuat du lieu",
         "operations": "Thao tac",
-        "security": "Bao mat va quyen rieng tu"
+        "security": "Bao mat va quyen rieng tu",
+        "all": "Tất cả"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "Nhung ngon ngu lap trinh nao duoc ho tro?",
           "answer": "Chung toi chinh thuc ho tro JavaScript/TypeScript (Node.js) va Python. Doi voi cac ngon ngu khac, ban co the su dung truc tiep REST API."
+        },
+        "q4": {
+          "question": "Cách nhanh nhất để xây dựng PoC là gì?",
+          "answer": "1) POST /api/memories để lưu tùy chọn người dùng. 2) GET /api/memories để tìm kiếm. 3) Đưa kết quả vào prompt LLM. 4) Sau đó, thêm /api/extract cho trích xuất tự động và /api/query cho phản hồi được tăng cường bộ nhớ."
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "Tham so user_id la gi?",
           "answer": "user_id lien ket ky uc voi mot nguoi dung cu the, cho phep trai nghiem ca nhan hoa cho moi nguoi dung."
+        },
+        "q4": {
+          "question": "Khi nào nên sử dụng scope (user/session/agent)?",
+          "answer": "user: Tùy chọn áp dụng toàn cục cho người dùng. session: Mục tiêu hoặc ngữ cảnh chỉ hợp lệ cho cuộc hội thoại này. agent: Quy tắc dành riêng cho một agent trong hệ thống đa agent. Sử dụng scope đúng cách giúp giảm độ dài prompt và cải thiện tính nhất quán phản hồi."
+        },
+        "q5": {
+          "question": "memory_types là gì và tại sao chúng quan trọng?",
+          "answer": "memory_type phân loại bộ nhớ: fact (thông tin không đổi), preference (lựa chọn người dùng), instruction (quy tắc cần tuân thủ), relationship (kết nối người/tổ chức), experience (sự kiện quá khứ). Đây là trục mạnh nhất cho lọc, xóa và áp dụng chính sách."
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "Co gioi han toc do khong?",
           "answer": "Co, gioi han khac nhau tuy theo goi. Goi mien phi cho phep 100 yeu cau moi phut. Xem trang gia de biet chi tiet."
+        },
+        "q4": {
+          "question": "Làm thế nào để giảm chi phí?",
+          "answer": "Các yếu tố chi phí lớn nhất: 1) Tần suất Extract - giảm lượt gọi. 2) Phạm vi tìm kiếm - dùng namespace để thu hẹp. 3) Chọn model - dùng haiku cho thông thường, sonnet cho quan trọng. 4) Caching - cache các truy vấn lặp lại. 5) Sử dụng batch operations khi có thể."
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "Ban co chung nhan SOC 2 khong?",
           "answer": "Chung toi dang trong qua trinh chung nhan SOC 2. Lien he voi nhom ban hang cua chung toi de biet them thong tin."
         }
+      },
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Câu hỏi phổ biến về Seizn Memory API, từ bắt đầu đến vận hành nâng cao.",
+      "nav": {
+        "dashboard": "Bảng điều khiển"
+      },
+      "cta": {
+        "title": "Vẫn còn câu hỏi?",
+        "subtitle": "Xem tài liệu hoặc liên hệ đội ngũ hỗ trợ.",
+        "readDocs": "Đọc tài liệu",
+        "contactSupport": "Liên hệ hỗ trợ"
+      },
+      "footer": {
+        "rights": "Bảo lưu mọi quyền."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "Bắt đầu nhanh 5 phút | Seizn",
+        "description": "Thêm AI memory trong 5 phút chỉ với 10 dòng mã"
+      },
+      "badge": "Hướng dẫn 5 phút",
+      "noCreditCard": "Không cần thẻ tín dụng",
+      "title": "Bắt đầu với Seizn",
+      "subtitle": "Thêm bộ nhớ lâu dài cho AI của bạn trong dưới 5 phút. Theo dõi và đánh dấu từng bước khi hoàn thành.",
+      "getApiKey": "Lấy API Key",
+      "fullExample": "Ví dụ đầy đủ (10 dòng)",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép!",
+      "progress": "Tiến độ",
+      "stepsLabel": "bước",
+      "steps": {
+        "getApiKey": {
+          "title": "Lấy API Key của bạn",
+          "time": "30 giây",
+          "description": "Đăng ký và tạo API key từ bảng điều khiển.",
+          "actionLabel": "Mở bảng điều khiển"
+        },
+        "install": {
+          "title": "Cài đặt SDK",
+          "time": "30 giây",
+          "description": "Cài đặt Seizn SDK bằng trình quản lý gói bạn muốn."
+        },
+        "ingest": {
+          "title": "Nạp tài liệu",
+          "time": "30 giây",
+          "description": "Tải tài liệu lên dataset để truy xuất."
+        },
+        "query": {
+          "title": "Chạy truy vấn đầu tiên",
+          "time": "10 giây",
+          "description": "Tìm kiếm tài liệu bằng truy vấn ngôn ngữ tự nhiên."
+        }
+      },
+      "completion": {
+        "title": "Chúc mừng!",
+        "description": "Bạn đã hoàn thành quickstart. Pipeline truy xuất của bạn đã sẵn sàng với tracing tích hợp.",
+        "readDocs": "Đọc tài liệu",
+        "goToDashboard": "Mở bảng điều khiển"
+      },
+      "expectedOutput": {
+        "title": "Kết quả mong đợi",
+        "description": "Mỗi truy vấn trả về kết quả, trace và chi tiết chi phí:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "Tham chiếu API",
+          "description": "Khám phá tất cả endpoint và tùy chọn cho các trường hợp sử dụng nâng cao."
+        },
+        "sdkExamples": {
+          "title": "Ví dụ SDK",
+          "description": "Ví dụ sẵn dùng cho Python, TypeScript và nhiều hơn nữa."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Câu hỏi thường gặp về loại bộ nhớ, namespace và thực tiễn tốt nhất."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "Tham chiếu API | Seizn",
+        "description": "Tài liệu API đầy đủ cho Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain và RetOps API"
+      },
+      "title": "Tham chiếu API",
+      "description": "Tài liệu đầy đủ cho tất cả API của Seizn bao gồm Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain và RetOps.",
+      "auth": {
+        "title": "Xác thực",
+        "description": "Tất cả các endpoint API yêu cầu xác thực qua API key. Đưa key của bạn vào header X-API-Key."
+      },
+      "sidebar": {
+        "title": "Nhóm API"
+      },
+      "endpoint": {
+        "parameters": "Tham số",
+        "requestBody": "Nội dung yêu cầu",
+        "response": "Phản hồi",
+        "errorCodes": "Mã lỗi"
+      },
+      "table": {
+        "name": "Tên",
+        "type": "Kiểu",
+        "required": "Bắt buộc",
+        "description": "Mô tả",
+        "code": "Mã",
+        "message": "Thông báo"
+      },
+      "copy": "Sao chép",
+      "copied": "Đã sao chép!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "Hướng dẫn 5 phút | Seizn",
+        "description": "Tìm hiểu cách thêm AI memory trong 5 phút với hướng dẫn tương tác từng bước"
+      },
+      "breadcrumb": "Hướng dẫn",
+      "badge": "Hướng dẫn 5 phút",
+      "noCreditCard": "Không cần thẻ tín dụng",
+      "title": "Thêm AI Memory trong 5 phút",
+      "subtitle": "Làm theo hướng dẫn từng bước để cung cấp bộ nhớ lâu dài cho AI của bạn. Đánh dấu mỗi bước khi hoàn thành.",
+      "getApiKey": "Lấy API Key",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép!",
+      "progress": "Tiến độ",
+      "stepsLabel": "bước",
+      "steps": {
+        "step1": {
+          "title": "Lấy API Key của bạn",
+          "time": "30 giây",
+          "description": "Đăng ký miễn phí và tạo API key từ bảng điều khiển.",
+          "instruction1": "Đăng ký hoặc đăng nhập vào tài khoản Seizn",
+          "instruction2": "Đi tới API Keys trong bảng điều khiển",
+          "instruction3": "Nhấp 'Tạo Key mới' và sao chép key của bạn",
+          "actionLabel": "Mở bảng điều khiển"
+        },
+        "step2": {
+          "title": "Cài đặt SDK",
+          "time": "30 giây",
+          "description": "Chọn ngôn ngữ bạn muốn và cài đặt Seizn SDK."
+        },
+        "step3": {
+          "title": "Lưu bộ nhớ đầu tiên",
+          "time": "2 phút",
+          "description": "Lưu trữ thông tin mà AI của bạn cần ghi nhớ giữa các phiên."
+        },
+        "step4": {
+          "title": "Tìm kiếm bộ nhớ",
+          "time": "2 phút",
+          "description": "Truy xuất bộ nhớ liên quan bằng truy vấn ngôn ngữ tự nhiên."
+        },
+        "step5": {
+          "title": "Xác minh kết quả",
+          "time": "30 giây",
+          "description": "Kiểm tra rằng bộ nhớ đã được lưu trữ và truy xuất thành công.",
+          "hint": "Bạn sẽ thấy phản hồi như thế này khi tìm kiếm bộ nhớ:",
+          "successTitle": "Thành công!",
+          "successDescription": "AI của bạn giờ đã có bộ nhớ lâu dài. Sử dụng kết quả tìm kiếm để nâng cao ngữ cảnh và phản hồi của AI."
+        }
+      },
+      "completion": {
+        "title": "Chúc mừng!",
+        "description": "Bạn đã hoàn thành hướng dẫn. AI của bạn giờ đã có bộ nhớ lâu dài hoạt động xuyên suốt các phiên.",
+        "readDocs": "Đọc tài liệu",
+        "goToDashboard": "Mở bảng điều khiển"
+      },
+      "nextSteps": {
+        "title": "Bước tiếp theo",
+        "apiReference": {
+          "title": "Tham chiếu API",
+          "description": "Khám phá tất cả endpoint cho bộ nhớ, trích xuất và truy vấn RAG."
+        },
+        "sdkExamples": {
+          "title": "Ví dụ SDK",
+          "description": "Ví dụ sẵn dùng cho Python, TypeScript và REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Tìm hiểu về loại bộ nhớ, namespace và thực tiễn tốt nhất."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Tích hợp | Seizn",
+        "description": "Tích hợp Seizn với LangChain, LlamaIndex, OpenTelemetry và nhiều hơn nữa"
+      },
+      "breadcrumb": "Tích hợp",
+      "title": "Tích hợp",
+      "subtitle": "Kết nối Seizn với các framework AI và công cụ quan sát yêu thích của bạn.",
+      "cards": {
+        "langchain": {
+          "badge": "Chính thức",
+          "title": "LangChain",
+          "description": "Drop-in retriever cho pipeline RAG LangChain. Hoạt động với Python và TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Chính thức",
+          "title": "LlamaIndex",
+          "description": "Native retriever cho query engine LlamaIndex. Hỗ trợ streaming và hybrid search."
+        },
+        "opentelemetry": {
+          "badge": "Chính thức",
+          "title": "OpenTelemetry",
+          "description": "Xuất trace đến Datadog, Grafana, Jaeger và bất kỳ backend tương thích OTLP nào."
+        }
+      },
+      "comingSoon": {
+        "title": "Sắp ra mắt",
+        "description": "Thêm nhiều tích hợp đang được phát triển. Hãy cho chúng tôi biết bạn cần gì!"
+      },
+      "backToDocs": "Quay lại tài liệu"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "Tích hợp LangChain | Seizn",
+        "description": "Drop-in retriever cho pipeline RAG LangChain"
+      },
+      "badge": "Chính thức",
+      "title": "Tích hợp LangChain",
+      "subtitle": "Drop-in retriever cho pipeline RAG LangChain với hỗ trợ tracing đầy đủ.",
+      "overview": {
+        "title": "Tổng quan 60 giây",
+        "description": "SeiznRetriever là giải pháp thay thế drop-in cho bất kỳ retriever LangChain nào. Cung cấp tìm kiếm vector với tracing, caching và reranking tích hợp.",
+        "feature1": "Tương thích với tất cả chain và agent LangChain",
+        "feature2": "Tracing tích hợp cho mọi thao tác truy xuất",
+        "feature3": "Hỗ trợ lọc, reranking và hybrid search"
+      },
+      "installation": {
+        "title": "Cài đặt",
+        "description": "Cài đặt Seizn SDK cùng với LangChain."
+      },
+      "example": {
+        "title": "Ví dụ 5 phút",
+        "description": "Tạo RAG chain với SeiznRetriever chỉ trong vài dòng mã."
+      },
+      "production": {
+        "title": "Mẹo cho Production",
+        "caching": {
+          "title": "Bật Caching",
+          "description": "Giảm độ trễ và chi phí bằng cách cache các truy vấn lặp lại."
+        },
+        "reranking": {
+          "title": "Bật Reranking",
+          "description": "Cải thiện chất lượng kết quả với cross-encoder reranking."
+        },
+        "filtering": {
+          "title": "Lọc Metadata",
+          "description": "Lọc kết quả theo trường metadata trước khi tìm kiếm vector."
+        }
+      },
+      "troubleshooting": {
+        "title": "Xử lý sự cố",
+        "errorColumn": "Lỗi",
+        "causeColumn": "Nguyên nhân",
+        "solutionColumn": "Giải pháp",
+        "authCause": "API key không hợp lệ hoặc thiếu",
+        "authSolution": "Kiểm tra biến môi trường SEIZN_API_KEY",
+        "rateCause": "Quá nhiều yêu cầu mỗi giây",
+        "rateSolution": "Áp dụng exponential backoff hoặc nâng cấp gói",
+        "emptyCause": "Threshold quá cao hoặc không có tài liệu phù hợp",
+        "emptySolution": "Giảm threshold hoặc kiểm tra nội dung dataset"
+      },
+      "nav": {
+        "backToIntegrations": "Quay lại tích hợp",
+        "nextLlamaIndex": "Tích hợp LlamaIndex"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "Tích hợp LlamaIndex | Seizn",
+        "description": "Native retriever cho pipeline RAG LlamaIndex"
+      },
+      "badge": "Chính thức",
+      "title": "Tích hợp LlamaIndex",
+      "subtitle": "Native retriever cho query engine LlamaIndex với streaming và hybrid search.",
+      "overview": {
+        "title": "Tổng quan 60 giây",
+        "description": "SeiznRetriever triển khai giao diện BaseRetriever của LlamaIndex, giúp tương thích với tất cả query engine và pipeline LlamaIndex.",
+        "feature1": "Tích hợp native với query engine LlamaIndex",
+        "feature2": "Hỗ trợ streaming response ngay lập tức",
+        "feature3": "Tương thích với node postprocessor LlamaIndex"
+      },
+      "installation": {
+        "title": "Cài đặt",
+        "description": "Cài đặt Seizn SDK cùng với LlamaIndex."
+      },
+      "example": {
+        "title": "Ví dụ 5 phút",
+        "description": "Xây dựng query engine với SeiznRetriever cho ứng dụng RAG của bạn."
+      },
+      "production": {
+        "title": "Mẹo cho Production",
+        "streaming": {
+          "title": "Streaming Response",
+          "description": "Bật streaming để trải nghiệm người dùng tốt hơn với phản hồi dài."
+        },
+        "hybrid": {
+          "title": "Hybrid Search",
+          "description": "Kết hợp tìm kiếm vector và từ khóa để recall tốt hơn."
+        },
+        "nodePostprocessors": {
+          "title": "Node Postprocessor",
+          "description": "Xâu chuỗi postprocessor cho lọc và reranking nâng cao."
+        }
+      },
+      "troubleshooting": {
+        "title": "Xử lý sự cố",
+        "errorColumn": "Lỗi",
+        "causeColumn": "Nguyên nhân",
+        "solutionColumn": "Giải pháp",
+        "authCause": "API key không hợp lệ hoặc thiếu",
+        "authSolution": "Kiểm tra biến môi trường SEIZN_API_KEY",
+        "datasetCause": "Không tìm thấy tên dataset",
+        "datasetSolution": "Xác minh dataset tồn tại trong bảng điều khiển",
+        "relevanceCause": "Truy vấn không khớp tài liệu",
+        "relevanceSolution": "Thử hybrid search hoặc điều chỉnh threshold"
+      },
+      "nav": {
+        "prevLangChain": "Tích hợp LangChain",
+        "nextOpenTelemetry": "Tích hợp OpenTelemetry"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "Tích hợp OpenTelemetry | Seizn",
+        "description": "Xuất trace đến Datadog, Grafana, Jaeger qua OTLP"
+      },
+      "badge": "Chính thức",
+      "title": "Tích hợp OpenTelemetry",
+      "subtitle": "Xuất trace truy xuất đến hệ thống quan sát của bạn qua OTLP.",
+      "overview": {
+        "title": "Tổng quan 60 giây",
+        "description": "Seizn xuất trace OpenTelemetry một cách native cho mọi thao tác truy xuất. Kết nối với bất kỳ backend tương thích OTLP nào để quan sát end-to-end.",
+        "feature1": "Xuất OTLP không cần cấu hình với tạo span tự động",
+        "feature2": "Thuộc tính phong phú bao gồm độ trễ, số token và chi phí",
+        "feature3": "Context propagation cho distributed tracing",
+        "supportedBackends": "Backend được hỗ trợ"
+      },
+      "installation": {
+        "title": "Thiết lập",
+        "description": "Cấu hình xuất OTLP qua biến môi trường."
+      },
+      "examples": {
+        "title": "Ví dụ Backend",
+        "datadog": {
+          "description": "Xuất trace đến Datadog APM qua Datadog Agent hoặc API trực tiếp."
+        },
+        "grafana": {
+          "description": "Gửi trace đến Grafana Tempo (Cloud hoặc self-hosted)."
+        },
+        "jaeger": {
+          "description": "Xuất đến Jaeger với hỗ trợ OTLP receiver native."
+        }
+      },
+      "production": {
+        "title": "Mẹo cho Production",
+        "sampling": {
+          "title": "Chiến lược Sampling",
+          "description": "Kiểm soát lượng trace với sampling head-based hoặc tail-based."
+        },
+        "attributes": {
+          "title": "Thuộc tính tùy chỉnh",
+          "description": "Thêm thuộc tính resource và span để lọc tốt hơn."
+        },
+        "batching": {
+          "title": "Cấu hình Batch",
+          "description": "Tối ưu hiệu suất xuất với cài đặt batch."
+        }
+      },
+      "troubleshooting": {
+        "title": "Xử lý sự cố",
+        "issueColumn": "Vấn đề",
+        "causeColumn": "Nguyên nhân",
+        "solutionColumn": "Giải pháp",
+        "noTracesIssue": "Không có trace xuất hiện",
+        "noTracesCause": "Telemetry bị tắt hoặc endpoint sai",
+        "noTracesSolution": "Đặt SEIZN_TELEMETRY_ENABLED=true và xác minh endpoint",
+        "connectionIssue": "Kết nối bị từ chối",
+        "connectionCause": "Collector không chạy hoặc sai port",
+        "connectionSolution": "Kiểm tra trạng thái collector và port 4318",
+        "missingSpansIssue": "Thiếu span trong trace",
+        "missingSpansCause": "Tỷ lệ sampling quá thấp",
+        "missingSpansSolution": "Tăng tỷ lệ sampling hoặc tắt sampling",
+        "debugTitle": "Chế độ Debug",
+        "debugDescription": "Bật debug logging để xử lý sự cố telemetry."
+      },
+      "nav": {
+        "prevLlamaIndex": "Tích hợp LlamaIndex",
+        "backToIntegrations": "Quay lại tích hợp"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Demo trực tiếp",
+    "subtitle": "Trải nghiệm pipeline truy xuất của Seizn với tracing đầy đủ và minh bạch chi phí.",
+    "tryItNow": "Thử ngay - Không cần đăng ký",
+    "queryPlaceholder": "Truy vấn tìm kiếm",
+    "runDemo": "Chạy Demo",
+    "running": "Đang chạy...",
+    "results": "Kết quả",
+    "trace": "Trace",
+    "cost": "Chi phí",
+    "noResults": "Chạy demo để xem kết quả",
+    "errorTitle": "Lỗi",
+    "rateLimitError": "Vượt giới hạn tốc độ. Vui lòng đợi.",
+    "retryIn": "Thử lại sau",
+    "seconds": "giây",
+    "score": "Điểm",
+    "rerankScore": "Rerank",
+    "latency": "Độ trễ",
+    "tokens": "Token",
+    "cached": "đã cache",
+    "model": "Model",
+    "input": "Đầu vào",
+    "output": "Đầu ra",
+    "costBreakdown": "Chi tiết",
+    "total": "Tổng chi phí",
+    "embedding": "Embedding",
+    "vectorSearch": "Tìm kiếm vector",
+    "rerank": "Rerank",
+    "answerContract": "Hợp đồng câu trả lời",
+    "tokensIn": "Token vào",
+    "tokensOut": "Token ra",
+    "queryUnits": "Đơn vị truy vấn",
+    "prefilledQueries": [
+      "Thử ví dụ"
+    ]
+  },
+  "publicTrace": {
+    "title": "Trace được chia sẻ",
+    "subtitle": "Xem chi tiết trace truy xuất được chia sẻ",
+    "sharedBy": "Trace được chia sẻ",
+    "expired": "Liên kết này đã hết hạn",
+    "expiredDesc": "Liên kết chia sẻ không còn hợp lệ. Hãy yêu cầu chủ sở hữu tạo liên kết mới.",
+    "notFound": "Không tìm thấy trace",
+    "notFoundDesc": "Không thể tìm thấy trace được chia sẻ này. Có thể đã bị thu hồi hoặc xóa.",
+    "backToHome": "Quay lại trang chủ",
+    "requestId": "ID yêu cầu",
+    "collection": "Bộ sưu tập",
+    "createdAt": "Ngày tạo",
+    "totalLatency": "Tổng độ trễ",
+    "totalCost": "Tổng chi phí",
+    "resultsCount": "Kết quả",
+    "query": "Truy vấn",
+    "timeline": "Dòng thời gian",
+    "candidates": "Ứng viên",
+    "rerankDiff": "Chênh lệch Rerank",
+    "costAnalysis": "Phân tích chi phí",
+    "redacted": "[ĐÃ ẨN]",
+    "piiMasked": "PII được ẩn để bảo vệ quyền riêng tư",
+    "readOnlyNote": "Đây là chế độ xem chỉ đọc của trace được chia sẻ."
+  },
+  "trustPage": {
+    "title": "Trung tâm Tin cậy",
+    "subtitle": "Thực tiễn bảo mật và dữ liệu tại Seizn",
+    "heroDescription": "Chúng tôi xây dựng với quyền riêng tư và bảo mật làm cốt lõi. Trang này mô tả chính xác những gì chúng tôi làm với dữ liệu của bạn.",
+    "lastUpdated": "Cập nhật lần cuối",
+    "sections": {
+      "dataFlow": {
+        "title": "Luồng dữ liệu",
+        "description": "Những gì chúng tôi lưu trữ và không lưu trữ",
+        "stored": {
+          "title": "Những gì chúng tôi lưu trữ",
+          "items": [
+            "Nội dung bộ nhớ và embedding",
+            "Log truy vấn (đã hash, không phải văn bản thuần)",
+            "Chỉ số sử dụng API theo key",
+            "Dữ liệu trace để debug (thời gian lưu giữ có thể cấu hình)"
+          ]
+        },
+        "notStored": {
+          "title": "Những gì chúng tôi KHÔNG lưu trữ",
+          "items": [
+            "API key thô (chỉ lưu hash)",
+            "Mật khẩu người dùng (chỉ OAuth)",
+            "Kết quả truy vấn vượt quá cache TTL",
+            "Log yêu cầu/phản hồi LLM bên thứ ba"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Mã hóa",
+        "description": "Bảo vệ dữ liệu khi truyền và khi lưu trữ",
+        "transit": {
+          "title": "Khi truyền",
+          "items": [
+            "Bắt buộc TLS 1.3 cho tất cả kết nối",
+            "HSTS được bật với max-age 1 năm",
+            "Certificate transparency logging"
+          ]
+        },
+        "atRest": {
+          "title": "Khi lưu trữ",
+          "items": [
+            "Mã hóa AES-256 cho tất cả dữ liệu lưu trữ",
+            "Mã hóa cấp cơ sở dữ liệu (Supabase)",
+            "Bản sao lưu được mã hóa với key riêng biệt"
+          ]
+        },
+        "keyManagement": {
+          "title": "Quản lý khóa",
+          "items": [
+            "API key được hash bằng SHA-256 + salt",
+            "Nhắc nhở xoay vòng key tự động (90 ngày)",
+            "Khả năng thu hồi key ngay lập tức"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Cách ly tenant",
+        "description": "Cách chúng tôi giữ dữ liệu của bạn riêng biệt",
+        "items": [
+          "Row-Level Security (RLS) được thực thi ở cấp cơ sở dữ liệu",
+          "Tất cả truy vấn tự động lọc theo user_id/org_id",
+          "Không có index dùng chung giữa các tenant",
+          "Phân tách namespace cho bộ sưu tập bộ nhớ"
+        ],
+        "rbac": {
+          "title": "Kiểm soát truy cập",
+          "items": [
+            "Truy cập dựa trên vai trò (Owner, Admin, Member)",
+            "Phạm vi API key theo tổ chức",
+            "Log kiểm toán cho mọi thay đổi quyền"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Lưu giữ & Xóa",
+        "description": "Chúng tôi giữ dữ liệu bao lâu và cách xóa",
+        "periods": [
+          {
+            "type": "Bộ nhớ",
+            "period": "Cho đến khi người dùng xóa"
+          },
+          {
+            "type": "Log API",
+            "period": "Luân chuyển 90 ngày"
+          },
+          {
+            "type": "Trace",
+            "period": "30 ngày (có thể cấu hình)"
+          },
+          {
+            "type": "Log kiểm toán",
+            "period": "1 năm"
+          },
+          {
+            "type": "Bản sao lưu",
+            "period": "30 ngày được mã hóa"
+          }
+        ],
+        "deletion": {
+          "title": "Quy trình xóa",
+          "items": [
+            "DELETE /api/memories xóa ngay lập tức",
+            "Xóa tài khoản: thời gian gia hạn 30 ngày",
+            "Xóa vĩnh viễn khỏi bản sao lưu trong 30 ngày",
+            "Xuất dữ liệu GDPR/CCPA có sẵn theo yêu cầu"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Log kiểm toán & Kiểm soát truy cập",
+        "description": "Theo dõi ai làm gì",
+        "logged": {
+          "title": "Sự kiện chúng tôi ghi nhận",
+          "items": [
+            "Tạo, xoay vòng, thu hồi API key",
+            "Thay đổi quyền (RBAC)",
+            "Yêu cầu xuất dữ liệu",
+            "Nỗ lực xác thực thất bại",
+            "Hành động quản trị trên tổ chức"
+          ]
+        },
+        "access": {
+          "title": "Truy cập Log",
+          "items": [
+            "Dành cho quản trị viên tổ chức",
+            "Xuất được qua API (gói Pro+)",
+            "Tìm kiếm theo người dùng, hành động, thời gian"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Bên xử lý phụ",
+        "description": "Bên thứ ba xử lý dữ liệu của bạn",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Cơ sở dữ liệu & Xác thực",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting & CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Thanh toán",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Phân tích sản phẩm",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Giám sát lỗi",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (tùy chọn)",
+            "location": "US/Canada"
+          }
+        ],
+        "note": "Chúng tôi chỉ chia sẻ dữ liệu tối thiểu cần thiết để mỗi dịch vụ hoạt động."
+      },
+      "disclosure": {
+        "title": "Những gì chúng tôi chưa làm",
+        "description": "Những thiếu sót trung thực trong vị thế bảo mật",
+        "items": [
+          "Chứng nhận SOC 2 Type II (đang tiến hành, dự kiến Q2 2026)",
+          "Tuân thủ HIPAA (dự kiến cho Enterprise)",
+          "Tùy chọn triển khai on-premise (đang đánh giá)",
+          "Module bảo mật phần cứng (HSM) cho lưu trữ khóa",
+          "Chương trình bug bounty (dự kiến Q3 2026)"
+        ],
+        "cta": "Có câu hỏi về bảo mật? Liên hệ chúng tôi tại security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Câu hỏi?",
+      "description": "Đội ngũ của chúng tôi sẵn lòng giải đáp các câu hỏi về bảo mật.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Giới hạn & Thanh toán",
+    "subtitle": "Tìm hiểu giới hạn gói, hạn mức và thông tin thanh toán.",
+    "unlimited": "Không giới hạn",
+    "custom": "Tùy chỉnh",
+    "requestsPerSecond": "yêu cầu/giây",
+    "sidebar": {
+      "onThisPage": "Trên trang này",
+      "quotas": "Hạn mức hàng tháng",
+      "rateLimits": "Giới hạn tốc độ",
+      "overage": "Hành vi vượt mức",
+      "reset": "Thời gian đặt lại",
+      "headers": "Header phản hồi"
+    },
+    "table": {
+      "plan": "Gói",
+      "monthlyQuota": "Hạn mức hàng tháng",
+      "rps": "Giới hạn RPS"
+    },
+    "plans": {
+      "free": {
+        "name": "Miễn phí",
+        "overage": "Giảm tốc sau giới hạn"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Giảm tốc, cảnh báo email"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Giảm tốc, hàng đợi ưu tiên"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "SLA tùy chỉnh, không giảm tốc"
+      }
+    },
+    "quotas": {
+      "title": "Hạn mức hàng tháng",
+      "description": "Mỗi gói bao gồm hạn mức gọi API hàng tháng. Hạn mức đặt lại vào ngày 1 mỗi tháng lúc 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Giới hạn tốc độ (RPS)",
+      "description": "Giới hạn tốc độ bảo vệ hạ tầng và đảm bảo sử dụng công bằng. Giới hạn áp dụng theo API key."
+    },
+    "overage": {
+      "title": "Hành vi vượt mức",
+      "softThrottle": {
+        "title": "Giảm tốc (Vượt hạn mức)",
+        "description": "Khi bạn vượt hạn mức hàng tháng:",
+        "point1": "Lượt gọi API tiếp tục với ưu tiên thấp hơn",
+        "point2": "Thời gian phản hồi có thể tăng 2-5 lần",
+        "point3": "Thông báo email khi sử dụng 80% và 100%"
+      },
+      "hard429": {
+        "title": "Hard 429 (Giới hạn tốc độ)",
+        "description": "Khi bạn vượt giới hạn tốc độ RPS:",
+        "recommendation": "Áp dụng exponential backoff (1s, 2s, 4s, 8s) và thử lại với jitter."
+      }
+    },
+    "reset": {
+      "title": "Thời gian đặt lại",
+      "monthly": {
+        "title": "Đặt lại hạn mức hàng tháng",
+        "description": "Hạn mức đặt lại vào ngày đầu mỗi tháng.",
+        "time": "Ngày 1, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Cửa sổ giới hạn tốc độ",
+        "description": "Giới hạn tốc độ sử dụng cửa sổ trượt.",
+        "time": "Cửa sổ trượt 1 giây"
+      }
+    },
+    "headers": {
+      "limit": "Số yêu cầu tối đa cho phép mỗi cửa sổ",
+      "remaining": "Yêu cầu còn lại trong cửa sổ hiện tại",
+      "reset": "Unix timestamp khi cửa sổ đặt lại",
+      "quotaLimit": "Giới hạn hạn mức hàng tháng",
+      "quotaRemaining": "Lượt gọi API còn lại tháng này",
+      "quotaReset": "Ngày ISO 8601 khi hạn mức đặt lại"
+    },
+    "headersSection": {
+      "title": "Header phản hồi",
+      "description": "Mỗi phản hồi API bao gồm header để giúp bạn theo dõi sử dụng và giới hạn.",
+      "header": "Header",
+      "headerDescription": "Mô tả",
+      "example": "Ví dụ Header phản hồi:"
+    },
+    "upgrade": {
+      "title": "Cần giới hạn cao hơn?",
+      "description": "Nâng cấp gói để tăng hạn mức, giới hạn tốc độ cao hơn và hỗ trợ ưu tiên.",
+      "viewPlans": "Xem các gói",
+      "contactSales": "Liên hệ Sales"
+    }
+  },
+  "help": {
+    "title": "Trung tâm trợ giúp",
+    "subtitle": "Tìm câu trả lời, nhận hỗ trợ và truy cập tài nguyên.",
+    "search": {
+      "placeholder": "Tìm kiếm trợ giúp...",
+      "noResults": "Không tìm thấy kết quả"
+    },
+    "sections": {
+      "support": {
+        "title": "Kênh hỗ trợ",
+        "description": "Nhận trợ giúp từ đội ngũ của chúng tôi",
+        "email": {
+          "title": "Hỗ trợ qua Email",
+          "description": "Nhận trợ giúp qua email trong vòng 24 giờ",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Cộng đồng Discord",
+          "description": "Tham gia cộng đồng để được trợ giúp theo thời gian thực",
+          "action": "Tham gia Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Báo cáo lỗi và yêu cầu tính năng",
+          "action": "Mở Issue"
+        }
+      },
+      "faq": {
+        "title": "Câu hỏi thường gặp",
+        "description": "Câu trả lời nhanh cho các câu hỏi phổ biến",
+        "viewAll": "Xem tất cả FAQ"
+      },
+      "status": {
+        "title": "Trạng thái hệ thống",
+        "description": "Kiểm tra trạng thái hệ thống hiện tại và sự cố",
+        "viewStatus": "Xem trang trạng thái",
+        "operational": "Tất cả hệ thống hoạt động bình thường",
+        "degraded": "Hiệu suất giảm",
+        "outage": "Gián đoạn dịch vụ"
+      },
+      "billing": {
+        "title": "Thanh toán & Gói dịch vụ",
+        "description": "Quản lý đăng ký và thanh toán",
+        "items": {
+          "plans": "Xem các gói giá",
+          "usage": "Kiểm tra mức sử dụng",
+          "invoices": "Tải hóa đơn",
+          "upgrade": "Nâng cấp gói"
+        }
+      },
+      "docs": {
+        "title": "Tài liệu",
+        "description": "Liên kết nhanh đến tài liệu phổ biến",
+        "links": {
+          "quickstart": "Hướng dẫn bắt đầu nhanh",
+          "apiReference": "Tham chiếu API",
+          "sdks": "SDK & Thư viện",
+          "limits": "Giới hạn & Thanh toán",
+          "security": "Bảo mật"
+        }
+      }
+    },
+    "contact": {
+      "title": "Vẫn cần trợ giúp?",
+      "description": "Đội ngũ hỗ trợ sẵn sàng giúp bạn thành công.",
+      "cta": "Liên hệ hỗ trợ"
+    }
+  },
+  "status": {
+    "title": "Trạng thái hệ thống",
+    "subtitle": "Trạng thái hệ thống thời gian thực và lịch sử sự cố",
+    "lastUpdated": "Cập nhật lần cuối",
+    "overall": {
+      "operational": "Tất cả hệ thống hoạt động bình thường",
+      "degraded": "Hiệu suất giảm",
+      "partialOutage": "Gián đoạn hệ thống một phần",
+      "majorOutage": "Gián đoạn hệ thống nghiêm trọng"
+    },
+    "uptime": {
+      "title": "Thời gian hoạt động",
+      "24h": "24 giờ",
+      "7d": "7 ngày",
+      "30d": "30 ngày",
+      "90d": "90 ngày"
+    },
+    "services": {
+      "title": "Trạng thái dịch vụ",
+      "operational": "Hoạt động",
+      "degraded": "Giảm",
+      "down": "Ngừng"
+    },
+    "incidents": {
+      "active": "Sự cố đang xảy ra",
+      "history": "Lịch sử sự cố",
+      "noActive": "Không có sự cố đang xảy ra",
+      "noHistory": "Không có sự cố trước đó",
+      "status": {
+        "investigating": "Đang điều tra",
+        "identified": "Đã xác định",
+        "monitoring": "Đang giám sát",
+        "resolved": "Đã giải quyết"
+      },
+      "severity": {
+        "minor": "Nhỏ",
+        "major": "Lớn",
+        "critical": "Nghiêm trọng"
+      },
+      "affected": "Dịch vụ bị ảnh hưởng",
+      "timeline": "Dòng thời gian",
+      "started": "Bắt đầu",
+      "resolved": "Đã giải quyết",
+      "duration": "Thời lượng",
+      "viewDetails": "Xem chi tiết"
+    },
+    "subscribe": {
+      "title": "Đăng ký nhận cập nhật",
+      "rss": "RSS Feed",
+      "email": "Thông báo qua Email"
     }
   }
 }

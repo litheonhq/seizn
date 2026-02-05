@@ -242,7 +242,26 @@
       "usageByApiKey": "Penggunaan per Kunci API",
       "errorsTitle": "Error",
       "errorRate": "tingkat error",
-      "noUsageData": "Tidak ada data penggunaan tersedia"
+      "noUsageData": "Tidak ada data penggunaan tersedia",
+      "p95Latency": "p95 Latency",
+      "errorRateKpi": "Tingkat Error",
+      "monthlyApiCalls": "Panggilan API Bulanan",
+      "dailyTrends": "Tren Harian",
+      "tabCalls": "Panggilan",
+      "tabCost": "Biaya",
+      "tabLatency": "Latency",
+      "tabErrors": "Error",
+      "noUsageTitle": "Belum ada data penggunaan",
+      "noUsageDescription": "Kirim permintaan API pertama Anda untuk melihat analitik penggunaan. Data akan muncul di sini dalam 5 detik.",
+      "noUsageExpected": "Yang diharapkan: Panggilan, token, biaya, dan rincian latency",
+      "getApiKey": "Dapatkan API Key",
+      "viewDocs": "Lihat Dokumentasi",
+      "noEndpointData": "Tidak ada data endpoint",
+      "noEndpointDescription": "Rincian endpoint akan muncul setelah panggilan API pertama Anda",
+      "sendTestRequest": "Kirim Permintaan Uji",
+      "noKeyData": "Tidak ada penggunaan API key",
+      "noKeyDescription": "Buat dan gunakan API key untuk melihat analitik per-key",
+      "createApiKey": "Buat API Key"
     },
     "language": "Bahasa",
     "organizations": "Organisasi",
@@ -343,7 +362,49 @@
       "export": "Ekspor",
       "exportResults": "Ekspor hasil",
       "exportFormat": "Format ekspor",
-      "exportSuccess": "Ekspor berhasil"
+      "exportSuccess": "Ekspor berhasil",
+      "queryBuilder": "Pembuat Query",
+      "namespace": "Namespace",
+      "namespacePlaceholder": "default",
+      "searchMode": "Mode Pencarian",
+      "vector": "Vector",
+      "hybrid": "Hybrid",
+      "keyword": "Keyword",
+      "rerank": "Aktifkan Rerank",
+      "trace": "Trace",
+      "cost": "Biaya",
+      "similarity": "Kesamaan",
+      "memoryType": "Tipe",
+      "rerankScore": "Skor Rerank",
+      "traceTimeline": "Timeline Trace",
+      "noTrace": "Jalankan query untuk melihat trace",
+      "step": "Langkah",
+      "completed": "Selesai",
+      "pending": "Tertunda",
+      "error": "Error",
+      "costBreakdown": "Rincian Biaya",
+      "noCost": "Jalankan query untuk melihat rincian biaya",
+      "component": "Komponen",
+      "search": "Pencarian",
+      "total": "Total",
+      "monthlyEstimate": "Estimasi Bulanan",
+      "basedOn": "Berdasarkan",
+      "queriesPerDay": "query/hari",
+      "rerankBefore": "Sebelum Rerank",
+      "rerankAfter": "Setelah Rerank",
+      "rank": "Peringkat",
+      "replayFromLog": "Putar Ulang dari Log",
+      "selectLog": "Pilih log untuk diputar ulang",
+      "replaySettings": "Pengaturan Putar Ulang",
+      "compareResults": "Bandingkan Hasil",
+      "original": "Asli",
+      "replay": "Putar Ulang",
+      "diff": "Perbedaan",
+      "hitAtK": "Hit@K",
+      "overlap": "Tumpang Tindih",
+      "added": "Ditambahkan",
+      "removed": "Dihapus",
+      "rankChanges": "Perubahan Peringkat"
     },
     "settingsPage": {
       "title": "Pengaturan",
@@ -362,7 +423,9 @@
         "profile": "Profil",
         "budget": "Anggaran",
         "notifications": "Notifikasi",
-        "security": "Keamanan"
+        "security": "Keamanan",
+        "billing": "Penagihan",
+        "danger": "Manajemen Data"
       },
       "budget": {
         "title": "Manajemen Anggaran",
@@ -380,7 +443,21 @@
         "alertDisabled": "Peringatan anggaran dinonaktifkan",
         "unlimited": "Tidak terbatas",
         "setLimit": "Atur batas",
-        "removeLimit": "Hapus batas"
+        "removeLimit": "Hapus batas",
+        "subtitle": "Tetapkan batas pengeluaran dan peringatan",
+        "perQueryMax": "Maksimal Per Query",
+        "alertThresholdDesc": "Dapatkan peringatan saat penggunaan mencapai persentase ini",
+        "budgetMode": "Mode Anggaran",
+        "soft": "Batas Lunak",
+        "softDesc": "Peringatkan tapi izinkan kelebihan",
+        "hard": "Batas Keras",
+        "hardDesc": "Blokir permintaan di batas",
+        "fallbackStrategy": "Strategi Cadangan",
+        "fallbackDesc": "Apa yang harus dilakukan saat anggaran terlampaui",
+        "reject": "Tolak Permintaan",
+        "cache": "Kembalikan Cache",
+        "degrade": "Turunkan Kualitas",
+        "queue": "Antrikan Permintaan"
       },
       "notifications": {
         "title": "Pengaturan Notifikasi",
@@ -398,7 +475,20 @@
         "allEnabled": "Semua notifikasi diaktifkan",
         "allDisabled": "Semua notifikasi dinonaktifkan",
         "enableAll": "Aktifkan semua",
-        "disableAll": "Nonaktifkan semua"
+        "disableAll": "Nonaktifkan semua",
+        "subtitle": "Konfigurasi cara Anda menerima peringatan",
+        "emailAlerts": "Peringatan Email",
+        "emailAlertsDesc": "Terima peringatan penting melalui email",
+        "usageAlerts": "Peringatan Penggunaan",
+        "usageAlertsDesc": "Dapatkan notifikasi saat mendekati batas",
+        "weeklyDigest": "Ringkasan Mingguan",
+        "weeklyDigestDesc": "Terima ringkasan penggunaan mingguan",
+        "securityAlerts": "Peringatan Keamanan",
+        "securityAlertsDesc": "Dapatkan notifikasi aktivitas mencurigakan",
+        "telegram": "Telegram",
+        "telegramDesc": "Terima peringatan melalui bot Telegram",
+        "comingSoon": "Segera Hadir",
+        "integrations": "Integrasi"
       },
       "security": {
         "title": "Pengaturan Keamanan",
@@ -425,7 +515,14 @@
         "passwordMismatch": "Kata sandi tidak cocok",
         "passwordTooShort": "Kata sandi terlalu pendek",
         "apiKeysSecurity": "Keamanan kunci API",
-        "apiKeysSecurityHint": "Pantau dan kelola kunci API Anda"
+        "apiKeysSecurityHint": "Pantau dan kelola kunci API Anda",
+        "subtitle": "Kelola keamanan akun Anda",
+        "save": "Simpan Perubahan",
+        "updatePassword": "Perbarui Kata Sandi",
+        "twoFactorDesc": "Tambahkan lapisan keamanan ekstra",
+        "enable2FA": "Aktifkan 2FA",
+        "sessionsDesc": "Kelola sesi aktif Anda",
+        "viewSessions": "Lihat Sesi"
       },
       "dangerZone": {
         "title": "Zona Berbahaya",
@@ -438,7 +535,38 @@
         "exportDataHint": "Unduh salinan semua data Anda",
         "exportDataButton": "Ekspor data",
         "exportInProgress": "Mengekspor...",
-        "exportComplete": "Ekspor selesai"
+        "exportComplete": "Ekspor selesai",
+        "subtitle": "Kelola dan hapus data akun Anda",
+        "exportDataDesc": "Unduh semua data Anda",
+        "exportButton": "Ekspor Semua Data",
+        "deleteMemories": "Hapus Semua Memori",
+        "deleteMemoriesDesc": "Hapus permanen semua memori yang tersimpan",
+        "deleteMemoriesButton": "Hapus Memori",
+        "deleteAccountDesc": "Hapus permanen akun dan semua data Anda",
+        "confirmDelete": "Ketik DELETE untuk konfirmasi"
+      },
+      "billing": {
+        "title": "Penagihan & Penggunaan",
+        "subtitle": "Kelola paket dan pantau penggunaan Anda",
+        "currentPlan": "Paket Saat Ini",
+        "monthlyPrice": "Harga Bulanan",
+        "upgradePlan": "Tingkatkan Paket",
+        "quotaWarningTitle": "Mendekati Batas Kuota",
+        "quotaWarningDesc": "Anda menggunakan {percent}% dari kuota {resource} Anda. Pertimbangkan untuk meningkatkan paket Anda.",
+        "upgradeNow": "Tingkatkan Sekarang",
+        "memoriesUsage": "Penggunaan Memori",
+        "apiCallsUsage": "Penggunaan Panggilan API",
+        "apiKeysUsage": "Penggunaan API Keys",
+        "unlimited": "Tidak Terbatas",
+        "planComparison": "Perbandingan Paket",
+        "feature": "Fitur",
+        "memoriesLabel": "Memori",
+        "apiCallsLabel": "Panggilan API/Bulan",
+        "apiKeysLabel": "API Keys",
+        "priceLabel": "Harga",
+        "contactUs": "Hubungi Kami",
+        "used": "terpakai",
+        "of": "dari"
       }
     },
     "greeting": {
@@ -468,7 +596,17 @@
       "collaborateTeam": "Berkolaborasi dengan tim Anda",
       "quickExample": "Contoh Cepat",
       "manageKeys": "Kelola Kunci",
-      "upgradePlan": "Upgrade Paket"
+      "upgradePlan": "Upgrade Paket",
+      "apiUsageChart": "Penggunaan API",
+      "last7days": "7 hari terakhir",
+      "viewDetails": "Lihat Detail",
+      "noUsageData": "Belum ada data penggunaan",
+      "recentActivity": "Aktivitas Terkini",
+      "last10Requests": "10 permintaan API terakhir",
+      "viewAllActivity": "Lihat Semua",
+      "noActivityYet": "Belum ada aktivitas API",
+      "noActivityDescription": "Kirim permintaan API pertama Anda untuk melihat aktivitas di sini",
+      "sendFirstRequest": "Kirim Permintaan Pertama"
     },
     "keysPage": {
       "title": "Kunci API",
@@ -498,7 +636,18 @@
       "keyNamePlaceholder": "mis., Produksi, Pengembangan, Pengujian",
       "cancel": "Batal",
       "creating": "Membuat...",
-      "createKey": "Buat Kunci"
+      "createKey": "Buat Kunci",
+      "name": "Nama",
+      "keyColumn": "Key",
+      "actions": "Tindakan",
+      "revokeWarning": "Semua aplikasi yang menggunakan key ini akan segera berhenti bekerja.",
+      "revokeAction": "Cabut",
+      "rotate": "Rotasi",
+      "rotateConfirm": "Rotasi API key \"{keyName}\"?",
+      "rotateWarning": "Key baru akan dibuat. Perbarui aplikasi Anda dengan key baru sebelum key lama kedaluwarsa.",
+      "rotateAction": "Rotasi Key",
+      "keyRotated": "API Key Dirotasi!",
+      "keyRotatedDesc": "Salin key baru ini sekarang. Key lama tidak lagi valid."
     },
     "organizationsPage": {
       "title": "Organisasi",
@@ -523,7 +672,16 @@
         "owner": "pemilik",
         "admin": "admin",
         "member": "anggota"
-      }
+      },
+      "noOrgsExpected": "Perlu waktu kurang dari 30 detik untuk menyiapkan",
+      "featureSharedKeys": "API Keys Bersama",
+      "featureSharedKeysDesc": "Manajemen key seluruh tim",
+      "featureTeamMembers": "Anggota Tim",
+      "featureTeamMembersDesc": "Undang dengan peran",
+      "featureBudget": "Anggaran Bersama",
+      "featureBudgetDesc": "Pelacakan biaya terpadu",
+      "featureAudit": "Log Audit",
+      "featureAuditDesc": "Riwayat aktivitas"
     },
     "onboarding": {
       "title": "Mulai dengan Seizn",
@@ -550,6 +708,770 @@
           "title": "Instal SDK",
           "description": "Tambahkan Seizn ke proyek Anda dengan npm atau pip",
           "action": "Lihat SDK"
+        },
+        "createOrg": {
+          "title": "Buat Organisasi",
+          "description": "Siapkan ruang kerja tim Anda untuk kolaborasi",
+          "action": "Buat Organisasi"
+        },
+        "firstQuery": {
+          "title": "Jalankan Query Pertama",
+          "description": "Uji API di playground dengan query contoh",
+          "action": "Coba Query"
+        }
+      },
+      "takeTour": "Ikuti tur",
+      "sdkModal": {
+        "title": "Instal Seizn SDK",
+        "description": "Pilih metode instalasi yang Anda inginkan dan salin perintahnya.",
+        "copy": "Salin",
+        "copied": "Tersalin!",
+        "viewDocs": "Lihat dokumentasi lengkap",
+        "done": "Selesai"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Selamat datang di Seizn!",
+          "description": "Mari ikuti tur singkat untuk membantu Anda memulai."
+        },
+        "sidebar": {
+          "title": "Navigasi",
+          "description": "Gunakan sidebar untuk bernavigasi antar bagian dashboard."
+        },
+        "stats": {
+          "title": "Statistik Anda",
+          "description": "Pantau penggunaan API, memori yang tersimpan, dan paket Anda saat ini."
+        },
+        "quickStart": {
+          "title": "Tindakan Cepat",
+          "description": "Gunakan kartu-kartu ini untuk tugas umum seperti membuat API keys."
+        },
+        "next": "Selanjutnya",
+        "skip": "Lewati tur",
+        "finish": "Selesai",
+        "stepOf": "Langkah {current} dari {total}"
+      }
+    },
+    "governance": {
+      "title": "Tata Kelola",
+      "subtitle": "Kelola kebijakan data, aturan retensi, dan pengaturan kepatuhan",
+      "tabs": {
+        "retention": "Retensi Data",
+        "access": "Kontrol Akses",
+        "pii": "Deteksi PII",
+        "compliance": "Kepatuhan"
+      },
+      "stats": {
+        "retentionPolicies": "Kebijakan Retensi",
+        "accessRules": "Aturan Akses",
+        "piiRules": "Aturan PII Aktif",
+        "complianceScore": "Skor Kepatuhan"
+      },
+      "addPolicy": "Tambah Kebijakan",
+      "addRule": "Tambah Aturan",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus kebijakan retensi ini?",
+      "retention": {
+        "description": "Konfigurasi berapa lama memori disimpan di setiap namespace",
+        "namespace": "Namespace",
+        "memoryTypes": "Tipe Memori",
+        "ttl": "TTL",
+        "autoArchive": "Arsip Otomatis",
+        "actions": "Tindakan",
+        "days": "hari",
+        "enabled": "Aktif",
+        "disabled": "Nonaktif",
+        "delete": "Hapus",
+        "addTitle": "Tambah Kebijakan Retensi",
+        "namespacePattern": "Pola Namespace",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Gunakan * untuk pencocokan wildcard",
+        "ttlDays": "TTL (Hari)",
+        "autoArchiveToggle": "Arsip Otomatis",
+        "autoArchiveDesc": "Arsipkan sebelum penghapusan",
+        "cancel": "Batal"
+      },
+      "access": {
+        "description": "Tentukan kontrol akses berbasis peran untuk tim Anda",
+        "namespaces": "Namespaces:",
+        "permissions": "Izin:"
+      },
+      "pii": {
+        "description": "Deteksi dan tangani informasi pengenal pribadi secara otomatis",
+        "pattern": "Pola",
+        "type": "Tipe",
+        "action": "Tindakan",
+        "status": "Status",
+        "aiDetection": "Deteksi AI",
+        "regex": "Regex",
+        "betaTitle": "Deteksi AI dalam Versi Beta",
+        "betaDesc": "Deteksi PII berbasis AI mungkin menghasilkan positif palsu. Tinjau konten yang ditandai sebelum mengambil tindakan."
+      },
+      "compliance": {
+        "description": "Lacak kepatuhan terhadap kerangka regulasi utama",
+        "active": "Aktif",
+        "inactive": "Nonaktif",
+        "requirementsMet": "Persyaratan Terpenuhi",
+        "fullyCompliant": "Sepenuhnya Patuh",
+        "enableCheck": "Aktifkan Pemeriksaan Kepatuhan",
+        "reports": "Laporan Kepatuhan",
+        "soc2Report": "Laporan SOC 2 Type II",
+        "soc2Date": "Dibuat Des 2024",
+        "dpa": "Perjanjian Pemrosesan Data",
+        "dpaDesc": "Template DPA sesuai GDPR",
+        "securityQuestionnaire": "Kuesioner Keamanan",
+        "securityQuestionnaireDesc": "Penilaian keamanan yang telah diisi sebelumnya",
+        "download": "Unduh"
+      }
+    },
+    "integrations": {
+      "title": "Integrasi",
+      "subtitle": "Hubungkan Seizn dengan alat dan framework favorit Anda",
+      "searchPlaceholder": "Cari integrasi...",
+      "stats": {
+        "total": "Total Integrasi",
+        "available": "Tersedia",
+        "beta": "Dalam Beta",
+        "comingSoon": "Segera Hadir"
+      },
+      "categories": {
+        "all": "Semua",
+        "frameworks": "Framework",
+        "llms": "LLMs",
+        "databases": "Database",
+        "platforms": "Platform"
+      },
+      "status": {
+        "available": "Tersedia",
+        "beta": "Beta",
+        "comingSoon": "Segera Hadir"
+      },
+      "docs": "Dokumentasi",
+      "copyInstall": "Salin Perintah Instal",
+      "noResults": "Tidak ditemukan integrasi yang sesuai dengan kriteria Anda",
+      "installation": "Instalasi",
+      "copied": "Tersalin!",
+      "copy": "Salin",
+      "quickStart": "Mulai Cepat",
+      "comingSoonMsg": "Integrasi ini sedang dalam pengembangan. Daftar untuk mendapat notifikasi saat tersedia.",
+      "notifyMe": "Beri Tahu Saya",
+      "betaMsg": "Integrasi ini dalam versi beta. Beberapa fitur mungkin berubah sebelum rilis final.",
+      "close": "Tutup",
+      "viewDocs": "Lihat Dokumentasi"
+    },
+    "analytics": "Analitik",
+    "analyticsPage": {
+      "title": "Analitik",
+      "subtitle": "Analisis penggunaan dan wawasan terperinci",
+      "allOrganizations": "Semua Organisasi",
+      "days7": "7 Hari",
+      "days30": "30 Hari",
+      "days90": "90 Hari",
+      "exportCSV": "Ekspor CSV",
+      "dailyActiveUsers": "Pengguna Aktif Harian",
+      "activeUsers": "Pengguna Aktif",
+      "apiCalls": "Panggilan API",
+      "apiCallsOverTime": "Panggilan API dari Waktu ke Waktu",
+      "memoryOperations": "Operasi Memori",
+      "memoryUsage": "Penggunaan Memori",
+      "stores": "Penyimpanan",
+      "searches": "Pencarian",
+      "avgLatency": "Latensi Rata-rata",
+      "latencyTrend": "Tren Latensi",
+      "errorRate": "Tingkat Kesalahan",
+      "errors": "Kesalahan",
+      "hourlyDistribution": "Distribusi Per Jam",
+      "calls": "panggilan",
+      "peakHour": "Jam Puncak",
+      "endpointBreakdown": "Rincian Endpoint",
+      "topQueries": "Query Teratas",
+      "noQueries": "Belum ada query",
+      "noData": "Tidak ada data analitik",
+      "noDataDescription": "Mulai lakukan panggilan API untuk melihat analitik terperinci di sini."
+    },
+    "memoriesPage": {
+      "title": "Memori",
+      "subtitle": "Jelajahi dan cari memori AI Anda",
+      "totalMemories": "Total Memori",
+      "search": "Cari",
+      "searchPlaceholder": "Cari memori...",
+      "namespace": "Namespace",
+      "memoryTypes": "Tipe Memori",
+      "tags": "Tag",
+      "noTags": "Tidak ada tag tersedia",
+      "clearFilters": "Hapus Filter",
+      "showing": "Menampilkan",
+      "of": "dari",
+      "results": "hasil",
+      "sortNewest": "Terbaru Dulu",
+      "sortOldest": "Terlama Dulu",
+      "sortRelevance": "Paling Relevan",
+      "activeFilters": "Filter aktif",
+      "loading": "Memuat memori...",
+      "noMemories": "Tidak ada memori ditemukan",
+      "noMatchingMemories": "Coba sesuaikan filter atau kata pencarian Anda",
+      "noMemoriesHint": "Mulai tambahkan memori melalui API untuk melihatnya di sini",
+      "match": "cocok",
+      "loadMore": "Muat Lebih Banyak"
+    },
+    "budgetPage": {
+      "title": "Anggaran & Kontrol Biaya",
+      "subtitle": "Kelola batas pengeluaran, peringatan, dan optimasi biaya otomatis",
+      "loadError": "Gagal memuat data anggaran",
+      "todaysSpend": "Pengeluaran Hari Ini",
+      "ofDailyLimit": "dari batas harian",
+      "monthlySpend": "Pengeluaran Bulanan",
+      "ofMonthlyLimit": "dari batas bulanan",
+      "apiCalls": "Panggilan API",
+      "thisMonth": "bulan ini",
+      "autoDegrades": "Degradasi Otomatis",
+      "noRecentDegrades": "Tidak ada degradasi terbaru",
+      "protectionActive": "Perlindungan Anggaran Aktif",
+      "protectionDesc": "Query Anda sedang dioptimasi secara otomatis agar tetap dalam anggaran. Ini mungkin mengurangi kualitas hasil. Pertimbangkan untuk meningkatkan batas anggaran Anda.",
+      "settings": "Pengaturan Anggaran",
+      "recentEvents": "Peristiwa Degradasi Terbaru",
+      "time": "Waktu",
+      "reason": "Alasan",
+      "changes": "Perubahan",
+      "saved": "Dihemat",
+      "howItWorks": "Cara Kerja Pengambilan Sadar Anggaran",
+      "step1": "Saat mendekati batas anggaran, Seizn secara otomatis mengoptimasi query Anda",
+      "step2": "Optimasi meliputi: menonaktifkan rerank, mengurangi topK, menggunakan cache-first",
+      "step3": "Dalam mode \"hard\", query yang melebihi anggaran ditolak sepenuhnya",
+      "step4": "Semua peristiwa degradasi dicatat dengan penghematan biaya untuk transparansi"
+    },
+    "devtoolsPage": {
+      "title": "DevTools Pengambilan",
+      "subtitle": "Debug dan analisis pipeline RAG Anda",
+      "query": "Query",
+      "noQueryText": "Tidak ada teks query",
+      "results": "hasil",
+      "error": "Kesalahan",
+      "rerank": "rerank",
+      "optimizationHints": "Saran Optimasi",
+      "tabs": {
+        "timeline": "Timeline",
+        "candidates": "Kandidat",
+        "rerank": "Rerank",
+        "whatIf": "What-If Lab",
+        "raw": "Data Mentah"
+      },
+      "finalResults": "Hasil Akhir",
+      "initialCandidates": "Kandidat Awal (Sebelum Rerank)",
+      "rawTraceData": "Data Pelacakan Mentah",
+      "emptyTitle": "Pilih pelacakan untuk diperiksa",
+      "emptyDesc": "Pilih pelacakan dari daftar di sebelah kiri untuk melihat timeline, kandidat, analisis reranking, dan menjalankan eksperimen what-if."
+    },
+    "enterpriseDashboard": {
+      "title": "Enterprise",
+      "badge": "Paket Enterprise",
+      "subtitle": "Konfigurasi SSO, SCIM, dan pengaturan enterprise",
+      "tabs": {
+        "sso": "Single Sign-On",
+        "scim": "Penyediaan Pengguna",
+        "settings": "Pengaturan"
+      },
+      "sso": {
+        "enabled": "SSO Diaktifkan",
+        "provider": "Penyedia:",
+        "domains": "Domain:",
+        "testConnection": "Uji Koneksi",
+        "disable": "Nonaktifkan",
+        "defaultRole": "Peran Default",
+        "status": "Status",
+        "active": "Aktif",
+        "lastLogin": "Login Terakhir",
+        "hoursAgo": "2 jam yang lalu",
+        "notConfigured": "Single Sign-On Belum Dikonfigurasi",
+        "notConfiguredDesc": "Aktifkan SSO agar anggota tim dapat login dengan penyedia identitas perusahaan mereka",
+        "configure": "Konfigurasi SSO",
+        "supportedProviders": "Penyedia yang Didukung",
+        "selectProvider": "Pilih Penyedia",
+        "configureDomains": "Konfigurasi Domain",
+        "emailDomains": "Domain Email",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Pengguna dengan domain email ini akan diarahkan ke SSO",
+        "idpConfig": "Konfigurasi IdP",
+        "idpCopyHint": "Salin nilai-nilai ini ke Penyedia Identitas Anda:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entity ID:",
+        "back": "Kembali",
+        "continue": "Lanjutkan",
+        "enableSSO": "Aktifkan SSO",
+        "configSaved": "Konfigurasi SSO tersimpan!"
+      },
+      "scim": {
+        "title": "Penyediaan SCIM",
+        "subtitle": "Sinkronkan pengguna dan grup dari penyedia identitas Anda secara otomatis",
+        "endpoint": "Endpoint SCIM",
+        "bearerToken": "Bearer Token",
+        "regenerate": "Buat Ulang",
+        "generate": "Buat",
+        "tokenWarning": "Salin token ini sekarang. Tidak akan ditampilkan lagi.",
+        "syncUsers": "Sinkronkan Pengguna",
+        "syncUsersDesc": "Impor dan sinkronkan akun pengguna",
+        "syncGroups": "Sinkronkan Grup",
+        "syncGroupsDesc": "Impor dan sinkronkan keanggotaan grup",
+        "autoProvision": "Penyediaan Otomatis",
+        "autoProvisionDesc": "Buat pengguna baru secara otomatis",
+        "autoDeprovision": "Pencabutan Otomatis",
+        "autoDeprovisionDesc": "Nonaktifkan pengguna yang dihapus secara otomatis"
+      },
+      "features": {
+        "title": "Fitur Enterprise",
+        "sso": "SSO",
+        "ssoDesc": "Single Sign-On dengan SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Penyediaan pengguna otomatis",
+        "auditLogs": "Log Audit",
+        "auditLogsDesc": "Riwayat aktivitas lengkap",
+        "customDomains": "Domain Kustom",
+        "customDomainsDesc": "Gunakan domain Anda sendiri",
+        "ipWhitelist": "Daftar Putih IP",
+        "ipWhitelistDesc": "Batasi akses berdasarkan IP",
+        "dataRetention": "Retensi Data",
+        "dataRetentionDesc": "Kebijakan retensi kustom",
+        "advancedAnalytics": "Analitik Lanjutan",
+        "advancedAnalyticsDesc": "Laporan penggunaan terperinci",
+        "sla": "SLA",
+        "slaDesc": "99.9% uptime guarantee",
+        "enabled": "Aktif",
+        "disabled": "Nonaktif"
+      },
+      "limits": {
+        "title": "Batas Paket",
+        "users": "Pengguna",
+        "unlimited": "Tidak Terbatas",
+        "apiCalls": "Panggilan API",
+        "apiCallsValue": "10M / bulan",
+        "storage": "Penyimpanan",
+        "storageValue": "1TB",
+        "collections": "Koleksi",
+        "documents": "Dokumen",
+        "retention": "Retensi",
+        "retentionValue": "365 hari"
+      },
+      "support": {
+        "title": "Dukungan Khusus",
+        "subtitle": "Dukungan prioritas dengan manajer akun khusus",
+        "contact": "Hubungi Dukungan"
+      }
+    },
+    "securityPage": {
+      "title": "Keamanan",
+      "subtitle": "Kelola kunci API dan lihat log audit keamanan",
+      "stats": {
+        "activeKeys": "Kunci API Aktif",
+        "auditEvents": "Peristiwa Audit (24j)",
+        "securityScore": "Skor Keamanan",
+        "alerts": "Peringatan"
+      },
+      "tabs": {
+        "audit": "Log Audit",
+        "keys": "Kunci API",
+        "policies": "Kebijakan",
+        "settings": "Pengaturan"
+      },
+      "audit": {
+        "allActions": "Semua Tindakan",
+        "lastHour": "Jam terakhir",
+        "last24Hours": "24 jam terakhir",
+        "last7Days": "7 hari terakhir",
+        "last30Days": "30 hari terakhir",
+        "exporting": "Mengekspor...",
+        "exportCSV": "Ekspor CSV",
+        "action": "Tindakan",
+        "resource": "Sumber Daya",
+        "details": "Detail",
+        "ipAddress": "Alamat IP",
+        "time": "Waktu",
+        "noLogs": "Tidak ada log audit ditemukan"
+      },
+      "keys": {
+        "description": "Kunci API digunakan untuk mengautentikasi permintaan ke Seizn API",
+        "createNew": "Buat Kunci Baru",
+        "rotate": "Rotasi",
+        "revoke": "Cabut",
+        "created": "Dibuat",
+        "lastUsed": "Terakhir Digunakan",
+        "never": "Belum Pernah",
+        "permissions": "Izin",
+        "rotateConfirm": "Apakah Anda yakin ingin merotasi kunci API ini? Kunci lama akan dibatalkan.",
+        "rotateSuccess": "Kunci berhasil dirotasi! Silakan salin kunci baru Anda.",
+        "revokeConfirm": "Apakah Anda yakin ingin mencabut kunci API ini? Tindakan ini tidak dapat dibatalkan.",
+        "createTitle": "Buat Kunci API",
+        "keyName": "Nama Kunci",
+        "keyNamePlaceholder": "Production Backend",
+        "keyType": "Tipe Kunci",
+        "test": "Uji Coba",
+        "live": "Produksi",
+        "testHint": "Kunci uji coba hanya berfungsi dalam mode sandbox",
+        "testKeysNote": "Kunci uji coba hanya berfungsi dalam mode sandbox",
+        "cancel": "Batal",
+        "createKey": "Buat Kunci"
+      },
+      "settings": {
+        "authentication": "Autentikasi",
+        "twoFactor": "Autentikasi Dua Faktor",
+        "twoFactorDesc": "Wajibkan 2FA untuk semua anggota tim",
+        "twoFactorDescription": "Wajibkan 2FA untuk semua anggota tim",
+        "sessionTimeout": "Batas Waktu Sesi",
+        "sessionTimeoutDesc": "Keluar otomatis setelah tidak aktif",
+        "sessionTimeoutDescription": "Keluar otomatis setelah tidak aktif",
+        "min15": "15 menit",
+        "15minutes": "15 menit",
+        "min30": "30 menit",
+        "30minutes": "30 menit",
+        "hour1": "1 jam",
+        "1hour": "1 jam",
+        "hour4": "4 jam",
+        "4hours": "4 jam",
+        "apiSecurity": "Keamanan API",
+        "ipWhitelist": "Daftar Putih IP",
+        "ipWhitelistDesc": "Hanya izinkan akses API dari IP tertentu",
+        "ipWhitelistDescription": "Hanya izinkan akses API dari IP tertentu",
+        "rateLimit": "Batas Laju",
+        "rateLimitDesc": "Permintaan maksimum per menit",
+        "rateLimitDescription": "Permintaan maksimum per menit",
+        "rate100": "100/menit",
+        "rate500": "500/menit",
+        "rate1000": "1.000/menit",
+        "rate5000": "5.000/menit",
+        "dangerZone": "Zona Bahaya",
+        "dangerWarning": "Tindakan ini tidak dapat dibatalkan. Harap lanjutkan dengan hati-hati.",
+        "dangerZoneDescription": "Tindakan ini tidak dapat dibatalkan. Harap lanjutkan dengan hati-hati.",
+        "revokeAll": "Cabut Semua Kunci API",
+        "revokeAllKeys": "Cabut Semua Kunci API",
+        "deleteAllData": "Hapus Semua Data"
+      },
+      "policies": {
+        "active": "Aktif",
+        "inactive": "Nonaktif",
+        "pending": "Menunggu",
+        "activePolicies": "Kebijakan Aktif",
+        "accessPolicies": "Kebijakan Akses",
+        "compliancePolicies": "Kebijakan Kepatuhan",
+        "awaitingApproval": "Menunggu persetujuan",
+        "addCustom": "Tambah Kebijakan Kustom"
+      }
+    },
+    "reportsPage": {
+      "title": "Laporan ROI",
+      "generated": "Dibuat",
+      "period7d": "7 hari terakhir",
+      "period30d": "30 hari terakhir",
+      "period90d": "90 hari terakhir",
+      "exportPdf": "Ekspor PDF",
+      "loadError": "Gagal memuat laporan",
+      "totalQueries": "Total Query",
+      "totalCost": "Total Biaya",
+      "avgLatency": "Latensi Rata-rata",
+      "costPerQuery": "Biaya/Query",
+      "estAnnualCost": "Estimasi Biaya Tahunan",
+      "projAnnualSavings": "Proyeksi Penghematan Tahunan",
+      "savingsRate": "Tingkat Penghematan",
+      "rerankImpact": "Dampak Rerank",
+      "mrrScore": "Skor MRR",
+      "without": "tanpa",
+      "withRerank": "dengan rerank",
+      "autopilotSavings": "Penghematan Autopilot",
+      "savedThisPeriod": "dihemat periode ini dengan Autopilot",
+      "withAutopilot": "dengan autopilot",
+      "recommendations": "Rekomendasi",
+      "queries": "Query:",
+      "avgCost": "Biaya Rata-rata"
+    },
+    "privacy": {
+      "title": "Privasi & RTBF",
+      "subtitle": "Kelola permintaan Hak untuk Dilupakan GDPR dan hak subjek data",
+      "tabs": {
+        "requests": "Permintaan RTBF",
+        "subjects": "Subjek Data",
+        "certificates": "Sertifikat",
+        "settings": "Pengaturan"
+      },
+      "stats": {
+        "pending": "Menunggu",
+        "inProgress": "Dalam Proses",
+        "completed": "Selesai",
+        "overdue": "Terlambat"
+      },
+      "requests": {
+        "description": "Kelola permintaan Hak untuk Dilupakan berdasarkan GDPR Pasal 17",
+        "newRequest": "Permintaan Baru",
+        "subject": "Subjek",
+        "status": "Status",
+        "phase": "Fase",
+        "dueDate": "Tenggat Waktu",
+        "scope": "Cakupan",
+        "actions": "Tindakan",
+        "daysOverdue": "hari terlambat",
+        "daysLeft": "hari tersisa",
+        "view": "Lihat",
+        "certificate": "Sertifikat",
+        "verify": "Verifikasi"
+      },
+      "detail": {
+        "title": "Detail Permintaan RTBF",
+        "dataSubject": "Subjek Data",
+        "requestedAt": "Diminta Pada",
+        "dueDate": "Tenggat Waktu",
+        "status": "Status",
+        "dataCategories": "Kategori Data",
+        "deletionScope": "Cakupan Penghapusan",
+        "completionDetails": "Detail Penyelesaian",
+        "completed": "Selesai:",
+        "verified": "Terverifikasi:",
+        "close": "Tutup",
+        "runVerification": "Jalankan Verifikasi",
+        "downloadCertificate": "Unduh Sertifikat"
+      },
+      "newRequest": {
+        "title": "Permintaan RTBF Baru",
+        "description": "Buat permintaan Hak untuk Dilupakan baru. Tenggat waktu akan ditetapkan 30 hari dari sekarang sesuai persyaratan GDPR.",
+        "emailLabel": "Email Subjek Data",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Cakupan Penghapusan",
+        "cancel": "Batal",
+        "creating": "Membuat...",
+        "create": "Buat Permintaan"
+      },
+      "subjects": {
+        "description": "Lihat dan kelola subjek data yang telah berinteraksi dengan sistem Anda",
+        "email": "Email",
+        "externalId": "ID Eksternal",
+        "requests": "Permintaan",
+        "dataCategories": "Kategori Data",
+        "actions": "Tindakan",
+        "viewData": "Lihat Data"
+      },
+      "certificates": {
+        "description": "Bukti kriptografis penghapusan data untuk audit kepatuhan",
+        "noTitle": "Belum Ada Sertifikat",
+        "noDesc": "Sertifikat dibuat saat permintaan RTBF diverifikasi",
+        "request": "Permintaan:",
+        "issued": "Diterbitkan:",
+        "gdprCompliant": "Sesuai GDPR",
+        "download": "Unduh",
+        "hash": "Hash Sertifikat"
+      },
+      "settings": {
+        "description": "Konfigurasi pemrosesan RTBF dan pengaturan kepatuhan",
+        "autoDiscovery": "Penemuan Otomatis",
+        "autoDiscoveryDesc": "Temukan semua data yang terkait dengan subjek secara otomatis",
+        "verificationRequired": "Verifikasi Diperlukan",
+        "verificationRequiredDesc": "Wajibkan verifikasi sebelum menerbitkan sertifikat penghapusan",
+        "responseDeadline": "Tenggat Respons (Hari)",
+        "responseDeadlineHint": "GDPR mewajibkan respons dalam 30 hari (dapat diperpanjang hingga 90 untuk permintaan kompleks)",
+        "notificationEmail": "Email Notifikasi",
+        "notificationEmailHint": "Alamat email untuk notifikasi permintaan RTBF",
+        "auditLogRetention": "Retensi Log Audit (Hari)",
+        "auditLogRetentionHint": "Berapa lama log audit disimpan untuk keperluan kepatuhan",
+        "years": "tahun",
+        "saving": "Menyimpan...",
+        "save": "Simpan Pengaturan"
+      },
+      "gdprNotes": {
+        "title": "Catatan Kepatuhan GDPR",
+        "note1": "Permintaan RTBF harus diselesaikan dalam 30 hari",
+        "note2": "Permintaan kompleks dapat diperpanjang hingga 90 hari",
+        "note3": "Log audit harus disimpan untuk kepatuhan",
+        "note4": "Sertifikat penghapusan memberikan bukti kriptografis"
+      }
+    },
+    "topBar": {
+      "personal": "Akun Pribadi",
+      "manageOrgs": "Kelola Organisasi",
+      "create": "Buat",
+      "createApiKey": "API Key Baru",
+      "createOrg": "Organisasi Baru"
+    },
+    "share": {
+      "title": "Bagikan Trace",
+      "button": "Bagikan",
+      "createLink": "Buat Link Berbagi",
+      "creating": "Membuat...",
+      "done": "Selesai",
+      "linkExpiration": "Kedaluwarsa Link",
+      "hour": "1J",
+      "day": "24J",
+      "week": "7H",
+      "never": "Tidak Pernah",
+      "privacyOptions": "Opsi Privasi",
+      "maskPii": "Sembunyikan PII (email, telepon, IP)",
+      "maskSecrets": "Sembunyikan API keys dan secrets",
+      "shareUrl": "URL Berbagi",
+      "copyLink": "Salin Link",
+      "linkCopied": "Tersalin!",
+      "expiresIn": "Link ini kedaluwarsa dalam {duration}.",
+      "neverExpires": "Link ini tidak pernah kedaluwarsa.",
+      "error": "Gagal membuat link berbagi",
+      "revoke": "Cabut Link",
+      "revokeConfirm": "Apakah Anda yakin ingin mencabut link ini?",
+      "linkRevoked": "Link berhasil dicabut"
+    },
+    "theme": {
+      "light": "Terang",
+      "dark": "Gelap",
+      "system": "Sistem",
+      "toggle": "Ganti tema"
+    },
+    "activity": {
+      "endpoint": "Endpoint",
+      "status": "Status",
+      "latency": "Latency",
+      "cost": "Biaya",
+      "key": "Key",
+      "time": "Waktu"
+    },
+    "evals": {
+      "title": "Evaluasi",
+      "subtitle": "Uji A/B dan ukur kualitas pengambilan data",
+      "newRun": "Run Evaluasi Baru",
+      "runs": "Run Evaluasi",
+      "noRuns": "Belum ada run evaluasi",
+      "metrics": "Metrik",
+      "comparison": "Perbandingan Visual",
+      "selectRun": "Pilih run evaluasi",
+      "selectRunHint": "Pilih run dari daftar untuk melihat metrik detail",
+      "completed": "Selesai",
+      "running": "Berjalan",
+      "failed": "Gagal",
+      "pending": "Tertunda",
+      "winner": "Pemenang",
+      "tie": "Seri",
+      "confidence": "kepercayaan",
+      "exportCSV": "Ekspor CSV",
+      "exportJSON": "Ekspor JSON",
+      "tabComparison": "Perbandingan",
+      "tabCharts": "Grafik",
+      "tabTimeline": "Timeline",
+      "precision": "Presisi",
+      "recall": "Recall",
+      "f1Score": "Skor F1",
+      "avgLatency": "Latency Rata-rata",
+      "avgCost": "Biaya Rata-rata",
+      "barChart": "Perbandingan Metrik",
+      "radarChart": "Gambaran Multi-Metrik",
+      "metricsTrend": "Tren Metrik",
+      "latencyTrend": "Tren Latency",
+      "recentRuns": "Run Selesai Terbaru",
+      "waitingForMetrics": "Menunggu evaluasi selesai..."
+    },
+    "autopilot": {
+      "title": "Autopilot",
+      "subtitle": "Optimisasi pengambilan data berbasis AI",
+      "settings": "Pengaturan",
+      "decisionLogs": "Log Keputusan",
+      "operationMode": "Mode Operasi",
+      "parameters": "Parameter",
+      "recentDecisions": "Keputusan Terkini",
+      "noLogs": "Belum ada log keputusan"
+    },
+    "calculator": {
+      "title": "Kalkulator Penggunaan",
+      "subtitle": "Estimasikan biaya bulanan Anda berdasarkan penggunaan yang diharapkan",
+      "stats": {
+        "apiCalls": "Panggilan API",
+        "memories": "Memori",
+        "extractions": "Ekstraksi",
+        "estimated": "Estimasi Biaya"
+      },
+      "presets": {
+        "title": "Preset Cepat",
+        "startup": "Startup",
+        "growing": "Berkembang",
+        "scale": "Skala",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Kustomisasi Penggunaan"
+      },
+      "labels": {
+        "apiCalls": "Panggilan API Bulanan",
+        "memories": "Memori Tersimpan",
+        "extractions": "Ekstraksi"
+      },
+      "recommended": {
+        "title": "Paket Direkomendasikan",
+        "base": "Harga Dasar",
+        "overage": "Kelebihan",
+        "cta": "Mulai Sekarang"
+      },
+      "comparison": {
+        "title": "Semua Paket",
+        "best": "Nilai Terbaik"
+      },
+      "details": {
+        "title": "Rincian Harga Detail",
+        "plan": "Paket",
+        "base": "Harga Dasar",
+        "includedCalls": "Panggilan Termasuk",
+        "overageRate": "Tarif Kelebihan",
+        "yourOverage": "Kelebihan Anda",
+        "total": "Total"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Konfigurasi HTTP callbacks untuk notifikasi event real-time",
+      "create": "Buat Webhook",
+      "stats": {
+        "total": "Total Webhooks",
+        "active": "Aktif",
+        "failing": "Gagal",
+        "deliveries": "Total Pengiriman"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "Pengiriman Terkini"
+      },
+      "success": "berhasil",
+      "failed": "gagal",
+      "lastTriggered": "Terakhir dipicu",
+      "edit": "Edit",
+      "delete": "Hapus",
+      "retry": "Coba Lagi",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus webhook ini? Tindakan ini tidak dapat dibatalkan.",
+      "empty": {
+        "title": "Tidak ada webhooks yang dikonfigurasi",
+        "description": "Buat webhook untuk menerima notifikasi real-time tentang event.",
+        "cta": "Buat Webhook Pertama Anda"
+      },
+      "table": {
+        "event": "Event",
+        "status": "Status",
+        "response": "Respons",
+        "time": "Waktu",
+        "actions": "Tindakan"
+      },
+      "modal": {
+        "title": "Buat Webhook",
+        "name": "Nama",
+        "url": "URL Endpoint",
+        "events": "Event untuk Berlangganan",
+        "cancel": "Batal",
+        "create": "Buat Webhook"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Tutorial Pencarian Pertama",
+      "subtitle": "Pelajari cara menggunakan playground",
+      "dismiss": "Tutup",
+      "tryExamples": "Coba query contoh:",
+      "hint": "Klik contoh mana pun untuk mengisi input query secara otomatis",
+      "gotIt": "Mengerti!",
+      "tips": {
+        "welcome": {
+          "title": "Selamat datang di Debug Console",
+          "description": "Uji query Anda di sini dengan pelacakan lengkap untuk memahami persis bagaimana pencarian bekerja."
+        },
+        "query": {
+          "title": "Query Bahasa Natural",
+          "description": "Masukkan query bahasa natural apa pun. AI kami akan menemukan memori yang mirip secara semantik dari data yang Anda simpan."
+        },
+        "trace": {
+          "title": "Pelacakan Eksekusi Lengkap",
+          "description": "Lihat setiap langkah pipeline - dari pembuatan embedding hingga peringkat hasil - dengan rincian waktu dan biaya."
         }
       }
     }
@@ -727,7 +1649,11 @@
       "pricing": "Harga",
       "enterprise": "Enterprise",
       "getApiKey": "Dapatkan Kunci API",
-      "tryDemo": "Coba Demo"
+      "tryDemo": "Coba Demo",
+      "limits": "Batas",
+      "status": "Status",
+      "help": "Bantuan",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Pembuat Permintaan",
@@ -753,7 +1679,8 @@
         "techDocs": "Dokumentasi Teknis",
         "legalContracts": "Kontrak Hukum",
         "researchPapers": "Makalah Penelitian"
-      }
+      },
+      "advanced": "Lanjutan"
     },
     "resultsPanel": {
       "searching": "Mencari...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "Hasil",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Biaya"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Kebijakan"
+    },
+    "playgroundTitle": "Coba sekarang",
+    "costPanel": {
+      "calculating": "Menghitung biaya...",
+      "noCost": "Jalankan kueri untuk melihat rincian biaya",
+      "costBreakdown": "Rincian Biaya",
+      "component": "Komponen",
+      "cost": "Biaya",
+      "embedding": "Embedding",
+      "vectorSearch": "Pencarian Vektor",
+      "rerank": "Peringkat Ulang",
+      "answerContract": "Kontrak Jawaban",
+      "total": "Total Biaya",
+      "usage": "Penggunaan",
+      "tokensIn": "Token Masuk",
+      "tokensOut": "Token Keluar",
+      "queryUnits": "Unit Kueri",
+      "estimatedMonthly": "Estimasi Bulanan",
+      "basedOn": "Berdasarkan",
+      "queriesPerDay": "kueri/hari"
+    },
+    "errorDisplay": {
+      "error": "Kesalahan",
+      "errorCode": "Kode",
+      "traceId": "Trace",
+      "hint": "Petunjuk",
+      "tryAgain": "Coba Lagi",
+      "copyTraceId": "Salin Trace ID",
+      "copied": "Tersalin!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "Sumber Daya",
       "security": "Keamanan",
       "sdks": "SDK",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "Tutorial 5 Menit",
+      "integrations": "Integrasi"
     },
     "hero": {
       "title": "Dokumentasi API",
@@ -873,7 +1837,9 @@
       "enterprise": "Enterprise",
       "unlimited": "Tidak terbatas",
       "exceeded": "Ketika Anda melebihi batas, API mengembalikan",
-      "response": "respons."
+      "response": "respons.",
+      "monthlyApiCalls": "Panggilan API Bulanan",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Kode Error",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "Pencarian dan Pengambilan",
         "extraction": "Ekstraksi Data",
         "operations": "Operasi",
-        "security": "Keamanan dan Privasi"
+        "security": "Keamanan dan Privasi",
+        "all": "Semua"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "Bahasa pemrograman apa yang didukung?",
           "answer": "Kami secara resmi mendukung JavaScript/TypeScript (Node.js) dan Python. Untuk bahasa lain, Anda dapat menggunakan REST API langsung."
+        },
+        "q4": {
+          "question": "Apa cara tercepat untuk membangun PoC?",
+          "answer": "1) POST /api/memories untuk menyimpan preferensi pengguna. 2) GET /api/memories untuk mencari. 3) Masukkan hasil ke prompt LLM Anda. 4) Kemudian, tambahkan /api/extract untuk ekstraksi otomatis dan /api/query untuk respons yang diperkaya memori."
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "Apa itu parameter user_id?",
           "answer": "user_id mengaitkan memori dengan pengguna tertentu, memungkinkan pengalaman yang dipersonalisasi untuk setiap pengguna."
+        },
+        "q4": {
+          "question": "Kapan sebaiknya menggunakan scope (user/session/agent)?",
+          "answer": "user: Preferensi yang berlaku untuk pengguna secara global. session: Tujuan atau konteks yang hanya valid untuk percakapan ini. agent: Aturan khusus untuk satu agen dalam sistem multi-agen. Penggunaan scope yang tepat mengurangi panjang prompt dan meningkatkan konsistensi respons."
+        },
+        "q5": {
+          "question": "Apa itu memory_types dan mengapa penting?",
+          "answer": "memory_type mengklasifikasikan memori: fact (info yang tidak berubah), preference (pilihan pengguna), instruction (aturan yang harus diikuti), relationship (koneksi orang/organisasi), experience (peristiwa masa lalu). Ini adalah sumbu paling kuat untuk penyaringan, penghapusan, dan penerapan kebijakan."
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "Apakah ada batas tingkat?",
           "answer": "Ya, batas bervariasi berdasarkan paket. Paket gratis mengizinkan 100 permintaan per menit. Lihat halaman harga untuk detail."
+        },
+        "q4": {
+          "question": "Bagaimana cara mengurangi biaya?",
+          "answer": "Faktor biaya terbesar: 1) Frekuensi Extract - kurangi panggilan. 2) Cakupan pencarian - gunakan namespace untuk mempersempit. 3) Pilihan model - gunakan haiku untuk rutin, sonnet untuk penting. 4) Caching - cache kueri yang berulang. 5) Gunakan batch operations bila memungkinkan."
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "Apakah Anda memiliki sertifikasi SOC 2?",
           "answer": "Kami sedang dalam proses sertifikasi SOC 2. Hubungi tim penjualan kami untuk informasi lebih lanjut."
         }
+      },
+      "title": "Pertanyaan yang Sering Diajukan",
+      "subtitle": "Pertanyaan umum tentang Seizn Memory API, dari memulai hingga operasi lanjutan.",
+      "nav": {
+        "dashboard": "Dasbor"
+      },
+      "cta": {
+        "title": "Masih punya pertanyaan?",
+        "subtitle": "Lihat dokumentasi kami atau hubungi tim dukungan kami.",
+        "readDocs": "Baca Dokumentasi",
+        "contactSupport": "Hubungi Dukungan"
+      },
+      "footer": {
+        "rights": "Hak cipta dilindungi."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "Mulai Cepat 5 Menit | Seizn",
+        "description": "Tambahkan AI memory dalam 5 menit hanya dengan 10 baris kode"
+      },
+      "badge": "Tutorial 5 menit",
+      "noCreditCard": "Tidak perlu kartu kredit",
+      "title": "Mulai dengan Seizn",
+      "subtitle": "Tambahkan memori persisten ke AI Anda dalam waktu kurang dari 5 menit. Ikuti langkah-langkahnya dan tandai setiap langkah yang telah selesai.",
+      "getApiKey": "Dapatkan API Key",
+      "fullExample": "Contoh Lengkap (10 baris)",
+      "copy": "Salin",
+      "copied": "Tersalin!",
+      "progress": "Progres",
+      "stepsLabel": "langkah",
+      "steps": {
+        "getApiKey": {
+          "title": "Dapatkan API Key Anda",
+          "time": "30 detik",
+          "description": "Daftar dan buat API key dari dasbor.",
+          "actionLabel": "Buka Dasbor"
+        },
+        "install": {
+          "title": "Instal SDK",
+          "time": "30 detik",
+          "description": "Instal Seizn SDK menggunakan manajer paket pilihan Anda."
+        },
+        "ingest": {
+          "title": "Unggah Dokumen",
+          "time": "30 detik",
+          "description": "Unggah dokumen ke dataset Anda untuk pengambilan."
+        },
+        "query": {
+          "title": "Jalankan Kueri Pertama Anda",
+          "time": "10 detik",
+          "description": "Cari dokumen Anda dengan kueri bahasa alami."
+        }
+      },
+      "completion": {
+        "title": "Selamat!",
+        "description": "Anda telah menyelesaikan quickstart. Pipeline pengambilan Anda siap dengan tracing bawaan.",
+        "readDocs": "Baca Dokumentasi",
+        "goToDashboard": "Buka Dasbor"
+      },
+      "expectedOutput": {
+        "title": "Output yang Diharapkan",
+        "description": "Setiap kueri mengembalikan hasil, trace, dan rincian biaya:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "Referensi API",
+          "description": "Jelajahi semua endpoint dan opsi untuk kasus penggunaan lanjutan."
+        },
+        "sdkExamples": {
+          "title": "Contoh SDK",
+          "description": "Contoh siap pakai untuk Python, TypeScript, dan lainnya."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Pertanyaan umum tentang jenis memori, namespace, dan praktik terbaik."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "Referensi API | Seizn",
+        "description": "Dokumentasi API lengkap untuk Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, dan RetOps API"
+      },
+      "title": "Referensi API",
+      "description": "Dokumentasi lengkap untuk semua API Seizn termasuk Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, dan RetOps.",
+      "auth": {
+        "title": "Autentikasi",
+        "description": "Semua endpoint API memerlukan autentikasi melalui API key. Sertakan key Anda di header X-API-Key."
+      },
+      "sidebar": {
+        "title": "Grup API"
+      },
+      "endpoint": {
+        "parameters": "Parameter",
+        "requestBody": "Isi Permintaan",
+        "response": "Respons",
+        "errorCodes": "Kode Kesalahan"
+      },
+      "table": {
+        "name": "Nama",
+        "type": "Tipe",
+        "required": "Wajib",
+        "description": "Deskripsi",
+        "code": "Kode",
+        "message": "Pesan"
+      },
+      "copy": "Salin",
+      "copied": "Tersalin!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "Tutorial 5 Menit | Seizn",
+        "description": "Pelajari cara menambahkan AI memory dalam 5 menit dengan panduan interaktif langkah demi langkah"
+      },
+      "breadcrumb": "Tutorial",
+      "badge": "Tutorial 5 Menit",
+      "noCreditCard": "Tidak perlu kartu kredit",
+      "title": "Tambahkan AI Memory dalam 5 Menit",
+      "subtitle": "Ikuti panduan langkah demi langkah ini untuk memberikan AI Anda memori persisten. Tandai setiap langkah saat Anda menyelesaikannya.",
+      "getApiKey": "Dapatkan API Key",
+      "copy": "Salin",
+      "copied": "Tersalin!",
+      "progress": "Progres",
+      "stepsLabel": "langkah",
+      "steps": {
+        "step1": {
+          "title": "Dapatkan API Key Anda",
+          "time": "30 detik",
+          "description": "Daftar gratis dan buat API key dari dasbor.",
+          "instruction1": "Daftar atau masuk ke akun Seizn Anda",
+          "instruction2": "Buka API Keys di dasbor",
+          "instruction3": "Klik 'Buat Key Baru' dan salin key Anda",
+          "actionLabel": "Buka Dasbor"
+        },
+        "step2": {
+          "title": "Instal SDK",
+          "time": "30 detik",
+          "description": "Pilih bahasa pilihan Anda dan instal Seizn SDK."
+        },
+        "step3": {
+          "title": "Simpan Memori Pertama Anda",
+          "time": "2 menit",
+          "description": "Simpan informasi yang harus diingat AI Anda lintas sesi."
+        },
+        "step4": {
+          "title": "Cari Memori",
+          "time": "2 menit",
+          "description": "Ambil memori yang relevan menggunakan kueri bahasa alami."
+        },
+        "step5": {
+          "title": "Verifikasi Hasil",
+          "time": "30 detik",
+          "description": "Periksa bahwa memori Anda berhasil disimpan dan diambil.",
+          "hint": "Anda akan melihat respons seperti ini saat mencari memori:",
+          "successTitle": "Berhasil!",
+          "successDescription": "AI Anda sekarang memiliki memori persisten. Gunakan hasil pencarian untuk meningkatkan konteks dan respons AI Anda."
+        }
+      },
+      "completion": {
+        "title": "Selamat!",
+        "description": "Anda telah menyelesaikan tutorial. AI Anda sekarang memiliki memori persisten yang berfungsi lintas sesi.",
+        "readDocs": "Baca Dokumentasi",
+        "goToDashboard": "Buka Dasbor"
+      },
+      "nextSteps": {
+        "title": "Langkah Selanjutnya",
+        "apiReference": {
+          "title": "Referensi API",
+          "description": "Jelajahi semua endpoint untuk memori, ekstraksi, dan kueri RAG."
+        },
+        "sdkExamples": {
+          "title": "Contoh SDK",
+          "description": "Contoh siap pakai untuk Python, TypeScript, dan REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Pelajari tentang jenis memori, namespace, dan praktik terbaik."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integrasi | Seizn",
+        "description": "Integrasikan Seizn dengan LangChain, LlamaIndex, OpenTelemetry, dan lainnya"
+      },
+      "breadcrumb": "Integrasi",
+      "title": "Integrasi",
+      "subtitle": "Hubungkan Seizn dengan framework AI dan alat observabilitas favorit Anda.",
+      "cards": {
+        "langchain": {
+          "badge": "Resmi",
+          "title": "LangChain",
+          "description": "Drop-in retriever untuk pipeline RAG LangChain. Berfungsi dengan Python dan TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Resmi",
+          "title": "LlamaIndex",
+          "description": "Native retriever untuk query engine LlamaIndex. Mendukung streaming dan hybrid search."
+        },
+        "opentelemetry": {
+          "badge": "Resmi",
+          "title": "OpenTelemetry",
+          "description": "Ekspor trace ke Datadog, Grafana, Jaeger, dan backend yang kompatibel dengan OTLP."
+        }
+      },
+      "comingSoon": {
+        "title": "Segera Hadir",
+        "description": "Lebih banyak integrasi sedang dalam perjalanan. Beri tahu kami apa yang Anda butuhkan!"
+      },
+      "backToDocs": "Kembali ke Dokumentasi"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "Integrasi LangChain | Seizn",
+        "description": "Drop-in retriever untuk pipeline RAG LangChain"
+      },
+      "badge": "Resmi",
+      "title": "Integrasi LangChain",
+      "subtitle": "Drop-in retriever untuk pipeline RAG LangChain dengan dukungan tracing penuh.",
+      "overview": {
+        "title": "Ikhtisar 60 Detik",
+        "description": "SeiznRetriever adalah pengganti drop-in untuk retriever LangChain mana pun. Menyediakan pencarian vektor dengan tracing, caching, dan reranking bawaan.",
+        "feature1": "Kompatibel dengan semua chain dan agent LangChain",
+        "feature2": "Tracing bawaan untuk setiap operasi pengambilan",
+        "feature3": "Mendukung penyaringan, reranking, dan hybrid search"
+      },
+      "installation": {
+        "title": "Instalasi",
+        "description": "Instal Seizn SDK bersama LangChain."
+      },
+      "example": {
+        "title": "Contoh 5 Menit",
+        "description": "Buat RAG chain dengan SeiznRetriever hanya dalam beberapa baris kode."
+      },
+      "production": {
+        "title": "Tips Produksi",
+        "caching": {
+          "title": "Aktifkan Caching",
+          "description": "Kurangi latensi dan biaya dengan meng-cache kueri yang berulang."
+        },
+        "reranking": {
+          "title": "Aktifkan Reranking",
+          "description": "Tingkatkan kualitas hasil dengan cross-encoder reranking."
+        },
+        "filtering": {
+          "title": "Penyaringan Metadata",
+          "description": "Saring hasil berdasarkan field metadata sebelum pencarian vektor."
+        }
+      },
+      "troubleshooting": {
+        "title": "Pemecahan Masalah",
+        "errorColumn": "Kesalahan",
+        "causeColumn": "Penyebab",
+        "solutionColumn": "Solusi",
+        "authCause": "API key tidak valid atau tidak ada",
+        "authSolution": "Periksa variabel lingkungan SEIZN_API_KEY",
+        "rateCause": "Terlalu banyak permintaan per detik",
+        "rateSolution": "Terapkan exponential backoff atau upgrade paket",
+        "emptyCause": "Threshold terlalu tinggi atau tidak ada dokumen yang cocok",
+        "emptySolution": "Turunkan threshold atau periksa isi dataset"
+      },
+      "nav": {
+        "backToIntegrations": "Kembali ke Integrasi",
+        "nextLlamaIndex": "Integrasi LlamaIndex"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "Integrasi LlamaIndex | Seizn",
+        "description": "Native retriever untuk pipeline RAG LlamaIndex"
+      },
+      "badge": "Resmi",
+      "title": "Integrasi LlamaIndex",
+      "subtitle": "Native retriever untuk query engine LlamaIndex dengan streaming dan hybrid search.",
+      "overview": {
+        "title": "Ikhtisar 60 Detik",
+        "description": "SeiznRetriever mengimplementasikan antarmuka BaseRetriever LlamaIndex, membuatnya kompatibel dengan semua query engine dan pipeline LlamaIndex.",
+        "feature1": "Integrasi native dengan query engine LlamaIndex",
+        "feature2": "Mendukung streaming response langsung",
+        "feature3": "Kompatibel dengan node postprocessor LlamaIndex"
+      },
+      "installation": {
+        "title": "Instalasi",
+        "description": "Instal Seizn SDK bersama LlamaIndex."
+      },
+      "example": {
+        "title": "Contoh 5 Menit",
+        "description": "Bangun query engine dengan SeiznRetriever untuk aplikasi RAG Anda."
+      },
+      "production": {
+        "title": "Tips Produksi",
+        "streaming": {
+          "title": "Streaming Response",
+          "description": "Aktifkan streaming untuk pengalaman pengguna yang lebih baik dengan respons panjang."
+        },
+        "hybrid": {
+          "title": "Hybrid Search",
+          "description": "Gabungkan pencarian vektor dan kata kunci untuk recall yang lebih baik."
+        },
+        "nodePostprocessors": {
+          "title": "Node Postprocessor",
+          "description": "Rangkai postprocessor untuk penyaringan dan reranking lanjutan."
+        }
+      },
+      "troubleshooting": {
+        "title": "Pemecahan Masalah",
+        "errorColumn": "Kesalahan",
+        "causeColumn": "Penyebab",
+        "solutionColumn": "Solusi",
+        "authCause": "API key tidak valid atau tidak ada",
+        "authSolution": "Periksa variabel lingkungan SEIZN_API_KEY",
+        "datasetCause": "Nama dataset tidak ditemukan",
+        "datasetSolution": "Verifikasi dataset ada di dasbor",
+        "relevanceCause": "Ketidakcocokan kueri-dokumen",
+        "relevanceSolution": "Coba hybrid search atau sesuaikan threshold"
+      },
+      "nav": {
+        "prevLangChain": "Integrasi LangChain",
+        "nextOpenTelemetry": "Integrasi OpenTelemetry"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "Integrasi OpenTelemetry | Seizn",
+        "description": "Ekspor trace ke Datadog, Grafana, Jaeger melalui OTLP"
+      },
+      "badge": "Resmi",
+      "title": "Integrasi OpenTelemetry",
+      "subtitle": "Ekspor trace pengambilan ke stack observabilitas Anda melalui OTLP.",
+      "overview": {
+        "title": "Ikhtisar 60 Detik",
+        "description": "Seizn secara native mengekspor trace OpenTelemetry untuk setiap operasi pengambilan. Hubungkan ke backend yang kompatibel dengan OTLP untuk observabilitas end-to-end.",
+        "feature1": "Ekspor OTLP tanpa konfigurasi dengan pembuatan span otomatis",
+        "feature2": "Atribut kaya termasuk latensi, jumlah token, dan biaya",
+        "feature3": "Context propagation untuk distributed tracing",
+        "supportedBackends": "Backend yang Didukung"
+      },
+      "installation": {
+        "title": "Pengaturan",
+        "description": "Konfigurasi ekspor OTLP melalui variabel lingkungan."
+      },
+      "examples": {
+        "title": "Contoh Backend",
+        "datadog": {
+          "description": "Ekspor trace ke Datadog APM melalui Datadog Agent atau API langsung."
+        },
+        "grafana": {
+          "description": "Kirim trace ke Grafana Tempo (Cloud atau self-hosted)."
+        },
+        "jaeger": {
+          "description": "Ekspor ke Jaeger dengan dukungan OTLP receiver native."
+        }
+      },
+      "production": {
+        "title": "Tips Produksi",
+        "sampling": {
+          "title": "Strategi Sampling",
+          "description": "Kontrol volume trace dengan sampling head-based atau tail-based."
+        },
+        "attributes": {
+          "title": "Atribut Kustom",
+          "description": "Tambahkan atribut resource dan span untuk penyaringan yang lebih baik."
+        },
+        "batching": {
+          "title": "Konfigurasi Batch",
+          "description": "Optimalkan performa ekspor dengan pengaturan batch."
+        }
+      },
+      "troubleshooting": {
+        "title": "Pemecahan Masalah",
+        "issueColumn": "Masalah",
+        "causeColumn": "Penyebab",
+        "solutionColumn": "Solusi",
+        "noTracesIssue": "Tidak ada trace yang muncul",
+        "noTracesCause": "Telemetri dinonaktifkan atau endpoint salah",
+        "noTracesSolution": "Atur SEIZN_TELEMETRY_ENABLED=true dan verifikasi endpoint",
+        "connectionIssue": "Koneksi ditolak",
+        "connectionCause": "Collector tidak berjalan atau port salah",
+        "connectionSolution": "Periksa status collector dan port 4318",
+        "missingSpansIssue": "Span hilang dalam trace",
+        "missingSpansCause": "Tingkat sampling terlalu rendah",
+        "missingSpansSolution": "Naikkan tingkat sampling atau nonaktifkan sampling",
+        "debugTitle": "Mode Debug",
+        "debugDescription": "Aktifkan debug logging untuk memecahkan masalah telemetri."
+      },
+      "nav": {
+        "prevLlamaIndex": "Integrasi LlamaIndex",
+        "backToIntegrations": "Kembali ke Integrasi"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Demo Langsung",
+    "subtitle": "Rasakan pipeline pengambilan Seizn dengan tracing penuh dan transparansi biaya.",
+    "tryItNow": "Coba sekarang - Tanpa pendaftaran",
+    "queryPlaceholder": "Kueri Pencarian",
+    "runDemo": "Jalankan Demo",
+    "running": "Menjalankan...",
+    "results": "Hasil",
+    "trace": "Trace",
+    "cost": "Biaya",
+    "noResults": "Jalankan demo untuk melihat hasil",
+    "errorTitle": "Kesalahan",
+    "rateLimitError": "Batas rate terlampaui. Silakan tunggu.",
+    "retryIn": "Coba lagi dalam",
+    "seconds": "detik",
+    "score": "Skor",
+    "rerankScore": "Rerank",
+    "latency": "Latensi",
+    "tokens": "Token",
+    "cached": "ter-cache",
+    "model": "Model",
+    "input": "Input",
+    "output": "Output",
+    "costBreakdown": "Rincian",
+    "total": "Total Biaya",
+    "embedding": "Embedding",
+    "vectorSearch": "Pencarian Vektor",
+    "rerank": "Rerank",
+    "answerContract": "Kontrak Jawaban",
+    "tokensIn": "Token Masuk",
+    "tokensOut": "Token Keluar",
+    "queryUnits": "Unit Kueri",
+    "prefilledQueries": [
+      "Coba contoh"
+    ]
+  },
+  "publicTrace": {
+    "title": "Trace Bersama",
+    "subtitle": "Lihat detail trace pengambilan yang dibagikan",
+    "sharedBy": "Trace bersama",
+    "expired": "Tautan ini telah kedaluwarsa",
+    "expiredDesc": "Tautan berbagi tidak lagi valid. Minta pemilik untuk membuat tautan baru.",
+    "notFound": "Trace tidak ditemukan",
+    "notFoundDesc": "Trace bersama ini tidak dapat ditemukan. Mungkin telah dicabut atau dihapus.",
+    "backToHome": "Kembali ke Beranda",
+    "requestId": "ID Permintaan",
+    "collection": "Koleksi",
+    "createdAt": "Dibuat",
+    "totalLatency": "Total Latensi",
+    "totalCost": "Total Biaya",
+    "resultsCount": "Hasil",
+    "query": "Kueri",
+    "timeline": "Lini Waktu",
+    "candidates": "Kandidat",
+    "rerankDiff": "Selisih Rerank",
+    "costAnalysis": "Analisis Biaya",
+    "redacted": "[DIHAPUS]",
+    "piiMasked": "PII disembunyikan untuk privasi",
+    "readOnlyNote": "Ini adalah tampilan baca-saja dari trace yang dibagikan."
+  },
+  "trustPage": {
+    "title": "Pusat Kepercayaan",
+    "subtitle": "Praktik keamanan dan data di Seizn",
+    "heroDescription": "Kami membangun dengan privasi dan keamanan sebagai inti. Halaman ini mendokumentasikan apa yang kami lakukan dengan data Anda.",
+    "lastUpdated": "Terakhir diperbarui",
+    "sections": {
+      "dataFlow": {
+        "title": "Alur Data",
+        "description": "Apa yang kami simpan dan apa yang tidak",
+        "stored": {
+          "title": "Yang Kami Simpan",
+          "items": [
+            "Konten memori dan embedding",
+            "Log kueri (di-hash, bukan teks biasa)",
+            "Metrik penggunaan API per key",
+            "Data trace untuk debugging (retensi dapat dikonfigurasi)"
+          ]
+        },
+        "notStored": {
+          "title": "Yang TIDAK Kami Simpan",
+          "items": [
+            "API key mentah (hanya hash)",
+            "Kata sandi pengguna (hanya OAuth)",
+            "Hasil kueri melampaui cache TTL",
+            "Log permintaan/respons LLM pihak ketiga"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Enkripsi",
+        "description": "Perlindungan data saat transit dan saat disimpan",
+        "transit": {
+          "title": "Saat Transit",
+          "items": [
+            "TLS 1.3 diberlakukan untuk semua koneksi",
+            "HSTS diaktifkan dengan max-age 1 tahun",
+            "Certificate transparency logging"
+          ]
+        },
+        "atRest": {
+          "title": "Saat Disimpan",
+          "items": [
+            "Enkripsi AES-256 untuk semua data yang disimpan",
+            "Enkripsi tingkat database (Supabase)",
+            "Cadangan terenkripsi dengan kunci terpisah"
+          ]
+        },
+        "keyManagement": {
+          "title": "Manajemen Kunci",
+          "items": [
+            "API key di-hash dengan SHA-256 + salt",
+            "Pengingat rotasi kunci otomatis (90 hari)",
+            "Kemampuan pencabutan kunci instan"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Isolasi Tenant",
+        "description": "Cara kami memisahkan data Anda",
+        "items": [
+          "Row-Level Security (RLS) diberlakukan di tingkat database",
+          "Semua kueri difilter berdasarkan user_id/org_id secara otomatis",
+          "Tidak ada indeks bersama antar tenant",
+          "Pemisahan namespace untuk koleksi memori"
+        ],
+        "rbac": {
+          "title": "Kontrol Akses",
+          "items": [
+            "Akses berbasis peran (Owner, Admin, Member)",
+            "Cakupan API key per organisasi",
+            "Log audit untuk semua perubahan izin"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Retensi & Penghapusan",
+        "description": "Berapa lama kami menyimpan data dan cara menghapusnya",
+        "periods": [
+          {
+            "type": "Memori",
+            "period": "Hingga dihapus oleh pengguna"
+          },
+          {
+            "type": "Log API",
+            "period": "Rolling 90 hari"
+          },
+          {
+            "type": "Trace",
+            "period": "30 hari (dapat dikonfigurasi)"
+          },
+          {
+            "type": "Log Audit",
+            "period": "1 tahun"
+          },
+          {
+            "type": "Cadangan",
+            "period": "30 hari terenkripsi"
+          }
+        ],
+        "deletion": {
+          "title": "Proses Penghapusan",
+          "items": [
+            "DELETE /api/memories menghapus langsung",
+            "Penghapusan akun: masa tenggang 30 hari",
+            "Penghapusan permanen dari cadangan dalam 30 hari",
+            "Ekspor data GDPR/CCPA tersedia berdasarkan permintaan"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Log Audit & Kontrol Akses",
+        "description": "Melacak siapa melakukan apa",
+        "logged": {
+          "title": "Peristiwa yang Kami Catat",
+          "items": [
+            "Pembuatan, rotasi, pencabutan API key",
+            "Perubahan izin (RBAC)",
+            "Permintaan ekspor data",
+            "Upaya autentikasi yang gagal",
+            "Tindakan admin pada organisasi"
+          ]
+        },
+        "access": {
+          "title": "Akses Log",
+          "items": [
+            "Tersedia untuk admin organisasi",
+            "Dapat diekspor melalui API (paket Pro+)",
+            "Dapat dicari berdasarkan pengguna, tindakan, waktu"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Subprosesor",
+        "description": "Pihak ketiga yang memproses data Anda",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Database & Autentikasi",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting & CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Pembayaran",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Analitik Produk",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Pemantauan Kesalahan",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (opsional)",
+            "location": "US/Canada"
+          }
+        ],
+        "note": "Kami hanya membagikan data minimum yang diperlukan agar setiap layanan dapat berfungsi."
+      },
+      "disclosure": {
+        "title": "Yang Belum Kami Lakukan",
+        "description": "Kekurangan jujur dalam postur keamanan kami",
+        "items": [
+          "Sertifikasi SOC 2 Type II (sedang berlangsung, ETA Q2 2026)",
+          "Kepatuhan HIPAA (direncanakan untuk Enterprise)",
+          "Opsi deployment on-premise (sedang dievaluasi)",
+          "Hardware security module (HSM) untuk penyimpanan kunci",
+          "Program bug bounty (direncanakan Q3 2026)"
+        ],
+        "cta": "Punya pertanyaan keamanan? Hubungi kami di security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Pertanyaan?",
+      "description": "Tim kami dengan senang hati menjawab pertanyaan keamanan.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Batas & Penagihan",
+    "subtitle": "Pahami batas paket, kuota, dan informasi penagihan Anda.",
+    "unlimited": "Tidak Terbatas",
+    "custom": "Kustom",
+    "requestsPerSecond": "permintaan/detik",
+    "sidebar": {
+      "onThisPage": "Di Halaman Ini",
+      "quotas": "Kuota Bulanan",
+      "rateLimits": "Batas Rate",
+      "overage": "Perilaku Kelebihan",
+      "reset": "Waktu Reset",
+      "headers": "Header Respons"
+    },
+    "table": {
+      "plan": "Paket",
+      "monthlyQuota": "Kuota Bulanan",
+      "rps": "Batas RPS"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "overage": "Throttle ringan setelah batas"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Throttle ringan, peringatan email"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Throttle ringan, antrean prioritas"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "SLA kustom, tanpa throttle"
+      }
+    },
+    "quotas": {
+      "title": "Kuota Bulanan",
+      "description": "Setiap paket mencakup kuota panggilan API bulanan. Kuota direset pada tanggal 1 setiap bulan pukul 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Batas Rate (RPS)",
+      "description": "Batas rate melindungi infrastruktur kami dan memastikan penggunaan yang adil. Batas diterapkan per API key."
+    },
+    "overage": {
+      "title": "Perilaku Kelebihan",
+      "softThrottle": {
+        "title": "Throttle Ringan (Kuota Terlampaui)",
+        "description": "Ketika Anda melampaui kuota bulanan:",
+        "point1": "Panggilan API berlanjut dengan prioritas lebih rendah",
+        "point2": "Waktu respons mungkin meningkat 2-5x",
+        "point3": "Notifikasi email pada penggunaan 80% dan 100%"
+      },
+      "hard429": {
+        "title": "Hard 429 (Batas Rate)",
+        "description": "Ketika Anda melampaui batas rate RPS:",
+        "recommendation": "Terapkan exponential backoff (1s, 2s, 4s, 8s) dan coba lagi dengan jitter."
+      }
+    },
+    "reset": {
+      "title": "Waktu Reset",
+      "monthly": {
+        "title": "Reset Kuota Bulanan",
+        "description": "Kuota direset pada hari pertama setiap bulan.",
+        "time": "Tanggal 1, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Jendela Batas Rate",
+        "description": "Batas rate menggunakan jendela geser.",
+        "time": "Jendela geser 1 detik"
+      }
+    },
+    "headers": {
+      "limit": "Permintaan maksimum yang diizinkan per jendela",
+      "remaining": "Permintaan tersisa di jendela saat ini",
+      "reset": "Unix timestamp saat jendela direset",
+      "quotaLimit": "Batas kuota bulanan",
+      "quotaRemaining": "Panggilan API tersisa bulan ini",
+      "quotaReset": "Tanggal ISO 8601 saat kuota direset"
+    },
+    "headersSection": {
+      "title": "Header Respons",
+      "description": "Setiap respons API menyertakan header untuk membantu Anda melacak penggunaan dan batas.",
+      "header": "Header",
+      "headerDescription": "Deskripsi",
+      "example": "Contoh Header Respons:"
+    },
+    "upgrade": {
+      "title": "Butuh Batas Lebih Tinggi?",
+      "description": "Upgrade paket Anda untuk kuota lebih besar, batas rate lebih tinggi, dan dukungan prioritas.",
+      "viewPlans": "Lihat Paket",
+      "contactSales": "Hubungi Sales"
+    }
+  },
+  "help": {
+    "title": "Pusat Bantuan",
+    "subtitle": "Temukan jawaban, dapatkan dukungan, dan akses sumber daya.",
+    "search": {
+      "placeholder": "Cari bantuan...",
+      "noResults": "Tidak ada hasil"
+    },
+    "sections": {
+      "support": {
+        "title": "Saluran Dukungan",
+        "description": "Dapatkan bantuan dari tim kami",
+        "email": {
+          "title": "Dukungan Email",
+          "description": "Dapatkan bantuan via email dalam 24 jam",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Komunitas Discord",
+          "description": "Bergabung dengan komunitas kami untuk bantuan real-time",
+          "action": "Gabung Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Laporkan bug dan minta fitur",
+          "action": "Buka Issue"
+        }
+      },
+      "faq": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "description": "Jawaban cepat untuk pertanyaan umum",
+        "viewAll": "Lihat Semua FAQ"
+      },
+      "status": {
+        "title": "Status Sistem",
+        "description": "Periksa status sistem saat ini dan insiden",
+        "viewStatus": "Lihat Halaman Status",
+        "operational": "Semua Sistem Beroperasi",
+        "degraded": "Performa Menurun",
+        "outage": "Gangguan Layanan"
+      },
+      "billing": {
+        "title": "Penagihan & Paket",
+        "description": "Kelola langganan dan pembayaran Anda",
+        "items": {
+          "plans": "Lihat paket harga",
+          "usage": "Periksa penggunaan Anda",
+          "invoices": "Unduh faktur",
+          "upgrade": "Upgrade paket Anda"
+        }
+      },
+      "docs": {
+        "title": "Dokumentasi",
+        "description": "Tautan cepat ke dokumen populer",
+        "links": {
+          "quickstart": "Panduan Mulai Cepat",
+          "apiReference": "Referensi API",
+          "sdks": "SDK & Pustaka",
+          "limits": "Batas & Penagihan",
+          "security": "Keamanan"
+        }
+      }
+    },
+    "contact": {
+      "title": "Masih Butuh Bantuan?",
+      "description": "Tim dukungan kami siap membantu Anda sukses.",
+      "cta": "Hubungi Dukungan"
+    }
+  },
+  "status": {
+    "title": "Status Sistem",
+    "subtitle": "Status sistem real-time dan riwayat insiden",
+    "lastUpdated": "Terakhir diperbarui",
+    "overall": {
+      "operational": "Semua Sistem Beroperasi",
+      "degraded": "Performa Menurun",
+      "partialOutage": "Gangguan Sistem Sebagian",
+      "majorOutage": "Gangguan Sistem Besar"
+    },
+    "uptime": {
+      "title": "Uptime",
+      "24h": "24 jam",
+      "7d": "7 hari",
+      "30d": "30 hari",
+      "90d": "90 hari"
+    },
+    "services": {
+      "title": "Status Layanan",
+      "operational": "Beroperasi",
+      "degraded": "Menurun",
+      "down": "Tidak Aktif"
+    },
+    "incidents": {
+      "active": "Insiden Aktif",
+      "history": "Riwayat Insiden",
+      "noActive": "Tidak ada insiden aktif",
+      "noHistory": "Tidak ada insiden sebelumnya",
+      "status": {
+        "investigating": "Sedang Diselidiki",
+        "identified": "Teridentifikasi",
+        "monitoring": "Sedang Dipantau",
+        "resolved": "Terselesaikan"
+      },
+      "severity": {
+        "minor": "Minor",
+        "major": "Mayor",
+        "critical": "Kritis"
+      },
+      "affected": "Layanan Terdampak",
+      "timeline": "Lini Waktu",
+      "started": "Dimulai",
+      "resolved": "Terselesaikan",
+      "duration": "Durasi",
+      "viewDetails": "Lihat Detail"
+    },
+    "subscribe": {
+      "title": "Berlangganan Pembaruan",
+      "rss": "RSS Feed",
+      "email": "Notifikasi Email"
     }
   }
 }

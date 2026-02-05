@@ -180,10 +180,10 @@ export default function GovernanceClient() {
   const [complianceSettings] = useState(mockComplianceSettings);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "retention", label: t("governance.tabs.retention") || "Data Retention", icon: "🗄️" },
-    { id: "access", label: t("governance.tabs.access") || "Access Control", icon: "🔐" },
-    { id: "pii", label: t("governance.tabs.pii") || "PII Detection", icon: "🛡️" },
-    { id: "compliance", label: t("governance.tabs.compliance") || "Compliance", icon: "✅" },
+    { id: "retention", label: t("dashboard.governance.tabs.retention") || "Data Retention", icon: "🗄️" },
+    { id: "access", label: t("dashboard.governance.tabs.access") || "Access Control", icon: "🔐" },
+    { id: "pii", label: t("dashboard.governance.tabs.pii") || "PII Detection", icon: "🛡️" },
+    { id: "compliance", label: t("dashboard.governance.tabs.compliance") || "Compliance", icon: "✅" },
   ];
 
   return (
@@ -191,10 +191,10 @@ export default function GovernanceClient() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          {t("governance.title") || "Governance"}
+          {t("dashboard.governance.title") || "Governance"}
         </h1>
         <p className="text-gray-500 mt-1">
-          {t("governance.subtitle") || "Manage data policies, retention rules, and compliance settings"}
+          {t("dashboard.governance.subtitle") || "Manage data policies, retention rules, and compliance settings"}
         </p>
       </div>
 
@@ -203,28 +203,28 @@ export default function GovernanceClient() {
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🗄️</span>
-            <span className="text-sm text-gray-500">{t("governance.stats.retentionPolicies") || "Retention Policies"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.governance.stats.retentionPolicies") || "Retention Policies"}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{retentionPolicies.length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔐</span>
-            <span className="text-sm text-gray-500">{t("governance.stats.accessRules") || "Access Rules"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.governance.stats.accessRules") || "Access Rules"}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{accessRules.filter(r => r.enabled).length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🛡️</span>
-            <span className="text-sm text-gray-500">{t("governance.stats.piiRules") || "PII Rules Active"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.governance.stats.piiRules") || "PII Rules Active"}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{piiRules.filter(r => r.enabled).length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-gray-500">{t("governance.stats.complianceScore") || "Compliance Score"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.governance.stats.complianceScore") || "Compliance Score"}</span>
           </div>
           <p className="text-2xl font-bold text-emerald-600">100%</p>
         </div>

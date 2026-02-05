@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { BudgetSettings } from "@/components/budget-planner/BudgetSettings";
 import type { BudgetSettings as BudgetSettingsType } from "@/lib/budget-planner/types";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 // ============================================
 // Types
@@ -66,6 +67,7 @@ export function BudgetDashboardClient() {
   const [degradeEvents, setDegradeEvents] = useState<DegradeEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useDashboardTranslation();
 
   // Fetch current settings and usage stats
   const fetchData = useCallback(async () => {
@@ -155,9 +157,9 @@ export function BudgetDashboardClient() {
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Budget & Cost Controls</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.budgetPage.title")}</h1>
         <p className="text-gray-500 mt-1">
-          Manage spending limits, alerts, and automatic cost optimization
+          {t("dashboard.budgetPage.subtitle")}
         </p>
       </div>
 
@@ -177,14 +179,14 @@ export function BudgetDashboardClient() {
               <div className="p-2 bg-blue-100 rounded-lg">
                 <DollarIcon className="w-5 h-5 text-blue-600" />
               </div>
-              <span className="text-sm font-medium text-gray-600">Today&apos;s Spend</span>
+              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.todaysSpend")}</span>
             </div>
             <div className="text-2xl font-bold text-gray-900">
               {formatCurrency(stats.dailyUsedUsd)}
             </div>
             <div className="mt-2">
               <div className="flex justify-between text-xs text-gray-500 mb-1">
-                <span>{dailyPercent.toFixed(1)}% of daily limit</span>
+                <span>{dailyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofDailyLimit")}</span>
                 <span>{formatCurrency(stats.dailyBudgetUsd)}</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -204,14 +206,14 @@ export function BudgetDashboardClient() {
               <div className="p-2 bg-emerald-100 rounded-lg">
                 <ChartIcon className="w-5 h-5 text-emerald-600" />
               </div>
-              <span className="text-sm font-medium text-gray-600">Monthly Spend</span>
+              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.monthlySpend")}</span>
             </div>
             <div className="text-2xl font-bold text-gray-900">
               {formatCurrency(stats.monthlyUsedUsd)}
             </div>
             <div className="mt-2">
               <div className="flex justify-between text-xs text-gray-500 mb-1">
-                <span>{monthlyPercent.toFixed(1)}% of monthly limit</span>
+                <span>{monthlyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofMonthlyLimit")}</span>
                 <span>{formatCurrency(stats.monthlyBudgetUsd)}</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -231,13 +233,13 @@ export function BudgetDashboardClient() {
               <div className="p-2 bg-purple-100 rounded-lg">
                 <ChartIcon className="w-5 h-5 text-purple-600" />
               </div>
-              <span className="text-sm font-medium text-gray-600">API Calls</span>
+              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.apiCalls")}</span>
             </div>
             <div className="text-2xl font-bold text-gray-900">
               {stats.todayQueries.toLocaleString()}
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              {stats.monthQueries.toLocaleString()} this month
+              {stats.monthQueries.toLocaleString()} {t("dashboard.budgetPage.thisMonth")}
             </p>
           </div>
 
@@ -247,13 +249,13 @@ export function BudgetDashboardClient() {
               <div className={`p-2 rounded-lg ${stats.degradeEvents > 0 ? "bg-yellow-100" : "bg-green-100"}`}>
                 <ShieldIcon className={`w-5 h-5 ${stats.degradeEvents > 0 ? "text-yellow-600" : "text-green-600"}`} />
               </div>
-              <span className="text-sm font-medium text-gray-600">Auto-Degrades</span>
+              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.autoDegrades")}</span>
             </div>
             <div className="text-2xl font-bold text-gray-900">
               {stats.degradeEvents}
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              {stats.lastDegradeReason || "No recent degrades"}
+              {stats.lastDegradeReason || t("dashboard.budgetPage.noRecentDegrades")}
             </p>
           </div>
         </div>
@@ -264,10 +266,9 @@ export function BudgetDashboardClient() {
         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3">
           <AlertTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-medium text-yellow-800">Budget Protection Active</h3>
+            <h3 className="font-medium text-yellow-800">{t("dashboard.budgetPage.protectionActive")}</h3>
             <p className="text-sm text-yellow-700 mt-1">
-              Your queries are being automatically optimized to stay within budget.
-              This may reduce result quality. Consider increasing your budget limits.
+              {t("dashboard.budgetPage.protectionDesc")}
             </p>
           </div>
         </div>
@@ -275,7 +276,7 @@ export function BudgetDashboardClient() {
 
       {/* Settings Form */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Budget Settings</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("dashboard.budgetPage.settings")}</h2>
         <BudgetSettings
           initialSettings={settings || undefined}
           onSave={handleSaveSettings}
@@ -285,22 +286,22 @@ export function BudgetDashboardClient() {
       {/* Recent Degrade Events */}
       {degradeEvents.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Degrade Events</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("dashboard.budgetPage.recentEvents")}</h2>
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Time
+                    {t("dashboard.budgetPage.time")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Reason
+                    {t("dashboard.budgetPage.reason")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Changes
+                    {t("dashboard.budgetPage.changes")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Saved
+                    {t("dashboard.budgetPage.saved")}
                   </th>
                 </tr>
               </thead>
@@ -331,23 +332,23 @@ export function BudgetDashboardClient() {
 
       {/* Info Box */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-        <h3 className="font-medium text-gray-900 mb-2">How Budget-Aware Retrieval Works</h3>
+        <h3 className="font-medium text-gray-900 mb-2">{t("dashboard.budgetPage.howItWorks")}</h3>
         <ul className="text-sm text-gray-600 space-y-2">
           <li className="flex items-start gap-2">
             <span className="text-emerald-500 font-bold">1.</span>
-            <span>When approaching budget limits, Seizn automatically optimizes your queries</span>
+            <span>{t("dashboard.budgetPage.step1")}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-emerald-500 font-bold">2.</span>
-            <span>Optimizations include: disabling rerank, reducing topK, using cache-first</span>
+            <span>{t("dashboard.budgetPage.step2")}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-emerald-500 font-bold">3.</span>
-            <span>In &quot;hard&quot; mode, queries exceeding budget are rejected entirely</span>
+            <span>{t("dashboard.budgetPage.step3")}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-emerald-500 font-bold">4.</span>
-            <span>All degrade events are logged with cost savings for transparency</span>
+            <span>{t("dashboard.budgetPage.step4")}</span>
           </li>
         </ul>
       </div>

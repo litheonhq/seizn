@@ -227,7 +227,48 @@
           "title": "SDK installieren",
           "description": "Fügen Sie Seizn mit npm oder pip zu Ihrem Projekt hinzu",
           "action": "SDKs anzeigen"
+        },
+        "createOrg": {
+          "title": "Organisation erstellen",
+          "description": "Richten Sie Ihren Team-Arbeitsbereich für die Zusammenarbeit ein",
+          "action": "Organisation erstellen"
+        },
+        "firstQuery": {
+          "title": "Erste Abfrage ausführen",
+          "description": "Testen Sie die API im Playground mit einer Beispielabfrage",
+          "action": "Abfrage testen"
         }
+      },
+      "takeTour": "Tour starten",
+      "sdkModal": {
+        "title": "Seizn SDK installieren",
+        "description": "Wählen Sie Ihre bevorzugte Installationsmethode und kopieren Sie den Befehl.",
+        "copy": "Kopieren",
+        "copied": "Kopiert!",
+        "viewDocs": "Vollständige Dokumentation anzeigen",
+        "done": "Fertig"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Willkommen bei Seizn!",
+          "description": "Lassen Sie uns eine kurze Tour machen, um Ihnen den Einstieg zu erleichtern."
+        },
+        "sidebar": {
+          "title": "Navigation",
+          "description": "Verwenden Sie die Seitenleiste, um zwischen den Dashboard-Bereichen zu navigieren."
+        },
+        "stats": {
+          "title": "Ihre Statistiken",
+          "description": "Überwachen Sie Ihre API-Nutzung, gespeicherte Erinnerungen und den aktuellen Plan."
+        },
+        "quickStart": {
+          "title": "Schnellaktionen",
+          "description": "Verwenden Sie diese Karten für häufige Aufgaben wie das Erstellen von API-Schlüsseln."
+        },
+        "next": "Weiter",
+        "skip": "Tour überspringen",
+        "finish": "Fertig",
+        "stepOf": "Schritt {current} von {total}"
       }
     },
     "keys": {
@@ -270,7 +311,26 @@
       "usageByApiKey": "Nutzung nach API-Schlüssel",
       "errorsTitle": "Fehler",
       "errorRate": "Fehlerrate",
-      "noUsageData": "Keine Nutzungsdaten verfügbar"
+      "noUsageData": "Keine Nutzungsdaten verfügbar",
+      "p95Latency": "p95 Latenz",
+      "errorRateKpi": "Fehlerrate",
+      "monthlyApiCalls": "Monatliche API-Aufrufe",
+      "dailyTrends": "Tägliche Trends",
+      "tabCalls": "Aufrufe",
+      "tabCost": "Kosten",
+      "tabLatency": "Latenz",
+      "tabErrors": "Fehler",
+      "noUsageTitle": "Noch keine Nutzungsdaten",
+      "noUsageDescription": "Senden Sie Ihre erste API-Anfrage, um Nutzungsanalysen zu sehen. Daten werden innerhalb von 5 Sekunden hier angezeigt.",
+      "noUsageExpected": "Erwartet: Aufrufe, Token, Kosten und Latenzaufschlüsselung",
+      "getApiKey": "API-Schlüssel abrufen",
+      "viewDocs": "Dokumentation anzeigen",
+      "noEndpointData": "Keine Endpunktdaten",
+      "noEndpointDescription": "Die Endpunktaufschlüsselung wird nach Ihrem ersten API-Aufruf angezeigt",
+      "sendTestRequest": "Testanfrage senden",
+      "noKeyData": "Keine API-Schlüsselnutzung",
+      "noKeyDescription": "Erstellen und verwenden Sie einen API-Schlüssel, um schlüsselspezifische Analysen zu sehen",
+      "createApiKey": "API-Schlüssel erstellen"
     },
     "language": "Sprache",
     "organizations": "Organizations",
@@ -371,7 +431,49 @@
       "export": "Exportieren",
       "exportResults": "Ergebnisse exportieren",
       "exportFormat": "Exportformat",
-      "exportSuccess": "Export erfolgreich"
+      "exportSuccess": "Export erfolgreich",
+      "queryBuilder": "Abfrage-Builder",
+      "namespace": "Namespace",
+      "namespacePlaceholder": "Standard",
+      "searchMode": "Suchmodus",
+      "vector": "Vektor",
+      "hybrid": "Hybrid",
+      "keyword": "Schlüsselwort",
+      "rerank": "Rerank aktivieren",
+      "trace": "Ablaufverfolgung",
+      "cost": "Kosten",
+      "similarity": "Ähnlichkeit",
+      "memoryType": "Typ",
+      "rerankScore": "Rerank-Bewertung",
+      "traceTimeline": "Ablaufverfolgung Timeline",
+      "noTrace": "Führen Sie eine Abfrage aus, um die Ablaufverfolgung zu sehen",
+      "step": "Schritt",
+      "completed": "Abgeschlossen",
+      "pending": "Ausstehend",
+      "error": "Fehler",
+      "costBreakdown": "Kostenaufschlüsselung",
+      "noCost": "Führen Sie eine Abfrage aus, um die Kostenaufschlüsselung zu sehen",
+      "component": "Komponente",
+      "search": "Suchen",
+      "total": "Gesamt",
+      "monthlyEstimate": "Monatliche Schätzung",
+      "basedOn": "Basierend auf",
+      "queriesPerDay": "Abfragen/Tag",
+      "rerankBefore": "Vor Rerank",
+      "rerankAfter": "Nach Rerank",
+      "rank": "Rang",
+      "replayFromLog": "Aus Protokoll wiederholen",
+      "selectLog": "Wählen Sie ein Protokoll zum Wiederholen",
+      "replaySettings": "Wiederholungseinstellungen",
+      "compareResults": "Ergebnisse vergleichen",
+      "original": "Original",
+      "replay": "Wiederholen",
+      "diff": "Unterschied",
+      "hitAtK": "Hit@K",
+      "overlap": "Überlappung",
+      "added": "Hinzugefügt",
+      "removed": "Entfernt",
+      "rankChanges": "Rangänderungen"
     },
     "settingsPage": {
       "title": "Einstellungen",
@@ -390,7 +492,9 @@
         "profile": "Profil",
         "budget": "Budget",
         "notifications": "Benachrichtigungen",
-        "security": "Sicherheit"
+        "security": "Sicherheit",
+        "billing": "Abrechnung",
+        "danger": "Datenverwaltung"
       },
       "budget": {
         "title": "Budget-Verwaltung",
@@ -408,7 +512,21 @@
         "alertDisabled": "Budget-Warnungen deaktiviert",
         "unlimited": "Unbegrenzt",
         "setLimit": "Limit festlegen",
-        "removeLimit": "Limit entfernen"
+        "removeLimit": "Limit entfernen",
+        "subtitle": "Ausgabenlimits und Warnungen festlegen",
+        "perQueryMax": "Maximum pro Abfrage",
+        "alertThresholdDesc": "Benachrichtigung erhalten, wenn die Nutzung diesen Prozentsatz erreicht",
+        "budgetMode": "Budgetmodus",
+        "soft": "Weiches Limit",
+        "softDesc": "Warnen, aber Überschreitungen zulassen",
+        "hard": "Hartes Limit",
+        "hardDesc": "Anfragen bei Limit blockieren",
+        "fallbackStrategy": "Ausweichstrategie",
+        "fallbackDesc": "Was zu tun ist, wenn das Budget überschritten wird",
+        "reject": "Anfrage ablehnen",
+        "cache": "Aus Cache zurückgeben",
+        "degrade": "Qualität reduzieren",
+        "queue": "Anfrage in Warteschlange"
       },
       "notifications": {
         "title": "Benachrichtigungseinstellungen",
@@ -426,7 +544,20 @@
         "allEnabled": "Alle Benachrichtigungen aktiviert",
         "allDisabled": "Alle Benachrichtigungen deaktiviert",
         "enableAll": "Alle aktivieren",
-        "disableAll": "Alle deaktivieren"
+        "disableAll": "Alle deaktivieren",
+        "subtitle": "Konfigurieren Sie, wie Sie Benachrichtigungen erhalten",
+        "emailAlerts": "E-Mail-Benachrichtigungen",
+        "emailAlertsDesc": "Wichtige Benachrichtigungen per E-Mail erhalten",
+        "usageAlerts": "Nutzungsbenachrichtigungen",
+        "usageAlertsDesc": "Benachrichtigt werden, wenn Limits erreicht werden",
+        "weeklyDigest": "Wöchentliche Zusammenfassung",
+        "weeklyDigestDesc": "Wöchentliche Nutzungsübersicht erhalten",
+        "securityAlerts": "Sicherheitsbenachrichtigungen",
+        "securityAlertsDesc": "Über verdächtige Aktivitäten benachrichtigt werden",
+        "telegram": "Telegram",
+        "telegramDesc": "Benachrichtigungen über Telegram-Bot erhalten",
+        "comingSoon": "Demnächst verfügbar",
+        "integrations": "Integrationen"
       },
       "security": {
         "title": "Sicherheitseinstellungen",
@@ -453,7 +584,14 @@
         "passwordMismatch": "Passwörter stimmen nicht überein",
         "passwordTooShort": "Passwort zu kurz",
         "apiKeysSecurity": "API-Schlüssel-Sicherheit",
-        "apiKeysSecurityHint": "Überwachen und verwalten Sie Ihre API-Schlüssel"
+        "apiKeysSecurityHint": "Überwachen und verwalten Sie Ihre API-Schlüssel",
+        "subtitle": "Verwalten Sie Ihre Kontosicherheit",
+        "save": "Änderungen speichern",
+        "updatePassword": "Passwort aktualisieren",
+        "twoFactorDesc": "Zusätzliche Sicherheitsebene hinzufügen",
+        "enable2FA": "2FA aktivieren",
+        "sessionsDesc": "Verwalten Sie Ihre aktiven Sitzungen",
+        "viewSessions": "Sitzungen anzeigen"
       },
       "dangerZone": {
         "title": "Gefahrenzone",
@@ -466,7 +604,38 @@
         "exportDataHint": "Laden Sie eine Kopie all Ihrer Daten herunter",
         "exportDataButton": "Daten exportieren",
         "exportInProgress": "Export läuft...",
-        "exportComplete": "Export abgeschlossen"
+        "exportComplete": "Export abgeschlossen",
+        "subtitle": "Verwalten und löschen Sie Ihre Kontodaten",
+        "exportDataDesc": "Alle Ihre Daten herunterladen",
+        "exportButton": "Alle Daten exportieren",
+        "deleteMemories": "Alle Erinnerungen löschen",
+        "deleteMemoriesDesc": "Alle gespeicherten Erinnerungen dauerhaft löschen",
+        "deleteMemoriesButton": "Erinnerungen löschen",
+        "deleteAccountDesc": "Ihr Konto und alle Daten dauerhaft löschen",
+        "confirmDelete": "Geben Sie DELETE ein, um zu bestätigen"
+      },
+      "billing": {
+        "title": "Abrechnung & Nutzung",
+        "subtitle": "Verwalten Sie Ihren Plan und überwachen Sie die Nutzung",
+        "currentPlan": "Aktueller Plan",
+        "monthlyPrice": "Monatlicher Preis",
+        "upgradePlan": "Plan upgraden",
+        "quotaWarningTitle": "Kontingentlimit wird erreicht",
+        "quotaWarningDesc": "Sie nutzen {percent}% Ihres {resource}-Kontingents. Erwägen Sie ein Upgrade Ihres Plans.",
+        "upgradeNow": "Jetzt upgraden",
+        "memoriesUsage": "Erinnerungsnutzung",
+        "apiCallsUsage": "API-Aufrufnutzung",
+        "apiKeysUsage": "API-Schlüsselnutzung",
+        "unlimited": "Unbegrenzt",
+        "planComparison": "Planvergleich",
+        "feature": "Funktion",
+        "memoriesLabel": "Erinnerungen",
+        "apiCallsLabel": "API-Aufrufe/Monat",
+        "apiKeysLabel": "API-Schlüssel",
+        "priceLabel": "Preis",
+        "contactUs": "Kontaktieren Sie uns",
+        "used": "genutzt",
+        "of": "von"
       }
     },
     "greeting": {
@@ -496,7 +665,17 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "API-Nutzung",
+      "last7days": "Letzte 7 Tage",
+      "viewDetails": "Details anzeigen",
+      "noUsageData": "Noch keine Nutzungsdaten",
+      "recentActivity": "Letzte Aktivität",
+      "last10Requests": "Letzte 10 API-Anfragen",
+      "viewAllActivity": "Alle anzeigen",
+      "noActivityYet": "Noch keine API-Aktivität",
+      "noActivityDescription": "Senden Sie Ihre erste API-Anfrage, um hier Aktivität zu sehen",
+      "sendFirstRequest": "Erste Anfrage senden"
     },
     "keysPage": {
       "title": "API-Schlüssel",
@@ -526,7 +705,18 @@
       "keyNamePlaceholder": "z.B.: Produktion, Entwicklung, Test",
       "cancel": "Abbrechen",
       "creating": "Erstellen...",
-      "createKey": "Schlüssel Erstellen"
+      "createKey": "Schlüssel Erstellen",
+      "name": "Name",
+      "keyColumn": "Schlüssel",
+      "actions": "Aktionen",
+      "revokeWarning": "Alle Anwendungen, die diesen Schlüssel verwenden, funktionieren sofort nicht mehr.",
+      "revokeAction": "Widerrufen",
+      "rotate": "Rotieren",
+      "rotateConfirm": "API-Schlüssel \"{keyName}\" rotieren?",
+      "rotateWarning": "Ein neuer Schlüssel wird generiert. Aktualisieren Sie Ihre Anwendungen mit dem neuen Schlüssel, bevor der alte abläuft.",
+      "rotateAction": "Schlüssel rotieren",
+      "keyRotated": "API-Schlüssel rotiert!",
+      "keyRotatedDesc": "Kopieren Sie diesen neuen Schlüssel jetzt. Der alte Schlüssel ist nicht mehr gültig."
     },
     "organizationsPage": {
       "title": "Organisationen",
@@ -551,8 +741,744 @@
         "owner": "Inhaber",
         "admin": "Admin",
         "member": "Mitglied"
+      },
+      "noOrgsExpected": "Dauert weniger als 30 Sekunden zum Einrichten",
+      "featureSharedKeys": "Geteilte API-Schlüssel",
+      "featureSharedKeysDesc": "Teamweite Schlüsselverwaltung",
+      "featureTeamMembers": "Teammitglieder",
+      "featureTeamMembersDesc": "Mit Rollen einladen",
+      "featureBudget": "Geteiltes Budget",
+      "featureBudgetDesc": "Einheitliche Kostenverfolgung",
+      "featureAudit": "Audit-Protokolle",
+      "featureAuditDesc": "Aktivitätsverlauf"
+    },
+    "governance": {
+      "title": "Governance",
+      "subtitle": "Richtlinien, Aufbewahrung und Compliance verwalten",
+      "tabs": {
+        "retention": "Aufbewahrung",
+        "access": "Zugriff",
+        "pii": "PII-Erkennung",
+        "compliance": "Compliance"
+      },
+      "stats": {
+        "policies": "Aktive Richtlinien",
+        "namespaces": "Geschützte Namespaces",
+        "piiDetected": "PII erkannt",
+        "complianceScore": "Compliance-Bewertung",
+        "retentionPolicies": "Aufbewahrungsrichtlinien",
+        "accessRules": "Zugriffsregeln",
+        "piiRules": "PII-Regeln aktiv"
+      },
+      "addPolicy": "Richtlinie hinzufügen",
+      "addRule": "Regel hinzufügen",
+      "deleteConfirm": "Sind Sie sicher, dass Sie diese Aufbewahrungsrichtlinie löschen möchten?",
+      "retention": {
+        "description": "Konfigurieren Sie, wie lange Erinnerungen in jedem Namespace aufbewahrt werden",
+        "namespace": "Namespace",
+        "memoryTypes": "Speichertypen",
+        "ttl": "TTL",
+        "autoArchive": "Automatische Archivierung",
+        "actions": "Aktionen",
+        "days": "Tage",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert",
+        "delete": "Löschen",
+        "addTitle": "Aufbewahrungsrichtlinie hinzufügen",
+        "namespacePattern": "Namespace-Muster",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Verwenden Sie * als Platzhalter",
+        "ttlDays": "TTL (Tage)",
+        "autoArchiveToggle": "Automatische Archivierung",
+        "autoArchiveDesc": "Vor dem Löschen archivieren",
+        "cancel": "Abbrechen"
+      },
+      "access": {
+        "description": "Definieren Sie rollenbasierte Zugriffskontrollen für Ihr Team",
+        "namespaces": "Namespaces:",
+        "permissions": "Berechtigungen:"
+      },
+      "pii": {
+        "description": "Personenbezogene Daten automatisch erkennen und verarbeiten",
+        "pattern": "Muster",
+        "type": "Typ",
+        "action": "Aktion",
+        "status": "Status",
+        "aiDetection": "KI-Erkennung",
+        "regex": "Regex",
+        "betaTitle": "KI-Erkennung ist in der Beta-Phase",
+        "betaDesc": "Die KI-gestützte PII-Erkennung kann Fehlalarme erzeugen. Überprüfen Sie markierte Inhalte, bevor Sie Maßnahmen ergreifen."
+      },
+      "compliance": {
+        "description": "Verfolgen Sie die Einhaltung wichtiger regulatorischer Rahmenwerke",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "requirementsMet": "Anforderungen erfüllt",
+        "fullyCompliant": "Vollständig konform",
+        "enableCheck": "Compliance-Prüfung aktivieren",
+        "reports": "Compliance-Berichte",
+        "soc2Report": "SOC 2 Typ II Bericht",
+        "soc2Date": "Erstellt Dez 2024",
+        "dpa": "Auftragsverarbeitungsvertrag",
+        "dpaDesc": "DSGVO-konformer AVV-Vorlage",
+        "securityQuestionnaire": "Sicherheitsfragebogen",
+        "securityQuestionnaireDesc": "Vorausgefüllte Sicherheitsbewertung",
+        "download": "Herunterladen"
       }
-    }
+    },
+    "integrations": {
+      "title": "Integrationen",
+      "subtitle": "Seizn mit Ihren bevorzugten Tools und Frameworks verbinden",
+      "searchPlaceholder": "Integrationen suchen...",
+      "stats": {
+        "total": "Gesamte Integrationen",
+        "installed": "Installiert",
+        "available": "Verfügbar",
+        "beta": "In Beta",
+        "comingSoon": "Demnächst verfügbar"
+      },
+      "categories": {
+        "all": "Alle",
+        "frameworks": "Frameworks",
+        "llms": "LLMs",
+        "databases": "Datenbanken",
+        "platforms": "Plattformen"
+      },
+      "status": {
+        "available": "Verfügbar",
+        "beta": "Beta",
+        "comingSoon": "Demnächst"
+      },
+      "docs": "Dokumentation",
+      "copyInstall": "Installation kopieren",
+      "noResults": "Keine Integrationen gefunden, die Ihren Kriterien entsprechen",
+      "installation": "Installation",
+      "copied": "Kopiert!",
+      "copy": "Kopieren",
+      "quickStart": "Schnellstart",
+      "comingSoonMsg": "Diese Integration befindet sich derzeit in Entwicklung. Melden Sie sich an, um benachrichtigt zu werden, wenn sie verfügbar ist.",
+      "notifyMe": "Benachrichtigen",
+      "betaMsg": "Diese Integration befindet sich in der Beta-Phase. Einige Funktionen können sich vor der endgültigen Veröffentlichung ändern.",
+      "close": "Schließen",
+      "viewDocs": "Dokumentation anzeigen"
+    },
+    "analyticsPage": {
+      "title": "Analytik",
+      "subtitle": "Überwachen Sie die Leistung und Nutzung Ihres Speichersystems",
+      "allOrganizations": "Alle Organisationen",
+      "days7": "7 Tage",
+      "days30": "30 Tage",
+      "days90": "90 Tage",
+      "exportCSV": "CSV exportieren",
+      "dailyActiveUsers": "Täglich aktive Benutzer",
+      "activeUsers": "Aktive Benutzer",
+      "apiCalls": "API-Aufrufe",
+      "apiCallsOverTime": "API-Aufrufe im Zeitverlauf",
+      "memoryOperations": "Speicheroperationen",
+      "memoryUsage": "Speichernutzung",
+      "stores": "Speicherungen",
+      "searches": "Suchen",
+      "avgLatency": "Durchschn. Latenz",
+      "latencyTrend": "Latenztrend",
+      "errorRate": "Fehlerrate",
+      "errors": "Fehler",
+      "hourlyDistribution": "Stündliche Verteilung",
+      "calls": "Aufrufe",
+      "peakHour": "Spitzenstunde",
+      "endpointBreakdown": "Endpunkt-Aufschlüsselung",
+      "topQueries": "Top-Abfragen",
+      "noQueries": "Noch keine Abfragen",
+      "noData": "Keine Analysedaten",
+      "noDataDescription": "Starten Sie API-Aufrufe, um hier detaillierte Analysen zu sehen."
+    },
+    "memoriesPage": {
+      "title": "Erinnerungen",
+      "subtitle": "Durchsuchen und finden Sie Ihre KI-Erinnerungen",
+      "totalMemories": "Gesamte Erinnerungen",
+      "search": "Suchen",
+      "searchPlaceholder": "Erinnerungen suchen...",
+      "namespace": "Namespace",
+      "memoryTypes": "Speichertypen",
+      "tags": "Tags",
+      "noTags": "Keine Tags verfügbar",
+      "clearFilters": "Filter zurücksetzen",
+      "showing": "Anzeige",
+      "of": "von",
+      "results": "Ergebnissen",
+      "sortNewest": "Neueste zuerst",
+      "sortOldest": "Älteste zuerst",
+      "sortRelevance": "Relevanteste",
+      "activeFilters": "Aktive Filter",
+      "loading": "Erinnerungen werden geladen...",
+      "noMemories": "Keine Erinnerungen gefunden",
+      "noMatchingMemories": "Versuchen Sie, Ihre Filter oder Suchanfrage anzupassen",
+      "noMemoriesHint": "Beginnen Sie, über die API Erinnerungen hinzuzufügen, um sie hier zu sehen",
+      "match": "Übereinstimmung",
+      "loadMore": "Mehr laden"
+    },
+    "budgetPage": {
+      "title": "Budget & Kostenkontrolle",
+      "subtitle": "Verwalten Sie Ausgabenlimits, Warnungen und automatische Kostenoptimierung",
+      "loadError": "Budgetdaten konnten nicht geladen werden",
+      "todaysSpend": "Heutige Ausgaben",
+      "ofDailyLimit": "des Tageslimits",
+      "monthlySpend": "Monatliche Ausgaben",
+      "ofMonthlyLimit": "des Monatslimits",
+      "apiCalls": "API-Aufrufe",
+      "thisMonth": "diesen Monat",
+      "autoDegrades": "Automatische Herabstufungen",
+      "noRecentDegrades": "Keine kürzlichen Herabstufungen",
+      "protectionActive": "Budgetschutz aktiv",
+      "protectionDesc": "Ihre Abfragen werden automatisch optimiert, um im Budget zu bleiben. Dies kann die Ergebnisqualität verringern. Erwägen Sie, Ihre Budgetlimits zu erhöhen.",
+      "settings": "Budget-Einstellungen",
+      "recentEvents": "Letzte Herabstufungsereignisse",
+      "time": "Zeit",
+      "reason": "Grund",
+      "changes": "Änderungen",
+      "saved": "Gespart",
+      "howItWorks": "Wie budgetbewusstes Retrieval funktioniert",
+      "step1": "Bei Annäherung an Budgetlimits optimiert Seizn automatisch Ihre Abfragen",
+      "step2": "Optimierungen umfassen: Rerank deaktivieren, topK reduzieren, Cache-first verwenden",
+      "step3": "Im strikten Modus werden Abfragen, die das Budget überschreiten, vollständig abgelehnt",
+      "step4": "Alle Herabstufungsereignisse werden mit Kosteneinsparungen zur Transparenz protokolliert"
+    },
+    "devtoolsPage": {
+      "title": "Retrieval DevTools",
+      "subtitle": "Debuggen und analysieren Sie Ihre RAG-Pipelines",
+      "query": "Abfrage",
+      "noQueryText": "Kein Abfragetext",
+      "results": "Ergebnisse",
+      "error": "Fehler",
+      "rerank": "Rerank",
+      "optimizationHints": "Optimierungshinweise",
+      "tabs": {
+        "timeline": "Zeitachse",
+        "candidates": "Kandidaten",
+        "rerank": "Rerank",
+        "whatIf": "Was-wäre-wenn-Labor",
+        "raw": "Rohdaten"
+      },
+      "finalResults": "Endergebnisse",
+      "initialCandidates": "Anfangskandidaten (vor Rerank)",
+      "rawTraceData": "Rohe Trace-Daten",
+      "emptyTitle": "Wählen Sie eine Trace zur Inspektion",
+      "emptyDesc": "Wählen Sie eine Trace aus der Liste links, um deren Zeitachse, Kandidaten, Reranking-Analyse anzuzeigen und Was-wäre-wenn-Experimente durchzuführen."
+    },
+    "enterpriseDashboard": {
+      "title": "Enterprise",
+      "badge": "Enterprise-Plan",
+      "subtitle": "SSO, SCIM und Enterprise-Einstellungen konfigurieren",
+      "tabs": {
+        "sso": "Single Sign-On",
+        "scim": "Benutzerbereitstellung",
+        "settings": "Einstellungen"
+      },
+      "sso": {
+        "enabled": "SSO aktiviert",
+        "provider": "Anbieter:",
+        "domains": "Domains:",
+        "testConnection": "Verbindung testen",
+        "disable": "Deaktivieren",
+        "defaultRole": "Standardrolle",
+        "status": "Status",
+        "active": "Aktiv",
+        "lastLogin": "Letzte Anmeldung",
+        "hoursAgo": "vor 2 Stunden",
+        "notConfigured": "Single Sign-On nicht konfiguriert",
+        "notConfiguredDesc": "Aktivieren Sie SSO, damit sich Ihre Teammitglieder mit ihrem Unternehmens-Identitätsanbieter anmelden können",
+        "configure": "SSO konfigurieren",
+        "supportedProviders": "Unterstützte Anbieter",
+        "selectProvider": "Anbieter auswählen",
+        "configureDomains": "Domains konfigurieren",
+        "emailDomains": "E-Mail-Domains",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Benutzer mit diesen E-Mail-Domains werden zu SSO weitergeleitet",
+        "idpConfig": "IdP-Konfiguration",
+        "idpCopyHint": "Kopieren Sie diese Werte in Ihren Identity Provider:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entity ID:",
+        "back": "Zurück",
+        "continue": "Weiter",
+        "enableSSO": "SSO aktivieren",
+        "configSaved": "SSO-Konfiguration gespeichert!"
+      },
+      "scim": {
+        "title": "SCIM-Bereitstellung",
+        "subtitle": "Synchronisieren Sie Benutzer und Gruppen automatisch von Ihrem Identitätsanbieter",
+        "endpoint": "SCIM-Endpunkt",
+        "bearerToken": "Bearer Token",
+        "regenerate": "Neu generieren",
+        "generate": "Generieren",
+        "tokenWarning": "Kopieren Sie dieses Token jetzt. Es wird nicht erneut angezeigt.",
+        "syncUsers": "Benutzer synchronisieren",
+        "syncUsersDesc": "Benutzerkonten importieren und synchronisieren",
+        "syncGroups": "Gruppen synchronisieren",
+        "syncGroupsDesc": "Gruppenmitgliedschaften importieren und synchronisieren",
+        "autoProvision": "Automatische Bereitstellung",
+        "autoProvisionDesc": "Neue Benutzer automatisch erstellen",
+        "autoDeprovision": "Automatische Deaktivierung",
+        "autoDeprovisionDesc": "Entfernte Benutzer automatisch deaktivieren"
+      },
+      "features": {
+        "title": "Enterprise-Funktionen",
+        "sso": "SSO",
+        "ssoDesc": "Single Sign-On mit SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Automatisierte Benutzerbereitstellung",
+        "auditLogs": "Audit-Logs",
+        "auditLogsDesc": "Vollständige Aktivitätshistorie",
+        "customDomains": "Eigene Domains",
+        "customDomainsDesc": "Verwenden Sie Ihre eigene Domain",
+        "ipWhitelist": "IP-Whitelist",
+        "ipWhitelistDesc": "Zugriff nach IP einschränken",
+        "dataRetention": "Datenaufbewahrung",
+        "dataRetentionDesc": "Individuelle Aufbewahrungsrichtlinien",
+        "advancedAnalytics": "Erweiterte Analytik",
+        "advancedAnalyticsDesc": "Detaillierte Nutzungsberichte",
+        "sla": "SLA",
+        "slaDesc": "99,9% Verfügbarkeitsgarantie",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert"
+      },
+      "limits": {
+        "title": "Plan-Limits",
+        "users": "Benutzer",
+        "unlimited": "Unbegrenzt",
+        "apiCalls": "API-Aufrufe",
+        "apiCallsValue": "10M / Monat",
+        "storage": "Speicher",
+        "storageValue": "1TB",
+        "collections": "Sammlungen",
+        "documents": "Dokumente",
+        "retention": "Aufbewahrung",
+        "retentionValue": "365 Tage"
+      },
+      "support": {
+        "title": "Dedizierter Support",
+        "subtitle": "Prioritäts-Support mit dediziertem Account-Manager",
+        "contact": "Support kontaktieren"
+      }
+    },
+    "securityPage": {
+      "title": "Sicherheit",
+      "subtitle": "API-Schlüssel verwalten und Sicherheits-Audit-Logs anzeigen",
+      "stats": {
+        "activeKeys": "Aktive API-Schlüssel",
+        "auditEvents": "Audit-Ereignisse (24h)",
+        "securityScore": "Sicherheitsbewertung",
+        "alerts": "Warnungen"
+      },
+      "tabs": {
+        "audit": "Audit-Log",
+        "keys": "API-Schlüssel",
+        "policies": "Richtlinien",
+        "settings": "Einstellungen"
+      },
+      "audit": {
+        "allActions": "Alle Aktionen",
+        "lastHour": "Letzte Stunde",
+        "last24Hours": "Letzte 24 Stunden",
+        "last7Days": "Letzte 7 Tage",
+        "last30Days": "Letzte 30 Tage",
+        "exporting": "Wird exportiert...",
+        "exportCSV": "CSV exportieren",
+        "action": "Aktion",
+        "resource": "Ressource",
+        "details": "Details",
+        "ipAddress": "IP-Adresse",
+        "time": "Zeit",
+        "noLogs": "Keine Audit-Logs gefunden"
+      },
+      "keys": {
+        "description": "API-Schlüssel werden zur Authentifizierung von Anfragen an die Seizn API verwendet",
+        "createNew": "Neuen Schlüssel erstellen",
+        "rotate": "Rotieren",
+        "revoke": "Widerrufen",
+        "created": "Erstellt",
+        "lastUsed": "Zuletzt verwendet",
+        "never": "Nie",
+        "permissions": "Berechtigungen",
+        "rotateConfirm": "Sind Sie sicher, dass Sie diesen API-Schlüssel rotieren möchten? Der alte Schlüssel wird ungültig.",
+        "rotateSuccess": "Schlüssel erfolgreich rotiert! Bitte kopieren Sie Ihren neuen Schlüssel.",
+        "revokeConfirm": "Sind Sie sicher, dass Sie diesen API-Schlüssel widerrufen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "createTitle": "API-Schlüssel erstellen",
+        "keyName": "Schlüsselname",
+        "keyNamePlaceholder": "Produktions-Backend",
+        "keyType": "Schlüsseltyp",
+        "test": "Test",
+        "live": "Live",
+        "testHint": "Testschlüssel funktionieren nur im Sandbox-Modus",
+        "testKeysNote": "Testschlüssel funktionieren nur im Sandbox-Modus",
+        "cancel": "Abbrechen",
+        "createKey": "Schlüssel erstellen"
+      },
+      "settings": {
+        "authentication": "Authentifizierung",
+        "twoFactor": "Zwei-Faktor-Authentifizierung",
+        "twoFactorDesc": "Zwei-Faktor-Authentifizierung für alle Teammitglieder erforderlich",
+        "twoFactorDescription": "Zwei-Faktor-Authentifizierung für alle Teammitglieder erforderlich",
+        "sessionTimeout": "Sitzungs-Timeout",
+        "sessionTimeoutDesc": "Automatisch nach Inaktivität abmelden",
+        "sessionTimeoutDescription": "Automatisch nach Inaktivität abmelden",
+        "min15": "15 Minuten",
+        "15minutes": "15 Minuten",
+        "min30": "30 Minuten",
+        "30minutes": "30 Minuten",
+        "hour1": "1 Stunde",
+        "1hour": "1 Stunde",
+        "hour4": "4 Stunden",
+        "4hours": "4 Stunden",
+        "apiSecurity": "API-Sicherheit",
+        "ipWhitelist": "IP-Whitelist",
+        "ipWhitelistDesc": "API-Zugriff nur von bestimmten IPs erlauben",
+        "ipWhitelistDescription": "API-Zugriff nur von bestimmten IPs erlauben",
+        "rateLimit": "Rate-Limit",
+        "rateLimitDesc": "Maximale Anfragen pro Minute",
+        "rateLimitDescription": "Maximale Anfragen pro Minute",
+        "rate100": "100/Min",
+        "rate500": "500/Min",
+        "rate1000": "1.000/Min",
+        "rate5000": "5.000/Min",
+        "dangerZone": "Gefahrenzone",
+        "dangerWarning": "Diese Aktionen sind unwiderruflich. Bitte gehen Sie mit Vorsicht vor.",
+        "dangerZoneDescription": "Diese Aktionen sind unwiderruflich. Bitte gehen Sie mit Vorsicht vor.",
+        "revokeAll": "Alle API-Schlüssel widerrufen",
+        "revokeAllKeys": "Alle API-Schlüssel widerrufen",
+        "deleteAllData": "Alle Daten löschen"
+      },
+      "policies": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "pending": "Ausstehend",
+        "activePolicies": "Aktive Richtlinien",
+        "accessPolicies": "Zugriffsrichtlinien",
+        "compliancePolicies": "Compliance-Richtlinien",
+        "awaitingApproval": "Genehmigung ausstehend",
+        "addCustom": "Benutzerdefinierte Richtlinie hinzufügen"
+      }
+    },
+    "reportsPage": {
+      "title": "ROI-Bericht",
+      "generated": "Erstellt",
+      "period7d": "Letzte 7 Tage",
+      "period30d": "Letzte 30 Tage",
+      "period90d": "Letzte 90 Tage",
+      "exportPdf": "PDF exportieren",
+      "loadError": "Bericht konnte nicht geladen werden",
+      "totalQueries": "Gesamte Abfragen",
+      "totalCost": "Gesamtkosten",
+      "avgLatency": "Durchschn. Latenz",
+      "costPerQuery": "Kosten/Abfrage",
+      "estAnnualCost": "Geschätzte Jahreskosten",
+      "projAnnualSavings": "Prognostizierte Jahreseinsparungen",
+      "savingsRate": "Einsparungsrate",
+      "rerankImpact": "Rerank-Auswirkung",
+      "mrrScore": "MRR-Bewertung",
+      "without": "ohne",
+      "withRerank": "mit Rerank",
+      "autopilotSavings": "Autopilot-Einsparungen",
+      "savedThisPeriod": "in diesem Zeitraum mit Autopilot gespart",
+      "withAutopilot": "mit Autopilot",
+      "recommendations": "Empfehlungen",
+      "queries": "Abfragen:",
+      "avgCost": "Durchschn. Kosten"
+    },
+    "privacy": {
+      "title": "Datenschutz & RTBF",
+      "subtitle": "DSGVO-Recht auf Vergessenwerden-Anfragen und Betroffenenrechte verwalten",
+      "tabs": {
+        "requests": "RTBF-Anfragen",
+        "subjects": "Betroffene",
+        "certificates": "Zertifikate",
+        "settings": "Einstellungen"
+      },
+      "stats": {
+        "pending": "Ausstehend",
+        "inProgress": "In Bearbeitung",
+        "completed": "Abgeschlossen",
+        "overdue": "Überfällig"
+      },
+      "requests": {
+        "description": "Recht auf Vergessenwerden-Anfragen gemäß DSGVO Artikel 17 verwalten",
+        "newRequest": "Neue Anfrage",
+        "subject": "Betroffener",
+        "status": "Status",
+        "phase": "Phase",
+        "dueDate": "Fälligkeitsdatum",
+        "scope": "Umfang",
+        "actions": "Aktionen",
+        "daysOverdue": "Tage überfällig",
+        "daysLeft": "Tage verbleibend",
+        "view": "Anzeigen",
+        "certificate": "Zertifikat",
+        "verify": "Verifizieren"
+      },
+      "detail": {
+        "title": "RTBF-Anfragedetails",
+        "dataSubject": "Betroffene Person",
+        "requestedAt": "Angefragt am",
+        "dueDate": "Fälligkeitsdatum",
+        "status": "Status",
+        "dataCategories": "Datenkategorien",
+        "deletionScope": "Löschungsumfang",
+        "completionDetails": "Abschlussdetails",
+        "completed": "Abgeschlossen:",
+        "verified": "Verifiziert:",
+        "close": "Schließen",
+        "runVerification": "Verifizierung durchführen",
+        "downloadCertificate": "Zertifikat herunterladen"
+      },
+      "newRequest": {
+        "title": "Neue RTBF-Anfrage",
+        "description": "Erstellen Sie eine neue Recht auf Vergessenwerden-Anfrage. Die Frist wird gemäß DSGVO-Anforderungen auf 30 Tage ab jetzt gesetzt.",
+        "emailLabel": "E-Mail der betroffenen Person",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Löschungsumfang",
+        "cancel": "Abbrechen",
+        "creating": "Wird erstellt...",
+        "create": "Anfrage erstellen"
+      },
+      "subjects": {
+        "description": "Betroffene Personen anzeigen und verwalten, die mit Ihrem System interagiert haben",
+        "email": "E-Mail",
+        "externalId": "Externe ID",
+        "requests": "Anfragen",
+        "dataCategories": "Datenkategorien",
+        "actions": "Aktionen",
+        "viewData": "Daten anzeigen"
+      },
+      "certificates": {
+        "description": "Kryptographischer Nachweis der Datenlöschung für Compliance-Audits",
+        "noTitle": "Noch keine Zertifikate",
+        "noDesc": "Zertifikate werden generiert, wenn RTBF-Anfragen verifiziert werden",
+        "request": "Anfrage:",
+        "issued": "Ausgestellt:",
+        "gdprCompliant": "DSGVO-konform",
+        "download": "Herunterladen",
+        "hash": "Zertifikat-Hash"
+      },
+      "settings": {
+        "description": "RTBF-Verarbeitung und Compliance-Einstellungen konfigurieren",
+        "autoDiscovery": "Automatische Erkennung",
+        "autoDiscoveryDesc": "Automatisch alle mit einer betroffenen Person verknüpften Daten erkennen",
+        "verificationRequired": "Verifizierung erforderlich",
+        "verificationRequiredDesc": "Verifizierung vor Ausstellung von Löschzertifikaten erfordern",
+        "responseDeadline": "Antwortfrist (Tage)",
+        "responseDeadlineHint": "Die DSGVO erfordert eine Antwort innerhalb von 30 Tagen (bei komplexen Anfragen auf 90 verlängerbar)",
+        "notificationEmail": "Benachrichtigungs-E-Mail",
+        "notificationEmailHint": "E-Mail-Adresse für RTBF-Anfragebenachrichtigungen",
+        "auditLogRetention": "Audit-Log-Aufbewahrung (Tage)",
+        "auditLogRetentionHint": "Wie lange Audit-Logs für Compliance-Zwecke aufbewahrt werden",
+        "years": "Jahre",
+        "saving": "Wird gespeichert...",
+        "save": "Einstellungen speichern"
+      },
+      "gdprNotes": {
+        "title": "DSGVO-Compliance-Hinweise",
+        "note1": "RTBF-Anfragen müssen innerhalb von 30 Tagen erfüllt werden",
+        "note2": "Komplexe Anfragen können auf 90 Tage verlängert werden",
+        "note3": "Audit-Logs sollten für die Compliance aufbewahrt werden",
+        "note4": "Löschzertifikate bieten kryptographischen Nachweis"
+      }
+    },
+    "topBar": {
+      "personal": "Persönliches Konto",
+      "manageOrgs": "Organisationen verwalten",
+      "create": "Erstellen",
+      "createApiKey": "Neuer API-Schlüssel",
+      "createOrg": "Neue Organisation"
+    },
+    "share": {
+      "title": "Ablaufverfolgung teilen",
+      "button": "Teilen",
+      "createLink": "Freigabelink erstellen",
+      "creating": "Erstellen...",
+      "done": "Fertig",
+      "linkExpiration": "Link-Ablauf",
+      "hour": "1 Std.",
+      "day": "24 Std.",
+      "week": "7 Tage",
+      "never": "Nie",
+      "privacyOptions": "Datenschutzoptionen",
+      "maskPii": "PII maskieren (E-Mails, Telefone, IPs)",
+      "maskSecrets": "API-Schlüssel und Geheimnisse maskieren",
+      "shareUrl": "Freigabe-URL",
+      "copyLink": "Link kopieren",
+      "linkCopied": "Kopiert!",
+      "expiresIn": "Dieser Link läuft ab in {duration}.",
+      "neverExpires": "Dieser Link läuft nie ab.",
+      "error": "Fehler beim Erstellen des Freigabelinks",
+      "revoke": "Link widerrufen",
+      "revokeConfirm": "Möchten Sie diesen Link wirklich widerrufen?",
+      "linkRevoked": "Link erfolgreich widerrufen"
+    },
+    "theme": {
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "System",
+      "toggle": "Design wechseln"
+    },
+    "activity": {
+      "endpoint": "Endpunkt",
+      "status": "Status",
+      "latency": "Latenz",
+      "cost": "Kosten",
+      "key": "Schlüssel",
+      "time": "Zeit"
+    },
+    "evals": {
+      "title": "Evaluierungen",
+      "subtitle": "A/B-Tests durchführen und Abrufqualität messen",
+      "newRun": "Neuer Eval-Durchlauf",
+      "runs": "Evaluierungsdurchläufe",
+      "noRuns": "Noch keine Evaluierungsdurchläufe",
+      "metrics": "Metriken",
+      "comparison": "Visueller Vergleich",
+      "selectRun": "Wählen Sie einen Evaluierungsdurchlauf",
+      "selectRunHint": "Wählen Sie einen Durchlauf aus der Liste, um detaillierte Metriken anzuzeigen",
+      "completed": "Abgeschlossen",
+      "running": "Läuft",
+      "failed": "Fehlgeschlagen",
+      "pending": "Ausstehend",
+      "winner": "Gewinner",
+      "tie": "Unentschieden",
+      "confidence": "Konfidenz",
+      "exportCSV": "CSV exportieren",
+      "exportJSON": "JSON exportieren",
+      "tabComparison": "Vergleich",
+      "tabCharts": "Diagramme",
+      "tabTimeline": "Zeitachse",
+      "precision": "Präzision",
+      "recall": "Recall",
+      "f1Score": "F1-Score",
+      "avgLatency": "Durchschn. Latenz",
+      "avgCost": "Durchschn. Kosten",
+      "barChart": "Metrikvergleich",
+      "radarChart": "Multi-Metrik-Übersicht",
+      "metricsTrend": "Metriktrend",
+      "latencyTrend": "Latenztrend",
+      "recentRuns": "Kürzlich abgeschlossene Durchläufe",
+      "waitingForMetrics": "Warten auf Abschluss der Evaluierung..."
+    },
+    "autopilot": {
+      "title": "Autopilot",
+      "subtitle": "KI-gestützte Abrufoptimierung",
+      "settings": "Einstellungen",
+      "decisionLogs": "Entscheidungsprotokolle",
+      "operationMode": "Betriebsmodus",
+      "parameters": "Parameter",
+      "recentDecisions": "Letzte Entscheidungen",
+      "noLogs": "Noch keine Entscheidungsprotokolle"
+    },
+    "calculator": {
+      "title": "Nutzungsrechner",
+      "subtitle": "Schätzen Sie Ihre monatlichen Kosten basierend auf der erwarteten Nutzung",
+      "stats": {
+        "apiCalls": "API-Aufrufe",
+        "memories": "Erinnerungen",
+        "extractions": "Extraktionen",
+        "estimated": "Geschätzte Kosten"
+      },
+      "presets": {
+        "title": "Schnellvorlagen",
+        "startup": "Startup",
+        "growing": "Wachsend",
+        "scale": "Skalierung",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Nutzung anpassen"
+      },
+      "labels": {
+        "apiCalls": "Monatliche API-Aufrufe",
+        "memories": "Gespeicherte Erinnerungen",
+        "extractions": "Extraktionen"
+      },
+      "recommended": {
+        "title": "Empfohlener Plan",
+        "base": "Grundpreis",
+        "overage": "Mehrverbrauch",
+        "cta": "Loslegen"
+      },
+      "comparison": {
+        "title": "Alle Pläne",
+        "best": "Bester Wert"
+      },
+      "details": {
+        "title": "Detaillierte Preisaufschlüsselung",
+        "plan": "Plan",
+        "base": "Grundpreis",
+        "includedCalls": "Enthaltene Aufrufe",
+        "overageRate": "Mehrverbrauchsrate",
+        "yourOverage": "Ihr Mehrverbrauch",
+        "total": "Gesamt"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "HTTP-Callbacks für Echtzeit-Ereignisbenachrichtigungen konfigurieren",
+      "create": "Webhook erstellen",
+      "stats": {
+        "total": "Webhooks gesamt",
+        "active": "Aktiv",
+        "failing": "Fehlerhaft",
+        "deliveries": "Zustellungen gesamt"
+      },
+      "tabs": {
+        "endpoints": "Endpunkte",
+        "deliveries": "Letzte Zustellungen"
+      },
+      "success": "erfolgreich",
+      "failed": "fehlgeschlagen",
+      "lastTriggered": "Zuletzt ausgelöst",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "retry": "Wiederholen",
+      "deleteConfirm": "Möchten Sie diesen Webhook wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "empty": {
+        "title": "Keine Webhooks konfiguriert",
+        "description": "Erstellen Sie einen Webhook, um Echtzeit-Benachrichtigungen über Ereignisse zu erhalten.",
+        "cta": "Ersten Webhook erstellen"
+      },
+      "table": {
+        "event": "Ereignis",
+        "status": "Status",
+        "response": "Antwort",
+        "time": "Zeit",
+        "actions": "Aktionen"
+      },
+      "modal": {
+        "title": "Webhook erstellen",
+        "name": "Name",
+        "url": "Endpunkt-URL",
+        "events": "Zu abonnierende Ereignisse",
+        "cancel": "Abbrechen",
+        "create": "Webhook erstellen"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Erste Suche Tutorial",
+      "subtitle": "Lernen Sie, wie Sie den Playground verwenden",
+      "dismiss": "Schließen",
+      "tryExamples": "Probieren Sie eine Beispielabfrage:",
+      "hint": "Klicken Sie auf ein Beispiel, um die Abfrage automatisch auszufüllen",
+      "gotIt": "Verstanden!",
+      "tips": {
+        "welcome": {
+          "title": "Willkommen in der Debug-Konsole",
+          "description": "Testen Sie Ihre Abfragen hier mit vollständiger Ablaufverfolgung, um genau zu verstehen, wie die Suche funktioniert."
+        },
+        "query": {
+          "title": "Abfragen in natürlicher Sprache",
+          "description": "Geben Sie eine beliebige Abfrage in natürlicher Sprache ein. Unsere KI findet semantisch ähnliche Erinnerungen aus Ihren gespeicherten Daten."
+        },
+        "trace": {
+          "title": "Vollständige Ausführungsablaufverfolgung",
+          "description": "Sehen Sie jeden Schritt der Pipeline - von der Embedding-Erstellung bis zum Ergebnis-Ranking - mit Zeit- und Kostenaufschlüsselung."
+        }
+      }
+    },
+    "analytics": "Analytik"
   },
   "pricingPage": {
     "title": "Preise",
@@ -727,7 +1653,11 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Limits",
+      "status": "Status",
+      "help": "Hilfe",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Anfrage-Builder",
@@ -753,7 +1683,8 @@
         "techDocs": "Technische Dokumentation",
         "legalContracts": "Rechtsverträge",
         "researchPapers": "Forschungsarbeiten"
-      }
+      },
+      "advanced": "Erweitert"
     },
     "resultsPanel": {
       "searching": "Suche...",
@@ -774,7 +1705,42 @@
     },
     "tabs": {
       "results": "Ergebnisse",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Kosten"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Policy"
+    },
+    "playgroundTitle": "Jetzt ausprobieren",
+    "costPanel": {
+      "calculating": "Kosten werden berechnet...",
+      "noCost": "Führen Sie eine Abfrage aus, um die Kostenaufschlüsselung zu sehen",
+      "costBreakdown": "Kostenaufschlüsselung",
+      "component": "Komponente",
+      "cost": "Kosten",
+      "embedding": "Embedding",
+      "vectorSearch": "Vektorsuche",
+      "rerank": "Rerank",
+      "answerContract": "Antwortvertrag",
+      "total": "Gesamtkosten",
+      "usage": "Nutzung",
+      "tokensIn": "Tokens Eingang",
+      "tokensOut": "Tokens Ausgang",
+      "queryUnits": "Abfrageeinheiten",
+      "estimatedMonthly": "Geschätzt monatlich",
+      "basedOn": "Basierend auf",
+      "queriesPerDay": "Abfragen/Tag"
+    },
+    "errorDisplay": {
+      "error": "Fehler",
+      "errorCode": "Code",
+      "traceId": "Trace",
+      "hint": "Hinweis",
+      "tryAgain": "Erneut versuchen",
+      "copyTraceId": "Trace-ID kopieren",
+      "copied": "Kopiert!"
     }
   },
   "docs": {
@@ -799,7 +1765,9 @@
       "resources": "Ressourcen",
       "security": "Sicherheit",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "5-Min-Tutorial",
+      "integrations": "Integrationen"
     },
     "hero": {
       "title": "API-Dokumentation",
@@ -873,7 +1841,9 @@
       "enterprise": "Enterprise",
       "unlimited": "Unbegrenzt",
       "exceeded": "Wenn Sie Ihr Rate-Limit überschreiten, gibt die API eine Antwort zurück",
-      "response": "."
+      "response": ".",
+      "monthlyApiCalls": "Monatliche API-Aufrufe",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Fehlercodes",
@@ -1212,7 +2182,8 @@
         "searchRetrieval": "Suche und Abruf",
         "extraction": "Datenextraktion",
         "operations": "Operationen",
-        "security": "Sicherheit und Datenschutz"
+        "security": "Sicherheit und Datenschutz",
+        "all": "Alle"
       },
       "gettingStarted": {
         "q1": {
@@ -1226,6 +2197,10 @@
         "q3": {
           "question": "Welche Programmiersprachen werden unterstutzt?",
           "answer": "Wir unterstutzen offiziell JavaScript/TypeScript (Node.js) und Python. Fur andere Sprachen konnen Sie die REST-API direkt verwenden."
+        },
+        "q4": {
+          "question": "Was ist der schnellste Weg, einen PoC zu erstellen?",
+          "answer": "1) POST /api/memories zum Speichern einer Benutzerpräferenz. 2) GET /api/memories zum Suchen. 3) Ergebnisse in Ihren LLM-Prompt einfügen. 4) Später /api/extract für automatische Extraktion und /api/query für speichergestützte Antworten hinzufügen."
         }
       },
       "coreConcepts": {
@@ -1240,6 +2215,14 @@
         "q3": {
           "question": "Was ist der user_id Parameter?",
           "answer": "Die user_id verknupft Erinnerungen mit einem bestimmten Benutzer und ermoglicht personalisierte Erfahrungen fur jeden Benutzer."
+        },
+        "q4": {
+          "question": "Wann sollte ich scope (user/session/agent) verwenden?",
+          "answer": "user: Präferenzen, die global für einen Benutzer gelten. session: Ziele oder Kontext, die nur für dieses Gespräch gültig sind. agent: Regeln, die spezifisch für einen Agenten in einem Multi-Agenten-System sind. Die richtige Verwendung von scope reduziert die Promptlänge und verbessert die Antwortkonsistenz."
+        },
+        "q5": {
+          "question": "Was sind memory_types und warum sind sie wichtig?",
+          "answer": "memory_type klassifiziert Erinnerungen: fact (unveränderliche Informationen), preference (Benutzerauswahl), instruction (zu befolgende Regeln), relationship (Personen-/Organisationsverbindungen), experience (vergangene Ereignisse). Dies ist die mächtigste Achse für Filterung, Löschung und Richtlinienanwendung."
         }
       },
       "searchRetrieval": {
@@ -1282,6 +2265,10 @@
         "q3": {
           "question": "Gibt es Ratenlimits?",
           "answer": "Ja, die Limits variieren je nach Plan. Der kostenlose Plan erlaubt 100 Anfragen pro Minute. Siehe Preisseite fur Details."
+        },
+        "q4": {
+          "question": "Wie kann ich Kosten reduzieren?",
+          "answer": "Größte Kostentreiber: 1) Extraktionshäufigkeit - Aufrufe reduzieren. 2) Suchbereich - Namespace verwenden, um einzugrenzen. 3) Modellwahl - Haiku für Routine, Sonnet für Wichtiges. 4) Caching - wiederholte Abfragen cachen. 5) Batch-Operationen wenn möglich."
         }
       },
       "security": {
@@ -1305,7 +2292,858 @@
           "question": "Haben Sie SOC 2-Zertifizierung?",
           "answer": "Wir befinden uns im SOC 2-Zertifizierungsprozess. Kontaktieren Sie unser Vertriebsteam fur weitere Informationen."
         }
+      },
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Häufige Fragen zur Seizn Memory API, von den ersten Schritten bis zu fortgeschrittenen Operationen.",
+      "nav": {
+        "dashboard": "Dashboard"
+      },
+      "cta": {
+        "title": "Noch Fragen?",
+        "subtitle": "Schauen Sie in unsere Dokumentation oder kontaktieren Sie unser Support-Team.",
+        "readDocs": "Dokumentation lesen",
+        "contactSupport": "Support kontaktieren"
+      },
+      "footer": {
+        "rights": "Alle Rechte vorbehalten."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5-Minuten-Schnellstart | Seizn",
+        "description": "Fügen Sie KI-Speicher in 5 Minuten mit nur 10 Zeilen Code hinzu"
+      },
+      "badge": "5-Min-Tutorial",
+      "noCreditCard": "Keine Kreditkarte erforderlich",
+      "title": "Erste Schritte mit Seizn",
+      "subtitle": "Fügen Sie Ihrer KI in unter 5 Minuten dauerhaften Speicher hinzu. Folgen Sie den Schritten und haken Sie jeden ab, wenn Sie ihn abgeschlossen haben.",
+      "getApiKey": "API-Schlüssel erhalten",
+      "fullExample": "Vollständiges Beispiel (10 Zeilen)",
+      "copy": "Kopieren",
+      "copied": "Kopiert!",
+      "progress": "Fortschritt",
+      "stepsLabel": "Schritte",
+      "steps": {
+        "getApiKey": {
+          "title": "API-Schlüssel erhalten",
+          "time": "30 Sek.",
+          "description": "Registrieren Sie sich und generieren Sie Ihren API-Schlüssel im Dashboard.",
+          "actionLabel": "Zum Dashboard"
+        },
+        "install": {
+          "title": "SDK installieren",
+          "time": "30 Sek.",
+          "description": "Installieren Sie das Seizn SDK mit Ihrem bevorzugten Paketmanager."
+        },
+        "ingest": {
+          "title": "Dokumente einlesen",
+          "time": "30 Sek.",
+          "description": "Laden Sie Dokumente in Ihr Dataset zum Abruf hoch."
+        },
+        "query": {
+          "title": "Erste Abfrage ausführen",
+          "time": "10 Sek.",
+          "description": "Durchsuchen Sie Ihre Dokumente mit einer natürlichsprachlichen Abfrage."
+        }
+      },
+      "completion": {
+        "title": "Herzlichen Glückwunsch!",
+        "description": "Sie haben den Schnellstart abgeschlossen. Ihre Abruf-Pipeline ist mit integriertem Tracing einsatzbereit.",
+        "readDocs": "Dokumentation lesen",
+        "goToDashboard": "Zum Dashboard"
+      },
+      "expectedOutput": {
+        "title": "Erwartete Ausgabe",
+        "description": "Jede Abfrage liefert Ergebnisse, Trace und Kostenaufschlüsselung:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API-Referenz",
+          "description": "Entdecken Sie alle Endpunkte und Optionen für fortgeschrittene Anwendungsfälle."
+        },
+        "sdkExamples": {
+          "title": "SDK-Beispiele",
+          "description": "Copy-Paste-Beispiele für Python, TypeScript und mehr."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Häufige Fragen zu Speichertypen, Namespaces und Best Practices."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API-Referenz | Seizn",
+        "description": "Vollständige API-Dokumentation für Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain und RetOps APIs"
+      },
+      "title": "API-Referenz",
+      "description": "Vollständige Dokumentation für alle Seizn APIs einschließlich Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain und RetOps.",
+      "auth": {
+        "title": "Authentifizierung",
+        "description": "Alle API-Endpunkte erfordern Authentifizierung per API-Schlüssel. Fügen Sie Ihren Schlüssel im X-API-Key-Header hinzu."
+      },
+      "sidebar": {
+        "title": "API-Gruppen"
+      },
+      "endpoint": {
+        "parameters": "Parameter",
+        "requestBody": "Anfragekörper",
+        "response": "Antwort",
+        "errorCodes": "Fehlercodes"
+      },
+      "table": {
+        "name": "Name",
+        "type": "Typ",
+        "required": "Erforderlich",
+        "description": "Beschreibung",
+        "code": "Code",
+        "message": "Nachricht"
+      },
+      "copy": "Kopieren",
+      "copied": "Kopiert!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5-Minuten-Tutorial | Seizn",
+        "description": "Erfahren Sie, wie Sie in 5 Minuten mit einer interaktiven Schritt-für-Schritt-Anleitung KI-Speicher hinzufügen"
+      },
+      "breadcrumb": "Tutorial",
+      "badge": "5-Minuten-Tutorial",
+      "noCreditCard": "Keine Kreditkarte erforderlich",
+      "title": "KI-Speicher in 5 Minuten hinzufügen",
+      "subtitle": "Folgen Sie dieser Schritt-für-Schritt-Anleitung, um Ihrer KI dauerhaften Speicher zu geben. Haken Sie jeden Schritt ab, wenn Sie ihn abgeschlossen haben.",
+      "getApiKey": "API-Schlüssel erhalten",
+      "copy": "Kopieren",
+      "copied": "Kopiert!",
+      "progress": "Fortschritt",
+      "stepsLabel": "Schritte",
+      "steps": {
+        "step1": {
+          "title": "API-Schlüssel erhalten",
+          "time": "30 Sek.",
+          "description": "Registrieren Sie sich kostenlos und generieren Sie Ihren API-Schlüssel im Dashboard.",
+          "instruction1": "Registrieren Sie sich oder melden Sie sich bei Ihrem Seizn-Konto an",
+          "instruction2": "Navigieren Sie zu API-Schlüssel im Dashboard",
+          "instruction3": "Klicken Sie auf 'Neuen Schlüssel erstellen' und kopieren Sie Ihren Schlüssel",
+          "actionLabel": "Zum Dashboard"
+        },
+        "step2": {
+          "title": "SDK installieren",
+          "time": "30 Sek.",
+          "description": "Wählen Sie Ihre bevorzugte Sprache und installieren Sie das Seizn SDK."
+        },
+        "step3": {
+          "title": "Ersten Speicher anlegen",
+          "time": "2 Min.",
+          "description": "Speichern Sie Informationen, die Ihre KI über Sitzungen hinweg behalten soll."
+        },
+        "step4": {
+          "title": "Erinnerungen durchsuchen",
+          "time": "2 Min.",
+          "description": "Rufen Sie relevante Erinnerungen mit natürlichsprachlichen Abfragen ab."
+        },
+        "step5": {
+          "title": "Ergebnisse überprüfen",
+          "time": "30 Sek.",
+          "description": "Prüfen Sie, ob Ihr Speicher erfolgreich gespeichert und abgerufen wurde.",
+          "hint": "Sie sollten eine Antwort wie diese sehen, wenn Sie nach Erinnerungen suchen:",
+          "successTitle": "Erfolg!",
+          "successDescription": "Ihre KI hat jetzt dauerhaften Speicher. Verwenden Sie die Suchergebnisse, um den Kontext und die Antworten Ihrer KI zu verbessern."
+        }
+      },
+      "completion": {
+        "title": "Herzlichen Glückwunsch!",
+        "description": "Sie haben das Tutorial abgeschlossen. Ihre KI hat jetzt dauerhaften Speicher, der sitzungsübergreifend funktioniert.",
+        "readDocs": "Dokumentation lesen",
+        "goToDashboard": "Zum Dashboard"
+      },
+      "nextSteps": {
+        "title": "Wie geht es weiter?",
+        "apiReference": {
+          "title": "API-Referenz",
+          "description": "Entdecken Sie alle Endpunkte für Erinnerungen, Extraktion und RAG-Abfragen."
+        },
+        "sdkExamples": {
+          "title": "SDK-Beispiele",
+          "description": "Copy-Paste-Beispiele für Python, TypeScript und REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Erfahren Sie mehr über Speichertypen, Namespaces und Best Practices."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integrationen | Seizn",
+        "description": "Integrieren Sie Seizn mit LangChain, LlamaIndex, OpenTelemetry und mehr"
+      },
+      "breadcrumb": "Integrationen",
+      "title": "Integrationen",
+      "subtitle": "Verbinden Sie Seizn mit Ihren bevorzugten KI-Frameworks und Observability-Tools.",
+      "cards": {
+        "langchain": {
+          "badge": "Offiziell",
+          "title": "LangChain",
+          "description": "Drop-in-Retriever für LangChain RAG-Pipelines. Funktioniert mit Python und TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Offiziell",
+          "title": "LlamaIndex",
+          "description": "Nativer Retriever für LlamaIndex Query Engines. Unterstützt Streaming und hybride Suche."
+        },
+        "opentelemetry": {
+          "badge": "Offiziell",
+          "title": "OpenTelemetry",
+          "description": "Exportieren Sie Traces nach Datadog, Grafana, Jaeger und jedem OTLP-kompatiblen Backend."
+        }
+      },
+      "comingSoon": {
+        "title": "Demnächst verfügbar",
+        "description": "Weitere Integrationen sind in Arbeit. Teilen Sie uns mit, was Sie benötigen!"
+      },
+      "backToDocs": "Zurück zur Dokumentation"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain-Integration | Seizn",
+        "description": "Drop-in-Retriever für LangChain RAG-Pipelines"
+      },
+      "badge": "Offiziell",
+      "title": "LangChain-Integration",
+      "subtitle": "Drop-in-Retriever für LangChain RAG-Pipelines mit vollständiger Tracing-Unterstützung.",
+      "overview": {
+        "title": "60-Sekunden-Überblick",
+        "description": "SeiznRetriever ist ein Drop-in-Ersatz für jeden LangChain-Retriever. Er bietet Vektorsuche mit integriertem Tracing, Caching und Reranking.",
+        "feature1": "Kompatibel mit allen LangChain-Chains und -Agents",
+        "feature2": "Integriertes Tracing für jeden Abrufvorgang",
+        "feature3": "Unterstützt Filterung, Reranking und hybride Suche"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installieren Sie das Seizn SDK zusammen mit LangChain."
+      },
+      "example": {
+        "title": "5-Minuten-Beispiel",
+        "description": "Erstellen Sie eine RAG-Chain mit SeiznRetriever in nur wenigen Zeilen Code."
+      },
+      "production": {
+        "title": "Produktionstipps",
+        "caching": {
+          "title": "Caching aktivieren",
+          "description": "Reduzieren Sie Latenz und Kosten durch Caching wiederholter Abfragen."
+        },
+        "reranking": {
+          "title": "Reranking aktivieren",
+          "description": "Verbessern Sie die Ergebnisqualität mit Cross-Encoder-Reranking."
+        },
+        "filtering": {
+          "title": "Metadaten-Filterung",
+          "description": "Filtern Sie Ergebnisse nach Metadatenfeldern vor der Vektorsuche."
+        }
+      },
+      "troubleshooting": {
+        "title": "Fehlerbehebung",
+        "errorColumn": "Fehler",
+        "causeColumn": "Ursache",
+        "solutionColumn": "Lösung",
+        "authCause": "Ungültiger oder fehlender API-Schlüssel",
+        "authSolution": "Prüfen Sie die Umgebungsvariable SEIZN_API_KEY",
+        "rateCause": "Zu viele Anfragen pro Sekunde",
+        "rateSolution": "Implementieren Sie exponentielles Backoff oder upgraden Sie Ihren Plan",
+        "emptyCause": "Schwellenwert zu hoch oder keine passenden Dokumente",
+        "emptySolution": "Schwellenwert senken oder Dataset-Inhalte prüfen"
+      },
+      "nav": {
+        "backToIntegrations": "Zurück zu Integrationen",
+        "nextLlamaIndex": "LlamaIndex-Integration"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex-Integration | Seizn",
+        "description": "Nativer Retriever für LlamaIndex RAG-Pipelines"
+      },
+      "badge": "Offiziell",
+      "title": "LlamaIndex-Integration",
+      "subtitle": "Nativer Retriever für LlamaIndex Query Engines mit Streaming und hybrider Suche.",
+      "overview": {
+        "title": "60-Sekunden-Überblick",
+        "description": "SeiznRetriever implementiert das LlamaIndex BaseRetriever-Interface und ist damit mit allen LlamaIndex Query Engines und Pipelines kompatibel.",
+        "feature1": "Native Integration mit LlamaIndex Query Engines",
+        "feature2": "Unterstützt Streaming-Antworten sofort einsatzbereit",
+        "feature3": "Kompatibel mit LlamaIndex Node-Postprocessoren"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installieren Sie das Seizn SDK zusammen mit LlamaIndex."
+      },
+      "example": {
+        "title": "5-Minuten-Beispiel",
+        "description": "Erstellen Sie eine Query Engine mit SeiznRetriever für Ihre RAG-Anwendung."
+      },
+      "production": {
+        "title": "Produktionstipps",
+        "streaming": {
+          "title": "Streaming-Antworten",
+          "description": "Aktivieren Sie Streaming für eine bessere Benutzererfahrung bei langen Antworten."
+        },
+        "hybrid": {
+          "title": "Hybride Suche",
+          "description": "Kombinieren Sie Vektor- und Schlüsselwortsuche für besseren Recall."
+        },
+        "nodePostprocessors": {
+          "title": "Node-Postprocessoren",
+          "description": "Verketten Sie Postprocessoren für erweiterte Filterung und Reranking."
+        }
+      },
+      "troubleshooting": {
+        "title": "Fehlerbehebung",
+        "errorColumn": "Fehler",
+        "causeColumn": "Ursache",
+        "solutionColumn": "Lösung",
+        "authCause": "Ungültiger oder fehlender API-Schlüssel",
+        "authSolution": "Prüfen Sie die Umgebungsvariable SEIZN_API_KEY",
+        "datasetCause": "Dataset-Name nicht gefunden",
+        "datasetSolution": "Überprüfen Sie im Dashboard, ob das Dataset existiert",
+        "relevanceCause": "Abfrage-Dokument-Diskrepanz",
+        "relevanceSolution": "Versuchen Sie hybride Suche oder passen Sie den Schwellenwert an"
+      },
+      "nav": {
+        "prevLangChain": "LangChain-Integration",
+        "nextOpenTelemetry": "OpenTelemetry-Integration"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry-Integration | Seizn",
+        "description": "Exportieren Sie Traces nach Datadog, Grafana, Jaeger via OTLP"
+      },
+      "badge": "Offiziell",
+      "title": "OpenTelemetry-Integration",
+      "subtitle": "Exportieren Sie Abruf-Traces über OTLP an Ihren Observability-Stack.",
+      "overview": {
+        "title": "60-Sekunden-Überblick",
+        "description": "Seizn exportiert nativ OpenTelemetry-Traces für jeden Abrufvorgang. Verbinden Sie sich mit jedem OTLP-kompatiblen Backend für End-to-End-Observability.",
+        "feature1": "Zero-Config OTLP-Export mit automatischer Span-Erstellung",
+        "feature2": "Umfangreiche Attribute inkl. Latenz, Token-Anzahl und Kosten",
+        "feature3": "Kontextpropagierung für verteiltes Tracing",
+        "supportedBackends": "Unterstützte Backends"
+      },
+      "installation": {
+        "title": "Einrichtung",
+        "description": "Konfigurieren Sie den OTLP-Export über Umgebungsvariablen."
+      },
+      "examples": {
+        "title": "Backend-Beispiele",
+        "datadog": {
+          "description": "Exportieren Sie Traces an Datadog APM über den Datadog Agent oder die direkte API."
+        },
+        "grafana": {
+          "description": "Senden Sie Traces an Grafana Tempo (Cloud oder selbst gehostet)."
+        },
+        "jaeger": {
+          "description": "Exportieren Sie nach Jaeger mit nativem OTLP-Receiver-Support."
+        }
+      },
+      "production": {
+        "title": "Produktionstipps",
+        "sampling": {
+          "title": "Sampling-Strategie",
+          "description": "Steuern Sie das Trace-Volumen mit Head-based oder Tail-based Sampling."
+        },
+        "attributes": {
+          "title": "Benutzerdefinierte Attribute",
+          "description": "Fügen Sie Ressourcen- und Span-Attribute für bessere Filterung hinzu."
+        },
+        "batching": {
+          "title": "Batch-Konfiguration",
+          "description": "Optimieren Sie die Export-Performance mit Batch-Einstellungen."
+        }
+      },
+      "troubleshooting": {
+        "title": "Fehlerbehebung",
+        "issueColumn": "Problem",
+        "causeColumn": "Ursache",
+        "solutionColumn": "Lösung",
+        "noTracesIssue": "Keine Traces sichtbar",
+        "noTracesCause": "Telemetrie deaktiviert oder Endpunkt falsch",
+        "noTracesSolution": "Setzen Sie SEIZN_TELEMETRY_ENABLED=true und überprüfen Sie den Endpunkt",
+        "connectionIssue": "Verbindung abgelehnt",
+        "connectionCause": "Collector läuft nicht oder falscher Port",
+        "connectionSolution": "Prüfen Sie den Collector-Status und Port 4318",
+        "missingSpansIssue": "Fehlende Spans im Trace",
+        "missingSpansCause": "Sampling-Rate zu niedrig",
+        "missingSpansSolution": "Erhöhen Sie die Sampling-Rate oder deaktivieren Sie Sampling",
+        "debugTitle": "Debug-Modus",
+        "debugDescription": "Aktivieren Sie Debug-Logging zur Fehlerbehebung von Telemetrie-Problemen."
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex-Integration",
+        "backToIntegrations": "Zurück zu Integrationen"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Live-Demo",
+    "subtitle": "Erleben Sie Seizns Abruf-Pipeline mit vollständigem Tracing und Kostentransparenz.",
+    "tryItNow": "Jetzt ausprobieren - Keine Registrierung erforderlich",
+    "queryPlaceholder": "Suchabfrage",
+    "runDemo": "Demo starten",
+    "running": "Läuft...",
+    "results": "Ergebnisse",
+    "trace": "Trace",
+    "cost": "Kosten",
+    "noResults": "Starten Sie die Demo, um Ergebnisse zu sehen",
+    "errorTitle": "Fehler",
+    "rateLimitError": "Rate-Limit überschritten. Bitte warten.",
+    "retryIn": "Erneut versuchen in",
+    "seconds": "Sekunden",
+    "score": "Bewertung",
+    "rerankScore": "Rerank",
+    "latency": "Latenz",
+    "tokens": "Tokens",
+    "cached": "gecacht",
+    "model": "Modell",
+    "input": "Eingabe",
+    "output": "Ausgabe",
+    "costBreakdown": "Aufschlüsselung",
+    "total": "Gesamtkosten",
+    "embedding": "Embedding",
+    "vectorSearch": "Vektorsuche",
+    "rerank": "Rerank",
+    "answerContract": "Antwortvertrag",
+    "tokensIn": "Tokens Eingang",
+    "tokensOut": "Tokens Ausgang",
+    "queryUnits": "Abfrageeinheiten",
+    "prefilledQueries": [
+      "Beispiele ausprobieren"
+    ]
+  },
+  "publicTrace": {
+    "title": "Geteilter Trace",
+    "subtitle": "Geteilte Abruf-Trace-Details anzeigen",
+    "sharedBy": "Geteilter Trace",
+    "expired": "Dieser Link ist abgelaufen",
+    "expiredDesc": "Der Freigabelink ist nicht mehr gültig. Bitten Sie den Eigentümer, einen neuen Link zu erstellen.",
+    "notFound": "Trace nicht gefunden",
+    "notFoundDesc": "Dieser geteilte Trace konnte nicht gefunden werden. Er wurde möglicherweise widerrufen oder gelöscht.",
+    "backToHome": "Zurück zur Startseite",
+    "requestId": "Anfrage-ID",
+    "collection": "Sammlung",
+    "createdAt": "Erstellt",
+    "totalLatency": "Gesamtlatenz",
+    "totalCost": "Gesamtkosten",
+    "resultsCount": "Ergebnisse",
+    "query": "Abfrage",
+    "timeline": "Zeitverlauf",
+    "candidates": "Kandidaten",
+    "rerankDiff": "Rerank-Differenz",
+    "costAnalysis": "Kostenanalyse",
+    "redacted": "[GESCHWÄRZT]",
+    "piiMasked": "PII aus Datenschutzgründen maskiert",
+    "readOnlyNote": "Dies ist eine schreibgeschützte Ansicht eines geteilten Traces."
+  },
+  "trustPage": {
+    "title": "Trust Center",
+    "subtitle": "Sicherheit und Datenpraktiken bei Seizn",
+    "heroDescription": "Wir entwickeln mit Datenschutz und Sicherheit im Kern. Diese Seite dokumentiert genau, was wir mit Ihren Daten tun.",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "sections": {
+      "dataFlow": {
+        "title": "Datenfluss",
+        "description": "Was wir speichern und was nicht",
+        "stored": {
+          "title": "Was wir speichern",
+          "items": [
+            "Speicherinhalte und Embeddings",
+            "Abfrageprotokolle (gehasht, nicht im Klartext)",
+            "API-Nutzungsmetriken pro Schlüssel",
+            "Trace-Daten zur Fehlersuche (konfigurierbare Aufbewahrung)"
+          ]
+        },
+        "notStored": {
+          "title": "Was wir NICHT speichern",
+          "items": [
+            "Rohe API-Schlüssel (nur gehasht)",
+            "Benutzerpasswörter (nur OAuth)",
+            "Abfrageergebnisse über die Cache-TTL hinaus",
+            "Anfrage-/Antwortprotokolle von Drittanbieter-LLMs"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Verschlüsselung",
+        "description": "Datenschutz bei Übertragung und Speicherung",
+        "transit": {
+          "title": "Bei Übertragung",
+          "items": [
+            "TLS 1.3 für alle Verbindungen erzwungen",
+            "HSTS aktiviert mit 1 Jahr max-age",
+            "Certificate-Transparency-Logging"
+          ]
+        },
+        "atRest": {
+          "title": "Im Ruhezustand",
+          "items": [
+            "AES-256-Verschlüsselung für alle gespeicherten Daten",
+            "Verschlüsselung auf Datenbankebene (Supabase)",
+            "Verschlüsselte Backups mit separaten Schlüsseln"
+          ]
+        },
+        "keyManagement": {
+          "title": "Schlüsselverwaltung",
+          "items": [
+            "API-Schlüssel gehasht mit SHA-256 + Salt",
+            "Automatische Schlüsselrotations-Erinnerungen (90 Tage)",
+            "Sofortige Schlüsselwiderruf-Möglichkeit"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Mandantentrennung",
+        "description": "Wie wir Ihre Daten getrennt halten",
+        "items": [
+          "Row-Level Security (RLS) auf Datenbankebene erzwungen",
+          "Alle Abfragen automatisch nach user_id/org_id gefiltert",
+          "Keine gemeinsamen Indizes zwischen Mandanten",
+          "Namespace-Trennung für Speichersammlungen"
+        ],
+        "rbac": {
+          "title": "Zugriffskontrolle",
+          "items": [
+            "Rollenbasierter Zugriff (Owner, Admin, Member)",
+            "API-Schlüssel-Scoping pro Organisation",
+            "Audit-Logs für alle Berechtigungsänderungen"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Aufbewahrung & Löschung",
+        "description": "Wie lange wir Daten aufbewahren und wie Sie sie löschen können",
+        "periods": [
+          {
+            "type": "Erinnerungen",
+            "period": "Bis zur Löschung durch den Benutzer"
+          },
+          {
+            "type": "API-Protokolle",
+            "period": "90 Tage rollierend"
+          },
+          {
+            "type": "Traces",
+            "period": "30 Tage (konfigurierbar)"
+          },
+          {
+            "type": "Audit-Protokolle",
+            "period": "1 Jahr"
+          },
+          {
+            "type": "Backups",
+            "period": "30 Tage verschlüsselt"
+          }
+        ],
+        "deletion": {
+          "title": "Löschprozess",
+          "items": [
+            "DELETE /api/memories entfernt sofort",
+            "Kontolöschung: 30 Tage Karenzzeit",
+            "Endgültige Löschung aus Backups innerhalb von 30 Tagen",
+            "GDPR/CCPA-Datenexport auf Anfrage verfügbar"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Audit-Protokolle & Zugriffskontrollen",
+        "description": "Nachverfolgung, wer was tut",
+        "logged": {
+          "title": "Ereignisse, die wir protokollieren",
+          "items": [
+            "API-Schlüssel-Erstellung, -Rotation, -Widerruf",
+            "Berechtigungsänderungen (RBAC)",
+            "Datenexport-Anfragen",
+            "Fehlgeschlagene Authentifizierungsversuche",
+            "Admin-Aktionen in der Organisation"
+          ]
+        },
+        "access": {
+          "title": "Protokollzugriff",
+          "items": [
+            "Verfügbar für Organisations-Administratoren",
+            "Exportierbar über API (Pro+-Pläne)",
+            "Durchsuchbar nach Benutzer, Aktion, Zeitstempel"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Auftragsverarbeiter",
+        "description": "Drittanbieter, die Ihre Daten verarbeiten",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Datenbank & Authentifizierung",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting & CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Zahlungen",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Produktanalyse",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Fehlerüberwachung",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (optional)",
+            "location": "US/Kanada"
+          }
+        ],
+        "note": "Wir teilen nur die minimal erforderlichen Daten, damit jeder Dienst funktioniert."
+      },
+      "disclosure": {
+        "title": "Was wir noch nicht tun",
+        "description": "Ehrliche Lücken in unserer Sicherheitsaufstellung",
+        "items": [
+          "SOC 2 Type II Zertifizierung (in Arbeit, voraussichtlich Q2 2026)",
+          "HIPAA-Konformität (geplant für Enterprise)",
+          "On-Premise-Bereitstellungsoption (in Evaluierung)",
+          "Hardware-Sicherheitsmodule (HSM) für Schlüsselspeicherung",
+          "Bug-Bounty-Programm (geplant Q3 2026)"
+        ],
+        "cta": "Haben Sie Sicherheitsfragen? Kontaktieren Sie uns unter security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Fragen?",
+      "description": "Unser Team beantwortet gerne Sicherheitsfragen.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Limits & Abrechnung",
+    "subtitle": "Verstehen Sie Ihre Plan-Limits, Kontingente und Abrechnungsinformationen.",
+    "unlimited": "Unbegrenzt",
+    "custom": "Individuell",
+    "requestsPerSecond": "Anfragen/Sekunde",
+    "sidebar": {
+      "onThisPage": "Auf dieser Seite",
+      "quotas": "Monatliche Kontingente",
+      "rateLimits": "Rate Limits",
+      "overage": "Überschreitungsverhalten",
+      "reset": "Zurücksetzungszeiten",
+      "headers": "Antwort-Header"
+    },
+    "table": {
+      "plan": "Plan",
+      "monthlyQuota": "Monatliches Kontingent",
+      "rps": "RPS-Limit"
+    },
+    "plans": {
+      "free": {
+        "name": "Kostenlos",
+        "overage": "Soft-Throttling nach Limit"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Soft-Throttling, E-Mail-Benachrichtigung"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Soft-Throttling, Prioritätswarteschlange"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Individuelles SLA, kein Throttling"
+      }
+    },
+    "quotas": {
+      "title": "Monatliche Kontingente",
+      "description": "Jeder Plan enthält ein monatliches API-Aufruf-Kontingent. Kontingente werden am 1. jedes Monats um 00:00 UTC zurückgesetzt."
+    },
+    "rateLimit": {
+      "title": "Rate Limits (RPS)",
+      "description": "Rate Limits schützen unsere Infrastruktur und gewährleisten faire Nutzung. Limits gelten pro API-Schlüssel."
+    },
+    "overage": {
+      "title": "Überschreitungsverhalten",
+      "softThrottle": {
+        "title": "Soft-Throttling (Kontingent überschritten)",
+        "description": "Wenn Sie Ihr monatliches Kontingent überschreiten:",
+        "point1": "API-Aufrufe werden mit reduzierter Priorität fortgesetzt",
+        "point2": "Antwortzeiten können sich um das 2-5-fache erhöhen",
+        "point3": "E-Mail-Benachrichtigung bei 80% und 100% Nutzung"
+      },
+      "hard429": {
+        "title": "Hard 429 (Rate Limit)",
+        "description": "Wenn Sie das RPS-Rate-Limit überschreiten:",
+        "recommendation": "Implementieren Sie exponentielles Backoff (1s, 2s, 4s, 8s) und wiederholen Sie mit Jitter."
+      }
+    },
+    "reset": {
+      "title": "Zurücksetzungszeiten",
+      "monthly": {
+        "title": "Monatliche Kontingent-Zurücksetzung",
+        "description": "Kontingente werden am ersten Tag jedes Monats zurückgesetzt.",
+        "time": "1. des Monats, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Rate-Limit-Fenster",
+        "description": "Rate Limits verwenden ein gleitendes Fenster.",
+        "time": "Rollendes 1-Sekunden-Fenster"
+      }
+    },
+    "headers": {
+      "limit": "Maximale Anfragen pro Fenster",
+      "remaining": "Verbleibende Anfragen im aktuellen Fenster",
+      "reset": "Unix-Zeitstempel der Fenster-Zurücksetzung",
+      "quotaLimit": "Monatliches Kontingent-Limit",
+      "quotaRemaining": "Verbleibende API-Aufrufe diesen Monat",
+      "quotaReset": "ISO 8601-Datum der Kontingent-Zurücksetzung"
+    },
+    "headersSection": {
+      "title": "Antwort-Header",
+      "description": "Jede API-Antwort enthält Header, die Ihnen helfen, Ihre Nutzung und Limits zu verfolgen.",
+      "header": "Header",
+      "headerDescription": "Beschreibung",
+      "example": "Beispiel-Antwort-Header:"
+    },
+    "upgrade": {
+      "title": "Höhere Limits benötigt?",
+      "description": "Upgraden Sie Ihren Plan für erhöhte Kontingente, höhere Rate Limits und Prioritäts-Support.",
+      "viewPlans": "Pläne anzeigen",
+      "contactSales": "Vertrieb kontaktieren"
+    }
+  },
+  "help": {
+    "title": "Hilfe-Center",
+    "subtitle": "Antworten finden, Support erhalten und auf Ressourcen zugreifen.",
+    "search": {
+      "placeholder": "Nach Hilfe suchen...",
+      "noResults": "Keine Ergebnisse gefunden"
+    },
+    "sections": {
+      "support": {
+        "title": "Support-Kanäle",
+        "description": "Hilfe von unserem Team erhalten",
+        "email": {
+          "title": "E-Mail-Support",
+          "description": "Erhalten Sie Hilfe per E-Mail innerhalb von 24 Stunden",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord-Community",
+          "description": "Treten Sie unserer Community bei für Echtzeit-Hilfe",
+          "action": "Discord beitreten"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Fehler melden und Funktionen anfragen",
+          "action": "Issue eröffnen"
+        }
+      },
+      "faq": {
+        "title": "Häufig gestellte Fragen",
+        "description": "Schnelle Antworten auf häufige Fragen",
+        "viewAll": "Alle FAQs anzeigen"
+      },
+      "status": {
+        "title": "Systemstatus",
+        "description": "Aktuellen Systemstatus und Vorfälle prüfen",
+        "viewStatus": "Statusseite anzeigen",
+        "operational": "Alle Systeme betriebsbereit",
+        "degraded": "Eingeschränkte Leistung",
+        "outage": "Dienstausfall"
+      },
+      "billing": {
+        "title": "Abrechnung & Pläne",
+        "description": "Abonnement und Zahlungen verwalten",
+        "items": {
+          "plans": "Preispläne anzeigen",
+          "usage": "Nutzung prüfen",
+          "invoices": "Rechnungen herunterladen",
+          "upgrade": "Plan upgraden"
+        }
+      },
+      "docs": {
+        "title": "Dokumentation",
+        "description": "Schnelllinks zu beliebten Dokumenten",
+        "links": {
+          "quickstart": "Schnellstart-Anleitung",
+          "apiReference": "API-Referenz",
+          "sdks": "SDKs & Bibliotheken",
+          "limits": "Limits & Abrechnung",
+          "security": "Sicherheit"
+        }
+      }
+    },
+    "contact": {
+      "title": "Brauchen Sie noch Hilfe?",
+      "description": "Unser Support-Team hilft Ihnen gerne weiter.",
+      "cta": "Support kontaktieren"
+    }
+  },
+  "status": {
+    "title": "Systemstatus",
+    "subtitle": "Echtzeit-Systemstatus und Vorfallshistorie",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "overall": {
+      "operational": "Alle Systeme betriebsbereit",
+      "degraded": "Eingeschränkte Leistung",
+      "partialOutage": "Teilweiser Systemausfall",
+      "majorOutage": "Schwerer Systemausfall"
+    },
+    "uptime": {
+      "title": "Verfügbarkeit",
+      "24h": "24 Stunden",
+      "7d": "7 Tage",
+      "30d": "30 Tage",
+      "90d": "90 Tage"
+    },
+    "services": {
+      "title": "Dienststatus",
+      "operational": "Betriebsbereit",
+      "degraded": "Eingeschränkt",
+      "down": "Ausgefallen"
+    },
+    "incidents": {
+      "active": "Aktive Vorfälle",
+      "history": "Vorfallshistorie",
+      "noActive": "Keine aktiven Vorfälle",
+      "noHistory": "Keine vergangenen Vorfälle",
+      "status": {
+        "investigating": "Wird untersucht",
+        "identified": "Identifiziert",
+        "monitoring": "Wird überwacht",
+        "resolved": "Behoben"
+      },
+      "severity": {
+        "minor": "Gering",
+        "major": "Schwerwiegend",
+        "critical": "Kritisch"
+      },
+      "affected": "Betroffene Dienste",
+      "timeline": "Zeitverlauf",
+      "started": "Gestartet",
+      "resolved": "Behoben",
+      "duration": "Dauer",
+      "viewDetails": "Details anzeigen"
+    },
+    "subscribe": {
+      "title": "Updates abonnieren",
+      "rss": "RSS-Feed",
+      "email": "E-Mail-Benachrichtigungen"
     }
   }
 }
