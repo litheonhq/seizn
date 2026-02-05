@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Пошук, який можна дебажити.",
-    "heroSubtitle": "Інтегрований пошуковий стек з вбудованим трасуванням, оцінкою та управлінням. Один запит = результати + трасування + вартість.",
+    "heroTitle": "Продакшн-ОС для ШІ-агентів.",
+    "heroSubtitle": "Переведіть агентів з пілоту в продакшн з керованою пам'яттю, вбудованою спостережуваністю та доказовою відповідністю.",
+    "ctaStart": "Почати Безкоштовно",
+    "ctaDemo": "Переглянути 2-Хв Демо",
+    "socialProof": "Довіряють команди, які працюють з агентами у масштабі",
+    "liveDemo": "Живе Демо",
+    "heroTagline": "Спробуйте API наживо — без реєстрації",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

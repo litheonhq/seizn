@@ -1012,9 +1012,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "에이전트를 위한 관리형 메모리 & 검색.",
-    "heroTagline": "디버깅 가능한 검색.",
-    "heroSubtitle": "기본 설정으로 디버깅 가능: 트레이스, 평가, 정책 결정, 비용을 한 곳에서.",
+    "heroTitle": "AI 에이전트를 위한 프로덕션 OS.",
+    "heroSubtitle": "관리된 메모리, 내장 옵저버빌리티, 입증 가능한 컴플라이언스로 에이전트를 파일럿에서 프로덕션까지.",
+    "ctaStart": "무료로 시작하기",
+    "ctaDemo": "2분 데모 보기",
+    "socialProof": "규모 있는 에이전트를 운영하는 팀들이 신뢰합니다",
+    "liveDemo": "라이브 데모",
+    "heroTagline": "API를 직접 사용해보세요 — 가입 불필요",
     "firstRetrievalComplete": "첫 번째 검색 완료",
     "copySnippetHint": "아래 코드를 복사해 재현하세요",
     "copySnippetTitle": "코드 복사",

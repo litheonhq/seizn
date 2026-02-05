@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Pesquisa que pode depurar.",
-    "heroSubtitle": "Stack de pesquisa integrado com rastreamento, avaliação e governação incorporados. Um pedido = resultados + rastreio + custo.",
+    "heroTitle": "O OS de produção para agentes de IA.",
+    "heroSubtitle": "Leve agentes do piloto à produção com memória governada, observabilidade integrada e conformidade comprovável.",
+    "ctaStart": "Comece Gratuitamente",
+    "ctaDemo": "Veja a Demo de 2 Min",
+    "socialProof": "Confiado por equipas que operam agentes em escala",
+    "liveDemo": "Demo em Direto",
+    "heroTagline": "Experimente a API em direto — sem registo",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

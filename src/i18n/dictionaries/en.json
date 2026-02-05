@@ -1011,9 +1011,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Governed memory & retrieval for agents.",
-    "heroTagline": "Search you can debug.",
-    "heroSubtitle": "Debuggable by default.",
+    "heroTitle": "The production OS for AI agents.",
+    "heroSubtitle": "Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove.",
+    "ctaStart": "Start Building Free",
+    "ctaDemo": "Watch 2-Min Demo",
+    "socialProof": "Trusted by teams shipping agents at scale",
+    "liveDemo": "Live Demo",
+    "heroTagline": "Try the API live — no signup required",
     "chips": {
       "trace": "Trace",
       "eval": "Eval",

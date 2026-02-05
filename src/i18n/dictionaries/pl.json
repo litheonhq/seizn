@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Wyszukiwanie, które możesz debugować.",
-    "heroSubtitle": "Zintegrowany stos wyszukiwania z wbudowanym śledzeniem, oceną i zarządzaniem. Jedno żądanie = wyniki + ślad + koszt.",
+    "heroTitle": "Produkcyjny OS dla agentów AI.",
+    "heroSubtitle": "Przenieś agentów z pilotażu do produkcji z zarządzaną pamięcią, wbudowaną obserwowalnością i udowodnioną zgodnością.",
+    "ctaStart": "Zacznij Za Darmo",
+    "ctaDemo": "Obejrzyj 2-Min Demo",
+    "socialProof": "Zaufany przez zespoły operujące agentami na dużą skalę",
+    "liveDemo": "Demo na Żywo",
+    "heroTagline": "Wypróbuj API na żywo — bez rejestracji",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

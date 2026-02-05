@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "بحث قابل للتصحيح.",
-    "heroSubtitle": "نظام استرجاع متكامل مع تتبع وتقييم وحوكمة مدمجة. طلب واحد = نتائج + تتبع + تكلفة.",
+    "heroTitle": "نظام التشغيل الإنتاجي لوكلاء الذكاء الاصطناعي.",
+    "heroSubtitle": "انقل الوكلاء من التجربة إلى الإنتاج مع ذاكرة محكومة، وقابلية مراقبة مدمجة، وامتثال قابل للإثبات.",
+    "ctaStart": "ابدأ مجاناً",
+    "ctaDemo": "شاهد العرض التوضيحي",
+    "socialProof": "موثوق من قبل الفرق التي تشغل الوكلاء على نطاق واسع",
+    "liveDemo": "عرض مباشر",
+    "heroTagline": "جرّب واجهة API مباشرة — بدون تسجيل",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

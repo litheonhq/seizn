@@ -649,9 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "可调试的搜索。",
-    "heroSubtitle": "内置追踪、评估和治理的集成检索堆栈。一次请求 = 结果 + 追踪 + 成本。",
-    "firstRetrievalComplete": "First retrieval complete",
+    "heroTitle": "AI代理的生产操作系统。",
+    "heroSubtitle": "通过受治理的记忆、内置可观测性和可验证的合规性，将代理从试点推进到生产。",
+    "ctaStart": "免费开始构建",
+    "ctaDemo": "观看2分钟演示",
+    "socialProof": "受到大规模运营代理团队的信赖",
+    "liveDemo": "在线演示",
+    "heroTagline": "直接试用API — 无需注册",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
     "copySnippetSubtitle": "Generated from your exact settings above",

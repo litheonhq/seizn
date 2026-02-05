@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Sökning du kan felsöka.",
-    "heroSubtitle": "Integrerad sökstack med inbyggd spårning, utvärdering och styrning. En förfrågan = resultat + spårning + kostnad.",
+    "heroTitle": "Produktions-OS för AI-agenter.",
+    "heroSubtitle": "Ta agenter från pilot till produktion med styrd minneshantering, inbyggd observerbarhet och bevisbar efterlevnad.",
+    "ctaStart": "Börja Gratis",
+    "ctaDemo": "Se 2-Min Demo",
+    "socialProof": "Betrodd av team som kör agenter i stor skala",
+    "liveDemo": "Live Demo",
+    "heroTagline": "Testa API:et live — ingen registrering krävs",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",

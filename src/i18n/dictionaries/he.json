@@ -649,8 +649,13 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "חיפוש שניתן לדבג.",
-    "heroSubtitle": "מחסנית אחזור משולבת עם מעקב, הערכה וממשל מובנים. בקשה אחת = תוצאות + עקבה + עלות.",
+    "heroTitle": "מערכת ההפעלה לייצור של סוכני AI.",
+    "heroSubtitle": "העבירו סוכנים מפיילוט לייצור עם זיכרון מנוהל, ניטור מובנה ותאימות ניתנת להוכחה.",
+    "ctaStart": "התחילו בחינם",
+    "ctaDemo": "צפו בהדגמה של 2 דקות",
+    "socialProof": "מהימן על ידי צוותים המפעילים סוכנים בקנה מידה",
+    "liveDemo": "הדגמה חיה",
+    "heroTagline": "נסו את ה-API בזמן אמת — ללא הרשמה",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Copy this snippet",
