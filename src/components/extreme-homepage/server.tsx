@@ -5,6 +5,10 @@ import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { ExtremeHomepageClient } from "./index";
 
+// =============================================================================
+// Icons — Existing
+// =============================================================================
+
 function TracingIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,120 +65,234 @@ function AuditIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function WhySeizn({ t }: { t: Dictionary }) {
+// =============================================================================
+// Icons — New
+// =============================================================================
+
+function DatabaseIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+    </svg>
+  );
+}
+
+function ComplianceIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  );
+}
+
+function ShieldCheckIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  );
+}
+
+function GlobeIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
+}
+
+function ForgetIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+  );
+}
+
+function CertificateIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+    </svg>
+  );
+}
+
+// =============================================================================
+// Feature Showcase (replaces WhySeizn)
+// =============================================================================
+
+const FEATURES = [
+  {
+    icon: DatabaseIcon,
+    title: "Semantic Memory & Context",
+    desc: "Persistent agent memory with graph knowledge, multilingual hybrid search across 100+ languages, and automatic context reconciliation. Your agents remember everything and never hallucinate on stale data.",
+    badge: "Mem0-level + Graph",
+    badgeColor: "emerald",
+    gradient: "from-emerald-400 to-teal-500",
+    iconBg: "bg-emerald-100 dark:bg-emerald-900/30",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    icon: GovernanceIcon,
+    title: "Policy Engine & Governance",
+    desc: "OPA-powered policy enforcement, tool approval workflows, and agent registry with key management. Define what agents can and cannot do\u2014then enforce it automatically.",
+    badge: "OPA-Powered",
+    badgeColor: "rose",
+    gradient: "from-rose-400 to-rose-600",
+    iconBg: "bg-rose-100 dark:bg-rose-900/30",
+    iconColor: "text-rose-600 dark:text-rose-400",
+  },
+  {
+    icon: TracingIcon,
+    title: "Observability & Eval",
+    desc: "Every request traced by default. Production-grade evaluation pipelines, regression detection, and failure debugging without bolting on LangSmith or custom logging.",
+    badge: "Traces On by Default",
+    badgeColor: "purple",
+    gradient: "from-purple-400 to-purple-600",
+    iconBg: "bg-purple-100 dark:bg-purple-900/30",
+    iconColor: "text-purple-600 dark:text-purple-400",
+  },
+  {
+    icon: AutopilotIcon,
+    title: "FinOps & Budget Control",
+    desc: "Set token and model budgets, get cost alerts before you overshoot, and let Budget Autopilot pick the cheapest strategy that meets your SLO. Never a surprise bill.",
+    badge: "Budget Autopilot",
+    badgeColor: "blue",
+    gradient: "from-blue-400 to-cyan-500",
+    iconBg: "bg-blue-100 dark:bg-blue-900/30",
+    iconColor: "text-blue-600 dark:text-blue-400",
+  },
+  {
+    icon: ComplianceIcon,
+    title: "EU AI Act & Compliance",
+    desc: "Built-in RTBF (right to be forgotten), EU AI Act transparency events, and ISO 42001-aligned audit trails. Produce evidence artifacts on demand for regulators and auditors.",
+    badge: "Audit-Ready",
+    badgeColor: "indigo",
+    gradient: "from-indigo-400 to-indigo-600",
+    iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
+    iconColor: "text-indigo-600 dark:text-indigo-400",
+  },
+  {
+    icon: LessGlueIcon,
+    title: "One SDK, One Bill",
+    desc: "Replace LangChain + Pinecone + LangSmith + custom PII filters + OPA sidecar + cost dashboards. Spring and Summer SDKs. One integration, one dashboard, one vendor.",
+    badge: "Spring + Summer SDKs",
+    badgeColor: "amber",
+    gradient: "from-amber-400 to-amber-600",
+    iconBg: "bg-amber-100 dark:bg-amber-900/30",
+    iconColor: "text-amber-600 dark:text-amber-400",
+  },
+] as const;
+
+const BADGE_COLORS: Record<string, string> = {
+  emerald: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
+  rose: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400",
+  purple: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+  blue: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
+  indigo: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
+  amber: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
+};
+
+function FeatureShowcase() {
   return (
     <section className="py-20 px-4 sm:px-6 bg-gray-50/80 dark:bg-gray-900/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
+            <AutopilotIcon className="w-3.5 h-3.5" />
+            {"Platform Capabilities"}
+          </div>
           <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            {t.extremeHome?.whySeizn?.title || "Why Seizn vs LangChain + Pinecone?"}
+            {"Everything agents need to run in production"}
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            {t.extremeHome?.whySeizn?.subtitle || "Stop gluing together fragmented tools. Get everything you need in one integrated stack."}
+          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            {"One platform for memory, governance, observability, cost control, and compliance\u2014so your team ships faster with fewer moving parts."}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-400 to-purple-600" />
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-4">
-              <TracingIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.tracingDesc || "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging."}
-            </p>
-            <div className="mt-4">
-              <span className="text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
-            </div>
-          </div>
-
-          <div className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-400 to-cyan-500" />
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
-              <AutopilotIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.autopilotDesc || "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required."}
-            </p>
-            <div className="mt-4">
-              <span className="text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
-            </div>
-          </div>
-
-          <div className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-400 to-rose-600" />
-            <div className="w-12 h-12 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center mb-4">
-              <GovernanceIcon className="w-6 h-6 text-rose-600 dark:text-rose-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.governanceDesc || "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later."}
-            </p>
-            <div className="mt-4">
-              <span className="text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
-            </div>
-          </div>
-
-          <div className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-amber-600" />
-            <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4">
-              <LessGlueIcon className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-              {t.extremeHome?.whySeizn?.lessGlueDesc || "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill."}
-            </p>
-            <div className="mt-4">
-              <span className="text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {FEATURES.map((f) => {
+            const Icon = f.icon;
+            return (
+              <div key={f.title} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
+                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${f.gradient}`} />
+                <div className={`w-12 h-12 ${f.iconBg} rounded-xl flex items-center justify-center mb-4`}>
+                  <Icon className={`w-6 h-6 ${f.iconColor}`} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{f.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                <div className="mt-4">
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${BADGE_COLORS[f.badgeColor]}`}>{f.badge}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-function TrustBadges({ t }: { t: Dictionary }) {
+// =============================================================================
+// Trust & Compliance (replaces TrustBadges)
+// =============================================================================
+
+const TRUST_ITEMS = [
+  { icon: SecurityIcon, title: "RLS + Key Hashing", desc: "Tenant isolation by default", color: "emerald" },
+  { icon: ShieldCheckIcon, title: "OWASP LLM Top 10", desc: "Prompt injection & data leakage protections", color: "rose" },
+  { icon: RateLimitIcon, title: "Rate Limits + Alerts", desc: "Per-agent, per-model throttling", color: "blue" },
+  { icon: AuditIcon, title: "Full Audit Trails", desc: "Every decision, every token logged", color: "purple" },
+  { icon: GlobeIcon, title: "EU AI Act Ready", desc: "Transparency events for high-risk AI", color: "indigo" },
+  { icon: ForgetIcon, title: "GDPR / RTBF", desc: "Right to be forgotten, verified", color: "rose" },
+  { icon: CertificateIcon, title: "SOC 2 Type II Path", desc: "Controls mapped, audit-ready", color: "amber" },
+  { icon: GovernanceIcon, title: "ISO 42001 Aligned", desc: "AI management system standard", color: "emerald" },
+] as const;
+
+const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
+  emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-600 dark:text-emerald-400" },
+  rose: { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-600 dark:text-rose-400" },
+  blue: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600 dark:text-blue-400" },
+  purple: { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-600 dark:text-purple-400" },
+  indigo: { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-600 dark:text-indigo-400" },
+  amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600 dark:text-amber-400" },
+};
+
+function TrustAndCompliance() {
   return (
-    <section className="py-14 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="glass-card-premium rounded-2xl px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-0 sm:divide-x sm:divide-gray-200 sm:dark:divide-gray-700">
-            <div className="flex items-center gap-3 sm:px-8">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shadow-sm">
-                <SecurityIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+    <section className="py-16 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            {"Enterprise-grade trust, built in"}
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {"Every layer designed for regulated industries and security-conscious teams."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {TRUST_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const style = TRUST_ICON_STYLES[item.color];
+            return (
+              <div key={item.title} className="glass-card-premium rounded-xl p-5 text-center">
+                <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center mx-auto mb-3`}>
+                  <Icon className={`w-5 h-5 ${style.text}`} />
+                </div>
+                <div className="font-medium text-sm text-gray-900 dark:text-gray-100">{item.title}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.desc}</div>
               </div>
-              <div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 sm:px-8">
-              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shadow-sm">
-                <RateLimitIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 sm:px-8">
-              <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shadow-sm">
-                <AuditIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
+
+// =============================================================================
+// Pricing CTA
+// =============================================================================
 
 function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
@@ -182,28 +300,34 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
       {/* Radial glow accent */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="max-w-4xl mx-auto text-center relative">
-        <h2 className="text-3xl sm:text-4xl font-semibold mb-4">{t.extremeHome?.pricingCta?.title || "Simple, transparent pricing"}</h2>
+        <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
+          {"From first API call to enterprise rollout"}
+        </h2>
         <p className="text-[#EAF0FF]/60 mb-10 max-w-lg mx-auto">
-          {t.extremeHome?.pricingCta?.subtitle || "Start free, scale as you grow. No hidden fees."}
+          {"Free tier to start building. Predictable per-query pricing as you scale. Custom plans for teams with compliance and SLA requirements."}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
             className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-full hover:-translate-y-0.5 transition-all shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
           >
-            {t.extremeHome?.pricingCta?.viewPricing || "View Pricing"}
+            {t.extremeHome?.pricingCta?.viewPricing || "See Plans & Pricing"}
           </Link>
           <Link
             href={`/${locale}/enterprise`}
             className="px-8 py-3.5 border border-[#EAF0FF]/20 bg-white/5 backdrop-blur-sm text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 hover:border-[#EAF0FF]/40 hover:-translate-y-0.5 transition-all"
           >
-            {t.extremeHome?.pricingCta?.contactSales || "Contact Sales"}
+            {t.extremeHome?.pricingCta?.contactSales || "Talk to Sales"}
           </Link>
         </div>
       </div>
     </section>
   );
 }
+
+// =============================================================================
+// Footer
+// =============================================================================
 
 function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
@@ -275,13 +399,17 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
         {/* Bottom bar */}
         <div className="pt-6 border-t border-gray-100 dark:border-gray-800">
           <div className="text-sm text-gray-400 dark:text-gray-500 text-center">
-            {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
+            {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `\u00A9 ${new Date().getFullYear()} Seizn. All rights reserved.`}
           </div>
         </div>
       </div>
     </footer>
   );
 }
+
+// =============================================================================
+// Page Composition
+// =============================================================================
 
 interface ExtremeHomepageProps {
   dict: Dictionary;
@@ -292,8 +420,8 @@ export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <ExtremeHomepageClient dict={dict} locale={locale} />
-      <WhySeizn t={dict} />
-      <TrustBadges t={dict} />
+      <FeatureShowcase />
+      <TrustAndCompliance />
       <PricingCTA locale={locale} t={dict} />
       <Footer locale={locale} t={dict} />
     </div>

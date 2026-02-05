@@ -554,14 +554,14 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         {/* Content Layer */}
         <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            {/* H1 - Concise tagline */}
+            {/* H1 - Category claim */}
             <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08] animate-fade-in">
-              {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
+              {"The production OS for AI agents."}
             </h1>
 
-            {/* Subtitle - Single sentence, clear value prop */}
+            {/* Subtitle - Value prop */}
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
-              {t.extremeHome?.heroSubtitle || "Trace, evaluate, and enforce policies — all in one request."}
+              {"Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove."}
             </p>
 
             {/* CTAs - Primary and Secondary */}
@@ -570,7 +570,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 href="/signup"
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                {t.extremeHome?.nav?.getApiKey || "Get API Key"}
+                {"Start Building Free"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -585,8 +585,19 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {t.extremeHome?.nav?.tryDemo || "Try Demo"}
+                {"Watch 2-Min Demo"}
               </button>
+            </div>
+
+            {/* Social Proof */}
+            <div className="flex items-center justify-center gap-2 pt-4 animate-fade-in-up animate-delay-400">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+              </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {"Trusted by teams shipping agents at scale"}
+              </span>
             </div>
 
             {/* Memory Flow Pipeline Animation */}
