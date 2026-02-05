@@ -18,9 +18,10 @@
   <rect x="64" y="64" width="896" height="896" rx="224" fill="url(#shine)"/>
   <rect x="64" y="64" width="896" height="896" rx="224" fill="none" stroke="#0A0A0A" stroke-opacity="0.06" stroke-width="4"/>
 
-  <!-- S Lettermark -->
-  <text x="460" y="700" font-family="'Inter', 'SF Pro Display', -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="560" font-weight="800" fill="#0A0A0A" text-anchor="middle" letter-spacing="-10">S</text>
+  <!-- S Lettermark (path-based, no font dependency) -->
+  <path d="M 600 310 C 600 245, 545 205, 470 205 C 375 205, 315 255, 315 335 C 315 405, 375 445, 470 485 C 565 525, 625 565, 625 645 C 625 735, 565 785, 470 785 C 385 785, 325 735, 325 670"
+    fill="none" stroke="#0A0A0A" stroke-width="80" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Green Square Dot -->
-  <rect x="660" y="620" width="76" height="76" rx="15" fill="#34D399"/>
+  <rect x="688" y="640" width="72" height="72" rx="14" fill="#34D399"/>
 </svg>
