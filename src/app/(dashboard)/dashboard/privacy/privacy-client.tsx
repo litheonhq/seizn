@@ -171,10 +171,10 @@ export default function PrivacyClient() {
   }, [loadData]);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "requests", label: t("privacy.tabs.requests") || "RTBF Requests", icon: "📋" },
-    { id: "subjects", label: t("privacy.tabs.subjects") || "Data Subjects", icon: "👤" },
-    { id: "certificates", label: t("privacy.tabs.certificates") || "Certificates", icon: "📜" },
-    { id: "settings", label: t("privacy.tabs.settings") || "Settings", icon: "⚙️" },
+    { id: "requests", label: t("dashboard.privacy.tabs.requests") || "RTBF Requests", icon: "📋" },
+    { id: "subjects", label: t("dashboard.privacy.tabs.subjects") || "Data Subjects", icon: "👤" },
+    { id: "certificates", label: t("dashboard.privacy.tabs.certificates") || "Certificates", icon: "📜" },
+    { id: "settings", label: t("dashboard.privacy.tabs.settings") || "Settings", icon: "⚙️" },
   ];
 
   const pendingCount = requests.filter(r => r.status === "pending").length;
@@ -189,10 +189,10 @@ export default function PrivacyClient() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          {t("privacy.title") || "Privacy & RTBF"}
+          {t("dashboard.privacy.title") || "Privacy & RTBF"}
         </h1>
         <p className="text-gray-500 mt-1">
-          {t("privacy.subtitle") || "Manage GDPR Right to be Forgotten requests and data subject rights"}
+          {t("dashboard.privacy.subtitle") || "Manage GDPR Right to be Forgotten requests and data subject rights"}
         </p>
       </div>
 
@@ -202,7 +202,7 @@ export default function PrivacyClient() {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⏳</span>
             <span className="text-sm text-gray-500">
-              {t("privacy.stats.pending") || "Pending"}
+              {t("dashboard.privacy.stats.pending") || "Pending"}
             </span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
@@ -211,7 +211,7 @@ export default function PrivacyClient() {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔄</span>
             <span className="text-sm text-gray-500">
-              {t("privacy.stats.inProgress") || "In Progress"}
+              {t("dashboard.privacy.stats.inProgress") || "In Progress"}
             </span>
           </div>
           <p className="text-2xl font-bold text-blue-600">{inProgressCount}</p>
@@ -220,7 +220,7 @@ export default function PrivacyClient() {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
             <span className="text-sm text-gray-500">
-              {t("privacy.stats.completed") || "Completed"}
+              {t("dashboard.privacy.stats.completed") || "Completed"}
             </span>
           </div>
           <p className="text-2xl font-bold text-emerald-600">{completedCount}</p>
@@ -229,7 +229,7 @@ export default function PrivacyClient() {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⚠️</span>
             <span className="text-sm text-gray-500">
-              {t("privacy.stats.overdue") || "Overdue"}
+              {t("dashboard.privacy.stats.overdue") || "Overdue"}
             </span>
           </div>
           <p className={`text-2xl font-bold ${overdueCount > 0 ? "text-red-600" : "text-gray-900"}`}>

@@ -242,7 +242,26 @@
       "usageByApiKey": "การใช้งานตามคีย์ API",
       "errorsTitle": "ข้อผิดพลาด",
       "errorRate": "อัตราข้อผิดพลาด",
-      "noUsageData": "ไม่มีข้อมูลการใช้งาน"
+      "noUsageData": "ไม่มีข้อมูลการใช้งาน",
+      "p95Latency": "p95 Latency",
+      "errorRateKpi": "อัตราข้อผิดพลาด",
+      "monthlyApiCalls": "การเรียก API รายเดือน",
+      "dailyTrends": "แนวโน้มรายวัน",
+      "tabCalls": "การเรียก",
+      "tabCost": "ค่าใช้จ่าย",
+      "tabLatency": "Latency",
+      "tabErrors": "ข้อผิดพลาด",
+      "noUsageTitle": "ยังไม่มีข้อมูลการใช้งาน",
+      "noUsageDescription": "ส่งคำขอ API แรกของคุณเพื่อดูการวิเคราะห์การใช้งาน ข้อมูลจะปรากฏที่นี่ภายใน 5 วินาที",
+      "noUsageExpected": "คาดหวัง: การเรียก, โทเค็น, ค่าใช้จ่าย และรายละเอียด latency",
+      "getApiKey": "รับ API Key",
+      "viewDocs": "ดูเอกสาร",
+      "noEndpointData": "ไม่มีข้อมูล endpoint",
+      "noEndpointDescription": "รายละเอียด endpoint จะปรากฏหลังจากการเรียก API ครั้งแรกของคุณ",
+      "sendTestRequest": "ส่งคำขอทดสอบ",
+      "noKeyData": "ไม่มีการใช้งาน API key",
+      "noKeyDescription": "สร้างและใช้ API key เพื่อดูการวิเคราะห์ต่อ key",
+      "createApiKey": "สร้าง API Key"
     },
     "language": "ภาษา",
     "organizations": "องค์กร",
@@ -343,7 +362,49 @@
       "export": "ส่งออก",
       "exportResults": "ส่งออกผลลัพธ์",
       "exportFormat": "รูปแบบการส่งออก",
-      "exportSuccess": "ส่งออกสำเร็จ"
+      "exportSuccess": "ส่งออกสำเร็จ",
+      "queryBuilder": "ตัวสร้างคิวรี",
+      "namespace": "Namespace",
+      "namespacePlaceholder": "default",
+      "searchMode": "โหมดการค้นหา",
+      "vector": "Vector",
+      "hybrid": "Hybrid",
+      "keyword": "Keyword",
+      "rerank": "เปิดใช้งาน Rerank",
+      "trace": "Trace",
+      "cost": "ค่าใช้จ่าย",
+      "similarity": "ความคล้ายคลึง",
+      "memoryType": "ประเภท",
+      "rerankScore": "คะแนน Rerank",
+      "traceTimeline": "ไทม์ไลน์ Trace",
+      "noTrace": "รันคิวรีเพื่อดู trace",
+      "step": "ขั้นตอน",
+      "completed": "เสร็จสิ้น",
+      "pending": "รอดำเนินการ",
+      "error": "ข้อผิดพลาด",
+      "costBreakdown": "รายละเอียดค่าใช้จ่าย",
+      "noCost": "รันคิวรีเพื่อดูรายละเอียดค่าใช้จ่าย",
+      "component": "ส่วนประกอบ",
+      "search": "ค้นหา",
+      "total": "รวม",
+      "monthlyEstimate": "ประมาณการรายเดือน",
+      "basedOn": "ขึ้นอยู่กับ",
+      "queriesPerDay": "คิวรี/วัน",
+      "rerankBefore": "ก่อน Rerank",
+      "rerankAfter": "หลัง Rerank",
+      "rank": "อันดับ",
+      "replayFromLog": "เล่นซ้ำจากล็อก",
+      "selectLog": "เลือกล็อกเพื่อเล่นซ้ำ",
+      "replaySettings": "การตั้งค่าการเล่นซ้ำ",
+      "compareResults": "เปรียบเทียบผลลัพธ์",
+      "original": "ต้นฉบับ",
+      "replay": "เล่นซ้ำ",
+      "diff": "ความแตกต่าง",
+      "hitAtK": "Hit@K",
+      "overlap": "ทับซ้อน",
+      "added": "เพิ่ม",
+      "removed": "ลบ",
+      "rankChanges": "การเปลี่ยนแปลงอันดับ"
     },
     "settingsPage": {
       "title": "การตั้งค่า",
@@ -362,7 +423,9 @@
         "profile": "โปรไฟล์",
         "budget": "งบประมาณ",
         "notifications": "การแจ้งเตือน",
-        "security": "ความปลอดภัย"
+        "security": "ความปลอดภัย",
+        "billing": "การเรียกเก็บเงิน",
+        "danger": "การจัดการข้อมูล"
       },
       "budget": {
         "title": "การจัดการงบประมาณ",
@@ -380,7 +443,21 @@
         "alertDisabled": "ปิดการแจ้งเตือนงบประมาณแล้ว",
         "unlimited": "ไม่จำกัด",
         "setLimit": "ตั้งขีดจำกัด",
-        "removeLimit": "ลบขีดจำกัด"
+        "removeLimit": "ลบขีดจำกัด",
+        "subtitle": "ตั้งค่าขอบเขตการใช้จ่ายและการแจ้งเตือน",
+        "perQueryMax": "สูงสุดต่อคิวรี",
+        "alertThresholdDesc": "รับการแจ้งเตือนเมื่อการใช้งานถึงเปอร์เซ็นต์นี้",
+        "budgetMode": "โหมดงบประมาณ",
+        "soft": "ขอบเขตอ่อน",
+        "softDesc": "เตือนแต่อนุญาตให้เกินขีดจำกัด",
+        "hard": "ขอบเขตแข็ง",
+        "hardDesc": "บลอกคำขอที่ขีดจำกัด",
+        "fallbackStrategy": "กลยุทธ์ทางเลือก",
+        "fallbackDesc": "จะทำอย่างไรเมื่องบประมาณเกิน",
+        "reject": "ปฏิเสธคำขอ",
+        "cache": "ส่งคืนแคช",
+        "degrade": "ลดคุณภาพ",
+        "queue": "จัดคิวคำขอ"
       },
       "notifications": {
         "title": "การตั้งค่าการแจ้งเตือน",
@@ -398,7 +475,20 @@
         "allEnabled": "เปิดการแจ้งเตือนทั้งหมดแล้ว",
         "allDisabled": "ปิดการแจ้งเตือนทั้งหมดแล้ว",
         "enableAll": "เปิดทั้งหมด",
-        "disableAll": "ปิดทั้งหมด"
+        "disableAll": "ปิดทั้งหมด",
+        "subtitle": "กำหนดค่าวิธีรับการแจ้งเตือน",
+        "emailAlerts": "การแจ้งเตือนทางอีเมล",
+        "emailAlertsDesc": "รับการแจ้งเตือนสำคัญทางอีเมล",
+        "usageAlerts": "การแจ้งเตือนการใช้งาน",
+        "usageAlertsDesc": "รับการแจ้งเตือนเมื่อใกล้ถึงขีดจำกัด",
+        "weeklyDigest": "สรุปรายสัปดาห์",
+        "weeklyDigestDesc": "รับสรุปการใช้งานรายสัปดาห์",
+        "securityAlerts": "การแจ้งเตือนความปลอดภัย",
+        "securityAlertsDesc": "รับการแจ้งเตือนเมื่อมีกิจกรรมที่น่าสงสัย",
+        "telegram": "Telegram",
+        "telegramDesc": "รับการแจ้งเตือนผ่านบอท Telegram",
+        "comingSoon": "เร็วๆ นี้",
+        "integrations": "การเชื่อมต่อ"
       },
       "security": {
         "title": "การตั้งค่าความปลอดภัย",
@@ -425,7 +515,14 @@
         "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
         "passwordTooShort": "รหัสผ่านสั้นเกินไป",
         "apiKeysSecurity": "ความปลอดภัยคีย์ API",
-        "apiKeysSecurityHint": "ตรวจสอบและจัดการคีย์ API ของคุณ"
+        "apiKeysSecurityHint": "ตรวจสอบและจัดการคีย์ API ของคุณ",
+        "subtitle": "จัดการความปลอดภัยบัญชีของคุณ",
+        "save": "บันทึกการเปลี่ยนแปลง",
+        "updatePassword": "อัปเดตรหัสผ่าน",
+        "twoFactorDesc": "เพิ่มชั้นความปลอดภัยเพิ่มเติม",
+        "enable2FA": "เปิดใช้งาน 2FA",
+        "sessionsDesc": "จัดการเซสชันที่ใช้งานอยู่ของคุณ",
+        "viewSessions": "ดูเซสชัน"
       },
       "dangerZone": {
         "title": "โซนอันตราย",
@@ -438,7 +535,38 @@
         "exportDataHint": "ดาวน์โหลดสำเนาข้อมูลทั้งหมดของคุณ",
         "exportDataButton": "ส่งออกข้อมูล",
         "exportInProgress": "กำลังส่งออก...",
-        "exportComplete": "ส่งออกเสร็จสิ้น"
+        "exportComplete": "ส่งออกเสร็จสิ้น",
+        "subtitle": "จัดการและลบข้อมูลบัญชีของคุณ",
+        "exportDataDesc": "ดาวน์โหลดข้อมูลทั้งหมดของคุณ",
+        "exportButton": "ส่งออกข้อมูลทั้งหมด",
+        "deleteMemories": "ลบหน่วยความจำทั้งหมด",
+        "deleteMemoriesDesc": "ลบหน่วยความจำที่เก็บไว้ทั้งหมดอย่างถาวร",
+        "deleteMemoriesButton": "ลบหน่วยความจำ",
+        "deleteAccountDesc": "ลบบัญชีและข้อมูลทั้งหมดของคุณอย่างถาวร",
+        "confirmDelete": "พิมพ์ DELETE เพื่อยืนยัน"
+      },
+      "billing": {
+        "title": "การเรียกเก็บเงินและการใช้งาน",
+        "subtitle": "จัดการแผนและติดตามการใช้งานของคุณ",
+        "currentPlan": "แผนปัจจุบัน",
+        "monthlyPrice": "ราคารายเดือน",
+        "upgradePlan": "อัปเกรดแผน",
+        "quotaWarningTitle": "ใกล้ถึงขีดจำกัดโควต้า",
+        "quotaWarningDesc": "คุณใช้งาน {percent}% ของโควต้า {resource} พิจารณาอัปเกรดแผนของคุณ",
+        "upgradeNow": "อัปเกรดเลย",
+        "memoriesUsage": "การใช้งานหน่วยความจำ",
+        "apiCallsUsage": "การใช้งานการเรียก API",
+        "apiKeysUsage": "การใช้งาน API Keys",
+        "unlimited": "ไม่จำกัด",
+        "planComparison": "เปรียบเทียบแผน",
+        "feature": "คุณสมบัติ",
+        "memoriesLabel": "หน่วยความจำ",
+        "apiCallsLabel": "การเรียก API/เดือน",
+        "apiKeysLabel": "API Keys",
+        "priceLabel": "ราคา",
+        "contactUs": "ติดต่อเรา",
+        "used": "ใช้แล้ว",
+        "of": "จาก"
       }
     },
     "greeting": {
@@ -468,7 +596,17 @@
       "collaborateTeam": "ทำงานร่วมกับทีมของคุณ",
       "quickExample": "ตัวอย่างด่วน",
       "manageKeys": "จัดการคีย์",
-      "upgradePlan": "อัพเกรดแผน"
+      "upgradePlan": "อัพเกรดแผน",
+      "apiUsageChart": "การใช้งาน API",
+      "last7days": "7 วันที่แล้ว",
+      "viewDetails": "ดูรายละเอียด",
+      "noUsageData": "ยังไม่มีข้อมูลการใช้งาน",
+      "recentActivity": "กิจกรรมล่าสุด",
+      "last10Requests": "คำขอ API 10 รายการล่าสุด",
+      "viewAllActivity": "ดูทั้งหมด",
+      "noActivityYet": "ยังไม่มีกิจกรรม API",
+      "noActivityDescription": "ส่งคำขอ API แรกของคุณเพื่อดูกิจกรรมที่นี่",
+      "sendFirstRequest": "ส่งคำขอแรก"
     },
     "keysPage": {
       "title": "คีย์ API",
@@ -498,7 +636,18 @@
       "keyNamePlaceholder": "เช่น Production, Development, Testing",
       "cancel": "ยกเลิก",
       "creating": "กำลังสร้าง...",
-      "createKey": "สร้างคีย์"
+      "createKey": "สร้างคีย์",
+      "name": "ชื่อ",
+      "keyColumn": "Key",
+      "actions": "การดำเนินการ",
+      "revokeWarning": "แอปพลิเคชันทั้งหมดที่ใช้ key นี้จะหยุดทำงานทันที",
+      "revokeAction": "เพิกถอน",
+      "rotate": "หมุนเวียน",
+      "rotateConfirm": "หมุนเวียน API key \"{keyName}\"?",
+      "rotateWarning": "key ใหม่จะถูกสร้างขึ้น อัปเดตแอปพลิเคชันของคุณด้วย key ใหม่ก่อนที่ key เก่าจะหมดอายุ",
+      "rotateAction": "หมุนเวียน Key",
+      "keyRotated": "หมุนเวียน API Key แล้ว!",
+      "keyRotatedDesc": "คัดลอก key ใหม่นี้เดี๋ยวนี้ key เก่าไม่สามารถใช้งานได้อีกต่อไป"
     },
     "organizationsPage": {
       "title": "องค์กร",
@@ -523,7 +672,16 @@
         "owner": "เจ้าของ",
         "admin": "ผู้ดูแล",
         "member": "สมาชิก"
-      }
+      },
+      "noOrgsExpected": "ใช้เวลาน้อยกว่า 30 วินาทีในการตั้งค่า",
+      "featureSharedKeys": "API Keys ที่ใช้ร่วมกัน",
+      "featureSharedKeysDesc": "การจัดการ key ทั้งทีม",
+      "featureTeamMembers": "สมาชิกทีม",
+      "featureTeamMembersDesc": "เชิญด้วยบทบาท",
+      "featureBudget": "งบประมาณที่ใช้ร่วมกัน",
+      "featureBudgetDesc": "การติดตามต้นทุนแบบรวม",
+      "featureAudit": "Audit ล็อก",
+      "featureAuditDesc": "ประวัติกิจกรรม"
     },
     "onboarding": {
       "title": "เริ่มต้นใช้งาน Seizn",
@@ -550,6 +708,770 @@
           "title": "ติดตั้ง SDK",
           "description": "เพิ่ม Seizn ในโปรเจกต์ของคุณด้วย npm หรือ pip",
           "action": "ดู SDK"
+        },
+        "createOrg": {
+          "title": "สร้างองค์กร",
+          "description": "ตั้งค่าพื้นที่ทำงานของทีมเพื่อการทำงานร่วมกัน",
+          "action": "สร้างองค์กร"
+        },
+        "firstQuery": {
+          "title": "รันคิวรีแรก",
+          "description": "ทดสอบ API ใน playground ด้วยคิวรีตัวอย่าง",
+          "action": "ลองคิวรี"
+        }
+      },
+      "takeTour": "เริ่มทัวร์",
+      "sdkModal": {
+        "title": "ติดตั้ง Seizn SDK",
+        "description": "เลือกวิธีการติดตั้งที่คุณต้องการและคัดลอกคำสั่ง",
+        "copy": "คัดลอก",
+        "copied": "คัดลอกแล้ว!",
+        "viewDocs": "ดูเอกสารฉบับเต็ม",
+        "done": "เสร็จสิ้น"
+      },
+      "tour": {
+        "welcome": {
+          "title": "ยินดีต้อนรับสู่ Seizn!",
+          "description": "มาทัวร์อย่างรวดเร็วเพื่อช่วยคุณเริ่มต้น"
+        },
+        "sidebar": {
+          "title": "การนำทาง",
+          "description": "ใช้แถบด้านข้างเพื่อนำทางระหว่างส่วนต่างๆ ของแดชบอร์ด"
+        },
+        "stats": {
+          "title": "สถิติของคุณ",
+          "description": "ติดตามการใช้งาน API, หน่วยความจำที่เก็บไว้ และแผนปัจจุบันของคุณ"
+        },
+        "quickStart": {
+          "title": "การดำเนินการด่วน",
+          "description": "ใช้การ์ดเหล่านี้สำหรับงานทั่วไป เช่น การสร้าง API keys"
+        },
+        "next": "ถัดไป",
+        "skip": "ข้ามทัวร์",
+        "finish": "เสร็จสิ้น",
+        "stepOf": "ขั้นตอนที่ {current} จาก {total}"
+      }
+    },
+    "governance": {
+      "title": "การกำกับดูแล",
+      "subtitle": "จัดการนโยบายข้อมูล กฎการเก็บรักษา และการตั้งค่าการปฏิบัติตามกฎระเบียบ",
+      "tabs": {
+        "retention": "การเก็บรักษาข้อมูล",
+        "access": "การควบคุมการเข้าถึง",
+        "pii": "การตรวจจับ PII",
+        "compliance": "การปฏิบัติตามกฎระเบียบ"
+      },
+      "stats": {
+        "retentionPolicies": "นโยบายการเก็บรักษา",
+        "accessRules": "กฎการเข้าถึง",
+        "piiRules": "กฎ PII ที่ใช้งานอยู่",
+        "complianceScore": "คะแนนการปฏิบัติตาม"
+      },
+      "addPolicy": "เพิ่มนโยบาย",
+      "addRule": "เพิ่มกฎ",
+      "deleteConfirm": "คุณแน่ใจหรือไม่ว่าต้องการลบนโยบายการเก็บรักษานี้?",
+      "retention": {
+        "description": "กำหนดค่าระยะเวลาการเก็บรักษาความทรงจำในแต่ละ namespace",
+        "namespace": "Namespace",
+        "memoryTypes": "ประเภทความทรงจำ",
+        "ttl": "TTL",
+        "autoArchive": "เก็บถาวรอัตโนมัติ",
+        "actions": "การดำเนินการ",
+        "days": "วัน",
+        "enabled": "เปิดใช้งาน",
+        "disabled": "ปิดใช้งาน",
+        "delete": "ลบ",
+        "addTitle": "เพิ่มนโยบายการเก็บรักษา",
+        "namespacePattern": "รูปแบบ Namespace",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "ใช้ * สำหรับการจับคู่แบบ wildcard",
+        "ttlDays": "TTL (วัน)",
+        "autoArchiveToggle": "เก็บถาวรอัตโนมัติ",
+        "autoArchiveDesc": "เก็บถาวรก่อนลบ",
+        "cancel": "ยกเลิก"
+      },
+      "access": {
+        "description": "กำหนดการควบคุมการเข้าถึงตามบทบาทสำหรับทีมของคุณ",
+        "namespaces": "Namespaces:",
+        "permissions": "สิทธิ์:"
+      },
+      "pii": {
+        "description": "ตรวจจับและจัดการข้อมูลส่วนบุคคลที่สามารถระบุตัวตนได้โดยอัตโนมัติ",
+        "pattern": "รูปแบบ",
+        "type": "ประเภท",
+        "action": "การดำเนินการ",
+        "status": "สถานะ",
+        "aiDetection": "การตรวจจับ AI",
+        "regex": "Regex",
+        "betaTitle": "การตรวจจับ AI อยู่ในช่วงเบต้า",
+        "betaDesc": "การตรวจจับ PII ด้วย AI อาจมีผลบวกปลอม โปรดตรวจสอบเนื้อหาที่ถูกแจ้งก่อนดำเนินการ"
+      },
+      "compliance": {
+        "description": "ติดตามการปฏิบัติตามกรอบกฎระเบียบหลัก",
+        "active": "ใช้งานอยู่",
+        "inactive": "ไม่ได้ใช้งาน",
+        "requirementsMet": "ข้อกำหนดที่ผ่าน",
+        "fullyCompliant": "ปฏิบัติตามครบถ้วน",
+        "enableCheck": "เปิดใช้งานการตรวจสอบการปฏิบัติตาม",
+        "reports": "รายงานการปฏิบัติตาม",
+        "soc2Report": "รายงาน SOC 2 Type II",
+        "soc2Date": "สร้างเมื่อ ธ.ค. 2024",
+        "dpa": "ข้อตกลงการประมวลผลข้อมูล",
+        "dpaDesc": "เทมเพลต DPA ที่สอดคล้องกับ GDPR",
+        "securityQuestionnaire": "แบบสอบถามด้านความปลอดภัย",
+        "securityQuestionnaireDesc": "แบบประเมินความปลอดภัยที่กรอกไว้ล่วงหน้า",
+        "download": "ดาวน์โหลด"
+      }
+    },
+    "integrations": {
+      "title": "การผสานรวม",
+      "subtitle": "เชื่อมต่อ Seizn กับเครื่องมือและเฟรมเวิร์กที่คุณชื่นชอบ",
+      "searchPlaceholder": "ค้นหาการผสานรวม...",
+      "stats": {
+        "total": "การผสานรวมทั้งหมด",
+        "available": "พร้อมใช้งาน",
+        "beta": "อยู่ในเบต้า",
+        "comingSoon": "เร็วๆ นี้"
+      },
+      "categories": {
+        "all": "ทั้งหมด",
+        "frameworks": "เฟรมเวิร์ก",
+        "llms": "LLMs",
+        "databases": "ฐานข้อมูล",
+        "platforms": "แพลตฟอร์ม"
+      },
+      "status": {
+        "available": "พร้อมใช้งาน",
+        "beta": "เบต้า",
+        "comingSoon": "เร็วๆ นี้"
+      },
+      "docs": "เอกสาร",
+      "copyInstall": "คัดลอกคำสั่งติดตั้ง",
+      "noResults": "ไม่พบการผสานรวมที่ตรงกับเกณฑ์ของคุณ",
+      "installation": "การติดตั้ง",
+      "copied": "คัดลอกแล้ว!",
+      "copy": "คัดลอก",
+      "quickStart": "เริ่มต้นอย่างรวดเร็ว",
+      "comingSoonMsg": "การผสานรวมนี้อยู่ระหว่างการพัฒนา สมัครเพื่อรับการแจ้งเตือนเมื่อพร้อมใช้งาน",
+      "notifyMe": "แจ้งเตือนฉัน",
+      "betaMsg": "การผสานรวมนี้อยู่ในช่วงเบต้า คุณสมบัติบางอย่างอาจเปลี่ยนแปลงก่อนเวอร์ชันสมบูรณ์",
+      "close": "ปิด",
+      "viewDocs": "ดูเอกสาร"
+    },
+    "analytics": "การวิเคราะห์",
+    "analyticsPage": {
+      "title": "การวิเคราะห์",
+      "subtitle": "การวิเคราะห์การใช้งานโดยละเอียดและข้อมูลเชิงลึก",
+      "allOrganizations": "ทุกองค์กร",
+      "days7": "7 วัน",
+      "days30": "30 วัน",
+      "days90": "90 วัน",
+      "exportCSV": "ส่งออก CSV",
+      "dailyActiveUsers": "ผู้ใช้งานรายวัน",
+      "activeUsers": "ผู้ใช้งาน",
+      "apiCalls": "การเรียก API",
+      "apiCallsOverTime": "การเรียก API ตามเวลา",
+      "memoryOperations": "การดำเนินการหน่วยความจำ",
+      "memoryUsage": "การใช้งานหน่วยความจำ",
+      "stores": "จัดเก็บ",
+      "searches": "ค้นหา",
+      "avgLatency": "เวลาตอบสนองเฉลี่ย",
+      "latencyTrend": "แนวโน้มเวลาตอบสนอง",
+      "errorRate": "อัตราข้อผิดพลาด",
+      "errors": "ข้อผิดพลาด",
+      "hourlyDistribution": "การกระจายรายชั่วโมง",
+      "calls": "การเรียก",
+      "peakHour": "ชั่วโมงสูงสุด",
+      "endpointBreakdown": "การวิเคราะห์ Endpoint",
+      "topQueries": "คำค้นหายอดนิยม",
+      "noQueries": "ยังไม่มีคำค้นหา",
+      "noData": "ไม่มีข้อมูลการวิเคราะห์",
+      "noDataDescription": "เริ่มเรียกใช้ API เพื่อดูการวิเคราะห์โดยละเอียดที่นี่"
+    },
+    "memoriesPage": {
+      "title": "ความทรงจำ",
+      "subtitle": "เรียกดูและค้นหาความทรงจำ AI ของคุณ",
+      "totalMemories": "ความทรงจำทั้งหมด",
+      "search": "ค้นหา",
+      "searchPlaceholder": "ค้นหาความทรงจำ...",
+      "namespace": "Namespace",
+      "memoryTypes": "ประเภทความทรงจำ",
+      "tags": "แท็ก",
+      "noTags": "ไม่มีแท็กที่ใช้ได้",
+      "clearFilters": "ล้างตัวกรอง",
+      "showing": "แสดง",
+      "of": "จาก",
+      "results": "ผลลัพธ์",
+      "sortNewest": "ใหม่สุดก่อน",
+      "sortOldest": "เก่าสุดก่อน",
+      "sortRelevance": "เกี่ยวข้องมากที่สุด",
+      "activeFilters": "ตัวกรองที่ใช้งานอยู่",
+      "loading": "กำลังโหลดความทรงจำ...",
+      "noMemories": "ไม่พบความทรงจำ",
+      "noMatchingMemories": "ลองปรับตัวกรองหรือคำค้นหาของคุณ",
+      "noMemoriesHint": "เริ่มเพิ่มความทรงจำผ่าน API เพื่อดูที่นี่",
+      "match": "ตรงกัน",
+      "loadMore": "โหลดเพิ่มเติม"
+    },
+    "budgetPage": {
+      "title": "งบประมาณและการควบคุมต้นทุน",
+      "subtitle": "จัดการขีดจำกัดการใช้จ่าย การแจ้งเตือน และการเพิ่มประสิทธิภาพต้นทุนอัตโนมัติ",
+      "loadError": "ไม่สามารถโหลดข้อมูลงบประมาณ",
+      "todaysSpend": "ค่าใช้จ่ายวันนี้",
+      "ofDailyLimit": "ของขีดจำกัดรายวัน",
+      "monthlySpend": "ค่าใช้จ่ายรายเดือน",
+      "ofMonthlyLimit": "ของขีดจำกัดรายเดือน",
+      "apiCalls": "การเรียก API",
+      "thisMonth": "เดือนนี้",
+      "autoDegrades": "การลดระดับอัตโนมัติ",
+      "noRecentDegrades": "ไม่มีการลดระดับล่าสุด",
+      "protectionActive": "การป้องกันงบประมาณทำงานอยู่",
+      "protectionDesc": "คำค้นหาของคุณกำลังถูกเพิ่มประสิทธิภาพโดยอัตโนมัติเพื่อให้อยู่ในงบประมาณ ซึ่งอาจลดคุณภาพผลลัพธ์ พิจารณาเพิ่มขีดจำกัดงบประมาณของคุณ",
+      "settings": "การตั้งค่างบประมาณ",
+      "recentEvents": "เหตุการณ์การลดระดับล่าสุด",
+      "time": "เวลา",
+      "reason": "เหตุผล",
+      "changes": "การเปลี่ยนแปลง",
+      "saved": "ประหยัดได้",
+      "howItWorks": "การเรียกค้นแบบรู้งบประมาณทำงานอย่างไร",
+      "step1": "เมื่อใกล้ถึงขีดจำกัดงบประมาณ Seizn จะเพิ่มประสิทธิภาพคำค้นหาของคุณโดยอัตโนมัติ",
+      "step2": "การเพิ่มประสิทธิภาพรวมถึง: ปิดการ rerank ลด topK ใช้ cache-first",
+      "step3": "ในโหมด \"hard\" คำค้นหาที่เกินงบประมาณจะถูกปฏิเสธทั้งหมด",
+      "step4": "เหตุการณ์การลดระดับทั้งหมดถูกบันทึกพร้อมการประหยัดต้นทุนเพื่อความโปร่งใส"
+    },
+    "devtoolsPage": {
+      "title": "เครื่องมือ DevTools สำหรับการเรียกค้น",
+      "subtitle": "ดีบักและวิเคราะห์ไปป์ไลน์ RAG ของคุณ",
+      "query": "คำค้นหา",
+      "noQueryText": "ไม่มีข้อความคำค้นหา",
+      "results": "ผลลัพธ์",
+      "error": "ข้อผิดพลาด",
+      "rerank": "rerank",
+      "optimizationHints": "คำแนะนำการเพิ่มประสิทธิภาพ",
+      "tabs": {
+        "timeline": "ไทม์ไลน์",
+        "candidates": "ผู้สมัคร",
+        "rerank": "Rerank",
+        "whatIf": "What-If Lab",
+        "raw": "ข้อมูลดิบ"
+      },
+      "finalResults": "ผลลัพธ์สุดท้าย",
+      "initialCandidates": "ผู้สมัครเริ่มต้น (ก่อน Rerank)",
+      "rawTraceData": "ข้อมูลการติดตามดิบ",
+      "emptyTitle": "เลือกการติดตามเพื่อตรวจสอบ",
+      "emptyDesc": "เลือกการติดตามจากรายการทางซ้ายเพื่อดูไทม์ไลน์ ผู้สมัคร การวิเคราะห์ reranking และทดลอง what-if"
+    },
+    "enterpriseDashboard": {
+      "title": "องค์กร",
+      "badge": "แผนองค์กร",
+      "subtitle": "กำหนดค่า SSO, SCIM และการตั้งค่าองค์กร",
+      "tabs": {
+        "sso": "Single Sign-On",
+        "scim": "การจัดเตรียมผู้ใช้",
+        "settings": "การตั้งค่า"
+      },
+      "sso": {
+        "enabled": "เปิดใช้งาน SSO แล้ว",
+        "provider": "ผู้ให้บริการ:",
+        "domains": "โดเมน:",
+        "testConnection": "ทดสอบการเชื่อมต่อ",
+        "disable": "ปิดใช้งาน",
+        "defaultRole": "บทบาทเริ่มต้น",
+        "status": "สถานะ",
+        "active": "ใช้งานอยู่",
+        "lastLogin": "เข้าสู่ระบบล่าสุด",
+        "hoursAgo": "2 ชั่วโมงที่แล้ว",
+        "notConfigured": "ยังไม่ได้กำหนดค่า Single Sign-On",
+        "notConfiguredDesc": "เปิดใช้งาน SSO เพื่อให้สมาชิกในทีมเข้าสู่ระบบด้วยผู้ให้บริการอัตลักษณ์ขององค์กร",
+        "configure": "กำหนดค่า SSO",
+        "supportedProviders": "ผู้ให้บริการที่รองรับ",
+        "selectProvider": "เลือกผู้ให้บริการ",
+        "configureDomains": "กำหนดค่าโดเมน",
+        "emailDomains": "โดเมนอีเมล",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "ผู้ใช้ที่มีโดเมนอีเมลเหล่านี้จะถูกนำไปยัง SSO",
+        "idpConfig": "การกำหนดค่า IdP",
+        "idpCopyHint": "คัดลอกค่าเหล่านี้ไปยังผู้ให้บริการอัตลักษณ์ของคุณ:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entity ID:",
+        "back": "ย้อนกลับ",
+        "continue": "ดำเนินการต่อ",
+        "enableSSO": "เปิดใช้งาน SSO",
+        "configSaved": "บันทึกการกำหนดค่า SSO แล้ว!"
+      },
+      "scim": {
+        "title": "การจัดเตรียม SCIM",
+        "subtitle": "ซิงค์ผู้ใช้และกลุ่มจากผู้ให้บริการอัตลักษณ์โดยอัตโนมัติ",
+        "endpoint": "SCIM Endpoint",
+        "bearerToken": "Bearer Token",
+        "regenerate": "สร้างใหม่",
+        "generate": "สร้าง",
+        "tokenWarning": "คัดลอก token นี้ตอนนี้ จะไม่แสดงอีกครั้ง",
+        "syncUsers": "ซิงค์ผู้ใช้",
+        "syncUsersDesc": "นำเข้าและซิงค์บัญชีผู้ใช้",
+        "syncGroups": "ซิงค์กลุ่ม",
+        "syncGroupsDesc": "นำเข้าและซิงค์การเป็นสมาชิกกลุ่ม",
+        "autoProvision": "การจัดเตรียมอัตโนมัติ",
+        "autoProvisionDesc": "สร้างผู้ใช้ใหม่โดยอัตโนมัติ",
+        "autoDeprovision": "การยกเลิกอัตโนมัติ",
+        "autoDeprovisionDesc": "ปิดใช้งานผู้ใช้ที่ถูกลบโดยอัตโนมัติ"
+      },
+      "features": {
+        "title": "ฟีเจอร์องค์กร",
+        "sso": "SSO",
+        "ssoDesc": "Single Sign-On ด้วย SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "การจัดเตรียมผู้ใช้อัตโนมัติ",
+        "auditLogs": "บันทึกการตรวจสอบ",
+        "auditLogsDesc": "ประวัติกิจกรรมทั้งหมด",
+        "customDomains": "โดเมนกำหนดเอง",
+        "customDomainsDesc": "ใช้โดเมนของคุณเอง",
+        "ipWhitelist": "รายการ IP ที่อนุญาต",
+        "ipWhitelistDesc": "จำกัดการเข้าถึงตาม IP",
+        "dataRetention": "การเก็บรักษาข้อมูล",
+        "dataRetentionDesc": "นโยบายการเก็บรักษาแบบกำหนดเอง",
+        "advancedAnalytics": "การวิเคราะห์ขั้นสูง",
+        "advancedAnalyticsDesc": "รายงานการใช้งานโดยละเอียด",
+        "sla": "SLA",
+        "slaDesc": "99.9% uptime guarantee",
+        "enabled": "เปิดใช้งาน",
+        "disabled": "ปิดใช้งาน"
+      },
+      "limits": {
+        "title": "ขีดจำกัดแผน",
+        "users": "ผู้ใช้",
+        "unlimited": "ไม่จำกัด",
+        "apiCalls": "การเรียก API",
+        "apiCallsValue": "10M / เดือน",
+        "storage": "พื้นที่จัดเก็บ",
+        "storageValue": "1TB",
+        "collections": "คอลเลกชัน",
+        "documents": "เอกสาร",
+        "retention": "การเก็บรักษา",
+        "retentionValue": "365 วัน"
+      },
+      "support": {
+        "title": "การสนับสนุนเฉพาะ",
+        "subtitle": "การสนับสนุนลำดับความสำคัญพร้อมผู้จัดการบัญชีเฉพาะ",
+        "contact": "ติดต่อฝ่ายสนับสนุน"
+      }
+    },
+    "securityPage": {
+      "title": "ความปลอดภัย",
+      "subtitle": "จัดการคีย์ API และดูบันทึกการตรวจสอบความปลอดภัย",
+      "stats": {
+        "activeKeys": "คีย์ API ที่ใช้งานอยู่",
+        "auditEvents": "เหตุการณ์ตรวจสอบ (24 ชม.)",
+        "securityScore": "คะแนนความปลอดภัย",
+        "alerts": "การแจ้งเตือน"
+      },
+      "tabs": {
+        "audit": "บันทึกการตรวจสอบ",
+        "keys": "คีย์ API",
+        "policies": "นโยบาย",
+        "settings": "การตั้งค่า"
+      },
+      "audit": {
+        "allActions": "การดำเนินการทั้งหมด",
+        "lastHour": "ชั่วโมงที่แล้ว",
+        "last24Hours": "24 ชั่วโมงที่แล้ว",
+        "last7Days": "7 วันที่แล้ว",
+        "last30Days": "30 วันที่แล้ว",
+        "exporting": "กำลังส่งออก...",
+        "exportCSV": "ส่งออก CSV",
+        "action": "การดำเนินการ",
+        "resource": "ทรัพยากร",
+        "details": "รายละเอียด",
+        "ipAddress": "ที่อยู่ IP",
+        "time": "เวลา",
+        "noLogs": "ไม่พบบันทึกการตรวจสอบ"
+      },
+      "keys": {
+        "description": "คีย์ API ใช้สำหรับยืนยันตัวตนคำขอไปยัง Seizn API",
+        "createNew": "สร้างคีย์ใหม่",
+        "rotate": "หมุนเวียน",
+        "revoke": "เพิกถอน",
+        "created": "สร้างเมื่อ",
+        "lastUsed": "ใช้ล่าสุด",
+        "never": "ไม่เคย",
+        "permissions": "สิทธิ์",
+        "rotateConfirm": "คุณแน่ใจหรือไม่ว่าต้องการหมุนเวียนคีย์ API นี้? คีย์เดิมจะถูกยกเลิก",
+        "rotateSuccess": "หมุนเวียนคีย์สำเร็จ! กรุณาคัดลอกคีย์ใหม่ของคุณ",
+        "revokeConfirm": "คุณแน่ใจหรือไม่ว่าต้องการเพิกถอนคีย์ API นี้? การดำเนินการนี้ไม่สามารถยกเลิกได้",
+        "createTitle": "สร้างคีย์ API",
+        "keyName": "ชื่อคีย์",
+        "keyNamePlaceholder": "Production Backend",
+        "keyType": "ประเภทคีย์",
+        "test": "ทดสอบ",
+        "live": "ใช้งานจริง",
+        "testHint": "คีย์ทดสอบใช้งานได้เฉพาะในโหมด sandbox",
+        "testKeysNote": "คีย์ทดสอบใช้งานได้เฉพาะในโหมด sandbox",
+        "cancel": "ยกเลิก",
+        "createKey": "สร้างคีย์"
+      },
+      "settings": {
+        "authentication": "การยืนยันตัวตน",
+        "twoFactor": "การยืนยันตัวตนสองขั้นตอน",
+        "twoFactorDesc": "กำหนดให้สมาชิกทีมทุกคนใช้ 2FA",
+        "twoFactorDescription": "กำหนดให้สมาชิกทีมทุกคนใช้ 2FA",
+        "sessionTimeout": "หมดเวลาเซสชัน",
+        "sessionTimeoutDesc": "ออกจากระบบอัตโนมัติหลังจากไม่มีกิจกรรม",
+        "sessionTimeoutDescription": "ออกจากระบบอัตโนมัติหลังจากไม่มีกิจกรรม",
+        "min15": "15 นาที",
+        "15minutes": "15 นาที",
+        "min30": "30 นาที",
+        "30minutes": "30 นาที",
+        "hour1": "1 ชั่วโมง",
+        "1hour": "1 ชั่วโมง",
+        "hour4": "4 ชั่วโมง",
+        "4hours": "4 ชั่วโมง",
+        "apiSecurity": "ความปลอดภัย API",
+        "ipWhitelist": "รายการ IP ที่อนุญาต",
+        "ipWhitelistDesc": "อนุญาตการเข้าถึง API จาก IP ที่ระบุเท่านั้น",
+        "ipWhitelistDescription": "อนุญาตการเข้าถึง API จาก IP ที่ระบุเท่านั้น",
+        "rateLimit": "จำกัดอัตรา",
+        "rateLimitDesc": "จำนวนคำขอสูงสุดต่อนาที",
+        "rateLimitDescription": "จำนวนคำขอสูงสุดต่อนาที",
+        "rate100": "100/นาที",
+        "rate500": "500/นาที",
+        "rate1000": "1,000/นาที",
+        "rate5000": "5,000/นาที",
+        "dangerZone": "โซนอันตราย",
+        "dangerWarning": "การดำเนินการเหล่านี้ไม่สามารถย้อนกลับได้ กรุณาดำเนินการด้วยความระมัดระวัง",
+        "dangerZoneDescription": "การดำเนินการเหล่านี้ไม่สามารถย้อนกลับได้ กรุณาดำเนินการด้วยความระมัดระวัง",
+        "revokeAll": "เพิกถอนคีย์ API ทั้งหมด",
+        "revokeAllKeys": "เพิกถอนคีย์ API ทั้งหมด",
+        "deleteAllData": "ลบข้อมูลทั้งหมด"
+      },
+      "policies": {
+        "active": "ใช้งานอยู่",
+        "inactive": "ไม่ได้ใช้งาน",
+        "pending": "รอดำเนินการ",
+        "activePolicies": "นโยบายที่ใช้งานอยู่",
+        "accessPolicies": "นโยบายการเข้าถึง",
+        "compliancePolicies": "นโยบายการปฏิบัติตาม",
+        "awaitingApproval": "รอการอนุมัติ",
+        "addCustom": "เพิ่มนโยบายกำหนดเอง"
+      }
+    },
+    "reportsPage": {
+      "title": "รายงาน ROI",
+      "generated": "สร้างเมื่อ",
+      "period7d": "7 วันที่แล้ว",
+      "period30d": "30 วันที่แล้ว",
+      "period90d": "90 วันที่แล้ว",
+      "exportPdf": "ส่งออก PDF",
+      "loadError": "ไม่สามารถโหลดรายงาน",
+      "totalQueries": "คำค้นหาทั้งหมด",
+      "totalCost": "ต้นทุนทั้งหมด",
+      "avgLatency": "เวลาตอบสนองเฉลี่ย",
+      "costPerQuery": "ต้นทุน/คำค้นหา",
+      "estAnnualCost": "ต้นทุนรายปีโดยประมาณ",
+      "projAnnualSavings": "การประหยัดรายปีที่คาดการณ์",
+      "savingsRate": "อัตราการประหยัด",
+      "rerankImpact": "ผลกระทบจาก Rerank",
+      "mrrScore": "คะแนน MRR",
+      "without": "ไม่มี",
+      "withRerank": "มี rerank",
+      "autopilotSavings": "การประหยัดจาก Autopilot",
+      "savedThisPeriod": "ประหยัดได้ในช่วงนี้ด้วย Autopilot",
+      "withAutopilot": "มี autopilot",
+      "recommendations": "คำแนะนำ",
+      "queries": "คำค้นหา:",
+      "avgCost": "ต้นทุนเฉลี่ย"
+    },
+    "privacy": {
+      "title": "ความเป็นส่วนตัวและ RTBF",
+      "subtitle": "จัดการคำขอสิทธิ์การถูกลืมตาม GDPR และสิทธิ์ของเจ้าของข้อมูล",
+      "tabs": {
+        "requests": "คำขอ RTBF",
+        "subjects": "เจ้าของข้อมูล",
+        "certificates": "ใบรับรอง",
+        "settings": "การตั้งค่า"
+      },
+      "stats": {
+        "pending": "รอดำเนินการ",
+        "inProgress": "อยู่ระหว่างดำเนินการ",
+        "completed": "เสร็จสิ้น",
+        "overdue": "เกินกำหนด"
+      },
+      "requests": {
+        "description": "จัดการคำขอสิทธิ์การถูกลืมตาม GDPR มาตรา 17",
+        "newRequest": "คำขอใหม่",
+        "subject": "เจ้าของข้อมูล",
+        "status": "สถานะ",
+        "phase": "ขั้นตอน",
+        "dueDate": "วันครบกำหนด",
+        "scope": "ขอบเขต",
+        "actions": "การดำเนินการ",
+        "daysOverdue": "วันที่เกินกำหนด",
+        "daysLeft": "วันที่เหลือ",
+        "view": "ดู",
+        "certificate": "ใบรับรอง",
+        "verify": "ตรวจสอบ"
+      },
+      "detail": {
+        "title": "รายละเอียดคำขอ RTBF",
+        "dataSubject": "เจ้าของข้อมูล",
+        "requestedAt": "ขอเมื่อ",
+        "dueDate": "วันครบกำหนด",
+        "status": "สถานะ",
+        "dataCategories": "หมวดหมู่ข้อมูล",
+        "deletionScope": "ขอบเขตการลบ",
+        "completionDetails": "รายละเอียดการดำเนินการ",
+        "completed": "เสร็จสิ้น:",
+        "verified": "ตรวจสอบแล้ว:",
+        "close": "ปิด",
+        "runVerification": "ดำเนินการตรวจสอบ",
+        "downloadCertificate": "ดาวน์โหลดใบรับรอง"
+      },
+      "newRequest": {
+        "title": "คำขอ RTBF ใหม่",
+        "description": "สร้างคำขอสิทธิ์การถูกลืมใหม่ กำหนดเวลาจะถูกตั้งเป็น 30 วันนับจากนี้ตามข้อกำหนด GDPR",
+        "emailLabel": "อีเมลเจ้าของข้อมูล",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "ขอบเขตการลบ",
+        "cancel": "ยกเลิก",
+        "creating": "กำลังสร้าง...",
+        "create": "สร้างคำขอ"
+      },
+      "subjects": {
+        "description": "ดูและจัดการเจ้าของข้อมูลที่มีปฏิสัมพันธ์กับระบบของคุณ",
+        "email": "อีเมล",
+        "externalId": "รหัสภายนอก",
+        "requests": "คำขอ",
+        "dataCategories": "หมวดหมู่ข้อมูล",
+        "actions": "การดำเนินการ",
+        "viewData": "ดูข้อมูล"
+      },
+      "certificates": {
+        "description": "หลักฐานการเข้ารหัสลับของการลบข้อมูลสำหรับการตรวจสอบการปฏิบัติตาม",
+        "noTitle": "ยังไม่มีใบรับรอง",
+        "noDesc": "ใบรับรองจะถูกสร้างเมื่อคำขอ RTBF ได้รับการตรวจสอบ",
+        "request": "คำขอ:",
+        "issued": "ออกเมื่อ:",
+        "gdprCompliant": "สอดคล้องกับ GDPR",
+        "download": "ดาวน์โหลด",
+        "hash": "แฮชใบรับรอง"
+      },
+      "settings": {
+        "description": "กำหนดค่าการประมวลผล RTBF และการตั้งค่าการปฏิบัติตาม",
+        "autoDiscovery": "การค้นหาอัตโนมัติ",
+        "autoDiscoveryDesc": "ค้นหาข้อมูลทั้งหมดที่เกี่ยวข้องกับเจ้าของข้อมูลโดยอัตโนมัติ",
+        "verificationRequired": "ต้องมีการตรวจสอบ",
+        "verificationRequiredDesc": "กำหนดให้ต้องมีการตรวจสอบก่อนออกใบรับรองการลบ",
+        "responseDeadline": "กำหนดเวลาตอบกลับ (วัน)",
+        "responseDeadlineHint": "GDPR กำหนดให้ตอบกลับภายใน 30 วัน (ขยายได้ถึง 90 วันสำหรับคำขอที่ซับซ้อน)",
+        "notificationEmail": "อีเมลแจ้งเตือน",
+        "notificationEmailHint": "ที่อยู่อีเมลสำหรับการแจ้งเตือนคำขอ RTBF",
+        "auditLogRetention": "การเก็บรักษาบันทึกการตรวจสอบ (วัน)",
+        "auditLogRetentionHint": "ระยะเวลาเก็บรักษาบันทึกการตรวจสอบเพื่อวัตถุประสงค์การปฏิบัติตาม",
+        "years": "ปี",
+        "saving": "กำลังบันทึก...",
+        "save": "บันทึกการตั้งค่า"
+      },
+      "gdprNotes": {
+        "title": "หมายเหตุการปฏิบัติตาม GDPR",
+        "note1": "คำขอ RTBF ต้องดำเนินการให้เสร็จภายใน 30 วัน",
+        "note2": "คำขอที่ซับซ้อนอาจขยายเวลาได้ถึง 90 วัน",
+        "note3": "ควรเก็บรักษาบันทึกการตรวจสอบเพื่อการปฏิบัติตาม",
+        "note4": "ใบรับรองการลบเป็นหลักฐานการเข้ารหัสลับ"
+      }
+    },
+    "topBar": {
+      "personal": "บัญชีส่วนตัว",
+      "manageOrgs": "จัดการองค์กร",
+      "create": "สร้าง",
+      "createApiKey": "API Key ใหม่",
+      "createOrg": "องค์กรใหม่"
+    },
+    "share": {
+      "title": "แชร์ Trace",
+      "button": "แชร์",
+      "createLink": "สร้างลิงก์แชร์",
+      "creating": "กำลังสร้าง...",
+      "done": "เสร็จสิ้น",
+      "linkExpiration": "วันหมดอายุลิงก์",
+      "hour": "1H",
+      "day": "24H",
+      "week": "7D",
+      "never": "ไม่มีวันหมดอายุ",
+      "privacyOptions": "ตัวเลือกความเป็นส่วนตัว",
+      "maskPii": "ซ่อน PII (อีเมล, โทรศัพท์, IP)",
+      "maskSecrets": "ซ่อน API keys และ secrets",
+      "shareUrl": "URL แชร์",
+      "copyLink": "คัดลอกลิงก์",
+      "linkCopied": "คัดลอกแล้ว!",
+      "expiresIn": "ลิงก์นี้จะหมดอายุใน {duration}",
+      "neverExpires": "ลิงก์นี้ไม่มีวันหมดอายุ",
+      "error": "ไม่สามารถสร้างลิงก์แชร์ได้",
+      "revoke": "เพิกถอนลิงก์",
+      "revokeConfirm": "คุณแน่ใจหรือไม่ว่าต้องการเพิกถอนลิงก์นี้?",
+      "linkRevoked": "เพิกถอนลิงก์สำเร็จ"
+    },
+    "theme": {
+      "light": "สว่าง",
+      "dark": "มืด",
+      "system": "ระบบ",
+      "toggle": "สลับธีม"
+    },
+    "activity": {
+      "endpoint": "Endpoint",
+      "status": "สถานะ",
+      "latency": "Latency",
+      "cost": "ค่าใช้จ่าย",
+      "key": "Key",
+      "time": "เวลา"
+    },
+    "evals": {
+      "title": "การประเมิน",
+      "subtitle": "ทดสอบ A/B และวัดคุณภาพการเรียกข้อมูล",
+      "newRun": "รันการประเมินใหม่",
+      "runs": "รันการประเมิน",
+      "noRuns": "ยังไม่มีรันการประเมิน",
+      "metrics": "เมตริก",
+      "comparison": "การเปรียบเทียบแบบภาพ",
+      "selectRun": "เลือกรันการประเมิน",
+      "selectRunHint": "เลือกรันจากรายการเพื่อดูเมตริกโดยละเอียด",
+      "completed": "เสร็จสิ้น",
+      "running": "กำลังทำงาน",
+      "failed": "ล้มเหลว",
+      "pending": "รอดำเนินการ",
+      "winner": "ผู้ชนะ",
+      "tie": "เสมอ",
+      "confidence": "ความมั่นใจ",
+      "exportCSV": "ส่งออก CSV",
+      "exportJSON": "ส่งออก JSON",
+      "tabComparison": "การเปรียบเทียบ",
+      "tabCharts": "กราф",
+      "tabTimeline": "ไทม์ไลน์",
+      "precision": "ความแม่นยำ",
+      "recall": "Recall",
+      "f1Score": "คะแนน F1",
+      "avgLatency": "Latency เฉลี่ย",
+      "avgCost": "ค่าใช้จ่ายเฉลี่ย",
+      "barChart": "การเปรียบเทียบเมตริก",
+      "radarChart": "ภาพรวมหลายเมตริก",
+      "metricsTrend": "แนวโน้มเมตริก",
+      "latencyTrend": "แนวโน้ม Latency",
+      "recentRuns": "รันที่เสร็จสิ้นล่าสุด",
+      "waitingForMetrics": "กำลังรอการประเมินให้เสร็จสิ้น..."
+    },
+    "autopilot": {
+      "title": "ระบบอัตโนมัติ",
+      "subtitle": "การเพิ่มประสิทธิภาพการเรียกข้อมูลที่ขับเคลื่อนด้วย AI",
+      "settings": "การตั้งค่า",
+      "decisionLogs": "ล็อกการตัดสินใจ",
+      "operationMode": "โหมดการทำงาน",
+      "parameters": "พารามิเตอร์",
+      "recentDecisions": "การตัดสินใจล่าสุด",
+      "noLogs": "ยังไม่มีล็อกการตัดสินใจ"
+    },
+    "calculator": {
+      "title": "เครื่องคำนวณการใช้งาน",
+      "subtitle": "ประมาณการค่าใช้จ่ายรายเดือนตามการใช้งานที่คาดหวัง",
+      "stats": {
+        "apiCalls": "การเรียก API",
+        "memories": "หน่วยความจำ",
+        "extractions": "การดึงข้อมูล",
+        "estimated": "ค่าใช้จ่ายประมาณการ"
+      },
+      "presets": {
+        "title": "ค่าที่ตั้งไว้ล่วงหน้า",
+        "startup": "สตาร์ทอัพ",
+        "growing": "กำลังเติบโต",
+        "scale": "ขยายขนาด",
+        "enterprise": "องค์กรขนาดใหญ่"
+      },
+      "customize": {
+        "title": "ปรับแต่งการใช้งาน"
+      },
+      "labels": {
+        "apiCalls": "การเรียก API รายเดือน",
+        "memories": "หน่วยความจำที่เก็บไว้",
+        "extractions": "การดึงข้อมูล"
+      },
+      "recommended": {
+        "title": "แผนที่แนะนำ",
+        "base": "ราคาพื้นฐาน",
+        "overage": "ค่าเกิน",
+        "cta": "เริ่มต้นใช้งาน"
+      },
+      "comparison": {
+        "title": "แผนทั้งหมด",
+        "best": "คุ้มค่าที่สุด"
+      },
+      "details": {
+        "title": "รายละเอียดการกำหนดราคา",
+        "plan": "แผน",
+        "base": "ราคาพื้นฐาน",
+        "includedCalls": "การเรียกที่รวมอยู่",
+        "overageRate": "อัตราค่าเกิน",
+        "yourOverage": "ค่าเกินของคุณ",
+        "total": "รวม"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "กำหนดค่า HTTP callbacks สำหรับการแจ้งเตือนเหตุการณ์แบบเรียลไทม์",
+      "create": "สร้าง Webhook",
+      "stats": {
+        "total": "Webhooks ทั้งหมด",
+        "active": "ใช้งานอยู่",
+        "failing": "ล้มเหลว",
+        "deliveries": "การส่งทั้งหมด"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "การส่งล่าสุด"
+      },
+      "success": "สำเร็จ",
+      "failed": "ล้มเหลว",
+      "lastTriggered": "ทริกเกอร์ล่าสุด",
+      "edit": "แก้ไข",
+      "delete": "ลบ",
+      "retry": "ลองใหม่",
+      "deleteConfirm": "คุณแน่ใจหรือไม่ว่าต้องการลบ webhook นี้? การดำเนินการนี้ไม่สามารถยกเลิกได้",
+      "empty": {
+        "title": "ยังไม่มีการกำหนดค่า webhooks",
+        "description": "สร้าง webhook เพื่อรับการแจ้งเตือนแบบเรียลไทม์เกี่ยวกับเหตุการณ์",
+        "cta": "สร้าง Webhook แรกของคุณ"
+      },
+      "table": {
+        "event": "เหตุการณ์",
+        "status": "สถานะ",
+        "response": "การตอบสนอง",
+        "time": "เวลา",
+        "actions": "การดำเนินการ"
+      },
+      "modal": {
+        "title": "สร้าง Webhook",
+        "name": "ชื่อ",
+        "url": "Endpoint URL",
+        "events": "เหตุการณ์ที่จะสมัครสมาชิก",
+        "cancel": "ยกเลิก",
+        "create": "สร้าง Webhook"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "บทช่วยสอนการค้นหาครั้งแรก",
+      "subtitle": "เรียนรู้วิธีใช้ playground",
+      "dismiss": "ปิด",
+      "tryExamples": "ลองคิวรีตัวอย่าง:",
+      "hint": "คลิกตัวอย่างใดๆ เพื่อกรอกอินพุตคิวรีโดยอัตโนมัติ",
+      "gotIt": "เข้าใจแล้ว!",
+      "tips": {
+        "welcome": {
+          "title": "ยินดีต้อนรับสู่ Debug Console",
+          "description": "ทดสอบคิวรีของคุณที่นี่ด้วยการติดตามอย่างครบถ้วนเพื่อเข้าใจว่าการค้นหาทำงานอย่างไรในรายละเอียด"
+        },
+        "query": {
+          "title": "คิวรีภาษาธรรมชาติ",
+          "description": "ป้อนคิวรีภาษาธรรมชาติใดๆ AI ของเราจะค้นหาหน่วยความจำที่คล้ายกันทางความหมายจากข้อมูลที่เก็บไว้ของคุณ"
+        },
+        "trace": {
+          "title": "การติดตามการดำเนินการทั้งหมด",
+          "description": "ดูทุกขั้นตอนของไปป์ไลน์ - ตั้งแต่การสร้างการฝังจนถึงการจัดอันดับผลลัพธ์ - พร้อมรายละเอียดเวลาและค่าใช้จ่าย"
         }
       }
     }
@@ -727,7 +1649,11 @@
       "pricing": "ราคา",
       "enterprise": "องค์กร",
       "getApiKey": "รับคีย์ API",
-      "tryDemo": "ลองสาธิต"
+      "tryDemo": "ลองสาธิต",
+      "limits": "ขีดจำกัด",
+      "status": "สถานะ",
+      "help": "ช่วยเหลือ",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "ตัวสร้างคำขอ",
@@ -753,7 +1679,8 @@
         "techDocs": "เอกสารเทคนิค",
         "legalContracts": "สัญญาทางกฎหมาย",
         "researchPapers": "เอกสารวิจัย"
-      }
+      },
+      "advanced": "ขั้นสูง"
     },
     "resultsPanel": {
       "searching": "กำลังค้นหา...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "ผลลัพธ์",
-      "trace": "การติดตาม"
+      "trace": "การติดตาม",
+      "cost": "ต้นทุน"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Policy"
+    },
+    "playgroundTitle": "ลองใช้เลย",
+    "costPanel": {
+      "calculating": "กำลังคำนวณต้นทุน...",
+      "noCost": "เรียกใช้คำค้นหาเพื่อดูรายละเอียดต้นทุน",
+      "costBreakdown": "รายละเอียดต้นทุน",
+      "component": "ส่วนประกอบ",
+      "cost": "ต้นทุน",
+      "embedding": "Embedding",
+      "vectorSearch": "ค้นหาเวกเตอร์",
+      "rerank": "จัดอันดับใหม่",
+      "answerContract": "สัญญาคำตอบ",
+      "total": "ต้นทุนรวม",
+      "usage": "การใช้งาน",
+      "tokensIn": "โทเค็นเข้า",
+      "tokensOut": "โทเค็นออก",
+      "queryUnits": "หน่วยคำค้นหา",
+      "estimatedMonthly": "ประมาณการรายเดือน",
+      "basedOn": "อ้างอิงจาก",
+      "queriesPerDay": "คำค้นหา/วัน"
+    },
+    "errorDisplay": {
+      "error": "ข้อผิดพลาด",
+      "errorCode": "รหัส",
+      "traceId": "Trace",
+      "hint": "คำแนะนำ",
+      "tryAgain": "ลองอีกครั้ง",
+      "copyTraceId": "คัดลอก Trace ID",
+      "copied": "คัดลอกแล้ว!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "ทรัพยากร",
       "security": "ความปลอดภัย",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "บทเรียน 5 นาที",
+      "integrations": "การเชื่อมต่อ"
     },
     "hero": {
       "title": "เอกสาร API",
@@ -873,7 +1837,9 @@
       "enterprise": "องค์กร",
       "unlimited": "ไม่จำกัด",
       "exceeded": "เมื่อคุณเกินขีดจำกัด API จะส่งคืน",
-      "response": "การตอบกลับ"
+      "response": "การตอบกลับ",
+      "monthlyApiCalls": "การเรียก API รายเดือน",
+      "starter": "Starter"
     },
     "errors": {
       "title": "รหัสข้อผิดพลาด",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "การค้นหาและการดึงข้อมูล",
         "extraction": "การสกัดข้อมูล",
         "operations": "การดำเนินการ",
-        "security": "ความปลอดภัยและความเป็นส่วนตัว"
+        "security": "ความปลอดภัยและความเป็นส่วนตัว",
+        "all": "ทั้งหมด"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "รองรับภาษาโปรแกรมอะไรบ้าง?",
           "answer": "เรารองรับ JavaScript/TypeScript (Node.js) และ Python อย่างเป็นทางการ สำหรับภาษาอื่น คุณสามารถใช้ REST API โดยตรง"
+        },
+        "q4": {
+          "question": "วิธีสร้าง PoC ที่เร็วที่สุดคืออะไร?",
+          "answer": "1) POST /api/memories เพื่อจัดเก็บความชอบของผู้ใช้ 2) GET /api/memories เพื่อค้นหา 3) ส่งผลลัพธ์เข้า LLM Prompt ของคุณ 4) ภายหลังเพิ่ม /api/extract สำหรับการสกัดอัตโนมัติ และ /api/query สำหรับการตอบกลับที่เสริมด้วยหน่วยความจำ"
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "พารามิเตอร์ user_id คืออะไร?",
           "answer": "user_id เชื่อมโยงความทรงจำกับผู้ใช้เฉพาะ ทำให้สามารถสร้างประสบการณ์ส่วนบุคคลสำหรับผู้ใช้แต่ละคน"
+        },
+        "q4": {
+          "question": "ควรใช้ scope (user/session/agent) เมื่อไร?",
+          "answer": "user: ความชอบที่ใช้กับผู้ใช้ทั่วไป session: เป้าหมายหรือบริบทที่ใช้ได้เฉพาะการสนทนานี้ agent: กฎเฉพาะสำหรับตัวแทนหนึ่งในระบบหลายตัวแทน การใช้ scope อย่างเหมาะสมจะลดความยาว Prompt และปรับปรุงความสม่ำเสมอของการตอบกลับ"
+        },
+        "q5": {
+          "question": "memory_types คืออะไร และทำไมถึงสำคัญ?",
+          "answer": "memory_type จัดหมวดหมู่หน่วยความจำ: fact (ข้อมูลที่ไม่เปลี่ยนแปลง), preference (ตัวเลือกของผู้ใช้), instruction (กฎที่ต้องปฏิบัติตาม), relationship (ความสัมพันธ์ของบุคคล/องค์กร), experience (เหตุการณ์ในอดีต) นี่คือแกนที่ทรงพลังที่สุดสำหรับการกรอง การลบ และการใช้นโยบาย"
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "มีการจำกัดอัตราหรือไม่?",
           "answer": "มี การจำกัดแตกต่างกันตามแผน แผนฟรีอนุญาต 100 คำขอต่อนาที ดูหน้าราคาสำหรับรายละเอียด"
+        },
+        "q4": {
+          "question": "จะลดต้นทุนได้อย่างไร?",
+          "answer": "ปัจจัยต้นทุนหลัก: 1) ความถี่ Extract - ลดการเรียก 2) ขอบเขตการค้นหา - ใช้ namespace เพื่อจำกัด 3) การเลือกโมเดล - ใช้ haiku สำหรับงานทั่วไป, sonnet สำหรับงานสำคัญ 4) การแคช - แคชคำค้นหาที่ซ้ำกัน 5) ใช้ batch operations เมื่อเป็นไปได้"
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "คุณมีใบรับรอง SOC 2 หรือไม่?",
           "answer": "เราอยู่ในขั้นตอนการรับรอง SOC 2 ติดต่อทีมขายของเราสำหรับข้อมูลเพิ่มเติม"
         }
+      },
+      "title": "คำถามที่พบบ่อย",
+      "subtitle": "คำถามทั่วไปเกี่ยวกับ Seizn Memory API ตั้งแต่เริ่มต้นจนถึงการใช้งานขั้นสูง",
+      "nav": {
+        "dashboard": "แดชบอร์ด"
+      },
+      "cta": {
+        "title": "ยังมีคำถามอยู่?",
+        "subtitle": "ดูเอกสารของเราหรือติดต่อทีมสนับสนุน",
+        "readDocs": "อ่านเอกสาร",
+        "contactSupport": "ติดต่อฝ่ายสนับสนุน"
+      },
+      "footer": {
+        "rights": "สงวนลิขสิทธิ์"
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "เริ่มต้นใน 5 นาที | Seizn",
+        "description": "เพิ่ม AI memory ใน 5 นาทีด้วยโค้ดเพียง 10 บรรทัด"
+      },
+      "badge": "บทเรียน 5 นาที",
+      "noCreditCard": "ไม่ต้องใช้บัตรเครดิต",
+      "title": "เริ่มต้นใช้งาน Seizn",
+      "subtitle": "เพิ่มหน่วยความจำถาวรให้ AI ของคุณภายใน 5 นาที ทำตามขั้นตอนและทำเครื่องหมายเมื่อเสร็จแต่ละขั้น",
+      "getApiKey": "รับ API Key",
+      "fullExample": "ตัวอย่างเต็ม (10 บรรทัด)",
+      "copy": "คัดลอก",
+      "copied": "คัดลอกแล้ว!",
+      "progress": "ความคืบหน้า",
+      "stepsLabel": "ขั้นตอน",
+      "steps": {
+        "getApiKey": {
+          "title": "รับ API Key ของคุณ",
+          "time": "30 วินาที",
+          "description": "สมัครสมาชิกและสร้าง API Key จากแดชบอร์ด",
+          "actionLabel": "ไปที่แดชบอร์ด"
+        },
+        "install": {
+          "title": "ติดตั้ง SDK",
+          "time": "30 วินาที",
+          "description": "ติดตั้ง Seizn SDK ด้วยตัวจัดการแพ็กเกจที่คุณต้องการ"
+        },
+        "ingest": {
+          "title": "นำเข้าเอกสาร",
+          "time": "30 วินาที",
+          "description": "อัปโหลดเอกสารไปยังชุดข้อมูลของคุณเพื่อการค้นคืน"
+        },
+        "query": {
+          "title": "เรียกใช้คำค้นหาแรกของคุณ",
+          "time": "10 วินาที",
+          "description": "ค้นหาเอกสารด้วยคำค้นหาภาษาธรรมชาติ"
+        }
+      },
+      "completion": {
+        "title": "ยินดีด้วย!",
+        "description": "คุณทำ Quickstart สำเร็จแล้ว ไปป์ไลน์การค้นคืนของคุณพร้อมใช้งานพร้อม Tracing ในตัว",
+        "readDocs": "อ่านเอกสาร",
+        "goToDashboard": "ไปที่แดชบอร์ด"
+      },
+      "expectedOutput": {
+        "title": "ผลลัพธ์ที่คาดหวัง",
+        "description": "แต่ละคำค้นหาจะส่งคืนผลลัพธ์ Trace และรายละเอียดต้นทุน:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API Reference",
+          "description": "สำรวจ Endpoint และตัวเลือกทั้งหมดสำหรับกรณีใช้งานขั้นสูง"
+        },
+        "sdkExamples": {
+          "title": "ตัวอย่าง SDK",
+          "description": "ตัวอย่างพร้อมใช้สำหรับ Python, TypeScript และอื่นๆ"
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "คำถามที่พบบ่อยเกี่ยวกับประเภทหน่วยความจำ เนมสเปซ และแนวปฏิบัติที่ดี"
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API Reference | Seizn",
+        "description": "เอกสาร API ฉบับสมบูรณ์สำหรับ Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain และ RetOps API"
+      },
+      "title": "API Reference",
+      "description": "เอกสารฉบับสมบูรณ์สำหรับ Seizn API ทั้งหมด ได้แก่ Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain และ RetOps",
+      "auth": {
+        "title": "การยืนยันตัวตน",
+        "description": "API Endpoint ทั้งหมดต้องมีการยืนยันตัวตนด้วย API Key ใส่คีย์ของคุณในเฮดเดอร์ X-API-Key"
+      },
+      "sidebar": {
+        "title": "กลุ่ม API"
+      },
+      "endpoint": {
+        "parameters": "พารามิเตอร์",
+        "requestBody": "เนื้อหาคำขอ",
+        "response": "การตอบกลับ",
+        "errorCodes": "รหัสข้อผิดพลาด"
+      },
+      "table": {
+        "name": "ชื่อ",
+        "type": "ประเภท",
+        "required": "จำเป็น",
+        "description": "คำอธิบาย",
+        "code": "รหัส",
+        "message": "ข้อความ"
+      },
+      "copy": "คัดลอก",
+      "copied": "คัดลอกแล้ว!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "บทเรียน 5 นาที | Seizn",
+        "description": "เรียนรู้วิธีเพิ่ม AI memory ใน 5 นาทีด้วยคู่มือแบบโต้ตอบทีละขั้นตอน"
+      },
+      "breadcrumb": "บทเรียน",
+      "badge": "บทเรียน 5 นาที",
+      "noCreditCard": "ไม่ต้องใช้บัตรเครดิต",
+      "title": "เพิ่ม AI Memory ใน 5 นาที",
+      "subtitle": "ทำตามคู่มือทีละขั้นตอนเพื่อให้ AI ของคุณมีหน่วยความจำถาวร ทำเครื่องหมายเมื่อเสร็จแต่ละขั้นตอน",
+      "getApiKey": "รับ API Key",
+      "copy": "คัดลอก",
+      "copied": "คัดลอกแล้ว!",
+      "progress": "ความคืบหน้า",
+      "stepsLabel": "ขั้นตอน",
+      "steps": {
+        "step1": {
+          "title": "รับ API Key ของคุณ",
+          "time": "30 วินาที",
+          "description": "สมัครสมาชิกฟรีและสร้าง API Key จากแดชบอร์ด",
+          "instruction1": "สมัครสมาชิกหรือเข้าสู่ระบบบัญชี Seizn ของคุณ",
+          "instruction2": "ไปที่ API Keys ในแดชบอร์ด",
+          "instruction3": "คลิก 'สร้างคีย์ใหม่' แล้วคัดลอกคีย์ของคุณ",
+          "actionLabel": "ไปที่แดชบอร์ด"
+        },
+        "step2": {
+          "title": "ติดตั้ง SDK",
+          "time": "30 วินาที",
+          "description": "เลือกภาษาที่คุณต้องการและติดตั้ง Seizn SDK"
+        },
+        "step3": {
+          "title": "บันทึกหน่วยความจำแรกของคุณ",
+          "time": "2 นาที",
+          "description": "จัดเก็บข้อมูลที่ AI ของคุณควรจำข้ามเซสชัน"
+        },
+        "step4": {
+          "title": "ค้นหาหน่วยความจำ",
+          "time": "2 นาที",
+          "description": "ค้นคืนหน่วยความจำที่เกี่ยวข้องด้วยคำค้นหาภาษาธรรมชาติ"
+        },
+        "step5": {
+          "title": "ตรวจสอบผลลัพธ์",
+          "time": "30 วินาที",
+          "description": "ตรวจสอบว่าหน่วยความจำของคุณถูกจัดเก็บและค้นคืนสำเร็จ",
+          "hint": "คุณควรเห็นการตอบกลับแบบนี้เมื่อค้นหาหน่วยความจำ:",
+          "successTitle": "สำเร็จ!",
+          "successDescription": "AI ของคุณมีหน่วยความจำถาวรแล้ว ใช้ผลการค้นหาเพื่อเพิ่มบริบทและคุณภาพการตอบกลับของ AI"
+        }
+      },
+      "completion": {
+        "title": "ยินดีด้วย!",
+        "description": "คุณทำบทเรียนสำเร็จแล้ว AI ของคุณมีหน่วยความจำถาวรที่ทำงานข้ามเซสชัน",
+        "readDocs": "อ่านเอกสาร",
+        "goToDashboard": "ไปที่แดชบอร์ด"
+      },
+      "nextSteps": {
+        "title": "ขั้นตอนถัดไป",
+        "apiReference": {
+          "title": "API Reference",
+          "description": "สำรวจ Endpoint ทั้งหมดสำหรับหน่วยความจำ การสกัด และ RAG Query"
+        },
+        "sdkExamples": {
+          "title": "ตัวอย่าง SDK",
+          "description": "ตัวอย่างพร้อมใช้สำหรับ Python, TypeScript และ REST"
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "เรียนรู้เกี่ยวกับประเภทหน่วยความจำ เนมสเปซ และแนวปฏิบัติที่ดี"
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "การเชื่อมต่อ | Seizn",
+        "description": "เชื่อมต่อ Seizn กับ LangChain, LlamaIndex, OpenTelemetry และอื่นๆ"
+      },
+      "breadcrumb": "การเชื่อมต่อ",
+      "title": "การเชื่อมต่อ",
+      "subtitle": "เชื่อมต่อ Seizn กับเฟรมเวิร์ก AI และเครื่องมือตรวจสอบที่คุณชื่นชอบ",
+      "cards": {
+        "langchain": {
+          "badge": "อย่างเป็นทางการ",
+          "title": "LangChain",
+          "description": "Drop-in retriever สำหรับ LangChain RAG Pipeline รองรับ Python และ TypeScript"
+        },
+        "llamaindex": {
+          "badge": "อย่างเป็นทางการ",
+          "title": "LlamaIndex",
+          "description": "Native retriever สำหรับ LlamaIndex Query Engine รองรับ Streaming และ Hybrid Search"
+        },
+        "opentelemetry": {
+          "badge": "อย่างเป็นทางการ",
+          "title": "OpenTelemetry",
+          "description": "ส่งออก Trace ไปยัง Datadog, Grafana, Jaeger และแบ็กเอนด์ที่รองรับ OTLP ทั้งหมด"
+        }
+      },
+      "comingSoon": {
+        "title": "เร็วๆ นี้",
+        "description": "การเชื่อมต่อเพิ่มเติมกำลังมา แจ้งให้เราทราบสิ่งที่คุณต้องการ!"
+      },
+      "backToDocs": "กลับไปยังเอกสาร"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "การเชื่อมต่อ LangChain | Seizn",
+        "description": "Drop-in retriever สำหรับ LangChain RAG Pipeline"
+      },
+      "badge": "อย่างเป็นทางการ",
+      "title": "การเชื่อมต่อ LangChain",
+      "subtitle": "Drop-in retriever สำหรับ LangChain RAG Pipeline พร้อมรองรับ Tracing เต็มรูปแบบ",
+      "overview": {
+        "title": "ภาพรวม 60 วินาที",
+        "description": "SeiznRetriever เป็นตัวทดแทน Drop-in สำหรับ LangChain Retriever ทุกตัว ให้การค้นหาเวกเตอร์พร้อม Tracing, Caching และ Reranking ในตัว",
+        "feature1": "ใช้งานร่วมกับ LangChain Chain และ Agent ทั้งหมดได้",
+        "feature2": "Tracing ในตัวสำหรับทุกการค้นคืน",
+        "feature3": "รองรับการกรอง การจัดอันดับใหม่ และ Hybrid Search"
+      },
+      "installation": {
+        "title": "การติดตั้ง",
+        "description": "ติดตั้ง Seizn SDK ควบคู่กับ LangChain"
+      },
+      "example": {
+        "title": "ตัวอย่าง 5 นาที",
+        "description": "สร้าง RAG Chain ด้วย SeiznRetriever ในโค้ดเพียงไม่กี่บรรทัด"
+      },
+      "production": {
+        "title": "เคล็ดลับสำหรับ Production",
+        "caching": {
+          "title": "เปิดใช้งาน Caching",
+          "description": "ลดเวลาตอบสนองและต้นทุนด้วยการแคชคำค้นหาที่ซ้ำกัน"
+        },
+        "reranking": {
+          "title": "เปิดใช้งาน Reranking",
+          "description": "ปรับปรุงคุณภาพผลลัพธ์ด้วย Cross-encoder Reranking"
+        },
+        "filtering": {
+          "title": "การกรองตาม Metadata",
+          "description": "กรองผลลัพธ์ตามฟิลด์ Metadata ก่อนการค้นหาเวกเตอร์"
+        }
+      },
+      "troubleshooting": {
+        "title": "การแก้ไขปัญหา",
+        "errorColumn": "ข้อผิดพลาด",
+        "causeColumn": "สาเหตุ",
+        "solutionColumn": "วิธีแก้ไข",
+        "authCause": "API Key ไม่ถูกต้องหรือไม่มี",
+        "authSolution": "ตรวจสอบตัวแปรสภาพแวดล้อม SEIZN_API_KEY",
+        "rateCause": "มีคำขอมากเกินไปต่อวินาที",
+        "rateSolution": "ใช้ Exponential Backoff หรืออัปเกรดแผน",
+        "emptyCause": "Threshold สูงเกินไปหรือไม่มีเอกสารที่ตรงกัน",
+        "emptySolution": "ลด Threshold หรือตรวจสอบเนื้อหาชุดข้อมูล"
+      },
+      "nav": {
+        "backToIntegrations": "กลับไปยังการเชื่อมต่อ",
+        "nextLlamaIndex": "การเชื่อมต่อ LlamaIndex"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "การเชื่อมต่อ LlamaIndex | Seizn",
+        "description": "Native retriever สำหรับ LlamaIndex RAG Pipeline"
+      },
+      "badge": "อย่างเป็นทางการ",
+      "title": "การเชื่อมต่อ LlamaIndex",
+      "subtitle": "Native retriever สำหรับ LlamaIndex Query Engine พร้อม Streaming และ Hybrid Search",
+      "overview": {
+        "title": "ภาพรวม 60 วินาที",
+        "description": "SeiznRetriever ใช้งาน LlamaIndex BaseRetriever Interface ทำให้ใช้งานร่วมกับ LlamaIndex Query Engine และ Pipeline ทั้งหมดได้",
+        "feature1": "เชื่อมต่อกับ LlamaIndex Query Engine แบบ Native",
+        "feature2": "รองรับ Streaming Response ได้ทันที",
+        "feature3": "ใช้งานร่วมกับ LlamaIndex Node Postprocessor ได้"
+      },
+      "installation": {
+        "title": "การติดตั้ง",
+        "description": "ติดตั้ง Seizn SDK ควบคู่กับ LlamaIndex"
+      },
+      "example": {
+        "title": "ตัวอย่าง 5 นาที",
+        "description": "สร้าง Query Engine ด้วย SeiznRetriever สำหรับแอปพลิเคชัน RAG ของคุณ"
+      },
+      "production": {
+        "title": "เคล็ดลับสำหรับ Production",
+        "streaming": {
+          "title": "Streaming Response",
+          "description": "เปิดใช้งาน Streaming เพื่อประสบการณ์ผู้ใช้ที่ดีขึ้นสำหรับการตอบกลับที่ยาว"
+        },
+        "hybrid": {
+          "title": "Hybrid Search",
+          "description": "รวมการค้นหาเวกเตอร์และคำสำคัญเพื่อ Recall ที่ดีขึ้น"
+        },
+        "nodePostprocessors": {
+          "title": "Node Postprocessor",
+          "description": "เชื่อมต่อ Postprocessor สำหรับการกรองและจัดอันดับใหม่ขั้นสูง"
+        }
+      },
+      "troubleshooting": {
+        "title": "การแก้ไขปัญหา",
+        "errorColumn": "ข้อผิดพลาด",
+        "causeColumn": "สาเหตุ",
+        "solutionColumn": "วิธีแก้ไข",
+        "authCause": "API Key ไม่ถูกต้องหรือไม่มี",
+        "authSolution": "ตรวจสอบตัวแปรสภาพแวดล้อม SEIZN_API_KEY",
+        "datasetCause": "ไม่พบชื่อชุดข้อมูล",
+        "datasetSolution": "ตรวจสอบว่าชุดข้อมูลมีอยู่ในแดชบอร์ด",
+        "relevanceCause": "คำค้นหาไม่ตรงกับเอกสาร",
+        "relevanceSolution": "ลอง Hybrid Search หรือปรับ Threshold"
+      },
+      "nav": {
+        "prevLangChain": "การเชื่อมต่อ LangChain",
+        "nextOpenTelemetry": "การเชื่อมต่อ OpenTelemetry"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "การเชื่อมต่อ OpenTelemetry | Seizn",
+        "description": "ส่งออก Trace ไปยัง Datadog, Grafana, Jaeger ผ่าน OTLP"
+      },
+      "badge": "อย่างเป็นทางการ",
+      "title": "การเชื่อมต่อ OpenTelemetry",
+      "subtitle": "ส่งออก Trace การค้นคืนไปยังระบบตรวจสอบของคุณผ่าน OTLP",
+      "overview": {
+        "title": "ภาพรวม 60 วินาที",
+        "description": "Seizn ส่งออก OpenTelemetry Trace แบบ Native สำหรับทุกการค้นคืน เชื่อมต่อกับแบ็กเอนด์ที่รองรับ OTLP ใดก็ได้สำหรับการตรวจสอบแบบครบวงจร",
+        "feature1": "ส่งออก OTLP แบบไม่ต้องตั้งค่าพร้อมสร้าง Span อัตโนมัติ",
+        "feature2": "Attribute ที่ครบถ้วน ได้แก่ เวลาตอบสนอง จำนวนโทเค็น และต้นทุน",
+        "feature3": "Context Propagation สำหรับ Distributed Tracing",
+        "supportedBackends": "แบ็กเอนด์ที่รองรับ"
+      },
+      "installation": {
+        "title": "การตั้งค่า",
+        "description": "กำหนดค่าการส่งออก OTLP ผ่านตัวแปรสภาพแวดล้อม"
+      },
+      "examples": {
+        "title": "ตัวอย่างแบ็กเอนด์",
+        "datadog": {
+          "description": "ส่งออก Trace ไปยัง Datadog APM ผ่าน Datadog Agent หรือ API โดยตรง"
+        },
+        "grafana": {
+          "description": "ส่ง Trace ไปยัง Grafana Tempo (Cloud หรือ Self-hosted)"
+        },
+        "jaeger": {
+          "description": "ส่งออกไปยัง Jaeger พร้อมรองรับ OTLP Receiver แบบ Native"
+        }
+      },
+      "production": {
+        "title": "เคล็ดลับสำหรับ Production",
+        "sampling": {
+          "title": "กลยุทธ์ Sampling",
+          "description": "ควบคุมปริมาณ Trace ด้วย Head-based หรือ Tail-based Sampling"
+        },
+        "attributes": {
+          "title": "Custom Attribute",
+          "description": "เพิ่ม Resource และ Span Attribute เพื่อการกรองที่ดีขึ้น"
+        },
+        "batching": {
+          "title": "การตั้งค่า Batch",
+          "description": "ปรับประสิทธิภาพการส่งออกด้วยการตั้งค่า Batch"
+        }
+      },
+      "troubleshooting": {
+        "title": "การแก้ไขปัญหา",
+        "issueColumn": "ปัญหา",
+        "causeColumn": "สาเหตุ",
+        "solutionColumn": "วิธีแก้ไข",
+        "noTracesIssue": "ไม่มี Trace ปรากฏ",
+        "noTracesCause": "Telemetry ปิดอยู่หรือ Endpoint ไม่ถูกต้อง",
+        "noTracesSolution": "ตั้งค่า SEIZN_TELEMETRY_ENABLED=true และตรวจสอบ Endpoint",
+        "connectionIssue": "การเชื่อมต่อถูกปฏิเสธ",
+        "connectionCause": "Collector ไม่ทำงานหรือพอร์ตไม่ถูกต้อง",
+        "connectionSolution": "ตรวจสอบสถานะ Collector และพอร์ต 4318",
+        "missingSpansIssue": "Span หายไปใน Trace",
+        "missingSpansCause": "อัตรา Sampling ต่ำเกินไป",
+        "missingSpansSolution": "เพิ่มอัตรา Sampling หรือปิด Sampling",
+        "debugTitle": "โหมด Debug",
+        "debugDescription": "เปิดใช้งาน Debug Logging เพื่อแก้ไขปัญหา Telemetry"
+      },
+      "nav": {
+        "prevLlamaIndex": "การเชื่อมต่อ LlamaIndex",
+        "backToIntegrations": "กลับไปยังการเชื่อมต่อ"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "สาธิตสด",
+    "subtitle": "สัมผัส Pipeline การค้นคืนของ Seizn พร้อม Tracing และความโปร่งใสด้านต้นทุน",
+    "tryItNow": "ลองใช้เลย - ไม่ต้องสมัครสมาชิก",
+    "queryPlaceholder": "คำค้นหา",
+    "runDemo": "เรียกใช้สาธิต",
+    "running": "กำลังทำงาน...",
+    "results": "ผลลัพธ์",
+    "trace": "Trace",
+    "cost": "ต้นทุน",
+    "noResults": "เรียกใช้สาธิตเพื่อดูผลลัพธ์",
+    "errorTitle": "ข้อผิดพลาด",
+    "rateLimitError": "เกินขีดจำกัดอัตรา กรุณารอสักครู่",
+    "retryIn": "ลองใหม่ใน",
+    "seconds": "วินาที",
+    "score": "คะแนน",
+    "rerankScore": "Rerank",
+    "latency": "เวลาตอบสนอง",
+    "tokens": "โทเค็น",
+    "cached": "แคชแล้ว",
+    "model": "โมเดล",
+    "input": "อินพุต",
+    "output": "เอาต์พุต",
+    "costBreakdown": "รายละเอียด",
+    "total": "ต้นทุนรวม",
+    "embedding": "Embedding",
+    "vectorSearch": "ค้นหาเวกเตอร์",
+    "rerank": "Rerank",
+    "answerContract": "สัญญาคำตอบ",
+    "tokensIn": "โทเค็นเข้า",
+    "tokensOut": "โทเค็นออก",
+    "queryUnits": "หน่วยคำค้นหา",
+    "prefilledQueries": [
+      "ลองตัวอย่าง"
+    ]
+  },
+  "publicTrace": {
+    "title": "Trace ที่แชร์",
+    "subtitle": "ดูรายละเอียด Trace การค้นคืนที่แชร์",
+    "sharedBy": "Trace ที่แชร์",
+    "expired": "ลิงก์นี้หมดอายุแล้ว",
+    "expiredDesc": "ลิงก์แชร์นี้ไม่สามารถใช้งานได้อีก โปรดขอให้เจ้าของสร้างลิงก์ใหม่",
+    "notFound": "ไม่พบ Trace",
+    "notFoundDesc": "ไม่พบ Trace ที่แชร์นี้ อาจถูกเพิกถอนหรือลบแล้ว",
+    "backToHome": "กลับหน้าหลัก",
+    "requestId": "Request ID",
+    "collection": "Collection",
+    "createdAt": "สร้างเมื่อ",
+    "totalLatency": "เวลาตอบสนองรวม",
+    "totalCost": "ต้นทุนรวม",
+    "resultsCount": "ผลลัพธ์",
+    "query": "คำค้นหา",
+    "timeline": "ไทม์ไลน์",
+    "candidates": "ตัวเลือก",
+    "rerankDiff": "ผลต่าง Rerank",
+    "costAnalysis": "การวิเคราะห์ต้นทุน",
+    "redacted": "[ปกปิด]",
+    "piiMasked": "ปกปิด PII เพื่อความเป็นส่วนตัว",
+    "readOnlyNote": "นี่คือมุมมองอ่านอย่างเดียวของ Trace ที่แชร์"
+  },
+  "trustPage": {
+    "title": "ศูนย์ความเชื่อมั่น",
+    "subtitle": "แนวปฏิบัติด้านความปลอดภัยและข้อมูลของ Seizn",
+    "heroDescription": "เราสร้างผลิตภัณฑ์โดยยึดความเป็นส่วนตัวและความปลอดภัยเป็นหลัก หน้านี้อธิบายว่าเราจัดการข้อมูลของคุณอย่างไร",
+    "lastUpdated": "อัปเดตล่าสุด",
+    "sections": {
+      "dataFlow": {
+        "title": "การไหลของข้อมูล",
+        "description": "สิ่งที่เราจัดเก็บและสิ่งที่เราไม่จัดเก็บ",
+        "stored": {
+          "title": "สิ่งที่เราจัดเก็บ",
+          "items": [
+            "เนื้อหาหน่วยความจำและ Embedding",
+            "บันทึกคำค้นหา (แฮชแล้ว ไม่ใช่ข้อความธรรมดา)",
+            "ตัวชี้วัดการใช้งาน API ต่อคีย์",
+            "ข้อมูล Trace สำหรับการดีบัก (กำหนดระยะเวลาเก็บรักษาได้)"
+          ]
+        },
+        "notStored": {
+          "title": "สิ่งที่เราไม่จัดเก็บ",
+          "items": [
+            "API Key ดิบ (เฉพาะแฮชเท่านั้น)",
+            "รหัสผ่านผู้ใช้ (OAuth เท่านั้น)",
+            "ผลลัพธ์คำค้นหาเกินกว่า Cache TTL",
+            "บันทึกคำขอ/การตอบกลับของ LLM บุคคลที่สาม"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "การเข้ารหัส",
+        "description": "การปกป้องข้อมูลระหว่างส่งและจัดเก็บ",
+        "transit": {
+          "title": "ระหว่างส่ง",
+          "items": [
+            "บังคับใช้ TLS 1.3 สำหรับทุกการเชื่อมต่อ",
+            "เปิดใช้งาน HSTS พร้อม max-age 1 ปี",
+            "Certificate Transparency Logging"
+          ]
+        },
+        "atRest": {
+          "title": "ระหว่างจัดเก็บ",
+          "items": [
+            "เข้ารหัส AES-256 สำหรับข้อมูลทั้งหมดที่จัดเก็บ",
+            "เข้ารหัสระดับฐานข้อมูล (Supabase)",
+            "แบ็กอัปเข้ารหัสด้วยคีย์แยกต่างหาก"
+          ]
+        },
+        "keyManagement": {
+          "title": "การจัดการคีย์",
+          "items": [
+            "API Key แฮชด้วย SHA-256 + salt",
+            "แจ้งเตือนหมุนเวียนคีย์อัตโนมัติ (90 วัน)",
+            "สามารถเพิกถอนคีย์ได้ทันที"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "การแยกผู้เช่า",
+        "description": "วิธีที่เราแยกข้อมูลของคุณ",
+        "items": [
+          "บังคับใช้ Row-Level Security (RLS) ที่ระดับฐานข้อมูล",
+          "คำค้นหาทั้งหมดกรองตาม user_id/org_id โดยอัตโนมัติ",
+          "ไม่มีดัชนีร่วมระหว่างผู้เช่า",
+          "แยก Namespace สำหรับ Collection หน่วยความจำ"
+        ],
+        "rbac": {
+          "title": "การควบคุมสิทธิ์การเข้าถึง",
+          "items": [
+            "การเข้าถึงตามบทบาท (Owner, Admin, Member)",
+            "กำหนดขอบเขต API Key ต่อองค์กร",
+            "บันทึกการตรวจสอบสำหรับทุกการเปลี่ยนแปลงสิทธิ์"
+          ]
+        }
+      },
+      "retention": {
+        "title": "การเก็บรักษาและการลบ",
+        "description": "เราเก็บข้อมูลนานเท่าไรและวิธีการลบ",
+        "periods": [
+          {
+            "type": "หน่วยความจำ",
+            "period": "จนกว่าผู้ใช้จะลบ"
+          },
+          {
+            "type": "บันทึก API",
+            "period": "หมุนเวียน 90 วัน"
+          },
+          {
+            "type": "Trace",
+            "period": "30 วัน (กำหนดเองได้)"
+          },
+          {
+            "type": "บันทึกการตรวจสอบ",
+            "period": "1 ปี"
+          },
+          {
+            "type": "แบ็กอัป",
+            "period": "30 วัน เข้ารหัส"
+          }
+        ],
+        "deletion": {
+          "title": "กระบวนการลบ",
+          "items": [
+            "DELETE /api/memories ลบทันที",
+            "ลบบัญชี: ระยะผ่อนผัน 30 วัน",
+            "ลบถาวรจากแบ็กอัปภายใน 30 วัน",
+            "ส่งออกข้อมูล GDPR/CCPA พร้อมให้บริการเมื่อร้องขอ"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "บันทึกการตรวจสอบและการควบคุมสิทธิ์",
+        "description": "ติดตามว่าใครทำอะไร",
+        "logged": {
+          "title": "เหตุการณ์ที่เราบันทึก",
+          "items": [
+            "การสร้าง หมุนเวียน และเพิกถอน API Key",
+            "การเปลี่ยนแปลงสิทธิ์ (RBAC)",
+            "คำขอส่งออกข้อมูล",
+            "ความพยายามยืนยันตัวตนที่ล้มเหลว",
+            "การดำเนินการของผู้ดูแลระบบต่อองค์กร"
+          ]
+        },
+        "access": {
+          "title": "การเข้าถึงบันทึก",
+          "items": [
+            "พร้อมให้ผู้ดูแลระบบองค์กร",
+            "ส่งออกได้ผ่าน API (แผน Pro+)",
+            "ค้นหาได้ตามผู้ใช้ การดำเนินการ เวลา"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "ผู้ประมวลผลย่อย",
+        "description": "บุคคลที่สามที่ประมวลผลข้อมูลของคุณ",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "ฐานข้อมูลและการยืนยันตัวตน",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "โฮสติ้งและ CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "การชำระเงิน",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "การวิเคราะห์ผลิตภัณฑ์",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "การตรวจสอบข้อผิดพลาด",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (ตัวเลือก)",
+            "location": "US/Canada"
+          }
+        ],
+        "note": "เราแชร์เฉพาะข้อมูลขั้นต่ำที่จำเป็นสำหรับการทำงานของแต่ละบริการเท่านั้น"
+      },
+      "disclosure": {
+        "title": "สิ่งที่เรายังไม่ได้ทำ",
+        "description": "จุดอ่อนที่เรายอมรับในด้านความปลอดภัย",
+        "items": [
+          "การรับรอง SOC 2 Type II (อยู่ระหว่างดำเนินการ คาดว่า Q2 2026)",
+          "การปฏิบัติตาม HIPAA (วางแผนสำหรับ Enterprise)",
+          "ตัวเลือกการติดตั้ง On-premise (อยู่ระหว่างประเมิน)",
+          "Hardware Security Module (HSM) สำหรับจัดเก็บคีย์",
+          "โปรแกรม Bug Bounty (วางแผนสำหรับ Q3 2026)"
+        ],
+        "cta": "มีคำถามด้านความปลอดภัย? ติดต่อเราที่ security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "มีคำถาม?",
+      "description": "ทีมงานของเรายินดีตอบคำถามด้านความปลอดภัย",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "ขีดจำกัดและการเรียกเก็บเงิน",
+    "subtitle": "ทำความเข้าใจขีดจำกัดแผน โควตา และข้อมูลการเรียกเก็บเงินของคุณ",
+    "unlimited": "ไม่จำกัด",
+    "custom": "กำหนดเอง",
+    "requestsPerSecond": "คำขอ/วินาที",
+    "sidebar": {
+      "onThisPage": "ในหน้านี้",
+      "quotas": "โควตารายเดือน",
+      "rateLimits": "ขีดจำกัดอัตรา",
+      "overage": "พฤติกรรมเกินโควตา",
+      "reset": "เวลารีเซ็ต",
+      "headers": "เฮดเดอร์การตอบกลับ"
+    },
+    "table": {
+      "plan": "แผน",
+      "monthlyQuota": "โควตารายเดือน",
+      "rps": "ขีดจำกัด RPS"
+    },
+    "plans": {
+      "free": {
+        "name": "ฟรี",
+        "overage": "ลดความเร็วหลังถึงขีดจำกัด"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "ลดความเร็ว แจ้งเตือนทางอีเมล"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "ลดความเร็ว คิวลำดับความสำคัญ"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "SLA กำหนดเอง ไม่ลดความเร็ว"
+      }
+    },
+    "quotas": {
+      "title": "โควตารายเดือน",
+      "description": "แต่ละแผนรวมโควตาการเรียก API รายเดือน โควตารีเซ็ตทุกวันที่ 1 ของเดือนเวลา 00:00 UTC"
+    },
+    "rateLimit": {
+      "title": "ขีดจำกัดอัตรา (RPS)",
+      "description": "ขีดจำกัดอัตราปกป้องโครงสร้างพื้นฐานและรับประกันการใช้งานอย่างเป็นธรรม ขีดจำกัดใช้ต่อ API Key"
+    },
+    "overage": {
+      "title": "พฤติกรรมเกินโควตา",
+      "softThrottle": {
+        "title": "ลดความเร็ว (เกินโควตา)",
+        "description": "เมื่อคุณเกินโควตารายเดือน:",
+        "point1": "การเรียก API ยังทำงานต่อในลำดับความสำคัญต่ำ",
+        "point2": "เวลาตอบสนองอาจเพิ่มขึ้น 2-5 เท่า",
+        "point3": "แจ้งเตือนทางอีเมลเมื่อใช้งาน 80% และ 100%"
+      },
+      "hard429": {
+        "title": "Hard 429 (ขีดจำกัดอัตรา)",
+        "description": "เมื่อคุณเกินขีดจำกัด RPS:",
+        "recommendation": "ใช้ Exponential Backoff (1s, 2s, 4s, 8s) และลองใหม่พร้อม Jitter"
+      }
+    },
+    "reset": {
+      "title": "เวลารีเซ็ต",
+      "monthly": {
+        "title": "รีเซ็ตโควตารายเดือน",
+        "description": "โควตารีเซ็ตในวันแรกของทุกเดือน",
+        "time": "วันที่ 1 ของเดือน 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "หน้าต่างขีดจำกัดอัตรา",
+        "description": "ขีดจำกัดอัตราใช้หน้าต่างแบบเลื่อน",
+        "time": "หน้าต่างเลื่อน 1 วินาที"
+      }
+    },
+    "headers": {
+      "limit": "จำนวนคำขอสูงสุดที่อนุญาตต่อหน้าต่าง",
+      "remaining": "คำขอที่เหลือในหน้าต่างปัจจุบัน",
+      "reset": "Unix Timestamp เมื่อหน้าต่างรีเซ็ต",
+      "quotaLimit": "ขีดจำกัดโควตารายเดือน",
+      "quotaRemaining": "การเรียก API ที่เหลือในเดือนนี้",
+      "quotaReset": "วันที่ ISO 8601 เมื่อโควตารีเซ็ต"
+    },
+    "headersSection": {
+      "title": "เฮดเดอร์การตอบกลับ",
+      "description": "การตอบกลับ API ทุกรายการมีเฮดเดอร์เพื่อช่วยติดตามการใช้งานและขีดจำกัดของคุณ",
+      "header": "เฮดเดอร์",
+      "headerDescription": "คำอธิบาย",
+      "example": "ตัวอย่างเฮดเดอร์การตอบกลับ:"
+    },
+    "upgrade": {
+      "title": "ต้องการขีดจำกัดที่สูงขึ้น?",
+      "description": "อัปเกรดแผนเพื่อเพิ่มโควตา ขีดจำกัดอัตราที่สูงขึ้น และการสนับสนุนลำดับความสำคัญ",
+      "viewPlans": "ดูแผน",
+      "contactSales": "ติดต่อฝ่ายขาย"
+    }
+  },
+  "help": {
+    "title": "ศูนย์ช่วยเหลือ",
+    "subtitle": "ค้นหาคำตอบ รับการสนับสนุน และเข้าถึงทรัพยากร",
+    "search": {
+      "placeholder": "ค้นหาความช่วยเหลือ...",
+      "noResults": "ไม่พบผลลัพธ์"
+    },
+    "sections": {
+      "support": {
+        "title": "ช่องทางสนับสนุน",
+        "description": "รับความช่วยเหลือจากทีมงานของเรา",
+        "email": {
+          "title": "อีเมลสนับสนุน",
+          "description": "รับความช่วยเหลือทางอีเมลภายใน 24 ชั่วโมง",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "ชุมชน Discord",
+          "description": "เข้าร่วมชุมชนของเราเพื่อรับความช่วยเหลือแบบเรียลไทม์",
+          "action": "เข้าร่วม Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "รายงานบั๊กและขอฟีเจอร์",
+          "action": "เปิด Issue"
+        }
+      },
+      "faq": {
+        "title": "คำถามที่พบบ่อย",
+        "description": "คำตอบด่วนสำหรับคำถามทั่วไป",
+        "viewAll": "ดู FAQ ทั้งหมด"
+      },
+      "status": {
+        "title": "สถานะระบบ",
+        "description": "ตรวจสอบสถานะระบบปัจจุบันและเหตุการณ์",
+        "viewStatus": "ดูหน้าสถานะ",
+        "operational": "ระบบทั้งหมดทำงานปกติ",
+        "degraded": "ประสิทธิภาพลดลง",
+        "outage": "บริการขัดข้อง"
+      },
+      "billing": {
+        "title": "การเรียกเก็บเงินและแผน",
+        "description": "จัดการการสมัครสมาชิกและการชำระเงินของคุณ",
+        "items": {
+          "plans": "ดูแผนราคา",
+          "usage": "ตรวจสอบการใช้งาน",
+          "invoices": "ดาวน์โหลดใบแจ้งหนี้",
+          "upgrade": "อัปเกรดแผนของคุณ"
+        }
+      },
+      "docs": {
+        "title": "เอกสาร",
+        "description": "ลิงก์ด่วนไปยังเอกสารยอดนิยม",
+        "links": {
+          "quickstart": "คู่มือเริ่มต้น",
+          "apiReference": "API Reference",
+          "sdks": "SDK และไลบรารี",
+          "limits": "ขีดจำกัดและการเรียกเก็บเงิน",
+          "security": "ความปลอดภัย"
+        }
+      }
+    },
+    "contact": {
+      "title": "ยังต้องการความช่วยเหลือ?",
+      "description": "ทีมสนับสนุนของเราพร้อมช่วยให้คุณประสบความสำเร็จ",
+      "cta": "ติดต่อฝ่ายสนับสนุน"
+    }
+  },
+  "status": {
+    "title": "สถานะระบบ",
+    "subtitle": "สถานะระบบแบบเรียลไทม์และประวัติเหตุการณ์",
+    "lastUpdated": "อัปเดตล่าสุด",
+    "overall": {
+      "operational": "ระบบทั้งหมดทำงานปกติ",
+      "degraded": "ประสิทธิภาพลดลง",
+      "partialOutage": "ระบบขัดข้องบางส่วน",
+      "majorOutage": "ระบบขัดข้องรุนแรง"
+    },
+    "uptime": {
+      "title": "เวลาทำงาน",
+      "24h": "24 ชั่วโมง",
+      "7d": "7 วัน",
+      "30d": "30 วัน",
+      "90d": "90 วัน"
+    },
+    "services": {
+      "title": "สถานะบริการ",
+      "operational": "ทำงานปกติ",
+      "degraded": "ลดลง",
+      "down": "หยุดทำงาน"
+    },
+    "incidents": {
+      "active": "เหตุการณ์ที่กำลังเกิดขึ้น",
+      "history": "ประวัติเหตุการณ์",
+      "noActive": "ไม่มีเหตุการณ์ที่กำลังเกิดขึ้น",
+      "noHistory": "ไม่มีเหตุการณ์ในอดีต",
+      "status": {
+        "investigating": "กำลังตรวจสอบ",
+        "identified": "ระบุแล้ว",
+        "monitoring": "กำลังเฝ้าระวัง",
+        "resolved": "แก้ไขแล้ว"
+      },
+      "severity": {
+        "minor": "เล็กน้อย",
+        "major": "สำคัญ",
+        "critical": "วิกฤต"
+      },
+      "affected": "บริการที่ได้รับผลกระทบ",
+      "timeline": "ไทม์ไลน์",
+      "started": "เริ่มต้น",
+      "resolved": "แก้ไขแล้ว",
+      "duration": "ระยะเวลา",
+      "viewDetails": "ดูรายละเอียด"
+    },
+    "subscribe": {
+      "title": "รับการแจ้งเตือน",
+      "rss": "RSS Feed",
+      "email": "การแจ้งเตือนทางอีเมล"
     }
   }
 }

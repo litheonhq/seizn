@@ -242,7 +242,26 @@
       "usageByApiKey": "Usage by API Key",
       "errorsTitle": "Errors",
       "errorRate": "error rate",
-      "noUsageData": "No usage data available"
+      "noUsageData": "No usage data available",
+      "p95Latency": "p95 Latens",
+      "errorRateKpi": "Felfrekvens",
+      "monthlyApiCalls": "Månatliga API-anrop",
+      "dailyTrends": "Dagliga Trender",
+      "tabCalls": "Anrop",
+      "tabCost": "Kostnad",
+      "tabLatency": "Latens",
+      "tabErrors": "Fel",
+      "noUsageTitle": "Ingen användningsdata ännu",
+      "noUsageDescription": "Skicka din första API-begäran för att se användningsanalys. Data visas här inom 5 sekunder.",
+      "noUsageExpected": "Förväntat: Anrop, tokens, kostnad och latensuppdelning",
+      "getApiKey": "Hämta API-nyckel",
+      "viewDocs": "Visa Dokumentation",
+      "noEndpointData": "Ingen endpoint-data",
+      "noEndpointDescription": "Endpoint-uppdelning visas efter ditt första API-anrop",
+      "sendTestRequest": "Skicka Testbegäran",
+      "noKeyData": "Ingen API-nyckelanvändning",
+      "noKeyDescription": "Skapa och använd en API-nyckel för att se nyckelspecifik analys",
+      "createApiKey": "Skapa API-nyckel"
     },
     "language": "Språk",
     "organizations": "Organizations",
@@ -343,7 +362,49 @@
       "export": "Export",
       "exportResults": "Export Results",
       "exportFormat": "Export Format",
-      "exportSuccess": "Export successful"
+      "exportSuccess": "Export successful",
+      "queryBuilder": "Frågebyggare",
+      "namespace": "Namnrymd",
+      "namespacePlaceholder": "standard",
+      "searchMode": "Sökläge",
+      "vector": "Vektor",
+      "hybrid": "Hybrid",
+      "keyword": "Nyckelord",
+      "rerank": "Aktivera Rerank",
+      "trace": "Spårning",
+      "cost": "Kostnad",
+      "similarity": "Likhet",
+      "memoryType": "Typ",
+      "rerankScore": "Rerank-poäng",
+      "traceTimeline": "Spårningstidslinje",
+      "noTrace": "Kör en fråga för att se spårning",
+      "step": "Steg",
+      "completed": "Slutförd",
+      "pending": "Väntande",
+      "error": "Fel",
+      "costBreakdown": "Kostnadsuppdelning",
+      "noCost": "Kör en fråga för att se kostnadsuppdelning",
+      "component": "Komponent",
+      "search": "Sök",
+      "total": "Totalt",
+      "monthlyEstimate": "Månadsuppskattning",
+      "basedOn": "Baserat på",
+      "queriesPerDay": "frågor/dag",
+      "rerankBefore": "Före Rerank",
+      "rerankAfter": "Efter Rerank",
+      "rank": "Rang",
+      "replayFromLog": "Spela upp från Logg",
+      "selectLog": "Välj en logg att spela upp",
+      "replaySettings": "Uppspelningsinställningar",
+      "compareResults": "Jämför Resultat",
+      "original": "Original",
+      "replay": "Uppspelning",
+      "diff": "Skillnad",
+      "hitAtK": "Hit@K",
+      "overlap": "Överlappning",
+      "added": "Tillagd",
+      "removed": "Borttagen",
+      "rankChanges": "Rangändringar"
     },
     "settingsPage": {
       "title": "Settings",
@@ -362,7 +423,9 @@
         "profile": "Profile",
         "budget": "Budget",
         "notifications": "Notifications",
-        "security": "Security"
+        "security": "Security",
+        "billing": "Fakturering",
+        "danger": "Datahantering"
       },
       "budget": {
         "title": "Budget Management",
@@ -380,7 +443,21 @@
         "alertDisabled": "Budget alerts disabled",
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
-        "removeLimit": "Remove Limit"
+        "removeLimit": "Remove Limit",
+        "subtitle": "Ställ in utgiftsgränser och varningar",
+        "perQueryMax": "Max per Fråga",
+        "alertThresholdDesc": "Få varning när användningen når denna procentsats",
+        "budgetMode": "Budgetläge",
+        "soft": "Mjuk Gräns",
+        "softDesc": "Varna men tillåt överskridanden",
+        "hard": "Hård Gräns",
+        "hardDesc": "Blockera begäranden vid gräns",
+        "fallbackStrategy": "Reservstrategi",
+        "fallbackDesc": "Vad som ska göras när budgeten överskrids",
+        "reject": "Avvisa Begäran",
+        "cache": "Returnera Cachad",
+        "degrade": "Försämra Kvalitet",
+        "queue": "Köa Begäran"
       },
       "notifications": {
         "title": "Notification Settings",
@@ -398,7 +475,20 @@
         "allEnabled": "All notifications enabled",
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
-        "disableAll": "Disable All"
+        "disableAll": "Disable All",
+        "subtitle": "Konfigurera hur du tar emot varningar",
+        "emailAlerts": "E-postaviseringar",
+        "emailAlertsDesc": "Ta emot viktiga varningar via e-post",
+        "usageAlerts": "Användningsvarningar",
+        "usageAlertsDesc": "Bli meddelad när du närmar dig gränser",
+        "weeklyDigest": "Veckosammanfattning",
+        "weeklyDigestDesc": "Ta emot veckovis användningssammanfattning",
+        "securityAlerts": "Säkerhetsvarningar",
+        "securityAlertsDesc": "Bli meddelad om misstänkt aktivitet",
+        "telegram": "Telegram",
+        "telegramDesc": "Ta emot varningar via Telegram-bot",
+        "comingSoon": "Kommer Snart",
+        "integrations": "Integrationer"
       },
       "security": {
         "title": "Security Settings",
@@ -425,7 +515,14 @@
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
-        "apiKeysSecurityHint": "Monitor and manage your API keys"
+        "apiKeysSecurityHint": "Monitor and manage your API keys",
+        "subtitle": "Hantera din kontosäkerhet",
+        "save": "Spara Ändringar",
+        "updatePassword": "Uppdatera Lösenord",
+        "twoFactorDesc": "Lägg till ett extra säkerhetslager",
+        "enable2FA": "Aktivera 2FA",
+        "sessionsDesc": "Hantera dina aktiva sessioner",
+        "viewSessions": "Visa Sessioner"
       },
       "dangerZone": {
         "title": "Danger Zone",
@@ -438,7 +535,38 @@
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
-        "exportComplete": "Export complete"
+        "exportComplete": "Export complete",
+        "subtitle": "Hantera och radera din kontodata",
+        "exportDataDesc": "Ladda ner all din data",
+        "exportButton": "Exportera All Data",
+        "deleteMemories": "Radera Alla Minnen",
+        "deleteMemoriesDesc": "Ta permanent bort alla lagrade minnen",
+        "deleteMemoriesButton": "Radera Minnen",
+        "deleteAccountDesc": "Ta permanent bort ditt konto och all data",
+        "confirmDelete": "Skriv DELETE för att bekräfta"
+      },
+      "billing": {
+        "title": "Fakturering & Användning",
+        "subtitle": "Hantera din plan och övervaka användning",
+        "currentPlan": "Nuvarande Plan",
+        "monthlyPrice": "Månadspris",
+        "upgradePlan": "Uppgradera Plan",
+        "quotaWarningTitle": "Närmar sig Kvotgräns",
+        "quotaWarningDesc": "Du använder {percent}% av din {resource}-kvot. Överväg att uppgradera din plan.",
+        "upgradeNow": "Uppgradera Nu",
+        "memoriesUsage": "Minnesanvändning",
+        "apiCallsUsage": "API-anropsanvändning",
+        "apiKeysUsage": "API-nyckelanvändning",
+        "unlimited": "Obegränsad",
+        "planComparison": "Planjämförelse",
+        "feature": "Funktion",
+        "memoriesLabel": "Minnen",
+        "apiCallsLabel": "API-anrop/Månad",
+        "apiKeysLabel": "API-nycklar",
+        "priceLabel": "Pris",
+        "contactUs": "Kontakta Oss",
+        "used": "använd",
+        "of": "av"
       }
     },
     "greeting": {
@@ -468,7 +596,17 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "API-användning",
+      "last7days": "Senaste 7 dagarna",
+      "viewDetails": "Visa Detaljer",
+      "noUsageData": "Ingen användningsdata ännu",
+      "recentActivity": "Senaste Aktivitet",
+      "last10Requests": "Senaste 10 API-begäranden",
+      "viewAllActivity": "Visa Alla",
+      "noActivityYet": "Ingen API-aktivitet ännu",
+      "noActivityDescription": "Skicka din första API-begäran för att se aktivitet här",
+      "sendFirstRequest": "Skicka Första Begäran"
     },
     "keysPage": {
       "title": "API Keys",
@@ -498,7 +636,18 @@
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
       "cancel": "Cancel",
       "creating": "Creating...",
-      "createKey": "Create Key"
+      "createKey": "Create Key",
+      "name": "Namn",
+      "keyColumn": "Nyckel",
+      "actions": "Åtgärder",
+      "revokeWarning": "Alla applikationer som använder denna nyckel kommer omedelbart att sluta fungera.",
+      "revokeAction": "Återkalla",
+      "rotate": "Rotera",
+      "rotateConfirm": "Rotera API-nyckel \"{keyName}\"?",
+      "rotateWarning": "En ny nyckel kommer att genereras. Uppdatera dina applikationer med den nya nyckeln innan den gamla löper ut.",
+      "rotateAction": "Rotera Nyckel",
+      "keyRotated": "API-nyckel Roterad!",
+      "keyRotatedDesc": "Kopiera denna nya nyckel nu. Den gamla nyckeln är inte längre giltig."
     },
     "organizationsPage": {
       "title": "Organizations",
@@ -523,7 +672,16 @@
         "owner": "owner",
         "admin": "admin",
         "member": "member"
-      }
+      },
+      "noOrgsExpected": "Tar mindre än 30 sekunder att konfigurera",
+      "featureSharedKeys": "Delade API-nycklar",
+      "featureSharedKeysDesc": "Teamomfattande nyckelhantering",
+      "featureTeamMembers": "Teammedlemmar",
+      "featureTeamMembersDesc": "Bjud in med roller",
+      "featureBudget": "Delad Budget",
+      "featureBudgetDesc": "Enhetlig kostnadsspårning",
+      "featureAudit": "Granskningsloggar",
+      "featureAuditDesc": "Aktivitetshistorik"
     },
     "onboarding": {
       "title": "Kom igång med Seizn",
@@ -550,6 +708,770 @@
           "title": "Installera SDK",
           "description": "Lägg till Seizn i ditt projekt med npm eller pip",
           "action": "Visa SDK"
+        },
+        "createOrg": {
+          "title": "Skapa Organisation",
+          "description": "Konfigurera din teamarbetsyta för samarbete",
+          "action": "Skapa Org"
+        },
+        "firstQuery": {
+          "title": "Kör Första Förfrågan",
+          "description": "Testa API:et i playground med en exempelfråga",
+          "action": "Prova Fråga"
+        }
+      },
+      "takeTour": "Ta en rundtur",
+      "sdkModal": {
+        "title": "Installera Seizn SDK",
+        "description": "Välj din föredragna installationsmetod och kopiera kommandot.",
+        "copy": "Kopiera",
+        "copied": "Kopierat!",
+        "viewDocs": "Visa fullständig dokumentation",
+        "done": "Klart"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Välkommen till Seizn!",
+          "description": "Låt oss ta en snabb rundtur för att hjälpa dig komma igång."
+        },
+        "sidebar": {
+          "title": "Navigering",
+          "description": "Använd sidofältet för att navigera mellan dashboardsektioner."
+        },
+        "stats": {
+          "title": "Din Statistik",
+          "description": "Övervaka din API-användning, lagrade minnen och nuvarande plan."
+        },
+        "quickStart": {
+          "title": "Snabbåtgärder",
+          "description": "Använd dessa kort för vanliga uppgifter som att skapa API-nycklar."
+        },
+        "next": "Nästa",
+        "skip": "Hoppa över rundtur",
+        "finish": "Slutför",
+        "stepOf": "Steg {current} av {total}"
+      }
+    },
+    "governance": {
+      "title": "Styrning",
+      "subtitle": "Hantera datapolicyer, lagringsregler och efterlevnadsinställningar",
+      "tabs": {
+        "retention": "Datalagring",
+        "access": "Åtkomstkontroll",
+        "pii": "PII-detektering",
+        "compliance": "Efterlevnad"
+      },
+      "stats": {
+        "retentionPolicies": "Lagringspolicyer",
+        "accessRules": "Åtkomstregler",
+        "piiRules": "PII-regler Aktiva",
+        "complianceScore": "Efterlevnadspoäng"
+      },
+      "addPolicy": "Lägg till policy",
+      "addRule": "Lägg till regel",
+      "deleteConfirm": "Är du säker på att du vill ta bort denna lagringspolicy?",
+      "retention": {
+        "description": "Konfigurera hur länge minnen bevaras i varje namespace",
+        "namespace": "Namespace",
+        "memoryTypes": "Minnestyper",
+        "ttl": "TTL",
+        "autoArchive": "Automatisk arkivering",
+        "actions": "Åtgärder",
+        "days": "dagar",
+        "enabled": "Aktiverad",
+        "disabled": "Inaktiverad",
+        "delete": "Ta bort",
+        "addTitle": "Lägg till lagringspolicy",
+        "namespacePattern": "Namespace-mönster",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Använd * för jokerteckenmatchning",
+        "ttlDays": "TTL (dagar)",
+        "autoArchiveToggle": "Automatisk arkivering",
+        "autoArchiveDesc": "Arkivera före radering",
+        "cancel": "Avbryt"
+      },
+      "access": {
+        "description": "Definiera rollbaserade åtkomstkontroller för ditt team",
+        "namespaces": "Namespaces:",
+        "permissions": "Behörigheter:"
+      },
+      "pii": {
+        "description": "Detektera och hantera personligt identifierbar information automatiskt",
+        "pattern": "Mönster",
+        "type": "Typ",
+        "action": "Åtgärd",
+        "status": "Status",
+        "aiDetection": "AI-detektering",
+        "regex": "Regex",
+        "betaTitle": "AI-detektering är i beta",
+        "betaDesc": "AI-driven PII-detektering kan ge falska positiva resultat. Granska flaggat innehåll innan du vidtar åtgärder."
+      },
+      "compliance": {
+        "description": "Spåra efterlevnad med stora regulatoriska ramverk",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "requirementsMet": "Krav uppfyllda",
+        "fullyCompliant": "Fullständigt efterlevande",
+        "enableCheck": "Aktivera efterlevnadskontroll",
+        "reports": "Efterlevnadsrapporter",
+        "soc2Report": "SOC 2 Type II-rapport",
+        "soc2Date": "Genererad dec 2024",
+        "dpa": "Personuppgiftsbiträdesavtal",
+        "dpaDesc": "GDPR-kompatibel DPA-mall",
+        "securityQuestionnaire": "Säkerhetsfrågeformulär",
+        "securityQuestionnaireDesc": "Förifylld säkerhetsbedömning",
+        "download": "Ladda ner"
+      }
+    },
+    "integrations": {
+      "title": "Integrationer",
+      "subtitle": "Anslut Seizn med dina favoritverktyg och ramverk",
+      "searchPlaceholder": "Sök integrationer...",
+      "stats": {
+        "total": "Totalt antal integrationer",
+        "available": "Tillgängliga",
+        "beta": "I Beta",
+        "comingSoon": "Kommer Snart"
+      },
+      "categories": {
+        "all": "Alla",
+        "frameworks": "Ramverk",
+        "llms": "LLMs",
+        "databases": "Databaser",
+        "platforms": "Plattformar"
+      },
+      "status": {
+        "available": "Tillgänglig",
+        "beta": "Beta",
+        "comingSoon": "Kommer snart"
+      },
+      "docs": "Dokumentation",
+      "copyInstall": "Kopiera installation",
+      "noResults": "Inga integrationer hittades som matchar dina kriterier",
+      "installation": "Installation",
+      "copied": "Kopierad!",
+      "copy": "Kopiera",
+      "quickStart": "Snabbstart",
+      "comingSoonMsg": "Denna integration är under utveckling. Registrera dig för att bli meddelad när den är tillgänglig.",
+      "notifyMe": "Meddela mig",
+      "betaMsg": "Denna integration är i beta. Vissa funktioner kan ändras innan den slutgiltiga versionen.",
+      "close": "Stäng",
+      "viewDocs": "Visa dokumentation"
+    },
+    "analytics": "Analytik",
+    "analyticsPage": {
+      "title": "Analys",
+      "subtitle": "Detaljerad användningsanalys och insikter",
+      "allOrganizations": "Alla Organisationer",
+      "days7": "7 Dagar",
+      "days30": "30 Dagar",
+      "days90": "90 Dagar",
+      "exportCSV": "Exportera CSV",
+      "dailyActiveUsers": "Dagliga Aktiva Användare",
+      "activeUsers": "Aktiva Användare",
+      "apiCalls": "API-anrop",
+      "apiCallsOverTime": "API-anrop Över Tid",
+      "memoryOperations": "Minnesoperationer",
+      "memoryUsage": "Minnesanvändning",
+      "stores": "Lagringar",
+      "searches": "Sökningar",
+      "avgLatency": "Genomsn. Latens",
+      "latencyTrend": "Latenstrend",
+      "errorRate": "Felfrekvens",
+      "errors": "Fel",
+      "hourlyDistribution": "Timfördelning",
+      "calls": "anrop",
+      "peakHour": "Toppimme",
+      "endpointBreakdown": "Endpoint-uppdelning",
+      "topQueries": "Toppfrågor",
+      "noQueries": "Inga frågor ännu",
+      "noData": "Ingen analysdata",
+      "noDataDescription": "Börja göra API-anrop för att se detaljerad analys här."
+    },
+    "memoriesPage": {
+      "title": "Minnen",
+      "subtitle": "Bläddra och sök bland dina AI-minnen",
+      "totalMemories": "Totalt antal minnen",
+      "search": "Sök",
+      "searchPlaceholder": "Sök minnen...",
+      "namespace": "Namespace",
+      "memoryTypes": "Minnestyper",
+      "tags": "Taggar",
+      "noTags": "Inga taggar tillgängliga",
+      "clearFilters": "Rensa filter",
+      "showing": "Visar",
+      "of": "av",
+      "results": "resultat",
+      "sortNewest": "Nyaste först",
+      "sortOldest": "Äldsta först",
+      "sortRelevance": "Mest relevanta",
+      "activeFilters": "Aktiva filter",
+      "loading": "Laddar minnen...",
+      "noMemories": "Inga minnen hittades",
+      "noMatchingMemories": "Försök justera dina filter eller sökfråga",
+      "noMemoriesHint": "Börja lägga till minnen via API:et för att se dem här",
+      "match": "matchning",
+      "loadMore": "Ladda fler"
+    },
+    "budgetPage": {
+      "title": "Budget och kostnadskontroller",
+      "subtitle": "Hantera utgiftsgränser, varningar och automatisk kostnadsoptimering",
+      "loadError": "Kunde inte ladda budgetdata",
+      "todaysSpend": "Dagens utgifter",
+      "ofDailyLimit": "av daglig gräns",
+      "monthlySpend": "Månatliga utgifter",
+      "ofMonthlyLimit": "av månatlig gräns",
+      "apiCalls": "API-anrop",
+      "thisMonth": "denna månad",
+      "autoDegrades": "Automatiska nedgraderingar",
+      "noRecentDegrades": "Inga senaste nedgraderingar",
+      "protectionActive": "Budgetskydd aktivt",
+      "protectionDesc": "Dina frågor optimeras automatiskt för att hålla sig inom budgeten. Detta kan minska resultatkvaliteten. Överväg att öka dina budgetgränser.",
+      "settings": "Budgetinställningar",
+      "recentEvents": "Senaste nedgraderingshändelser",
+      "time": "Tid",
+      "reason": "Orsak",
+      "changes": "Ändringar",
+      "saved": "Sparade",
+      "howItWorks": "Hur budgetmedveten hämtning fungerar",
+      "step1": "När budgetgränserna närmar sig optimerar Seizn automatiskt dina frågor",
+      "step2": "Optimeringar inkluderar: inaktivera omrankning, minska topK, använda cache först",
+      "step3": "I strikt läge avvisas frågor som överskrider budgeten helt",
+      "step4": "Alla nedgraderingshändelser loggas med kostnadsbesparingar för transparens"
+    },
+    "devtoolsPage": {
+      "title": "Hämtnings-DevTools",
+      "subtitle": "Felsök och analysera dina RAG-pipelines",
+      "query": "Fråga",
+      "noQueryText": "Ingen frågetext",
+      "results": "resultat",
+      "error": "Fel",
+      "rerank": "omrankning",
+      "optimizationHints": "Optimeringstips",
+      "tabs": {
+        "timeline": "Tidslinje",
+        "candidates": "Kandidater",
+        "rerank": "Omrankning",
+        "whatIf": "Tänk om-labb",
+        "raw": "Rådata"
+      },
+      "finalResults": "Slutresultat",
+      "initialCandidates": "Initiala kandidater (före omrankning)",
+      "rawTraceData": "Rådata för spårning",
+      "emptyTitle": "Välj en spårning att inspektera",
+      "emptyDesc": "Välj en spårning från listan till vänster för att visa dess tidslinje, kandidater, omrankningsanalys och köra tänk om-experiment."
+    },
+    "enterpriseDashboard": {
+      "title": "Enterprise",
+      "badge": "Enterprise-plan",
+      "subtitle": "Konfigurera SSO, SCIM och företagsinställningar",
+      "tabs": {
+        "sso": "Enkel inloggning",
+        "scim": "Användarprovisionering",
+        "settings": "Inställningar"
+      },
+      "sso": {
+        "enabled": "SSO aktiverad",
+        "provider": "Leverantör:",
+        "domains": "Domäner:",
+        "testConnection": "Testa anslutning",
+        "disable": "Inaktivera",
+        "defaultRole": "Standardroll",
+        "status": "Status",
+        "active": "Aktiv",
+        "lastLogin": "Senaste inloggning",
+        "hoursAgo": "2 timmar sedan",
+        "notConfigured": "Enkel inloggning ej konfigurerad",
+        "notConfiguredDesc": "Aktivera SSO för att låta dina teammedlemmar logga in med sin företagsidentitetsleverantör",
+        "configure": "Konfigurera SSO",
+        "supportedProviders": "Stödda leverantörer",
+        "selectProvider": "Välj leverantör",
+        "configureDomains": "Konfigurera domäner",
+        "emailDomains": "E-postdomäner",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Användare med dessa e-postdomäner omdirigeras till SSO",
+        "idpConfig": "IdP-konfiguration",
+        "idpCopyHint": "Kopiera dessa värden till din identitetsleverantör:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entitets-ID:",
+        "back": "Tillbaka",
+        "continue": "Fortsätt",
+        "enableSSO": "Aktivera SSO",
+        "configSaved": "SSO-konfiguration sparad!"
+      },
+      "scim": {
+        "title": "SCIM-provisionering",
+        "subtitle": "Synkronisera användare och grupper automatiskt från din identitetsleverantör",
+        "endpoint": "SCIM-slutpunkt",
+        "bearerToken": "Bearer-token",
+        "regenerate": "Regenerera",
+        "generate": "Generera",
+        "tokenWarning": "Kopiera denna token nu. Den visas inte igen.",
+        "syncUsers": "Synkronisera användare",
+        "syncUsersDesc": "Importera och synkronisera användarkonton",
+        "syncGroups": "Synkronisera grupper",
+        "syncGroupsDesc": "Importera och synkronisera gruppmedlemskap",
+        "autoProvision": "Automatisk provisionering",
+        "autoProvisionDesc": "Skapa nya användare automatiskt",
+        "autoDeprovision": "Automatisk avprovisionering",
+        "autoDeprovisionDesc": "Inaktivera borttagna användare automatiskt"
+      },
+      "features": {
+        "title": "Enterprise-funktioner",
+        "sso": "SSO",
+        "ssoDesc": "Enkel inloggning med SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Automatiserad användarprovisionering",
+        "auditLogs": "Granskningsloggar",
+        "auditLogsDesc": "Fullständig aktivitetshistorik",
+        "customDomains": "Anpassade domäner",
+        "customDomainsDesc": "Använd din egen domän",
+        "ipWhitelist": "IP-vitlista",
+        "ipWhitelistDesc": "Begränsa åtkomst efter IP",
+        "dataRetention": "Datalagring",
+        "dataRetentionDesc": "Anpassade lagringspolicyer",
+        "advancedAnalytics": "Avancerad analys",
+        "advancedAnalyticsDesc": "Detaljerade användningsrapporter",
+        "sla": "SLA",
+        "slaDesc": "99,9% drifttidsgaranti",
+        "enabled": "Aktiverad",
+        "disabled": "Inaktiverad"
+      },
+      "limits": {
+        "title": "Plangränser",
+        "users": "Användare",
+        "unlimited": "Obegränsat",
+        "apiCalls": "API-anrop",
+        "apiCallsValue": "10M / månad",
+        "storage": "Lagring",
+        "storageValue": "1TB",
+        "collections": "Samlingar",
+        "documents": "Dokument",
+        "retention": "Lagring",
+        "retentionValue": "365 dagar"
+      },
+      "support": {
+        "title": "Dedikerad support",
+        "subtitle": "Prioriterad support med dedikerad kontoansvarig",
+        "contact": "Kontakta support"
+      }
+    },
+    "securityPage": {
+      "title": "Säkerhet",
+      "subtitle": "Hantera API-nycklar och visa säkerhetsgranskningsloggar",
+      "stats": {
+        "activeKeys": "Aktiva API-nycklar",
+        "auditEvents": "Granskningshändelser (24h)",
+        "securityScore": "Säkerhetspoäng",
+        "alerts": "Varningar"
+      },
+      "tabs": {
+        "audit": "Granskningslogg",
+        "keys": "API-nycklar",
+        "policies": "Policyer",
+        "settings": "Inställningar"
+      },
+      "audit": {
+        "allActions": "Alla åtgärder",
+        "lastHour": "Senaste timmen",
+        "last24Hours": "Senaste 24 timmarna",
+        "last7Days": "Senaste 7 dagarna",
+        "last30Days": "Senaste 30 dagarna",
+        "exporting": "Exporterar...",
+        "exportCSV": "Exportera CSV",
+        "action": "Åtgärd",
+        "resource": "Resurs",
+        "details": "Detaljer",
+        "ipAddress": "IP-adress",
+        "time": "Tid",
+        "noLogs": "Inga granskningsloggar hittades"
+      },
+      "keys": {
+        "description": "API-nycklar används för att autentisera förfrågningar till Seizn API",
+        "createNew": "Skapa ny nyckel",
+        "rotate": "Rotera",
+        "revoke": "Återkalla",
+        "created": "Skapad",
+        "lastUsed": "Senast använd",
+        "never": "Aldrig",
+        "permissions": "Behörigheter",
+        "rotateConfirm": "Är du säker på att du vill rotera denna API-nyckel? Den gamla nyckeln kommer att ogiltigförklaras.",
+        "rotateSuccess": "Nyckel roterad framgångsrikt! Kopiera din nya nyckel.",
+        "revokeConfirm": "Är du säker på att du vill återkalla denna API-nyckel? Denna åtgärd kan inte ångras.",
+        "createTitle": "Skapa API-nyckel",
+        "keyName": "Nyckelnamn",
+        "keyNamePlaceholder": "Produktionsbackend",
+        "keyType": "Nyckeltyp",
+        "test": "Test",
+        "live": "Live",
+        "testHint": "Testnycklar fungerar bara i sandlådeläge",
+        "testKeysNote": "Testnycklar fungerar bara i sandlådeläge",
+        "cancel": "Avbryt",
+        "createKey": "Skapa nyckel"
+      },
+      "settings": {
+        "authentication": "Autentisering",
+        "twoFactor": "Tvåfaktorsautentisering",
+        "twoFactorDesc": "Kräv 2FA för alla teammedlemmar",
+        "twoFactorDescription": "Kräv 2FA för alla teammedlemmar",
+        "sessionTimeout": "Sessionstimeout",
+        "sessionTimeoutDesc": "Logga ut automatiskt efter inaktivitet",
+        "sessionTimeoutDescription": "Logga ut automatiskt efter inaktivitet",
+        "min15": "15 minuter",
+        "15minutes": "15 minuter",
+        "min30": "30 minuter",
+        "30minutes": "30 minuter",
+        "hour1": "1 timme",
+        "1hour": "1 timme",
+        "hour4": "4 timmar",
+        "4hours": "4 timmar",
+        "apiSecurity": "API-säkerhet",
+        "ipWhitelist": "IP-vitlista",
+        "ipWhitelistDesc": "Tillåt API-åtkomst endast från specifika IP-adresser",
+        "ipWhitelistDescription": "Tillåt API-åtkomst endast från specifika IP-adresser",
+        "rateLimit": "Hastighetsbegränsning",
+        "rateLimitDesc": "Maximala förfrågningar per minut",
+        "rateLimitDescription": "Maximala förfrågningar per minut",
+        "rate100": "100/min",
+        "rate500": "500/min",
+        "rate1000": "1 000/min",
+        "rate5000": "5 000/min",
+        "dangerZone": "Farozon",
+        "dangerWarning": "Dessa åtgärder är oåterkalleliga. Fortsätt med försiktighet.",
+        "dangerZoneDescription": "Dessa åtgärder är oåterkalleliga. Fortsätt med försiktighet.",
+        "revokeAll": "Återkalla alla API-nycklar",
+        "revokeAllKeys": "Återkalla alla API-nycklar",
+        "deleteAllData": "Ta bort all data"
+      },
+      "policies": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "pending": "Väntande",
+        "activePolicies": "Aktiva policyer",
+        "accessPolicies": "Åtkomstpolicyer",
+        "compliancePolicies": "Efterlevnadspolicyer",
+        "awaitingApproval": "Inväntar godkännande",
+        "addCustom": "Lägg till anpassad policy"
+      }
+    },
+    "reportsPage": {
+      "title": "ROI-rapport",
+      "generated": "Genererad",
+      "period7d": "Senaste 7 dagarna",
+      "period30d": "Senaste 30 dagarna",
+      "period90d": "Senaste 90 dagarna",
+      "exportPdf": "Exportera PDF",
+      "loadError": "Kunde inte ladda rapport",
+      "totalQueries": "Totalt antal frågor",
+      "totalCost": "Total kostnad",
+      "avgLatency": "Genomsnittlig latens",
+      "costPerQuery": "Kostnad/fråga",
+      "estAnnualCost": "Beräknad årskostnad",
+      "projAnnualSavings": "Beräknade årliga besparingar",
+      "savingsRate": "Besparingsgrad",
+      "rerankImpact": "Omrankningseffekt",
+      "mrrScore": "MRR-poäng",
+      "without": "utan",
+      "withRerank": "med omrankning",
+      "autopilotSavings": "Autopilot-besparingar",
+      "savedThisPeriod": "sparat denna period med Autopilot",
+      "withAutopilot": "med Autopilot",
+      "recommendations": "Rekommendationer",
+      "queries": "Frågor:",
+      "avgCost": "Genomsnittlig kostnad"
+    },
+    "privacy": {
+      "title": "Integritet och RTBF",
+      "subtitle": "Hantera GDPR-förfrågningar om rätten att bli glömd och registrerades rättigheter",
+      "tabs": {
+        "requests": "RTBF-förfrågningar",
+        "subjects": "Registrerade",
+        "certificates": "Certifikat",
+        "settings": "Inställningar"
+      },
+      "stats": {
+        "pending": "Väntande",
+        "inProgress": "Pågående",
+        "completed": "Slutförda",
+        "overdue": "Försenade"
+      },
+      "requests": {
+        "description": "Hantera förfrågningar om rätten att bli glömd enligt GDPR artikel 17",
+        "newRequest": "Ny förfrågan",
+        "subject": "Registrerad",
+        "status": "Status",
+        "phase": "Fas",
+        "dueDate": "Förfallodatum",
+        "scope": "Omfattning",
+        "actions": "Åtgärder",
+        "daysOverdue": "dagar försenad",
+        "daysLeft": "dagar kvar",
+        "view": "Visa",
+        "certificate": "Certifikat",
+        "verify": "Verifiera"
+      },
+      "detail": {
+        "title": "RTBF-förfrågningsdetaljer",
+        "dataSubject": "Registrerad",
+        "requestedAt": "Begärd",
+        "dueDate": "Förfallodatum",
+        "status": "Status",
+        "dataCategories": "Datakategorier",
+        "deletionScope": "Raderingsomfattning",
+        "completionDetails": "Slutförandedetaljer",
+        "completed": "Slutförd:",
+        "verified": "Verifierad:",
+        "close": "Stäng",
+        "runVerification": "Kör verifiering",
+        "downloadCertificate": "Ladda ner certifikat"
+      },
+      "newRequest": {
+        "title": "Ny RTBF-förfrågan",
+        "description": "Skapa en ny förfrågan om rätten att bli glömd. Tidsfristen sätts till 30 dagar från nu enligt GDPR-krav.",
+        "emailLabel": "Registrerads e-post",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Raderingsomfattning",
+        "cancel": "Avbryt",
+        "creating": "Skapar...",
+        "create": "Skapa förfrågan"
+      },
+      "subjects": {
+        "description": "Visa och hantera registrerade som har interagerat med ditt system",
+        "email": "E-post",
+        "externalId": "Externt ID",
+        "requests": "Förfrågningar",
+        "dataCategories": "Datakategorier",
+        "actions": "Åtgärder",
+        "viewData": "Visa data"
+      },
+      "certificates": {
+        "description": "Kryptografiskt bevis på dataradering för efterlevnadsgranskningar",
+        "noTitle": "Inga certifikat ännu",
+        "noDesc": "Certifikat genereras när RTBF-förfrågningar verifieras",
+        "request": "Förfrågan:",
+        "issued": "Utfärdad:",
+        "gdprCompliant": "GDPR-kompatibel",
+        "download": "Ladda ner",
+        "hash": "Certifikathash"
+      },
+      "settings": {
+        "description": "Konfigurera RTBF-behandling och efterlevnadsinställningar",
+        "autoDiscovery": "Automatisk upptäckt",
+        "autoDiscoveryDesc": "Upptäck automatiskt all data kopplad till en registrerad",
+        "verificationRequired": "Verifiering krävs",
+        "verificationRequiredDesc": "Kräv verifiering innan raderingscertifikat utfärdas",
+        "responseDeadline": "Svarsfrist (dagar)",
+        "responseDeadlineHint": "GDPR kräver svar inom 30 dagar (kan förlängas till 90 för komplexa förfrågningar)",
+        "notificationEmail": "Aviseringsmail",
+        "notificationEmailHint": "E-postadress för aviseringar om RTBF-förfrågningar",
+        "auditLogRetention": "Granskningslogglagring (dagar)",
+        "auditLogRetentionHint": "Hur länge granskningsloggar bevaras för efterlevnadsändamål",
+        "years": "år",
+        "saving": "Sparar...",
+        "save": "Spara inställningar"
+      },
+      "gdprNotes": {
+        "title": "GDPR-efterlevnadsanteckningar",
+        "note1": "RTBF-förfrågningar måste uppfyllas inom 30 dagar",
+        "note2": "Komplexa förfrågningar kan förlängas till 90 dagar",
+        "note3": "Granskningsloggar bör bevaras för efterlevnad",
+        "note4": "Raderingscertifikat ger kryptografiskt bevis"
+      }
+    },
+    "topBar": {
+      "personal": "Personligt Konto",
+      "manageOrgs": "Hantera Organisationer",
+      "create": "Skapa",
+      "createApiKey": "Ny API-nyckel",
+      "createOrg": "Ny Organisation"
+    },
+    "share": {
+      "title": "Dela Spårning",
+      "button": "Dela",
+      "createLink": "Skapa Delningslänk",
+      "creating": "Skapar...",
+      "done": "Klart",
+      "linkExpiration": "Länkens Utgång",
+      "hour": "1t",
+      "day": "24t",
+      "week": "7d",
+      "never": "Aldrig",
+      "privacyOptions": "Integritetsalternativ",
+      "maskPii": "Maskera PII (e-post, telefon, IP)",
+      "maskSecrets": "Maskera API-nycklar och hemligheter",
+      "shareUrl": "Delnings-URL",
+      "copyLink": "Kopiera Länk",
+      "linkCopied": "Kopierat!",
+      "expiresIn": "Denna länk går ut om {duration}.",
+      "neverExpires": "Denna länk går aldrig ut.",
+      "error": "Misslyckades med att skapa delningslänk",
+      "revoke": "Återkalla Länk",
+      "revokeConfirm": "Är du säker på att du vill återkalla denna länk?",
+      "linkRevoked": "Länk återkallad framgångsrikt"
+    },
+    "theme": {
+      "light": "Ljus",
+      "dark": "Mörk",
+      "system": "System",
+      "toggle": "Växla tema"
+    },
+    "activity": {
+      "endpoint": "Endpoint",
+      "status": "Status",
+      "latency": "Latens",
+      "cost": "Kostnad",
+      "key": "Nyckel",
+      "time": "Tid"
+    },
+    "evals": {
+      "title": "Utvärderingar",
+      "subtitle": "A/B-testa och mät återhämtningskvalitet",
+      "newRun": "Ny Eval-körning",
+      "runs": "Utvärderingskörningar",
+      "noRuns": "Inga utvärderingskörningar ännu",
+      "metrics": "Mätvärden",
+      "comparison": "Visuell Jämförelse",
+      "selectRun": "Välj en utvärderingskörning",
+      "selectRunHint": "Välj en körning från listan för att visa detaljerade mätvärden",
+      "completed": "Slutförd",
+      "running": "Kör",
+      "failed": "Misslyckad",
+      "pending": "Väntande",
+      "winner": "Vinnare",
+      "tie": "Oavgjort",
+      "confidence": "förtroende",
+      "exportCSV": "Exportera CSV",
+      "exportJSON": "Exportera JSON",
+      "tabComparison": "Jämförelse",
+      "tabCharts": "Diagram",
+      "tabTimeline": "Tidslinje",
+      "precision": "Precision",
+      "recall": "Återkallelse",
+      "f1Score": "F1-poäng",
+      "avgLatency": "Genomsn. Latens",
+      "avgCost": "Genomsn. Kostnad",
+      "barChart": "Mätvärdesjämförelse",
+      "radarChart": "Multi-mätvärdesöversikt",
+      "metricsTrend": "Mätvärdestrend",
+      "latencyTrend": "Latenstrend",
+      "recentRuns": "Senaste Slutförda Körningar",
+      "waitingForMetrics": "Väntar på att utvärderingen ska slutföras..."
+    },
+    "autopilot": {
+      "title": "Autopilot",
+      "subtitle": "AI-driven återhämtningsoptimering",
+      "settings": "Inställningar",
+      "decisionLogs": "Beslutsloggar",
+      "operationMode": "Driftläge",
+      "parameters": "Parametrar",
+      "recentDecisions": "Senaste Beslut",
+      "noLogs": "Inga beslutsloggar ännu"
+    },
+    "calculator": {
+      "title": "Användningskalkylator",
+      "subtitle": "Uppskatta dina månadskostnader baserat på förväntad användning",
+      "stats": {
+        "apiCalls": "API-anrop",
+        "memories": "Minnen",
+        "extractions": "Extraheringar",
+        "estimated": "Uppskattad Kostnad"
+      },
+      "presets": {
+        "title": "Snabbmallar",
+        "startup": "Startup",
+        "growing": "Växande",
+        "scale": "Skala",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Anpassa Användning"
+      },
+      "labels": {
+        "apiCalls": "Månatliga API-anrop",
+        "memories": "Lagrade Minnen",
+        "extractions": "Extraheringar"
+      },
+      "recommended": {
+        "title": "Rekommenderad Plan",
+        "base": "Baspris",
+        "overage": "Överskridande",
+        "cta": "Kom Igång"
+      },
+      "comparison": {
+        "title": "Alla Planer",
+        "best": "Bästa Värde"
+      },
+      "details": {
+        "title": "Detaljerad Prisuppdelning",
+        "plan": "Plan",
+        "base": "Baspris",
+        "includedCalls": "Inkluderade Anrop",
+        "overageRate": "Överskridandefrekvens",
+        "yourOverage": "Ditt Överskridande",
+        "total": "Totalt"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Konfigurera HTTP-callbacks för realtidshändelseaviseringar",
+      "create": "Skapa Webhook",
+      "stats": {
+        "total": "Totalt Webhooks",
+        "active": "Aktiva",
+        "failing": "Misslyckade",
+        "deliveries": "Totalt Leveranser"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "Senaste Leveranser"
+      },
+      "success": "lyckades",
+      "failed": "misslyckades",
+      "lastTriggered": "Senast utlöst",
+      "edit": "Redigera",
+      "delete": "Radera",
+      "retry": "Försök Igen",
+      "deleteConfirm": "Är du säker på att du vill radera denna webhook? Denna åtgärd kan inte ångras.",
+      "empty": {
+        "title": "Inga webhooks konfigurerade",
+        "description": "Skapa en webhook för att ta emot realtidsaviseringar om händelser.",
+        "cta": "Skapa Din Första Webhook"
+      },
+      "table": {
+        "event": "Händelse",
+        "status": "Status",
+        "response": "Svar",
+        "time": "Tid",
+        "actions": "Åtgärder"
+      },
+      "modal": {
+        "title": "Skapa Webhook",
+        "name": "Namn",
+        "url": "Endpoint-URL",
+        "events": "Händelser att Prenumerera",
+        "cancel": "Avbryt",
+        "create": "Skapa Webhook"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Första Sökningen Handledning",
+      "subtitle": "Lär dig hur du använder playground",
+      "dismiss": "Stäng",
+      "tryExamples": "Prova en exempelfråga:",
+      "hint": "Klicka på något exempel för att autofylla frågeingången",
+      "gotIt": "Jag förstår!",
+      "tips": {
+        "welcome": {
+          "title": "Välkommen till Felsökningskonsolen",
+          "description": "Testa dina frågor här med fullständig spårning för att förstå exakt hur sökningen fungerar."
+        },
+        "query": {
+          "title": "Frågor på Naturligt Språk",
+          "description": "Ange vilken fråga som helst på naturligt språk. Vår AI kommer att hitta semantiskt liknande minnen från din lagrade data."
+        },
+        "trace": {
+          "title": "Fullständig Exekveringsspårning",
+          "description": "Se varje steg i pipeline - från skapande av inbäddning till resultatrankning - med tids- och kostnadsuppdelningar."
         }
       }
     }
@@ -727,7 +1649,11 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Gränser",
+      "status": "Status",
+      "help": "Hjälp",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Request Builder",
@@ -753,7 +1679,8 @@
         "techDocs": "Tech Documentation",
         "legalContracts": "Legal Contracts",
         "researchPapers": "Research Papers"
-      }
+      },
+      "advanced": "Avancerat"
     },
     "resultsPanel": {
       "searching": "Searching...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "Results",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Kostnad"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Eval",
+      "policy": "Policy"
+    },
+    "playgroundTitle": "Prova nu",
+    "costPanel": {
+      "calculating": "Beräknar kostnader...",
+      "noCost": "Kör en fråga för att se kostnadsuppdelning",
+      "costBreakdown": "Kostnadsuppdelning",
+      "component": "Komponent",
+      "cost": "Kostnad",
+      "embedding": "Embedding",
+      "vectorSearch": "Vektorsökning",
+      "rerank": "Rerank",
+      "answerContract": "Svarskontrakt",
+      "total": "Total kostnad",
+      "usage": "Användning",
+      "tokensIn": "Token in",
+      "tokensOut": "Token ut",
+      "queryUnits": "Frågeenheter",
+      "estimatedMonthly": "Uppskattad månadskostnad",
+      "basedOn": "Baserat på",
+      "queriesPerDay": "frågor/dag"
+    },
+    "errorDisplay": {
+      "error": "Fel",
+      "errorCode": "Kod",
+      "traceId": "Trace",
+      "hint": "Tips",
+      "tryAgain": "Försök igen",
+      "copyTraceId": "Kopiera trace-ID",
+      "copied": "Kopierad!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "Resurser",
       "security": "Säkerhet",
       "sdks": "SDK",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "5-min-guide",
+      "integrations": "Integrationer"
     },
     "hero": {
       "title": "API-dokumentation",
@@ -873,7 +1837,9 @@
       "enterprise": "Företag",
       "unlimited": "Obegränsat",
       "exceeded": "När du överskrider din hastighetsbegränsning returnerar API:et ett",
-      "response": "svar."
+      "response": "svar.",
+      "monthlyApiCalls": "Månatliga API-anrop",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Felkoder",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "Sokning och hamtning",
         "extraction": "Dataextraktion",
         "operations": "Operationer",
-        "security": "Sakerhet och integritet"
+        "security": "Sakerhet och integritet",
+        "all": "Alla"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "Vilka programmeringssprak stods?",
           "answer": "Vi stoder officiellt JavaScript/TypeScript (Node.js) och Python. For andra sprak kan du anvanda REST API direkt."
+        },
+        "q4": {
+          "question": "Vad är det snabbaste sättet att bygga en PoC?",
+          "answer": "1) POST /api/memories för att lagra en användarpreferens. 2) GET /api/memories för att söka. 3) Injicera resultaten i din LLM-prompt. 4) Senare, lägg till /api/extract för automatisk extraktion och /api/query för minnesförstärkta svar."
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "Vad ar parametern user_id?",
           "answer": "user_id kopplar minnen till en specifik anvandare, vilket mojliggor personaliserade upplevelser for varje anvandare."
+        },
+        "q4": {
+          "question": "När ska jag använda scope (user/session/agent)?",
+          "answer": "user: Preferenser som gäller globalt för en användare. session: Mål eller kontext som bara gäller för denna konversation. agent: Regler specifika för en agent i ett multiagentsystem. Korrekt användning av scope minskar promptlängden och förbättrar svarskonsekvensen."
+        },
+        "q5": {
+          "question": "Vad är memory_types och varför är de viktiga?",
+          "answer": "memory_type klassificerar minnen: fact (oföränderlig info), preference (användarval), instruction (regler att följa), relationship (person-/organisationsrelationer), experience (tidigare händelser). Detta är den mest kraftfulla axeln för filtrering, radering och policyhantering."
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "Finns det hastighetsbegransningar?",
           "answer": "Ja, begronsningar varierar per plan. Gratisplanen tillater 100 forfraqningar per minut. Se prissidan for detaljer."
+        },
+        "q4": {
+          "question": "Hur minskar jag kostnaderna?",
+          "answer": "Största kostnadsdrivarna: 1) Extraktionsfrekvens - minska anrop. 2) Sökräckvidd - använd namespace för att begränsa. 3) Modellval - använd haiku för rutinärenden, sonnet för viktiga. 4) Cachning - cacha upprepade frågor. 5) Batchoperationer när möjligt."
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "Har ni SOC 2-certifiering?",
           "answer": "Vi ar i process for SOC 2-certifiering. Kontakta vart saljteam for mer information."
         }
+      },
+      "title": "Vanliga frågor",
+      "subtitle": "Vanliga frågor om Seizn Memory API, från att komma igång till avancerade operationer.",
+      "nav": {
+        "dashboard": "Kontrollpanel"
+      },
+      "cta": {
+        "title": "Har du fortfarande frågor?",
+        "subtitle": "Kolla in vår dokumentation eller kontakta vårt supportteam.",
+        "readDocs": "Läs dokumentation",
+        "contactSupport": "Kontakta support"
+      },
+      "footer": {
+        "rights": "Alla rättigheter förbehållna."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5-minuters snabbstart | Seizn",
+        "description": "Lägg till AI-minne på 5 minuter med bara 10 rader kod"
+      },
+      "badge": "5-min-guide",
+      "noCreditCard": "Inget kreditkort krävs",
+      "title": "Kom igång med Seizn",
+      "subtitle": "Lägg till beständigt minne till din AI på under 5 minuter. Följ med och bocka av varje steg när du slutför det.",
+      "getApiKey": "Hämta API-nyckel",
+      "fullExample": "Komplett exempel (10 rader)",
+      "copy": "Kopiera",
+      "copied": "Kopierad!",
+      "progress": "Framsteg",
+      "stepsLabel": "steg",
+      "steps": {
+        "getApiKey": {
+          "title": "Hämta din API-nyckel",
+          "time": "30 sek",
+          "description": "Registrera dig och generera din API-nyckel från kontrollpanelen.",
+          "actionLabel": "Gå till kontrollpanelen"
+        },
+        "install": {
+          "title": "Installera SDK:n",
+          "time": "30 sek",
+          "description": "Installera Seizn SDK med din föredragna pakethanterare."
+        },
+        "ingest": {
+          "title": "Importera dokument",
+          "time": "30 sek",
+          "description": "Ladda upp dokument till ditt dataset för hämtning."
+        },
+        "query": {
+          "title": "Kör din första fråga",
+          "time": "10 sek",
+          "description": "Sök igenom dina dokument med en fråga på naturligt språk."
+        }
+      },
+      "completion": {
+        "title": "Grattis!",
+        "description": "Du har slutfört snabbstarten. Din hämtningspipeline är redo med inbyggd spårning.",
+        "readDocs": "Läs dokumentationen",
+        "goToDashboard": "Gå till kontrollpanelen"
+      },
+      "expectedOutput": {
+        "title": "Förväntad utdata",
+        "description": "Varje fråga returnerar resultat, trace och kostnadsuppdelning:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API-referens",
+          "description": "Utforska alla endpoints och alternativ för avancerade användningsfall."
+        },
+        "sdkExamples": {
+          "title": "SDK-exempel",
+          "description": "Kopiera-klistra-in-exempel för Python, TypeScript och mer."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Vanliga frågor om minnestyper, namnrymder och bästa praxis."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API-referens | Seizn",
+        "description": "Komplett API-dokumentation för Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain och RetOps APIs"
+      },
+      "title": "API-referens",
+      "description": "Komplett dokumentation för alla Seizn APIs inklusive Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain och RetOps.",
+      "auth": {
+        "title": "Autentisering",
+        "description": "Alla API-endpoints kräver autentisering via API-nyckel. Inkludera din nyckel i X-API-Key-headern."
+      },
+      "sidebar": {
+        "title": "API-grupper"
+      },
+      "endpoint": {
+        "parameters": "Parametrar",
+        "requestBody": "Begärandekropp",
+        "response": "Svar",
+        "errorCodes": "Felkoder"
+      },
+      "table": {
+        "name": "Namn",
+        "type": "Typ",
+        "required": "Obligatorisk",
+        "description": "Beskrivning",
+        "code": "Kod",
+        "message": "Meddelande"
+      },
+      "copy": "Kopiera",
+      "copied": "Kopierad!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5-minuters guide | Seizn",
+        "description": "Lär dig hur du lägger till AI-minne på 5 minuter med en interaktiv steg-för-steg-guide"
+      },
+      "breadcrumb": "Guide",
+      "badge": "5-minuters guide",
+      "noCreditCard": "Inget kreditkort krävs",
+      "title": "Lägg till AI-minne på 5 minuter",
+      "subtitle": "Följ denna steg-för-steg-guide för att ge din AI beständigt minne. Bocka av varje steg när du slutför det.",
+      "getApiKey": "Hämta API-nyckel",
+      "copy": "Kopiera",
+      "copied": "Kopierad!",
+      "progress": "Framsteg",
+      "stepsLabel": "steg",
+      "steps": {
+        "step1": {
+          "title": "Hämta din API-nyckel",
+          "time": "30 sek",
+          "description": "Registrera dig gratis och generera din API-nyckel från kontrollpanelen.",
+          "instruction1": "Registrera dig eller logga in på ditt Seizn-konto",
+          "instruction2": "Navigera till API-nycklar i kontrollpanelen",
+          "instruction3": "Klicka på 'Skapa ny nyckel' och kopiera din nyckel",
+          "actionLabel": "Gå till kontrollpanelen"
+        },
+        "step2": {
+          "title": "Installera SDK:n",
+          "time": "30 sek",
+          "description": "Välj ditt föredragna språk och installera Seizn SDK."
+        },
+        "step3": {
+          "title": "Spara ditt första minne",
+          "time": "2 min",
+          "description": "Lagra information som din AI ska komma ihåg mellan sessioner."
+        },
+        "step4": {
+          "title": "Sök i minnen",
+          "time": "2 min",
+          "description": "Hämta relevanta minnen med frågor på naturligt språk."
+        },
+        "step5": {
+          "title": "Verifiera resultaten",
+          "time": "30 sek",
+          "description": "Kontrollera att ditt minne lagrades och hämtades korrekt.",
+          "hint": "Du bör se ett svar som detta när du söker efter minnen:",
+          "successTitle": "Lyckades!",
+          "successDescription": "Din AI har nu beständigt minne. Använd sökresultaten för att förbättra din AI:s kontext och svar."
+        }
+      },
+      "completion": {
+        "title": "Grattis!",
+        "description": "Du har slutfört guiden. Din AI har nu beständigt minne som fungerar mellan sessioner.",
+        "readDocs": "Läs dokumentationen",
+        "goToDashboard": "Gå till kontrollpanelen"
+      },
+      "nextSteps": {
+        "title": "Vad händer härnäst?",
+        "apiReference": {
+          "title": "API-referens",
+          "description": "Utforska alla endpoints för minnen, extraktion och RAG-frågor."
+        },
+        "sdkExamples": {
+          "title": "SDK-exempel",
+          "description": "Kopiera-klistra-in-exempel för Python, TypeScript och REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Lär dig om minnestyper, namnrymder och bästa praxis."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integrationer | Seizn",
+        "description": "Integrera Seizn med LangChain, LlamaIndex, OpenTelemetry och mer"
+      },
+      "breadcrumb": "Integrationer",
+      "title": "Integrationer",
+      "subtitle": "Anslut Seizn med dina favorit-AI-ramverk och observabilitetsverktyg.",
+      "cards": {
+        "langchain": {
+          "badge": "Officiell",
+          "title": "LangChain",
+          "description": "Drop-in-retriever för LangChain RAG-pipelines. Fungerar med Python och TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Officiell",
+          "title": "LlamaIndex",
+          "description": "Inbyggd retriever för LlamaIndex query engines. Stöder streaming och hybridsökning."
+        },
+        "opentelemetry": {
+          "badge": "Officiell",
+          "title": "OpenTelemetry",
+          "description": "Exportera traces till Datadog, Grafana, Jaeger och alla OTLP-kompatibla backends."
+        }
+      },
+      "comingSoon": {
+        "title": "Kommer snart",
+        "description": "Fler integrationer är på väg. Låt oss veta vad du behöver!"
+      },
+      "backToDocs": "Tillbaka till dokumentation"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain-integration | Seizn",
+        "description": "Drop-in-retriever för LangChain RAG-pipelines"
+      },
+      "badge": "Officiell",
+      "title": "LangChain-integration",
+      "subtitle": "Drop-in-retriever för LangChain RAG-pipelines med fullständigt spårningsstöd.",
+      "overview": {
+        "title": "60-sekunders överblick",
+        "description": "SeiznRetriever är en drop-in-ersättning för alla LangChain-retrievers. Den tillhandahåller vektorsökning med inbyggd spårning, cachning och omrangordning.",
+        "feature1": "Kompatibel med alla LangChain-chains och -agents",
+        "feature2": "Inbyggd spårning för varje hämtningsoperation",
+        "feature3": "Stöder filtrering, omrangordning och hybridsökning"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installera Seizn SDK tillsammans med LangChain."
+      },
+      "example": {
+        "title": "5-minuters exempel",
+        "description": "Skapa en RAG-chain med SeiznRetriever på bara några rader kod."
+      },
+      "production": {
+        "title": "Produktionstips",
+        "caching": {
+          "title": "Aktivera cachning",
+          "description": "Minska latens och kostnader genom att cacha upprepade frågor."
+        },
+        "reranking": {
+          "title": "Aktivera omrangordning",
+          "description": "Förbättra resultatkvaliteten med cross-encoder-omrangordning."
+        },
+        "filtering": {
+          "title": "Metadatafiltrering",
+          "description": "Filtrera resultat efter metadatafält före vektorsökning."
+        }
+      },
+      "troubleshooting": {
+        "title": "Felsökning",
+        "errorColumn": "Fel",
+        "causeColumn": "Orsak",
+        "solutionColumn": "Lösning",
+        "authCause": "Ogiltig eller saknad API-nyckel",
+        "authSolution": "Kontrollera miljövariabeln SEIZN_API_KEY",
+        "rateCause": "För många begäranden per sekund",
+        "rateSolution": "Implementera exponentiell backoff eller uppgradera din plan",
+        "emptyCause": "Tröskelvärde för högt eller inga matchande dokument",
+        "emptySolution": "Sänk tröskelvärdet eller kontrollera datasetinnehållet"
+      },
+      "nav": {
+        "backToIntegrations": "Tillbaka till integrationer",
+        "nextLlamaIndex": "LlamaIndex-integration"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex-integration | Seizn",
+        "description": "Inbyggd retriever för LlamaIndex RAG-pipelines"
+      },
+      "badge": "Officiell",
+      "title": "LlamaIndex-integration",
+      "subtitle": "Inbyggd retriever för LlamaIndex query engines med streaming och hybridsökning.",
+      "overview": {
+        "title": "60-sekunders överblick",
+        "description": "SeiznRetriever implementerar LlamaIndex BaseRetriever-gränssnittet, vilket gör den kompatibel med alla LlamaIndex query engines och pipelines.",
+        "feature1": "Inbyggd integration med LlamaIndex query engines",
+        "feature2": "Stöder streaming-svar direkt ur lådan",
+        "feature3": "Kompatibel med LlamaIndex node-postprocessorer"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installera Seizn SDK tillsammans med LlamaIndex."
+      },
+      "example": {
+        "title": "5-minuters exempel",
+        "description": "Bygg en query engine med SeiznRetriever för din RAG-applikation."
+      },
+      "production": {
+        "title": "Produktionstips",
+        "streaming": {
+          "title": "Streaming-svar",
+          "description": "Aktivera streaming för bättre användarupplevelse vid långa svar."
+        },
+        "hybrid": {
+          "title": "Hybridsökning",
+          "description": "Kombinera vektor- och nyckelordssökning för bättre recall."
+        },
+        "nodePostprocessors": {
+          "title": "Node-postprocessorer",
+          "description": "Kedja postprocessorer för avancerad filtrering och omrangordning."
+        }
+      },
+      "troubleshooting": {
+        "title": "Felsökning",
+        "errorColumn": "Fel",
+        "causeColumn": "Orsak",
+        "solutionColumn": "Lösning",
+        "authCause": "Ogiltig eller saknad API-nyckel",
+        "authSolution": "Kontrollera miljövariabeln SEIZN_API_KEY",
+        "datasetCause": "Datasetnamn hittades inte",
+        "datasetSolution": "Verifiera att datasetet finns i kontrollpanelen",
+        "relevanceCause": "Fråga-dokument-diskrepans",
+        "relevanceSolution": "Prova hybridsökning eller justera tröskelvärdet"
+      },
+      "nav": {
+        "prevLangChain": "LangChain-integration",
+        "nextOpenTelemetry": "OpenTelemetry-integration"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry-integration | Seizn",
+        "description": "Exportera traces till Datadog, Grafana, Jaeger via OTLP"
+      },
+      "badge": "Officiell",
+      "title": "OpenTelemetry-integration",
+      "subtitle": "Exportera hämtningstraces till din observabilitetsstack via OTLP.",
+      "overview": {
+        "title": "60-sekunders överblick",
+        "description": "Seizn exporterar nativt OpenTelemetry-traces för varje hämtningsoperation. Anslut till valfri OTLP-kompatibel backend för end-to-end-observabilitet.",
+        "feature1": "Zero-config OTLP-export med automatiskt span-skapande",
+        "feature2": "Detaljerade attribut inklusive latens, tokenantal och kostnader",
+        "feature3": "Kontextpropagering för distribuerad spårning",
+        "supportedBackends": "Stödda backends"
+      },
+      "installation": {
+        "title": "Konfiguration",
+        "description": "Konfigurera OTLP-export via miljövariabler."
+      },
+      "examples": {
+        "title": "Backend-exempel",
+        "datadog": {
+          "description": "Exportera traces till Datadog APM via Datadog Agent eller direkt API."
+        },
+        "grafana": {
+          "description": "Skicka traces till Grafana Tempo (Cloud eller egenhostad)."
+        },
+        "jaeger": {
+          "description": "Exportera till Jaeger med inbyggt OTLP-mottagarstöd."
+        }
+      },
+      "production": {
+        "title": "Produktionstips",
+        "sampling": {
+          "title": "Samplingsstrategi",
+          "description": "Kontrollera trace-volymen med head-baserad eller tail-baserad sampling."
+        },
+        "attributes": {
+          "title": "Anpassade attribut",
+          "description": "Lägg till resurs- och span-attribut för bättre filtrering."
+        },
+        "batching": {
+          "title": "Batch-konfiguration",
+          "description": "Optimera exportprestanda med batch-inställningar."
+        }
+      },
+      "troubleshooting": {
+        "title": "Felsökning",
+        "issueColumn": "Problem",
+        "causeColumn": "Orsak",
+        "solutionColumn": "Lösning",
+        "noTracesIssue": "Inga traces visas",
+        "noTracesCause": "Telemetri inaktiverad eller felaktig endpoint",
+        "noTracesSolution": "Ställ in SEIZN_TELEMETRY_ENABLED=true och verifiera endpoint",
+        "connectionIssue": "Anslutning nekad",
+        "connectionCause": "Collector körs inte eller fel port",
+        "connectionSolution": "Kontrollera collector-status och port 4318",
+        "missingSpansIssue": "Saknade spans i trace",
+        "missingSpansCause": "Samplingsfrekvens för låg",
+        "missingSpansSolution": "Öka samplingsfrekvensen eller inaktivera sampling",
+        "debugTitle": "Felsökningsläge",
+        "debugDescription": "Aktivera felsökningsloggning för att felsöka telemetriproblem."
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex-integration",
+        "backToIntegrations": "Tillbaka till integrationer"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Live-demo",
+    "subtitle": "Upplev Seizns hämtningspipeline med fullständig spårning och kostnadstransparens.",
+    "tryItNow": "Prova nu - Ingen registrering krävs",
+    "queryPlaceholder": "Sökfråga",
+    "runDemo": "Kör demo",
+    "running": "Kör...",
+    "results": "Resultat",
+    "trace": "Trace",
+    "cost": "Kostnad",
+    "noResults": "Kör demon för att se resultat",
+    "errorTitle": "Fel",
+    "rateLimitError": "Frekvensgräns överskriden. Vänta.",
+    "retryIn": "Försök igen om",
+    "seconds": "sekunder",
+    "score": "Poäng",
+    "rerankScore": "Rerank",
+    "latency": "Latens",
+    "tokens": "Tokens",
+    "cached": "cachad",
+    "model": "Modell",
+    "input": "Indata",
+    "output": "Utdata",
+    "costBreakdown": "Uppdelning",
+    "total": "Total kostnad",
+    "embedding": "Embedding",
+    "vectorSearch": "Vektorsökning",
+    "rerank": "Rerank",
+    "answerContract": "Svarskontrakt",
+    "tokensIn": "Token in",
+    "tokensOut": "Token ut",
+    "queryUnits": "Frågeenheter",
+    "prefilledQueries": [
+      "Prova exempel"
+    ]
+  },
+  "publicTrace": {
+    "title": "Delad trace",
+    "subtitle": "Visa detaljer för delad hämtningstrace",
+    "sharedBy": "Delad trace",
+    "expired": "Denna länk har löpt ut",
+    "expiredDesc": "Delningslänken är inte längre giltig. Be ägaren att skapa en ny länk.",
+    "notFound": "Trace hittades inte",
+    "notFoundDesc": "Denna delade trace kunde inte hittas. Den kan ha återkallats eller raderats.",
+    "backToHome": "Tillbaka till startsidan",
+    "requestId": "Begärande-ID",
+    "collection": "Samling",
+    "createdAt": "Skapad",
+    "totalLatency": "Total latens",
+    "totalCost": "Total kostnad",
+    "resultsCount": "Resultat",
+    "query": "Fråga",
+    "timeline": "Tidslinje",
+    "candidates": "Kandidater",
+    "rerankDiff": "Rerank-skillnad",
+    "costAnalysis": "Kostnadsanalys",
+    "redacted": "[MASKERAD]",
+    "piiMasked": "PII maskerad för integritet",
+    "readOnlyNote": "Detta är en skrivskyddad vy av en delad trace."
+  },
+  "trustPage": {
+    "title": "Förtroendecenter",
+    "subtitle": "Säkerhet och datapolicyer hos Seizn",
+    "heroDescription": "Vi bygger med integritet och säkerhet i kärnan. Denna sida dokumenterar exakt vad vi gör med dina data.",
+    "lastUpdated": "Senast uppdaterad",
+    "sections": {
+      "dataFlow": {
+        "title": "Dataflöde",
+        "description": "Vad vi lagrar och vad vi inte lagrar",
+        "stored": {
+          "title": "Vad vi lagrar",
+          "items": [
+            "Minnesinnehåll och embeddings",
+            "Frågeloggar (hashade, inte i klartext)",
+            "API-användningsmetrik per nyckel",
+            "Trace-data för felsökning (konfigurerbar retention)"
+          ]
+        },
+        "notStored": {
+          "title": "Vad vi INTE lagrar",
+          "items": [
+            "Rena API-nycklar (endast hashade)",
+            "Användarlösenord (endast OAuth)",
+            "Frågeresultat efter cache-TTL",
+            "Begäran-/svarsloggar från tredjeparts-LLM"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Kryptering",
+        "description": "Dataskydd vid överföring och i vila",
+        "transit": {
+          "title": "Vid överföring",
+          "items": [
+            "TLS 1.3 krävs för alla anslutningar",
+            "HSTS aktiverad med 1 års max-age",
+            "Certificate transparency-loggning"
+          ]
+        },
+        "atRest": {
+          "title": "I vila",
+          "items": [
+            "AES-256-kryptering för alla lagrade data",
+            "Kryptering på databasnivå (Supabase)",
+            "Krypterade säkerhetskopior med separata nycklar"
+          ]
+        },
+        "keyManagement": {
+          "title": "Nyckelhantering",
+          "items": [
+            "API-nycklar hashade med SHA-256 + salt",
+            "Automatiska påminnelser om nyckelrotation (90 dagar)",
+            "Omedelbar nyckelåterkallningsmöjlighet"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Hyresgästisolering",
+        "description": "Hur vi håller dina data separata",
+        "items": [
+          "Row-Level Security (RLS) tillämpas på databasnivå",
+          "Alla frågor filtreras automatiskt efter user_id/org_id",
+          "Inga delade index mellan hyresgäster",
+          "Namnrymdseparering för minnessamlingar"
+        ],
+        "rbac": {
+          "title": "Åtkomstkontroll",
+          "items": [
+            "Rollbaserad åtkomst (Owner, Admin, Member)",
+            "API-nyckelomfång per organisation",
+            "Granskningsloggar för alla behörighetsändringar"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Lagring och radering",
+        "description": "Hur länge vi behåller data och hur du raderar dem",
+        "periods": [
+          {
+            "type": "Minnen",
+            "period": "Tills de raderas av användaren"
+          },
+          {
+            "type": "API-loggar",
+            "period": "90 dagar rullande"
+          },
+          {
+            "type": "Traces",
+            "period": "30 dagar (konfigurerbart)"
+          },
+          {
+            "type": "Granskningsloggar",
+            "period": "1 år"
+          },
+          {
+            "type": "Säkerhetskopior",
+            "period": "30 dagar krypterade"
+          }
+        ],
+        "deletion": {
+          "title": "Raderingsprocess",
+          "items": [
+            "DELETE /api/memories raderar omedelbart",
+            "Kontoradering: 30 dagars karensperiod",
+            "Slutgiltig radering från säkerhetskopior inom 30 dagar",
+            "GDPR/CCPA-dataexport tillgänglig på begäran"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Granskningsloggar och åtkomstkontroller",
+        "description": "Spåra vem som gör vad",
+        "logged": {
+          "title": "Händelser vi loggar",
+          "items": [
+            "Skapande, rotation, återkallning av API-nycklar",
+            "Behörighetsändringar (RBAC)",
+            "Begäranden om dataexport",
+            "Misslyckade autentiseringsförsök",
+            "Adminåtgärder i organisationen"
+          ]
+        },
+        "access": {
+          "title": "Loggåtkomst",
+          "items": [
+            "Tillgänglig för organisationsadministratörer",
+            "Exporterbar via API (Pro+-planer)",
+            "Sökbar efter användare, åtgärd, tidsstämpel"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Underbiträden",
+        "description": "Tredjeparter som behandlar dina data",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Databas och autentisering",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting och CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Betalningar",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Produktanalys",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Felövervakning",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (valfritt)",
+            "location": "US/Kanada"
+          }
+        ],
+        "note": "Vi delar bara den minsta mängd data som krävs för att varje tjänst ska fungera."
+      },
+      "disclosure": {
+        "title": "Vad vi inte gör ännu",
+        "description": "Ärliga luckor i vår säkerhetsposition",
+        "items": [
+          "SOC 2 Type II-certifiering (pågår, beräknad Q2 2026)",
+          "HIPAA-efterlevnad (planerad för Enterprise)",
+          "On-premise-distributionsalternativ (utvärderas)",
+          "Hårdvarusäkerhetsmoduler (HSM) för nyckellagring",
+          "Bug bounty-program (planerat Q3 2026)"
+        ],
+        "cta": "Har du säkerhetsfrågor? Kontakta oss på security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Frågor?",
+      "description": "Vårt team svarar gärna på säkerhetsfrågor.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Gränser och fakturering",
+    "subtitle": "Förstå dina plangränser, kvoter och faktureringsinformation.",
+    "unlimited": "Obegränsad",
+    "custom": "Anpassad",
+    "requestsPerSecond": "begäranden/sekund",
+    "sidebar": {
+      "onThisPage": "På denna sida",
+      "quotas": "Månadskvoter",
+      "rateLimits": "Frekvensgränser",
+      "overage": "Överskridandebeteende",
+      "reset": "Återställningstider",
+      "headers": "Svarsheaders"
+    },
+    "table": {
+      "plan": "Plan",
+      "monthlyQuota": "Månadskvot",
+      "rps": "RPS-gräns"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "overage": "Mjuk strypning efter gräns"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Mjuk strypning, e-postvarning"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Mjuk strypning, prioritetskö"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Anpassad SLA, ingen strypning"
+      }
+    },
+    "quotas": {
+      "title": "Månadskvoter",
+      "description": "Varje plan inkluderar en månadskvot för API-anrop. Kvoter återställs den 1:a varje månad kl. 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Frekvensgränser (RPS)",
+      "description": "Frekvensgränser skyddar vår infrastruktur och säkerställer rättvis användning. Gränser tillämpas per API-nyckel."
+    },
+    "overage": {
+      "title": "Överskridandebeteende",
+      "softThrottle": {
+        "title": "Mjuk strypning (kvot överskriden)",
+        "description": "När du överskrider din månadskvot:",
+        "point1": "API-anrop fortsätter med reducerad prioritet",
+        "point2": "Svarstider kan öka med 2-5 gånger",
+        "point3": "E-postavisering vid 80% och 100% användning"
+      },
+      "hard429": {
+        "title": "Hard 429 (frekvensgräns)",
+        "description": "När du överskrider RPS-frekvensgränsen:",
+        "recommendation": "Implementera exponentiell backoff (1s, 2s, 4s, 8s) och försök igen med jitter."
+      }
+    },
+    "reset": {
+      "title": "Återställningstider",
+      "monthly": {
+        "title": "Månatlig kvotåterställning",
+        "description": "Kvoter återställs den första dagen varje månad.",
+        "time": "1:a varje månad, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Frekvensgränsfönster",
+        "description": "Frekvensgränser använder ett glidande fönster.",
+        "time": "Rullande 1-sekunders fönster"
+      }
+    },
+    "headers": {
+      "limit": "Maximala begäranden tillåtna per fönster",
+      "remaining": "Återstående begäranden i nuvarande fönster",
+      "reset": "Unix-tidsstämpel för fönsteråterställning",
+      "quotaLimit": "Månadskvotgräns",
+      "quotaRemaining": "Återstående API-anrop denna månad",
+      "quotaReset": "ISO 8601-datum för kvotåterställning"
+    },
+    "headersSection": {
+      "title": "Svarsheaders",
+      "description": "Varje API-svar inkluderar headers som hjälper dig att spåra din användning och dina gränser.",
+      "header": "Header",
+      "headerDescription": "Beskrivning",
+      "example": "Exempel på svarsheaders:"
+    },
+    "upgrade": {
+      "title": "Behöver du högre gränser?",
+      "description": "Uppgradera din plan för ökade kvoter, högre frekvensgränser och prioriterad support.",
+      "viewPlans": "Visa planer",
+      "contactSales": "Kontakta försäljning"
+    }
+  },
+  "help": {
+    "title": "Hjälpcenter",
+    "subtitle": "Hitta svar, få support och ta del av resurser.",
+    "search": {
+      "placeholder": "Sök efter hjälp...",
+      "noResults": "Inga resultat hittades"
+    },
+    "sections": {
+      "support": {
+        "title": "Supportkanaler",
+        "description": "Få hjälp från vårt team",
+        "email": {
+          "title": "E-postsupport",
+          "description": "Få hjälp via e-post inom 24 timmar",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord-community",
+          "description": "Gå med i vår community för hjälp i realtid",
+          "action": "Gå med i Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Rapportera buggar och begär funktioner",
+          "action": "Öppna issue"
+        }
+      },
+      "faq": {
+        "title": "Vanliga frågor",
+        "description": "Snabba svar på vanliga frågor",
+        "viewAll": "Visa alla FAQ"
+      },
+      "status": {
+        "title": "Systemstatus",
+        "description": "Kontrollera aktuell systemstatus och incidenter",
+        "viewStatus": "Visa statussida",
+        "operational": "Alla system operativa",
+        "degraded": "Försämrad prestanda",
+        "outage": "Tjänstavbrott"
+      },
+      "billing": {
+        "title": "Fakturering och planer",
+        "description": "Hantera din prenumeration och betalningar",
+        "items": {
+          "plans": "Visa prisplaner",
+          "usage": "Kontrollera din användning",
+          "invoices": "Ladda ner fakturor",
+          "upgrade": "Uppgradera din plan"
+        }
+      },
+      "docs": {
+        "title": "Dokumentation",
+        "description": "Snabblänkar till populär dokumentation",
+        "links": {
+          "quickstart": "Snabbstartsguide",
+          "apiReference": "API-referens",
+          "sdks": "SDK:er och bibliotek",
+          "limits": "Gränser och fakturering",
+          "security": "Säkerhet"
+        }
+      }
+    },
+    "contact": {
+      "title": "Behöver du fortfarande hjälp?",
+      "description": "Vårt supportteam finns här för att hjälpa dig lyckas.",
+      "cta": "Kontakta support"
+    }
+  },
+  "status": {
+    "title": "Systemstatus",
+    "subtitle": "Systemstatus i realtid och incidenthistorik",
+    "lastUpdated": "Senast uppdaterad",
+    "overall": {
+      "operational": "Alla system operativa",
+      "degraded": "Försämrad prestanda",
+      "partialOutage": "Delvis systemavbrott",
+      "majorOutage": "Allvarligt systemavbrott"
+    },
+    "uptime": {
+      "title": "Drifttid",
+      "24h": "24 timmar",
+      "7d": "7 dagar",
+      "30d": "30 dagar",
+      "90d": "90 dagar"
+    },
+    "services": {
+      "title": "Tjänststatus",
+      "operational": "Operativ",
+      "degraded": "Försämrad",
+      "down": "Nere"
+    },
+    "incidents": {
+      "active": "Aktiva incidenter",
+      "history": "Incidenthistorik",
+      "noActive": "Inga aktiva incidenter",
+      "noHistory": "Inga tidigare incidenter",
+      "status": {
+        "investigating": "Undersöks",
+        "identified": "Identifierad",
+        "monitoring": "Övervakas",
+        "resolved": "Löst"
+      },
+      "severity": {
+        "minor": "Mindre",
+        "major": "Allvarlig",
+        "critical": "Kritisk"
+      },
+      "affected": "Berörda tjänster",
+      "timeline": "Tidslinje",
+      "started": "Startad",
+      "resolved": "Löst",
+      "duration": "Varaktighet",
+      "viewDetails": "Visa detaljer"
+    },
+    "subscribe": {
+      "title": "Prenumerera på uppdateringar",
+      "rss": "RSS-flöde",
+      "email": "E-postaviseringar"
     }
   }
 }

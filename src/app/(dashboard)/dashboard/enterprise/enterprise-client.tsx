@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 type TabType = "sso" | "scim" | "settings";
 
@@ -50,6 +51,8 @@ export function EnterpriseClient() {
   const [ssoSetupStep, setSSOSetupStep] = useState(1);
   const [domains, setDomains] = useState("");
 
+  const { t } = useDashboardTranslation();
+
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -79,7 +82,7 @@ export function EnterpriseClient() {
 
   const handleEnableSSO = async () => {
     // In production, this would submit the SSO configuration
-    alert("SSO configuration saved!");
+    alert(t("dashboard.enterpriseDashboard.sso.configSaved"));
     setShowSSOSetup(false);
     setSSOSetupStep(1);
     loadData();
@@ -106,13 +109,13 @@ export function EnterpriseClient() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">Enterprise</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.enterpriseDashboard.title")}</h1>
           <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full">
-            Enterprise Plan
+            {t("dashboard.enterpriseDashboard.badge")}
           </span>
         </div>
         <p className="text-gray-500 mt-1">
-          Configure SSO, SCIM, and enterprise settings
+          {t("dashboard.enterpriseDashboard.subtitle")}
         </p>
       </div>
 
@@ -128,9 +131,9 @@ export function EnterpriseClient() {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {tab === "sso" && "Single Sign-On"}
-            {tab === "scim" && "User Provisioning"}
-            {tab === "settings" && "Settings"}
+            {tab === "sso" && t("dashboard.enterpriseDashboard.tabs.sso")}
+            {tab === "scim" && t("dashboard.enterpriseDashboard.tabs.scim")}
+            {tab === "settings" && t("dashboard.enterpriseDashboard.tabs.settings")}
           </button>
         ))}
       </div>
@@ -146,34 +149,34 @@ export function EnterpriseClient() {
                     <span className="text-lg">🔐</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">SSO Enabled</h3>
+                    <h3 className="font-semibold text-gray-900">{t("dashboard.enterpriseDashboard.sso.enabled")}</h3>
                     <p className="text-sm text-gray-500">
-                      Provider: {ssoConfig.provider} | Domains: {ssoConfig.domains.join(", ")}
+                      {t("dashboard.enterpriseDashboard.sso.provider")} {ssoConfig.provider} | {t("dashboard.enterpriseDashboard.sso.domains")} {ssoConfig.domains.join(", ")}
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50">
-                    Test Connection
+                    {t("dashboard.enterpriseDashboard.sso.testConnection")}
                   </button>
                   <button className="px-3 py-1.5 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50">
-                    Disable
+                    {t("dashboard.enterpriseDashboard.sso.disable")}
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <span className="text-sm text-gray-500">Default Role</span>
+                  <span className="text-sm text-gray-500">{t("dashboard.enterpriseDashboard.sso.defaultRole")}</span>
                   <p className="text-gray-900 capitalize">{ssoConfig.defaultRole}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-500">Status</span>
-                  <p className="text-emerald-600">Active</p>
+                  <span className="text-sm text-gray-500">{t("dashboard.enterpriseDashboard.sso.status")}</span>
+                  <p className="text-emerald-600">{t("dashboard.enterpriseDashboard.sso.active")}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-500">Last Login</span>
-                  <p className="text-gray-900">2 hours ago</p>
+                  <span className="text-sm text-gray-500">{t("dashboard.enterpriseDashboard.sso.lastLogin")}</span>
+                  <p className="text-gray-900">{t("dashboard.enterpriseDashboard.sso.hoursAgo")}</p>
                 </div>
               </div>
             </div>
@@ -183,17 +186,16 @@ export function EnterpriseClient() {
                 <span className="text-3xl">🔐</span>
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">
-                Single Sign-On Not Configured
+                {t("dashboard.enterpriseDashboard.sso.notConfigured")}
               </h3>
               <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                Enable SSO to allow your team members to log in with their corporate
-                identity provider
+                {t("dashboard.enterpriseDashboard.sso.notConfiguredDesc")}
               </p>
               <button
                 onClick={() => setShowSSOSetup(true)}
                 className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
               >
-                Configure SSO
+                {t("dashboard.enterpriseDashboard.sso.configure")}
               </button>
             </div>
           )}
@@ -201,7 +203,7 @@ export function EnterpriseClient() {
           {/* Provider Selection */}
           {!ssoConfig && !showSSOSetup && (
             <div className="bg-white rounded-2xl border p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Supported Providers</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.enterpriseDashboard.sso.supportedProviders")}</h3>
               <div className="grid grid-cols-3 gap-4">
                 {providers.map((provider) => (
                   <div
@@ -227,9 +229,9 @@ export function EnterpriseClient() {
           <div className="bg-white rounded-2xl border p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-semibold text-gray-900">SCIM Provisioning</h3>
+                <h3 className="font-semibold text-gray-900">{t("dashboard.enterpriseDashboard.scim.title")}</h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  Automatically sync users and groups from your identity provider
+                  {t("dashboard.enterpriseDashboard.scim.subtitle")}
                 </p>
               </div>
               <button
@@ -253,7 +255,7 @@ export function EnterpriseClient() {
                 <div className="space-y-4 mb-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      SCIM Endpoint
+                      {t("dashboard.enterpriseDashboard.scim.endpoint")}
                     </label>
                     <input
                       type="text"
@@ -265,7 +267,7 @@ export function EnterpriseClient() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bearer Token
+                      {t("dashboard.enterpriseDashboard.scim.bearerToken")}
                     </label>
                     <div className="flex gap-2">
                       <input
@@ -278,12 +280,12 @@ export function EnterpriseClient() {
                         onClick={handleGenerateSCIMToken}
                         className="px-4 py-2 border rounded-lg hover:bg-gray-50"
                       >
-                        {scimConfig.bearerToken ? "Regenerate" : "Generate"}
+                        {scimConfig.bearerToken ? t("dashboard.enterpriseDashboard.scim.regenerate") : t("dashboard.enterpriseDashboard.scim.generate")}
                       </button>
                     </div>
                     {scimConfig.bearerToken && (
                       <p className="text-xs text-yellow-600 mt-1">
-                        Copy this token now. It won&apos;t be shown again.
+                        {t("dashboard.enterpriseDashboard.scim.tokenWarning")}
                       </p>
                     )}
                   </div>
@@ -292,9 +294,9 @@ export function EnterpriseClient() {
                 <div className="space-y-3">
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-gray-900">Sync Users</span>
+                      <span className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.scim.syncUsers")}</span>
                       <p className="text-sm text-gray-500">
-                        Import and sync user accounts
+                        {t("dashboard.enterpriseDashboard.scim.syncUsersDesc")}
                       </p>
                     </div>
                     <input
@@ -309,9 +311,9 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-gray-900">Sync Groups</span>
+                      <span className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.scim.syncGroups")}</span>
                       <p className="text-sm text-gray-500">
-                        Import and sync group memberships
+                        {t("dashboard.enterpriseDashboard.scim.syncGroupsDesc")}
                       </p>
                     </div>
                     <input
@@ -326,9 +328,9 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-gray-900">Auto-Provision</span>
+                      <span className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.scim.autoProvision")}</span>
                       <p className="text-sm text-gray-500">
-                        Automatically create new users
+                        {t("dashboard.enterpriseDashboard.scim.autoProvisionDesc")}
                       </p>
                     </div>
                     <input
@@ -343,9 +345,9 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-gray-900">Auto-Deprovision</span>
+                      <span className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.scim.autoDeprovision")}</span>
                       <p className="text-sm text-gray-500">
-                        Automatically disable removed users
+                        {t("dashboard.enterpriseDashboard.scim.autoDeprovisionDesc")}
                       </p>
                     </div>
                     <input
@@ -371,76 +373,92 @@ export function EnterpriseClient() {
       {activeTab === "settings" && (
         <div className="space-y-6">
           <div className="bg-white rounded-2xl border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Enterprise Features</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.enterpriseDashboard.features.title")}</h3>
             <div className="grid grid-cols-2 gap-4">
               <FeatureCard
-                name="SSO"
-                description="Single Sign-On with SAML/OIDC"
+                name={t("dashboard.enterpriseDashboard.features.sso")}
+                description={t("dashboard.enterpriseDashboard.features.ssoDesc")}
                 enabled={!!ssoConfig}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="SCIM"
-                description="Automated user provisioning"
+                name={t("dashboard.enterpriseDashboard.features.scim")}
+                description={t("dashboard.enterpriseDashboard.features.scimDesc")}
                 enabled={scimConfig.enabled}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="Audit Logs"
-                description="Complete activity history"
+                name={t("dashboard.enterpriseDashboard.features.auditLogs")}
+                description={t("dashboard.enterpriseDashboard.features.auditLogsDesc")}
                 enabled={true}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="Custom Domains"
-                description="Use your own domain"
+                name={t("dashboard.enterpriseDashboard.features.customDomains")}
+                description={t("dashboard.enterpriseDashboard.features.customDomainsDesc")}
                 enabled={false}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="IP Whitelist"
-                description="Restrict access by IP"
+                name={t("dashboard.enterpriseDashboard.features.ipWhitelist")}
+                description={t("dashboard.enterpriseDashboard.features.ipWhitelistDesc")}
                 enabled={false}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="Data Retention"
-                description="Custom retention policies"
+                name={t("dashboard.enterpriseDashboard.features.dataRetention")}
+                description={t("dashboard.enterpriseDashboard.features.dataRetentionDesc")}
                 enabled={true}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="Advanced Analytics"
-                description="Detailed usage reports"
+                name={t("dashboard.enterpriseDashboard.features.advancedAnalytics")}
+                description={t("dashboard.enterpriseDashboard.features.advancedAnalyticsDesc")}
                 enabled={true}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
               <FeatureCard
-                name="SLA"
-                description="99.9% uptime guarantee"
+                name={t("dashboard.enterpriseDashboard.features.sla")}
+                description={t("dashboard.enterpriseDashboard.features.slaDesc")}
                 enabled={true}
+                enabledLabel={t("dashboard.enterpriseDashboard.features.enabled")}
+                disabledLabel={t("dashboard.enterpriseDashboard.features.disabled")}
               />
             </div>
           </div>
 
           <div className="bg-white rounded-2xl border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Plan Limits</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.enterpriseDashboard.limits.title")}</h3>
             <div className="grid grid-cols-3 gap-6">
-              <LimitCard label="Users" value="Unlimited" max="∞" />
-              <LimitCard label="API Calls" value="10M / month" max="10,000,000" />
-              <LimitCard label="Storage" value="1TB" max="1,000 GB" />
-              <LimitCard label="Collections" value="Unlimited" max="∞" />
-              <LimitCard label="Documents" value="Unlimited" max="∞" />
-              <LimitCard label="Retention" value="365 days" max="365" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.users")} value={t("dashboard.enterpriseDashboard.limits.unlimited")} max="∞" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.apiCalls")} value={t("dashboard.enterpriseDashboard.limits.apiCallsValue")} max="10,000,000" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.storage")} value={t("dashboard.enterpriseDashboard.limits.storageValue")} max="1,000 GB" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.collections")} value={t("dashboard.enterpriseDashboard.limits.unlimited")} max="∞" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.documents")} value={t("dashboard.enterpriseDashboard.limits.unlimited")} max="∞" />
+              <LimitCard label={t("dashboard.enterpriseDashboard.limits.retention")} value={t("dashboard.enterpriseDashboard.limits.retentionValue")} max="365" />
             </div>
           </div>
 
           <div className="bg-white rounded-2xl border p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-gray-900">Dedicated Support</h3>
+                <h3 className="font-semibold text-gray-900">{t("dashboard.enterpriseDashboard.support.title")}</h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  Priority support with dedicated account manager
+                  {t("dashboard.enterpriseDashboard.support.subtitle")}
                 </p>
               </div>
               <a
                 href="mailto:enterprise@seizn.com"
                 className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
               >
-                Contact Support
+                {t("dashboard.enterpriseDashboard.support.contact")}
               </a>
             </div>
           </div>
@@ -452,7 +470,7 @@ export function EnterpriseClient() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Configure SSO</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t("dashboard.enterpriseDashboard.sso.configure")}</h2>
               <button
                 onClick={() => setShowSSOSetup(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -475,7 +493,7 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 1 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">Select Provider</h3>
+                <h3 className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.sso.selectProvider")}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {providers.map((provider) => (
                     <button
@@ -497,10 +515,10 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 2 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">Configure Domains</h3>
+                <h3 className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.sso.configureDomains")}</h3>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email Domains
+                    {t("dashboard.enterpriseDashboard.sso.emailDomains")}
                   </label>
                   <input
                     type="text"
@@ -510,7 +528,7 @@ export function EnterpriseClient() {
                     className="w-full px-3 py-2 border rounded-lg"
                   />
                   <p className="text-sm text-gray-500 mt-1">
-                    Users with these email domains will be redirected to SSO
+                    {t("dashboard.enterpriseDashboard.sso.emailDomainsHint")}
                   </p>
                 </div>
               </div>
@@ -518,20 +536,20 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 3 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">IdP Configuration</h3>
+                <h3 className="font-medium text-gray-900">{t("dashboard.enterpriseDashboard.sso.idpConfig")}</h3>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <p className="text-sm text-gray-600 mb-2">
-                    Copy these values to your Identity Provider:
+                    {t("dashboard.enterpriseDashboard.sso.idpCopyHint")}
                   </p>
                   <div className="space-y-2 font-mono text-sm">
                     <div>
-                      <span className="text-gray-500">ACS URL:</span>{" "}
+                      <span className="text-gray-500">{t("dashboard.enterpriseDashboard.sso.acsUrl")}</span>{" "}
                       <span className="text-gray-900">
                         https://app.seizn.com/api/auth/sso/callback
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Entity ID:</span>{" "}
+                      <span className="text-gray-500">{t("dashboard.enterpriseDashboard.sso.entityId")}</span>{" "}
                       <span className="text-gray-900">
                         https://app.seizn.com/api/auth/sso/metadata
                       </span>
@@ -547,7 +565,7 @@ export function EnterpriseClient() {
                   onClick={() => setSSOSetupStep(ssoSetupStep - 1)}
                   className="px-4 py-2 border rounded-lg hover:bg-gray-50"
                 >
-                  Back
+                  {t("dashboard.enterpriseDashboard.sso.back")}
                 </button>
               )}
               <button
@@ -561,7 +579,7 @@ export function EnterpriseClient() {
                 disabled={ssoSetupStep === 1 && !selectedProvider}
                 className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
               >
-                {ssoSetupStep < 3 ? "Continue" : "Enable SSO"}
+                {ssoSetupStep < 3 ? t("dashboard.enterpriseDashboard.sso.continue") : t("dashboard.enterpriseDashboard.sso.enableSSO")}
               </button>
             </div>
           </div>
@@ -575,10 +593,14 @@ function FeatureCard({
   name,
   description,
   enabled,
+  enabledLabel,
+  disabledLabel,
 }: {
   name: string;
   description: string;
   enabled: boolean;
+  enabledLabel: string;
+  disabledLabel: string;
 }) {
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -588,11 +610,11 @@ function FeatureCard({
       </div>
       {enabled ? (
         <span className="px-2 py-1 text-xs bg-emerald-100 text-emerald-700 rounded-full">
-          Enabled
+          {enabledLabel}
         </span>
       ) : (
         <span className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
-          Disabled
+          {disabledLabel}
         </span>
       )}
     </div>

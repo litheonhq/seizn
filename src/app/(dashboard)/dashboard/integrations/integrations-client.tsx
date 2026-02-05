@@ -192,10 +192,10 @@ export default function IntegrationsClient() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          {t("integrations.title") || "Integrations"}
+          {t("dashboard.integrations.title") || "Integrations"}
         </h1>
         <p className="text-gray-500 mt-1">
-          {t("integrations.subtitle") || "Connect Seizn with your favorite tools and frameworks"}
+          {t("dashboard.integrations.subtitle") || "Connect Seizn with your favorite tools and frameworks"}
         </p>
       </div>
 
@@ -204,28 +204,28 @@ export default function IntegrationsClient() {
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔌</span>
-            <span className="text-sm text-gray-500">{t("integrations.stats.total") || "Total Integrations"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{integrations.length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-gray-500">{t("integrations.stats.available") || "Available"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.integrations.stats.available") || "Available"}</span>
           </div>
           <p className="text-2xl font-bold text-emerald-600">{integrations.filter(i => i.status === "available").length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🧪</span>
-            <span className="text-sm text-gray-500">{t("integrations.stats.beta") || "In Beta"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600">{integrations.filter(i => i.status === "beta").length}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔜</span>
-            <span className="text-sm text-gray-500">{t("integrations.stats.comingSoon") || "Coming Soon"}</span>
+            <span className="text-sm text-gray-500">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
           </div>
           <p className="text-2xl font-bold text-gray-600">{integrations.filter(i => i.status === "coming_soon").length}</p>
         </div>
@@ -238,7 +238,7 @@ export default function IntegrationsClient() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("integrations.searchPlaceholder") || "Search integrations..."}
+            placeholder={t("dashboard.integrations.searchPlaceholder") || "Search integrations..."}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
         </div>

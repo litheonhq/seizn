@@ -177,7 +177,7 @@ export default function WebhooksClient() {
   };
 
   const handleDeleteWebhook = (webhookId: string) => {
-    if (confirm(t("webhooks.deleteConfirm"))) {
+    if (confirm(t("dashboard.webhooks.deleteConfirm"))) {
       setWebhooks(webhooks.filter(w => w.id !== webhookId));
     }
   };
@@ -228,10 +228,10 @@ export default function WebhooksClient() {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {t("webhooks.title")}
+            {t("dashboard.webhooks.title")}
           </h1>
           <p className="mt-1 text-gray-500 dark:text-gray-400">
-            {t("webhooks.subtitle")}
+            {t("dashboard.webhooks.subtitle")}
           </p>
         </div>
         <button
@@ -241,7 +241,7 @@ export default function WebhooksClient() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          {t("webhooks.create")}
+          {t("dashboard.webhooks.create")}
         </button>
       </div>
 
@@ -255,7 +255,7 @@ export default function WebhooksClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("webhooks.stats.total")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.webhooks.stats.total")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">{webhooks.length}</p>
             </div>
           </div>
@@ -268,7 +268,7 @@ export default function WebhooksClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("webhooks.stats.active")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.webhooks.stats.active")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">
                 {webhooks.filter(w => w.status === "active").length}
               </p>
@@ -283,7 +283,7 @@ export default function WebhooksClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("webhooks.stats.failing")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.webhooks.stats.failing")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">
                 {webhooks.filter(w => w.status === "failing").length}
               </p>
@@ -298,7 +298,7 @@ export default function WebhooksClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t("webhooks.stats.deliveries")}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.webhooks.stats.deliveries")}</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white">
                 {webhooks.reduce((acc, w) => acc + w.success_count + w.failure_count, 0)}
               </p>
@@ -318,7 +318,7 @@ export default function WebhooksClient() {
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400"
             }`}
           >
-            {t("webhooks.tabs.endpoints")}
+            {t("dashboard.webhooks.tabs.endpoints")}
           </button>
           <button
             onClick={() => setActiveTab("deliveries")}
@@ -328,7 +328,7 @@ export default function WebhooksClient() {
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400"
             }`}
           >
-            {t("webhooks.tabs.deliveries")}
+            {t("dashboard.webhooks.tabs.deliveries")}
           </button>
         </nav>
       </div>
@@ -342,16 +342,16 @@ export default function WebhooksClient() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
               <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-                {t("webhooks.empty.title")}
+                {t("dashboard.webhooks.empty.title")}
               </h3>
               <p className="mt-2 text-gray-500 dark:text-gray-400">
-                {t("webhooks.empty.description")}
+                {t("dashboard.webhooks.empty.description")}
               </p>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                {t("webhooks.empty.cta")}
+                {t("dashboard.webhooks.empty.cta")}
               </button>
             </div>
           ) : (
@@ -388,17 +388,17 @@ export default function WebhooksClient() {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        {webhook.success_count} {t("webhooks.success")}
+                        {webhook.success_count} {t("dashboard.webhooks.success")}
                       </span>
                       <span className="flex items-center gap-1">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        {webhook.failure_count} {t("webhooks.failed")}
+                        {webhook.failure_count} {t("dashboard.webhooks.failed")}
                       </span>
                       {webhook.last_triggered && (
                         <span>
-                          {t("webhooks.lastTriggered")}: {formatDate(webhook.last_triggered)}
+                          {t("dashboard.webhooks.lastTriggered")}: {formatDate(webhook.last_triggered)}
                         </span>
                       )}
                     </div>
@@ -419,7 +419,7 @@ export default function WebhooksClient() {
                     <button
                       onClick={() => setSelectedWebhook(webhook)}
                       className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                      title={t("webhooks.edit")}
+                      title={t("dashboard.webhooks.edit")}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -428,7 +428,7 @@ export default function WebhooksClient() {
                     <button
                       onClick={() => handleDeleteWebhook(webhook.id)}
                       className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
-                      title={t("webhooks.delete")}
+                      title={t("dashboard.webhooks.delete")}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -449,19 +449,19 @@ export default function WebhooksClient() {
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("webhooks.table.event")}
+                  {t("dashboard.webhooks.table.event")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("webhooks.table.status")}
+                  {t("dashboard.webhooks.table.status")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("webhooks.table.response")}
+                  {t("dashboard.webhooks.table.response")}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("webhooks.table.time")}
+                  {t("dashboard.webhooks.table.time")}
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("webhooks.table.actions")}
+                  {t("dashboard.webhooks.table.actions")}
                 </th>
               </tr>
             </thead>
@@ -497,7 +497,7 @@ export default function WebhooksClient() {
                         onClick={() => handleRetryDelivery(delivery.id)}
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
-                        {t("webhooks.retry")}
+                        {t("dashboard.webhooks.retry")}
                       </button>
                     )}
                   </td>
@@ -514,13 +514,13 @@ export default function WebhooksClient() {
           <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {t("webhooks.modal.title")}
+                {t("dashboard.webhooks.modal.title")}
               </h2>
             </div>
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("webhooks.modal.name")}
+                  {t("dashboard.webhooks.modal.name")}
                 </label>
                 <input
                   type="text"
@@ -532,7 +532,7 @@ export default function WebhooksClient() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("webhooks.modal.url")}
+                  {t("dashboard.webhooks.modal.url")}
                 </label>
                 <input
                   type="url"
@@ -544,7 +544,7 @@ export default function WebhooksClient() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t("webhooks.modal.events")}
+                  {t("dashboard.webhooks.modal.events")}
                 </label>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {eventTypes.map((event) => (
@@ -582,14 +582,14 @@ export default function WebhooksClient() {
                 onClick={() => setShowCreateModal(false)}
                 className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                {t("webhooks.modal.cancel")}
+                {t("dashboard.webhooks.modal.cancel")}
               </button>
               <button
                 onClick={handleCreateWebhook}
                 disabled={!formName || !formUrl || formEvents.length === 0}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t("webhooks.modal.create")}
+                {t("dashboard.webhooks.modal.create")}
               </button>
             </div>
           </div>

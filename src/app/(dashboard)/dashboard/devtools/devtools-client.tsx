@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import {
   TraceExplorer,
   TraceTimeline,
@@ -118,6 +119,7 @@ export function DevToolsClient() {
   const [traceDetail, setTraceDetail] = useState<TraceDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("timeline");
+  const { t } = useDashboardTranslation();
 
   // Fetch trace detail when selected
   const fetchTraceDetail = useCallback(async (traceId: string) => {
@@ -165,11 +167,11 @@ export function DevToolsClient() {
 
   // Tabs config
   const tabs: Array<{ id: TabId; label: string; icon: typeof ClockIcon }> = [
-    { id: "timeline", label: "Timeline", icon: ClockIcon },
-    { id: "candidates", label: "Candidates", icon: DocumentIcon },
-    { id: "rerank", label: "Rerank", icon: ChevronRightIcon },
-    { id: "whatif", label: "What-If Lab", icon: TerminalIcon },
-    { id: "raw", label: "Raw Data", icon: DocumentIcon },
+    { id: "timeline", label: t("dashboard.devtoolsPage.tabs.timeline"), icon: ClockIcon },
+    { id: "candidates", label: t("dashboard.devtoolsPage.tabs.candidates"), icon: DocumentIcon },
+    { id: "rerank", label: t("dashboard.devtoolsPage.tabs.rerank"), icon: ChevronRightIcon },
+    { id: "whatif", label: t("dashboard.devtoolsPage.tabs.whatIf"), icon: TerminalIcon },
+    { id: "raw", label: t("dashboard.devtoolsPage.tabs.raw"), icon: DocumentIcon },
   ];
 
   return (
@@ -190,9 +192,9 @@ export function DevToolsClient() {
           <div className="flex items-center gap-3">
             <TerminalIcon className="w-6 h-6 text-blue-400" />
             <div>
-              <h1 className="text-xl font-bold text-white">Retrieval DevTools</h1>
+              <h1 className="text-xl font-bold text-white">{t("dashboard.devtoolsPage.title")}</h1>
               <p className="text-sm text-gray-400">
-                Debug and analyze your RAG pipelines
+                {t("dashboard.devtoolsPage.subtitle")}
               </p>
             </div>
           </div>
@@ -204,10 +206,10 @@ export function DevToolsClient() {
             <div className="flex-shrink-0 p-4 border-b border-gray-800 bg-gray-900/50">
               {/* Query */}
               <div className="mb-3">
-                <span className="text-xs text-gray-500 uppercase tracking-wider">Query</span>
+                <span className="text-xs text-gray-500 uppercase tracking-wider">{t("dashboard.devtoolsPage.query")}</span>
                 <p className="text-white mt-1 line-clamp-2">
                   {traceDetail.query.text || (
-                    <span className="text-gray-500 italic">No query text</span>
+                    <span className="text-gray-500 italic">{t("dashboard.devtoolsPage.noQueryText")}</span>
                   )}
                 </p>
               </div>
@@ -242,7 +244,7 @@ export function DevToolsClient() {
                 <div className="flex items-center gap-2">
                   <DocumentIcon className="w-4 h-4 text-gray-500" />
                   <span className="font-medium text-white">
-                    {traceDetail.results.count} results
+                    {traceDetail.results.count} {t("dashboard.devtoolsPage.results")}
                   </span>
                 </div>
 
@@ -250,7 +252,7 @@ export function DevToolsClient() {
                 {traceDetail.status.has_error && (
                   <div className="flex items-center gap-2">
                     <AlertIcon className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Error</span>
+                    <span className="text-red-400">{t("dashboard.devtoolsPage.error")}</span>
                   </div>
                 )}
 
@@ -261,7 +263,7 @@ export function DevToolsClient() {
                   </span>
                   {Boolean(traceDetail.config.effective.rerankEnabled) && (
                     <span className="px-2 py-1 text-xs bg-purple-900/50 text-purple-300 rounded">
-                      rerank
+                      {t("dashboard.devtoolsPage.rerank")}
                     </span>
                   )}
                   <span className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded">
@@ -274,7 +276,7 @@ export function DevToolsClient() {
               {traceDetail.config.analysis.optimization_hints.length > 0 && (
                 <div className="mt-3 p-2 bg-yellow-900/20 border border-yellow-800 rounded-lg">
                   <div className="text-xs text-yellow-400 font-medium mb-1">
-                    Optimization Hints
+                    {t("dashboard.devtoolsPage.optimizationHints")}
                   </div>
                   {traceDetail.config.analysis.optimization_hints.map((hint, i) => (
                     <div key={i} className="text-xs text-yellow-300">
@@ -335,13 +337,13 @@ export function DevToolsClient() {
                             ? traceDetail.candidates.after_rerank
                             : traceDetail.candidates.before_rerank
                         }
-                        title="Final Results"
+                        title={t("dashboard.devtoolsPage.finalResults")}
                         showRankDelta={traceDetail.candidates.rerank_applied}
                       />
                       {traceDetail.candidates.before_rerank.length > 0 && (
                         <CandidateList
                           candidates={traceDetail.candidates.before_rerank}
-                          title="Initial Candidates (Before Rerank)"
+                          title={t("dashboard.devtoolsPage.initialCandidates")}
                           maxDisplay={15}
                         />
                       )}
@@ -376,7 +378,7 @@ export function DevToolsClient() {
 
                   {activeTab === "raw" && (
                     <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
-                      <h3 className="text-lg font-semibold text-white mb-4">Raw Trace Data</h3>
+                      <h3 className="text-lg font-semibold text-white mb-4">{t("dashboard.devtoolsPage.rawTraceData")}</h3>
                       <pre className="text-xs text-gray-300 overflow-x-auto bg-gray-800 p-4 rounded-lg">
                         {JSON.stringify(traceDetail, null, 2)}
                       </pre>
@@ -392,11 +394,10 @@ export function DevToolsClient() {
             <div className="text-center">
               <TerminalIcon className="w-16 h-16 text-gray-700 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-gray-400 mb-2">
-                Select a trace to inspect
+                {t("dashboard.devtoolsPage.emptyTitle")}
               </h2>
               <p className="text-gray-500 max-w-md">
-                Choose a trace from the list on the left to view its timeline, candidates,
-                reranking analysis, and run what-if experiments.
+                {t("dashboard.devtoolsPage.emptyDesc")}
               </p>
             </div>
           </div>

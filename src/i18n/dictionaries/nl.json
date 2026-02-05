@@ -242,7 +242,26 @@
       "usageByApiKey": "Usage by API Key",
       "errorsTitle": "Errors",
       "errorRate": "error rate",
-      "noUsageData": "No usage data available"
+      "noUsageData": "No usage data available",
+      "p95Latency": "p95 Latentie",
+      "errorRateKpi": "Foutpercentage",
+      "monthlyApiCalls": "Maandelijkse API-aanroepen",
+      "dailyTrends": "Dagelijkse Trends",
+      "tabCalls": "Aanroepen",
+      "tabCost": "Kosten",
+      "tabLatency": "Latentie",
+      "tabErrors": "Fouten",
+      "noUsageTitle": "Nog geen gebruiksgegevens",
+      "noUsageDescription": "Verstuur uw eerste API-verzoek om gebruiksanalyses te zien. Gegevens verschijnen binnen 5 seconden.",
+      "noUsageExpected": "Verwacht: Aanroepen, tokens, kosten en latentie-uitsplitsing",
+      "getApiKey": "API-sleutel Verkrijgen",
+      "viewDocs": "Documentatie Bekijken",
+      "noEndpointData": "Geen endpoint-gegevens",
+      "noEndpointDescription": "Endpoint-uitsplitsing verschijnt na uw eerste API-aanroep",
+      "sendTestRequest": "Testverzoek Versturen",
+      "noKeyData": "Geen API-sleutelgebruik",
+      "noKeyDescription": "Maak en gebruik een API-sleutel om analyses per sleutel te zien",
+      "createApiKey": "API-sleutel Aanmaken"
     },
     "language": "Taal",
     "organizations": "Organizations",
@@ -343,7 +362,49 @@
       "export": "Export",
       "exportResults": "Export Results",
       "exportFormat": "Export Format",
-      "exportSuccess": "Export successful"
+      "exportSuccess": "Export successful",
+      "queryBuilder": "Query Builder",
+      "namespace": "Namespace",
+      "namespacePlaceholder": "standaard",
+      "searchMode": "Zoekmodus",
+      "vector": "Vector",
+      "hybrid": "Hybride",
+      "keyword": "Trefwoord",
+      "rerank": "Rerank Inschakelen",
+      "trace": "Tracering",
+      "cost": "Kosten",
+      "similarity": "Gelijkenis",
+      "memoryType": "Type",
+      "rerankScore": "Rerank-score",
+      "traceTimeline": "Traceringstijdlijn",
+      "noTrace": "Voer een query uit om tracering te zien",
+      "step": "Stap",
+      "completed": "Voltooid",
+      "pending": "In afwachting",
+      "error": "Fout",
+      "costBreakdown": "Kostenuitsplitsing",
+      "noCost": "Voer een query uit om kostenuitsplitsing te zien",
+      "component": "Component",
+      "search": "Zoeken",
+      "total": "Totaal",
+      "monthlyEstimate": "Maandelijkse Schatting",
+      "basedOn": "Gebaseerd op",
+      "queriesPerDay": "queries/dag",
+      "rerankBefore": "Voor Rerank",
+      "rerankAfter": "Na Rerank",
+      "rank": "Rangschikking",
+      "replayFromLog": "Afspelen vanuit Log",
+      "selectLog": "Selecteer een log om af te spelen",
+      "replaySettings": "Afspeelinstelling",
+      "compareResults": "Resultaten Vergelijken",
+      "original": "Origineel",
+      "replay": "Afspelen",
+      "diff": "Verschil",
+      "hitAtK": "Hit@K",
+      "overlap": "Overlapping",
+      "added": "Toegevoegd",
+      "removed": "Verwijderd",
+      "rankChanges": "Rangschikkingswijzigingen"
     },
     "settingsPage": {
       "title": "Settings",
@@ -362,7 +423,9 @@
         "profile": "Profile",
         "budget": "Budget",
         "notifications": "Notifications",
-        "security": "Security"
+        "security": "Security",
+        "billing": "Facturering",
+        "danger": "Gegevensbeheer"
       },
       "budget": {
         "title": "Budget Management",
@@ -380,7 +443,21 @@
         "alertDisabled": "Budget alerts disabled",
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
-        "removeLimit": "Remove Limit"
+        "removeLimit": "Remove Limit",
+        "subtitle": "Bestedingslimieten en waarschuwingen instellen",
+        "perQueryMax": "Maximum per Query",
+        "alertThresholdDesc": "Ontvang een waarschuwing wanneer gebruik dit percentage bereikt",
+        "budgetMode": "Budgetmodus",
+        "soft": "Zachte Limiet",
+        "softDesc": "Waarschuwen maar overschrijdingen toestaan",
+        "hard": "Harde Limiet",
+        "hardDesc": "Verzoeken blokkeren bij limiet",
+        "fallbackStrategy": "Terugvalstrategie",
+        "fallbackDesc": "Wat te doen wanneer budget wordt overschreden",
+        "reject": "Verzoek Weigeren",
+        "cache": "Gecachte Terugsturen",
+        "degrade": "Kwaliteit Verminderen",
+        "queue": "Verzoek in Wachtrij"
       },
       "notifications": {
         "title": "Notification Settings",
@@ -398,7 +475,20 @@
         "allEnabled": "All notifications enabled",
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
-        "disableAll": "Disable All"
+        "disableAll": "Disable All",
+        "subtitle": "Configureer hoe u waarschuwingen ontvangt",
+        "emailAlerts": "E-mailwaarschuwingen",
+        "emailAlertsDesc": "Ontvang belangrijke waarschuwingen via e-mail",
+        "usageAlerts": "Gebruikswaarschuwingen",
+        "usageAlertsDesc": "Ontvang een melding bij benadering van limieten",
+        "weeklyDigest": "Wekelijks Overzicht",
+        "weeklyDigestDesc": "Ontvang wekelijks gebruiksoverzicht",
+        "securityAlerts": "Beveiligingswaarschuwingen",
+        "securityAlertsDesc": "Ontvang een melding van verdachte activiteit",
+        "telegram": "Telegram",
+        "telegramDesc": "Ontvang waarschuwingen via Telegram-bot",
+        "comingSoon": "Binnenkort",
+        "integrations": "Integraties"
       },
       "security": {
         "title": "Security Settings",
@@ -425,7 +515,14 @@
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
-        "apiKeysSecurityHint": "Monitor and manage your API keys"
+        "apiKeysSecurityHint": "Monitor and manage your API keys",
+        "subtitle": "Beheer de beveiliging van uw account",
+        "save": "Wijzigingen Opslaan",
+        "updatePassword": "Wachtwoord Bijwerken",
+        "twoFactorDesc": "Voeg een extra beveiligingslaag toe",
+        "enable2FA": "2FA Inschakelen",
+        "sessionsDesc": "Beheer uw actieve sessies",
+        "viewSessions": "Sessies Bekijken"
       },
       "dangerZone": {
         "title": "Danger Zone",
@@ -438,7 +535,38 @@
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
-        "exportComplete": "Export complete"
+        "exportComplete": "Export complete",
+        "subtitle": "Beheer en verwijder uw accountgegevens",
+        "exportDataDesc": "Download al uw gegevens",
+        "exportButton": "Alle Gegevens Exporteren",
+        "deleteMemories": "Alle Herinneringen Verwijderen",
+        "deleteMemoriesDesc": "Alle opgeslagen herinneringen permanent verwijderen",
+        "deleteMemoriesButton": "Herinneringen Verwijderen",
+        "deleteAccountDesc": "Uw account en alle gegevens permanent verwijderen",
+        "confirmDelete": "Typ DELETE om te bevestigen"
+      },
+      "billing": {
+        "title": "Facturering & Gebruik",
+        "subtitle": "Beheer uw abonnement en monitor gebruik",
+        "currentPlan": "Huidig Abonnement",
+        "monthlyPrice": "Maandelijkse Prijs",
+        "upgradePlan": "Abonnement Upgraden",
+        "quotaWarningTitle": "Quotumlimiet Naderen",
+        "quotaWarningDesc": "U gebruikt {percent}% van uw {resource}-quotum. Overweeg uw abonnement te upgraden.",
+        "upgradeNow": "Nu Upgraden",
+        "memoriesUsage": "Herinneringengebruik",
+        "apiCallsUsage": "API-aanroepengebruik",
+        "apiKeysUsage": "API-sleutelgebruik",
+        "unlimited": "Onbeperkt",
+        "planComparison": "Abonnementenvergelijking",
+        "feature": "Functie",
+        "memoriesLabel": "Herinneringen",
+        "apiCallsLabel": "API-aanroepen/Maand",
+        "apiKeysLabel": "API-sleutels",
+        "priceLabel": "Prijs",
+        "contactUs": "Contact Opnemen",
+        "used": "gebruikt",
+        "of": "van"
       }
     },
     "greeting": {
@@ -468,7 +596,17 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "API-gebruik",
+      "last7days": "Laatste 7 dagen",
+      "viewDetails": "Details Bekijken",
+      "noUsageData": "Nog geen gebruiksgegevens",
+      "recentActivity": "Recente Activiteit",
+      "last10Requests": "Laatste 10 API-verzoeken",
+      "viewAllActivity": "Alles Bekijken",
+      "noActivityYet": "Nog geen API-activiteit",
+      "noActivityDescription": "Verstuur uw eerste API-verzoek om activiteit hier te zien",
+      "sendFirstRequest": "Eerste Verzoek Versturen"
     },
     "keysPage": {
       "title": "API Keys",
@@ -498,7 +636,18 @@
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
       "cancel": "Cancel",
       "creating": "Creating...",
-      "createKey": "Create Key"
+      "createKey": "Create Key",
+      "name": "Naam",
+      "keyColumn": "Sleutel",
+      "actions": "Acties",
+      "revokeWarning": "Alle applicaties die deze sleutel gebruiken zullen onmiddellijk stoppen met werken.",
+      "revokeAction": "Intrekken",
+      "rotate": "Roteren",
+      "rotateConfirm": "API-sleutel \"{keyName}\" roteren?",
+      "rotateWarning": "Er wordt een nieuwe sleutel gegenereerd. Update uw applicaties met de nieuwe sleutel voordat de oude verloopt.",
+      "rotateAction": "Sleutel Roteren",
+      "keyRotated": "API-sleutel Geroteerd!",
+      "keyRotatedDesc": "Kopieer deze nieuwe sleutel nu. De oude sleutel is niet meer geldig."
     },
     "organizationsPage": {
       "title": "Organizations",
@@ -523,7 +672,16 @@
         "owner": "owner",
         "admin": "admin",
         "member": "member"
-      }
+      },
+      "noOrgsExpected": "Duurt minder dan 30 seconden om in te stellen",
+      "featureSharedKeys": "Gedeelde API-sleutels",
+      "featureSharedKeysDesc": "Sleutelbeheer voor het hele team",
+      "featureTeamMembers": "Teamleden",
+      "featureTeamMembersDesc": "Uitnodigen met rollen",
+      "featureBudget": "Gedeeld Budget",
+      "featureBudgetDesc": "Uniforme kostenregistratie",
+      "featureAudit": "Auditlogboeken",
+      "featureAuditDesc": "Activiteitengeschiedenis"
     },
     "onboarding": {
       "title": "Aan de slag met Seizn",
@@ -550,6 +708,770 @@
           "title": "SDK installeren",
           "description": "Voeg Seizn toe aan je project met npm of pip",
           "action": "SDKs bekijken"
+        },
+        "createOrg": {
+          "title": "Organisatie Aanmaken",
+          "description": "Stel uw teamwerkruimte in voor samenwerking",
+          "action": "Organisatie Aanmaken"
+        },
+        "firstQuery": {
+          "title": "Eerste Query Uitvoeren",
+          "description": "Test de API in de playground met een voorbeeldquery",
+          "action": "Query Proberen"
+        }
+      },
+      "takeTour": "Rondleiding volgen",
+      "sdkModal": {
+        "title": "Seizn SDK Installeren",
+        "description": "Kies uw voorkeursmethode voor installatie en kopieer de opdracht.",
+        "copy": "Kopiëren",
+        "copied": "Gekopieerd!",
+        "viewDocs": "Volledige documentatie bekijken",
+        "done": "Klaar"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Welkom bij Seizn!",
+          "description": "Laten we een korte rondleiding doen om u op weg te helpen."
+        },
+        "sidebar": {
+          "title": "Navigatie",
+          "description": "Gebruik de zijbalk om tussen dashboardsecties te navigeren."
+        },
+        "stats": {
+          "title": "Uw Statistieken",
+          "description": "Monitor uw API-gebruik, opgeslagen herinneringen en huidig abonnement."
+        },
+        "quickStart": {
+          "title": "Snelle Acties",
+          "description": "Gebruik deze kaarten voor veelvoorkomende taken zoals het aanmaken van API-sleutels."
+        },
+        "next": "Volgende",
+        "skip": "Rondleiding overslaan",
+        "finish": "Voltooien",
+        "stepOf": "Stap {current} van {total}"
+      }
+    },
+    "governance": {
+      "title": "Governance",
+      "subtitle": "Beheer gegevensbeleid, bewaarregels en compliance-instellingen",
+      "tabs": {
+        "retention": "Gegevensbewaring",
+        "access": "Toegangsbeheer",
+        "pii": "PII-detectie",
+        "compliance": "Compliance"
+      },
+      "stats": {
+        "retentionPolicies": "Bewaarbeleid",
+        "accessRules": "Toegangsregels",
+        "piiRules": "Actieve PII-regels",
+        "complianceScore": "Compliance-score"
+      },
+      "addPolicy": "Beleid toevoegen",
+      "addRule": "Regel toevoegen",
+      "deleteConfirm": "Weet u zeker dat u dit bewaarbeleid wilt verwijderen?",
+      "retention": {
+        "description": "Configureer hoe lang herinneringen worden bewaard in elke namespace",
+        "namespace": "Namespace",
+        "memoryTypes": "Geheugentypen",
+        "ttl": "TTL",
+        "autoArchive": "Automatisch archiveren",
+        "actions": "Acties",
+        "days": "dagen",
+        "enabled": "Ingeschakeld",
+        "disabled": "Uitgeschakeld",
+        "delete": "Verwijderen",
+        "addTitle": "Bewaarbeleid toevoegen",
+        "namespacePattern": "Namespace-patroon",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Gebruik * voor jokertekens",
+        "ttlDays": "TTL (dagen)",
+        "autoArchiveToggle": "Automatisch archiveren",
+        "autoArchiveDesc": "Archiveren voor verwijdering",
+        "cancel": "Annuleren"
+      },
+      "access": {
+        "description": "Definieer rolgebaseerde toegangscontroles voor uw team",
+        "namespaces": "Namespaces:",
+        "permissions": "Rechten:"
+      },
+      "pii": {
+        "description": "Detecteer en verwerk persoonlijk identificeerbare informatie automatisch",
+        "pattern": "Patroon",
+        "type": "Type",
+        "action": "Actie",
+        "status": "Status",
+        "aiDetection": "AI-detectie",
+        "regex": "Regex",
+        "betaTitle": "AI-detectie is in bèta",
+        "betaDesc": "AI-gestuurde PII-detectie kan fout-positieven opleveren. Controleer gemarkeerde inhoud voordat u actie onderneemt."
+      },
+      "compliance": {
+        "description": "Volg compliance met belangrijke regelgevende kaders",
+        "active": "Actief",
+        "inactive": "Inactief",
+        "requirementsMet": "Vereisten voldaan",
+        "fullyCompliant": "Volledig conform",
+        "enableCheck": "Compliance-controle inschakelen",
+        "reports": "Compliance-rapporten",
+        "soc2Report": "SOC 2 Type II-rapport",
+        "soc2Date": "Gegenereerd dec 2024",
+        "dpa": "Verwerkersovereenkomst",
+        "dpaDesc": "GDPR-conforme DPA-sjabloon",
+        "securityQuestionnaire": "Beveiligingsvragenlijst",
+        "securityQuestionnaireDesc": "Vooraf ingevulde beveiligingsbeoordeling",
+        "download": "Downloaden"
+      }
+    },
+    "integrations": {
+      "title": "Integraties",
+      "subtitle": "Verbind Seizn met uw favoriete tools en frameworks",
+      "searchPlaceholder": "Integraties zoeken...",
+      "stats": {
+        "total": "Totaal integraties",
+        "available": "Beschikbaar",
+        "beta": "In bèta",
+        "comingSoon": "Binnenkort beschikbaar"
+      },
+      "categories": {
+        "all": "Alle",
+        "frameworks": "Frameworks",
+        "llms": "LLMs",
+        "databases": "Databases",
+        "platforms": "Platforms"
+      },
+      "status": {
+        "available": "Beschikbaar",
+        "beta": "Bèta",
+        "comingSoon": "Binnenkort beschikbaar"
+      },
+      "docs": "Documentatie",
+      "copyInstall": "Installatie kopiëren",
+      "noResults": "Geen integraties gevonden die overeenkomen met uw criteria",
+      "installation": "Installatie",
+      "copied": "Gekopieerd!",
+      "copy": "Kopiëren",
+      "quickStart": "Snelstart",
+      "comingSoonMsg": "Deze integratie is momenteel in ontwikkeling. Meld u aan om een melding te ontvangen wanneer deze beschikbaar is.",
+      "notifyMe": "Stuur mij een melding",
+      "betaMsg": "Deze integratie is in bèta. Sommige functies kunnen wijzigen voor de definitieve release.",
+      "close": "Sluiten",
+      "viewDocs": "Documentatie bekijken"
+    },
+    "analytics": "Analyses",
+    "analyticsPage": {
+      "title": "Analyses",
+      "subtitle": "Gedetailleerde gebruiksanalyses en inzichten",
+      "allOrganizations": "Alle Organisaties",
+      "days7": "7 Dagen",
+      "days30": "30 Dagen",
+      "days90": "90 Dagen",
+      "exportCSV": "CSV Exporteren",
+      "dailyActiveUsers": "Dagelijks Actieve Gebruikers",
+      "activeUsers": "Actieve Gebruikers",
+      "apiCalls": "API-aanroepen",
+      "apiCallsOverTime": "API-aanroepen in de Tijd",
+      "memoryOperations": "Geheugenoperaties",
+      "memoryUsage": "Geheugengebruik",
+      "stores": "Opslag",
+      "searches": "Zoekopdrachten",
+      "avgLatency": "Gem. Latentie",
+      "latencyTrend": "Latentietrend",
+      "errorRate": "Foutpercentage",
+      "errors": "Fouten",
+      "hourlyDistribution": "Uurlijkse Verdeling",
+      "calls": "aanroepen",
+      "peakHour": "Piekuur",
+      "endpointBreakdown": "Endpoint-uitsplitsing",
+      "topQueries": "Topquery's",
+      "noQueries": "Nog geen query's",
+      "noData": "Geen analysegegevens",
+      "noDataDescription": "Begin met het maken van API-aanroepen om hier gedetailleerde analyses te zien."
+    },
+    "memoriesPage": {
+      "title": "Herinneringen",
+      "subtitle": "Blader en zoek in uw AI-herinneringen",
+      "totalMemories": "Totaal herinneringen",
+      "search": "Zoeken",
+      "searchPlaceholder": "Herinneringen zoeken...",
+      "namespace": "Namespace",
+      "memoryTypes": "Geheugentypen",
+      "tags": "Tags",
+      "noTags": "Geen tags beschikbaar",
+      "clearFilters": "Filters wissen",
+      "showing": "Toont",
+      "of": "van",
+      "results": "resultaten",
+      "sortNewest": "Nieuwste eerst",
+      "sortOldest": "Oudste eerst",
+      "sortRelevance": "Meest relevant",
+      "activeFilters": "Actieve filters",
+      "loading": "Herinneringen laden...",
+      "noMemories": "Geen herinneringen gevonden",
+      "noMatchingMemories": "Probeer uw filters of zoekopdracht aan te passen",
+      "noMemoriesHint": "Begin met het toevoegen van herinneringen via de API om ze hier te zien",
+      "match": "overeenkomst",
+      "loadMore": "Meer laden"
+    },
+    "budgetPage": {
+      "title": "Budget en kostenbeheer",
+      "subtitle": "Beheer uitgavenlimieten, waarschuwingen en automatische kostenoptimalisatie",
+      "loadError": "Kan budgetgegevens niet laden",
+      "todaysSpend": "Uitgaven vandaag",
+      "ofDailyLimit": "van dagelijkse limiet",
+      "monthlySpend": "Maandelijkse uitgaven",
+      "ofMonthlyLimit": "van maandelijkse limiet",
+      "apiCalls": "API-aanroepen",
+      "thisMonth": "deze maand",
+      "autoDegrades": "Automatische degradaties",
+      "noRecentDegrades": "Geen recente degradaties",
+      "protectionActive": "Budgetbescherming actief",
+      "protectionDesc": "Uw queries worden automatisch geoptimaliseerd om binnen het budget te blijven. Dit kan de resultaatkwaliteit verminderen. Overweeg uw budgetlimieten te verhogen.",
+      "settings": "Budgetinstellingen",
+      "recentEvents": "Recente degradatie-gebeurtenissen",
+      "time": "Tijd",
+      "reason": "Reden",
+      "changes": "Wijzigingen",
+      "saved": "Bespaard",
+      "howItWorks": "Hoe budgetbewust ophalen werkt",
+      "step1": "Wanneer budgetlimieten naderen, optimaliseert Seizn automatisch uw queries",
+      "step2": "Optimalisaties omvatten: herrangschikking uitschakelen, topK verlagen, cache-first gebruiken",
+      "step3": "In strikte modus worden queries die het budget overschrijden volledig geweigerd",
+      "step4": "Alle degradatie-gebeurtenissen worden gelogd met kostenbesparingen voor transparantie"
+    },
+    "devtoolsPage": {
+      "title": "Ophaal-DevTools",
+      "subtitle": "Debug en analyseer uw RAG-pipelines",
+      "query": "Query",
+      "noQueryText": "Geen querytekst",
+      "results": "resultaten",
+      "error": "Fout",
+      "rerank": "herrangschikking",
+      "optimizationHints": "Optimalisatietips",
+      "tabs": {
+        "timeline": "Tijdlijn",
+        "candidates": "Kandidaten",
+        "rerank": "Herrangschikking",
+        "whatIf": "Wat-als-lab",
+        "raw": "Ruwe data"
+      },
+      "finalResults": "Eindresultaten",
+      "initialCandidates": "Initiële kandidaten (voor herrangschikking)",
+      "rawTraceData": "Ruwe tracegegevens",
+      "emptyTitle": "Selecteer een trace om te inspecteren",
+      "emptyDesc": "Kies een trace uit de lijst links om de tijdlijn, kandidaten, herrangschikkingsanalyse te bekijken en wat-als-experimenten uit te voeren."
+    },
+    "enterpriseDashboard": {
+      "title": "Enterprise",
+      "badge": "Enterprise-plan",
+      "subtitle": "Configureer SSO, SCIM en enterprise-instellingen",
+      "tabs": {
+        "sso": "Single Sign-On",
+        "scim": "Gebruikersprovisioning",
+        "settings": "Instellingen"
+      },
+      "sso": {
+        "enabled": "SSO ingeschakeld",
+        "provider": "Provider:",
+        "domains": "Domeinen:",
+        "testConnection": "Verbinding testen",
+        "disable": "Uitschakelen",
+        "defaultRole": "Standaardrol",
+        "status": "Status",
+        "active": "Actief",
+        "lastLogin": "Laatste login",
+        "hoursAgo": "2 uur geleden",
+        "notConfigured": "Single Sign-On niet geconfigureerd",
+        "notConfiguredDesc": "Schakel SSO in zodat uw teamleden kunnen inloggen met hun bedrijfsidentiteitsprovider",
+        "configure": "SSO configureren",
+        "supportedProviders": "Ondersteunde providers",
+        "selectProvider": "Provider selecteren",
+        "configureDomains": "Domeinen configureren",
+        "emailDomains": "E-maildomeinen",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Gebruikers met deze e-maildomeinen worden doorgestuurd naar SSO",
+        "idpConfig": "IdP-configuratie",
+        "idpCopyHint": "Kopieer deze waarden naar uw identiteitsprovider:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entiteits-ID:",
+        "back": "Terug",
+        "continue": "Doorgaan",
+        "enableSSO": "SSO inschakelen",
+        "configSaved": "SSO-configuratie opgeslagen!"
+      },
+      "scim": {
+        "title": "SCIM-provisioning",
+        "subtitle": "Synchroniseer automatisch gebruikers en groepen vanuit uw identiteitsprovider",
+        "endpoint": "SCIM-endpoint",
+        "bearerToken": "Bearer-token",
+        "regenerate": "Regenereren",
+        "generate": "Genereren",
+        "tokenWarning": "Kopieer dit token nu. Het wordt niet opnieuw getoond.",
+        "syncUsers": "Gebruikers synchroniseren",
+        "syncUsersDesc": "Importeer en synchroniseer gebruikersaccounts",
+        "syncGroups": "Groepen synchroniseren",
+        "syncGroupsDesc": "Importeer en synchroniseer groepslidmaatschappen",
+        "autoProvision": "Automatische provisioning",
+        "autoProvisionDesc": "Maak automatisch nieuwe gebruikers aan",
+        "autoDeprovision": "Automatische deprovisioning",
+        "autoDeprovisionDesc": "Schakel verwijderde gebruikers automatisch uit"
+      },
+      "features": {
+        "title": "Enterprise-functies",
+        "sso": "SSO",
+        "ssoDesc": "Single Sign-On met SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Geautomatiseerde gebruikersprovisioning",
+        "auditLogs": "Auditlogboeken",
+        "auditLogsDesc": "Volledige activiteitengeschiedenis",
+        "customDomains": "Aangepaste domeinen",
+        "customDomainsDesc": "Gebruik uw eigen domein",
+        "ipWhitelist": "IP-whitelist",
+        "ipWhitelistDesc": "Beperk toegang op IP",
+        "dataRetention": "Gegevensbewaring",
+        "dataRetentionDesc": "Aangepast bewaarbeleid",
+        "advancedAnalytics": "Geavanceerde analyse",
+        "advancedAnalyticsDesc": "Gedetailleerde gebruiksrapporten",
+        "sla": "SLA",
+        "slaDesc": "99,9% uptime-garantie",
+        "enabled": "Ingeschakeld",
+        "disabled": "Uitgeschakeld"
+      },
+      "limits": {
+        "title": "Planlimieten",
+        "users": "Gebruikers",
+        "unlimited": "Onbeperkt",
+        "apiCalls": "API-aanroepen",
+        "apiCallsValue": "10M / maand",
+        "storage": "Opslag",
+        "storageValue": "1TB",
+        "collections": "Collecties",
+        "documents": "Documenten",
+        "retention": "Bewaring",
+        "retentionValue": "365 dagen"
+      },
+      "support": {
+        "title": "Toegewijde ondersteuning",
+        "subtitle": "Prioriteitsondersteuning met toegewijde accountmanager",
+        "contact": "Contact ondersteuning"
+      }
+    },
+    "securityPage": {
+      "title": "Beveiliging",
+      "subtitle": "Beheer API-sleutels en bekijk beveiligingsauditlogboeken",
+      "stats": {
+        "activeKeys": "Actieve API-sleutels",
+        "auditEvents": "Auditgebeurtenissen (24u)",
+        "securityScore": "Beveiligingsscore",
+        "alerts": "Waarschuwingen"
+      },
+      "tabs": {
+        "audit": "Auditlogboek",
+        "keys": "API-sleutels",
+        "policies": "Beleid",
+        "settings": "Instellingen"
+      },
+      "audit": {
+        "allActions": "Alle acties",
+        "lastHour": "Afgelopen uur",
+        "last24Hours": "Afgelopen 24 uur",
+        "last7Days": "Afgelopen 7 dagen",
+        "last30Days": "Afgelopen 30 dagen",
+        "exporting": "Exporteren...",
+        "exportCSV": "Exporteer CSV",
+        "action": "Actie",
+        "resource": "Bron",
+        "details": "Details",
+        "ipAddress": "IP-adres",
+        "time": "Tijd",
+        "noLogs": "Geen auditlogboeken gevonden"
+      },
+      "keys": {
+        "description": "API-sleutels worden gebruikt om verzoeken aan de Seizn API te authenticeren",
+        "createNew": "Nieuwe sleutel maken",
+        "rotate": "Roteren",
+        "revoke": "Intrekken",
+        "created": "Aangemaakt",
+        "lastUsed": "Laatst gebruikt",
+        "never": "Nooit",
+        "permissions": "Rechten",
+        "rotateConfirm": "Weet u zeker dat u deze API-sleutel wilt roteren? De oude sleutel wordt ongeldig.",
+        "rotateSuccess": "Sleutel succesvol geroteerd! Kopieer uw nieuwe sleutel.",
+        "revokeConfirm": "Weet u zeker dat u deze API-sleutel wilt intrekken? Deze actie kan niet ongedaan worden gemaakt.",
+        "createTitle": "API-sleutel aanmaken",
+        "keyName": "Sleutelnaam",
+        "keyNamePlaceholder": "Productie Backend",
+        "keyType": "Sleuteltype",
+        "test": "Test",
+        "live": "Live",
+        "testHint": "Testsleutels werken alleen in sandboxmodus",
+        "testKeysNote": "Testsleutels werken alleen in sandboxmodus",
+        "cancel": "Annuleren",
+        "createKey": "Sleutel aanmaken"
+      },
+      "settings": {
+        "authentication": "Authenticatie",
+        "twoFactor": "Tweefactorauthenticatie",
+        "twoFactorDesc": "Vereis 2FA voor alle teamleden",
+        "twoFactorDescription": "Vereis 2FA voor alle teamleden",
+        "sessionTimeout": "Sessie-timeout",
+        "sessionTimeoutDesc": "Automatisch uitloggen na inactiviteit",
+        "sessionTimeoutDescription": "Automatisch uitloggen na inactiviteit",
+        "min15": "15 minuten",
+        "15minutes": "15 minuten",
+        "min30": "30 minuten",
+        "30minutes": "30 minuten",
+        "hour1": "1 uur",
+        "1hour": "1 uur",
+        "hour4": "4 uur",
+        "4hours": "4 uur",
+        "apiSecurity": "API-beveiliging",
+        "ipWhitelist": "IP-whitelist",
+        "ipWhitelistDesc": "Sta API-toegang alleen toe vanaf specifieke IP-adressen",
+        "ipWhitelistDescription": "Sta API-toegang alleen toe vanaf specifieke IP-adressen",
+        "rateLimit": "Snelheidslimiet",
+        "rateLimitDesc": "Maximaal aantal verzoeken per minuut",
+        "rateLimitDescription": "Maximaal aantal verzoeken per minuut",
+        "rate100": "100/min",
+        "rate500": "500/min",
+        "rate1000": "1.000/min",
+        "rate5000": "5.000/min",
+        "dangerZone": "Gevarenzone",
+        "dangerWarning": "Deze acties zijn onomkeerbaar. Ga voorzichtig te werk.",
+        "dangerZoneDescription": "Deze acties zijn onomkeerbaar. Ga voorzichtig te werk.",
+        "revokeAll": "Alle API-sleutels intrekken",
+        "revokeAllKeys": "Alle API-sleutels intrekken",
+        "deleteAllData": "Alle gegevens verwijderen"
+      },
+      "policies": {
+        "active": "Actief",
+        "inactive": "Inactief",
+        "pending": "In afwachting",
+        "activePolicies": "Actief beleid",
+        "accessPolicies": "Toegangsbeleid",
+        "compliancePolicies": "Compliancebeleid",
+        "awaitingApproval": "Wacht op goedkeuring",
+        "addCustom": "Aangepast beleid toevoegen"
+      }
+    },
+    "reportsPage": {
+      "title": "ROI-rapport",
+      "generated": "Gegenereerd",
+      "period7d": "Afgelopen 7 dagen",
+      "period30d": "Afgelopen 30 dagen",
+      "period90d": "Afgelopen 90 dagen",
+      "exportPdf": "Exporteer PDF",
+      "loadError": "Kan rapport niet laden",
+      "totalQueries": "Totaal queries",
+      "totalCost": "Totale kosten",
+      "avgLatency": "Gem. latentie",
+      "costPerQuery": "Kosten/query",
+      "estAnnualCost": "Geschatte jaarlijkse kosten",
+      "projAnnualSavings": "Verwachte jaarlijkse besparingen",
+      "savingsRate": "Besparingspercentage",
+      "rerankImpact": "Herrangschikkingseffect",
+      "mrrScore": "MRR-score",
+      "without": "zonder",
+      "withRerank": "met herrangschikking",
+      "autopilotSavings": "Autopilot-besparingen",
+      "savedThisPeriod": "bespaard deze periode met Autopilot",
+      "withAutopilot": "met Autopilot",
+      "recommendations": "Aanbevelingen",
+      "queries": "Queries:",
+      "avgCost": "Gem. kosten"
+    },
+    "privacy": {
+      "title": "Privacy en RTBF",
+      "subtitle": "Beheer GDPR-verzoeken voor het recht op vergetelheid en rechten van betrokkenen",
+      "tabs": {
+        "requests": "RTBF-verzoeken",
+        "subjects": "Betrokkenen",
+        "certificates": "Certificaten",
+        "settings": "Instellingen"
+      },
+      "stats": {
+        "pending": "In afwachting",
+        "inProgress": "In behandeling",
+        "completed": "Voltooid",
+        "overdue": "Achterstallig"
+      },
+      "requests": {
+        "description": "Beheer verzoeken voor het recht op vergetelheid onder GDPR artikel 17",
+        "newRequest": "Nieuw verzoek",
+        "subject": "Betrokkene",
+        "status": "Status",
+        "phase": "Fase",
+        "dueDate": "Deadline",
+        "scope": "Bereik",
+        "actions": "Acties",
+        "daysOverdue": "dagen achterstallig",
+        "daysLeft": "dagen resterend",
+        "view": "Bekijken",
+        "certificate": "Certificaat",
+        "verify": "Verifiëren"
+      },
+      "detail": {
+        "title": "RTBF-verzoekdetails",
+        "dataSubject": "Betrokkene",
+        "requestedAt": "Aangevraagd op",
+        "dueDate": "Deadline",
+        "status": "Status",
+        "dataCategories": "Gegevenscategorieën",
+        "deletionScope": "Verwijderingsbereik",
+        "completionDetails": "Voltooiingsdetails",
+        "completed": "Voltooid:",
+        "verified": "Geverifieerd:",
+        "close": "Sluiten",
+        "runVerification": "Verificatie uitvoeren",
+        "downloadCertificate": "Certificaat downloaden"
+      },
+      "newRequest": {
+        "title": "Nieuw RTBF-verzoek",
+        "description": "Maak een nieuw verzoek voor het recht op vergetelheid. De deadline wordt ingesteld op 30 dagen vanaf nu volgens GDPR-vereisten.",
+        "emailLabel": "E-mail betrokkene",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Verwijderingsbereik",
+        "cancel": "Annuleren",
+        "creating": "Aanmaken...",
+        "create": "Verzoek aanmaken"
+      },
+      "subjects": {
+        "description": "Bekijk en beheer betrokkenen die met uw systeem hebben gewerkt",
+        "email": "E-mail",
+        "externalId": "Extern ID",
+        "requests": "Verzoeken",
+        "dataCategories": "Gegevenscategorieën",
+        "actions": "Acties",
+        "viewData": "Gegevens bekijken"
+      },
+      "certificates": {
+        "description": "Cryptografisch bewijs van gegevensverwijdering voor compliance-audits",
+        "noTitle": "Nog geen certificaten",
+        "noDesc": "Certificaten worden gegenereerd wanneer RTBF-verzoeken worden geverifieerd",
+        "request": "Verzoek:",
+        "issued": "Uitgegeven:",
+        "gdprCompliant": "GDPR-conform",
+        "download": "Downloaden",
+        "hash": "Certificaathash"
+      },
+      "settings": {
+        "description": "Configureer RTBF-verwerking en compliance-instellingen",
+        "autoDiscovery": "Automatische ontdekking",
+        "autoDiscoveryDesc": "Ontdek automatisch alle gegevens gekoppeld aan een betrokkene",
+        "verificationRequired": "Verificatie vereist",
+        "verificationRequiredDesc": "Vereis verificatie voordat verwijderingscertificaten worden uitgegeven",
+        "responseDeadline": "Reactietermijn (dagen)",
+        "responseDeadlineHint": "GDPR vereist reactie binnen 30 dagen (verlengbaar tot 90 voor complexe verzoeken)",
+        "notificationEmail": "Meldings-e-mail",
+        "notificationEmailHint": "E-mailadres voor RTBF-verzoekmeldingen",
+        "auditLogRetention": "Auditlogbewaring (dagen)",
+        "auditLogRetentionHint": "Hoe lang auditlogboeken worden bewaard voor compliance-doeleinden",
+        "years": "jaar",
+        "saving": "Opslaan...",
+        "save": "Instellingen opslaan"
+      },
+      "gdprNotes": {
+        "title": "GDPR-compliance-opmerkingen",
+        "note1": "RTBF-verzoeken moeten binnen 30 dagen worden uitgevoerd",
+        "note2": "Complexe verzoeken kunnen worden verlengd tot 90 dagen",
+        "note3": "Auditlogboeken moeten worden bewaard voor compliance",
+        "note4": "Verwijderingscertificaten bieden cryptografisch bewijs"
+      }
+    },
+    "topBar": {
+      "personal": "Persoonlijk Account",
+      "manageOrgs": "Organisaties Beheren",
+      "create": "Aanmaken",
+      "createApiKey": "Nieuwe API-sleutel",
+      "createOrg": "Nieuwe Organisatie"
+    },
+    "share": {
+      "title": "Tracering Delen",
+      "button": "Delen",
+      "createLink": "Deellink Aanmaken",
+      "creating": "Aanmaken...",
+      "done": "Klaar",
+      "linkExpiration": "Linkvervaldatum",
+      "hour": "1U",
+      "day": "24U",
+      "week": "7D",
+      "never": "Nooit",
+      "privacyOptions": "Privacy-opties",
+      "maskPii": "PII maskeren (e-mails, telefoons, IP's)",
+      "maskSecrets": "API-sleutels en geheimen maskeren",
+      "shareUrl": "Deel-URL",
+      "copyLink": "Link Kopiëren",
+      "linkCopied": "Gekopieerd!",
+      "expiresIn": "Deze link verloopt over {duration}.",
+      "neverExpires": "Deze link verloopt nooit.",
+      "error": "Kon deellink niet aanmaken",
+      "revoke": "Link Intrekken",
+      "revokeConfirm": "Weet u zeker dat u deze link wilt intrekken?",
+      "linkRevoked": "Link succesvol ingetrokken"
+    },
+    "theme": {
+      "light": "Licht",
+      "dark": "Donker",
+      "system": "Systeem",
+      "toggle": "Thema wisselen"
+    },
+    "activity": {
+      "endpoint": "Endpoint",
+      "status": "Status",
+      "latency": "Latentie",
+      "cost": "Kosten",
+      "key": "Sleutel",
+      "time": "Tijd"
+    },
+    "evals": {
+      "title": "Evaluaties",
+      "subtitle": "A/B-testen en kwaliteit van opvraging meten",
+      "newRun": "Nieuwe Evaluatierun",
+      "runs": "Evaluatieruns",
+      "noRuns": "Nog geen evaluatieruns",
+      "metrics": "Statistieken",
+      "comparison": "Visuele Vergelijking",
+      "selectRun": "Selecteer een evaluatierun",
+      "selectRunHint": "Kies een run uit de lijst om gedetailleerde statistieken te bekijken",
+      "completed": "Voltooid",
+      "running": "Bezig",
+      "failed": "Mislukt",
+      "pending": "In afwachting",
+      "winner": "Winnaar",
+      "tie": "Gelijkspel",
+      "confidence": "vertrouwen",
+      "exportCSV": "CSV Exporteren",
+      "exportJSON": "JSON Exporteren",
+      "tabComparison": "Vergelijking",
+      "tabCharts": "Grafieken",
+      "tabTimeline": "Tijdlijn",
+      "precision": "Precisie",
+      "recall": "Recall",
+      "f1Score": "F1-score",
+      "avgLatency": "Gem. Latentie",
+      "avgCost": "Gem. Kosten",
+      "barChart": "Statistiekenvergelijking",
+      "radarChart": "Overzicht van Meerdere Statistieken",
+      "metricsTrend": "Statistiekentrend",
+      "latencyTrend": "Latentietrend",
+      "recentRuns": "Recent Voltooide Runs",
+      "waitingForMetrics": "Wachten tot evaluatie is voltooid..."
+    },
+    "autopilot": {
+      "title": "Autopilot",
+      "subtitle": "AI-aangedreven opvragingsoptimalisatie",
+      "settings": "Instellingen",
+      "decisionLogs": "Beslissingslogboeken",
+      "operationMode": "Bedieningsmodus",
+      "parameters": "Parameters",
+      "recentDecisions": "Recente Beslissingen",
+      "noLogs": "Nog geen beslissingslogboeken"
+    },
+    "calculator": {
+      "title": "Gebruikscalculator",
+      "subtitle": "Schat uw maandelijkse kosten op basis van verwacht gebruik",
+      "stats": {
+        "apiCalls": "API-aanroepen",
+        "memories": "Herinneringen",
+        "extractions": "Extracties",
+        "estimated": "Geschatte Kosten"
+      },
+      "presets": {
+        "title": "Snelle Voorinstellingen",
+        "startup": "Startup",
+        "growing": "Groeiend",
+        "scale": "Schaal",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Gebruik Aanpassen"
+      },
+      "labels": {
+        "apiCalls": "Maandelijkse API-aanroepen",
+        "memories": "Opgeslagen Herinneringen",
+        "extractions": "Extracties"
+      },
+      "recommended": {
+        "title": "Aanbevolen Abonnement",
+        "base": "Basisprijs",
+        "overage": "Overschrijding",
+        "cta": "Aan de Slag"
+      },
+      "comparison": {
+        "title": "Alle Abonnementen",
+        "best": "Beste Waarde"
+      },
+      "details": {
+        "title": "Gedetailleerde Prijsuitsplitsing",
+        "plan": "Abonnement",
+        "base": "Basisprijs",
+        "includedCalls": "Inbegrepen Aanroepen",
+        "overageRate": "Overschrijdingstarief",
+        "yourOverage": "Uw Overschrijding",
+        "total": "Totaal"
+      }
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Configureer HTTP-callbacks voor realtime gebeurtenismeldingen",
+      "create": "Webhook Aanmaken",
+      "stats": {
+        "total": "Totaal Webhooks",
+        "active": "Actief",
+        "failing": "Mislukkend",
+        "deliveries": "Totaal Leveringen"
+      },
+      "tabs": {
+        "endpoints": "Endpoints",
+        "deliveries": "Recente Leveringen"
+      },
+      "success": "geslaagd",
+      "failed": "mislukt",
+      "lastTriggered": "Laatst geactiveerd",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "retry": "Opnieuw Proberen",
+      "deleteConfirm": "Weet u zeker dat u deze webhook wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "empty": {
+        "title": "Geen webhooks geconfigureerd",
+        "description": "Maak een webhook aan om realtime meldingen over gebeurtenissen te ontvangen.",
+        "cta": "Maak Uw Eerste Webhook"
+      },
+      "table": {
+        "event": "Gebeurtenis",
+        "status": "Status",
+        "response": "Reactie",
+        "time": "Tijd",
+        "actions": "Acties"
+      },
+      "modal": {
+        "title": "Webhook Aanmaken",
+        "name": "Naam",
+        "url": "Endpoint-URL",
+        "events": "Gebeurtenissen om op te Abonneren",
+        "cancel": "Annuleren",
+        "create": "Webhook Aanmaken"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Tutorial Eerste Zoekopdracht",
+      "subtitle": "Leer hoe u de playground gebruikt",
+      "dismiss": "Negeren",
+      "tryExamples": "Probeer een voorbeeldquery:",
+      "hint": "Klik op een voorbeeld om de query-invoer automatisch in te vullen",
+      "gotIt": "Begrepen!",
+      "tips": {
+        "welcome": {
+          "title": "Welkom bij de Debugconsole",
+          "description": "Test uw queries hier met volledige tracering om precies te begrijpen hoe zoeken onder de motorkap werkt."
+        },
+        "query": {
+          "title": "Queries in Natuurlijke Taal",
+          "description": "Voer elke query in natuurlijke taal in. Onze AI zal semantisch vergelijkbare herinneringen vinden uit uw opgeslagen gegevens."
+        },
+        "trace": {
+          "title": "Volledige Uitvoeringstracering",
+          "description": "Zie elke stap van de pipeline - van embedding-creatie tot resultaatrangschikking - met timing- en kostenuitsplitsingen."
         }
       }
     }
@@ -727,7 +1649,11 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Limieten",
+      "status": "Status",
+      "help": "Help",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Request Builder",
@@ -753,7 +1679,8 @@
         "techDocs": "Tech Documentation",
         "legalContracts": "Legal Contracts",
         "researchPapers": "Research Papers"
-      }
+      },
+      "advanced": "Geavanceerd"
     },
     "resultsPanel": {
       "searching": "Searching...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "Results",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Kosten"
+    },
+    "chips": {
+      "trace": "Trace",
+      "eval": "Evaluatie",
+      "policy": "Beleid"
+    },
+    "playgroundTitle": "Probeer het nu",
+    "costPanel": {
+      "calculating": "Kosten berekenen...",
+      "noCost": "Voer een query uit om de kostenspecificatie te zien",
+      "costBreakdown": "Kostenspecificatie",
+      "component": "Component",
+      "cost": "Kosten",
+      "embedding": "Embedding",
+      "vectorSearch": "Vectorzoekopdracht",
+      "rerank": "Herordening",
+      "answerContract": "Antwoordcontract",
+      "total": "Totale Kosten",
+      "usage": "Gebruik",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Uit",
+      "queryUnits": "Query-eenheden",
+      "estimatedMonthly": "Geschat Maandelijks",
+      "basedOn": "Gebaseerd op",
+      "queriesPerDay": "queries/dag"
+    },
+    "errorDisplay": {
+      "error": "Fout",
+      "errorCode": "Code",
+      "traceId": "Trace",
+      "hint": "Hint",
+      "tryAgain": "Opnieuw Proberen",
+      "copyTraceId": "Trace-ID kopiëren",
+      "copied": "Gekopieerd!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "Bronnen",
       "security": "Beveiliging",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "5 Min Tutorial",
+      "integrations": "Integraties"
     },
     "hero": {
       "title": "API Documentatie",
@@ -873,7 +1837,9 @@
       "enterprise": "Enterprise",
       "unlimited": "Onbeperkt",
       "exceeded": "Wanneer je de limiet overschrijdt, retourneert de API een",
-      "response": "antwoord."
+      "response": "antwoord.",
+      "monthlyApiCalls": "Maandelijkse API-aanroepen",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Foutcodes",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "Zoeken en ophalen",
         "extraction": "Data-extractie",
         "operations": "Operaties",
-        "security": "Beveiliging en privacy"
+        "security": "Beveiliging en privacy",
+        "all": "Alles"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "Welke programmeertalen worden ondersteund?",
           "answer": "We ondersteunen officieel JavaScript/TypeScript (Node.js) en Python. Voor andere talen kunt u de REST API direct gebruiken."
+        },
+        "q4": {
+          "question": "Wat is de snelste manier om een PoC te bouwen?",
+          "answer": "1) POST /api/memories om een gebruikersvoorkeur op te slaan. 2) GET /api/memories om te zoeken. 3) Injecteer de resultaten in uw LLM-prompt. 4) Voeg later /api/extract toe voor automatische extractie en /api/query voor geheugen-verrijkte antwoorden."
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "Wat is de user_id parameter?",
           "answer": "De user_id koppelt herinneringen aan een specifieke gebruiker, waardoor gepersonaliseerde ervaringen mogelijk zijn."
+        },
+        "q4": {
+          "question": "Wanneer moet ik scope (user/session/agent) gebruiken?",
+          "answer": "user: Voorkeuren die globaal voor een gebruiker gelden. session: Doelen of context die alleen geldig zijn voor dit gesprek. agent: Regels specifiek voor één agent in een multi-agent systeem. Correct gebruik van scope verkort de prompt en verbetert de consistentie van antwoorden."
+        },
+        "q5": {
+          "question": "Wat zijn memory_types en waarom zijn ze belangrijk?",
+          "answer": "memory_type classificeert herinneringen: fact (onveranderlijke informatie), preference (gebruikerskeuzes), instruction (te volgen regels), relationship (verbindingen tussen personen/organisaties), experience (gebeurtenissen uit het verleden). Dit is de krachtigste as voor filtering, verwijdering en beleidstoepassing."
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "Zijn er snelheidslimieten?",
           "answer": "Ja, limieten varieren per plan. Het gratis plan staat 100 verzoeken per minuut toe. Zie de prijspagina voor details."
+        },
+        "q4": {
+          "question": "Hoe kan ik kosten verlagen?",
+          "answer": "Grootste kostenfactoren: 1) Extractiefrequentie - verminder aanroepen. 2) Zoekbereik - gebruik namespace om te beperken. 3) Modelkeuze - gebruik haiku voor routine, sonnet voor belangrijk. 4) Caching - cache herhaalde queries. 5) Batchbewerkingen waar mogelijk."
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "Heeft u SOC 2-certificering?",
           "answer": "We zijn bezig met SOC 2-certificering. Neem contact op met ons salesteam voor meer informatie."
         }
+      },
+      "title": "Veelgestelde Vragen",
+      "subtitle": "Veelgestelde vragen over de Seizn Memory API, van de eerste stappen tot geavanceerde bewerkingen.",
+      "nav": {
+        "dashboard": "Dashboard"
+      },
+      "cta": {
+        "title": "Nog vragen?",
+        "subtitle": "Bekijk onze documentatie of neem contact op met ons supportteam.",
+        "readDocs": "Documentatie Lezen",
+        "contactSupport": "Contact Support"
+      },
+      "footer": {
+        "rights": "Alle rechten voorbehouden."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5 Minuten Snelstart | Seizn",
+        "description": "Voeg AI-geheugen toe in 5 minuten met slechts 10 regels code"
+      },
+      "badge": "5 min tutorial",
+      "noCreditCard": "Geen creditcard vereist",
+      "title": "Aan de Slag met Seizn",
+      "subtitle": "Voeg persistent geheugen toe aan uw AI in minder dan 5 minuten. Volg de stappen en vink elke stap af wanneer u deze voltooit.",
+      "getApiKey": "API-sleutel Ophalen",
+      "fullExample": "Volledig Voorbeeld (10 regels)",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!",
+      "progress": "Voortgang",
+      "stepsLabel": "stappen",
+      "steps": {
+        "getApiKey": {
+          "title": "Haal Uw API-sleutel Op",
+          "time": "30 sec",
+          "description": "Registreer u en genereer uw API-sleutel vanuit het dashboard.",
+          "actionLabel": "Naar het Dashboard"
+        },
+        "install": {
+          "title": "Installeer de SDK",
+          "time": "30 sec",
+          "description": "Installeer de Seizn SDK met de pakketbeheerder van uw voorkeur."
+        },
+        "ingest": {
+          "title": "Documenten Opnemen",
+          "time": "30 sec",
+          "description": "Upload documenten naar uw dataset voor ophaling."
+        },
+        "query": {
+          "title": "Voer Uw Eerste Query Uit",
+          "time": "10 sec",
+          "description": "Doorzoek uw documenten met een query in natuurlijke taal."
+        }
+      },
+      "completion": {
+        "title": "Gefeliciteerd!",
+        "description": "U hebt de snelstart voltooid. Uw ophaalpipeline is gereed met ingebouwde tracing.",
+        "readDocs": "Documentatie Lezen",
+        "goToDashboard": "Naar het Dashboard"
+      },
+      "expectedOutput": {
+        "title": "Verwachte Uitvoer",
+        "description": "Elke query retourneert resultaten, trace en kostenspecificatie:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API-referentie",
+          "description": "Verken alle endpoints en opties voor geavanceerde gebruiksscenario's."
+        },
+        "sdkExamples": {
+          "title": "SDK-voorbeelden",
+          "description": "Kant-en-klare voorbeelden voor Python, TypeScript en meer."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Veelgestelde vragen over geheugentypen, namespaces en best practices."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API-referentie | Seizn",
+        "description": "Volledige API-documentatie voor Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain en RetOps APIs"
+      },
+      "title": "API-referentie",
+      "description": "Volledige documentatie voor alle Seizn APIs, waaronder Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain en RetOps.",
+      "auth": {
+        "title": "Authenticatie",
+        "description": "Alle API-endpoints vereisen authenticatie via API-sleutel. Voeg uw sleutel toe in de X-API-Key header."
+      },
+      "sidebar": {
+        "title": "API-groepen"
+      },
+      "endpoint": {
+        "parameters": "Parameters",
+        "requestBody": "Request Body",
+        "response": "Respons",
+        "errorCodes": "Foutcodes"
+      },
+      "table": {
+        "name": "Naam",
+        "type": "Type",
+        "required": "Vereist",
+        "description": "Beschrijving",
+        "code": "Code",
+        "message": "Bericht"
+      },
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5 Minuten Tutorial | Seizn",
+        "description": "Leer hoe u AI-geheugen toevoegt in 5 minuten met een stapsgewijze interactieve handleiding"
+      },
+      "breadcrumb": "Tutorial",
+      "badge": "5 Minuten Tutorial",
+      "noCreditCard": "Geen creditcard vereist",
+      "title": "Voeg AI-geheugen Toe in 5 Minuten",
+      "subtitle": "Volg deze stapsgewijze handleiding om uw AI persistent geheugen te geven. Vink elke stap af wanneer u deze voltooit.",
+      "getApiKey": "API-sleutel Ophalen",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!",
+      "progress": "Voortgang",
+      "stepsLabel": "stappen",
+      "steps": {
+        "step1": {
+          "title": "Haal Uw API-sleutel Op",
+          "time": "30 sec",
+          "description": "Registreer u gratis en genereer uw API-sleutel vanuit het dashboard.",
+          "instruction1": "Registreer u of log in op uw Seizn-account",
+          "instruction2": "Navigeer naar API-sleutels in het dashboard",
+          "instruction3": "Klik op 'Nieuwe Sleutel Aanmaken' en kopieer uw sleutel",
+          "actionLabel": "Naar het Dashboard"
+        },
+        "step2": {
+          "title": "Installeer de SDK",
+          "time": "30 sec",
+          "description": "Kies uw voorkeurstaal en installeer de Seizn SDK."
+        },
+        "step3": {
+          "title": "Sla Uw Eerste Herinnering Op",
+          "time": "2 min",
+          "description": "Sla informatie op die uw AI moet onthouden tussen sessies."
+        },
+        "step4": {
+          "title": "Doorzoek Herinneringen",
+          "time": "2 min",
+          "description": "Haal relevante herinneringen op met queries in natuurlijke taal."
+        },
+        "step5": {
+          "title": "Verifieer de Resultaten",
+          "time": "30 sec",
+          "description": "Controleer of uw herinnering succesvol is opgeslagen en opgehaald.",
+          "hint": "U zou een respons als deze moeten zien bij het zoeken naar herinneringen:",
+          "successTitle": "Gelukt!",
+          "successDescription": "Uw AI heeft nu persistent geheugen. Gebruik de zoekresultaten om de context en antwoorden van uw AI te verrijken."
+        }
+      },
+      "completion": {
+        "title": "Gefeliciteerd!",
+        "description": "U hebt de tutorial voltooid. Uw AI heeft nu persistent geheugen dat werkt tussen sessies.",
+        "readDocs": "Documentatie Lezen",
+        "goToDashboard": "Naar het Dashboard"
+      },
+      "nextSteps": {
+        "title": "Volgende Stappen",
+        "apiReference": {
+          "title": "API-referentie",
+          "description": "Verken alle endpoints voor herinneringen, extractie en RAG-queries."
+        },
+        "sdkExamples": {
+          "title": "SDK-voorbeelden",
+          "description": "Kant-en-klare voorbeelden voor Python, TypeScript en REST."
+        },
+        "faq": {
+          "title": "FAQ",
+          "description": "Meer informatie over geheugentypen, namespaces en best practices."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integraties | Seizn",
+        "description": "Integreer Seizn met LangChain, LlamaIndex, OpenTelemetry en meer"
+      },
+      "breadcrumb": "Integraties",
+      "title": "Integraties",
+      "subtitle": "Verbind Seizn met uw favoriete AI-frameworks en observability-tools.",
+      "cards": {
+        "langchain": {
+          "badge": "Officieel",
+          "title": "LangChain",
+          "description": "Plug-and-play retriever voor LangChain RAG-pipelines. Werkt met Python en TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Officieel",
+          "title": "LlamaIndex",
+          "description": "Natieve retriever voor LlamaIndex query-engines. Ondersteunt streaming en hybride zoekopdrachten."
+        },
+        "opentelemetry": {
+          "badge": "Officieel",
+          "title": "OpenTelemetry",
+          "description": "Exporteer traces naar Datadog, Grafana, Jaeger en elke OTLP-compatibele backend."
+        }
+      },
+      "comingSoon": {
+        "title": "Binnenkort Beschikbaar",
+        "description": "Meer integraties zijn onderweg. Laat ons weten wat u nodig hebt!"
+      },
+      "backToDocs": "Terug naar Documentatie"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain-integratie | Seizn",
+        "description": "Plug-and-play retriever voor LangChain RAG-pipelines"
+      },
+      "badge": "Officieel",
+      "title": "LangChain-integratie",
+      "subtitle": "Plug-and-play retriever voor LangChain RAG-pipelines met volledige tracing-ondersteuning.",
+      "overview": {
+        "title": "Overzicht in 60 Seconden",
+        "description": "SeiznRetriever is een directe vervanging voor elke LangChain retriever. Het biedt vectorzoekopdrachten met ingebouwde tracing, caching en herordening.",
+        "feature1": "Compatibel met alle LangChain chains en agents",
+        "feature2": "Ingebouwde tracing voor elke ophaalbewerking",
+        "feature3": "Ondersteunt filtering, herordening en hybride zoekopdrachten"
+      },
+      "installation": {
+        "title": "Installatie",
+        "description": "Installeer de Seizn SDK naast LangChain."
+      },
+      "example": {
+        "title": "5 Minuten Voorbeeld",
+        "description": "Maak een RAG-chain met SeiznRetriever in slechts een paar regels code."
+      },
+      "production": {
+        "title": "Productietips",
+        "caching": {
+          "title": "Caching Inschakelen",
+          "description": "Verminder latentie en kosten door herhaalde queries te cachen."
+        },
+        "reranking": {
+          "title": "Herordening Inschakelen",
+          "description": "Verbeter de kwaliteit van resultaten met cross-encoder herordening."
+        },
+        "filtering": {
+          "title": "Metadatafiltering",
+          "description": "Filter resultaten op metadatavelden vóór de vectorzoekopdracht."
+        }
+      },
+      "troubleshooting": {
+        "title": "Probleemoplossing",
+        "errorColumn": "Fout",
+        "causeColumn": "Oorzaak",
+        "solutionColumn": "Oplossing",
+        "authCause": "Ongeldige of ontbrekende API-sleutel",
+        "authSolution": "Controleer de SEIZN_API_KEY omgevingsvariabele",
+        "rateCause": "Te veel verzoeken per seconde",
+        "rateSolution": "Implementeer exponentiële backoff of upgrade uw plan",
+        "emptyCause": "Drempel te hoog of geen overeenkomende documenten",
+        "emptySolution": "Verlaag de drempel of controleer de datasetinhoud"
+      },
+      "nav": {
+        "backToIntegrations": "Terug naar Integraties",
+        "nextLlamaIndex": "LlamaIndex-integratie"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex-integratie | Seizn",
+        "description": "Natieve retriever voor LlamaIndex RAG-pipelines"
+      },
+      "badge": "Officieel",
+      "title": "LlamaIndex-integratie",
+      "subtitle": "Natieve retriever voor LlamaIndex query-engines met streaming en hybride zoekopdrachten.",
+      "overview": {
+        "title": "Overzicht in 60 Seconden",
+        "description": "SeiznRetriever implementeert de LlamaIndex BaseRetriever-interface, waardoor het compatibel is met alle LlamaIndex query-engines en pipelines.",
+        "feature1": "Natieve integratie met LlamaIndex query-engines",
+        "feature2": "Ondersteunt streaming-antwoorden standaard",
+        "feature3": "Compatibel met LlamaIndex node-postprocessors"
+      },
+      "installation": {
+        "title": "Installatie",
+        "description": "Installeer de Seizn SDK naast LlamaIndex."
+      },
+      "example": {
+        "title": "5 Minuten Voorbeeld",
+        "description": "Bouw een query-engine met SeiznRetriever voor uw RAG-applicatie."
+      },
+      "production": {
+        "title": "Productietips",
+        "streaming": {
+          "title": "Streaming-antwoorden",
+          "description": "Schakel streaming in voor een betere gebruikerservaring bij lange antwoorden."
+        },
+        "hybrid": {
+          "title": "Hybride Zoekopdrachten",
+          "description": "Combineer vector- en trefwoordzoekopdrachten voor betere dekking."
+        },
+        "nodePostprocessors": {
+          "title": "Node-postprocessors",
+          "description": "Keten postprocessors voor geavanceerde filtering en herordening."
+        }
+      },
+      "troubleshooting": {
+        "title": "Probleemoplossing",
+        "errorColumn": "Fout",
+        "causeColumn": "Oorzaak",
+        "solutionColumn": "Oplossing",
+        "authCause": "Ongeldige of ontbrekende API-sleutel",
+        "authSolution": "Controleer de SEIZN_API_KEY omgevingsvariabele",
+        "datasetCause": "Datasetnaam niet gevonden",
+        "datasetSolution": "Controleer of de dataset bestaat in het dashboard",
+        "relevanceCause": "Mismatch tussen query en document",
+        "relevanceSolution": "Probeer hybride zoekopdrachten of pas de drempel aan"
+      },
+      "nav": {
+        "prevLangChain": "LangChain-integratie",
+        "nextOpenTelemetry": "OpenTelemetry-integratie"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry-integratie | Seizn",
+        "description": "Exporteer traces naar Datadog, Grafana, Jaeger via OTLP"
+      },
+      "badge": "Officieel",
+      "title": "OpenTelemetry-integratie",
+      "subtitle": "Exporteer ophaaltraces naar uw observability-stack via OTLP.",
+      "overview": {
+        "title": "Overzicht in 60 Seconden",
+        "description": "Seizn exporteert native OpenTelemetry traces voor elke ophaalbewerking. Verbind met elke OTLP-compatibele backend voor end-to-end observability.",
+        "feature1": "Configuratievrije OTLP-export met automatische span-aanmaak",
+        "feature2": "Uitgebreide attributen inclusief latentie, tokenaantallen en kosten",
+        "feature3": "Contextpropagatie voor gedistribueerde tracing",
+        "supportedBackends": "Ondersteunde Backends"
+      },
+      "installation": {
+        "title": "Configuratie",
+        "description": "Configureer OTLP-export via omgevingsvariabelen."
+      },
+      "examples": {
+        "title": "Backend-voorbeelden",
+        "datadog": {
+          "description": "Exporteer traces naar Datadog APM via de Datadog Agent of directe API."
+        },
+        "grafana": {
+          "description": "Stuur traces naar Grafana Tempo (Cloud of self-hosted)."
+        },
+        "jaeger": {
+          "description": "Exporteer naar Jaeger met native OTLP-receiver ondersteuning."
+        }
+      },
+      "production": {
+        "title": "Productietips",
+        "sampling": {
+          "title": "Samplingstrategie",
+          "description": "Beheer het tracevolume met head-based of tail-based sampling."
+        },
+        "attributes": {
+          "title": "Aangepaste Attributen",
+          "description": "Voeg resource- en span-attributen toe voor betere filtering."
+        },
+        "batching": {
+          "title": "Batchconfiguratie",
+          "description": "Optimaliseer exportprestaties met batchinstellingen."
+        }
+      },
+      "troubleshooting": {
+        "title": "Probleemoplossing",
+        "issueColumn": "Probleem",
+        "causeColumn": "Oorzaak",
+        "solutionColumn": "Oplossing",
+        "noTracesIssue": "Geen traces zichtbaar",
+        "noTracesCause": "Telemetrie uitgeschakeld of verkeerd endpoint",
+        "noTracesSolution": "Stel SEIZN_TELEMETRY_ENABLED=true in en controleer het endpoint",
+        "connectionIssue": "Verbinding geweigerd",
+        "connectionCause": "Collector draait niet of verkeerde poort",
+        "connectionSolution": "Controleer de collectorstatus en poort 4318",
+        "missingSpansIssue": "Ontbrekende spans in trace",
+        "missingSpansCause": "Samplingfrequentie te laag",
+        "missingSpansSolution": "Verhoog de samplingfrequentie of schakel sampling uit",
+        "debugTitle": "Debugmodus",
+        "debugDescription": "Schakel debuglogging in om telemetrieproblemen op te lossen."
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex-integratie",
+        "backToIntegrations": "Terug naar Integraties"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Live Demo",
+    "subtitle": "Ervaar de ophaalpipeline van Seizn met volledige tracing en kostentransparantie.",
+    "tryItNow": "Probeer het nu - Geen registratie nodig",
+    "queryPlaceholder": "Zoekopdracht",
+    "runDemo": "Demo Starten",
+    "running": "Bezig...",
+    "results": "Resultaten",
+    "trace": "Trace",
+    "cost": "Kosten",
+    "noResults": "Start de demo om resultaten te zien",
+    "errorTitle": "Fout",
+    "rateLimitError": "Limiet overschreden. Even geduld.",
+    "retryIn": "Opnieuw proberen over",
+    "seconds": "seconden",
+    "score": "Score",
+    "rerankScore": "Herordening",
+    "latency": "Latentie",
+    "tokens": "Tokens",
+    "cached": "gecachet",
+    "model": "Model",
+    "input": "Invoer",
+    "output": "Uitvoer",
+    "costBreakdown": "Specificatie",
+    "total": "Totale Kosten",
+    "embedding": "Embedding",
+    "vectorSearch": "Vectorzoekopdracht",
+    "rerank": "Herordening",
+    "answerContract": "Antwoordcontract",
+    "tokensIn": "Tokens In",
+    "tokensOut": "Tokens Uit",
+    "queryUnits": "Query-eenheden",
+    "prefilledQueries": [
+      "Probeer voorbeelden"
+    ]
+  },
+  "publicTrace": {
+    "title": "Gedeelde Trace",
+    "subtitle": "Bekijk details van de gedeelde ophaaltrace",
+    "sharedBy": "Gedeelde trace",
+    "expired": "Deze link is verlopen",
+    "expiredDesc": "De deellink is niet meer geldig. Vraag de eigenaar om een nieuwe link aan te maken.",
+    "notFound": "Trace niet gevonden",
+    "notFoundDesc": "Deze gedeelde trace kon niet worden gevonden. Mogelijk is deze ingetrokken of verwijderd.",
+    "backToHome": "Terug naar Home",
+    "requestId": "Request-ID",
+    "collection": "Collectie",
+    "createdAt": "Aangemaakt",
+    "totalLatency": "Totale Latentie",
+    "totalCost": "Totale Kosten",
+    "resultsCount": "Resultaten",
+    "query": "Query",
+    "timeline": "Tijdlijn",
+    "candidates": "Kandidaten",
+    "rerankDiff": "Herordening Verschil",
+    "costAnalysis": "Kostenanalyse",
+    "redacted": "[VERWIJDERD]",
+    "piiMasked": "PII gemaskeerd voor privacy",
+    "readOnlyNote": "Dit is een alleen-lezen weergave van een gedeelde trace."
+  },
+  "trustPage": {
+    "title": "Vertrouwenscentrum",
+    "subtitle": "Beveiliging en gegevenspraktijken bij Seizn",
+    "heroDescription": "Wij bouwen met privacy en beveiliging als kern. Deze pagina documenteert precies wat wij met uw gegevens doen.",
+    "lastUpdated": "Laatst bijgewerkt",
+    "sections": {
+      "dataFlow": {
+        "title": "Gegevensstroom",
+        "description": "Wat we opslaan en wat niet",
+        "stored": {
+          "title": "Wat We Opslaan",
+          "items": [
+            "Geheugeninhoud en embeddings",
+            "Querylogs (gehashed, niet als platte tekst)",
+            "API-gebruiksstatistieken per sleutel",
+            "Tracegegevens voor debugging (configureerbare retentie)"
+          ]
+        },
+        "notStored": {
+          "title": "Wat We NIET Opslaan",
+          "items": [
+            "Onbewerkte API-sleutels (alleen gehashed)",
+            "Gebruikerswachtwoorden (alleen OAuth)",
+            "Queryresultaten na cache-TTL",
+            "LLM-verzoek/antwoordlogs van derden"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Versleuteling",
+        "description": "Gegevensbescherming tijdens transport en in rust",
+        "transit": {
+          "title": "Tijdens Transport",
+          "items": [
+            "TLS 1.3 verplicht voor alle verbindingen",
+            "HSTS ingeschakeld met max-age van 1 jaar",
+            "Certificaattransparantie-logging"
+          ]
+        },
+        "atRest": {
+          "title": "In Rust",
+          "items": [
+            "AES-256-versleuteling voor alle opgeslagen gegevens",
+            "Versleuteling op databaseniveau (Supabase)",
+            "Versleutelde back-ups met afzonderlijke sleutels"
+          ]
+        },
+        "keyManagement": {
+          "title": "Sleutelbeheer",
+          "items": [
+            "API-sleutels gehashed met SHA-256 + salt",
+            "Automatische herinneringen voor sleutelrotatie (90 dagen)",
+            "Directe sleutelintrekking mogelijk"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Tenant-isolatie",
+        "description": "Hoe we uw gegevens gescheiden houden",
+        "items": [
+          "Row-Level Security (RLS) afgedwongen op databaseniveau",
+          "Alle queries automatisch gefilterd op user_id/org_id",
+          "Geen gedeelde indexen tussen tenants",
+          "Namespace-scheiding voor geheugencollecties"
+        ],
+        "rbac": {
+          "title": "Toegangsbeheer",
+          "items": [
+            "Rolgebaseerde toegang (Eigenaar, Admin, Lid)",
+            "API-sleutelbereik per organisatie",
+            "Auditlogs voor alle machtigingswijzigingen"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Retentie en Verwijdering",
+        "description": "Hoe lang we gegevens bewaren en hoe u ze kunt verwijderen",
+        "periods": [
+          {
+            "type": "Herinneringen",
+            "period": "Tot verwijdering door gebruiker"
+          },
+          {
+            "type": "API-logs",
+            "period": "90 dagen rollend"
+          },
+          {
+            "type": "Traces",
+            "period": "30 dagen (configureerbaar)"
+          },
+          {
+            "type": "Auditlogs",
+            "period": "1 jaar"
+          },
+          {
+            "type": "Back-ups",
+            "period": "30 dagen versleuteld"
+          }
+        ],
+        "deletion": {
+          "title": "Verwijderingsproces",
+          "items": [
+            "DELETE /api/memories verwijdert onmiddellijk",
+            "Accountverwijdering: 30 dagen respijttermijn",
+            "Definitieve verwijdering uit back-ups binnen 30 dagen",
+            "GDPR/CCPA gegevensexport beschikbaar op verzoek"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Auditlogs en Toegangscontroles",
+        "description": "Bijhouden wie wat doet",
+        "logged": {
+          "title": "Gebeurtenissen die We Loggen",
+          "items": [
+            "Aanmaak, rotatie en intrekking van API-sleutels",
+            "Machtigingswijzigingen (RBAC)",
+            "Verzoeken voor gegevensexport",
+            "Mislukte authenticatiepogingen",
+            "Beheerdersacties op de organisatie"
+          ]
+        },
+        "access": {
+          "title": "Logtoegang",
+          "items": [
+            "Beschikbaar voor organisatiebeheerders",
+            "Exporteerbaar via API (Pro+ plannen)",
+            "Doorzoekbaar op gebruiker, actie en tijdstempel"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Subverwerkers",
+        "description": "Derden die uw gegevens verwerken",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Database en Authenticatie",
+            "location": "VS (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting en CDN",
+            "location": "Wereldwijd Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Betalingen",
+            "location": "VK/VS"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Productanalyse",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Foutbewaking",
+            "location": "VS"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Herordening (optioneel)",
+            "location": "VS/Canada"
+          }
+        ],
+        "note": "We delen alleen de minimaal benodigde gegevens voor het functioneren van elke dienst."
+      },
+      "disclosure": {
+        "title": "Wat We Nog Niet Doen",
+        "description": "Eerlijke hiaten in onze beveiligingshouding",
+        "items": [
+          "SOC 2 Type II-certificering (in uitvoering, verwacht Q2 2026)",
+          "HIPAA-compliance (gepland voor Enterprise)",
+          "On-premise implementatieoptie (wordt geëvalueerd)",
+          "Hardware security modules (HSM) voor sleutelopslag",
+          "Bug bounty-programma (gepland Q3 2026)"
+        ],
+        "cta": "Heeft u beveiligingsvragen? Neem contact met ons op via security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Vragen?",
+      "description": "Ons team beantwoordt graag beveiligingsvragen.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Limieten en Facturering",
+    "subtitle": "Begrijp de limieten, quota en factureringsinformatie van uw plan.",
+    "unlimited": "Onbeperkt",
+    "custom": "Aangepast",
+    "requestsPerSecond": "verzoeken/seconde",
+    "sidebar": {
+      "onThisPage": "Op Deze Pagina",
+      "quotas": "Maandelijkse Quota",
+      "rateLimits": "Snelheidslimieten",
+      "overage": "Overschrijdingsgedrag",
+      "reset": "Resettijden",
+      "headers": "Responsheaders"
+    },
+    "table": {
+      "plan": "Plan",
+      "monthlyQuota": "Maandelijks Quotum",
+      "rps": "RPS-limiet"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "overage": "Zachte beperking na limiet"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Zachte beperking, e-mailwaarschuwing"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Zachte beperking, prioriteitswachtrij"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Aangepaste SLA, geen beperking"
+      }
+    },
+    "quotas": {
+      "title": "Maandelijkse Quota",
+      "description": "Elk plan bevat een maandelijks API-aanroepquotum. Quota worden gereset op de 1e van elke maand om 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Snelheidslimieten (RPS)",
+      "description": "Snelheidslimieten beschermen onze infrastructuur en zorgen voor eerlijk gebruik. Limieten worden toegepast per API-sleutel."
+    },
+    "overage": {
+      "title": "Overschrijdingsgedrag",
+      "softThrottle": {
+        "title": "Zachte Beperking (Quotum Overschreden)",
+        "description": "Wanneer u uw maandelijks quotum overschrijdt:",
+        "point1": "API-aanroepen gaan door met verlaagde prioriteit",
+        "point2": "Responstijden kunnen 2-5x toenemen",
+        "point3": "E-mailmelding bij 80% en 100% gebruik"
+      },
+      "hard429": {
+        "title": "Harde 429 (Snelheidslimiet)",
+        "description": "Wanneer u de RPS-snelheidslimiet overschrijdt:",
+        "recommendation": "Implementeer exponentiële backoff (1s, 2s, 4s, 8s) en probeer opnieuw met jitter."
+      }
+    },
+    "reset": {
+      "title": "Resettijden",
+      "monthly": {
+        "title": "Maandelijkse Quotumreset",
+        "description": "Quota worden gereset op de eerste dag van elke maand.",
+        "time": "1e van de maand, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Snelheidslimietvenster",
+        "description": "Snelheidslimieten gebruiken een schuivend venster.",
+        "time": "Rollend venster van 1 seconde"
+      }
+    },
+    "headers": {
+      "limit": "Maximaal toegestane verzoeken per venster",
+      "remaining": "Resterende verzoeken in het huidige venster",
+      "reset": "Unix-tijdstempel wanneer het venster reset",
+      "quotaLimit": "Maandelijkse quotumlimiet",
+      "quotaRemaining": "Resterende API-aanroepen deze maand",
+      "quotaReset": "ISO 8601-datum wanneer het quotum reset"
+    },
+    "headersSection": {
+      "title": "Responsheaders",
+      "description": "Elke API-respons bevat headers om u te helpen uw gebruik en limieten bij te houden.",
+      "header": "Header",
+      "headerDescription": "Beschrijving",
+      "example": "Voorbeeld Responsheaders:"
+    },
+    "upgrade": {
+      "title": "Hogere Limieten Nodig?",
+      "description": "Upgrade uw plan voor verhoogde quota, hogere snelheidslimieten en prioriteitsondersteuning.",
+      "viewPlans": "Plannen Bekijken",
+      "contactSales": "Contact Sales"
+    }
+  },
+  "help": {
+    "title": "Helpcentrum",
+    "subtitle": "Vind antwoorden, krijg ondersteuning en toegang tot bronnen.",
+    "search": {
+      "placeholder": "Zoeken in help...",
+      "noResults": "Geen resultaten gevonden"
+    },
+    "sections": {
+      "support": {
+        "title": "Supportkanalen",
+        "description": "Krijg hulp van ons team",
+        "email": {
+          "title": "E-mailsupport",
+          "description": "Ontvang hulp via e-mail binnen 24 uur",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord-community",
+          "description": "Sluit u aan bij onze community voor realtime hulp",
+          "action": "Naar Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Meld bugs en vraag functies aan",
+          "action": "Issue Openen"
+        }
+      },
+      "faq": {
+        "title": "Veelgestelde Vragen",
+        "description": "Snelle antwoorden op veelgestelde vragen",
+        "viewAll": "Alle FAQ's Bekijken"
+      },
+      "status": {
+        "title": "Systeemstatus",
+        "description": "Controleer de huidige systeemstatus en incidenten",
+        "viewStatus": "Statuspagina Bekijken",
+        "operational": "Alle Systemen Operationeel",
+        "degraded": "Verminderde Prestaties",
+        "outage": "Servicestoring"
+      },
+      "billing": {
+        "title": "Facturering en Plannen",
+        "description": "Beheer uw abonnement en betalingen",
+        "items": {
+          "plans": "Prijsplannen bekijken",
+          "usage": "Uw gebruik controleren",
+          "invoices": "Facturen downloaden",
+          "upgrade": "Uw plan upgraden"
+        }
+      },
+      "docs": {
+        "title": "Documentatie",
+        "description": "Snelle links naar populaire documentatie",
+        "links": {
+          "quickstart": "Snelstartgids",
+          "apiReference": "API-referentie",
+          "sdks": "SDK's en Bibliotheken",
+          "limits": "Limieten en Facturering",
+          "security": "Beveiliging"
+        }
+      }
+    },
+    "contact": {
+      "title": "Nog Hulp Nodig?",
+      "description": "Ons supportteam staat klaar om u te helpen slagen.",
+      "cta": "Contact Support"
+    }
+  },
+  "status": {
+    "title": "Systeemstatus",
+    "subtitle": "Realtime systeemstatus en incidentgeschiedenis",
+    "lastUpdated": "Laatst bijgewerkt",
+    "overall": {
+      "operational": "Alle Systemen Operationeel",
+      "degraded": "Verminderde Prestaties",
+      "partialOutage": "Gedeeltelijke Systeemstoring",
+      "majorOutage": "Grote Systeemstoring"
+    },
+    "uptime": {
+      "title": "Uptime",
+      "24h": "24 uur",
+      "7d": "7 dagen",
+      "30d": "30 dagen",
+      "90d": "90 dagen"
+    },
+    "services": {
+      "title": "Servicestatus",
+      "operational": "Operationeel",
+      "degraded": "Verminderd",
+      "down": "Niet Beschikbaar"
+    },
+    "incidents": {
+      "active": "Actieve Incidenten",
+      "history": "Incidentgeschiedenis",
+      "noActive": "Geen actieve incidenten",
+      "noHistory": "Geen eerdere incidenten",
+      "status": {
+        "investigating": "Onderzoek",
+        "identified": "Geïdentificeerd",
+        "monitoring": "Monitoring",
+        "resolved": "Opgelost"
+      },
+      "severity": {
+        "minor": "Klein",
+        "major": "Groot",
+        "critical": "Kritiek"
+      },
+      "affected": "Getroffen Diensten",
+      "timeline": "Tijdlijn",
+      "started": "Gestart",
+      "resolved": "Opgelost",
+      "duration": "Duur",
+      "viewDetails": "Details Bekijken"
+    },
+    "subscribe": {
+      "title": "Abonneer op Updates",
+      "rss": "RSS-feed",
+      "email": "E-mailmeldingen"
     }
   }
 }

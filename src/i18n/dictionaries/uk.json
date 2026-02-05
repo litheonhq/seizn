@@ -227,7 +227,48 @@
           "title": "Встановити SDK",
           "description": "Додайте Seizn до свого проекту за допомогою npm або pip",
           "action": "Переглянути SDK"
+        },
+        "createOrg": {
+          "title": "Створити організацію",
+          "description": "Налаштуйте робочий простір для командної співпраці",
+          "action": "Створити організацію"
+        },
+        "firstQuery": {
+          "title": "Виконати перший запит",
+          "description": "Протестуйте API в пісочниці з прикладом запиту",
+          "action": "Спробувати запит"
         }
+      },
+      "takeTour": "Пройти тур",
+      "sdkModal": {
+        "title": "Встановити Seizn SDK",
+        "description": "Виберіть бажаний спосіб встановлення та скопіюйте команду.",
+        "copy": "Копіювати",
+        "copied": "Скопійовано!",
+        "viewDocs": "Переглянути повну документацію",
+        "done": "Готово"
+      },
+      "tour": {
+        "welcome": {
+          "title": "Ласкаво просимо до Seizn!",
+          "description": "Давайте здійснимо короткий тур, щоб допомогти вам почати роботу."
+        },
+        "sidebar": {
+          "title": "Навігація",
+          "description": "Використовуйте бічну панель для навігації між розділами панелі управління."
+        },
+        "stats": {
+          "title": "Ваша статистика",
+          "description": "Відстежуйте використання API, збережені спогади та поточний план."
+        },
+        "quickStart": {
+          "title": "Швидкі дії",
+          "description": "Використовуйте ці картки для виконання звичайних завдань, таких як створення API ключів."
+        },
+        "next": "Далі",
+        "skip": "Пропустити тур",
+        "finish": "Завершити",
+        "stepOf": "Крок {current} з {total}"
       }
     },
     "keys": {
@@ -270,7 +311,26 @@
       "usageByApiKey": "Usage by API Key",
       "errorsTitle": "Errors",
       "errorRate": "error rate",
-      "noUsageData": "No usage data available"
+      "noUsageData": "No usage data available",
+      "p95Latency": "p95 затримка",
+      "errorRateKpi": "Відсоток помилок",
+      "monthlyApiCalls": "API викликів на місяць",
+      "dailyTrends": "Щоденні тренди",
+      "tabCalls": "Виклики",
+      "tabCost": "Вартість",
+      "tabLatency": "Затримка",
+      "tabErrors": "Помилки",
+      "noUsageTitle": "Немає даних про використання",
+      "noUsageDescription": "Надішліть перший API запит, щоб побачити аналітику використання. Дані з'являться тут протягом 5 секунд.",
+      "noUsageExpected": "Очікується: виклики, токени, вартість та розбивка затримки",
+      "getApiKey": "Отримати API ключ",
+      "viewDocs": "Переглянути документацію",
+      "noEndpointData": "Немає даних про кінцеві точки",
+      "noEndpointDescription": "Розбивка по кінцевих точках з'явиться після першого API виклику",
+      "sendTestRequest": "Надіслати тестовий запит",
+      "noKeyData": "Немає використання API ключів",
+      "noKeyDescription": "Створіть та використайте API ключ, щоб побачити аналітику по ключах",
+      "createApiKey": "Створити API ключ"
     },
     "language": "Мова",
     "organizations": "Organizations",
@@ -371,7 +431,49 @@
       "export": "Export",
       "exportResults": "Export Results",
       "exportFormat": "Export Format",
-      "exportSuccess": "Export successful"
+      "exportSuccess": "Export successful",
+      "queryBuilder": "Конструктор запитів",
+      "namespace": "Простір імен",
+      "namespacePlaceholder": "за замовчуванням",
+      "searchMode": "Режим пошуку",
+      "vector": "Векторний",
+      "hybrid": "Гібридний",
+      "keyword": "Ключові слова",
+      "rerank": "Увімкнути переранжування",
+      "trace": "Трасування",
+      "cost": "Вартість",
+      "similarity": "Схожість",
+      "memoryType": "Тип",
+      "rerankScore": "Оцінка переранжування",
+      "traceTimeline": "Часова шкала трасування",
+      "noTrace": "Виконайте запит, щоб побачити трасування",
+      "step": "Крок",
+      "completed": "Завершено",
+      "pending": "В очікуванні",
+      "error": "Помилка",
+      "costBreakdown": "Розбивка вартості",
+      "noCost": "Виконайте запит, щоб побачити розбивку вартості",
+      "component": "Компонент",
+      "search": "Пошук",
+      "total": "Загалом",
+      "monthlyEstimate": "Місячна оцінка",
+      "basedOn": "На основі",
+      "queriesPerDay": "запитів/день",
+      "rerankBefore": "До переранжування",
+      "rerankAfter": "Після переранжування",
+      "rank": "Ранг",
+      "replayFromLog": "Відтворити з журналу",
+      "selectLog": "Виберіть журнал для відтворення",
+      "replaySettings": "Налаштування відтворення",
+      "compareResults": "Порівняти результати",
+      "original": "Оригінал",
+      "replay": "Відтворення",
+      "diff": "Різниця",
+      "hitAtK": "Hit@K",
+      "overlap": "Перетин",
+      "added": "Додано",
+      "removed": "Видалено",
+      "rankChanges": "Зміни рангу"
     },
     "settingsPage": {
       "title": "Settings",
@@ -390,7 +492,9 @@
         "profile": "Profile",
         "budget": "Budget",
         "notifications": "Notifications",
-        "security": "Security"
+        "security": "Security",
+        "billing": "Оплата",
+        "danger": "Управління даними"
       },
       "budget": {
         "title": "Budget Management",
@@ -408,7 +512,21 @@
         "alertDisabled": "Budget alerts disabled",
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
-        "removeLimit": "Remove Limit"
+        "removeLimit": "Remove Limit",
+        "subtitle": "Встановіть ліміти витрат та сповіщення",
+        "perQueryMax": "Максимум на запит",
+        "alertThresholdDesc": "Отримувати сповіщення при досягненні цього відсотка використання",
+        "budgetMode": "Режим бюджету",
+        "soft": "М'який ліміт",
+        "softDesc": "Попереджати, але дозволяти перевищення",
+        "hard": "Жорсткий ліміт",
+        "hardDesc": "Блокувати запити при досягненні ліміту",
+        "fallbackStrategy": "Стратегія резерву",
+        "fallbackDesc": "Що робити при перевищенні бюджету",
+        "reject": "Відхилити запит",
+        "cache": "Повернути кешоване",
+        "degrade": "Знизити якість",
+        "queue": "Поставити в чергу"
       },
       "notifications": {
         "title": "Notification Settings",
@@ -426,7 +544,20 @@
         "allEnabled": "All notifications enabled",
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
-        "disableAll": "Disable All"
+        "disableAll": "Disable All",
+        "subtitle": "Налаштуйте спосіб отримання сповіщень",
+        "emailAlerts": "Email сповіщення",
+        "emailAlertsDesc": "Отримувати важливі сповіщення по email",
+        "usageAlerts": "Сповіщення про використання",
+        "usageAlertsDesc": "Отримувати сповіщення при наближенні до лімітів",
+        "weeklyDigest": "Тижнева зведення",
+        "weeklyDigestDesc": "Отримувати тижневу зведення використання",
+        "securityAlerts": "Сповіщення про безпеку",
+        "securityAlertsDesc": "Отримувати сповіщення про підозрілу активність",
+        "telegram": "Telegram",
+        "telegramDesc": "Отримувати сповіщення через Telegram бота",
+        "comingSoon": "Незабаром",
+        "integrations": "Інтеграції"
       },
       "security": {
         "title": "Security Settings",
@@ -453,7 +584,14 @@
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
-        "apiKeysSecurityHint": "Monitor and manage your API keys"
+        "apiKeysSecurityHint": "Monitor and manage your API keys",
+        "subtitle": "Управління безпекою вашого акаунту",
+        "save": "Зберегти зміни",
+        "updatePassword": "Оновити пароль",
+        "twoFactorDesc": "Додати додатковий рівень безпеки",
+        "enable2FA": "Увімкнути 2FA",
+        "sessionsDesc": "Управління активними сеансами",
+        "viewSessions": "Перегляд сеансів"
       },
       "dangerZone": {
         "title": "Danger Zone",
@@ -466,7 +604,38 @@
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
-        "exportComplete": "Export complete"
+        "exportComplete": "Export complete",
+        "subtitle": "Управління та видалення даних вашого акаунту",
+        "exportDataDesc": "Завантажити всі ваші дані",
+        "exportButton": "Експортувати всі дані",
+        "deleteMemories": "Видалити всі спогади",
+        "deleteMemoriesDesc": "Безповоротно видалити всі збережені спогади",
+        "deleteMemoriesButton": "Видалити спогади",
+        "deleteAccountDesc": "Безповоротно видалити ваш акаунт та всі дані",
+        "confirmDelete": "Введіть DELETE для підтвердження"
+      },
+      "billing": {
+        "title": "Оплата та використання",
+        "subtitle": "Керуйте вашим планом та відстежуйте використання",
+        "currentPlan": "Поточний план",
+        "monthlyPrice": "Місячна ціна",
+        "upgradePlan": "Покращити план",
+        "quotaWarningTitle": "Наближення до ліміту квоти",
+        "quotaWarningDesc": "Ви використовуєте {percent}% вашої квоти {resource}. Розгляньте можливість покращення плану.",
+        "upgradeNow": "Покращити зараз",
+        "memoriesUsage": "Використання спогадів",
+        "apiCallsUsage": "Використання API викликів",
+        "apiKeysUsage": "Використання API ключів",
+        "unlimited": "Необмежено",
+        "planComparison": "Порівняння планів",
+        "feature": "Функція",
+        "memoriesLabel": "Спогади",
+        "apiCallsLabel": "API викликів/місяць",
+        "apiKeysLabel": "API ключі",
+        "priceLabel": "Ціна",
+        "contactUs": "Зв'язатися з нами",
+        "used": "використано",
+        "of": "з"
       }
     },
     "greeting": {
@@ -496,7 +665,17 @@
       "collaborateTeam": "Collaborate with your team",
       "quickExample": "Quick Example",
       "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan"
+      "upgradePlan": "Upgrade Plan",
+      "apiUsageChart": "Використання API",
+      "last7days": "Останні 7 днів",
+      "viewDetails": "Детальніше",
+      "noUsageData": "Немає даних про використання",
+      "recentActivity": "Недавня активність",
+      "last10Requests": "Останні 10 API запитів",
+      "viewAllActivity": "Показати всі",
+      "noActivityYet": "Немає активності API",
+      "noActivityDescription": "Надішліть перший API запит, щоб побачити активність тут",
+      "sendFirstRequest": "Надіслати перший запит"
     },
     "keysPage": {
       "title": "API Keys",
@@ -526,7 +705,18 @@
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
       "cancel": "Cancel",
       "creating": "Creating...",
-      "createKey": "Create Key"
+      "createKey": "Create Key",
+      "name": "Назва",
+      "keyColumn": "Ключ",
+      "actions": "Дії",
+      "revokeWarning": "Всі застосунки, що використовують цей ключ, негайно перестануть працювати.",
+      "revokeAction": "Відкликати",
+      "rotate": "Змінити",
+      "rotateConfirm": "Змінити API ключ \"{keyName}\"?",
+      "rotateWarning": "Буде згенеровано новий ключ. Оновіть ваші застосунки новим ключем до закінчення терміну дії старого.",
+      "rotateAction": "Змінити ключ",
+      "keyRotated": "API ключ змінено!",
+      "keyRotatedDesc": "Скопіюйте цей новий ключ зараз. Старий ключ більше не дійсний."
     },
     "organizationsPage": {
       "title": "Organizations",
@@ -551,7 +741,739 @@
         "owner": "owner",
         "admin": "admin",
         "member": "member"
+      },
+      "noOrgsExpected": "Налаштування займає менше 30 секунд",
+      "featureSharedKeys": "Спільні API ключі",
+      "featureSharedKeysDesc": "Управління ключами для всієї команди",
+      "featureTeamMembers": "Учасники команди",
+      "featureTeamMembersDesc": "Запрошення з ролями",
+      "featureBudget": "Спільний бюджет",
+      "featureBudgetDesc": "Єдине відстеження витрат",
+      "featureAudit": "Журнали аудиту",
+      "featureAuditDesc": "Історія активності"
+    },
+    "governance": {
+      "title": "Управління",
+      "subtitle": "Керуйте політиками даних, правилами зберігання та налаштуваннями відповідності",
+      "tabs": {
+        "retention": "Зберігання даних",
+        "access": "Контроль доступу",
+        "pii": "Виявлення PII",
+        "compliance": "Відповідність"
+      },
+      "stats": {
+        "retentionPolicies": "Політики зберігання",
+        "accessRules": "Правила доступу",
+        "piiRules": "Активні правила PII",
+        "complianceScore": "Оцінка відповідності"
+      },
+      "addPolicy": "Додати політику",
+      "addRule": "Додати правило",
+      "deleteConfirm": "Ви впевнені, що хочете видалити цю політику зберігання?",
+      "retention": {
+        "description": "Налаштуйте, як довго спогади зберігаються в кожному просторі імен",
+        "namespace": "Простір імен",
+        "memoryTypes": "Типи пам'яті",
+        "ttl": "TTL",
+        "autoArchive": "Автоархівування",
+        "actions": "Дії",
+        "days": "днів",
+        "enabled": "Увімкнено",
+        "disabled": "Вимкнено",
+        "delete": "Видалити",
+        "addTitle": "Додати політику зберігання",
+        "namespacePattern": "Шаблон простору імен",
+        "namespacePlaceholder": "prod:*, session:*, default",
+        "namespaceHint": "Використовуйте * для підстановки",
+        "ttlDays": "TTL (Дні)",
+        "autoArchiveToggle": "Автоархівування",
+        "autoArchiveDesc": "Архівувати перед видаленням",
+        "cancel": "Скасувати"
+      },
+      "access": {
+        "description": "Визначте рольовий контроль доступу для вашої команди",
+        "namespaces": "Простори імен:",
+        "permissions": "Дозволи:"
+      },
+      "pii": {
+        "description": "Автоматичне виявлення та обробка персональних даних",
+        "pattern": "Шаблон",
+        "type": "Тип",
+        "action": "Дія",
+        "status": "Статус",
+        "aiDetection": "ШІ-виявлення",
+        "regex": "Regex",
+        "betaTitle": "ШІ-виявлення в бета-версії",
+        "betaDesc": "ШІ-виявлення PII може давати хибнопозитивні результати. Перевіряйте позначений вміст перед вжиттям заходів."
+      },
+      "compliance": {
+        "description": "Відстежуйте відповідність основним регуляторним рамкам",
+        "active": "Активний",
+        "inactive": "Неактивний",
+        "requirementsMet": "Вимоги виконано",
+        "fullyCompliant": "Повна відповідність",
+        "enableCheck": "Увімкнути перевірку відповідності",
+        "reports": "Звіти відповідності",
+        "soc2Report": "Звіт SOC 2 Type II",
+        "soc2Date": "Згенеровано грудень 2024",
+        "dpa": "Угода про обробку даних",
+        "dpaDesc": "Шаблон DPA відповідно до GDPR",
+        "securityQuestionnaire": "Анкета безпеки",
+        "securityQuestionnaireDesc": "Попередньо заповнена оцінка безпеки",
+        "download": "Завантажити"
       }
+    },
+    "integrations": {
+      "title": "Інтеграції",
+      "subtitle": "Підключіть Seizn до ваших улюблених інструментів і фреймворків",
+      "searchPlaceholder": "Пошук інтеграцій...",
+      "stats": {
+        "total": "Всього інтеграцій",
+        "available": "Доступні",
+        "beta": "У бета-версії",
+        "comingSoon": "Незабаром"
+      },
+      "categories": {
+        "all": "Усі",
+        "frameworks": "Фреймворки",
+        "llms": "LLM",
+        "databases": "Бази даних",
+        "platforms": "Платформи"
+      },
+      "status": {
+        "available": "Доступно",
+        "beta": "Бета",
+        "comingSoon": "Незабаром"
+      },
+      "docs": "Документація",
+      "copyInstall": "Копіювати команду встановлення",
+      "noResults": "Інтеграцій, що відповідають вашим критеріям, не знайдено",
+      "installation": "Встановлення",
+      "copied": "Скопійовано!",
+      "copy": "Копіювати",
+      "quickStart": "Швидкий старт",
+      "comingSoonMsg": "Ця інтеграція зараз у розробці. Підпишіться, щоб отримати сповіщення, коли вона стане доступною.",
+      "notifyMe": "Сповістити мене",
+      "betaMsg": "Ця інтеграція в бета-версії. Деякі функції можуть змінитися перед фінальним релізом.",
+      "close": "Закрити",
+      "viewDocs": "Переглянути документацію"
+    },
+    "privacy": {
+      "title": "Конфіденційність та RTBF",
+      "subtitle": "Керуйте запитами GDPR на право бути забутим та правами суб'єктів даних",
+      "tabs": {
+        "requests": "Запити RTBF",
+        "subjects": "Суб'єкти даних",
+        "certificates": "Сертифікати",
+        "settings": "Налаштування"
+      },
+      "stats": {
+        "pending": "Очікують",
+        "inProgress": "В обробці",
+        "completed": "Завершені",
+        "overdue": "Прострочені"
+      },
+      "requests": {
+        "description": "Керуйте запитами на право бути забутим відповідно до статті 17 GDPR",
+        "newRequest": "Новий запит",
+        "subject": "Суб'єкт",
+        "status": "Статус",
+        "phase": "Фаза",
+        "dueDate": "Термін виконання",
+        "scope": "Обсяг",
+        "actions": "Дії",
+        "daysOverdue": "днів прострочено",
+        "daysLeft": "днів залишилось",
+        "view": "Переглянути",
+        "certificate": "Сертифікат",
+        "verify": "Перевірити"
+      },
+      "detail": {
+        "title": "Деталі запиту RTBF",
+        "dataSubject": "Суб'єкт даних",
+        "requestedAt": "Запитано",
+        "dueDate": "Термін виконання",
+        "status": "Статус",
+        "dataCategories": "Категорії даних",
+        "deletionScope": "Обсяг видалення",
+        "completionDetails": "Деталі завершення",
+        "completed": "Завершено:",
+        "verified": "Перевірено:",
+        "close": "Закрити",
+        "runVerification": "Запустити перевірку",
+        "downloadCertificate": "Завантажити сертифікат"
+      },
+      "newRequest": {
+        "title": "Новий запит RTBF",
+        "description": "Створіть новий запит на право бути забутим. Термін буде встановлено на 30 днів від поточної дати відповідно до вимог GDPR.",
+        "emailLabel": "Email суб'єкта даних",
+        "emailPlaceholder": "user@example.com",
+        "deletionScope": "Обсяг видалення",
+        "cancel": "Скасувати",
+        "creating": "Створення...",
+        "create": "Створити запит"
+      },
+      "subjects": {
+        "description": "Переглядайте та керуйте суб'єктами даних, які взаємодіяли з вашою системою",
+        "email": "Email",
+        "externalId": "Зовнішній ID",
+        "requests": "Запити",
+        "dataCategories": "Категорії даних",
+        "actions": "Дії",
+        "viewData": "Переглянути дані"
+      },
+      "certificates": {
+        "description": "Криптографічне підтвердження видалення даних для аудитів відповідності",
+        "noTitle": "Сертифікатів поки немає",
+        "noDesc": "Сертифікати генеруються після перевірки запитів RTBF",
+        "request": "Запит:",
+        "issued": "Видано:",
+        "gdprCompliant": "Відповідає GDPR",
+        "download": "Завантажити",
+        "hash": "Хеш сертифіката"
+      },
+      "settings": {
+        "description": "Налаштуйте обробку RTBF та параметри відповідності",
+        "autoDiscovery": "Автовиявлення",
+        "autoDiscoveryDesc": "Автоматично виявляти всі дані, пов'язані з суб'єктом",
+        "verificationRequired": "Потрібна перевірка",
+        "verificationRequiredDesc": "Вимагати перевірку перед видачею сертифікатів видалення",
+        "responseDeadline": "Термін відповіді (Дні)",
+        "responseDeadlineHint": "GDPR вимагає відповіді протягом 30 днів (з можливістю продовження до 90 для складних запитів)",
+        "notificationEmail": "Email для сповіщень",
+        "notificationEmailHint": "Email-адреса для сповіщень про запити RTBF",
+        "auditLogRetention": "Зберігання журналу аудиту (Дні)",
+        "auditLogRetentionHint": "Як довго зберігати журнали аудиту для цілей відповідності",
+        "years": "років",
+        "saving": "Збереження...",
+        "save": "Зберегти налаштування"
+      },
+      "gdprNotes": {
+        "title": "Примітки щодо відповідності GDPR",
+        "note1": "Запити RTBF мають бути виконані протягом 30 днів",
+        "note2": "Складні запити можуть бути продовжені до 90 днів",
+        "note3": "Журнали аудиту слід зберігати для цілей відповідності",
+        "note4": "Сертифікати видалення забезпечують криптографічне підтвердження"
+      }
+    },
+    "memoriesPage": {
+      "title": "Спогади",
+      "subtitle": "Переглядайте та шукайте ваші спогади ШІ",
+      "totalMemories": "Всього спогадів",
+      "search": "Пошук",
+      "searchPlaceholder": "Шукати спогади...",
+      "namespace": "Простір імен",
+      "memoryTypes": "Типи пам'яті",
+      "tags": "Теги",
+      "noTags": "Теги відсутні",
+      "clearFilters": "Очистити фільтри",
+      "showing": "Показано",
+      "of": "з",
+      "results": "результатів",
+      "sortNewest": "Спочатку нові",
+      "sortOldest": "Спочатку старі",
+      "sortRelevance": "Найрелевантніші",
+      "activeFilters": "Активні фільтри",
+      "loading": "Завантаження спогадів...",
+      "noMemories": "Спогадів не знайдено",
+      "noMatchingMemories": "Спробуйте змінити фільтри або пошуковий запит",
+      "noMemoriesHint": "Почніть додавати спогади через API, щоб побачити їх тут",
+      "match": "збіг",
+      "loadMore": "Завантажити ще"
+    },
+    "budgetPage": {
+      "title": "Бюджет і контроль витрат",
+      "subtitle": "Керуйте лімітами витрат, сповіщеннями та автоматичною оптимізацією витрат",
+      "loadError": "Не вдалося завантажити дані бюджету",
+      "todaysSpend": "Витрати сьогодні",
+      "ofDailyLimit": "від денного ліміту",
+      "monthlySpend": "Місячні витрати",
+      "ofMonthlyLimit": "від місячного ліміту",
+      "apiCalls": "API-виклики",
+      "thisMonth": "цього місяця",
+      "autoDegrades": "Автозниження",
+      "noRecentDegrades": "Немає нещодавніх знижень",
+      "protectionActive": "Захист бюджету активний",
+      "protectionDesc": "Ваші запити автоматично оптимізуються для дотримання бюджету. Це може знизити якість результатів. Розгляньте можливість збільшення лімітів бюджету.",
+      "settings": "Налаштування бюджету",
+      "recentEvents": "Нещодавні події зниження",
+      "time": "Час",
+      "reason": "Причина",
+      "changes": "Зміни",
+      "saved": "Збережено",
+      "howItWorks": "Як працює бюджетне витягування",
+      "step1": "При наближенні до лімітів бюджету Seizn автоматично оптимізує ваші запити",
+      "step2": "Оптимізації включають: вимкнення переранжування, зменшення topK, пріоритет кешу",
+      "step3": "У жорсткому режимі запити, що перевищують бюджет, повністю відхиляються",
+      "step4": "Усі події зниження записуються з економією витрат для прозорості"
+    },
+    "devtoolsPage": {
+      "title": "DevTools витягування",
+      "subtitle": "Відлагоджуйте та аналізуйте ваші RAG-конвеєри",
+      "query": "Запит",
+      "noQueryText": "Текст запиту відсутній",
+      "results": "результатів",
+      "error": "Помилка",
+      "rerank": "переранжування",
+      "optimizationHints": "Поради з оптимізації",
+      "tabs": {
+        "timeline": "Часова шкала",
+        "candidates": "Кандидати",
+        "rerank": "Переранжування",
+        "whatIf": "Лабораторія «Що якщо»",
+        "raw": "Необроблені дані"
+      },
+      "finalResults": "Кінцеві результати",
+      "initialCandidates": "Початкові кандидати (до переранжування)",
+      "rawTraceData": "Необроблені дані трасування",
+      "emptyTitle": "Оберіть трасування для перегляду",
+      "emptyDesc": "Виберіть трасування зі списку зліва, щоб переглянути його часову шкалу, кандидатів, аналіз переранжування та запустити експерименти «що якщо»."
+    },
+    "enterpriseDashboard": {
+      "title": "Корпоративний",
+      "badge": "Корпоративний план",
+      "subtitle": "Налаштуйте SSO, SCIM та корпоративні параметри",
+      "tabs": {
+        "sso": "Єдиний вхід",
+        "scim": "Управління користувачами",
+        "settings": "Налаштування"
+      },
+      "sso": {
+        "enabled": "SSO увімкнено",
+        "provider": "Провайдер:",
+        "domains": "Домени:",
+        "testConnection": "Тестувати з'єднання",
+        "disable": "Вимкнути",
+        "defaultRole": "Роль за замовчуванням",
+        "status": "Статус",
+        "active": "Активний",
+        "lastLogin": "Останній вхід",
+        "hoursAgo": "2 години тому",
+        "notConfigured": "Єдиний вхід не налаштовано",
+        "notConfiguredDesc": "Увімкніть SSO, щоб дозволити членам команди входити через корпоративного провайдера ідентифікації",
+        "configure": "Налаштувати SSO",
+        "supportedProviders": "Підтримувані провайдери",
+        "selectProvider": "Обрати провайдера",
+        "configureDomains": "Налаштувати домени",
+        "emailDomains": "Домени електронної пошти",
+        "emailDomainsPlaceholder": "example.com, corp.example.com",
+        "emailDomainsHint": "Користувачі з цими доменами email будуть перенаправлені на SSO",
+        "idpConfig": "Конфігурація IdP",
+        "idpCopyHint": "Скопіюйте ці значення у вашого провайдера ідентифікації:",
+        "acsUrl": "ACS URL:",
+        "entityId": "Entity ID:",
+        "back": "Назад",
+        "continue": "Продовжити",
+        "enableSSO": "Увімкнути SSO",
+        "configSaved": "Конфігурацію SSO збережено!"
+      },
+      "scim": {
+        "title": "Управління SCIM",
+        "subtitle": "Автоматична синхронізація користувачів і груп із вашого провайдера ідентифікації",
+        "endpoint": "Кінцева точка SCIM",
+        "bearerToken": "Bearer-токен",
+        "regenerate": "Перегенерувати",
+        "generate": "Згенерувати",
+        "tokenWarning": "Скопіюйте цей токен зараз. Він більше не буде показаний.",
+        "syncUsers": "Синхронізація користувачів",
+        "syncUsersDesc": "Імпорт та синхронізація облікових записів користувачів",
+        "syncGroups": "Синхронізація груп",
+        "syncGroupsDesc": "Імпорт та синхронізація членства в групах",
+        "autoProvision": "Автоматичне створення",
+        "autoProvisionDesc": "Автоматично створювати нових користувачів",
+        "autoDeprovision": "Автоматичне вимкнення",
+        "autoDeprovisionDesc": "Автоматично вимикати видалених користувачів"
+      },
+      "features": {
+        "title": "Корпоративні функції",
+        "sso": "SSO",
+        "ssoDesc": "Єдиний вхід з SAML/OIDC",
+        "scim": "SCIM",
+        "scimDesc": "Автоматичне управління користувачами",
+        "auditLogs": "Журнали аудиту",
+        "auditLogsDesc": "Повна історія дій",
+        "customDomains": "Власні домени",
+        "customDomainsDesc": "Використовуйте свій домен",
+        "ipWhitelist": "Білий список IP",
+        "ipWhitelistDesc": "Обмеження доступу за IP",
+        "dataRetention": "Зберігання даних",
+        "dataRetentionDesc": "Індивідуальні політики зберігання",
+        "advancedAnalytics": "Розширена аналітика",
+        "advancedAnalyticsDesc": "Детальні звіти використання",
+        "sla": "SLA",
+        "slaDesc": "Гарантія доступності 99.9%",
+        "enabled": "Увімкнено",
+        "disabled": "Вимкнено"
+      },
+      "limits": {
+        "title": "Ліміти плану",
+        "users": "Користувачі",
+        "unlimited": "Безліміт",
+        "apiCalls": "API-виклики",
+        "apiCallsValue": "10М / місяць",
+        "storage": "Сховище",
+        "storageValue": "1ТБ",
+        "collections": "Колекції",
+        "documents": "Документи",
+        "retention": "Зберігання",
+        "retentionValue": "365 днів"
+      },
+      "support": {
+        "title": "Виділена підтримка",
+        "subtitle": "Пріоритетна підтримка з виділеним менеджером",
+        "contact": "Зв'язатися з підтримкою"
+      }
+    },
+    "securityPage": {
+      "title": "Безпека",
+      "subtitle": "Керуйте API-ключами та переглядайте журнали аудиту безпеки",
+      "stats": {
+        "activeKeys": "Активні API-ключі",
+        "auditEvents": "Подій аудиту (24год)",
+        "securityScore": "Оцінка безпеки",
+        "alerts": "Сповіщення"
+      },
+      "tabs": {
+        "audit": "Журнал аудиту",
+        "keys": "API-ключі",
+        "policies": "Політики",
+        "settings": "Налаштування"
+      },
+      "audit": {
+        "allActions": "Усі дії",
+        "lastHour": "Остання година",
+        "last24Hours": "Останні 24 години",
+        "last7Days": "Останні 7 днів",
+        "last30Days": "Останні 30 днів",
+        "exporting": "Експортування...",
+        "exportCSV": "Експорт CSV",
+        "action": "Дія",
+        "resource": "Ресурс",
+        "details": "Деталі",
+        "ipAddress": "IP-адреса",
+        "time": "Час",
+        "noLogs": "Журнали аудиту не знайдено"
+      },
+      "keys": {
+        "description": "API-ключі використовуються для автентифікації запитів до API Seizn",
+        "createNew": "Створити новий ключ",
+        "rotate": "Ротувати",
+        "revoke": "Відкликати",
+        "created": "Створено",
+        "lastUsed": "Останнє використання",
+        "never": "Ніколи",
+        "permissions": "Дозволи",
+        "rotateConfirm": "Ви впевнені, що хочете ротувати цей API-ключ? Старий ключ буде анульовано.",
+        "rotateSuccess": "Ключ успішно ротовано! Скопіюйте ваш новий ключ.",
+        "revokeConfirm": "Ви впевнені, що хочете відкликати цей API-ключ? Цю дію неможливо скасувати.",
+        "createTitle": "Створити API-ключ",
+        "keyName": "Назва ключа",
+        "keyNamePlaceholder": "Production Backend",
+        "keyType": "Тип ключа",
+        "test": "Тестовий",
+        "live": "Робочий",
+        "testHint": "Тестові ключі працюють лише в режимі пісочниці",
+        "testKeysNote": "Тестові ключі працюють лише в режимі пісочниці",
+        "cancel": "Скасувати",
+        "createKey": "Створити ключ"
+      },
+      "settings": {
+        "authentication": "Автентифікація",
+        "twoFactor": "Двофакторна автентифікація",
+        "twoFactorDesc": "Вимагати 2FA для всіх членів команди",
+        "twoFactorDescription": "Вимагати 2FA для всіх членів команди",
+        "sessionTimeout": "Тайм-аут сесії",
+        "sessionTimeoutDesc": "Автоматичний вихід після неактивності",
+        "sessionTimeoutDescription": "Автоматичний вихід після неактивності",
+        "min15": "15 хвилин",
+        "15minutes": "15 хвилин",
+        "min30": "30 хвилин",
+        "30minutes": "30 хвилин",
+        "hour1": "1 година",
+        "1hour": "1 година",
+        "hour4": "4 години",
+        "4hours": "4 години",
+        "apiSecurity": "Безпека API",
+        "ipWhitelist": "Білий список IP",
+        "ipWhitelistDesc": "Дозволити доступ до API лише з певних IP",
+        "ipWhitelistDescription": "Дозволити доступ до API лише з певних IP",
+        "rateLimit": "Обмеження запитів",
+        "rateLimitDesc": "Максимум запитів на хвилину",
+        "rateLimitDescription": "Максимум запитів на хвилину",
+        "rate100": "100/хв",
+        "rate500": "500/хв",
+        "rate1000": "1 000/хв",
+        "rate5000": "5 000/хв",
+        "dangerZone": "Небезпечна зона",
+        "dangerWarning": "Ці дії незворотні. Будь ласка, дійте обережно.",
+        "dangerZoneDescription": "Ці дії незворотні. Будь ласка, дійте обережно.",
+        "revokeAll": "Відкликати всі API-ключі",
+        "revokeAllKeys": "Відкликати всі API-ключі",
+        "deleteAllData": "Видалити всі дані"
+      },
+      "policies": {
+        "active": "Активна",
+        "inactive": "Неактивна",
+        "pending": "Очікує",
+        "activePolicies": "Активні політики",
+        "accessPolicies": "Політики доступу",
+        "compliancePolicies": "Політики відповідності",
+        "awaitingApproval": "Очікує затвердження",
+        "addCustom": "Додати власну політику"
+      }
+    },
+    "reportsPage": {
+      "title": "Звіт ROI",
+      "generated": "Згенеровано",
+      "period7d": "Останні 7 днів",
+      "period30d": "Останні 30 днів",
+      "period90d": "Останні 90 днів",
+      "exportPdf": "Експорт PDF",
+      "loadError": "Не вдалося завантажити звіт",
+      "totalQueries": "Всього запитів",
+      "totalCost": "Загальна вартість",
+      "avgLatency": "Середня затримка",
+      "costPerQuery": "Вартість/Запит",
+      "estAnnualCost": "Очікувана річна вартість",
+      "projAnnualSavings": "Прогнозована річна економія",
+      "savingsRate": "Рівень економії",
+      "rerankImpact": "Вплив переранжування",
+      "mrrScore": "Оцінка MRR",
+      "without": "без",
+      "withRerank": "з переранжуванням",
+      "autopilotSavings": "Економія автопілота",
+      "savedThisPeriod": "зекономлено за цей період з автопілотом",
+      "withAutopilot": "з автопілотом",
+      "recommendations": "Рекомендації",
+      "queries": "Запити:",
+      "avgCost": "Середня вартість"
+    },
+    "topBar": {
+      "personal": "Особистий акаунт",
+      "manageOrgs": "Управління організаціями",
+      "create": "Створити",
+      "createApiKey": "Новий API ключ",
+      "createOrg": "Нова організація"
+    },
+    "share": {
+      "title": "Поділитися трасуванням",
+      "button": "Поділитися",
+      "createLink": "Створити посилання для спільного доступу",
+      "creating": "Створення...",
+      "done": "Готово",
+      "linkExpiration": "Закінчення посилання",
+      "hour": "1Г",
+      "day": "24Г",
+      "week": "7Д",
+      "never": "Ніколи",
+      "privacyOptions": "Налаштування конфіденційності",
+      "maskPii": "Приховати персональні дані (email, телефони, IP)",
+      "maskSecrets": "Приховати API ключі та секрети",
+      "shareUrl": "URL для спільного доступу",
+      "copyLink": "Копіювати посилання",
+      "linkCopied": "Скопійовано!",
+      "expiresIn": "Це посилання закінчується через {duration}.",
+      "neverExpires": "Це посилання ніколи не закінчується.",
+      "error": "Не вдалося створити посилання для спільного доступу",
+      "revoke": "Відкликати посилання",
+      "revokeConfirm": "Ви впевнені, що хочете відкликати це посилання?",
+      "linkRevoked": "Посилання успішно відкликано"
+    },
+    "theme": {
+      "light": "Світла",
+      "dark": "Темна",
+      "system": "Системна",
+      "toggle": "Перемкнути тему"
+    },
+    "activity": {
+      "endpoint": "Кінцева точка",
+      "status": "Статус",
+      "latency": "Затримка",
+      "cost": "Вартість",
+      "key": "Ключ",
+      "time": "Час"
+    },
+    "evals": {
+      "title": "Оцінювання",
+      "subtitle": "A/B тестування та вимірювання якості вилучення",
+      "newRun": "Новий запуск оцінювання",
+      "runs": "Запуски оцінювань",
+      "noRuns": "Немає запусків оцінювань",
+      "metrics": "Метрики",
+      "comparison": "Візуальне порівняння",
+      "selectRun": "Виберіть запуск оцінювання",
+      "selectRunHint": "Виберіть запуск зі списку для перегляду детальних метрик",
+      "completed": "Завершено",
+      "running": "Виконується",
+      "failed": "Не вдалося",
+      "pending": "В очікуванні",
+      "winner": "Переможець",
+      "tie": "Нічия",
+      "confidence": "достовірність",
+      "exportCSV": "Експортувати CSV",
+      "exportJSON": "Експортувати JSON",
+      "tabComparison": "Порівняння",
+      "tabCharts": "Графіки",
+      "tabTimeline": "Часова шкала",
+      "precision": "Точність",
+      "recall": "Повнота",
+      "f1Score": "F1 оцінка",
+      "avgLatency": "Середня затримка",
+      "avgCost": "Середня вартість",
+      "barChart": "Порівняння метрик",
+      "radarChart": "Огляд декількох метрик",
+      "metricsTrend": "Тренд метрик",
+      "latencyTrend": "Тренд затримки",
+      "recentRuns": "Недавні завершені запуски",
+      "waitingForMetrics": "Очікування завершення оцінювання..."
+    },
+    "autopilot": {
+      "title": "Автопілот",
+      "subtitle": "Оптимізація вилучення на основі AI",
+      "settings": "Налаштування",
+      "decisionLogs": "Журнали рішень",
+      "operationMode": "Режим роботи",
+      "parameters": "Параметри",
+      "recentDecisions": "Недавні рішення",
+      "noLogs": "Немає журналів рішень"
+    },
+    "calculator": {
+      "title": "Калькулятор використання",
+      "subtitle": "Оцініть ваші місячні витрати на основі очікуваного використання",
+      "stats": {
+        "apiCalls": "API виклики",
+        "memories": "Спогади",
+        "extractions": "Вилучення",
+        "estimated": "Оціночна вартість"
+      },
+      "presets": {
+        "title": "Швидкі пресети",
+        "startup": "Стартап",
+        "growing": "Зростаючий",
+        "scale": "Масштаб",
+        "enterprise": "Корпоративний"
+      },
+      "customize": {
+        "title": "Налаштувати використання"
+      },
+      "labels": {
+        "apiCalls": "Місячні API виклики",
+        "memories": "Збережені спогади",
+        "extractions": "Вилучення"
+      },
+      "recommended": {
+        "title": "Рекомендований план",
+        "base": "Базова ціна",
+        "overage": "Перевищення",
+        "cta": "Почати"
+      },
+      "comparison": {
+        "title": "Всі плани",
+        "best": "Найкраща пропозиція"
+      },
+      "details": {
+        "title": "Детальна розбивка цін",
+        "plan": "План",
+        "base": "Базова ціна",
+        "includedCalls": "Включені виклики",
+        "overageRate": "Ставка за перевищення",
+        "yourOverage": "Ваше перевищення",
+        "total": "Загалом"
+      }
+    },
+    "webhooks": {
+      "title": "Вебхуки",
+      "subtitle": "Налаштуйте HTTP зворотні виклики для сповіщень про події в реальному часі",
+      "create": "Створити вебхук",
+      "stats": {
+        "total": "Всього вебхуків",
+        "active": "Активні",
+        "failing": "Невдалі",
+        "deliveries": "Всього доставок"
+      },
+      "tabs": {
+        "endpoints": "Кінцеві точки",
+        "deliveries": "Недавні доставки"
+      },
+      "success": "успішно",
+      "failed": "невдало",
+      "lastTriggered": "Останній запуск",
+      "edit": "Редагувати",
+      "delete": "Видалити",
+      "retry": "Повторити",
+      "deleteConfirm": "Ви впевнені, що хочете видалити цей вебхук? Цю дію не можна скасувати.",
+      "empty": {
+        "title": "Вебхуки не налаштовані",
+        "description": "Створіть вебхук для отримання сповіщень про події в реальному часі.",
+        "cta": "Створити перший вебхук"
+      },
+      "table": {
+        "event": "Подія",
+        "status": "Статус",
+        "response": "Відповідь",
+        "time": "Час",
+        "actions": "Дії"
+      },
+      "modal": {
+        "title": "Створити вебхук",
+        "name": "Назва",
+        "url": "URL кінцевої точки",
+        "events": "Події для підписки",
+        "cancel": "Скасувати",
+        "create": "Створити вебхук"
+      }
+    },
+    "playgroundTutorial": {
+      "title": "Посібник з першого пошуку",
+      "subtitle": "Навчіться використовувати пісочницю",
+      "dismiss": "Закрити",
+      "tryExamples": "Спробуйте приклад запиту:",
+      "hint": "Натисніть на будь-який приклад, щоб автоматично заповнити поле запиту",
+      "gotIt": "Зрозуміло!",
+      "tips": {
+        "welcome": {
+          "title": "Ласкаво просимо до консолі налагодження",
+          "description": "Тестуйте ваші запити тут з повним трасуванням, щоб точно зрозуміти, як працює пошук під капотом."
+        },
+        "query": {
+          "title": "Запити природною мовою",
+          "description": "Введіть будь-який запит природною мовою. Наш AI знайде семантично схожі спогади з ваших збережених даних."
+        },
+        "trace": {
+          "title": "Повне трасування виконання",
+          "description": "Дивіться кожен крок конвеєра - від створення embeddings до ранжування результатів - з розбивкою по часу та вартості."
+        }
+      }
+    },
+    "analytics": "Аналітика",
+    "analyticsPage": {
+      "title": "Аналітика",
+      "subtitle": "Детальна аналітика використання та інсайти",
+      "allOrganizations": "Всі організації",
+      "days7": "7 днів",
+      "days30": "30 днів",
+      "days90": "90 днів",
+      "exportCSV": "Експортувати CSV",
+      "dailyActiveUsers": "Активні користувачі на день",
+      "activeUsers": "Активні користувачі",
+      "apiCalls": "API виклики",
+      "apiCallsOverTime": "API виклики в часі",
+      "memoryOperations": "Операції зі спогадами",
+      "memoryUsage": "Використання спогадів",
+      "stores": "Збереження",
+      "searches": "Пошуки",
+      "avgLatency": "Середня затримка",
+      "latencyTrend": "Тренд затримки",
+      "errorRate": "Відсоток помилок",
+      "errors": "Помилки",
+      "hourlyDistribution": "Погодинний розподіл",
+      "calls": "викликів",
+      "peakHour": "Пікова година",
+      "endpointBreakdown": "Розбивка по кінцевих точках",
+      "topQueries": "Популярні запити",
+      "noQueries": "Немає запитів",
+      "noData": "Немає даних аналітики",
+      "noDataDescription": "Почніть робити API виклики, щоб побачити детальну аналітику тут."
     }
   },
   "pricingPage": {
@@ -727,7 +1649,11 @@
       "pricing": "Pricing",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "tryDemo": "Try Demo",
+      "limits": "Ліміти",
+      "status": "Статус",
+      "help": "Допомога",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Request Builder",
@@ -753,7 +1679,8 @@
         "techDocs": "Tech Documentation",
         "legalContracts": "Legal Contracts",
         "researchPapers": "Research Papers"
-      }
+      },
+      "advanced": "Додатково"
     },
     "resultsPanel": {
       "searching": "Searching...",
@@ -774,7 +1701,42 @@
     },
     "tabs": {
       "results": "Results",
-      "trace": "Trace"
+      "trace": "Trace",
+      "cost": "Вартість"
+    },
+    "chips": {
+      "trace": "Трейс",
+      "eval": "Оцінка",
+      "policy": "Політика"
+    },
+    "playgroundTitle": "Спробуйте зараз",
+    "costPanel": {
+      "calculating": "Розрахунок вартості...",
+      "noCost": "Виконайте запит, щоб побачити розбивку вартості",
+      "costBreakdown": "Розбивка вартості",
+      "component": "Компонент",
+      "cost": "Вартість",
+      "embedding": "Ембединг",
+      "vectorSearch": "Векторний пошук",
+      "rerank": "Переранжування",
+      "answerContract": "Контракт відповіді",
+      "total": "Загальна вартість",
+      "usage": "Використання",
+      "tokensIn": "Токенів на вході",
+      "tokensOut": "Токенів на виході",
+      "queryUnits": "Одиниць запитів",
+      "estimatedMonthly": "Прогноз за місяць",
+      "basedOn": "На основі",
+      "queriesPerDay": "запитів/день"
+    },
+    "errorDisplay": {
+      "error": "Помилка",
+      "errorCode": "Код",
+      "traceId": "Трейс",
+      "hint": "Підказка",
+      "tryAgain": "Повторити",
+      "copyTraceId": "Копіювати trace ID",
+      "copied": "Скопійовано!"
     }
   },
   "docs": {
@@ -799,7 +1761,9 @@
       "resources": "Ресурси",
       "security": "Безпека",
       "sdks": "SDK",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "tutorial": "Посібник за 5 хвилин",
+      "integrations": "Інтеграції"
     },
     "hero": {
       "title": "Документація API",
@@ -873,7 +1837,9 @@
       "enterprise": "Корпоративний",
       "unlimited": "Без обмежень",
       "exceeded": "При перевищенні ліміту API повертає відповідь",
-      "response": "."
+      "response": ".",
+      "monthlyApiCalls": "API-викликів на місяць",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Коди помилок",
@@ -1171,7 +2137,8 @@
         "searchRetrieval": "Пошук та отримання",
         "extraction": "Витяг даних",
         "operations": "Операції",
-        "security": "Безпека та конфіденційність"
+        "security": "Безпека та конфіденційність",
+        "all": "Усі"
       },
       "gettingStarted": {
         "q1": {
@@ -1185,6 +2152,10 @@
         "q3": {
           "question": "Які мови програмування підтримуються?",
           "answer": "Ми офіційно підтримуємо JavaScript/TypeScript (Node.js) та Python. Для інших мов можна використовувати REST API безпосередньо."
+        },
+        "q4": {
+          "question": "Як найшвидше створити PoC?",
+          "answer": "1) POST /api/memories для збереження налаштування користувача. 2) GET /api/memories для пошуку. 3) Вставте результати в промпт Вашої LLM. 4) Пізніше додайте /api/extract для автоматичного вилучення та /api/query для відповідей із використанням пам'яті."
         }
       },
       "coreConcepts": {
@@ -1199,6 +2170,14 @@
         "q3": {
           "question": "Що таке параметр user_id?",
           "answer": "user_id пов'язує спогади з конкретним користувачем, забезпечуючи персоналізований досвід для кожного користувача."
+        },
+        "q4": {
+          "question": "Коли слід використовувати scope (user/session/agent)?",
+          "answer": "user: Налаштування, що застосовуються до користувача глобально. session: Цілі або контекст, актуальні лише для поточної розмови. agent: Правила, специфічні для одного агента в мультиагентній системі. Правильне використання scope скорочує довжину промпту та підвищує стабільність відповідей."
+        },
+        "q5": {
+          "question": "Що таке memory_types і чому вони важливі?",
+          "answer": "memory_type класифікує спогади: fact (незмінна інформація), preference (вибір користувача), instruction (правила для виконання), relationship (зв'язки між людьми/організаціями), experience (минулі події). Це найпотужніша вісь для фільтрації, видалення та застосування політик."
         }
       },
       "searchRetrieval": {
@@ -1241,6 +2220,10 @@
         "q3": {
           "question": "Чи є обмеження на кількість запитів?",
           "answer": "Так, ліміти залежать від плану. Безкоштовний план дозволяє 100 запитів на хвилину. Див. сторінку цін для деталей."
+        },
+        "q4": {
+          "question": "Як зменшити витрати?",
+          "answer": "Основні фактори витрат: 1) Частота вилучення — скоротіть кількість викликів. 2) Область пошуку — використовуйте namespace для звуження. 3) Вибір моделі — використовуйте haiku для рутинних задач, sonnet для важливих. 4) Кешування — кешуйте повторювані запити. 5) За можливості використовуйте пакетні операції."
         }
       },
       "security": {
@@ -1264,7 +2247,858 @@
           "question": "Чи маєте ви сертифікацію SOC 2?",
           "answer": "Ми перебуваємо в процесі сертифікації SOC 2. Зверніться до нашої команди продажів для отримання додаткової інформації."
         }
+      },
+      "title": "Часті запитання",
+      "subtitle": "Поширені запитання про Seizn Memory API: від початку роботи до складних операцій.",
+      "nav": {
+        "dashboard": "Панель керування"
+      },
+      "cta": {
+        "title": "Залишились запитання?",
+        "subtitle": "Ознайомтесь з нашою документацією або зв'яжіться з нашою службою підтримки.",
+        "readDocs": "Документація",
+        "contactSupport": "Зв'язатися з підтримкою"
+      },
+      "footer": {
+        "rights": "Усі права захищені."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "Швидкий старт за 5 хвилин | Seizn",
+        "description": "Додайте AI-пам'ять за 5 хвилин лише з 10 рядками коду"
+      },
+      "badge": "Посібник за 5 хвилин",
+      "noCreditCard": "Банківська картка не потрібна",
+      "title": "Початок роботи з Seizn",
+      "subtitle": "Додайте постійну пам'ять до Вашого AI менш ніж за 5 хвилин. Слідуйте інструкції та відмічайте кожен крок після виконання.",
+      "getApiKey": "Отримати API-ключ",
+      "fullExample": "Повний приклад (10 рядків)",
+      "copy": "Копіювати",
+      "copied": "Скопійовано!",
+      "progress": "Прогрес",
+      "stepsLabel": "кроків",
+      "steps": {
+        "getApiKey": {
+          "title": "Отримайте Ваш API-ключ",
+          "time": "30 сек",
+          "description": "Зареєструйтесь і згенеруйте API-ключ у панелі керування.",
+          "actionLabel": "Перейти до панелі керування"
+        },
+        "install": {
+          "title": "Встановіть SDK",
+          "time": "30 сек",
+          "description": "Встановіть Seizn SDK за допомогою бажаного пакетного менеджера."
+        },
+        "ingest": {
+          "title": "Завантажте документи",
+          "time": "30 сек",
+          "description": "Завантажте документи до Вашого датасету для вилучення."
+        },
+        "query": {
+          "title": "Виконайте перший запит",
+          "time": "10 сек",
+          "description": "Шукайте інформацію у Ваших документах за допомогою запиту природною мовою."
+        }
+      },
+      "completion": {
+        "title": "Вітаємо!",
+        "description": "Ви завершили швидкий старт. Ваш пайплайн вилучення даних готовий із вбудованим трейсингом.",
+        "readDocs": "Читати документацію",
+        "goToDashboard": "Перейти до панелі керування"
+      },
+      "expectedOutput": {
+        "title": "Очікуваний результат",
+        "description": "Кожен запит повертає результати, трейс і розбивку вартості:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "Довідник API",
+          "description": "Дослідіть усі ендпоінти та параметри для складних сценаріїв."
+        },
+        "sdkExamples": {
+          "title": "Приклади SDK",
+          "description": "Готові приклади для Python, TypeScript та інших мов."
+        },
+        "faq": {
+          "title": "Часті запитання",
+          "description": "Відповіді на часті запитання про типи пам'яті, простори імен та найкращі практики."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "Довідник API | Seizn",
+        "description": "Повна документація API для Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain та RetOps APIs"
+      },
+      "title": "Довідник API",
+      "description": "Повна документація для всіх API Seizn, включаючи Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain та RetOps.",
+      "auth": {
+        "title": "Автентифікація",
+        "description": "Усі ендпоінти API потребують автентифікації через API-ключ. Додайте Ваш ключ у заголовок X-API-Key."
+      },
+      "sidebar": {
+        "title": "Групи API"
+      },
+      "endpoint": {
+        "parameters": "Параметри",
+        "requestBody": "Тіло запиту",
+        "response": "Відповідь",
+        "errorCodes": "Коди помилок"
+      },
+      "table": {
+        "name": "Назва",
+        "type": "Тип",
+        "required": "Обов'язковий",
+        "description": "Опис",
+        "code": "Код",
+        "message": "Повідомлення"
+      },
+      "copy": "Копіювати",
+      "copied": "Скопійовано!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "Посібник за 5 хвилин | Seizn",
+        "description": "Дізнайтесь, як додати AI-пам'ять за 5 хвилин із покроковим інтерактивним посібником"
+      },
+      "breadcrumb": "Посібник",
+      "badge": "Посібник за 5 хвилин",
+      "noCreditCard": "Банківська картка не потрібна",
+      "title": "Додайте AI-пам'ять за 5 хвилин",
+      "subtitle": "Слідуйте цьому покроковому посібнику, щоб додати Вашому AI постійну пам'ять. Відмічайте кожен крок після виконання.",
+      "getApiKey": "Отримати API-ключ",
+      "copy": "Копіювати",
+      "copied": "Скопійовано!",
+      "progress": "Прогрес",
+      "stepsLabel": "кроків",
+      "steps": {
+        "step1": {
+          "title": "Отримайте Ваш API-ключ",
+          "time": "30 сек",
+          "description": "Зареєструйтесь безкоштовно і згенеруйте API-ключ у панелі керування.",
+          "instruction1": "Зареєструйтесь або увійдіть до Вашого облікового запису Seizn",
+          "instruction2": "Перейдіть до розділу API-ключів у панелі керування",
+          "instruction3": "Натисніть «Створити новий ключ» і скопіюйте його",
+          "actionLabel": "Перейти до панелі керування"
+        },
+        "step2": {
+          "title": "Встановіть SDK",
+          "time": "30 сек",
+          "description": "Оберіть мову програмування та встановіть Seizn SDK."
+        },
+        "step3": {
+          "title": "Збережіть перший спогад",
+          "time": "2 хв",
+          "description": "Збережіть інформацію, яку Ваш AI повинен пам'ятати між сесіями."
+        },
+        "step4": {
+          "title": "Пошук спогадів",
+          "time": "2 хв",
+          "description": "Вилучайте релевантні спогади за допомогою запитів природною мовою."
+        },
+        "step5": {
+          "title": "Перевірте результати",
+          "time": "30 сек",
+          "description": "Переконайтесь, що пам'ять було успішно збережено та вилучено.",
+          "hint": "При пошуку спогадів Ви повинні побачити відповідь, подібну до цієї:",
+          "successTitle": "Готово!",
+          "successDescription": "Ваш AI тепер має постійну пам'ять. Використовуйте результати пошуку для покращення контексту та відповідей Вашого AI."
+        }
+      },
+      "completion": {
+        "title": "Вітаємо!",
+        "description": "Ви завершили посібник. Ваш AI тепер має постійну пам'ять, яка працює між сесіями.",
+        "readDocs": "Читати документацію",
+        "goToDashboard": "Перейти до панелі керування"
+      },
+      "nextSteps": {
+        "title": "Що далі?",
+        "apiReference": {
+          "title": "Довідник API",
+          "description": "Дослідіть усі ендпоінти для спогадів, вилучення та RAG-запитів."
+        },
+        "sdkExamples": {
+          "title": "Приклади SDK",
+          "description": "Готові приклади для Python, TypeScript та REST."
+        },
+        "faq": {
+          "title": "Часті запитання",
+          "description": "Дізнайтесь про типи пам'яті, простори імен та найкращі практики."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Інтеграції | Seizn",
+        "description": "Інтеграція Seizn з LangChain, LlamaIndex, OpenTelemetry та іншими інструментами"
+      },
+      "breadcrumb": "Інтеграції",
+      "title": "Інтеграції",
+      "subtitle": "Підключіть Seizn до Ваших улюблених AI-фреймворків та інструментів спостережуваності.",
+      "cards": {
+        "langchain": {
+          "badge": "Офіційна",
+          "title": "LangChain",
+          "description": "Вбудований ретривер для RAG-пайплайнів LangChain. Працює з Python та TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Офіційна",
+          "title": "LlamaIndex",
+          "description": "Нативний ретривер для движків запитів LlamaIndex. Підтримує потокову передачу та гібридний пошук."
+        },
+        "opentelemetry": {
+          "badge": "Офіційна",
+          "title": "OpenTelemetry",
+          "description": "Експорт трейсів у Datadog, Grafana, Jaeger та будь-який OTLP-сумісний бекенд."
+        }
+      },
+      "comingSoon": {
+        "title": "Незабаром",
+        "description": "Нові інтеграції вже в розробці. Повідомте нам, що Вам потрібно!"
+      },
+      "backToDocs": "Повернутися до документації"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "Інтеграція з LangChain | Seizn",
+        "description": "Вбудований ретривер для RAG-пайплайнів LangChain"
+      },
+      "badge": "Офіційна",
+      "title": "Інтеграція з LangChain",
+      "subtitle": "Вбудований ретривер для RAG-пайплайнів LangChain з повною підтримкою трейсингу.",
+      "overview": {
+        "title": "Огляд за 60 секунд",
+        "description": "SeiznRetriever — це повна заміна будь-якого ретривера LangChain. Він забезпечує векторний пошук із вбудованим трейсингом, кешуванням та переранжуванням.",
+        "feature1": "Сумісний з усіма ланцюжками та агентами LangChain",
+        "feature2": "Вбудований трейсинг для кожної операції вилучення",
+        "feature3": "Підтримка фільтрації, переранжування та гібридного пошуку"
+      },
+      "installation": {
+        "title": "Встановлення",
+        "description": "Встановіть Seizn SDK разом із LangChain."
+      },
+      "example": {
+        "title": "Приклад за 5 хвилин",
+        "description": "Створіть RAG-ланцюжок із SeiznRetriever лише в кілька рядків коду."
+      },
+      "production": {
+        "title": "Поради для продакшену",
+        "caching": {
+          "title": "Увімкніть кешування",
+          "description": "Зменшіть затримку та витрати за допомогою кешування повторюваних запитів."
+        },
+        "reranking": {
+          "title": "Увімкніть переранжування",
+          "description": "Покращте якість результатів за допомогою переранжування на крос-енкодері."
+        },
+        "filtering": {
+          "title": "Фільтрація за метаданими",
+          "description": "Фільтруйте результати за полями метаданих перед векторним пошуком."
+        }
+      },
+      "troubleshooting": {
+        "title": "Усунення неполадок",
+        "errorColumn": "Помилка",
+        "causeColumn": "Причина",
+        "solutionColumn": "Рішення",
+        "authCause": "Недійсний або відсутній API-ключ",
+        "authSolution": "Перевірте змінну середовища SEIZN_API_KEY",
+        "rateCause": "Забагато запитів на секунду",
+        "rateSolution": "Реалізуйте експоненціальну затримку або оновіть тарифний план",
+        "emptyCause": "Занадто високий поріг або немає відповідних документів",
+        "emptySolution": "Знизьте поріг або перевірте вміст датасету"
+      },
+      "nav": {
+        "backToIntegrations": "Повернутися до інтеграцій",
+        "nextLlamaIndex": "Інтеграція з LlamaIndex"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "Інтеграція з LlamaIndex | Seizn",
+        "description": "Нативний ретривер для RAG-пайплайнів LlamaIndex"
+      },
+      "badge": "Офіційна",
+      "title": "Інтеграція з LlamaIndex",
+      "subtitle": "Нативний ретривер для движків запитів LlamaIndex з потоковою передачею та гібридним пошуком.",
+      "overview": {
+        "title": "Огляд за 60 секунд",
+        "description": "SeiznRetriever реалізує інтерфейс BaseRetriever LlamaIndex, забезпечуючи сумісність з усіма движками запитів та пайплайнами LlamaIndex.",
+        "feature1": "Нативна інтеграція з движками запитів LlamaIndex",
+        "feature2": "Вбудована підтримка потокових відповідей",
+        "feature3": "Сумісність із постпроцесорами вузлів LlamaIndex"
+      },
+      "installation": {
+        "title": "Встановлення",
+        "description": "Встановіть Seizn SDK разом із LlamaIndex."
+      },
+      "example": {
+        "title": "Приклад за 5 хвилин",
+        "description": "Створіть движок запитів із SeiznRetriever для Вашого RAG-застосунку."
+      },
+      "production": {
+        "title": "Поради для продакшену",
+        "streaming": {
+          "title": "Потокові відповіді",
+          "description": "Увімкніть потокову передачу для покращення досвіду користувача при довгих відповідях."
+        },
+        "hybrid": {
+          "title": "Гібридний пошук",
+          "description": "Поєднуйте векторний та ключовий пошук для кращої повноти результатів."
+        },
+        "nodePostprocessors": {
+          "title": "Постпроцесори вузлів",
+          "description": "Об'єднуйте постпроцесори для складної фільтрації та переранжування."
+        }
+      },
+      "troubleshooting": {
+        "title": "Усунення неполадок",
+        "errorColumn": "Помилка",
+        "causeColumn": "Причина",
+        "solutionColumn": "Рішення",
+        "authCause": "Недійсний або відсутній API-ключ",
+        "authSolution": "Перевірте змінну середовища SEIZN_API_KEY",
+        "datasetCause": "Назву датасету не знайдено",
+        "datasetSolution": "Переконайтесь, що датасет існує в панелі керування",
+        "relevanceCause": "Невідповідність запиту та документів",
+        "relevanceSolution": "Спробуйте гібридний пошук або змініть поріг"
+      },
+      "nav": {
+        "prevLangChain": "Інтеграція з LangChain",
+        "nextOpenTelemetry": "Інтеграція з OpenTelemetry"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "Інтеграція з OpenTelemetry | Seizn",
+        "description": "Експорт трейсів у Datadog, Grafana, Jaeger через OTLP"
+      },
+      "badge": "Офіційна",
+      "title": "Інтеграція з OpenTelemetry",
+      "subtitle": "Експорт трейсів вилучення до Вашого стеку спостережуваності через OTLP.",
+      "overview": {
+        "title": "Огляд за 60 секунд",
+        "description": "Seizn нативно експортує OpenTelemetry-трейси для кожної операції вилучення. Підключайтесь до будь-якого OTLP-сумісного бекенду для наскрізної спостережуваності.",
+        "feature1": "OTLP-експорт без налаштування з автоматичним створенням спанів",
+        "feature2": "Детальні атрибути: затримка, кількість токенів та вартість",
+        "feature3": "Розповсюдження контексту для розподіленого трейсингу",
+        "supportedBackends": "Підтримувані бекенди"
+      },
+      "installation": {
+        "title": "Налаштування",
+        "description": "Налаштуйте OTLP-експорт через змінні середовища."
+      },
+      "examples": {
+        "title": "Приклади для бекендів",
+        "datadog": {
+          "description": "Експорт трейсів у Datadog APM через Datadog Agent або прямий API."
+        },
+        "grafana": {
+          "description": "Надсилання трейсів до Grafana Tempo (Cloud або self-hosted)."
+        },
+        "jaeger": {
+          "description": "Експорт до Jaeger з нативною підтримкою OTLP-приймача."
+        }
+      },
+      "production": {
+        "title": "Поради для продакшену",
+        "sampling": {
+          "title": "Стратегія семплювання",
+          "description": "Керуйте обсягом трейсів за допомогою head-based або tail-based семплювання."
+        },
+        "attributes": {
+          "title": "Користувацькі атрибути",
+          "description": "Додавайте ресурсні та спанові атрибути для покращення фільтрації."
+        },
+        "batching": {
+          "title": "Налаштування пакетів",
+          "description": "Оптимізуйте продуктивність експорту за допомогою налаштувань пакетного надсилання."
+        }
+      },
+      "troubleshooting": {
+        "title": "Усунення неполадок",
+        "issueColumn": "Проблема",
+        "causeColumn": "Причина",
+        "solutionColumn": "Рішення",
+        "noTracesIssue": "Трейси не відображаються",
+        "noTracesCause": "Телеметрія вимкнена або невірний ендпоінт",
+        "noTracesSolution": "Встановіть SEIZN_TELEMETRY_ENABLED=true і перевірте ендпоінт",
+        "connectionIssue": "Відмова у з'єднанні",
+        "connectionCause": "Колектор не запущений або невірний порт",
+        "connectionSolution": "Перевірте статус колектора та порт 4318",
+        "missingSpansIssue": "Відсутні спани в трейсі",
+        "missingSpansCause": "Занадто низька частота семплювання",
+        "missingSpansSolution": "Збільшіть частоту семплювання або вимкніть його",
+        "debugTitle": "Режим налагодження",
+        "debugDescription": "Увімкніть налагоджувальне логування для усунення проблем із телеметрією."
+      },
+      "nav": {
+        "prevLlamaIndex": "Інтеграція з LlamaIndex",
+        "backToIntegrations": "Повернутися до інтеграцій"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Живе демо",
+    "subtitle": "Оцініть пайплайн вилучення Seizn із повним трейсингом та прозорістю вартості.",
+    "tryItNow": "Спробуйте зараз — реєстрація не потрібна",
+    "queryPlaceholder": "Пошуковий запит",
+    "runDemo": "Запустити демо",
+    "running": "Виконується...",
+    "results": "Результати",
+    "trace": "Трейс",
+    "cost": "Вартість",
+    "noResults": "Запустіть демо, щоб побачити результати",
+    "errorTitle": "Помилка",
+    "rateLimitError": "Перевищено ліміт запитів. Будь ласка, зачекайте.",
+    "retryIn": "Повтор через",
+    "seconds": "секунд",
+    "score": "Оцінка",
+    "rerankScore": "Переранжування",
+    "latency": "Затримка",
+    "tokens": "Токени",
+    "cached": "з кешу",
+    "model": "Модель",
+    "input": "Вхід",
+    "output": "Вихід",
+    "costBreakdown": "Розбивка",
+    "total": "Загальна вартість",
+    "embedding": "Ембединг",
+    "vectorSearch": "Векторний пошук",
+    "rerank": "Переранжування",
+    "answerContract": "Контракт відповіді",
+    "tokensIn": "Токенів на вході",
+    "tokensOut": "Токенів на виході",
+    "queryUnits": "Одиниць запитів",
+    "prefilledQueries": [
+      "Приклади запитів"
+    ]
+  },
+  "publicTrace": {
+    "title": "Спільний трейс",
+    "subtitle": "Перегляд деталей спільного трейсу вилучення",
+    "sharedBy": "Спільний трейс",
+    "expired": "Термін дії посилання закінчився",
+    "expiredDesc": "Посилання для доступу більше не дійсне. Попросіть власника створити нове посилання.",
+    "notFound": "Трейс не знайдено",
+    "notFoundDesc": "Цей спільний трейс не знайдено. Можливо, доступ було відкликано або трейс видалено.",
+    "backToHome": "На головну",
+    "requestId": "ID запиту",
+    "collection": "Колекція",
+    "createdAt": "Створено",
+    "totalLatency": "Загальна затримка",
+    "totalCost": "Загальна вартість",
+    "resultsCount": "Результати",
+    "query": "Запит",
+    "timeline": "Хронологія",
+    "candidates": "Кандидати",
+    "rerankDiff": "Різниця переранжування",
+    "costAnalysis": "Аналіз вартості",
+    "redacted": "[ПРИХОВАНО]",
+    "piiMasked": "Персональні дані приховано",
+    "readOnlyNote": "Це подання спільного трейсу доступне лише для читання."
+  },
+  "trustPage": {
+    "title": "Центр довіри",
+    "subtitle": "Безпека та практики роботи з даними в Seizn",
+    "heroDescription": "Ми створюємо продукт із конфіденційністю та безпекою в основі. На цій сторінці описано, що саме ми робимо з Вашими даними.",
+    "lastUpdated": "Останнє оновлення",
+    "sections": {
+      "dataFlow": {
+        "title": "Потік даних",
+        "description": "Що ми зберігаємо і що не зберігаємо",
+        "stored": {
+          "title": "Що ми зберігаємо",
+          "items": [
+            "Вміст пам'яті та ембединги",
+            "Логи запитів (хешовані, не у відкритому вигляді)",
+            "Метрики використання API по кожному ключу",
+            "Дані трейсів для налагодження (налаштовуваний термін зберігання)"
+          ]
+        },
+        "notStored": {
+          "title": "Що ми НЕ зберігаємо",
+          "items": [
+            "Сирі API-ключі (лише хеші)",
+            "Паролі користувачів (лише OAuth)",
+            "Результати запитів після закінчення TTL кешу",
+            "Логи запитів/відповідей сторонніх LLM"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Шифрування",
+        "description": "Захист даних при передачі та зберіганні",
+        "transit": {
+          "title": "При передачі",
+          "items": [
+            "TLS 1.3 обов'язковий для всіх з'єднань",
+            "HSTS увімкнений із max-age 1 рік",
+            "Логування прозорості сертифікатів"
+          ]
+        },
+        "atRest": {
+          "title": "При зберіганні",
+          "items": [
+            "Шифрування AES-256 для всіх збережених даних",
+            "Шифрування на рівні бази даних (Supabase)",
+            "Зашифровані резервні копії з окремими ключами"
+          ]
+        },
+        "keyManagement": {
+          "title": "Керування ключами",
+          "items": [
+            "API-ключі хешуються за допомогою SHA-256 + сіль",
+            "Автоматичні нагадування про ротацію ключів (90 днів)",
+            "Миттєве відкликання ключів"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Ізоляція орендарів",
+        "description": "Як ми розділяємо Ваші дані",
+        "items": [
+          "Row-Level Security (RLS) на рівні бази даних",
+          "Усі запити автоматично фільтруються за user_id/org_id",
+          "Немає спільних індексів між орендарями",
+          "Розділення просторів імен для колекцій пам'яті"
+        ],
+        "rbac": {
+          "title": "Керування доступом",
+          "items": [
+            "Рольовий доступ (Власник, Адміністратор, Учасник)",
+            "Прив'язка API-ключів до організації",
+            "Журнали аудиту для всіх змін прав"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Зберігання та видалення",
+        "description": "Терміни зберігання даних та порядок видалення",
+        "periods": [
+          {
+            "type": "Спогади",
+            "period": "До видалення користувачем"
+          },
+          {
+            "type": "Логи API",
+            "period": "90 днів із ротацією"
+          },
+          {
+            "type": "Трейси",
+            "period": "30 днів (налаштовується)"
+          },
+          {
+            "type": "Журнали аудиту",
+            "period": "1 рік"
+          },
+          {
+            "type": "Резервні копії",
+            "period": "30 днів, зашифровані"
+          }
+        ],
+        "deletion": {
+          "title": "Процес видалення",
+          "items": [
+            "DELETE /api/memories видаляє негайно",
+            "Видалення облікового запису: пільговий період 30 днів",
+            "Повне видалення з резервних копій протягом 30 днів",
+            "Експорт даних за GDPR/CCPA доступний за запитом"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Журнали аудиту та керування доступом",
+        "description": "Відстеження дій користувачів",
+        "logged": {
+          "title": "Події, що записуються",
+          "items": [
+            "Створення, ротація та відкликання API-ключів",
+            "Зміни прав доступу (RBAC)",
+            "Запити на експорт даних",
+            "Невдалі спроби автентифікації",
+            "Дії адміністраторів в організації"
+          ]
+        },
+        "access": {
+          "title": "Доступ до журналів",
+          "items": [
+            "Доступні адміністраторам організації",
+            "Експорт через API (тарифи Pro та вище)",
+            "Пошук за користувачем, дією, часовою міткою"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Субпроцесори",
+        "description": "Треті сторони, що обробляють Ваші дані",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "База даних та автентифікація",
+            "location": "США (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Хостинг та CDN",
+            "location": "Глобальна мережа Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Платежі",
+            "location": "Великобританія/США"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Продуктова аналітика",
+            "location": "ЄС"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Моніторинг помилок",
+            "location": "США"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Переранжування (опціонально)",
+            "location": "США/Канада"
+          }
+        ],
+        "note": "Ми передаємо лише мінімум даних, необхідний для роботи кожного сервісу."
+      },
+      "disclosure": {
+        "title": "Що ми ще не реалізували",
+        "description": "Чесні прогалини в нашій системі безпеки",
+        "items": [
+          "Сертифікація SOC 2 Type II (в процесі, очікується у 2-му кварталі 2026)",
+          "Відповідність HIPAA (заплановано для Enterprise)",
+          "Варіант розгортання на власних серверах (на розгляді)",
+          "Апаратні модулі безпеки (HSM) для зберігання ключів",
+          "Програма Bug Bounty (запланована на 3-й квартал 2026)"
+        ],
+        "cta": "Маєте запитання щодо безпеки? Зв'яжіться з нами за адресою security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Запитання?",
+      "description": "Наша команда із задоволенням відповість на запитання щодо безпеки.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Ліміти та білінг",
+    "subtitle": "Інформація про ліміти тарифного плану, квоти та білінг.",
+    "unlimited": "Безліміт",
+    "custom": "За домовленістю",
+    "requestsPerSecond": "запитів/сек",
+    "sidebar": {
+      "onThisPage": "На цій сторінці",
+      "quotas": "Місячні квоти",
+      "rateLimits": "Ліміти запитів",
+      "overage": "Перевищення лімітів",
+      "reset": "Час скидання",
+      "headers": "Заголовки відповідей"
+    },
+    "table": {
+      "plan": "Тарифний план",
+      "monthlyQuota": "Місячна квота",
+      "rps": "Ліміт RPS"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "overage": "М'яке обмеження після вичерпання ліміту"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "М'яке обмеження, сповіщення на email"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "М'яке обмеження, пріоритетна черга"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Індивідуальний SLA, без обмежень"
+      }
+    },
+    "quotas": {
+      "title": "Місячні квоти",
+      "description": "Кожен тарифний план включає місячну квоту API-викликів. Квоти скидаються 1-го числа кожного місяця о 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Ліміти запитів (RPS)",
+      "description": "Ліміти запитів захищають нашу інфраструктуру та забезпечують справедливе використання. Ліміти застосовуються до кожного API-ключа."
+    },
+    "overage": {
+      "title": "Перевищення лімітів",
+      "softThrottle": {
+        "title": "М'яке обмеження (квоту перевищено)",
+        "description": "При перевищенні місячної квоти:",
+        "point1": "API-виклики продовжують працювати зі зниженим пріоритетом",
+        "point2": "Час відповіді може збільшитися у 2–5 разів",
+        "point3": "Сповіщення на email при 80% та 100% використання"
+      },
+      "hard429": {
+        "title": "Жорсткий 429 (ліміт запитів)",
+        "description": "При перевищенні ліміту RPS:",
+        "recommendation": "Реалізуйте експоненціальну затримку (1с, 2с, 4с, 8с) та повторюйте з джитером."
+      }
+    },
+    "reset": {
+      "title": "Час скидання",
+      "monthly": {
+        "title": "Скидання місячної квоти",
+        "description": "Квоти скидаються першого дня кожного місяця.",
+        "time": "1-е число місяця, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Вікно ліміту запитів",
+        "description": "Ліміти запитів використовують ковзне вікно.",
+        "time": "Ковзне вікно в 1 секунду"
+      }
+    },
+    "headers": {
+      "limit": "Максимальна кількість запитів за вікно",
+      "remaining": "Запити, що залишилися в поточному вікні",
+      "reset": "Unix-мітка часу скидання вікна",
+      "quotaLimit": "Ліміт місячної квоти",
+      "quotaRemaining": "API-виклики, що залишилися цього місяця",
+      "quotaReset": "Дата скидання квоти у форматі ISO 8601"
+    },
+    "headersSection": {
+      "title": "Заголовки відповідей",
+      "description": "Кожна API-відповідь містить заголовки для відстеження Вашого використання та лімітів.",
+      "header": "Заголовок",
+      "headerDescription": "Опис",
+      "example": "Приклад заголовків відповіді:"
+    },
+    "upgrade": {
+      "title": "Потрібні вищі ліміти?",
+      "description": "Оновіть тарифний план для збільшення квот, підвищення лімітів запитів та пріоритетної підтримки.",
+      "viewPlans": "Переглянути тарифи",
+      "contactSales": "Зв'язатися з відділом продажів"
+    }
+  },
+  "help": {
+    "title": "Центр допомоги",
+    "subtitle": "Знаходьте відповіді, отримуйте підтримку та використовуйте ресурси.",
+    "search": {
+      "placeholder": "Пошук у довідці...",
+      "noResults": "Результатів не знайдено"
+    },
+    "sections": {
+      "support": {
+        "title": "Канали підтримки",
+        "description": "Отримайте допомогу від нашої команди",
+        "email": {
+          "title": "Підтримка по email",
+          "description": "Отримайте допомогу по email протягом 24 годин",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Спільнота Discord",
+          "description": "Приєднуйтесь до нашої спільноти для допомоги в реальному часі",
+          "action": "Приєднатися до Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Повідомляйте про помилки та пропонуйте покращення",
+          "action": "Створити Issue"
+        }
+      },
+      "faq": {
+        "title": "Часті запитання",
+        "description": "Швидкі відповіді на поширені запитання",
+        "viewAll": "Усі запитання"
+      },
+      "status": {
+        "title": "Статус системи",
+        "description": "Перевірте поточний статус системи та інциденти",
+        "viewStatus": "Сторінка статусу",
+        "operational": "Усі системи працюють",
+        "degraded": "Зниження продуктивності",
+        "outage": "Збій у роботі"
+      },
+      "billing": {
+        "title": "Білінг та тарифи",
+        "description": "Керуйте підпискою та платежами",
+        "items": {
+          "plans": "Переглянути тарифні плани",
+          "usage": "Перевірити використання",
+          "invoices": "Завантажити рахунки",
+          "upgrade": "Оновити тариф"
+        }
+      },
+      "docs": {
+        "title": "Документація",
+        "description": "Швидкі посилання на популярні розділи",
+        "links": {
+          "quickstart": "Посібник швидкого старту",
+          "apiReference": "Довідник API",
+          "sdks": "SDK та бібліотеки",
+          "limits": "Ліміти та білінг",
+          "security": "Безпека"
+        }
+      }
+    },
+    "contact": {
+      "title": "Потрібна допомога?",
+      "description": "Наша служба підтримки допоможе Вам досягти успіху.",
+      "cta": "Зв'язатися з підтримкою"
+    }
+  },
+  "status": {
+    "title": "Статус системи",
+    "subtitle": "Статус системи та історія інцидентів у реальному часі",
+    "lastUpdated": "Останнє оновлення",
+    "overall": {
+      "operational": "Усі системи працюють",
+      "degraded": "Зниження продуктивності",
+      "partialOutage": "Частковий збій",
+      "majorOutage": "Масштабний збій"
+    },
+    "uptime": {
+      "title": "Час роботи",
+      "24h": "24 години",
+      "7d": "7 днів",
+      "30d": "30 днів",
+      "90d": "90 днів"
+    },
+    "services": {
+      "title": "Статус сервісів",
+      "operational": "Працює",
+      "degraded": "Деградація",
+      "down": "Недоступний"
+    },
+    "incidents": {
+      "active": "Активні інциденти",
+      "history": "Історія інцидентів",
+      "noActive": "Активних інцидентів немає",
+      "noHistory": "Минулих інцидентів немає",
+      "status": {
+        "investigating": "Дослідження",
+        "identified": "Виявлено",
+        "monitoring": "Моніторинг",
+        "resolved": "Вирішено"
+      },
+      "severity": {
+        "minor": "Незначний",
+        "major": "Серйозний",
+        "critical": "Критичний"
+      },
+      "affected": "Уражені сервіси",
+      "timeline": "Хронологія",
+      "started": "Початок",
+      "resolved": "Вирішено",
+      "duration": "Тривалість",
+      "viewDetails": "Детальніше"
+    },
+    "subscribe": {
+      "title": "Підпишіться на оновлення",
+      "rss": "RSS-стрічка",
+      "email": "Сповіщення на email"
     }
   }
 }
