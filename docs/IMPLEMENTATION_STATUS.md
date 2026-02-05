@@ -1,6 +1,6 @@
 # Seizn Implementation Status
 
-> Version: 2.0 | Date: 2026-02-02 | Purpose: 구현 여부 검증용 문서
+> Version: 3.0 | Date: 2026-02-04 | Purpose: 구현 여부 검증용 문서
 
 ---
 
@@ -53,16 +53,38 @@ src/app/(dashboard)/dashboard/memories/
 
 | 기능 | 상태 | DB | API | Service | UI |
 |------|------|:--:|:---:|:-------:|:--:|
-| Collections | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Documents/Chunks | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Index API | **PLANNED** | ❌ | ❌ | ❌ | ❌ |
-| Retrieve API | **PLANNED** | ❌ | ❌ | ❌ | ❌ |
-| Reranking | **PLANNED** | ❌ | ❌ | ❌ | ❌ |
+| Collections | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Documents/Chunks | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Index API | **FULL** | ✅ | ✅ | ✅ | - |
+| Retrieve API | **FULL** | ✅ | ✅ | ✅ | - |
+| RAG Pipeline | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Reranking | **FULL** | ✅ | ✅ | ✅ | - |
+| Federated Search | **FULL** | ✅ | ✅ | ✅ | - |
+| Versioning | **FULL** | ✅ | ✅ | ✅ | - |
+| Cache Layer | **FULL** | ✅ | ✅ | ✅ | - |
+| RetOps/Metrics | **FULL** | ✅ | ✅ | ✅ | - |
 
 **검증 파일:**
 ```
-supabase/migrations/021_summer_schema.sql  # DB만 존재
-src/app/api/summer/                        # 디렉토리 없음 → 미구현
+src/app/api/summer/rag/route.ts            # RAG 파이프라인 (300줄)
+src/app/api/summer/search/route.ts         # 검색 API
+src/app/api/summer/retrieve/route.ts       # 검색 API
+src/app/api/summer/index/route.ts          # 인덱싱 API
+src/app/api/summer/collections/route.ts    # 컬렉션 관리
+src/app/api/summer/rerank/route.ts         # 리랭킹 API
+src/app/api/summer/rerank/batch/route.ts   # 배치 리랭킹
+src/app/api/summer/versions/               # 버전 관리 (diff, restore)
+src/app/api/summer/cache/                  # 캐시 (stats, query, invalidate)
+src/app/api/summer/retops/                 # RetOps (metrics, alerts, quality)
+src/lib/summer/rag-pipeline.ts             # RAG 파이프라인 서비스 (1041줄)
+src/lib/rag/service.ts                     # RAG 서비스 (792줄)
+src/lib/summer/reranker.ts                 # 리랭킹 서비스
+src/lib/summer/search.ts                   # 검색 서비스
+src/lib/summer/cache/                      # 캐시 레이어
+src/lib/summer/versioning/                 # 버전 관리
+src/lib/summer/federated/                  # Federated 검색
+src/lib/summer/retops/                     # RetOps
+supabase/migrations/021_summer_schema.sql
 ```
 
 ---
@@ -108,11 +130,11 @@ src/app/api/retention/holds/
 
 | 기능 | 상태 | DB | API | Service | UI |
 |------|------|:--:|:---:|:-------:|:--:|
-| Deletion Request | **BACKEND** | ✅ | ✅ | ✅ | ❌ |
-| Verification | **BACKEND** | ✅ | ✅ | ✅ | ❌ |
-| Certificate Generation | **BACKEND** | ✅ | ✅ | ✅ | ❌ |
-| Evidence Export | **BACKEND** | ✅ | ✅ | ✅ | ❌ |
-| Compliance Check | **BACKEND** | ✅ | ✅ | ✅ | ❌ |
+| Deletion Request | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Verification | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Certificate Generation | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Evidence Export | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Compliance Check | **FULL** | ✅ | ✅ | ✅ | ✅ |
 
 **검증 파일:**
 ```
@@ -120,47 +142,56 @@ supabase/migrations/20260202_012_deletion_verification.sql
 src/lib/winter/rtbf/verification.ts     # 512 lines
 src/app/api/winter/rtbf/route.ts
 src/app/api/cron/winter/rtbf/verify-pending/route.ts
-
-# UI 미구현 증거:
-src/app/(dashboard)/dashboard/settings/settings-client.tsx
-# → "Coming Soon" 버튼만 존재
+src/components/settings/RTBFModal.tsx   # Multi-step deletion flow
+src/components/settings/DataExportModal.tsx
+src/components/settings/DeleteMemoriesModal.tsx
+src/app/(dashboard)/dashboard/settings/settings-client.tsx  # RTBF UI integrated
 ```
 
 ### 3.4 Tool Gating (Agent 권한 제어)
 
 | 기능 | 상태 | DB | API | Service | UI |
 |------|------|:--:|:---:|:-------:|:--:|
-| Tool Registry | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Tool Tokens | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Approval Workflow | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Execution Audit | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
+| Tool Registry | **FULL** | ✅ | ✅ | ✅ | - |
+| Tool Tokens | **FULL** | ✅ | ✅ | ✅ | - |
+| Approval Workflow | **FULL** | ✅ | ✅ | ✅ | - |
+| Execution Audit | **FULL** | ✅ | ✅ | ✅ | - |
+| Policy Evaluation | **FULL** | ✅ | ✅ | ✅ | - |
 
 **검증 파일:**
 ```
-supabase/migrations/20260202_013_tool_gating.sql  # DB 스키마만
-
-# 미구현 증거:
-grep -r "agent_tool" src/  # 결과 없음
-ls src/app/api/tools/      # 디렉토리 없음
+src/lib/tool-gating/service.ts             # 전체 서비스 (620+ lines)
+src/lib/tool-gating/types.ts               # 타입 정의
+src/lib/tool-gating/index.ts               # Export
+src/app/api/tools/route.ts                 # Tool Registry API
+src/app/api/tools/[id]/route.ts            # Tool CRUD
+src/app/api/tool-tokens/route.ts           # Token 관리 API
+src/app/api/tool-tokens/[id]/route.ts      # Token CRUD
+src/app/api/tool-approvals/route.ts        # 승인 워크플로우 API
+src/app/api/tool-approvals/[id]/route.ts   # 승인 CRUD
+supabase/migrations/20260202_013_tool_gating.sql
 ```
 
 ### 3.5 Policy Pack Registry
 
 | 기능 | 상태 | DB | API | Service | UI |
 |------|------|:--:|:---:|:-------:|:--:|
-| Pack Registry | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Version Management | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Installation | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
-| Signature Verification | **SCHEMA** | ✅ | ❌ | ❌ | ❌ |
+| Pack Registry | **FULL** | ✅ | ✅ | ✅ | - |
+| Version Management | **FULL** | ✅ | ✅ | ✅ | - |
+| Installation | **FULL** | ✅ | ✅ | ✅ | - |
+| Signature Verification | **FULL** | ✅ | ✅ | ✅ | - |
+| Auto-Eval Integration | **FULL** | ✅ | ✅ | ✅ | - |
 | Marketplace UI | **PLANNED** | ❌ | ❌ | ❌ | ❌ |
 
 **검증 파일:**
 ```
-supabase/migrations/20260202_014_policy_pack_registry.sql  # DB 스키마만
-
-# 미구현 증거:
-grep -r "policy_pack" src/lib/  # 결과 없음
-ls src/app/api/policy-packs/    # 디렉토리 없음
+src/lib/policy-packs/service.ts             # 전체 서비스 (550+ lines)
+src/lib/policy-packs/types.ts               # 타입 정의
+src/lib/policy-packs/signing.ts             # 서명 검증
+src/lib/policy-packs/auto-eval-integration.ts # Auto-Eval 통합
+src/lib/policy-packs/index.ts               # Export
+src/app/api/policy-packs/route.ts           # Policy Pack API
+supabase/migrations/20260202_014_policy_pack_registry.sql
 ```
 
 ---
@@ -256,55 +287,159 @@ deploy/helm/seizn/
 | SDK | 상태 | 검증 파일 |
 |-----|------|-----------|
 | @seizn/spring (Memory) | **FULL** | `packages/spring-sdk/` |
-| @seizn/summer (RAG) | **PLANNED** | - |
-| LangChain Adapter | **PLANNED** | - |
-| LlamaIndex Adapter | **PLANNED** | - |
-| Vercel AI SDK | **PLANNED** | - |
+| @seizn/summer (RAG) | **FULL** | `packages/summer-sdk/` |
+| LangChain Adapter | **FULL** | `src/lib/integrations/langchain/` |
+| LlamaIndex Adapter | **FULL** | `src/lib/integrations/llamaindex/` |
+| Vercel AI SDK | **FULL** | `src/lib/integrations/vercel-ai/` |
+
+**LlamaIndex Adapter 검증 파일:**
+```
+src/lib/integrations/llamaindex/index.ts
+src/lib/integrations/llamaindex/memory-retriever.ts  # SeizNMemoryRetriever
+src/lib/integrations/llamaindex/memory-store.ts      # SeizNVectorStore
+```
+
+**Vercel AI SDK 검증 파일:**
+```
+src/lib/integrations/vercel-ai/index.ts
+src/lib/integrations/vercel-ai/memory-provider.ts    # createSeizNMemoryTools
+src/lib/integrations/vercel-ai/memory-middleware.ts  # withSeizNMemory middleware
+```
+
+---
+
+## Part 6.5: Memory v3 (Intelligent Memory)
+
+### 6.5.1 Core Features
+
+| 기능 | 상태 | DB | API | Service | UI |
+|------|------|:--:|:---:|:-------:|:--:|
+| Typed Notes (6 types) | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Knowledge Graph (Edges) | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Provenance Tracking | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Candidate Queue | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Contradiction Engine | **FULL** | ✅ | ✅ | ✅ | - |
+
+### 6.5.2 Advanced Features
+
+| 기능 | 상태 | DB | API | Service | UI |
+|------|------|:--:|:---:|:-------:|:--:|
+| Memory Distillation | **FULL** | ✅ | - | ✅ | - |
+| Utility Scoring | **FULL** | ✅ | - | ✅ | - |
+| Context Packer | **FULL** | - | - | ✅ | - |
+
+### 6.5.3 MindMap Visualization
+
+| 기능 | 상태 | DB | API | Service | UI |
+|------|------|:--:|:---:|:-------:|:--:|
+| Graph Slice API | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Node Expansion | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Graph Search | **FULL** | ✅ | ✅ | ✅ | ✅ |
+| Layout Engine | **FULL** | - | ✅ | ✅ | ✅ |
+| React Flow Canvas | **FULL** | - | - | - | ✅ |
+
+**검증 파일:**
+
+```text
+# Database Migration
+supabase/migrations/20260204_spring_memory_v3.sql
+
+# Types & Service
+src/lib/spring/memory-v3/types.ts
+src/lib/spring/memory-v3/service.ts              # 2041 lines
+src/lib/spring/memory-v3/contradiction-engine.ts
+src/lib/spring/memory-v3/distillation.ts
+src/lib/spring/memory-v3/utility-scorer.ts
+src/lib/spring/memory-v3/context-packer.ts
+src/lib/spring/memory-v3/index.ts
+
+# Memory API (7 routes)
+src/app/api/spring/memory/route.ts
+src/app/api/spring/memory/[noteId]/route.ts
+src/app/api/spring/memory/[noteId]/explain/route.ts
+src/app/api/spring/memory/[noteId]/provenance/route.ts
+src/app/api/spring/memory/candidates/route.ts
+src/app/api/spring/memory/candidates/[candidateId]/route.ts
+src/app/api/spring/memory/edges/route.ts
+
+# MindMap API (4 routes)
+src/app/api/spring/mindmap/route.ts
+src/app/api/spring/mindmap/expand/route.ts
+src/app/api/spring/mindmap/search/route.ts
+src/app/api/spring/mindmap/layout/route.ts
+
+# MindMap UI
+src/app/(dashboard)/dashboard/memories/mindmap/page.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/MindMapCanvas.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/MindMapNode.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/MindMapEdge.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/MindMapFilters.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/NodeInspector.tsx
+src/app/(dashboard)/dashboard/memories/mindmap/hooks/useMindMapData.ts
+
+# Candidate Queue UI
+src/app/(dashboard)/dashboard/memories/candidates/page.tsx
+src/app/(dashboard)/dashboard/memories/candidates/CandidatesClient.tsx
+```
 
 ---
 
 ## Part 7: Implementation Gap Summary
 
-### 즉시 필요한 작업 (SCHEMA → FULL)
+### ✅ 완료된 작업 (2026-02-04 기준)
+
+| 기능 | 상태 | 완료 항목 |
+|------|------|-----------|
+| **Tool Gating** | ✅ FULL | DB + API + Service (620+ lines) |
+| **Policy Pack Registry** | ✅ FULL | DB + API + Service + Signing (550+ lines) |
+| **Summer RAG** | ✅ FULL | 25개 API 라우트 + RAG Pipeline (1041 lines) + Service (792 lines) |
+| **RTBF** | ✅ FULL | DB + API + Service + UI (RTBFModal, DataExportModal) |
+| **OIDC/SSO** | ✅ FULL | PKCE + SAML + SCIM 2.0 |
+| **Memory v3** | ✅ FULL | DB + 11 API + Service (2041 lines) + MindMap UI |
+| **Candidate Queue** | ✅ FULL | API + UI (CandidatesClient) |
+| **LlamaIndex Adapter** | ✅ FULL | SeizNMemoryRetriever + SeizNVectorStore |
+| **Vercel AI SDK** | ✅ FULL | createSeizNMemoryTools + withSeizNMemory |
+| **Memory v4 (Mem0)** | ✅ FULL | Ingestion Controls + Search v3 + Semantic Update + Usage Tracking |
+| **Multimodal Ingestion** | ✅ FULL | Vision extraction + Asset management |
+| **Async Jobs** | ✅ FULL | Job queue + Export v2 |
+
+### Memory v4 (Mem0-Inspired) 상세
+
+| 기능 | 상태 | 검증 파일 |
+|------|------|-----------|
+| Ingestion Controls | ✅ FULL | `src/lib/spring/memory-v4/ingestion-service.ts` |
+| Ingestion Rules | ✅ FULL | `src/app/api/spring/ingestion/rules/route.ts` |
+| Ingestion Settings | ✅ FULL | `src/app/api/spring/ingestion/settings/route.ts` |
+| Search v3 (Filters) | ✅ FULL | `src/app/api/spring/search-v3/route.ts` |
+| Query Expansion | ✅ FULL | `src/lib/spring/memory-v4/search-service.ts` |
+| Semantic Update | ✅ FULL | `src/app/api/spring/update/route.ts` |
+| Usage Tracking | ✅ FULL | `src/app/api/spring/memory/[noteId]/usage/route.ts` |
+| MindMap "Where Used" | ✅ FULL | `src/app/(dashboard)/dashboard/memories/mindmap/hooks/useMemoryUsage.ts` |
+| Async Jobs | ✅ FULL | `src/app/api/spring/jobs/route.ts` |
+| Export v2 | ✅ FULL | `src/app/api/spring/export/route.ts` |
+| Multimodal Ingestion | ✅ FULL | `src/app/api/spring/ingest-multimodal/route.ts` |
+
+### 남은 작업
 
 | 기능 | 현재 상태 | 필요 작업 | 예상 공수 |
 |------|----------|-----------|-----------|
-| **Tool Gating** | SCHEMA | API + Service + Middleware | 2주 |
-| **Policy Pack Registry** | SCHEMA | API + Service + Marketplace UI | 2주 |
-| **RTBF Dashboard UI** | BACKEND | Settings 페이지 버튼 활성화 | 1주 |
-| **Summer RAG** | SCHEMA | 전체 API/Service 구현 | 4-6주 |
+| **Policy Pack Marketplace UI** | PLANNED | UI 구현 | 1주 |
+| **Memory Sandbox UI** | PLANNED | 테스트/디버그 UI | 3일 |
 
-### DB 스키마 검증 쿼리
-
-```sql
--- Tool Gating 테이블 확인
-SELECT table_name FROM information_schema.tables
-WHERE table_name LIKE 'agent_tool%';
--- 결과: agent_tools, agent_tool_tokens, agent_tool_approvals,
---       agent_tool_executions, agent_tool_policies
-
--- Policy Pack 테이블 확인
-SELECT table_name FROM information_schema.tables
-WHERE table_name LIKE 'policy_pack%';
--- 결과: policy_packs, policy_pack_versions,
---       policy_pack_installations, policy_pack_reviews
-
--- RLS 활성화 확인
-SELECT tablename, rowsecurity FROM pg_tables
-WHERE schemaname = 'public' AND tablename LIKE 'agent_tool%';
-```
-
-### API 존재 여부 확인
+### API 존재 확인 (2026-02-04 검증 완료)
 
 ```bash
-# Tool Gating API 확인
-ls src/app/api/tools/  # 없으면 미구현
+# Tool Gating API ✅
+ls src/app/api/tools/          # route.ts, [id]/route.ts
+ls src/app/api/tool-tokens/    # route.ts, [id]/route.ts
+ls src/app/api/tool-approvals/ # route.ts, [id]/route.ts
 
-# Policy Pack API 확인
-ls src/app/api/policy-packs/  # 없으면 미구현
+# Policy Pack API ✅
+ls src/app/api/policy-packs/   # route.ts
 
-# Summer RAG API 확인
-ls src/app/api/summer/  # 없으면 미구현
+# Summer RAG API ✅ (25개 라우트)
+ls src/app/api/summer/         # rag, search, retrieve, index, collections,
+                               # rerank, versions, cache, retops, explain, feedback
 ```
 
 ---
@@ -317,6 +452,8 @@ ls src/app/api/summer/  # 없으면 미구현
 | 013 | 2026-02-02 | Tool Gating | ✅ Applied |
 | 014 | 2026-02-02 | Policy Pack Registry | ✅ Applied |
 | 015 | 2026-02-02 | Security Lint Fixes | ✅ Applied |
+| spring_memory_v3 | 2026-02-04 | Memory v3 Schema | ✅ Applied |
+| spring_memory_v4 | 2026-02-04 | Memory v4 (Mem0-Inspired) | ✅ Applied |
 
 ---
 
@@ -336,3 +473,6 @@ WHERE user_id = auth.uid()
 ---
 
 *Document generated on 2026-02-02*
+*Updated on 2026-02-04 - P3 features (Tool Gating, Policy Pack, Summer RAG) verified as FULL*
+*Updated on 2026-02-04 - Memory v3, RTBF UI, MindMap, Candidate Queue, SDK Adapters completed*
+*Updated on 2026-02-04 - Memory v4 (Mem0-Inspired): Ingestion Controls, Search v3, Semantic Update, Usage Tracking, Multimodal completed*

@@ -44,6 +44,16 @@ export const ErrorCodes = {
   RESOURCE_ALREADY_EXISTS: 'RESOURCE_ALREADY_EXISTS',
   DUPLICATE_ENTRY: 'DUPLICATE_ENTRY',
 
+  // Memory v4 specific (6xxx)
+  CANDIDATE_NOT_FOUND: 'CANDIDATE_NOT_FOUND',
+  CANDIDATE_ALREADY_PROCESSED: 'CANDIDATE_ALREADY_PROCESSED',
+  EDGE_NOT_FOUND: 'EDGE_NOT_FOUND',
+  EDGE_ALREADY_EXISTS: 'EDGE_ALREADY_EXISTS',
+  MEMORY_OWNERSHIP_REQUIRED: 'MEMORY_OWNERSHIP_REQUIRED',
+  CONFIRMATION_REQUIRED: 'CONFIRMATION_REQUIRED',
+  INVALID_EDGE_TYPE: 'INVALID_EDGE_TYPE',
+  INVALID_MEMORY_SCOPE: 'INVALID_MEMORY_SCOPE',
+
   // Server (9xxx)
   INTERNAL_ERROR: 'INTERNAL_ERROR',
   SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
@@ -104,6 +114,16 @@ const Hints: Record<ErrorCode, string> = {
   // Conflict
   [ErrorCodes.RESOURCE_ALREADY_EXISTS]: 'Use different identifier or update existing',
   [ErrorCodes.DUPLICATE_ENTRY]: 'Check for existing entry before creating',
+
+  // Memory v4 specific
+  [ErrorCodes.CANDIDATE_NOT_FOUND]: 'Check candidate ID or list pending candidates',
+  [ErrorCodes.CANDIDATE_ALREADY_PROCESSED]: 'Candidate has already been accepted or rejected',
+  [ErrorCodes.EDGE_NOT_FOUND]: 'Check edge ID or list edges for a memory',
+  [ErrorCodes.EDGE_ALREADY_EXISTS]: 'Edge between these memories already exists',
+  [ErrorCodes.MEMORY_OWNERSHIP_REQUIRED]: 'You can only create edges between your own memories',
+  [ErrorCodes.CONFIRMATION_REQUIRED]: 'Set confirm: true to execute this operation',
+  [ErrorCodes.INVALID_EDGE_TYPE]: 'Use valid edge type: relates_to, supports, contradicts, etc.',
+  [ErrorCodes.INVALID_MEMORY_SCOPE]: 'Use valid scope: user, workspace, org, session, agent',
 
   // Server
   [ErrorCodes.INTERNAL_ERROR]: 'Retry request; contact support if persists',
@@ -355,6 +375,75 @@ export const ServerErrors = {
       code: ErrorCodes.SERVICE_UNAVAILABLE,
       message: 'Service temporarily unavailable. Please try again later.',
       status: 503,
+    }),
+};
+
+// Memory v4 specific errors
+export const MemoryV4Errors = {
+  candidateNotFound: (id?: string) =>
+    createApiError({
+      code: ErrorCodes.CANDIDATE_NOT_FOUND,
+      message: id ? `Candidate not found: ${id}` : 'Candidate not found',
+      status: 404,
+      details: id ? { candidate_id: id } : undefined,
+    }),
+
+  candidateAlreadyProcessed: (id: string, action: string) =>
+    createApiError({
+      code: ErrorCodes.CANDIDATE_ALREADY_PROCESSED,
+      message: `Candidate ${id} has already been ${action}`,
+      status: 400,
+      details: { candidate_id: id, action },
+    }),
+
+  edgeNotFound: (id?: string) =>
+    createApiError({
+      code: ErrorCodes.EDGE_NOT_FOUND,
+      message: id ? `Edge not found: ${id}` : 'Edge not found',
+      status: 404,
+      details: id ? { edge_id: id } : undefined,
+    }),
+
+  edgeAlreadyExists: (srcId: string, dstId: string, edgeType: string) =>
+    createApiError({
+      code: ErrorCodes.EDGE_ALREADY_EXISTS,
+      message: `Edge of type '${edgeType}' already exists between memories`,
+      status: 409,
+      details: { src_memory_id: srcId, dst_memory_id: dstId, edge_type: edgeType },
+    }),
+
+  memoryOwnershipRequired: (memoryId: string) =>
+    createApiError({
+      code: ErrorCodes.MEMORY_OWNERSHIP_REQUIRED,
+      message: `Memory ${memoryId} does not belong to you`,
+      status: 403,
+      details: { memory_id: memoryId },
+    }),
+
+  confirmationRequired: (operation: string, count?: number) =>
+    createApiError({
+      code: ErrorCodes.CONFIRMATION_REQUIRED,
+      message: count
+        ? `This will affect ${count} items. Set confirm: true to proceed with ${operation}.`
+        : `Set confirm: true to proceed with ${operation}.`,
+      status: 400,
+      details: { operation, affected_count: count },
+    }),
+
+  invalidEdgeType: (edgeType: string, validTypes: string[]) =>
+    createApiError({
+      code: ErrorCodes.INVALID_EDGE_TYPE,
+      message: `Invalid edge type '${edgeType}'. Valid types: ${validTypes.join(', ')}`,
+      status: 400,
+      details: { edge_type: edgeType, valid_types: validTypes },
+    }),
+
+  invalidMemoryScope: (scope: string, validScopes: string[]) =>
+    createApiError({
+      code: ErrorCodes.INVALID_MEMORY_SCOPE,
+      message: `Invalid scope '${scope}'. Valid scopes: ${validScopes.join(', ')}`,
+      status: 400,
+      details: { scope, valid_scopes: validScopes },
     }),
 };
 

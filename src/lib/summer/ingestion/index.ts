@@ -6,6 +6,10 @@
  * - Table extraction
  * - Math/equation extraction
  * - Partial document updates
+ *
+ * @deprecated UNUSED - This module is exported but not currently used in the codebase.
+ * Review for potential removal or implementation in future releases.
+ * Code quality audit: 2026-02-05
  */
 
 // Layout Parser

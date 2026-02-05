@@ -117,16 +117,9 @@ export async function runSecuritySmokeTest(): Promise<EvalTestResult[]> {
 // ============================================
 
 async function getSecurityTestCases(): Promise<SecurityTestCase[]> {
-  try {
-    // Try to import from the test suite
-    const { ALL_SECURITY_TESTS } = await import(
-      '@/__tests__/security/llm-top10/payloads'
-    );
-    return ALL_SECURITY_TESTS as unknown as SecurityTestCase[];
-  } catch {
-    // Fallback to built-in minimal test set
-    return getBuiltInTestCases();
-  }
+  // Always use built-in test cases for production
+  // Test suite payloads are only available in development/test environment
+  return getBuiltInTestCases();
 }
 
 async function getFirewallScanner(policyId: string): Promise<{

@@ -894,7 +894,8 @@
         "searchRetrieval": "搜索与检索",
         "extraction": "提取",
         "operations": "运营",
-        "securityCompliance": "安全与合规"
+        "securityCompliance": "安全与合规",
+        "technology": "技术"
       },
       "items": [
         {
@@ -996,6 +997,46 @@
           "category": "securityCompliance",
           "question": "我的安全/法务团队需要什么文档？",
           "answer": "他们需要：1) 数据范围（存储/不存储什么），2) 加密（静态：AES-256，传输中：TLS），3) 租户隔离方法，4) 删除/保留策略，5) 审计日志访问，6) 密钥轮换/过期策略。在文档中保留安全与治理页面。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什么是 Graph-RAG 记忆系统？",
+          "answer": "Seizn 使用 Graph-RAG 架构，将向量嵌入与知识图谱关系相结合。记忆存储为具有类型化边（relates_to、supports、contradicts 等）的节点。这使得能够：通过图遍历进行上下文回忆、用于主题聚类的自动社区检测、以及具有有效期的时间知识跟踪。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什么是记忆分层系统（Hot/Warm/Cold）？",
+          "answer": "Seizn 根据使用情况自动将记忆组织到不同层级：Hot 层（频繁访问，保留在快速缓存中）、Warm 层（偶尔访问，标准检索）、Cold 层（很少使用，归档但可搜索）。层级管理器根据访问模式自动提升/降级记忆，同时优化性能和成本。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "跨语言搜索如何工作？",
+          "answer": "Seizn 为每个记忆存储原始内容和规范英语表示。搜索查询与两种嵌入进行匹配，使得像用英语搜索找到印地语记忆这样的场景成为可能。我们使用支持 100+ 种语言的多语言嵌入模型（BGE-M3、LaBSE），具有高跨语言对齐度。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "记忆提取支持哪些语言？",
+          "answer": "Seizn 支持 35+ 种语言的记忆提取和搜索，包括：英语、中文（简体/繁体）、印地语、西班牙语、法语、德语、日语、韩语、俄语、乌克兰语、阿拉伯语，以及所有主要印度语言（泰米尔语、泰卢固语、孟加拉语等）。语言以 95%+ 的准确率自动检测。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "什么是 MCP 集成？如何使用？",
+          "answer": "MCP（模型上下文协议）允许像 Claude Desktop 这样的 AI 助手直接访问 Seizn 记忆。安装我们的 MCP 服务器（npx @seizn/mcp-server），将其添加到 Claude Desktop 配置中，助手就可以在对话期间自动保存和检索记忆。这实现了跨会话的持久个性化。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn 的记忆系统由什么技术驱动？",
+          "answer": "Seizn 构建于：带有 React Server Components 的 Next.js 16、Supabase（PostgreSQL + pgvector 用于向量搜索）、Voyage AI voyage-3 模型（1024 维嵌入）、Claude 用于记忆提取和分析。我们使用 HNSW 索引实现亚 100ms 向量搜索、WebSocket 实时订阅和 Redis 缓存。"
+        },
+        {
+          "category": "operations",
+          "question": "如何将 Seizn 集成到我的 LLM 工作流中？",
+          "answer": "三种主要方法：1) REST API - 直接 HTTP 调用以获得完全控制，2) SDK（TypeScript/Python）- 带重试逻辑的类型安全包装器，3) MCP 服务器 - 与 Claude Desktop 和其他 MCP 兼容助手的自动集成。对于生产环境，我们建议使用 SDK 配合服务器端调用来保护您的 API 密钥。"
+        },
+        {
+          "category": "operations",
+          "question": "什么是 Context API？如何使用？",
+          "answer": "Context API（GET /api/context）返回可直接注入 LLM 提示的预格式化字符串。它结合了：用户档案、最近记忆、相关事实和图上下文。根据上下文预算使用 format=brief（~500 tokens）、detailed（~1500 tokens）或 extended（~3000 tokens）。"
         }
       ]
     },

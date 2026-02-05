@@ -278,21 +278,28 @@ export function withRequestContext(handler: ApiRouteHandlerWithContext): ApiRout
 export function successResponse<T>(
   data: T,
   ctx: RequestContext,
-  meta?: Record<string, unknown>
+  metaOrStatus?: Record<string, unknown> | number
 ): NextResponse<ApiSuccessResponse<T>> {
   const latencyMs = calculateLatency(ctx.startTime);
 
-  const response = NextResponse.json<ApiSuccessResponse<T>>({
-    success: true,
-    data,
-    trace_id: ctx.traceId,
-    request_id: ctx.requestId,
-    meta: {
-      timestamp: new Date().toISOString(),
-      latency_ms: latencyMs,
-      ...meta,
+  // Handle status code as third argument for backward compatibility
+  const status = typeof metaOrStatus === 'number' ? metaOrStatus : 200;
+  const meta = typeof metaOrStatus === 'object' ? metaOrStatus : undefined;
+
+  const response = NextResponse.json<ApiSuccessResponse<T>>(
+    {
+      success: true,
+      data,
+      trace_id: ctx.traceId,
+      request_id: ctx.requestId,
+      meta: {
+        timestamp: new Date().toISOString(),
+        latency_ms: latencyMs,
+        ...meta,
+      },
     },
-  });
+    { status }
+  );
 
   // Set trace headers
   response.headers.set('X-Trace-ID', ctx.traceId);

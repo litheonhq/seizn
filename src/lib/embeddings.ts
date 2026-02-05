@@ -108,3 +108,13 @@ export async function semanticSimilarity(textA: string, textB: string): Promise<
   const embeddings = await computeEmbeddings([textA, textB]);
   return cosineSimilarity(embeddings[0], embeddings[1]);
 }
+
+// ============================================
+// Aliases for backward compatibility
+// ============================================
+
+/** @deprecated Use computeEmbedding instead */
+export const generateEmbedding = computeEmbedding;
+
+/** @deprecated Use computeEmbeddings instead */
+export const generateEmbeddings = computeEmbeddings;

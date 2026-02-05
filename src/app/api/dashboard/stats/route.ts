@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { AuthErrors, ServerErrors } from '@/lib/api-error';
 
 interface PlanLimits {
   memories: number;
@@ -19,10 +20,7 @@ export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return AuthErrors.unauthorized('dashboard stats');
     }
 
     const supabase = createServerClient();
@@ -84,9 +82,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Stats error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('dashboard_stats');
   }
 }

@@ -175,6 +175,116 @@ async function apiRequest(
 
 // Tool definitions
 const tools: Tool[] = [
+  // =========================================================================
+  // Context API Tools (Zep/Memobase style)
+  // =========================================================================
+  {
+    name: "get_context",
+    description: "Get formatted context string ready for LLM prompt injection. Supports multiple formats and includes user profile, facts, and recent messages.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        format: {
+          type: "string",
+          enum: ["brief", "detailed", "extended"],
+          description: "Context format: brief (~500 tokens), detailed (~1500 tokens), extended (~3000 tokens)"
+        },
+        query: {
+          type: "string",
+          description: "Optional query for relevance filtering"
+        },
+        includeProfile: {
+          type: "boolean",
+          description: "Include user profile summary (default: true)"
+        },
+        includeGraph: {
+          type: "boolean",
+          description: "Include graph relationships (default: false)"
+        },
+        tierStrategy: {
+          type: "string",
+          enum: ["hot_first", "balanced", "comprehensive"],
+          description: "Memory tier retrieval strategy"
+        },
+        maxTokens: {
+          type: "number",
+          description: "Maximum tokens for context"
+        }
+      }
+    }
+  },
+  {
+    name: "flush_memories",
+    description: "Immediately process pending memories: promote candidates, generate embeddings, create links, update profile.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        processCandidates: {
+          type: "boolean",
+          description: "Process pending candidates (default: true)"
+        },
+        generateEmbeddings: {
+          type: "boolean",
+          description: "Generate missing embeddings (default: true)"
+        },
+        generateLinks: {
+          type: "boolean",
+          description: "Generate links between memories (default: true)"
+        },
+        updateProfile: {
+          type: "boolean",
+          description: "Update user profile (default: true)"
+        },
+        maxItems: {
+          type: "number",
+          description: "Maximum items to process per category (default: 50)"
+        }
+      }
+    }
+  },
+  // =========================================================================
+  // External Connector Tools
+  // =========================================================================
+  {
+    name: "sync_connector",
+    description: "Trigger synchronization from an external source (Google Drive, Notion, GitHub)",
+    inputSchema: {
+      type: "object",
+      properties: {
+        connectorType: {
+          type: "string",
+          enum: ["google_drive", "notion", "github"],
+          description: "Type of connector to sync"
+        },
+        connectionId: {
+          type: "string",
+          description: "Optional specific connection ID to sync"
+        },
+        force: {
+          type: "boolean",
+          description: "Force re-sync even if content unchanged"
+        }
+      },
+      required: ["connectorType"]
+    }
+  },
+  {
+    name: "list_connectors",
+    description: "List available external connectors and their status",
+    inputSchema: {
+      type: "object",
+      properties: {
+        connectorType: {
+          type: "string",
+          enum: ["google_drive", "notion", "github"],
+          description: "Optional filter by connector type"
+        }
+      }
+    }
+  },
+  // =========================================================================
+  // Knowledge Graph Tools (existing)
+  // =========================================================================
   {
     name: "create_entities",
     description: "Create multiple new entities (memories) in Seizn. Each entity becomes a searchable memory.",
@@ -511,6 +621,145 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   return JSON.stringify({ success: true, deleted });
 }
 
+// =========================================================================
+// Context API Handlers
+// =========================================================================
+
+interface ContextOptions {
+  format?: string;
+  query?: string;
+  includeProfile?: boolean;
+  includeGraph?: boolean;
+  tierStrategy?: string;
+  maxTokens?: number;
+}
+
+interface ContextResponse {
+  contextString: string;
+  facts: unknown[];
+  profile?: unknown;
+  tokenCount: number;
+  metadata: unknown;
+}
+
+async function handleGetContext(options: ContextOptions = {}): Promise<string> {
+  const params = new URLSearchParams();
+
+  if (options.format) params.append("format", options.format);
+  if (options.query) params.append("query", options.query);
+  if (options.includeProfile !== undefined) params.append("includeProfile", String(options.includeProfile));
+  if (options.includeGraph !== undefined) params.append("includeGraph", String(options.includeGraph));
+  if (options.tierStrategy) params.append("tierStrategy", options.tierStrategy);
+  if (options.maxTokens) params.append("maxTokens", String(options.maxTokens));
+
+  const response = await apiRequest(`/api/context?${params.toString()}`) as ContextResponse;
+
+  return JSON.stringify({
+    success: true,
+    contextString: response.contextString,
+    tokenCount: response.tokenCount,
+    factsIncluded: Array.isArray(response.facts) ? response.facts.length : 0,
+    metadata: response.metadata
+  });
+}
+
+interface FlushOptions {
+  processCandidates?: boolean;
+  generateEmbeddings?: boolean;
+  generateLinks?: boolean;
+  updateProfile?: boolean;
+  maxItems?: number;
+}
+
+interface FlushResponse {
+  success: boolean;
+  processed: {
+    candidates: { promoted: number; denied: number; errors: number };
+    embeddings: { generated: number; errors: number };
+    links: { created: number; errors: number };
+    profile: { updated: boolean };
+  };
+  processingMs: number;
+}
+
+async function handleFlushMemories(options: FlushOptions = {}): Promise<string> {
+  const response = await apiRequest("/api/memories/flush", "POST", options) as FlushResponse;
+
+  return JSON.stringify({
+    success: response.success,
+    processed: response.processed,
+    processingMs: response.processingMs
+  });
+}
+
+// =========================================================================
+// Connector Handlers
+// =========================================================================
+
+interface SyncOptions {
+  connectorType: string;
+  connectionId?: string;
+  force?: boolean;
+}
+
+interface SyncResponse {
+  success: boolean;
+  synced?: number;
+  skipped?: number;
+  failed?: number;
+  errors?: string[];
+}
+
+async function handleSyncConnector(options: SyncOptions): Promise<string> {
+  const endpoint = options.connectionId
+    ? `/api/connectors/${options.connectorType}/sync?connectionId=${options.connectionId}`
+    : `/api/connectors/${options.connectorType}/sync`;
+
+  const response = await apiRequest(endpoint, "POST", {
+    force: options.force || false
+  }) as SyncResponse;
+
+  return JSON.stringify({
+    success: response.success,
+    connectorType: options.connectorType,
+    synced: response.synced ?? 0,
+    skipped: response.skipped ?? 0,
+    failed: response.failed ?? 0,
+    errors: response.errors ?? []
+  });
+}
+
+interface Connection {
+  id: string;
+  connectorType: string;
+  accountEmail?: string;
+  status: string;
+  lastSyncAt?: string;
+}
+
+interface ListConnectorsResponse {
+  connections: Connection[];
+}
+
+async function handleListConnectors(connectorType?: string): Promise<string> {
+  const endpoint = connectorType
+    ? `/api/connectors?type=${connectorType}`
+    : "/api/connectors";
+
+  const response = await apiRequest(endpoint) as ListConnectorsResponse;
+
+  return JSON.stringify({
+    success: true,
+    connectors: response.connections?.map(c => ({
+      id: c.id,
+      type: c.connectorType,
+      account: c.accountEmail,
+      status: c.status,
+      lastSync: c.lastSyncAt
+    })) ?? []
+  });
+}
+
 // Helper functions
 function extractEntityName(content: string): string {
   const match = content.match(/\[.*?\]\s*(.+?)(?:\n|$)/);
@@ -539,7 +788,7 @@ async function main() {
   const server = new Server(
     {
       name: "seizn-memory",
-      version: "1.0.0",
+      version: "2.0.0", // v2.0: Added Context API and Connector tools
     },
     {
       capabilities: {
@@ -561,6 +810,23 @@ async function main() {
       let result: string;
 
       switch (name) {
+        // Context API Tools
+        case "get_context":
+          result = await handleGetContext(args as ContextOptions);
+          break;
+        case "flush_memories":
+          result = await handleFlushMemories(args as FlushOptions);
+          break;
+
+        // Connector Tools
+        case "sync_connector":
+          result = await handleSyncConnector(args as unknown as SyncOptions);
+          break;
+        case "list_connectors":
+          result = await handleListConnectors(args?.connectorType as string);
+          break;
+
+        // Knowledge Graph Tools
         case "create_entities":
           result = await handleCreateEntities(args?.entities as Entity[]);
           break;

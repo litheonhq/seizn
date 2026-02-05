@@ -294,7 +294,13 @@ export default function ControlTowerPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <QuickActionCard
+          title="Budget"
+          description="Budget caps & cost alerts"
+          href="/dashboard/control-tower/budget"
+          icon={TrendingUp}
+        />
         <QuickActionCard
           title="Alert Rules"
           description="Configure alert thresholds"

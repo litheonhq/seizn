@@ -894,7 +894,8 @@
         "searchRetrieval": "Ricerca e Recupero",
         "extraction": "Estrazione",
         "operations": "Operazioni",
-        "securityCompliance": "Sicurezza e Conformita"
+        "securityCompliance": "Sicurezza e Conformita",
+        "technology": "Tecnologia"
       },
       "items": [
         {
@@ -996,6 +997,46 @@
           "category": "securityCompliance",
           "question": "Quale documentazione necessita il mio team sicurezza/legale?",
           "answer": "Vorranno: 1) Ambito dati (cosa viene archiviato/non archiviato), 2) Crittografia (a riposo: AES-256, in transito: TLS), 3) Metodo isolamento tenant, 4) Policy eliminazione/conservazione, 5) Accesso log di audit, 6) Policy rotazione/scadenza chiavi. Mantieni una pagina Sicurezza e Governance nei tuoi docs."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Cos'è il sistema di memoria Graph-RAG?",
+          "answer": "Seizn utilizza un'architettura Graph-RAG che combina embedding vettoriali con relazioni del grafo di conoscenza. Le memorie sono archiviate come nodi con archi tipizzati (relates_to, supports, contradicts, ecc.). Questo abilita: richiamo contestuale attraverso la traversata del grafo, rilevamento automatico di community per clustering tematico, e tracciamento temporale della conoscenza con periodi di validità."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Cos'è il sistema di livelli di memoria (Hot/Warm/Cold)?",
+          "answer": "Seizn organizza automaticamente le memorie in livelli basati sull'utilizzo: livello Hot (accesso frequente, mantenuto in cache veloce), livello Warm (accesso occasionale, recupero standard), livello Cold (raramente usato, archiviato ma ricercabile). Il gestore livelli promuove/degrada automaticamente le memorie basandosi sui pattern di accesso, ottimizzando sia performance che costi."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Come funziona la ricerca cross-linguale?",
+          "answer": "Seizn archivia sia il contenuto originale che una rappresentazione canonica in inglese per ogni memoria. Le query di ricerca vengono confrontate con entrambi gli embedding, abilitando scenari come cercare in inglese e trovare memorie in hindi. Usiamo modelli di embedding multilingue (BGE-M3, LaBSE) che supportano 100+ lingue con alto allineamento cross-linguale."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Quali lingue sono supportate per l'estrazione di memoria?",
+          "answer": "Seizn supporta 35+ lingue per estrazione e ricerca di memoria, incluse: inglese, cinese (semplificato/tradizionale), hindi, spagnolo, francese, tedesco, giapponese, coreano, russo, ucraino, arabo e tutte le principali lingue indiane (tamil, telugu, bengalese, ecc.). La lingua viene rilevata automaticamente con precisione 95%+."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Cos'è l'integrazione MCP e come la uso?",
+          "answer": "MCP (Model Context Protocol) permette ad assistenti IA come Claude Desktop di accedere direttamente alle memorie Seizn. Installa il nostro server MCP (npx @seizn/mcp-server), aggiungilo alla tua configurazione Claude Desktop, e l'assistente può automaticamente salvare e recuperare memorie durante le conversazioni. Questo abilita personalizzazione persistente tra sessioni."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Quale tecnologia alimenta il sistema di memoria di Seizn?",
+          "answer": "Seizn è costruito su: Next.js 16 con React Server Components, Supabase (PostgreSQL + pgvector per ricerca vettoriale), modello Voyage AI voyage-3 (embedding 1024 dimensioni), Claude per estrazione e analisi memoria. Usiamo indici HNSW per ricerca vettoriale sub-100ms, sottoscrizioni WebSocket in tempo reale, e Redis per caching."
+        },
+        {
+          "category": "operations",
+          "question": "Come integro Seizn nel mio workflow LLM?",
+          "answer": "Tre approcci principali: 1) REST API - chiamate HTTP dirette per controllo completo, 2) SDK (TypeScript/Python) - wrapper type-safe con logica di retry, 3) Server MCP - integrazione automatica con Claude Desktop e altri assistenti MCP-compatibili. Per produzione, raccomandiamo l'SDK con chiamate lato server per proteggere la tua chiave API."
+        },
+        {
+          "category": "operations",
+          "question": "Cos'è la Context API e come la uso?",
+          "answer": "La Context API (GET /api/context) ritorna una stringa pre-formattata pronta da iniettare nel tuo prompt LLM. Combina: profilo utente, memorie recenti, fatti rilevanti e contesto grafo. Usa format=brief (~500 token), detailed (~1500 token), o extended (~3000 token) in base al tuo budget di contesto."
         }
       ]
     },

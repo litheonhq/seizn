@@ -894,7 +894,8 @@
         "searchRetrieval": "搜尋與檢索",
         "extraction": "提取",
         "operations": "操作",
-        "securityCompliance": "安全與合規"
+        "securityCompliance": "安全與合規",
+        "technology": "技術"
       },
       "items": [
         {
@@ -996,6 +997,46 @@
           "category": "securityCompliance",
           "question": "我的安全/法務團隊需要什麼文檔？",
           "answer": "他們需要：1) 數據範圍（存儲/不存儲什麼），2) 加密（靜態：AES-256，傳輸中：TLS），3) 租戶隔離方法，4) 刪除/保留策略，5) 審計日誌訪問，6) 密鑰輪換/過期策略。在您的文檔中保留安全與治理頁面。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什麼是 Graph-RAG 記憶體系統？",
+          "answer": "Seizn 使用 Graph-RAG 架構，將向量嵌入與知識圖譜關係相結合。記憶體儲存為具有類型化邊（relates_to、supports、contradicts 等）的節點。這使得：透過圖遍歷進行上下文回憶、用於主題聚類的自動社區檢測、以及具有有效期的時間知識追蹤成為可能。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "什麼是記憶體層級系統（Hot/Warm/Cold）？",
+          "answer": "Seizn 根據使用情況自動將記憶體組織到不同層級：Hot 層（頻繁存取，保留在快速快取中）、Warm 層（偶爾存取，標準檢索）、Cold 層（很少使用，歸檔但可搜尋）。層級管理器根據存取模式自動提升/降級記憶體，同時優化效能和成本。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "跨語言搜尋如何運作？",
+          "answer": "Seizn 為每個記憶體儲存原始內容和規範英語表示。搜尋查詢與兩種嵌入進行匹配，使得像用英語搜尋找到印地語記憶體這樣的情境成為可能。我們使用支援 100+ 種語言的多語言嵌入模型（BGE-M3、LaBSE），具有高跨語言對齊度。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "記憶體提取支援哪些語言？",
+          "answer": "Seizn 支援 35+ 種語言的記憶體提取和搜尋，包括：英語、中文（簡體/繁體）、印地語、西班牙語、法語、德語、日語、韓語、俄語、烏克蘭語、阿拉伯語，以及所有主要印度語言（泰米爾語、泰盧固語、孟加拉語等）。語言以 95%+ 的準確率自動檢測。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "什麼是 MCP 整合？如何使用？",
+          "answer": "MCP（模型上下文協定）允許像 Claude Desktop 這樣的 AI 助手直接存取 Seizn 記憶體。安裝我們的 MCP 伺服器（npx @seizn/mcp-server），將其添加到 Claude Desktop 配置中，助手就可以在對話期間自動儲存和檢索記憶體。這實現了跨會話的持久個人化。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn 的記憶體系統由什麼技術驅動？",
+          "answer": "Seizn 建構於：帶有 React Server Components 的 Next.js 16、Supabase（PostgreSQL + pgvector 用於向量搜尋）、Voyage AI voyage-3 模型（1024 維嵌入）、Claude 用於記憶體提取和分析。我們使用 HNSW 索引實現亞 100ms 向量搜尋、WebSocket 即時訂閱和 Redis 快取。"
+        },
+        {
+          "category": "operations",
+          "question": "如何將 Seizn 整合到我的 LLM 工作流程中？",
+          "answer": "三種主要方法：1) REST API - 直接 HTTP 呼叫以獲得完全控制，2) SDK（TypeScript/Python）- 帶重試邏輯的類型安全包裝器，3) MCP 伺服器 - 與 Claude Desktop 和其他 MCP 相容助手的自動整合。對於生產環境，我們建議使用 SDK 配合伺服器端呼叫來保護您的 API 金鑰。"
+        },
+        {
+          "category": "operations",
+          "question": "什麼是 Context API？如何使用？",
+          "answer": "Context API（GET /api/context）返回可直接注入 LLM 提示的預格式化字串。它結合了：使用者檔案、最近記憶體、相關事實和圖上下文。根據上下文預算使用 format=brief（~500 tokens）、detailed（~1500 tokens）或 extended（~3000 tokens）。"
         }
       ]
     },

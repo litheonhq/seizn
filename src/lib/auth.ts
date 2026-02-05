@@ -192,14 +192,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 });
 
-// Type augmentation for session
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string;
-      email?: string | null;
-      name?: string | null;
-      image?: string | null;
-    };
-  }
-}
+// Type augmentation moved to src/types/next-auth.d.ts

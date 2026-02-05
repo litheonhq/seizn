@@ -1302,7 +1302,8 @@
         "searchRetrieval": "검색 및 조회",
         "extraction": "추출",
         "operations": "운영",
-        "securityCompliance": "보안 및 규정 준수"
+        "securityCompliance": "보안 및 규정 준수",
+        "technology": "기술"
       },
       "items": [
         {
@@ -1454,6 +1455,46 @@
           "category": "securityCompliance",
           "question": "GDPR/CCPA를 위한 사용자 데이터 삭제는 어떻게 구현하나요?",
           "answer": "DELETE /api/memories와 user_id 필터를 사용하여 사용자의 모든 메모리를 제거하세요. 삭제를 증명하기 위해 감사 로깅을 활성화하세요. 일정 기간 후 자동 삭제를 위한 보존 정책을 설정하세요. 데이터 이동성 요청을 위해 GET /api/memories/export?user_id=xxx로 사용자 데이터를 내보내세요."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Graph-RAG 메모리 시스템이란 무엇인가요?",
+          "answer": "Seizn은 벡터 임베딩과 지식 그래프 관계를 결합한 Graph-RAG 아키텍처를 사용합니다. 메모리는 타입이 지정된 엣지(relates_to, supports, contradicts 등)를 가진 노드로 저장됩니다. 이를 통해 그래프 순회를 통한 문맥 기반 회상, 토픽 클러스터링을 위한 자동 커뮤니티 감지, 유효 기간이 있는 시간적 지식 추적이 가능합니다."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "메모리 티어 시스템(Hot/Warm/Cold)이란 무엇인가요?",
+          "answer": "Seizn은 사용 빈도에 따라 메모리를 자동으로 티어로 구성합니다: Hot 티어(자주 접근, 빠른 캐시에 보관), Warm 티어(가끔 접근, 표준 검색), Cold 티어(거의 사용 안 함, 보관되지만 검색 가능). 티어 매니저가 접근 패턴에 따라 메모리를 자동으로 승격/강등하여 성능과 비용을 모두 최적화합니다."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "교차 언어 검색은 어떻게 작동하나요?",
+          "answer": "Seizn은 각 메모리에 대해 원본 콘텐츠와 영어 표준 표현을 모두 저장합니다. 검색 쿼리는 두 임베딩 모두와 매칭되어, 영어로 검색해도 힌디어 메모리를 찾는 것과 같은 시나리오가 가능합니다. 100개 이상의 언어를 높은 교차 언어 정렬로 지원하는 다국어 임베딩 모델(BGE-M3, LaBSE)을 사용합니다."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "메모리 추출에 어떤 언어가 지원되나요?",
+          "answer": "Seizn은 메모리 추출 및 검색에 35개 이상의 언어를 지원합니다: 영어, 중국어(간체/번체), 힌디어, 스페인어, 프랑스어, 독일어, 일본어, 한국어, 러시아어, 우크라이나어, 아랍어, 그리고 모든 주요 인도어(타밀어, 텔루구어, 벵골어 등). 언어는 95% 이상의 정확도로 자동 감지됩니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "MCP 통합이란 무엇이며 어떻게 사용하나요?",
+          "answer": "MCP(Model Context Protocol)를 통해 Claude Desktop과 같은 AI 어시스턴트가 Seizn 메모리에 직접 접근할 수 있습니다. MCP 서버(npx @seizn/mcp-server)를 설치하고, Claude Desktop 설정에 추가하면, 어시스턴트가 대화 중 자동으로 메모리를 저장하고 검색할 수 있습니다. 이를 통해 세션 간 지속적인 개인화가 가능합니다."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seizn의 메모리 시스템은 어떤 기술로 구동되나요?",
+          "answer": "Seizn은 다음 기술로 구축되었습니다: React Server Components가 포함된 Next.js 16, Supabase(PostgreSQL + 벡터 검색용 pgvector), Voyage AI voyage-3 모델(1024차원 임베딩), 메모리 추출 및 분석용 Claude. 100ms 미만의 벡터 검색을 위한 HNSW 인덱스, WebSocket 실시간 구독, 캐싱용 Redis를 사용합니다."
+        },
+        {
+          "category": "operations",
+          "question": "Seizn을 LLM 워크플로우에 어떻게 통합하나요?",
+          "answer": "세 가지 주요 접근 방식이 있습니다: 1) REST API - 완전한 제어를 위한 직접 HTTP 호출, 2) SDK(TypeScript/Python) - 재시도 로직이 포함된 타입 안전 래퍼, 3) MCP 서버 - Claude Desktop 및 기타 MCP 호환 어시스턴트와의 자동 통합. 프로덕션에서는 API 키 보호를 위해 서버 측 호출과 함께 SDK 사용을 권장합니다."
+        },
+        {
+          "category": "operations",
+          "question": "Context API란 무엇이며 어떻게 사용하나요?",
+          "answer": "Context API(GET /api/context)는 LLM 프롬프트에 바로 주입할 수 있도록 미리 형식화된 문자열을 반환합니다. 사용자 프로필, 최근 메모리, 관련 팩트, 그래프 컨텍스트를 결합합니다. 컨텍스트 예산에 따라 format=brief(~500 토큰), detailed(~1500 토큰), extended(~3000 토큰)를 사용하세요."
         }
       ]
     },

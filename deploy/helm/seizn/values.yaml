@@ -121,3 +121,178 @@ externalSecrets:
 networkPolicy:
   enabled: true
   allowExternal: false
+
+# ==============================================
+# Enterprise Features (Self-Hosted)
+# ==============================================
+
+enterprise:
+  # License configuration
+  license:
+    enabled: false
+    # License key (or use secret)
+    key: ""
+    # Use existing secret for license key
+    existingSecret: ""
+    existingSecretKey: "license-key"
+    # Offline validation (for air-gapped)
+    offlineValidation: false
+
+  # Air-gapped deployment
+  airGapped:
+    enabled: false
+    # Private container registry
+    imageRegistry: ""
+    imagePullSecrets:
+      - name: private-registry
+
+  # SSO/OIDC Configuration
+  sso:
+    enabled: false
+    provider: "oidc"  # oidc, saml, okta, azure-ad
+    # OIDC settings
+    oidc:
+      issuerUrl: ""
+      clientId: ""
+      clientSecret: ""
+      # Use existing secret
+      existingSecret: ""
+      existingSecretClientIdKey: "client-id"
+      existingSecretClientSecretKey: "client-secret"
+      scopes:
+        - openid
+        - email
+        - profile
+    # Allowed domains for SSO
+    allowedDomains: []
+
+  # KMS Configuration for Evidence Pack Signing
+  kms:
+    enabled: false
+    provider: "local"  # local, aws, azure, gcp
+    aws:
+      region: "us-east-1"
+      keyId: ""
+      # Use IRSA (IAM Roles for Service Accounts)
+      useIRSA: true
+      # Or provide credentials
+      accessKeyId: ""
+      secretAccessKey: ""
+      existingSecret: ""
+    azure:
+      keyVaultUrl: ""
+      keyName: ""
+      # Uses workload identity by default
+      useWorkloadIdentity: true
+    gcp:
+      projectId: ""
+      locationId: "global"
+      keyRingId: ""
+      keyId: ""
+      # Uses workload identity by default
+      useWorkloadIdentity: true
+
+  # Audit Logging
+  audit:
+    enabled: true
+    # Log retention days
+    retentionDays: 90
+    # Export to external systems
+    export:
+      enabled: false
+      type: "syslog"  # syslog, splunk, datadog, custom
+      endpoint: ""
+      # For Splunk
+      splunkToken: ""
+      # For custom webhook
+      webhookUrl: ""
+      webhookSecret: ""
+
+  # Data Residency
+  dataResidency:
+    enabled: false
+    region: ""  # us, eu, apac, custom
+    # Enforce data locality
+    enforceLocality: true
+    # Allowed storage regions
+    allowedRegions:
+      - us-east-1
+      - us-west-2
+
+  # Custom RBAC Roles
+  rbac:
+    enabled: true
+    # Pre-defined custom roles
+    customRoles: []
+    # Example:
+    # - name: data-scientist
+    #   permissions:
+    #     - memories:read
+    #     - memories:write
+    #     - traces:read
+    #   description: "Data scientist role with memory access"
+
+  # Resource Quotas per Organization
+  quotas:
+    enabled: false
+    defaults:
+      maxUsers: 100
+      maxMemoryGB: 50
+      maxRequestsPerMonth: 1000000
+      maxTracesPerMonth: 500000
+
+# Vector Database Configuration
+vectorDb:
+  # Use embedded Qdrant or external
+  type: "embedded"  # embedded, external
+  external:
+    host: ""
+    port: 6333
+    apiKey: ""
+    collection: "seizn"
+  embedded:
+    persistence:
+      enabled: true
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 8Gi
+
+# Monitoring & Observability
+monitoring:
+  enabled: true
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+  # Grafana dashboards
+  grafana:
+    enabled: false
+    dashboards:
+      enabled: true
+  # Tracing
+  tracing:
+    enabled: false
+    provider: "otlp"  # otlp, jaeger, zipkin
+    endpoint: ""
+    samplingRate: 0.1
+
+# Backup & Recovery
+backup:
+  enabled: false
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: 30
+  # Storage backend
+  storage:
+    type: "s3"  # s3, gcs, azure, local
+    bucket: ""
+    prefix: "seizn-backups"
+    # Credentials (or use IRSA/Workload Identity)
+    accessKeyId: ""
+    secretAccessKey: ""

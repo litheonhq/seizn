@@ -351,3 +351,5 @@ export function validateSAMLConfig(config: SAMLConfig): { valid: boolean; errors
     errors,
   };
 }
+
+// validateOIDCConfig is defined in oidc-provider.ts to avoid circular dependency
