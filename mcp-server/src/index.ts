@@ -459,6 +459,45 @@ const tools: Tool[] = [
       },
       required: ["relations"]
     }
+  },
+  // =========================================================================
+  // Profile API Tools (PR-021)
+  // =========================================================================
+  {
+    name: "get_profile",
+    description: "Get the user's structured profile including about_me, preferences, constraints, tools, and workstyle.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        history: {
+          type: "boolean",
+          description: "If true, include version history (default: false)"
+        }
+      }
+    }
+  },
+  {
+    name: "update_profile",
+    description: "Update the user's structured profile. Creates a new version preserving history.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        aboutMe: { type: "string", description: "Brief paragraph about the user" },
+        preferences: { type: "object", description: "Key-value pairs for user preferences" },
+        constraints: { type: "array", items: { type: "string" }, description: "List of constraints or limitations" },
+        tools: { type: "array", items: { type: "string" }, description: "Tools and technologies the user uses" },
+        workstyle: { type: "string", description: "How the user prefers to work" },
+        customFields: { type: "object", description: "Any other structured information" }
+      }
+    }
+  },
+  {
+    name: "derive_profile",
+    description: "Derive a structured profile from the user's memories using AI. Creates a new profile version based on stored memories.",
+    inputSchema: {
+      type: "object",
+      properties: {}
+    }
   }
 ];
 
@@ -693,6 +732,60 @@ async function handleFlushMemories(options: FlushOptions = {}): Promise<string> 
 }
 
 // =========================================================================
+// Profile API Handlers (PR-021)
+// =========================================================================
+
+interface ProfileResponse {
+  userId: string;
+  version: number;
+  aboutMe: string;
+  preferences: Record<string, unknown>;
+  constraints: string[];
+  tools: string[];
+  workstyle: string;
+  customFields: Record<string, unknown>;
+  derivedFrom: string;
+  updatedAt: string;
+}
+
+interface ProfileUpdateOptions {
+  aboutMe?: string;
+  preferences?: Record<string, unknown>;
+  constraints?: string[];
+  tools?: string[];
+  workstyle?: string;
+  customFields?: Record<string, unknown>;
+}
+
+async function handleGetProfile(options: { history?: boolean } = {}): Promise<string> {
+  const endpoint = options.history
+    ? "/api/v1/profile?history=true"
+    : "/api/v1/profile";
+
+  const response = await apiRequest(endpoint) as ProfileResponse | { profile: ProfileResponse; history: ProfileResponse[] };
+
+  return JSON.stringify({ success: true, ...response });
+}
+
+async function handleUpdateProfile(options: ProfileUpdateOptions): Promise<string> {
+  const response = await apiRequest("/api/v1/profile", "PUT", options) as ProfileResponse;
+
+  return JSON.stringify({
+    success: true,
+    profile: response,
+  });
+}
+
+async function handleDeriveProfile(): Promise<string> {
+  const response = await apiRequest("/api/v1/profile/derive", "POST") as ProfileResponse;
+
+  return JSON.stringify({
+    success: true,
+    profile: response,
+  });
+}
+
+// =========================================================================
 // Connector Handlers
 // =========================================================================
 
@@ -788,7 +881,7 @@ async function main() {
   const server = new Server(
     {
       name: "seizn-memory",
-      version: "2.0.0", // v2.0: Added Context API and Connector tools
+      version: "2.1.0", // v2.1: Added Profile API tools
     },
     {
       capabilities: {
@@ -816,6 +909,17 @@ async function main() {
           break;
         case "flush_memories":
           result = await handleFlushMemories(args as FlushOptions);
+          break;
+
+        // Profile API Tools
+        case "get_profile":
+          result = await handleGetProfile(args as { history?: boolean });
+          break;
+        case "update_profile":
+          result = await handleUpdateProfile(args as ProfileUpdateOptions);
+          break;
+        case "derive_profile":
+          result = await handleDeriveProfile();
           break;
 
         // Connector Tools

@@ -5,16 +5,7 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
-import { getEffectivePlan } from "@/lib/plan-limits";
-
-
-// Plan display limits for UI
-const UI_PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number }> = {
-  free: { memories: 10000, apiCalls: 1000, apiKeys: 3 },
-  plus: { memories: 100000, apiCalls: 10000, apiKeys: 10 },
-  pro: { memories: 1000000, apiCalls: 100000, apiKeys: 50 },
-  enterprise: { memories: -1, apiCalls: -1, apiKeys: -1 }, // -1 = unlimited
-};
+import { getEffectivePlan, getPlan } from "@/lib/plan-limits";
 
 /**
  * GET /api/quota
@@ -50,8 +41,8 @@ export async function GET() {
       subscription_ends_at: profile?.subscription_ends_at,
     });
 
-    const uiLimits = UI_PLAN_LIMITS[effectivePlan] || UI_PLAN_LIMITS.free;
-
+    const planConfig = getPlan(effectivePlan);
+    const uiLimits = { memories: planConfig.memories, apiCalls: planConfig.apiCallsMonthly, apiKeys: planConfig.apiKeys };
 
     // Get API call count for this month
     const now = new Date();
