@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect, Suspense, memo } from "react";
+import { useState, useCallback, useEffect, useMemo, Suspense, memo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -184,6 +185,15 @@ const MOCK_COST: CostBreakdown = {
   queryUnits: 1.5,
 };
 
+/** Determine seasonal theme class based on current month */
+function getSeasonalTheme(): string {
+  const month = new Date().getMonth(); // 0-11
+  if (month >= 2 && month <= 4) return "theme-spring";
+  if (month >= 5 && month <= 7) return "theme-summer";
+  if (month >= 8 && month <= 10) return "theme-autumn";
+  return "theme-winter";
+}
+
 // Memoized Navigation component to prevent unnecessary re-renders
 const Navigation = memo(function Navigation({
   locale,
@@ -197,37 +207,37 @@ const Navigation = memo(function Navigation({
   t: Dictionary;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left: Logo + Navigation Links */}
         <div className="flex items-center gap-8">
           <Link href={`/${locale}`} className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/seizn-icon.svg"
               alt="Seizn"
               className="w-8 h-8"
               width={32}
               height={32}
+              priority
             />
-            <span className="font-semibold text-xl tracking-tight text-gray-900">Seizn</span>
+            <span className="font-semibold text-xl tracking-tight text-gray-900 dark:text-gray-100">Seizn</span>
           </Link>
 
           {/* Desktop Nav - Links next to logo */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/docs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="/docs" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.docs || "Docs"}
             </Link>
-            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.pricing || "Pricing"}
             </Link>
-            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.enterprise || "Enterprise"}
             </Link>
-            <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.github || "GitHub"}
             </a>
-            <Link href="/status" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="/status" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               {t.extremeHome?.nav?.status || "Status"}
             </Link>
           </div>
@@ -246,7 +256,7 @@ const Navigation = memo(function Navigation({
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-gray-600"
+          className="md:hidden p-2 text-gray-600 dark:text-gray-400"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -254,34 +264,36 @@ const Navigation = memo(function Navigation({
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100">
-          <div className="px-4 py-4 space-y-3">
-            <Link href="/docs" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-              {t.extremeHome?.nav?.docs || "Docs"}
-            </Link>
-            <Link href={`/${locale}/pricing`} className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-              {t.extremeHome?.nav?.pricing || "Pricing"}
-            </Link>
-            <Link href={`/${locale}/enterprise`} className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-              {t.extremeHome?.nav?.enterprise || "Enterprise"}
-            </Link>
-            <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-              {t.extremeHome?.nav?.github || "GitHub"}
-            </a>
-            <Link href="/status" className="block py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-              {t.extremeHome?.nav?.status || "Status"}
-            </Link>
-            <div className="pt-2 border-t border-gray-100">
-              <LanguageSwitcher currentLocale={locale} />
-            </div>
-            <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full mt-3">
-              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
-            </Link>
+      {/* Mobile Menu - animated */}
+      <div
+        className={`md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+          mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-4 py-4 space-y-3">
+          <Link href="/docs" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.extremeHome?.nav?.docs || "Docs"}
+          </Link>
+          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.extremeHome?.nav?.pricing || "Pricing"}
+          </Link>
+          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.extremeHome?.nav?.enterprise || "Enterprise"}
+          </Link>
+          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.extremeHome?.nav?.github || "GitHub"}
+          </a>
+          <Link href="/status" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.extremeHome?.nav?.status || "Status"}
+          </Link>
+          <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+            <LanguageSwitcher currentLocale={locale} />
           </div>
+          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full mt-3">
+            {t.extremeHome?.nav?.getApiKey || "Get API Key"}
+          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 });
@@ -473,6 +485,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   }, [hasRun, handleRun]);
 
   const t = dict;
+  const seasonalTheme = useMemo(() => getSeasonalTheme(), []);
 
   return (
     <>
@@ -484,16 +497,16 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         t={t}
       />
 
-      {/* Hero Section - Clean, focused above-the-fold with proper spacing */}
-      <section className="min-h-[70vh] flex items-center pt-20 lg:pt-24 pb-16 lg:pb-24 px-4 sm:px-6">
+      {/* Hero Section - Clean, focused above-the-fold with seasonal theme */}
+      <section className={`min-h-[70vh] flex items-center pt-20 lg:pt-24 pb-16 lg:pb-24 px-4 sm:px-6 ${seasonalTheme} theme-gradient-bg`}>
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* H1 - Concise tagline */}
-          <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 leading-[1.08]">
+          <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08]">
             {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
           </h1>
 
           {/* Subtitle - Single sentence, clear value prop */}
-          <p className="text-lg lg:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg lg:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
             {t.extremeHome?.heroSubtitle || "Trace, evaluate, and enforce policies — all in one request."}
           </p>
 
@@ -501,9 +514,9 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             <Link
               href={`/${locale}/signup`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shadow-sm"
             >
-              {"Get API Key"}
+              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -512,13 +525,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               onClick={() => {
                 document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-medium rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              {"Try Demo"}
+              {t.extremeHome?.nav?.tryDemo || "Try Demo"}
             </button>
           </div>
 
@@ -547,28 +560,28 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       </section>
 
       {/* Playground Section - Visually distinct with subtle background */}
-      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-gray-50/50 to-white">
+      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950">
         <div className="max-w-7xl mx-auto">
           {/* Playground Header with Mode Toggle */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {t.extremeHome?.playgroundTitle || "Playground"}
               </h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {"Test the API with your own queries"}
               </p>
             </div>
 
             {/* Mode Toggle - Moved here */}
             <div className="flex items-center gap-2">
-              <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-xl">
+              <div className="inline-flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
                 <button
                   onClick={() => setMode("mock")}
                   className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "mock"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                   }`}
                 >
                   Mock
@@ -577,8 +590,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   onClick={() => setMode("real")}
                   className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "real"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                   }`}
                 >
                   Real API
@@ -596,22 +609,22 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           {hasRun && (
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <CheckIcon className="w-4 h-4 text-emerald-600" />
+                <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                  <CheckIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <span className="text-sm text-gray-600">{t.extremeHome?.firstRetrievalComplete || "First retrieval complete"}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{t.extremeHome?.firstRetrievalComplete || "First retrieval complete"}</span>
               </div>
-              <span className="text-gray-300">|</span>
-              <span className="text-sm text-gray-500">{t.extremeHome?.copySnippetHint || "Copy the snippet below to reproduce"}</span>
+              <span className="text-gray-300 dark:text-gray-600">|</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{t.extremeHome?.copySnippetHint || "Copy the snippet below to reproduce"}</span>
             </div>
           )}
 
           {/* Live Console - Desktop */}
-          <div className="hidden md:block bg-gray-50 rounded-2xl p-6 border border-gray-100">
+          <div className="hidden md:block bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
             <div className="grid grid-cols-2 gap-6">
               {/* Left: Request Builder */}
-              <div className="bg-white rounded-xl p-6 border border-gray-100">
-                <h3 className="text-sm font-medium text-gray-500 mb-4">{(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700">
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">{(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
                 <RequestBuilder
                   config={config}
                   onConfigChange={setConfig}
@@ -622,20 +635,20 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               </div>
 
               {/* Right: Results + Trace */}
-              <div className="bg-white rounded-xl p-6 border border-gray-100 flex flex-col min-h-[600px]">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700 flex flex-col min-h-[600px]">
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
                     onClick={() => setActiveTab("results")}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "results"
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
                   >
                     {t.extremeHome?.tabs?.results || "Results"}
                     {results.length > 0 && (
-                      <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-full">
                         {results.length}
                       </span>
                     )}
@@ -644,13 +657,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                     onClick={() => setActiveTab("trace")}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "trace"
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
                   >
                     {t.extremeHome?.tabs?.trace || "Trace"}
                     {trace && (
-                      <span className="ml-2 text-xs bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">
                         {trace.totalLatencyMs.toFixed(0)}ms
                       </span>
                     )}
@@ -659,13 +672,13 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                     onClick={() => setActiveTab("cost")}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "cost"
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
                   >
                     {t.extremeHome?.tabs?.cost || "Cost"}
                     {cost && (
-                      <span className="ml-2 text-xs bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded-full">
                         ${cost.total.toFixed(4)}
                       </span>
                     )}
@@ -720,15 +733,15 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           </div>
 
           {/* Live Console - Mobile */}
-          <div className="md:hidden bg-gray-50 rounded-2xl p-4 border border-gray-100">
+          <div className="md:hidden bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800">
             {/* Mobile Tabs */}
             <div className="flex items-center gap-2 mb-4 overflow-x-auto">
               <button
                 onClick={() => setMobileConsoleTab("request")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "request"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
                 {(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request"}
@@ -737,8 +750,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 onClick={() => setMobileConsoleTab("results")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "results"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
                 {t.extremeHome?.tabs?.results || "Results"}
@@ -747,8 +760,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 onClick={() => setMobileConsoleTab("trace")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "trace"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
                 {t.extremeHome?.tabs?.trace || "Trace"}
@@ -757,15 +770,15 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 onClick={() => setMobileConsoleTab("cost")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "cost"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
                 {t.extremeHome?.tabs?.cost || "Cost"}
               </button>
             </div>
 
-            <div className="bg-white rounded-xl p-4 border border-gray-100 min-h-[400px]">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700 min-h-[400px]">
               {mobileConsoleTab === "request" && (
                 <RequestBuilder
                   config={config}
@@ -812,8 +825,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       <section className="py-8 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t.extremeHome?.copySnippetTitle || "Copy this snippet"}</h2>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.copySnippetTitle || "Copy this snippet"}</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {t.extremeHome?.copySnippetSubtitle || "Generated from your exact settings above"}
             </p>
           </div>

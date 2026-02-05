@@ -1308,7 +1308,8 @@
         "searchRetrieval": "Search & Retrieval",
         "extraction": "Extraction",
         "operations": "Operations",
-        "securityCompliance": "Security & Compliance"
+        "securityCompliance": "Security & Compliance",
+        "technology": "Technology"
       },
       "items": [
         {
@@ -1460,6 +1461,46 @@
           "category": "securityCompliance",
           "question": "How do I implement user data deletion for GDPR/CCPA?",
           "answer": "Use DELETE /api/memories with user_id filter to remove all memories for a user. Enable audit logging to prove deletion. Set retention policies to auto-delete after a period. Export user data with GET /api/memories/export?user_id=xxx for data portability requests."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "What is the Graph-RAG memory system?",
+          "answer": "Seizn uses a Graph-RAG architecture that combines vector embeddings with knowledge graph relationships. Memories are stored as nodes with typed edges (relates_to, supports, contradicts, etc.). This enables: contextual recall through graph traversal, automatic community detection for topic clustering, and temporal knowledge tracking with validity periods."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "What is the memory tier system (Hot/Warm/Cold)?",
+          "answer": "Seizn automatically organizes memories into tiers based on usage: Hot tier (frequently accessed, kept in fast cache), Warm tier (occasionally accessed, standard retrieval), Cold tier (rarely used, archived but searchable). The tier manager automatically promotes/demotes memories based on access patterns, optimizing both performance and cost."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "How does cross-lingual search work?",
+          "answer": "Seizn stores both original content and a canonical English representation for each memory. Search queries are matched against both embeddings, enabling scenarios like searching in English and finding Hindi memories. We use multilingual embedding models (BGE-M3, LaBSE) that support 100+ languages with high cross-lingual alignment."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "What languages are supported for memory extraction?",
+          "answer": "Seizn supports 35+ languages for memory extraction and search, including: English, Chinese (Simplified/Traditional), Hindi, Spanish, French, German, Japanese, Korean, Russian, Ukrainian, Arabic, and all major Indic languages (Tamil, Telugu, Bengali, etc.). Language is auto-detected with 95%+ accuracy."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "What is MCP integration and how do I use it?",
+          "answer": "MCP (Model Context Protocol) allows AI assistants like Claude Desktop to directly access Seizn memories. Install our MCP server (npx @seizn/mcp-server), add it to your Claude Desktop config, and the assistant can automatically save and retrieve memories during conversations. This enables persistent personalization across sessions."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "What technology powers Seizn's memory system?",
+          "answer": "Seizn is built on: Next.js 16 with React Server Components, Supabase (PostgreSQL + pgvector for vector search), Voyage AI voyage-3 model (1024-dim embeddings), Claude for memory extraction and analysis. We use HNSW indexes for sub-100ms vector search, WebSocket realtime subscriptions, and Redis for caching."
+        },
+        {
+          "category": "operations",
+          "question": "How do I integrate Seizn with my LLM workflow?",
+          "answer": "Three main approaches: 1) REST API - direct HTTP calls for full control, 2) SDKs (TypeScript/Python) - type-safe wrappers with retry logic, 3) MCP Server - automatic integration with Claude Desktop and other MCP-compatible assistants. For production, we recommend the SDK with server-side calls to protect your API key."
+        },
+        {
+          "category": "operations",
+          "question": "What is the Context API and how do I use it?",
+          "answer": "The Context API (GET /api/context) returns a pre-formatted string ready to inject into your LLM prompt. It combines: user profile, recent memories, relevant facts, and graph context. Use format=brief (~500 tokens), detailed (~1500 tokens), or extended (~3000 tokens) based on your context budget."
         }
       ]
     },

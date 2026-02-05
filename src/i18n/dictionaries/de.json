@@ -894,7 +894,8 @@
         "searchRetrieval": "Suche und Abruf",
         "extraction": "Extraktion",
         "operations": "Operationen",
-        "securityCompliance": "Sicherheit und Compliance"
+        "securityCompliance": "Sicherheit und Compliance",
+        "technology": "Technologie"
       },
       "items": [
         {
@@ -996,6 +997,46 @@
           "category": "securityCompliance",
           "question": "Welche Dokumentation braucht mein Sicherheits-/Rechtsteam?",
           "answer": "Sie wollen: 1) Datenumfang (was wird gespeichert/nicht gespeichert), 2) Verschlüsselung (ruhend: AES-256, übertragend: TLS), 3) Tenant-Isolierungsmethode, 4) Lösch-/Aufbewahrungsrichtlinie, 5) Audit-Log-Zugriff, 6) Schlüsselrotations-/Ablaufrichtlinie. Eine Sicherheits- und Governance-Seite in Ihren Docs führen."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Was ist das Graph-RAG Speichersystem?",
+          "answer": "Seizn verwendet eine Graph-RAG-Architektur, die Vektor-Embeddings mit Wissensgraph-Beziehungen kombiniert. Speicher werden als Knoten mit typisierten Kanten gespeichert (relates_to, supports, contradicts, etc.). Dies ermöglicht: kontextuellen Abruf durch Graph-Traversierung, automatische Community-Erkennung für thematisches Clustering und zeitliches Wissens-Tracking mit Gültigkeitsperioden."
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Was ist das Speicher-Tier-System (Hot/Warm/Cold)?",
+          "answer": "Seizn organisiert Speicher automatisch in Tiers basierend auf der Nutzung: Hot-Tier (häufig zugegriffen, in schnellem Cache gehalten), Warm-Tier (gelegentlich zugegriffen, Standard-Abruf), Cold-Tier (selten genutzt, archiviert aber durchsuchbar). Der Tier-Manager befördert/degradiert Speicher automatisch basierend auf Zugriffsmustern und optimiert sowohl Leistung als auch Kosten."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Wie funktioniert die sprachübergreifende Suche?",
+          "answer": "Seizn speichert sowohl den Originalinhalt als auch eine kanonische englische Repräsentation für jeden Speicher. Suchanfragen werden mit beiden Embeddings abgeglichen, was Szenarien wie das Suchen auf Englisch und Finden von Hindi-Speichern ermöglicht. Wir verwenden mehrsprachige Embedding-Modelle (BGE-M3, LaBSE), die über 100 Sprachen mit hoher sprachübergreifender Ausrichtung unterstützen."
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "Welche Sprachen werden für die Speicherextraktion unterstützt?",
+          "answer": "Seizn unterstützt über 35 Sprachen für Speicherextraktion und -suche, darunter: Englisch, Chinesisch (vereinfacht/traditionell), Hindi, Spanisch, Französisch, Deutsch, Japanisch, Koreanisch, Russisch, Ukrainisch, Arabisch und alle wichtigen indischen Sprachen (Tamil, Telugu, Bengali, etc.). Die Sprache wird automatisch mit über 95% Genauigkeit erkannt."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Was ist MCP-Integration und wie nutze ich sie?",
+          "answer": "MCP (Model Context Protocol) ermöglicht KI-Assistenten wie Claude Desktop den direkten Zugriff auf Seizn-Speicher. Installieren Sie unseren MCP-Server (npx @seizn/mcp-server), fügen Sie ihn zu Ihrer Claude Desktop-Konfiguration hinzu, und der Assistent kann während Gesprächen automatisch Speicher speichern und abrufen. Dies ermöglicht persistente Personalisierung über Sitzungen hinweg."
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Welche Technologie treibt Seizns Speichersystem an?",
+          "answer": "Seizn basiert auf: Next.js 16 mit React Server Components, Supabase (PostgreSQL + pgvector für Vektorsuche), Voyage AI voyage-3 Modell (1024-dimensionale Embeddings), Claude für Speicherextraktion und -analyse. Wir verwenden HNSW-Indizes für sub-100ms Vektorsuche, WebSocket-Echtzeit-Abonnements und Redis für Caching."
+        },
+        {
+          "category": "operations",
+          "question": "Wie integriere ich Seizn in meinen LLM-Workflow?",
+          "answer": "Drei Hauptansätze: 1) REST API - direkte HTTP-Aufrufe für volle Kontrolle, 2) SDKs (TypeScript/Python) - typsichere Wrapper mit Retry-Logik, 3) MCP-Server - automatische Integration mit Claude Desktop und anderen MCP-kompatiblen Assistenten. Für Produktion empfehlen wir das SDK mit serverseitigen Aufrufen zum Schutz Ihres API-Schlüssels."
+        },
+        {
+          "category": "operations",
+          "question": "Was ist die Context API und wie nutze ich sie?",
+          "answer": "Die Context API (GET /api/context) gibt einen vorformatierten String zurück, der direkt in Ihren LLM-Prompt eingefügt werden kann. Sie kombiniert: Benutzerprofil, aktuelle Speicher, relevante Fakten und Graph-Kontext. Verwenden Sie format=brief (~500 Tokens), detailed (~1500 Tokens) oder extended (~3000 Tokens) je nach Ihrem Kontext-Budget."
         }
       ]
     },

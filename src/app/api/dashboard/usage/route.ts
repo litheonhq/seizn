@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { AuthErrors, ServerErrors } from '@/lib/api-error';
 
 // GET /api/dashboard/usage - Get detailed usage analytics
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return AuthErrors.unauthorized('usage analytics');
     }
 
     const { searchParams } = new URL(request.url);
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     if (logsError) {
       console.error('Usage logs error:', logsError);
-      return NextResponse.json({ error: 'Failed to fetch usage' }, { status: 500 });
+      return ServerErrors.database('fetch_usage');
     }
 
     // Process data for charts
@@ -86,7 +87,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Usage analytics error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return ServerErrors.internal('usage_analytics');
   }
 }
 

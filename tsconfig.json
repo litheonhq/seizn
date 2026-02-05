@@ -22,6 +22,7 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
@@ -30,6 +31,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "src/types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
@@ -42,6 +44,7 @@
     "examples",
     "packages",
     "relay-agent",
+    "scripts",
     "src/test",
     "**/*.test.ts",
     "**/*.test.tsx"

@@ -1,0 +1,246 @@
+name: Red Team Security Scan
+
+on:
+  # Run on schedule (nightly)
+  schedule:
+    - cron: '0 2 * * *'  # 2 AM UTC daily
+
+  # Run on PRs that modify prompt templates or AI-related code
+  pull_request:
+    paths:
+      - 'src/lib/**/*.ts'
+      - 'src/app/api/**/*.ts'
+      - 'prompts/**'
+      - 'system-prompts/**'
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      attack_categories:
+        description: 'Comma-separated attack categories (jailbreak,injection,extraction,bypass)'
+        required: false
+        default: 'jailbreak,injection,extraction,bypass'
+      test_limit:
+        description: 'Maximum tests per category'
+        required: false
+        default: '10'
+      target_endpoint:
+        description: 'Target API endpoint (default: staging)'
+        required: false
+        default: 'staging'
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  red-team-scan:
+    name: Red Team Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set target URL
+        id: target
+        run: |
+          if [ "${{ github.event.inputs.target_endpoint }}" = "production" ]; then
+            echo "url=${{ secrets.PRODUCTION_API_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "url=${{ secrets.STAGING_API_URL }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Red Team Scan
+        id: scan
+        env:
+          API_URL: ${{ steps.target.outputs.url }}
+          API_KEY: ${{ secrets.RED_TEAM_API_KEY }}
+          ATTACK_CATEGORIES: ${{ github.event.inputs.attack_categories || 'jailbreak,injection,extraction,bypass' }}
+          TEST_LIMIT: ${{ github.event.inputs.test_limit || '10' }}
+        run: |
+          npm run security:red-team -- \
+            --categories "$ATTACK_CATEGORIES" \
+            --limit "$TEST_LIMIT" \
+            --output-file red-team-report.json
+
+      - name: Process Results
+        id: results
+        run: |
+          if [ -f red-team-report.json ]; then
+            CRITICAL=$(jq '.findings | map(select(.severity == "critical")) | length' red-team-report.json)
+            HIGH=$(jq '.findings | map(select(.severity == "high")) | length' red-team-report.json)
+            TOTAL=$(jq '.summary.total_tests' red-team-report.json)
+            PASSED=$(jq '.summary.passed' red-team-report.json)
+
+            echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high=$HIGH" >> $GITHUB_OUTPUT
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+
+            # Fail if critical findings
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "status=failed" >> $GITHUB_OUTPUT
+            else
+              echo "status=passed" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "status=error" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: red-team-report-${{ github.run_number }}
+          path: red-team-report.json
+          retention-days: 90
+
+      - name: Create Summary
+        run: |
+          cat << EOF >> $GITHUB_STEP_SUMMARY
+          ## 🔴 Red Team Security Scan Results
+
+          | Metric | Value |
+          |--------|-------|
+          | Total Tests | ${{ steps.results.outputs.total }} |
+          | Passed | ${{ steps.results.outputs.passed }} |
+          | Critical Findings | ${{ steps.results.outputs.critical }} |
+          | High Findings | ${{ steps.results.outputs.high }} |
+
+          ### Status: ${{ steps.results.outputs.status == 'passed' && '✅ PASSED' || '❌ FAILED' }}
+
+          $(if [ "${{ steps.results.outputs.critical }}" -gt 0 ]; then echo "⚠️ **Critical vulnerabilities detected!** Review required before merge."; fi)
+
+          [View Full Report](../actions/runs/${{ github.run_id }})
+          EOF
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const critical = ${{ steps.results.outputs.critical }};
+            const high = ${{ steps.results.outputs.high }};
+            const total = ${{ steps.results.outputs.total }};
+            const passed = ${{ steps.results.outputs.passed }};
+            const status = '${{ steps.results.outputs.status }}';
+
+            const emoji = status === 'passed' ? '✅' : '❌';
+            const body = `## ${emoji} Red Team Security Scan
+
+            | Metric | Value |
+            |--------|-------|
+            | Total Tests | ${total} |
+            | Passed | ${passed} |
+            | Critical Findings | ${critical} |
+            | High Findings | ${high} |
+
+            ${critical > 0 ? '⚠️ **Critical vulnerabilities detected!** Please review the [security report](../actions/runs/${{ github.run_id }}) before merging.' : ''}
+
+            <details>
+            <summary>View scan details</summary>
+
+            - Attack categories tested: ${{ github.event.inputs.attack_categories || 'jailbreak,injection,extraction,bypass' }}
+            - Test limit per category: ${{ github.event.inputs.test_limit || '10' }}
+            - Target: ${{ github.event.inputs.target_endpoint || 'staging' }}
+
+            </details>
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Fail on Critical Findings
+        if: steps.results.outputs.critical > 0
+        run: |
+          echo "❌ Critical security vulnerabilities found!"
+          echo "Please review the red-team-report.json artifact for details."
+          exit 1
+
+      - name: Send Slack Notification (Critical)
+        if: failure() && steps.results.outputs.critical > 0
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "🚨 Critical Security Alert",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Red Team Scan: Critical Findings"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {"type": "mrkdwn", "text": "*Repository:*\n${{ github.repository }}"},
+                    {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"},
+                    {"type": "mrkdwn", "text": "*Critical:*\n${{ steps.results.outputs.critical }}"},
+                    {"type": "mrkdwn", "text": "*High:*\n${{ steps.results.outputs.high }}"}
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "text": "View Report"},
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  # Optional: Store results in database for trend analysis
+  store-results:
+    name: Store Results
+    needs: red-team-scan
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Report
+        uses: actions/download-artifact@v4
+        with:
+          name: red-team-report-${{ github.run_number }}
+        continue-on-error: true
+
+      - name: Store in Database
+        if: hashFiles('red-team-report.json') != ''
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          # Store scan results for trend analysis
+          curl -X POST "$SUPABASE_URL/rest/v1/security_scan_results" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d @- << EOF
+          {
+            "scan_type": "red_team",
+            "run_id": "${{ github.run_id }}",
+            "ref": "${{ github.ref }}",
+            "sha": "${{ github.sha }}",
+            "report": $(cat red-team-report.json)
+          }
+          EOF

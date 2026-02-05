@@ -110,6 +110,8 @@ export const DOMAIN_CONFIGS: Record<DomainType, DomainConfig> = {
 
 /**
  * Get recommended model for a domain
+ * @deprecated UNUSED - This function is exported but not currently used in the codebase.
+ * Code quality audit: 2026-02-05
  */
 export function getRecommendedModel(domain: DomainType): RerankerModel {
   return DOMAIN_CONFIGS[domain]?.recommendedModel || 'cohere-rerank-v3';
@@ -214,6 +216,8 @@ export function detectDomain(content: string): DomainType {
 
 /**
  * Get domain-specific prompt augmentation
+ * @deprecated UNUSED - This function is exported but not currently used in the codebase.
+ * Code quality audit: 2026-02-05
  */
 export function getDomainPromptAugmentation(domain: DomainType): string {
   const augmentations: Record<DomainType, string> = {

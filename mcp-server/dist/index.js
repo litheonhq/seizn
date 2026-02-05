@@ -127,6 +127,116 @@ async function apiRequest(endpoint, method = "GET", body) {
 }
 // Tool definitions
 const tools = [
+    // =========================================================================
+    // Context API Tools (Zep/Memobase style)
+    // =========================================================================
+    {
+        name: "get_context",
+        description: "Get formatted context string ready for LLM prompt injection. Supports multiple formats and includes user profile, facts, and recent messages.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                format: {
+                    type: "string",
+                    enum: ["brief", "detailed", "extended"],
+                    description: "Context format: brief (~500 tokens), detailed (~1500 tokens), extended (~3000 tokens)"
+                },
+                query: {
+                    type: "string",
+                    description: "Optional query for relevance filtering"
+                },
+                includeProfile: {
+                    type: "boolean",
+                    description: "Include user profile summary (default: true)"
+                },
+                includeGraph: {
+                    type: "boolean",
+                    description: "Include graph relationships (default: false)"
+                },
+                tierStrategy: {
+                    type: "string",
+                    enum: ["hot_first", "balanced", "comprehensive"],
+                    description: "Memory tier retrieval strategy"
+                },
+                maxTokens: {
+                    type: "number",
+                    description: "Maximum tokens for context"
+                }
+            }
+        }
+    },
+    {
+        name: "flush_memories",
+        description: "Immediately process pending memories: promote candidates, generate embeddings, create links, update profile.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                processCandidates: {
+                    type: "boolean",
+                    description: "Process pending candidates (default: true)"
+                },
+                generateEmbeddings: {
+                    type: "boolean",
+                    description: "Generate missing embeddings (default: true)"
+                },
+                generateLinks: {
+                    type: "boolean",
+                    description: "Generate links between memories (default: true)"
+                },
+                updateProfile: {
+                    type: "boolean",
+                    description: "Update user profile (default: true)"
+                },
+                maxItems: {
+                    type: "number",
+                    description: "Maximum items to process per category (default: 50)"
+                }
+            }
+        }
+    },
+    // =========================================================================
+    // External Connector Tools
+    // =========================================================================
+    {
+        name: "sync_connector",
+        description: "Trigger synchronization from an external source (Google Drive, Notion, GitHub)",
+        inputSchema: {
+            type: "object",
+            properties: {
+                connectorType: {
+                    type: "string",
+                    enum: ["google_drive", "notion", "github"],
+                    description: "Type of connector to sync"
+                },
+                connectionId: {
+                    type: "string",
+                    description: "Optional specific connection ID to sync"
+                },
+                force: {
+                    type: "boolean",
+                    description: "Force re-sync even if content unchanged"
+                }
+            },
+            required: ["connectorType"]
+        }
+    },
+    {
+        name: "list_connectors",
+        description: "List available external connectors and their status",
+        inputSchema: {
+            type: "object",
+            properties: {
+                connectorType: {
+                    type: "string",
+                    enum: ["google_drive", "notion", "github"],
+                    description: "Optional filter by connector type"
+                }
+            }
+        }
+    },
+    // =========================================================================
+    // Knowledge Graph Tools (existing)
+    // =========================================================================
     {
         name: "create_entities",
         description: "Create multiple new entities (memories) in Seizn. Each entity becomes a searchable memory.",
@@ -418,6 +528,69 @@ async function handleDeleteEntities(entityNames) {
     }
     return JSON.stringify({ success: true, deleted });
 }
+async function handleGetContext(options = {}) {
+    const params = new URLSearchParams();
+    if (options.format)
+        params.append("format", options.format);
+    if (options.query)
+        params.append("query", options.query);
+    if (options.includeProfile !== undefined)
+        params.append("includeProfile", String(options.includeProfile));
+    if (options.includeGraph !== undefined)
+        params.append("includeGraph", String(options.includeGraph));
+    if (options.tierStrategy)
+        params.append("tierStrategy", options.tierStrategy);
+    if (options.maxTokens)
+        params.append("maxTokens", String(options.maxTokens));
+    const response = await apiRequest(`/api/context?${params.toString()}`);
+    return JSON.stringify({
+        success: true,
+        contextString: response.contextString,
+        tokenCount: response.tokenCount,
+        factsIncluded: Array.isArray(response.facts) ? response.facts.length : 0,
+        metadata: response.metadata
+    });
+}
+async function handleFlushMemories(options = {}) {
+    const response = await apiRequest("/api/memories/flush", "POST", options);
+    return JSON.stringify({
+        success: response.success,
+        processed: response.processed,
+        processingMs: response.processingMs
+    });
+}
+async function handleSyncConnector(options) {
+    const endpoint = options.connectionId
+        ? `/api/connectors/${options.connectorType}/sync?connectionId=${options.connectionId}`
+        : `/api/connectors/${options.connectorType}/sync`;
+    const response = await apiRequest(endpoint, "POST", {
+        force: options.force || false
+    });
+    return JSON.stringify({
+        success: response.success,
+        connectorType: options.connectorType,
+        synced: response.synced ?? 0,
+        skipped: response.skipped ?? 0,
+        failed: response.failed ?? 0,
+        errors: response.errors ?? []
+    });
+}
+async function handleListConnectors(connectorType) {
+    const endpoint = connectorType
+        ? `/api/connectors?type=${connectorType}`
+        : "/api/connectors";
+    const response = await apiRequest(endpoint);
+    return JSON.stringify({
+        success: true,
+        connectors: response.connections?.map(c => ({
+            id: c.id,
+            type: c.connectorType,
+            account: c.accountEmail,
+            status: c.status,
+            lastSync: c.lastSyncAt
+        })) ?? []
+    });
+}
 // Helper functions
 function extractEntityName(content) {
     const match = content.match(/\[.*?\]\s*(.+?)(?:\n|$)/);
@@ -442,7 +615,7 @@ function parseRelation(content) {
 async function main() {
     const server = new index_js_1.Server({
         name: "seizn-memory",
-        version: "1.0.0",
+        version: "2.0.0", // v2.0: Added Context API and Connector tools
     }, {
         capabilities: {
             tools: {},
@@ -458,6 +631,21 @@ async function main() {
         try {
             let result;
             switch (name) {
+                // Context API Tools
+                case "get_context":
+                    result = await handleGetContext(args);
+                    break;
+                case "flush_memories":
+                    result = await handleFlushMemories(args);
+                    break;
+                // Connector Tools
+                case "sync_connector":
+                    result = await handleSyncConnector(args);
+                    break;
+                case "list_connectors":
+                    result = await handleListConnectors(args?.connectorType);
+                    break;
+                // Knowledge Graph Tools
                 case "create_entities":
                     result = await handleCreateEntities(args?.entities);
                     break;

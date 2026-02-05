@@ -9,15 +9,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  // Dictionary fetch preserved for future i18n of metadata
-  const _dict = await getDictionary(locale);
+  const dict = await getDictionary(locale);
+
+  const title = dict.metadata?.title || "Seizn - AI Memory Infrastructure";
+  const description = dict.metadata?.description || "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.";
 
   return {
-    title: "Seizn - Search you can debug",
-    description: "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.",
+    title,
+    description,
     openGraph: {
-      title: "Seizn - Search you can debug",
-      description: "Integrated retrieval stack with built-in tracing, evaluation, and governance.",
+      title,
+      description,
       type: "website",
     },
   };

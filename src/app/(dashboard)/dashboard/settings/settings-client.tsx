@@ -6,6 +6,7 @@ import Link from "next/link";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { RTBFModal, DataExportModal, DeleteMemoriesModal } from '@/components/settings';
 
 interface ProfileData {
   email?: string | null;
@@ -96,6 +97,11 @@ export function SettingsClient() {
     apiKeys: { used: 0, limit: PLAN_LIMITS.free.apiKeys },
   });
   const [quotaLoading, setQuotaLoading] = useState(true);
+
+  // Modal state for RTBF actions
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showDeleteMemoriesModal, setShowDeleteMemoriesModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -823,10 +829,10 @@ export function SettingsClient() {
                   </p>
                 </div>
                 <button
-                  disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  onClick={() => setShowExportModal(true)}
+                  className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
-                  {t("dashboard.settingsPage.notifications.comingSoon")}
+                  {t("dashboard.settingsPage.dangerZone.exportData")}
                 </button>
               </div>
             </div>
@@ -843,10 +849,10 @@ export function SettingsClient() {
                   </p>
                 </div>
                 <button
-                  disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  onClick={() => setShowDeleteMemoriesModal(true)}
+                  className="px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors"
                 >
-                  {t("dashboard.settingsPage.notifications.comingSoon")}
+                  {t("dashboard.settingsPage.dangerZone.deleteMemories")}
                 </button>
               </div>
             </div>
@@ -863,16 +869,30 @@ export function SettingsClient() {
                   </p>
                 </div>
                 <button
-                  disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  onClick={() => setShowDeleteAccountModal(true)}
+                  className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors"
                 >
-                  {t("dashboard.settingsPage.notifications.comingSoon")}
+                  {t("dashboard.settingsPage.dangerZone.deleteAccount")}
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* RTBF Modals */}
+      <DataExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+      />
+      <DeleteMemoriesModal
+        isOpen={showDeleteMemoriesModal}
+        onClose={() => setShowDeleteMemoriesModal(false)}
+      />
+      <RTBFModal
+        isOpen={showDeleteAccountModal}
+        onClose={() => setShowDeleteAccountModal(false)}
+      />
     </div>
   );
 }

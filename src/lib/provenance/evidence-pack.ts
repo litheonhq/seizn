@@ -12,6 +12,7 @@
 
 import { createHash, createSign, createVerify, generateKeyPairSync } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
+import { createKMSSigner, getKMSConfigFromEnv, type IKMSSigner, type KMSConfig } from './kms-signer';
 
 // ============================================
 // W3C PROV Types
@@ -448,7 +449,8 @@ export class EvidencePackBuilder {
   }
 
   /**
-   * Build and sign the evidence pack
+   * Build and sign the evidence pack (legacy - uses local key)
+   * @deprecated Use buildSignedWithKMS for production
    */
   buildSigned(privateKey: string): EvidencePack {
     const pack = this.build();
@@ -469,6 +471,42 @@ export class EvidencePackBuilder {
       algorithm: 'RSA-SHA256',
       value: signature,
       publicKey,
+    };
+
+    return pack;
+  }
+
+  /**
+   * Build and sign the evidence pack using KMS
+   *
+   * Uses cloud KMS (AWS, Azure, GCP) for cryptographic signing.
+   * Falls back to environment configuration if no config provided.
+   */
+  async buildSignedWithKMS(kmsConfig?: KMSConfig): Promise<EvidencePack> {
+    const pack = this.build();
+    const content = JSON.stringify(pack.provenance);
+
+    // Create KMS signer
+    const config = kmsConfig || getKMSConfigFromEnv();
+    const signer = createKMSSigner(config);
+
+    // Sign with KMS
+    const signatureResult = await signer.sign(content);
+
+    // Get public key for verification
+    const publicKey = await signer.getPublicKey();
+
+    pack.signature = {
+      algorithm: signatureResult.algorithm,
+      value: signatureResult.signature,
+      publicKey,
+    };
+
+    // Add KMS metadata
+    (pack.metadata as Record<string, unknown>).kms = {
+      provider: signatureResult.provider,
+      keyId: signatureResult.keyId,
+      signedAt: signatureResult.timestamp,
     };
 
     return pack;

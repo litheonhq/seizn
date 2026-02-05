@@ -48,6 +48,7 @@ export function FAQServer({ locale, dictionary }: Props) {
     "extraction",
     "operations",
     "securityCompliance",
+    "technology",
   ];
 
   // Generate JSON-LD for FAQPage schema (SSR - included in HTML)

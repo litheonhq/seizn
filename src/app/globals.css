@@ -608,3 +608,50 @@ body {
 .glow-cyan {
   box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
 }
+
+/* ========== Mind Map Edge Animation ========== */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-dash {
+  animation: dash 1s linear infinite;
+}
+
+/* React Flow custom styles */
+.react-flow__node.selected {
+  outline: none !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke-width: 3;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.react-flow__controls button {
+  background: white !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.dark .react-flow__controls button {
+  background: #1f2937 !important;
+  border-bottom: 1px solid #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.react-flow__controls button:hover {
+  background: #f3f4f6 !important;
+}
+
+.dark .react-flow__controls button:hover {
+  background: #374151 !important;
+}
+
+.react-flow__minimap {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}

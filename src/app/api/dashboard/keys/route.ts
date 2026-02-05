@@ -4,16 +4,19 @@ import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
+import {
+  AuthErrors,
+  ValidationErrors,
+  ServerErrors,
+  RateLimitErrors,
+} from '@/lib/api-error';
 
 // GET /api/dashboard/keys - List user's API keys (NextAuth session)
 export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return AuthErrors.unauthorized('API keys');
     }
 
     const supabase = createServerClient();
@@ -27,10 +30,7 @@ export async function GET() {
 
     if (error) {
       console.error('List keys error:', error);
-      return NextResponse.json(
-        { error: 'Failed to list keys' },
-        { status: 500 }
-      );
+      return ServerErrors.database('list_keys');
     }
 
     return NextResponse.json({
@@ -39,10 +39,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('List keys error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('list_keys');
   }
 }
 
@@ -51,10 +48,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return AuthErrors.unauthorized('API keys');
     }
 
     const body = await request.json();
@@ -86,10 +80,7 @@ export async function POST(request: NextRequest) {
     const keyLimit = keyLimits[plan] || 2;
 
     if ((count || 0) >= keyLimit) {
-      return NextResponse.json(
-        { error: `API key limit reached (${keyLimit} keys for ${plan} plan)` },
-        { status: 403 }
-      );
+      return RateLimitErrors.quotaExceeded('monthly', plan);
     }
 
     // Generate new API key
@@ -111,10 +102,7 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('Create key error:', insertError);
-      return NextResponse.json(
-        { error: 'Failed to create key' },
-        { status: 500 }
-      );
+      return ServerErrors.database('create_key');
     }
 
     // Send API key created notification email (non-blocking)
@@ -134,10 +122,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Create key error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('create_key');
   }
 }
 
@@ -146,20 +131,14 @@ export async function DELETE(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return AuthErrors.unauthorized('API keys');
     }
 
     const { searchParams } = new URL(request.url);
     const keyId = searchParams.get('id');
 
     if (!keyId) {
-      return NextResponse.json(
-        { error: 'Key ID required' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('id');
     }
 
     const supabase = createServerClient();
@@ -172,10 +151,7 @@ export async function DELETE(request: NextRequest) {
 
     if (error) {
       console.error('Revoke key error:', error);
-      return NextResponse.json(
-        { error: 'Failed to revoke key' },
-        { status: 500 }
-      );
+      return ServerErrors.database('revoke_key');
     }
 
     return NextResponse.json({
@@ -184,9 +160,6 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error('Revoke key error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('revoke_key');
   }
 }

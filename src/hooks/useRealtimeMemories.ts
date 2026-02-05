@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   subscribeToMemories,
   subscribeToMemory,
-  RealtimeMemory,
-  MemoryEventType,
+  type RealtimeMemory,
+  type MemoryEventType,
 } from '@/lib/realtime';
 
 interface UseRealtimeMemoriesOptions {

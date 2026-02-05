@@ -63,67 +63,67 @@ function AuditIcon(props: SVGProps<SVGSVGElement>) {
 
 function WhySeizn({ t }: { t: Dictionary }) {
   return (
-    <section className="py-16 px-4 sm:px-6 bg-gray-50">
+    <section className="py-16 px-4 sm:px-6 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
+          <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
             {t.extremeHome?.whySeizn?.title || "Why Seizn vs LangChain + Pinecone?"}
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto">
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
             {t.extremeHome?.whySeizn?.subtitle || "Stop gluing together fragmented tools. Get everything you need in one integrated stack."}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-              <TracingIcon className="w-5 h-5 text-purple-600" />
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-4">
+              <TracingIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.tracingTitle || "Built-in Tracing + Eval"}</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               {t.extremeHome?.whySeizn?.tracingDesc || "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging."}
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
+              <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.tracingBadge || "Default ON"}</span>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-              <AutopilotIcon className="w-5 h-5 text-blue-600" />
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+              <AutopilotIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.autopilotTitle || "Budget-aware Autopilot"}</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               {t.extremeHome?.whySeizn?.autopilotDesc || "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required."}
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
+              <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.autopilotBadge || "Optional"}</span>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center mb-4">
-              <GovernanceIcon className="w-5 h-5 text-rose-600" />
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center mb-4">
+              <GovernanceIcon className="w-5 h-5 text-rose-600 dark:text-rose-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.governanceTitle || "Governance + Audit Logs"}</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               {t.extremeHome?.whySeizn?.governanceDesc || "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later."}
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
+              <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.governanceBadge || "Default for Teams"}</span>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-              <LessGlueIcon className="w-5 h-5 text-amber-600" />
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4">
+              <LessGlueIcon className="w-5 h-5 text-amber-600 dark:text-amber-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.extremeHome?.whySeizn?.lessGlueTitle || "Fewer Moving Parts"}</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               {t.extremeHome?.whySeizn?.lessGlueDesc || "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill."}
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
+              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full">{t.extremeHome?.whySeizn?.lessGlueBadge || "Less Glue Code"}</span>
             </div>
           </div>
         </div>
@@ -137,31 +137,31 @@ function TrustBadges({ t }: { t: Dictionary }) {
     <section className="py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-              <SecurityIcon className="w-5 h-5 text-emerald-600" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+              <SecurityIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.security || "RLS + Key Hashing"}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.securityDesc || "Secure by default"}</div>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <RateLimitIcon className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              <RateLimitIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.rateLimits || "Rate Limits"}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.rateLimitsDesc || "Usage alerts"}</div>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-              <AuditIcon className="w-5 h-5 text-purple-600" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+              <AuditIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
-              <div className="text-xs text-gray-500">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">{t.extremeHome?.trust?.auditLogs || "Audit Logs"}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{t.extremeHome?.trust?.auditLogsDesc || "Full traceability"}</div>
             </div>
           </div>
         </div>
@@ -199,7 +199,7 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
 
 function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
-    <footer className="py-12 px-4 sm:px-6 border-t border-gray-100">
+    <footer className="py-12 px-4 sm:px-6 border-t border-gray-100 dark:border-gray-800">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
         <div className="flex flex-col gap-2">
           <Link href={`/${locale}`} className="flex items-center gap-2">
@@ -211,21 +211,21 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
               height={24}
               priority={false}
             />
-            <span className="font-medium">Seizn</span>
+            <span className="font-medium text-gray-900 dark:text-gray-100">Seizn</span>
           </Link>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
             {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `© ${new Date().getFullYear()} Seizn. All rights reserved.`}
           </div>
         </div>
         <nav className="flex flex-wrap items-center gap-6">
-          <Link href="/docs" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
-          <Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link>
-          <Link href="/status" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link>
-          <Link href={`/${locale}/help`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link>
-          <a href="https://github.com/seizn" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">GitHub</a>
-          <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Terms</Link>
-          <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Privacy</Link>
-          <Link href="/refund" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Refund</Link>
+          <Link href="/docs" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link>
+          <Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link>
+          <Link href="/status" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link>
+          <Link href={`/${locale}/help`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link>
+          <a href="https://github.com/seizn" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">GitHub</a>
+          <Link href="/terms" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.footer?.terms || "Terms"}</Link>
+          <Link href="/privacy" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.footer?.privacy || "Privacy"}</Link>
+          <Link href="/refund" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">{t.footer?.contact || "Refund"}</Link>
         </nav>
       </div>
     </footer>
@@ -239,7 +239,7 @@ interface ExtremeHomepageProps {
 
 export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <ExtremeHomepageClient dict={dict} locale={locale} />
       <WhySeizn t={dict} />
       <TrustBadges t={dict} />

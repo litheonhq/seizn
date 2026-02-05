@@ -1032,7 +1032,8 @@
         "searchRetrieval": "検索と取得",
         "extraction": "抽出",
         "operations": "運用",
-        "securityCompliance": "セキュリティとコンプライアンス"
+        "securityCompliance": "セキュリティとコンプライアンス",
+        "technology": "技術"
       },
       "items": [
         {
@@ -1134,6 +1135,46 @@
           "category": "securityCompliance",
           "question": "セキュリティ/法務チームに必要なドキュメントは？",
           "answer": "必要なもの：1) データ範囲（保存されるもの/されないもの）、2) 暗号化（保存時：AES-256、転送中：TLS）、3) テナント分離方法、4) 削除/保持ポリシー、5) 監査ログアクセス、6) キーローテーション/有効期限ポリシー。ドキュメントにセキュリティとガバナンスのページを維持してください。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "Graph-RAGメモリシステムとは何ですか？",
+          "answer": "Seiznはベクター埋め込みとナレッジグラフの関係を組み合わせたGraph-RAGアーキテクチャを使用しています。メモリは型付きエッジ（relates_to、supports、contradictsなど）を持つノードとして保存されます。これにより、グラフ探索による文脈的な想起、トピッククラスタリングのための自動コミュニティ検出、有効期間を持つ時間的知識追跡が可能になります。"
+        },
+        {
+          "category": "coreConcepts",
+          "question": "メモリティアシステム（Hot/Warm/Cold）とは何ですか？",
+          "answer": "Seiznは使用パターンに基づいてメモリを自動的にティアに整理します：Hotティア（頻繁にアクセス、高速キャッシュに保持）、Warmティア（時々アクセス、標準検索）、Coldティア（まれに使用、アーカイブされるが検索可能）。ティアマネージャーがアクセスパターンに基づいてメモリを自動的に昇格/降格し、パフォーマンスとコストの両方を最適化します。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "クロスリンガル検索はどのように機能しますか？",
+          "answer": "Seiznは各メモリに対してオリジナルコンテンツと正規化された英語表現の両方を保存します。検索クエリは両方の埋め込みとマッチングされ、英語で検索してヒンディー語のメモリを見つけるようなシナリオが可能になります。100以上の言語を高いクロスリンガル整合性でサポートする多言語埋め込みモデル（BGE-M3、LaBSE）を使用しています。"
+        },
+        {
+          "category": "searchRetrieval",
+          "question": "メモリ抽出にはどの言語がサポートされていますか？",
+          "answer": "Seiznはメモリ抽出と検索に35以上の言語をサポートしています：英語、中国語（簡体字/繁体字）、ヒンディー語、スペイン語、フランス語、ドイツ語、日本語、韓国語、ロシア語、ウクライナ語、アラビア語、およびすべての主要なインド諸語（タミル語、テルグ語、ベンガル語など）。言語は95%以上の精度で自動検出されます。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "MCP統合とは何ですか？どのように使用しますか？",
+          "answer": "MCP（Model Context Protocol）により、Claude Desktopなどのアシスタントが直接Seiznメモリにアクセスできます。MCPサーバー（npx @seizn/mcp-server）をインストールし、Claude Desktop設定に追加すると、会話中にアシスタントが自動的にメモリを保存・検索できます。これにより、セッション間で永続的なパーソナライゼーションが可能になります。"
+        },
+        {
+          "category": "gettingStarted",
+          "question": "Seiznのメモリシステムを動かす技術は何ですか？",
+          "answer": "Seiznは以下で構築されています：React Server Components付きのNext.js 16、Supabase（PostgreSQL + ベクター検索用pgvector）、Voyage AI voyage-3モデル（1024次元埋め込み）、メモリ抽出・分析用Claude。100ms未満のベクター検索のためにHNSWインデックス、WebSocketリアルタイムサブスクリプション、キャッシング用Redisを使用しています。"
+        },
+        {
+          "category": "operations",
+          "question": "SeiznをLLMワークフローに統合するにはどうすればいいですか？",
+          "answer": "3つの主なアプローチがあります：1) REST API - 完全な制御のための直接HTTP呼び出し、2) SDK（TypeScript/Python）- リトライロジック付きの型安全ラッパー、3) MCPサーバー - Claude Desktopや他のMCP互換アシスタントとの自動統合。本番環境では、APIキー保護のためにサーバーサイド呼び出しとSDKの使用を推奨します。"
+        },
+        {
+          "category": "operations",
+          "question": "Context APIとは何ですか？どのように使用しますか？",
+          "answer": "Context API（GET /api/context）は、LLMプロンプトに直接注入できる事前フォーマット済みの文字列を返します。ユーザープロファイル、最近のメモリ、関連する事実、グラフコンテキストを組み合わせます。コンテキスト予算に応じて、format=brief（〜500トークン）、detailed（〜1500トークン）、extended（〜3000トークン）を使用してください。"
         }
       ]
     },

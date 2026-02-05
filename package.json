@@ -17,7 +17,9 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:security": "vitest run src/__tests__/security/llm-top10/",
-    "test:security:strict": "SECURITY_STRICT_MODE=true vitest run src/__tests__/security/llm-top10/"
+    "test:security:strict": "SECURITY_STRICT_MODE=true vitest run src/__tests__/security/llm-top10/",
+    "verify:evidence": "npx ts-node --project tsconfig.node.json scripts/verify-evidence-pack.ts",
+    "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
@@ -42,6 +44,7 @@
     "@supabase/supabase-js": "^2.90.0",
     "@upstash/redis": "^1.36.1",
     "@xyflow/react": "^12.10.0",
+    "ai": "^6.0.69",
     "lucide-react": "^0.563.0",
     "mammoth": "^1.11.0",
     "next": "^16.1.6",
@@ -52,10 +55,13 @@
     "posthog-js": "^1.316.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-error-boundary": "^6.1.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.0",
     "recharts": "^3.6.0",
     "resend": "^6.7.0",
+    "swr": "^2.4.0",
+    "tailwind-merge": "^3.4.0",
     "web-vitals": "^4.2.4",
     "yaml": "^2.8.2"
   },

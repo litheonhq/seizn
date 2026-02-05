@@ -1,0 +1,152 @@
+{{- if .Values.enterprise }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "seizn.fullname" . }}-enterprise
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+data:
+  # License Configuration
+  LICENSE_ENABLED: {{ .Values.enterprise.license.enabled | quote }}
+  LICENSE_OFFLINE_VALIDATION: {{ .Values.enterprise.license.offlineValidation | quote }}
+
+  # Air-Gapped Configuration
+  AIR_GAPPED_MODE: {{ .Values.enterprise.airGapped.enabled | quote }}
+  {{- if .Values.enterprise.airGapped.enabled }}
+  PRIVATE_IMAGE_REGISTRY: {{ .Values.enterprise.airGapped.imageRegistry | quote }}
+  {{- end }}
+
+  # SSO/OIDC Configuration
+  SSO_ENABLED: {{ .Values.enterprise.sso.enabled | quote }}
+  {{- if .Values.enterprise.sso.enabled }}
+  SSO_PROVIDER: {{ .Values.enterprise.sso.provider | quote }}
+  {{- if eq .Values.enterprise.sso.provider "oidc" }}
+  OIDC_ISSUER_URL: {{ .Values.enterprise.sso.oidc.issuerUrl | quote }}
+  OIDC_CLIENT_ID: {{ .Values.enterprise.sso.oidc.clientId | quote }}
+  OIDC_SCOPES: {{ join "," .Values.enterprise.sso.oidc.scopes | quote }}
+  {{- end }}
+  SSO_ALLOWED_DOMAINS: {{ join "," .Values.enterprise.sso.allowedDomains | quote }}
+  {{- end }}
+
+  # KMS Configuration
+  KMS_ENABLED: {{ .Values.enterprise.kms.enabled | quote }}
+  {{- if .Values.enterprise.kms.enabled }}
+  KMS_PROVIDER: {{ .Values.enterprise.kms.provider | quote }}
+  {{- if eq .Values.enterprise.kms.provider "aws" }}
+  AWS_KMS_REGION: {{ .Values.enterprise.kms.aws.region | quote }}
+  AWS_KMS_KEY_ID: {{ .Values.enterprise.kms.aws.keyId | quote }}
+  {{- end }}
+  {{- if eq .Values.enterprise.kms.provider "azure" }}
+  AZURE_KEY_VAULT_URL: {{ .Values.enterprise.kms.azure.keyVaultUrl | quote }}
+  AZURE_KEY_NAME: {{ .Values.enterprise.kms.azure.keyName | quote }}
+  {{- end }}
+  {{- if eq .Values.enterprise.kms.provider "gcp" }}
+  GCP_PROJECT_ID: {{ .Values.enterprise.kms.gcp.projectId | quote }}
+  GCP_KMS_LOCATION: {{ .Values.enterprise.kms.gcp.locationId | quote }}
+  GCP_KMS_KEY_RING: {{ .Values.enterprise.kms.gcp.keyRingId | quote }}
+  GCP_KMS_KEY_ID: {{ .Values.enterprise.kms.gcp.keyId | quote }}
+  {{- end }}
+  {{- end }}
+
+  # Audit Configuration
+  AUDIT_ENABLED: {{ .Values.enterprise.audit.enabled | quote }}
+  AUDIT_RETENTION_DAYS: {{ .Values.enterprise.audit.retentionDays | quote }}
+  {{- if .Values.enterprise.audit.export.enabled }}
+  AUDIT_EXPORT_ENABLED: "true"
+  AUDIT_EXPORT_TYPE: {{ .Values.enterprise.audit.export.type | quote }}
+  AUDIT_EXPORT_ENDPOINT: {{ .Values.enterprise.audit.export.endpoint | quote }}
+  {{- end }}
+
+  # Data Residency
+  DATA_RESIDENCY_ENABLED: {{ .Values.enterprise.dataResidency.enabled | quote }}
+  {{- if .Values.enterprise.dataResidency.enabled }}
+  DATA_RESIDENCY_REGION: {{ .Values.enterprise.dataResidency.region | quote }}
+  DATA_RESIDENCY_ENFORCE: {{ .Values.enterprise.dataResidency.enforceLocality | quote }}
+  DATA_RESIDENCY_ALLOWED_REGIONS: {{ join "," .Values.enterprise.dataResidency.allowedRegions | quote }}
+  {{- end }}
+
+  # RBAC Configuration
+  CUSTOM_RBAC_ENABLED: {{ .Values.enterprise.rbac.enabled | quote }}
+
+  # Resource Quotas
+  QUOTAS_ENABLED: {{ .Values.enterprise.quotas.enabled | quote }}
+  {{- if .Values.enterprise.quotas.enabled }}
+  QUOTA_MAX_USERS: {{ .Values.enterprise.quotas.defaults.maxUsers | quote }}
+  QUOTA_MAX_MEMORY_GB: {{ .Values.enterprise.quotas.defaults.maxMemoryGB | quote }}
+  QUOTA_MAX_REQUESTS: {{ .Values.enterprise.quotas.defaults.maxRequestsPerMonth | quote }}
+  QUOTA_MAX_TRACES: {{ .Values.enterprise.quotas.defaults.maxTracesPerMonth | quote }}
+  {{- end }}
+
+---
+{{- if and .Values.enterprise.license.enabled (not .Values.enterprise.license.existingSecret) .Values.enterprise.license.key }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "seizn.fullname" . }}-license
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  license-key: {{ .Values.enterprise.license.key | quote }}
+{{- end }}
+
+---
+{{- if and .Values.enterprise.sso.enabled (not .Values.enterprise.sso.oidc.existingSecret) .Values.enterprise.sso.oidc.clientSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "seizn.fullname" . }}-sso
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  client-id: {{ .Values.enterprise.sso.oidc.clientId | quote }}
+  client-secret: {{ .Values.enterprise.sso.oidc.clientSecret | quote }}
+{{- end }}
+
+---
+{{- if and .Values.enterprise.kms.enabled (eq .Values.enterprise.kms.provider "aws") (not .Values.enterprise.kms.aws.useIRSA) .Values.enterprise.kms.aws.accessKeyId }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "seizn.fullname" . }}-kms-aws
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  access-key-id: {{ .Values.enterprise.kms.aws.accessKeyId | quote }}
+  secret-access-key: {{ .Values.enterprise.kms.aws.secretAccessKey | quote }}
+{{- end }}
+
+---
+{{- if and .Values.enterprise.audit.export.enabled (or .Values.enterprise.audit.export.splunkToken .Values.enterprise.audit.export.webhookSecret) }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "seizn.fullname" . }}-audit-export
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  {{- if .Values.enterprise.audit.export.splunkToken }}
+  splunk-token: {{ .Values.enterprise.audit.export.splunkToken | quote }}
+  {{- end }}
+  {{- if .Values.enterprise.audit.export.webhookSecret }}
+  webhook-secret: {{ .Values.enterprise.audit.export.webhookSecret | quote }}
+  {{- end }}
+{{- end }}
+
+---
+{{- if and .Values.enterprise.rbac.enabled .Values.enterprise.rbac.customRoles }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "seizn.fullname" . }}-custom-roles
+  labels:
+    {{- include "seizn.labels" . | nindent 4 }}
+data:
+  custom-roles.json: |
+    {{ .Values.enterprise.rbac.customRoles | toJson }}
+{{- end }}
+{{- end }}
