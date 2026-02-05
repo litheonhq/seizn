@@ -4,16 +4,13 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
+import type { NavGroup } from "./DashboardShell";
 
 interface MobileSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   session: Session | null;
-  navigationConfig: {
-    key: string;
-    href: string;
-    icon: React.ComponentType<{ className?: string }>;
-  }[];
+  navigationGroups: NavGroup[];
   t: (key: string) => string;
   seasonConfig: {
     name: string;
@@ -26,7 +23,7 @@ export default function MobileSidebar({
   isOpen,
   onClose,
   session,
-  navigationConfig,
+  navigationGroups,
   t,
   seasonConfig,
   onSignOut,
@@ -130,61 +127,84 @@ export default function MobileSidebar({
               className="w-10 h-10 rounded-2xl shadow-lg"
             />
             <div>
-              <span className="text-xl font-bold text-gray-900 block">
+              <span className="text-xl font-bold text-gray-900 dark:text-white block">
                 Seizn<span className="theme-primary">.</span>
               </span>
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                {seasonConfig.icon} {seasonConfig.name}
+              <p className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                {"Agent OS"} <span>{seasonConfig.icon}</span>
               </p>
             </div>
           </Link>
           <button
             onClick={onClose}
-            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
-            aria-label={t("dashboard.close") || "Close menu"}
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+            aria-label="Close menu"
           >
             <CloseIcon className="w-6 h-6" />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navigationConfig.map((item) => {
-            const active = isActive(item.href);
-            const label = t(item.key);
-            return (
-              <Link
-                key={item.key}
-                href={item.href}
-                onClick={onClose}
-                className={`group flex items-center gap-3 px-4 py-3.5 min-h-[48px] rounded-2xl text-sm font-medium transition-all duration-200 ${
-                  active
-                    ? "theme-gradient-btn text-white shadow-lg theme-shadow"
-                    : "text-gray-600 hover:bg-white/60 hover:text-gray-900 active:bg-white/80"
-                }`}
-              >
-                <item.icon
-                  className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${
-                    active
-                      ? "text-white"
-                      : "text-gray-400 group-hover:text-gray-600"
-                  }`}
-                />
-                <span>{label}</span>
-              </Link>
-            );
-          })}
+        <nav className="flex-1 p-3 overflow-y-auto scrollbar-thin">
+          {navigationGroups.map((group, groupIdx) => (
+            <div key={group.label || `group-${groupIdx}`}>
+              {/* Group header (skip for empty-label top group) */}
+              {group.label && (
+                <>
+                  {groupIdx > 0 && (
+                    <div className="mx-3 my-2 border-t border-gray-200/60 dark:border-gray-700/60" />
+                  )}
+                  <div className="px-3 pt-3 pb-1">
+                    <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">
+                      {group.label}
+                    </span>
+                  </div>
+                </>
+              )}
+
+              {/* Group items */}
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={onClose}
+                      className={`group relative flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-xl text-[13px] font-medium transition-all duration-200 ${
+                        active
+                          ? "bg-white/70 dark:bg-gray-800/70 text-gray-900 dark:text-white"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white active:bg-white/80"
+                      }`}
+                    >
+                      {active && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-[color:var(--theme-primary)]" />
+                      )}
+                      <item.icon
+                        className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-200 ${
+                          active
+                            ? "text-[color:var(--theme-primary)]"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
+                        }`}
+                      />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50">
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className="w-11 h-11 rounded-full ring-2 ring-white shadow-md object-cover"
+                className="w-11 h-11 rounded-full ring-2 ring-white dark:ring-gray-700 shadow-md object-cover"
               />
             ) : (
               <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
@@ -194,10 +214,10 @@ export default function MobileSidebar({
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                 {session?.user?.name || "User"}
               </p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                 {session?.user?.email}
               </p>
             </div>
@@ -207,7 +227,7 @@ export default function MobileSidebar({
               onClose();
               onSignOut();
             }}
-            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3.5 min-h-[48px] rounded-xl text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-white/60 active:bg-white/80 transition-colors"
+            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3.5 min-h-[48px] rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-white/60 dark:hover:bg-gray-700/50 active:bg-white/80 transition-colors"
           >
             <LogoutIcon className="w-5 h-5" />
             {t("dashboard.signOut")}
