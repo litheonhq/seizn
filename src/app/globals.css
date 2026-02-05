@@ -6,14 +6,14 @@
 
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafaf9;
+  --foreground: #1a1a1b;
 }
 
 /* Dark mode using class strategy */
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #0a0a0b;
+  --foreground: #e8e8ed;
 }
 
 @theme inline {
@@ -39,12 +39,12 @@ body {
 }
 
 :root:not(.dark) body {
-  color: #171717;
+  color: #1a1a1b;
 }
 
 /* Dark mode text color */
 .dark body {
-  color: #ededed;
+  color: #e8e8ed;
 }
 
 /* Focus styles for accessibility */

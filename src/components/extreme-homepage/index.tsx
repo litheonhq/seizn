@@ -556,12 +556,12 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
             <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08] animate-fade-in">
-              {t.extremeHome?.heroTitle || "The production OS for AI agents."}
+              {t.extremeHome?.heroTitle || "The standard backend for agent runtime persistence."}
             </h1>
 
             {/* Subtitle - Value prop */}
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
-              {t.extremeHome?.heroSubtitle || "Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove."}
+              {t.extremeHome?.heroSubtitle || "MCP server, checkpointer, and policy/trace layer\u2014one SDK to persist, govern, and observe every agent session."}
             </p>
 
             {/* CTAs - Primary and Secondary */}

@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { createServerClient } from "@/lib/supabase";
 import { getGateway } from "@/lib/ai-gateway";
+import { getPolicyRouter } from "@/lib/ai-gateway/policy-router";
 import type { GatewayRequest, ChatMessage } from "@/lib/ai-gateway/types";
 
 // Model pricing (per 1M tokens, in microcents - 1 USD = 100000 microcents)
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check policies
+    // Check legacy gateway policies (model allowlist/blocklist)
     if (orgId) {
       const policyResult = await checkPolicies(orgId, model, messages);
       if (!policyResult.allowed) {
@@ -155,8 +156,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create gateway request
-    const gatewayRequest: GatewayRequest = {
+    // Evaluate OPA policies via PolicyRouter (budget, content, cost optimization)
+    // Fails open: if the policy engine is unavailable, the request proceeds
+    const policyRouter = getPolicyRouter();
+    let gatewayRequest: GatewayRequest = {
       id: requestId,
       model,
       messages,
@@ -169,6 +172,40 @@ export async function POST(request: NextRequest) {
         source: "gateway_api",
       },
     };
+
+    const policyDecision = await policyRouter.evaluateRequest(
+      gatewayRequest,
+      userId || "anonymous",
+      orgId || undefined
+    );
+
+    if (!policyDecision.allowed) {
+      const statusCode = policyDecision.policyId === "budget_enforcement" ? 429 : 403;
+      return NextResponse.json(
+        {
+          error: {
+            code: policyDecision.policyId === "budget_enforcement"
+              ? "BUDGET_EXCEEDED"
+              : "POLICY_VIOLATION",
+            message: policyDecision.reason || "Request blocked by policy",
+            budget_remaining: policyDecision.budgetRemaining,
+            policy_id: policyDecision.policyId,
+          },
+          request_id: requestId,
+        },
+        { status: statusCode }
+      );
+    }
+
+    // Apply any policy modifications (token caps, provider overrides, etc.)
+    if (policyDecision.modifications) {
+      gatewayRequest = policyRouter.applyModifications(gatewayRequest, policyDecision);
+      gatewayRequest.metadata = {
+        ...gatewayRequest.metadata,
+        policy_modified: true,
+        budget_remaining: policyDecision.budgetRemaining,
+      };
+    }
 
     // Execute through gateway
     const gateway = getGateway();

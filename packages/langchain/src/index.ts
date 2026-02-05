@@ -81,6 +81,21 @@ export {
 } from './memory';
 
 // ============================================
+// Checkpointer Exports (LangGraph)
+// ============================================
+
+export {
+  SeiznCheckpointer,
+  createSeiznCheckpointer,
+  type SeiznCheckpointerConfig,
+  type Checkpoint,
+  type CheckpointMetadata,
+  type CheckpointTuple,
+  type CheckpointListOptions,
+  type RunnableConfig,
+} from './checkpointer';
+
+// ============================================
 // Re-export core types for convenience
 // ============================================
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
-import { PLAN_LIMITS } from '@/lib/usage';
+import { getPlan } from '@/lib/plan-limits';
 import { RATE_LIMITS } from '@/lib/rate-limit';
 
 // GET /api/me - Get current user's account info, plan, and usage
@@ -48,7 +48,8 @@ export async function GET(request: NextRequest) {
     .eq('is_active', true);
 
   const plan = profile.plan || 'free';
-  const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
+  const planConfig = getPlan(plan);
+  const limits = { memories: planConfig.memories, apiCallsMonthly: planConfig.apiCallsMonthly, apiKeys: planConfig.apiKeys };
   const rateLimit = RATE_LIMITS[plan] || RATE_LIMITS.free;
 
   const response = NextResponse.json({

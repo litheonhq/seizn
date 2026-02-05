@@ -7,11 +7,14 @@
  * - Create links between memories
  * - Update profile card
  *
+ * Supports both session auth (dashboard) and API key auth (MCP/SDK).
+ *
  * POST /api/memories/flush
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import { createIngestionService } from '@/lib/spring/memory-v4/ingestion-service';
 import { createLinkGeneratorService } from '@/lib/spring/memory-v4/link-generator';
@@ -44,12 +47,21 @@ interface FlushResult {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Dual auth: API key first, session fallback
+    let userId: string;
+    let authHeaders: Record<string, string> | undefined;
 
-    const userId = session.user.id;
+    const apiAuth = await authenticateRequest(request, { skipUsageCheck: false });
+    if (!isAuthError(apiAuth)) {
+      userId = apiAuth.userId;
+      authHeaders = apiAuth.rateLimitHeaders;
+    } else {
+      const session = await auth();
+      if (!session?.user?.id) {
+        return authErrorResponse(apiAuth.authError);
+      }
+      userId = session.user.id;
+    }
     const body = (await request.json()) as FlushRequest;
 
     const {
@@ -225,7 +237,16 @@ export async function POST(request: NextRequest) {
     result.errors = errors;
     result.success = errors.length === 0;
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+
+    // Attach rate-limit / deprecation headers from API key auth
+    if (authHeaders) {
+      Object.entries(authHeaders).forEach(([key, value]) => {
+        response.headers.set(key, value);
+      });
+    }
+
+    return response;
   } catch (error) {
     console.error('Flush API error:', error);
     return NextResponse.json(
