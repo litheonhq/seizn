@@ -30,6 +30,8 @@ function getLocaleFromPath(pathname: string): Locale | null {
 }
 
 function isPublicPath(pathname: string): boolean {
+  // Skip all static files (files with extensions like .svg, .png, .css, etc.)
+  if (/\.\w+$/.test(pathname)) return true;
   return publicPaths.some((path) => pathname.startsWith(path));
 }
 
@@ -238,6 +240,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all paths except static files and API routes
-    '/((?!api|_next/static|_next/image|favicon.ico|icon.svg|apple-touch-icon.png|og-image.png|monitoring|robots.txt|sitemap.xml).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2)$).*)',
   ],
 };
