@@ -693,3 +693,37 @@ body {
     animation: none !important;
   }
 }
+
+/* ========== Hero Background Video ========== */
+
+/* Video element: hidden when no source, shown when loaded */
+.hero-video {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-video.loaded {
+  opacity: 1;
+}
+
+/* Hide placeholder when video is playing */
+.hero-video.loaded ~ .hero-placeholder {
+  opacity: 0;
+}
+
+/* Subtle dot grid pattern for placeholder */
+.hero-grid-pattern {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Animated gradient shift for placeholder orbs */
+@keyframes hero-gradient-shift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5%, -3%) scale(1.05); }
+  66% { transform: translate(-3%, 5%) scale(0.95); }
+}
+
+.hero-placeholder > div > div {
+  animation: hero-gradient-shift 20s ease-in-out infinite;
+}

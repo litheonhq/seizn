@@ -503,49 +503,89 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         t={t}
       />
 
-      {/* Hero Section - Clean, focused above-the-fold with seasonal theme */}
-      <section className={`min-h-[70vh] flex items-center pt-20 lg:pt-24 pb-16 lg:pb-24 px-4 sm:px-6 ${seasonalTheme} theme-gradient-bg`}>
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          {/* H1 - Concise tagline */}
-          <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08]">
-            {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
-          </h1>
+      {/* Hero Section - Fullscreen background video with text overlay */}
+      <section className={`relative min-h-screen flex items-center overflow-hidden ${seasonalTheme}`}>
+        {/* Background Video Layer */}
+        <div className="absolute inset-0 z-0">
+          {/* Video element — replace src with actual mp4/webm when ready */}
+          <video
+            className="hero-video absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/hero-poster.jpg"
+            aria-hidden="true"
+          >
+            {/* Uncomment and add your video sources when ready:
+            <source src="/hero-bg.webm" type="video/webm" />
+            <source src="/hero-bg.mp4" type="video/mp4" />
+            */}
+          </video>
 
-          {/* Subtitle - Single sentence, clear value prop */}
-          <p className="text-lg lg:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            {t.extremeHome?.heroSubtitle || "Trace, evaluate, and enforce policies — all in one request."}
-          </p>
-
-          {/* CTAs - Primary and Secondary */}
-          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
-            <Link
-              href={`/${locale}/signup`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shadow-sm"
-            >
-              {t.extremeHome?.nav?.getApiKey || "Get API Key"}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-            <button
-              onClick={() => {
-                document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {t.extremeHome?.nav?.tryDemo || "Try Demo"}
-            </button>
+          {/* Animated placeholder gradient (shown until real video is added) */}
+          <div className="hero-placeholder absolute inset-0 theme-gradient-bg" aria-hidden="true">
+            {/* Animated gradient orbs */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-1/4 -left-1/4 w-[60%] h-[60%] rounded-full bg-[color:var(--theme-primary)]/10 blur-[100px] animate-float-slow" />
+              <div className="absolute -bottom-1/4 -right-1/4 w-[50%] h-[50%] rounded-full bg-[color:var(--theme-secondary)]/10 blur-[100px] animate-float-medium" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full bg-[color:var(--theme-accent)]/15 blur-[80px] animate-float-fast" />
+            </div>
+            {/* Subtle grid pattern */}
+            <div className="absolute inset-0 hero-grid-pattern opacity-[0.03] dark:opacity-[0.05]" />
           </div>
 
-          {/* Memory Flow Pipeline Animation */}
-          <div className="pt-6">
-            <MemoryFlowAnimation />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80 dark:from-gray-950/70 dark:via-gray-950/50 dark:to-gray-950/90" />
+        </div>
+
+        {/* Content Layer */}
+        <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            {/* H1 - Concise tagline */}
+            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08] animate-fade-in">
+              {t.extremeHome?.heroTitle || "Governed memory & retrieval for agents."}
+            </h1>
+
+            {/* Subtitle - Single sentence, clear value prop */}
+            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
+              {t.extremeHome?.heroSubtitle || "Trace, evaluate, and enforce policies — all in one request."}
+            </p>
+
+            {/* CTAs - Primary and Secondary */}
+            <div className="flex items-center justify-center gap-4 flex-wrap pt-2 animate-fade-in-up animate-delay-300">
+              <Link
+                href={`/${locale}/signup`}
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              >
+                {t.extremeHome?.nav?.getApiKey || "Get API Key"}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+              <button
+                onClick={() => {
+                  document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 font-medium rounded-xl border border-gray-200/80 dark:border-gray-700/80 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-white dark:hover:bg-gray-800 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {t.extremeHome?.nav?.tryDemo || "Try Demo"}
+              </button>
+            </div>
+
+            {/* Memory Flow Pipeline Animation */}
+            <div className="pt-8 animate-fade-in-up animate-delay-500">
+              <MemoryFlowAnimation />
+            </div>
           </div>
         </div>
+
+        {/* Bottom gradient fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-gray-950 to-transparent z-10 pointer-events-none" />
       </section>
 
       {/* Playground Section - Visually distinct with subtle background */}
