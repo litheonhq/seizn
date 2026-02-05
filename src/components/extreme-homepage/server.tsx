@@ -210,6 +210,7 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
               width={24}
               height={24}
               priority={false}
+              unoptimized
             />
             <span className="font-medium text-gray-900 dark:text-gray-100">Seizn</span>
           </Link>

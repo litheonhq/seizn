@@ -225,6 +225,7 @@ const Navigation = memo(function Navigation({
               width={32}
               height={32}
               priority
+              unoptimized
             />
             <span className="font-semibold text-xl tracking-tight text-gray-900 dark:text-gray-100">Seizn</span>
           </Link>
