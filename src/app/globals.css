@@ -585,6 +585,12 @@ body {
   background: #a1a1a1;
 }
 
+/* Thin scrollbar for sidebar navigation */
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 2px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+
 /* Stagger delays */
 .animate-delay-50 { animation-delay: 50ms; }
 .animate-delay-150 { animation-delay: 150ms; }
