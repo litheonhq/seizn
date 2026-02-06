@@ -143,16 +143,16 @@ export function FeedbackButton({
     <div className={`relative ${className}`}>
       {/* Thumbs buttons */}
       <div className="inline-flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-        <span className="text-xs text-gray-500 px-2">Helpful?</span>
+        <span className="text-xs text-gray-600 px-2">Helpful?</span>
         <button
           onClick={handlePositive}
           disabled={submitting || rating !== null}
           className={`p-1.5 rounded-md transition-colors ${
             rating === "positive"
               ? "bg-emerald-100 text-emerald-600"
-              : "hover:bg-gray-200 text-gray-500 hover:text-emerald-600"
+              : "hover:bg-gray-200 text-gray-600 hover:text-emerald-600"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
-          title="Yes, helpful"
+          aria-label="Yes, helpful"
         >
           <ThumbsUpIcon className="w-4 h-4" filled={rating === "positive"} />
         </button>
@@ -162,9 +162,9 @@ export function FeedbackButton({
           className={`p-1.5 rounded-md transition-colors ${
             rating === "negative"
               ? "bg-red-100 text-red-600"
-              : "hover:bg-gray-200 text-gray-500 hover:text-red-600"
+              : "hover:bg-gray-200 text-gray-600 hover:text-red-600"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
-          title="No, not helpful"
+          aria-label="No, not helpful"
         >
           <ThumbsDownIcon className="w-4 h-4" filled={rating === "negative"} />
         </button>

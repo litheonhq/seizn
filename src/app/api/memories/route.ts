@@ -18,6 +18,7 @@ import {
 } from '@/lib/memory/query-cache';
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
+import { boundedInt } from '@/lib/parse-params';
 import type { AddMemoryRequest } from '@/types/database';
 
 // POST /api/memories - Add a new memory
@@ -114,7 +115,7 @@ export async function GET(request: NextRequest) {
       return ValidationErrors.missingField('query');
     }
 
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const limit = boundedInt(searchParams.get('limit'), 10, 1, 100);
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const namespace = searchParams.get('namespace') || 'default';
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;

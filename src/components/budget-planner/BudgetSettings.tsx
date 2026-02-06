@@ -116,19 +116,20 @@ export function BudgetSettings({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Daily Budget */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="budget-daily" className="block text-sm font-medium text-gray-700 mb-1">
               Daily Budget (USD)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
               <input
+                id="budget-daily"
                 type="number"
                 step="0.01"
                 min="0"
                 value={form.dailyBudgetUsd}
                 onChange={(e) => setForm({ ...form, dailyBudgetUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100"
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">Max spend per day</p>
@@ -136,19 +137,20 @@ export function BudgetSettings({
 
           {/* Monthly Budget */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="budget-monthly" className="block text-sm font-medium text-gray-700 mb-1">
               Monthly Budget (USD)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
               <input
+                id="budget-monthly"
                 type="number"
                 step="0.01"
                 min="0"
                 value={form.monthlyBudgetUsd}
                 onChange={(e) => setForm({ ...form, monthlyBudgetUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100"
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">Max spend per month</p>
@@ -156,19 +158,20 @@ export function BudgetSettings({
 
           {/* Per-Query Max */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="budget-per-query" className="block text-sm font-medium text-gray-700 mb-1">
               Per-Query Max (USD)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
               <input
+                id="budget-per-query"
                 type="number"
                 step="0.001"
                 min="0"
                 value={form.perQueryMaxUsd}
                 onChange={(e) => setForm({ ...form, perQueryMaxUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100"
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">Max cost per query</p>
@@ -181,11 +184,12 @@ export function BudgetSettings({
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Alert Settings</h3>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="budget-alert-threshold" className="block text-sm font-medium text-gray-700 mb-1">
             Alert Threshold
           </label>
           <div className="flex items-center gap-4">
             <input
+              id="budget-alert-threshold"
               type="range"
               min="0"
               max="100"
@@ -250,16 +254,17 @@ export function BudgetSettings({
           {/* Fallback Strategy */}
           {form.mode === "soft" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="budget-fallback-strategy" className="block text-sm font-medium text-gray-700 mb-2">
                 Fallback Strategy
               </label>
               <select
+                id="budget-fallback-strategy"
                 value={form.fallbackStrategy}
                 onChange={(e) =>
                   setForm({ ...form, fallbackStrategy: e.target.value as FallbackStrategy })
                 }
                 disabled={disabled || saving}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100"
               >
                 <option value="degrade">Degrade - Use cheaper models/fewer results</option>
                 <option value="reject">Reject - Return error when over budget</option>
@@ -291,7 +296,7 @@ export function BudgetSettings({
         <button
           type="submit"
           disabled={disabled || saving}
-          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {saving ? "Saving..." : "Save Settings"}
         </button>

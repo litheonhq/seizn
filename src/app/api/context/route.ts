@@ -14,6 +14,7 @@ import { auth } from '@/lib/auth';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
 import { createContextService, type ContextFormat, type ContextOptions } from '@/lib/spring/memory-v4/context-service';
+import { boundedInt } from '@/lib/parse-params';
 
 /**
  * Resolve userId from session (dashboard) or API key (MCP/SDK).
@@ -49,11 +50,11 @@ export async function GET(request: NextRequest) {
     // Parse options from query params
     const options: ContextOptions = {
       format: (searchParams.get('format') as ContextFormat) ?? 'detailed',
-      maxTokens: searchParams.get('maxTokens') ? parseInt(searchParams.get('maxTokens')!) : undefined,
+      maxTokens: searchParams.get('maxTokens') ? boundedInt(searchParams.get('maxTokens'), 4096, 100, 32000) : undefined,
       includeProfile: searchParams.get('includeProfile') !== 'false',
       includeRecentMessages: searchParams.get('includeRecentMessages') !== 'false',
       recentMessageCount: searchParams.get('recentMessageCount')
-        ? parseInt(searchParams.get('recentMessageCount')!)
+        ? boundedInt(searchParams.get('recentMessageCount'), 20, 1, 100)
         : undefined,
       includeFacts: searchParams.get('includeFacts') !== 'false',
       includeGraph: searchParams.get('includeGraph') === 'true',

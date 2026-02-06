@@ -164,6 +164,7 @@ export function TraceTimeline({
                   width: `${Math.max(stage.widthPercent, 1)}%`,
                 }}
                 title={`${stage.label}: ${formatDuration(stage.duration_ms)}`}
+                aria-label={`${stage.label}: ${formatDuration(stage.duration_ms)}`}
               >
                 {stage.widthPercent > 8 && (
                   <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${colors.text} truncate px-1`}>
@@ -189,6 +190,7 @@ export function TraceTimeline({
                 key={`detail-${stage.name}-${index}`}
                 onClick={() => onStageClick?.(stage)}
                 className="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors"
+                aria-label={`${stage.label} stage details: ${formatDuration(stage.duration_ms)}`}
               >
                 {/* Icon */}
                 <div className={`p-2 rounded ${colors.bg} ${colors.text}`}>
@@ -242,7 +244,7 @@ export function TraceTimeline({
             .map(([name, colors]) => (
               <div key={name} className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded ${colors.bg} ${colors.border} border`} />
-                <span className="text-xs text-gray-400 capitalize">
+                <span className="text-xs text-gray-500 capitalize">
                   {name.replace(/_/g, " ")}
                 </span>
               </div>

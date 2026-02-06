@@ -11,6 +11,7 @@ import {
   isAuthError,
   authErrorResponse,
 } from '@/lib/api-auth';
+import { boundedInt } from '@/lib/parse-params';
 import {
   getAlerts,
   acknowledgeAlert,
@@ -37,8 +38,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     const unacknowledgedOnly = searchParams.get('unacknowledged_only') === 'true';
-    const limitParam = searchParams.get('limit');
-    const limit = limitParam ? parseInt(limitParam) : 50;
+    const limit = boundedInt(searchParams.get('limit'), 50, 1, 100);
 
     const alerts = await getAlerts(auth.userId, {
       unacknowledgedOnly,

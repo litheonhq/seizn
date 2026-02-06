@@ -13,6 +13,7 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
+import { parsePagination } from "@/lib/parse-params";
 
 interface CreateWorkflowRequest {
   name: string;
@@ -94,8 +95,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Pagination
-    const limit = parseInt(searchParams.get("limit") || "20");
-    const offset = parseInt(searchParams.get("offset") || "0");
+    const { limit, offset } = parsePagination(searchParams);
     query = query.range(offset, offset + limit - 1);
 
     const { data: workflows, error, count } = await query;

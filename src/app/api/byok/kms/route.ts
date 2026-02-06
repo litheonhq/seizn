@@ -15,6 +15,7 @@ import {
   type ProviderConfig,
 } from '@/lib/byok/kms';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { parsePagination } from '@/lib/parse-params';
 import {
   isValidAwsKmsKeyReference,
   isValidGcpKmsKeyReference,
@@ -68,8 +69,7 @@ export async function GET(request: NextRequest) {
 
     const provider = searchParams.get('provider') as KmsProvider | undefined;
     const isActive = searchParams.get('is_active');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const { limit, offset } = parsePagination(searchParams, { limit: 50 });
 
     const configs = await listKmsConfigs({
       organization_id: orgId,

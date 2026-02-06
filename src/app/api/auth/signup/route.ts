@@ -40,8 +40,21 @@ async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean
 // POST /api/auth/signup - Create a new user account
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password, name, turnstileToken } = body;
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON body' },
+        { status: 400 }
+      );
+    }
+    const { email, password, name, turnstileToken } = body as {
+      email?: string;
+      password?: string;
+      name?: string;
+      turnstileToken?: string;
+    };
 
     // Validate input
     if (!email || !password) {

@@ -13,6 +13,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import { parsePagination } from '@/lib/parse-params';
 import type {
   CreateModelRequest,
   ECLTranslationModelRow,
@@ -39,8 +40,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const sourceModel = searchParams.get('source_model');
     const targetModel = searchParams.get('target_model');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const { limit, offset } = parsePagination(searchParams, { limit: 50 });
 
     const supabase = createServerClient();
 

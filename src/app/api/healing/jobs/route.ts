@@ -5,6 +5,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { parsePagination } from '@/lib/parse-params';
 import {
   scheduleHealingJob,
   listJobs,
@@ -39,8 +40,7 @@ export async function GET(request: NextRequest) {
 
     const collectionId = searchParams.get('collectionId') ?? undefined;
     const statusParam = searchParams.get('status');
-    const limit = parseInt(searchParams.get('limit') ?? '20');
-    const offset = parseInt(searchParams.get('offset') ?? '0');
+    const { limit, offset } = parsePagination(searchParams);
 
     // Parse status filter
     let status: JobStatus | JobStatus[] | undefined;

@@ -5,6 +5,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { parsePagination } from '@/lib/parse-params';
 import {
   createRule,
   updateRule,
@@ -39,8 +40,7 @@ export async function GET(request: NextRequest) {
 
     const collectionId = searchParams.get('collectionId') ?? undefined;
     const isActiveParam = searchParams.get('isActive');
-    const limit = parseInt(searchParams.get('limit') ?? '50');
-    const offset = parseInt(searchParams.get('offset') ?? '0');
+    const { limit, offset } = parsePagination(searchParams, { limit: 50 });
 
     let isActive: boolean | undefined;
     if (isActiveParam !== null) {

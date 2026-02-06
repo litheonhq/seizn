@@ -6,6 +6,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { parsePagination } from '@/lib/parse-params';
 
 interface ExportedMemory {
   id: string;
@@ -37,8 +38,7 @@ export async function GET(request: NextRequest) {
     const format = searchParams.get('format') || 'json'; // json, csv
     const namespace = searchParams.get('namespace'); // Optional filter
     const memory_type = searchParams.get('memory_type'); // Optional filter
-    const limit = parseInt(searchParams.get('limit') || '10000'); // Max 10000 per export
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const { limit, offset } = parsePagination(searchParams, { limit: 10000, maxLimit: 10000 });
 
     if (!['json', 'csv'].includes(format)) {
       return NextResponse.json(
