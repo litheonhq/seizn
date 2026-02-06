@@ -152,7 +152,7 @@ export class Seizn {
       const response = await fetch(url.toString(), {
         method,
         headers: {
-          'x-api-key': this.apiKey,
+          'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: options?.body ? JSON.stringify(options.body) : undefined,

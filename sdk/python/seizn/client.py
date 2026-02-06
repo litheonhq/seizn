@@ -56,7 +56,7 @@ class Seizn:
         self._client = httpx.Client(
             base_url=self.base_url,
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
             },
             timeout=timeout,
@@ -294,7 +294,7 @@ class AsyncSeizn:
         self._client = httpx.AsyncClient(
             base_url=self.base_url,
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
             },
             timeout=timeout,
