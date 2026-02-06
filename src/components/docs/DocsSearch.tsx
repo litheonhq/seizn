@@ -189,7 +189,8 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
       {/* Search Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors"
+        aria-label="Search documentation (Ctrl+K)"
       >
         <SearchIcon className="w-4 h-4" />
         <span className="hidden sm:inline">{t.buttonText}</span>
@@ -259,7 +260,8 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                       <button
                         key={term}
                         onClick={() => setQuery(term)}
-                        className="px-3 py-1.5 text-sm text-gray-500 bg-gray-100 rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                        className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                        aria-label={`Search for ${term}`}
                       >
                         {term}
                       </button>

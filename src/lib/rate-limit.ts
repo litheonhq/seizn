@@ -227,58 +227,6 @@ export async function checkRateLimitAsync(
   return checkRateLimitMemory(key, limit, windowMs);
 }
 
-/**
- * Check rate limit for a user (sync version, in-memory only)
- * Uses sliding window algorithm with 1-minute window
- * @deprecated Use checkRateLimitAsync for distributed rate limiting
- */
-export function checkRateLimit(
-  identifier: string,
-  plan: string = 'free'
-): RateLimitResult {
-  cleanup();
-
-  // Get rate limit from plan configuration
-  const limit = getLimit(plan, 'rateLimit');
-  const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute window
-  const key = `ratelimit:${identifier}`;
-
-  const entry = rateLimitStore.get(key);
-
-  // New window or expired window
-  if (!entry || entry.resetAt < now) {
-    rateLimitStore.set(key, {
-      count: 1,
-      resetAt: now + windowMs,
-    });
-    return {
-      allowed: true,
-      remaining: limit - 1,
-      resetAt: now + windowMs,
-      limit,
-    };
-  }
-
-  // Within current window
-  if (entry.count >= limit) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetAt: entry.resetAt,
-      limit,
-    };
-  }
-
-  // Increment count
-  entry.count++;
-  return {
-    allowed: true,
-    remaining: limit - entry.count,
-    resetAt: entry.resetAt,
-    limit,
-  };
-}
 
 /**
  * Get rate limit headers for response
@@ -309,51 +257,6 @@ export async function checkIpRateLimitAsync(ip: string): Promise<RateLimitResult
   return checkRateLimitMemory(key, limit, windowMs);
 }
 
-/**
- * Check IP-based rate limit for unauthenticated endpoints (sync version)
- * More restrictive than user-based limits
- * @deprecated Use checkIpRateLimitAsync for distributed rate limiting
- */
-export function checkIpRateLimit(ip: string): RateLimitResult {
-  const limit = 30; // 30 requests per minute for unauthenticated
-  const now = Date.now();
-  const windowMs = 60 * 1000;
-  const key = `ip:${ip}`;
-
-  cleanup();
-
-  const entry = rateLimitStore.get(key);
-
-  if (!entry || entry.resetAt < now) {
-    rateLimitStore.set(key, {
-      count: 1,
-      resetAt: now + windowMs,
-    });
-    return {
-      allowed: true,
-      remaining: limit - 1,
-      resetAt: now + windowMs,
-      limit,
-    };
-  }
-
-  if (entry.count >= limit) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetAt: entry.resetAt,
-      limit,
-    };
-  }
-
-  entry.count++;
-  return {
-    allowed: true,
-    remaining: limit - entry.count,
-    resetAt: entry.resetAt,
-    limit,
-  };
-}
 
 // =============================================================================
 // Utility Functions

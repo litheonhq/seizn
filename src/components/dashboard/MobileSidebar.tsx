@@ -155,7 +155,7 @@ export default function MobileSidebar({
                     <div className="mx-3 my-2 border-t border-gray-200/60 dark:border-gray-700/60" />
                   )}
                   <div className="px-3 pt-3 pb-1">
-                    <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">
+                    <span className="text-[10px] font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase">
                       {group.label}
                     </span>
                   </div>

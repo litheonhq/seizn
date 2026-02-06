@@ -137,13 +137,15 @@ export async function POST(request: NextRequest) {
     let tierDistribution: Record<MemoryTier, number> | undefined;
 
     if (tierStrategy !== 'comprehensive' && advanced.includeTiers) {
-      // Get tier info for each result
-      const resultsWithTiers = await Promise.all(
-        searchResults.results.map(async (r) => {
-          const tier = await tierManager.calculateTier(r.id, userId);
-          return { ...r, tier };
-        })
+      // Get tier info for all results in a single batch query
+      const tierMap = await tierManager.calculateTiersBatch(
+        searchResults.results.map((r) => r.id),
+        userId,
       );
+      const resultsWithTiers = searchResults.results.map((r) => ({
+        ...r,
+        tier: tierMap.get(r.id) ?? 'warm',
+      }));
 
       // Categorize by tier
       const hotResults = resultsWithTiers.filter((r) => r.tier === 'hot');

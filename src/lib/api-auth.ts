@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
-import { checkRateLimit, getRateLimitHeaders } from './rate-limit';
+import { checkRateLimitAsync, getRateLimitHeaders } from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
 import {
   ErrorCodes,
@@ -182,7 +182,7 @@ export async function authenticateRequest(
   const plan = profile?.plan || 'free';
 
   // Check rate limit (per-minute burst protection)
-  const rateLimitResult = checkRateLimit(keyData.user_id, plan);
+  const rateLimitResult = await checkRateLimitAsync(keyData.user_id, plan);
   const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
 
   if (!rateLimitResult.allowed) {

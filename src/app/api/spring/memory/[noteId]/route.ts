@@ -174,8 +174,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const updates: Record<string, unknown> = {};
 
     if (body.content !== undefined) {
+      const MAX_CONTENT_LENGTH = 50_000;
       if (typeof body.content !== 'string' || body.content.trim().length === 0) {
         return ValidationErrors.invalidField('content', 'must be a non-empty string');
+      }
+      if ((body.content as string).length > MAX_CONTENT_LENGTH) {
+        return ValidationErrors.invalidField('content', `must be at most ${MAX_CONTENT_LENGTH} characters`);
       }
       updates.content = body.content;
     }

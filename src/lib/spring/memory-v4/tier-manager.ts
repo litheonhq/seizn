@@ -156,6 +156,50 @@ export class TierManagerService {
   }
 
   /**
+   * Calculate tiers for multiple memories in a single query (batch version).
+   * Avoids N+1 by fetching metadata for all IDs at once and computing tiers locally.
+   */
+  async calculateTiersBatch(
+    memoryIds: string[],
+    userId: string,
+  ): Promise<Map<string, MemoryTier>> {
+    if (memoryIds.length === 0) return new Map();
+
+    const { data, error } = await this.supabase
+      .from('memories')
+      .select('id, note_type, salience, access_count, last_accessed_at, created_at')
+      .eq('user_id', userId)
+      .in('id', memoryIds);
+
+    const result = new Map<string, MemoryTier>();
+
+    if (error || !data) {
+      console.error('Failed to batch-fetch tiers:', error);
+      // Fallback: all warm
+      for (const id of memoryIds) result.set(id, 'warm');
+      return result;
+    }
+
+    for (const row of data) {
+      const tier = this.determineTierLocal(
+        row.note_type ?? 'fact',
+        row.salience ?? 0.5,
+        row.access_count ?? 0,
+        row.last_accessed_at ? new Date(row.last_accessed_at) : null,
+        new Date(row.created_at),
+      );
+      result.set(row.id, tier);
+    }
+
+    // Any IDs not found in DB → default warm
+    for (const id of memoryIds) {
+      if (!result.has(id)) result.set(id, 'warm');
+    }
+
+    return result;
+  }
+
+  /**
    * Calculate tier score (used for sorting within tiers)
    */
   calculateTierScore(

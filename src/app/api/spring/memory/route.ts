@@ -221,9 +221,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required fields
+    const MAX_CONTENT_LENGTH = 50_000; // 50KB max
     const content = body.content as string;
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
       return ValidationErrors.missingField('content');
+    }
+    if (content.length > MAX_CONTENT_LENGTH) {
+      return ValidationErrors.invalidField('content', `must be at most ${MAX_CONTENT_LENGTH} characters`);
     }
 
     const type = body.type as NoteType;

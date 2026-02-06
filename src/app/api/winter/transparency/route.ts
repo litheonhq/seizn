@@ -13,6 +13,7 @@ import {
   CreateTransparencyEventInput,
   TransparencyEventFilter,
 } from '@/lib/winter/transparency';
+import { parsePagination } from '@/lib/parse-params';
 
 /**
  * POST /api/winter/transparency
@@ -114,8 +115,7 @@ export async function GET(req: NextRequest) {
       contentTypes: searchParams.get('contentTypes')?.split(',') as any,
       startDate: searchParams.get('startDate') || undefined,
       endDate: searchParams.get('endDate') || undefined,
-      limit: parseInt(searchParams.get('limit') || '100', 10),
-      offset: parseInt(searchParams.get('offset') || '0', 10),
+      ...parsePagination(searchParams, { limit: 100 }),
     };
 
     const result = await queryTransparencyEvents(filter);
