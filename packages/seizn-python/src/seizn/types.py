@@ -1,105 +1,135 @@
-"""
-Type definitions for Seizn SDK
-"""
+"""Type definitions for Seizn SDK."""
 
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
-
-from pydantic import BaseModel, Field
-
-
-class SeizConfig(BaseModel):
-    """Configuration for Seizn client"""
-
-    api_key: str = Field(..., description="Seizn API key (szn_xxx)")
-    base_url: str = Field(
-        default="https://seizn.com/api",
-        description="Base URL for Seizn API"
-    )
-    timeout: float = Field(default=30.0, description="Request timeout in seconds")
-    retries: int = Field(default=3, description="Number of retries for failed requests")
+from enum import Enum
+from typing import List, Optional
 
 
-class SeizError(Exception):
-    """Seizn API error"""
-
-    def __init__(
-        self,
-        message: str,
-        code: Optional[str] = None,
-        status: Optional[int] = None,
-        details: Optional[Dict[str, Any]] = None,
-    ):
-        super().__init__(message)
-        self.message = message
-        self.code = code
-        self.status = status
-        self.details = details or {}
-
-    def __str__(self) -> str:
-        if self.code:
-            return f"[{self.code}] {self.message}"
-        return self.message
+class MemoryType(str, Enum):
+    """Types of memories that can be stored."""
+    FACT = "fact"
+    PREFERENCE = "preference"
+    EXPERIENCE = "experience"
+    RELATIONSHIP = "relationship"
+    INSTRUCTION = "instruction"
 
 
-class MemoryMessage(BaseModel):
-    """A message in memory (for conversation context)"""
+class SearchMode(str, Enum):
+    """Search modes for memory retrieval."""
+    VECTOR = "vector"
+    KEYWORD = "keyword"
+    HYBRID = "hybrid"
 
-    role: Literal["user", "assistant", "system"]
-    content: str
 
-
-class Memory(BaseModel):
-    """A stored memory"""
-
+@dataclass
+class Memory:
+    """A stored memory."""
     id: str
     content: str
-    user_id: Optional[str] = None
-    agent_id: Optional[str] = None
-    namespace: Optional[str] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    memory_type: MemoryType
+    tags: List[str]
+    namespace: str
+    importance: int
+    confidence: float
+    created_at: datetime
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Memory":
+        return cls(
+            id=data["id"],
+            content=data["content"],
+            memory_type=MemoryType(data.get("memory_type", "fact")),
+            tags=data.get("tags", []),
+            namespace=data.get("namespace", "default"),
+            importance=data.get("importance", 5),
+            confidence=data.get("confidence", 1.0),
+            created_at=datetime.fromisoformat(data["created_at"].replace("Z", "+00:00"))
+            if isinstance(data.get("created_at"), str)
+            else datetime.now(),
+        )
 
 
-class SearchResult(BaseModel):
-    """A search result with relevance score"""
-
+@dataclass
+class SearchResult:
+    """A memory search result with similarity score."""
     id: str
     content: str
-    score: float = Field(..., ge=0.0, le=1.0)
-    user_id: Optional[str] = None
-    agent_id: Optional[str] = None
-    namespace: Optional[str] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-    created_at: Optional[datetime] = None
+    memory_type: MemoryType
+    tags: List[str]
+    similarity: float
+    keyword_rank: Optional[float] = None
+    combined_score: Optional[float] = None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "SearchResult":
+        return cls(
+            id=data["id"],
+            content=data["content"],
+            memory_type=MemoryType(data.get("memory_type", "fact")),
+            tags=data.get("tags", []),
+            similarity=data.get("similarity", 0),
+            keyword_rank=data.get("keyword_rank"),
+            combined_score=data.get("combined_score"),
+        )
 
 
-class AddMemoryRequest(BaseModel):
-    """Request to add a memory"""
-
+@dataclass
+class ExtractedMemory:
+    """A memory extracted from conversation."""
     content: str
-    user_id: Optional[str] = None
-    agent_id: Optional[str] = None
-    namespace: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    memory_type: MemoryType
+    tags: List[str]
+    confidence: float
+    importance: int
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "ExtractedMemory":
+        return cls(
+            content=data["content"],
+            memory_type=MemoryType(data.get("memory_type", "fact")),
+            tags=data.get("tags", []),
+            confidence=data.get("confidence", 0.8),
+            importance=data.get("importance", 5),
+        )
 
 
-class AddMessagesRequest(BaseModel):
-    """Request to add messages (extracts memories automatically)"""
+@dataclass
+class QueryResponse:
+    """Response from a memory-augmented query."""
+    response: str
+    memories_used: List[SearchResult]
+    model_used: str
 
-    messages: List[MemoryMessage]
-    user_id: Optional[str] = None
-    agent_id: Optional[str] = None
-    namespace: Optional[str] = None
+
+@dataclass
+class ConversationSummary:
+    """Summary of a conversation."""
+    text: str
+    topic: str
+    key_points: List[str]
+    message_count: int
 
 
-class SearchRequest(BaseModel):
-    """Request to search memories"""
+@dataclass
+class Webhook:
+    """A webhook configuration."""
+    id: str
+    name: str
+    url: str
+    events: List[str]
+    namespace: Optional[str]
+    is_active: bool
+    secret: Optional[str] = None
 
-    query: str
-    user_id: Optional[str] = None
-    agent_id: Optional[str] = None
-    namespace: Optional[str] = None
-    top_k: int = Field(default=10, ge=1, le=100)
-    threshold: float = Field(default=0.0, ge=0.0, le=1.0)
+    @classmethod
+    def from_dict(cls, data: dict) -> "Webhook":
+        return cls(
+            id=data["id"],
+            name=data["name"],
+            url=data["url"],
+            events=data.get("events", ["memory.created"]),
+            namespace=data.get("namespace"),
+            is_active=data.get("is_active", True),
+            secret=data.get("secret"),
+        )
