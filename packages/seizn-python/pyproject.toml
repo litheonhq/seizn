@@ -1,50 +1,43 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "seizn"
-version = "0.1.0"
-description = "Seizn - Semantic Memory & RAG Infrastructure SDK for AI Applications"
+version = "0.4.0"
+description = "Seizn - AI Memory Infrastructure for Developers"
 readme = "README.md"
-license = "MIT"
-requires-python = ">=3.8"
+license = {text = "MIT"}
 authors = [
-    { name = "Seizn", email = "support@seizn.com" }
+    {name = "Seizn Team", email = "support@seizn.com"}
 ]
-keywords = [
-    "seizn",
-    "ai",
-    "memory",
-    "rag",
-    "semantic-search",
-    "vector-database",
-    "llm",
-    "embeddings"
-]
+keywords = ["ai", "memory", "llm", "rag", "embeddings", "vector-search", "knowledge-graph"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
+requires-python = ">=3.8"
 dependencies = [
     "httpx>=0.24.0",
-    "pydantic>=2.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "ruff>=0.1.0",
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "respx>=0.20",
+    "black>=23.0",
+    "mypy>=1.0",
+    "ruff>=0.1",
 ]
 
 [project.urls]
@@ -53,12 +46,23 @@ Documentation = "https://docs.seizn.com"
 Repository = "https://github.com/iruhana/seizn"
 Issues = "https://github.com/iruhana/seizn/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/seizn"]
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py38"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.mypy]
+python_version = "3.8"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

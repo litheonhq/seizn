@@ -14,6 +14,7 @@ from .types import (
     ConversationSummary,
     Webhook,
 )
+from .async_spring import AsyncSpringMixin
 
 
 class SeiznAsyncError(Exception):
@@ -25,7 +26,7 @@ class SeiznAsyncError(Exception):
         super().__init__(message)
 
 
-class AsyncSeizn:
+class AsyncSeizn(AsyncSpringMixin):
     """
     Async Seizn Memory API Client.
 
@@ -47,16 +48,6 @@ class AsyncSeizn:
         retries: int = DEFAULT_RETRIES,
         retry_delay: float = DEFAULT_RETRY_DELAY,
     ):
-        """
-        Initialize the async Seizn client.
-
-        Args:
-            api_key: Your Seizn API key (starts with szn_)
-            base_url: Override the API base URL (for testing)
-            timeout: Request timeout in seconds
-            retries: Number of retry attempts for transient failures
-            retry_delay: Base delay between retries (exponential backoff)
-        """
         self.api_key = api_key
         self.base_url = (base_url or self.DEFAULT_BASE_URL).rstrip("/")
         self.timeout = timeout
@@ -90,13 +81,11 @@ class AsyncSeizn:
                 response = await client.request(method, path, params=params, json=json)
 
                 if response.status_code >= 500:
-                    # Server error - retry
                     raise SeiznAsyncError(
                         f"Server error: {response.status_code}", response.status_code
                     )
 
                 if response.status_code >= 400:
-                    # Client error - don't retry
                     try:
                         error_data = response.json()
                         message = error_data.get("error", response.text)
@@ -154,16 +143,7 @@ class AsyncSeizn:
         memories: List[Dict[str, Any]],
         namespace: str = "default",
     ) -> List[Memory]:
-        """
-        Add multiple memories in parallel.
-
-        Args:
-            memories: List of memory dicts with 'content', 'memory_type', 'tags'
-            namespace: Default namespace for all memories
-
-        Returns:
-            List of created Memory objects
-        """
+        """Add multiple memories in parallel."""
         tasks = []
         for mem in memories:
             task = self.add(
@@ -262,20 +242,7 @@ class AsyncSeizn:
         namespace: str = "default",
         context: Optional[str] = None,
     ) -> List[ExtractedMemory]:
-        """
-        Extract memories from an image using Claude Vision.
-
-        Args:
-            image: Base64 encoded image data
-            media_type: Image MIME type (image/png, image/jpeg, image/gif, image/webp)
-            model: AI model to use (haiku or sonnet)
-            auto_store: Automatically store extracted memories
-            namespace: Namespace for stored memories
-            context: Optional context about the image
-
-        Returns:
-            List of ExtractedMemory objects
-        """
+        """Extract memories from an image using Claude Vision."""
         data = {
             "image": image,
             "media_type": media_type,
@@ -353,21 +320,8 @@ class AsyncSeizn:
         limit: int = 10000,
         offset: int = 0,
     ) -> Dict[str, Any]:
-        """
-        Export memories.
-
-        Args:
-            format: Export format (json or csv)
-            namespace: Filter by namespace
-            memory_type: Filter by memory type
-            limit: Maximum memories to export (max 10000)
-            offset: Pagination offset
-
-        Returns:
-            Dict with export metadata and memories (for json)
-            or raw CSV string (for csv)
-        """
-        params = {
+        """Export memories."""
+        params: Dict[str, Any] = {
             "format": format,
             "limit": limit,
             "offset": offset,
@@ -391,17 +345,7 @@ class AsyncSeizn:
         memories: List[Dict[str, Any]],
         skip_duplicates: bool = True,
     ) -> Dict[str, Any]:
-        """
-        Import memories in bulk.
-
-        Args:
-            memories: List of memory dicts with 'content' (required),
-                     'memory_type', 'tags', 'namespace', 'importance'
-            skip_duplicates: Skip memories with duplicate content
-
-        Returns:
-            Dict with import results (imported, skipped, failed counts)
-        """
+        """Import memories in bulk."""
         data = {
             "memories": memories,
             "skip_duplicates": skip_duplicates,

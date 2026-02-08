@@ -177,3 +177,195 @@ export interface MemoryUsage {
   deletions: number;
   embeddingTokens: number;
 }
+
+// ============================================
+// Graph Types
+// ============================================
+
+export type EdgeType =
+  | 'relates_to'
+  | 'supports'
+  | 'contradicts'
+  | 'supersedes'
+  | 'derived_from'
+  | 'mentions'
+  | 'part_of'
+  | 'causes'
+  | 'similar_to';
+
+export interface Edge {
+  id: string;
+  srcMemoryId: string;
+  dstMemoryId: string;
+  edgeType: EdgeType | string;
+  weight: number;
+  reason?: string;
+  confidence?: number;
+  direction: string;
+  createdAt: string;
+}
+
+export interface CreateEdgeRequest {
+  srcMemoryId: string;
+  dstMemoryId: string;
+  edgeType?: EdgeType | string;
+  weight?: number;
+  reason?: string;
+  confidence?: number;
+  agentId?: string;
+}
+
+export interface GraphNeighbor {
+  memoryId: string;
+  content: string;
+  edgeType: string;
+  weight: number;
+  direction: string;
+  hops: number;
+}
+
+export interface NeighborhoodRequest {
+  memory_id: string;
+  max_hops?: number;
+  limit?: number;
+  min_weight?: number;
+  edge_types?: string[];
+}
+
+// ============================================
+// Temporal Types
+// ============================================
+
+export interface TemporalSearchRequest {
+  valid_at: string;
+  query?: string;
+  types?: string[];
+  top_k?: number;
+  min_similarity?: number;
+  exclude_expired?: boolean;
+  include_superseded?: boolean;
+}
+
+export interface TemporalResult {
+  id: string;
+  content: string;
+  type: string;
+  similarity: number | null;
+  validFrom: string | null;
+  validTo: string | null;
+  eventTime: string | null;
+  createdAt: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface TemporalSearchResponse {
+  success: boolean;
+  results: TemporalResult[];
+  count: number;
+}
+
+export interface TimelineEntry {
+  id: string;
+  content: string;
+  type: string;
+  eventTime: string;
+  validFrom: string | null;
+  validTo: string | null;
+  isCurrentlyValid: boolean;
+}
+
+export interface TimelineResponse {
+  success: boolean;
+  entries: TimelineEntry[];
+  count: number;
+}
+
+export interface FactHistoryEntry extends TemporalResult {
+  supersededById: string | null;
+}
+
+export interface FactHistoryResponse {
+  success: boolean;
+  history: FactHistoryEntry[];
+  count: number;
+}
+
+export interface ChangedFact {
+  oldFact: Omit<TemporalResult, 'similarity' | 'metadata'>;
+  newFact: Omit<TemporalResult, 'similarity' | 'metadata'>;
+  changedAt: string;
+}
+
+export interface ChangedFactsResponse {
+  success: boolean;
+  changes: ChangedFact[];
+  count: number;
+}
+
+export interface TemporalStatus {
+  active: number;
+  expired: number;
+  superseded: number;
+  expiringSoon: number;
+  total: number;
+}
+
+export interface TemporalStatusResponse extends TemporalStatus {
+  success: boolean;
+}
+
+// ============================================
+// Ingestion Types
+// ============================================
+
+export type IngestionAction = 'store' | 'redact' | 'deny' | 'store_as_candidate';
+export type StrictnessLevel = 'low' | 'medium' | 'high' | 'very_high';
+
+export interface IngestionRule {
+  id: string;
+  name: string;
+  action: IngestionAction | string;
+  description?: string;
+  priority: number;
+  enabled: boolean;
+  workspaceId?: string;
+  namespace?: string;
+  agentId?: string;
+  noteTypes?: string[];
+  categories?: string[];
+  tagPatterns?: string[];
+  contentPatterns?: string[];
+  confidenceThreshold: number;
+  redactReplacement?: string;
+  metadata?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateIngestionRuleRequest {
+  name: string;
+  action: IngestionAction | string;
+  description?: string;
+  priority?: number;
+  enabled?: boolean;
+  workspace_id?: string;
+  namespace?: string;
+  agent_id?: string;
+  note_types?: string[];
+  categories?: string[];
+  tag_patterns?: string[];
+  content_patterns?: string[];
+  confidence_threshold?: number;
+  redact_replacement?: string;
+}
+
+export interface IngestionSettings {
+  autoSaveEnabled: boolean;
+  candidateModeEnabled: boolean;
+  defaultConfidenceThreshold: number;
+  strictness: StrictnessLevel | string;
+  blockedCategories: string[];
+  blockedPatterns: string[];
+  sensitiveCapsuleEnabled: boolean;
+  sensitiveCategories: string[];
+}

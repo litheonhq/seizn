@@ -40,6 +40,18 @@ import type {
   BulkAddRequest,
   BulkAddResponse,
   MemoryStats,
+  Edge,
+  CreateEdgeRequest,
+  GraphNeighbor,
+  TemporalSearchRequest,
+  TemporalSearchResponse,
+  TimelineResponse,
+  FactHistoryResponse,
+  ChangedFactsResponse,
+  TemporalStatusResponse,
+  IngestionRule,
+  CreateIngestionRuleRequest,
+  IngestionSettings,
 } from './types';
 
 const DEFAULT_BASE_URL = 'https://www.seizn.com/api';
@@ -232,6 +244,223 @@ export class SpringClient {
    */
   async forget(ids: string | string[]): Promise<number> {
     return this.delete(ids);
+  }
+
+  // ============================================
+  // Graph Operations
+  // ============================================
+
+  /**
+   * Get edges for a memory
+   */
+  async getEdges(
+    memoryId: string,
+    options?: { direction?: string; edge_types?: string[]; min_weight?: number }
+  ): Promise<Edge[]> {
+    const params = new URLSearchParams({
+      memory_id: memoryId,
+      direction: options?.direction ?? 'both',
+      min_weight: String(options?.min_weight ?? 0),
+    });
+    if (options?.edge_types?.length) {
+      params.set('edge_types', options.edge_types.join(','));
+    }
+
+    const response = await this.request<{ success: boolean; edges: Edge[] }>(
+      `/spring/edges?${params}`
+    );
+    return response.edges;
+  }
+
+  /**
+   * Create an edge between two memories
+   */
+  async createEdge(request: CreateEdgeRequest): Promise<Edge> {
+    const response = await this.request<{ success: boolean; edge: Edge }>(
+      '/spring/edges',
+      { method: 'POST', body: request }
+    );
+    return response.edge;
+  }
+
+  /**
+   * Delete an edge
+   */
+  async deleteEdge(edgeId: string): Promise<boolean> {
+    await this.request<{ success: boolean }>(`/spring/edges/${edgeId}`, {
+      method: 'DELETE',
+    });
+    return true;
+  }
+
+  /**
+   * Get graph neighborhood of a memory
+   */
+  async getNeighborhood(
+    memoryId: string,
+    options?: { max_hops?: number; limit?: number; min_weight?: number; edge_types?: string[] }
+  ): Promise<GraphNeighbor[]> {
+    const params = new URLSearchParams({
+      memory_id: memoryId,
+      max_hops: String(options?.max_hops ?? 2),
+      limit: String(options?.limit ?? 50),
+      min_weight: String(options?.min_weight ?? 0),
+    });
+    if (options?.edge_types?.length) {
+      params.set('edge_types', options.edge_types.join(','));
+    }
+
+    const response = await this.request<{ success: boolean; neighbors: GraphNeighbor[] }>(
+      `/spring/graph/neighborhood?${params}`
+    );
+    return response.neighbors;
+  }
+
+  // ============================================
+  // Temporal Operations
+  // ============================================
+
+  /**
+   * Search memories valid at a specific point in time
+   */
+  async temporalSearch(request: TemporalSearchRequest): Promise<TemporalSearchResponse> {
+    const params = new URLSearchParams({
+      valid_at: request.valid_at,
+      top_k: String(request.top_k ?? 20),
+      min_similarity: String(request.min_similarity ?? 0.5),
+      exclude_expired: String(request.exclude_expired ?? true),
+      include_superseded: String(request.include_superseded ?? false),
+    });
+    if (request.query) params.set('query', request.query);
+    if (request.types?.length) params.set('types', request.types.join(','));
+
+    return this.request<TemporalSearchResponse>(`/spring/temporal/search?${params}`);
+  }
+
+  /**
+   * Get memory timeline
+   */
+  async timeline(options?: {
+    start_date?: string;
+    end_date?: string;
+    types?: string[];
+    limit?: number;
+  }): Promise<TimelineResponse> {
+    const params = new URLSearchParams();
+    if (options?.start_date) params.set('start_date', options.start_date);
+    if (options?.end_date) params.set('end_date', options.end_date);
+    if (options?.types?.length) params.set('types', options.types.join(','));
+    if (options?.limit) params.set('limit', String(options.limit));
+
+    const query = params.toString();
+    return this.request<TimelineResponse>(
+      `/spring/temporal/timeline${query ? `?${query}` : ''}`
+    );
+  }
+
+  /**
+   * Get fact history (all versions including superseded)
+   */
+  async factHistory(factId: string): Promise<FactHistoryResponse> {
+    return this.request<FactHistoryResponse>(`/spring/temporal/history/${factId}`);
+  }
+
+  /**
+   * Get facts that changed within a time range
+   */
+  async changedFacts(startDate: string, endDate: string): Promise<ChangedFactsResponse> {
+    const params = new URLSearchParams({
+      start_date: startDate,
+      end_date: endDate,
+    });
+    return this.request<ChangedFactsResponse>(`/spring/temporal/changes?${params}`);
+  }
+
+  /**
+   * Get temporal status counts
+   */
+  async temporalStatus(): Promise<TemporalStatusResponse> {
+    return this.request<TemporalStatusResponse>('/spring/temporal/status');
+  }
+
+  // ============================================
+  // Ingestion Rules
+  // ============================================
+
+  /**
+   * List ingestion rules
+   */
+  async listIngestionRules(options?: {
+    workspace_id?: string;
+    enabled_only?: boolean;
+  }): Promise<IngestionRule[]> {
+    const params = new URLSearchParams();
+    if (options?.workspace_id) params.set('workspace_id', options.workspace_id);
+    if (options?.enabled_only) params.set('enabled_only', 'true');
+
+    const query = params.toString();
+    const response = await this.request<{ success: boolean; rules: IngestionRule[] }>(
+      `/spring/ingestion/rules${query ? `?${query}` : ''}`
+    );
+    return response.rules;
+  }
+
+  /**
+   * Create an ingestion rule
+   */
+  async createIngestionRule(request: CreateIngestionRuleRequest): Promise<IngestionRule> {
+    const response = await this.request<{ success: boolean; rule: IngestionRule }>(
+      '/spring/ingestion/rules',
+      { method: 'POST', body: request }
+    );
+    return response.rule;
+  }
+
+  /**
+   * Update an ingestion rule
+   */
+  async updateIngestionRule(
+    ruleId: string,
+    updates: Partial<CreateIngestionRuleRequest>
+  ): Promise<IngestionRule> {
+    const response = await this.request<{ success: boolean; rule: IngestionRule }>(
+      `/spring/ingestion/rules/${ruleId}`,
+      { method: 'PUT', body: updates }
+    );
+    return response.rule;
+  }
+
+  /**
+   * Delete an ingestion rule
+   */
+  async deleteIngestionRule(ruleId: string): Promise<boolean> {
+    await this.request<{ success: boolean }>(`/spring/ingestion/rules/${ruleId}`, {
+      method: 'DELETE',
+    });
+    return true;
+  }
+
+  /**
+   * Get ingestion settings
+   */
+  async getIngestionSettings(): Promise<IngestionSettings> {
+    const response = await this.request<{ success: boolean; settings: IngestionSettings }>(
+      '/spring/ingestion/settings'
+    );
+    return response.settings;
+  }
+
+  /**
+   * Update ingestion settings
+   */
+  async updateIngestionSettings(
+    updates: Partial<IngestionSettings>
+  ): Promise<IngestionSettings> {
+    const response = await this.request<{ success: boolean; settings: IngestionSettings }>(
+      '/spring/ingestion/settings',
+      { method: 'PUT', body: updates }
+    );
+    return response.settings;
   }
 
   // ============================================

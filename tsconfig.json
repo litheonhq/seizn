@@ -43,6 +43,7 @@
     "mcp-server",
     "examples",
     "packages",
+    "cli",
     "relay-agent",
     "scripts",
     "src/test",
