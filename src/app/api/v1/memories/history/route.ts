@@ -10,6 +10,7 @@ import {
   authenticateRequest,
   isAuthError,
   authErrorResponse,
+  logRequest,
 } from '@/lib/api-auth';
 import { auth } from '@/lib/auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
@@ -17,7 +18,7 @@ import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 async function resolveAuth(
   request: NextRequest
 ): Promise<{ userId: string; keyId: string | null } | { error: NextResponse }> {
-  const authResult = await authenticateRequest(request, { skipUsageCheck: true });
+  const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (!isAuthError(authResult)) {
     return { userId: authResult.userId, keyId: authResult.keyId };
   }
@@ -29,11 +30,13 @@ async function resolveAuth(
 }
 
 export async function GET(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
     const result = await resolveAuth(request);
     if ('error' in result) return result.error;
 
-    const { userId } = result;
+    const { userId, keyId } = result;
     const { searchParams } = new URL(request.url);
     const memoryId = searchParams.get('memory_id');
 
@@ -70,6 +73,13 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('get_memory_history');
     }
 
+    if (keyId) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/v1/memories/history', method: 'GET', startTime },
+        200
+      );
+    }
+
     return NextResponse.json({
       success: true,
       data: {
@@ -77,7 +87,7 @@ export async function GET(request: NextRequest) {
         history: history || [],
         versionCount: (history?.length || 0) + 1,
       },
-      meta: { version: 'v1' },
+      meta: { version: 'v1', latencyMs: Date.now() - startTime },
     });
   } catch (error) {
     console.error('[v1/memories/history] Error:', error);
