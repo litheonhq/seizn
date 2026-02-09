@@ -42,6 +42,8 @@ jobs:
         run: npm run build
         env:
           SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'placeholder-anon-key'
 
       - name: Start server
         run: npm run start -- --port 3000 &
