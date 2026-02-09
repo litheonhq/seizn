@@ -8,6 +8,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { hasPermission } from '@/lib/rbac/permissions';
+import { Permissions } from '@/lib/rbac/types';
 import {
   queryAuditEvents,
   getAuditSummary,
@@ -36,7 +38,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // TODO: Verify user has admin access to this org
+    // Verify user has admin access to this org
+    const permCheck = await hasPermission(session.user.id, orgId, Permissions.AUDIT_LOG_VIEW);
+    if (!permCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Forbidden: insufficient permissions for audit access' },
+        { status: 403 }
+      );
+    }
 
     // Check if requesting summary
     if (searchParams.get('summary') === 'true') {
@@ -161,6 +170,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Organization ID required' },
         { status: 400 }
+      );
+    }
+
+    // Verify user has admin access to this org
+    const permCheck = await hasPermission(session.user.id, orgId, Permissions.AUDIT_LOG_VIEW);
+    if (!permCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Forbidden: insufficient permissions for audit access' },
+        { status: 403 }
       );
     }
 
