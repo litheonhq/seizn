@@ -498,7 +498,23 @@ const tools: Tool[] = [
       type: "object",
       properties: {}
     }
-  }
+  },
+  // =========================================================================
+  // Diagnostics
+  // =========================================================================
+  {
+    name: "health_check",
+    description: "Check MCP server health, API connectivity, and version info. Use this to diagnose connection issues.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        verbose: {
+          type: "boolean",
+          description: "Include detailed diagnostics (default: false)"
+        }
+      }
+    }
+  },
 ];
 
 // Tool handlers
@@ -853,6 +869,50 @@ async function handleListConnectors(connectorType?: string): Promise<string> {
   });
 }
 
+// =========================================================================
+// Health Check Handler
+// =========================================================================
+
+async function handleHealthCheck(verbose = false): Promise<string> {
+  const startTime = Date.now();
+  const diagnostics: Record<string, unknown> = {
+    server: "seizn-mcp",
+    version: "2.2.0",
+    transport: process.argv.includes('--http') ? 'http' : 'stdio',
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    const response = await apiRequest("/api/v1/profile") as Record<string, unknown>;
+    diagnostics.api = {
+      status: "healthy",
+      url: SEIZN_API_URL,
+      latencyMs: Date.now() - startTime,
+      authenticated: response.success === true,
+    };
+  } catch (error) {
+    diagnostics.api = {
+      status: "degraded",
+      url: SEIZN_API_URL,
+      latencyMs: Date.now() - startTime,
+      error: (error as Error).message,
+    };
+  }
+
+  if (verbose) {
+    diagnostics.config = {
+      apiUrl: SEIZN_API_URL,
+      apiKeySet: !!SEIZN_API_KEY,
+      apiKeyPrefix: SEIZN_API_KEY ? SEIZN_API_KEY.slice(0, 8) + "..." : "not set",
+      nodeVersion: process.version,
+      platform: process.platform,
+    };
+  }
+
+  const overallStatus = (diagnostics.api as Record<string, unknown>)?.status === "healthy" ? "healthy" : "degraded";
+  return JSON.stringify({ status: overallStatus, ...diagnostics });
+}
+
 // Helper functions
 function extractEntityName(content: string): string {
   const match = content.match(/\[.*?\]\s*(.+?)(?:\n|$)/);
@@ -876,101 +936,59 @@ function parseRelation(content: string): Relation | null {
   return null;
 }
 
-// Create and run server
-async function main() {
-  const server = new Server(
-    {
-      name: "seizn-memory",
-      version: "2.1.0", // v2.1: Added Profile API tools
-    },
-    {
-      capabilities: {
-        tools: {},
-      },
-    }
-  );
+// Shared tool dispatch (used by both stdio and HTTP transports)
+async function dispatchTool(name: string, args?: Record<string, unknown>): Promise<string> {
+  switch (name) {
+    case "get_context":
+      return handleGetContext(args as ContextOptions);
+    case "flush_memories":
+      return handleFlushMemories(args as FlushOptions);
+    case "get_profile":
+      return handleGetProfile(args as { history?: boolean });
+    case "update_profile":
+      return handleUpdateProfile(args as ProfileUpdateOptions);
+    case "derive_profile":
+      return handleDeriveProfile();
+    case "health_check":
+      return handleHealthCheck(args?.verbose as boolean);
+    case "sync_connector":
+      return handleSyncConnector(args as unknown as SyncOptions);
+    case "list_connectors":
+      return handleListConnectors(args?.connectorType as string);
+    case "create_entities":
+      return handleCreateEntities(args?.entities as Entity[]);
+    case "create_relations":
+      return handleCreateRelations(args?.relations as Relation[]);
+    case "add_observations":
+      return handleAddObservations(args?.observations as { entityName: string; contents: string[] }[]);
+    case "search_nodes":
+      return handleSearchNodes(args?.query as string, args?.limit as number, args?.mode as string);
+    case "read_graph":
+      return handleReadGraph(args?.namespace as string);
+    case "open_nodes":
+      return handleOpenNodes(args?.names as string[]);
+    case "delete_entities":
+      return handleDeleteEntities(args?.entityNames as string[]);
+    case "delete_observations":
+      return JSON.stringify({ success: true, message: "Observations deleted" });
+    case "delete_relations":
+      return JSON.stringify({ success: true, message: "Relations deleted" });
+    default:
+      throw new Error(`Unknown tool: ${name}`);
+  }
+}
 
-  // List tools handler
+// Register MCP handlers on a Server instance
+function registerHandlers(server: Server) {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return { tools };
   });
 
-  // Call tool handler
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
-
     try {
-      let result: string;
-
-      switch (name) {
-        // Context API Tools
-        case "get_context":
-          result = await handleGetContext(args as ContextOptions);
-          break;
-        case "flush_memories":
-          result = await handleFlushMemories(args as FlushOptions);
-          break;
-
-        // Profile API Tools
-        case "get_profile":
-          result = await handleGetProfile(args as { history?: boolean });
-          break;
-        case "update_profile":
-          result = await handleUpdateProfile(args as ProfileUpdateOptions);
-          break;
-        case "derive_profile":
-          result = await handleDeriveProfile();
-          break;
-
-        // Connector Tools
-        case "sync_connector":
-          result = await handleSyncConnector(args as unknown as SyncOptions);
-          break;
-        case "list_connectors":
-          result = await handleListConnectors(args?.connectorType as string);
-          break;
-
-        // Knowledge Graph Tools
-        case "create_entities":
-          result = await handleCreateEntities(args?.entities as Entity[]);
-          break;
-        case "create_relations":
-          result = await handleCreateRelations(args?.relations as Relation[]);
-          break;
-        case "add_observations":
-          result = await handleAddObservations(args?.observations as { entityName: string; contents: string[] }[]);
-          break;
-        case "search_nodes":
-          result = await handleSearchNodes(
-            args?.query as string,
-            args?.limit as number,
-            args?.mode as string
-          );
-          break;
-        case "read_graph":
-          result = await handleReadGraph(args?.namespace as string);
-          break;
-        case "open_nodes":
-          result = await handleOpenNodes(args?.names as string[]);
-          break;
-        case "delete_entities":
-          result = await handleDeleteEntities(args?.entityNames as string[]);
-          break;
-        case "delete_observations":
-          // Similar implementation
-          result = JSON.stringify({ success: true, message: "Observations deleted" });
-          break;
-        case "delete_relations":
-          // Similar implementation
-          result = JSON.stringify({ success: true, message: "Relations deleted" });
-          break;
-        default:
-          throw new Error(`Unknown tool: ${name}`);
-      }
-
-      return {
-        content: [{ type: "text", text: result }],
-      };
+      const result = await dispatchTool(name, args as Record<string, unknown>);
+      return { content: [{ type: "text", text: result }] };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       return {
@@ -979,12 +997,109 @@ async function main() {
       };
     }
   });
+}
 
-  // Start server
-  const transport = new ContentLengthStdioTransport();
-  await server.connect(transport);
+// Create and run server
+async function main() {
+  const httpMode = process.argv.includes('--http');
+  const port = parseInt(process.env.SEIZN_MCP_PORT || '3100', 10);
 
-  console.error("Seizn MCP Server running on stdio");
+  const server = new Server(
+    {
+      name: "seizn-memory",
+      version: "2.2.0", // v2.2: Health check + HTTP transport
+    },
+    {
+      capabilities: {
+        tools: {},
+      },
+    }
+  );
+
+  registerHandlers(server);
+
+  if (httpMode) {
+    // HTTP transport mode
+    const { createServer } = await import('node:http');
+
+    const httpServer = createServer(async (req, res) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+      }
+
+      const url = new URL(req.url || '/', `http://localhost:${port}`);
+
+      // Health endpoint
+      if (url.pathname === '/health' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          status: 'healthy',
+          version: '2.2.0',
+          transport: 'http',
+          timestamp: new Date().toISOString(),
+        }));
+        return;
+      }
+
+      // MCP JSON-RPC endpoint
+      if (url.pathname === '/mcp' && req.method === 'POST') {
+        try {
+          const chunks: Buffer[] = [];
+          for await (const chunk of req) {
+            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+          }
+          const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+
+          if (body.method === 'tools/list') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              jsonrpc: '2.0', id: body.id,
+              result: { tools },
+            }));
+            return;
+          }
+
+          if (body.method === 'tools/call') {
+            const { name, arguments: args } = body.params;
+            const result = await dispatchTool(name, args);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              jsonrpc: '2.0', id: body.id,
+              result: { content: [{ type: 'text', text: result }] },
+            }));
+            return;
+          }
+
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ jsonrpc: '2.0', id: body.id, error: { code: -32601, message: 'Method not found' } }));
+        } catch (error) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: (error as Error).message }));
+        }
+        return;
+      }
+
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Not found' }));
+    });
+
+    httpServer.listen(port, () => {
+      console.error(`Seizn MCP Server (HTTP) running on http://localhost:${port}`);
+      console.error(`  MCP endpoint: POST http://localhost:${port}/mcp`);
+      console.error(`  Health check: GET  http://localhost:${port}/health`);
+    });
+  } else {
+    // stdio transport (default)
+    const transport = new ContentLengthStdioTransport();
+    await server.connect(transport);
+    console.error("Seizn MCP Server running on stdio");
+  }
 }
 
 main().catch(console.error);
