@@ -3,9 +3,23 @@ name: E2E Tests (Linux Compatibility)
 on:
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'e2e/**'
+      - 'playwright.config.ts'
+      - 'package.json'
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'e2e/**'
+      - 'playwright.config.ts'
+      - 'package.json'
   workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: '20'

@@ -3,7 +3,7 @@ name: Red Team Security Scan
 on:
   # Run on schedule (nightly)
   schedule:
-    - cron: '0 2 * * *'  # 2 AM UTC daily
+    - cron: '0 2 * * 5'  # 2 AM UTC Fridays only
 
   # Run on PRs that modify prompt templates or AI-related code
   pull_request:
