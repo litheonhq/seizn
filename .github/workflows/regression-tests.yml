@@ -55,9 +55,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install ts-node
-        run: npm install -g ts-node typescript
-
       - name: Run Regression Tests
         env:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
@@ -81,8 +78,8 @@ jobs:
             ARGS="$ARGS --verbose"
           fi
 
-          echo "Running: npx ts-node scripts/ci/regression-test.ts $ARGS"
-          npx ts-node scripts/ci/regression-test.ts $ARGS
+          echo "Running: npx tsx scripts/ci/regression-test.ts $ARGS"
+          npx tsx scripts/ci/regression-test.ts $ARGS
 
       - name: Upload test results
         if: always()
