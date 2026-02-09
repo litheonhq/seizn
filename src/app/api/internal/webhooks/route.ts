@@ -24,7 +24,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[Internal Webhooks] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
     const limit = body.limit || 50;
 
     const results = await processPendingWebhooks(limit);

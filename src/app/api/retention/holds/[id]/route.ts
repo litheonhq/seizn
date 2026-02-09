@@ -179,7 +179,10 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     // Get release reason from body
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[Retention Hold] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
     const releaseReason = body.release_reason || 'Released via API';
 
     await releaseLegalHold(id, user.id, releaseReason);

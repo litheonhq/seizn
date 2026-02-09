@@ -591,10 +591,11 @@ export default function OrganizationDetailClient({
 
       {/* Settings Tab */}
       {activeTab === "settings" && (
-        <div className="glass-card rounded-2xl p-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Organization Settings</h2>
-          <p className="text-gray-500">Settings management coming soon...</p>
-        </div>
+        <OrgSettingsTab
+          organization={organization}
+          canManage={canManageMembers}
+          onUpdate={(updated) => setOrganization({ ...organization, ...updated })}
+        />
       )}
 
       {/* Invite Modal */}
@@ -690,6 +691,206 @@ export default function OrganizationDetailClient({
               </button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =========================================================================
+// Organization Settings Tab
+// =========================================================================
+
+function OrgSettingsTab({
+  organization,
+  canManage,
+  onUpdate,
+}: {
+  organization: Organization;
+  canManage: boolean;
+  onUpdate: (updates: Partial<Organization>) => void;
+}) {
+  const [name, setName] = useState(organization.name);
+  const [slug, setSlug] = useState(organization.slug);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+
+  const hasChanges = name !== organization.name || slug !== organization.slug;
+
+  const handleSave = async () => {
+    if (!hasChanges || !canManage) return;
+    setIsSaving(true);
+    setSaveMessage(null);
+
+    try {
+      const res = await fetch("/api/organizations", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: organization.id,
+          name: name.trim(),
+          slug: slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        onUpdate({ name: name.trim(), slug: slug.trim() });
+        setSaveMessage({ type: "success", text: "Settings saved successfully" });
+      } else {
+        setSaveMessage({ type: "error", text: data.error || "Failed to save settings" });
+      }
+    } catch {
+      setSaveMessage({ type: "error", text: "Failed to save settings" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (deleteConfirmText !== organization.name) return;
+
+    try {
+      const res = await fetch(`/api/organizations?id=${organization.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = "/dashboard/organizations";
+      } else {
+        setSaveMessage({ type: "error", text: data.error || "Failed to delete organization" });
+      }
+    } catch {
+      setSaveMessage({ type: "error", text: "Failed to delete organization" });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* General Settings */}
+      <div className="glass-card rounded-2xl p-6">
+        <h2 className="font-semibold text-gray-900 mb-6">General Settings</h2>
+
+        {saveMessage && (
+          <div className={`mb-4 p-3 rounded-xl text-sm ${
+            saveMessage.type === "success"
+              ? "bg-green-50 border border-green-100 text-green-600"
+              : "bg-red-50 border border-red-100 text-red-600"
+          }`}>
+            {saveMessage.text}
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Organization Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={!canManage}
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              URL Slug
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400 text-sm">seizn.com/org/</span>
+              <input
+                type="text"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                disabled={!canManage}
+                className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500 transition-all"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Plan
+            </label>
+            <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600">
+              {organization.plan || "Free"} Plan
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Organization ID
+            </label>
+            <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-400 font-mono text-sm">
+              {organization.id}
+            </div>
+          </div>
+        </div>
+
+        {canManage && (
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <button
+              onClick={handleSave}
+              disabled={!hasChanges || isSaving}
+              className="theme-gradient-btn text-white px-6 py-2.5 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Danger Zone */}
+      {canManage && (
+        <div className="glass-card rounded-2xl p-6 border-2 border-red-100">
+          <h2 className="font-semibold text-red-600 mb-2">Danger Zone</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Deleting an organization is permanent and cannot be undone. All members will lose access and all data will be removed.
+          </p>
+
+          {showDeleteConfirm ? (
+            <div className="space-y-3">
+              <p className="text-sm text-gray-700">
+                Type <strong>{organization.name}</strong> to confirm:
+              </p>
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder={organization.name}
+                className="w-full px-4 py-3 bg-white border border-red-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(""); }}
+                  className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleteConfirmText !== organization.name}
+                  className="px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-600 transition-colors"
+                >
+                  Delete Organization
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="px-4 py-2.5 border-2 border-red-200 text-red-600 rounded-xl font-medium hover:bg-red-50 transition-colors"
+            >
+              Delete Organization
+            </button>
+          )}
         </div>
       )}
     </div>

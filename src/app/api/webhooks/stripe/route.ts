@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as crypto from "crypto";
 import { createServerClient } from "@/lib/supabase";
 import { getPlanFromStripePriceId } from "@/lib/stripe-config";
+import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
 // Stripe webhook event types we handle
 type StripeEventType =
@@ -157,12 +158,12 @@ async function findUser(
   supabase: ReturnType<typeof createServerClient>,
   customerId: string | undefined,
   customUserId: string | undefined | null
-): Promise<{ id: string } | null> {
+): Promise<{ id: string; email?: string; full_name?: string } | null> {
   // Try finding by Stripe customer ID first
   if (customerId) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, email, full_name")
       .eq("stripe_customer_id", customerId)
       .single();
 
@@ -173,7 +174,7 @@ async function findUser(
   if (customUserId) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, email, full_name")
       .eq("id", customUserId)
       .single();
 
@@ -573,7 +574,19 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        // TODO: Send payment failed notification email
+        // Send payment failed notification email
+        if (user?.email) {
+          await sendEmail({
+            to: user.email,
+            subject: 'Action required: Your Seizn payment failed',
+            html: paymentFailedEmail(
+              user.full_name || 'there',
+              String(eventData.amount_due),
+              eventData.currency,
+              eventData.hosted_invoice_url
+            ),
+          }).catch((err) => console.error('Failed to send payment failure email:', err));
+        }
         break;
       }
 
