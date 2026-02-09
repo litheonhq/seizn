@@ -1,6 +1,6 @@
 {
   "name": "seizn-mcp",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "MCP (Model Context Protocol) server for Seizn AI Memory - Persistent memory for AI applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:http": "node dist/index.js --http",
     "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/index.ts --http",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
