@@ -495,7 +495,7 @@ async function handleCreateEntities(entities) {
     for (const entity of entities) {
         // Create a memory for each entity with all observations
         const content = `[${entity.entityType}] ${entity.name}\n\n${entity.observations.join("\n")}`;
-        const response = await apiRequest("/api/memories", "POST", {
+        const response = await apiRequest("/api/v1/memories", "POST", {
             content,
             memory_type: "fact", // Valid type: fact, preference, experience, relationship, instruction
             tags: ["entity", entity.entityType, entity.name],
@@ -505,7 +505,7 @@ async function handleCreateEntities(entities) {
         results.push({
             name: entity.name,
             type: entity.entityType,
-            id: response.memory?.id
+            id: response.data?.memory?.id
         });
     }
     return JSON.stringify({ success: true, created: results });
@@ -515,7 +515,7 @@ async function handleCreateRelations(relations) {
     const results = [];
     for (const rel of relations) {
         const content = `[Relation] ${rel.from} --${rel.relationType}--> ${rel.to}`;
-        const response = await apiRequest("/api/memories", "POST", {
+        const response = await apiRequest("/api/v1/memories", "POST", {
             content,
             memory_type: "relationship", // Valid type for relations
             tags: ["relation", rel.from, rel.to, rel.relationType],
@@ -526,7 +526,7 @@ async function handleCreateRelations(relations) {
             from: rel.from,
             to: rel.to,
             type: rel.relationType,
-            id: response.memory?.id
+            id: response.data?.memory?.id
         });
     }
     return JSON.stringify({ success: true, created: results });
@@ -535,11 +535,11 @@ async function handleAddObservations(observations) {
     const results = [];
     for (const obs of observations) {
         // First search for the entity
-        const searchResponse = await apiRequest(`/api/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=hybrid`);
-        if (searchResponse.results && searchResponse.results.length > 0) {
+        const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=hybrid`);
+        if (searchResponse.data?.results && searchResponse.data.results.length > 0) {
             // Add new observations as new memories linked to the entity
             for (const content of obs.contents) {
-                await apiRequest("/api/memories", "POST", {
+                await apiRequest("/api/v1/memories", "POST", {
                     content: `[${obs.entityName}] ${content}`,
                     memory_type: "fact", // Valid type for observations
                     tags: ["observation", obs.entityName],
@@ -553,9 +553,9 @@ async function handleAddObservations(observations) {
     return JSON.stringify({ success: true, updated: results });
 }
 async function handleSearchNodes(query, limit = 10, mode = "vector") {
-    const response = await apiRequest(`/api/memories?query=${encodeURIComponent(query)}&limit=${limit}&mode=${mode}`);
+    const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(query)}&limit=${limit}&mode=${mode}`);
     // Transform to entity format
-    const entities = response.results?.map((m) => ({
+    const entities = response.data?.results?.map((m) => ({
         name: extractEntityName(m.content),
         type: m.memory_type,
         content: m.content,
@@ -566,26 +566,26 @@ async function handleSearchNodes(query, limit = 10, mode = "vector") {
 }
 async function handleReadGraph(namespace) {
     // Get all entities
-    const entitiesResponse = await apiRequest(`/api/memories?query=entity&limit=100&mode=keyword${namespace ? `&namespace=${namespace}` : ""}`);
+    const entitiesResponse = await apiRequest(`/api/v1/memories?query=entity&limit=100&mode=keyword${namespace ? `&namespace=${namespace}` : ""}`);
     // Get all relations
-    const relationsResponse = await apiRequest(`/api/memories?query=relation&limit=100&mode=keyword${namespace ? `&namespace=${namespace}` : ""}`);
-    const entities = entitiesResponse.results?.map((m) => ({
+    const relationsResponse = await apiRequest(`/api/v1/memories?query=relation&limit=100&mode=keyword${namespace ? `&namespace=${namespace}` : ""}`);
+    const entities = entitiesResponse.data?.results?.map((m) => ({
         name: extractEntityName(m.content),
         entityType: extractEntityType(m.content),
         observations: [m.content]
     })) || [];
-    const relations = relationsResponse.results?.map((m) => parseRelation(m.content)).filter(Boolean) || [];
+    const relations = relationsResponse.data?.results?.map((m) => parseRelation(m.content)).filter(Boolean) || [];
     return JSON.stringify({ entities, relations });
 }
 async function handleOpenNodes(names) {
     const results = [];
     for (const name of names) {
-        const response = await apiRequest(`/api/memories?query=${encodeURIComponent(name)}&limit=5&mode=hybrid`);
-        if (response.results && response.results.length > 0) {
+        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=hybrid`);
+        if (response.data?.results && response.data.results.length > 0) {
             results.push({
                 name,
-                entityType: extractEntityType(response.results[0].content),
-                observations: response.results.map((m) => m.content)
+                entityType: extractEntityType(response.data.results[0].content),
+                observations: response.data.results.map((m) => m.content)
             });
         }
     }
@@ -595,10 +595,10 @@ async function handleDeleteEntities(entityNames) {
     const deleted = [];
     for (const name of entityNames) {
         // Search for memories with this entity name
-        const response = await apiRequest(`/api/memories?query=${encodeURIComponent(name)}&limit=50&mode=hybrid`);
-        if (response.results && response.results.length > 0) {
-            const ids = response.results.map((m) => m.id).join(",");
-            await apiRequest(`/api/memories?ids=${ids}`, "DELETE");
+        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=hybrid`);
+        if (response.data?.results && response.data.results.length > 0) {
+            const ids = response.data.results.map((m) => m.id).join(",");
+            await apiRequest(`/api/v1/memories?ids=${ids}`, "DELETE");
             deleted.push(name);
         }
     }
@@ -695,7 +695,7 @@ async function handleHealthCheck(verbose = false) {
     const startTime = Date.now();
     const diagnostics = {
         server: "seizn-mcp",
-        version: "2.3.0",
+        version: "2.4.0",
         transport: process.argv.includes('--http') ? 'http' : 'stdio',
         timestamp: new Date().toISOString(),
     };
@@ -744,9 +744,9 @@ async function handleSessionInit(options = {}) {
     }
     // 2. Load recent memories
     try {
-        const recentResponse = await apiRequest(`/api/memories?query=recent&limit=${limit}&mode=keyword`);
-        if (recentResponse.results && recentResponse.results.length > 0) {
-            const memorySummary = recentResponse.results.map(m => `- [${m.memory_type}] ${m.content}${m.tags?.length ? ` (tags: ${m.tags.join(', ')})` : ''}`).join('\n');
+        const recentResponse = await apiRequest(`/api/v1/memories?query=recent&limit=${limit}&mode=keyword`);
+        if (recentResponse.data?.results && recentResponse.data.results.length > 0) {
+            const memorySummary = recentResponse.data.results.map(m => `- [${m.memory_type}] ${m.content}${m.tags?.length ? ` (tags: ${m.tags.join(', ')})` : ''}`).join('\n');
             sections.push(`## Recent Memories (last ${hoursBack}h)\n${memorySummary}`);
         }
         else {
@@ -862,7 +862,7 @@ async function main() {
     const port = parseInt(process.env.SEIZN_MCP_PORT || '3100', 10);
     const server = new index_js_1.Server({
         name: "seizn-memory",
-        version: "2.3.0", // v2.2: Health check + HTTP transport
+        version: "2.4.0", // v2.2: Health check + HTTP transport
     }, {
         capabilities: {
             tools: {},
@@ -887,7 +887,7 @@ async function main() {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
                     status: 'healthy',
-                    version: '2.2.0',
+                    version: '2.4.0',
                     transport: 'http',
                     timestamp: new Date().toISOString(),
                 }));

@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     const namespace = body.namespace || 'default';
 
     // Dedup check (opt-out with dedup=false)
-    const dedupEnabled = (body as Record<string, unknown>).dedup !== false;
+    const dedupEnabled = (body as unknown as Record<string, unknown>).dedup !== false;
     if (dedupEnabled) {
       const duplicate = await findDuplicate(userId, embedding, namespace);
       if (duplicate) {
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     // Auto importance scoring (opt-in with auto_score=true)
     let importance = 5;
-    if ((body as Record<string, unknown>).auto_score === true) {
+    if ((body as unknown as Record<string, unknown>).auto_score === true) {
       importance = await scoreImportance(body.content);
     }
 
@@ -223,7 +223,7 @@ export async function GET(request: NextRequest) {
             { embedding: 0 }
           );
         }
-        logMemoryAccess(request, userId, keyId, 'read', {
+        logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
           memoryId: `slot:${slotKey}`,
           query,
         }).catch(console.error);
@@ -262,7 +262,7 @@ export async function GET(request: NextRequest) {
         );
       }
       Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
-      logMemoryAccess(request, userId, keyId, 'search', {
+      logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
         query,
       }).catch(console.error);
@@ -376,7 +376,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    logMemoryAccess(request, userId, keyId, 'search', {
+    logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
       memoryCount: results?.length || 0,
       query,
     }).catch(console.error);
