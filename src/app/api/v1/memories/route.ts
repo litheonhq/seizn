@@ -31,6 +31,9 @@ import {
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import { boundedInt } from '@/lib/parse-params';
+import { findDuplicate } from '@/lib/memory/dedup';
+import { scoreImportance } from '@/lib/memory/auto-score';
+import { emitWebhookEvent } from '@/lib/webhook-emit';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
@@ -80,6 +83,36 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
     const embedding = await createEmbedding(body.content);
+    const namespace = body.namespace || 'default';
+
+    // Dedup check (opt-out with dedup=false)
+    const dedupEnabled = (body as Record<string, unknown>).dedup !== false;
+    if (dedupEnabled) {
+      const duplicate = await findDuplicate(userId, embedding, namespace);
+      if (duplicate) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+            200
+          );
+        }
+        return NextResponse.json({
+          success: true,
+          data: {
+            memory: { id: duplicate.id, content: duplicate.content },
+            deduplicated: true,
+            similarity: duplicate.similarity,
+          },
+          meta: { ...META, latencyMs: Date.now() - startTime },
+        });
+      }
+    }
+
+    // Auto importance scoring (opt-in with auto_score=true)
+    let importance = 5;
+    if ((body as Record<string, unknown>).auto_score === true) {
+      importance = await scoreImportance(body.content);
+    }
 
     const { data: memory, error: insertError } = await supabase
       .from('memories')
@@ -89,15 +122,15 @@ export async function POST(request: NextRequest) {
         embedding,
         memory_type: body.memory_type || 'fact',
         tags: body.tags || [],
-        namespace: body.namespace || 'default',
+        namespace,
         scope: body.scope || 'user',
         session_id: body.session_id || null,
         agent_id: body.agent_id || null,
         source: body.source || 'api',
         confidence: 1.0,
-        importance: 5,
+        importance,
       })
-      .select('id, content, memory_type, tags, namespace, created_at')
+      .select('id, content, memory_type, tags, namespace, importance, created_at')
       .single();
 
     if (insertError) {
@@ -111,7 +144,12 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('insert_memory');
     }
 
-    incrementMemoryVersion(userId, body.namespace || 'default').catch(console.error);
+    incrementMemoryVersion(userId, namespace).catch(console.error);
+
+    // Emit webhook event (non-blocking)
+    emitWebhookEvent(userId, 'memory.created', {
+      memory: { id: memory.id, content: memory.content, memory_type: memory.memory_type },
+    }, namespace).catch(console.error);
 
     if (keyId) {
       await logRequest(
@@ -158,6 +196,8 @@ export async function GET(request: NextRequest) {
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const namespace = searchParams.get('namespace') || 'default';
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
+    const agentId = searchParams.get('agent_id');
+    const scope = searchParams.get('scope');
 
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
@@ -298,6 +338,15 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
+    // Multi-agent filtering (post-search)
+    if (results && (agentId || scope)) {
+      results = results.filter((m: Record<string, unknown>) => {
+        if (agentId && m.agent_id !== agentId) return false;
+        if (scope && m.scope !== scope) return false;
+        return true;
+      });
+    }
+
     // Cache results
     if (results && results.length > 0) {
       const cacheableResults: CachedMemory[] = results.map((r) => ({
@@ -390,6 +439,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     incrementMemoryVersion(userId, namespace).catch(console.error);
+
+    // Emit webhook event (non-blocking)
+    emitWebhookEvent(userId, 'memory.deleted', {
+      ids,
+      count: ids.length,
+    }, namespace).catch(console.error);
 
     if (keyId) {
       await logRequest(

@@ -55,5 +55,41 @@ npm run start    # 프로덕션 서버
 npm run lint     # ESLint 검사
 ```
 
+## MCP 폴백 가이드
+
+Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
+
+1. **REST API 직접 호출** (최우선):
+   ```bash
+   # 메모리 저장
+   curl -X POST https://www.seizn.com/api/v1/memories \
+     -H "Authorization: Bearer $SEIZN_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"content":"...", "tags":["tag1"]}'
+
+   # 메모리 검색
+   curl "https://www.seizn.com/api/v1/memories?query=...&mode=hybrid" \
+     -H "Authorization: Bearer $SEIZN_API_KEY"
+   ```
+
+2. **CLI 원라이너**:
+   ```bash
+   SEIZN_API_KEY=szn_... npx seizn save "메모리 내용" --tags tag1,tag2
+   ```
+
+3. **HTTP Transport** (로컬):
+   ```bash
+   SEIZN_API_KEY=szn_... npx seizn-mcp --http  # localhost:3100
+   curl localhost:3100/health
+   ```
+
+## API v1 기능
+- **중복 방지**: POST 시 자동 dedup (similarity > 0.95), `dedup: false`로 비활성화
+- **자동 중요도**: `auto_score: true` 옵션으로 Haiku 기반 1-10 점수 자동 부여
+- **멀티 에이전트**: `agent_id`, `scope` 쿼리 파라미터로 에이전트별 메모리 분리
+- **Webhook**: `memory.created`, `memory.updated`, `memory.deleted` 이벤트 → n8n/Zapier 연동
+- **메모리 버전 관리**: 내용 변경 시 자동으로 이전 버전 보존 (memory_content_history)
+- **실시간 스트림**: SSE `/api/v1/memories/stream` 엔드포인트
+
 ## 참고 문서
 - 기획/조사: `C:\Users\admin\Dendron\notes\사업\기타-프로젝트\AI-Memory-Server-Research.md`

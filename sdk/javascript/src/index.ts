@@ -28,11 +28,53 @@ export interface AddMemoryOptions {
   session_id?: string;
   agent_id?: string;
   source?: string;
+  /** Enable deduplication check (default: true) */
+  dedup?: boolean;
+  /** Auto-score importance using AI (default: false) */
+  auto_score?: boolean;
 }
 
 export interface SearchOptions {
   limit?: number;
   threshold?: number;
+  namespace?: string;
+  mode?: 'auto' | 'vector' | 'hybrid' | 'keyword';
+  /** Filter by agent ID */
+  agent_id?: string;
+  /** Filter by scope */
+  scope?: 'user' | 'session' | 'agent';
+}
+
+export interface MemoryHistory {
+  current: Memory;
+  history: Array<{
+    id: string;
+    content: string;
+    memory_type: string;
+    tags: string[];
+    importance: number;
+    version: number;
+    changed_by: string;
+    created_at: string;
+  }>;
+  versionCount: number;
+}
+
+export interface Webhook {
+  id: string;
+  name: string;
+  url: string;
+  events: string[];
+  namespace: string | null;
+  is_active: boolean;
+  secret?: string;
+  created_at: string;
+}
+
+export interface CreateWebhookOptions {
+  name: string;
+  url: string;
+  events?: ('memory.created' | 'memory.updated' | 'memory.deleted')[];
   namespace?: string;
 }
 
@@ -198,20 +240,24 @@ export class Seizn {
    * });
    * ```
    */
-  async add(content: string, options: AddMemoryOptions = {}): Promise<Memory> {
-    const result = await this.request<{ success: boolean; memory: Memory }>('POST', '/api/memories', {
-      body: {
-        content,
-        memory_type: options.memory_type || 'fact',
-        tags: options.tags || [],
-        namespace: options.namespace || 'default',
-        scope: options.scope,
-        session_id: options.session_id,
-        agent_id: options.agent_id,
-        source: options.source,
+  async add(content: string, options: AddMemoryOptions = {}): Promise<Memory & { deduplicated?: boolean }> {
+    const result = await this.request<{ success: boolean; data: { memory: Memory; deduplicated?: boolean } }>(
+      'POST', '/api/v1/memories', {
+        body: {
+          content,
+          memory_type: options.memory_type || 'fact',
+          tags: options.tags || [],
+          namespace: options.namespace || 'default',
+          scope: options.scope,
+          session_id: options.session_id,
+          agent_id: options.agent_id,
+          source: options.source || 'sdk',
+          dedup: options.dedup,
+          auto_score: options.auto_score,
+        },
       },
-    });
-    return result.memory;
+    );
+    return { ...result.data.memory, deduplicated: result.data.deduplicated };
   }
 
   /**
@@ -232,16 +278,17 @@ export class Seizn {
       limit: options.limit || 10,
       threshold: options.threshold || 0.7,
     };
-    if (options.namespace) {
-      params.namespace = options.namespace;
-    }
+    if (options.namespace) params.namespace = options.namespace;
+    if (options.mode) params.mode = options.mode;
+    if (options.agent_id) params.agent_id = options.agent_id;
+    if (options.scope) params.scope = options.scope;
 
-    const result = await this.request<{ success: boolean; results: Memory[] }>(
+    const result = await this.request<{ success: boolean; data: { results: Memory[] } }>(
       'GET',
-      '/api/memories',
+      '/api/v1/memories',
       { params },
     );
-    return result.results;
+    return result.data.results;
   }
 
   /**
@@ -256,14 +303,56 @@ export class Seizn {
    * ```
    */
   async delete(ids: string[]): Promise<number> {
-    const result = await this.request<{ success: boolean; deleted: number }>(
+    const result = await this.request<{ success: boolean; data: { deleted: number } }>(
       'DELETE',
-      '/api/memories',
+      '/api/v1/memories',
       {
         params: { ids: ids.join(',') },
       },
     );
-    return result.deleted;
+    return result.data.deleted;
+  }
+
+  /**
+   * Get content change history for a memory.
+   */
+  async history(memoryId: string): Promise<MemoryHistory> {
+    const result = await this.request<{ success: boolean; data: MemoryHistory }>(
+      'GET',
+      '/api/v1/memories/history',
+      { params: { memory_id: memoryId } },
+    );
+    return result.data;
+  }
+
+  /**
+   * List webhooks.
+   */
+  async listWebhooks(): Promise<Webhook[]> {
+    const result = await this.request<{ success: boolean; webhooks: Webhook[] }>(
+      'GET',
+      '/api/webhooks',
+    );
+    return result.webhooks;
+  }
+
+  /**
+   * Create a webhook.
+   */
+  async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+    const result = await this.request<{ success: boolean; webhook: Webhook }>(
+      'POST',
+      '/api/webhooks',
+      { body: options as Record<string, unknown> },
+    );
+    return result.webhook;
+  }
+
+  /**
+   * Delete a webhook.
+   */
+  async deleteWebhook(id: string): Promise<void> {
+    await this.request('DELETE', '/api/webhooks', { params: { id } });
   }
 
   /**

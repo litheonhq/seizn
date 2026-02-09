@@ -467,6 +467,27 @@ const tools = [
             }
         }
     },
+    {
+        name: "session_init",
+        description: "Initialize a new session by loading recent context: user profile, recent memories, and session summary. Call this at the start of every new conversation to ensure continuity.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                hoursBack: {
+                    type: "number",
+                    description: "Hours of recent memories to load (default: 24)"
+                },
+                limit: {
+                    type: "number",
+                    description: "Max memories to return (default: 20)"
+                },
+                namespace: {
+                    type: "string",
+                    description: "Namespace filter (default: all)"
+                }
+            }
+        }
+    },
 ];
 // Tool handlers
 async function handleCreateEntities(entities) {
@@ -674,7 +695,7 @@ async function handleHealthCheck(verbose = false) {
     const startTime = Date.now();
     const diagnostics = {
         server: "seizn-mcp",
-        version: "2.2.0",
+        version: "2.3.0",
         transport: process.argv.includes('--http') ? 'http' : 'stdio',
         timestamp: new Date().toISOString(),
     };
@@ -706,6 +727,51 @@ async function handleHealthCheck(verbose = false) {
     }
     const overallStatus = diagnostics.api?.status === "healthy" ? "healthy" : "degraded";
     return JSON.stringify({ status: overallStatus, ...diagnostics });
+}
+async function handleSessionInit(options = {}) {
+    const hoursBack = options.hoursBack || 24;
+    const limit = options.limit || 20;
+    const sections = [];
+    // 1. Load user profile
+    try {
+        const profileResponse = await apiRequest("/api/v1/profile");
+        if (profileResponse.success && profileResponse.profile) {
+            sections.push(`## User Profile\n${JSON.stringify(profileResponse.profile, null, 2)}`);
+        }
+    }
+    catch {
+        sections.push("## User Profile\n(Could not load profile)");
+    }
+    // 2. Load recent memories
+    try {
+        const recentResponse = await apiRequest(`/api/memories?query=recent&limit=${limit}&mode=keyword`);
+        if (recentResponse.results && recentResponse.results.length > 0) {
+            const memorySummary = recentResponse.results.map(m => `- [${m.memory_type}] ${m.content}${m.tags?.length ? ` (tags: ${m.tags.join(', ')})` : ''}`).join('\n');
+            sections.push(`## Recent Memories (last ${hoursBack}h)\n${memorySummary}`);
+        }
+        else {
+            sections.push(`## Recent Memories\nNo recent memories found.`);
+        }
+    }
+    catch {
+        sections.push("## Recent Memories\n(Could not load memories)");
+    }
+    // 3. Get context summary
+    try {
+        const contextResponse = await apiRequest("/api/context?format=brief");
+        if (contextResponse.contextString) {
+            sections.push(`## Context Summary\n${contextResponse.contextString}`);
+        }
+    }
+    catch {
+        // Context API may not be available
+    }
+    return JSON.stringify({
+        success: true,
+        sessionContext: sections.join('\n\n'),
+        memoriesLoaded: sections.length > 1,
+        timestamp: new Date().toISOString(),
+    });
 }
 // Helper functions
 function extractEntityName(content) {
@@ -742,6 +808,8 @@ async function dispatchTool(name, args) {
             return handleDeriveProfile();
         case "health_check":
             return handleHealthCheck(args?.verbose);
+        case "session_init":
+            return handleSessionInit(args);
         case "sync_connector":
             return handleSyncConnector(args);
         case "list_connectors":
@@ -794,7 +862,7 @@ async function main() {
     const port = parseInt(process.env.SEIZN_MCP_PORT || '3100', 10);
     const server = new index_js_1.Server({
         name: "seizn-memory",
-        version: "2.2.0", // v2.2: Health check + HTTP transport
+        version: "2.3.0", // v2.2: Health check + HTTP transport
     }, {
         capabilities: {
             tools: {},

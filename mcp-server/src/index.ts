@@ -515,6 +515,27 @@ const tools: Tool[] = [
       }
     }
   },
+  {
+    name: "session_init",
+    description: "Initialize a new session by loading recent context: user profile, recent memories, and session summary. Call this at the start of every new conversation to ensure continuity.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        hoursBack: {
+          type: "number",
+          description: "Hours of recent memories to load (default: 24)"
+        },
+        limit: {
+          type: "number",
+          description: "Max memories to return (default: 20)"
+        },
+        namespace: {
+          type: "string",
+          description: "Namespace filter (default: all)"
+        }
+      }
+    }
+  },
 ];
 
 // Tool handlers
@@ -877,7 +898,7 @@ async function handleHealthCheck(verbose = false): Promise<string> {
   const startTime = Date.now();
   const diagnostics: Record<string, unknown> = {
     server: "seizn-mcp",
-    version: "2.2.0",
+    version: "2.3.0",
     transport: process.argv.includes('--http') ? 'http' : 'stdio',
     timestamp: new Date().toISOString(),
   };
@@ -911,6 +932,68 @@ async function handleHealthCheck(verbose = false): Promise<string> {
 
   const overallStatus = (diagnostics.api as Record<string, unknown>)?.status === "healthy" ? "healthy" : "degraded";
   return JSON.stringify({ status: overallStatus, ...diagnostics });
+}
+
+// =========================================================================
+// Session Init Handler
+// =========================================================================
+
+interface SessionInitOptions {
+  hoursBack?: number;
+  limit?: number;
+  namespace?: string;
+}
+
+async function handleSessionInit(options: SessionInitOptions = {}): Promise<string> {
+  const hoursBack = options.hoursBack || 24;
+  const limit = options.limit || 20;
+
+  const sections: string[] = [];
+
+  // 1. Load user profile
+  try {
+    const profileResponse = await apiRequest("/api/v1/profile") as Record<string, unknown>;
+    if (profileResponse.success && profileResponse.profile) {
+      sections.push(`## User Profile\n${JSON.stringify(profileResponse.profile, null, 2)}`);
+    }
+  } catch {
+    sections.push("## User Profile\n(Could not load profile)");
+  }
+
+  // 2. Load recent memories
+  try {
+    const recentResponse = await apiRequest(
+      `/api/memories?query=recent&limit=${limit}&mode=keyword`
+    ) as { results?: Array<{ id: string; content: string; memory_type: string; tags?: string[]; created_at?: string }> };
+
+    if (recentResponse.results && recentResponse.results.length > 0) {
+      const memorySummary = recentResponse.results.map(m =>
+        `- [${m.memory_type}] ${m.content}${m.tags?.length ? ` (tags: ${m.tags.join(', ')})` : ''}`
+      ).join('\n');
+      sections.push(`## Recent Memories (last ${hoursBack}h)\n${memorySummary}`);
+    } else {
+      sections.push(`## Recent Memories\nNo recent memories found.`);
+    }
+  } catch {
+    sections.push("## Recent Memories\n(Could not load memories)");
+  }
+
+  // 3. Get context summary
+  try {
+    const contextResponse = await apiRequest("/api/context?format=brief") as { contextString?: string; tokenCount?: number };
+    if (contextResponse.contextString) {
+      sections.push(`## Context Summary\n${contextResponse.contextString}`);
+    }
+  } catch {
+    // Context API may not be available
+  }
+
+  return JSON.stringify({
+    success: true,
+    sessionContext: sections.join('\n\n'),
+    memoriesLoaded: sections.length > 1,
+    timestamp: new Date().toISOString(),
+  });
 }
 
 // Helper functions
@@ -951,6 +1034,8 @@ async function dispatchTool(name: string, args?: Record<string, unknown>): Promi
       return handleDeriveProfile();
     case "health_check":
       return handleHealthCheck(args?.verbose as boolean);
+    case "session_init":
+      return handleSessionInit(args as SessionInitOptions);
     case "sync_connector":
       return handleSyncConnector(args as unknown as SyncOptions);
     case "list_connectors":
@@ -1007,7 +1092,7 @@ async function main() {
   const server = new Server(
     {
       name: "seizn-memory",
-      version: "2.2.0", // v2.2: Health check + HTTP transport
+      version: "2.3.0", // v2.2: Health check + HTTP transport
     },
     {
       capabilities: {
