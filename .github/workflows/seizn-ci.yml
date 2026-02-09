@@ -3,8 +3,24 @@ name: Seizn CI - Trace to Test to Fix
 on:
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
   push:
     branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: '20'
