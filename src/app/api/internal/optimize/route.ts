@@ -32,7 +32,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[Internal Optimize] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
     const { userId, action = 'all' } = body;
 
     const supabase = createServerClient();

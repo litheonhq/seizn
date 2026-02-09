@@ -113,7 +113,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Cannot rotate inactive KMS configuration' }, { status: 400 });
     }
 
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[KMS Rotate] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
     const rotationType = body.type === 'emergency' ? 'emergency' : 'manual';
 
     const rotation = await rotateKmsKey(id, user.id, rotationType);

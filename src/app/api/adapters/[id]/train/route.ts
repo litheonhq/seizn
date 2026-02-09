@@ -69,7 +69,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // Parse training config from body
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[Adapter Train] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
     const config: LoRAConfig = {
       ...DEFAULT_LORA_CONFIG,
       rank: body.rank ?? adapter.adapterRank ?? DEFAULT_LORA_CONFIG.rank,

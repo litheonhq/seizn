@@ -19,7 +19,7 @@ import OpenAI from "openai";
 const EMBEDDING_MODELS: Record<
   string,
   {
-    provider: "openai" | "cohere" | "voyage" | "local";
+    provider: "openai" | "cohere" | "voyage";
     dimensions: number;
     maxTokens: number;
     costPer1M: number; // in microcents
@@ -161,8 +161,8 @@ export async function POST(request: NextRequest) {
           break;
         default:
           return NextResponse.json(
-            { error: { code: "PROVIDER_ERROR", message: "Provider not implemented" } },
-            { status: 501 }
+            { error: { code: "UNSUPPORTED_PROVIDER", message: `Provider "${modelConfig.provider}" is not supported` }, request_id: requestId },
+            { status: 400 }
           );
       }
 

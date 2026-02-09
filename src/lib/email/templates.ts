@@ -271,3 +271,42 @@ export function enterpriseInquiryConfirmationEmail(companyName: string, contactN
   `;
   return baseTemplate(content, `We received your enterprise inquiry for ${companyName}`);
 }
+
+// Payment failed notification email
+export function paymentFailedEmail(
+  name: string,
+  amount?: string,
+  currency?: string,
+  invoiceUrl?: string
+) {
+  const amountDisplay = amount && currency
+    ? `${currency.toUpperCase()} ${(Number(amount) / 100).toFixed(2)}`
+    : null;
+
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">Payment Failed</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
+      Hi ${name || 'there'},
+    </p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
+      We were unable to process your latest payment${amountDisplay ? ` of <strong>${amountDisplay}</strong>` : ''}. Please update your payment method to avoid any service interruptions.
+    </p>
+    <div style="background:#fef2f2;padding:16px;border-radius:8px;margin:0 0 24px;border:1px solid #fecaca;">
+      <p style="margin:0;font-size:14px;color:#991b1b;">
+        Your account access may be restricted if payment is not resolved within 7 days.
+      </p>
+    </div>
+    ${invoiceUrl ? `
+    <a href="${invoiceUrl}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;margin-bottom:12px;">
+      View Invoice
+    </a>
+    <br>` : ''}
+    <a href="https://www.seizn.com/dashboard/billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
+      Update Payment Method
+    </a>
+    <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">
+      If you believe this is an error, please contact us at <a href="mailto:support@seizn.com" style="color:#4b5563;">support@seizn.com</a>.
+    </p>
+  `;
+  return baseTemplate(content, 'Action required: Your payment failed');
+}

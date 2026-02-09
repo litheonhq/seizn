@@ -15,6 +15,7 @@ import {
   exportCostBreakdownToCSV,
   type CostQueryParams,
 } from '@/lib/control-tower/cost-attribution';
+import { createServerClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -99,7 +100,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Check if user has admin permission for this org
+    // Verify the user is an admin/owner for this organization
+    const supabase = createServerClient();
+    const { data: membership } = await supabase
+      .from('organization_members')
+      .select('role')
+      .eq('organization_id', targetOrgId)
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (!membership || !['owner', 'admin'].includes(membership.role)) {
+      return NextResponse.json(
+        { error: 'Admin permission required to manage budgets' },
+        { status: 403 }
+      );
+    }
 
     switch (action) {
       case 'set_budget':

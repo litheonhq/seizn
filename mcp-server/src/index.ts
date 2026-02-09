@@ -697,6 +697,62 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   return JSON.stringify({ success: true, deleted });
 }
 
+async function handleDeleteObservations(deletions: { entityName: string; observations: string[] }[]): Promise<string> {
+  const results = [];
+
+  for (const del of deletions) {
+    let deletedCount = 0;
+
+    for (const observation of del.observations) {
+      // Search for memories matching this observation content
+      const searchResponse = await apiRequest(
+        `/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=hybrid`
+      ) as { success: boolean; data: { results: Memory[] } };
+
+      const matches = searchResponse.data?.results?.filter(
+        (m: Memory) => m.content.includes(observation) && m.tags?.includes('observation')
+      ) || [];
+
+      if (matches.length > 0) {
+        const ids = matches.map((m: Memory) => m.id).join(",");
+        await apiRequest(`/api/v1/memories?ids=${ids}`, "DELETE");
+        deletedCount += matches.length;
+      }
+    }
+
+    results.push({ entityName: del.entityName, deleted: deletedCount });
+  }
+
+  return JSON.stringify({ success: true, results });
+}
+
+async function handleDeleteRelations(relations: { from: string; to: string; relationType: string }[]): Promise<string> {
+  const deleted = [];
+
+  for (const rel of relations) {
+    // Relations are stored as memories with tags
+    const query = `${rel.from} ${rel.relationType} ${rel.to}`;
+    const searchResponse = await apiRequest(
+      `/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=hybrid`
+    ) as { success: boolean; data: { results: Memory[] } };
+
+    const matches = searchResponse.data?.results?.filter(
+      (m: Memory) =>
+        m.content.includes(rel.from) &&
+        m.content.includes(rel.to) &&
+        m.tags?.includes('relation')
+    ) || [];
+
+    if (matches.length > 0) {
+      const ids = matches.map((m: Memory) => m.id).join(",");
+      await apiRequest(`/api/v1/memories?ids=${ids}`, "DELETE");
+      deleted.push({ from: rel.from, to: rel.to, relationType: rel.relationType });
+    }
+  }
+
+  return JSON.stringify({ success: true, deleted });
+}
+
 // =========================================================================
 // Context API Handlers
 // =========================================================================
@@ -1055,9 +1111,9 @@ async function dispatchTool(name: string, args?: Record<string, unknown>): Promi
     case "delete_entities":
       return handleDeleteEntities(args?.entityNames as string[]);
     case "delete_observations":
-      return JSON.stringify({ success: true, message: "Observations deleted" });
+      return handleDeleteObservations(args?.deletions as { entityName: string; observations: string[] }[]);
     case "delete_relations":
-      return JSON.stringify({ success: true, message: "Relations deleted" });
+      return handleDeleteRelations(args?.relations as { from: string; to: string; relationType: string }[]);
     default:
       throw new Error(`Unknown tool: ${name}`);
   }

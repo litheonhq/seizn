@@ -98,7 +98,10 @@ export async function POST(
 
     const { userId } = authResult;
     const { id: experimentId } = await params;
-    const body = await request.json().catch(() => ({}));
+    const body = await request.json().catch((e: unknown) => {
+      console.warn('[Experiment Winner] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as Record<string, unknown>;
+    });
 
     const result = await autoPromoteWinner({
       experimentId,

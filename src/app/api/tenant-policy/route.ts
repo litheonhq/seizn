@@ -50,11 +50,21 @@ async function getUserFromToken(request: NextRequest) {
 }
 
 // Helper to check admin access
-async function checkAdminAccess(_userId: string, _tenantId: string): Promise<boolean> {
+async function checkAdminAccess(userId: string, tenantId: string): Promise<boolean> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-  // TODO: Implement proper org/tenant role check
-  // For now, allow all authenticated users
-  return true;
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  const { data: membership } = await supabase
+    .from('organization_members')
+    .select('role')
+    .eq('organization_id', tenantId)
+    .eq('user_id', userId)
+    .single();
+
+  if (!membership) return false;
+  return ['owner', 'admin'].includes(membership.role);
 }
 
 /**

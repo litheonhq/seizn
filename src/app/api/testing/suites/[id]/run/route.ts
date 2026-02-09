@@ -32,7 +32,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const { userId, keyId } = authResult;
-    const body: RunTestsRequest = await request.json().catch(() => ({}));
+    const body: RunTestsRequest = await request.json().catch((e: unknown) => {
+      console.warn('[Test Suite Run] Failed to parse request body:', e instanceof Error ? e.message : e);
+      return {} as RunTestsRequest;
+    });
     const supabase = createServerClient();
 
     // Verify suite exists and belongs to user

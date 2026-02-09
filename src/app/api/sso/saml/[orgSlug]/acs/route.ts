@@ -92,23 +92,103 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Extract user attributes from assertion
     const userAttrs = extractUserAttributes(result.assertion, activeConnection);
 
-    // TODO: Create or update user profile
-    // TODO: Create NextAuth session
-    // TODO: Record successful login attempt
-    // TODO: Create SSO session for SLO support
+    // 1. Create or update user profile via Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email: userAttrs.email,
+      email_confirm: true,
+      user_metadata: {
+        full_name: userAttrs.displayName || `${userAttrs.firstName || ''} ${userAttrs.lastName || ''}`.trim(),
+        sso_provider: 'saml',
+        sso_connection_id: activeConnection.id,
+        organization_id: org.id,
+      },
+    });
 
-    // Placeholder: Redirect to callback URL or dashboard
-    const redirectUrl = relayState || '/dashboard';
+    // If user already exists, update metadata instead
+    let userId: string;
+    if (authError?.message?.includes('already been registered')) {
+      const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', userAttrs.email)
+        .single();
 
-    // For now, redirect with a message since actual session creation is not implemented
-    return NextResponse.redirect(
-      new URL(
-        `/login?error=sso_not_implemented&email=${encodeURIComponent(
-          userAttrs.email
-        )}`,
-        request.url
-      )
+      if (!existingUser) {
+        return NextResponse.redirect(
+          new URL(`/login?error=user_lookup_failed`, request.url)
+        );
+      }
+      userId = existingUser.id;
+
+      await supabase
+        .from('profiles')
+        .update({
+          full_name: userAttrs.displayName || `${userAttrs.firstName || ''} ${userAttrs.lastName || ''}`.trim(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId);
+    } else if (authError) {
+      console.error('SSO user creation error:', authError);
+      return NextResponse.redirect(
+        new URL(`/login?error=user_creation_failed`, request.url)
+      );
+    } else {
+      userId = authData.user.id;
+    }
+
+    // Ensure user is a member of the organization
+    await supabase.from('organization_members').upsert(
+      {
+        organization_id: org.id,
+        user_id: userId,
+        role: 'member',
+        joined_at: new Date().toISOString(),
+      },
+      { onConflict: 'organization_id,user_id' }
     );
+
+    // 2. Create session via Supabase magic link (generates session tokens)
+    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+      type: 'magiclink',
+      email: userAttrs.email,
+      options: {
+        redirectTo: relayState || '/dashboard',
+      },
+    });
+
+    if (sessionError || !sessionData?.properties?.hashed_token) {
+      console.error('SSO session creation error:', sessionError);
+      return NextResponse.redirect(
+        new URL(`/login?error=session_creation_failed`, request.url)
+      );
+    }
+
+    // 3. Record successful login attempt
+    await supabase.from('sso_login_attempts').insert({
+      connection_id: activeConnection.id,
+      organization_id: org.id,
+      user_id: userId,
+      response_status: 'success',
+      ip_address: request.headers.get('x-forwarded-for')?.split(',')[0] || null,
+      user_agent: request.headers.get('user-agent'),
+    });
+
+    // 4. Create SSO session record for SLO support
+    await supabase.from('sso_sessions').upsert(
+      {
+        connection_id: activeConnection.id,
+        user_id: userId,
+        organization_id: org.id,
+        session_index: result.assertion.authnStatement?.sessionIndex || null,
+        name_id: result.assertion.subject?.nameId || userAttrs.email,
+        logged_in_at: new Date().toISOString(),
+        last_active_at: new Date().toISOString(),
+      },
+      { onConflict: 'connection_id,user_id' }
+    );
+
+    // Redirect through the auth callback to establish the session
+    return NextResponse.redirect(sessionData.properties.action_link);
   } catch (error) {
     console.error('SAML ACS error:', error);
     return NextResponse.redirect(
