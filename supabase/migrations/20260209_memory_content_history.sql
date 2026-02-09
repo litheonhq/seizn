@@ -25,7 +25,7 @@ CREATE POLICY "Users can view history of own memories"
     EXISTS (
       SELECT 1 FROM memories m
       WHERE m.id = memory_content_history.memory_id
-        AND m.user_id = auth.uid()
+        AND m.user_id = auth.uid()::text
     )
   );
 

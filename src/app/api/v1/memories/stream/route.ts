@@ -5,12 +5,15 @@
  *
  * Query params:
  *   namespace - Filter by namespace (default: all)
- *   events    - Comma-separated event types (default: memory.created,memory.updated,memory.deleted)
+ *   token     - API key for browser EventSource (which cannot send custom headers)
  *
- * Usage:
+ * Usage (Node.js / polyfill with headers):
  *   const es = new EventSource('/api/v1/memories/stream?namespace=default', {
  *     headers: { Authorization: 'Bearer szn_...' }
  *   });
+ *
+ * Usage (browser native EventSource):
+ *   const es = new EventSource('/api/v1/memories/stream?token=szn_...');
  *   es.onmessage = (e) => console.log(JSON.parse(e.data));
  */
 
@@ -25,15 +28,32 @@ import { auth } from '@/lib/auth';
 
 async function resolveAuth(
   request: NextRequest
-): Promise<{ userId: string } | { error: Response }> {
-  const authResult = await authenticateRequest(request, { skipUsageCheck: true });
+): Promise<{ userId: string; keyId: string | null } | { error: Response }> {
+  // Standard header auth first
+  const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (!isAuthError(authResult)) {
-    return { userId: authResult.userId };
+    return { userId: authResult.userId, keyId: authResult.keyId };
   }
 
+  // Query parameter token fallback (for browser EventSource)
+  const tokenParam = new URL(request.url).searchParams.get('token');
+  if (tokenParam) {
+    const tokenRequest = new NextRequest(request.url, {
+      headers: new Headers({
+        ...Object.fromEntries(request.headers.entries()),
+        'authorization': `Bearer ${tokenParam}`,
+      }),
+    });
+    const tokenResult = await authenticateRequest(tokenRequest, { skipUsageCheck: false });
+    if (!isAuthError(tokenResult)) {
+      return { userId: tokenResult.userId, keyId: tokenResult.keyId };
+    }
+  }
+
+  // Session fallback
   const session = await auth();
   if (session?.user?.id) {
-    return { userId: session.user.id };
+    return { userId: session.user.id, keyId: null };
   }
 
   return { error: authErrorResponse(authResult.authError) };

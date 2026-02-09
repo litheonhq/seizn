@@ -37,9 +37,8 @@ export function createSaveCommand(): Command {
         const client = createCLIClient();
         const result = await client.request<{
           success: boolean;
-          memory?: { id: string };
-          data?: { memory: { id: string } };
-        }>('/memories', {
+          data: { memory: { id: string }; deduplicated?: boolean };
+        }>('/v1/memories', {
           method: 'POST',
           body: {
             content,
@@ -50,13 +49,13 @@ export function createSaveCommand(): Command {
           },
         });
 
-        const memoryId = result.data?.memory?.id || result.memory?.id;
+        const memoryId = result.data.memory.id;
+        const deduped = result.data.deduplicated;
 
         if (opts.quiet) {
-          // Print only the ID for scripting
           console.log(memoryId);
         } else {
-          spinner?.succeed('Memory saved');
+          spinner?.succeed(deduped ? 'Memory already exists (deduplicated)' : 'Memory saved');
           console.log(chalk.dim(`  ID: ${memoryId}`));
           console.log(chalk.dim(`  Type: ${opts.type}`));
           if (opts.tags) console.log(chalk.dim(`  Tags: ${opts.tags}`));

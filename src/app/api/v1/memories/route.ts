@@ -418,6 +418,13 @@ export async function DELETE(request: NextRequest) {
       return ValidationErrors.missingField('ids');
     }
 
+    if (ids.length > 100) {
+      return NextResponse.json(
+        { success: false, error: 'Cannot delete more than 100 memories at once' },
+        { status: 400 }
+      );
+    }
+
     const namespace = searchParams.get('namespace') || 'default';
     const supabase = createServerClient();
 
