@@ -1,6 +1,6 @@
 # Thin caller — logic lives in iruhana/claude-workflows
-# seizn: SaaS + MCP 서버 → 보안 기본, API 스코프
-# CLI: gh workflow run claude-improve.yml -f task_type=security
+# seizn: AI 메모리 OS + MCP 서버 → MCP/메모리/AI 컨텍스트 우선
+# CLI: gh workflow run claude-improve.yml -f task_type="mcp-protocol"
 name: Claude Improve
 on:
   workflow_dispatch:
@@ -9,6 +9,9 @@ on:
         description: Type of improvement task
         type: choice
         options:
+          - mcp-protocol
+          - memory-graph
+          - ai-context
           - security
           - code-quality
           - performance
@@ -18,7 +21,7 @@ on:
           - deps-update
           - accessibility
           - seo
-        default: security
+        default: mcp-protocol
       task:
         description: Custom task description (used when task_type is custom)
         required: false
