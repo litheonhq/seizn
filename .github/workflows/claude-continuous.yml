@@ -35,10 +35,6 @@ permissions:
   contents: write
   pull-requests: write
 
-concurrency:
-  group: claude-continuous
-  cancel-in-progress: false
-
 jobs:
   run:
     uses: iruhana/claude-workflows/.github/workflows/claude-continuous.yml@v1
