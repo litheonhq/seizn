@@ -1,0 +1,16 @@
+# Minimal test caller for debugging
+name: Test Continuous
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    uses: iruhana/claude-workflows/.github/workflows/claude-continuous.yml@v1
+    with:
+      tasks: 'dead-code'
+      max_cycles: '1'
+    secrets: inherit
