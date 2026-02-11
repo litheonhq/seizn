@@ -1,0 +1,36 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run claude-review.yml -f pr_number=123
+name: Claude Review
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number
+        required: true
+        type: string
+      model:
+        description: Model tier
+        type: choice
+        options: [auto, sonnet, opus]
+        default: auto
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: claude-review-pr-${{ inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/claude-review.yml@v1
+    with:
+      pr_number: ${{ inputs.pr_number }}
+      model: ${{ inputs.model }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: read
+      pull-requests: write

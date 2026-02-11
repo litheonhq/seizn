@@ -1,0 +1,36 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run claude-audit.yml -f depth=full
+name: Claude Audit
+on:
+  workflow_dispatch:
+    inputs:
+      depth:
+        description: Audit depth
+        type: choice
+        options: [quick, full, strategic]
+        default: full
+      auto_commit:
+        description: Auto-commit changes
+        type: boolean
+        default: false
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: claude-audit-${{ inputs.depth }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/claude-audit.yml@v1
+    with:
+      depth: ${{ inputs.depth }}
+      auto_commit: ${{ inputs.auto_commit }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write

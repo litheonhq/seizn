@@ -1,0 +1,73 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run claude-improve.yml -f task_type=code-quality -f scope=src/
+name: Claude Improve
+on:
+  workflow_dispatch:
+    inputs:
+      task_type:
+        description: Type of improvement task
+        type: choice
+        options:
+          - custom
+          - code-quality
+          - security
+          - performance
+          - dead-code
+          - deps-update
+          - tech-debt
+          - accessibility
+          - seo
+        default: custom
+      task:
+        description: Custom task description (used when task_type is custom)
+        required: false
+        type: string
+      scope:
+        description: File/directory scope
+        required: false
+        type: string
+        default: all
+      model:
+        description: Model tier
+        type: choice
+        options: [auto, sonnet, opus]
+        default: auto
+      max_turns:
+        description: Maximum conversation turns
+        required: false
+        type: string
+        default: '60'
+      use_web_search:
+        description: Enable web search
+        type: boolean
+        default: false
+      auto_commit:
+        description: Auto-commit changes
+        type: boolean
+        default: false
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: claude-improve-${{ inputs.task_type }}-${{ inputs.scope }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/claude-improve.yml@v1
+    with:
+      task_type: ${{ inputs.task_type }}
+      task: ${{ inputs.task }}
+      scope: ${{ inputs.scope }}
+      model: ${{ inputs.model }}
+      max_turns: ${{ inputs.max_turns }}
+      use_web_search: ${{ inputs.use_web_search }}
+      auto_commit: ${{ inputs.auto_commit }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
