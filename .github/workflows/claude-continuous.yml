@@ -14,7 +14,7 @@ on:
         description: File/directory scope
         required: false
         type: string
-        default: all
+        default: 'all'
       max_cycles:
         description: Maximum cycles (0 = unlimited)
         required: false
@@ -31,6 +31,10 @@ on:
         options: [claude, codex]
         default: claude
 
+permissions:
+  contents: write
+  pull-requests: write
+
 concurrency:
   group: claude-continuous
   cancel-in-progress: false
@@ -45,6 +49,3 @@ jobs:
       cooldown: ${{ inputs.cooldown }}
       provider: ${{ inputs.provider }}
     secrets: inherit
-    permissions:
-      contents: write
-      pull-requests: write
