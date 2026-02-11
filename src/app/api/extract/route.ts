@@ -14,6 +14,7 @@ import {
   getAllSlots,
   type SlotData,
 } from '@/lib/memory/slot';
+import { safeJsonParse } from '@/lib/safe-json';
 
 // POST /api/extract - Extract and store memories from conversation
 export async function POST(request: NextRequest) {
@@ -28,14 +29,20 @@ export async function POST(request: NextRequest) {
 
     const { userId, keyId } = authResult;
 
-    // Parse request body
-    const body = await request.json();
+    // Parse request body (auto-detects non-UTF-8 encodings from Windows clients)
+    const body = await safeJsonParse<{
+      conversation?: string;
+      model?: string;
+      auto_store?: boolean;
+      namespace?: string;
+      extract_slots?: boolean;
+    }>(request);
     const {
       conversation,
       model = 'haiku',
       auto_store = true,
       namespace = 'default',
-      extract_slots = true, // New option to enable slot extraction
+      extract_slots = true,
     } = body;
 
     if (!conversation || typeof conversation !== 'string') {
