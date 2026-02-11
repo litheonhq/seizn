@@ -91,5 +91,72 @@ Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
 - **메모리 버전 관리**: 내용 변경 시 자동으로 이전 버전 보존 (memory_content_history)
 - **실시간 스트림**: SSE `/api/v1/memories/stream` 엔드포인트
 
+## 기술 스택 문서
+
+- **위치**: `.github/TECH_STACK.md`
+- **기술 구현/변경 작업 후 반드시 업데이트** (전역 CLAUDE.md §10 준수)
+- 새 라이브러리 추가, API 라우트 생성, 아키텍처 변경 시 해당 섹션 수정
+- `claude-audit.yml` 워크플로우로 전체 재생성 가능
+
+## CI/CD 워크플로우 (GitHub Actions, Self-hosted Runner)
+
+중앙 레포 `iruhana/claude-workflows@v1` 기반. 모든 워크플로우는 **수동 트리거(workflow_dispatch)** 전용.
+프로바이더: `claude` (기본) 또는 `codex` (`-f provider="codex"` 추가).
+
+### 코드 개선 (claude-improve.yml)
+seizn 전용 프리셋 우선. 기본값: `mcp-protocol`.
+
+| 프리셋 | 설명 | 모델 |
+|--------|------|------|
+| `mcp-protocol` | MCP SDK 스펙 준수, tool/resource 핸들러, JSON-RPC | **opus** |
+| `memory-graph` | 메모리 CRUD, 지식 그래프 무결성, 검색 관련성 | **opus** |
+| `ai-context` | session_init 프로젝트 감지, 8개 AI 도구 설정 동기화 | sonnet |
+| `security` | XSS, CSRF, 인젝션, 시크릿 노출 감사 | **opus** |
+| `code-quality` | DRY, 네이밍, 타입, 패턴 일관성 | sonnet |
+| `performance` | N+1 쿼리, memo, 동적 임포트, 캐싱 | **opus** |
+| `dead-code` / `tech-debt` / `deps-update` / `accessibility` / `seo` | 범용 | 자동 |
+
+```bash
+# 기본 (MCP 프로토콜 감사)
+gh workflow run claude-improve.yml
+
+# 특정 프리셋 + Codex
+gh workflow run claude-improve.yml -f task_type="memory-graph" -f provider="codex"
+
+# 커스텀 작업 + 범위 제한
+gh workflow run claude-improve.yml -f task_type="custom" -f task="Refactor webhook delivery retry logic" -f scope="src/app/api/webhooks"
+
+# 모델 강제 + 웹 검색
+gh workflow run claude-improve.yml -f task_type="security" -f model="opus" -f use_web_search="true"
+```
+
+### 기타 워크플로우
+
+```bash
+# PR 코드 리뷰
+gh workflow run claude-review.yml -f pr_number="5"
+
+# 빌드 에러 자동 수정 (3라운드 에스컬레이션)
+gh workflow run auto-fix.yml -f pr_number="5"
+
+# Issue → 구현 → PR
+gh workflow run issue-to-code.yml -f issue_number="3"
+
+# 기술 스택 문서 생성
+gh workflow run claude-audit.yml -f depth="strategic"
+
+# 연속 개선 (기본: mcp-protocol,memory-graph,ai-context,security,...)
+gh workflow run claude-continuous.yml
+gh workflow run claude-continuous.yml -f tasks="mcp-protocol,security" -f max_cycles=3
+
+# 연속 실행 중지
+gh run cancel $(gh run list -w claude-continuous.yml -L 1 --json databaseId -q '.[0].databaseId')
+```
+
+### 자동 머지
+저위험 프리셋(`dead-code`, `seo`, `accessibility`, `code-quality`, `ai-context`, `deps-update`)은 빌드 통과 시 자동 squash merge.
+
 ## 참고 문서
+
 - 기획/조사: `C:\Users\admin\Dendron\notes\사업\기타-프로젝트\AI-Memory-Server-Research.md`
+- 전역 규칙: `C:\Users\admin\Dendron\notes\CLAUDE.md`
