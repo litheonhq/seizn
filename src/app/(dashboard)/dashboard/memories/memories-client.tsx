@@ -15,18 +15,38 @@ interface Memory {
   namespace: string;
   similarity?: number;
   created_at: string;
+  updated_at?: string;
   importance?: number;
+  source?: string;
+  scope?: string;
+  agent_id?: string;
 }
 
 interface MemoriesResponse {
   success: boolean;
   results: Memory[];
   count: number;
+  total: number;
+  offset: number;
+  limit: number;
   mode?: string;
   cached?: boolean;
 }
 
-type SortOption = "date_desc" | "date_asc" | "relevance";
+interface NamespaceInfo {
+  name: string;
+  count: number;
+}
+
+interface NamespacesResponse {
+  success: boolean;
+  data: {
+    namespaces: NamespaceInfo[];
+    total: number;
+  };
+}
+
+type SortOption = "date_desc" | "date_asc" | "importance" | "relevance";
 
 // ============================================
 // Icons
@@ -94,6 +114,26 @@ const InboxIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const StarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+  </svg>
+);
+
+// ============================================
+// Helpers
+// ============================================
+
+function sortToApiParams(sort: SortOption): { sort: string; order: string } {
+  switch (sort) {
+    case "date_desc": return { sort: "created_at", order: "desc" };
+    case "date_asc": return { sort: "created_at", order: "asc" };
+    case "importance": return { sort: "importance", order: "desc" };
+    case "relevance": return { sort: "created_at", order: "desc" }; // relevance only in search mode
+    default: return { sort: "created_at", order: "desc" };
+  }
+}
+
 // ============================================
 // Component
 // ============================================
@@ -105,56 +145,93 @@ export default function MemoriesClient() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>("date_desc");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [_page, setPage] = useState(1);
+  const [offset, setOffset] = useState(0);
 
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [namespace, setNamespace] = useState("default");
+  const [namespaces, setNamespaces] = useState<NamespaceInfo[]>([]);
+
+  // Date range filters
+  const [afterDate, setAfterDate] = useState("");
+  const [beforeDate, setBeforeDate] = useState("");
 
   const ITEMS_PER_PAGE = 20;
 
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Fetch namespaces on mount
+  useEffect(() => {
+    fetch("/api/v1/memories/namespaces")
+      .then(res => res.json())
+      .then((data: NamespacesResponse) => {
+        if (data.success && data.data?.namespaces) {
+          setNamespaces(data.data.namespaces);
+        }
+      })
+      .catch(() => { /* ignore */ });
+  }, []);
+
   // Fetch memories
-  const fetchMemories = useCallback(async (reset = false) => {
+  const fetchMemories = useCallback(async (resetOffset = true) => {
     setIsLoading(true);
     try {
-      const limit = ITEMS_PER_PAGE;
-
-
-      // Build query params
+      const currentOffset = resetOffset ? 0 : offset;
       const params = new URLSearchParams();
-      params.set("query", searchQuery || "*");
-      params.set("limit", String(limit));
-      params.set("namespace", namespace);
-      params.set("threshold", "0.0");
 
-      // Add tag filter
+      // Browse mode: no query param. Search mode: include query.
+      if (debouncedQuery.trim()) {
+        params.set("query", debouncedQuery.trim());
+        params.set("mode", "auto");
+        params.set("threshold", "0.0");
+      }
+
+      params.set("limit", String(ITEMS_PER_PAGE));
+      params.set("offset", String(currentOffset));
+      params.set("namespace", namespace);
+
+      // Sort
+      const { sort, order } = sortToApiParams(sortOption);
+      params.set("sort", sort);
+      params.set("order", order);
+
+      // Filters
       if (selectedTags.length > 0) {
         params.set("tags", selectedTags.join(","));
       }
-
-      // Add memory type filter
-      if (selectedTypes.length > 0) {
-        params.set("memory_types", selectedTypes.join(","));
+      if (selectedTypes.length === 1) {
+        params.set("memory_type", selectedTypes[0]);
       }
 
-      const res = await fetch(`/api/memories?${params.toString()}`);
-      const data: MemoriesResponse = await res.json();
+      // Date filters
+      if (afterDate) params.set("after", new Date(afterDate).toISOString());
+      if (beforeDate) params.set("before", new Date(beforeDate + "T23:59:59").toISOString());
+
+      const res = await fetch(`/api/v1/memories?${params.toString()}`);
+      const data: { success: boolean; data: MemoriesResponse } = await res.json();
 
       if (data.success) {
-        const newMemories = data.results || [];
+        const responseData = data.data;
+        const newMemories = responseData.results || [];
 
-        if (reset) {
+        if (resetOffset) {
           setMemories(newMemories);
-          setPage(1);
+          setOffset(ITEMS_PER_PAGE);
         } else {
           setMemories(prev => [...prev, ...newMemories]);
+          setOffset(currentOffset + ITEMS_PER_PAGE);
         }
 
-        setTotalCount(data.count || newMemories.length);
+        setTotalCount(responseData.total ?? responseData.count ?? newMemories.length);
         setHasMore(newMemories.length === ITEMS_PER_PAGE);
       }
     } catch (error) {
@@ -162,19 +239,17 @@ export default function MemoriesClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, selectedTags, selectedTypes, namespace]);
+  }, [debouncedQuery, selectedTags, selectedTypes, namespace, sortOption, afterDate, beforeDate, offset]);
 
-
-  // Initial fetch
+  // Reset & fetch on filter/sort changes
   useEffect(() => {
     fetchMemories(true);
-  }, [fetchMemories]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQuery, selectedTags, selectedTypes, namespace, sortOption, afterDate, beforeDate]);
 
   // Load more
   const loadMore = () => {
     if (!isLoading && hasMore) {
-      setPage(prev => prev + 1);
       fetchMemories(false);
     }
   };
@@ -194,35 +269,16 @@ export default function MemoriesClient() {
   // Toggle tag selection
   const toggleTag = (tag: string) => {
     setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
   };
 
   // Toggle memory type selection
   const toggleType = (type: string) => {
     setSelectedTypes(prev =>
-      prev.includes(type)
-        ? prev.filter(t => t !== type)
-        : [...prev, type]
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
   };
-
-  // Sort memories
-  const sortedMemories = useMemo(() => {
-    const sorted = [...memories];
-    switch (sortOption) {
-      case "date_desc":
-        return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      case "date_asc":
-        return sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-      case "relevance":
-        return sorted.sort((a, b) => (b.similarity || 0) - (a.similarity || 0));
-      default:
-        return sorted;
-    }
-  }, [memories, sortOption]);
 
   // Format date
   const formatDate = (dateStr: string) => {
@@ -239,18 +295,12 @@ export default function MemoriesClient() {
   // Get memory type color
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "fact":
-        return "bg-blue-100 text-blue-700";
-      case "preference":
-        return "bg-purple-100 text-purple-700";
-      case "experience":
-        return "bg-green-100 text-green-700";
-      case "relationship":
-        return "bg-orange-100 text-orange-700";
-      case "instruction":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
+      case "fact": return "bg-blue-100 text-blue-700";
+      case "preference": return "bg-purple-100 text-purple-700";
+      case "experience": return "bg-green-100 text-green-700";
+      case "relationship": return "bg-orange-100 text-orange-700";
+      case "instruction": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -259,9 +309,11 @@ export default function MemoriesClient() {
     setSelectedTags([]);
     setSelectedTypes([]);
     setSearchQuery("");
+    setAfterDate("");
+    setBeforeDate("");
   };
 
-  const hasActiveFilters = selectedTags.length > 0 || selectedTypes.length > 0 || searchQuery.length > 0;
+  const hasActiveFilters = selectedTags.length > 0 || selectedTypes.length > 0 || searchQuery.length > 0 || afterDate || beforeDate;
 
   return (
     <div className="space-y-6">
@@ -311,13 +363,61 @@ export default function MemoriesClient() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {t("dashboard.memoriesPage.namespace") || "Namespace"}
             </label>
-            <input
-              type="text"
-              value={namespace}
-              onChange={(e) => setNamespace(e.target.value)}
-              placeholder="default"
-              className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            {namespaces.length > 0 ? (
+              <select
+                value={namespace}
+                onChange={(e) => setNamespace(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+              >
+                {namespaces.map((ns) => (
+                  <option key={ns.name} value={ns.name}>
+                    {ns.name} ({ns.count})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={namespace}
+                onChange={(e) => setNamespace(e.target.value)}
+                placeholder="default"
+                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            )}
+          </div>
+
+          {/* Date Range */}
+          <div className="glass-card rounded-2xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <CalendarIcon className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">
+                {t("dashboard.memoriesPage.dateRange") || "Date Range"}
+              </span>
+            </div>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">
+                  {t("dashboard.memoriesPage.after") || "After"}
+                </label>
+                <input
+                  type="date"
+                  value={afterDate}
+                  onChange={(e) => setAfterDate(e.target.value)}
+                  className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">
+                  {t("dashboard.memoriesPage.before") || "Before"}
+                </label>
+                <input
+                  type="date"
+                  value={beforeDate}
+                  onChange={(e) => setBeforeDate(e.target.value)}
+                  className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Memory Types */}
@@ -393,7 +493,7 @@ export default function MemoriesClient() {
           {/* Sort & Info Bar */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-500">
-              {t("dashboard.memoriesPage.showing") || "Showing"} {sortedMemories.length} {t("dashboard.memoriesPage.of") || "of"} {totalCount} {t("dashboard.memoriesPage.results") || "results"}
+              {t("dashboard.memoriesPage.showing") || "Showing"} {memories.length} {t("dashboard.memoriesPage.of") || "of"} {totalCount} {t("dashboard.memoriesPage.results") || "results"}
             </p>
 
             {/* Sort Dropdown */}
@@ -406,6 +506,7 @@ export default function MemoriesClient() {
                 <span>
                   {sortOption === "date_desc" && (t("dashboard.memoriesPage.sortNewest") || "Newest First")}
                   {sortOption === "date_asc" && (t("dashboard.memoriesPage.sortOldest") || "Oldest First")}
+                  {sortOption === "importance" && (t("dashboard.memoriesPage.sortImportance") || "Most Important")}
                   {sortOption === "relevance" && (t("dashboard.memoriesPage.sortRelevance") || "Most Relevant")}
                 </span>
                 <ChevronDownIcon className={`w-4 h-4 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
@@ -413,24 +514,24 @@ export default function MemoriesClient() {
 
               {showSortDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10">
-                  <button
-                    onClick={() => { setSortOption("date_desc"); setShowSortDropdown(false); }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 first:rounded-t-xl ${sortOption === "date_desc" ? "text-teal-600 font-medium" : "text-gray-700"}`}
-                  >
-                    {t("dashboard.memoriesPage.sortNewest") || "Newest First"}
-                  </button>
-                  <button
-                    onClick={() => { setSortOption("date_asc"); setShowSortDropdown(false); }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${sortOption === "date_asc" ? "text-teal-600 font-medium" : "text-gray-700"}`}
-                  >
-                    {t("dashboard.memoriesPage.sortOldest") || "Oldest First"}
-                  </button>
-                  <button
-                    onClick={() => { setSortOption("relevance"); setShowSortDropdown(false); }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 last:rounded-b-xl ${sortOption === "relevance" ? "text-teal-600 font-medium" : "text-gray-700"}`}
-                  >
-                    {t("dashboard.memoriesPage.sortRelevance") || "Most Relevant"}
-                  </button>
+                  {([
+                    ["date_desc", t("dashboard.memoriesPage.sortNewest") || "Newest First"],
+                    ["date_asc", t("dashboard.memoriesPage.sortOldest") || "Oldest First"],
+                    ["importance", t("dashboard.memoriesPage.sortImportance") || "Most Important"],
+                    ...(debouncedQuery ? [["relevance", t("dashboard.memoriesPage.sortRelevance") || "Most Relevant"]] : []),
+                  ] as [SortOption, string][]).map(([value, label], i, arr) => (
+                    <button
+                      key={value}
+                      onClick={() => { setSortOption(value); setShowSortDropdown(false); }}
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                        i === 0 ? "rounded-t-xl" : ""
+                      } ${i === arr.length - 1 ? "rounded-b-xl" : ""} ${
+                        sortOption === value ? "text-teal-600 font-medium" : "text-gray-700"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -464,6 +565,22 @@ export default function MemoriesClient() {
                   </button>
                 </span>
               )}
+              {afterDate && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">
+                  After {afterDate}
+                  <button onClick={() => setAfterDate("")} className="hover:opacity-70">
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {beforeDate && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">
+                  Before {beforeDate}
+                  <button onClick={() => setBeforeDate("")} className="hover:opacity-70">
+                    <XIcon className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
             </div>
           )}
 
@@ -473,7 +590,7 @@ export default function MemoriesClient() {
               <LoadingSpinner className="w-8 h-8 text-teal-500 mx-auto" />
               <p className="mt-4 text-gray-500">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
             </div>
-          ) : sortedMemories.length === 0 ? (
+          ) : memories.length === 0 ? (
             <div className="glass-card rounded-2xl p-12 text-center">
               <InboxIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-400 mb-2">
@@ -488,7 +605,7 @@ export default function MemoriesClient() {
             </div>
           ) : (
             <div className="space-y-3">
-              {sortedMemories.map((memory) => (
+              {memories.map((memory) => (
                 <div
                   key={memory.id}
                   className="glass-card rounded-2xl p-4 hover:border-teal-200 transition-colors"
@@ -506,6 +623,21 @@ export default function MemoriesClient() {
                         <span className={`px-2 py-0.5 rounded-full ${getTypeColor(memory.memory_type)}`}>
                           {memory.memory_type}
                         </span>
+
+                        {/* Importance */}
+                        {memory.importance != null && memory.importance !== 5 && (
+                          <span className="flex items-center gap-0.5 text-amber-600">
+                            <StarIcon className="w-3 h-3" />
+                            {memory.importance}
+                          </span>
+                        )}
+
+                        {/* Source */}
+                        {memory.source && memory.source !== "api" && (
+                          <span className="text-gray-400">
+                            via {memory.source}
+                          </span>
+                        )}
 
                         {/* Tags */}
                         {memory.tags && memory.tags.length > 0 && (
@@ -543,7 +675,7 @@ export default function MemoriesClient() {
           )}
 
           {/* Load More */}
-          {hasMore && sortedMemories.length > 0 && (
+          {hasMore && memories.length > 0 && (
             <div className="text-center pt-4">
               <button
                 onClick={loadMore}

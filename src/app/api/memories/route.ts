@@ -19,8 +19,15 @@ import {
 } from '@/lib/memory/query-cache';
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
-import { boundedInt } from '@/lib/parse-params';
+import { parsePagination } from '@/lib/parse-params';
 import type { AddMemoryRequest } from '@/types/database';
+
+/** Valid sort columns for browse mode */
+const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
+type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
+
+const MEMORY_SELECT_FIELDS =
+  'id, content, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
 
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
@@ -93,8 +100,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/memories - Search memories
-// Supports: mode=auto (default), mode=vector, mode=hybrid, mode=keyword, mode=slot
+// GET /api/memories — Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
@@ -107,21 +113,82 @@ export async function GET(request: NextRequest) {
     const { userId, keyId } = authResult;
     const { searchParams } = new URL(request.url);
 
+    // ── Common params ──
     const query = searchParams.get('query');
+    const { limit, offset } = parsePagination(searchParams, { limit: 20 });
+    const namespace = searchParams.get('namespace') || 'default';
+    const memoryType = searchParams.get('memory_type');
+    const tagsParam = searchParams.get('tags');
+    const after = searchParams.get('after');
+    const before = searchParams.get('before');
+    const sortRaw = searchParams.get('sort') || 'created_at';
+    const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
+      ? (sortRaw as BrowseSortColumn)
+      : 'created_at';
+    const orderAsc = searchParams.get('order') === 'asc';
+
+    // ══════════════════════════════════════════════
+    // BROWSE MODE — no query, return paginated list
+    // ══════════════════════════════════════════════
     if (!query) {
+      const supabase = createServerClient();
+
+      let q = supabase
+        .from('memories')
+        .select(MEMORY_SELECT_FIELDS, { count: 'exact' })
+        .eq('user_id', userId)
+        .eq('is_deleted', false);
+
+      if (namespace !== 'default') q = q.eq('namespace', namespace);
+      if (memoryType) q = q.eq('memory_type', memoryType);
+      if (after) q = q.gt('created_at', after);
+      if (before) q = q.lt('created_at', before);
+      if (tagsParam) {
+        const tags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+        if (tags.length > 0) q = q.overlaps('tags', tags);
+      }
+
+      q = q.order(sort, { ascending: orderAsc }).range(offset, offset + limit - 1);
+
+      const { data: memories, error: browseError, count } = await q;
+
+      if (browseError) {
+        console.error('[api/memories] Browse error:', browseError);
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+          500
+        );
+        return ServerErrors.database('browse_memories');
+      }
+
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-        400
+        200,
+        { embedding: 0 }
       );
-      return ValidationErrors.missingField('query');
+
+      logMemoryAccess(request, userId, keyId, 'search', {
+        memoryCount: memories?.length || 0,
+      }).catch(console.error);
+
+      return NextResponse.json({
+        success: true,
+        mode: 'browse',
+        results: memories || [],
+        count: memories?.length || 0,
+        total: count ?? 0,
+        offset,
+        limit,
+        cached: false,
+      });
     }
 
-    const limit = boundedInt(searchParams.get('limit'), 10, 1, 100);
+    // ══════════════════════════════════════════════
+    // SEARCH MODE — query provided
+    // ══════════════════════════════════════════════
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
-    const namespace = searchParams.get('namespace') || 'default';
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
 
-    // Auto router: determine best search strategy
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
 
@@ -132,7 +199,7 @@ export async function GET(request: NextRequest) {
       actualMode = requestedMode as Exclude<SearchMode, 'auto'>;
     }
 
-    // Handle slot lookups (O(1) deterministic)
+    // Handle slot lookups
     if (actualMode === 'slot') {
       const slotKey = detectSlotQuery(query);
       if (slotKey) {
@@ -144,7 +211,6 @@ export async function GET(request: NextRequest) {
           200,
           { embedding: 0 }
         );
-
         logMemoryAccess(request, userId, keyId, 'read', {
           memoryId: `slot:${slotKey}`,
           query,
@@ -155,37 +221,29 @@ export async function GET(request: NextRequest) {
             success: true,
             mode: 'slot',
             requestedMode,
-            results: [
-              {
-                id: `slot:${slotKey}`,
-                content: slotValue,
-                memory_type: 'fact',
-                slot_key: slotKey,
-                similarity: 1.0,
-              },
-            ],
+            results: [{
+              id: `slot:${slotKey}`,
+              content: slotValue,
+              memory_type: 'fact',
+              slot_key: slotKey,
+              similarity: 1.0,
+            }],
             count: 1,
+            total: 1,
             cached: false,
             slot: { key: slotKey, value: slotValue },
             routerDecision: routerDecision
-              ? {
-                  strategy: routerDecision.strategy,
-                  confidence: routerDecision.confidence,
-                  reason: routerDecision.reason,
-                }
+              ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
               : null,
           });
         }
-
-        // Slot not found, fall back to keyword search
         actualMode = 'keyword';
       } else {
-        // No slot key detected, fall back to keyword
         actualMode = 'keyword';
       }
     }
 
-    // Check query cache first
+    // Cache check
     const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
     if (cacheResult.hit && cacheResult.results.length > 0) {
       await logRequest(
@@ -205,18 +263,15 @@ export async function GET(request: NextRequest) {
         requestedMode,
         results: cacheResult.results,
         count: cacheResult.results.length,
+        total: cacheResult.results.length,
         cached: true,
         routerDecision: routerDecision
-          ? {
-              strategy: routerDecision.strategy,
-              confidence: routerDecision.confidence,
-              reason: routerDecision.reason,
-            }
+          ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
           : null,
       });
     }
 
-    // Cache miss - perform search
+    // Search
     const supabase = createServerClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
@@ -260,7 +315,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (searchError) {
-      console.error('Search error:', searchError);
+      console.error('[api/memories] Search error:', searchError);
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
         500
@@ -268,7 +323,22 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
-    // Cache results for future queries
+    // Post-search filtering
+    if (results) {
+      results = results.filter((m: Record<string, unknown>) => {
+        if (memoryType && m.memory_type !== memoryType) return false;
+        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
+        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
+        if (tagsParam) {
+          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+          const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
+          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
+        }
+        return true;
+      });
+    }
+
+    // Cache results
     if (results && results.length > 0) {
       const cacheableResults: CachedMemory[] = results.map((r) => ({
         id: r.id,
@@ -306,13 +376,10 @@ export async function GET(request: NextRequest) {
       requestedMode,
       results: results || [],
       count: results?.length || 0,
+      total: results?.length || 0,
       cached: false,
       routerDecision: routerDecision
-        ? {
-            strategy: routerDecision.strategy,
-            confidence: routerDecision.confidence,
-            reason: routerDecision.reason,
-          }
+        ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
         : null,
     });
   } catch (error) {

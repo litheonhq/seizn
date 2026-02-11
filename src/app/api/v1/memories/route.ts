@@ -2,8 +2,28 @@
  * REST API v1 - Memories
  *
  * POST   /api/v1/memories - Add a new memory
- * GET    /api/v1/memories - Search memories
+ * GET    /api/v1/memories - Search or browse memories
  * DELETE /api/v1/memories - Delete memories by IDs
+ *
+ * GET supports two modes:
+ *   - Search mode (query param provided): vector/keyword/hybrid/slot/auto search
+ *   - Browse mode (no query): chronological listing with filters
+ *
+ * Common GET params:
+ *   query       - Search text (optional; omit for browse mode)
+ *   limit       - Max results (1-100, default 20)
+ *   offset      - Skip N results for pagination (default 0)
+ *   namespace   - Memory namespace (default 'default')
+ *   memory_type - Filter: fact|preference|experience|relationship|instruction
+ *   tags        - Filter: comma-separated, matches memories with ANY of these tags
+ *   agent_id    - Filter: agent scope
+ *   scope       - Filter: user|session|agent
+ *   after       - Filter: created_at > ISO date
+ *   before      - Filter: created_at < ISO date
+ *   sort        - Sort column: created_at|updated_at|importance (default created_at)
+ *   order       - Sort direction: asc|desc (default desc)
+ *   mode        - Search strategy: auto|vector|keyword|hybrid|slot (search mode only)
+ *   threshold   - Similarity threshold 0-1 (search mode only, default 0.7)
  *
  * Supports dual auth: API key (Bearer/x-api-key) first, session fallback.
  * Returns v1 envelope: { success, data, meta: { version: "v1" } }
@@ -31,7 +51,7 @@ import {
 } from '@/lib/memory/query-cache';
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
-import { boundedInt } from '@/lib/parse-params';
+import { parsePagination } from '@/lib/parse-params';
 import { findDuplicate } from '@/lib/memory/dedup';
 import { scoreImportance } from '@/lib/memory/auto-score';
 import { emitWebhookEvent } from '@/lib/webhook-emit';
@@ -171,7 +191,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/v1/memories
+/** Valid sort columns for browse mode */
+const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
+type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
+
+const MEMORY_SELECT_FIELDS =
+  'id, content, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+
+// GET /api/v1/memories — Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
@@ -182,23 +209,97 @@ export async function GET(request: NextRequest) {
     const { userId, keyId } = result;
     const { searchParams } = new URL(request.url);
 
+    // ── Common params ──
     const query = searchParams.get('query');
+    const { limit, offset } = parsePagination(searchParams, { limit: 20 });
+    const namespace = searchParams.get('namespace') || 'default';
+    const agentId = searchParams.get('agent_id');
+    const scope = searchParams.get('scope');
+    const memoryType = searchParams.get('memory_type');
+    const tagsParam = searchParams.get('tags');
+    const after = searchParams.get('after');
+    const before = searchParams.get('before');
+    const sortRaw = searchParams.get('sort') || 'created_at';
+    const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
+      ? (sortRaw as BrowseSortColumn)
+      : 'created_at';
+    const order = searchParams.get('order') === 'asc' ? true : false; // ascending?
+
+    // ══════════════════════════════════════════════
+    // BROWSE MODE — no query, return paginated list
+    // ══════════════════════════════════════════════
     if (!query) {
+      const supabase = createServerClient();
+
+      let q = supabase
+        .from('memories')
+        .select(MEMORY_SELECT_FIELDS, { count: 'exact' })
+        .eq('user_id', userId)
+        .eq('is_deleted', false);
+
+      // Namespace filter
+      if (namespace !== 'default') {
+        q = q.eq('namespace', namespace);
+      }
+
+      // Optional filters
+      if (memoryType) q = q.eq('memory_type', memoryType);
+      if (agentId) q = q.eq('agent_id', agentId);
+      if (scope) q = q.eq('scope', scope);
+      if (after) q = q.gt('created_at', after);
+      if (before) q = q.lt('created_at', before);
+      if (tagsParam) {
+        const tags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+        if (tags.length > 0) q = q.overlaps('tags', tags);
+      }
+
+      // Sort & paginate
+      q = q.order(sort, { ascending: order }).range(offset, offset + limit - 1);
+
+      const { data: memories, error: browseError, count } = await q;
+
+      if (browseError) {
+        console.error('[v1/memories] Browse error:', browseError);
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
+            500
+          );
+        }
+        return ServerErrors.database('browse_memories');
+      }
+
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
-          400
+          200,
+          { embedding: 0 }
         );
       }
-      return ValidationErrors.missingField('query');
+
+      logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
+        memoryCount: memories?.length || 0,
+      }).catch(console.error);
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          mode: 'browse',
+          results: memories || [],
+          count: memories?.length || 0,
+          total: count ?? 0,
+          offset,
+          limit,
+        },
+        meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
+      });
     }
 
-    const limit = boundedInt(searchParams.get('limit'), 10, 1, 100);
+    // ══════════════════════════════════════════════
+    // SEARCH MODE — query provided
+    // ══════════════════════════════════════════════
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
-    const namespace = searchParams.get('namespace') || 'default';
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
-    const agentId = searchParams.get('agent_id');
-    const scope = searchParams.get('scope');
 
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
@@ -242,6 +343,9 @@ export async function GET(request: NextRequest) {
                 similarity: 1.0,
               }],
               count: 1,
+              total: 1,
+              offset: 0,
+              limit,
             },
             meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
           });
@@ -275,6 +379,9 @@ export async function GET(request: NextRequest) {
           requestedMode,
           results: cacheResult.results,
           count: cacheResult.results.length,
+          total: cacheResult.results.length,
+          offset: 0,
+          limit,
           routerDecision: routerDecision ? {
             strategy: routerDecision.strategy,
             confidence: routerDecision.confidence,
@@ -339,11 +446,19 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
-    // Multi-agent filtering (post-search)
-    if (results && (agentId || scope)) {
+    // Post-search filtering (agent, scope, type, tags, date)
+    if (results) {
       results = results.filter((m: Record<string, unknown>) => {
         if (agentId && m.agent_id !== agentId) return false;
         if (scope && m.scope !== scope) return false;
+        if (memoryType && m.memory_type !== memoryType) return false;
+        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
+        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
+        if (tagsParam) {
+          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+          const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
+          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
+        }
         return true;
       });
     }
@@ -389,6 +504,9 @@ export async function GET(request: NextRequest) {
         requestedMode,
         results: results || [],
         count: results?.length || 0,
+        total: results?.length || 0,
+        offset: 0,
+        limit,
         routerDecision: routerDecision ? {
           strategy: routerDecision.strategy,
           confidence: routerDecision.confidence,
