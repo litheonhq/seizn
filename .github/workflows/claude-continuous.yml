@@ -1,6 +1,6 @@
 # Thin caller — logic lives in iruhana/claude-workflows
-# seizn: SaaS + MCP 서버 → 보안/API 품질 우선
-# CLI: gh workflow run claude-continuous.yml -f tasks="security,code-quality" -f max_cycles=3
+# seizn: AI 메모리 OS + MCP 서버 → MCP/메모리/AI 컨텍스트 우선
+# CLI: gh workflow run claude-continuous.yml -f tasks="mcp-protocol,memory-graph" -f max_cycles=3
 name: Claude Continuous
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         description: Comma-separated task presets to run
         required: false
         type: string
-        default: 'security,code-quality,performance,dead-code,tech-debt'
+        default: 'mcp-protocol,memory-graph,ai-context,security,code-quality,performance,dead-code'
       scope:
         description: File/directory scope
         required: false
