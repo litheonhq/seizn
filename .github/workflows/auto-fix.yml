@@ -1,0 +1,42 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run auto-fix.yml -f pr_number=123 -f max_retries=3
+name: Auto Fix
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number (optional — fixes default branch if omitted)
+        required: false
+        type: string
+      max_retries:
+        description: Maximum retry attempts
+        type: choice
+        options: ['1', '2', '3']
+        default: '3'
+      model:
+        description: Model tier
+        type: choice
+        options: [sonnet, opus]
+        default: sonnet
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: auto-fix-pr-${{ inputs.pr_number || 'default' }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/auto-fix.yml@v1
+    with:
+      pr_number: ${{ inputs.pr_number }}
+      max_retries: ${{ inputs.max_retries }}
+      model: ${{ inputs.model }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write

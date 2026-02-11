@@ -1,0 +1,49 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run claude-continuous.yml -f tasks="code-quality,security" -f max_cycles=5
+name: Claude Continuous
+on:
+  workflow_dispatch:
+    inputs:
+      tasks:
+        description: Comma-separated task presets to run
+        required: false
+        type: string
+        default: all
+      scope:
+        description: File/directory scope
+        required: false
+        type: string
+        default: all
+      max_cycles:
+        description: Maximum cycles (0 = unlimited)
+        required: false
+        type: string
+        default: '0'
+      cooldown:
+        description: Cooldown seconds between cycles
+        required: false
+        type: string
+        default: '120'
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: claude-continuous
+  cancel-in-progress: false
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/claude-continuous.yml@v1
+    with:
+      tasks: ${{ inputs.tasks }}
+      scope: ${{ inputs.scope }}
+      max_cycles: ${{ inputs.max_cycles }}
+      cooldown: ${{ inputs.cooldown }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write

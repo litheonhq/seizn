@@ -1,0 +1,37 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# CLI: gh workflow run issue-to-code.yml -f issue_number=42
+name: Issue to Code
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to implement
+        required: true
+        type: string
+      model:
+        description: Model tier
+        type: choice
+        options: [auto, sonnet, opus]
+        default: auto
+      provider:
+        description: AI provider
+        type: choice
+        options: [claude, codex]
+        default: claude
+
+concurrency:
+  group: issue-to-code-${{ inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    uses: iruhana/claude-workflows/.github/workflows/issue-to-code.yml@v1
+    with:
+      issue_number: ${{ inputs.issue_number }}
+      model: ${{ inputs.model }}
+      provider: ${{ inputs.provider }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
