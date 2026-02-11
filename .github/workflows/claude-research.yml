@@ -1,0 +1,37 @@
+# Thin caller — logic lives in iruhana/claude-workflows
+# seizn: AI Memory SaaS — MCP, pgvector, knowledge graphs
+# CLI: gh workflow run claude-research.yml -f focus="all"
+name: AI Research
+on:
+  workflow_dispatch:
+    inputs:
+      focus:
+        description: '리서치 포커스'
+        required: false
+        default: 'all'
+        type: choice
+        options: [all, papers, tech, security-advisories]
+      max_issues:
+        description: '최대 Issue 생성 수'
+        required: false
+        default: '10'
+      provider:
+        description: 'AI 프로바이더'
+        required: false
+        default: 'claude'
+        type: choice
+        options: [claude, codex]
+concurrency:
+  group: claude-research
+  cancel-in-progress: false
+jobs:
+  research:
+    uses: iruhana/claude-workflows/.github/workflows/claude-research.yml@v1
+    with:
+      focus: ${{ github.event.inputs.focus || 'all' }}
+      max_issues: ${{ github.event.inputs.max_issues || '10' }}
+      provider: ${{ github.event.inputs.provider || 'claude' }}
+    secrets: inherit
+    permissions:
+      contents: read
+      issues: write

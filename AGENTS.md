@@ -119,6 +119,11 @@ gh workflow run claude-continuous.yml -f tasks="mcp-protocol,security" -f max_cy
 
 # Stop continuous run
 gh run cancel $(gh run list -w claude-continuous.yml -L 1 --json databaseId -q '.[0].databaseId')
+
+# AI Research (하루 1회, 논문/기술/보안 → Issue 생성)
+gh workflow run claude-research.yml -f focus="all"
+gh workflow run claude-research.yml -f focus="security-advisories"
+gh workflow run claude-research.yml -f focus="papers"
 ```
 
 ### Auto-merge
