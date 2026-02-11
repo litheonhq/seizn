@@ -1,5 +1,6 @@
 # Thin caller — logic lives in iruhana/claude-workflows
-# CLI: gh workflow run claude-continuous.yml -f tasks="code-quality,security" -f max_cycles=5
+# seizn: SaaS + MCP 서버 → 보안/API 품질 우선
+# CLI: gh workflow run claude-continuous.yml -f tasks="security,code-quality" -f max_cycles=3
 name: Claude Continuous
 on:
   workflow_dispatch:
@@ -8,7 +9,7 @@ on:
         description: Comma-separated task presets to run
         required: false
         type: string
-        default: all
+        default: 'security,code-quality,performance,dead-code,tech-debt'
       scope:
         description: File/directory scope
         required: false
