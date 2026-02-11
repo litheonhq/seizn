@@ -1,5 +1,6 @@
 # Thin caller — logic lives in iruhana/claude-workflows
-# CLI: gh workflow run claude-improve.yml -f task_type=code-quality -f scope=src/
+# seizn: SaaS + MCP 서버 → 보안 기본, API 스코프
+# CLI: gh workflow run claude-improve.yml -f task_type=security
 name: Claude Improve
 on:
   workflow_dispatch:
@@ -8,16 +9,16 @@ on:
         description: Type of improvement task
         type: choice
         options:
-          - custom
-          - code-quality
           - security
+          - code-quality
           - performance
           - dead-code
-          - deps-update
           - tech-debt
+          - custom
+          - deps-update
           - accessibility
           - seo
-        default: custom
+        default: security
       task:
         description: Custom task description (used when task_type is custom)
         required: false
