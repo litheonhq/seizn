@@ -8,6 +8,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { safeJsonParse } from '@/lib/safe-json';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { userId, keyId } = authResult;
-    const body: AddMemoryRequest = await request.json();
+    const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
 
     if (!body.content || body.content.trim().length === 0) {
       await logRequest(
