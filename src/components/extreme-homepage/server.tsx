@@ -234,6 +234,127 @@ function FeatureShowcase() {
 }
 
 // =============================================================================
+// MCP & Developer Tools
+// =============================================================================
+
+function PlugIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  );
+}
+
+function TerminalIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  );
+}
+
+function SyncIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>
+  );
+}
+
+function KeyIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+    </svg>
+  );
+}
+
+const MCP_FEATURES = [
+  {
+    icon: TerminalIcon,
+    title: "MCP Server for 8 Editors",
+    desc: "Native MCP support for Claude Code, Cursor, Windsurf, Cline. Config file sync for Copilot, Aider, Codex. One memory, every editor.",
+    editors: ["Claude Code", "Cursor", "Windsurf", "Copilot", "Cline", "Aider", "Codex"],
+  },
+  {
+    icon: SyncIcon,
+    title: "Config Sync Across Tools",
+    desc: "Auto-generate CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules, and more from your Seizn memories. Push or pull — your preferences follow you.",
+    editors: ["CLAUDE.md", "AGENTS.md", ".cursorrules", ".windsurfrules"],
+  },
+  {
+    icon: KeyIcon,
+    title: "OAuth Device Flow",
+    desc: "Browser-based auth for CLI tools. No API key copying. Just approve a code like ABCD-1234 in your browser — token saved automatically.",
+    editors: ["RFC 8628", "Zero-copy Auth"],
+  },
+  {
+    icon: PlugIcon,
+    title: "Auto Context & Webhooks",
+    desc: "Auto-detect projects from package.json/pyproject.toml/Cargo.toml. Get webhook notifications on memory changes. MCP Resources for read-only access.",
+    editors: ["Auto-detect", "Webhooks", "MCP Resources"],
+  },
+] as const;
+
+function MCPDeveloperTools({ locale }: { locale: Locale }) {
+  return (
+    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-gray-900/50 to-gray-950/80">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-xs font-medium text-emerald-700 dark:text-emerald-400 mb-4">
+            <TerminalIcon className="w-3.5 h-3.5" />
+            {"MCP & Developer Tools"}
+          </div>
+          <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {"Your AI memories, in every editor"}
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            {"One MCP server bridges Seizn to 8 AI coding assistants. Auto-sync preferences, instructions, and context — no manual config files."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {MCP_FEATURES.map((f) => {
+            const Icon = f.icon;
+            return (
+              <div key={f.title} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-400 to-teal-500" />
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{f.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">{f.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {f.editors.map((e) => (
+                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">{e}</span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-10 text-center">
+          <Link
+            href={`/${locale}/docs/integrations`}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-full transition-colors"
+          >
+            {"Set up MCP Server"}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Link>
+          <p className="mt-3 text-sm text-gray-500 dark:text-gray-500">
+            {"npx seizn-mcp@latest — works in 30 seconds"}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============================================================================
 // Trust & Compliance (replaces TrustBadges)
 // =============================================================================
 
@@ -366,6 +487,7 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
               <li><Link href={`/${locale}/docs`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link></li>
               <li><Link href={`/${locale}/pricing`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.pricing || "Pricing"}</Link></li>
               <li><Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link></li>
+              <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{"MCP Server"}</Link></li>
               <li><Link href="/status" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link></li>
             </ul>
           </div>
@@ -421,6 +543,7 @@ export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <ExtremeHomepageClient dict={dict} locale={locale} />
       <FeatureShowcase />
+      <MCPDeveloperTools locale={locale} />
       <TrustAndCompliance />
       <PricingCTA locale={locale} t={dict} />
       <Footer locale={locale} t={dict} />
