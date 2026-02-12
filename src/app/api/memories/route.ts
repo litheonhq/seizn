@@ -51,7 +51,18 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
-    const embedding = await createEmbedding(body.content);
+
+    let embedding: number[];
+    try {
+      embedding = await createEmbedding(body.content);
+    } catch (embErr) {
+      console.error('Embedding error:', embErr, '| content length:', body.content.length, '| has backslash:', body.content.includes('\\'));
+      await logRequest(
+        { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+        500
+      );
+      return ServerErrors.internal('embedding_failed');
+    }
 
     const { data: memory, error: insertError } = await supabase
       .from('memories')
@@ -73,7 +84,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error('Insert error:', insertError);
+      console.error('Insert error:', insertError, '| has backslash:', body.content.includes('\\'));
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
         500
