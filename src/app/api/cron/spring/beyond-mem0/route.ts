@@ -25,6 +25,7 @@ import { createLinkGeneratorService } from '@/lib/spring/memory-v4/link-generato
 import { createFactInvalidationService } from '@/lib/spring/memory-v4/fact-invalidation';
 import { createCommunityDetectionService } from '@/lib/graph-rag/community/detection';
 import { createCommunitySummaryService } from '@/lib/graph-rag/community/summary';
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // =============================================================================
 // Configuration
@@ -43,26 +44,6 @@ const ALL_TASKS: TaskType[] = [
   'community_detection',
   'summary_refresh',
 ];
-
-// =============================================================================
-// Auth
-// =============================================================================
-
-function verifyCronAuth(request: NextRequest): boolean {
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret) {
-    console.warn('CRON_SECRET not configured');
-    return false;
-  }
-
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return false;
-  }
-
-  const token = authHeader.slice(7);
-  return token === cronSecret;
-}
 
 // =============================================================================
 // Task Results
@@ -590,7 +571,7 @@ async function processSummaryRefresh(
 
 export async function GET(request: NextRequest) {
   // Verify cron authentication
-  if (!verifyCronAuth(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json(
       { success: false, error: 'Unauthorized' },
       { status: 401 }
@@ -695,9 +676,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Internal server error',
         duration: Date.now() - startTime,
-        results,
       },
       { status: 500 }
     );

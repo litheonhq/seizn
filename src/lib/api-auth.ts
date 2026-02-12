@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
-import { checkRateLimitAsync, getRateLimitHeaders } from './rate-limit';
+import { checkRateLimitAsync, getRateLimitHeaders, checkAuthFailRateLimit } from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
 import {
   ErrorCodes,
@@ -107,6 +107,13 @@ export async function authenticateRequest(
   // Get deprecation headers if using legacy auth
   const deprecationHeaders = getDeprecationHeaders(authMethod);
 
+  // Brute force protection: check failed auth rate limit before processing
+  const clientIp =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown';
+  const authFailCheck = await checkAuthFailRateLimit(clientIp);
+
   if (!apiKey) {
     // Log auth failure (no key provided)
     logAuthFailure(request, 'no_api_key_provided').catch(console.error);
@@ -118,6 +125,17 @@ export async function authenticateRequest(
         headers: {
           'WWW-Authenticate': 'Bearer realm="Seizn API", charset="UTF-8"',
         },
+      },
+    };
+  }
+
+  // If too many recent auth failures from this IP, reject early
+  if (!authFailCheck.allowed) {
+    return {
+      authError: {
+        code: ErrorCodes.RATE_LIMIT_EXCEEDED,
+        error: 'Too many failed authentication attempts. Try again later.',
+        status: 429,
       },
     };
   }

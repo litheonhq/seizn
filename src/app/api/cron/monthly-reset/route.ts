@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // GET /api/cron/monthly-reset - Reset monthly API call counters for all users
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -48,7 +44,7 @@ export async function GET(request: NextRequest) {
     if (resetError) {
       console.error('Failed to reset API call counters:', resetError);
       return NextResponse.json(
-        { error: 'Failed to reset API call counters', details: resetError.message },
+        { error: 'Failed to reset API call counters' },
         { status: 500 }
       );
     }
@@ -102,7 +98,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

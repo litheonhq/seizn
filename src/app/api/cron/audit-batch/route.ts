@@ -18,15 +18,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMerkleBatch } from '@/lib/audit/tamper-evident';
 import { createServerClient } from '@/lib/supabase';
-
-// Verify cron secret to prevent unauthorized access
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify cron authorization
-    const authHeader = request.headers.get('authorization');
-    if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+    if (!verifyCronSecret(request)) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -98,10 +94,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('[AuditBatchCron] Error:', error);
     return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

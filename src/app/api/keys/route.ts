@@ -8,6 +8,11 @@ import {
   ServerErrors,
   RateLimitErrors,
 } from '@/lib/api-error';
+import { logAuditEvent, getAuditContext, AuditActions } from '@/lib/audit';
+import { checkIpRateLimitAsync } from '@/lib/rate-limit';
+
+/** Session freshness window for sensitive key operations (15 minutes) */
+const SESSION_FRESHNESS_MS = 15 * 60 * 1000;
 
 // Helper to get user from Authorization header (Bearer token)
 async function getUserFromToken(request: NextRequest) {
@@ -28,6 +33,13 @@ async function getUserFromToken(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   return user;
+}
+
+/** Check if user session is fresh enough for sensitive operations */
+function isSessionFresh(lastSignInAt: string | undefined): boolean {
+  if (!lastSignInAt) return false;
+  const signInTime = new Date(lastSignInAt).getTime();
+  return Date.now() - signInTime < SESSION_FRESHNESS_MS;
 }
 
 // GET /api/keys - List user's API keys
@@ -64,13 +76,28 @@ export async function GET(request: NextRequest) {
 // POST /api/keys - Create a new API key
 export async function POST(request: NextRequest) {
   try {
+    // IP rate limit for key creation (stricter: 5/min)
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const ipLimit = await checkIpRateLimitAsync(ip);
+    if (!ipLimit.allowed) {
+      return RateLimitErrors.rateLimitExceeded();
+    }
+
     const user = await getUserFromToken(request);
     if (!user) {
       return AuthErrors.unauthorized('API keys');
     }
 
+    // Warn if session is stale (not blocking, but logged)
+    const sessionFresh = isSessionFresh(user.last_sign_in_at ?? undefined);
+
     const body = await request.json();
     const name = body.name || 'Default Key';
+
+    // Validate name length
+    if (typeof name !== 'string' || name.length > 100) {
+      return ValidationErrors.invalidField('name', 'Key name must be 1-100 characters');
+    }
 
     const supabase = createServerClient();
 
@@ -122,6 +149,24 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('create_key');
     }
 
+    // Audit log: API key created
+    logAuditEvent(
+      {
+        userId: user.id,
+        action: AuditActions.API_KEY_CREATE,
+        resourceType: 'api_key',
+        resourceId: keyRecord.id,
+        details: {
+          key_prefix: prefix,
+          key_name: name,
+          expires_at: expiresAt.toISOString(),
+          session_fresh: sessionFresh,
+        },
+        status: 'success',
+      },
+      getAuditContext(request)
+    ).catch(console.error);
+
     // Return the full key only once (never stored/shown again)
     return NextResponse.json({
       success: true,
@@ -150,7 +195,20 @@ export async function DELETE(request: NextRequest) {
       return ValidationErrors.missingField('id');
     }
 
+    // Validate UUID format to prevent injection
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(keyId)) {
+      return ValidationErrors.invalidField('id', 'Invalid key ID format');
+    }
+
     const supabase = createServerClient();
+
+    // Get key info before revoking (for audit log)
+    const { data: keyBefore } = await supabase
+      .from('api_keys')
+      .select('key_prefix, name')
+      .eq('id', keyId)
+      .eq('user_id', user.id)
+      .single();
 
     const { error } = await supabase
       .from('api_keys')
@@ -162,6 +220,22 @@ export async function DELETE(request: NextRequest) {
       console.error('Revoke key error:', error);
       return ServerErrors.database('revoke_key');
     }
+
+    // Audit log: API key revoked
+    logAuditEvent(
+      {
+        userId: user.id,
+        action: AuditActions.API_KEY_REVOKE,
+        resourceType: 'api_key',
+        resourceId: keyId,
+        details: {
+          key_prefix: keyBefore?.key_prefix,
+          key_name: keyBefore?.name,
+        },
+        status: 'success',
+      },
+      getAuditContext(request)
+    ).catch(console.error);
 
     return NextResponse.json({
       success: true,

@@ -259,6 +259,28 @@ export async function checkIpRateLimitAsync(ip: string): Promise<RateLimitResult
 
 
 // =============================================================================
+// Failed Auth Rate Limiting (Brute Force Protection)
+// =============================================================================
+
+/**
+ * Stricter rate limit for failed authentication attempts.
+ * 5 failures per IP per 15 minutes — blocks brute force attacks.
+ */
+export async function checkAuthFailRateLimit(ip: string): Promise<RateLimitResult> {
+  const limit = 5;
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const key = `auth_fail:${ip}`;
+
+  const redis = getRedisClient();
+
+  if (redis) {
+    return checkRateLimitRedis(redis, key, limit, windowMs);
+  }
+
+  return checkRateLimitMemory(key, limit, windowMs);
+}
+
+// =============================================================================
 // Utility Functions
 // =============================================================================
 

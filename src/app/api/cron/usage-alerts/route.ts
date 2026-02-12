@@ -2,18 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { sendBatchEmails } from '@/lib/email';
 import { usageAlertEmail } from '@/lib/email/templates';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // Usage thresholds to trigger alerts (as percentages)
 const USAGE_THRESHOLDS = [80, 90, 100];
 
 // GET /api/cron/usage-alerts - Check usage and send alerts
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

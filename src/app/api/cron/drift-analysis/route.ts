@@ -8,25 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { DriftCollector } from '@/lib/drift';
-
-// Verify cron secret for security
-function verifyCronSecret(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  // In development, allow without secret
-  if (process.env.NODE_ENV === 'development') {
-    return true;
-  }
-
-  // If no secret configured, allow the request
-  if (!cronSecret) {
-    console.warn('CRON_SECRET not configured, allowing request');
-    return true;
-  }
-
-  return authHeader === `Bearer ${cronSecret}`;
-}
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 export async function GET(request: NextRequest) {
   // Verify cron authorization
@@ -179,7 +161,6 @@ export async function GET(request: NextRequest) {
       {
         success: false,
         error: 'Drift analysis failed',
-        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
