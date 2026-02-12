@@ -1814,7 +1814,8 @@
         "extraction": "Extraction",
         "operations": "Operations",
         "securityCompliance": "Security & Compliance",
-        "technology": "Technology"
+        "technology": "Technology",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2006,6 +2007,41 @@
           "category": "operations",
           "question": "What is the Context API and how do I use it?",
           "answer": "The Context API (GET /api/context) returns a pre-formatted string ready to inject into your LLM prompt. It combines: user profile, recent memories, relevant facts, and graph context. Use format=brief (~500 tokens), detailed (~1500 tokens), or extended (~3000 tokens) based on your context budget."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "What is the Seizn MCP Server and which editors does it support?",
+          "answer": "The Seizn MCP Server (seizn-mcp) is a Model Context Protocol server that lets AI coding assistants directly access your Seizn memories. It supports Claude Code, Cursor, Windsurf, Cline, and any MCP-compatible client natively. For editors without MCP support (GitHub Copilot, Aider, OpenAI Codex), we provide config file sync that generates CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules, .github/copilot-instructions.md, .clinerules, and CONVENTIONS.md from your memories."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "How does multi-editor config sync work?",
+          "answer": "Seizn can export your memories as editor-specific configuration files. Use the sync_config_files MCP tool or POST /api/config-sync API. Supported formats: CLAUDE.md (Claude Code), AGENTS.md (OpenAI Codex), .cursor/rules (Cursor), .cursorrules (Cursor legacy), .windsurfrules (Windsurf), .github/copilot-instructions.md (GitHub Copilot), .clinerules (Cline), CONVENTIONS.md (Aider). Push syncs memories to files, pull imports files back to Seizn. This means your AI preferences follow you across every editor."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "How do I authenticate the MCP server without copying API keys?",
+          "answer": "Seizn supports OAuth Device Flow (RFC 8628) for browser-based authentication. Run the auth_login MCP tool — it generates a human-readable code like 'ABCD-1234', opens your browser to seizn.com/auth/device, and you approve access. The token is saved to ~/.seizn/credentials.json automatically. No more copying API keys between terminals."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "What MCP Resources are available?",
+          "answer": "Seizn MCP Server exposes read-only resources that AI assistants can access: seizn://memories/recent (last 10 memories), seizn://profile (user profile), seizn://graph/summary (knowledge graph stats), seizn://memories/project/{name} (project-filtered memories), seizn://context/{format} (pre-formatted context in brief/detailed/extended), and seizn://docs/setup/{editor} (editor-specific setup guides)."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "Can I get notified when memories change?",
+          "answer": "Yes. Use the Webhook tools (create_webhook, list_webhooks, delete_webhook, webhook_deliveries) in MCP or the REST API at /api/webhooks. Subscribe to events like memory.created, memory.updated, memory.deleted and receive HTTPS POST notifications. This enables real-time sync between Seizn and your custom integrations."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "How does auto context loading work with projects?",
+          "answer": "When you call session_init with a cwd (current working directory), Seizn auto-detects your project from package.json, pyproject.toml, or Cargo.toml. It then loads project-specific memories and instructions automatically. This means your AI assistant always has the right context for the project you're working on — no manual configuration needed."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "How do I set up Seizn MCP in my editor?",
+          "answer": "For Claude Code: add to ~/.claude/settings.json under mcpServers with command 'npx' and args ['-y', 'seizn-mcp@latest']. For Cursor: go to Settings > MCP Servers and add the same config. For Windsurf: Settings > MCP. For Cline: MCP settings. Set SEIZN_API_KEY in the env block, or use auth_login for browser-based OAuth. Full setup guides are available at seizn.com/docs/integrations."
         }
       ]
     },
@@ -2420,6 +2456,11 @@
       "title": "Integrations",
       "subtitle": "Connect Seizn with your favorite AI frameworks and observability tools.",
       "cards": {
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
+        },
         "langchain": {
           "badge": "Official",
           "title": "LangChain",

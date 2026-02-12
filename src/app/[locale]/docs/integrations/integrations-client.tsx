@@ -28,6 +28,15 @@ function getNestedValue(obj: unknown, path: string): string | undefined {
 
 const integrations = [
   {
+    id: 'mcp-server',
+    icon: '🔌',
+    href: null,
+    badgeKey: 'docs.integrationsPage.cards.mcpServer.badge',
+    titleKey: 'docs.integrationsPage.cards.mcpServer.title',
+    descKey: 'docs.integrationsPage.cards.mcpServer.description',
+    tags: ['Claude Code', 'Cursor', 'Windsurf', 'Copilot', 'Cline', 'Aider', 'Codex'],
+  },
+  {
     id: 'langchain',
     icon: '🦜',
     href: '/docs/integrations/langchain',
@@ -109,12 +118,8 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
 
         {/* Integration Cards */}
         <div className="grid gap-6">
-          {integrations.map((integration) => (
-            <Link
-              key={integration.id}
-              href={`/${locale}${integration.href}`}
-              className="group block bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
-            >
+          {integrations.map((integration) => {
+            const cardContent = (
               <div className="flex items-start gap-4">
                 <div className="text-4xl">{integration.icon}</div>
                 <div className="flex-1 min-w-0">
@@ -139,18 +144,47 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
                       </span>
                     ))}
                   </div>
+                  {integration.id === 'mcp-server' && (
+                    <div className="mt-4 p-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                      <code className="text-xs text-emerald-600 dark:text-emerald-400 font-mono">npx seizn-mcp@latest</code>
+                      <span className="text-xs text-zinc-500 ml-2">— works in 30 seconds</span>
+                    </div>
+                  )}
                 </div>
-                <svg
-                  className="w-5 h-5 text-zinc-400 group-hover:text-emerald-500 transition-colors flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                {integration.href && (
+                  <svg
+                    className="w-5 h-5 text-zinc-400 group-hover:text-emerald-500 transition-colors flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                )}
               </div>
-            </Link>
-          ))}
+            );
+
+            if (integration.href) {
+              return (
+                <Link
+                  key={integration.id}
+                  href={`/${locale}${integration.href}`}
+                  className="group block bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
+                >
+                  {cardContent}
+                </Link>
+              );
+            }
+
+            return (
+              <div
+                key={integration.id}
+                className="group block bg-zinc-50 dark:bg-zinc-900 border border-emerald-500/50 dark:border-emerald-500/30 rounded-xl p-6"
+              >
+                {cardContent}
+              </div>
+            );
+          })}
         </div>
 
         {/* Coming Soon Section */}

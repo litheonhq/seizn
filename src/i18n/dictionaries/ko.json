@@ -1814,7 +1814,8 @@
         "extraction": "추출",
         "operations": "운영",
         "securityCompliance": "보안 및 규정 준수",
-        "technology": "기술"
+        "technology": "기술",
+        "mcpDevTools": "MCP & 개발 도구"
       },
       "items": [
         {
@@ -2006,6 +2007,41 @@
           "category": "operations",
           "question": "Context API란 무엇이며 어떻게 사용하나요?",
           "answer": "Context API(GET /api/context)는 LLM 프롬프트에 바로 주입할 수 있도록 미리 형식화된 문자열을 반환합니다. 사용자 프로필, 최근 메모리, 관련 팩트, 그래프 컨텍스트를 결합합니다. 컨텍스트 예산에 따라 format=brief(~500 토큰), detailed(~1500 토큰), extended(~3000 토큰)를 사용하세요."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "Seizn MCP 서버란 무엇이며 어떤 에디터를 지원하나요?",
+          "answer": "Seizn MCP 서버(seizn-mcp)는 AI 코딩 어시스턴트가 Seizn 메모리에 직접 접근할 수 있게 해주는 Model Context Protocol 서버입니다. Claude Code, Cursor, Windsurf, Cline 및 MCP 호환 클라이언트를 네이티브로 지원합니다. MCP를 지원하지 않는 에디터(GitHub Copilot, Aider, OpenAI Codex)에는 메모리에서 CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules, .github/copilot-instructions.md, .clinerules, CONVENTIONS.md를 생성하는 설정 파일 동기화를 제공합니다."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "멀티 에디터 설정 동기화는 어떻게 작동하나요?",
+          "answer": "Seizn은 메모리를 에디터별 설정 파일로 내보낼 수 있습니다. sync_config_files MCP 도구 또는 POST /api/config-sync API를 사용하세요. 지원 형식: CLAUDE.md(Claude Code), AGENTS.md(OpenAI Codex), .cursor/rules(Cursor), .cursorrules(Cursor 레거시), .windsurfrules(Windsurf), .github/copilot-instructions.md(GitHub Copilot), .clinerules(Cline), CONVENTIONS.md(Aider). Push는 메모리를 파일로, Pull은 파일을 Seizn으로 가져옵니다. AI 선호 설정이 모든 에디터에서 동기화됩니다."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "API 키 복사 없이 MCP 서버를 인증하려면?",
+          "answer": "Seizn은 브라우저 기반 인증을 위한 OAuth Device Flow(RFC 8628)를 지원합니다. auth_login MCP 도구를 실행하면 'ABCD-1234' 같은 사람이 읽을 수 있는 코드가 생성되고, 브라우저에서 seizn.com/auth/device를 열어 접근을 승인합니다. 토큰은 ~/.seizn/credentials.json에 자동 저장됩니다. 터미널 간 API 키 복사가 필요 없습니다."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "어떤 MCP 리소스를 사용할 수 있나요?",
+          "answer": "Seizn MCP 서버는 AI 어시스턴트가 접근할 수 있는 읽기 전용 리소스를 제공합니다: seizn://memories/recent(최근 10개 메모리), seizn://profile(사용자 프로필), seizn://graph/summary(지식 그래프 통계), seizn://memories/project/{name}(프로젝트별 메모리), seizn://context/{format}(brief/detailed/extended 형식의 사전 포맷된 컨텍스트), seizn://docs/setup/{editor}(에디터별 설정 가이드)."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "메모리 변경 시 알림을 받을 수 있나요?",
+          "answer": "네. MCP의 Webhook 도구(create_webhook, list_webhooks, delete_webhook, webhook_deliveries) 또는 /api/webhooks REST API를 사용하세요. memory.created, memory.updated, memory.deleted 같은 이벤트를 구독하고 HTTPS POST 알림을 받을 수 있습니다. Seizn과 커스텀 통합 간 실시간 동기화가 가능합니다."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "프로젝트 자동 컨텍스트 로딩은 어떻게 작동하나요?",
+          "answer": "session_init에 cwd(현재 작업 디렉토리)를 전달하면 Seizn이 package.json, pyproject.toml, Cargo.toml에서 프로젝트를 자동 감지합니다. 그런 다음 프로젝트별 메모리와 지시사항을 자동으로 로드합니다. AI 어시스턴트가 항상 작업 중인 프로젝트에 맞는 컨텍스트를 갖게 됩니다 — 수동 설정이 필요 없습니다."
+        },
+        {
+          "category": "mcpDevTools",
+          "question": "에디터에서 Seizn MCP를 설정하려면?",
+          "answer": "Claude Code: ~/.claude/settings.json의 mcpServers에 command 'npx', args ['-y', 'seizn-mcp@latest']를 추가하세요. Cursor: Settings > MCP Servers에서 같은 설정을 추가하세요. Windsurf: Settings > MCP. Cline: MCP 설정. env 블록에 SEIZN_API_KEY를 설정하거나 auth_login으로 브라우저 기반 OAuth를 사용하세요. 전체 설정 가이드는 seizn.com/docs/integrations에서 확인하세요."
         }
       ]
     },
@@ -2419,6 +2455,11 @@
       "title": "연동 가이드",
       "subtitle": "LangChain, LlamaIndex, OpenTelemetry와 같은 인기 프레임워크에 Seizn을 연결하세요.",
       "cards": {
+        "mcpServer": {
+          "badge": "신규",
+          "title": "MCP 서버 (seizn-mcp)",
+          "description": "AI 코딩 어시스턴트를 위한 범용 MCP 서버. Claude Code, Cursor, Windsurf, Cline 네이티브 지원. GitHub Copilot, Aider, OpenAI Codex 설정 파일 동기화. OAuth 디바이스 플로우, 자동 프로젝트 감지, 웹훅, MCP 리소스 포함."
+        },
         "langchain": {
           "title": "LangChain 어댑터",
           "description": "LangChain RAG 파이프라인을 위한 SeizRetriever",

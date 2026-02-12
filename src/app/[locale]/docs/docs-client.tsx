@@ -103,6 +103,11 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             <a href="#sdks" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.sdks")}</a>
             <Link href={`/${locale}/docs/integrations`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.integrations")}</Link>
             <Link href={`/${locale}/docs/faq`} className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t("docs.sidebar.faq")}</Link>
+
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 mt-6">{"MCP & Dev Tools"}</p>
+            <a href="#mcp-server" className="block py-1.5 text-sm text-emerald-600 dark:text-emerald-400 font-medium hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors">{"MCP Server"}</a>
+            <a href="#config-sync" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{"Config Sync"}</a>
+            <a href="#oauth-device-flow" className="block py-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{"OAuth Device Flow"}</a>
           </div>
         </nav>
 
@@ -504,6 +509,118 @@ const results = await client.search('preferences');
 // Extract from conversation
 await client.extract({ conversation: '...' });`}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* MCP Server */}
+        <section id="mcp-server" className="mb-16">
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{"MCP Server — Every Editor, One Memory"}</h2>
+          <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30 rounded-xl p-6 mb-6">
+            <p className="text-zinc-700 dark:text-zinc-300 mb-4">
+              {"The Seizn MCP Server ("}
+              <code className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded text-emerald-700 dark:text-emerald-400">{"seizn-mcp"}</code>
+              {") bridges your Seizn memories to AI coding assistants via the Model Context Protocol. 40+ tools, MCP Resources, webhooks, OAuth device flow, and multi-editor config sync — all in one package."}
+            </p>
+            <CodeBlock
+              language="bash"
+              code={`# Install globally or use npx
+npx seizn-mcp@latest
+
+# Or add to Claude Code settings (~/.claude/settings.json)
+{
+  "mcpServers": {
+    "seizn": {
+      "command": "npx",
+      "args": ["-y", "seizn-mcp@latest"],
+      "env": { "SEIZN_API_KEY": "your-api-key" }
+    }
+  }
+}`}
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-3">{"Supported Editors"}</h3>
+              <ul className="space-y-2 text-zinc-600 dark:text-zinc-400">
+                <li className="flex items-center gap-2"><span className="text-emerald-500">{">"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"Claude Code"}</strong> {"— native MCP"}</li>
+                <li className="flex items-center gap-2"><span className="text-emerald-500">{">"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"Cursor"}</strong> {"— native MCP"}</li>
+                <li className="flex items-center gap-2"><span className="text-emerald-500">{">"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"Windsurf"}</strong> {"— native MCP"}</li>
+                <li className="flex items-center gap-2"><span className="text-emerald-500">{">"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"Cline"}</strong> {"— native MCP"}</li>
+                <li className="flex items-center gap-2"><span className="text-blue-500">{"~"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"GitHub Copilot"}</strong> {"— via config sync"}</li>
+                <li className="flex items-center gap-2"><span className="text-blue-500">{"~"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"Aider"}</strong> {"— via config sync"}</li>
+                <li className="flex items-center gap-2"><span className="text-blue-500">{"~"}</span> <strong className="text-zinc-700 dark:text-zinc-300">{"OpenAI Codex"}</strong> {"— via config sync"}</li>
+              </ul>
+            </div>
+            <div className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-3">{"Key Features"}</h3>
+              <ul className="space-y-2 text-zinc-600 dark:text-zinc-400">
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-1">{">"}</span> <span><strong className="text-zinc-700 dark:text-zinc-300">{"40+ MCP Tools"}</strong> {"— memories, knowledge graph, profile, webhooks, config sync"}</span></li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-1">{">"}</span> <span><strong className="text-zinc-700 dark:text-zinc-300">{"MCP Resources"}</strong> {"— seizn://memories/recent, seizn://profile, seizn://context/{format}"}</span></li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-1">{">"}</span> <span><strong className="text-zinc-700 dark:text-zinc-300">{"OAuth Device Flow"}</strong> {"— browser auth, no API key copy"}</span></li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-1">{">"}</span> <span><strong className="text-zinc-700 dark:text-zinc-300">{"Auto Context"}</strong> {"— detects project from package.json, pyproject.toml, Cargo.toml"}</span></li>
+                <li className="flex items-start gap-2"><span className="text-emerald-500 mt-1">{">"}</span> <span><strong className="text-zinc-700 dark:text-zinc-300">{"UTF-8 Support"}</strong> {"— Korean, Japanese, Chinese, Arabic and 100+ languages"}</span></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Config Sync */}
+        <section id="config-sync" className="mb-16">
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{"Multi-Editor Config Sync"}</h2>
+          <div className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 mb-6">
+            <p className="text-zinc-700 dark:text-zinc-300 mb-4">
+              {"Seizn exports your memories as editor-specific configuration files. Your AI preferences follow you across every tool."}
+            </p>
+            <div className="bg-zinc-200 dark:bg-zinc-800 rounded-xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-zinc-300 dark:bg-zinc-700">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{"File"}</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{"AI Tool"}</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-zinc-700 dark:text-zinc-300">{"Method"}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-300 dark:divide-zinc-700">
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{"CLAUDE.md"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"Claude Code"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"MCP + File"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{"AGENTS.md"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"OpenAI Codex"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"File Sync"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{".cursor/rules"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"Cursor"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"MCP + File"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{".windsurfrules"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"Windsurf"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"MCP + File"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{".github/copilot-instructions.md"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"GitHub Copilot"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"File Sync"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{".clinerules"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"Cline"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"MCP + File"}</td></tr>
+                  <tr><td className="px-4 py-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">{"CONVENTIONS.md"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"Aider"}</td><td className="px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400">{"File Sync"}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* OAuth Device Flow */}
+        <section id="oauth-device-flow" className="mb-16">
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{"OAuth Device Flow"}</h2>
+          <div className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
+            <p className="text-zinc-700 dark:text-zinc-300 mb-4">
+              {"No more copying API keys. The MCP server supports RFC 8628 Device Authorization Grant for browser-based authentication."}
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-zinc-200 dark:bg-zinc-800 rounded-lg p-4 text-center">
+                <div className="text-2xl mb-2">{"1"}</div>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{"Run "}<code className="text-emerald-600 dark:text-emerald-400">{"auth_login"}</code>{" tool"}</p>
+              </div>
+              <div className="bg-zinc-200 dark:bg-zinc-800 rounded-lg p-4 text-center">
+                <div className="text-2xl mb-2">{"2"}</div>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{"Enter code "}<code className="text-emerald-600 dark:text-emerald-400">{"ABCD-1234"}</code>{" in browser"}</p>
+              </div>
+              <div className="bg-zinc-200 dark:bg-zinc-800 rounded-lg p-4 text-center">
+                <div className="text-2xl mb-2">{"3"}</div>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{"Token saved to "}<code className="text-emerald-600 dark:text-emerald-400">{"~/.seizn/"}</code></p>
+              </div>
+            </div>
+            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+              <p className="text-emerald-700 dark:text-emerald-400 text-sm">
+                <strong>{"Zero-copy auth:"}</strong>{" The device flow generates a human-readable code, opens your browser, and saves credentials automatically. Works with any terminal or SSH session."}
+              </p>
             </div>
           </div>
         </section>
