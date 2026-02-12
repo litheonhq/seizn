@@ -44,7 +44,16 @@ export async function POST(request: NextRequest) {
     const { userId, keyId } = authResult;
 
     step = 'parse_body';
-    const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
+    let body: AddMemoryRequest;
+    try {
+      body = await safeJsonParse<AddMemoryRequest>(request);
+    } catch (parseErr) {
+      return ValidationErrors.invalidBody(
+        parseErr instanceof SyntaxError
+          ? 'Invalid JSON: check for unescaped backslashes or special characters'
+          : 'Could not parse request body'
+      );
+    }
 
     step = 'validate';
     if (!body.content || body.content.trim().length === 0) {
@@ -54,6 +63,13 @@ export async function POST(request: NextRequest) {
       );
       return ValidationErrors.missingField('content');
     }
+    if (body.content.length > 10000) {
+      return ValidationErrors.invalidField('content', 'Content too long (max 10,000 chars)');
+    }
+
+    // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
+    // eslint-disable-next-line no-control-regex
+    const sanitizedContent = body.content.replace(/\x00/g, '');
 
     step = 'supabase_client';
     const supabase = createServerClient();
@@ -61,7 +77,7 @@ export async function POST(request: NextRequest) {
     step = 'embedding';
     let embedding: number[];
     try {
-      embedding = await createEmbedding(body.content);
+      embedding = await createEmbedding(sanitizedContent);
     } catch (embErr) {
       console.error('[memory:POST] Embedding failed:', embErr instanceof Error ? embErr.message : embErr);
       return ServerErrors.internal('embedding_failed');
@@ -72,7 +88,7 @@ export async function POST(request: NextRequest) {
       .from('memories')
       .insert({
         user_id: userId,
-        content: body.content,
+        content: sanitizedContent,
         embedding: embedding,
         memory_type: body.memory_type || 'fact',
         tags: body.tags || [],

@@ -75,15 +75,22 @@ const VARIANT_TO_PLAN: Record<number, string> = {
   // Enterprise - handled separately
 };
 
-// Verify webhook signature
+// Verify webhook signature (safe against length-mismatch crash)
 function verifySignature(
   payload: string,
   signature: string,
   secret: string
 ): boolean {
-  const hmac = crypto.createHmac("sha256", secret);
-  const digest = hmac.update(payload).digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest));
+  try {
+    const hmac = crypto.createHmac("sha256", secret);
+    const digest = hmac.update(payload).digest("hex");
+    const sigBuf = Buffer.from(signature);
+    const digestBuf = Buffer.from(digest);
+    if (sigBuf.length !== digestBuf.length) return false;
+    return crypto.timingSafeEqual(sigBuf, digestBuf);
+  } catch {
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {

@@ -29,10 +29,12 @@ export function verifyCsrf(request: NextRequest): NextResponse | null {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
 
-  // If there's a Bearer / API-key header, skip CSRF (not cookie-based)
+  // Skip CSRF only for properly formatted Bearer / API-key headers.
+  // Require valid prefix to prevent bypass via empty or garbage auth headers.
   const auth = request.headers.get('authorization');
   const apiKey = request.headers.get('x-api-key');
-  if (auth || apiKey) return null;
+  if (auth?.startsWith('Bearer ') && auth.length > 15) return null;
+  if (apiKey && apiKey.startsWith('szn_') && apiKey.length > 10) return null;
 
   // Check Origin header first (most reliable)
   if (origin) {
