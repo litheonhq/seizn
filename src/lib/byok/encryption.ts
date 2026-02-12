@@ -15,8 +15,11 @@ function getEncryptionKey(): Buffer {
     throw new Error("BYOK_ENCRYPTION_SECRET or NEXTAUTH_SECRET must be set");
   }
 
-  // Use a fixed salt for consistent key derivation
-  const salt = process.env.BYOK_ENCRYPTION_SALT || "seizn-byok-salt-v1";
+  const salt = process.env.BYOK_ENCRYPTION_SALT || process.env.NEXTAUTH_SECRET;
+  if (!salt) {
+    throw new Error("BYOK_ENCRYPTION_SALT or NEXTAUTH_SECRET must be set");
+  }
+
   return scryptSync(secret, salt, KEY_LENGTH);
 }
 

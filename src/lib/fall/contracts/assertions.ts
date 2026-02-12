@@ -606,50 +606,19 @@ export const arrayLength: AssertionFn = (data, assertion) => {
  */
 export const custom: AssertionFn = (data, assertion) => {
   const path = assertion.field || '';
-  const fn = assertion.params?.fn as string | undefined;
-
-  if (!fn) {
-    return {
-      assertionId: assertion.id,
-      assertionType: 'custom',
-      field: path,
-      status: 'fail',
-      message: 'Custom function not provided in assertion params',
-      expected: 'fn parameter',
-      actual: 'undefined',
-    };
-  }
-
   const { found, value } = getValueAtPath(data, path);
 
-  try {
-    // Create a safe function from the string
-    // Note: In production, consider using a sandboxed evaluator
-    const customFn = new Function('value', 'data', fn) as (value: unknown, data: unknown) => boolean;
-    const result = customFn(found ? value : undefined, data);
-
-    return {
-      assertionId: assertion.id,
-      assertionType: 'custom',
-      field: path,
-      status: result ? 'pass' : assertion.severity === 'warning' ? 'warning' : 'fail',
-      message: result
-        ? assertion.message || `Custom assertion passed`
-        : assertion.message || `Custom assertion failed`,
-      expected: 'custom condition',
-      actual: value,
-    };
-  } catch (err) {
-    return {
-      assertionId: assertion.id,
-      assertionType: 'custom',
-      field: path,
-      status: 'fail',
-      message: `Custom assertion error: ${err instanceof Error ? err.message : 'Unknown error'}`,
-      expected: 'valid custom function',
-      actual: fn,
-    };
-  }
+  return {
+    assertionId: assertion.id,
+    assertionType: 'custom',
+    field: path,
+    status: assertion.severity === 'warning' ? 'warning' : 'fail',
+    message:
+      assertion.message ||
+      'Custom assertions are disabled for security. Use built-in assertion types.',
+    expected: 'built-in assertion type',
+    actual: found ? value : 'undefined',
+  };
 };
 
 // ============================================

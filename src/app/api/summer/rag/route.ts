@@ -3,6 +3,7 @@ import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from 
 import { ragQuery, ragQueryStream } from '@/lib/summer/rag-pipeline';
 import type { RAGOptions, RAGStreamChunk } from '@/lib/summer/rag-pipeline';
 import { hasFeature } from '@/lib/plan-limits';
+import { buildCorsPreflightHeaders } from '@/lib/security/cors';
 
 // ===========================================
 // Request/Response Types
@@ -287,14 +288,27 @@ export async function POST(request: NextRequest) {
 // OPTIONS (CORS preflight)
 // ===========================================
 
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const headers = buildCorsPreflightHeaders(
+    request,
+    'POST, OPTIONS',
+    'Content-Type, x-api-key, Authorization'
+  );
+
+  if (!headers) {
+    return NextResponse.json(
+      {
+        error: {
+          code: 'CORS_ORIGIN_NOT_ALLOWED',
+          message: 'Origin is not allowed',
+        },
+      },
+      { status: 403 }
+    );
+  }
+
   return new NextResponse(null, {
     status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, x-api-key, Authorization',
-      'Access-Control-Max-Age': '86400',
-    },
+    headers,
   });
 }

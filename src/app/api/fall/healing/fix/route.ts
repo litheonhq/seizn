@@ -18,19 +18,13 @@ import type {
  *
  * Execute auto-fix on data that failed validation
  *
- * Body (option 1 - provide healing plan):
- * {
- *   "plan": { ... HealingPlan object ... },
- *   "data": { ... original data ... }
- * }
- *
- * Body (option 2 - auto-fix with contract):
+ * Body (option 1 - auto-fix with contract):
  * {
  *   "contract_id": "uuid",
  *   "data": { ... data to validate and fix ... }
  * }
  *
- * Body (option 3 - inline contract):
+ * Body (option 2 - inline contract):
  * {
  *   "contract": { ... contract definition ... },
  *   "data": { ... data to validate and fix ... }
@@ -78,13 +72,15 @@ export async function POST(request: NextRequest) {
     let validationResult: ValidationResult | undefined;
     let contractId: string | null = null;
 
-    // Option 1: Healing plan provided
+    // For security reasons, client-supplied execution plans are not accepted.
     if (body.plan) {
-      plan = body.plan;
-      validationResult = plan.validationResult;
+      return NextResponse.json(
+        { error: 'plan input is not allowed. Provide contract_id or contract.' },
+        { status: 400 }
+      );
     }
-    // Option 2: Contract ID provided
-    else if (body.contract_id) {
+    // Option 1: Contract ID provided
+    if (body.contract_id) {
       const { data: contractRow, error } = await supabase
         .from('fall_contracts')
         .select('*')
@@ -118,7 +114,7 @@ export async function POST(request: NextRequest) {
       // Generate healing plan
       plan = analyzeFailures(validationResult, rules, config);
     }
-    // Option 3: Inline contract
+    // Option 2: Inline contract
     else if (body.contract) {
       const now = new Date().toISOString();
       const contract: Contract = {
@@ -155,7 +151,7 @@ export async function POST(request: NextRequest) {
       plan = analyzeFailures(validationResult, rules, config);
     } else {
       return NextResponse.json(
-        { error: 'Must provide plan, contract_id, or contract' },
+        { error: 'Must provide contract_id or contract' },
         { status: 400 }
       );
     }

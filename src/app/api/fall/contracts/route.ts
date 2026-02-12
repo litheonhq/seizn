@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
  *   "version"?: "string",
  *   "assertions": [
  *     {
- *       "type": "hasField" | "matchesSchema" | "matchesRegex" | "inRange" | "oneOf" | "minLength" | "maxLength" | "isType" | "isNonEmpty" | "isArray" | "arrayLength" | "custom",
+ *       "type": "hasField" | "matchesSchema" | "matchesRegex" | "inRange" | "oneOf" | "minLength" | "maxLength" | "isType" | "isNonEmpty" | "isArray" | "arrayLength",
  *       "field"?: "string",
  *       "params"?: { ... },
  *       "message"?: "string",
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     const validTypes = [
       'hasField', 'matchesSchema', 'matchesRegex', 'inRange', 'oneOf',
       'minLength', 'maxLength', 'isType', 'isNonEmpty', 'isArray',
-      'arrayLength', 'custom',
+      'arrayLength',
     ];
 
     for (const assertion of assertions) {

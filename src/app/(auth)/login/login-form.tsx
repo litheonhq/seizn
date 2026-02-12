@@ -5,11 +5,12 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
+import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
 
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = sanitizeRelativeRedirect(searchParams.get("callbackUrl"));
   const error = searchParams.get("error");
 
   const [email, setEmail] = useState("");
@@ -35,9 +36,6 @@ export default function LoginForm() {
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Also reset on mount (in case user navigated back)
-    setIsLoading(false);
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);

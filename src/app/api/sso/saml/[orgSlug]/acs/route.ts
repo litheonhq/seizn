@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getSSOConnections } from '@/lib/sso';
 import { parseSAMLResponse, extractUserAttributes } from '@/lib/sso/saml-provider';
+import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 
 interface RouteParams {
   params: Promise<{ orgSlug: string }>;
@@ -27,6 +28,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const formData = await request.formData();
     const samlResponse = formData.get('SAMLResponse') as string | null;
     const relayState = formData.get('RelayState') as string | null;
+    const safeRelayState = sanitizeSameOriginRedirect(
+      relayState,
+      request.nextUrl.origin
+    );
 
     if (!samlResponse) {
       return NextResponse.redirect(
@@ -152,7 +157,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       type: 'magiclink',
       email: userAttrs.email,
       options: {
-        redirectTo: relayState || '/dashboard',
+        redirectTo: safeRelayState,
       },
     });
 

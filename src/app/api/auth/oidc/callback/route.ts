@@ -13,7 +13,7 @@ import {
 } from '@/lib/enterprise-auth/oidc-provider';
 import { logAuditEvent } from '@/lib/enterprise-auth/audit';
 import type { OIDCConfig } from '@/lib/enterprise-auth/types';
-import { signIn } from '@/lib/auth';
+import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
 
@@ -25,7 +25,10 @@ export async function GET(request: NextRequest) {
   const errorDescription = searchParams.get('error_description');
 
   // Get base URL for redirects
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || '';
+  const baseUrl =
+    process.env.NEXTAUTH_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    request.nextUrl.origin;
 
   // Handle IdP errors
   if (error) {
@@ -194,11 +197,14 @@ export async function GET(request: NextRequest) {
 
     // Get redirect URL from cookie
     const cookieStore = await cookies();
-    const redirectUrl = cookieStore.get(REDIRECT_COOKIE_NAME)?.value || '/dashboard';
+    const redirectPath = sanitizeSameOriginRedirect(
+      cookieStore.get(REDIRECT_COOKIE_NAME)?.value,
+      baseUrl
+    );
     cookieStore.delete(REDIRECT_COOKIE_NAME);
 
     // Set session cookie and redirect
-    const response = NextResponse.redirect(new URL(redirectUrl, baseUrl));
+    const response = NextResponse.redirect(new URL(redirectPath, baseUrl));
 
     // Set the session token cookie
     const useSecureCookies = process.env.NODE_ENV === 'production';
