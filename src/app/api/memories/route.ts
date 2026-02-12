@@ -32,16 +32,21 @@ const MEMORY_SELECT_FIELDS =
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
+  let step = 'init';
 
   try {
+    step = 'auth';
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
     }
 
     const { userId, keyId } = authResult;
+
+    step = 'parse_body';
     const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
 
+    step = 'validate';
     if (!body.content || body.content.trim().length === 0) {
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
@@ -50,20 +55,19 @@ export async function POST(request: NextRequest) {
       return ValidationErrors.missingField('content');
     }
 
+    step = 'supabase_client';
     const supabase = createServerClient();
 
+    step = 'embedding';
     let embedding: number[];
     try {
       embedding = await createEmbedding(body.content);
     } catch (embErr) {
-      console.error('Embedding error:', embErr, '| content length:', body.content.length, '| has backslash:', body.content.includes('\\'));
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-        500
-      );
+      console.error('[memory:POST] Embedding failed:', embErr instanceof Error ? embErr.message : embErr);
       return ServerErrors.internal('embedding_failed');
     }
 
+    step = 'insert';
     const { data: memory, error: insertError } = await supabase
       .from('memories')
       .insert({
@@ -84,14 +88,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error('Insert error:', insertError, '| has backslash:', body.content.includes('\\'));
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-        500
-      );
+      console.error('[memory:POST] Insert failed:', insertError.message || insertError);
       return ServerErrors.database('insert_memory');
     }
 
+    step = 'post_insert';
     // Invalidate cache for this namespace
     incrementMemoryVersion(userId, body.namespace || 'default').catch(console.error);
 
@@ -106,8 +107,9 @@ export async function POST(request: NextRequest) {
       memory: memory,
     });
   } catch (error) {
-    console.error('Add memory error:', error);
-    return ServerErrors.internal('add_memory');
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error(`[memory:POST] Uncaught at step=${step}:`, msg);
+    return ServerErrors.internal(`add_memory:${step}`);
   }
 }
 
