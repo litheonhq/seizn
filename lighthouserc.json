@@ -1,7 +1,10 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://localhost:3000/en"],
+      "url": [
+        "http://localhost:3000/en",
+        "http://localhost:3000/ko"
+      ],
       "numberOfRuns": 3,
       "startServerCommand": "npm run start",
       "startServerReadyPattern": "ready on",

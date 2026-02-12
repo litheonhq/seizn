@@ -193,20 +193,68 @@ const BADGE_COLORS: Record<string, string> = {
   amber: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
 };
 
-function FeatureShowcase() {
+const SECTION_COPY = {
+  en: {
+    platformCapabilities: "Platform Capabilities",
+    platformTitle: "Everything agents need to run in production",
+    platformSubtitle: "One platform for memory, governance, observability, cost control, and compliance - so your team ships faster with fewer moving parts.",
+    mcpTools: "MCP & Developer Tools",
+    mcpTitle: "Your AI memories, in every editor",
+    mcpSubtitle: "One MCP server bridges Seizn to 8 AI coding assistants. Auto-sync preferences, instructions, and context - no manual config files.",
+    setupMcp: "Set up MCP Server",
+    mcpHint: "npx seizn-mcp@latest - works in 30 seconds",
+    trustTitle: "Enterprise-grade trust, built in",
+    trustSubtitle: "Every layer designed for regulated industries and security-conscious teams.",
+    pricingTitle: "From first API call to enterprise rollout",
+    pricingSubtitle: "Free tier to start building. Predictable per-query pricing as you scale. Custom plans for teams with compliance and SLA requirements.",
+    footerTagline: "Built for agents, governed by design.",
+    productLabel: "Product",
+    resourcesLabel: "Resources",
+    legalLabel: "Legal",
+    mcpServerLabel: "MCP Server",
+    githubLabel: "GitHub",
+  },
+  ko: {
+    platformCapabilities: "플랫폼 기능",
+    platformTitle: "에이전트 운영에 필요한 모든 기능",
+    platformSubtitle: "메모리, 거버넌스, 관측, 비용 제어, 컴플라이언스를 하나의 플랫폼에서 제공합니다.",
+    mcpTools: "MCP 및 개발자 도구",
+    mcpTitle: "어떤 에디터에서든 같은 AI 메모리",
+    mcpSubtitle: "하나의 MCP 서버로 8개 AI 코딩 도구에 Seizn 컨텍스트를 연결합니다. 수동 설정 파일 없이 동작합니다.",
+    setupMcp: "MCP 서버 설정하기",
+    mcpHint: "npx seizn-mcp@latest - 30초 내 설정",
+    trustTitle: "엔터프라이즈 신뢰 기능 내장",
+    trustSubtitle: "규제가 필요한 환경에서도 바로 사용할 수 있도록 설계했습니다.",
+    pricingTitle: "첫 API 호출부터 엔터프라이즈 배포까지",
+    pricingSubtitle: "무료로 시작하고 규모에 맞춰 예측 가능한 과금으로 확장하세요.",
+    footerTagline: "에이전트를 위한 설계, 거버넌스를 기본으로.",
+    productLabel: "제품",
+    resourcesLabel: "리소스",
+    legalLabel: "법적 고지",
+    mcpServerLabel: "MCP 서버",
+    githubLabel: "GitHub",
+  },
+} as const;
+
+function getSectionCopy(locale: Locale) {
+  return locale === "ko" ? SECTION_COPY.ko : SECTION_COPY.en;
+}
+
+function FeatureShowcase({ locale }: { locale: Locale }) {
+  const copy = getSectionCopy(locale);
   return (
     <section className="py-20 px-4 sm:px-6 bg-gray-50/80 dark:bg-gray-900/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
             <AutopilotIcon className="w-3.5 h-3.5" />
-            {"Platform Capabilities"}
+            {copy.platformCapabilities}
           </div>
           <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            {"Everything agents need to run in production"}
+            {copy.platformTitle}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            {"One platform for memory, governance, observability, cost control, and compliance\u2014so your team ships faster with fewer moving parts."}
+            {copy.platformSubtitle}
           </p>
         </div>
 
@@ -297,19 +345,20 @@ const MCP_FEATURES = [
 ] as const;
 
 function MCPDeveloperTools({ locale }: { locale: Locale }) {
+  const copy = getSectionCopy(locale);
   return (
     <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-gray-900/50 to-gray-950/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-xs font-medium text-emerald-700 dark:text-emerald-400 mb-4">
             <TerminalIcon className="w-3.5 h-3.5" />
-            {"MCP & Developer Tools"}
+            {copy.mcpTools}
           </div>
           <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            {"Your AI memories, in every editor"}
+            {copy.mcpTitle}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            {"One MCP server bridges Seizn to 8 AI coding assistants. Auto-sync preferences, instructions, and context — no manual config files."}
+            {copy.mcpSubtitle}
           </p>
         </div>
 
@@ -340,13 +389,13 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
             href={`/${locale}/docs/integrations`}
             className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-full transition-colors"
           >
-            {"Set up MCP Server"}
+            {copy.setupMcp}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Link>
           <p className="mt-3 text-sm text-gray-500 dark:text-gray-500">
-            {"npx seizn-mcp@latest — works in 30 seconds"}
+            {copy.mcpHint}
           </p>
         </div>
       </div>
@@ -378,16 +427,17 @@ const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
   amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600 dark:text-amber-400" },
 };
 
-function TrustAndCompliance() {
+function TrustAndCompliance({ locale }: { locale: Locale }) {
+  const copy = getSectionCopy(locale);
   return (
     <section className="py-16 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            {"Enterprise-grade trust, built in"}
+            {copy.trustTitle}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {"Every layer designed for regulated industries and security-conscious teams."}
+            {copy.trustSubtitle}
           </p>
         </div>
 
@@ -416,16 +466,17 @@ function TrustAndCompliance() {
 // =============================================================================
 
 function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
+  const copy = getSectionCopy(locale);
   return (
     <section className="py-20 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF] relative overflow-hidden">
       {/* Radial glow accent */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="max-w-4xl mx-auto text-center relative">
         <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
-          {"From first API call to enterprise rollout"}
+          {t.extremeHome?.pricingCta?.title || copy.pricingTitle}
         </h2>
         <p className="text-[#EAF0FF]/60 mb-10 max-w-lg mx-auto">
-          {"Free tier to start building. Predictable per-query pricing as you scale. Custom plans for teams with compliance and SLA requirements."}
+          {t.extremeHome?.pricingCta?.subtitle || copy.pricingSubtitle}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
@@ -451,6 +502,7 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
 // =============================================================================
 
 function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
+  const copy = getSectionCopy(locale);
   return (
     <footer className="pt-12 pb-8 px-4 sm:px-6">
       {/* Gradient divider */}
@@ -476,32 +528,32 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
               <span className="font-semibold text-gray-900 dark:text-gray-100">Seizn</span>
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-              {"Built for agents, governed by design."}
+              {copy.footerTagline}
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{"Product"}</h4>
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{copy.productLabel}</h4>
             <ul className="space-y-2.5">
               <li><Link href={`/${locale}/docs`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link></li>
               <li><Link href={`/${locale}/pricing`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.pricing || "Pricing"}</Link></li>
               <li><Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link></li>
-              <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{"MCP Server"}</Link></li>
+              <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{copy.mcpServerLabel}</Link></li>
               <li><Link href="/status" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{"Resources"}</h4>
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{copy.resourcesLabel}</h4>
             <ul className="space-y-2.5">
               <li><Link href={`/${locale}/help`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link></li>
               <li><Link href={`/${locale}/enterprise`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.enterprise || "Enterprise"}</Link></li>
               <li>
                 <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors inline-flex items-center gap-1.5">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                  GitHub
+                  {copy.githubLabel}
                 </a>
               </li>
             </ul>
@@ -509,7 +561,7 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
 
           {/* Legal */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{"Legal"}</h4>
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">{copy.legalLabel}</h4>
             <ul className="space-y-2.5">
               <li><Link href="/terms" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.terms || "Terms"}</Link></li>
               <li><Link href="/privacy" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.privacy || "Privacy"}</Link></li>
@@ -542,9 +594,9 @@ export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <ExtremeHomepageClient dict={dict} locale={locale} />
-      <FeatureShowcase />
+      <FeatureShowcase locale={locale} />
       <MCPDeveloperTools locale={locale} />
-      <TrustAndCompliance />
+      <TrustAndCompliance locale={locale} />
       <PricingCTA locale={locale} t={dict} />
       <Footer locale={locale} t={dict} />
     </div>
