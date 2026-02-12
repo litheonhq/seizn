@@ -24,6 +24,21 @@ export function generateSignature(payload: string, secret: string): string {
   return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
 
+/** Validate webhook URL — block private/internal IPs (SSRF prevention) */
+export function isValidWebhookUrl(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+    if (!['http:', 'https:'].includes(url.protocol)) return false;
+    const host = url.hostname.toLowerCase();
+    if (['localhost', '127.0.0.1', '::1', '0.0.0.0', '169.254.169.254'].includes(host)) return false;
+    if (/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)) return false;
+    if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Deliver a single webhook
 export async function deliverWebhook(
   delivery: WebhookDelivery,
@@ -41,6 +56,11 @@ export async function deliverWebhook(
   // Add signature if secret is configured
   if (webhook.secret) {
     headers['X-Seizn-Signature'] = `sha256=${generateSignature(payloadString, webhook.secret)}`;
+  }
+
+  // SSRF check before delivery
+  if (!isValidWebhookUrl(webhook.url)) {
+    return { success: false, error: 'Webhook URL blocked by SSRF policy' };
   }
 
   try {

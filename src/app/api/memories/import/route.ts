@@ -92,6 +92,11 @@ export async function POST(request: NextRequest) {
         results.errors.push(`Memory ${i}: Content is required`);
         continue;
       }
+      if (memory.content.length > 10000) {
+        results.failed++;
+        results.errors.push(`Memory ${i}: Content too long (max 10,000 chars)`);
+        continue;
+      }
 
       // Skip duplicates
       if (skipDuplicates && existingContents.has(memory.content.toLowerCase().trim())) {
@@ -109,12 +114,14 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        // Create embedding
-        const embedding = await createEmbedding(memory.content);
+        // Sanitize null bytes and create embedding
+        // eslint-disable-next-line no-control-regex
+        const cleanContent = memory.content.replace(/\x00/g, '');
+        const embedding = await createEmbedding(cleanContent);
 
         memoriesToInsert.push({
           user_id: userId,
-          content: memory.content,
+          content: cleanContent,
           embedding,
           memory_type: memoryType,
           tags: memory.tags || [],

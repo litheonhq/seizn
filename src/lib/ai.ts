@@ -252,6 +252,20 @@ interface ImageExtractionOptions {
   existingMemories?: string[];
 }
 
+const MAX_IMAGE_BASE64_LENGTH = 7_000_000; // ~5MB after base64 encoding
+
+/** Block SSRF: reject private/internal IPs and non-HTTPS URLs */
+function validateImageUrl(urlString: string): void {
+  const url = new URL(urlString); // throws on invalid
+  if (url.protocol !== 'https:') throw new Error('Only HTTPS image URLs allowed');
+  const host = url.hostname.toLowerCase();
+  const blocked = ['localhost', '127.0.0.1', '::1', '0.0.0.0', '169.254.169.254'];
+  if (blocked.includes(host)) throw new Error('URL hostname not allowed');
+  if (/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)) {
+    throw new Error('Private IP addresses not allowed');
+  }
+}
+
 export async function extractMemoriesFromImage(
   imageData: string, // Base64 encoded image or URL
   mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
@@ -267,16 +281,19 @@ export async function extractMemoriesFromImage(
     ? 'claude-3-5-haiku-20241022'
     : 'claude-3-5-sonnet-20241022';
 
-  // Build content array with image
+  // Build content array with image (SSRF-safe)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const content: any[] = [
-    {
-      type: 'image',
-      source: imageData.startsWith('http')
-        ? { type: 'url', url: imageData }
-        : { type: 'base64', media_type: mediaType, data: imageData },
-    },
-  ];
+  let imageSource: any;
+  if (imageData.startsWith('http')) {
+    validateImageUrl(imageData);
+    imageSource = { type: 'url', url: imageData };
+  } else {
+    if (imageData.length > MAX_IMAGE_BASE64_LENGTH) {
+      throw new Error(`Image too large (max ~5MB). Got ${Math.round(imageData.length / 1_000_000)}MB`);
+    }
+    imageSource = { type: 'base64', media_type: mediaType, data: imageData };
+  }
+  const content: any[] = [{ type: 'image', source: imageSource }];
 
   // Add context if provided
   let textContent = 'Extract any important memories from this image.';
