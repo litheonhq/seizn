@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo, Suspense, memo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef, Suspense, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { analytics } from "@/lib/analytics";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { RequestBuilder, type RequestConfig, type RequestBuilderTranslations } from "./request-builder";
@@ -14,14 +15,9 @@ import { type CostBreakdown, type CostPanelTranslations } from "./cost-panel";
 import { type PlaygroundError, type ErrorDisplayTranslations } from "./error-display";
 import { PanelSkeleton, SnippetSkeleton } from "./loading-skeleton";
 import {
-  DocsIcon,
-  PricingIcon,
-  EnterpriseIcon,
   MenuIcon,
   CloseIcon,
   CheckIcon,
-  GitHubIcon,
-  StatusIcon,
 } from "./icons";
 
 // Dynamic imports for below-the-fold and heavy components (code-split for better LCP)
@@ -272,6 +268,8 @@ const Navigation = memo(function Navigation({
           className="md:hidden p-2 text-gray-600 dark:text-gray-400"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="extreme-home-mobile-menu"
         >
           {mobileMenuOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
         </button>
@@ -279,6 +277,7 @@ const Navigation = memo(function Navigation({
 
       {/* Mobile Menu - animated */}
       <div
+        id="extreme-home-mobile-menu"
         className={`md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         }`}
@@ -326,6 +325,18 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
   const [traceId, setTraceId] = useState<string | null>(null);
   const [shareToastVisible, setShareToastVisible] = useState(false);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
+  const autoRunAttemptedRef = useRef(false);
+  const liveDemoCtaLabel = "Open Live Playground";
+
+  const scrollToDemo = useCallback((source: "hero_cta" = "hero_cta") => {
+    analytics.featureUsed("extreme_home_scroll_to_demo", { source });
+    document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const handleModeChange = useCallback((nextMode: DemoMode) => {
+    setMode(nextMode);
+    analytics.featureUsed("extreme_home_demo_mode_changed", { mode: nextMode });
+  }, []);
 
   // Close mobile menu on resize - use passive listener
   useEffect(() => {
@@ -338,7 +349,8 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleRun = useCallback(async () => {
+  const handleRun = useCallback(async (source: "manual" | "auto" = "manual") => {
+    analytics.featureUsed("extreme_home_demo_run_started", { mode, source });
     setIsLoading(true);
     setHasRun(true);
     setError(null);
@@ -383,6 +395,12 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         queryUnits: 1 + (config.hybridSearch ? 0.5 : 0) + (config.rerank ? 1 : 0),
       };
       setCost(costData);
+      analytics.featureUsed("extreme_home_demo_completed", {
+        mode: "mock",
+        source,
+        result_count: Math.min(config.topK, MOCK_RESULTS.length),
+        latency_ms: Math.round(totalLatency),
+      });
 
       setIsLoading(false);
       setActiveTab("results");
@@ -391,6 +409,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
       // Real API mode
       if (!config.query.trim()) {
         setError({ message: "Please enter a query", details: "" });
+        analytics.errorOccurred("extreme_home_empty_query", "Attempted to run demo without query");
         setIsLoading(false);
         return;
       }
@@ -415,6 +434,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             message: "Rate limit exceeded. Please wait before trying again.",
             details: data.message || "",
           });
+          analytics.errorOccurred("extreme_home_rate_limit", data.message || "Rate limit exceeded");
           setRateLimitRetryAfter(data.retryAfter || 60);
           setIsLoading(false);
           return;
@@ -426,6 +446,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             message: data.message || "An error occurred",
             details: data.details || "",
           });
+          analytics.errorOccurred("extreme_home_api_error", data.message || "Demo API request failed");
           setIsLoading(false);
           return;
         }
@@ -437,11 +458,19 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         setTraceId(data.traceId || `tr_${Date.now().toString(36)}`);
         setActiveTab("results");
         setMobileConsoleTab("results");
+        analytics.featureUsed("extreme_home_demo_completed", {
+          mode: "real",
+          source,
+          result_count: Array.isArray(data.results) ? data.results.length : 0,
+          latency_ms: data.trace?.totalLatencyMs ? Math.round(data.trace.totalLatencyMs) : null,
+        });
       } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown network error";
         setError({
           message: "Network error. Please check your connection and try again.",
-          details: err instanceof Error ? err.message : "",
+          details: message,
         });
+        analytics.errorOccurred("extreme_home_network_error", message);
       } finally {
         setIsLoading(false);
       }
@@ -465,43 +494,67 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
     try {
       await navigator.clipboard.writeText(shareUrl);
       setShareToastVisible(true);
+      analytics.featureUsed("extreme_home_trace_shared", { trace_id: traceId });
       setTimeout(() => setShareToastVisible(false), 3000);
     } catch {
+      analytics.errorOccurred("extreme_home_trace_share_failed", "Failed to copy trace link to clipboard");
       console.error('Failed to copy trace link');
     }
   }, [traceId]);
 
-  // Auto-run demo on page load (once per session)
+  // Auto-run demo once when the demo section enters viewport (session-scoped)
   useEffect(() => {
-    // Skip if already run in this session or already executed
+    if (hasRun || autoRunAttemptedRef.current || mode !== "mock") return;
     const hasAutoRun = sessionStorage.getItem("seizn-demo-auto-run");
-    if (hasAutoRun || hasRun) return;
+    if (hasAutoRun) return;
 
-    // Wait for page to fully load, then auto-run demo
-    const timer = setTimeout(() => {
-      // Set a demo query
-      setConfig((prev) => ({
-        ...prev,
-        query: "How do I implement secure authentication?",
-      }));
+    const demoSection = document.getElementById("demo");
+    if (!demoSection) return;
 
-      // Trigger the demo run after a short delay
-      setTimeout(async () => {
-        await handleRun();
-        sessionStorage.setItem("seizn-demo-auto-run", "true");
-        // Switch to trace tab to show the trace visualization
-        setActiveTab("trace");
-      }, 500);
-    }, 1500);
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((entry) => entry.isIntersecting);
+        if (!isVisible || autoRunAttemptedRef.current) return;
 
-    return () => clearTimeout(timer);
-  }, [hasRun, handleRun]);
+        autoRunAttemptedRef.current = true;
+        observer.disconnect();
+        timer = setTimeout(async () => {
+          setConfig((prev) => ({
+            ...prev,
+            query: "How do I implement secure authentication?",
+          }));
+          await handleRun("auto");
+          sessionStorage.setItem("seizn-demo-auto-run", "true");
+          setActiveTab("trace");
+          setMobileConsoleTab("trace");
+          analytics.featureUsed("extreme_home_auto_demo_completed", { mode: "mock" });
+        }, 500);
+      },
+      { rootMargin: "160px 0px" }
+    );
+
+    observer.observe(demoSection);
+    return () => {
+      observer.disconnect();
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [hasRun, handleRun, mode]);
 
   const t = dict;
   const seasonalTheme = useMemo(() => getSeasonalTheme(), []);
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-gray-900 focus:text-white"
+      >
+        Skip to main content
+      </a>
+
       {/* Sticky Navigation - Memoized */}
       <Navigation
         locale={locale}
@@ -510,6 +563,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
         t={t}
       />
 
+      <main id="main-content">
       {/* Hero Section - Fullscreen background video with text overlay */}
       <section className={`relative min-h-screen flex items-center overflow-hidden ${seasonalTheme}`}>
         {/* Background Video Layer */}
@@ -521,6 +575,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             loop
             muted
             playsInline
+            preload="none"
             poster="/hero-poster.jpg"
             aria-hidden="true"
           >
@@ -568,6 +623,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
             <div className="flex items-center justify-center gap-4 flex-wrap pt-2 animate-fade-in-up animate-delay-300">
               <Link
                 href="/signup"
+                onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "signup" })}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 {t.extremeHome?.ctaStart || "Start Building Free"}
@@ -576,16 +632,14 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 </svg>
               </Link>
               <button
-                onClick={() => {
-                  document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
-                }}
+                onClick={() => scrollToDemo("hero_cta")}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 font-medium rounded-xl border border-gray-200/80 dark:border-gray-700/80 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-white dark:hover:bg-gray-800 transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {t.extremeHome?.ctaDemo || "Watch 2-Min Demo"}
+                {liveDemoCtaLabel}
               </button>
             </div>
 
@@ -626,14 +680,14 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
               <span className="theme-gradient-text">{t.extremeHome?.playgroundTitle || "Playground"}</span>
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              {t.extremeHome?.heroTagline || "Try the API live — no signup required"}
+              {t.extremeHome?.heroTagline || "Try the API live - no signup required"}
             </p>
 
             {/* Mode Toggle */}
             <div className="inline-flex items-center gap-2">
               <div className="inline-flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
                 <button
-                  onClick={() => setMode("mock")}
+                  onClick={() => handleModeChange("mock")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "mock"
                       ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -643,7 +697,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   Mock
                 </button>
                 <button
-                  onClick={() => setMode("real")}
+                  onClick={() => handleModeChange("real")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "real"
                       ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -659,6 +713,11 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 </span>
               )}
             </div>
+            {rateLimitRetryAfter !== null && (
+              <p className="mt-2 text-xs text-amber-600 dark:text-amber-400">
+                {`Retry available in ${rateLimitRetryAfter}s`}
+              </p>
+            )}
           </div>
 
           {/* Progress Indicator */}
@@ -695,7 +754,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
-                    onClick={() => setActiveTab("results")}
+                    onClick={() => {
+                      setActiveTab("results");
+                      analytics.featureUsed("extreme_home_desktop_tab_changed", { tab: "results" });
+                    }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "results"
                         ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -710,7 +772,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                     )}
                   </button>
                   <button
-                    onClick={() => setActiveTab("trace")}
+                    onClick={() => {
+                      setActiveTab("trace");
+                      analytics.featureUsed("extreme_home_desktop_tab_changed", { tab: "trace" });
+                    }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "trace"
                         ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -725,7 +790,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                     )}
                   </button>
                   <button
-                    onClick={() => setActiveTab("cost")}
+                    onClick={() => {
+                      setActiveTab("cost");
+                      analytics.featureUsed("extreme_home_desktop_tab_changed", { tab: "cost" });
+                    }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "cost"
                         ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -791,9 +859,12 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           {/* Live Console - Mobile */}
           <div className="md:hidden bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800">
             {/* Mobile Tabs */}
-            <div className="flex items-center gap-2 mb-4 overflow-x-auto">
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto" role="tablist" aria-label="Mobile demo console tabs">
               <button
-                onClick={() => setMobileConsoleTab("request")}
+                onClick={() => {
+                  setMobileConsoleTab("request");
+                  analytics.featureUsed("extreme_home_mobile_tab_changed", { tab: "request" });
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "request"
                     ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -803,7 +874,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 {(t.extremeHome?.requestBuilder as RequestBuilderTranslations)?.title || "Request"}
               </button>
               <button
-                onClick={() => setMobileConsoleTab("results")}
+                onClick={() => {
+                  setMobileConsoleTab("results");
+                  analytics.featureUsed("extreme_home_mobile_tab_changed", { tab: "results" });
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "results"
                     ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -813,7 +887,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 {t.extremeHome?.tabs?.results || "Results"}
               </button>
               <button
-                onClick={() => setMobileConsoleTab("trace")}
+                onClick={() => {
+                  setMobileConsoleTab("trace");
+                  analytics.featureUsed("extreme_home_mobile_tab_changed", { tab: "trace" });
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "trace"
                     ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -823,7 +900,10 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                 {t.extremeHome?.tabs?.trace || "Trace"}
               </button>
               <button
-                onClick={() => setMobileConsoleTab("cost")}
+                onClick={() => {
+                  setMobileConsoleTab("cost");
+                  analytics.featureUsed("extreme_home_mobile_tab_changed", { tab: "cost" });
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "cost"
                     ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
@@ -841,6 +921,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
                   onConfigChange={setConfig}
                   onRun={handleRun}
                   isLoading={isLoading}
+                  compact
                   translations={t.extremeHome?.requestBuilder as RequestBuilderTranslations}
                 />
               )}
@@ -900,6 +981,7 @@ export function ExtremeHomepageClient({ dict, locale }: ExtremeHomepageClientPro
           </Suspense>
         </div>
       </section>
+      </main>
 
       {/* Share Trace Toast Notification */}
       {shareToastVisible && (

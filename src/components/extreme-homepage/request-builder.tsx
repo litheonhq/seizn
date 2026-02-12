@@ -89,6 +89,7 @@ interface RequestBuilderProps {
   onRun: () => void;
   isLoading: boolean;
   disabled?: boolean;
+  compact?: boolean;
   translations?: RequestBuilderTranslations;
 }
 
@@ -162,6 +163,7 @@ export function RequestBuilder({
   onRun,
   isLoading,
   disabled,
+  compact = false,
   translations: t,
 }: RequestBuilderProps) {
   const [showSampleQueries, setShowSampleQueries] = useState(false);
@@ -207,8 +209,10 @@ export function RequestBuilder({
             value={config.query}
             onChange={(e) => updateConfig({ query: e.target.value })}
             placeholder={t?.queryPlaceholder || "Enter your search query..."}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all text-gray-900 placeholder:text-gray-400"
-            rows={3}
+            className={`w-full border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all text-gray-900 placeholder:text-gray-400 ${
+              compact ? "px-3 py-2.5 text-sm" : "px-4 py-3"
+            }`}
+            rows={compact ? 2 : 3}
             disabled={disabled}
           />
 
@@ -247,11 +251,11 @@ export function RequestBuilder({
           <button
             type="button"
             onClick={() => applyPreset("fast")}
-            className={`p-3 rounded-xl border text-left transition-all ${
+            className={`rounded-xl border text-left transition-all ${
               currentPreset === "fast"
                 ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-            }`}
+            } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
@@ -262,17 +266,17 @@ export function RequestBuilder({
                 {t?.presets?.fast || "Fast"}
               </span>
             </div>
-            <p className="text-xs text-gray-500">{t?.presets?.fastDesc || "~200ms, basic"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.presets?.fastDesc || "~200ms, basic"}</p>}
           </button>
 
           <button
             type="button"
             onClick={() => applyPreset("balanced")}
-            className={`p-3 rounded-xl border text-left transition-all ${
+            className={`rounded-xl border text-left transition-all ${
               currentPreset === "balanced"
                 ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-            }`}
+            } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
@@ -283,17 +287,17 @@ export function RequestBuilder({
                 {t?.presets?.balanced || "Balanced"}
               </span>
             </div>
-            <p className="text-xs text-gray-500">{t?.presets?.balancedDesc || "~500ms, rerank"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.presets?.balancedDesc || "~500ms, rerank"}</p>}
           </button>
 
           <button
             type="button"
             onClick={() => applyPreset("precise")}
-            className={`p-3 rounded-xl border text-left transition-all ${
+            className={`rounded-xl border text-left transition-all ${
               currentPreset === "precise"
                 ? "border-purple-500 bg-purple-50 ring-1 ring-purple-500"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-            }`}
+            } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
@@ -304,7 +308,7 @@ export function RequestBuilder({
                 {t?.presets?.precise || "Precise"}
               </span>
             </div>
-            <p className="text-xs text-gray-500">{t?.presets?.preciseDesc || "~1.5s, full suite"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.presets?.preciseDesc || "~1.5s, full suite"}</p>}
           </button>
         </div>
       </div>
@@ -423,7 +427,7 @@ export function RequestBuilder({
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
             <span className="text-sm font-medium text-gray-800">{t?.hybridSearch || "Hybrid Search"}</span>
-            <p className="text-xs text-gray-500">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>}
           </div>
           <input
             type="checkbox"
@@ -437,7 +441,7 @@ export function RequestBuilder({
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
             <span className="text-sm font-medium text-gray-800">{t?.rerank || "Rerank"}</span>
-            <p className="text-xs text-gray-500">{t?.rerankDesc || "Re-score with cross-encoder"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.rerankDesc || "Re-score with cross-encoder"}</p>}
           </div>
           <input
             type="checkbox"
@@ -451,7 +455,7 @@ export function RequestBuilder({
         <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
           <div>
             <span className="text-sm font-medium text-gray-800">{t?.answerContract || "Answer Contract"}</span>
-            <p className="text-xs text-gray-500">{t?.answerContractDesc || "Validate answer quality"}</p>
+            {!compact && <p className="text-xs text-gray-500">{t?.answerContractDesc || "Validate answer quality"}</p>}
           </div>
           <input
             type="checkbox"
@@ -464,7 +468,12 @@ export function RequestBuilder({
       </div>
 
       {/* Estimated Latency & Cost Preview */}
-      <div className="mb-6 grid grid-cols-2 gap-3">
+      {compact ? (
+        <div className="mb-5 px-3 py-2 rounded-lg bg-gray-50 border border-gray-100 text-xs text-gray-600">
+          {`${t?.estimatedLatency || "Est. Latency"} ${estimates.latencyP50}ms | ${t?.estimatedCost || "Est. Cost"} $${estimates.costPerRequest.toFixed(4)}`}
+        </div>
+      ) : (
+        <div className="mb-6 grid grid-cols-2 gap-3">
         {/* Latency Card */}
         <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
@@ -509,12 +518,15 @@ export function RequestBuilder({
           </div>
         </div>
       </div>
+      )}
 
       {/* Run Button */}
       <button
         onClick={onRun}
         disabled={isLoading || disabled || !config.query.trim()}
-        className="w-full py-4 bg-black text-white font-medium rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+        className={`w-full bg-black text-white font-medium rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 ${
+          compact ? "py-3.5" : "py-4"
+        }`}
       >
         {isLoading ? (
           <>
