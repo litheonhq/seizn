@@ -253,6 +253,7 @@ export const fallbackStrategy: StrategyExecutor = async (data, action) => {
 
 export const transformStrategy: StrategyExecutor = async (data, action) => {
   const config = action.params as TransformConfig | undefined;
+  const blockedDynamicOperations: string[] = [];
 
   if (!config?.transformations || config.transformations.length === 0) {
     return {
@@ -285,30 +286,12 @@ export const transformStrategy: StrategyExecutor = async (data, action) => {
       }
 
       case 'map': {
-        const { found, value } = getValueAtPath(healedData, field);
-        if (found && Array.isArray(value) && params?.mapFn) {
-          try {
-            const mapFn = new Function('item', 'index', params.mapFn as string);
-            const mapped = value.map((item, index) => mapFn(item, index));
-            healedData = setValueAtPath(healedData, field, mapped);
-          } catch {
-            // Skip invalid map function
-          }
-        }
+        blockedDynamicOperations.push(`${field}:map`);
         break;
       }
 
       case 'filter': {
-        const { found, value } = getValueAtPath(healedData, field);
-        if (found && Array.isArray(value) && params?.filterFn) {
-          try {
-            const filterFn = new Function('item', 'index', params.filterFn as string);
-            const filtered = value.filter((item, index) => filterFn(item, index));
-            healedData = setValueAtPath(healedData, field, filtered);
-          } catch {
-            // Skip invalid filter function
-          }
-        }
+        blockedDynamicOperations.push(`${field}:filter`);
         break;
       }
 
@@ -320,6 +303,19 @@ export const transformStrategy: StrategyExecutor = async (data, action) => {
         break;
       }
     }
+  }
+
+  if (blockedDynamicOperations.length > 0) {
+    return {
+      success: false,
+      healedData,
+      message:
+        'Blocked insecure dynamic transform operations (map/filter) in healing config',
+      metadata: {
+        transformationsApplied: config.transformations.length,
+        blockedDynamicOperations,
+      },
+    };
   }
 
   return {

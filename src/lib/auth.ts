@@ -154,6 +154,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      try {
+        const safeUrl = new URL(url, baseUrl);
+        if (safeUrl.origin !== new URL(baseUrl).origin) {
+          return baseUrl;
+        }
+        return safeUrl.toString();
+      } catch {
+        return baseUrl;
+      }
+    },
   },
   pages: {
     signIn: '/login',

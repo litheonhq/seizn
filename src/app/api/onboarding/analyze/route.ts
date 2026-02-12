@@ -20,6 +20,7 @@ import {
   type DocumentSample,
   type OnboardingResult,
 } from '@/lib/onboarding';
+import { buildCorsPreflightHeaders } from '@/lib/security/cors';
 
 /**
  * Request body schema
@@ -238,13 +239,28 @@ export async function POST(request: NextRequest) {
 /**
  * OPTIONS handler for CORS preflight
  */
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const headers = buildCorsPreflightHeaders(
+    request,
+    'POST, OPTIONS',
+    'Content-Type, Authorization'
+  );
+
+  if (!headers) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: 'CORS_ORIGIN_NOT_ALLOWED',
+          message: 'Origin is not allowed',
+        },
+      },
+      { status: 403 }
+    );
+  }
+
   return new NextResponse(null, {
     status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
+    headers,
   });
 }

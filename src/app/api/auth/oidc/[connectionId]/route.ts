@@ -13,6 +13,7 @@ import {
   validateOIDCConfig,
 } from '@/lib/enterprise-auth/oidc-provider';
 import type { OIDCConfig } from '@/lib/enterprise-auth/types';
+import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
 
@@ -63,7 +64,10 @@ export async function GET(
     const codeVerifier = oidcProvider.generateCodeVerifier();
 
     // Determine redirect URI
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || '';
+    const baseUrl =
+      process.env.NEXTAUTH_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      request.nextUrl.origin;
     const redirectUri = `${baseUrl}/api/auth/oidc/callback`;
 
     // Store auth request for callback verification
@@ -77,7 +81,10 @@ export async function GET(
 
     // Get the original redirect URL from query params
     const searchParams = request.nextUrl.searchParams;
-    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+    const callbackUrl = sanitizeSameOriginRedirect(
+      searchParams.get('callbackUrl'),
+      request.nextUrl.origin
+    );
 
     // Store callback URL in cookie
     const cookieStore = await cookies();

@@ -107,7 +107,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       const validTypes = [
         'hasField', 'matchesSchema', 'matchesRegex', 'inRange', 'oneOf',
         'minLength', 'maxLength', 'isType', 'isNonEmpty', 'isArray',
-        'arrayLength', 'custom',
+        'arrayLength',
       ];
 
       if (!Array.isArray(body.assertions) || body.assertions.length === 0) {

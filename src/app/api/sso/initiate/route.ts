@@ -14,6 +14,7 @@ import { findSSOConnectionByEmail, getSSOConnection } from '@/lib/sso';
 import { generateSAMLRequest } from '@/lib/sso/saml-provider';
 import { createServerClient } from '@/lib/supabase';
 import { ValidationErrors, NotFoundErrors, ServerErrors, createApiError, ErrorCodes } from '@/lib/api-error';
+import { sanitizeRelativeRedirect } from '@/lib/security/redirect';
 
 /**
  * POST /api/sso/initiate
@@ -27,6 +28,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, connectionId, relayState } = body;
+    const safeRelayState = sanitizeRelativeRedirect(
+      typeof relayState === 'string' ? relayState : null
+    );
 
     let connection;
 
@@ -90,7 +94,7 @@ export async function POST(request: NextRequest) {
       connection_id: connection.id,
       organization_id: connection.organizationId,
       request_id: requestId,
-      relay_state: relayState,
+      relay_state: safeRelayState,
       response_status: 'pending',
       ip_address: request.headers.get('x-forwarded-for')?.split(',')[0] || null,
       user_agent: request.headers.get('user-agent'),
@@ -101,7 +105,7 @@ export async function POST(request: NextRequest) {
     try {
       const { redirectUrl, request: samlRequest } = await generateSAMLRequest(
         connection,
-        relayState
+        safeRelayState
       );
 
       return NextResponse.json({
@@ -142,7 +146,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
-  const redirect = searchParams.get('redirect') || '/dashboard';
+  const redirect = sanitizeRelativeRedirect(searchParams.get('redirect'));
 
   if (!email) {
     return NextResponse.redirect(

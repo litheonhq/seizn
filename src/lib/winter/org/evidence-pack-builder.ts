@@ -322,6 +322,13 @@ function generateChecksum(data: string): string {
  * Generate a signature for the manifest
  */
 function generateSignature(manifest: EvidencePackManifest): string {
+  const signingKey = process.env.EVIDENCE_PACK_SIGNING_KEY;
+  if (!signingKey) {
+    throw new Error(
+      'EVIDENCE_PACK_SIGNING_KEY must be set before generating evidence pack signatures'
+    );
+  }
+
   const signatureInput = JSON.stringify({
     packId: manifest.packId,
     organizationId: manifest.organizationId,
@@ -329,9 +336,7 @@ function generateSignature(manifest: EvidencePackManifest): string {
     checksums: manifest.checksums,
   });
 
-  // In production, use asymmetric signing with private key
-  // For now, use HMAC with a derived key
-  const signingKey = process.env.EVIDENCE_PACK_SIGNING_KEY || 'seizn-evidence-pack-v1';
+  // Use HMAC signing key from environment.
 
   return crypto
     .createHmac('sha256', signingKey)
@@ -383,9 +388,17 @@ export function verifyEvidencePackIntegrity(pack: {
   }
 
   // Verify signature
-  const expectedSignature = generateSignature(pack.manifest);
-  if (expectedSignature !== pack.manifest.signature.value) {
-    errors.push('Manifest signature invalid');
+  try {
+    const expectedSignature = generateSignature(pack.manifest);
+    if (expectedSignature !== pack.manifest.signature.value) {
+      errors.push('Manifest signature invalid');
+    }
+  } catch (error) {
+    errors.push(
+      error instanceof Error
+        ? error.message
+        : 'EVIDENCE_PACK_SIGNING_KEY is missing for signature verification'
+    );
   }
 
   return {
@@ -397,5 +410,3 @@ export function verifyEvidencePackIntegrity(pack: {
 // ============================================
 // Types Export
 // ============================================
-
-

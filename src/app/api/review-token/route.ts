@@ -1,32 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-// 관리자 시크릿 (환경 변수에서 가져오거나 기본값 사용)
-const ADMIN_SECRET = process.env.REVIEW_ADMIN_SECRET || 'seizn-review-admin-2025';
-// 토큰 서명용 시크릿
-const TOKEN_SECRET = process.env.REVIEW_TOKEN_SECRET || 'seizn-token-secret-2025';
+function getConfiguredSecrets(): { adminSecret: string; tokenSecret: string } | null {
+  const adminSecret = process.env.REVIEW_ADMIN_SECRET;
+  const tokenSecret = process.env.REVIEW_TOKEN_SECRET;
 
-/**
- * 자체 검증 가능한 토큰 생성 (JWT-like)
- * 형식: base64(payload).signature
- */
-function createSignedToken(payload: {
-  exp: number; // 만료 시간 (Unix timestamp)
-  paths: string[]; // 허용된 경로
-  note?: string;
-}): string {
+  if (!adminSecret || !tokenSecret) {
+    return null;
+  }
+
+  return { adminSecret, tokenSecret };
+}
+
+function missingSecretResponse() {
+  return NextResponse.json(
+    {
+      error:
+        'Server misconfigured: REVIEW_ADMIN_SECRET and REVIEW_TOKEN_SECRET must be set',
+    },
+    { status: 500 }
+  );
+}
+
+function createSignedToken(
+  payload: { exp: number; paths: string[]; note?: string },
+  tokenSecret: string
+): string {
   const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const signature = crypto
-    .createHmac('sha256', TOKEN_SECRET)
+    .createHmac('sha256', tokenSecret)
     .update(payloadStr)
     .digest('base64url');
+
   return `${payloadStr}.${signature}`;
 }
 
-/**
- * 토큰 검증 및 페이로드 추출 (Node.js용 - API Route에서만 사용)
- */
-function verifyToken(token: string): {
+function verifyToken(
+  token: string,
+  tokenSecret: string
+): {
   valid: boolean;
   payload?: { exp: number; paths: string[]; note?: string };
   error?: string;
@@ -37,9 +49,8 @@ function verifyToken(token: string): {
       return { valid: false, error: 'Invalid token format' };
     }
 
-    // 서명 검증
     const expectedSignature = crypto
-      .createHmac('sha256', TOKEN_SECRET)
+      .createHmac('sha256', tokenSecret)
       .update(payloadStr)
       .digest('base64url');
 
@@ -47,10 +58,8 @@ function verifyToken(token: string): {
       return { valid: false, error: 'Invalid signature' };
     }
 
-    // 페이로드 파싱
     const payload = JSON.parse(Buffer.from(payloadStr, 'base64url').toString());
 
-    // 만료 검증
     if (Date.now() > payload.exp) {
       return { valid: false, error: 'Token expired' };
     }
@@ -61,30 +70,46 @@ function verifyToken(token: string): {
   }
 }
 
-/**
- * POST: 새 리뷰 토큰 생성 (관리자 전용)
- */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { adminSecret, expiresInHours = 24, allowedPaths = ['/dashboard'], note } = body;
+    const secrets = getConfiguredSecrets();
+    if (!secrets) {
+      return missingSecretResponse();
+    }
 
-    // 관리자 인증
-    if (adminSecret !== ADMIN_SECRET) {
+    const body = await request.json();
+    const {
+      adminSecret,
+      expiresInHours = 24,
+      allowedPaths = ['/dashboard'],
+      note,
+    } = body;
+
+    if (adminSecret !== secrets.adminSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 만료 시간 계산
+    if (
+      !Array.isArray(allowedPaths) ||
+      !allowedPaths.every((path) => typeof path === 'string')
+    ) {
+      return NextResponse.json(
+        { error: 'allowedPaths must be a string array' },
+        { status: 400 }
+      );
+    }
+
     const expiresAt = Date.now() + expiresInHours * 60 * 60 * 1000;
 
-    // 자체 검증 토큰 생성
-    const token = createSignedToken({
-      exp: expiresAt,
-      paths: allowedPaths,
-      note,
-    });
+    const token = createSignedToken(
+      {
+        exp: expiresAt,
+        paths: allowedPaths,
+        note,
+      },
+      secrets.tokenSecret
+    );
 
-    // 리뷰 URL 생성
     const baseUrl = process.env.NEXTAUTH_URL || 'https://www.seizn.com';
     const reviewUrl = `${baseUrl}/dashboard?review_token=${encodeURIComponent(token)}`;
 
@@ -103,17 +128,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * GET: 토큰 검증
- */
 export async function GET(request: NextRequest) {
+  const secrets = getConfiguredSecrets();
+  if (!secrets) {
+    return missingSecretResponse();
+  }
+
   const token = request.nextUrl.searchParams.get('token');
 
   if (!token) {
     return NextResponse.json({ valid: false, error: 'Token required' }, { status: 400 });
   }
 
-  const result = verifyToken(token);
+  const result = verifyToken(token, secrets.tokenSecret);
 
   if (!result.valid) {
     return NextResponse.json({ valid: false, error: result.error }, { status: 401 });
@@ -126,20 +153,21 @@ export async function GET(request: NextRequest) {
   });
 }
 
-/**
- * DELETE: 토큰 무효화 안내
- * 자체 검증 토큰은 서버에서 무효화할 수 없음
- * 시크릿을 변경하거나 만료를 기다려야 함
- */
 export async function DELETE(request: NextRequest) {
+  const secrets = getConfiguredSecrets();
+  if (!secrets) {
+    return missingSecretResponse();
+  }
+
   const { adminSecret } = await request.json();
 
-  if (adminSecret !== ADMIN_SECRET) {
+  if (adminSecret !== secrets.adminSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   return NextResponse.json({
     success: false,
-    message: 'Self-validating tokens cannot be revoked. Change REVIEW_TOKEN_SECRET env var to invalidate all tokens, or wait for expiration.',
+    message:
+      'Self-validating tokens cannot be revoked. Change REVIEW_TOKEN_SECRET env var to invalidate all tokens, or wait for expiration.',
   });
 }
