@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { runDeletionJob } from '@/lib/winter/forget';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // Configuration
 const BATCH_SIZE = 10; // Process up to 10 jobs per cron run
@@ -16,9 +14,7 @@ const MAX_JOB_AGE_HOURS = 168; // 7 days - fail old jobs
  * Should be called periodically (e.g., every hour) via cron.
  */
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -66,7 +62,7 @@ export async function GET(request: NextRequest) {
     if (fetchError) {
       console.error('[RTBF Cron] Failed to fetch jobs:', fetchError);
       return NextResponse.json(
-        { error: 'Failed to fetch deletion jobs', details: fetchError.message },
+        { error: 'Failed to fetch deletion jobs' },
         { status: 500 }
       );
     }
@@ -167,7 +163,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

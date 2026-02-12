@@ -49,6 +49,24 @@ export function getAuditContext(request: NextRequest): AuditContext {
   return { ipAddress, userAgent, requestId };
 }
 
+/** Strip sensitive fields from audit details before persisting */
+function sanitizeAuditData(obj: Record<string, unknown> | undefined): Record<string, unknown> {
+  if (!obj) return {};
+  const sensitiveKeys = ['password', 'secret', 'token', 'api_key', 'key_hash', 'authorization', 'credit_card', 'ssn'];
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const lower = key.toLowerCase();
+    if (sensitiveKeys.some(s => lower.includes(s))) {
+      result[key] = '[REDACTED]';
+    } else if (typeof value === 'string' && value.length > 500) {
+      result[key] = value.substring(0, 500) + '...[truncated]';
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
 /**
  * Log an audit event
  */
@@ -68,14 +86,14 @@ export async function logAuditEvent(
         action: params.action,
         resource_type: params.resourceType,
         resource_id: params.resourceId || null,
-        details: params.details || {},
-        previous_state: params.previousState || null,
-        new_state: params.newState || null,
+        details: sanitizeAuditData(params.details),
+        previous_state: sanitizeAuditData(params.previousState),
+        new_state: sanitizeAuditData(params.newState),
         ip_address: context?.ipAddress || null,
-        user_agent: context?.userAgent || null,
+        user_agent: context?.userAgent?.substring(0, 500) || null,
         request_id: context?.requestId || null,
         status: params.status || 'success',
-        error_message: params.errorMessage || null,
+        error_message: params.errorMessage?.substring(0, 1000) || null,
         is_service_role: params.isServiceRole || false,
       })
       .select('id')

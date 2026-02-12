@@ -15,6 +15,7 @@ import { createServerClient } from '@/lib/supabase';
 import { createJobService } from '@/lib/spring/memory-v4/job-service';
 import { createIngestionService } from '@/lib/spring/memory-v4/ingestion-service';
 import { createSearchServiceV3 } from '@/lib/spring/memory-v4/search-service';
+import { verifyCronSecret } from '@/lib/cron-auth';
 import type { Job, JobType } from '@/lib/spring/memory-v4/types';
 
 // =============================================================================
@@ -23,26 +24,6 @@ import type { Job, JobType } from '@/lib/spring/memory-v4/types';
 
 const MAX_JOBS_PER_RUN = 5;
 const JOB_TIMEOUT_MS = 55000; // 55 seconds (leave room for response)
-
-// =============================================================================
-// Auth
-// =============================================================================
-
-function verifyCronAuth(request: NextRequest): boolean {
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret) {
-    console.warn('CRON_SECRET not configured');
-    return false;
-  }
-
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return false;
-  }
-
-  const token = authHeader.slice(7);
-  return token === cronSecret;
-}
 
 // =============================================================================
 // Job Processors
@@ -378,7 +359,7 @@ const processors: Partial<Record<JobType, JobProcessor>> = {
 
 export async function GET(request: NextRequest) {
   // Verify cron authentication
-  if (!verifyCronAuth(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json(
       { success: false, error: 'Unauthorized' },
       { status: 401 }
@@ -510,9 +491,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Internal server error',
         duration: Date.now() - startTime,
-        results,
       },
       { status: 500 }
     );

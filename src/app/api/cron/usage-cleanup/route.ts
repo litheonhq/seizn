@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // Retention period in days
 const RETENTION_DAYS = 90;
 
 // GET /api/cron/usage-cleanup - Clean up old usage_logs (older than 90 days)
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -43,7 +39,7 @@ export async function GET(request: NextRequest) {
     if (fetchError) {
       console.error('Failed to fetch old usage logs:', fetchError);
       return NextResponse.json(
-        { error: 'Failed to fetch old usage logs', details: fetchError.message },
+        { error: 'Failed to fetch old usage logs' },
         { status: 500 }
       );
     }
@@ -172,7 +168,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

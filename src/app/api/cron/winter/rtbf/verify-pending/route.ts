@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { runPendingVerifications, verifyCompliance } from '@/lib/winter/rtbf/verification';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // Configuration
 const BATCH_SIZE = 50; // Verify up to 50 requests per cron run
@@ -16,9 +14,7 @@ const COMPLIANCE_CHECK_BATCH = 10; // Run compliance checks for recent completio
  * Should be called periodically (e.g., daily) via cron.
  */
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -190,7 +186,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

@@ -49,12 +49,15 @@ export async function GET(request: NextRequest) {
 
     // Check if requesting summary
     if (searchParams.get('summary') === 'true') {
-      const days = parseInt(searchParams.get('days') || '30', 10);
+      const days = Math.min(Math.max(parseInt(searchParams.get('days') || '30', 10) || 30, 1), 365);
       const summary = await getAuditSummary(orgId, days);
       return NextResponse.json({ summary });
     }
 
-    // Build query params
+    // Build query params with bounds checking
+    const rawLimit = parseInt(searchParams.get('limit') || '100', 10);
+    const rawOffset = parseInt(searchParams.get('offset') || '0', 10);
+
     const params: AuditQueryParams = {
       organizationId: orgId,
       category: searchParams.get('category') as AuditEventCategory || undefined,
@@ -68,8 +71,8 @@ export async function GET(request: NextRequest) {
         : undefined,
       startDate: searchParams.get('startDate') || undefined,
       endDate: searchParams.get('endDate') || undefined,
-      limit: parseInt(searchParams.get('limit') || '100', 10),
-      offset: parseInt(searchParams.get('offset') || '0', 10),
+      limit: Math.min(Math.max(rawLimit || 100, 1), 1000),
+      offset: Math.max(rawOffset || 0, 0),
     };
 
     const events = await queryAuditEvents(params);
@@ -136,7 +139,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Audit query error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to query audit events' },
+      { error: 'Failed to query audit events' },
       { status: 500 }
     );
   }
@@ -217,7 +220,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Audit log error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to log audit event' },
+      { error: 'Failed to log audit event' },
       { status: 500 }
     );
   }

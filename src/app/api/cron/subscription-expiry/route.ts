@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-
-// Cron authentication
-const CRON_SECRET = process.env.CRON_SECRET;
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // Plan limits for downgrade
 const FREE_PLAN_LIMITS = {
@@ -12,9 +10,7 @@ const FREE_PLAN_LIMITS = {
 
 // GET /api/cron/subscription-expiry - Check and downgrade expired subscriptions
 export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -42,7 +38,7 @@ export async function GET(request: NextRequest) {
     if (fetchError) {
       console.error('Failed to fetch expired subscriptions:', fetchError);
       return NextResponse.json(
-        { error: 'Failed to fetch expired subscriptions', details: fetchError.message },
+        { error: 'Failed to fetch expired subscriptions' },
         { status: 500 }
       );
     }
@@ -135,7 +131,7 @@ export async function GET(request: NextRequest) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Subscription expiry cron error:', errorMessage);
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
