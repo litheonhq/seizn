@@ -74,6 +74,13 @@ export async function logAuditEvent(
   params: AuditLogParams,
   context?: AuditContext
 ): Promise<string | null> {
+  // Unauthenticated events (ex: auth failure) may not have a profile row, which
+  // can violate FK constraints on audit_logs.user_id. Avoid spamming logs in
+  // those cases.
+  if (!params.userId || params.userId === "anonymous") {
+    return null;
+  }
+
   try {
     const supabase = createServerClient();
 

@@ -235,13 +235,39 @@ export function SettingsClient() {
     isUsageCritical(quotaData.apiCalls.used, quotaData.apiCalls.limit) ||
     isUsageCritical(quotaData.apiKeys.used, quotaData.apiKeys.limit);
 
+  const isSessionLoading = sessionStatus === "loading";
+  const isUnauthenticated = sessionStatus === "unauthenticated";
+
   return (
     <div className="space-y-6">
-      {sessionStatus === "loading" && (
+      {isSessionLoading && (
         <div className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.loading")}</div>
       )}
-      {sessionStatus === "unauthenticated" && (
-        <div className="text-sm text-red-600">{t("dashboard.settingsPage.loginRequired")}</div>
+      {isUnauthenticated && (
+        <div className="rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
+                <UserIcon className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-red-800 dark:text-red-300">
+                  {t("dashboard.settingsPage.loginRequired") || "Login required"}
+                </p>
+                <p className="text-xs text-red-700 dark:text-red-400 mt-1">
+                  {t("auth.login.subtitle")}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => signIn(undefined, { callbackUrl: "/dashboard/settings" })}
+              className="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors"
+            >
+              {t("auth.login.submit")}
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Header */}
