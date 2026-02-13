@@ -6,7 +6,7 @@
     "dev": "next dev",
     "check:policy": "node scripts/policy-consistency-check.mjs",
     "build": "node scripts/check-route-conflicts.js && next build",
-    "analyze": "ANALYZE=true npm run build",
+    "analyze": "node scripts/analyze-build.mjs",
     "start": "next start",
     "lint": "eslint",
     "predeploy": "bash scripts/pre-deploy.sh",
