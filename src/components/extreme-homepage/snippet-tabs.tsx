@@ -1,10 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
+import javascript from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
+import json from "react-syntax-highlighter/dist/esm/languages/prism/json";
+import python from "react-syntax-highlighter/dist/esm/languages/prism/python";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import type { RequestConfig } from "./request-builder";
 import { copyToClipboard } from "@/lib/clipboard";
+
+// PrismLight lets us register only the languages we actually render, which keeps the bundle small.
+SyntaxHighlighter.registerLanguage("bash", bash);
+SyntaxHighlighter.registerLanguage("javascript", javascript);
+SyntaxHighlighter.registerLanguage("json", json);
+SyntaxHighlighter.registerLanguage("python", python);
 
 interface SnippetTabsProps {
   config: RequestConfig;
