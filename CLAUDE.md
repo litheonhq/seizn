@@ -1,4 +1,4 @@
-# Seizn - AI Memory Server
+﻿# Seizn - AI Memory Server
 
 ## 프로젝트 개요
 - **브랜드명**: Seizn (시즌)

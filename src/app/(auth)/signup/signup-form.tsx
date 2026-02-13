@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
+import { getErrorMessage } from "@/lib/ui-error";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function SignupForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Failed to create account");
+        setError(getErrorMessage(data.error, "Failed to create account"));
         setIsLoading(false);
         return;
       }

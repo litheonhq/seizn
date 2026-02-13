@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface Organization {
   id: string;
@@ -61,11 +62,11 @@ export default function OrganizationsClient() {
         setNewOrgName("");
         setNewOrgSlug("");
       } else {
-        setError(data.error || "Failed to create organization");
+        setError(getErrorMessage(data.error, "Failed to create organization"));
       }
     } catch (err) {
       console.error("Failed to create organization:", err);
-      setError("Failed to create organization");
+      setError(getErrorMessage(err, "Failed to create organization"));
     } finally {
       setIsCreating(false);
     }

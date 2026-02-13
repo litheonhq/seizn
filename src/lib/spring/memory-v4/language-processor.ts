@@ -64,8 +64,14 @@ export class LanguageProcessor {
   private anthropic: Anthropic | null = null;
 
   constructor() {
-    if (process.env.ANTHROPIC_API_KEY) {
-      this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    // Never instantiate server-side LLM clients in browser-like runtimes (ex: jsdom tests).
+    // This avoids SDK safeguards throwing and prevents accidental client-bundle usage.
+    const g = globalThis as unknown as { window?: unknown; document?: unknown };
+    const isBrowserLike =
+      typeof g.window !== 'undefined' || typeof g.document !== 'undefined';
+    if (apiKey && !isBrowserLike) {
+      this.anthropic = new Anthropic({ apiKey });
     }
   }
 

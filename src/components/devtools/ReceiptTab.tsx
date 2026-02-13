@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ReceiptDetail } from "@/components/receipt/ReceiptDetail";
 import { ReceiptDownload } from "@/components/receipt/ReceiptDownload";
 import type { QueryReceipt } from "@/lib/retrieval/receipt";
+import { getErrorMessage } from "@/lib/ui-error";
 
 // ============================================
 // Types
@@ -39,11 +40,11 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
       if (data.success) {
         setReceipt(data.receipt);
       } else {
-        setError(data.error || "Failed to fetch receipt");
+        setError(getErrorMessage(data.error, "Failed to fetch receipt"));
       }
     } catch (err) {
       console.error("Failed to fetch receipt:", err);
-      setError("Failed to fetch receipt");
+      setError(getErrorMessage(err, "Failed to fetch receipt"));
     } finally {
       setLoading(false);
     }

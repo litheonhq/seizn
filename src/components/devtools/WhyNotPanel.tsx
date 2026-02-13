@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { getErrorMessage } from "@/lib/ui-error";
+
 // ============================================
 // Types
 // ============================================
@@ -160,11 +162,11 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
       if (data.success) {
         setResults(data.results);
       } else {
-        setError(data.error || "Analysis failed");
+        setError(getErrorMessage(data.error, "Analysis failed"));
       }
     } catch (err) {
       console.error("Why-not analysis error:", err);
-      setError("Failed to analyze document");
+      setError(getErrorMessage(err, "Failed to analyze document"));
     } finally {
       setLoading(false);
     }

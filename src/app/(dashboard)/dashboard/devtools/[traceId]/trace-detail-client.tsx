@@ -12,6 +12,7 @@ import {
 } from "@/components/devtools";
 import type { TimelineStage, Candidate, WhatIfResult } from "@/components/devtools";
 import { ShareTraceModal, ShareIcon } from "@/components/devtools/ShareTraceModal";
+import { getErrorMessage } from "@/lib/ui-error";
 
 // ============================================
 // Types
@@ -168,11 +169,11 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
         if (data.success) {
           setTraceDetail(data.trace);
         } else {
-          setError(data.error || "Failed to fetch trace");
+          setError(getErrorMessage(data.error, "Failed to fetch trace"));
         }
       } catch (err) {
         console.error("Failed to fetch trace:", err);
-        setError("Failed to fetch trace");
+        setError(getErrorMessage(err, "Failed to fetch trace"));
       } finally {
         setLoading(false);
       }

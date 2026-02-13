@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface TTFTMetric {
   p75Minutes: number | null;
@@ -70,11 +71,11 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       if (data.success) {
         setMetrics(data.metrics);
       } else {
-        setError(data.error || "Failed to load metrics");
+        setError(getErrorMessage(data.error, "Failed to load metrics"));
       }
     } catch (err) {
       console.error("Failed to fetch North Star metrics:", err);
-      setError("Failed to load metrics");
+      setError(getErrorMessage(err, "Failed to load metrics"));
     } finally {
       setIsLoading(false);
     }
