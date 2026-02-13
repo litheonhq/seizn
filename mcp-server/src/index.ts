@@ -207,7 +207,23 @@ async function apiRequest(
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(url, options);
+  // Prevent indefinite hangs if the Seizn API becomes slow/unreachable.
+  const timeoutMsRaw = process.env.SEIZN_API_TIMEOUT_MS;
+  const timeoutMs = timeoutMsRaw ? Number(timeoutMsRaw) : 15000;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : 15000);
+
+  let response: Response;
+  try {
+    response = await fetch(url, { ...options, signal: controller.signal });
+  } catch (err) {
+    if (err && typeof err === "object" && "name" in err && (err as { name?: string }).name === "AbortError") {
+      throw new Error(`API request timed out after ${timeoutMs}ms: ${method} ${endpoint}`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const errorText = await response.text();

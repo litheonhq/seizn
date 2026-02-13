@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 
+import { getErrorMessage } from "@/lib/ui-error";
+
 // ============================================
 // Types
 // ============================================
@@ -179,11 +181,11 @@ export function TraceExplorer({
           hasMore: data.pagination.has_more,
         }));
       } else {
-        setError(data.error || "Failed to fetch traces");
+        setError(getErrorMessage(data.error, "Failed to fetch traces"));
       }
     } catch (err) {
       console.error("Failed to fetch traces:", err);
-      setError("Failed to fetch traces");
+      setError(getErrorMessage(err, "Failed to fetch traces"));
     } finally {
       setLoading(false);
     }

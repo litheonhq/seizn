@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
+import { getErrorMessage } from "@/lib/ui-error";
+
 interface User {
   id: string;
   email?: string | null;
@@ -91,11 +93,11 @@ export function DashboardClient({ user }: { user: User }) {
         setApiKeys([data.keyRecord, ...apiKeys]);
         setNewKeyName("");
       } else {
-        setError(data.error || "Failed to create key");
+        setError(getErrorMessage(data.error, "Failed to create key"));
       }
     } catch (err) {
       console.error("Failed to create API key:", err);
-      setError("Failed to create key");
+      setError(getErrorMessage(err, "Failed to create key"));
     } finally {
       setIsLoading(false);
     }

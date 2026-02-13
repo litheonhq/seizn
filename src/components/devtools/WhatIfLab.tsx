@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { getErrorMessage } from "@/lib/ui-error";
+
 // ============================================
 // Types
 // ============================================
@@ -155,11 +157,11 @@ export function WhatIfLab({
         setResult(replayResult);
         onReplayComplete?.(replayResult);
       } else {
-        setError(data.error || "Replay failed");
+        setError(getErrorMessage(data.error, "Replay failed"));
       }
     } catch (err) {
       console.error("Replay error:", err);
-      setError("Failed to run replay");
+      setError(getErrorMessage(err, "Failed to run replay"));
     } finally {
       setLoading(false);
     }

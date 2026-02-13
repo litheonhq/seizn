@@ -5,6 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 
+import { getErrorMessage } from '@/lib/ui-error';
+
 interface InviteDetails {
   email: string;
   role: string;
@@ -36,7 +38,7 @@ export default function InvitePage() {
         const data = await res.json();
 
         if (!res.ok) {
-          setError(data.error || 'Invalid invite');
+          setError(getErrorMessage(data.error, 'Invalid invite'));
           return;
         }
 
@@ -76,7 +78,7 @@ export default function InvitePage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to accept invite');
+        setError(getErrorMessage(data.error, 'Failed to accept invite'));
         return;
       }
 

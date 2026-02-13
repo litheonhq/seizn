@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { copyToClipboard } from "@/lib/clipboard";
+import { getErrorMessage } from "@/lib/ui-error";
 
 // Icons
 const ShareIcon = ({ className }: { className?: string }) => (
@@ -66,10 +67,10 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
       if (data.success) {
         setShareUrl(data.share_url);
       } else {
-        setError(data.error || "Failed to create share link");
+        setError(getErrorMessage(data.error, "Failed to create share link"));
       }
-    } catch {
-      setError("Failed to create share link");
+    } catch (err) {
+      setError(getErrorMessage(err, "Failed to create share link"));
     } finally {
       setLoading(false);
     }
