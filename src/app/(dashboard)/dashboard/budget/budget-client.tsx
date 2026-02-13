@@ -154,7 +154,7 @@ export function BudgetDashboardClient() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.budgetPage.title")}</h1>
