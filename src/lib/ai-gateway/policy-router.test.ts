@@ -51,6 +51,10 @@ function makeRequest(overrides: Partial<GatewayRequest> = {}): GatewayRequest {
   };
 }
 
+function asMock<T extends (...args: unknown[]) => unknown>(fn: T) {
+  return fn as unknown as ReturnType<typeof vi.fn>;
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -101,7 +105,7 @@ describe('PolicyRouter', () => {
 
     it('blocks when OPA access check denies', async () => {
       const mockOpa = getOpaPolicyService();
-      (mockOpa.checkAccess as any).mockResolvedValueOnce({
+      asMock(mockOpa.checkAccess).mockResolvedValueOnce({
         allow: false,
         reason: 'Blocked by policy',
       });
@@ -113,7 +117,7 @@ describe('PolicyRouter', () => {
 
     it('blocks when OPA rate limit denies', async () => {
       const mockOpa = getOpaPolicyService();
-      (mockOpa.checkRateLimit as any).mockResolvedValueOnce({
+      asMock(mockOpa.checkRateLimit).mockResolvedValueOnce({
         allowed: false,
         retryAfterSeconds: 30,
       });
@@ -124,7 +128,7 @@ describe('PolicyRouter', () => {
     });
 
     it('blocks when over budget', async () => {
-      (getBudgetStatus as any).mockResolvedValueOnce({
+      asMock(getBudgetStatus).mockResolvedValueOnce({
         isOverBudget: true,
         currentSpend: 12000,
         budgetLimit: 10000,
@@ -143,7 +147,7 @@ describe('PolicyRouter', () => {
         enableCostOptimization: false,
       });
       const mockOpa = getOpaPolicyService();
-      (mockOpa.checkAccess as any).mockRejectedValueOnce(new Error('OPA down'));
+      asMock(mockOpa.checkAccess).mockRejectedValueOnce(new Error('OPA down'));
 
       const result = await router.evaluateRequest(makeRequest(), 'user-1', 'org-1');
       // evaluateOpaPolicy catches internally and returns allowed with requireLogging
@@ -165,7 +169,7 @@ describe('PolicyRouter', () => {
 
     it('applies cost optimizations when budget is tight', async () => {
       // Budget at 15% remaining (1500 of 10000)
-      (getBudgetStatus as any).mockResolvedValueOnce({
+      asMock(getBudgetStatus).mockResolvedValueOnce({
         isOverBudget: false,
         currentSpend: 8500,
         budgetLimit: 10000,
@@ -189,7 +193,7 @@ describe('PolicyRouter', () => {
 
   describe('enforceBudget', () => {
     it('blocks when over budget', async () => {
-      (getBudgetStatus as any).mockResolvedValueOnce({
+      asMock(getBudgetStatus).mockResolvedValueOnce({
         isOverBudget: true,
         currentSpend: 15000,
         budgetLimit: 10000,
@@ -202,7 +206,7 @@ describe('PolicyRouter', () => {
     });
 
     it('returns budget remaining when under budget', async () => {
-      (getBudgetStatus as any).mockResolvedValueOnce({
+      asMock(getBudgetStatus).mockResolvedValueOnce({
         isOverBudget: false,
         currentSpend: 3000,
         budgetLimit: 10000,
@@ -214,7 +218,7 @@ describe('PolicyRouter', () => {
     });
 
     it('fails open when budget check throws', async () => {
-      (getBudgetStatus as any).mockRejectedValueOnce(new Error('Service down'));
+      asMock(getBudgetStatus).mockRejectedValueOnce(new Error('Service down'));
 
       const result = await router.enforceBudget('user-1', 'org-1');
       expect(result.allowed).toBe(true);

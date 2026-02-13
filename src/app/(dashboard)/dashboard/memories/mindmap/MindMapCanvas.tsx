@@ -190,6 +190,12 @@ export default function MindMapCanvas() {
     searchQuery: "",
   });
 
+  const [nowMs, setNowMs] = useState(0);
+  useEffect(() => {
+    const id = setTimeout(() => setNowMs(Date.now()), 0);
+    return () => clearTimeout(id);
+  }, []);
+
   // Selected node for inspector
   const [selectedNode, setSelectedNode] = useState<Node<MindMapNodeData> | null>(null);
 
@@ -248,11 +254,10 @@ export default function MindMapCanvas() {
     }
 
     // Filter by time range (assuming nodes have timestamps)
-    if (filters.timeRange[0] > 0 || filters.timeRange[1] < 100) {
-      const now = Date.now();
+    if ((filters.timeRange[0] > 0 || filters.timeRange[1] < 100) && nowMs > 0) {
       const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
       filteredNodes = filteredNodes.filter((n) => {
-        const age = now - new Date(n.data.note.createdAt).getTime();
+        const age = nowMs - new Date(n.data.note.createdAt).getTime();
         const agePercent = Math.min(100, (age / maxAge) * 100);
         return agePercent >= filters.timeRange[0] && agePercent <= filters.timeRange[1];
       });
@@ -278,7 +283,7 @@ export default function MindMapCanvas() {
     const layoutNodes = calculateLayout(filteredNodes, filteredEdges);
 
     return { nodes: layoutNodes, edges: filteredEdges };
-  }, [data, filters]);
+  }, [data, filters, nowMs]);
 
   // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState(processedData.nodes);

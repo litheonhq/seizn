@@ -20,9 +20,6 @@ import {
   ALL_POLICY_TEMPLATES,
   type OpaInput,
   type OpaPrincipal,
-  type OpaResource,
-  type OpaAction,
-  type OpaContext,
   type RegoPolicyCategory,
 } from '@/lib/winter/opa';
 

@@ -16,7 +16,8 @@ export function useReviewMode() {
 
     if (reviewModeCookie) {
       const value = reviewModeCookie.split('=')[1]?.trim();
-      setIsReviewMode(value === 'true');
+      // Avoid synchronous setState directly in effect body (React compiler lint).
+      setTimeout(() => setIsReviewMode(value === 'true'), 0);
     }
   }, []);
 

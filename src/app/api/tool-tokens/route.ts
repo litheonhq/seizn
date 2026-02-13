@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createToolGatingService } from '@/lib/tool-gating';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = createServerClient();
 
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const tokens = await service.listTokens(membership.organization_id);
 
     // Remove sensitive fields
-    const safeTokens = tokens.map(({ tokenHash, ...token }) => token);
+    const safeTokens = tokens.map(({ tokenHash: _tokenHash, ...token }) => token);
 
     return NextResponse.json({ tokens: safeTokens });
   } catch (error) {
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Return token value only once
-    const { tokenHash, ...safeToken } = tokenWithSecret;
+    const { tokenHash: _tokenHash, ...safeToken } = tokenWithSecret;
 
     return NextResponse.json(
       {

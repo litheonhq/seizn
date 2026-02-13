@@ -24,7 +24,7 @@ function createMockSupabase() {
     builder[m] = vi.fn().mockReturnValue(builder);
   }
 
-  (builder as any).then = (resolve: (v: unknown) => void) => {
+  (builder as { then: (resolve: (v: unknown) => void) => Promise<unknown> }).then = (resolve: (v: unknown) => void) => {
     resolve(queryResult);
     return Promise.resolve(queryResult);
   };
@@ -90,10 +90,14 @@ vi.mock('@anthropic-ai/sdk', () => {
 describe('ProfileService', () => {
   let supabase: ReturnType<typeof createMockSupabase>;
   let service: ProfileService;
+  type ProfileSupabase = ConstructorParameters<typeof ProfileService>[0];
+  type ThenableBuilder = {
+    then: (resolve: (v: unknown) => void) => Promise<unknown>;
+  };
 
   beforeEach(() => {
     supabase = createMockSupabase();
-    service = new ProfileService(supabase as any);
+    service = new ProfileService(supabase as unknown as ProfileSupabase);
   });
 
   // -------------------------------------------------------------------------
@@ -137,7 +141,7 @@ describe('ProfileService', () => {
       const getProfileResult = { data: null, error: { code: 'PGRST116' } };
       const insertResult = { data: mockProfileRow(), error: null };
 
-      (supabase._builder as any).then = (resolve: (v: unknown) => void) => {
+      (supabase._builder as ThenableBuilder).then = (resolve: (v: unknown) => void) => {
         callCount++;
         const result = callCount <= 1 ? getProfileResult : insertResult;
         resolve(result);
@@ -157,7 +161,7 @@ describe('ProfileService', () => {
       const existingRow = mockProfileRow({ version: 3 });
       const newRow = mockProfileRow({ version: 4 });
 
-      (supabase._builder as any).then = (resolve: (v: unknown) => void) => {
+      (supabase._builder as ThenableBuilder).then = (resolve: (v: unknown) => void) => {
         callCount++;
         const result = callCount <= 1
           ? { data: existingRow, error: null }
@@ -175,7 +179,7 @@ describe('ProfileService', () => {
 
     it('throws on Supabase insert error', async () => {
       let callCount = 0;
-      (supabase._builder as any).then = (resolve: (v: unknown) => void) => {
+      (supabase._builder as ThenableBuilder).then = (resolve: (v: unknown) => void) => {
         callCount++;
         const result = callCount <= 1
           ? { data: null, error: { code: 'PGRST116' } }
@@ -238,7 +242,7 @@ describe('ProfileService', () => {
       const currentRow = mockProfileRow({ version: 5 });
       const newRow = mockProfileRow({ version: 6, about_me: 'Old profile' });
 
-      (supabase._builder as any).then = (resolve: (v: unknown) => void) => {
+      (supabase._builder as ThenableBuilder).then = (resolve: (v: unknown) => void) => {
         callCount++;
         let result;
         if (callCount === 1) result = { data: targetRow, error: null }; // fetch target
@@ -268,7 +272,7 @@ describe('ProfileService', () => {
 
   describe('createProfileService', () => {
     it('returns a ProfileService instance', () => {
-      const svc = createProfileService(supabase as any);
+      const svc = createProfileService(supabase as unknown as ProfileSupabase);
       expect(svc).toBeInstanceOf(ProfileService);
     });
   });

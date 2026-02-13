@@ -5,7 +5,7 @@
  * Test policy decisions without affecting production
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { simulatePolicy } from '@/lib/opa/simulator';
 import { validateApiKey } from '@/lib/auth/api-key';

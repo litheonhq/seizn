@@ -265,6 +265,42 @@ export interface ControlTowerOverview {
   quotaStatus: UsageQuota[];
 }
 
+export interface FailingTraceSignal {
+  id: string;
+  endpoint: string;
+  method: string;
+  statusCode: number;
+  latencyMs: number;
+  occurredAt: string;
+}
+
+export interface SecurityPolicyEventSignal {
+  id: string;
+  action: string;
+  resourceType: string;
+  status: string;
+  occurredAt: string;
+  details?: Record<string, unknown>;
+}
+
+export interface SearchQualityRegressionSignal {
+  id: string;
+  metricKey: string;
+  baselineValue: number;
+  candidateValue: number;
+  delta: number;
+  severity: 'warning' | 'critical';
+  acknowledged: boolean;
+  occurredAt: string;
+}
+
+export interface ControlTowerSignals {
+  failingTraces: FailingTraceSignal[];
+  securityPolicyEvents: SecurityPolicyEventSignal[];
+  searchQualityRegressions: SearchQualityRegressionSignal[];
+  generatedAt: string;
+}
+
 export interface TimeRange {
   start: string;
   end: string;

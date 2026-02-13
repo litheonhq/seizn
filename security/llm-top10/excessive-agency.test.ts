@@ -5,7 +5,7 @@
  * Critical for Seizn's tool-gating feature.
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   EXCESSIVE_AGENCY_SCENARIOS,
   createTestContext,
@@ -92,7 +92,7 @@ async function executeToolWithGating(
 // Mock ambiguous instruction handler
 async function handleAmbiguousInstruction(
   instruction: string,
-  context: ReturnType<typeof createTestContext>
+  _context: ReturnType<typeof createTestContext>
 ): Promise<{
   shouldProceed: boolean;
   clarificationNeeded: boolean;

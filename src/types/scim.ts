@@ -383,7 +383,7 @@ export interface CreateSCIMUserRequest {
   'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'?: SCIMEnterpriseUser;
 }
 
-export interface UpdateSCIMUserRequest extends Partial<CreateSCIMUserRequest> {}
+export type UpdateSCIMUserRequest = Partial<CreateSCIMUserRequest>;
 
 export interface CreateSCIMGroupRequest {
   schemas?: string[];
@@ -392,7 +392,7 @@ export interface CreateSCIMGroupRequest {
   members?: SCIMGroupMember[];
 }
 
-export interface UpdateSCIMGroupRequest extends Partial<CreateSCIMGroupRequest> {}
+export type UpdateSCIMGroupRequest = Partial<CreateSCIMGroupRequest>;
 
 // ============================================
 // Filter Types

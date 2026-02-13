@@ -14,7 +14,6 @@ export default function DeviceForm() {
   const [step, setStep] = useState<Step>("input");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [deviceInfo, setDeviceInfo] = useState<{ device_code: string } | null>(null);
 
   // Auto-format: insert dash after 4 chars
   const handleCodeChange = (val: string) => {
@@ -58,7 +57,6 @@ export default function DeviceForm() {
         return;
       }
 
-      setDeviceInfo(data);
       setStep("confirming");
     } catch {
       setErrorMsg("Network error. Please try again.");
@@ -115,9 +113,15 @@ export default function DeviceForm() {
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
+
+    let codeTimeout: ReturnType<typeof setTimeout> | undefined;
     if (code) {
-      handleCodeChange(code);
+      codeTimeout = setTimeout(() => handleCodeChange(code), 0);
     }
+
+    return () => {
+      if (codeTimeout) clearTimeout(codeTimeout);
+    };
   }, []);
 
   return (

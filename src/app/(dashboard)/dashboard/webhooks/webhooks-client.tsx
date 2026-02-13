@@ -117,7 +117,7 @@ export default function WebhooksClient() {
   const [deliveries, setDeliveries] = useState<WebhookDelivery[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
+  const [editingWebhook, setEditingWebhook] = useState<Webhook | null>(null);
   const [activeTab, setActiveTab] = useState<"webhooks" | "deliveries">("webhooks");
 
 
@@ -146,9 +146,23 @@ export default function WebhooksClient() {
     fetchData();
   }, [fetchData]);
 
-  const handleCreateWebhook = async () => {
+  const handleSaveWebhook = async () => {
     if (!formName || !formUrl || formEvents.length === 0) return;
 
+    if (editingWebhook) {
+      setWebhooks((prev) =>
+        prev.map((w) =>
+          w.id === editingWebhook.id
+            ? {
+                ...w,
+                name: formName,
+                url: formUrl,
+                events: formEvents,
+              }
+            : w
+        )
+      );
+    } else {
     const newWebhook: Webhook = {
       id: `wh_${Date.now()}`,
       name: formName,
@@ -161,8 +175,10 @@ export default function WebhooksClient() {
       failure_count: 0,
     };
 
-    setWebhooks([newWebhook, ...webhooks]);
+      setWebhooks((prev) => [newWebhook, ...prev]);
+    }
     setShowCreateModal(false);
+    setEditingWebhook(null);
     setFormName("");
     setFormUrl("");
     setFormEvents([]);
@@ -235,7 +251,13 @@ export default function WebhooksClient() {
           </p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => {
+            setEditingWebhook(null);
+            setFormName("");
+            setFormUrl("");
+            setFormEvents([]);
+            setShowCreateModal(true);
+          }}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -348,7 +370,13 @@ export default function WebhooksClient() {
                 {t("dashboard.webhooks.empty.description")}
               </p>
               <button
-                onClick={() => setShowCreateModal(true)}
+                onClick={() => {
+                  setEditingWebhook(null);
+                  setFormName("");
+                  setFormUrl("");
+                  setFormEvents([]);
+                  setShowCreateModal(true);
+                }}
                 className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 {t("dashboard.webhooks.empty.cta")}
@@ -417,7 +445,13 @@ export default function WebhooksClient() {
                       />
                     </button>
                     <button
-                      onClick={() => setSelectedWebhook(webhook)}
+                      onClick={() => {
+                        setEditingWebhook(webhook);
+                        setFormName(webhook.name);
+                        setFormUrl(webhook.url);
+                        setFormEvents(webhook.events);
+                        setShowCreateModal(true);
+                      }}
                       className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                       title={t("dashboard.webhooks.edit")}
                     >
@@ -579,13 +613,16 @@ export default function WebhooksClient() {
             </div>
             <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
               <button
-                onClick={() => setShowCreateModal(false)}
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setEditingWebhook(null);
+                }}
                 className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
                 {t("dashboard.webhooks.modal.cancel")}
               </button>
               <button
-                onClick={handleCreateWebhook}
+                onClick={handleSaveWebhook}
                 disabled={!formName || !formUrl || formEvents.length === 0}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >

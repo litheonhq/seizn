@@ -253,6 +253,10 @@ interface ImageExtractionOptions {
 }
 
 const MAX_IMAGE_BASE64_LENGTH = 7_000_000; // ~5MB after base64 encoding
+type ImageSource =
+  | { type: 'url'; url: string }
+  | { type: 'base64'; media_type: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'; data: string };
+type VisionContentItem = { type: 'image'; source: ImageSource } | { type: 'text'; text: string };
 
 /** Block SSRF: reject private/internal IPs and non-HTTPS URLs */
 function validateImageUrl(urlString: string): void {
@@ -282,8 +286,7 @@ export async function extractMemoriesFromImage(
     : 'claude-3-5-sonnet-20241022';
 
   // Build content array with image (SSRF-safe)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let imageSource: any;
+  let imageSource: ImageSource;
   if (imageData.startsWith('http')) {
     validateImageUrl(imageData);
     imageSource = { type: 'url', url: imageData };
@@ -293,7 +296,7 @@ export async function extractMemoriesFromImage(
     }
     imageSource = { type: 'base64', media_type: mediaType, data: imageData };
   }
-  const content: any[] = [{ type: 'image', source: imageSource }];
+  const content: VisionContentItem[] = [{ type: 'image', source: imageSource }];
 
   // Add context if provided
   let textContent = 'Extract any important memories from this image.';

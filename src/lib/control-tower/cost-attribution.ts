@@ -82,6 +82,22 @@ export interface BudgetStatus {
   isNearLimit: boolean;
 }
 
+interface GatewayCostLedgerRecord {
+  model?: string | null;
+  provider?: string | null;
+  total_cost?: number | null;
+  input_tokens?: number | null;
+  output_tokens?: number | null;
+  cached_tokens?: number | null;
+  cache_savings?: number | null;
+  route_id?: string | null;
+  route_name?: string | null;
+  latency_ms?: number | null;
+  is_error?: boolean | null;
+  user_id?: string | null;
+  created_at?: string | null;
+}
+
 // ============================================
 // Cost Attribution Functions
 // ============================================
@@ -123,7 +139,7 @@ export async function getCostBreakdown(params: CostQueryParams): Promise<CostBre
     throw new Error(`Failed to fetch cost ledgers: ${error.message}`);
   }
 
-  const records = ledgers || [];
+  const records: GatewayCostLedgerRecord[] = (ledgers || []) as GatewayCostLedgerRecord[];
 
   // Calculate totals
   const totalCost = records.reduce((sum, r) => sum + (r.total_cost || 0), 0);
@@ -159,7 +175,7 @@ export async function getCostBreakdown(params: CostQueryParams): Promise<CostBre
 /**
  * Get cost breakdown by model
  */
-function aggregateByModel(records: any[]): ModelCostBreakdown[] {
+function aggregateByModel(records: GatewayCostLedgerRecord[]): ModelCostBreakdown[] {
   const modelMap = new Map<string, {
     provider: string;
     totalCost: number;
@@ -211,7 +227,7 @@ function aggregateByModel(records: any[]): ModelCostBreakdown[] {
 /**
  * Get cost breakdown by route
  */
-function aggregateByRoute(records: any[]): RouteCostBreakdown[] {
+function aggregateByRoute(records: GatewayCostLedgerRecord[]): RouteCostBreakdown[] {
   const routeMap = new Map<string, {
     routeName: string;
     totalCost: number;
@@ -254,7 +270,7 @@ function aggregateByRoute(records: any[]): RouteCostBreakdown[] {
 /**
  * Get cost breakdown by user
  */
-function aggregateByUser(records: any[]): UserCostBreakdown[] {
+function aggregateByUser(records: GatewayCostLedgerRecord[]): UserCostBreakdown[] {
   const userMap = new Map<string, {
     totalCost: number;
     requestCount: number;
@@ -269,8 +285,9 @@ function aggregateByUser(records: any[]): UserCostBreakdown[] {
       models: new Map(),
     };
 
-    const modelCount = existing.models.get(r.model) || 0;
-    existing.models.set(r.model, modelCount + 1);
+    const modelKey = r.model || 'unknown';
+    const modelCount = existing.models.get(modelKey) || 0;
+    existing.models.set(modelKey, modelCount + 1);
 
     userMap.set(key, {
       totalCost: existing.totalCost + (r.total_cost || 0),
@@ -296,7 +313,7 @@ function aggregateByUser(records: any[]): UserCostBreakdown[] {
 /**
  * Get cost breakdown by day
  */
-function aggregateByDay(records: any[]): DailyCostBreakdown[] {
+function aggregateByDay(records: GatewayCostLedgerRecord[]): DailyCostBreakdown[] {
   const dayMap = new Map<string, { totalCost: number; requestCount: number }>();
 
   for (const r of records) {

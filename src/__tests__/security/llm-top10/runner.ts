@@ -4,7 +4,7 @@
  * Executes security tests against the Seizn Guard/Firewall system.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
   PromptInjectionDetector,
   createDetector,
@@ -19,7 +19,6 @@ import type {
 } from './types';
 import {
   ALL_SECURITY_TESTS,
-  getTestsByCategory,
   LLM01_PROMPT_INJECTION,
   LLM02_INSECURE_OUTPUT,
   LLM04_MODEL_DOS,

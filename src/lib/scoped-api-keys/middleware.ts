@@ -216,13 +216,13 @@ export function withScopedApiKey(
   handler: (
     request: NextRequest,
     auth: ScopedAuthResult,
-    ...args: any[]
+    ...args: unknown[]
   ) => Promise<NextResponse>,
   options?: {
     requiredPermission?: Permission;
   }
 ) {
-  return async (request: NextRequest, ...args: any[]): Promise<NextResponse> => {
+  return async (request: NextRequest, ...args: unknown[]): Promise<NextResponse> => {
     const authResult = await authenticateScopedRequest(request, {
       requiredPermission: options?.requiredPermission,
     });

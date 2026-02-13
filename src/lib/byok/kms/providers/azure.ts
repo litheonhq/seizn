@@ -13,6 +13,7 @@ import type {
   AzureKeyVaultConfig,
   ValidateKmsResult,
 } from '../types';
+import type { TokenCredential } from '@azure/core-auth';
 
 export class AzureKeyVaultClient implements KmsProviderClient {
   readonly provider = 'azure_keyvault' as const;
@@ -173,15 +174,15 @@ export class AzureKeyVaultClient implements KmsProviderClient {
   /**
    * Create Azure credential based on configuration
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   private createCredential(
     ClientSecretCredential: new (
       tenantId: string,
       clientId: string,
       clientSecret: string
-    ) => any,
-    DefaultAzureCredential: new () => any
-  ): any {
+    ) => TokenCredential,
+    DefaultAzureCredential: new () => TokenCredential
+  ): TokenCredential {
     // Use Service Principal if client_secret is provided
     if (this.config.client_secret && !this.config.use_managed_identity) {
       return new ClientSecretCredential(

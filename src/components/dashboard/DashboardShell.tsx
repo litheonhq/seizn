@@ -171,24 +171,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const router = useRouter();
   const { t } = useDashboardTranslation();
   const navigationGroups = useMemo(() => buildNavigationGroups(t), [t]);
-  const [isReviewMode, setIsReviewMode] = useState(false);
-  const [reviewModeChecked, setReviewModeChecked] = useState(false);
-
-  useEffect(() => {
-    const reviewCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("review_mode="));
-    if (reviewCookie?.split("=")[1] === "true") {
-      setIsReviewMode(true);
-    }
-    setReviewModeChecked(true);
-  }, []);
-
-  useEffect(() => {
-    if (reviewModeChecked && status === "unauthenticated" && !isReviewMode) {
-      window.location.href = "/login";
-    }
-  }, [status, isReviewMode, reviewModeChecked]);
 
   const handleSignOut = async () => {
     router.refresh();
@@ -196,7 +178,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   };
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [season, setSeason] = useState<Season>("winter");
+  const season = getSeason();
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
@@ -216,41 +198,45 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     return initial;
   });
 
-  // Auto-expand group containing active page
-  useEffect(() => {
+  const autoExpandedGroupKeys = useMemo(() => {
+    const keys = new Set<string>();
     for (const group of navigationGroups) {
       if (!group.key) continue;
       const hasActive = group.items.some((item) => {
         if (item.href === "/dashboard") return pathname === "/dashboard";
         return pathname.startsWith(item.href);
       });
-      if (hasActive) {
-        setOpenGroups((prev) => ({ ...prev, [group.key]: true }));
-      }
+      if (hasActive) keys.add(group.key);
     }
-  }, [pathname]);
+    return keys;
+  }, [navigationGroups, pathname]);
 
   const toggleGroup = useCallback((label: string) => {
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
   }, []);
 
-  const fetchOrganizations = useCallback(async () => {
-    try {
-      const res = await fetch("/api/dashboard/organizations");
-      const data = await res.json();
-      if (data.success && data.organizations) {
-        setOrganizations(data.organizations);
-      }
-    } catch (err) {
-      console.error("Failed to fetch orgs:", err);
-    }
-  }, []);
-
   useEffect(() => {
     if (status === "authenticated") {
-      fetchOrganizations();
+      let cancelled = false;
+
+      fetch("/api/dashboard/organizations")
+        .then((res) => res.json())
+        .then((data) => {
+          if (cancelled) return;
+          if (data.success && data.organizations) {
+            setOrganizations(data.organizations);
+          }
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.error("Failed to fetch orgs:", err);
+        });
+
+      return () => {
+        cancelled = true;
+      };
     }
-  }, [status, fetchOrganizations]);
+  }, [status]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -265,10 +251,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    setSeason(getSeason());
-  }, []);
-
   const config = seasonConfig[season];
   const isSidebarExpanded = isSidebarPinned;
   const mainPaddingClass = "lg:pl-20";
@@ -279,12 +261,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     return pathname.startsWith(href);
   }, [pathname]);
 
-  const allNavItems = useMemo(() =>
-    navigationGroups.flatMap((g) => g.items),
-    []
-  );
+  const allNavItems = navigationGroups.flatMap((g) => g.items);
 
-  if (status === "loading" || (status === "unauthenticated" && !isReviewMode && reviewModeChecked)) {
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
@@ -346,7 +325,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-thin">
           {isSidebarExpanded ? (
             navigationGroups.map((group) => {
-              const isOpen = group.key ? (openGroups[group.key] ?? true) : true;
+              const isOpen = group.key
+                ? (openGroups[group.key] ?? true) || autoExpandedGroupKeys.has(group.key)
+                : true;
               return (
                 <div key={group.key || "__top"} className={group.key ? "mt-1" : ""}>
                   {group.key && (

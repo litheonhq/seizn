@@ -98,7 +98,10 @@ self.addEventListener('fetch', (event) => {
 
   // API requests: Network-first with cache fallback
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(networkFirstWithCache(request, API_CACHE));
+    const urlToTest = `${url.pathname}${url.search}`;
+    if (CACHEABLE_API_PATTERNS.some((pattern) => pattern.test(urlToTest))) {
+      event.respondWith(networkFirstWithCache(request, API_CACHE));
+    }
     return;
   }
 
@@ -156,7 +159,7 @@ async function networkFirstWithCache(request, cacheName) {
     }
 
     return networkResponse;
-  } catch (error) {
+  } catch {
     console.log('[SW] Network failed, trying cache:', request.url);
 
     const cachedResponse = await caches.match(request);

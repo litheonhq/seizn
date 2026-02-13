@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, type ReactNode, type ReactElement } from 'react';
+import { Suspense, type ReactNode } from 'react';
 
 /**
  * SuspenseList Props
@@ -47,7 +47,7 @@ export interface SuspenseListProps {
 export function SuspenseList({
   children,
   revealOrder = 'forwards',
-  tail,
+  tail: _tail,
 }: SuspenseListProps) {
   // Note: This is a simplified implementation.
   // React's experimental SuspenseList provides more sophisticated coordination.
@@ -79,7 +79,7 @@ export interface StaggeredListProps<T> {
 export function StaggeredList<T>({
   items,
   renderItem,
-  renderSkeleton,
+  renderSkeleton: _renderSkeleton,
   getKey,
   staggerDelay = 100,
 }: StaggeredListProps<T>) {

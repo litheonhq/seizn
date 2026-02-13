@@ -313,7 +313,7 @@ async function handleMemorySearch(
   const queryEmbedding = await generateEmbedding(query);
 
   // Build base query
-  let rpcQuery = supabase.rpc('search_memories', {
+  const rpcQuery = supabase.rpc('search_memories', {
     p_user_id: context.userId,
     p_query_embedding: queryEmbedding,
     p_match_threshold: minRelevance,
@@ -365,30 +365,42 @@ async function handleMemorySearch(
     };
   }
 
+  type MemorySearchResult = {
+    id: string;
+    content: string;
+    memory_type: string;
+    tags?: string[];
+    scope?: string;
+    importance?: number;
+    created_at?: string;
+    similarity?: number;
+    relevance?: number;
+  };
+
   // Apply post-filters
-  let results = memories || [];
+  let results: MemorySearchResult[] = (memories || []) as MemorySearchResult[];
 
   if (args.memory_types) {
     const types = args.memory_types as string[];
-    results = results.filter((m: any) => types.includes(m.memory_type));
+    results = results.filter((m) => types.includes(m.memory_type));
   }
 
   if (args.tags) {
     const filterTags = args.tags as string[];
-    results = results.filter((m: any) =>
+    results = results.filter((m) =>
       filterTags.some((t) => m.tags?.includes(t))
     );
   }
 
   if (args.scope) {
-    results = results.filter((m: any) => m.scope === args.scope);
+    results = results.filter((m) => m.scope === args.scope);
   }
 
   return {
     success: true,
     result: {
       query,
-      memories: results.slice(0, limit).map((m: any) => ({
+      memories: results.slice(0, limit).map((m) => ({
         id: m.id,
         content: m.content,
         memory_type: m.memory_type,

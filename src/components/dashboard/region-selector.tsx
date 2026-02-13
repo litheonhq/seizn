@@ -3,12 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   REGIONS,
-  getAvailableRegions,
   getRegionsForPlan,
   getDataResidencyInfo,
   getRegionMigrationInfo,
   type RegionCode,
-  type RegionConfig,
 } from "@/config/regions";
 
 interface RegionSelectorProps {

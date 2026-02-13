@@ -20,7 +20,7 @@ import {
   updateSSOConnection,
   deleteSSOConnection,
 } from '@/lib/sso';
-import type { SSOConnectionStatus, SSOProviderType } from '@/types/sso';
+import type { SSOConnectionStatus } from '@/types/sso';
 
 // Helper to get user from auth header
 async function getUserFromToken(request: NextRequest) {

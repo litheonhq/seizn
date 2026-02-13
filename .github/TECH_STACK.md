@@ -1,5 +1,5 @@
 # Seizn -- Tech Stack Documentation
-> Auto-generated on 2026-02-12
+> Auto-generated on 2026-02-13
 
 Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
 
@@ -324,7 +324,7 @@ User Request
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |
 | Redis Caching | Fully Implemented | `src/lib/redis.ts` | Embedding cache, rate limit store |
-| i18n (22 locales) | Fully Implemented | `src/i18n/config.ts`, `src/i18n/dictionaries/`, `src/middleware.ts` | Cookie, Accept-Language, IP geolocation |
+| i18n (22 locales) | Fully Implemented | `src/i18n/config.ts`, `src/i18n/dictionaries/`, `src/proxy.ts` | Cookie, Accept-Language, IP geolocation |
 | PostHog Analytics | Fully Implemented | `src/components/posthog-provider.tsx`, `src/lib/analytics.ts` | TTFS, conversion, feature tracking |
 | Sentry Error Tracking | Fully Implemented | `src/instrumentation.ts`, `src/instrumentation-client.ts`, `next.config.ts` | Source maps disabled (build stability) |
 | OpenTelemetry Tracing | Fully Implemented | `src/lib/otel/instrumentation.ts`, `src/lib/telemetry/` | GenAI semantic conventions |

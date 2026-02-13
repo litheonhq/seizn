@@ -12,7 +12,6 @@ import {
   type AccessContext,
   type AccessReason,
 } from '@/lib/confidential/rag-mode';
-import { createServerClient } from '@/lib/supabase';
 
 interface RetrieveRequest {
   collection_id: string;

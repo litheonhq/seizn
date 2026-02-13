@@ -60,20 +60,6 @@ export function DeleteMemoriesModal({
 
   const CONFIRM_PHRASE = "DELETE ALL";
 
-  // Reset state when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setStep("confirm");
-      setStats(null);
-      setConfirmText("");
-      setResult(null);
-      setError(null);
-      setLoading(false);
-      setProgress(0);
-      loadStats();
-    }
-  }, [isOpen]);
-
   // Load memory statistics
   const loadStats = useCallback(async () => {
     setLoading(true);
@@ -109,6 +95,20 @@ export function DeleteMemoriesModal({
       setLoading(false);
     }
   }, [namespace]);
+
+  // Reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setStep("confirm");
+      setStats(null);
+      setConfirmText("");
+      setResult(null);
+      setError(null);
+      setLoading(false);
+      setProgress(0);
+      void loadStats();
+    }
+  }, [isOpen, loadStats]);
 
   // Proceed to typing step
   const proceedToTyping = () => {

@@ -6,6 +6,7 @@
  */
 
 import crypto from "crypto";
+import os from "node:os";
 import { createServerClient } from "@/lib/supabase";
 
 // License types
@@ -436,8 +437,6 @@ export function getDefaultFeatures(licenseType: LicenseType): Partial<LicenseFea
  * Generate a hardware fingerprint
  */
 export function generateHardwareFingerprint(): string {
-  const os = require("os");
-
   const components = [
     os.hostname(),
     os.platform(),

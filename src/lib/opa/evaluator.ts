@@ -131,8 +131,8 @@ export class PolicyEvaluator {
     const wasm = await response.arrayBuffer();
 
     // Compile WASM module
-    const module = await WebAssembly.compile(wasm);
-    const instance = await WebAssembly.instantiate(module, {
+    const wasmModule = await WebAssembly.compile(wasm);
+    const instance = await WebAssembly.instantiate(wasmModule, {
       env: {
         opa_abort: (addr: number) => {
           const msg = wasmMemory ? readString(wasmMemory, addr) : 'unknown error';

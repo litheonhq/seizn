@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { createServerClient } from "@/lib/supabase";
 import { getGateway } from "@/lib/ai-gateway";
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { model, messages, temperature, max_tokens, stream, metadata } = body;
+    const { model, messages, temperature, max_tokens, stream: _stream, metadata } = body;
 
     // Validate required fields
     if (!model || !messages || !Array.isArray(messages) || messages.length === 0) {
@@ -279,8 +280,7 @@ export async function POST(request: NextRequest) {
  * Hash API key for lookup
  */
 function hashApiKey(key: string): string {
-  const crypto = require("crypto");
-  return crypto.createHash("sha256").update(key).digest("hex");
+  return createHash("sha256").update(key).digest("hex");
 }
 
 /**
@@ -289,7 +289,7 @@ function hashApiKey(key: string): string {
 async function checkRateLimit(
   orgId: string,
   userId: string,
-  model: string
+  _model: string
 ): Promise<{ allowed: boolean; remaining?: number; retryAfter?: Date }> {
   try {
     const supabase = createServerClient();
@@ -324,7 +324,7 @@ async function checkRateLimit(
 async function checkPolicies(
   orgId: string,
   model: string,
-  messages: ChatMessage[]
+  _messages: ChatMessage[]
 ): Promise<{ allowed: boolean; reason?: string }> {
   try {
     const supabase = createServerClient();

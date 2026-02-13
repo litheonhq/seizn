@@ -4,7 +4,7 @@
  * Tests for direct and indirect prompt injection vulnerabilities.
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   PROMPT_INJECTION_PAYLOADS,
   containsSystemPrompt,

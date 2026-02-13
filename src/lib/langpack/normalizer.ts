@@ -269,7 +269,7 @@ export function normalizeArabicText(text: string): string {
  * - Handle common letter variations
  */
 export function normalizeCyrillicText(text: string): string {
-  let result = text.normalize('NFKC');
+  const result = text.normalize('NFKC');
 
   // Normalize common variations
   const cyrillicNormalizations: Record<string, string> = {

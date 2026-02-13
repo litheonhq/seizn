@@ -172,7 +172,6 @@ function hierarchicalLayout(
   }
 
   // Find root nodes (nodes with no incoming edges or minimum incoming)
-  const nodeIds = new Set(nodes.map((n) => n.id));
   const roots: string[] = [];
 
   for (const node of nodes) {
@@ -201,7 +200,7 @@ function hierarchicalLayout(
   // Assign levels using BFS
   const levels = new Map<string, number>();
   const visited = new Set<string>();
-  let queue = roots.map((id) => ({ id, level: 0 }));
+  const queue = roots.map((id) => ({ id, level: 0 }));
 
   while (queue.length > 0) {
     const { id, level } = queue.shift()!;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, use, type ReactNode, useState, useEffect } from 'react';
+import { Suspense, use, type ReactNode, useState, useEffect, useMemo } from 'react';
 
 /**
  * Props for DataLoader
@@ -35,20 +35,17 @@ function DataConsumerWithCache<T>({
   cacheKey: string;
   useCache: boolean;
 }) {
-  // Check cache first
-  if (useCache && dataCache.has(cacheKey)) {
-    return <>{children(dataCache.get(cacheKey) as T)}</>;
-  }
+  const promise = useMemo(() => {
+    if (useCache && dataCache.has(cacheKey)) {
+      return Promise.resolve(dataCache.get(cacheKey) as T);
+    }
 
-  // Create and use the promise
-  const [promise] = useState(() => {
     const p = promiseFactory();
-    // Cache the result
     if (useCache) {
       p.then((data) => dataCache.set(cacheKey, data));
     }
     return p;
-  });
+  }, [cacheKey, promiseFactory, useCache]);
 
   const data = use(promise);
   return <>{children(data)}</>;

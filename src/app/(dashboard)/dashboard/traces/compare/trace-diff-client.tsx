@@ -20,10 +20,12 @@ interface Trace {
 
 export function TraceDiffClient() {
   const searchParams = useSearchParams();
-  const [traceA, setTraceA] = useState<string>(searchParams.get("a") || "");
-  const [traceB, setTraceB] = useState<string>(searchParams.get("b") || "");
+  const initialTraceA = searchParams.get("a") || "";
+  const initialTraceB = searchParams.get("b") || "";
+  const [traceA, setTraceA] = useState<string>(initialTraceA);
+  const [traceB, setTraceB] = useState<string>(initialTraceB);
   const [recentTraces, setRecentTraces] = useState<Trace[]>([]);
-  const [showDiff, setShowDiff] = useState(false);
+  const [showDiff, setShowDiff] = useState(Boolean(initialTraceA && initialTraceB));
   const [selectedTrace, setSelectedTrace] = useState<Trace | null>(null);
 
   // Load recent traces for selection
@@ -41,13 +43,6 @@ export function TraceDiffClient() {
     };
     loadRecentTraces();
   }, []);
-
-  // Auto-show diff if both traces are in URL
-  useEffect(() => {
-    if (traceA && traceB) {
-      setShowDiff(true);
-    }
-  }, [traceA, traceB]);
 
   const handleCompare = () => {
     if (traceA && traceB) {

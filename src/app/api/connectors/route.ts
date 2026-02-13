@@ -12,7 +12,7 @@ import { createServerClient } from '@/lib/supabase';
 import { getAvailableConnectors, type ConnectorType } from '@/lib/connectors/external';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {

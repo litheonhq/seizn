@@ -8,7 +8,15 @@
  * @module lib/feature-flags/hooks
  */
 
-import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  createContext,
+  useContext,
+} from 'react';
 import type { ReactNode } from 'react';
 import { getPostHogClient, initFeatureFlags } from './posthog-client';
 import type {
@@ -33,7 +41,7 @@ interface FeatureFlagsContextValue {
   reloadFlags: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 const _FlagsContext = createContext<FeatureFlagsContextValue | null>(null);
 
 // =============================================================================
@@ -161,22 +169,22 @@ export function useFeatureFlag<K extends FlagKey>(
 ): UseFeatureFlagReturn<K> {
   const { key, defaultValue, trackExposure = true } = options;
   const { isReady, getFlag, isEnabled } = useFeatureFlags();
-  const [hasTrackedExposure, setHasTrackedExposure] = useState(false);
+  const trackedExposureKeyRef = useRef<FlagKey | null>(null);
 
   const value = getFlag(key, defaultValue);
   const enabled = isEnabled(key);
 
   // Track exposure once when ready
   useEffect(() => {
-    if (isReady && trackExposure && !hasTrackedExposure) {
+    if (isReady && trackExposure && trackedExposureKeyRef.current !== key) {
       const client = getPostHogClient();
       client.track('$feature_flag_called', {
         $feature_flag: key,
         $feature_flag_response: value,
       });
-      setHasTrackedExposure(true);
+      trackedExposureKeyRef.current = key;
     }
-  }, [isReady, key, value, trackExposure, hasTrackedExposure]);
+  }, [isReady, key, value, trackExposure]);
 
   return {
     value,
@@ -233,7 +241,7 @@ export interface UseExperimentReturn {
 export function useExperiment(options: UseExperimentOptions): UseExperimentReturn {
   const { key, variants, trackExposure = true } = options;
   const { isReady, getFlag } = useFeatureFlags();
-  const [hasTrackedExposure, setHasTrackedExposure] = useState(false);
+  const trackedExposureKeyRef = useRef<FlagKey | null>(null);
 
   const value = getFlag(key);
   const variant = typeof value === 'string' ? value : 'control';
@@ -241,12 +249,17 @@ export function useExperiment(options: UseExperimentOptions): UseExperimentRetur
 
   // Track exposure
   useEffect(() => {
-    if (isReady && trackExposure && !hasTrackedExposure && isParticipant) {
+    if (
+      isReady &&
+      trackExposure &&
+      isParticipant &&
+      trackedExposureKeyRef.current !== key
+    ) {
       const client = getPostHogClient();
       client.trackExperimentExposure(key, variant);
-      setHasTrackedExposure(true);
+      trackedExposureKeyRef.current = key;
     }
-  }, [isReady, key, variant, trackExposure, hasTrackedExposure, isParticipant]);
+  }, [isReady, key, variant, trackExposure, isParticipant]);
 
   const trackConversion = useCallback(
     (event: string, properties?: Record<string, unknown>) => {
@@ -287,14 +300,12 @@ export function useFeatureFlagPayload<K extends FlagKey>(key: K): {
   isLoading: boolean;
 } {
   const { isReady, isEnabled } = useFeatureFlags();
-  const [payload, setPayload] = useState<Record<string, unknown> | undefined>();
+  const payload = useMemo(() => {
+    if (!isReady) return undefined;
 
-  useEffect(() => {
-    if (isReady) {
-      const client = getPostHogClient();
-      const flagData = client.getFlagWithPayload(key);
-      setPayload(flagData.payload);
-    }
+    const client = getPostHogClient();
+    const flagData = client.getFlagWithPayload(key);
+    return flagData.payload as Record<string, unknown> | undefined;
   }, [isReady, key]);
 
   return {

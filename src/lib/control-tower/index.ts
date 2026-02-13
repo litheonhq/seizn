@@ -27,6 +27,11 @@ export {
   recordMetric,
 } from './metrics';
 
+// High-signal insights
+export {
+  getControlTowerSignals,
+} from './signals';
+
 // Alert management
 export {
   getActiveAlerts,

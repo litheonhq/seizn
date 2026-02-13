@@ -7,9 +7,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createResidencyService } from '@/lib/residency/service';
-import { REGION_DEFINITIONS, SKU_DEFINITIONS, getAvailableRegions } from '@/lib/residency/types';
+import { REGION_DEFINITIONS } from '@/lib/residency/types';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = createServerClient();
 

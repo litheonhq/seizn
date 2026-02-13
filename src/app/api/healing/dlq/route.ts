@@ -18,7 +18,6 @@ import {
   cleanupOldDLQEntries,
   DLQStatus,
   FailureCode,
-  IssueType,
 } from '@/lib/self-healing/dlq';
 
 /**

@@ -149,18 +149,22 @@ const FlowNode = memo(function FlowNode({
 
 export const MemoryFlowAnimation = memo(function MemoryFlowAnimation() {
   const [activeStep, setActiveStep] = useState(-1);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [paths, setPaths] = useState<string[]>([]);
-  const reducedMotionRef = useRef(false);
 
   // Animation loop
   useEffect(() => {
-    reducedMotionRef.current = prefersReducedMotion();
+    const prefers = prefersReducedMotion();
+    const motionId = setTimeout(() => setReducedMotion(prefers), 0);
 
-    if (reducedMotionRef.current) {
-      setActiveStep(PIPELINE_STEPS.length - 1);
-      return;
+    if (prefers) {
+      const id = setTimeout(() => setActiveStep(PIPELINE_STEPS.length - 1), 0);
+      return () => {
+        clearTimeout(motionId);
+        clearTimeout(id);
+      };
     }
 
     const startTime = Date.now();
@@ -173,7 +177,10 @@ export const MemoryFlowAnimation = memo(function MemoryFlowAnimation() {
       }
     }, 100);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(motionId);
+      clearInterval(interval);
+    };
   }, []);
 
   // Calculate SVG connector paths
@@ -299,7 +306,7 @@ export const MemoryFlowAnimation = memo(function MemoryFlowAnimation() {
             )}
 
             {/* Data particle */}
-            {isStepActive(i + 1) && !reducedMotionRef.current && (
+            {isStepActive(i + 1) && !reducedMotion && (
               <circle
                 r="3"
                 fill="var(--theme-primary)"

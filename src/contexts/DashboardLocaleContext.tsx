@@ -71,12 +71,12 @@ export function DashboardLocaleProvider({ children, initialLocale }: Props) {
   // Load dictionary on mount and when locale changes
   useEffect(() => {
     const detectedLocale = getLocaleFromCookie();
-    setLocale(detectedLocale);
-
-    setIsLoading(true);
+    const id = setTimeout(() => setLocale(detectedLocale), 0);
     loadDictionary(detectedLocale)
       .then(setDictionary)
       .finally(() => setIsLoading(false));
+
+    return () => clearTimeout(id);
   }, []);
 
   // Listen for locale changes via custom event (triggered by language switcher)

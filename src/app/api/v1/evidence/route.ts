@@ -10,9 +10,7 @@ import { validateApiKey } from '@/lib/auth/api-key';
 import {
   createEvidencePackBuilder,
   createEvidencePackStore,
-  createEvidencePackVerifier,
-  exportToProvJson,
-  exportToProvN,
+  type EvidencePack,
 } from '@/lib/provenance/evidence-pack';
 
 interface CreateEvidenceRequest {
@@ -156,8 +154,24 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Build pack (signing not implemented in this version for simplicity)
-    const pack = builder.build();
+    const shouldSign = body.sign === true;
+
+    let pack: EvidencePack;
+    if (shouldSign) {
+      try {
+        pack = await builder.buildSignedWithKMS();
+      } catch (signError) {
+        return NextResponse.json(
+          {
+            error: 'Signing failed',
+            message: signError instanceof Error ? signError.message : 'Unknown signing error',
+          },
+          { status: 422 }
+        );
+      }
+    } else {
+      pack = builder.build();
+    }
 
     // Store pack
     const store = createEvidencePackStore();
@@ -169,6 +183,8 @@ export async function POST(request: NextRequest) {
         version: pack.version,
         created: pack.created,
         hash: pack.hash,
+        has_signature: !!pack.signature,
+        signature_algorithm: pack.signature?.algorithm,
         entity_count: Object.keys(pack.provenance.entity).length,
         activity_count: Object.keys(pack.provenance.activity).length,
         agent_count: Object.keys(pack.provenance.agent).length,
@@ -192,8 +208,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const traceId = searchParams.get('trace_id');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
 
     const store = createEvidencePackStore();
 
@@ -221,6 +235,7 @@ export async function GET(request: NextRequest) {
         'GET /api/v1/evidence/:id/verify': 'Verify evidence pack integrity',
         'GET /api/v1/evidence/:id/export?format=prov-json': 'Export as PROV-JSON',
         'GET /api/v1/evidence/:id/export?format=prov-n': 'Export as PROV-N',
+        'GET /api/v1/evidence/:id/export?format=zip': 'Export as signed zip (provenance + policy + PII + trace digest)',
         'GET /api/v1/evidence/:id/trace/:entityId': 'Trace derivation chain',
       },
     });

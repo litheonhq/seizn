@@ -356,7 +356,6 @@ function MetricCard({
   value,
   secondaryValue,
   target,
-  trend,
   trendLabel,
   trendColor,
   trendIcon,

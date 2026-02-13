@@ -296,11 +296,11 @@ export function useRealtimeTable<T extends { id?: string | number }>(
   // Subscribe to realtime changes
   useEffect(() => {
     if (!enabled) {
-      setStatus('disconnected');
-      return;
+      const id = setTimeout(() => setStatus('disconnected'), 0);
+      return () => clearTimeout(id);
     }
 
-    setStatus('connecting');
+    const connectingId = setTimeout(() => setStatus('connecting'), 0);
 
     const unsubscribe = subscribeToTable<T>(
       {
@@ -316,10 +316,14 @@ export function useRealtimeTable<T extends { id?: string | number }>(
       }
     );
 
-    setStatus('connected');
-    onConnectionChangeRef.current?.('connected');
+    const connectedId = setTimeout(() => {
+      setStatus('connected');
+      onConnectionChangeRef.current?.('connected');
+    }, 0);
 
     return () => {
+      clearTimeout(connectingId);
+      clearTimeout(connectedId);
       unsubscribe();
       setStatus('disconnected');
       onConnectionChangeRef.current?.('disconnected');
@@ -329,7 +333,8 @@ export function useRealtimeTable<T extends { id?: string | number }>(
   // Sync initial data when it changes
   useEffect(() => {
     if (initialData.length > 0) {
-      setData(initialData);
+      const id = setTimeout(() => setData(initialData), 0);
+      return () => clearTimeout(id);
     }
   }, [initialData]);
 

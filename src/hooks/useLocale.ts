@@ -34,15 +34,17 @@ export function useLocale(options?: UseLocaleOptions) {
       userLocale: options?.userLocale,
       countryCode: options?.countryCode,
     });
-    setLocaleState(detected);
+    const id = setTimeout(() => setLocaleState(detected), 0);
+    return () => clearTimeout(id);
   }, [options?.userLocale, options?.countryCode]);
 
   // Load dictionary when locale changes
   useEffect(() => {
-    setIsLoading(true);
+    const id = setTimeout(() => setIsLoading(true), 0);
     loadDictionary(locale)
       .then(setDictionary)
       .finally(() => setIsLoading(false));
+    return () => clearTimeout(id);
   }, [locale]);
 
   // Change locale and persist

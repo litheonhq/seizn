@@ -73,8 +73,8 @@ export function useRealtimeMemories({
 
   useEffect(() => {
     if (!enabled || !userId) {
-      setIsConnected(false);
-      return;
+      const id = setTimeout(() => setIsConnected(false), 0);
+      return () => clearTimeout(id);
     }
 
     const unsubscribe = subscribeToMemories(
@@ -105,9 +105,10 @@ export function useRealtimeMemories({
       namespace
     );
 
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     return () => {
+      clearTimeout(connectId);
       unsubscribe();
       setIsConnected(false);
     };
@@ -164,8 +165,8 @@ export function useRealtimeMemory({
 
   useEffect(() => {
     if (!enabled || !memoryId) {
-      setIsConnected(false);
-      return;
+      const id = setTimeout(() => setIsConnected(false), 0);
+      return () => clearTimeout(id);
     }
 
     const unsubscribe = subscribeToMemory(
@@ -180,9 +181,10 @@ export function useRealtimeMemory({
       }
     );
 
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     return () => {
+      clearTimeout(connectId);
       unsubscribe();
       setIsConnected(false);
     };

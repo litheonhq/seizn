@@ -806,6 +806,181 @@ export function exportToProvN(pack: EvidencePack): string {
   return lines.join('\n');
 }
 
+export interface EvidencePackZipSupplemental {
+  policyDecisions: Record<string, unknown>[];
+  piiRedactionReport: Record<string, unknown>;
+  traceDigest: Record<string, unknown>;
+}
+
+function hashSortedObject(obj: Record<string, unknown>): string {
+  const sortedJson = JSON.stringify(obj, Object.keys(obj).sort());
+  return createHash('sha256').update(sortedJson).digest('hex');
+}
+
+function normalizeSignatureAlgorithm(raw?: string): 'hmac' | 'rsa' | 'ed25519' {
+  if (!raw) return 'hmac';
+  const lower = raw.toLowerCase();
+  if (lower.includes('ed25519')) return 'ed25519';
+  if (lower.includes('rsa')) return 'rsa';
+  return 'hmac';
+}
+
+/**
+ * Export a signed ZIP-compatible bundle.
+ *
+ * The format intentionally mirrors the verifier CLI structure and includes:
+ * - provenance graph
+ * - policy decisions log
+ * - PII redaction report
+ * - trace digest
+ */
+export function exportToSignedZip(
+  pack: EvidencePack,
+  supplemental: EvidencePackZipSupplemental
+): {
+  contentBase64: string;
+  checksum: string;
+  fileCount: number;
+} {
+  const proofChainMeta = {
+    id: pack.id,
+    userId: pack.metadata.organizationId,
+    traceId: pack.metadata.traceId,
+    version: pack.version,
+    hashAlgorithm: 'sha256',
+    rootHash: pack.hash,
+    finalHash: pack.hash,
+    chainLength: 1,
+    status: pack.signature ? 'signed' : 'unsigned',
+    createdAt: pack.created,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const signedHash = hashSortedObject({
+    proofChainId: proofChainMeta.id,
+    rootHash: proofChainMeta.rootHash,
+    finalHash: proofChainMeta.finalHash,
+    chainLength: proofChainMeta.chainLength,
+    version: proofChainMeta.version,
+  });
+
+  const signatureData = {
+    id: `sig:${pack.id}`,
+    proofChainId: pack.id,
+    algorithm: normalizeSignatureAlgorithm(pack.signature?.algorithm),
+    hashAlgorithm: 'sha256',
+    signedHash,
+    signature: pack.signature?.value || '',
+    keyId: ((pack.metadata as Record<string, unknown>)?.kms as Record<string, unknown> | undefined)?.keyId || 'embedded',
+    signerId: 'seizn-evidence-pack',
+    signedAt:
+      ((pack.metadata as Record<string, unknown>)?.kms as Record<string, unknown> | undefined)?.signedAt ||
+      pack.created,
+    claims: {
+      evidencePackId: pack.id,
+      provenanceHash: pack.hash,
+      traceId: pack.metadata.traceId,
+    },
+  };
+
+  const verifier = new EvidencePackVerifier();
+  const verification = verifier.verifyIntegrity(pack);
+  const verificationCertificate = {
+    verification: {
+      valid: verification.valid,
+      status: verification.valid ? 'valid' : 'invalid',
+      verifiedAt: new Date().toISOString(),
+      errors: verification.errors,
+    },
+    evidencePack: {
+      id: pack.id,
+      hash: pack.hash,
+    },
+  };
+
+  const manifest = {
+    version: '1.0',
+    format: 'seizn-evidence-pack',
+    exportedAt: new Date().toISOString(),
+    proofChainId: pack.id,
+    signatureId: signatureData.id,
+    files: [] as string[],
+  };
+
+  const entries: Array<{ path: string; content: string }> = [];
+
+  const pushEntry = (path: string, content: unknown) => {
+    const normalized = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+    entries.push({ path, content: normalized });
+    manifest.files.push(path);
+  };
+
+  pushEntry('proof-chain/metadata.json', proofChainMeta);
+  pushEntry('proof-chain/chain-hashes.json', [
+    {
+      index: 0,
+      evidenceId: pack.id,
+      evidenceType: 'metadata',
+      evidenceHash: pack.hash,
+      linkHash: pack.hash,
+      previousHash: null,
+      timestamp: pack.created,
+    },
+  ]);
+  pushEntry('signature/signature.json', signatureData);
+  pushEntry('verification/certificate.json', verificationCertificate);
+  pushEntry('metadata/evidence-pack.json', {
+    id: pack.id,
+    version: pack.version,
+    created: pack.created,
+    hash: pack.hash,
+    metadata: pack.metadata,
+  });
+  pushEntry('provenance/prov.json', pack.provenance);
+  pushEntry('governance/policy-decisions.json', supplemental.policyDecisions);
+  pushEntry('compliance/pii-redaction-report.json', supplemental.piiRedactionReport);
+  pushEntry('trace/trace-digest.json', supplemental.traceDigest);
+  pushEntry(
+    'README.txt',
+    [
+      'SEIZN EVIDENCE PACK (SIGNED ZIP)',
+      '',
+      `Evidence Pack ID: ${pack.id}`,
+      `Created: ${pack.created}`,
+      `Provenance Hash: ${pack.hash}`,
+      '',
+      'Included artifacts:',
+      '- provenance/prov.json',
+      '- governance/policy-decisions.json',
+      '- compliance/pii-redaction-report.json',
+      '- trace/trace-digest.json',
+      '- signature/signature.json',
+      '',
+      'Use seizn-verify-evidence CLI to verify integrity.',
+    ].join('\n')
+  );
+
+  entries.unshift({
+    path: 'manifest.json',
+    content: JSON.stringify(manifest, null, 2),
+  });
+
+  const zipContent = {
+    format: 'seizn-evidence-pack-zip',
+    version: '1.0',
+    entries,
+  };
+
+  const contentBase64 = Buffer.from(JSON.stringify(zipContent, null, 2)).toString('base64');
+  const checksum = createHash('sha256').update(contentBase64).digest('hex');
+
+  return {
+    contentBase64,
+    checksum,
+    fileCount: entries.length,
+  };
+}
+
 // ============================================
 // Factory functions
 // ============================================

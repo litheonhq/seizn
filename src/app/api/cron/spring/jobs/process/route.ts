@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createJobService } from '@/lib/spring/memory-v4/job-service';
 import { createIngestionService } from '@/lib/spring/memory-v4/ingestion-service';
-import { createSearchServiceV3 } from '@/lib/spring/memory-v4/search-service';
+import { runMemoryFlush, type FlushOptions } from '@/lib/spring/memory-v4/flush-service';
 import { verifyCronSecret } from '@/lib/cron-auth';
 import type { Job, JobType } from '@/lib/spring/memory-v4/types';
 
@@ -38,6 +38,20 @@ interface JobProcessor {
 }
 
 const processors: Partial<Record<JobType, JobProcessor>> = {
+  /**
+   * Consolidation / flush pipeline
+   */
+  async consolidate(job, supabase) {
+    const flushOptions = (job.inputData.flushOptions as FlushOptions | undefined) || {};
+    const result = await runMemoryFlush(supabase, job.userId, flushOptions);
+
+    return {
+      success: result.success,
+      outputData: result as unknown as Record<string, unknown>,
+      error: result.success ? undefined : result.errors.join('; '),
+    };
+  },
+
   /**
    * Ingest memories
    */
@@ -229,7 +243,7 @@ const processors: Partial<Record<JobType, JobProcessor>> = {
       .eq('user_id', job.userId);
 
     if (filters.types && Array.isArray(filters.types)) {
-      query = query.in('type', filters.types);
+      query = query.in('note_type', filters.types);
     }
 
     if (filters.categories && Array.isArray(filters.categories)) {
@@ -271,34 +285,67 @@ const processors: Partial<Record<JobType, JobProcessor>> = {
       includeProvenance?: boolean;
     };
 
-    const searchService = createSearchServiceV3(supabase);
-
     // Fetch all matching memories (paginated)
     const allNotes: Array<Record<string, unknown>> = [];
     let offset = 0;
     const batchSize = 100;
 
     while (true) {
-      const response = await searchService.search(job.userId, {
-        query: '*',
-        filters: input.filters,
-        topK: batchSize,
-      });
+      const filters = (input.filters || {}) as Record<string, unknown>;
 
-      if (response.results.length === 0) break;
+      let query = supabase
+        .from('spring_memory_notes')
+        .select('id,content,note_type,tags,category,extraction_confidence,created_at,payload_json,provenance')
+        .eq('user_id', job.userId)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + batchSize - 1);
 
-      allNotes.push(...response.results.map(r => ({
-        id: r.id,
-        content: r.content,
-        type: r.type,
-        tags: r.tags,
-        category: r.category,
-        extractionConfidence: r.extractionConfidence,
-        createdAt: r.createdAt,
-        ...(input.includeMetadata ? { metadata: r.metadata } : {}),
-      })));
+      if (filters.types && Array.isArray(filters.types)) {
+        query = query.in('note_type', filters.types);
+      }
 
-      if (response.results.length < batchSize) break;
+      if (filters.categories && Array.isArray(filters.categories)) {
+        query = query.overlaps('categories', filters.categories);
+      }
+
+      if (filters.tags && Array.isArray(filters.tags)) {
+        query = query.overlaps('tags', filters.tags);
+      }
+
+      if (filters.createdBefore) {
+        query = query.lt('created_at', filters.createdBefore);
+      }
+
+      if (filters.createdAfter) {
+        query = query.gt('created_at', filters.createdAfter);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      if (!data || data.length === 0) break;
+
+      allNotes.push(
+        ...data.map((r) => ({
+          id: r.id,
+          content: r.content,
+          type: r.note_type,
+          tags: r.tags ?? [],
+          category: r.category ?? undefined,
+          extractionConfidence:
+            r.extraction_confidence !== null && r.extraction_confidence !== undefined
+              ? Number(r.extraction_confidence)
+              : undefined,
+          createdAt: r.created_at,
+          ...(input.includeMetadata ? { metadata: r.payload_json } : {}),
+          ...(input.includeProvenance ? { provenance: r.provenance } : {}),
+        }))
+      );
+
+      if (data.length < batchSize) break;
       offset += batchSize;
     }
 

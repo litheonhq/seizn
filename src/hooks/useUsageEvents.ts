@@ -126,8 +126,8 @@ export function useUsageEvents({
   // Subscribe to usage events
   useEffect(() => {
     if (!enabled || !userId) {
-      setIsConnected(false);
-      return;
+      const id = setTimeout(() => setIsConnected(false), 0);
+      return () => clearTimeout(id);
     }
 
     const unsubscribe = subscribeToUsageEvents(userId, {
@@ -170,9 +170,10 @@ export function useUsageEvents({
       },
     });
 
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     return () => {
+      clearTimeout(connectId);
       unsubscribe();
       setIsConnected(false);
     };
@@ -226,8 +227,8 @@ export function useMemoryUsage({
 
   useEffect(() => {
     if (!enabled || !memoryId) {
-      setIsConnected(false);
-      return;
+      const id = setTimeout(() => setIsConnected(false), 0);
+      return () => clearTimeout(id);
     }
 
     const unsubscribe = subscribeToMemoryUsage(memoryId, {
@@ -241,9 +242,10 @@ export function useMemoryUsage({
       },
     });
 
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     return () => {
+      clearTimeout(connectId);
       unsubscribe();
       setIsConnected(false);
     };

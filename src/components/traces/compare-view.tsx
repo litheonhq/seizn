@@ -565,13 +565,6 @@ export function CompareView({
   const [traceB, setTraceB] = useState<TraceData | null>(propTraceB || null);
   const [diff, setDiff] = useState<ComparisonDiff | null>(null);
 
-  // Load trace data if IDs provided
-  useEffect(() => {
-    if (mode === "traces" && itemIdA && itemIdB && !propTraceA && !propTraceB) {
-      loadComparison();
-    }
-  }, [mode, itemIdA, itemIdB]);
-
   const loadComparison = useCallback(async () => {
     if (!itemIdA || !itemIdB) return;
 
@@ -618,6 +611,13 @@ export function CompareView({
       setLoading(false);
     }
   }, [itemIdA, itemIdB]);
+
+  // Load trace data if IDs provided
+  useEffect(() => {
+    if (mode === "traces" && itemIdA && itemIdB && !propTraceA && !propTraceB) {
+      void loadComparison();
+    }
+  }, [mode, itemIdA, itemIdB, propTraceA, propTraceB, loadComparison]);
 
   // Build comparison diff from trace data if provided directly
   const computedDiff = useMemo((): ComparisonDiff | null => {

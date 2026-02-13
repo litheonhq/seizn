@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import {
   AlertTriangle,
   Bell,
@@ -87,12 +88,12 @@ export default function AlertsPage() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <a
+          <Link
             href="/dashboard/control-tower/alerts/rules"
             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
           >
             Manage Rules
-          </a>
+          </Link>
           <button
             onClick={fetchAlerts}
             disabled={loading}

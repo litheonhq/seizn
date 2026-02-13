@@ -138,7 +138,7 @@ export function useOnlineStatus(options: UseOnlineStatusOptions = {}): OnlineSta
     window.addEventListener('offline', handleOffline);
 
     // Update connection info initially
-    updateConnectionInfo();
+    const infoId = setTimeout(() => updateConnectionInfo(), 0);
 
     // Listen for connection changes
     const connection =
@@ -155,6 +155,7 @@ export function useOnlineStatus(options: UseOnlineStatusOptions = {}): OnlineSta
     }
 
     return () => {
+      clearTimeout(infoId);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
 

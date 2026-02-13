@@ -54,7 +54,8 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const updateTargetRect = useCallback(() => {
@@ -72,12 +73,13 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
   }, [isOpen, currentStep, steps]);
 
   useEffect(() => {
-    updateTargetRect();
+    const id = setTimeout(() => updateTargetRect(), 0);
 
     window.addEventListener("resize", updateTargetRect);
     window.addEventListener("scroll", updateTargetRect, true);
 
     return () => {
+      clearTimeout(id);
       window.removeEventListener("resize", updateTargetRect);
       window.removeEventListener("scroll", updateTargetRect, true);
     };
@@ -251,7 +253,8 @@ export function useTourStatus() {
 
   useEffect(() => {
     const completed = localStorage.getItem(STORAGE_KEY);
-    setShouldShowTour(completed !== "true");
+    const id = setTimeout(() => setShouldShowTour(completed !== "true"), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const resetTour = () => {

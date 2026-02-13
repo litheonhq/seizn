@@ -42,8 +42,8 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('query') || undefined;
     const topK = parseInt(searchParams.get('top_k') || '20', 10);
     const minSimilarity = parseFloat(searchParams.get('min_similarity') || '0.5');
-    const excludeExpired = searchParams.get('exclude_expired') !== 'false';
-    const includeSuperseded = searchParams.get('include_superseded') === 'true';
+    const _excludeExpired = searchParams.get('exclude_expired') !== 'false';
+    const _includeSuperseded = searchParams.get('include_superseded') === 'true';
     const typesStr = searchParams.get('types');
     const types = typesStr ? typesStr.split(',') : undefined;
 
