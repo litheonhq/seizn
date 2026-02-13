@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface Organization {
   id: string;
@@ -176,7 +177,7 @@ export default function OrganizationDetailClient({
           setInviteSuccess(null);
         }, 2000);
       } else {
-        setInviteError(data.error || "Failed to send invitation");
+        setInviteError(getErrorMessage(data.error, "Failed to send invitation"));
       }
     } catch (err) {
       console.error("Failed to invite:", err);
@@ -741,7 +742,7 @@ function OrgSettingsTab({
         onUpdate({ name: name.trim(), slug: slug.trim() });
         setSaveMessage({ type: "success", text: "Settings saved successfully" });
       } else {
-        setSaveMessage({ type: "error", text: data.error || "Failed to save settings" });
+        setSaveMessage({ type: "error", text: getErrorMessage(data.error, "Failed to save settings") });
       }
     } catch {
       setSaveMessage({ type: "error", text: "Failed to save settings" });
@@ -762,7 +763,10 @@ function OrgSettingsTab({
       if (data.success) {
         window.location.href = "/dashboard/organizations";
       } else {
-        setSaveMessage({ type: "error", text: data.error || "Failed to delete organization" });
+        setSaveMessage({
+          type: "error",
+          text: getErrorMessage(data.error, "Failed to delete organization"),
+        });
       }
     } catch {
       setSaveMessage({ type: "error", text: "Failed to delete organization" });

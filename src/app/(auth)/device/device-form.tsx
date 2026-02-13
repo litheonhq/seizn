@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { getErrorMessage } from "@/lib/ui-error";
 
 type Step = "input" | "confirming" | "approved" | "denied" | "error" | "expired";
 
@@ -51,7 +52,7 @@ export default function DeviceForm() {
         if (data.error === "expired") {
           setStep("expired");
         } else {
-          setErrorMsg(data.error || "Invalid code. Please check and try again.");
+          setErrorMsg(getErrorMessage(data.error, "Invalid code. Please check and try again."));
         }
         setIsLoading(false);
         return;
@@ -78,7 +79,7 @@ export default function DeviceForm() {
         setStep("approved");
       } else {
         const data = await res.json();
-        setErrorMsg(data.error || "Failed to approve.");
+        setErrorMsg(getErrorMessage(data.error, "Failed to approve."));
         setStep("error");
       }
     } catch {
