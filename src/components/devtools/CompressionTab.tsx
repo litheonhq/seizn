@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { CompressedView } from "@/components/compression/CompressedView";
 import type { CompressedChunk, CompressionTraceStats } from "@/lib/compression";
+import { getErrorMessage } from "@/lib/ui-error";
 
 // ============================================
 // Types
@@ -50,7 +51,7 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
           setData(null);
         }
       } else {
-        setError(result.error || "Failed to fetch trace data");
+        setError(getErrorMessage(result.error, "Failed to fetch trace data"));
       }
     } catch (err) {
       console.error("Failed to fetch compression data:", err);
