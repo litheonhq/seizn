@@ -4,6 +4,7 @@
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID;
+let warnedMissingCredentials = false;
 
 interface AlertParams {
   title: string;
@@ -17,7 +18,10 @@ interface AlertParams {
  */
 export async function sendTelegramAlert(params: AlertParams): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN || !ADMIN_CHAT_ID) {
-    console.warn('Telegram credentials not configured');
+    if (!warnedMissingCredentials) {
+      warnedMissingCredentials = true;
+      console.warn('Telegram credentials not configured');
+    }
     return false;
   }
 

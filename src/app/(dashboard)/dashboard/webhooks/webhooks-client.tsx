@@ -120,7 +120,6 @@ export default function WebhooksClient() {
   const [editingWebhook, setEditingWebhook] = useState<Webhook | null>(null);
   const [activeTab, setActiveTab] = useState<"webhooks" | "deliveries">("webhooks");
 
-
   // Form state
   const [formName, setFormName] = useState("");
   const [formUrl, setFormUrl] = useState("");
@@ -241,8 +240,8 @@ export default function WebhooksClient() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-start">
-        <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {t("dashboard.webhooks.title")}
           </h1>
@@ -258,7 +257,7 @@ export default function WebhooksClient() {
             setFormEvents([]);
             setShowCreateModal(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -389,7 +388,7 @@ export default function WebhooksClient() {
                 className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                         {webhook.name}
@@ -398,7 +397,7 @@ export default function WebhooksClient() {
                         {webhook.status}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 font-mono">
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 font-mono break-all">
                       {webhook.url}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -479,7 +478,8 @@ export default function WebhooksClient() {
       {/* Deliveries List */}
       {activeTab === "deliveries" && (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <table className="w-full">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px]">
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -539,6 +539,7 @@ export default function WebhooksClient() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
