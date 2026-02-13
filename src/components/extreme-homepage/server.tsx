@@ -593,7 +593,7 @@ interface ExtremeHomepageProps {
 export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <ExtremeHomepageClient dict={dict} locale={locale} />
+      <ExtremeHomepageClient messages={dict.extremeHome} locale={locale} />
       <FeatureShowcase locale={locale} />
       <MCPDeveloperTools locale={locale} />
       <TrustAndCompliance locale={locale} />
