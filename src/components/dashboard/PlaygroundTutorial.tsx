@@ -3,14 +3,6 @@
 import { useState, useEffect } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
-declare global {
-  interface Window {
-    seiznOnboarding?: {
-      markComplete: (step: string) => void;
-    };
-  }
-}
-
 const STORAGE_KEY = "seizn_playground_tutorial_completed";
 
 interface Props {
@@ -24,7 +16,8 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
 
   useEffect(() => {
     const completed = localStorage.getItem(STORAGE_KEY);
-    setIsVisible(completed !== "true");
+    const id = setTimeout(() => setIsVisible(completed !== "true"), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const tips = [

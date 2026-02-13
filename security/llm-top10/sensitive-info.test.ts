@@ -6,15 +6,14 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-  SENSITIVE_PATTERNS,
   containsSensitiveData,
   createTestContext,
 } from './utils';
 
 // Mock memory retrieval with PII redaction
 async function retrieveMemoryWithRedaction(
-  query: string,
-  context: ReturnType<typeof createTestContext>
+  _query: string,
+  _context: ReturnType<typeof createTestContext>
 ): Promise<{
   memories: string[];
   redacted: boolean;
@@ -93,7 +92,7 @@ async function retrieveMemoryWithRedaction(
 // Mock cross-tenant isolation check
 async function queryMemories(
   organizationId: string,
-  query: string
+  _query: string
 ): Promise<{
   results: Array<{ content: string; organizationId: string }>;
   isolationViolation: boolean;

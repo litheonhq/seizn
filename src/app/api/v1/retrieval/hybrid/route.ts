@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
         'Query expansion with synonyms (optional)',
       ],
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

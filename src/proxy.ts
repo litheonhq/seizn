@@ -17,6 +17,15 @@ const publicPaths = [
   '/dashboard',  // Dashboard routes (separate route group, not locale-prefixed)
   '/login',      // Auth routes
   '/signup',
+  '/device',     // Device auth flow (root route, not locale-prefixed)
+  '/invite',     // Invite/token links (root route, not locale-prefixed)
+  '/status',     // Status page (root route, not locale-prefixed)
+  '/offline',    // Offline fallback (root route, not locale-prefixed)
+  '/terms',      // Legal pages exist at root (see next.config.ts redirects)
+  '/privacy',
+  '/refund',
+  '/t/',         // Short token redirect routes (root route, not locale-prefixed)
+  '/trace/',     // Trace share routes (root route, not locale-prefixed)
   // Note: /docs removed - now uses locale-prefixed routes (/en/docs, /ko/docs, etc.)
 ];
 
@@ -42,7 +51,8 @@ function isDashboardPath(pathname: string): boolean {
 
 // Add security headers for dashboard routes (P0-4: review_token leak prevention)
 function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Keep consistent with next.config.ts dashboard headers (P0-4: review_token leak prevention)
+  response.headers.set('Referrer-Policy', 'no-referrer');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
   return response;
@@ -164,7 +174,7 @@ async function handleReviewToken(
   return addDashboardSecurityHeaders(response);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip public paths (API routes, static files, etc.)

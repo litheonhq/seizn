@@ -94,6 +94,34 @@ export interface RelatedMemory {
   strength: number;
 }
 
+interface RetrievalSearchResult {
+  id: string;
+  similarity?: number;
+  bm25_score?: number;
+  importance?: number;
+  created_at: string;
+  graph_score?: number;
+}
+
+interface MemoryMetadata {
+  extraction_method?: string;
+  document_id?: string;
+  derived_from?: string[];
+  consolidated_from?: string[];
+  extraction_pipeline?: string;
+  verification_status?: 'verified' | 'unverified' | 'disputed';
+}
+
+interface ExplainableMemoryRow {
+  source?: string;
+  confidence?: number;
+  metadata?: MemoryMetadata;
+  provenance_source_id?: string;
+  provenance_source_type?: string;
+  provenance_trace_id?: string;
+  provenance_span_id?: string;
+}
+
 // ============================================
 // Explain Functions
 // ============================================
@@ -158,7 +186,7 @@ export async function explainMemory(memoryId: string): Promise<MemoryExplanation
 export async function explainRetrieval(
   memoryId: string,
   query: string,
-  searchResults: any[]
+  searchResults: RetrievalSearchResult[]
 ): Promise<RetrievalReason> {
   // Find this memory in search results
   const result = searchResults.find((r) => r.id === memoryId);
@@ -374,15 +402,24 @@ async function getRelatedMemories(
 
   return edges
     .filter((e) => e.target)
-    .map((e) => ({
-      memoryId: e.target_memory_id,
-      content: (e.target as any)?.content?.substring(0, 200) || '',
-      relationship: mapEdgeTypeToRelationship(e.edge_type),
-      strength: e.weight,
-    }));
+    .map((e) => {
+      const target = (e as unknown as { target?: unknown }).target;
+      const targetRow = Array.isArray(target) ? target[0] : target;
+      const targetContent =
+        targetRow && typeof targetRow === 'object' && 'content' in targetRow
+          ? (targetRow as { content?: unknown }).content
+          : undefined;
+
+      return {
+        memoryId: e.target_memory_id,
+        content: typeof targetContent === 'string' ? targetContent.substring(0, 200) : '',
+        relationship: mapEdgeTypeToRelationship(e.edge_type),
+        strength: e.weight,
+      };
+    });
 }
 
-function buildStorageReason(memory: any): StorageReason {
+function buildStorageReason(memory: ExplainableMemoryRow): StorageReason {
   const source = memory.source || 'api';
   const metadata = memory.metadata || {};
 
@@ -420,7 +457,7 @@ function buildStorageReason(memory: any): StorageReason {
   };
 }
 
-function buildProvenance(memory: any): MemoryProvenance {
+function buildProvenance(memory: ExplainableMemoryRow): MemoryProvenance {
   const metadata = memory.metadata || {};
 
   return {
@@ -445,13 +482,14 @@ function determineStorageSource(source: string): 'explicit' | 'extracted' | 'con
   return 'explicit';
 }
 
-function determineCreator(source: string): string {
+function determineCreator(source?: string): string {
+  if (!source) return 'system';
   if (source === 'api' || source === 'user_input') return 'user';
   if (source === 'extraction' || source === 'trace') return 'extraction_pipeline';
   return 'system';
 }
 
-function determineMatchType(result: any): 'semantic' | 'keyword' | 'hybrid' | 'graph' {
+function determineMatchType(result: RetrievalSearchResult): 'semantic' | 'keyword' | 'hybrid' | 'graph' {
   if (result.graph_score !== undefined) return 'graph';
   if (result.similarity !== undefined && result.bm25_score !== undefined) return 'hybrid';
   if (result.bm25_score !== undefined) return 'keyword';

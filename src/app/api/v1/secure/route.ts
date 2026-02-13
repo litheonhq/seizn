@@ -10,7 +10,6 @@ import { validateApiKey } from '@/lib/auth/api-key';
 import {
   createConfidentialRAGService,
   createAccessControlService,
-  type SecurityLevel,
   type SecurityClassification,
 } from '@/lib/confidential/rag-mode';
 

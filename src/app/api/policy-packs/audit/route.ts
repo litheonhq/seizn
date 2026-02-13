@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams;
     const packId = searchParams.get('packId');
-    const eventType = searchParams.get('eventType');
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
+    const _eventType = searchParams.get('eventType');
+    const _startDate = searchParams.get('startDate');
+    const _endDate = searchParams.get('endDate');
     const limit = parseInt(searchParams.get('limit') || '100');
     const offset = parseInt(searchParams.get('offset') || '0');
 

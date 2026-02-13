@@ -108,11 +108,21 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
+    const eventTypesParam = searchParams.get('eventTypes');
+    const contentTypesParam = searchParams.get('contentTypes');
 
     const filter: TransparencyEventFilter = {
       organizationId: membership.organization_id,
-      eventTypes: searchParams.get('eventTypes')?.split(',') as any,
-      contentTypes: searchParams.get('contentTypes')?.split(',') as any,
+      eventTypes: eventTypesParam
+        ? (eventTypesParam
+            .split(',')
+            .filter(Boolean) as TransparencyEventFilter['eventTypes'])
+        : undefined,
+      contentTypes: contentTypesParam
+        ? (contentTypesParam
+            .split(',')
+            .filter(Boolean) as TransparencyEventFilter['contentTypes'])
+        : undefined,
       startDate: searchParams.get('startDate') || undefined,
       endDate: searchParams.get('endDate') || undefined,
       ...parsePagination(searchParams, { limit: 100 }),

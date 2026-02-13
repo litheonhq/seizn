@@ -9,7 +9,7 @@
  * If these tests fail, either code or docs have drifted — fix before merging.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   extractApiKey,
   getDeprecationHeaders,

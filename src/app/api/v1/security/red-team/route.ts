@@ -10,7 +10,6 @@ import { validateApiKey } from '@/lib/auth/api-key';
 import { createServerClient } from '@/lib/supabase';
 import {
   createRedTeamRunner,
-  createAttackGenerator,
   type RedTeamConfig,
   type AttackCategory,
 } from '@/lib/security/red-team';

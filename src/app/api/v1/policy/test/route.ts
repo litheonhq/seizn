@@ -5,7 +5,7 @@
  * Run policy test suites
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { PolicySimulator, BUILTIN_TEST_CASES, runBuiltinTests } from '@/lib/opa/simulator';
 import { validateApiKey } from '@/lib/auth/api-key';

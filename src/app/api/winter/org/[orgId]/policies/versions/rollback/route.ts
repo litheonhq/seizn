@@ -9,7 +9,6 @@ import { createClient } from '@supabase/supabase-js';
 import { getUserOrgRole } from '@/lib/winter/org';
 import {
   rollbackToVersion,
-  getPolicyVersion,
   getVersionHistory,
 } from '@/lib/winter/org/policy-versions';
 

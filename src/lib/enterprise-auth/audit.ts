@@ -415,7 +415,28 @@ export function exportAuditEventsToJSON(events: AuditEvent[]): string {
 // Helper Functions
 // ============================================
 
-function mapAuditEvent(row: any): AuditEvent {
+interface AuditEventRow {
+  id: string;
+  organization_id: string;
+  actor_id?: string;
+  actor_email?: string;
+  actor_role?: string;
+  actor_ip_address?: string;
+  event_category: AuditEventCategory;
+  event_type: string;
+  event_severity: AuditEventSeverity;
+  resource_type?: string;
+  resource_id?: string;
+  resource_name?: string;
+  action: string;
+  success: boolean;
+  error_message?: string;
+  changes?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+  created_at: string;
+}
+
+function mapAuditEvent(row: AuditEventRow): AuditEvent {
   return {
     id: row.id,
     organizationId: row.organization_id,

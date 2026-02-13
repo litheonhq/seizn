@@ -14,7 +14,6 @@ import {
   type GraphRenderer,
   type GraphData,
   type GraphNode,
-  type GraphEvent,
   type LayoutConfig,
   type RendererConfig,
 } from '@/lib/graph-viz';
@@ -102,13 +101,38 @@ export function useGraphRenderer(
     visibleEdges: 0,
   });
 
+  const configRef = useRef(config);
+  const onNodeClickRef = useRef(onNodeClick);
+  const onNodeHoverRef = useRef(onNodeHover);
+  const onLayoutCompleteRef = useRef(onLayoutComplete);
+
+  useEffect(() => {
+    configRef.current = config;
+    onNodeClickRef.current = onNodeClick;
+    onNodeHoverRef.current = onNodeHover;
+    onLayoutCompleteRef.current = onLayoutComplete;
+  }, [config, onNodeClick, onNodeHover, onLayoutComplete]);
+
+  // Update stats helper
+  const updateStats = useCallback(() => {
+    if (rendererRef.current) {
+      const s = rendererRef.current.getStats();
+      setStats({
+        nodeCount: s.nodeCount,
+        edgeCount: s.edgeCount,
+        visibleNodes: s.visibleNodes,
+        visibleEdges: s.visibleEdges,
+      });
+    }
+  }, []);
+
   // Initialize renderer
   useEffect(() => {
     if (!containerRef.current) return;
 
     const renderer = createGraphRenderer({
       container: containerRef.current,
-      ...config,
+      ...configRef.current,
     });
 
     rendererRef.current = renderer;
@@ -117,16 +141,16 @@ export function useGraphRenderer(
     renderer.on('node:click', (event) => {
       if (event.target) {
         setSelectedNode(event.target as GraphNode);
-        onNodeClick?.(event.target as GraphNode);
+        onNodeClickRef.current?.(event.target as GraphNode);
       }
     });
 
     renderer.on('node:hover', (event) => {
-      onNodeHover?.(event.target as GraphNode | null);
+      onNodeHoverRef.current?.(event.target as GraphNode | null);
     });
 
     renderer.on('node:leave', () => {
-      onNodeHover?.(null);
+      onNodeHoverRef.current?.(null);
     });
 
     renderer.on('layout:start', () => {
@@ -135,7 +159,7 @@ export function useGraphRenderer(
 
     renderer.on('layout:complete', () => {
       setIsLayoutRunning(false);
-      onLayoutComplete?.();
+      onLayoutCompleteRef.current?.();
       updateStats();
     });
 
@@ -143,13 +167,14 @@ export function useGraphRenderer(
       setSelectedNode(null);
     });
 
-    setIsLoading(false);
+    const loadingId = setTimeout(() => setIsLoading(false), 0);
 
     return () => {
+      clearTimeout(loadingId);
       renderer.destroy();
       rendererRef.current = null;
     };
-  }, []);
+  }, [updateStats]);
 
   // Update data when it changes
   useEffect(() => {
@@ -168,20 +193,7 @@ export function useGraphRenderer(
     };
 
     loadData();
-  }, [data, autoLayout, layoutConfig]);
-
-  // Update stats helper
-  const updateStats = useCallback(() => {
-    if (rendererRef.current) {
-      const s = rendererRef.current.getStats();
-      setStats({
-        nodeCount: s.nodeCount,
-        edgeCount: s.edgeCount,
-        visibleNodes: s.visibleNodes,
-        visibleEdges: s.visibleEdges,
-      });
-    }
-  }, []);
+  }, [data, autoLayout, layoutConfig, updateStats]);
 
   // Run layout
   const runLayout = useCallback((config?: Partial<LayoutConfig>) => {
@@ -222,7 +234,7 @@ export function useGraphRenderer(
   }, [autoLayout, layoutConfig]);
 
   // Select node
-  const selectNode = useCallback((nodeId: string | null) => {
+  const selectNode = useCallback((_nodeId: string | null) => {
     // Would update renderer's selected node
     setSelectedNode(null); // TODO: get node from renderer
   }, []);

@@ -324,6 +324,131 @@ const TrendingUpIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+type EvalWinner = "A" | "B" | "tie";
+
+function WinnerBadge({
+  winner,
+  tieLabel,
+  winnerLabel,
+}: {
+  winner: EvalWinner;
+  tieLabel: string;
+  winnerLabel: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+      <TrophyIcon className="w-3 h-3" />
+      {winner === "tie" ? tieLabel : `${winnerLabel}: ${winner}`}
+    </span>
+  );
+}
+
+type MetricComparisonProps = {
+  label: string;
+  valueA: number;
+  valueB?: number;
+  format: (v: number) => string;
+  higherIsBetter?: boolean;
+  winner?: EvalWinner;
+};
+
+function MetricComparison({
+  label,
+  valueA,
+  valueB,
+  format,
+  higherIsBetter = true,
+  winner,
+}: MetricComparisonProps) {
+  const diff = valueB !== undefined ? valueA - valueB : 0;
+  const percentDiff = valueB !== undefined && valueB !== 0 ? Math.abs(diff / valueB) * 100 : 0;
+  const isWinnerA = higherIsBetter ? diff > 0 : diff < 0;
+  const showComparison = valueB !== undefined && diff !== 0;
+
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-700">{label}</span>
+        {showComparison && (
+          <span
+            className={`text-xs px-1.5 py-0.5 rounded ${
+              isWinnerA ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            }`}
+          >
+            {isWinnerA ? "+" : "-"}{percentDiff.toFixed(1)}%
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1">
+          {winner === "A" && showComparison && isWinnerA && (
+            <TrophyIcon className="w-4 h-4 text-yellow-500" />
+          )}
+          <span
+            className={`text-sm font-semibold ${
+              showComparison && isWinnerA ? "text-green-600" : "text-gray-900"
+            }`}
+          >
+            {format(valueA)}
+          </span>
+        </div>
+        {valueB !== undefined && (
+          <>
+            <span className="text-gray-400 text-xs">vs</span>
+            <div className="flex items-center gap-1">
+              <span
+                className={`text-sm font-semibold ${
+                  showComparison && !isWinnerA ? "text-green-600" : "text-gray-900"
+                }`}
+              >
+                {format(valueB)}
+              </span>
+              {winner === "B" && showComparison && !isWinnerA && (
+                <TrophyIcon className="w-4 h-4 text-yellow-500" />
+              )}
+            </div>
+            {showComparison && (
+              <span className={`inline-flex items-center text-xs ${isWinnerA ? "text-green-500" : "text-red-500"}`}>
+                {isWinnerA ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
+              </span>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+type CustomTooltipPayloadEntry = {
+  name: string;
+  value: number;
+  color: string;
+};
+
+function CustomTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: CustomTooltipPayloadEntry[];
+  label?: string;
+}) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg p-3">
+        <p className="font-medium text-gray-900 mb-2">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} className="text-sm" style={{ color: entry.color }}>
+            {entry.name}: {entry.value}%
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 
 // ============================================
 // Component
@@ -488,107 +613,6 @@ export default function EvalsClient() {
     }
   };
 
-  // Winner Badge Component
-  const WinnerBadge = ({ winner }: { winner: "A" | "B" | "tie" }) => (
-    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
-      <TrophyIcon className="w-3 h-3" />
-      {winner === "tie" ? t("dashboard.evals.tie") || "Tie" : `${t("dashboard.evals.winner") || "Winner"}: ${winner}`}
-    </span>
-  );
-
-
-  const MetricComparison = ({
-    label,
-    valueA,
-    valueB,
-    format,
-    higherIsBetter = true,
-    winner,
-  }: {
-    label: string;
-    valueA: number;
-    valueB?: number;
-    format: (v: number) => string;
-    higherIsBetter?: boolean;
-    winner?: "A" | "B" | "tie";
-  }) => {
-    const diff = valueB !== undefined ? valueA - valueB : 0;
-    const percentDiff = valueB !== undefined && valueB !== 0 ? Math.abs(diff / valueB) * 100 : 0;
-    const isWinnerA = higherIsBetter ? diff > 0 : diff < 0;
-    const showComparison = valueB !== undefined && diff !== 0;
-
-    return (
-      <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">{label}</span>
-          {showComparison && (
-            <span
-              className={`text-xs px-1.5 py-0.5 rounded ${
-                isWinnerA ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-              }`}
-            >
-              {isWinnerA ? "+" : "-"}{percentDiff.toFixed(1)}%
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            {winner === "A" && showComparison && isWinnerA && (
-              <TrophyIcon className="w-4 h-4 text-yellow-500" />
-            )}
-            <span
-              className={`text-sm font-semibold ${
-                showComparison && isWinnerA ? "text-green-600" : "text-gray-900"
-              }`}
-            >
-              {format(valueA)}
-            </span>
-          </div>
-          {valueB !== undefined && (
-            <>
-              <span className="text-gray-400 text-xs">vs</span>
-              <div className="flex items-center gap-1">
-                <span
-                  className={`text-sm font-semibold ${
-                    showComparison && !isWinnerA ? "text-green-600" : "text-gray-900"
-                  }`}
-                >
-                  {format(valueB)}
-                </span>
-                {winner === "B" && showComparison && !isWinnerA && (
-                  <TrophyIcon className="w-4 h-4 text-yellow-500" />
-                )}
-              </div>
-              {showComparison && (
-                <span className={`inline-flex items-center text-xs ${isWinnerA ? "text-green-500" : "text-red-500"}`}>
-                  {isWinnerA ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
-                </span>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  // Custom tooltip for charts
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg p-3">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {entry.value}%
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -669,7 +693,13 @@ export default function EvalsClient() {
                     <p className="text-gray-500">{selectedRun.dataset_name}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {selectedRun.metrics?.winner && <WinnerBadge winner={selectedRun.metrics.winner} />}
+                    {selectedRun.metrics?.winner && (
+                      <WinnerBadge
+                        winner={selectedRun.metrics.winner}
+                        tieLabel={t("dashboard.evals.tie") || "Tie"}
+                        winnerLabel={t("dashboard.evals.winner") || "Winner"}
+                      />
+                    )}
                     {getStatusBadge(selectedRun.status)}
                   </div>
                 </div>

@@ -5,8 +5,9 @@ import Link from "next/link";
 import { ttfsEvents } from "@/lib/analytics";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
-interface OnboardingStep {  id: StepId;  titleKey: string;  descriptionKey: string;  iconType: StepIconType;  action: { labelKey: string; href?: string };}type StepId = "create_org" | "api_key" | "install_sdk" | "first_query" | "view_trace";type StepIconType = "org" | "key" | "sdk" | "query" | "trace";
+interface OnboardingStep {  id: StepId;  titleKey: string;  descriptionKey: string;  iconType: StepIconType;  action: { labelKey: string; href?: string };}type StepId = SeiznOnboardingStepId;type StepIconType = "org" | "key" | "sdk" | "query" | "trace";
 type SdkType = "npm" | "pip" | "curl";
+
 const STORAGE_KEYS = {
   dismissed: (userId: string) => `seizn_onboarding_dismissed_${userId}`,
   traceViewed: "seizn_trace_viewed",
@@ -62,7 +63,13 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
       if (completed.size === steps.length) ttfsEvents.onboardingCompleted();
     };
     const dismissed = localStorage.getItem(STORAGE_KEYS.dismissed(userId));
-    if (dismissed === "true") { setIsDismissed(true); setIsLoading(false); return; }
+    if (dismissed === "true") {
+      const id = setTimeout(() => {
+        setIsDismissed(true);
+        setIsLoading(false);
+      }, 0);
+      return () => clearTimeout(id);
+    }
     checkSteps();
   }, [userId]);
 
@@ -95,7 +102,7 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      (window as any).seiznOnboarding = { markComplete: markStepComplete };
+      window.seiznOnboarding = { markComplete: markStepComplete };
     }
   }, [markStepComplete]);
 

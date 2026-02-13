@@ -125,7 +125,7 @@ export interface UseSpanOptions {
  * @example
  * ```tsx
  * function DataLoader() {
- *   const { spanId, addEvent, endWithStatus } = useSpan({
+ *   const { getSpanId, addEvent, endWithStatus } = useSpan({
  *     name: 'data-load',
  *     autoEnd: true,
  *   });
@@ -172,8 +172,10 @@ export function useSpan(options: UseSpanOptions) {
     }
   }, []);
 
+  const getSpanId = useCallback(() => spanIdRef.current, []);
+
   return {
-    spanId: spanIdRef.current,
+    getSpanId,
     addEvent,
     endWithStatus,
   };

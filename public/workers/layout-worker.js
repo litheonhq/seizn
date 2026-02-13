@@ -131,7 +131,7 @@ function runForceAtlas2() {
   const { iterations, gravity, scalingRatio, preventOverlap, nodeMargin } = config;
 
   // Build adjacency for quick lookup
-  const adjacency = buildAdjacency();
+  const _adjacency = buildAdjacency();
 
   for (let i = 0; i < iterations; i++) {
     if (shouldStop) break;

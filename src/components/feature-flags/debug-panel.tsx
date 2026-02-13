@@ -10,7 +10,7 @@
 
 import { useState, useEffect } from 'react';
 import { useFeatureFlags } from '@/lib/feature-flags';
-import type { FlagKey, KnownFlags } from '@/lib/feature-flags';
+import type { FlagKey } from '@/lib/feature-flags';
 
 // =============================================================================
 // Types
@@ -73,7 +73,8 @@ export function FeatureFlagsDebugPanel({
   const { isReady, getFlag, setOverride, clearOverride, reloadFlags } = useFeatureFlags();
 
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   // Don't render in production if devOnly

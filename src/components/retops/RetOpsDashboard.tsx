@@ -117,7 +117,10 @@ export function RetOpsDashboard({
 
   // Initial load
   useEffect(() => {
-    fetchData();
+    const id = setTimeout(() => {
+      void fetchData();
+    }, 0);
+    return () => clearTimeout(id);
   }, [fetchData]);
 
   // Auto-refresh

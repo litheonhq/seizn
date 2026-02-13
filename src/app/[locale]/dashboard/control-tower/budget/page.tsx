@@ -501,7 +501,7 @@ function SpendingChart({ data }: { data: DailyCost[] }) {
 
   return (
     <div className="flex items-end justify-between h-full gap-1">
-      {data.slice(-14).map((day, index) => {
+      {data.slice(-14).map((day) => {
         const height = maxCost > 0 ? (day.totalCost / maxCost) * 100 : 0;
         const date = new Date(day.date);
         const dayLabel = date.toLocaleDateString('en', { weekday: 'short', day: 'numeric' });

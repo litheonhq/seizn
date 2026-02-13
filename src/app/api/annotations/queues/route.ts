@@ -5,7 +5,7 @@
  * POST /api/annotations/queues - Create annotation queue
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import { createServerClient } from "@/lib/supabase";
 import {

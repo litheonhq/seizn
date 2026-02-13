@@ -41,17 +41,22 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
   // Initialize theme from localStorage
   useEffect(() => {
     const storedTheme = getStoredTheme();
-    setThemeState(storedTheme);
-    setMounted(true);
+    const id = setTimeout(() => {
+      setThemeState(storedTheme);
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   // Update resolved theme and apply class to html element
   useEffect(() => {
     if (!mounted) return;
 
+    let resolvedTimeout: ReturnType<typeof setTimeout> | undefined;
     const updateResolvedTheme = () => {
       const resolved = theme === "system" ? getSystemTheme() : theme;
-      setResolvedTheme(resolved);
+      if (resolvedTimeout) clearTimeout(resolvedTimeout);
+      resolvedTimeout = setTimeout(() => setResolvedTheme(resolved), 0);
 
       // Apply dark class to html element
       const root = document.documentElement;
@@ -69,8 +74,14 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const handleChange = () => updateResolvedTheme();
       mediaQuery.addEventListener("change", handleChange);
-      return () => mediaQuery.removeEventListener("change", handleChange);
+      return () => {
+        if (resolvedTimeout) clearTimeout(resolvedTimeout);
+        mediaQuery.removeEventListener("change", handleChange);
+      };
     }
+    return () => {
+      if (resolvedTimeout) clearTimeout(resolvedTimeout);
+    };
   }, [theme, mounted]);
 
   const setTheme = useCallback((newTheme: Theme) => {

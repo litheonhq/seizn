@@ -88,7 +88,6 @@ describe('Temporal Search API', () => {
 
     const request = makeRequest('/api/spring/temporal/search');
     const response = await GET(request);
-    const data = await response.json();
 
     expect(response.status).toBe(400);
   });

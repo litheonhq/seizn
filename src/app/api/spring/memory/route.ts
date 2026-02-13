@@ -13,7 +13,6 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
-import { getRateLimitHeaders } from '@/lib/rate-limit';
 import { createServerClient } from '@/lib/supabase';
 import { createMemoryV3Service } from '@/lib/spring/memory-v3/service';
 import type { NoteQuery, NoteType, NoteStatus, NoteScope, PrivacyClass, MemoryNote, MemoryCandidate } from '@/lib/spring/memory-v3/types';

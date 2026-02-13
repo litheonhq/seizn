@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
 
       try {
         // Sanitize null bytes and create embedding
-        // eslint-disable-next-line no-control-regex
+         
         const cleanContent = memory.content.replace(/\x00/g, '');
         const embedding = await createEmbedding(cleanContent);
 

@@ -7,7 +7,7 @@
 
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { processPII, scanPII, type PipelineResult, type PipelineConfig } from '@/lib/security/pii-pipeline';
+import { processPII, type PipelineConfig } from '@/lib/security/pii-pipeline';
 import { SECRET_PATTERNS, type SecretType } from '@/lib/security/secret-patterns';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createApiResponse, createApiError } from '@/lib/api-response';
@@ -26,8 +26,6 @@ const ScanRequestSchema = z.object({
   min_confidence: z.number().min(0).max(1).optional().default(0.7),
   return_masked: z.boolean().optional().default(true),
 });
-
-type ScanRequest = z.infer<typeof ScanRequestSchema>;
 
 // ============================================
 // Response Types

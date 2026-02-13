@@ -13,6 +13,7 @@ vi.mock('@/lib/embeddings', () => ({
 describe('CandidateService', () => {
   let service: CandidateService;
   let mockSupabase: ReturnType<typeof createMockSupabase>;
+  type CandidateSupabase = ConstructorParameters<typeof CandidateService>[0];
 
   function createMockSupabase() {
     const mockQueryBuilder = {
@@ -39,7 +40,7 @@ describe('CandidateService', () => {
 
   beforeEach(() => {
     mockSupabase = createMockSupabase();
-    service = new CandidateService(mockSupabase as any);
+    service = new CandidateService(mockSupabase as unknown as CandidateSupabase);
   });
 
   describe('createCandidate', () => {
@@ -253,8 +254,8 @@ describe('CandidateService', () => {
 
       // Check the insert was called with v3 column names
       const insertCalls = mockSupabase._queryBuilder.insert.mock.calls;
-      const noteInsert = insertCalls.find((call: any[]) => {
-        const arg = call[0];
+      const noteInsert = insertCalls.find((call: unknown[]) => {
+        const arg = call[0] as Record<string, unknown> | undefined;
         return arg && 'content' in arg && 'note_type' in arg;
       });
 
@@ -346,25 +347,18 @@ describe('CandidateService', () => {
         },
       ];
 
-      mockSupabase._queryBuilder.order.mockReturnThis();
-      // Mock the final query result
-      const mockFinalQuery = {
-        ...mockSupabase._queryBuilder,
-        then: vi.fn((resolve) => resolve({ data: mockData, error: null })),
+      const mockQuery = {
+        eq: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockReturnThis(),
+        range: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve: (value: { data: typeof mockData; error: null }) => unknown) =>
+          resolve({ data: mockData, error: null })
+        ),
       };
-      mockSupabase._queryBuilder.order.mockReturnValue(mockFinalQuery);
-
-      // The query chain returns the data
       mockSupabase.from.mockReturnValue({
-        ...mockSupabase._queryBuilder,
-        select: vi.fn().mockReturnValue({
-          ...mockSupabase._queryBuilder,
-          eq: vi.fn().mockReturnValue({
-            ...mockSupabase._queryBuilder,
-            order: vi.fn().mockResolvedValue({ data: mockData, error: null }),
-          }),
-        }),
-      });
+        select: vi.fn().mockReturnValue(mockQuery),
+      } as unknown as ReturnType<typeof createMockSupabase>['_queryBuilder']);
 
       const result = await service.listCandidates('user-123', { action: 'pending' });
 
@@ -372,6 +366,8 @@ describe('CandidateService', () => {
       expect(result[0].content).toBe('Test 1');
       expect(result[0].noteType).toBe('fact');
       expect(result[0].metadata).toEqual({ key: 'value' });
+      expect(mockQuery.eq).toHaveBeenCalledWith('user_id', 'user-123');
+      expect(mockQuery.eq).toHaveBeenCalledWith('action', 'pending');
     });
   });
 });

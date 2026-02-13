@@ -68,7 +68,7 @@ export function createBroadcastChannel(
 
   const channel = getOrCreateChannel(fullChannelName);
   const eventCallbacks = new Map<string, Set<(payload: unknown) => void>>();
-  let anyCallbacks: Set<BroadcastCallback> = new Set();
+  const anyCallbacks: Set<BroadcastCallback> = new Set();
 
   // Set up listener for all broadcast events
   channel.on('broadcast', { event: '*' }, ({ event, payload }) => {

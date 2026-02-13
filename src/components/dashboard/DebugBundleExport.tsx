@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { RedactionProfile, ExpiresIn } from "@/lib/sharing/types";
+import type { ExpiresIn } from "@/lib/sharing/types";
 
 // ============================================
 // Types

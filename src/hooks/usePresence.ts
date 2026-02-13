@@ -140,9 +140,11 @@ export function usePresence({
   // Set up presence channel
   useEffect(() => {
     if (!enabled || !userId || !channelName) {
-      setIsConnected(false);
-      setIsTracking(false);
-      return;
+      const id = setTimeout(() => {
+        setIsConnected(false);
+        setIsTracking(false);
+      }, 0);
+      return () => clearTimeout(id);
     }
 
     const callbacks: PresenceCallbacks = {
@@ -202,7 +204,7 @@ export function usePresence({
     });
 
     presenceRef.current = presence;
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     // Track presence
     presence.track().then(() => {
@@ -210,6 +212,7 @@ export function usePresence({
     });
 
     return () => {
+      clearTimeout(connectId);
       presence.untrack().then(() => {
         setIsTracking(false);
       });
@@ -247,7 +250,7 @@ export function useMemoryViewers(
 } {
   const [viewers, setViewers] = useState<PresenceUser[]>([]);
 
-  const { onlineUsers } = usePresence({
+  usePresence({
     channelName: `memory-viewers:${memoryId || 'none'}`,
     userId,
     userName,
@@ -276,7 +279,7 @@ export function useTypingIndicator(
 } {
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
 
-  const { onlineUsers, updateMetadata } = usePresence({
+  const { updateMetadata } = usePresence({
     channelName: `typing:${channelName}`,
     userId,
     userName,

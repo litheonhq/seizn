@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { createServerClient } from "@/lib/supabase";
 import OpenAI from "openai";
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: EmbedRequest = await request.json();
-    const { model, input, encoding_format, dimensions, metadata } = body;
+    const { model, input, encoding_format, dimensions, metadata: _metadata } = body;
 
     // Validate required fields
     if (!model || !input) {
@@ -467,16 +468,14 @@ async function recordEmbeddingCost(
  * Hash API key
  */
 function hashApiKey(key: string): string {
-  const crypto = require("crypto");
-  return crypto.createHash("sha256").update(key).digest("hex");
+  return createHash("sha256").update(key).digest("hex");
 }
 
 /**
  * Hash input for caching
  */
 function hashInput(input: string): string {
-  const crypto = require("crypto");
-  return crypto.createHash("sha256").update(input).digest("hex").substring(0, 32);
+  return createHash("sha256").update(input).digest("hex").substring(0, 32);
 }
 
 /**

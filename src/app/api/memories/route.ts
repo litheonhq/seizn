@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
-    // eslint-disable-next-line no-control-regex
+     
     const sanitizedContent = body.content.replace(/\x00/g, '');
 
     step = 'supabase_client';

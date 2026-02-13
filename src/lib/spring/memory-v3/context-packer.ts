@@ -166,7 +166,7 @@ export class ContextPackerService {
 
     // Step 1: Filter by minimum score
     const minScore = options.minScore ?? 0;
-    let filtered = memories.filter((note) => {
+    const filtered = memories.filter((note) => {
       const score = this.getNoteScore(note);
       return score >= minScore;
     });

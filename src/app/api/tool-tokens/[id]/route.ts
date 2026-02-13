@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // Remove sensitive fields
-    const { tokenHash, ...safeToken } = token;
+    const { tokenHash: _tokenHash, ...safeToken } = token;
 
     return NextResponse.json({ token: safeToken });
   } catch (error) {

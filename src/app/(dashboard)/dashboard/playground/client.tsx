@@ -4,14 +4,6 @@ import { useState, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { PlaygroundTutorial } from "@/components/dashboard/PlaygroundTutorial";
 
-declare global {
-  interface Window {
-    seiznOnboarding?: {
-      markComplete: (step: string) => void;
-    };
-  }
-}
-
 interface TraceStep {
   name: string;
   latencyMs: number;

@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
       },
       required_scopes: ['admin', 'eval:run'],
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

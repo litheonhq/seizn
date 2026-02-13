@@ -6,6 +6,7 @@
 
 import { createServerClient } from '../supabase';
 import { generateApiKey, hashApiKey } from '../api-key';
+import type { Permission } from '../rbac/types';
 import {
   ScopedApiKey,
   ApiKeyScope,
@@ -14,6 +15,7 @@ import {
   CreateScopedApiKeyResponse,
   ListScopedKeysOptions,
   ScopeLevel,
+  ScopedApiKeyDbRecord,
   dbRecordToScopedApiKey,
 } from './types';
 import { validateScopeConfig, validateIpRestriction } from './validation';
@@ -101,8 +103,8 @@ export async function createScopedApiKey(
     organizationId: request.scope.organizationId,
     projectIds: request.scope.projectIds,
     actions: request.scope.actions,
-    customPermissions: request.scope.customPermissions as any,
-    deniedPermissions: request.scope.deniedPermissions as any,
+    customPermissions: request.scope.customPermissions as Permission[] | undefined,
+    deniedPermissions: request.scope.deniedPermissions as Permission[] | undefined,
   };
 
   // Insert key record
@@ -147,7 +149,7 @@ export async function createScopedApiKey(
 
   return {
     key,
-    keyRecord: dbRecordToScopedApiKey(keyRecord as any),
+    keyRecord: dbRecordToScopedApiKey(keyRecord as ScopedApiKeyDbRecord),
     message: 'Save this key securely. It will not be shown again.',
   };
 }
@@ -208,7 +210,7 @@ export async function listScopedApiKeys(
     throw new Error(`Failed to list API keys: ${error.message}`);
   }
 
-  return (data || []).map(record => dbRecordToScopedApiKey(record as any));
+  return (data || []).map(record => dbRecordToScopedApiKey(record as ScopedApiKeyDbRecord));
 }
 
 /**
@@ -246,7 +248,7 @@ export async function getScopedApiKey(
     return null;
   }
 
-  return dbRecordToScopedApiKey(data as any);
+  return dbRecordToScopedApiKey(data as ScopedApiKeyDbRecord);
 }
 
 /**
@@ -278,7 +280,7 @@ export async function updateScopedApiKey(
   }
 
   // Build update object
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, unknown> = {};
 
   if (updates.name !== undefined) {
     updateData.name = updates.name;
@@ -350,7 +352,7 @@ export async function updateScopedApiKey(
     throw new Error(`Failed to update API key: ${error.message}`);
   }
 
-  return dbRecordToScopedApiKey(data as any);
+  return dbRecordToScopedApiKey(data as ScopedApiKeyDbRecord);
 }
 
 /**
@@ -472,7 +474,7 @@ export async function rotateScopedApiKey(
 
   return {
     key,
-    keyRecord: dbRecordToScopedApiKey(newKeyRecord as any),
+    keyRecord: dbRecordToScopedApiKey(newKeyRecord as ScopedApiKeyDbRecord),
     message: 'Key rotated successfully. Save the new key securely. It will not be shown again.',
   };
 }
@@ -525,7 +527,7 @@ export async function getOrganizationApiKeys(
     throw new Error(`Failed to list organization API keys: ${error.message}`);
   }
 
-  return (data || []).map(record => dbRecordToScopedApiKey(record as any));
+  return (data || []).map(record => dbRecordToScopedApiKey(record as ScopedApiKeyDbRecord));
 }
 
 /**

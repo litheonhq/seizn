@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import DeviceForm from "./device-form";
 
 function DeviceLoading() {

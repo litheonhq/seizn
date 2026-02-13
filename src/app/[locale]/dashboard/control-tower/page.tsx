@@ -7,21 +7,26 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import {
   Activity,
   AlertTriangle,
   Bell,
+  Bug,
   CheckCircle,
   Clock,
   Database,
+  FlaskConical,
   RefreshCw,
   Server,
   Settings,
+  ShieldAlert,
   TrendingUp,
   XCircle,
   Zap,
 } from 'lucide-react';
 import type {
+  ControlTowerSignals,
   SystemHealth,
   DashboardMetrics,
   Alert,
@@ -47,6 +52,7 @@ export default function ControlTowerPage() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [signals, setSignals] = useState<ControlTowerSignals | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
@@ -56,10 +62,11 @@ export default function ControlTowerPage() {
     try {
       setError(null);
 
-      const [healthRes, metricsRes, alertsRes] = await Promise.all([
+      const [healthRes, metricsRes, alertsRes, signalsRes] = await Promise.all([
         fetch('/api/control-tower/health'),
         fetch('/api/control-tower/metrics'),
         fetch('/api/control-tower/alerts'),
+        fetch('/api/control-tower/signals?limit=8'),
       ]);
 
       if (healthRes.ok) {
@@ -75,6 +82,11 @@ export default function ControlTowerPage() {
       if (alertsRes.ok) {
         const alertsData = await alertsRes.json();
         setAlerts(alertsData.data);
+      }
+
+      if (signalsRes.ok) {
+        const signalsData = await signalsRes.json();
+        setSignals(signalsData.data);
       }
 
       setLastRefresh(new Date());
@@ -270,13 +282,13 @@ export default function ControlTowerPage() {
               </span>
             )}
           </h2>
-          <a
+          <Link
             href="/dashboard/control-tower/alerts"
             className="text-sm text-blue-600 hover:underline flex items-center gap-1"
           >
             View all
             <Settings className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {alerts.length === 0 ? (
@@ -291,6 +303,43 @@ export default function ControlTowerPage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* High-signal Insights */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <SignalCard
+          title="Top failing traces"
+          icon={Bug}
+          emptyLabel="No failing traces in recent window"
+          items={(signals?.failingTraces || []).map((trace) => ({
+            id: trace.id,
+            headline: `${trace.method} ${trace.endpoint}`,
+            subline: `status ${trace.statusCode} · ${trace.latencyMs}ms`,
+            timestamp: trace.occurredAt,
+          }))}
+        />
+        <SignalCard
+          title="Security policy events"
+          icon={ShieldAlert}
+          emptyLabel="No policy/security events found"
+          items={(signals?.securityPolicyEvents || []).map((event) => ({
+            id: event.id,
+            headline: `${event.action} (${event.status})`,
+            subline: event.resourceType,
+            timestamp: event.occurredAt,
+          }))}
+        />
+        <SignalCard
+          title="Search quality regressions"
+          icon={FlaskConical}
+          emptyLabel="No regressions detected"
+          items={(signals?.searchQualityRegressions || []).map((reg) => ({
+            id: reg.id,
+            headline: `${reg.metricKey} · ${reg.severity}`,
+            subline: `Δ ${reg.delta.toFixed(3)} (baseline ${reg.baselineValue.toFixed(3)} → ${reg.candidateValue.toFixed(3)})`,
+            timestamp: reg.occurredAt,
+          }))}
+        />
       </div>
 
       {/* Quick Actions */}
@@ -326,6 +375,48 @@ export default function ControlTowerPage() {
           icon={Settings}
         />
       </div>
+    </div>
+  );
+}
+
+function SignalCard({
+  title,
+  icon: Icon,
+  emptyLabel,
+  items,
+}: {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  emptyLabel: string;
+  items: Array<{
+    id: string;
+    headline: string;
+    subline: string;
+    timestamp: string;
+  }>;
+}) {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+        <Icon className="w-5 h-5" />
+        {title}
+      </h2>
+
+      {items.length === 0 ? (
+        <div className="text-sm text-gray-500 py-6">{emptyLabel}</div>
+      ) : (
+        <div className="space-y-3">
+          {items.map((item) => (
+            <div key={item.id} className="border border-gray-100 dark:border-gray-700 rounded-lg p-3">
+              <div className="text-sm font-medium">{item.headline}</div>
+              <div className="text-xs text-gray-500 mt-1">{item.subline}</div>
+              <div className="text-xs text-gray-400 mt-2">
+                {new Date(item.timestamp).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

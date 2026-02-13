@@ -25,6 +25,11 @@ on:
         required: false
         type: string
         default: '120'
+      idle_cycles:
+        description: Stop after N consecutive cycles with zero changes (0 = disable)
+        required: false
+        type: string
+        default: '2'
       provider:
         description: AI provider
         type: choice
@@ -43,5 +48,6 @@ jobs:
       scope: ${{ inputs.scope }}
       max_cycles: ${{ inputs.max_cycles }}
       cooldown: ${{ inputs.cooldown }}
+      idle_cycles: ${{ inputs.idle_cycles }}
       provider: ${{ inputs.provider }}
     secrets: inherit

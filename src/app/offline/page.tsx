@@ -13,7 +13,7 @@ export default function OfflinePage() {
   const [isOnline, setIsOnline] = useState(false);
 
   useEffect(() => {
-    setIsOnline(navigator.onLine);
+    const id = setTimeout(() => setIsOnline(navigator.onLine), 0);
 
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -22,6 +22,7 @@ export default function OfflinePage() {
     window.addEventListener('offline', handleOffline);
 
     return () => {
+      clearTimeout(id);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };

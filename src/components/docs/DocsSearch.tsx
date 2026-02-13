@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface SearchItem {
   id: string;
@@ -41,6 +42,7 @@ const defaultTranslations: SearchTranslations = {
 
 export function DocsSearch({ locale = "en", translations = {} }: Props) {
   const t = { ...defaultTranslations, ...translations };
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchItem[]>([]);
@@ -157,7 +159,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
       setSelectedIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter" && results[selectedIndex]) {
       e.preventDefault();
-      window.location.href = getLocalizedUrl(results[selectedIndex].url);
+      router.push(getLocalizedUrl(results[selectedIndex].url));
       setIsOpen(false);
     }
   };

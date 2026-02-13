@@ -155,7 +155,7 @@ export async function getK12SafetyAction(
 // Default Export
 // ============================================
 
-export default {
+const opa = {
   evaluatePolicy: _evaluatePolicy,
   evaluateK12Policy: _evaluateK12Policy,
   isAllowed,
@@ -165,3 +165,5 @@ export default {
   isK12AnswerAllowed,
   getK12SafetyAction,
 };
+
+export default opa;

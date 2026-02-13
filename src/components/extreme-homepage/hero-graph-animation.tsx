@@ -48,7 +48,6 @@ interface AnimState {
 // Constants
 // =============================================================================
 
-const NODE_COUNT = 10;
 const MAX_EDGES = 15;
 const DRIFT_AMPLITUDE = 0.03;
 const EDGE_FADE_SPEED = 0.3;

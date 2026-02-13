@@ -27,6 +27,12 @@ const eslintConfig = [
           varsIgnorePattern: "^_",
         },
       ],
+      "react-hooks/set-state-in-effect": "error",
+      "react-hooks/static-components": "error",
+      "react-hooks/refs": "error",
+      "react-hooks/purity": "error",
+      "react-hooks/immutability": "error",
+      "react-hooks/preserve-manual-memoization": "error",
     },
   },
   {

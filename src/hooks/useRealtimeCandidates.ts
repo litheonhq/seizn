@@ -153,8 +153,8 @@ export function useRealtimeCandidates({
   // Subscribe to candidates
   useEffect(() => {
     if (!enabled || !userId) {
-      setIsConnected(false);
-      return;
+      const id = setTimeout(() => setIsConnected(false), 0);
+      return () => clearTimeout(id);
     }
 
     const unsubscribe = subscribeToCandidates(userId, {
@@ -174,7 +174,7 @@ export function useRealtimeCandidates({
         onInsertRef.current?.(candidate);
       },
 
-      onUpdate: (newCandidate, oldCandidate) => {
+      onUpdate: (newCandidate, _oldCandidate) => {
         setActiveCandidates((prev) =>
           prev.map((c) => (c.id === newCandidate.id ? newCandidate : c))
         );
@@ -206,9 +206,10 @@ export function useRealtimeCandidates({
       },
     });
 
-    setIsConnected(true);
+    const connectId = setTimeout(() => setIsConnected(true), 0);
 
     return () => {
+      clearTimeout(connectId);
       unsubscribe();
       setIsConnected(false);
     };

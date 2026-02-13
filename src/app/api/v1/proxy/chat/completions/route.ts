@@ -38,9 +38,7 @@ import {
 } from '@/lib/api-auth';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
-import { computeEmbedding, cosineSimilarity } from '@/lib/embeddings';
-
-const META = { version: 'v1' as const };
+import { computeEmbedding } from '@/lib/embeddings';
 
 // ============================================
 // Types

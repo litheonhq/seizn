@@ -496,7 +496,7 @@ export class ConfidentialRAGService {
     policy?: AccessPolicy;
   }): Promise<SecureRetrievalResult> {
     const results: SecureRetrievalResult['chunks'] = [];
-    let chunksRedacted = 0;
+    const chunksRedacted = 0;
     let chunksDenied = 0;
 
     const logId = crypto.randomUUID();

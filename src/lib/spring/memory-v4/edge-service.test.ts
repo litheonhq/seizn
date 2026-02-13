@@ -8,6 +8,7 @@ import { EdgeService } from './edge-service';
 describe('EdgeService', () => {
   let service: EdgeService;
   let mockSupabase: ReturnType<typeof createMockSupabase>;
+  type EdgeSupabase = ConstructorParameters<typeof EdgeService>[0];
 
   function createMockSupabase() {
     const mockQueryBuilder = {
@@ -33,7 +34,7 @@ describe('EdgeService', () => {
 
   beforeEach(() => {
     mockSupabase = createMockSupabase();
-    service = new EdgeService(mockSupabase as any);
+    service = new EdgeService(mockSupabase as unknown as EdgeSupabase);
   });
 
   describe('createEdge', () => {
@@ -163,32 +164,34 @@ describe('EdgeService', () => {
       });
 
       // Mock upsert result
-      mockSupabase._queryBuilder.select.mockResolvedValueOnce({
-        data: [
-          {
-            id: 'edge-1',
-            src_memory_id: 'src-1',
-            dst_memory_id: 'dst-1',
-            edge_type: 'relates_to',
-            weight: 1.0,
-            confidence: 0.8,
-            created_by: 'user-123',
-            created_by_system: false,
-            created_at: new Date().toISOString(),
-          },
-          {
-            id: 'edge-2',
-            src_memory_id: 'src-2',
-            dst_memory_id: 'dst-2',
-            edge_type: 'supports',
-            weight: 0.9,
-            confidence: 0.8,
-            created_by: 'user-123',
-            created_by_system: false,
-            created_at: new Date().toISOString(),
-          },
-        ],
-        error: null,
+      mockSupabase._queryBuilder.upsert.mockReturnValueOnce({
+        select: vi.fn().mockResolvedValueOnce({
+          data: [
+            {
+              id: 'edge-1',
+              src_memory_id: 'src-1',
+              dst_memory_id: 'dst-1',
+              edge_type: 'relates_to',
+              weight: 1.0,
+              confidence: 0.8,
+              created_by: 'user-123',
+              created_by_system: false,
+              created_at: new Date().toISOString(),
+            },
+            {
+              id: 'edge-2',
+              src_memory_id: 'src-2',
+              dst_memory_id: 'dst-2',
+              edge_type: 'supports',
+              weight: 0.9,
+              confidence: 0.8,
+              created_by: 'user-123',
+              created_by_system: false,
+              created_at: new Date().toISOString(),
+            },
+          ],
+          error: null,
+        }),
       });
 
       const result = await service.createEdges('user-123', [
@@ -238,9 +241,11 @@ describe('EdgeService', () => {
         },
       ];
 
-      mockSupabase._queryBuilder.select.mockResolvedValueOnce({
-        data: mockEdges,
-        error: null,
+      mockSupabase._queryBuilder.upsert.mockReturnValueOnce({
+        select: vi.fn().mockResolvedValueOnce({
+          data: mockEdges,
+          error: null,
+        }),
       });
 
       // This should not throw even if 'this' binding was incorrect

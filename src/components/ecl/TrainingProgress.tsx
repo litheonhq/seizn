@@ -89,6 +89,19 @@ function PlayIcon() {
   );
 }
 
+function TrainingStatusIcon({ status }: { status: TrainingState["status"] }) {
+  switch (status) {
+    case "completed":
+      return <CheckIcon />;
+    case "failed":
+      return <XCircleIcon />;
+    case "training":
+      return <SpinnerIcon />;
+    default:
+      return null;
+  }
+}
+
 // ============================================
 // Progress Bar
 // ============================================
@@ -249,7 +262,10 @@ export function TrainingProgress({
 
   // Initial fetch
   useEffect(() => {
-    fetchStatus();
+    const id = setTimeout(() => {
+      void fetchStatus();
+    }, 0);
+    return () => clearTimeout(id);
   }, [fetchStatus]);
 
   const startTraining = useCallback(async () => {
@@ -306,25 +322,13 @@ export function TrainingProgress({
 
   // Auto-start if requested
   useEffect(() => {
-    if (autoStart && pairCount >= 10 && modelStatus === "pending") {
-      startTraining();
-    }
+    if (!(autoStart && pairCount >= 10 && modelStatus === "pending")) return;
+
+    const id = setTimeout(() => {
+      void startTraining();
+    }, 0);
+    return () => clearTimeout(id);
   }, [autoStart, pairCount, modelStatus, startTraining]);
-
-
-  // Status indicator
-  const StatusIcon = () => {
-    switch (state.status) {
-      case "completed":
-        return <CheckIcon />;
-      case "failed":
-        return <XCircleIcon />;
-      case "training":
-        return <SpinnerIcon />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -332,7 +336,7 @@ export function TrainingProgress({
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-900">Training Status</h3>
         <div className="flex items-center gap-2">
-          <StatusIcon />
+          <TrainingStatusIcon status={state.status} />
           <span
             className={`text-sm font-medium ${
               state.status === "completed"

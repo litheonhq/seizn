@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     const useCommunities = advanced.useCommunities ?? false;
 
     // Step 1: Base search with tier awareness
-    let searchResults = await searchService.search(userId, {
+    const searchResults = await searchService.search(userId, {
       query,
       topK: topK * 2, // Oversample for filtering/reranking
       filters,

@@ -31,21 +31,31 @@ export function OfflineIndicator({
 
   // Show indicator when offline
   useEffect(() => {
+    let stateTimeout: ReturnType<typeof setTimeout> | undefined;
+    let autoHideTimeout: ReturnType<typeof setTimeout> | undefined;
+
     if (!isOnline) {
-      setVisible(true);
-      setShowReconnected(false);
+      stateTimeout = setTimeout(() => {
+        setVisible(true);
+        setShowReconnected(false);
+      }, 0);
     } else if (wasOffline) {
-      setShowReconnected(true);
+      stateTimeout = setTimeout(() => {
+        setShowReconnected(true);
 
-      if (autoHide) {
-        const timer = setTimeout(() => {
-          setVisible(false);
-          setShowReconnected(false);
-        }, autoHideDelay);
-
-        return () => clearTimeout(timer);
-      }
+        if (autoHide) {
+          autoHideTimeout = setTimeout(() => {
+            setVisible(false);
+            setShowReconnected(false);
+          }, autoHideDelay);
+        }
+      }, 0);
     }
+
+    return () => {
+      if (stateTimeout) clearTimeout(stateTimeout);
+      if (autoHideTimeout) clearTimeout(autoHideTimeout);
+    };
   }, [isOnline, wasOffline, autoHide, autoHideDelay]);
 
   if (!visible && !showReconnected) return null;
