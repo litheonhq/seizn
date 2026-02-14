@@ -96,6 +96,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const repoFullName = `${config.owner}/${config.repo}`;
+
     // Check daily PR limit
     const today = new Date().toISOString().slice(0, 10);
     const { count: todayPrCount } = await supabase
@@ -117,6 +119,11 @@ export async function POST(request: NextRequest) {
     // Apply overrides
     const prContext: PRContext = {
       ...body.context,
+      metadata: {
+        ...body.context.metadata,
+        userId, // Trust the authenticated userId over client-provided metadata.
+        repoFullName,
+      },
       reviewers: body.reviewers || body.context.reviewers,
       labels: body.labels || body.context.labels,
       draft: body.draft !== undefined ? body.draft : body.context.draft,

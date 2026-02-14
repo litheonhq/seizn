@@ -357,6 +357,8 @@ export class PRGenerator {
     analysis: TraceAnalysis,
     suggestions: FixSuggestion[]
   ): PRMetadata {
+    const repoFullName =
+      this.config.owner && this.config.repo ? `${this.config.owner}/${this.config.repo}` : undefined;
     const codeChanges = suggestions.reduce(
       (sum, s) => sum + (s.codeChanges?.length || 0),
       0
@@ -369,6 +371,7 @@ export class PRGenerator {
     return {
       traceId: analysis.traceId,
       userId: analysis.userId,
+      repoFullName,
       autopilotVersion: AUTOPILOT_VERSION,
       createdAt: new Date().toISOString(),
       confidence: analysis.confidence,
