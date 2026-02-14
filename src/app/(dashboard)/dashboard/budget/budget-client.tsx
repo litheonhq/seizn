@@ -148,7 +148,7 @@ export function BudgetDashboardClient() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-emerald-500 dark:border-emerald-400 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -157,16 +157,16 @@ export function BudgetDashboardClient() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.budgetPage.title")}</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t("dashboard.budgetPage.title")}</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">
           {t("dashboard.budgetPage.subtitle")}
         </p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg">
+          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
         </div>
       )}
 
@@ -174,22 +174,22 @@ export function BudgetDashboardClient() {
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Daily Usage */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <DollarIcon className="w-5 h-5 text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-950/40 rounded-lg">
+                <DollarIcon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
               </div>
-              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.todaysSpend")}</span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("dashboard.budgetPage.todaysSpend")}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {formatCurrency(stats.dailyUsedUsd)}
             </div>
             <div className="mt-2">
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                 <span>{dailyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofDailyLimit")}</span>
                 <span>{formatCurrency(stats.dailyBudgetUsd)}</span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     dailyPercent > 90 ? "bg-red-500" : dailyPercent > 70 ? "bg-yellow-500" : "bg-blue-500"
@@ -201,22 +201,22 @@ export function BudgetDashboardClient() {
           </div>
 
           {/* Monthly Usage */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <ChartIcon className="w-5 h-5 text-emerald-600" />
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-950/35 rounded-lg">
+                <ChartIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-300" />
               </div>
-              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.monthlySpend")}</span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("dashboard.budgetPage.monthlySpend")}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {formatCurrency(stats.monthlyUsedUsd)}
             </div>
             <div className="mt-2">
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                 <span>{monthlyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofMonthlyLimit")}</span>
                 <span>{formatCurrency(stats.monthlyBudgetUsd)}</span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     monthlyPercent > 90 ? "bg-red-500" : monthlyPercent > 70 ? "bg-yellow-500" : "bg-emerald-500"
@@ -228,33 +228,33 @@ export function BudgetDashboardClient() {
           </div>
 
           {/* Query Count */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <ChartIcon className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-950/35 rounded-lg">
+                <ChartIcon className="w-5 h-5 text-purple-600 dark:text-purple-300" />
               </div>
-              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.apiCalls")}</span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("dashboard.budgetPage.apiCalls")}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.todayQueries.toLocaleString()}
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {stats.monthQueries.toLocaleString()} {t("dashboard.budgetPage.thisMonth")}
             </p>
           </div>
 
           {/* Degrade Events */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className={`p-2 rounded-lg ${stats.degradeEvents > 0 ? "bg-yellow-100" : "bg-green-100"}`}>
-                <ShieldIcon className={`w-5 h-5 ${stats.degradeEvents > 0 ? "text-yellow-600" : "text-green-600"}`} />
+              <div className={`p-2 rounded-lg ${stats.degradeEvents > 0 ? "bg-yellow-100 dark:bg-yellow-950/40" : "bg-green-100 dark:bg-green-950/35"}`}>
+                <ShieldIcon className={`w-5 h-5 ${stats.degradeEvents > 0 ? "text-yellow-600 dark:text-yellow-300" : "text-green-600 dark:text-green-300"}`} />
               </div>
-              <span className="text-sm font-medium text-gray-600">{t("dashboard.budgetPage.autoDegrades")}</span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("dashboard.budgetPage.autoDegrades")}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.degradeEvents}
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {stats.lastDegradeReason || t("dashboard.budgetPage.noRecentDegrades")}
             </p>
           </div>
@@ -263,11 +263,11 @@ export function BudgetDashboardClient() {
 
       {/* Degrade Warning Banner */}
       {stats && stats.degradeEvents > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3">
-          <AlertTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/40 rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangleIcon className="w-5 h-5 text-yellow-600 dark:text-yellow-300 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-medium text-yellow-800">{t("dashboard.budgetPage.protectionActive")}</h3>
-            <p className="text-sm text-yellow-700 mt-1">
+            <h3 className="font-medium text-yellow-800 dark:text-yellow-200">{t("dashboard.budgetPage.protectionActive")}</h3>
+            <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
               {t("dashboard.budgetPage.protectionDesc")}
             </p>
           </div>
@@ -276,7 +276,7 @@ export function BudgetDashboardClient() {
 
       {/* Settings Form */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("dashboard.budgetPage.settings")}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t("dashboard.budgetPage.settings")}</h2>
         <BudgetSettings
           initialSettings={settings || undefined}
           onSave={handleSaveSettings}
@@ -286,40 +286,40 @@ export function BudgetDashboardClient() {
       {/* Recent Degrade Events */}
       {degradeEvents.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("dashboard.budgetPage.recentEvents")}</h2>
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t("dashboard.budgetPage.recentEvents")}</h2>
+          <div className="bg-white dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-900/40">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.budgetPage.time")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.budgetPage.reason")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.budgetPage.changes")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.budgetPage.saved")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-900/20 divide-y divide-gray-200 dark:divide-gray-800">
                 {degradeEvents.map((event) => (
                   <tr key={event.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(event.timestamp).toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                       {event.reason}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                      <code className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-1 rounded">
                         {JSON.stringify(event.degradedConfig)}
                       </code>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-300 font-medium">
                       {formatCurrency(event.costSaved)}
                     </td>
                   </tr>
@@ -331,23 +331,23 @@ export function BudgetDashboardClient() {
       )}
 
       {/* Info Box */}
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-        <h3 className="font-medium text-gray-900 mb-2">{t("dashboard.budgetPage.howItWorks")}</h3>
-        <ul className="text-sm text-gray-600 space-y-2">
+      <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+        <h3 className="font-medium text-gray-900 dark:text-white mb-2">{t("dashboard.budgetPage.howItWorks")}</h3>
+        <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 font-bold">1.</span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-bold">1.</span>
             <span>{t("dashboard.budgetPage.step1")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 font-bold">2.</span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-bold">2.</span>
             <span>{t("dashboard.budgetPage.step2")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 font-bold">3.</span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-bold">3.</span>
             <span>{t("dashboard.budgetPage.step3")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 font-bold">4.</span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-bold">4.</span>
             <span>{t("dashboard.budgetPage.step4")}</span>
           </li>
         </ul>
