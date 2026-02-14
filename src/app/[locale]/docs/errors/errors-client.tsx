@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
-import { ErrorCodeV2 } from "@/lib/api-error-v2";
+import { ErrorCodeV2 } from "@/lib/api-error-codes-v2";
 
 // ============================================
 // Types
