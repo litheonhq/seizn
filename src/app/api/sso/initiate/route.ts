@@ -61,6 +61,15 @@ export async function POST(request: NextRequest) {
       return NotFoundErrors.resource('SSO connection', connectionId || 'unknown');
     }
 
+    if (connection.providerType !== 'saml') {
+      return createApiError({
+        code: ErrorCodes.VALIDATION_ERROR,
+        message: 'This SSO connection is not configured for SAML',
+        status: 400,
+        details: { providerType: connection.providerType },
+      });
+    }
+
     // Check connection is active
     if (connection.status !== 'active' && connection.status !== 'testing') {
       return createApiError({
@@ -72,7 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check required SAML config
-    if (!connection.ssoUrl || !connection.entityId) {
+    if (!connection.ssoUrl || !connection.entityId || !connection.certificate) {
       return createApiError({
         code: ErrorCodes.VALIDATION_ERROR,
         message: 'SSO connection is not fully configured',
@@ -81,37 +90,42 @@ export async function POST(request: NextRequest) {
           missing: [
             !connection.ssoUrl && 'ssoUrl',
             !connection.entityId && 'entityId',
+            !connection.certificate && 'certificate',
           ].filter(Boolean),
         },
       });
     }
 
-    // Log the initiation
-    const supabase = createServerClient();
-    const requestId = `_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    await supabase.from('sso_login_attempts').insert({
-      connection_id: connection.id,
-      organization_id: connection.organizationId,
-      request_id: requestId,
-      relay_state: safeRelayState,
-      response_status: 'pending',
-      ip_address: request.headers.get('x-forwarded-for')?.split(',')[0] || null,
-      user_agent: request.headers.get('user-agent'),
-      email: email || null,
-    });
-
     // Generate SAML AuthnRequest
     try {
-      const { redirectUrl, request: samlRequest } = await generateSAMLRequest(
-        connection,
-        safeRelayState
-      );
+      const { redirectUrl, requestId } = await generateSAMLRequest(connection, safeRelayState);
+
+      // Persist the attempt for replay protection / relay-state binding.
+      const supabase = createServerClient();
+      const { error: attemptError } = await supabase.from('sso_login_attempts').insert({
+        connection_id: connection.id,
+        organization_id: connection.organizationId,
+        request_id: requestId,
+        relay_state: safeRelayState,
+        response_status: 'pending',
+        ip_address: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null,
+        user_agent: request.headers.get('user-agent'),
+        email: typeof email === 'string' ? email : null,
+      });
+
+      if (attemptError) {
+        console.error('Failed to persist SSO login attempt:', attemptError);
+        return createApiError({
+          code: ErrorCodes.INTERNAL_ERROR,
+          message: 'Failed to persist SSO login attempt',
+          status: 500,
+        });
+      }
 
       return NextResponse.json({
         success: true,
         redirectUrl,
-        requestId: samlRequest.id,
+        requestId,
         provider: {
           name: connection.name,
           type: connection.providerType,
@@ -180,7 +194,24 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const { redirectUrl } = await generateSAMLRequest(connection, redirect);
+    if (connection.providerType !== 'saml' || !connection.certificate) {
+      return NextResponse.redirect(new URL('/login?error=sso_not_configured', request.url));
+    }
+
+    const { redirectUrl, requestId } = await generateSAMLRequest(connection, redirect);
+
+    const supabase = createServerClient();
+    await supabase.from('sso_login_attempts').insert({
+      connection_id: connection.id,
+      organization_id: connection.organizationId,
+      request_id: requestId,
+      relay_state: redirect,
+      response_status: 'pending',
+      ip_address: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null,
+      user_agent: request.headers.get('user-agent'),
+      email,
+    });
+
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('SSO redirect error:', error);

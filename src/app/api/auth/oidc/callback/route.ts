@@ -14,8 +14,69 @@ import {
 import { logAuditEvent } from '@/lib/enterprise-auth/audit';
 import type { OIDCConfig } from '@/lib/enterprise-auth/types';
 import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
+import { decryptSSOSecret } from '@/lib/sso/secret';
+import { createAuthJsSessionToken } from '@/lib/auth/session-token';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
+
+type DbSSOConnection = {
+  id: string;
+  organization_id: string;
+  name: string;
+  provider_type: 'saml' | 'oidc';
+  status: 'draft' | 'testing' | 'active' | 'disabled';
+  oidc_issuer: string | null;
+  oidc_client_id: string | null;
+  oidc_client_secret_encrypted: string | null;
+  email_domains: string[] | null;
+  // Optional newer columns (may exist depending on migration history).
+  domains?: string[] | null;
+};
+
+function buildOIDCConfig(connection: DbSSOConnection): OIDCConfig {
+  if (!connection.oidc_client_id) {
+    throw new Error('OIDC client ID not configured');
+  }
+
+  if (!connection.oidc_client_secret_encrypted) {
+    throw new Error('OIDC client secret not configured');
+  }
+
+  if (!connection.oidc_issuer) {
+    throw new Error('OIDC issuer not configured');
+  }
+
+  return {
+    type: 'oidc',
+    clientId: connection.oidc_client_id,
+    clientSecret: decryptSSOSecret(connection.oidc_client_secret_encrypted),
+    issuerUrl: connection.oidc_issuer,
+    authorizationUrl: '',
+    tokenUrl: '',
+    userInfoUrl: '',
+    scopes: ['openid', 'email', 'profile'],
+    attributeMapping: {
+      email: 'email',
+      name: 'name',
+      picture: 'picture',
+      groups: 'groups',
+    },
+  };
+}
+
+function getCookieDomain(baseUrl: string): string | undefined {
+  if (process.env.AUTH_COOKIE_DOMAIN) {
+    return process.env.AUTH_COOKIE_DOMAIN;
+  }
+
+  try {
+    const hostname = new URL(baseUrl).hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
+    return hostname.startsWith('.') ? hostname : `.${hostname}`;
+  } catch {
+    return undefined;
+  }
+}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -61,16 +122,27 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient();
     const { data: connection, error: connError } = await supabase
       .from('sso_connections')
-      .select('*')
+      .select(
+        'id, organization_id, name, provider_type, status, oidc_issuer, oidc_client_id, oidc_client_secret_encrypted, email_domains, domains'
+      )
       .eq('id', authRequest.connectionId)
-      .eq('enabled', true)
       .single();
 
     if (connError || !connection) {
       throw new Error('SSO connection not found or disabled');
     }
 
-    const config = connection.config as OIDCConfig;
+    const typed = connection as DbSSOConnection;
+
+    if (typed.provider_type !== 'oidc') {
+      throw new Error('This connection is not configured for OIDC');
+    }
+
+    if (typed.status !== 'active' && typed.status !== 'testing') {
+      throw new Error('SSO connection not found or disabled');
+    }
+
+    const config = buildOIDCConfig(typed);
 
     // Exchange code for tokens
     const tokens = await oidcProvider.exchangeCode(
@@ -100,10 +172,9 @@ export async function GET(request: NextRequest) {
 
     // Verify email domain matches connection domains
     const emailDomain = profile.email.split('@')[1];
-    if (connection.domains && connection.domains.length > 0) {
-      if (!connection.domains.includes(emailDomain)) {
-        throw new Error(`Email domain ${emailDomain} not allowed for this SSO connection`);
-      }
+    const allowedDomains = (typed.email_domains || typed.domains || []).filter(Boolean);
+    if (allowedDomains.length > 0 && !allowedDomains.includes(emailDomain)) {
+      throw new Error(`Email domain ${emailDomain} not allowed for this SSO connection`);
     }
 
     // Find or create user
@@ -152,7 +223,7 @@ export async function GET(request: NextRequest) {
       await supabase
         .from('organization_members')
         .insert({
-          organization_id: connection.organization_id,
+          organization_id: typed.organization_id,
           user_id: userId,
           role: 'member',
         });
@@ -164,9 +235,9 @@ export async function GET(request: NextRequest) {
 
     await supabase.from('sso_sessions').insert({
       user_id: userId,
-      organization_id: connection.organization_id,
+      organization_id: typed.organization_id,
       connection_id: authRequest.connectionId,
-      provider: connection.provider,
+      provider: typed.provider_type,
       idp_session_id: idTokenClaims.sid as string || null,
       ip_address: ipAddress,
       user_agent: userAgent,
@@ -175,25 +246,30 @@ export async function GET(request: NextRequest) {
 
     // Log audit event
     await logAuditEvent({
-      organizationId: connection.organization_id,
+      organizationId: typed.organization_id,
       actorId: userId,
       actorEmail: profile.email,
       actorIpAddress: ipAddress,
       actorUserAgent: userAgent,
       eventCategory: 'sso',
       eventType: 'sso_login',
-      action: `OIDC login via ${connection.provider}`,
+      action: `OIDC login via ${typed.name}`,
       success: true,
       metadata: {
         connectionId: authRequest.connectionId,
-        provider: connection.provider,
+        provider: typed.name,
         email: profile.email,
       },
     });
 
     // Create session token
-    // For NextAuth integration, we create a JWT and set it as a cookie
-    const sessionToken = await createSessionToken(userId, profile.email, profile.name);
+    // For NextAuth integration, issue an Auth.js-compatible JWE token and set it as a cookie.
+    const sessionToken = await createAuthJsSessionToken({
+      userId,
+      email: profile.email,
+      name: profile.name,
+      picture: profile.picture,
+    });
 
     // Get redirect URL from cookie
     const cookieStore = await cookies();
@@ -209,6 +285,7 @@ export async function GET(request: NextRequest) {
     // Set the session token cookie
     const useSecureCookies = process.env.NODE_ENV === 'production';
     const cookiePrefix = useSecureCookies ? '__Secure-' : '';
+    const cookieDomain = getCookieDomain(baseUrl);
 
     response.cookies.set(`${cookiePrefix}authjs.session-token`, sessionToken, {
       httpOnly: true,
@@ -216,6 +293,7 @@ export async function GET(request: NextRequest) {
       sameSite: 'lax',
       path: '/',
       maxAge: 24 * 60 * 60, // 24 hours
+      ...(cookieDomain ? { domain: cookieDomain } : {}),
     });
 
     return response;
@@ -247,29 +325,4 @@ export async function GET(request: NextRequest) {
     errorUrl.searchParams.set('error_description', err instanceof Error ? err.message : 'Authentication failed');
     return NextResponse.redirect(errorUrl);
   }
-}
-
-/**
- * Create a session token for the authenticated user
- */
-async function createSessionToken(
-  userId: string,
-  email: string,
-  name?: string
-): Promise<string> {
-  const { SignJWT } = await import('jose');
-  const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
-
-  const token = await new SignJWT({
-    id: userId,
-    email,
-    name,
-    sub: userId,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
-  })
-    .setProtectedHeader({ alg: 'HS256' })
-    .sign(secret);
-
-  return token;
 }

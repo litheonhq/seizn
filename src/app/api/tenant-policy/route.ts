@@ -12,11 +12,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@/lib/supabase";
+import { getRequestUser } from "@/lib/api/request-user";
 import {
   getTenantPolicy,
   getTenantBudgetState,
   invalidatePolicyCache,
+  savePolicyToDB,
+  clearPolicyFromDB,
 
   listPresets,
   createTenantPolicy,
@@ -28,33 +31,9 @@ import {
   type PresetName,
 } from "@/lib/tenant-policy";
 
-// Helper to get user from session token
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
-
 // Helper to check admin access
 async function checkAdminAccess(userId: string, tenantId: string): Promise<boolean> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  const supabase = createServerClient();
 
   const { data: membership } = await supabase
     .from('organization_members')
@@ -73,6 +52,11 @@ async function checkAdminAccess(userId: string, tenantId: string): Promise<boole
  */
 export async function GET(request: NextRequest) {
   try {
+    const user = await getRequestUser(request);
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get("tenant_id");
     const includeBudget = searchParams.get("include_budget") === "true";
@@ -83,6 +67,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: "tenant_id is required" },
         { status: 400 }
+      );
+    }
+
+    // Check admin access (policy and budget info is tenant-admin scoped)
+    const hasAccess = await checkAdminAccess(user.id, tenantId);
+    if (!hasAccess) {
+      return NextResponse.json(
+        { error: "Not authorized to view this tenant's policy" },
+        { status: 403 }
       );
     }
 
@@ -135,7 +128,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -199,9 +192,15 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Save to DB when prisma is available
-    // const saved = await savePolicyToDB(tenant_id, newPolicy, prisma);
+    const saved = await savePolicyToDB(tenant_id, newPolicy);
+    if (!saved) {
+      return NextResponse.json(
+        { error: "Failed to persist policy" },
+        { status: 500 }
+      );
+    }
 
-    // For now, just invalidate cache so next request picks up env changes
+    // Defensive: ensure any stale cached value is cleared.
     invalidatePolicyCache(tenant_id);
 
     return NextResponse.json({
@@ -226,7 +225,7 @@ export async function POST(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -252,6 +251,9 @@ export async function DELETE(request: NextRequest) {
 
     // Invalidate cache to reset to default
     invalidatePolicyCache(tenantId);
+
+    // Remove persisted policy so the tenant falls back to defaults.
+    await clearPolicyFromDB(tenantId);
 
     // Get default policy
     const defaultPolicy = createTenantPolicy(tenantId, "conservative");

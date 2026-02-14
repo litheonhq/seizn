@@ -126,13 +126,39 @@ export async function POST(request: NextRequest) {
     const codeFixer = createCodeFixer(config, configData.github_token);
     const prRecord = await codeFixer.applyFixes(prContext);
 
+    const traceId = prRecord.context.metadata.traceId;
+
+    // Attempt to link the most recent fix for this trace.
+    const { data: fixRows } = await supabase
+      .from('autopilot_fixes')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('trace_id', traceId)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    const fixId = Array.isArray(fixRows) ? fixRows[0]?.id : null;
+
     // Store PR record
     await supabase
       .from('autopilot_prs')
       .insert({
         id: prRecord.id,
         user_id: userId,
-        trace_id: prRecord.context.metadata.traceId,
+        analysis_id: traceId,
+        fix_id: fixId ?? null,
+        pr_type: 'code_fix',
+        title: prRecord.context.title,
+        description: prRecord.context.body,
+        files_changed: prRecord.context.files.map((f) => ({
+          path: f.path,
+          changeType: f.changeType,
+        })),
+        external_provider: 'github',
+        external_pr_id: prRecord.prNumber ? String(prRecord.prNumber) : null,
+        external_pr_url: prRecord.prUrl ?? null,
+
+        trace_id: traceId,
         pr_number: prRecord.prNumber,
         pr_url: prRecord.prUrl,
         status: prRecord.status,
@@ -145,16 +171,28 @@ export async function POST(request: NextRequest) {
       });
 
     // Update fix status
-    await supabase
-      .from('autopilot_fixes')
-      .update({
-        status: prRecord.status === 'created' ? 'pr_created' : 'failed',
+    if (fixId) {
+      const now = new Date().toISOString();
+      const fixUpdate: Record<string, unknown> = {
         pr_id: prRecord.id,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('trace_id', prRecord.context.metadata.traceId)
-      .eq('user_id', userId)
-      .eq('status', 'pending');
+        updated_at: now,
+      };
+
+      if (prRecord.status === 'failed') {
+        fixUpdate.status = 'rejected';
+        fixUpdate.rollback_reason = prRecord.error || 'PR creation failed';
+      } else {
+        fixUpdate.status = 'applied';
+        fixUpdate.applied_at = now;
+        fixUpdate.applied_by = 'system';
+      }
+
+      await supabase
+        .from('autopilot_fixes')
+        .update(fixUpdate)
+        .eq('id', fixId)
+        .eq('user_id', userId);
+    }
 
     const response: CreatePRResponse = {
       success: prRecord.status !== 'failed',

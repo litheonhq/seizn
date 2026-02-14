@@ -20,6 +20,8 @@ import {
   DEFAULT_ATTRIBUTE_MAPPING,
 } from '@/types/sso';
 import { randomUUID } from 'crypto';
+import { encryptSSOSecret } from './secret';
+import { verifyDomainOwnership } from './domain-verification';
 
 // ============================================
 // Constants
@@ -160,8 +162,9 @@ export async function updateSSOConnection(
 
   // Handle encrypted client secret separately (in production, encrypt before storing)
   if (updates.oidcClientSecret !== undefined) {
-    // TODO: Encrypt the client secret before storing
-    dbUpdates.oidc_client_secret_encrypted = updates.oidcClientSecret;
+    dbUpdates.oidc_client_secret_encrypted = updates.oidcClientSecret
+      ? encryptSSOSecret(updates.oidcClientSecret)
+      : null;
   }
 
   // Merge attribute mapping and settings with existing values
@@ -284,9 +287,7 @@ export async function verifyDomain(verificationId: string): Promise<SSODomainVer
     throw new Error('Verification token expired');
   }
 
-  // TODO: Implement actual DNS/file verification
-  // For now, mark as verified (in production, implement DNS TXT lookup)
-  const isVerified = await checkDomainVerification(
+  const isVerified = await verifyDomainOwnership(
     verification.domain,
     verification.verification_token,
     verification.verification_method
@@ -313,30 +314,6 @@ export async function verifyDomain(verificationId: string): Promise<SSODomainVer
   return mapDbToDomainVerification(data);
 }
 
-/**
- * Check domain verification (placeholder for actual implementation)
- */
-async function checkDomainVerification(
-  domain: string,
-  token: string,
-  method: string
-): Promise<boolean> {
-  // TODO: Implement actual verification methods
-  // - dns_txt: Check for TXT record at _seizn-verification.{domain}
-  // - dns_cname: Check for CNAME record
-  // - meta_tag: Crawl domain and check for meta tag
-  // - file: Check for /.well-known/seizn-verification.txt
-
-  console.log(`Domain verification check for ${domain} using ${method}: ${token}`);
-
-  // Placeholder: In development, always return true
-  if (process.env.NODE_ENV === 'development') {
-    return true;
-  }
-
-  // In production, implement actual verification
-  return false;
-}
 
 // ============================================
 // SP Metadata Generation

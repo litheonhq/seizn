@@ -67,6 +67,7 @@ export {
   getTenantPolicy,
   loadPolicyFromDB,
   savePolicyToDB,
+  clearPolicyFromDB,
   getTenantBudgetState,
   updateBudgetState,
   invalidatePolicyCache,

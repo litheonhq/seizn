@@ -6,8 +6,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
 import {
   AuthErrors,
   ValidationErrors,
@@ -18,25 +18,6 @@ import {
   createSSOConnection,
 } from '@/lib/sso';
 import type { SSOProviderType } from '@/types/sso';
-
-// Helper to get user from auth header
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
 
 // Check if user is org admin
 async function checkOrgAdmin(userId: string, orgId: string): Promise<boolean> {
@@ -63,7 +44,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { orgId } = await params;
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
 
     if (!user) {
       return AuthErrors.unauthorized('SSO connections');
@@ -101,7 +82,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { orgId } = await params;
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
 
     if (!user) {
       return AuthErrors.unauthorized('SSO connections');

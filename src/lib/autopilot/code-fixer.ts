@@ -106,7 +106,7 @@ export class CodeFixer {
   private createPRRecord(context: PRContext): PRRecord {
     const now = new Date().toISOString();
     return {
-      id: `pr-${randomUUID().slice(0, 8)}`,
+      id: randomUUID(),
       status: 'pending',
       context,
       history: [{
