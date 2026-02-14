@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { createClient } from '@supabase/supabase-js';
+import { getRequestUser } from '@/lib/api/request-user';
 import {
   AuthErrors,
   ValidationErrors,
@@ -16,25 +16,6 @@ import {
   type RegionCode,
 } from '@/config/regions';
 
-// Helper to get user from session
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
-
 interface RouteContext {
   params: Promise<{ orgId: string }>;
 }
@@ -45,7 +26,7 @@ export async function GET(
   context: RouteContext
 ) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organization_region');
     }
@@ -115,7 +96,7 @@ export async function PATCH(
   context: RouteContext
 ) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organization_region');
     }
@@ -258,7 +239,7 @@ export async function POST(
   context: RouteContext
 ) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organization_region');
     }

@@ -1,20 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/api-auth';
-import { AuthErrors, ServerErrors } from '@/lib/api-error';
-import { getSSOService, SSOService } from '@/lib/enterprise';
+import { ServerErrors } from '@/lib/api-error';
+import { SSOService } from '@/lib/enterprise';
+import { getRequestUser } from '@/lib/api/request-user';
+import { createServerClient } from '@/lib/supabase';
+import { getSSOConnections } from '@/lib/sso';
+
+async function resolveAdminOrgId(userId: string, requestedOrgId?: string | null): Promise<string | null> {
+  const supabase = createServerClient();
+
+  if (requestedOrgId) {
+    const { data } = await supabase
+      .from('organization_members')
+      .select('organization_id, role')
+      .eq('organization_id', requestedOrgId)
+      .eq('user_id', userId)
+      .single();
+
+    if (!data || !['owner', 'admin'].includes(data.role)) return null;
+    return data.organization_id;
+  }
+
+  // Default: first org where user is owner/admin.
+  const { data } = await supabase
+    .from('organization_members')
+    .select('organization_id, role')
+    .eq('user_id', userId)
+    .in('role', ['owner', 'admin'])
+    .order('created_at', { ascending: true })
+    .limit(1);
+
+  const membership = Array.isArray(data) ? data[0] : null;
+  return membership?.organization_id || null;
+}
 
 /**
  * GET /api/enterprise/sso - Get SSO configuration or providers
  */
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await validateApiKey(request);
-    if (!authResult?.success) {
-      return AuthErrors.invalidKey();
-    }
-
     const { searchParams } = new URL(request.url);
     const info = searchParams.get('info');
+    const requestedOrgId = searchParams.get('organization_id') || searchParams.get('org_id');
 
     if (info === 'providers') {
       return NextResponse.json({
@@ -23,20 +50,36 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const ssoService = getSSOService();
-    const config = ssoService.getConfig(authResult.orgId || authResult.userId);
+    const sessionUser = await getRequestUser(request);
+    const apiKeyAuth = sessionUser ? null : await validateApiKey(request);
+
+    const userId = sessionUser?.id || apiKeyAuth?.userId || null;
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const orgId =
+      (apiKeyAuth?.orgId ?? null) ||
+      (await resolveAdminOrgId(userId, requestedOrgId));
+
+    if (!orgId) {
+      // No admin org found; enterprise UI can render "not configured".
+      return NextResponse.json({ success: true, config: null });
+    }
+
+    // Fetch SSO connections (real implementation)
+    const connections = await getSSOConnections(orgId);
+    const primary = connections.find((c) => c.status === 'active') || connections[0] || null;
 
     return NextResponse.json({
       success: true,
-      config: config
+      config: primary
         ? {
-            id: config.id,
-            enabled: config.enabled,
-            provider: config.provider,
-            domains: config.domains,
-            defaultRole: config.defaultRole,
-            createdAt: config.createdAt,
-            updatedAt: config.updatedAt,
+            id: primary.id,
+            enabled: primary.status === 'active',
+            provider: primary.name,
+            domains: primary.emailDomains || [],
+            defaultRole: primary.settings?.defaultRole || 'member',
           }
         : null,
     });
@@ -49,55 +92,18 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/enterprise/sso - Create or update SSO configuration
  */
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
-    const authResult = await validateApiKey(request);
-    if (!authResult?.success) {
-      return AuthErrors.invalidKey();
-    }
-
-    const body = await request.json();
-    const { provider, config, domains, defaultRole, enabled } = body;
-
-    if (!provider || !config || !domains || domains.length === 0) {
-      return NextResponse.json(
-        {
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'provider, config, and domains are required',
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    const ssoService = getSSOService();
-    const orgId = authResult.orgId || authResult.userId;
-
-    const ssoConfig = {
-      id: crypto.randomUUID(),
-      orgId,
-      enabled: enabled !== false,
-      provider,
-      config,
-      domains,
-      defaultRole: defaultRole || 'viewer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    await ssoService.registerConfig(ssoConfig);
-
-    return NextResponse.json({
-      success: true,
-      config: {
-        id: ssoConfig.id,
-        enabled: ssoConfig.enabled,
-        provider: ssoConfig.provider,
-        domains: ssoConfig.domains,
-        defaultRole: ssoConfig.defaultRole,
+    // This endpoint is a dashboard convenience wrapper.
+    // Use the organization-scoped SSO APIs for actual configuration:
+    // - POST /api/organizations/[orgId]/sso
+    // - PATCH /api/organizations/[orgId]/sso/[connectionId]
+    return NextResponse.json(
+      {
+        error: 'Not implemented. Use /api/organizations/[orgId]/sso endpoints.',
       },
-    });
+      { status: 501 }
+    );
   } catch (error) {
     console.error('SSO config error:', error);
     return ServerErrors.internal('sso_config_create');
@@ -107,18 +113,14 @@ export async function POST(request: NextRequest) {
 /**
  * DELETE /api/enterprise/sso - Disable SSO
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE(_request: NextRequest) {
   try {
-    const authResult = await validateApiKey(request);
-    if (!authResult?.success) {
-      return AuthErrors.invalidKey();
-    }
-
-    // In production, this would update the config in the database
-    return NextResponse.json({
-      success: true,
-      message: 'SSO disabled',
-    });
+    return NextResponse.json(
+      {
+        error: 'Not implemented. Use /api/organizations/[orgId]/sso endpoints.',
+      },
+      { status: 501 }
+    );
   } catch (error) {
     console.error('SSO disable error:', error);
     return ServerErrors.internal('sso_disable');

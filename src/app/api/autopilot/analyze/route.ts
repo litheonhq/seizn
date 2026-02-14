@@ -32,6 +32,13 @@ import { getTraceAnalyzer } from '@/lib/autopilot';
 import type { StoredTrace } from '@/lib/fall/flight-recorder';
 import type { AnalyzeRequest, AnalyzeResponse, TraceAnalysis } from '@/lib/autopilot';
 
+function toSeverityLabel(severity: number): 'low' | 'medium' | 'high' | 'critical' {
+  if (severity >= 9) return 'critical';
+  if (severity >= 7) return 'high';
+  if (severity >= 4) return 'medium';
+  return 'low';
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Authenticate request
@@ -69,12 +76,12 @@ export async function POST(request: NextRequest) {
     if (!body.force) {
       const { data: cachedAnalysis } = await supabase
         .from('autopilot_analyses')
-        .select('*')
-        .eq('trace_id', body.traceId)
+        .select('analysis')
+        .eq('id', body.traceId)
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
-      if (cachedAnalysis) {
+      if (cachedAnalysis?.analysis) {
         return NextResponse.json({
           success: true,
           analysis: cachedAnalysis.analysis as TraceAnalysis,
@@ -124,19 +131,39 @@ export async function POST(request: NextRequest) {
 
     // Analyze the trace
     const analyzer = getTraceAnalyzer();
+    const startedAt = new Date().toISOString();
     const analysis = await analyzer.analyze(trace);
+    const completedAt = new Date().toISOString();
 
     // Store analysis result
-    await supabase
+    const { error: storeError } = await supabase
       .from('autopilot_analyses')
       .upsert({
-        id: `analysis-${body.traceId}`,
-        trace_id: body.traceId,
+        // Use traceId as the analysis primary key for deterministic lookups.
+        id: body.traceId,
         user_id: userId,
-        analysis: analysis,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        collection_id: trace.collectionId ?? null,
+        trace_id: body.traceId,
+        analysis_type: 'trace_analysis',
+        status: 'completed',
+        input_data: {
+          trace_id: body.traceId,
+          include_related: Boolean(body.includeRelated),
+          forced: Boolean(body.force),
+        },
+        findings: analysis.failures,
+        recommendations: analysis.suggestions,
+        confidence_score: analysis.confidence,
+        severity: toSeverityLabel(analysis.severity),
+        analysis,
+        started_at: startedAt,
+        completed_at: completedAt,
+        updated_at: completedAt,
       });
+
+    if (storeError) {
+      console.error('Autopilot analysis store error:', storeError);
+    }
 
     // Fetch related traces if requested
     if (body.includeRelated && analysis.failures.length > 0) {

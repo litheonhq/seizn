@@ -1,203 +1,260 @@
+import 'server-only';
+
 /**
- * SAML Provider Placeholder for NextAuth.js
+ * SAML SSO Provider (production implementation)
  *
- * This file provides the foundation for SAML SSO integration.
- * Full SAML implementation requires additional packages like:
- * - @node-saml/node-saml (formerly passport-saml)
- * - samlify
- * - or @boxyhq/saml-jackson
+ * This module uses `@node-saml/node-saml` to:
+ * - Generate SAML AuthnRequest redirect URLs
+ * - Validate SAML POST responses (signature, audience, timestamps)
+ * - Extract user attributes from the validated SAML profile
  *
- * This placeholder implements the interface and flow structure,
- * allowing the UI and API to be built while the actual SAML
- * processing is implemented later.
+ * Replay protection:
+ * - We use `sso_login_attempts` as the request ID cache.
+ * - `cacheProvider.getAsync` validates that the requestId exists and is still pending.
+ * - `cacheProvider.removeAsync` marks the requestId as consumed ("processing") so it cannot be replayed.
  */
 
-import type {
-  SSOConnection,
-  SAMLAuthRequest,
-  SAMLResponse,
-  SAMLAssertion,
-  SSOError,
-} from '@/types/sso';
-import { getSSOConnection, findSSOConnectionByEmail } from './index';
+import { SAML, ValidateInResponseTo, generateServiceProviderMetadata } from '@node-saml/node-saml';
+import type { CacheItem, CacheProvider, Profile, SamlConfig } from '@node-saml/node-saml';
 import { randomUUID } from 'crypto';
+import { createServerClient } from '@/lib/supabase';
+import type { SSOConnection, SSOError } from '@/types/sso';
 
-// ============================================
-// Configuration
-// ============================================
+const REQUEST_ID_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
+function getBaseUrl(): string {
+  return process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://www.seizn.com';
+}
 
-// ============================================
-// SAML Request Generation
-// ============================================
+function getSpPrivateKey(): string | undefined {
+  return process.env.SSO_SAML_SP_PRIVATE_KEY || process.env.SAML_SP_PRIVATE_KEY;
+}
 
-/**
- * Generate a SAML AuthnRequest
- *
- * @param connection - SSO connection configuration
- * @param relayState - URL to redirect to after authentication
- * @returns SAML AuthnRequest object and redirect URL
- */
-export async function generateSAMLRequest(
-  connection: SSOConnection,
-  relayState?: string
-): Promise<{
-  requestId: string;
-  redirectUrl: string;
-  request: SAMLAuthRequest;
-}> {
+function getSpPublicCert(): string | undefined {
+  return process.env.SSO_SAML_SP_PUBLIC_CERT || process.env.SAML_SP_PUBLIC_CERT;
+}
+
+function normalizePemBlock(value: string, label: 'CERTIFICATE' | 'PRIVATE KEY'): string {
+  const trimmed = value.trim();
+  if (!trimmed) return trimmed;
+  if (trimmed.includes('-----BEGIN')) return trimmed;
+
+  const body = trimmed.replace(/\s+/g, '');
+  const lines = body.match(/.{1,64}/g) || [body];
+  return `-----BEGIN ${label}-----\n${lines.join('\n')}\n-----END ${label}-----`;
+}
+
+function normalizeIdpCertificate(cert: string): string {
+  return normalizePemBlock(cert, 'CERTIFICATE');
+}
+
+function normalizePrivateKey(key: string): string {
+  return normalizePemBlock(key, 'PRIVATE KEY');
+}
+
+function createLoginAttemptCacheProvider(connectionId: string): CacheProvider {
+  return {
+    async saveAsync(key: string, value: string): Promise<CacheItem | null> {
+      // `@node-saml/node-saml` persists request IDs here, but we store the attempt
+      // in `sso_login_attempts` in the initiate route (where we have more context).
+      return { value, createdAt: Date.now() };
+    },
+
+    async getAsync(key: string): Promise<string | null> {
+      if (!key) return null;
+
+      const supabase = createServerClient();
+      const { data, error } = await supabase
+        .from('sso_login_attempts')
+        .select('created_at, response_status')
+        .eq('connection_id', connectionId)
+        .eq('request_id', key)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (error || !data || data.length === 0) return null;
+
+      const row = data[0] as { created_at: string; response_status: string | null };
+      if (row.response_status !== 'pending') return null;
+
+      const createdAtMs = new Date(row.created_at).getTime();
+      if (!Number.isFinite(createdAtMs)) return null;
+      if (Date.now() > createdAtMs + REQUEST_ID_TTL_MS) return null;
+
+      // The library expects a date-like string so it can check TTL.
+      return row.created_at;
+    },
+
+    async removeAsync(key: string | null): Promise<string | null> {
+      if (!key) return null;
+
+      const supabase = createServerClient();
+      await supabase
+        .from('sso_login_attempts')
+        .update({ response_status: 'processing' })
+        .eq('connection_id', connectionId)
+        .eq('request_id', key)
+        .eq('response_status', 'pending');
+
+      return null;
+    },
+  };
+}
+
+function buildSamlConfig(connection: SSOConnection): SamlConfig {
   if (!connection.ssoUrl) {
     throw new Error('SSO URL not configured');
   }
-
-  const requestId = `_${randomUUID().replace(/-/g, '')}`;
-  const issueInstant = new Date().toISOString();
-
-  const request: SAMLAuthRequest = {
-    id: requestId,
-    issuer: connection.spEntityId,
-    destination: connection.ssoUrl,
-    assertionConsumerServiceURL: connection.spAcsUrl,
-    nameIdPolicy: {
-      format: connection.settings.nameIdFormat,
-      allowCreate: true,
-    },
-    requestedAuthnContext: connection.settings.authnContextClassRef
-      ? {
-          comparison: 'exact',
-          authnContextClassRef: [connection.settings.authnContextClassRef],
-        }
-      : undefined,
-    forceAuthn: connection.settings.forceAuthn,
-    isPassive: false,
-  };
-
-  // TODO: Implement actual SAML XML generation and signing
-  // For now, return a placeholder URL
-  const redirectUrl = buildSAMLRedirectUrl(connection, request, relayState);
-
-  // Store request for later validation
-  await storeAuthRequest(requestId, connection.id, relayState);
-
-  return {
-    requestId,
-    redirectUrl,
-    request,
-  };
-}
-
-/**
- * Build SAML redirect URL with encoded request
- *
- * NOTE: This is a placeholder. Real implementation requires:
- * 1. Generate SAML XML from request object
- * 2. Deflate compress the XML
- * 3. Base64 encode
- * 4. URL encode
- * 5. Optionally sign the request
- */
-function buildSAMLRedirectUrl(
-  connection: SSOConnection,
-  request: SAMLAuthRequest,
-  relayState?: string
-): string {
-  // Placeholder: In production, generate actual SAML XML
-  const samlRequestPlaceholder = Buffer.from(
-    JSON.stringify({
-      type: 'AuthnRequest',
-      id: request.id,
-      issuer: request.issuer,
-      // ... other fields
-    })
-  ).toString('base64');
-
-  const params = new URLSearchParams({
-    SAMLRequest: samlRequestPlaceholder,
-  });
-
-  if (relayState) {
-    params.set('RelayState', relayState);
+  if (!connection.entityId) {
+    throw new Error('IdP entity ID not configured');
+  }
+  if (!connection.certificate) {
+    throw new Error('IdP certificate not configured');
   }
 
-  return `${connection.ssoUrl}?${params.toString()}`;
+  const idpCert = normalizeIdpCertificate(connection.certificate);
+
+  let lastGeneratedId: string | null = null;
+  const generateUniqueId = () => {
+    // SAML IDs are typically prefixed with '_' and must be unique.
+    const id = `_${randomUUID().replace(/-/g, '')}`;
+    lastGeneratedId = id;
+    return id;
+  };
+
+  const validateInResponseTo = connection.settings.allowIdpInitiated
+    ? ValidateInResponseTo.ifPresent
+    : ValidateInResponseTo.always;
+
+  const authnContext = connection.settings.authnContextClassRef
+    ? [connection.settings.authnContextClassRef]
+    : [];
+
+  const cfg: SamlConfig = {
+    // Mandatory:
+    idpCert,
+    issuer: connection.spEntityId,
+    callbackUrl: connection.spAcsUrl,
+
+    // IdP endpoints:
+    entryPoint: connection.ssoUrl,
+    logoutUrl: connection.sloUrl || '',
+
+    // Validation:
+    idpIssuer: connection.entityId,
+    audience: connection.spEntityId,
+    acceptedClockSkewMs: CLOCK_SKEW_MS,
+    maxAssertionAgeMs: 10 * 60 * 1000,
+    validateInResponseTo,
+    requestIdExpirationPeriodMs: REQUEST_ID_TTL_MS,
+    cacheProvider: createLoginAttemptCacheProvider(connection.id),
+
+    // Requested attributes:
+    identifierFormat: connection.settings.nameIdFormat || null,
+    allowCreate: true,
+    disableRequestedAuthnContext: authnContext.length === 0,
+    authnContext,
+    forceAuthn: Boolean(connection.settings.forceAuthn),
+    passive: false,
+
+    // Signature requirements:
+    wantAuthnResponseSigned: false,
+    wantAssertionsSigned: Boolean(connection.settings.wantAssertionsSigned),
+
+    // Request signing:
+    generateUniqueId,
+  };
+
+  if (connection.settings.signRequest) {
+    const pk = getSpPrivateKey();
+    if (!pk) {
+      throw new Error('SP request signing is enabled but SSO_SAML_SP_PRIVATE_KEY is not configured');
+    }
+
+    cfg.privateKey = normalizePrivateKey(pk);
+    const publicCert = getSpPublicCert();
+    if (publicCert) cfg.publicCert = normalizeIdpCertificate(publicCert);
+    cfg.signatureAlgorithm = 'sha256';
+  }
+
+  // Expose for callers that need the request id.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (cfg as any).__getLastGeneratedId = () => lastGeneratedId;
+
+  return cfg;
 }
 
-// ============================================
-// SAML Response Processing
-// ============================================
+export async function generateSAMLRequest(
+  connection: SSOConnection,
+  relayState?: string
+): Promise<{ requestId: string; redirectUrl: string }> {
+  const config = buildSamlConfig(connection);
+  const saml = new SAML(config);
 
-/**
- * Parse and validate a SAML Response
- *
- * @param samlResponse - Base64 encoded SAML Response
- * @param connection - SSO connection for validation
- * @returns Parsed SAML Response or error
- */
+  const url = await saml.getAuthorizeUrlAsync(relayState || '', getBaseUrl(), {
+    additionalParams: {},
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const requestId = (config as any).__getLastGeneratedId?.() as string | null;
+  if (!requestId) {
+    throw new Error('Failed to capture SAML request ID');
+  }
+
+  return { requestId, redirectUrl: url };
+}
+
 export async function parseSAMLResponse(
   samlResponse: string,
   connection: SSOConnection
-): Promise<{ response: SAMLResponse; assertion: SAMLAssertion } | { error: SSOError }> {
-  // TODO: Implement actual SAML response parsing
-  // This requires:
-  // 1. Base64 decode the response
-  // 2. Parse XML
-  // 3. Validate signature using IdP certificate
-  // 4. Validate conditions (timing, audience)
-  // 5. Extract assertion and attributes
-
+): Promise<{ profile: Profile } | { error: SSOError }> {
   try {
-    // Placeholder: Basic structure validation
     if (!samlResponse) {
+      return { error: { code: 'INVALID_SAML_RESPONSE', message: 'Empty SAML response' } };
+    }
+
+    const config = buildSamlConfig(connection);
+    const saml = new SAML(config);
+
+    const result = await saml.validatePostResponseAsync({ SAMLResponse: samlResponse });
+    if (result.loggedOut || !result.profile) {
       return {
         error: {
           code: 'INVALID_SAML_RESPONSE',
-          message: 'Empty SAML response',
+          message: 'SAML response did not contain a valid user profile',
         },
       };
     }
 
-    // Decode response (placeholder - real implementation would parse XML)
-    const decoded = Buffer.from(samlResponse, 'base64').toString('utf-8');
-
-    // Validate certificate is configured
-    if (!connection.certificate) {
-      return {
-        error: {
-          code: 'CERTIFICATE_INVALID',
-          message: 'IdP certificate not configured',
-        },
-      };
-    }
-
-    // TODO: Actual XML parsing and signature validation
-
-    // Placeholder response structure
-    console.log('SAML Response received (placeholder processing):', decoded.substring(0, 100));
-
-    return {
-      error: {
-        code: 'INVALID_SAML_RESPONSE',
-        message:
-          'SAML response processing not yet implemented. Install @node-saml/node-saml or similar package.',
-      },
-    };
-  } catch (error) {
-    console.error('SAML response parsing error:', error);
-    return {
-      error: {
-        code: 'INVALID_SAML_RESPONSE',
-        message: error instanceof Error ? error.message : 'Failed to parse SAML response',
-      },
-    };
+    return { profile: result.profile };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Failed to validate SAML response';
+    return { error: { code: 'INVALID_SAML_RESPONSE', message: msg } };
   }
 }
 
-/**
- * Extract user attributes from SAML assertion
- */
+function readProfileValue(profile: Profile, key: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = (profile as any)?.[key];
+  if (typeof raw === 'string') return raw;
+  if (Array.isArray(raw) && typeof raw[0] === 'string') return raw[0];
+  return undefined;
+}
+
+function readProfileValues(profile: Profile, key: string): string[] | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = (profile as any)?.[key];
+  if (typeof raw === 'string') return [raw];
+  if (Array.isArray(raw)) {
+    const values = raw.filter((v) => typeof v === 'string') as string[];
+    return values.length ? values : undefined;
+  }
+  return undefined;
+}
+
 export function extractUserAttributes(
-  assertion: SAMLAssertion,
+  profile: Profile,
   connection: SSOConnection
 ): {
   email: string;
@@ -206,232 +263,53 @@ export function extractUserAttributes(
   displayName?: string;
   groups?: string[];
 } {
-  const attrs = assertion.attributeStatement;
   const mapping = connection.attributeMapping;
 
-  const getValue = (key: string): string | undefined => {
-    const value = attrs[key];
-    if (Array.isArray(value)) return value[0];
-    return value;
-  };
+  const email =
+    (mapping.email ? readProfileValue(profile, mapping.email) : undefined) ||
+    readProfileValue(profile, 'email') ||
+    readProfileValue(profile, 'mail') ||
+    readProfileValue(profile, 'urn:oid:0.9.2342.19200300.100.1.3') ||
+    profile.nameID;
 
-  const email = getValue(mapping.email) || assertion.subject.nameId;
-
-  return {
-    email,
-    firstName: mapping.firstName ? getValue(mapping.firstName) : undefined,
-    lastName: mapping.lastName ? getValue(mapping.lastName) : undefined,
-    displayName: mapping.displayName ? getValue(mapping.displayName) : undefined,
-    groups: mapping.groups
-      ? (attrs[mapping.groups] as string[] | undefined)
-      : undefined,
-  };
-}
-
-// ============================================
-// Session Management
-// ============================================
-
-/**
- * Store SAML AuthnRequest for later validation
- */
-async function storeAuthRequest(
-  requestId: string,
-  connectionId: string,
-  relayState?: string
-): Promise<void> {
-  // TODO: Store in database or Redis for validation when response comes back
-  // The stored request should include:
-  // - requestId (to match InResponseTo)
-  // - connectionId (to know which IdP certificate to use)
-  // - relayState (for redirect after success)
-  // - createdAt (for expiry checking)
-  // - expiresAt (typically 5-10 minutes)
-
-  console.log('Storing SAML request (placeholder):', {
-    requestId,
-    connectionId,
-    relayState,
-  });
-}
-
-/**
- * Retrieve and validate stored AuthnRequest
- */
-export async function validateAuthRequest(
-  inResponseTo: string
-): Promise<{ connectionId: string; relayState?: string } | null> {
-  // TODO: Retrieve from database/Redis and validate
-  // - Check request exists
-  // - Check not expired
-  // - Delete after successful validation (prevent replay)
-
-  console.log('Validating SAML request (placeholder):', inResponseTo);
-  return null;
-}
-
-// ============================================
-// Single Logout (SLO)
-// ============================================
-
-/**
- * Generate SAML LogoutRequest
- */
-export async function generateLogoutRequest(
-  connection: SSOConnection,
-  sessionIndex: string,
-  nameId: string
-): Promise<{ requestId: string; redirectUrl: string }> {
-  if (!connection.sloUrl) {
-    throw new Error('Single Logout URL not configured');
+  if (!email) {
+    throw new Error('Email not provided by identity provider');
   }
 
-  const requestId = `_${randomUUID().replace(/-/g, '')}`;
+  const firstName = mapping.firstName ? readProfileValue(profile, mapping.firstName) : undefined;
+  const lastName = mapping.lastName ? readProfileValue(profile, mapping.lastName) : undefined;
+  const displayName =
+    (mapping.displayName ? readProfileValue(profile, mapping.displayName) : undefined) ||
+    readProfileValue(profile, 'displayName') ||
+    readProfileValue(profile, 'name');
+  const groups = mapping.groups ? readProfileValues(profile, mapping.groups) : undefined;
 
-  // TODO: Generate actual SAML LogoutRequest XML
-  const logoutRequestPlaceholder = Buffer.from(
-    JSON.stringify({
-      type: 'LogoutRequest',
-      id: requestId,
-      issuer: connection.spEntityId,
-      sessionIndex,
-      nameId,
-    })
-  ).toString('base64');
-
-  const params = new URLSearchParams({
-    SAMLRequest: logoutRequestPlaceholder,
-  });
-
-  return {
-    requestId,
-    redirectUrl: `${connection.sloUrl}?${params.toString()}`,
-  };
+  return { email, firstName, lastName, displayName, groups };
 }
 
-// ============================================
-// SP Metadata
-// ============================================
-
-/**
- * Generate full SP Metadata XML
- *
- * This is used by IdPs to configure the connection on their side.
- */
 export function generateFullSPMetadataXML(connection: SSOConnection): string {
-  // More complete metadata than the basic version in index.ts
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<md:EntityDescriptor
-    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-    entityID="${escapeXml(connection.spEntityId)}"
-    validUntil="${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()}">
+  const publicCert = getSpPublicCert();
+  const wantsSignedRequests = Boolean(connection.settings.signRequest && publicCert);
 
-  <md:SPSSODescriptor
-      AuthnRequestsSigned="${connection.settings.signRequest}"
-      WantAssertionsSigned="${connection.settings.wantAssertionsSigned}"
-      protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-
-    <md:NameIDFormat>${escapeXml(connection.settings.nameIdFormat)}</md:NameIDFormat>
-
-    <md:AssertionConsumerService
-        Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-        Location="${escapeXml(connection.spAcsUrl)}"
-        index="1"
-        isDefault="true"/>
-
-    ${
-      connection.sloUrl
-        ? `
-    <md:SingleLogoutService
-        Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-        Location="${escapeXml(BASE_URL)}/api/sso/saml/logout"/>
-    `
-        : ''
-    }
-
-  </md:SPSSODescriptor>
-
-  <md:Organization>
-    <md:OrganizationName xml:lang="en">Seizn</md:OrganizationName>
-    <md:OrganizationDisplayName xml:lang="en">Seizn AI Memory</md:OrganizationDisplayName>
-    <md:OrganizationURL xml:lang="en">https://www.seizn.com</md:OrganizationURL>
-  </md:Organization>
-
-  <md:ContactPerson contactType="technical">
-    <md:GivenName>Seizn</md:GivenName>
-    <md:SurName>Support</md:SurName>
-    <md:EmailAddress>support@seizn.com</md:EmailAddress>
-  </md:ContactPerson>
-
-</md:EntityDescriptor>`;
+  return generateServiceProviderMetadata({
+    issuer: connection.spEntityId,
+    callbackUrl: connection.spAcsUrl,
+    identifierFormat: connection.settings.nameIdFormat || undefined,
+    wantAssertionsSigned: Boolean(connection.settings.wantAssertionsSigned),
+    publicCerts: wantsSignedRequests && publicCert ? normalizeIdpCertificate(publicCert) : null,
+    signMetadata: false,
+    metadataOrganization: {
+      OrganizationName: [{ '@xml:lang': 'en', '#text': 'Seizn' }],
+      OrganizationDisplayName: [{ '@xml:lang': 'en', '#text': 'Seizn AI Memory' }],
+      OrganizationURL: [{ '@xml:lang': 'en', '#text': 'https://www.seizn.com' }],
+    },
+    metadataContactPerson: [
+      {
+        '@contactType': 'technical',
+        GivenName: 'Seizn',
+        SurName: 'Support',
+        EmailAddress: ['support@seizn.com'],
+      },
+    ],
+  });
 }
-
-// ============================================
-// Helpers
-// ============================================
-
-function escapeXml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-// ============================================
-// NextAuth Integration Placeholder
-// ============================================
-
-/**
- * Custom SAML Provider for NextAuth.js
- *
- * This is a placeholder for the actual NextAuth provider configuration.
- * When implementing, you would:
- *
- * 1. Create a custom OAuth provider that handles SAML:
- *    - authorization: redirects to IdP SSO URL with SAML AuthnRequest
- *    - token: validates SAML Response and returns user info
- *
- * 2. Or use a SAML-specific library like @boxyhq/saml-jackson
- *    which provides a drop-in NextAuth provider
- *
- * Example with saml-jackson:
- * ```typescript
- * import SAMLJackson from '@boxyhq/saml-jackson';
- *
- * const jackson = await SAMLJackson({
- *   db: { engine: 'sql', ... },
- *   samlPath: '/api/auth/saml',
- *   ...
- * });
- * ```
- */
-export const SAMLProviderPlaceholder = {
-  id: 'saml',
-  name: 'SAML SSO',
-  type: 'oauth' as const,
-
-  // These would be dynamically configured per-organization
-  authorization: {
-    url: `${BASE_URL}/api/sso/saml/authorize`,
-    params: { scope: 'openid email profile' },
-  },
-
-  // Placeholder - actual implementation would process SAML response
-  token: `${BASE_URL}/api/sso/saml/token`,
-  userinfo: `${BASE_URL}/api/sso/saml/userinfo`,
-
-  profile(profile: Record<string, unknown>) {
-    return {
-      id: profile.id as string,
-      email: profile.email as string,
-      name: profile.name as string,
-      image: profile.image as string | null,
-    };
-  },
-};
-
-// Re-export types for convenience
-export type { SAMLAuthRequest, SAMLResponse, SAMLAssertion };

@@ -41,9 +41,11 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 131 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 132 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
+| SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
+| Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
@@ -150,6 +152,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `next` | ^16.1.6 | Full-stack React framework (App Router) |
 | `@supabase/supabase-js` | ^2.90.0 | PostgreSQL database client with RLS |
 | `next-auth` | ^5.0.0-beta.30 | Authentication (JWT, OAuth, Credentials) |
+| `@node-saml/node-saml` | ^5.1.0 | SAML 2.0 processing for Enterprise SSO (ACS, metadata, assertions) |
 | `@anthropic-ai/sdk` | ^0.71.2 | Claude AI for memory extraction, summarization, vision |
 | `openai` | ^6.16.0 | OpenAI API for AI Gateway multi-provider routing |
 | `@google/generative-ai` | ^0.24.1 | Google AI for gateway multi-provider support |
@@ -320,7 +323,10 @@ User Request
 | Feature | Status | Key Files | Notes |
 |---------|--------|-----------|-------|
 | NextAuth (GitHub + Google + Credentials) | Fully Implemented | `src/lib/auth.ts`, `src/app/api/auth/[...nextauth]/` | JWT strategy, Turnstile CAPTCHA |
-| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (131 files) | Browser + server clients, pgvector |
+| Enterprise SSO (SAML + OIDC) | Partially Implemented | `src/lib/sso/`, `src/app/api/sso/`, `src/app/api/auth/oidc/` | Org-scoped SSO connections, SAML ACS + OIDC callback; validate with each IdP before GA |
+| Tenant Policy (Budget & Cost Controls) | Fully Implemented | `src/lib/tenant-policy/`, `src/app/api/tenant-policy/` | Policy persisted in `organizations.settings.budget_quota_policy`; internal enforcement endpoint |
+| Autopilot PR Bot (GitHub Webhooks) | Fully Implemented | `src/app/api/webhooks/github/`, `src/app/api/autopilot/`, `src/lib/autopilot/` | Idempotent webhook ingestion; persists deliveries in `autopilot_webhooks` |
+| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (132 files) | Browser + server clients, pgvector |
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |
 | Redis Caching | Fully Implemented | `src/lib/redis.ts` | Embedding cache, rate limit store |

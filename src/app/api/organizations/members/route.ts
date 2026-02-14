@@ -2,38 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
 import { organizationInviteEmail } from '@/lib/email/templates';
 import { createServerClient } from '@/lib/supabase';
-import { createClient } from '@supabase/supabase-js';
+import { getRequestUser } from '@/lib/api/request-user';
 import crypto from 'crypto';
-
-// Helper to get user from session
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
 
 // GET /api/organizations/members - List organization members
 export async function GET(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const orgId = searchParams.get('org_id');
+    const orgId = searchParams.get('organization_id') || searchParams.get('org_id');
 
     if (!orgId) {
       return NextResponse.json({ error: 'Organization ID required' }, { status: 400 });
@@ -58,6 +39,7 @@ export async function GET(request: NextRequest) {
       .from('organization_members')
       .select(`
         id,
+        user_id,
         role,
         created_at,
         user:profiles (
@@ -75,6 +57,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch members' }, { status: 500 });
     }
 
+    // Map members into dashboard-friendly shape
+    const mappedMembers = (members || []).map((m) => {
+      const profile = m.user as unknown as {
+        id: string;
+        email: string | null;
+        full_name: string | null;
+        avatar_url: string | null;
+      } | null;
+
+      return {
+        id: m.id as string,
+        user_id: (m.user_id as string) || profile?.id,
+        email: profile?.email || 'unknown',
+        name: profile?.full_name || null,
+        role: m.role as string,
+        joined_at: m.created_at as string,
+        avatar: profile?.avatar_url || undefined,
+      };
+    });
+
     // Get pending invites (only for admins)
     let invites: unknown[] = [];
     if (['owner', 'admin'].includes(membership.role)) {
@@ -84,12 +86,15 @@ export async function GET(request: NextRequest) {
         .eq('organization_id', orgId)
         .gt('expires_at', new Date().toISOString());
 
-      invites = pendingInvites || [];
+      invites = (pendingInvites || []).map((invite) => ({
+        ...invite,
+        status: 'pending',
+      }));
     }
 
     return NextResponse.json({
       success: true,
-      members: members || [],
+      members: mappedMembers,
       pending_invites: invites,
       your_role: membership.role,
     });
@@ -102,15 +107,17 @@ export async function GET(request: NextRequest) {
 // POST /api/organizations/members - Invite a new member
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const { org_id, email, role = 'member' } = body;
+    const orgId = body.organization_id || body.org_id;
+    const email = body.email;
+    const role = body.role || 'member';
 
-    if (!org_id || !email) {
+    if (!orgId || !email) {
       return NextResponse.json({ error: 'Organization ID and email required' }, { status: 400 });
     }
 
@@ -125,7 +132,7 @@ export async function POST(request: NextRequest) {
     const { data: membership } = await supabase
       .from('organization_members')
       .select('role')
-      .eq('organization_id', org_id)
+      .eq('organization_id', orgId)
       .eq('user_id', user.id)
       .single();
 
@@ -134,29 +141,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already a member
-    const { data: existingMember } = await supabase
-      .from('organization_members')
+    const emailLower = String(email).toLowerCase();
+    const { data: profile } = await supabase
+      .from('profiles')
       .select('id')
-      .eq('organization_id', org_id)
-      .eq('user_id', (
-        await supabase
-          .from('profiles')
-          .select('id')
-          .eq('email', email.toLowerCase())
-          .single()
-      ).data?.id)
+      .eq('email', emailLower)
       .single();
 
-    if (existingMember) {
-      return NextResponse.json({ error: 'User is already a member' }, { status: 400 });
+    if (profile?.id) {
+      const { data: existingMember } = await supabase
+        .from('organization_members')
+        .select('id')
+        .eq('organization_id', orgId)
+        .eq('user_id', profile.id)
+        .single();
+
+      if (existingMember) {
+        return NextResponse.json({ error: 'User is already a member' }, { status: 400 });
+      }
     }
 
     // Check for existing pending invite
     const { data: existingInvite } = await supabase
       .from('organization_invites')
       .select('id')
-      .eq('organization_id', org_id)
-      .eq('email', email.toLowerCase())
+      .eq('organization_id', orgId)
+      .eq('email', emailLower)
       .gt('expires_at', new Date().toISOString())
       .single();
 
@@ -172,14 +182,14 @@ export async function POST(request: NextRequest) {
     const { data: invite, error: inviteError } = await supabase
       .from('organization_invites')
       .insert({
-        organization_id: org_id,
-        email: email.toLowerCase(),
+        organization_id: orgId,
+        email: emailLower,
         role,
         invited_by: user.id,
         token,
         expires_at: expiresAt.toISOString(),
       })
-      .select('id, email, role, expires_at')
+      .select('id, email, role, created_at, expires_at')
       .single();
 
     if (inviteError) {
@@ -193,7 +203,7 @@ export async function POST(request: NextRequest) {
       const { data: org } = await supabase
         .from('organizations')
         .select('name')
-        .eq('id', org_id)
+        .eq('id', orgId)
         .single();
 
       // Get inviter name
@@ -204,7 +214,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       await sendEmail({
-        to: email.toLowerCase(),
+        to: emailLower,
         subject: `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
         html: organizationInviteEmail(
           inviter?.full_name || 'A team member',
@@ -219,7 +229,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      invite,
+      invite: { ...invite, status: 'pending' },
       invite_url: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
     });
   } catch (error) {
@@ -231,15 +241,17 @@ export async function POST(request: NextRequest) {
 // PATCH /api/organizations/members - Update member role
 export async function PATCH(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const { org_id, member_id, role } = body;
+    const orgId = body.organization_id || body.org_id;
+    const memberId = body.member_id;
+    const role = body.role;
 
-    if (!org_id || !member_id || !role) {
+    if (!orgId || !memberId || !role) {
       return NextResponse.json({ error: 'Organization ID, member ID, and role required' }, { status: 400 });
     }
 
@@ -253,7 +265,7 @@ export async function PATCH(request: NextRequest) {
     const { data: membership } = await supabase
       .from('organization_members')
       .select('role')
-      .eq('organization_id', org_id)
+      .eq('organization_id', orgId)
       .eq('user_id', user.id)
       .single();
 
@@ -265,7 +277,7 @@ export async function PATCH(request: NextRequest) {
     const { data: targetMember } = await supabase
       .from('organization_members')
       .select('role')
-      .eq('id', member_id)
+      .eq('id', memberId)
       .single();
 
     if (targetMember?.role === 'owner') {
@@ -276,8 +288,8 @@ export async function PATCH(request: NextRequest) {
     const { error } = await supabase
       .from('organization_members')
       .update({ role })
-      .eq('id', member_id)
-      .eq('organization_id', org_id);
+      .eq('id', memberId)
+      .eq('organization_id', orgId);
 
     if (error) {
       console.error('Update member role error:', error);
@@ -294,13 +306,13 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/organizations/members - Remove a member
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const orgId = searchParams.get('org_id');
+    const orgId = searchParams.get('organization_id') || searchParams.get('org_id');
     const memberId = searchParams.get('member_id');
 
     if (!orgId || !memberId) {

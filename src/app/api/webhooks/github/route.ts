@@ -20,9 +20,19 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
 import { createCodeFixer, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { AutopilotConfig, PRStatus, WebhookPayload, GitHubWebhookEvent } from '@/lib/autopilot';
+import { extractCheckSuiteHeadBranch, extractCheckSuitePRNumbers } from '@/lib/autopilot/github-webhook';
 
 // Webhook secret from environment
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
+
+type AutopilotPrRow = {
+  id: string;
+  user_id: string;
+  pr_number: number;
+  status: PRStatus;
+  history: unknown[];
+  context: Record<string, unknown>;
+};
 
 /**
  * Verify GitHub webhook signature
@@ -105,17 +115,37 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Store webhook event
+    // Idempotency: if we've already processed this delivery, return the stored result.
+    const { data: existingWebhook } = await supabase
+      .from('autopilot_webhooks')
+      .select('processed, result')
+      .eq('id', deliveryId)
+      .maybeSingle();
+
+    if (existingWebhook?.processed) {
+      return NextResponse.json({
+        success: true,
+        event: eventType,
+        deliveryId,
+        result: existingWebhook.result || { processed: true, action: 'duplicate' },
+        deduped: true,
+      });
+    }
+
+    // Store webhook event (upsert so retries don't fail on PK conflicts).
     await supabase
       .from('autopilot_webhooks')
-      .insert({
-        id: deliveryId,
-        event: eventType,
-        repository: repoFullName,
-        payload: webhookPayload,
-        processed: false,
-        created_at: new Date().toISOString(),
-      });
+      .upsert(
+        {
+          id: deliveryId,
+          event: eventType,
+          repository: repoFullName,
+          payload: webhookPayload,
+          processed: false,
+          created_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' }
+      );
 
     // Handle event based on type
     let result: { processed: boolean; action?: string; error?: string } = { processed: false };
@@ -175,13 +205,15 @@ async function handlePullRequestEvent(
   const action = payload.action as string;
   const pullRequest = payload.pull_request as Record<string, unknown>;
   const prNumber = pullRequest.number as number;
+  const headBranch = (pullRequest.head as Record<string, unknown> | undefined)?.ref as string | undefined;
 
   // Find matching autopilot PR
   const { data: prData } = await supabase
     .from('autopilot_prs')
     .select('*')
     .eq('pr_number', prNumber)
-    .single();
+    .limit(1)
+    .maybeSingle();
 
   if (!prData) {
     // Not an autopilot PR
@@ -224,7 +256,7 @@ async function handlePullRequestEvent(
 
     // If merged, clean up branch
     if (newStatus === 'merged') {
-      await cleanupAfterMerge(prData, owner, repo, supabase);
+      await cleanupAfterMerge(prData, owner, repo, supabase, headBranch);
     }
   }
 
@@ -255,7 +287,8 @@ async function handlePullRequestReviewEvent(
     .from('autopilot_prs')
     .select('*')
     .eq('pr_number', prNumber)
-    .single();
+    .limit(1)
+    .maybeSingle();
 
   if (!prData) {
     return { processed: false, action: 'not_autopilot_pr' };
@@ -317,14 +350,27 @@ async function handleCheckSuiteEvent(
     return { processed: false, action: 'ignored' };
   }
 
-  const headSha = checkSuite.head_sha as string;
   const conclusion = checkSuite.conclusion as string;
 
-  // Find autopilot PR by head SHA
-  const { data: prs } = await supabase
-    .from('autopilot_prs')
-    .select('*')
-    .contains('context', { headBranch: headSha });
+  const prNumbers = extractCheckSuitePRNumbers(checkSuite);
+  const headBranch = extractCheckSuiteHeadBranch(checkSuite);
+
+  // Prefer matching by PR number when available (most reliable).
+  let prs: AutopilotPrRow[] | null = null;
+  if (prNumbers.length > 0) {
+    const { data } = await supabase
+      .from('autopilot_prs')
+      .select('*')
+      .in('pr_number', prNumbers);
+    prs = (data as AutopilotPrRow[]) || null;
+  } else if (headBranch) {
+    // Fallback: match by head branch name stored in PR context.
+    const { data } = await supabase
+      .from('autopilot_prs')
+      .select('*')
+      .contains('context', { headBranch });
+    prs = (data as AutopilotPrRow[]) || null;
+  }
 
   if (!prs || prs.length === 0) {
     return { processed: false, action: 'not_autopilot_pr' };
@@ -366,8 +412,7 @@ async function handleCheckRunEvent(
  * Attempt auto-merge for approved PR
  */
 async function attemptAutoMerge(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prData: any,
+  prData: AutopilotPrRow,
   owner: string,
   repo: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -398,7 +443,7 @@ async function attemptAutoMerge(
     const result = await codeFixer.mergePR(prData.pr_number);
 
     if (result.success) {
-      const history = [...prData.history, {
+      const history = [...(Array.isArray(prData.history) ? prData.history : []), {
         status: 'merged',
         timestamp: new Date().toISOString(),
         actor: 'autopilot',
@@ -423,12 +468,12 @@ async function attemptAutoMerge(
  * Clean up after PR merge
  */
 async function cleanupAfterMerge(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prData: any,
+  prData: AutopilotPrRow,
   owner: string,
   repo: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: any
+  supabase: any,
+  headBranchOverride?: string
 ): Promise<void> {
   // Get user's config
   const { data: configData } = await supabase
@@ -448,7 +493,10 @@ async function cleanupAfterMerge(
 
   try {
     const codeFixer = createCodeFixer(config, configData.github_token);
-    await codeFixer.deleteBranch(prData.context.headBranch);
+    const headBranch = headBranchOverride || prData.context?.headBranch;
+    if (typeof headBranch === 'string' && headBranch) {
+      await codeFixer.deleteBranch(headBranch);
+    }
   } catch (error) {
     console.error('Branch cleanup failed:', error);
   }

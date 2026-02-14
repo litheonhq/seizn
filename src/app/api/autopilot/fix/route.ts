@@ -28,6 +28,14 @@ import { createServerClient } from '@/lib/supabase';
 import { getTraceAnalyzer, createPRGenerator, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { StoredTrace } from '@/lib/fall/flight-recorder';
 import type { FixRequest, FixResponse, TraceAnalysis, AutopilotConfig } from '@/lib/autopilot';
+import { randomUUID } from 'crypto';
+
+function toSeverityLabel(severity: number): 'low' | 'medium' | 'high' | 'critical' {
+  if (severity >= 9) return 'critical';
+  if (severity >= 7) return 'high';
+  if (severity >= 4) return 'medium';
+  return 'low';
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,6 +72,7 @@ export async function POST(request: NextRequest) {
 
     // Get analysis
     let analysis: TraceAnalysis;
+    let analysisId: string;
 
     if (body.analysisId) {
       // Fetch existing analysis
@@ -82,6 +91,7 @@ export async function POST(request: NextRequest) {
       }
 
       analysis = analysisData.analysis as TraceAnalysis;
+      analysisId = analysisData.id as string;
     } else {
       // Analyze trace first
       const { data: traceData, error: traceError } = await supabase
@@ -122,7 +132,36 @@ export async function POST(request: NextRequest) {
       };
 
       const analyzer = getTraceAnalyzer();
+      const startedAt = new Date().toISOString();
       analysis = await analyzer.analyze(trace);
+      const completedAt = new Date().toISOString();
+
+      // Ensure analysis is persisted so fixes can reference a valid analysis_id.
+      const { error: storeError } = await supabase
+        .from('autopilot_analyses')
+        .upsert({
+          id: analysis.traceId,
+          user_id: userId,
+          collection_id: trace.collectionId ?? null,
+          trace_id: analysis.traceId,
+          analysis_type: 'trace_analysis',
+          status: 'completed',
+          input_data: { trace_id: analysis.traceId, source: 'fix' },
+          findings: analysis.failures,
+          recommendations: analysis.suggestions,
+          confidence_score: analysis.confidence,
+          severity: toSeverityLabel(analysis.severity),
+          analysis,
+          started_at: startedAt,
+          completed_at: completedAt,
+          updated_at: completedAt,
+        });
+
+      if (storeError) {
+        console.error('Autopilot analysis store error (fix):', storeError);
+      }
+
+      analysisId = analysis.traceId;
     }
 
     // Filter suggestions
@@ -176,17 +215,26 @@ export async function POST(request: NextRequest) {
 
     // Store the fix context (unless preview only)
     if (!body.preview) {
+      const fixType =
+        suggestionsToApply.some((s) => s.type === 'code') ? 'code_patch' :
+        suggestionsToApply.some((s) => s.type === 'config') ? 'config_update' :
+        'manual_review';
+
       await supabase
         .from('autopilot_fixes')
         .insert({
-          id: `fix-${analysis.traceId}-${Date.now()}`,
+          id: randomUUID(),
           user_id: userId,
           trace_id: analysis.traceId,
-          analysis_id: body.analysisId || `analysis-${analysis.traceId}`,
+          analysis_id: analysisId,
+          fix_type: fixType,
+          target_type: 'config',
+          description: prContext.title,
           pr_context: prContext,
           applied_suggestions: suggestionsToApply.map((s) => s.id),
-          status: 'pending',
+          status: 'proposed',
           created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         });
     }
 

@@ -8,6 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import {
   getTenantPolicy,
   getTenantBudgetState,
@@ -18,6 +19,27 @@ import {
   type RequestMeta,
   type SummerRequestParams,
 } from "@/lib/tenant-policy";
+
+function verifyInternalKey(request: NextRequest): boolean {
+  const configured = process.env.INTERNAL_API_KEY;
+  if (!configured) {
+    // Fail-closed in all environments; this endpoint is internal-only.
+    console.error("[TenantPolicy Enforce] INTERNAL_API_KEY not configured");
+    return false;
+  }
+
+  const provided = request.headers.get("x-internal-key");
+  if (!provided) return false;
+
+  try {
+    const a = Buffer.from(provided);
+    const b = Buffer.from(configured);
+    if (a.length !== b.length) return false;
+    return timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * POST /api/tenant-policy/enforce
@@ -45,6 +67,10 @@ import {
  */
 export async function POST(request: NextRequest) {
   try {
+    if (!verifyInternalKey(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const {
       tenant_id,
@@ -156,6 +182,10 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    if (!verifyInternalKey(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get("tenant_id");
     const minuteRequests = parseInt(searchParams.get("minute_requests") || "0");

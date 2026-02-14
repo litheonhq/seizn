@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { createClient } from '@supabase/supabase-js';
+import { getRequestUser } from '@/lib/api/request-user';
 import {
   AuthErrors,
   ValidationErrors,
@@ -9,34 +9,52 @@ import {
   createApiError,
 } from '@/lib/api-error';
 
-// Helper to get user from session
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
-
 // GET /api/organizations - List user's organizations
 export async function GET(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
     }
 
+    const { searchParams } = new URL(request.url);
+    const orgId = searchParams.get('id');
     const supabase = createServerClient();
+
+    // GET /api/organizations?id=... - Fetch a single organization (with your role)
+    if (orgId) {
+      const { data: membership, error } = await supabase
+        .from('organization_members')
+        .select(`
+          role,
+          organization:organizations (
+            id,
+            name,
+            slug,
+            plan,
+            created_at,
+            settings
+          )
+        `)
+        .eq('organization_id', orgId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (error || !membership?.organization) {
+        return createApiError({
+          code: ErrorCodes.NOT_FOUND,
+          message: 'Organization not found',
+          status: 404,
+          details: { id: orgId },
+        });
+      }
+
+      return NextResponse.json({
+        success: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        organization: { ...(membership.organization as any), role: membership.role },
+      });
+    }
 
     const { data: memberships, error } = await supabase
       .from('organization_members')
@@ -77,7 +95,7 @@ export async function GET(request: NextRequest) {
 // POST /api/organizations - Create a new organization
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
     }
@@ -167,13 +185,13 @@ export async function POST(request: NextRequest) {
 // PATCH /api/organizations - Update an organization
 export async function PATCH(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
     }
 
     const body = await request.json();
-    const { id, name, settings } = body;
+    const { id, name, slug, settings } = body;
 
     if (!id) {
       return ValidationErrors.missingField('id');
@@ -199,6 +217,37 @@ export async function PATCH(request: NextRequest) {
       updated_at: new Date().toISOString(),
     };
     if (name) updates.name = name.trim();
+    if (slug) {
+      const cleanSlug = String(slug)
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .substring(0, 50);
+
+      if (cleanSlug.length < 2) {
+        return ValidationErrors.invalidField('slug', 'must be at least 2 characters');
+      }
+
+      // Check if slug is taken by another org
+      const { data: existing } = await supabase
+        .from('organizations')
+        .select('id')
+        .eq('slug', cleanSlug)
+        .neq('id', id)
+        .single();
+
+      if (existing) {
+        return createApiError({
+          code: ErrorCodes.DUPLICATE_ENTRY,
+          message: 'This organization slug is already taken',
+          status: 409,
+          details: { slug: cleanSlug },
+        });
+      }
+
+      updates.slug = cleanSlug;
+    }
     if (settings) updates.settings = settings;
 
     const { data: org, error } = await supabase
@@ -226,7 +275,7 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/organizations - Delete an organization
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
     }

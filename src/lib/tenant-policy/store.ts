@@ -8,6 +8,7 @@
 
 import type { TenantPolicy, TenantBudgetState } from "./types";
 import { CONSERVATIVE_POLICY, createTenantPolicy } from "./presets";
+import { createServerClient } from "@/lib/supabase";
 
 // ============================================================================
 // Cache
@@ -214,7 +215,12 @@ export async function getTenantPolicy(
     policy = loadPolicyFromEnvParts(tenantId);
   }
 
-  // 4. 기본 프리셋
+  // 4. DB (organizations.settings.budget_quota_policy)
+  if (!policy) {
+    policy = await loadPolicyFromDB(tenantId);
+  }
+
+  // 5. 기본 프리셋
   if (!policy) {
     policy = createTenantPolicy(tenantId, "conservative");
   }
@@ -226,28 +232,29 @@ export async function getTenantPolicy(
 }
 
 /**
- * DB에서 테넌트 정책 로드 (Prisma 사용 시)
+ * DB에서 테넌트 정책 로드
  * organizations.settings.budget_quota_policy 에서 로드
  */
 export async function loadPolicyFromDB(
-  tenantId: string,
-  prisma?: unknown
+  tenantId: string
 ): Promise<TenantPolicy | null> {
-  // 실제 구현은 prisma를 통해 organizations 테이블 조회
-  // 여기서는 타입만 정의
-  if (!prisma) return null;
-
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const db = prisma as any;
-    const org = await db.organization.findUnique({
-      where: { slug: tenantId },
-      select: { settings: true },
-    });
+    const supabase = createServerClient();
+    const { data, error } = await supabase
+      .from("organizations")
+      .select("settings")
+      .eq("id", tenantId)
+      .single();
 
-    if (!org?.settings?.budget_quota_policy) return null;
+    if (error || !data) return null;
 
-    return validatePolicy(org.settings.budget_quota_policy);
+    const settings =
+      data.settings && typeof data.settings === "object"
+        ? (data.settings as Record<string, unknown>)
+        : null;
+
+    const rawPolicy = settings ? settings["budget_quota_policy"] : null;
+    return validatePolicy(rawPolicy);
   } catch (error) {
     console.error(`[TenantPolicy] Failed to load from DB for ${tenantId}:`, error);
     return null;
@@ -259,22 +266,39 @@ export async function loadPolicyFromDB(
  */
 export async function savePolicyToDB(
   tenantId: string,
-  policy: TenantPolicy,
-  prisma?: unknown
+  policy: TenantPolicy
 ): Promise<boolean> {
-  if (!prisma) return false;
-
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const db = prisma as any;
-    await db.organization.update({
-      where: { slug: tenantId },
-      data: {
-        settings: {
-          budget_quota_policy: policy,
-        },
-      },
-    });
+    const supabase = createServerClient();
+
+    const { data: org, error: fetchError } = await supabase
+      .from("organizations")
+      .select("settings")
+      .eq("id", tenantId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(fetchError.message);
+    }
+
+    const currentSettings =
+      org?.settings && typeof org.settings === "object"
+        ? (org.settings as Record<string, unknown>)
+        : {};
+
+    const nextSettings = {
+      ...currentSettings,
+      budget_quota_policy: policy,
+    };
+
+    const { error: updateError } = await supabase
+      .from("organizations")
+      .update({ settings: nextSettings })
+      .eq("id", tenantId);
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
     // 캐시 갱신
     policyCache.set(tenantId, { policy, loadedAt: new Date() });
@@ -282,6 +306,48 @@ export async function savePolicyToDB(
     return true;
   } catch (error) {
     console.error(`[TenantPolicy] Failed to save to DB for ${tenantId}:`, error);
+    return false;
+  }
+}
+
+export async function clearPolicyFromDB(tenantId: string): Promise<boolean> {
+  try {
+    const supabase = createServerClient();
+
+    const { data: org, error: fetchError } = await supabase
+      .from("organizations")
+      .select("settings")
+      .eq("id", tenantId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(fetchError.message);
+    }
+
+    const currentSettings =
+      org?.settings && typeof org.settings === "object"
+        ? (org.settings as Record<string, unknown>)
+        : {};
+
+    // Remove key without using delete (lint-friendly).
+    const { budget_quota_policy: _ignored, ...rest } = currentSettings as Record<
+      string,
+      unknown
+    >;
+
+    const { error: updateError } = await supabase
+      .from("organizations")
+      .update({ settings: rest })
+      .eq("id", tenantId);
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+
+    invalidatePolicyCache(tenantId);
+    return true;
+  } catch (error) {
+    console.error(`[TenantPolicy] Failed to clear policy from DB for ${tenantId}:`, error);
     return false;
   }
 }
