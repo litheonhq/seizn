@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { PublicTraceView, RedactionProfile } from "@/lib/sharing/types";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface SharedTraceViewProps {
   token: string;
@@ -43,7 +44,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || "Failed to load trace");
+          throw new Error(getErrorMessage(data?.error, "Failed to load trace"));
         }
 
         setTrace(data.trace);
@@ -224,7 +225,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
               <div className="text-xs text-red-600 mb-1">Error</div>
               <div className="text-red-800 font-mono text-sm">
-                {trace.error}
+                {getErrorMessage(trace.error)}
               </div>
             </div>
           )}

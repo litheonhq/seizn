@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import type { PublicTraceView } from '@/lib/sharing';
+import { getErrorMessage } from '@/lib/ui-error';
 
 // Simple in-memory rate limiting for public endpoint
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -103,6 +104,7 @@ export async function GET(
 
   // Build public trace view
   const snapshot = sharedTrace.trace_snapshot;
+  const normalizedTraceError = snapshot?.error ? getErrorMessage(snapshot.error, '') : undefined;
   const publicTrace: PublicTraceView = {
     id: snapshot.id,
     request_id: snapshot.request_id,
@@ -113,7 +115,8 @@ export async function GET(
     effective_config: snapshot.effective_config || {},
     timings_ms: snapshot.timings_ms || {},
     results_count: snapshot.results_count || 0,
-    error: snapshot.error,
+    // Defensive: shared snapshots can contain structured error objects; always serialize to a string for UI.
+    error: normalizedTraceError,
     trace: snapshot.trace || {},
     created_at: snapshot.created_at,
     view_count: (sharedTrace.view_count || 0) + 1,
@@ -178,6 +181,7 @@ async function fetchByShortId(shortId: string, remaining: number) {
     ;
 
   const snapshot = sharedTrace.trace_snapshot;
+  const normalizedTraceError = snapshot?.error ? getErrorMessage(snapshot.error, '') : undefined;
   const publicTrace: PublicTraceView = {
     id: snapshot.id,
     request_id: snapshot.request_id,
@@ -188,7 +192,8 @@ async function fetchByShortId(shortId: string, remaining: number) {
     effective_config: snapshot.effective_config || {},
     timings_ms: snapshot.timings_ms || {},
     results_count: snapshot.results_count || 0,
-    error: snapshot.error,
+    // Defensive: shared snapshots can contain structured error objects; always serialize to a string for UI.
+    error: normalizedTraceError,
     trace: snapshot.trace || {},
     created_at: snapshot.created_at,
     view_count: (sharedTrace.view_count || 0) + 1,
