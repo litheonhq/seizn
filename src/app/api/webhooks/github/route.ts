@@ -57,11 +57,97 @@ function verifySignature(payload: string, signature: string): boolean {
   }
 }
 
+function extractRepoFullNameFromUrl(url: string): string | null {
+  const uiMatch = /github\.com\/([^/]+\/[^/]+)\/pull\//i.exec(url);
+  if (uiMatch?.[1]) {
+    return uiMatch[1];
+  }
+
+  const apiMatch = /api\.github\.com\/repos\/([^/]+\/[^/]+)\/pulls\//i.exec(url);
+  if (apiMatch?.[1]) {
+    return apiMatch[1];
+  }
+
+  return null;
+}
+
+function matchesRepoFullName(prData: Record<string, unknown>, repoFullName: string): boolean {
+  const context = prData.context as Record<string, unknown> | undefined;
+  const metadata = context?.metadata as Record<string, unknown> | undefined;
+  const metaRepo = metadata?.repoFullName;
+  if (typeof metaRepo === 'string' && metaRepo.trim().toLowerCase() === repoFullName.toLowerCase()) {
+    return true;
+  }
+
+  const urlFields = ['external_pr_url', 'pr_url', 'externalPrUrl', 'prUrl'] as const;
+  for (const field of urlFields) {
+    const value = prData[field];
+    if (typeof value !== 'string' || !value) continue;
+
+    const extracted = extractRepoFullNameFromUrl(value);
+    if (extracted && extracted.toLowerCase() === repoFullName.toLowerCase()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function findAutopilotPrByNumber(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  prNumber: number,
+  repoFullName: string
+): Promise<AutopilotPrRow | null> {
+  const { data: prData } = await supabase
+    .from('autopilot_prs')
+    .select('*')
+    .eq('pr_number', prNumber)
+    .contains('context', { metadata: { repoFullName } })
+    .limit(1)
+    .maybeSingle();
+
+  if (prData) {
+    return prData as AutopilotPrRow;
+  }
+
+  const { data: candidates } = await supabase
+    .from('autopilot_prs')
+    .select('*')
+    .eq('pr_number', prNumber);
+
+  if (!Array.isArray(candidates)) {
+    return null;
+  }
+
+  const match = (candidates as Record<string, unknown>[]).find((row) =>
+    matchesRepoFullName(row, repoFullName)
+  );
+
+  return (match as AutopilotPrRow) || null;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const eventType = request.headers.get('X-GitHub-Event') as GitHubWebhookEvent;
-    const deliveryId = request.headers.get('X-GitHub-Delivery') || '';
-    const signature = request.headers.get('X-Hub-Signature-256') || '';
+    const eventTypeHeader = request.headers.get('X-GitHub-Event');
+    const deliveryId = (request.headers.get('X-GitHub-Delivery') || '').trim();
+    const signature = (request.headers.get('X-Hub-Signature-256') || '').trim();
+
+    if (!eventTypeHeader) {
+      return NextResponse.json(
+        { error: 'Missing X-GitHub-Event header' },
+        { status: 400 }
+      );
+    }
+
+    if (!deliveryId) {
+      return NextResponse.json(
+        { error: 'Missing X-GitHub-Delivery header' },
+        { status: 400 }
+      );
+    }
+
+    const eventType = eventTypeHeader as GitHubWebhookEvent;
 
     // Get raw body for signature verification
     const rawBody = await request.text();
@@ -206,14 +292,10 @@ async function handlePullRequestEvent(
   const pullRequest = payload.pull_request as Record<string, unknown>;
   const prNumber = pullRequest.number as number;
   const headBranch = (pullRequest.head as Record<string, unknown> | undefined)?.ref as string | undefined;
+  const repoFullName = `${owner}/${repo}`;
 
   // Find matching autopilot PR
-  const { data: prData } = await supabase
-    .from('autopilot_prs')
-    .select('*')
-    .eq('pr_number', prNumber)
-    .limit(1)
-    .maybeSingle();
+  const prData = await findAutopilotPrByNumber(supabase, prNumber, repoFullName);
 
   if (!prData) {
     // Not an autopilot PR
@@ -277,18 +359,14 @@ async function handlePullRequestReviewEvent(
   const review = payload.review as Record<string, unknown>;
   const pullRequest = payload.pull_request as Record<string, unknown>;
   const prNumber = pullRequest.number as number;
+  const repoFullName = `${owner}/${repo}`;
 
   if (action !== 'submitted') {
     return { processed: false, action: 'ignored' };
   }
 
   // Find matching autopilot PR
-  const { data: prData } = await supabase
-    .from('autopilot_prs')
-    .select('*')
-    .eq('pr_number', prNumber)
-    .limit(1)
-    .maybeSingle();
+  const prData = await findAutopilotPrByNumber(supabase, prNumber, repoFullName);
 
   if (!prData) {
     return { processed: false, action: 'not_autopilot_pr' };
@@ -354,6 +432,7 @@ async function handleCheckSuiteEvent(
 
   const prNumbers = extractCheckSuitePRNumbers(checkSuite);
   const headBranch = extractCheckSuiteHeadBranch(checkSuite);
+  const repoFullName = `${owner}/${repo}`;
 
   // Prefer matching by PR number when available (most reliable).
   let prs: AutopilotPrRow[] | null = null;
@@ -362,14 +441,16 @@ async function handleCheckSuiteEvent(
       .from('autopilot_prs')
       .select('*')
       .in('pr_number', prNumbers);
-    prs = (data as AutopilotPrRow[]) || null;
+    const rows = (Array.isArray(data) ? data : []) as Record<string, unknown>[];
+    prs = rows.filter((row) => matchesRepoFullName(row, repoFullName)) as AutopilotPrRow[];
   } else if (headBranch) {
     // Fallback: match by head branch name stored in PR context.
     const { data } = await supabase
       .from('autopilot_prs')
       .select('*')
       .contains('context', { headBranch });
-    prs = (data as AutopilotPrRow[]) || null;
+    const rows = (Array.isArray(data) ? data : []) as Record<string, unknown>[];
+    prs = rows.filter((row) => matchesRepoFullName(row, repoFullName)) as AutopilotPrRow[];
   }
 
   if (!prs || prs.length === 0) {
@@ -439,7 +520,8 @@ async function attemptAutoMerge(
   }
 
   try {
-    const codeFixer = createCodeFixer(config, configData.github_token);
+    const scopedConfig: AutopilotConfig = { ...config, owner, repo };
+    const codeFixer = createCodeFixer(scopedConfig, configData.github_token);
     const result = await codeFixer.mergePR(prData.pr_number);
 
     if (result.success) {
@@ -492,7 +574,8 @@ async function cleanupAfterMerge(
   };
 
   try {
-    const codeFixer = createCodeFixer(config, configData.github_token);
+    const scopedConfig: AutopilotConfig = { ...config, owner, repo };
+    const codeFixer = createCodeFixer(scopedConfig, configData.github_token);
     const headBranch = headBranchOverride || prData.context?.headBranch;
     if (typeof headBranch === 'string' && headBranch) {
       await codeFixer.deleteBranch(headBranch);

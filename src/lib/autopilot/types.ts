@@ -307,6 +307,8 @@ export interface PRMetadata {
   traceId: string;
   /** User ID */
   userId: string;
+  /** Target repository in "owner/repo" format (used for webhook reconciliation) */
+  repoFullName?: string;
   /** Autopilot version */
   autopilotVersion: string;
   /** Timestamp */

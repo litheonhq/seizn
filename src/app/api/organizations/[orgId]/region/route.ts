@@ -254,6 +254,18 @@ export async function POST(
 
     const supabase = createServerClient();
 
+    // Check user is owner or admin (defense-in-depth; RPC should also enforce)
+    const { data: membership } = await supabase
+      .from('organization_members')
+      .select('role')
+      .eq('organization_id', orgId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!membership || !['owner', 'admin'].includes(membership.role)) {
+      return AuthErrors.unauthorized('organization_region');
+    }
+
     // Call the database function to lock/unlock region
     const { data: result, error } = await supabase.rpc('lock_organization_region', {
       p_org_id: orgId,
