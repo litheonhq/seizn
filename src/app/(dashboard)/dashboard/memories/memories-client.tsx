@@ -296,12 +296,12 @@ export default function MemoriesClient() {
   // Get memory type color
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "fact": return "bg-blue-100 text-blue-700";
-      case "preference": return "bg-purple-100 text-purple-700";
-      case "experience": return "bg-green-100 text-green-700";
-      case "relationship": return "bg-orange-100 text-orange-700";
-      case "instruction": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
+      case "fact": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
+      case "preference": return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300";
+      case "experience": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+      case "relationship": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
+      case "instruction": return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300";
+      default: return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300";
     }
   };
 
@@ -327,17 +327,17 @@ export default function MemoriesClient() {
               <BrainIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {t("dashboard.memoriesPage.title") || "Memories"}
               </h1>
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
                 {t("dashboard.memoriesPage.subtitle") || "Browse and search your AI memories"}
               </p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-gray-900">{totalCount}</p>
-            <p className="text-sm text-gray-500">{t("dashboard.memoriesPage.totalMemories") || "Total Memories"}</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.memoriesPage.totalMemories") || "Total Memories"}</p>
           </div>
         </div>
       </div>
@@ -347,7 +347,7 @@ export default function MemoriesClient() {
         <div className="lg:col-span-1 space-y-4">
           {/* Search */}
           <div className="glass-card rounded-2xl p-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <SearchIcon className="w-4 h-4 inline mr-1" />
               {t("dashboard.memoriesPage.search") || "Search"}
             </label>
@@ -356,7 +356,7 @@ export default function MemoriesClient() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search memories..."}
-              className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
             />
           </div>
 
@@ -366,32 +366,32 @@ export default function MemoriesClient() {
               type="button"
               onClick={() => setMobileFiltersOpen(open => !open)}
               aria-expanded={mobileFiltersOpen}
-              className="w-full px-4 py-3 text-sm font-medium text-gray-700 bg-white/80 border border-gray-200 rounded-2xl hover:bg-white transition-colors flex items-center justify-between"
+              className="w-full px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-2xl hover:bg-white dark:hover:bg-gray-800 transition-colors flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
-                <FilterIcon className="w-4 h-4 text-gray-500" />
+                <FilterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 {t("dashboard.memoriesPage.filters") || "Filters"}
                 {activeFilterCount > 0 && (
-                  <span className="ml-1 inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-teal-100 text-teal-700">
+                  <span className="ml-1 inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200">
                     {activeFilterCount}
                   </span>
                 )}
               </span>
-              <ChevronDownIcon className={`w-4 h-4 text-gray-500 transition-transform ${mobileFiltersOpen ? "rotate-180" : ""}`} />
+              <ChevronDownIcon className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${mobileFiltersOpen ? "rotate-180" : ""}`} />
             </button>
           </div>
 
           <div className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block space-y-4`}>
             {/* Namespace */}
             <div className="glass-card rounded-2xl p-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("dashboard.memoriesPage.namespace") || "Namespace"}
               </label>
               {namespaces.length > 0 ? (
                 <select
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                 >
                   {namespaces.map((ns) => (
                     <option key={ns.name} value={ns.name}>
@@ -405,7 +405,7 @@ export default function MemoriesClient() {
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
                   placeholder="default"
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                 />
               )}
             </div>
@@ -413,32 +413,32 @@ export default function MemoriesClient() {
             {/* Date Range */}
             <div className="glass-card rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <CalendarIcon className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">
+                <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t("dashboard.memoriesPage.dateRange") || "Date Range"}
                 </span>
               </div>
               <div className="space-y-2">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
                     {t("dashboard.memoriesPage.after") || "After"}
                   </label>
                   <input
                     type="date"
                     value={afterDate}
                     onChange={(e) => setAfterDate(e.target.value)}
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
                     {t("dashboard.memoriesPage.before") || "Before"}
                   </label>
                   <input
                     type="date"
                     value={beforeDate}
                     onChange={(e) => setBeforeDate(e.target.value)}
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                   />
                 </div>
               </div>
@@ -447,8 +447,8 @@ export default function MemoriesClient() {
             {/* Memory Types */}
             <div className="glass-card rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <FilterIcon className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">
+                <FilterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t("dashboard.memoriesPage.memoryTypes") || "Memory Types"}
                 </span>
               </div>
@@ -459,7 +459,7 @@ export default function MemoriesClient() {
                       type="checkbox"
                       checked={selectedTypes.includes(type)}
                       onChange={() => toggleType(type)}
-                      className="w-4 h-4 rounded border-gray-300 text-teal-500 focus:ring-teal-500"
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-teal-500 focus:ring-teal-500 dark:focus:ring-teal-400"
                     />
                     <span className={`px-2 py-0.5 text-xs rounded-full ${getTypeColor(type)}`}>
                       {type}
@@ -472,8 +472,8 @@ export default function MemoriesClient() {
             {/* Tags */}
             <div className="glass-card rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <TagIcon className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">
+                <TagIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t("dashboard.memoriesPage.tags") || "Tags"}
                 </span>
               </div>
@@ -486,7 +486,7 @@ export default function MemoriesClient() {
                       className={`px-3 py-1 text-xs rounded-full transition-colors ${
                         selectedTags.includes(tag)
                           ? "bg-teal-500 text-white"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                       }`}
                     >
                       {tag}
@@ -494,7 +494,7 @@ export default function MemoriesClient() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-400 dark:text-gray-500">
                   {t("dashboard.memoriesPage.noTags") || "No tags available"}
                 </p>
               )}
@@ -504,7 +504,7 @@ export default function MemoriesClient() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 <XIcon className="w-4 h-4" />
                 {t("dashboard.memoriesPage.clearFilters") || "Clear Filters"}
@@ -517,7 +517,7 @@ export default function MemoriesClient() {
         <div className="lg:col-span-3 space-y-4">
           {/* Sort & Info Bar */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {t("dashboard.memoriesPage.showing") || "Showing"} {memories.length} {t("dashboard.memoriesPage.of") || "of"} {totalCount} {t("dashboard.memoriesPage.results") || "results"}
             </p>
 
@@ -525,9 +525,9 @@ export default function MemoriesClient() {
             <div className="relative">
               <button
                 onClick={() => setShowSortDropdown(!showSortDropdown)}
-                className="flex items-center gap-2 px-3 py-2 text-sm bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <SortIcon className="w-4 h-4 text-gray-500" />
+                <SortIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <span>
                   {sortOption === "date_desc" && (t("dashboard.memoriesPage.sortNewest") || "Newest First")}
                   {sortOption === "date_asc" && (t("dashboard.memoriesPage.sortOldest") || "Oldest First")}
@@ -538,7 +538,7 @@ export default function MemoriesClient() {
               </button>
 
               {showSortDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-10">
                   {([
                     ["date_desc", t("dashboard.memoriesPage.sortNewest") || "Newest First"],
                     ["date_asc", t("dashboard.memoriesPage.sortOldest") || "Oldest First"],
@@ -548,10 +548,10 @@ export default function MemoriesClient() {
                     <button
                       key={value}
                       onClick={() => { setSortOption(value); setShowSortDropdown(false); }}
-                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${
                         i === 0 ? "rounded-t-xl" : ""
                       } ${i === arr.length - 1 ? "rounded-b-xl" : ""} ${
-                        sortOption === value ? "text-teal-600 font-medium" : "text-gray-700"
+                        sortOption === value ? "text-teal-600 dark:text-teal-400 font-medium" : "text-gray-700 dark:text-gray-200"
                       }`}
                     >
                       {label}
@@ -565,7 +565,7 @@ export default function MemoriesClient() {
           {/* Active Filters */}
           {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-gray-500">{t("dashboard.memoriesPage.activeFilters") || "Active filters"}:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.memoriesPage.activeFilters") || "Active filters"}:</span>
               {selectedTypes.map(type => (
                 <span key={type} className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}>
                   {type}
@@ -575,7 +575,7 @@ export default function MemoriesClient() {
                 </span>
               ))}
               {selectedTags.map(tag => (
-                <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded-full">
+                <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200 rounded-full">
                   {tag}
                   <button onClick={() => toggleTag(tag)} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -583,7 +583,7 @@ export default function MemoriesClient() {
                 </span>
               ))}
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 rounded-full">
                   &quot;{searchQuery}&quot;
                   <button onClick={() => setSearchQuery("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -591,7 +591,7 @@ export default function MemoriesClient() {
                 </span>
               )}
               {afterDate && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
                   After {afterDate}
                   <button onClick={() => setAfterDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -599,7 +599,7 @@ export default function MemoriesClient() {
                 </span>
               )}
               {beforeDate && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
                   Before {beforeDate}
                   <button onClick={() => setBeforeDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -613,15 +613,15 @@ export default function MemoriesClient() {
           {isLoading && memories.length === 0 ? (
             <div className="glass-card rounded-2xl p-12 text-center">
               <LoadingSpinner className="w-8 h-8 text-teal-500 mx-auto" />
-              <p className="mt-4 text-gray-500">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
+              <p className="mt-4 text-gray-500 dark:text-gray-400">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
             </div>
           ) : memories.length === 0 ? (
             <div className="glass-card rounded-2xl p-12 text-center">
-              <InboxIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-400 mb-2">
+              <InboxIcon className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-400 dark:text-gray-300 mb-2">
                 {t("dashboard.memoriesPage.noMemories") || "No memories found"}
               </h3>
-              <p className="text-gray-400">
+              <p className="text-gray-400 dark:text-gray-400">
                 {hasActiveFilters
                   ? (t("dashboard.memoriesPage.noMatchingMemories") || "Try adjusting your filters or search query")
                   : (t("dashboard.memoriesPage.noMemoriesHint") || "Start adding memories via the API to see them here")
@@ -633,12 +633,12 @@ export default function MemoriesClient() {
               {memories.map((memory) => (
                 <div
                   key={memory.id}
-                  className="glass-card rounded-2xl p-4 hover:border-teal-200 transition-colors"
+                  className="glass-card rounded-2xl p-4 hover:border-teal-200 dark:hover:border-teal-700/50 transition-colors"
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1 min-w-0">
                       {/* Content */}
-                      <p className="text-gray-900 mb-3 whitespace-pre-wrap">
+                      <p className="text-gray-900 dark:text-gray-100 mb-3 whitespace-pre-wrap">
                         {memory.content}
                       </p>
 
@@ -651,7 +651,7 @@ export default function MemoriesClient() {
 
                         {/* Importance */}
                         {memory.importance != null && memory.importance !== 5 && (
-                          <span className="flex items-center gap-0.5 text-amber-600">
+                          <span className="flex items-center gap-0.5 text-amber-600 dark:text-amber-400">
                             <StarIcon className="w-3 h-3" />
                             {memory.importance}
                           </span>
@@ -659,7 +659,7 @@ export default function MemoriesClient() {
 
                         {/* Source */}
                         {memory.source && memory.source !== "api" && (
-                          <span className="text-gray-400">
+                          <span className="text-gray-400 dark:text-gray-500">
                             via {memory.source}
                           </span>
                         )}
@@ -667,27 +667,27 @@ export default function MemoriesClient() {
                         {/* Tags */}
                         {memory.tags && memory.tags.length > 0 && (
                           <div className="flex items-center gap-1">
-                            <TagIcon className="w-3 h-3 text-gray-400" />
+                            <TagIcon className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                             {memory.tags.slice(0, 3).map((tag) => (
-                              <span key={tag} className="text-gray-500">
+                              <span key={tag} className="text-gray-500 dark:text-gray-400">
                                 {tag}
                               </span>
                             ))}
                             {memory.tags.length > 3 && (
-                              <span className="text-gray-400">+{memory.tags.length - 3}</span>
+                              <span className="text-gray-400 dark:text-gray-500">+{memory.tags.length - 3}</span>
                             )}
                           </div>
                         )}
 
                         {/* Date */}
-                        <span className="flex items-center gap-1 text-gray-400">
+                        <span className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
                           <CalendarIcon className="w-3 h-3" />
                           {formatDate(memory.created_at)}
                         </span>
 
                         {/* Similarity Score */}
                         {memory.similarity !== undefined && memory.similarity > 0 && (
-                          <span className="text-teal-600">
+                          <span className="text-teal-600 dark:text-teal-400">
                             {(memory.similarity * 100).toFixed(1)}% {t("dashboard.memoriesPage.match") || "match"}
                           </span>
                         )}
