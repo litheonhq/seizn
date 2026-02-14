@@ -254,21 +254,25 @@ export default function AutopilotClient() {
               <CpuIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.autopilot.title") || "Autopilot"}</h1>
-              <p className="text-gray-500">{t("dashboard.autopilot.subtitle") || "AI-powered retrieval optimization"}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t("dashboard.autopilot.title") || "Autopilot"}</h1>
+              <p className="text-gray-500 dark:text-gray-400">{t("dashboard.autopilot.subtitle") || "AI-powered retrieval optimization"}</p>
             </div>
           </div>
 
           {/* Enable/Disable Toggle */}
           <div className="flex items-center gap-3">
-            <span className={`text-sm font-medium ${config?.enabled ? "text-green-600" : "text-gray-500"}`}>
+            <span
+              className={`text-sm font-medium ${
+                config?.enabled ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"
+              }`}
+            >
               {config?.enabled ? "Enabled" : "Disabled"}
             </span>
             <button
               onClick={handleToggle}
               disabled={isLoading || isSaving}
-              className={`relative w-14 h-8 rounded-full transition-colors duration-200 ${
-                config?.enabled ? "bg-green-500" : "bg-gray-300"
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 ${
+                config?.enabled ? "bg-green-500" : "bg-gray-300 dark:bg-gray-700"
               } ${isSaving ? "opacity-50" : ""}`}
             >
               <span
@@ -282,22 +286,22 @@ export default function AutopilotClient() {
 
         {/* Stats */}
         {config && (
-          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100">
+          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
             <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900">{config.total_decisions.toLocaleString()}</p>
-              <p className="text-xs text-gray-500">Total Decisions</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{config.total_decisions.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Total Decisions</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-green-600">{successRate}%</p>
-              <p className="text-xs text-gray-500">Success Rate</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Success Rate</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900">{config.mode}</p>
-              <p className="text-xs text-gray-500">Current Mode</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{config.mode}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Current Mode</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900">{(config.exploration_rate * 100).toFixed(0)}%</p>
-              <p className="text-xs text-gray-500">Exploration Rate</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{(config.exploration_rate * 100).toFixed(0)}%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Exploration Rate</p>
             </div>
           </div>
         )}
@@ -310,7 +314,7 @@ export default function AutopilotClient() {
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
             activeTab === "settings"
               ? "bg-teal-500 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
+              : "bg-white dark:bg-gray-900/60 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60"
           }`}
         >
           <CogIcon className="w-4 h-4" />
@@ -321,7 +325,7 @@ export default function AutopilotClient() {
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
             activeTab === "logs"
               ? "bg-teal-500 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
+              : "bg-white dark:bg-gray-900/60 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60"
           }`}
         >
           <ListIcon className="w-4 h-4" />
@@ -333,7 +337,7 @@ export default function AutopilotClient() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Mode Selection */}
           <div className="glass-card rounded-2xl p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.autopilot.operationMode") || "Operation Mode"}</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">{t("dashboard.autopilot.operationMode") || "Operation Mode"}</h2>
             <div className="space-y-3">
               {(["conservative", "balanced", "aggressive", "experimental"] as const).map((mode) => (
                 <button
@@ -342,17 +346,17 @@ export default function AutopilotClient() {
                   disabled={isSaving}
                   className={`w-full p-4 rounded-xl text-left transition-colors ${
                     config?.mode === mode
-                      ? "bg-teal-50 border-2 border-teal-500"
-                      : "bg-gray-50 border-2 border-transparent hover:border-gray-200"
+                      ? "bg-teal-50 dark:bg-teal-950/30 border-2 border-teal-500 dark:border-teal-400"
+                      : "bg-gray-50 dark:bg-gray-900/40 border-2 border-transparent hover:border-gray-200 dark:hover:border-gray-700"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium capitalize">{mode}</span>
+                    <span className="font-medium capitalize text-gray-900 dark:text-gray-100">{mode}</span>
                     {config?.mode === mode && (
                       <span className="px-2 py-1 text-xs bg-teal-500 text-white rounded-full">Active</span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">{getModeDescription(mode)}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{getModeDescription(mode)}</p>
                 </button>
               ))}
             </div>
@@ -360,38 +364,38 @@ export default function AutopilotClient() {
 
           {/* Parameters */}
           <div className="glass-card rounded-2xl p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.autopilot.parameters") || "Parameters"}</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">{t("dashboard.autopilot.parameters") || "Parameters"}</h2>
             {config && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Max Latency</span>
-                  <span className="font-medium">{config.max_latency_ms}ms</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Max Latency</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{config.max_latency_ms}ms</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Max Cost per Query</span>
-                  <span className="font-medium">${config.max_cost_per_query.toFixed(4)}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Max Cost per Query</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">${config.max_cost_per_query.toFixed(4)}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Min Relevance Threshold</span>
-                  <span className="font-medium">{(config.min_relevance_threshold * 100).toFixed(0)}%</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Min Relevance Threshold</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{(config.min_relevance_threshold * 100).toFixed(0)}%</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Learning Rate</span>
-                  <span className="font-medium">{config.learning_rate}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Learning Rate</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{config.learning_rate}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Min Samples Before Learning</span>
-                  <span className="font-medium">{config.min_samples_before_learning}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Min Samples Before Learning</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{config.min_samples_before_learning}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Thompson Sampling</span>
-                  <span className={`font-medium ${config.use_thompson_sampling ? "text-green-600" : "text-gray-400"}`}>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Thompson Sampling</span>
+                  <span className={`font-medium ${config.use_thompson_sampling ? "text-green-600 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}`}>
                     {config.use_thompson_sampling ? "Enabled" : "Disabled"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2">
-                  <span className="text-sm text-gray-600">Decay Factor</span>
-                  <span className="font-medium">{config.decay_factor}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Decay Factor</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{config.decay_factor}</span>
                 </div>
               </div>
             )}
@@ -400,41 +404,41 @@ export default function AutopilotClient() {
       ) : (
         /* Decision Logs */
         <div className="glass-card rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-900">{t("dashboard.autopilot.recentDecisions") || "Recent Decisions"}</h2>
+          <div className="p-4 border-b border-gray-100 dark:border-gray-800">
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t("dashboard.autopilot.recentDecisions") || "Recent Decisions"}</h2>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-800">
             {isLoading ? (
               <div className="p-8 text-center">
-                <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                <div className="w-8 h-8 border-2 border-teal-500 dark:border-teal-400 border-t-transparent rounded-full animate-spin mx-auto" />
               </div>
             ) : logs.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <ListIcon className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                <ListIcon className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-2" />
                 <p>{t("dashboard.autopilot.noLogs") || "No decision logs yet"}</p>
               </div>
             ) : (
               logs.map((log) => (
-                <div key={log.id} className="p-4 hover:bg-gray-50 transition-colors">
+                <div key={log.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-colors">
                   <div className="flex items-start gap-3">
                     <div className="mt-1">{getOutcomeIcon(log.outcome)}</div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 line-clamp-1">{log.query}</p>
-                      <p className="text-sm text-gray-500 mt-1">{log.reason}</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">{log.query}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{log.reason}</p>
                       <div className="flex flex-wrap items-center gap-3 mt-2 text-xs">
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-full">
                           {log.decision.search_type}
                         </span>
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-full">
                           top_k: {log.decision.top_k}
                         </span>
                         {log.decision.rerank_enabled && (
-                          <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full">rerank</span>
+                          <span className="px-2 py-1 bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-200 rounded-full">rerank</span>
                         )}
-                        <span className="text-gray-400">|</span>
-                        <span className="text-gray-500">{log.latency_ms}ms</span>
-                        <span className="text-gray-500">${(log.cost_usd * 1000).toFixed(2)}m</span>
-                        <span className="text-gray-400 ml-auto">{formatDate(log.created_at)}</span>
+                        <span className="text-gray-400 dark:text-gray-600">|</span>
+                        <span className="text-gray-500 dark:text-gray-400">{log.latency_ms}ms</span>
+                        <span className="text-gray-500 dark:text-gray-400">${(log.cost_usd * 1000).toFixed(2)}m</span>
+                        <span className="text-gray-400 dark:text-gray-500 ml-auto">{formatDate(log.created_at)}</span>
                       </div>
                     </div>
                   </div>
