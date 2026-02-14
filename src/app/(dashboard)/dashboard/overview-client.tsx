@@ -156,20 +156,20 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <BrainIcon className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full dark:bg-gray-800 dark:text-gray-300">
               {stats?.planDisplay || "Free"}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.totalMemories")}</p>
-          <p className="text-3xl font-bold text-gray-900">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t("dashboard.overviewPage.totalMemories")}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
+              <span className="inline-block w-16 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : (
               stats?.memories.count.toLocaleString() || "0"
             )}
           </p>
           <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
               <span>{t("dashboard.overviewPage.usage")}</span>
               <span>
                 {stats?.memories.limit === -1
@@ -177,7 +177,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                   : `${stats?.memories.percentage || 0}%`}
               </span>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full transition-all duration-500"
                 style={{
@@ -194,20 +194,20 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <ApiIcon className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full dark:bg-gray-800 dark:text-gray-300">
               {t("dashboard.overviewPage.today")}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.apiCalls")}</p>
-          <p className="text-3xl font-bold text-gray-900">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t("dashboard.overviewPage.apiCalls")}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
+              <span className="inline-block w-16 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : (
               stats?.apiCalls.today.toLocaleString() || "0"
             )}
           </p>
           <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
               <span>{t("dashboard.overviewPage.dailyLimit")}</span>
               <span>
                 {stats?.apiCalls.limit === -1
@@ -215,7 +215,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                   : stats?.apiCalls.limit.toLocaleString()}
               </span>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500"
                 style={{
@@ -233,10 +233,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <KeyIcon className="w-6 h-6 text-white" />
             </div>
           </div>
-          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.activeKeys")}</p>
-          <p className="text-3xl font-bold text-gray-900">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t("dashboard.overviewPage.activeKeys")}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {isLoading ? (
-              <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" />
+              <span className="inline-block w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : (
               stats?.keys || 0
             )}
@@ -257,10 +257,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <SparkleIcon className="w-6 h-6 text-white" />
             </div>
           </div>
-          <p className="text-sm text-gray-500 mb-1">{t("dashboard.overviewPage.currentPlan")}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t("dashboard.overviewPage.currentPlan")}</p>
           <p className="text-3xl font-bold theme-gradient-text">
             {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse" />
+              <span className="inline-block w-16 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : (
               stats?.planDisplay || "Free"
             )}
@@ -287,8 +287,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <ChartIcon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.apiUsageChart")}</h2>
-              <p className="text-xs text-gray-500">{t("dashboard.overviewPage.last7days")}</p>
+              <h2 className="font-semibold text-gray-900 dark:text-white">{t("dashboard.overviewPage.apiUsageChart")}</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.overviewPage.last7days")}</p>
             </div>
           </div>
           <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
@@ -298,11 +298,11 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         <div className="p-6">
           {isLoading ? (
             <div className="h-48 flex items-center justify-center">
-              <div className="animate-pulse w-full h-32 bg-gray-100 rounded-lg" />
+              <div className="animate-pulse w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-lg" />
             </div>
           ) : dailyUsage.length === 0 ? (
-            <div className="h-48 flex flex-col items-center justify-center text-gray-500">
-              <ChartIcon className="w-12 h-12 text-gray-300 mb-2" />
+            <div className="h-48 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+              <ChartIcon className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-2" />
               <p>{t("dashboard.overviewPage.noUsageData")}</p>
             </div>
           ) : (
@@ -319,8 +319,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <ActivityIcon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.recentActivity")}</h2>
-              <p className="text-xs text-gray-500">{t("dashboard.overviewPage.last10Requests")}</p>
+              <h2 className="font-semibold text-gray-900 dark:text-white">{t("dashboard.overviewPage.recentActivity")}</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.overviewPage.last10Requests")}</p>
             </div>
           </div>
           <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
@@ -333,21 +333,21 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               <div className="animate-pulse space-y-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex items-center gap-4">
-                    <div className="w-16 h-6 bg-gray-200 rounded" />
-                    <div className="flex-1 h-4 bg-gray-100 rounded" />
-                    <div className="w-12 h-4 bg-gray-100 rounded" />
-                    <div className="w-16 h-4 bg-gray-100 rounded" />
+                    <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded" />
+                    <div className="flex-1 h-4 bg-gray-100 dark:bg-gray-800 rounded" />
+                    <div className="w-12 h-4 bg-gray-100 dark:bg-gray-800 rounded" />
+                    <div className="w-16 h-4 bg-gray-100 dark:bg-gray-800 rounded" />
                   </div>
                 ))}
               </div>
             </div>
           ) : recentActivity.length === 0 ? (
             <div className="p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
-                <ActivityIcon className="w-8 h-8 text-emerald-400" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 flex items-center justify-center">
+                <ActivityIcon className="w-8 h-8 text-emerald-400 dark:text-emerald-300" />
               </div>
-              <h3 className="text-gray-900 font-medium mb-2">{t("dashboard.overviewPage.noActivityYet")}</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <h3 className="text-gray-900 dark:text-white font-medium mb-2">{t("dashboard.overviewPage.noActivityYet")}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {t("dashboard.overviewPage.noActivityDescription")}
               </p>
               <Link
@@ -361,52 +361,52 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50/50">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <tr className="bg-gray-50/50 dark:bg-gray-900/40">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.endpoint")}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.status")}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.latency")}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.cost")}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.key")}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t("dashboard.activity.time")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {recentActivity.map((activity) => (
-                  <tr key={activity.id} className="hover:bg-white/50 transition-colors">
+                  <tr key={activity.id} className="hover:bg-white/50 dark:hover:bg-gray-800/40 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-                          activity.method === 'GET' ? 'bg-blue-100 text-blue-700' :
-                          activity.method === 'POST' ? 'bg-green-100 text-green-700' :
-                          activity.method === 'PUT' ? 'bg-amber-100 text-amber-700' :
-                          activity.method === 'DELETE' ? 'bg-red-100 text-red-700' :
-                          'bg-gray-100 text-gray-700'
+                          activity.method === 'GET' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' :
+                          activity.method === 'POST' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300' :
+                          activity.method === 'PUT' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' :
+                          activity.method === 'DELETE' ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300' :
+                          'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200'
                         }`}>
                           {activity.method}
                         </span>
-                        <span className="text-gray-900 font-mono text-xs truncate max-w-[200px]">
+                        <span className="text-gray-900 dark:text-gray-100 font-mono text-xs truncate max-w-[200px]">
                           {activity.endpoint}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full ${
-                        activity.statusCategory === 'success' ? 'bg-green-100 text-green-700' :
-                        activity.statusCategory === 'redirect' ? 'bg-blue-100 text-blue-700' :
-                        activity.statusCategory === 'client_error' ? 'bg-amber-100 text-amber-700' :
-                        'bg-red-100 text-red-700'
+                        activity.statusCategory === 'success' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300' :
+                        activity.statusCategory === 'redirect' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' :
+                        activity.statusCategory === 'client_error' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' :
+                        'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300'
                       }`}>
                         {activity.statusCategory === 'success' && <SuccessIcon className="w-3 h-3" />}
                         {activity.statusCategory === 'client_error' && <WarningIcon className="w-3 h-3" />}
@@ -416,24 +416,24 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-mono ${
-                        (activity.latencyMs || 0) > 1000 ? 'text-red-600' :
-                        (activity.latencyMs || 0) > 500 ? 'text-amber-600' :
-                        'text-gray-600'
+                        (activity.latencyMs || 0) > 1000 ? 'text-red-600 dark:text-red-400' :
+                        (activity.latencyMs || 0) > 500 ? 'text-amber-600 dark:text-amber-400' :
+                        'text-gray-600 dark:text-gray-300'
                       }`}>
                         {activity.latencyMs ? `${activity.latencyMs}ms` : '-'}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
                         {activity.costCents > 0 ? `$${(activity.costCents / 100).toFixed(4)}` : '-'}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                      <span className="text-xs font-mono text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
                         {activity.keyPrefix}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-500">
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">
                       {new Date(activity.timestamp).toLocaleString(locale, {
                         month: 'short',
                         day: 'numeric',
@@ -454,7 +454,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         {/* Recent Memories */}
         <div className="lg:col-span-2 glass-card rounded-2xl overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">{t("dashboard.overviewPage.recentMemories")}</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t("dashboard.overviewPage.recentMemories")}</h2>
             <Link href="/dashboard/memories" className="text-sm theme-primary hover:underline">
               {t("dashboard.overviewPage.viewAll")}
             </Link>
@@ -463,31 +463,31 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             <div className="p-4 space-y-3">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse flex items-start gap-3">
-                  <div className="w-8 h-8 bg-gray-200 rounded-lg" />
+                  <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-3 bg-gray-100 rounded w-1/2" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : recentMemories.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <BrainIcon className="w-6 h-6 text-gray-400" />
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <BrainIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
               </div>
               <p>{t("dashboard.overviewPage.noMemories")}</p>
               <p className="text-sm mt-1">{t("dashboard.overviewPage.noMemoriesHint")}</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-gray-800">
               {recentMemories.map((memory) => (
-                <div key={memory.id} className="p-4 hover:bg-white/50 transition-colors">
+                <div key={memory.id} className="p-4 hover:bg-white/50 dark:hover:bg-gray-800/40 transition-colors">
                   <div className="flex items-start gap-3">
                     <span className="text-lg">{getMemoryTypeIcon(memory.memory_type)}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-gray-900 text-sm line-clamp-2">{memory.content}</p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-gray-900 dark:text-gray-100 text-sm line-clamp-2">{memory.content}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                         {new Date(memory.created_at).toLocaleDateString(locale, {
                           month: "short",
                           day: "numeric",
@@ -496,7 +496,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                         })}
                       </p>
                     </div>
-                    <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                    <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full">
                       {memory.memory_type}
                     </span>
                   </div>
@@ -508,49 +508,49 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
         {/* Quick Actions */}
         <div className="glass-card rounded-2xl p-6">
-          <h2 className="font-semibold text-gray-900 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
           <div className="space-y-3">
             <Link
               href="/dashboard/keys"
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 transition-colors group"
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <KeyIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.createApiKey")}</p>
-                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.getStartedApi")}</p>
+                <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">{t("dashboard.overviewPage.createApiKey")}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.overviewPage.getStartedApi")}</p>
               </div>
             </Link>
             <Link
               href="/docs"
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 transition-colors group"
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <BookIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.viewDocumentation")}</p>
-                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.learnSeizn")}</p>
+                <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">{t("dashboard.overviewPage.viewDocumentation")}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.overviewPage.learnSeizn")}</p>
               </div>
             </Link>
             <Link
               href="/dashboard/organizations"
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 transition-colors group"
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <UsersIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-gray-900 text-sm">{t("dashboard.overviewPage.createOrganization")}</p>
-                <p className="text-xs text-gray-500">{t("dashboard.overviewPage.collaborateTeam")}</p>
+                <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">{t("dashboard.overviewPage.createOrganization")}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.overviewPage.collaborateTeam")}</p>
               </div>
             </Link>
           </div>
 
           {/* Code Example */}
           <div className="mt-6 pt-6 border-t theme-border">
-            <p className="text-sm font-medium text-gray-700 mb-3">{t("dashboard.overviewPage.quickExample")}</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">{t("dashboard.overviewPage.quickExample")}</p>
             <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
               <pre className="text-xs text-gray-300">
                 <code>{`curl -X POST \\
@@ -682,23 +682,23 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
     <div className="space-y-4">
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="text-center p-3 bg-gray-50 rounded-xl">
-          <p className="text-2xl font-bold text-gray-900">
+        <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">
             {data.reduce((sum, d) => sum + d.calls, 0).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-500">Total Calls</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Total Calls</p>
         </div>
-        <div className="text-center p-3 bg-gray-50 rounded-xl">
-          <p className="text-2xl font-bold text-gray-900">
+        <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">
             {Math.round(data.reduce((sum, d) => sum + d.calls, 0) / data.length).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-500">Avg/Day</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Avg/Day</p>
         </div>
-        <div className="text-center p-3 bg-gray-50 rounded-xl">
-          <p className="text-2xl font-bold text-gray-900">
+        <div className="text-center p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">
             {data[data.length - 1]?.calls.toLocaleString() || 0}
           </p>
-          <p className="text-xs text-gray-500">Today</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Today</p>
         </div>
       </div>
 
@@ -728,7 +728,7 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
                   x={`${x}%`}
                   y={chartHeight + 20}
                   textAnchor="middle"
-                  className="fill-gray-500 text-xs"
+                  className="fill-gray-500 dark:fill-gray-400 text-xs"
                   fontSize="11"
                 >
                   {formatDate(day.date)}
@@ -739,7 +739,7 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
                     x={`${x}%`}
                     y={chartHeight - barHeight - 5}
                     textAnchor="middle"
-                    className="fill-gray-700 text-xs font-medium"
+                    className="fill-gray-700 dark:fill-gray-200 text-xs font-medium"
                     fontSize="10"
                   >
                     {day.calls.toLocaleString()}
@@ -754,7 +754,7 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
             y1={chartHeight}
             x2="100%"
             y2={chartHeight}
-            stroke="#e5e7eb"
+            className="stroke-gray-200 dark:stroke-gray-700"
             strokeWidth={1}
           />
         </svg>
