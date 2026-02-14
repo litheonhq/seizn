@@ -187,8 +187,8 @@ export function AnalyticsClient() {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)]">
-          <p className="text-xs font-semibold text-slate-500">{label}</p>
+        <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] dark:border-slate-700/70 dark:bg-slate-900">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-300">{label}</p>
           <div className="mt-2 space-y-1">
             {payload.map((entry, index) => (
               <div key={index} className="flex items-center justify-between gap-4">
@@ -197,11 +197,11 @@ export function AnalyticsClient() {
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: entry.color }}
                   />
-                  <span className="text-xs font-medium text-slate-700">
+                  <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
                     {entry.name}
                   </span>
                 </div>
-                <span className="text-xs font-semibold text-slate-900" style={{ color: entry.color || "#0f172a" }}>
+                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100" style={entry.color ? { color: entry.color } : undefined}>
                   {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
                 </span>
               </div>
@@ -214,24 +214,24 @@ export function AnalyticsClient() {
   };
 
   return (
-    <div className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] sm:p-8">
+    <div className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:border-slate-700/60 dark:bg-slate-900/70 sm:p-8">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/60 to-white" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/60 to-white dark:from-slate-950 dark:via-slate-900/40 dark:to-slate-950" />
         <div className="absolute top-[-180px] right-[-120px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08),transparent_70%)]" />
         <div className="absolute bottom-[-200px] left-[-120px] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)]" />
       </div>
       {/* Header */}
       <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
-        <div className="absolute -z-10 left-0 top-2 h-12 w-full rounded-full bg-slate-50/80" />
+        <div className="absolute -z-10 left-0 top-2 h-12 w-full rounded-full bg-slate-50/80 dark:bg-slate-800/40" />
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 flex items-center justify-center">
-            <AnalyticsHeaderIcon className="w-6 h-6 text-blue-600" />
+          <div className="w-12 h-12 rounded-2xl bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 flex items-center justify-center dark:bg-slate-900 dark:ring-slate-700">
+            <AnalyticsHeaderIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               {t("dashboard.analyticsPage.title")}
             </h1>
-            <p className="text-sm text-slate-600 mt-0.5">
+            <p className="text-sm text-slate-600 mt-0.5 dark:text-slate-300">
               {t("dashboard.analyticsPage.subtitle")}
             </p>
           </div>
@@ -243,7 +243,7 @@ export function AnalyticsClient() {
           <select
             value={selectedOrg}
             onChange={(e) => setSelectedOrg(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           >
             <option value="all">{t("dashboard.analyticsPage.allOrganizations")}</option>
             {organizations.map((org) => (
@@ -254,15 +254,15 @@ export function AnalyticsClient() {
           </select>
 
           {/* Period Selector */}
-          <div className="flex gap-1 p-1 bg-slate-100 rounded-xl">
+          <div className="flex gap-1 p-1 bg-slate-100 rounded-xl dark:bg-slate-800/60">
             {(["7d", "30d", "90d"] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   period === p
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-100"
+                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
                 }`}
               >
                 {p === "7d"
@@ -278,7 +278,7 @@ export function AnalyticsClient() {
           <button
             onClick={handleExportCSV}
             disabled={!analytics}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors disabled:opacity-50 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:bg-slate-800"
           >
             <DownloadIcon className="w-4 h-4" />
             {t("dashboard.analyticsPage.exportCSV")}
@@ -288,7 +288,7 @@ export function AnalyticsClient() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 dark:border-blue-400"></div>
         </div>
       ) : analytics ? (
         <>
@@ -332,12 +332,12 @@ export function AnalyticsClient() {
           {/* Main Charts - with improvements */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Daily Active Users Chart */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="h-1 w-12 bg-gradient-to-r from-blue-600 to-sky-400 rounded-full" />
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.dailyActiveUsers")}
                   </h3>
                 </div>
@@ -376,12 +376,12 @@ export function AnalyticsClient() {
             </div>
 
             {/* API Calls Over Time */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="h-1 w-12 bg-gradient-to-r from-sky-500 to-blue-600 rounded-full" />
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.apiCallsOverTime")}
                   </h3>
                 </div>
@@ -423,12 +423,12 @@ export function AnalyticsClient() {
             </div>
 
             {/* Memory Usage Chart */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="h-1 w-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full" />
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.memoryUsage")}
                   </h3>
                 </div>
@@ -474,12 +474,12 @@ export function AnalyticsClient() {
             </div>
 
             {/* Latency Trend */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="h-1 w-12 bg-gradient-to-r from-amber-500 to-orange-400 rounded-full" />
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.latencyTrend")}
                   </h3>
                 </div>
@@ -514,10 +514,10 @@ export function AnalyticsClient() {
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Hourly Distribution */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
                   {t("dashboard.analyticsPage.hourlyDistribution")}
                 </h3>
                 <div className="h-48">
@@ -545,8 +545,8 @@ export function AnalyticsClient() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="mt-3 p-3 bg-blue-50/80 rounded-xl border border-blue-100">
-                  <p className="text-xs text-blue-700 text-center font-medium">
+                <div className="mt-3 p-3 bg-blue-50/80 rounded-xl border border-blue-100 dark:bg-blue-950/30 dark:border-blue-900/40">
+                  <p className="text-xs text-blue-700 text-center font-medium dark:text-blue-200">
                     {t("dashboard.analyticsPage.peakHour")}: {analytics.summary.peakHour}:00
                   </p>
                 </div>
@@ -554,10 +554,10 @@ export function AnalyticsClient() {
             </div>
 
             {/* Endpoint Breakdown */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
                   {t("dashboard.analyticsPage.endpointBreakdown")}
                 </h3>
                 <div className="h-48">
@@ -583,17 +583,17 @@ export function AnalyticsClient() {
                 </div>
                 <div className="space-y-2 mt-3">
                   {analytics.endpointBreakdown.slice(0, 4).map((ep, index) => (
-                    <div key={ep.endpoint} className="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-50">
+                    <div key={ep.endpoint} className="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800/70">
                       <div className="flex items-center gap-2">
                         <div
                           className="w-2.5 h-2.5 rounded-full"
                           style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
                         />
-                        <span className="text-slate-700 truncate max-w-[100px] font-medium">
+                        <span className="text-slate-700 truncate max-w-[100px] font-medium dark:text-slate-200">
                           {ep.endpoint}
                         </span>
                       </div>
-                      <span className="text-slate-900 font-bold">{ep.percentage}%</span>
+                      <span className="text-slate-900 font-bold dark:text-slate-100">{ep.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -601,30 +601,30 @@ export function AnalyticsClient() {
             </div>
 
             {/* Top Queries */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow">
+            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.12),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
                   {t("dashboard.analyticsPage.topQueries")}
                 </h3>
                 <div className="space-y-3">
                   {analytics.topQueries.slice(0, 5).map((query, index) => (
-                    <div key={index} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <div key={index} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors dark:bg-slate-800/60 dark:hover:bg-slate-800">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-slate-900 truncate font-medium" title={query.query}>
+                        <p className="text-sm text-slate-900 truncate font-medium dark:text-slate-100" title={query.query}>
                           {query.query}
                         </p>
-                        <p className="text-xs text-slate-600 mt-1">
+                        <p className="text-xs text-slate-600 mt-1 dark:text-slate-300">
                           {query.avgLatency}ms avg
                         </p>
                       </div>
-                      <span className="text-sm font-bold text-blue-600 whitespace-nowrap">
+                      <span className="text-sm font-bold text-blue-600 whitespace-nowrap dark:text-blue-400">
                         {query.count.toLocaleString()}
                       </span>
                     </div>
                   ))}
                   {analytics.topQueries.length === 0 && (
-                    <p className="text-sm text-slate-500 text-center py-8">
+                    <p className="text-sm text-slate-500 text-center py-8 dark:text-slate-400">
                       {t("dashboard.analyticsPage.noQueries")}
                     </p>
                   )}
@@ -634,15 +634,15 @@ export function AnalyticsClient() {
           </div>
         </>
       ) : (
-        <div className="rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-12">
+        <div className="rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-12 dark:border-slate-700/60 dark:bg-slate-900/60">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center">
-              <ChartIcon className="w-10 h-10 text-blue-500" />
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center dark:bg-slate-800/60 dark:ring-slate-700">
+              <ChartIcon className="w-10 h-10 text-blue-500 dark:text-blue-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
               {t("dashboard.analyticsPage.noData")}
             </h3>
-            <p className="text-slate-600">
+            <p className="text-slate-600 dark:text-slate-300">
               {t("dashboard.analyticsPage.noDataDescription")}
             </p>
           </div>
@@ -676,24 +676,24 @@ function KpiCard({
     : "text-red-500";
 
   const bgGradient = isError
-    ? "from-white via-red-50/30 to-white"
-    : "from-white via-slate-50 to-white";
+    ? "from-white via-red-50/30 to-white dark:from-slate-950 dark:via-red-950/25 dark:to-slate-950"
+    : "from-white via-slate-50 to-white dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950";
 
   const iconBgColor = isError
-    ? "bg-red-50 text-red-500"
-    : "bg-blue-50 text-blue-600";
+    ? "bg-red-50 text-red-500 dark:bg-red-950/35 dark:text-red-300"
+    : "bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-200";
 
   return (
-    <div className={`relative rounded-2xl border border-slate-200/70 bg-gradient-to-br ${bgGradient} p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] hover:border-slate-300`}>
+    <div className={`relative rounded-2xl border border-slate-200/70 bg-gradient-to-br ${bgGradient} p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] hover:border-slate-300 dark:border-slate-700/60 dark:hover:border-slate-600`}>
       <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)] -mr-12 -mt-12" />
 
       <div className="relative">
         <div className="flex items-center justify-between mb-3">
-          <div className={`w-10 h-10 rounded-xl ${iconBgColor} flex items-center justify-center shadow-sm ring-1 ring-white`}>
+          <div className={`w-10 h-10 rounded-xl ${iconBgColor} flex items-center justify-center shadow-sm ring-1 ring-white dark:ring-slate-800`}>
             {icon}
           </div>
           {change !== 0 && (
-            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${changeColor} bg-white shadow-sm ring-1 ring-slate-200/70`}
+            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${changeColor} bg-white shadow-sm ring-1 ring-slate-200/70 dark:bg-slate-900 dark:ring-slate-700/70`}
             >
               {isPositive ? (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -708,10 +708,10 @@ function KpiCard({
             </div>
           )}
         </div>
-        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600" : "text-slate-900"}`}>
+        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600 dark:text-red-300" : "text-slate-900 dark:text-slate-100"}`}>
           {value}
         </p>
-        <p className="text-sm font-medium text-slate-500">{title}</p>
+        <p className="text-sm font-medium text-slate-500 dark:text-slate-300">{title}</p>
       </div>
     </div>
   );
