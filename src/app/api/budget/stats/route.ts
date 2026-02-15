@@ -26,8 +26,8 @@ export async function GET() {
 
     // Get budget settings
     const { data: settings } = await supabase
-      .from("budget_settings")
-      .select("*")
+      .from("retrieval_budgets")
+      .select("daily_budget_usd, monthly_budget_usd")
       .eq("user_id", session.user.id)
       .single();
 

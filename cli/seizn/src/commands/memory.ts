@@ -23,7 +23,7 @@ export function createMemoryCommand(): Command {
     .option('-t, --type <type>', 'Memory type (fact, preference, experience, relationship, instruction)', 'fact')
     .option('--tags <tags>', 'Comma-separated tags')
     .option('-n, --namespace <ns>', 'Namespace', 'default')
-    .action(async (content: string, opts) => {
+    .action(async (content: string, opts: any) => {
       const spinner = ora('Adding memory...').start();
       try {
         const client = createCLIClient();
@@ -73,7 +73,7 @@ export function createMemoryCommand(): Command {
     .option('--tags <tags>', 'Comma-separated tags')
     .option('--importance <n>', 'Importance (0-10)')
     .option('-t, --type <type>', 'Memory type')
-    .action(async (id: string, opts) => {
+    .action(async (id: string, opts: any) => {
       const spinner = ora('Updating...').start();
       try {
         const client = createCLIClient();
@@ -110,7 +110,7 @@ export function createMemoryCommand(): Command {
     .description('List recent memories')
     .option('-l, --limit <n>', 'Maximum results', '20')
     .option('-n, --namespace <ns>', 'Namespace')
-    .action(async (opts) => {
+    .action(async (opts: any) => {
       const spinner = ora('Fetching memories...').start();
       try {
         const client = createCLIClient();

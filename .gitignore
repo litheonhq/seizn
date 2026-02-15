@@ -55,6 +55,8 @@ sdks/*/*.egg-info/
 sdks/*/package-lock.json
 packages/*/node_modules/
 packages/*/dist/
+cli/*/node_modules/
+cli/*/dist/
 
 # CI artifacts
 .seizn-traces/

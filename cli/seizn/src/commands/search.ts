@@ -21,7 +21,7 @@ export function createSearchCommand(): Command {
     .option('-l, --limit <n>', 'Maximum results', '10')
     .option('--threshold <n>', 'Similarity threshold', '0.7')
     .option('-n, --namespace <ns>', 'Namespace')
-    .action(async (query: string, opts) => {
+    .action(async (query: string, opts: any) => {
       const spinner = ora('Searching...').start();
       try {
         const client = createCLIClient();
@@ -57,7 +57,7 @@ export function createSearchCommand(): Command {
     .option('--valid-at <date>', 'Valid at date (ISO 8601)', new Date().toISOString())
     .option('-l, --limit <n>', 'Maximum results', '20')
     .option('--types <types>', 'Comma-separated memory types')
-    .action(async (query: string, opts) => {
+    .action(async (query: string, opts: any) => {
       const spinner = ora('Temporal searching...').start();
       try {
         const client = createCLIClient();
@@ -94,7 +94,7 @@ export function createSearchCommand(): Command {
     .option('--end <date>', 'End date (ISO 8601)')
     .option('-l, --limit <n>', 'Maximum entries', '50')
     .option('--types <types>', 'Comma-separated memory types')
-    .action(async (opts) => {
+    .action(async (opts: any) => {
       const spinner = ora('Loading timeline...').start();
       try {
         const client = createCLIClient();

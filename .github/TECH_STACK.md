@@ -1,5 +1,5 @@
 # Seizn -- Tech Stack Documentation
-> Auto-generated on 2026-02-13
+> Auto-generated on 2026-02-15
 
 Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
 
@@ -326,7 +326,7 @@ User Request
 | Enterprise SSO (SAML + OIDC) | Partially Implemented | `src/lib/sso/`, `src/app/api/sso/`, `src/app/api/auth/oidc/` | Org-scoped SSO connections, SAML ACS + OIDC callback; validate with each IdP before GA |
 | Tenant Policy (Budget & Cost Controls) | Fully Implemented | `src/lib/tenant-policy/`, `src/app/api/tenant-policy/` | Policy persisted in `organizations.settings.budget_quota_policy`; internal enforcement endpoint |
 | Autopilot PR Bot (GitHub Webhooks) | Fully Implemented | `src/app/api/webhooks/github/`, `src/app/api/autopilot/`, `src/lib/autopilot/` | Idempotent webhook ingestion; persists deliveries in `autopilot_webhooks` |
-| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (132 files) | Browser + server clients, pgvector |
+| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (132 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |
 | Redis Caching | Fully Implemented | `src/lib/redis.ts` | Embedding cache, rate limit store |
@@ -351,6 +351,7 @@ User Request
 | Error Boundaries | Fully Implemented | `src/components/streaming/async-boundary.tsx`, `src/app/global-error.tsx` | Streaming + global |
 | Docker Self-Hosting | Fully Implemented | `Dockerfile`, `docker-compose.yml`, `deploy/` | Multi-stage build, Helm charts |
 | E2E Tests (Playwright) | Fully Implemented | `e2e/` (3 spec files), `playwright.config.ts` | Chromium + Firefox |
+| Offline Local Memory Store (CLI) | Fully Implemented | `cli/seizn/src/commands/local.ts`, `cli/seizn/src/local-store.ts` | JSONL at `~/.seizn/local/memories.jsonl` (offline-only, no API key) |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
