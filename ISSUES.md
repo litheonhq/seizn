@@ -8,7 +8,7 @@
 **날짜:** 2026-02-14  
 **증상:** `pg`로 pooler 접속 시 “self-signed certificate in certificate chain” 류의 SSL 검증 에러.  
 **원인:** 로컬 환경/체인 설정에서 pooler 인증서 검증이 엄격 모드에서 실패.  
-**해결:** 마이그레이션/인트로스펙션 같은 one-off 스크립트에서만 `ssl.rejectUnauthorized=false` 및 `NODE_TLS_REJECT_UNAUTHORIZED=0` 사용. 런타임 코드에서는 사용 금지.
+**해결:** 마이그레이션/인트로스펙션 같은 one-off 스크립트에서만 `ssl.rejectUnauthorized=false` 사용. `NODE_TLS_REJECT_UNAUTHORIZED=0`는 전역 TLS 비활성화라서 사용하지 않음. 런타임 코드에서는 사용 금지.
 
 ### autopilot_webhooks 권한 과다 노출 (RLS만으로 불충분)
 **날짜:** 2026-02-14  
@@ -22,4 +22,3 @@
 **원인:** 임시 마이그레이션 실행 편의를 위해 하드코딩된 것으로 추정.  
 **해결:** 파일을 “credential-less wrapper”로 변경하여 `.env.local`의 `POSTGRES_URL_NON_POOLING`을 사용하는 `scripts/run-migration-file.mjs`로 위임.  
 **후속 조치:** 이미 커밋/배포된 이력이 있다면 해당 비밀번호는 유출로 간주하고 즉시 회전(rotate) 권장. 히스토리 purge는 별도 승인 후 진행.
-
