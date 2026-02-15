@@ -3,6 +3,8 @@
  *
  * - No API key required
  * - Stores data under ~/.seizn/local/memories.jsonl
+ * - If SEIZN_LOCAL_ENCRYPTION_PASSPHRASE is set, memory content is encrypted at rest
+ * - Content that appears to include secrets is refused by default (override: SEIZN_LOCAL_ALLOW_SENSITIVE=1)
  *
  * Examples:
  *   seizn local save "User prefers dark mode" --type preference --tags ui
@@ -20,6 +22,7 @@ import {
   appendLocalMemory,
   clearLocalMemories,
   getLocalMemoryFilePath,
+  isLocalMemoryEncryptionEnabled,
   readLocalMemories,
   searchLocalMemories,
 } from '../local-store.js';
@@ -51,7 +54,7 @@ export function createLocalCommand(): Command {
         }
       }
 
-      const spinner = opts.quiet ? null : ora('Saving locally...').start();
+      const spinner = opts.quiet ? null : ora(`Saving locally${isLocalMemoryEncryptionEnabled() ? ' (encrypted)' : ''}...`).start();
       try {
         const entry = await appendLocalMemory({
           content,
@@ -69,6 +72,7 @@ export function createLocalCommand(): Command {
         console.log(chalk.dim(`  ID: ${entry.id}`));
         console.log(chalk.dim(`  Type: ${entry.memoryType}`));
         console.log(chalk.dim(`  Namespace: ${entry.namespace}`));
+        console.log(chalk.dim(`  Encrypted at rest: ${isLocalMemoryEncryptionEnabled() ? 'yes' : 'no'}`));
         if (entry.tags.length > 0) console.log(chalk.dim(`  Tags: ${entry.tags.join(', ')}`));
         console.log(`  ${chalk.green(entry.content.length > 100 ? entry.content.slice(0, 100) + '...' : entry.content)}`);
       } catch (error) {

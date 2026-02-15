@@ -149,6 +149,19 @@ docker-compose --profile observability up -d
 | `@seizn/summer` | npm | RAG/Document Search |
 | `@seizn/mcp-server` | npm | MCP Server for Claude |
 
+## CLI
+
+The Seizn CLI lives in `cli/seizn` and provides a `seizn` command for interacting with the platform.
+
+### Offline Local Memory (No Network)
+
+The CLI includes an **offline-only** local memory store (no API key required):
+
+- Storage: `~/.seizn/local/memories.jsonl` (JSONL)
+- Commands: `seizn local save/search/list/export/clear`
+- Encryption at rest: set `SEIZN_LOCAL_ENCRYPTION_PASSPHRASE` to encrypt `content` (AES-256-GCM)
+- Secret safety: the CLI refuses to save content that appears to include secrets by default (override: `SEIZN_LOCAL_ALLOW_SENSITIVE=1`, not recommended)
+
 ## Documentation
 
 - [Quickstart Guide](./docs/quickstart.md)
