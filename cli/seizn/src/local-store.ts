@@ -224,9 +224,18 @@ export async function readLocalMemories(): Promise<LocalMemoryEntry[]> {
           parsed?.contentEnc &&
           typeof (parsed.contentEnc as EncryptedContent).ciphertext === 'string'
         ) {
-          const contentText = passphrase
-            ? decryptContent(parsed.contentEnc as EncryptedContent, passphrase, parsed.id)
-            : '[encrypted]';
+          let contentText = '[encrypted]';
+          if (passphrase) {
+            try {
+              contentText = decryptContent(
+                parsed.contentEnc as EncryptedContent,
+                passphrase,
+                parsed.id
+              );
+            } catch {
+              contentText = '[encrypted]';
+            }
+          }
 
           entries.push({
             id: parsed.id,
