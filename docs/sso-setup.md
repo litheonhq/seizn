@@ -1,6 +1,9 @@
-# SSO/SAML Setup Guide
+# SSO Setup Guide (SAML 2.0 / OIDC)
 
-This guide explains how to configure Single Sign-On (SSO) using SAML 2.0 for enterprise authentication in Seizn.
+This guide explains how to configure Single Sign-On (SSO) for enterprise authentication in Seizn.
+
+- **SAML 2.0**: supported for enterprise SSO (recommended default).
+- **OIDC**: supported for enterprise SSO via IdP OIDC apps (validate per-IdP before GA).
 
 ## Overview
 
@@ -20,6 +23,10 @@ Seizn supports SAML 2.0 for enterprise SSO, allowing organizations to use their 
 - Admin access to your organization in Seizn
 - Admin access to your Identity Provider (IdP)
 - Verified ownership of your email domain
+- For self-hosting / non-`seizn.com` domains: set `NEXT_PUBLIC_SITE_URL` (and/or `NEXTAUTH_URL`) to your canonical base URL
+- If `signRequest` is enabled (default): configure SP key material via environment variables:
+  - `SSO_SAML_SP_PRIVATE_KEY` (required when signing AuthnRequests)
+  - `SSO_SAML_SP_PUBLIC_CERT` (optional; used for SP metadata / request signing setups)
 
 ## Setup Process
 
@@ -63,6 +70,8 @@ Download the Seizn SP (Service Provider) metadata from your connection settings,
 | NameID Format | `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` |
 
 Replace `{org-slug}` with your organization's slug.
+
+> Self-hosting: these URLs are derived from `NEXT_PUBLIC_SITE_URL` / `NEXTAUTH_URL`.
 
 #### IdP Configuration Examples
 
@@ -253,6 +262,7 @@ Content-Type: application/json
 - Check that the IdP certificate is correctly configured
 - Verify the clock is synchronized (SAML assertions are time-sensitive)
 - Check the NameID format matches
+- If AuthnRequest signing is enabled: ensure `SSO_SAML_SP_PRIVATE_KEY` is configured
 
 **"Domain not verified"**
 - Ensure DNS changes have propagated (check with `dig` or online DNS tools)
@@ -280,17 +290,17 @@ This will log detailed SAML request/response information.
 
 ## Implementation Status
 
-> **Note**: Full SAML response processing requires additional packages. The current implementation provides:
-> - SSO connection configuration and management
-> - Domain verification
-> - SP metadata generation
-> - SAML request generation (placeholder)
-> - SAML response endpoint structure
->
-> To complete the implementation, install one of:
-> - `@node-saml/node-saml`
-> - `@boxyhq/saml-jackson`
-> - `samlify`
+Seizn includes a production SAML implementation using `@node-saml/node-saml`:
+- SAML AuthnRequest redirect generation (SP-initiated)
+- SAML POST response validation (signature, audience, timestamps)
+- Replay protection (InResponseTo validation via `sso_login_attempts`)
+- Attribute mapping and JIT provisioning into `profiles` + `organization_members`
+- Auth.js (NextAuth v5) session cookie issuance at the ACS endpoint
+
+Still required before GA:
+- IdP-specific smoke tests (at least 1 IdP for SAML and 1 for OIDC)
+- Domain verification workflow validation (DNS propagation timing, failure states)
+- Operational runbook (certificate rotation, outage handling, support escalation)
 
 ## Support
 
