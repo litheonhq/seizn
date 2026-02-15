@@ -2,10 +2,12 @@ import pg from 'pg';
 import { config } from 'dotenv';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { parse as parseConnectionString } from 'pg-connection-string';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// NOTE: Avoid setting NODE_TLS_REJECT_UNAUTHORIZED=0 (global TLS disable).
+// If your DB requires relaxed verification, use the per-connection `ssl` option below.
 config({ path: resolve(__dirname, '../.env.local') });
 
 const connectionString = process.env.POSTGRES_URL_NON_POOLING;
@@ -24,7 +26,7 @@ const TABLES = [
 
 async function main() {
   const client = new pg.Client({
-    connectionString,
+    ...parseConnectionString(connectionString),
     ssl: { rejectUnauthorized: false },
   });
 

@@ -3,11 +3,13 @@ import { config } from 'dotenv';
 import { resolve, dirname, isAbsolute } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { parse as parseConnectionString } from 'pg-connection-string';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // One-off migration runner for Supabase pooler connections.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// NOTE: Avoid setting NODE_TLS_REJECT_UNAUTHORIZED=0 (global TLS disable).
+// If your DB requires relaxed verification, use the per-connection `ssl` option below.
 
 config({ path: resolve(__dirname, '../.env.local') });
 
@@ -30,7 +32,8 @@ async function run() {
   }
 
   const client = new pg.Client({
-    connectionString,
+    ...parseConnectionString(connectionString),
+    // Supabase pooler can fail strict verification on some local setups.
     ssl: { rejectUnauthorized: false },
   });
 
@@ -57,4 +60,3 @@ async function run() {
 }
 
 run();
-

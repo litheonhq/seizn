@@ -3,12 +3,14 @@ import { config } from 'dotenv';
 import { resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { parse as parseConnectionString } from 'pg-connection-string';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Supabase pooler certificates can fail strict verification on some setups.
 // This is a one-off migration script; do NOT use this pattern in app runtime.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// NOTE: Avoid setting NODE_TLS_REJECT_UNAUTHORIZED=0 (global TLS disable).
+// If your DB requires relaxed verification, use the per-connection `ssl` option below.
 
 // Load local env for DB connection (do not print secrets).
 config({ path: resolve(__dirname, '../.env.local') });
@@ -27,7 +29,7 @@ const migrationPath = resolve(
 
 async function run() {
   const client = new pg.Client({
-    connectionString,
+    ...parseConnectionString(connectionString),
     ssl: { rejectUnauthorized: false },
   });
 
