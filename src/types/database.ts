@@ -31,6 +31,12 @@ export interface Profile {
   language: SupportedLocale;
   default_region?: DataRegion | null;
 
+  // E2E Memory Encryption (confidential memories)
+  // NOTE: Salt + verification block are not secrets. PIN/key material is never stored.
+  e2e_salt?: string | null;
+  e2e_verification_block?: string | null;
+  e2e_setup_at?: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -56,6 +62,9 @@ export interface Memory {
   user_id: string;
 
   content: string;
+  // For encrypted memories, content is the placeholder "[encrypted]"
+  encrypted_content?: string | null;
+  is_encrypted?: boolean;
   embedding: number[] | null;
 
   memory_type: MemoryType;
@@ -203,7 +212,12 @@ export interface OrganizationRegionHistory {
 
 // API Request/Response types
 export interface AddMemoryRequest {
-  content: string;
+  // Plaintext content (required when is_encrypted is false/omitted)
+  content?: string;
+  // Base64 ciphertext (required when is_encrypted is true)
+  encrypted_content?: string;
+  // When true, server stores ciphertext only and skips embeddings/dedup/optimization
+  is_encrypted?: boolean;
   memory_type?: MemoryType;
   tags?: string[];
   namespace?: string;

@@ -82,7 +82,8 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   }
 
   // 4. Additional validation: content must not be empty after trim
-  if (body.content.trim().length === 0) {
+  const content = body.content ?? '';
+  if (content.trim().length === 0) {
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
       400
@@ -106,7 +107,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   // 6. Create embedding for the memory content
   let embedding: number[];
   try {
-    embedding = await createEmbedding(body.content);
+    embedding = await createEmbedding(content);
   } catch (error) {
     console.error(`[${traceId}] Embedding error:`, error);
     await logRequest(
@@ -124,7 +125,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     .from('memories')
     .insert({
       user_id: userId,
-      content: body.content,
+      content,
       embedding: embedding,
       memory_type: body.memory_type || 'fact',
       tags: body.tags || [],
@@ -152,7 +153,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   await logRequest(
     { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
     200,
-    { embedding: body.content.length }
+    { embedding: content.length }
   );
 
   // 9. Return success response

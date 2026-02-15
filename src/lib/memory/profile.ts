@@ -101,6 +101,7 @@ export async function generateProfileCard(
     .eq('user_id', userId)
     .eq('namespace', namespace)
     .eq('is_deleted', false)
+    .eq('is_encrypted', false)
     .order('importance', { ascending: false })
     .order('created_at', { ascending: false })
     .limit(maxMemories);
@@ -277,7 +278,8 @@ export async function profileNeedsUpdate(
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId)
     .eq('namespace', namespace)
-    .eq('is_deleted', false);
+    .eq('is_deleted', false)
+    .eq('is_encrypted', false);
 
   if (!profile) {
     // No profile exists, needs creation

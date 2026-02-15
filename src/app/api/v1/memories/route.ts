@@ -58,6 +58,7 @@ import { emitWebhookEvent } from '@/lib/webhook-emit';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
+const ENCRYPTED_PLACEHOLDER = '[encrypted]';
 
 /**
  * Resolve userId from API key auth or session auth.
@@ -91,56 +92,85 @@ export async function POST(request: NextRequest) {
 
     const { userId, keyId } = result;
     const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
+    const isEncrypted = (body as unknown as Record<string, unknown>).is_encrypted === true;
+    const encryptedContent = body.encrypted_content;
 
-    if (!body.content || body.content.trim().length === 0) {
-      if (keyId) {
-        await logRequest(
-          { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
-          400
-        );
-      }
-      return ValidationErrors.missingField('content');
-    }
-
-    const supabase = createServerClient();
-    const embedding = await createEmbedding(body.content);
-    const namespace = body.namespace || 'default';
-
-    // Dedup check (opt-out with dedup=false)
-    const dedupEnabled = (body as unknown as Record<string, unknown>).dedup !== false;
-    if (dedupEnabled) {
-      const duplicate = await findDuplicate(userId, embedding, namespace);
-      if (duplicate) {
+    if (isEncrypted) {
+      if (!encryptedContent || encryptedContent.trim().length === 0) {
         if (keyId) {
           await logRequest(
             { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
-            200
+            400
           );
         }
-        return NextResponse.json({
-          success: true,
-          data: {
-            memory: { id: duplicate.id, content: duplicate.content },
-            deduplicated: true,
-            similarity: duplicate.similarity,
-          },
-          meta: { ...META, latencyMs: Date.now() - startTime },
-        });
+        return ValidationErrors.missingField('encrypted_content');
+      }
+      if (encryptedContent.length > 20000) {
+        return ValidationErrors.invalidField('encrypted_content', 'Encrypted content too long');
+      }
+    } else {
+      if (!body.content || body.content.trim().length === 0) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+            400
+          );
+        }
+        return ValidationErrors.missingField('content');
+      }
+      if (body.content.length > 10000) {
+        return ValidationErrors.invalidField('content', 'Content too long (max 10,000 chars)');
+      }
+    }
+
+    const supabase = createServerClient();
+    const namespace = body.namespace || 'default';
+
+    // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
+    const sanitizedContent = (body.content || '').replace(/\x00/g, '');
+
+    // Dedup check (opt-out with dedup=false)
+    let embedding: number[] | null = null;
+    if (!isEncrypted) {
+      embedding = await createEmbedding(sanitizedContent);
+
+      const dedupEnabled = (body as unknown as Record<string, unknown>).dedup !== false;
+      if (dedupEnabled) {
+        const duplicate = await findDuplicate(userId, embedding, namespace);
+        if (duplicate) {
+          if (keyId) {
+            await logRequest(
+              { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+              200
+            );
+          }
+          return NextResponse.json({
+            success: true,
+            data: {
+              memory: { id: duplicate.id, content: duplicate.content },
+              deduplicated: true,
+              similarity: duplicate.similarity,
+            },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          });
+        }
       }
     }
 
     // Auto importance scoring (opt-in with auto_score=true)
     let importance = 5;
-    if ((body as unknown as Record<string, unknown>).auto_score === true) {
-      importance = await scoreImportance(body.content);
+    if (!isEncrypted && (body as unknown as Record<string, unknown>).auto_score === true) {
+      importance = await scoreImportance(sanitizedContent);
     }
 
     const { data: memory, error: insertError } = await supabase
       .from('memories')
       .insert({
         user_id: userId,
-        content: body.content,
-        embedding,
+        content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
+        encrypted_content: isEncrypted ? encryptedContent : null,
+        is_encrypted: isEncrypted,
+        embedding: isEncrypted ? null : embedding,
         memory_type: body.memory_type || 'fact',
         tags: body.tags || [],
         namespace,
@@ -151,7 +181,7 @@ export async function POST(request: NextRequest) {
         confidence: 1.0,
         importance,
       })
-      .select('id, content, memory_type, tags, namespace, importance, created_at')
+      .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
       .single();
 
     if (insertError) {
@@ -176,7 +206,7 @@ export async function POST(request: NextRequest) {
       await logRequest(
         { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
         200,
-        { embedding: body.content.length }
+        { embedding: isEncrypted ? 0 : sanitizedContent.length }
       );
     }
 
@@ -196,9 +226,9 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
 
-// GET /api/v1/memories — Search (with query) or Browse (without query)
+// GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
@@ -209,7 +239,7 @@ export async function GET(request: NextRequest) {
     const { userId, keyId } = result;
     const { searchParams } = new URL(request.url);
 
-    // ── Common params ──
+    // Common params
     const query = searchParams.get('query');
     const { limit, offset } = parsePagination(searchParams, { limit: 20 });
     const namespace = searchParams.get('namespace') || 'default';
@@ -225,9 +255,9 @@ export async function GET(request: NextRequest) {
       : 'created_at';
     const order = searchParams.get('order') === 'asc' ? true : false; // ascending?
 
-    // ══════════════════════════════════════════════
-    // BROWSE MODE — no query, return paginated list
-    // ══════════════════════════════════════════════
+    // ----------------------------------------------
+    // BROWSE MODE - no query, return paginated list
+    // ----------------------------------------------
     if (!query) {
       const supabase = createServerClient();
 
@@ -295,9 +325,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // ══════════════════════════════════════════════
-    // SEARCH MODE — query provided
-    // ══════════════════════════════════════════════
+    // ----------------------------------------------
+    // SEARCH MODE - query provided
+    // ----------------------------------------------
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
 
