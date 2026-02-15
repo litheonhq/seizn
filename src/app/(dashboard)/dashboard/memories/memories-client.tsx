@@ -2,6 +2,10 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import type { PinDialogMode } from "@/components/memories/pin-dialog";
+import { PinDialog } from "@/components/memories/pin-dialog";
+import { LockedMemoryCard } from "@/components/memories/locked-memory-card";
+import { secureMemory } from "@/lib/memory/secure-memory-client";
 
 // ============================================
 // Types
@@ -10,6 +14,8 @@ import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 interface Memory {
   id: string;
   content: string;
+  encrypted_content?: string | null;
+  is_encrypted?: boolean;
   memory_type: string;
   tags: string[];
   namespace: string;
@@ -153,6 +159,15 @@ export default function MemoriesClient() {
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [offset, setOffset] = useState(0);
 
+  // E2E encryption UI state (client-side only, never persisted)
+  const [e2eLoading, setE2eLoading] = useState(true);
+  const [hasE2ESetup, setHasE2ESetup] = useState(false);
+  const [isE2EUnlocked, setIsE2EUnlocked] = useState(secureMemory.isUnlocked);
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [pinDialogMode, setPinDialogMode] = useState<PinDialogMode>("unlock");
+  const [decryptedById, setDecryptedById] = useState<Record<string, string>>({});
+  const [decryptErrorById, setDecryptErrorById] = useState<Record<string, string>>({});
+
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [namespace, setNamespace] = useState("default");
@@ -181,6 +196,35 @@ export default function MemoriesClient() {
       })
       .catch(() => { /* ignore */ });
   }, []);
+
+  // Fetch E2E setup status on mount
+  const refreshE2E = useCallback(async () => {
+    setE2eLoading(true);
+    const material = await secureMemory.getSetupMaterial();
+    setHasE2ESetup(Boolean(material?.hasSetup));
+    setE2eLoading(false);
+  }, []);
+
+  useEffect(() => {
+    void refreshE2E();
+  }, [refreshE2E]);
+
+  const openPinSetup = () => {
+    setPinDialogMode("setup");
+    setPinDialogOpen(true);
+  };
+
+  const openPinUnlock = () => {
+    setPinDialogMode("unlock");
+    setPinDialogOpen(true);
+  };
+
+  const lockEncryptedMemories = () => {
+    secureMemory.lock();
+    setIsE2EUnlocked(false);
+    setDecryptedById({});
+    setDecryptErrorById({});
+  };
 
   // Fetch memories
   const fetchMemories = useCallback(async (resetOffset = true) => {
@@ -247,6 +291,47 @@ export default function MemoriesClient() {
     fetchMemories(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery, selectedTags, selectedTypes, namespace, sortOption, afterDate, beforeDate]);
+
+  // Decrypt encrypted memories in the current page (lazy, per-memory).
+  // NOTE: decrypted content lives only in React state; lock() clears it.
+  useEffect(() => {
+    if (!isE2EUnlocked) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      const updates: Record<string, string> = {};
+      const errors: Record<string, string> = {};
+
+      for (const m of memories) {
+        if (m.is_encrypted !== true) continue;
+        if (!m.encrypted_content) continue;
+        if (decryptedById[m.id] || decryptErrorById[m.id]) continue;
+
+        try {
+          const plaintext = await secureMemory.decryptFromStorage(m.encrypted_content);
+          if (cancelled) return;
+          updates[m.id] = plaintext;
+        } catch {
+          errors[m.id] = "decrypt_failed";
+        }
+      }
+
+      if (cancelled) return;
+      if (Object.keys(updates).length > 0) {
+        setDecryptedById((prev) => ({ ...prev, ...updates }));
+      }
+      if (Object.keys(errors).length > 0) {
+        setDecryptErrorById((prev) => ({ ...prev, ...errors }));
+      }
+    };
+
+    void run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [decryptedById, decryptErrorById, isE2EUnlocked, memories]);
 
   // Load more
   const loadMore = () => {
@@ -338,6 +423,42 @@ export default function MemoriesClient() {
           <div className="text-right">
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.memoriesPage.totalMemories") || "Total Memories"}</p>
+
+            <div className="mt-3 flex items-center justify-end gap-2">
+              {e2eLoading ? (
+                <div className="h-9 w-28 rounded-xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
+              ) : !hasE2ESetup ? (
+                <button
+                  type="button"
+                  onClick={openPinSetup}
+                  className="px-4 py-2 text-sm rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium hover:from-teal-600 hover:to-cyan-600 transition-colors"
+                >
+                  Set up PIN
+                </button>
+              ) : isE2EUnlocked ? (
+                <button
+                  type="button"
+                  onClick={lockEncryptedMemories}
+                  className="px-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Lock
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openPinUnlock}
+                  className="px-4 py-2 text-sm rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium hover:from-teal-600 hover:to-cyan-600 transition-colors"
+                >
+                  Unlock
+                </button>
+              )}
+            </div>
+
+            {hasE2ESetup && !isE2EUnlocked && (
+              <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                Encrypted memories are hidden until unlocked.
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -630,17 +751,54 @@ export default function MemoriesClient() {
             </div>
           ) : (
             <div className="space-y-3">
-              {memories.map((memory) => (
-                <div
-                  key={memory.id}
-                  className="glass-card rounded-2xl p-4 hover:border-teal-200 dark:hover:border-teal-700/50 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-1 min-w-0">
-                      {/* Content */}
-                      <p className="text-gray-900 dark:text-gray-100 mb-3 whitespace-pre-wrap">
-                        {memory.content}
-                      </p>
+              {memories.map((memory) => {
+                const isEncrypted = memory.is_encrypted === true && Boolean(memory.encrypted_content);
+
+                if (isEncrypted && !isE2EUnlocked) {
+                  return (
+                    <LockedMemoryCard
+                      key={memory.id}
+                      memory={{
+                        id: memory.id,
+                        memory_type: memory.memory_type,
+                        tags: memory.tags || [],
+                        created_at: memory.created_at,
+                        importance: memory.importance,
+                        source: memory.source,
+                        similarity: memory.similarity,
+                      }}
+                      onUnlockRequest={hasE2ESetup ? openPinUnlock : openPinSetup}
+                    />
+                  );
+                }
+
+                const decrypted = isEncrypted ? decryptedById[memory.id] : undefined;
+                const decryptFailed = isEncrypted ? Boolean(decryptErrorById[memory.id]) : false;
+
+                return (
+                  <div
+                    key={memory.id}
+                    className="glass-card rounded-2xl p-4 hover:border-teal-200 dark:hover:border-teal-700/50 transition-colors"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="flex-1 min-w-0">
+                        {/* Content */}
+                        <p className="text-gray-900 dark:text-gray-100 mb-3 whitespace-pre-wrap">
+                          {isEncrypted ? (
+                            decrypted ? (
+                              decrypted
+                            ) : decryptFailed ? (
+                              "[Unable to decrypt]"
+                            ) : (
+                              <span className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                                <LoadingSpinner className="w-4 h-4 text-teal-500" />
+                                Decrypting...
+                              </span>
+                            )
+                          ) : (
+                            memory.content
+                          )}
+                        </p>
 
                       {/* Metadata Row */}
                       <div className="flex flex-wrap items-center gap-3 text-xs">
@@ -648,6 +806,12 @@ export default function MemoriesClient() {
                         <span className={`px-2 py-0.5 rounded-full ${getTypeColor(memory.memory_type)}`}>
                           {memory.memory_type}
                         </span>
+
+                        {isEncrypted && (
+                          <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                            encrypted
+                          </span>
+                        )}
 
                         {/* Importance */}
                         {memory.importance != null && memory.importance !== 5 && (
@@ -695,7 +859,8 @@ export default function MemoriesClient() {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
 
@@ -720,6 +885,22 @@ export default function MemoriesClient() {
           )}
         </div>
       </div>
+
+      <PinDialog
+        isOpen={pinDialogOpen}
+        mode={pinDialogMode}
+        onClose={() => setPinDialogOpen(false)}
+        onSetupSuccess={() => {
+          setHasE2ESetup(true);
+          setIsE2EUnlocked(true);
+          setDecryptedById({});
+          setDecryptErrorById({});
+          void refreshE2E();
+        }}
+        onUnlockSuccess={() => {
+          setIsE2EUnlocked(true);
+        }}
+      />
     </div>
   );
 }

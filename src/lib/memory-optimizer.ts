@@ -7,7 +7,7 @@ interface Memory {
   id: string;
   user_id: string;
   content: string;
-  embedding: number[];
+  embedding: number[] | null;
   memory_type: string;
   importance: number;
   access_count: number;
@@ -52,6 +52,7 @@ export async function findSimilarMemories(
     .select('id, user_id, content, embedding, memory_type, importance, access_count, last_accessed_at, created_at')
     .eq('user_id', userId)
     .eq('is_deleted', false)
+    .eq('is_encrypted', false)
     .order('created_at', { ascending: false })
     .limit(500); // Limit for performance
 
@@ -65,6 +66,7 @@ export async function findSimilarMemories(
   // Compare each pair of memories
   for (let i = 0; i < memories.length; i++) {
     for (let j = i + 1; j < memories.length; j++) {
+      if (!memories[i].embedding || !memories[j].embedding) continue;
       const similarity = cosineSimilarity(
         memories[i].embedding,
         memories[j].embedding
@@ -267,6 +269,7 @@ export async function applyMemoryDecay(userId: string): Promise<number> {
     .select('id, importance, access_count, last_accessed_at, created_at')
     .eq('user_id', userId)
     .eq('is_deleted', false)
+    .eq('is_encrypted', false)
     .lt('last_accessed_at', cutoffDate.toISOString())
     .gt('importance', 1); // Don't decay already-low importance
 
@@ -284,7 +287,8 @@ export async function applyMemoryDecay(userId: string): Promise<number> {
       const { error: updateError } = await supabase
         .from('memories')
         .update({ importance: newImportance })
-        .eq('id', memory.id);
+        .eq('id', memory.id)
+        .eq('is_encrypted', false);
 
       if (!updateError) {
         decayedCount++;
@@ -303,7 +307,8 @@ export async function updateImportanceScores(userId: string): Promise<number> {
     .from('memories')
     .select('id, importance, access_count, last_accessed_at, created_at')
     .eq('user_id', userId)
-    .eq('is_deleted', false);
+    .eq('is_deleted', false)
+    .eq('is_encrypted', false);
 
   if (fetchError || !memories) {
     console.error('Error fetching memories:', fetchError);
@@ -319,7 +324,8 @@ export async function updateImportanceScores(userId: string): Promise<number> {
       const { error: updateError } = await supabase
         .from('memories')
         .update({ importance: newImportance })
-        .eq('id', memory.id);
+        .eq('id', memory.id)
+        .eq('is_encrypted', false);
 
       if (!updateError) {
         updatedCount++;

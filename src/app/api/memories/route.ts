@@ -27,7 +27,9 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+
+const ENCRYPTED_PLACEHOLDER = '[encrypted]';
 
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
@@ -56,31 +58,49 @@ export async function POST(request: NextRequest) {
     }
 
     step = 'validate';
-    if (!body.content || body.content.trim().length === 0) {
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-        400
-      );
-      return ValidationErrors.missingField('content');
-    }
-    if (body.content.length > 10000) {
-      return ValidationErrors.invalidField('content', 'Content too long (max 10,000 chars)');
+    const isEncrypted = (body as unknown as Record<string, unknown>).is_encrypted === true;
+    const encryptedContent = body.encrypted_content;
+
+    if (isEncrypted) {
+      if (!encryptedContent || encryptedContent.trim().length === 0) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+          400
+        );
+        return ValidationErrors.missingField('encrypted_content');
+      }
+      if (encryptedContent.length > 20000) {
+        return ValidationErrors.invalidField('encrypted_content', 'Encrypted content too long');
+      }
+    } else {
+      if (!body.content || body.content.trim().length === 0) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+          400
+        );
+        return ValidationErrors.missingField('content');
+      }
+      if (body.content.length > 10000) {
+        return ValidationErrors.invalidField('content', 'Content too long (max 10,000 chars)');
+      }
     }
 
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
      
-    const sanitizedContent = body.content.replace(/\x00/g, '');
+    const sanitizedContent = (body.content || '').replace(/\x00/g, '');
 
     step = 'supabase_client';
     const supabase = createServerClient();
 
     step = 'embedding';
-    let embedding: number[];
-    try {
-      embedding = await createEmbedding(sanitizedContent);
-    } catch (embErr) {
-      console.error('[memory:POST] Embedding failed:', embErr instanceof Error ? embErr.message : embErr);
-      return ServerErrors.internal('embedding_failed');
+    let embedding: number[] | null = null;
+    if (!isEncrypted) {
+      try {
+        embedding = await createEmbedding(sanitizedContent);
+      } catch (embErr) {
+        console.error('[memory:POST] Embedding failed:', embErr instanceof Error ? embErr.message : embErr);
+        return ServerErrors.internal('embedding_failed');
+      }
     }
 
     step = 'insert';
@@ -88,8 +108,10 @@ export async function POST(request: NextRequest) {
       .from('memories')
       .insert({
         user_id: userId,
-        content: sanitizedContent,
-        embedding: embedding,
+        content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
+        encrypted_content: isEncrypted ? encryptedContent : null,
+        is_encrypted: isEncrypted,
+        embedding: isEncrypted ? null : embedding,
         memory_type: body.memory_type || 'fact',
         tags: body.tags || [],
         namespace: body.namespace || 'default',
@@ -100,7 +122,7 @@ export async function POST(request: NextRequest) {
         confidence: 1.0,
         importance: 5,
       })
-      .select('id, content, memory_type, tags, namespace, created_at')
+      .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
       .single();
 
     if (insertError) {
@@ -115,7 +137,7 @@ export async function POST(request: NextRequest) {
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
       200,
-      { embedding: body.content.length }
+      { embedding: isEncrypted ? 0 : sanitizedContent.length }
     );
 
     return NextResponse.json({
@@ -129,7 +151,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/memories — Search (with query) or Browse (without query)
+// GET /api/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
@@ -142,7 +164,7 @@ export async function GET(request: NextRequest) {
     const { userId, keyId } = authResult;
     const { searchParams } = new URL(request.url);
 
-    // ── Common params ──
+    // Common params
     const query = searchParams.get('query');
     const { limit, offset } = parsePagination(searchParams, { limit: 20 });
     const namespace = searchParams.get('namespace') || 'default';
@@ -156,9 +178,9 @@ export async function GET(request: NextRequest) {
       : 'created_at';
     const orderAsc = searchParams.get('order') === 'asc';
 
-    // ══════════════════════════════════════════════
-    // BROWSE MODE — no query, return paginated list
-    // ══════════════════════════════════════════════
+    // ----------------------------------------------
+    // BROWSE MODE - no query, return paginated list
+    // ----------------------------------------------
     if (!query) {
       const supabase = createServerClient();
 
@@ -212,9 +234,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // ══════════════════════════════════════════════
-    // SEARCH MODE — query provided
-    // ══════════════════════════════════════════════
+    // ----------------------------------------------
+    // SEARCH MODE - query provided
+    // ----------------------------------------------
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
 
