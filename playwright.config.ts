@@ -1,5 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+let devPort = '3000';
+try {
+  devPort = new URL(baseURL).port || '3000';
+} catch {
+  // Keep default if PLAYWRIGHT_BASE_URL is malformed.
+}
+
 /**
  * Playwright E2E Test Configuration
  * Supports Linux/macOS/Windows with Chromium and Firefox
@@ -18,7 +26,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -58,8 +66,8 @@ export default defineConfig({
 
   // Local development server
   webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
+    command: `npm run dev -- --port ${devPort}`,
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },

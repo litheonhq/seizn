@@ -109,7 +109,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Tool | Version | Scope |
 |------|---------|-------|
 | Vitest | ^4.0.17 | Unit + integration tests (`src/__tests__/`) |
-| Playwright | ^1.57.0 | E2E tests (`e2e/`): core pages, API keys, Spring memory CRUD |
+| Playwright | ^1.57.0 | E2E tests (`e2e/`): core pages, API keys, Spring memory CRUD, dashboard smoke |
 | @testing-library/react | ^16.3.1 | Component testing |
 | Lighthouse CI | ^0.14.0 | Performance auditing |
 | Custom Red Team | -- | `scripts/red-team-ci.ts` for prompt injection/jailbreak testing |

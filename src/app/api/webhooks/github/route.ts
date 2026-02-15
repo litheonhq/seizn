@@ -21,6 +21,7 @@ import { createServerClient } from '@/lib/supabase';
 import { createCodeFixer, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { AutopilotConfig, PRStatus, WebhookPayload, GitHubWebhookEvent } from '@/lib/autopilot';
 import { extractCheckSuiteHeadBranch, extractCheckSuitePRNumbers } from '@/lib/autopilot/github-webhook';
+import { matchesRepoFullName } from '@/lib/autopilot/github-webhook-reconcile';
 
 // Webhook secret from environment
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
@@ -55,42 +56,6 @@ function verifySignature(payload: string, signature: string): boolean {
   } catch {
     return false;
   }
-}
-
-function extractRepoFullNameFromUrl(url: string): string | null {
-  const uiMatch = /github\.com\/([^/]+\/[^/]+)\/pull\//i.exec(url);
-  if (uiMatch?.[1]) {
-    return uiMatch[1];
-  }
-
-  const apiMatch = /api\.github\.com\/repos\/([^/]+\/[^/]+)\/pulls\//i.exec(url);
-  if (apiMatch?.[1]) {
-    return apiMatch[1];
-  }
-
-  return null;
-}
-
-function matchesRepoFullName(prData: Record<string, unknown>, repoFullName: string): boolean {
-  const context = prData.context as Record<string, unknown> | undefined;
-  const metadata = context?.metadata as Record<string, unknown> | undefined;
-  const metaRepo = metadata?.repoFullName;
-  if (typeof metaRepo === 'string' && metaRepo.trim().toLowerCase() === repoFullName.toLowerCase()) {
-    return true;
-  }
-
-  const urlFields = ['external_pr_url', 'pr_url', 'externalPrUrl', 'prUrl'] as const;
-  for (const field of urlFields) {
-    const value = prData[field];
-    if (typeof value !== 'string' || !value) continue;
-
-    const extracted = extractRepoFullNameFromUrl(value);
-    if (extracted && extracted.toLowerCase() === repoFullName.toLowerCase()) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 async function findAutopilotPrByNumber(

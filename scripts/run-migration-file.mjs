@@ -1,0 +1,60 @@
+import pg from 'pg';
+import { config } from 'dotenv';
+import { resolve, dirname, isAbsolute } from 'path';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// One-off migration runner for Supabase pooler connections.
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+config({ path: resolve(__dirname, '../.env.local') });
+
+const connectionString = process.env.POSTGRES_URL_NON_POOLING;
+if (!connectionString) {
+  console.error('POSTGRES_URL_NON_POOLING not set');
+  process.exit(1);
+}
+
+function resolveMigrationPath(arg) {
+  if (!arg) return null;
+  return isAbsolute(arg) ? arg : resolve(process.cwd(), arg);
+}
+
+async function run() {
+  const target = resolveMigrationPath(process.argv[2]);
+  if (!target) {
+    console.error('Usage: node scripts/run-migration-file.mjs <path-to-sql>');
+    process.exit(1);
+  }
+
+  const client = new pg.Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false },
+  });
+
+  try {
+    await client.connect();
+    const sql = readFileSync(target, 'utf8');
+
+    console.log(`Applying SQL: ${target}`);
+    await client.query('BEGIN');
+    await client.query(sql);
+    await client.query('COMMIT');
+    console.log('Done.');
+  } catch (err) {
+    try {
+      await client.query('ROLLBACK');
+    } catch {
+      // ignore
+    }
+    console.error('Failed:', err?.message || err);
+    process.exitCode = 1;
+  } finally {
+    await client.end();
+  }
+}
+
+run();
+
