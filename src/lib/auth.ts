@@ -87,9 +87,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        // Verify Turnstile CAPTCHA if configured and token provided
-        if (TURNSTILE_SECRET_KEY && credentials.turnstileToken) {
-          const isValidCaptcha = await verifyTurnstileToken(credentials.turnstileToken as string);
+        // Verify Turnstile CAPTCHA if configured.
+        if (TURNSTILE_SECRET_KEY) {
+          const token = typeof credentials.turnstileToken === 'string' ? credentials.turnstileToken : '';
+          if (!token) {
+            throw new Error('CAPTCHA verification required');
+          }
+
+          const isValidCaptcha = await verifyTurnstileToken(token);
           if (!isValidCaptcha) {
             throw new Error('CAPTCHA verification failed');
           }

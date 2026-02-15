@@ -80,9 +80,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify Turnstile CAPTCHA (if configured)
-    if (TURNSTILE_SECRET_KEY && turnstileToken) {
-      const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
-                 request.headers.get('x-real-ip') || undefined;
+    if (TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return NextResponse.json(
+          { error: 'CAPTCHA verification required. Please try again.' },
+          { status: 400 }
+        );
+      }
+
+      const ip =
+        request.headers.get('x-forwarded-for')?.split(',')[0] ||
+        request.headers.get('x-real-ip') ||
+        undefined;
       const isValidCaptcha = await verifyTurnstileToken(turnstileToken, ip);
       if (!isValidCaptcha) {
         return NextResponse.json(

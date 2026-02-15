@@ -18,6 +18,7 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(error);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token);
@@ -206,7 +207,7 @@ export default function LoginForm() {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || (turnstileRequired && !turnstileToken)}
               className="w-full py-3.5 btn-premium bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
             >
               {isLoading ? (
