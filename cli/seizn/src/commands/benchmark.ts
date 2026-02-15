@@ -23,7 +23,7 @@ export function createBenchmarkCommand(): Command {
     .option('--top-k <n>', 'Results per query', '10')
     .option('--modes <modes>', 'Comma-separated search modes', 'vector,hybrid,keyword')
     .option('--queries <queries>', 'Custom queries (comma-separated)')
-    .action(async (opts) => {
+    .action(async (opts: any) => {
       const client = createCLIClient();
       const modes = opts.modes.split(',');
       const queries = opts.queries ? opts.queries.split(',') : BENCHMARK_QUERIES;

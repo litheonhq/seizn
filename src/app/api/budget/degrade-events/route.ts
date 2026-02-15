@@ -34,6 +34,18 @@ export async function GET(request: NextRequest) {
       .range(offset, offset + limit - 1);
 
     if (error) {
+      // PGRST205: table does not exist (dev DB not migrated yet)
+      if (error.code === "PGRST205") {
+        return successResponse({
+          events: [],
+          pagination: {
+            total: 0,
+            limit,
+            offset,
+            hasMore: false,
+          },
+        }, context);
+      }
       console.error("Failed to fetch degrade events:", error);
       return errorResponse({ code: "SEIZN_405", message: "Failed to fetch events", status: 500 }, context);
     }

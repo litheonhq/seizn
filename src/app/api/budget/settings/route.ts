@@ -6,6 +6,7 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
+import { DEFAULT_BUDGET_SETTINGS } from "@/lib/budget-planner/types";
 
 /**
  * GET /api/budget/settings
@@ -23,25 +24,27 @@ export async function GET() {
     const supabase = createServerClient();
 
     const { data, error } = await supabase
-      .from("budget_settings")
-      .select("*")
+      .from("retrieval_budgets")
+      .select("daily_budget_usd, monthly_budget_usd, per_query_max_usd, alert_at_percent, mode, fallback_strategy")
       .eq("user_id", session.user.id)
       .single();
 
-    if (error && error.code !== "PGRST116") {
+    // PGRST116: "No rows found". PGRST205: "Table not found" (dev DB not migrated yet).
+    if (error && error.code !== "PGRST116" && error.code !== "PGRST205") {
       console.error("Failed to fetch budget settings:", error);
       return errorResponse({ code: "SEIZN_405", message: "Failed to fetch settings", status: 500 }, context);
     }
 
-    // Return default settings if not set
-    const settings = data || {
-      dailyBudgetUsd: 10.0,
-      monthlyBudgetUsd: 100.0,
-      perQueryMaxUsd: 0.05,
-      alertAtPercent: 80,
-      mode: "soft",
-      fallbackStrategy: "degrade",
-    };
+    const settings = data
+      ? {
+        dailyBudgetUsd: data.daily_budget_usd ?? DEFAULT_BUDGET_SETTINGS.dailyBudgetUsd,
+        monthlyBudgetUsd: data.monthly_budget_usd ?? DEFAULT_BUDGET_SETTINGS.monthlyBudgetUsd,
+        perQueryMaxUsd: data.per_query_max_usd ?? DEFAULT_BUDGET_SETTINGS.perQueryMaxUsd,
+        alertAtPercent: data.alert_at_percent ?? DEFAULT_BUDGET_SETTINGS.alertAtPercent,
+        mode: data.mode ?? DEFAULT_BUDGET_SETTINGS.mode,
+        fallbackStrategy: data.fallback_strategy ?? DEFAULT_BUDGET_SETTINGS.fallbackStrategy,
+      }
+      : DEFAULT_BUDGET_SETTINGS;
 
     return successResponse({ settings }, context);
   } catch (error) {
@@ -97,7 +100,7 @@ export async function PUT(request: NextRequest) {
 
     // Upsert settings
     const { error } = await supabase
-      .from("budget_settings")
+      .from("retrieval_budgets")
       .upsert(
         {
           user_id: session.user.id,

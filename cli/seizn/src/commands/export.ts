@@ -22,7 +22,7 @@ export function createExportCommand(): Command {
     .option('-n, --namespace <ns>', 'Filter by namespace')
     .option('-t, --type <type>', 'Filter by memory type')
     .option('-l, --limit <n>', 'Maximum memories', '10000')
-    .action(async (opts) => {
+    .action(async (opts: any) => {
       const spinner = ora('Exporting memories...').start();
       try {
         const client = createCLIClient();
@@ -52,7 +52,7 @@ export function createExportCommand(): Command {
     .command('load <file>')
     .description('Import memories from a file')
     .option('--skip-duplicates', 'Skip duplicate memories', true)
-    .action(async (file: string, opts) => {
+    .action(async (file: string, opts: any) => {
       const spinner = ora('Importing memories...').start();
       try {
         const client = createCLIClient();

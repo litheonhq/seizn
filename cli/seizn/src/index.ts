@@ -21,6 +21,7 @@ import { createMigrateCommand } from './commands/migrate.js';
 import { createBenchmarkCommand } from './commands/benchmark.js';
 import { createConfigCommand } from './commands/config.js';
 import { createSaveCommand } from './commands/save.js';
+import { createLocalCommand } from './commands/local.js';
 
 const program = new Command();
 
@@ -30,6 +31,7 @@ program
   .version('0.1.0');
 
 program.addCommand(createSaveCommand());
+program.addCommand(createLocalCommand());
 program.addCommand(createMemoryCommand());
 program.addCommand(createSearchCommand());
 program.addCommand(createExportCommand());
@@ -37,4 +39,4 @@ program.addCommand(createMigrateCommand());
 program.addCommand(createBenchmarkCommand());
 program.addCommand(createConfigCommand());
 
-program.parse();
+program.parse(process.argv);

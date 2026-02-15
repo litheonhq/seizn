@@ -21,7 +21,7 @@ export function createMigrateCommand(): Command {
     .requiredOption('--api-key <key>', 'Mem0 API key')
     .option('--base-url <url>', 'Mem0 API base URL', 'https://api.mem0.ai/v1')
     .option('-n, --namespace <ns>', 'Target namespace', 'default')
-    .action(async (opts) => {
+    .action(async (opts: any) => {
       const spinner = ora('Fetching memories from Mem0...').start();
       try {
         // Fetch from Mem0
@@ -65,7 +65,7 @@ export function createMigrateCommand(): Command {
     .command('json <file>')
     .description('Migrate from a JSON file')
     .option('-n, --namespace <ns>', 'Target namespace', 'default')
-    .action(async (file: string, opts) => {
+    .action(async (file: string, opts: any) => {
       const spinner = ora('Importing from JSON...').start();
       try {
         const client = createCLIClient();
@@ -98,7 +98,7 @@ export function createMigrateCommand(): Command {
     .option('-n, --namespace <ns>', 'Target namespace', 'default')
     .option('--content-col <col>', 'Content column name', 'content')
     .option('--type-col <col>', 'Type column name', 'type')
-    .action(async (file: string, opts) => {
+    .action(async (file: string, opts: any) => {
       const spinner = ora('Importing from CSV...').start();
       try {
         const client = createCLIClient();

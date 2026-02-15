@@ -21,7 +21,7 @@ export function createSaveCommand(): Command {
     .option('--tags <tags>', 'Comma-separated tags')
     .option('-n, --namespace <ns>', 'Namespace', 'default')
     .option('-q, --quiet', 'Quiet mode: print only the memory ID')
-    .action(async (content: string, opts) => {
+    .action(async (content: string, opts: any) => {
       // Read from stdin if content is "-"
       if (content === '-') {
         content = await readStdin();
@@ -77,7 +77,7 @@ function readStdin(): Promise<string> {
   return new Promise((resolve) => {
     const chunks: string[] = [];
     process.stdin.setEncoding('utf8');
-    process.stdin.on('data', (chunk) => chunks.push(chunk));
+    process.stdin.on('data', (chunk) => chunks.push(String(chunk)));
     process.stdin.on('end', () => resolve(chunks.join('')));
     process.stdin.resume();
   });
