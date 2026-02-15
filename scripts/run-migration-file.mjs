@@ -3,7 +3,6 @@ import { config } from 'dotenv';
 import { resolve, dirname, isAbsolute } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { parse as parseConnectionString } from 'pg-connection-string';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -19,6 +18,19 @@ if (!connectionString) {
   process.exit(1);
 }
 
+function pgConfigFromConnectionString(cs) {
+  const url = new URL(cs);
+  const database = url.pathname?.replace(/^\//, '') || undefined;
+
+  return {
+    user: decodeURIComponent(url.username || ''),
+    password: decodeURIComponent(url.password || ''),
+    host: url.hostname,
+    port: url.port ? Number(url.port) : undefined,
+    database,
+  };
+}
+
 function resolveMigrationPath(arg) {
   if (!arg) return null;
   return isAbsolute(arg) ? arg : resolve(process.cwd(), arg);
@@ -32,7 +44,7 @@ async function run() {
   }
 
   const client = new pg.Client({
-    ...parseConnectionString(connectionString),
+    ...pgConfigFromConnectionString(connectionString),
     // Supabase pooler can fail strict verification on some local setups.
     ssl: { rejectUnauthorized: false },
   });

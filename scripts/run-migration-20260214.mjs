@@ -3,7 +3,6 @@ import { config } from 'dotenv';
 import { resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { parse as parseConnectionString } from 'pg-connection-string';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -27,9 +26,22 @@ const migrationPath = resolve(
   '../supabase/migrations/20260214_autopilot_prbot_schema.sql'
 );
 
+function pgConfigFromConnectionString(cs) {
+  const url = new URL(cs);
+  const database = url.pathname?.replace(/^\//, '') || undefined;
+
+  return {
+    user: decodeURIComponent(url.username || ''),
+    password: decodeURIComponent(url.password || ''),
+    host: url.hostname,
+    port: url.port ? Number(url.port) : undefined,
+    database,
+  };
+}
+
 async function run() {
   const client = new pg.Client({
-    ...parseConnectionString(connectionString),
+    ...pgConfigFromConnectionString(connectionString),
     ssl: { rejectUnauthorized: false },
   });
 
