@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 139 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 140 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -328,7 +328,7 @@ User Request
 | Enterprise SSO (SAML + OIDC) | Partially Implemented | `src/lib/sso/`, `src/app/api/sso/`, `src/app/api/auth/oidc/` | Org-scoped SSO connections, SAML ACS + OIDC callback; validate with each IdP before GA |
 | Tenant Policy (Budget & Cost Controls) | Fully Implemented | `src/lib/tenant-policy/`, `src/app/api/tenant-policy/` | Policy persisted in `organizations.settings.budget_quota_policy`; internal enforcement endpoint |
 | Autopilot PR Bot (GitHub Webhooks) | Fully Implemented | `src/app/api/webhooks/github/`, `src/app/api/autopilot/`, `src/lib/autopilot/` | Idempotent webhook ingestion; persists deliveries in `autopilot_webhooks` |
-| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (139 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
+| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (140 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
 | E2E Confidential Memory Encryption | Fully Implemented | `src/lib/memory/encryption.ts`, `src/lib/memory/secure-memory-client.ts`, `src/app/api/profile/e2e/`, `src/app/api/v1/memories/` | Opt-in: `content` placeholder + ciphertext storage. Encrypted memories excluded from search/embedding/optimizer. Key never persisted; PIN loss is irreversible. |
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |
