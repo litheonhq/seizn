@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+const disableTurnstile = process.env.PLAYWRIGHT_DISABLE_TURNSTILE === '1';
 let devPort = '3000';
 try {
   devPort = new URL(baseURL).port || '3000';
@@ -68,7 +69,15 @@ export default defineConfig({
   webServer: process.env.CI ? undefined : {
     command: `npm run dev -- --port ${devPort}`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    // When disabling Turnstile, we must start a fresh server with the overridden env.
+    reuseExistingServer: !process.env.CI && !disableTurnstile,
     timeout: 120 * 1000,
+    env: disableTurnstile
+      ? {
+          // Ensure Next.js does not load the values from `.env.local` (dotenv does not override existing keys).
+          TURNSTILE_SECRET_KEY: '',
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: '',
+        }
+      : undefined,
   },
 });
