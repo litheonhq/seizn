@@ -13,12 +13,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Dashboard Smoke (Authenticated)', () => {
   const hasCreds = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
+  const allowAutoProvision =
+    process.env.PLAYWRIGHT_DISABLE_TURNSTILE === '1' || process.env.E2E_ALLOW_AUTO_PROVISION === '1';
+
+  test.skip(
+    !hasCreds && !allowAutoProvision,
+    'Requires TEST_USER_EMAIL/TEST_USER_PASSWORD (or enable auto-provision with PLAYWRIGHT_DISABLE_TURNSTILE=1)'
+  );
   const runId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   const email = process.env.TEST_USER_EMAIL || `e2e+${runId}@example.com`;
   const password = process.env.TEST_USER_PASSWORD || `E2E!${runId}Aa`;
 
   test.beforeAll(async ({ request }) => {
-    if (hasCreds) return;
+    if (hasCreds || !allowAutoProvision) return;
 
     const res = await request.post('/api/auth/signup', {
       data: {
