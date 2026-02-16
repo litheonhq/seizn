@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import {
+  canUseEncryptedMemories,
+  getEncryptedMemoryPlanError,
+} from '@/lib/memory/entitlements';
 
 type E2EProfileRow = {
   e2e_salt: string | null;
@@ -93,14 +97,8 @@ export async function PUT(request: NextRequest) {
   const plan = existingRow?.plan || 'free';
   const hasExisting = Boolean(existingRow?.e2e_salt && existingRow?.e2e_verification_block);
 
-  if (plan === 'free') {
-    return NextResponse.json(
-      {
-        error: 'E2E setup is available on Starter plan or above.',
-        required_plan: 'starter',
-      },
-      { status: 403 }
-    );
+  if (!canUseEncryptedMemories(plan)) {
+    return NextResponse.json(getEncryptedMemoryPlanError(), { status: 403 });
   }
 
   if (hasExisting && !rotate) {

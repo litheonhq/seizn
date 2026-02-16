@@ -385,10 +385,10 @@ export default function WebhooksClient() {
             webhooks.map((webhook) => (
               <div
                 key={webhook.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                         {webhook.name}
@@ -410,7 +410,7 @@ export default function WebhooksClient() {
                         </span>
                       ))}
                     </div>
-                    <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-500 dark:text-gray-400 sm:flex sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-1">
                       <span className="flex items-center gap-1">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -424,13 +424,13 @@ export default function WebhooksClient() {
                         {webhook.failure_count} {t("dashboard.webhooks.failed")}
                       </span>
                       {webhook.last_triggered && (
-                        <span>
+                        <span className="col-span-2">
                           {t("dashboard.webhooks.lastTriggered")}: {formatDate(webhook.last_triggered)}
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between gap-2 border-t border-gray-200 pt-3 dark:border-gray-700 sm:border-0 sm:pt-0 sm:justify-end">
                     <button
                       onClick={() => handleToggleWebhook(webhook)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -443,30 +443,32 @@ export default function WebhooksClient() {
                         }`}
                       />
                     </button>
-                    <button
-                      onClick={() => {
-                        setEditingWebhook(webhook);
-                        setFormName(webhook.name);
-                        setFormUrl(webhook.url);
-                        setFormEvents(webhook.events);
-                        setShowCreateModal(true);
-                      }}
-                      className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                      title={t("dashboard.webhooks.edit")}
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDeleteWebhook(webhook.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
-                      title={t("dashboard.webhooks.delete")}
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingWebhook(webhook);
+                          setFormName(webhook.name);
+                          setFormUrl(webhook.url);
+                          setFormEvents(webhook.events);
+                          setShowCreateModal(true);
+                        }}
+                        className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        title={t("dashboard.webhooks.edit")}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteWebhook(webhook.id)}
+                        className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                        title={t("dashboard.webhooks.delete")}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -477,9 +479,44 @@ export default function WebhooksClient() {
 
       {/* Deliveries List */}
       {activeTab === "deliveries" && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px]">
+        <div className="space-y-4">
+          <div className="sm:hidden space-y-3">
+            {deliveries.map((delivery) => (
+              <div
+                key={delivery.id}
+                className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{delivery.event}</span>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(delivery.status)}`}>
+                    {delivery.status}
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                  <div>{formatDate(delivery.created_at)}</div>
+                  <div>
+                    {delivery.response_code && (
+                      <span className={delivery.response_code < 400 ? "text-green-600" : "text-red-600"}>
+                        {delivery.response_code}
+                      </span>
+                    )}
+                    {delivery.response_time_ms && <span className="ml-1">({delivery.response_time_ms}ms)</span>}
+                  </div>
+                </div>
+                {delivery.status === "failed" && (
+                  <button
+                    onClick={() => handleRetryDelivery(delivery.id)}
+                    className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+                  >
+                    {t("dashboard.webhooks.retry")}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="hidden sm:block bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px]">
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -538,7 +575,8 @@ export default function WebhooksClient() {
                 </tr>
               ))}
             </tbody>
-          </table>
+              </table>
+            </div>
           </div>
         </div>
       )}

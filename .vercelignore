@@ -1,7 +1,7 @@
-# MCP Server - 별도 패키지로 독립 실행
+# Auxiliary MCP server package
 mcp-server/
 
-# Examples - 참고용 코드, 빌드 제외
+# Example projects and samples
 examples/
 
 # Development files
@@ -21,3 +21,4 @@ __tests__/
 *.test.tsx
 *.spec.ts
 *.spec.tsx
+
