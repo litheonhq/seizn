@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 // AI-powered Memory Optimization System
 // Runs silently in the background to improve memory quality
 
@@ -96,11 +97,7 @@ export async function mergeMemories(
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 256,

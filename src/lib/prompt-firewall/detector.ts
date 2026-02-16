@@ -134,7 +134,10 @@ export class PromptInjectionDetector {
    */
   private findMatches(input: string, pattern: ThreatPattern): DetectedThreat[] {
     const threats: DetectedThreat[] = [];
-    const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags + 'g');
+    const flags = pattern.pattern.flags.includes('g')
+      ? pattern.pattern.flags
+      : `${pattern.pattern.flags}g`;
+    const regex = new RegExp(pattern.pattern.source, flags);
     let match: RegExpExecArray | null;
 
     while ((match = regex.exec(input)) !== null) {

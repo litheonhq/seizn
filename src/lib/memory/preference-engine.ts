@@ -1,9 +1,10 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Implicit Preference Learning Engine (PersonaMem-v2 Pattern)
  *
  * Automatically derives user preferences from interaction patterns
  * without requiring explicit statements. Users rarely state preferences
- * directly — this engine infers them from behavior.
+ * directly ??this engine infers them from behavior.
  *
  * Preference Types:
  * - Communication style (formal/casual, verbose/concise)
@@ -117,7 +118,7 @@ const DEFAULT_ENGINE_CONFIG: PreferenceEngineConfig = {
 /**
  * Extract interaction signals from a conversation turn.
  *
- * This is the passive observation layer — it looks at what
+ * This is the passive observation layer ??it looks at what
  * the user says and how they interact without asking directly.
  */
 export function extractSignals(
@@ -320,11 +321,7 @@ export async function analyzePreferences(
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(apiKey),
       body: JSON.stringify({
         model: 'claude-3-5-haiku-20241022',
         max_tokens: 1024,

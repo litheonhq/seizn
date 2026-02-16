@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Evidence Mapper
  *
@@ -168,11 +169,7 @@ Analyze whether the evidence supports, contradicts, or is neutral to this claim.
   try {
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(apiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 2048,

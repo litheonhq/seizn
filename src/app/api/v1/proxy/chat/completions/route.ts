@@ -1,8 +1,9 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
- * Seizn Proxy — OpenAI-Compatible Chat Completions
+ * Seizn Proxy -> OpenAI-Compatible Chat Completions
  *
  * Drop-in replacement for OpenAI's /v1/chat/completions.
- * Developers change ONE line: baseURL → https://www.seizn.com/api/v1/proxy
+ * Developers change ONE line: baseURL -> https://www.seizn.com/api/v1/proxy
  *
  * What happens transparently:
  * 1. Authenticate via Seizn API key
@@ -15,9 +16,9 @@
  *
  * @example
  * ```python
- * # Python — ONE line change
+ * # Python -> ONE line change
  * client = OpenAI(
- *   base_url="https://www.seizn.com/api/v1/proxy",   # ← only change
+ *   base_url="https://www.seizn.com/api/v1/proxy",   # -> only change
  *   api_key="szn_your_key",                            # Seizn key
  *   default_headers={"x-provider-key": "sk-..."}       # Provider key
  * )
@@ -236,11 +237,7 @@ async function extractAndStoreMemories(
 
     const extractionResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(apiKey),
       body: JSON.stringify({
         model: 'claude-3-5-haiku-20241022',
         max_tokens: 512,

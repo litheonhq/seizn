@@ -1,6 +1,10 @@
 // AI Service Clients for Seizn
 
 import { getCachedEmbedding, setCachedEmbedding } from './redis';
+import {
+  buildAnthropicHeaders,
+  buildCachedSystemPrompt,
+} from './anthropic/prompt-caching';
 
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
@@ -129,15 +133,11 @@ export async function extractMemories(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 2048,
-      system: EXTRACTION_PROMPT,
+      system: buildCachedSystemPrompt(EXTRACTION_PROMPT),
       messages: [
         {
           role: 'user',
@@ -193,15 +193,11 @@ Use these memories naturally in your response when relevant. Don't explicitly me
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 1024,
-      system: systemPrompt,
+      system: buildCachedSystemPrompt(systemPrompt),
       messages: [
         { role: 'user', content: query },
       ],
@@ -311,15 +307,11 @@ export async function extractMemoriesFromImage(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 2048,
-      system: IMAGE_EXTRACTION_PROMPT,
+      system: buildCachedSystemPrompt(IMAGE_EXTRACTION_PROMPT),
       messages: [
         {
           role: 'user',
@@ -363,11 +355,7 @@ export async function describeImageForEmbedding(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 500,
@@ -470,15 +458,11 @@ export async function summarizeConversation(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 2048,
-      system: SUMMARIZATION_PROMPT,
+      system: buildCachedSystemPrompt(SUMMARIZATION_PROMPT),
       messages: [
         { role: 'user', content: userMessage },
       ],

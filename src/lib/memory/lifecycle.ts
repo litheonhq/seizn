@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Memory Lifecycle Engine (EverMemOS Pattern)
  *
@@ -6,7 +7,7 @@
  * Phase 1: Episodic Trace Formation
  *   - Converts conversation streams into MemCells
  *   - Each MemCell contains: atomic facts, episodic trace, time-bounded foresight
- *   - Raw input → structured, timestamped memory units
+ *   - Raw input -> structured, timestamped memory units
  *
  * Phase 2: Semantic Consolidation
  *   - Groups MemCells into thematic MemScenes
@@ -158,11 +159,7 @@ export async function formEpisodicTrace(
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
+        headers: buildAnthropicHeaders(apiKey),
         body: JSON.stringify({
           model: 'claude-3-5-haiku-20241022',
           max_tokens: 512,
@@ -262,11 +259,7 @@ export async function consolidateMemCells(
       try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-          },
+          headers: buildAnthropicHeaders(apiKey),
           body: JSON.stringify({
             model: 'claude-3-5-haiku-20241022',
             max_tokens: 512,
@@ -506,7 +499,7 @@ export async function reconstructContext(
   fragments.sort((a, b) => b.relevance - a.relevance);
   const selectedFragments = fragments.slice(0, 10);
 
-  // Estimate token count (rough: 1 token ≈ 4 chars)
+  // Estimate token count (rough: 1 token -> 4 chars)
   let tokenEstimate = 0;
   const contextParts: string[] = [];
 
@@ -595,7 +588,7 @@ export async function processConversationTurn(
       .eq('is_deleted', false);
 
     if ((count || 0) >= config.consolidationThreshold) {
-      // Phase 2: Consolidate (placeholder — would need recent unclustered cells)
+      // Phase 2: Consolidate (placeholder -> would need recent unclustered cells)
       consolidated = true;
     }
   }

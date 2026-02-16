@@ -669,6 +669,36 @@ const tools = [
         }
     },
     // =========================================================================
+    // MCP Sampling Tool
+    // =========================================================================
+    {
+        name: "sampling_draft",
+        description: "Draft text through MCP sampling/createMessage while signaling sampling.tools capability.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                prompt: {
+                    type: "string",
+                    description: "Prompt to send to the connected MCP client model"
+                },
+                maxTokens: {
+                    type: "number",
+                    description: "Max response tokens (64-4096, default: 400)"
+                },
+                includeSearchTool: {
+                    type: "boolean",
+                    description: "Include a Seizn search_nodes tool definition in sampling request (default: true)"
+                },
+                toolMode: {
+                    type: "string",
+                    enum: ["auto", "none", "required"],
+                    description: "Tool choice mode when includeSearchTool=true (default: none)"
+                }
+            },
+            required: ["prompt"]
+        }
+    },
+    // =========================================================================
     // Auth Tool
     // =========================================================================
     {
@@ -1279,6 +1309,119 @@ async function handleAuthLogin(force = false) {
     }
     return JSON.stringify({ success: false, error: "Authentication timed out.", instructions: message });
 }
+function renderSamplingBlock(contentBlock) {
+    if (!contentBlock || typeof contentBlock !== "object")
+        return "";
+    const block = contentBlock;
+    const type = typeof block.type === "string" ? block.type : "unknown";
+    if (type === "text" && typeof block.text === "string") {
+        return block.text;
+    }
+    if (type === "tool_use") {
+        const name = typeof block.name === "string" ? block.name : "unknown";
+        const input = block.input && typeof block.input === "object"
+            ? JSON.stringify(block.input)
+            : "{}";
+        return `[tool_use:${name}] ${input}`;
+    }
+    if (type === "tool_result") {
+        const toolUseId = typeof block.toolUseId === "string" ? block.toolUseId : "unknown";
+        return `[tool_result:${toolUseId}]`;
+    }
+    return `[${type}]`;
+}
+function renderSamplingContent(content) {
+    if (Array.isArray(content)) {
+        return content.map(renderSamplingBlock).filter(Boolean).join("\n");
+    }
+    return renderSamplingBlock(content);
+}
+async function handleSamplingDraft(server, args = {}) {
+    const prompt = (args.prompt || "").trim();
+    if (!prompt) {
+        return JSON.stringify({ success: false, error: "prompt is required" });
+    }
+    const clientCapabilities = server.getClientCapabilities();
+    if (!clientCapabilities?.sampling) {
+        return JSON.stringify({
+            success: false,
+            error: "Connected client does not advertise sampling capability",
+            hint: "Use an MCP client that supports sampling/createMessage over stdio transport.",
+        });
+    }
+    const maxTokensRaw = typeof args.maxTokens === "number" ? args.maxTokens : 400;
+    const maxTokens = Math.max(64, Math.min(4096, Math.floor(maxTokensRaw)));
+    const includeSearchTool = args.includeSearchTool !== false;
+    const toolMode = args.toolMode || "none";
+    const samplingParams = {
+        messages: [
+            {
+                role: "user",
+                content: { type: "text", text: prompt },
+            },
+        ],
+        maxTokens,
+    };
+    const searchTool = {
+        name: "search_nodes",
+        description: "Search Seizn memory graph by semantic query.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                query: { type: "string", description: "Search query string" },
+                limit: { type: "number", description: "Maximum results (default 10)" },
+            },
+            required: ["query"],
+        },
+    };
+    try {
+        const response = includeSearchTool
+            ? await server.createMessage({
+                ...samplingParams,
+                tools: [searchTool],
+                toolChoice: { mode: toolMode },
+            })
+            : await server.createMessage(samplingParams);
+        return JSON.stringify({
+            success: true,
+            usedSamplingTools: includeSearchTool,
+            toolMode: includeSearchTool ? toolMode : "none",
+            clientSupportsSamplingTools: Boolean(clientCapabilities.sampling.tools),
+            model: response.model,
+            stopReason: response.stopReason,
+            content: renderSamplingContent(response.content),
+        });
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        // Graceful fallback for clients that support sampling but not sampling.tools
+        if (includeSearchTool && message.toLowerCase().includes("sampling tools capability")) {
+            try {
+                const fallbackResponse = await server.createMessage(samplingParams);
+                return JSON.stringify({
+                    success: true,
+                    usedSamplingTools: false,
+                    fallbackWithoutTools: true,
+                    error: message,
+                    model: fallbackResponse.model,
+                    stopReason: fallbackResponse.stopReason,
+                    content: renderSamplingContent(fallbackResponse.content),
+                });
+            }
+            catch (fallbackError) {
+                const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+                return JSON.stringify({
+                    success: false,
+                    usedSamplingTools: true,
+                    fallbackWithoutTools: true,
+                    error: message,
+                    fallbackError: fallbackMessage,
+                });
+            }
+        }
+        return JSON.stringify({ success: false, error: message });
+    }
+}
 // Helper functions
 function extractEntityName(content) {
     const match = content.match(/\[.*?\]\s*(.+?)(?:\n|$)/);
@@ -1480,7 +1623,7 @@ OpenAI Codex CLI reads AGENTS.md as the primary instruction file.
 `,
 };
 // Shared tool dispatch (used by both stdio and HTTP transports)
-async function dispatchTool(name, args) {
+async function dispatchTool(name, args, server) {
     switch (name) {
         case "get_context":
             return handleGetContext(args);
@@ -1532,6 +1675,11 @@ async function dispatchTool(name, args) {
             return handleListConfigFormats();
         case "sync_config_files":
             return handleSyncConfigFiles(args);
+        case "sampling_draft":
+            if (!server) {
+                throw new Error("sampling_draft requires a connected MCP server session");
+            }
+            return handleSamplingDraft(server, args);
         // Auth tool
         case "auth_login":
             return handleAuthLogin(args?.force);
@@ -1596,7 +1744,7 @@ function registerHandlers(server) {
     server.setRequestHandler(types_js_1.CallToolRequestSchema, async (request) => {
         const { name, arguments: args } = request.params;
         try {
-            const result = await dispatchTool(name, args);
+            const result = await dispatchTool(name, args, server);
             return { content: [{ type: "text", text: result }] };
         }
         catch (error) {
@@ -1688,7 +1836,7 @@ async function main() {
                     }
                     if (body.method === 'tools/call') {
                         const { name, arguments: args } = body.params;
-                        const result = await dispatchTool(name, args);
+                        const result = await dispatchTool(name, args, server);
                         res.writeHead(200, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify({
                             jsonrpc: '2.0', id: body.id,

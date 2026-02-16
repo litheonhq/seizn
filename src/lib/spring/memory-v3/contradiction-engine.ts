@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Contradiction Engine
  *
@@ -611,11 +612,7 @@ Determine if the NEW note supersedes, contradicts, duplicates, elaborates on, or
 
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.config.anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(this.config.anthropicApiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 1024,

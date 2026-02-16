@@ -55,6 +55,24 @@ npm run start    # 프로덕션 서버
 npm run lint     # ESLint 검사
 ```
 
+## 마이그레이션 워크플로우
+
+```bash
+# 마이그레이션 적용 (verify:e2e-encryption-db 자동 실행)
+node run-migration-file.mjs <sql파일>
+
+# 검증만 단독 실행 (대시보드에서 직접 SQL 적용한 경우)
+npm run verify:e2e-encryption-db
+
+# 검증 우회 (예외적 상황만)
+SKIP_E2E_VERIFY=1 node run-migration-file.mjs <sql파일>
+```
+
+- `run-migration-file.mjs` 실행 시 `verify:e2e-encryption-db`가 자동 실행됨
+- 오버로드/RPC 누락 회귀 감지 시 exit code 1 → 마이그레이션도 실패
+- Supabase 대시보드에서 직접 SQL 적용한 경우: `npm run verify:e2e-encryption-db` 수동 1회 필수
+- DB 변경 이후마다 검증 1회 습관화 권장
+
 ## MCP 폴백 가이드
 
 Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
