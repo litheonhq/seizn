@@ -4,6 +4,7 @@
  */
 
 import { THREAT_PATTERNS, compareThreatLevel, type ThreatLevel } from './patterns';
+import { PromptInjectionDetector } from './detector';
 
 // ============================================
 // Types
@@ -124,40 +125,30 @@ export async function quickScan(input: string): Promise<boolean> {
  * Create a threat detector (synchronous version)
  */
 export function createDetector(config?: Partial<FirewallConfig>): Detector {
-  const activePatterns = THREAT_PATTERNS.filter((p) => p.enabled);
+  const mode = config?.mode === 'sanitize' ? 'sanitize' : config?.mode === 'warn' ? 'monitor' : 'block';
+  const coreDetector = new PromptInjectionDetector({
+    enabled: config?.enabled ?? true,
+    mode,
+    minThreatLevel: 'low',
+    logDetections: false,
+    alertOnCritical: true,
+  });
 
   return {
     scan: (input: string): DetectorResult => {
-      const threats: DetectorResult['threats'] = [];
-      let maxLevel: ThreatLevel = 'none';
-      let sanitizedInput = input;
-
-      for (const pattern of activePatterns) {
-        const match = input.match(pattern.pattern);
-        if (match) {
-          threats.push({
-            category: pattern.category,
-            level: pattern.level,
-            patternName: pattern.name,
-            matchedText: match[0],
-          });
-
-          if (compareThreatLevel(pattern.level, maxLevel) > 0) {
-            maxLevel = pattern.level;
-          }
-
-          // Sanitize if mode is sanitize
-          if (config?.mode === 'sanitize') {
-            sanitizedInput = sanitizedInput.replace(pattern.pattern, '[REDACTED]');
-          }
-        }
-      }
+      const result = coreDetector.scan(input);
+      const threats: DetectorResult['threats'] = result.threats.map((threat) => ({
+        category: threat.category,
+        level: threat.level,
+        patternName: threat.patternName,
+        matchedText: threat.matchedText,
+      }));
 
       return {
-        detected: threats.length > 0,
-        threatLevel: maxLevel,
+        detected: result.detected,
+        threatLevel: result.threatLevel,
         threats,
-        sanitizedInput: config?.mode === 'sanitize' ? sanitizedInput : undefined,
+        sanitizedInput: mode === 'sanitize' ? result.sanitizedInput : undefined,
       };
     },
   };

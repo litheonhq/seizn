@@ -35,6 +35,15 @@ type AutopilotPrRow = {
   context: Record<string, unknown>;
 };
 
+type WebhookProcessResult = { processed: boolean; action?: string; error?: string };
+type WebhookLockStatus = {
+  processed: boolean;
+  processed_at: string | null;
+  result: unknown;
+};
+
+const WEBHOOK_LOCK_STALE_MS = 5 * 60 * 1000;
+
 /**
  * Verify GitHub webhook signature
  */
@@ -90,6 +99,123 @@ async function findAutopilotPrByNumber(
   );
 
   return (match as AutopilotPrRow) || null;
+}
+
+async function upsertWebhookEvent(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  deliveryId: string,
+  eventType: GitHubWebhookEvent,
+  repoFullName: string,
+  webhookPayload: WebhookPayload
+): Promise<void> {
+  await supabase
+    .from('autopilot_webhooks')
+    .upsert(
+      {
+        id: deliveryId,
+        event: eventType,
+        repository: repoFullName,
+        payload: webhookPayload,
+        processed: false,
+        created_at: new Date().toISOString(),
+      },
+      { onConflict: 'id' }
+    );
+}
+
+async function claimWebhookDelivery(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  deliveryId: string
+): Promise<{ acquired: true; processorId: string } | { acquired: false; status: WebhookLockStatus | null }> {
+  const processorId = crypto.randomUUID();
+  const nowIso = new Date().toISOString();
+  const lockPayload = {
+    processed_at: nowIso,
+    result: {
+      state: 'processing',
+      processorId,
+      startedAt: nowIso,
+    },
+  };
+
+  const { data: claimedNow, error: claimErrorNow } = await supabase
+    .from('autopilot_webhooks')
+    .update(lockPayload)
+    .eq('id', deliveryId)
+    .eq('processed', false)
+    .is('processed_at', null)
+    .select('id')
+    .maybeSingle();
+
+  if (claimErrorNow) {
+    throw claimErrorNow;
+  }
+
+  if (claimedNow) {
+    return { acquired: true, processorId };
+  }
+
+  // Reclaim stale lock (worker crashed or timed out before cleanup).
+  const staleBefore = new Date(Date.now() - WEBHOOK_LOCK_STALE_MS).toISOString();
+  const { data: reclaimed, error: reclaimError } = await supabase
+    .from('autopilot_webhooks')
+    .update(lockPayload)
+    .eq('id', deliveryId)
+    .eq('processed', false)
+    .lt('processed_at', staleBefore)
+    .select('id')
+    .maybeSingle();
+
+  if (reclaimError) {
+    throw reclaimError;
+  }
+
+  if (reclaimed) {
+    return { acquired: true, processorId };
+  }
+
+  const { data: status } = await supabase
+    .from('autopilot_webhooks')
+    .select('processed, processed_at, result')
+    .eq('id', deliveryId)
+    .maybeSingle();
+
+  return {
+    acquired: false,
+    status: (status as WebhookLockStatus | null) ?? null,
+  };
+}
+
+async function finalizeWebhookDelivery(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  deliveryId: string,
+  processorId: string,
+  result: WebhookProcessResult
+): Promise<void> {
+  const nowIso = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('autopilot_webhooks')
+    .update({
+      processed: result.processed,
+      result,
+      processed_at: result.processed ? nowIso : null,
+    })
+    .eq('id', deliveryId)
+    .contains('result', { processorId })
+    .select('id')
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error(`Failed to finalize webhook delivery lock for ${deliveryId}`);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -165,68 +291,61 @@ export async function POST(request: NextRequest) {
     };
 
     const supabase = createServerClient();
+    await upsertWebhookEvent(supabase, deliveryId, eventType, repoFullName, webhookPayload);
 
-    // Idempotency: if we've already processed this delivery, return the stored result.
-    const { data: existingWebhook } = await supabase
-      .from('autopilot_webhooks')
-      .select('processed, result')
-      .eq('id', deliveryId)
-      .maybeSingle();
-
-    if (existingWebhook?.processed) {
-      return NextResponse.json({
-        success: true,
-        event: eventType,
-        deliveryId,
-        result: existingWebhook.result || { processed: true, action: 'duplicate' },
-        deduped: true,
-      });
-    }
-
-    // Store webhook event (upsert so retries don't fail on PK conflicts).
-    await supabase
-      .from('autopilot_webhooks')
-      .upsert(
-        {
-          id: deliveryId,
+    const claim = await claimWebhookDelivery(supabase, deliveryId);
+    if (!claim.acquired) {
+      if (claim.status?.processed) {
+        return NextResponse.json({
+          success: true,
           event: eventType,
-          repository: repoFullName,
-          payload: webhookPayload,
-          processed: false,
-          created_at: new Date().toISOString(),
+          deliveryId,
+          result: claim.status.result || { processed: true, action: 'duplicate' },
+          deduped: true,
+        });
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          event: eventType,
+          deliveryId,
+          result: { processed: false, action: 'in_progress' },
+          deduped: true,
         },
-        { onConflict: 'id' }
+        { status: 202 }
       );
-
-    // Handle event based on type
-    let result: { processed: boolean; action?: string; error?: string } = { processed: false };
-
-    switch (eventType) {
-      case 'pull_request':
-        result = await handlePullRequestEvent(payload, owner, repo, supabase);
-        break;
-      case 'pull_request_review':
-        result = await handlePullRequestReviewEvent(payload, owner, repo, supabase);
-        break;
-      case 'check_suite':
-        result = await handleCheckSuiteEvent(payload, owner, repo, supabase);
-        break;
-      case 'check_run':
-        result = await handleCheckRunEvent(payload, owner, repo, supabase);
-        break;
-      default:
-        result = { processed: false, action: 'ignored' };
     }
 
-    // Update webhook record
-    await supabase
-      .from('autopilot_webhooks')
-      .update({
-        processed: result.processed,
-        result: result,
-        processed_at: new Date().toISOString(),
-      })
-      .eq('id', deliveryId);
+    let result: WebhookProcessResult = { processed: false };
+
+    try {
+      switch (eventType) {
+        case 'pull_request':
+          result = await handlePullRequestEvent(payload, owner, repo, supabase);
+          break;
+        case 'pull_request_review':
+          result = await handlePullRequestReviewEvent(payload, owner, repo, supabase);
+          break;
+        case 'check_suite':
+          result = await handleCheckSuiteEvent(payload, owner, repo, supabase);
+          break;
+        case 'check_run':
+          result = await handleCheckRunEvent(payload, owner, repo, supabase);
+          break;
+        default:
+          result = { processed: true, action: 'ignored' };
+      }
+    } catch (error) {
+      result = {
+        processed: false,
+        action: 'error',
+        error: error instanceof Error ? error.message : 'Webhook processing failed',
+      };
+      throw error;
+    } finally {
+      await finalizeWebhookDelivery(supabase, deliveryId, claim.processorId, result);
+    }
 
     return NextResponse.json({
       success: true,
@@ -264,7 +383,7 @@ async function handlePullRequestEvent(
 
   if (!prData) {
     // Not an autopilot PR
-    return { processed: false, action: 'not_autopilot_pr' };
+    return { processed: true, action: 'not_autopilot_pr' };
   }
 
   let newStatus: PRStatus | null = null;
@@ -327,14 +446,14 @@ async function handlePullRequestReviewEvent(
   const repoFullName = `${owner}/${repo}`;
 
   if (action !== 'submitted') {
-    return { processed: false, action: 'ignored' };
+    return { processed: true, action: 'ignored' };
   }
 
   // Find matching autopilot PR
   const prData = await findAutopilotPrByNumber(supabase, prNumber, repoFullName);
 
   if (!prData) {
-    return { processed: false, action: 'not_autopilot_pr' };
+    return { processed: true, action: 'not_autopilot_pr' };
   }
 
   const reviewState = review.state as string;
@@ -390,7 +509,7 @@ async function handleCheckSuiteEvent(
   const checkSuite = payload.check_suite as Record<string, unknown>;
 
   if (action !== 'completed') {
-    return { processed: false, action: 'ignored' };
+    return { processed: true, action: 'ignored' };
   }
 
   const conclusion = checkSuite.conclusion as string;
@@ -419,7 +538,7 @@ async function handleCheckSuiteEvent(
   }
 
   if (!prs || prs.length === 0) {
-    return { processed: false, action: 'not_autopilot_pr' };
+    return { processed: true, action: 'not_autopilot_pr' };
   }
 
   for (const prData of prs) {
@@ -445,7 +564,7 @@ async function handleCheckRunEvent(
   const action = payload.action as string;
 
   if (action !== 'completed') {
-    return { processed: false, action: 'ignored' };
+    return { processed: true, action: 'ignored' };
   }
 
   // Similar to check_suite, but for individual checks

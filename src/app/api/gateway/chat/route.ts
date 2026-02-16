@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Evaluate OPA policies via PolicyRouter (budget, content, cost optimization)
-    // Fails open: if the policy engine is unavailable, the request proceeds
+    // Fallback mode is configurable; sensitive tool calls can fail closed.
     const policyRouter = getPolicyRouter();
     let gatewayRequest: GatewayRequest = {
       id: requestId,

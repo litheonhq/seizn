@@ -11,7 +11,6 @@ import {
   getPolicyRouter,
   resetPolicyRouter,
   type PolicyDecision,
-  type PolicyRouterConfig,
 } from './policy-router';
 import type { GatewayRequest } from './types';
 
@@ -154,6 +153,43 @@ describe('PolicyRouter', () => {
       expect(result.allowed).toBe(true);
     });
 
+    it('fails closed for tool requests when OPA throws', async () => {
+      router = new PolicyRouter({
+        enableContentPolicy: true,
+        enableBudgetEnforcement: false,
+        enableCostOptimization: false,
+        failClosedOnToolCalls: true,
+      });
+      const mockOpa = getOpaPolicyService();
+      asMock(mockOpa.checkAccess).mockRejectedValueOnce(new Error('OPA down'));
+
+      const result = await router.evaluateRequest(
+        makeRequest({
+          tools: [{ type: 'function', function: { name: 'send_email' } }],
+        }),
+        'user-1',
+        'org-1'
+      );
+
+      expect(result.allowed).toBe(false);
+      expect(result.policyId).toBe('policy_engine_unavailable');
+    });
+
+    it('fails closed globally when failureMode is closed', async () => {
+      router = new PolicyRouter({
+        enableContentPolicy: true,
+        enableBudgetEnforcement: false,
+        enableCostOptimization: false,
+        failureMode: 'closed',
+      });
+      const mockOpa = getOpaPolicyService();
+      asMock(mockOpa.checkAccess).mockRejectedValueOnce(new Error('OPA down'));
+
+      const result = await router.evaluateRequest(makeRequest(), 'user-1', 'org-1');
+      expect(result.allowed).toBe(false);
+      expect(result.policyId).toBe('policy_engine_unavailable');
+    });
+
     it('skips OPA when orgId is not provided', async () => {
       const result = await router.evaluateRequest(makeRequest(), 'user-1');
       expect(result.allowed).toBe(true);
@@ -222,6 +258,15 @@ describe('PolicyRouter', () => {
 
       const result = await router.enforceBudget('user-1', 'org-1');
       expect(result.allowed).toBe(true);
+    });
+
+    it('fails closed when budget service throws and failureMode is closed', async () => {
+      router = new PolicyRouter({ failureMode: 'closed' });
+      asMock(getBudgetStatus).mockRejectedValueOnce(new Error('Service down'));
+
+      const result = await router.enforceBudget('user-1', 'org-1', makeRequest());
+      expect(result.allowed).toBe(false);
+      expect(result.policyId).toBe('policy_engine_unavailable');
     });
   });
 

@@ -163,6 +163,8 @@ export interface TenantBudgetState {
   dayRequests: number;
   /** 분 사용 요청 수 (rolling window) */
   minuteRequests: number;
+  /** 일일 ingest chunk upserts 수 */
+  dayChunkUpserts: number;
   /** 월 비용 사용률 (0-1) */
   ratioMonth: number;
   /** 일 비용 사용률 (0-1) */

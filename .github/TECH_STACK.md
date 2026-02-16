@@ -46,7 +46,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
 | Encryption | E2E confidential memory encryption | -- | Opt-in client-side WebCrypto (PBKDF2-SHA256 600k + AES-256-GCM). Contract: `content="[encrypted]"`, `encrypted_content=<base64 ciphertext>`, `is_encrypted=true`. Setup material stored in `profiles.e2e_*` via `/api/profile/e2e`. Encrypted memories excluded from search/embedding/optimizer. |
-| Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` |
+| Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
@@ -88,6 +88,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | E2E Tests (Linux) | `e2e-linux.yml` | PR/push, Playwright (Chromium + Firefox) |
 | Lighthouse CI | `lighthouse-ci.yml` | PR to main/develop |
 | Security Tests (OWASP LLM Top 10) | `security-tests.yml` | PR/push to main, releases |
+| API Security Live Smoke | `api-security-live.yml` | Daily schedule + push to main (API changes) + manual |
 | Red Team Security Scan | `red-team-security.yml` | Weekly Fridays 2AM UTC, PR on AI code |
 | Regression Tests | `regression-tests.yml` | -- |
 | Multilingual Regression | `multilingual-regression.yml` | -- |
@@ -224,6 +225,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 - BYOK encryption (`src/lib/byok/`)
 - Data residency controls (`src/lib/residency/`)
 - Audit logging (`src/lib/audit/`)
+- GitHub webhook idempotency lock/claim flow for Autopilot deliveries (`src/app/api/webhooks/github/route.ts`)
 - Review token system for secure dashboard sharing
 - Security headers: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 - Dashboard-specific stricter headers (DENY framing, no-referrer)

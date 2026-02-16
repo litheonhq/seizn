@@ -53,6 +53,7 @@ function verifyInternalKey(request: NextRequest): boolean {
  *   estimated_cost_cents?: number,        // Optional cost override
  *   request_bytes?: number,               // For ingest
  *   chunk_count?: number,                 // For ingest
+ *   day_chunk_upserts?: number,           // Current daily chunk upserts (optional override)
  * }
  *
  * Response:
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
       estimated_cost_cents,
       request_bytes,
       chunk_count,
+      day_chunk_upserts,
     } = body;
 
     if (!tenant_id) {
@@ -100,6 +102,13 @@ export async function POST(request: NextRequest) {
 
     // Get budget state
     const budgetState = await getTenantBudgetState(policy, tenant_id);
+    const effectiveBudgetState =
+      typeof day_chunk_upserts === "number" && Number.isFinite(day_chunk_upserts)
+        ? {
+            ...budgetState,
+            dayChunkUpserts: Math.max(0, Math.floor(day_chunk_upserts)),
+          }
+        : budgetState;
 
     // Estimate cost for summer requests if not provided
     let costEstimate = estimated_cost_cents;
@@ -123,7 +132,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Enforce policy
-    const result = enforceCaps(policy, budgetState, requestMeta);
+    const result = enforceCaps(policy, effectiveBudgetState, requestMeta);
 
     // Convert to HTTP response format
     const httpResponse = toHttpResponse(result);

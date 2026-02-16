@@ -15,6 +15,7 @@ function makeBudgetState(overrides: Partial<TenantBudgetState> = {}): TenantBudg
     monthRequests: 0,
     dayRequests: 0,
     minuteRequests: 0,
+    dayChunkUpserts: 0,
     ratioMonth: 0,
     ratioDay: 0,
     lastUpdated: new Date(),
@@ -112,6 +113,46 @@ describe("tenant-policy enforceCaps", () => {
     expect(result.action).toBe("deny");
     expect(result.reason).toBe("ingest_disabled");
   });
+
+  it("denies ingest when daily chunk upsert cap would be exceeded", () => {
+    const policy = makePolicy();
+    policy.ingest.daily_chunk_upserts_max = 100;
+
+    const result = enforceCaps(
+      policy,
+      makeBudgetState({
+        dayChunkUpserts: 95,
+      }),
+      {
+        type: "ingest",
+        chunkCount: 10,
+        requestBytes: 1024,
+      }
+    );
+
+    expect(result.action).toBe("deny");
+    expect(result.reason).toBe("quota_exceeded");
+    expect(result.retryAfter).toBeGreaterThan(0);
+  });
+
+  it("allows ingest when daily chunk upsert cap is not exceeded", () => {
+    const policy = makePolicy();
+    policy.ingest.daily_chunk_upserts_max = 100;
+
+    const result = enforceCaps(
+      policy,
+      makeBudgetState({
+        dayChunkUpserts: 90,
+      }),
+      {
+        type: "ingest",
+        chunkCount: 10,
+        requestBytes: 1024,
+      }
+    );
+
+    expect(result.action).not.toBe("deny");
+  });
 });
 
 describe("tenant-policy estimateSummerCost", () => {
@@ -134,4 +175,3 @@ describe("tenant-policy estimateSummerCost", () => {
     expect(cost).toBeGreaterThan(0);
   });
 });
-
