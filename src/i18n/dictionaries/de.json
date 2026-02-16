@@ -50,18 +50,30 @@
     "subtitle": "Kostenlos starten, bei Wachstum skalieren.",
     "free": {
       "name": "Kostenlos",
-      "price": "0 $",
+      "price": "$0",
       "period": "Für immer kostenlos",
       "features": [
-        "10.000 Erinnerungen",
+        "12.000 Erinnerungen",
         "1.000 API-Aufrufe/Monat",
         "Community-Support"
       ],
       "cta": "Starten"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "pro Monat",
+      "features": [
+        "50.000 Erinnerungen",
+        "5.000 API-Aufrufe/Monat",
+        "E-Mail-Support",
+        "E2E encrypted memories"
+      ],
+      "cta": "Abonnieren"
+    },
     "plus": {
       "name": "Plus",
-      "price": "9 $",
+      "price": "$29",
       "period": "pro Monat",
       "features": [
         "50.000 Erinnerungen",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "29 $",
+      "price": "$99",
       "period": "pro Monat",
       "badge": "Beliebt",
       "features": [
@@ -1513,7 +1525,7 @@
         },
         {
           "q": "Gibt es eine kostenlose Testversion?",
-          "a": "Der kostenlose Plan ist dauerhaft: 10.000 Erinnerungen, 1.000 API-Aufrufe/Monat. Keine Kreditkarte erforderlich."
+          "a": "Der kostenlose Plan ist dauerhaft: 12.000 Erinnerungen, 1.000 API-Aufrufe/Monat. Keine Kreditkarte erforderlich."
         },
         {
           "q": "Wie schnell ist der Abruf?",

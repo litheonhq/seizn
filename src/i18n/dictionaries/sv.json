@@ -59,9 +59,21 @@
       ],
       "cta": "Kom igång"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "per månad",
+      "features": [
+        "50 000 minnen",
+        "10 000 API-anrop/månad",
+        "E-postsupport",
+        "E2E encrypted memories"
+      ],
+      "cta": "Prenumerera"
+    },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "per månad",
       "features": [
         "50 000 minnen",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "per månad",
       "badge": "Populär",
       "features": [

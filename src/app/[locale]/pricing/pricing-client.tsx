@@ -66,6 +66,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           <div className="flex items-center gap-6">
             <a href={`/${locale}#features`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.nav.features}</a>
             <Link href={`/${locale}/pricing`} className="text-sm text-gray-900 font-medium hidden md:block">{t.nav.pricing}</Link>
+            <Link href={`/${locale}/comparison`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.extremeHome?.nav?.compare || "Compare"}</Link>
             <Link href="/docs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">{t.nav.docs}</Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link
@@ -99,9 +100,11 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
       {/* Pricing Cards */}
       <section className="py-12 px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {/* Free */}
             <PricingCard plan={t.pricing.free} locale={locale} type="free" />
+            {/* Starter */}
+            <PricingCard plan={t.pricing.starter} locale={locale} type="starter" />
             {/* Plus */}
             <PricingCard plan={t.pricing.plus} locale={locale} type="plus" />
             {/* Pro */}
@@ -261,6 +264,14 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
           >
             {plan.cta}
           </Link>
+        )}
+        {type === "starter" && (
+          <CheckoutButton
+            priceId={PLAN_VARIANTS.starter}
+            className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-white/50 hover:border-gray-300 transition-all text-center"
+          >
+            {plan.cta}
+          </CheckoutButton>
         )}
         {type === "plus" && (
           <CheckoutButton

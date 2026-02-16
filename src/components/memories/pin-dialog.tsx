@@ -100,6 +100,7 @@ export function PinDialog({
         if (!result.ok) {
           if (result.reason === "invalid_pin") setError("PIN must be 4-6 digits.");
           else if (result.reason === "unauthorized") setError("Login required.");
+          else if (result.reason === "plan_required") setError("E2E encryption is available on Starter plan or above.");
           else if (result.reason === "conflict") setError("PIN is already set up.");
           else setError("Failed to set up PIN. Please try again.");
           return;

@@ -59,9 +59,21 @@
       ],
       "cta": "Rozpocznij"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "miesięcznie",
+      "features": [
+        "50 000 wspomnień",
+        "10 000 wywołań API/mies.",
+        "Wsparcie email",
+        "E2E encrypted memories"
+      ],
+      "cta": "Subskrybuj"
+    },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "miesięcznie",
       "features": [
         "50 000 wspomnień",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "miesięcznie",
       "badge": "Popularne",
       "features": [

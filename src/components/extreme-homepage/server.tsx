@@ -211,6 +211,7 @@ const SECTION_COPY = {
     productLabel: "Product",
     resourcesLabel: "Resources",
     legalLabel: "Legal",
+    compareLabel: "Compare",
     mcpServerLabel: "MCP Server",
     githubLabel: "GitHub",
   },
@@ -231,6 +232,7 @@ const SECTION_COPY = {
     productLabel: "제품",
     resourcesLabel: "리소스",
     legalLabel: "법적 고지",
+    compareLabel: "비교",
     mcpServerLabel: "MCP 서버",
     githubLabel: "GitHub",
   },
@@ -538,6 +540,7 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
             <ul className="space-y-2.5">
               <li><Link href={`/${locale}/docs`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link></li>
               <li><Link href={`/${locale}/pricing`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.pricing || "Pricing"}</Link></li>
+              <li><Link href={`/${locale}/comparison`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.compare || copy.compareLabel}</Link></li>
               <li><Link href={`/${locale}/docs/limits`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link></li>
               <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{copy.mcpServerLabel}</Link></li>
               <li><Link href="/status" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link></li>

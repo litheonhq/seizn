@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '', priority: 1.0, changeFreq: 'weekly' as const },
     { path: '/enterprise', priority: 0.8, changeFreq: 'monthly' as const },
     { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
+    { path: '/comparison', priority: 0.8, changeFreq: 'monthly' as const },
   ];
 
   // Generate sitemap entries for each locale

@@ -281,7 +281,7 @@ const memories = await seizn.search({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {/* Free */}
             <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
               <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.free.name}</div>
@@ -300,6 +300,29 @@ const memories = await seizn.search({
               <Link href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
                 {t.pricing.free.cta}
               </Link>
+            </div>
+
+            {/* Starter */}
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
+              <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.starter.name}</div>
+              <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.starter.price}</div>
+              <div className="text-sm text-gray-500 mb-6">{t.pricing.starter.period}</div>
+              <ul className="space-y-3 mb-8">
+                {t.pricing.starter.features.map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <CheckoutButton
+                priceId={PLAN_VARIANTS.starter}
+                className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center"
+              >
+                {t.pricing.starter.cta}
+              </CheckoutButton>
             </div>
 
             {/* Plus */}

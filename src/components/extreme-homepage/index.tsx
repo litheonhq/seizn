@@ -249,6 +249,12 @@ const Navigation = memo(function Navigation({
               {t.nav?.pricing || "Pricing"}
             </Link>
             <Link
+              href={`/${locale}/comparison`}
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              {t.nav?.compare || "Compare"}
+            </Link>
+            <Link
               href={`/${locale}/enterprise`}
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             >
@@ -307,6 +313,9 @@ const Navigation = memo(function Navigation({
           </Link>
           <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
             {t.nav?.pricing || "Pricing"}
+          </Link>
+          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            {t.nav?.compare || "Compare"}
           </Link>
           <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
             {t.nav?.enterprise || "Enterprise"}

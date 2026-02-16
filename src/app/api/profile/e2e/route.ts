@@ -8,6 +8,12 @@ type E2EProfileRow = {
   e2e_setup_at: string | null;
 };
 
+type E2EPlanRow = {
+  plan: string | null;
+  e2e_salt: string | null;
+  e2e_verification_block: string | null;
+};
+
 // GET /api/profile/e2e - Check whether the user has set up E2E PIN and fetch params (salt + verification block)
 export async function GET() {
   const session = await auth();
@@ -72,10 +78,10 @@ export async function PUT(request: NextRequest) {
 
   const supabase = createServerClient();
 
-  // Guard against accidental rotation.
+  // Guard against accidental rotation and enforce plan gate.
   const { data: existing, error: existingError } = await supabase
     .from('profiles')
-    .select('e2e_salt, e2e_verification_block')
+    .select('plan, e2e_salt, e2e_verification_block')
     .eq('id', userId)
     .single();
 
@@ -83,7 +89,20 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to load profile' }, { status: 500 });
   }
 
-  const hasExisting = Boolean(existing?.e2e_salt && existing?.e2e_verification_block);
+  const existingRow = (existing || null) as E2EPlanRow | null;
+  const plan = existingRow?.plan || 'free';
+  const hasExisting = Boolean(existingRow?.e2e_salt && existingRow?.e2e_verification_block);
+
+  if (plan === 'free') {
+    return NextResponse.json(
+      {
+        error: 'E2E setup is available on Starter plan or above.',
+        required_plan: 'starter',
+      },
+      { status: 403 }
+    );
+  }
+
   if (hasExisting && !rotate) {
     return NextResponse.json(
       {
@@ -115,4 +134,3 @@ export async function PUT(request: NextRequest) {
     },
   });
 }
-

@@ -46,6 +46,82 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
   const [error, setError] = useState('');
 
   const t = dict.enterprisePage;
+  const enterpriseSnapshotTitle =
+    locale === 'ko' ? '엔터프라이즈 세일즈 1페이지 요약' : 'Enterprise One-Page Snapshot';
+  const enterpriseSnapshotSubtitle =
+    locale === 'ko'
+      ? 'SSO/SAML, On-prem, Audit, SLA 기준으로 핵심 기능을 정리했습니다.'
+      : 'Standardized around SSO/SAML, On-prem, Audit, and SLA for procurement and security review.';
+  const enterpriseStandards =
+    locale === 'ko'
+      ? [
+          {
+            title: 'SSO / SAML',
+            points: [
+              'SAML 2.0 + OIDC 연결 지원',
+              '도메인 검증 및 조직 단위 정책 적용',
+              '기존 IdP(Okta, Entra ID, Google Workspace)와 연동 가능',
+            ],
+          },
+          {
+            title: 'On-prem / Controlled Deployment',
+            points: [
+              '규제/망분리 환경용 배포 옵션 제공',
+              '데이터 거버넌스 정책과 결합 가능',
+              '리전 및 보안 요구사항 기반 커스텀 설계',
+            ],
+          },
+          {
+            title: 'Audit & Evidence',
+            points: [
+              '정책/변경/접근 이력 추적',
+              '감사 대응용 증적 패키지 생성',
+              '컴플라이언스 보고 프로세스에 연계 가능',
+            ],
+          },
+          {
+            title: 'SLA',
+            points: [
+              '가용성/지원 응답 시간 기준 협의',
+              '장애 대응 및 커뮤니케이션 절차 명시',
+              '엔터프라이즈 운영 모델 기준 맞춤 계약',
+            ],
+          },
+        ]
+      : [
+          {
+            title: 'SSO / SAML',
+            points: [
+              'SAML 2.0 and OIDC organization connections',
+              'Domain verification and org-scoped access policy',
+              'Interoperable with Okta, Entra ID, and Google Workspace',
+            ],
+          },
+          {
+            title: 'On-prem / Controlled Deployment',
+            points: [
+              'Deployment options for regulated or isolated environments',
+              'Integrates with tenant policy and governance controls',
+              'Custom architecture by region and security requirements',
+            ],
+          },
+          {
+            title: 'Audit & Evidence',
+            points: [
+              'Traceable policy, access, and configuration events',
+              'Evidence-pack workflows for security and legal review',
+              'Audit-friendly export model for compliance programs',
+            ],
+          },
+          {
+            title: 'SLA',
+            points: [
+              'Availability and response-time commitments by agreement',
+              'Clear incident response and communication process',
+              'Support model aligned to enterprise operations',
+            ],
+          },
+        ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -113,6 +189,26 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
           </ul>
         </div>
 
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold mb-2">{enterpriseSnapshotTitle}</h2>
+          <p className="text-sm text-gray-400 mb-5">{enterpriseSnapshotSubtitle}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {enterpriseStandards.map((item) => (
+              <div key={item.title} className="rounded-lg border border-gray-700 bg-gray-950/50 p-4">
+                <h3 className="text-sm font-semibold text-white mb-3">{item.title}</h3>
+                <ul className="space-y-2">
+                  {item.points.map((point) => (
+                    <li key={point} className="text-sm text-gray-300 flex items-start gap-2">
+                      <span className="text-blue-400 mt-0.5">-</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {error && (
           <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6">
             {error}
@@ -120,7 +216,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">{t.form.companyName} *</label>
               <input
@@ -145,7 +241,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">{t.form.workEmail} *</label>
               <input
@@ -169,7 +265,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">{t.form.jobTitle}</label>
               <input
@@ -211,7 +307,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">{t.form.expectedVolume}</label>
               <select
