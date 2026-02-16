@@ -1,18 +1,19 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Multi-Graph Memory Engine (MAGMA Pattern)
  *
  * Represents each memory item across four orthogonal graph dimensions:
  *
- * 1. Temporal Graph — immutable timeline of events (answers "when")
+ * 1. Temporal Graph -> immutable timeline of events (answers "when")
  *    - Edges: BEFORE, AFTER, DURING, CONCURRENT
  *
- * 2. Causal Graph — cause-and-effect relationships (answers "why")
+ * 2. Causal Graph -> cause-and-effect relationships (answers "why")
  *    - Edges: CAUSES, PREVENTS, ENABLES, REQUIRES
  *
- * 3. Entity Graph — tracks people/places/things (object permanence)
+ * 3. Entity Graph -> tracks people/places/things (object permanence)
  *    - Edges: IS_A, PART_OF, BELONGS_TO, RELATED_TO
  *
- * 4. Semantic Graph — conceptual similarity (answers "what relates")
+ * 4. Semantic Graph -> conceptual similarity (answers "what relates")
  *    - Edges: SIMILAR_TO, CONTRASTS_WITH, ELABORATES, REFERENCES
  *
  * The multi-graph approach provides 45.5% higher reasoning accuracy
@@ -112,7 +113,7 @@ export interface MultiGraphQuery {
   limit?: number;
 }
 
-// Dimension → valid edge types mapping
+// Dimension -> valid edge types mapping
 const DIMENSION_EDGES: Record<GraphDimension, readonly string[]> = {
   temporal: ['before', 'after', 'during', 'concurrent'] as const,
   causal: ['causes', 'prevents', 'enables', 'requires', 'depends_on'] as const,
@@ -323,11 +324,7 @@ export class MultiGraphService {
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
+        headers: buildAnthropicHeaders(apiKey),
         body: JSON.stringify({
           model: 'claude-3-5-haiku-20241022',
           max_tokens: 1024,

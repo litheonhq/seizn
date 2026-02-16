@@ -40,6 +40,12 @@ import {
 } from './load-balancer';
 
 import { withRetry, DEFAULT_RETRY_CONFIG } from './retry';
+import {
+  buildAnthropicSdkDefaultHeaders,
+  buildCachedSystemPrompt,
+  extractAnthropicCacheUsage,
+  isAnthropicPromptCachingEnabled,
+} from '../anthropic/prompt-caching';
 
 // Provider clients (singletons)
 let openaiClient: OpenAI | null = null;
@@ -186,7 +192,10 @@ export class AIGateway {
 
       case 'anthropic':
         if (!anthropicClient) {
-          anthropicClient = new Anthropic({ apiKey: apiKey || process.env.ANTHROPIC_API_KEY });
+          anthropicClient = new Anthropic({
+            apiKey: apiKey || process.env.ANTHROPIC_API_KEY,
+            defaultHeaders: buildAnthropicSdkDefaultHeaders(),
+          });
         }
         return anthropicClient;
 
@@ -353,11 +362,12 @@ export class AIGateway {
     // Extract system message
     const systemMessage = request.messages.find((m) => m.role === 'system');
     const otherMessages = request.messages.filter((m) => m.role !== 'system');
+    const cachedSystemPrompt = buildCachedSystemPrompt(systemMessage?.content);
 
     const response = await client.messages.create({
       model: request.model,
       max_tokens: request.maxTokens || 4096,
-      system: systemMessage?.content,
+      system: cachedSystemPrompt,
       messages: otherMessages.map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
@@ -366,6 +376,12 @@ export class AIGateway {
 
     const latencyMs = Date.now() - startTime;
     const content = response.content[0]?.type === 'text' ? response.content[0].text : '';
+    const usage = response.usage;
+    const cacheUsage = extractAnthropicCacheUsage(usage);
+    const baseInputTokens = usage?.input_tokens ?? 0;
+    const completionTokens = usage?.output_tokens ?? 0;
+    const promptTokens = baseInputTokens + cacheUsage.cacheCreationInputTokens + cacheUsage.cacheReadInputTokens;
+    const totalTokens = promptTokens + completionTokens;
 
     return {
       id: response.id,
@@ -375,13 +391,20 @@ export class AIGateway {
       content,
       finishReason: response.stop_reason as GatewayResponse['finishReason'] || 'stop',
       usage: {
-        promptTokens: response.usage.input_tokens,
-        completionTokens: response.usage.output_tokens,
-        totalTokens: response.usage.input_tokens + response.usage.output_tokens,
+        promptTokens,
+        completionTokens,
+        totalTokens,
       },
       latencyMs,
-      cost: estimateCost(request.model, response.usage.input_tokens, response.usage.output_tokens),
+      cost: estimateCost(request.model, promptTokens, completionTokens),
       cached: false,
+      metadata: {
+        ...request.metadata,
+        anthropicPromptCachingEnabled: isAnthropicPromptCachingEnabled(),
+        anthropicBaseInputTokens: baseInputTokens,
+        anthropicCacheCreationInputTokens: cacheUsage.cacheCreationInputTokens,
+        anthropicCacheReadInputTokens: cacheUsage.cacheReadInputTokens,
+      },
     };
   }
 

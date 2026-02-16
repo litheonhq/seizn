@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Context Packer Service
  *
@@ -687,11 +688,7 @@ Provide a brief (1-2 sentence) summary that acknowledges the conflict and, if po
 
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.config.anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(this.config.anthropicApiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 256,

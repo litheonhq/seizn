@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Memory Distillation Service
  *
@@ -1007,11 +1008,7 @@ Create a single, coherent semantic memory that captures the essential knowledge 
 
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.config.anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(this.config.anthropicApiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 1024,

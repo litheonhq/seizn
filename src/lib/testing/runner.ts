@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Test Runner
  *
@@ -353,11 +354,7 @@ async function generateAnswer(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 512,

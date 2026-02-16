@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Entity Extractor
  *
@@ -25,23 +26,23 @@ const PATTERNS: Record<EntityType, RegExp[]> = {
     // Names with titles
     /(?:Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/g,
     // Korean names (2-4 syllables)
-    /([가-힣]{2,4})(?:\s*(?:씨|님|교수|박사|대표|사장))/g,
+    /([\p{Script=Hangul}]{2,4})(?:\s*[\p{Script=Hangul}]{1,6})?/gu,
   ],
   organization: [
     // Company suffixes
     /([A-Z][A-Za-z0-9]+(?:\s+[A-Z][A-Za-z0-9]+)*)\s+(?:Inc\.|Corp\.|Ltd\.|LLC|Co\.|Company|Corporation)/gi,
     // Korean company names
-    /(?:주식회사|㈜)\s*([가-힣A-Za-z0-9]+)/g,
-    /([가-힣A-Za-z0-9]+)\s*(?:주식회사|㈜)/g,
+    /(?:주식회사|회사)\s*([\p{Script=Hangul}A-Za-z0-9]+)/gu,
+    /([\p{Script=Hangul}A-Za-z0-9]+)\s*(?:주식회사|회사)/gu,
     // Universities
     /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:University|College|Institute)/gi,
-    /([가-힣]+)\s*(?:대학교|대학|연구원|연구소)/g,
+    /([\p{Script=Hangul}]+)\s*(?:대학교|대학|연구소|연구원)/gu,
   ],
   location: [
     // Cities/Countries with context
     /(?:in|at|from)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/g,
     // Korean locations
-    /([가-힣]+(?:시|구|동|군|도|읍|면|리))/g,
+    /([\p{Script=Hangul}]+(?:시|군|구|동|면|리))/gu,
     // Addresses
     /\d+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s+(?:Street|St\.|Avenue|Ave\.|Road|Rd\.|Boulevard|Blvd\.)/gi,
   ],
@@ -209,11 +210,7 @@ async function extractByLlm(
   try {
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(apiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 2048,

@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Seizn Summer - RAG Pipeline
  *
@@ -161,11 +162,7 @@ async function callAnthropicLLM(params: {
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: params.modelId,
       max_tokens: params.maxTokens,
@@ -200,11 +197,7 @@ async function* streamAnthropicLLM(params: {
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: params.modelId,
       max_tokens: params.maxTokens,

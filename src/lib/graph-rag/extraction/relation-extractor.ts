@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Relation Extractor
  *
@@ -55,7 +56,7 @@ const RELATION_PATTERNS: RelationPattern[] = [
     confidence: 0.7,
   },
   {
-    pattern: /([가-힣A-Za-z0-9]+)(?:은|는|이|가)\s+([가-힣A-Za-z0-9]+)의?\s*(?:일종|종류)/g,
+    pattern: /([\p{Script=Hangul}A-Za-z0-9]+)(?:은|는|이|가)\s+([\p{Script=Hangul}A-Za-z0-9]+)\s*(?:일종|종류|타입)/gu,
     type: 'is_a',
     sourceGroup: 1,
     targetGroup: 2,
@@ -318,11 +319,7 @@ async function extractRelationsByLlm(
   try {
     const response = await fetch(ANTHROPIC_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: buildAnthropicHeaders(apiKey),
       body: JSON.stringify({
         model: modelId,
         max_tokens: 2048,

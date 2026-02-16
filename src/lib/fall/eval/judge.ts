@@ -1,4 +1,5 @@
 import { estimateTokens } from '@/lib/summer/utils/tokens';
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 
 export interface FaithfulnessJudgeResult {
   score: number; // 0..1
@@ -34,11 +35,7 @@ export async function judgeFaithfulness(params: {
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model,
       max_tokens: 250,

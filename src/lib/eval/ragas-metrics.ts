@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Seizn - Ragas-Compatible Evaluation Metrics
  *
@@ -94,11 +95,7 @@ async function callLLM(prompt: string, systemPrompt?: string): Promise<{ text: s
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 500,

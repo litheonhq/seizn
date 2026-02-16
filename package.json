@@ -20,6 +20,7 @@
     "test:security:strict": "SECURITY_STRICT_MODE=true vitest run src/__tests__/security/llm-top10/",
     "verify:evidence": "npx ts-node --project tsconfig.node.json scripts/verify-evidence-pack.ts",
     "verify:e2e-encryption-db": "node scripts/db-verify-e2e-encryption.mjs",
+    "verify:ai-os-memory": "node scripts/verify-ai-os-memory.mjs",
     "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
   },
   "dependencies": {

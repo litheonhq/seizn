@@ -1,3 +1,4 @@
+import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 /**
  * Test Generator
  *
@@ -95,11 +96,7 @@ async function generateTestsByType(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 4096,
@@ -160,11 +157,7 @@ export async function generateMultiDocTests(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 4096,
@@ -234,11 +227,7 @@ export async function generateTestsFromTemplate(
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: buildAnthropicHeaders(apiKey),
     body: JSON.stringify({
       model: modelId,
       max_tokens: 4096,
