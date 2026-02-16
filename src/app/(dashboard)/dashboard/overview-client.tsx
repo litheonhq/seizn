@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
+import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
 
 interface User {
   id: string;
@@ -55,6 +56,25 @@ interface RecentActivity {
   timestamp: string;
   tokens: number;
 }
+
+const RELIABILITY_CARD_META = [
+  {
+    href: "/dashboard/enterprise",
+    tone: "from-violet-500/15 to-indigo-500/15 border-violet-200/60 dark:border-violet-900/60",
+  },
+  {
+    href: "/dashboard/webhooks",
+    tone: "from-blue-500/15 to-cyan-500/15 border-blue-200/60 dark:border-blue-900/60",
+  },
+  {
+    href: (locale: string) => `/${locale}/docs/security`,
+    tone: "from-emerald-500/15 to-teal-500/15 border-emerald-200/60 dark:border-emerald-900/60",
+  },
+  {
+    href: (locale: string) => `/${locale}/docs/security`,
+    tone: "from-amber-500/15 to-orange-500/15 border-amber-200/60 dark:border-amber-900/60",
+  },
+] as const;
 
 export default function DashboardOverviewClient({ user }: { user: User }) {
   const { t, locale } = useDashboardTranslation();
@@ -112,45 +132,16 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
   };
 
   const greeting = getGreeting();
-  const isKorean = locale.startsWith("ko");
-  const reliabilityUpdates = [
-    {
-      title: isKorean ? "Tenant 정책 강제 강화" : "Tenant policy enforcement",
-      description: isKorean
-        ? "인제스트 상한/폴백 정책이 프로덕션 기준으로 고정되었습니다."
-        : "Ingest caps and fallback behavior are now locked for production-safe defaults.",
-      href: "/dashboard/enterprise",
-      cta: isKorean ? "Enterprise 확인" : "Review enterprise",
-      tone: "from-violet-500/15 to-indigo-500/15 border-violet-200/60 dark:border-violet-900/60",
-    },
-    {
-      title: isKorean ? "Webhook 멱등성 강화" : "Webhook idempotency hardening",
-      description: isKorean
-        ? "재시도/중복 이벤트에 대해 lock-claim-finalize 경로가 적용되었습니다."
-        : "Retry and duplicate events now follow a lock-claim-finalize path.",
-      href: "/dashboard/webhooks",
-      cta: isKorean ? "Webhook 확인" : "Review webhooks",
-      tone: "from-blue-500/15 to-cyan-500/15 border-blue-200/60 dark:border-blue-900/60",
-    },
-    {
-      title: isKorean ? "E2E 암호화 검증 자동화" : "E2E encryption verification",
-      description: isKorean
-        ? "DB 변경 이후 RPC/오버로드 회귀를 자동 점검하도록 정비되었습니다."
-        : "Post-migration verification now catches RPC/overload regressions.",
-      href: `/${locale}/docs/security`,
-      cta: isKorean ? "보안 문서 보기" : "Read security docs",
-      tone: "from-emerald-500/15 to-teal-500/15 border-emerald-200/60 dark:border-emerald-900/60",
-    },
-    {
-      title: isKorean ? "FNA 준비 상태" : "FNA readiness",
-      description: isKorean
-        ? "Failure Notification & Analysis 운영 가이드를 문서에 추가했습니다."
-        : "Failure Notification & Analysis guidance has been added for operations.",
-      href: `/${locale}/docs/security`,
-      cta: isKorean ? "FNA 보기" : "View FNA notes",
-      tone: "from-amber-500/15 to-orange-500/15 border-amber-200/60 dark:border-amber-900/60",
-    },
-  ];
+  const reliabilityCopy = getReliabilityUpdatesCopy(locale).dashboard;
+  const reliabilityUpdates = reliabilityCopy.cards.map((card, index) => {
+    const meta = RELIABILITY_CARD_META[index] ?? RELIABILITY_CARD_META[0];
+    const href = typeof meta.href === "function" ? meta.href(locale) : meta.href;
+    return {
+      ...card,
+      href,
+      tone: meta.tone,
+    };
+  });
 
   const getMemoryTypeIcon = (type: string) => {
     switch (type) {
@@ -192,16 +183,14 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         <div className="p-4 border-b theme-border flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-gray-900 dark:text-white">
-              {isKorean ? "보안 및 신뢰성 업데이트" : "Security & Reliability Updates"}
+              {reliabilityCopy.heading}
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              {isKorean
-                ? "최근 완료된 하드닝 작업과 운영 체크포인트"
-                : "Recently completed hardening work and operational checkpoints"}
+              {reliabilityCopy.subtitle}
             </p>
           </div>
           <Link href={`/${locale}/docs/security`} className="text-sm theme-primary hover:underline">
-            {isKorean ? "문서 보기" : "Docs"}
+            {reliabilityCopy.docsCta}
           </Link>
         </div>
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
 
 type Dictionary = Record<string, unknown>;
 
@@ -13,6 +14,7 @@ interface Props {
 
 export function SecurityClient({ locale }: Props) {
   const currentYear = new Date().getFullYear();
+  const reliabilityCopy = getReliabilityUpdatesCopy(locale);
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
@@ -59,49 +61,29 @@ export function SecurityClient({ locale }: Props) {
         {/* Recent Hardening */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-4">
-            Recent Hardening (2026 Q1)
+            {reliabilityCopy.security.sectionTitle}
           </h2>
           <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 p-5">
-              <h3 className="font-semibold text-zinc-900 dark:text-white mb-2">Tenant Policy Safety Rails</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Policy fallback handling was hardened to avoid unsafe pass-through behavior during partial failures.
-                Tenant-level ingest caps are now consistently enforced in production paths.
-              </p>
-            </div>
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 p-5">
-              <h3 className="font-semibold text-zinc-900 dark:text-white mb-2">Autopilot Webhook Idempotency</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Webhook processing now uses lock/claim/finalize semantics to handle retries and duplicate deliveries
-                without writing duplicate operational records.
-              </p>
-            </div>
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 p-5">
-              <h3 className="font-semibold text-zinc-900 dark:text-white mb-2">E2E Encryption Verification</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Database migration flow includes automatic verification for encrypted-memory search RPC overloads.
-                This helps prevent accidental regressions before deployment.
-              </p>
-            </div>
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 p-5">
-              <h3 className="font-semibold text-zinc-900 dark:text-white mb-2">FNA Operations Readiness</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                FNA (Failure Notification &amp; Analysis) runbook coverage was expanded for security events,
-                webhook retries, and migration-time validation failures.
-              </p>
-            </div>
+            {reliabilityCopy.dashboard.cards.map((card) => (
+              <div
+                key={card.title}
+                className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 p-5"
+              >
+                <h3 className="font-semibold text-zinc-900 dark:text-white mb-2">{card.title}</h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{card.description}</p>
+              </div>
+            ))}
           </div>
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
             <p className="text-sm text-zinc-700 dark:text-zinc-300 mb-3">
-              Recommended migration workflow:
+              {reliabilityCopy.security.workflowTitle}
             </p>
             <pre className="text-xs overflow-x-auto bg-zinc-950 text-zinc-100 rounded-lg p-4">
 {`node scripts/run-migration-file.mjs <sql-file>
 npm run verify:e2e-encryption-db`}
             </pre>
             <p className="text-xs mt-3 text-zinc-600 dark:text-zinc-400">
-              `run-migration-file.mjs` triggers `verify:e2e-encryption-db` by default and fails fast on overload/RPC regressions.
-              Use `SKIP_E2E_VERIFY=1` only for emergency bypass scenarios.
+              {reliabilityCopy.security.workflowNote}
             </p>
           </div>
         </section>
