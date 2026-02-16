@@ -191,7 +191,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Save to DB when prisma is available
     const saved = await savePolicyToDB(tenant_id, newPolicy);
     if (!saved) {
       return NextResponse.json(

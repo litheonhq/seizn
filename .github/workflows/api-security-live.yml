@@ -1,0 +1,53 @@
+name: API Security Live Smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 2 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'src/app/api/**'
+      - 'src/__tests__/security/api-security.test.ts'
+      - '.github/workflows/api-security-live.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-security-live:
+    name: API Security Live Tests (Staging)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.SECURITY_TEST_BASE_URL }}" ]; then
+            echo "::error::Missing SECURITY_TEST_BASE_URL secret"
+            exit 1
+          fi
+          if [ -z "${{ secrets.SECURITY_TEST_API_KEY }}" ]; then
+            echo "::error::Missing SECURITY_TEST_API_KEY secret"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run live API security tests
+        env:
+          SECURITY_TEST_LIVE: 'true'
+          TEST_BASE_URL: ${{ secrets.SECURITY_TEST_BASE_URL }}
+          TEST_API_KEY: ${{ secrets.SECURITY_TEST_API_KEY }}
+        run: npx vitest run src/__tests__/security/api-security.test.ts

@@ -5,12 +5,12 @@
  * Enforces cost budgets, rate limits, and content policies.
  *
  * Design principles:
- * - Fail-open: If the OPA engine is unavailable, requests are allowed with a warning log
+ * - Configurable failure mode: fail-open by default, with fail-closed support for sensitive requests
  * - Non-blocking: Policy evaluation should not add significant latency
  * - Composable: Budget, content, and cost-optimization policies are independently toggleable
  */
 
-import type { GatewayRequest, RoutingDecision, LLMProvider } from './types';
+import type { GatewayRequest, LLMProvider } from './types';
 import { getOpaPolicyService } from '@/lib/winter/opa';
 import type { OpaPrincipal, OpaDecision } from '@/lib/winter/opa';
 import { getBudgetStatus } from '@/lib/control-tower/cost-attribution';
@@ -37,6 +37,8 @@ export interface PolicyRouterConfig {
   enableContentPolicy: boolean;
   enableCostOptimization: boolean;
   defaultBudgetCents: number;
+  failureMode: 'open' | 'closed';
+  failClosedOnToolCalls: boolean;
 }
 
 // Cost-optimized provider ordering (cheapest first)
@@ -68,6 +70,8 @@ const DEFAULT_CONFIG: PolicyRouterConfig = {
   enableContentPolicy: true,
   enableCostOptimization: true,
   defaultBudgetCents: 10000, // $100/month default
+  failureMode: process.env.POLICY_ROUTER_FAILURE_MODE === 'closed' ? 'closed' : 'open',
+  failClosedOnToolCalls: true,
 };
 
 // ============================================
@@ -89,7 +93,7 @@ export class PolicyRouter {
    * 2. Budget enforcement
    * 3. Cost optimization modifications
    *
-   * Fails open if the policy engine is unavailable.
+   * Uses configured fallback behavior when the policy engine is unavailable.
    */
   async evaluateRequest(
     request: GatewayRequest,
@@ -135,22 +139,15 @@ export class PolicyRouter {
       // All checks passed, no modifications needed
       return { allowed: true };
     } catch (error) {
-      // Fail open: allow the request but log the error
-      console.warn('[PolicyRouter] Policy evaluation failed, failing open:', {
+      // Fail open/closed based on configured failure mode.
+      console.warn('[PolicyRouter] Policy evaluation failed, applying fallback mode:', {
         requestId: request.id,
         userId,
         orgId,
         error: error instanceof Error ? error.message : String(error),
         evaluationTimeMs: Date.now() - startTime,
       });
-
-      return {
-        allowed: true,
-        reason: 'Policy evaluation unavailable; request allowed by fail-open policy',
-        modifications: {
-          requireLogging: true, // Force logging when we fail open
-        },
-      };
+      return this.handlePolicyFailure('Policy evaluation', request);
     }
   }
 
@@ -189,14 +186,13 @@ export class PolicyRouter {
         budgetRemaining: Math.max(0, remaining),
       };
     } catch (error) {
-      // Fail open on budget check failure
-      console.warn('[PolicyRouter] Budget check failed, failing open:', {
+      // Fail open/closed based on configured failure mode.
+      console.warn('[PolicyRouter] Budget check failed, applying fallback mode:', {
         userId,
         orgId,
         error: error instanceof Error ? error.message : String(error),
       });
-
-      return { allowed: true };
+      return this.handlePolicyFailure('Budget check', request);
     }
   }
 
@@ -302,20 +298,48 @@ export class PolicyRouter {
 
       return { allowed: true };
     } catch (error) {
-      // Fail open if OPA is unavailable
-      console.warn('[PolicyRouter] OPA policy evaluation failed, failing open:', {
+      // Fail open/closed based on configured failure mode.
+      console.warn('[PolicyRouter] OPA policy evaluation failed, applying fallback mode:', {
         requestId: request.id,
         error: error instanceof Error ? error.message : String(error),
       });
+      return this.handlePolicyFailure('OPA engine', request);
+    }
+  }
 
+  private shouldFailClosed(request?: GatewayRequest): boolean {
+    if (this.config.failureMode === 'closed') {
+      return true;
+    }
+
+    if (!request) {
+      return false;
+    }
+
+    if (this.config.failClosedOnToolCalls && Array.isArray(request.tools) && request.tools.length > 0) {
+      return true;
+    }
+
+    return request.metadata?.policyFailClosed === true;
+  }
+
+  private handlePolicyFailure(component: string, request?: GatewayRequest): PolicyDecision {
+    if (this.shouldFailClosed(request)) {
       return {
-        allowed: true,
-        reason: 'OPA engine unavailable; allowed by fail-open policy',
-        modifications: {
-          requireLogging: true,
-        },
+        allowed: false,
+        reason: `${component} unavailable; request denied by fail-closed policy`,
+        policyId: 'policy_engine_unavailable',
       };
     }
+
+    return {
+      allowed: true,
+      reason: `${component} unavailable; request allowed by fail-open policy`,
+      modifications: {
+        requireLogging: true,
+      },
+      policyId: 'policy_engine_unavailable',
+    };
   }
 
   /**

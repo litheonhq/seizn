@@ -280,7 +280,28 @@ function checkIngestLimits(
     return createDenyResult("quota_exceeded", policy, budgetState, 0);
   }
 
-  // TODO: daily_chunk_upserts_max 체크 (별도 카운터 필요)
+  // 일일 chunk upsert 상한 체크
+  if (requestMeta.chunkCount && requestMeta.chunkCount > 0) {
+    const currentChunkUpserts = Number.isFinite(budgetState.dayChunkUpserts)
+      ? budgetState.dayChunkUpserts
+      : 0;
+    const projectedChunkUpserts = currentChunkUpserts + requestMeta.chunkCount;
+    if (projectedChunkUpserts > policy.ingest.daily_chunk_upserts_max) {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      const retryAfter = Math.ceil((tomorrow.getTime() - now.getTime()) / 1000);
+
+      return createDenyResult(
+        "quota_exceeded",
+        policy,
+        budgetState,
+        0,
+        retryAfter
+      );
+    }
+  }
 
   return null;
 }

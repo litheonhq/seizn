@@ -13,11 +13,11 @@ import {
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import {
-  createDetector,
   type FirewallConfig,
   type ScanRequest,
   type ScanResponse,
-} from '@/lib/prompt-firewall';
+} from '@/lib/prompt-firewall/types';
+import { createDetector } from '@/lib/prompt-firewall/detector';
 
 export const runtime = 'nodejs';
 
@@ -49,6 +49,9 @@ export async function POST(request: NextRequest) {
     const config: Partial<FirewallConfig> = {
       enabled: true,
       mode: body.options?.returnSanitized ? 'sanitize' : 'block',
+      minThreatLevel: 'low',
+      logDetections: false,
+      alertOnCritical: true,
     };
 
     const detector = createDetector(config);

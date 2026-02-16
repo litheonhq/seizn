@@ -7,7 +7,7 @@
  */
 
 import type { TenantPolicy, TenantBudgetState } from "./types";
-import { CONSERVATIVE_POLICY, createTenantPolicy } from "./presets";
+import { createTenantPolicy } from "./presets";
 import { createServerClient } from "@/lib/supabase";
 
 // ============================================================================
@@ -382,6 +382,7 @@ export async function getTenantBudgetState(
     monthRequests: 0,
     dayRequests: 0,
     minuteRequests: 0,
+    dayChunkUpserts: 0,
     ratioMonth: 0,
     ratioDay: 0,
     lastUpdated: new Date(),
@@ -396,9 +397,11 @@ export async function getTenantBudgetState(
 export async function updateBudgetState(
   tenantId: string,
   costCents: number,
-  policy: TenantPolicy
+  policy: TenantPolicy,
+  options: { chunkUpserts?: number } = {}
 ): Promise<TenantBudgetState> {
   const current = await getTenantBudgetState(policy, tenantId);
+  const chunkDelta = options.chunkUpserts ?? 0;
 
   const updated: TenantBudgetState = {
     ...current,
@@ -407,6 +410,7 @@ export async function updateBudgetState(
     monthRequests: current.monthRequests + 1,
     dayRequests: current.dayRequests + 1,
     minuteRequests: current.minuteRequests + 1,
+    dayChunkUpserts: current.dayChunkUpserts + chunkDelta,
     ratioMonth:
       (current.monthSpendCents + costCents) / policy.caps.monthly_cost_cents,
     ratioDay:
