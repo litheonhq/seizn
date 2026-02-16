@@ -135,3 +135,26 @@ Low-risk presets (`dead-code`, `seo`, `accessibility`, `code-quality`, `ai-conte
 - Never commit `.env.local` or secrets
 - Update `.github/TECH_STACK.md` after tech changes
 - Build must pass: `npm run build`
+
+## Seizn DB Migration Guardrail (E2E Encryption)
+
+For Seizn DB changes, use this exact flow:
+
+1. Apply migrations with:
+   - `node scripts/run-migration-file.mjs <path-to-sql>`
+2. After any DB change, run:
+   - `npm run verify:e2e-encryption-db`
+
+### Important behavior
+
+- `run-migration-file.mjs` automatically runs `verify:e2e-encryption-db` after migration apply.
+- If overload/RPC regression is detected (for example, missing `is_encrypted` filters), verification fails with exit code `1`, and the migration command is treated as failed.
+- Emergency bypass exists:
+  - `SKIP_E2E_VERIFY=1`
+  - Use only for intentional/manual exception cases.
+
+### Scope limitation
+
+- This automatic hook applies only when Seizn migrations are applied through `run-migration-file.mjs`.
+- If SQL is applied directly in Supabase Dashboard, the hook does not run.
+- In Dashboard/manual apply cases, run `npm run verify:e2e-encryption-db` once manually.
