@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { resolve, dirname, isAbsolute } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { spawnSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -58,6 +59,25 @@ async function run() {
     await client.query(sql);
     await client.query('COMMIT');
     console.log('Done.');
+
+    // Guardrail: after any DB migration, run the E2E encryption DB contract verification.
+    // Set SKIP_E2E_VERIFY=1 only for emergency/manual scenarios.
+    if (process.env.SKIP_E2E_VERIFY !== '1') {
+      console.log('Running post-migration verification: npm run verify:e2e-encryption-db');
+      const verify = spawnSync('npm', ['run', 'verify:e2e-encryption-db'], {
+        stdio: 'inherit',
+        shell: process.platform === 'win32',
+      });
+
+      if (verify.status !== 0) {
+        throw new Error(
+          'Post-migration verification failed (verify:e2e-encryption-db). ' +
+            'Set SKIP_E2E_VERIFY=1 only if you intentionally need to bypass.'
+        );
+      }
+    } else {
+      console.warn('SKIP_E2E_VERIFY=1 set: skipped post-migration verification.');
+    }
   } catch (err) {
     try {
       await client.query('ROLLBACK');
