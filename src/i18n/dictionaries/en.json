@@ -53,11 +53,23 @@
       "price": "$0",
       "period": "Forever free",
       "features": [
-        "10,000 memories",
+        "12,000 memories",
         "1,000 API calls/month",
         "Community support"
       ],
       "cta": "Get Started"
+    },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "per month",
+      "features": [
+        "50,000 memories",
+        "5,000 API calls/month",
+        "Email support",
+        "E2E encrypted memories"
+      ],
+      "cta": "Subscribe"
     },
     "plus": {
       "name": "Plus",
@@ -1418,7 +1430,7 @@
         },
         {
           "q": "Is there a free trial?",
-          "a": "Free plan is permanent: 10,000 memories, 1,000 API calls/month. No credit card needed."
+          "a": "Free plan is permanent: 12,000 memories, 1,000 API calls/month. No credit card needed."
         },
         {
           "q": "How fast is retrieval?",
@@ -1599,13 +1611,14 @@
     },
     "pricingCta": {
       "title": "Simple, transparent pricing",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "subtitle": "Start free with 12,000 memories. Upgrade to Starter for E2E encrypted memories and scale from there.",
       "viewPricing": "View Pricing",
       "contactSales": "Contact Sales"
     },
     "nav": {
       "docs": "Docs",
       "pricing": "Pricing",
+      "compare": "Compare",
       "enterprise": "Enterprise",
       "getApiKey": "Get API Key",
       "tryDemo": "Try Demo",

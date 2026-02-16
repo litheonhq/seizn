@@ -1,0 +1,44 @@
+{
+  "sources": [
+    {
+      "vendor": "Seizn",
+      "scope": "Product",
+      "url": "https://www.seizn.com/en"
+    },
+    {
+      "vendor": "Seizn",
+      "scope": "Pricing",
+      "url": "https://www.seizn.com/en/pricing"
+    },
+    {
+      "vendor": "Mem0",
+      "scope": "Product",
+      "url": "https://mem0.ai/"
+    },
+    {
+      "vendor": "LangSmith",
+      "scope": "Product",
+      "url": "https://www.langchain.com/langsmith"
+    },
+    {
+      "vendor": "Pinecone",
+      "scope": "Product",
+      "url": "https://www.pinecone.io/"
+    },
+    {
+      "vendor": "Weights & Biases",
+      "scope": "Product",
+      "url": "https://wandb.ai/site"
+    },
+    {
+      "vendor": "Arize Phoenix",
+      "scope": "Product",
+      "url": "https://phoenix.arize.com/"
+    },
+    {
+      "vendor": "LlamaIndex",
+      "scope": "Product",
+      "url": "https://www.llamaindex.ai/"
+    }
+  ]
+}

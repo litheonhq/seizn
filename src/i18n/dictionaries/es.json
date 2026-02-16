@@ -53,15 +53,27 @@
       "price": "$0",
       "period": "Gratis para siempre",
       "features": [
-        "10,000 memorias",
+        "12,000 memorias",
         "1,000 llamadas API/mes",
         "Soporte comunitario"
       ],
       "cta": "Comenzar"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "por mes",
+      "features": [
+        "50,000 memorias",
+        "5,000 llamadas API/mes",
+        "Soporte por correo",
+        "E2E encrypted memories"
+      ],
+      "cta": "Suscribirse"
+    },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "por mes",
       "features": [
         "50,000 memorias",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "por mes",
       "badge": "Popular",
       "features": [
@@ -1509,7 +1521,7 @@
         },
         {
           "q": "¿Hay prueba gratuita?",
-          "a": "El plan gratuito es permanente: 10,000 memorias, 1,000 llamadas API/mes. Sin tarjeta de crédito."
+          "a": "El plan gratuito es permanente: 12,000 memorias, 1,000 llamadas API/mes. Sin tarjeta de crédito."
         },
         {
           "q": "¿Qué tan rápida es la recuperación?",

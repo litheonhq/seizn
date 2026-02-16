@@ -124,6 +124,10 @@ export function CheckoutButton({
 // Price IDs for each plan (Paddle uses pri_* format)
 // Replace these with actual Paddle price IDs after account setup
 export const PLAN_PRICES = {
+  starter: {
+    monthly: "pri_placeholder_starter_monthly",
+    yearly: "pri_placeholder_starter_yearly",
+  },
   plus: {
     monthly: "pri_placeholder_plus_monthly",
     yearly: "pri_placeholder_plus_yearly",
@@ -137,6 +141,7 @@ export const PLAN_PRICES = {
 // Legacy variant mapping for backward compatibility during migration
 // Can be removed after full migration to Paddle
 export const PLAN_VARIANTS = {
+  starter: PLAN_PRICES.starter.monthly,
   plus: PLAN_PRICES.plus.monthly,
   pro: PLAN_PRICES.pro.monthly,
 } as const;

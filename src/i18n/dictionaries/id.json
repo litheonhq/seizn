@@ -53,15 +53,27 @@
       "price": "$0",
       "period": "Gratis selamanya",
       "features": [
-        "10.000 memori",
+        "12.000 memori",
         "1.000 panggilan API/bulan",
         "Dukungan komunitas"
       ],
       "cta": "Mulai"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "per bulan",
+      "features": [
+        "50.000 memori",
+        "5.000 panggilan API/bulan",
+        "Dukungan email",
+        "E2E encrypted memories"
+      ],
+      "cta": "Daftar"
+    },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "per bulan",
       "features": [
         "50.000 memori",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "per bulan",
       "badge": "Populer",
       "features": [
@@ -1509,7 +1521,7 @@
         },
         {
           "q": "Apakah ada uji coba gratis?",
-          "a": "Paket gratis adalah selamanya: 10.000 memori, 1.000 panggilan API/bulan. Tidak perlu kartu kredit."
+          "a": "Paket gratis adalah selamanya: 12.000 memori, 1.000 panggilan API/bulan. Tidak perlu kartu kredit."
         },
         {
           "q": "Seberapa cepat pengambilan?",

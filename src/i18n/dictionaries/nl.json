@@ -53,15 +53,27 @@
       "price": "$0",
       "period": "Voor altijd gratis",
       "features": [
-        "10.000 herinneringen",
+        "12.000 herinneringen",
         "1.000 API-aanroepen/maand",
         "Community-ondersteuning"
       ],
       "cta": "Aan de slag"
     },
+    "starter": {
+      "name": "Starter",
+      "price": "$9",
+      "period": "per maand",
+      "features": [
+        "50.000 herinneringen",
+        "5.000 API-aanroepen/maand",
+        "E-mailondersteuning",
+        "E2E encrypted memories"
+      ],
+      "cta": "Abonneren"
+    },
     "plus": {
       "name": "Plus",
-      "price": "$9",
+      "price": "$29",
       "period": "per maand",
       "features": [
         "50.000 herinneringen",
@@ -73,7 +85,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$29",
+      "price": "$99",
       "period": "per maand",
       "badge": "Populair",
       "features": [
@@ -1509,7 +1521,7 @@
         },
         {
           "q": "Is er een gratis proefperiode?",
-          "a": "Het gratis plan is permanent: 10.000 herinneringen, 1.000 API-aanroepen/maand. Geen creditcard nodig."
+          "a": "Het gratis plan is permanent: 12.000 herinneringen, 1.000 API-aanroepen/maand. Geen creditcard nodig."
         },
         {
           "q": "Hoe snel is het ophalen?",

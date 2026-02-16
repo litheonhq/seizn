@@ -273,6 +273,22 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
       email: "security@seizn.com"
     }
   };
+  const lastUpdatedDate = locale === "ko" ? "2026년 2월 16일" : "February 16, 2026";
+  const roadmapTitle = locale === "ko" ? "Trust & Compliance 로드맵" : "Trust & Compliance Roadmap";
+  const roadmapItems =
+    locale === "ko"
+      ? [
+          { milestone: "SOC 2 Type II", target: "2026년 Q2", status: "진행 중" },
+          { milestone: "HIPAA (Enterprise)", target: "2026년 Q3", status: "범위 확정 중" },
+          { milestone: "On-prem 배포", target: "2026년 Q4", status: "설계 검토 중" },
+          { milestone: "Bug Bounty Program", target: "2026년 Q3", status: "프로그램 준비 중" },
+        ]
+      : [
+          { milestone: "SOC 2 Type II", target: "Q2 2026", status: "In progress" },
+          { milestone: "HIPAA (Enterprise scope)", target: "Q3 2026", status: "Scope definition" },
+          { milestone: "On-prem deployment option", target: "Q4 2026", status: "Architecture review" },
+          { milestone: "Bug bounty program", target: "Q3 2026", status: "Program design" },
+        ];
 
   const handleSectionClick = (id: SectionId) => {
     setActiveSection(activeSection === id ? null : id);
@@ -292,6 +308,9 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
             </Link>
             <Link href={`/${locale}/pricing`} className="text-sm text-gray-400 hover:text-white">
               {dict.nav?.pricing || "Pricing"}
+            </Link>
+            <Link href={`/${locale}/comparison`} className="text-sm text-gray-400 hover:text-white">
+              {dict.extremeHome?.nav?.compare || "Compare"}
             </Link>
             <Link
               href="/dashboard"
@@ -317,8 +336,28 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
             {t.heroDescription}
           </p>
           <p className="text-sm text-gray-500">
-            {t.lastUpdated}: January 2026
+            {t.lastUpdated}: {lastUpdatedDate}
           </p>
+        </div>
+      </section>
+
+      {/* Roadmap Section */}
+      <section className="px-4 pb-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+            <h2 className="text-lg font-semibold text-white mb-4">{roadmapTitle}</h2>
+            <div className="grid md:grid-cols-2 gap-3">
+              {roadmapItems.map((item) => (
+                <div key={item.milestone} className="rounded-lg border border-gray-800 bg-gray-950/60 p-4">
+                  <div className="text-sm font-semibold text-white">{item.milestone}</div>
+                  <div className="text-xs text-gray-400 mt-2">{item.target}</div>
+                  <div className="mt-2 inline-flex rounded-full bg-blue-500/20 text-blue-300 px-2.5 py-1 text-xs">
+                    {item.status}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

@@ -1,0 +1,45 @@
+name: Competitive Research Refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Monthly cadence (~30 days): 1st day of every month at 04:00 UTC
+    - cron: "0 4 1 * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: competitive-research-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Refresh positioning report
+        run: node scripts/market/update-competitive-research.mjs
+
+      - name: Create PR if report changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "docs: refresh competitive positioning research"
+          branch: "chore/competitive-research-refresh"
+          title: "chore: refresh competitive positioning research"
+          body: |
+            Automated monthly refresh for competitive positioning report.
+
+            - Rechecked configured public source URLs
+            - Regenerated `docs/research/competitive-positioning.md`
+          labels: |
+            docs
+            research

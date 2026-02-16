@@ -28,7 +28,7 @@ export type SecureMemoryUnlockResult =
 
 export type SecureMemorySetupResult =
   | { ok: true; data: E2EProfileData }
-  | { ok: false; reason: 'invalid_pin' | 'unauthorized' | 'network' | 'conflict' };
+  | { ok: false; reason: 'invalid_pin' | 'unauthorized' | 'network' | 'conflict' | 'plan_required' };
 
 function isDigitsOnly(value: string): boolean {
   return /^[0-9]+$/.test(value);
@@ -108,6 +108,9 @@ export class SecureMemoryClient {
       const payload = (await response.json()) as E2EProfilePutResponse;
       if (response.status === 401) {
         return { ok: false, reason: 'unauthorized' };
+      }
+      if (response.status === 403) {
+        return { ok: false, reason: 'plan_required' };
       }
       if (response.status === 409) {
         return { ok: false, reason: 'conflict' };
@@ -225,4 +228,3 @@ export class SecureMemoryClient {
 }
 
 export const secureMemory = new SecureMemoryClient();
-
