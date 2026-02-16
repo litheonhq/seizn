@@ -20,7 +20,7 @@ import {
   type SummerRequestParams,
 } from "@/lib/tenant-policy";
 
-function verifyInternalKey(request: NextRequest): boolean {
+export function verifyInternalKey(request: NextRequest): boolean {
   const configured = process.env.INTERNAL_API_KEY;
   if (!configured) {
     // Fail-closed in all environments; this endpoint is internal-only.
@@ -32,8 +32,9 @@ function verifyInternalKey(request: NextRequest): boolean {
   if (!provided) return false;
 
   try {
-    const a = Buffer.from(provided);
-    const b = Buffer.from(configured);
+    const encoder = new TextEncoder();
+    const a = encoder.encode(provided);
+    const b = encoder.encode(configured);
     if (a.length !== b.length) return false;
     return timingSafeEqual(a, b);
   } catch {

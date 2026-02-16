@@ -44,6 +44,10 @@ import { safeJsonParse } from '@/lib/safe-json';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
+  canUseEncryptedMemories,
+  getEncryptedMemoryPlanError,
+} from '@/lib/memory/entitlements';
+import {
   getCachedQueryResults,
   setCachedQueryResults,
   incrementMemoryVersion,
@@ -66,17 +70,17 @@ const ENCRYPTED_PLACEHOLDER = '[encrypted]';
 async function resolveAuth(
   request: NextRequest
 ): Promise<
-  | { userId: string; keyId: string | null }
+  | { userId: string; keyId: string | null; plan: string | null }
   | { error: NextResponse }
 > {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (!isAuthError(authResult)) {
-    return { userId: authResult.userId, keyId: authResult.keyId };
+    return { userId: authResult.userId, keyId: authResult.keyId, plan: authResult.plan };
   }
 
   const session = await auth();
   if (session?.user?.id) {
-    return { userId: session.user.id, keyId: null };
+    return { userId: session.user.id, keyId: null, plan: null };
   }
 
   return { error: authErrorResponse(authResult.authError) };
@@ -125,6 +129,35 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
     const namespace = body.namespace || 'default';
+
+    if (isEncrypted) {
+      let effectivePlan = result.plan;
+      if (!effectivePlan) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('plan')
+          .eq('id', userId)
+          .maybeSingle();
+        effectivePlan = profile?.plan || 'free';
+      }
+
+      if (!canUseEncryptedMemories(effectivePlan)) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+            403
+          );
+        }
+        return NextResponse.json(
+          {
+            success: false,
+            error: getEncryptedMemoryPlanError(),
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          },
+          { status: 403 }
+        );
+      }
+    }
 
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
     const sanitizedContent = (body.content || '').replace(/\x00/g, '');

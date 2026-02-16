@@ -1,4 +1,5 @@
 {
+  "ignoreCommand": "npm run vercel:ignore-build",
   "redirects": [
     {
       "source": "/:path*",

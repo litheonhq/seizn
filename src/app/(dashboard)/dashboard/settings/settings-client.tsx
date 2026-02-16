@@ -282,12 +282,12 @@ export function SettingsClient() {
       </header>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-x-auto">
+      <div className="grid grid-cols-2 gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors sm:justify-start sm:px-4 ${
               activeTab === tab.id
                 ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
@@ -300,7 +300,7 @@ export function SettingsClient() {
       </div>
 
       {/* Tab Content */}
-      <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
+      <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-4 sm:p-6">
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="space-y-6">

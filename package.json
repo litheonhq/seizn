@@ -21,6 +21,7 @@
     "verify:evidence": "npx ts-node --project tsconfig.node.json scripts/verify-evidence-pack.ts",
     "verify:e2e-encryption-db": "node scripts/db-verify-e2e-encryption.mjs",
     "verify:ai-os-memory": "node scripts/verify-ai-os-memory.mjs",
+    "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "refresh:competitive-research": "node scripts/market/update-competitive-research.mjs",
     "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
   },

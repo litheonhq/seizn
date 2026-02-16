@@ -12,57 +12,10 @@ import {
   oidcSessionStore,
   validateOIDCConfig,
 } from '@/lib/enterprise-auth/oidc-provider';
-import type { OIDCConfig } from '@/lib/enterprise-auth/types';
 import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
-import { decryptSSOSecret } from '@/lib/sso/secret';
+import { buildOIDCConfigFromConnection, type OidcConnectionRecord } from '@/lib/sso/oidc-config';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
-
-type DbSSOConnection = {
-  id: string;
-  organization_id: string;
-  name: string;
-  provider_type: 'saml' | 'oidc';
-  status: 'draft' | 'testing' | 'active' | 'disabled';
-  oidc_issuer: string | null;
-  oidc_client_id: string | null;
-  oidc_client_secret_encrypted: string | null;
-  email_domains: string[] | null;
-  // Optional newer columns (may exist depending on migration history).
-  domains?: string[] | null;
-};
-
-function buildOIDCConfig(connection: DbSSOConnection): OIDCConfig {
-  if (!connection.oidc_client_id) {
-    throw new Error('OIDC client ID not configured');
-  }
-
-  if (!connection.oidc_client_secret_encrypted) {
-    throw new Error('OIDC client secret not configured');
-  }
-
-  if (!connection.oidc_issuer) {
-    throw new Error('OIDC issuer not configured');
-  }
-
-  return {
-    type: 'oidc',
-    clientId: connection.oidc_client_id,
-    clientSecret: decryptSSOSecret(connection.oidc_client_secret_encrypted),
-    issuerUrl: connection.oidc_issuer,
-    // Prefer discovery when these are not explicitly configured.
-    authorizationUrl: '',
-    tokenUrl: '',
-    userInfoUrl: '',
-    scopes: ['openid', 'email', 'profile'],
-    attributeMapping: {
-      email: 'email',
-      name: 'name',
-      picture: 'picture',
-      groups: 'groups',
-    },
-  };
-}
 
 export async function GET(
   request: NextRequest,
@@ -89,7 +42,7 @@ export async function GET(
     }
 
     // Verify this is an OIDC connection
-    const typed = connection as DbSSOConnection;
+    const typed = connection as OidcConnectionRecord;
     if (typed.provider_type !== 'oidc') {
       return NextResponse.json(
         { error: 'This connection is not configured for OIDC' },
@@ -105,7 +58,7 @@ export async function GET(
       );
     }
 
-    const config = buildOIDCConfig(typed);
+    const config = buildOIDCConfigFromConnection(typed);
 
     // Validate OIDC config
     const validation = validateOIDCConfig(config);

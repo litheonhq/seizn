@@ -12,6 +12,10 @@ import { safeJsonParse } from '@/lib/safe-json';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
+  canUseEncryptedMemories,
+  getEncryptedMemoryPlanError,
+} from '@/lib/memory/entitlements';
+import {
   getCachedQueryResults,
   setCachedQueryResults,
   incrementMemoryVersion,
@@ -43,7 +47,7 @@ export async function POST(request: NextRequest) {
       return authErrorResponse(authResult.authError);
     }
 
-    const { userId, keyId } = authResult;
+    const { userId, keyId, plan } = authResult;
 
     step = 'parse_body';
     let body: AddMemoryRequest;
@@ -62,6 +66,13 @@ export async function POST(request: NextRequest) {
     const encryptedContent = body.encrypted_content;
 
     if (isEncrypted) {
+      if (!canUseEncryptedMemories(plan)) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+          403
+        );
+        return NextResponse.json(getEncryptedMemoryPlanError(), { status: 403 });
+      }
       if (!encryptedContent || encryptedContent.trim().length === 0) {
         await logRequest(
           { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
