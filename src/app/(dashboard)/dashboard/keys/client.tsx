@@ -147,7 +147,7 @@ export default function ApiKeysClient() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t("dashboard.keysPage.title")}</h1>
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
             {t("dashboard.keysPage.subtitle")}
           </p>
         </div>
@@ -189,7 +189,7 @@ export default function ApiKeysClient() {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               {t("dashboard.keysPage.noKeysTitle")}
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6 max-w-sm mx-auto">
+            <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto">
               {t("dashboard.keysPage.noKeysDesc")}
             </p>
             <button
@@ -204,11 +204,11 @@ export default function ApiKeysClient() {
             <table className="w-full">
               <thead>
                 <tr className="border-b theme-border text-left">
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t("dashboard.keysPage.name")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider hidden sm:table-cell">{t("dashboard.keysPage.keyColumn")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider hidden md:table-cell">{t("dashboard.keysPage.created")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider hidden lg:table-cell">{t("dashboard.keysPage.lastUsed")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">{t("dashboard.keysPage.actions")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("dashboard.keysPage.name")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">{t("dashboard.keysPage.keyColumn")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">{t("dashboard.keysPage.created")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">{t("dashboard.keysPage.lastUsed")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">{t("dashboard.keysPage.actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -223,7 +223,7 @@ export default function ApiKeysClient() {
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <code className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">{key.key_prefix}...</code>
+                      <code className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">{key.key_prefix}...</code>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <span className="text-sm text-gray-600 dark:text-gray-300">{new Date(key.created_at).toLocaleDateString(locale)}</span>
@@ -267,7 +267,7 @@ export default function ApiKeysClient() {
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{t("dashboard.keysPage.authentication")}</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-3">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
               {t("dashboard.keysPage.authDesc")}
             </p>
             <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
@@ -312,7 +312,7 @@ export default function ApiKeysClient() {
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("dashboard.keysPage.keyCreated")}</h2>
-                  <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                     {t("dashboard.keysPage.keyCreatedDesc")}
                   </p>
                 </div>
@@ -347,7 +347,7 @@ export default function ApiKeysClient() {
                     <KeyIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("dashboard.keysPage.createKeyTitle")}</h2>
-                  <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                     {t("dashboard.keysPage.createKeyDesc")}
                   </p>
                 </div>
@@ -416,7 +416,7 @@ export default function ApiKeysClient() {
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {t("dashboard.keysPage.revokeConfirm").replace("{keyName}", revokeTarget.name)}
               </h2>
-              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-2">
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
                 {t("dashboard.keysPage.revokeWarning")}
               </p>
             </div>
@@ -472,7 +472,7 @@ export default function ApiKeysClient() {
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("dashboard.keysPage.keyRotated")}</h2>
-                  <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                     {t("dashboard.keysPage.keyRotatedDesc")}
                   </p>
                 </div>
@@ -509,7 +509,7 @@ export default function ApiKeysClient() {
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     {t("dashboard.keysPage.rotateConfirm").replace("{keyName}", rotateTarget.name)}
                   </h2>
-                  <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-2">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
                     {t("dashboard.keysPage.rotateWarning")}
                   </p>
                 </div>

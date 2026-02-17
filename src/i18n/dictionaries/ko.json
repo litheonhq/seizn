@@ -887,6 +887,16 @@
         "events": "구독할 이벤트",
         "cancel": "취소",
         "create": "웹훅 생성"
+      },
+      "events": {
+        "memory_created": { "label": "메모리 생성", "desc": "새 메모리가 저장될 때" },
+        "memory_updated": { "label": "메모리 수정", "desc": "메모리가 수정될 때" },
+        "memory_deleted": { "label": "메모리 삭제", "desc": "메모리가 삭제될 때" },
+        "extraction_completed": { "label": "추출 완료", "desc": "메모리 추출이 완료될 때" },
+        "query_executed": { "label": "쿼리 실행", "desc": "RAG 쿼리가 수행될 때" },
+        "key_created": { "label": "API 키 생성", "desc": "새 API 키가 생성될 때" },
+        "key_revoked": { "label": "API 키 폐기", "desc": "API 키가 폐기될 때" },
+        "usage_threshold": { "label": "사용량 임계값", "desc": "사용량이 임계값을 초과할 때" }
       }
     },
     "keysPage": {

@@ -1053,6 +1053,16 @@
         "events": "Events to Subscribe",
         "cancel": "Cancel",
         "create": "Create Webhook"
+      },
+      "events": {
+        "memory_created": { "label": "Memory Created", "desc": "When a new memory is stored" },
+        "memory_updated": { "label": "Memory Updated", "desc": "When a memory is modified" },
+        "memory_deleted": { "label": "Memory Deleted", "desc": "When a memory is removed" },
+        "extraction_completed": { "label": "Extraction Completed", "desc": "When memory extraction finishes" },
+        "query_executed": { "label": "Query Executed", "desc": "When a RAG query is performed" },
+        "key_created": { "label": "API Key Created", "desc": "When a new API key is generated" },
+        "key_revoked": { "label": "API Key Revoked", "desc": "When an API key is revoked" },
+        "usage_threshold": { "label": "Usage Threshold", "desc": "When usage exceeds threshold" }
       }
     },
     "playgroundTutorial": {

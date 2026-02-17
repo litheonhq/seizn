@@ -274,7 +274,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   return (
     <div className={`theme-${season} min-h-screen theme-gradient-bg`}>
       {/* Seasonal particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
         {config.particles.map((particle, i) => (
           <div
             key={i}
@@ -299,6 +299,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
       {/* Sidebar - Desktop */}
       <aside
+        role="navigation"
+        aria-label="Main navigation"
         className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col glass-card transition-all duration-300 ease-out ${
           isSidebarExpanded ? "w-72" : "w-20"
         }`}
@@ -497,6 +499,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <button
             onClick={() => setShowOrgDropdown(!showOrgDropdown)}
             className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200"
+            aria-expanded={showOrgDropdown}
+            aria-haspopup="true"
+            aria-label={t("dashboard.topBar.switchOrg") || "Switch organization"}
           >
             <OrgIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
             <span>{selectedOrg?.name || t("dashboard.topBar.personal")}</span>
@@ -539,6 +544,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <button
             onClick={() => setShowCreateDropdown(!showCreateDropdown)}
             className="flex items-center gap-2 px-4 py-2 rounded-xl theme-gradient-btn text-white text-sm font-medium shadow-md hover:shadow-lg transition-all"
+            aria-expanded={showCreateDropdown}
+            aria-haspopup="true"
           >
             <PlusIcon className="w-4 h-4" />
             {t("dashboard.topBar.create")}
