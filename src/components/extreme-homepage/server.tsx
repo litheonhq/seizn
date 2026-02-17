@@ -4,6 +4,15 @@ import type { SVGProps } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { ExtremeHomepageClient } from "./index";
+import {
+  getFeatureContent,
+  getMCPFeatureContent,
+  getTrustContent,
+  getSectionContent,
+  type FeatureKey,
+  type MCPFeatureKey,
+  type TrustKey,
+} from "./feature-translations";
 
 // =============================================================================
 // Icons — Existing
@@ -121,68 +130,63 @@ function CertificateIcon(props: SVGProps<SVGSVGElement>) {
 // Feature Showcase (replaces WhySeizn)
 // =============================================================================
 
-const FEATURES = [
+const FEATURES: {
+  key: FeatureKey;
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  badgeColor: string;
+  gradient: string;
+  iconBg: string;
+  iconColor: string;
+}[] = [
   {
+    key: "semantic-memory",
     icon: DatabaseIcon,
-    title: "Semantic Memory & Context",
-    desc: "Persistent agent memory with graph knowledge, multilingual hybrid search across 100+ languages, and automatic context reconciliation. Your agents remember everything and never hallucinate on stale data.",
-    badge: "Mem0-level + Graph",
     badgeColor: "emerald",
     gradient: "from-emerald-400 to-teal-500",
     iconBg: "bg-emerald-100 dark:bg-emerald-900/30",
     iconColor: "text-emerald-600 dark:text-emerald-400",
   },
   {
+    key: "policy-engine",
     icon: GovernanceIcon,
-    title: "Policy Engine & Governance",
-    desc: "OPA-powered policy enforcement, tool approval workflows, and agent registry with key management. Define what agents can and cannot do\u2014then enforce it automatically.",
-    badge: "OPA-Powered",
     badgeColor: "rose",
     gradient: "from-rose-400 to-rose-600",
     iconBg: "bg-rose-100 dark:bg-rose-900/30",
     iconColor: "text-rose-600 dark:text-rose-400",
   },
   {
+    key: "observability",
     icon: TracingIcon,
-    title: "Observability & Eval",
-    desc: "Every request traced by default. Production-grade evaluation pipelines, regression detection, and failure debugging without bolting on LangSmith or custom logging.",
-    badge: "Traces On by Default",
     badgeColor: "purple",
     gradient: "from-purple-400 to-purple-600",
     iconBg: "bg-purple-100 dark:bg-purple-900/30",
     iconColor: "text-purple-600 dark:text-purple-400",
   },
   {
+    key: "finops",
     icon: AutopilotIcon,
-    title: "FinOps & Budget Control",
-    desc: "Set token and model budgets, get cost alerts before you overshoot, and let Budget Autopilot pick the cheapest strategy that meets your SLO. Never a surprise bill.",
-    badge: "Budget Autopilot",
     badgeColor: "blue",
     gradient: "from-blue-400 to-cyan-500",
     iconBg: "bg-blue-100 dark:bg-blue-900/30",
     iconColor: "text-blue-600 dark:text-blue-400",
   },
   {
+    key: "compliance",
     icon: ComplianceIcon,
-    title: "EU AI Act & Compliance",
-    desc: "Built-in RTBF (right to be forgotten), EU AI Act transparency events, and ISO 42001-aligned audit trails. Produce evidence artifacts on demand for regulators and auditors.",
-    badge: "Audit-Ready",
     badgeColor: "indigo",
     gradient: "from-indigo-400 to-indigo-600",
     iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
     iconColor: "text-indigo-600 dark:text-indigo-400",
   },
   {
+    key: "one-sdk",
     icon: LessGlueIcon,
-    title: "One SDK, One Bill",
-    desc: "Replace LangChain + Pinecone + LangSmith + custom PII filters + OPA sidecar + cost dashboards. Spring and Summer SDKs. One integration, one dashboard, one vendor.",
-    badge: "Spring + Summer SDKs",
     badgeColor: "amber",
     gradient: "from-amber-400 to-amber-600",
     iconBg: "bg-amber-100 dark:bg-amber-900/30",
     iconColor: "text-amber-600 dark:text-amber-400",
   },
-] as const;
+];
 
 const BADGE_COLORS: Record<string, string> = {
   emerald: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
@@ -193,53 +197,8 @@ const BADGE_COLORS: Record<string, string> = {
   amber: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
 };
 
-const SECTION_COPY = {
-  en: {
-    platformCapabilities: "Platform Capabilities",
-    platformTitle: "Everything agents need to run in production",
-    platformSubtitle: "One platform for memory, governance, observability, cost control, and compliance - so your team ships faster with fewer moving parts.",
-    mcpTools: "MCP & Developer Tools",
-    mcpTitle: "Your AI memories, in every editor",
-    mcpSubtitle: "One MCP server bridges Seizn to 8 AI coding assistants. Auto-sync preferences, instructions, and context - no manual config files.",
-    setupMcp: "Set up MCP Server",
-    mcpHint: "npx seizn-mcp@latest - works in 30 seconds",
-    trustTitle: "Enterprise-grade trust, built in",
-    trustSubtitle: "Every layer designed for regulated industries and security-conscious teams.",
-    pricingTitle: "From first API call to enterprise rollout",
-    pricingSubtitle: "Free tier to start building. Predictable per-query pricing as you scale. Custom plans for teams with compliance and SLA requirements.",
-    footerTagline: "Built for agents, governed by design.",
-    productLabel: "Product",
-    resourcesLabel: "Resources",
-    legalLabel: "Legal",
-    compareLabel: "Compare",
-    mcpServerLabel: "MCP Server",
-    githubLabel: "GitHub",
-  },
-  ko: {
-    platformCapabilities: "플랫폼 기능",
-    platformTitle: "에이전트 운영에 필요한 모든 기능",
-    platformSubtitle: "메모리, 거버넌스, 관측, 비용 제어, 컴플라이언스를 하나의 플랫폼에서 제공합니다.",
-    mcpTools: "MCP 및 개발자 도구",
-    mcpTitle: "어떤 에디터에서든 같은 AI 메모리",
-    mcpSubtitle: "하나의 MCP 서버로 8개 AI 코딩 도구에 Seizn 컨텍스트를 연결합니다. 수동 설정 파일 없이 동작합니다.",
-    setupMcp: "MCP 서버 설정하기",
-    mcpHint: "npx seizn-mcp@latest - 30초 내 설정",
-    trustTitle: "엔터프라이즈 신뢰 기능 내장",
-    trustSubtitle: "규제가 필요한 환경에서도 바로 사용할 수 있도록 설계했습니다.",
-    pricingTitle: "첫 API 호출부터 엔터프라이즈 배포까지",
-    pricingSubtitle: "무료로 시작하고 규모에 맞춰 예측 가능한 과금으로 확장하세요.",
-    footerTagline: "에이전트를 위한 설계, 거버넌스를 기본으로.",
-    productLabel: "제품",
-    resourcesLabel: "리소스",
-    legalLabel: "법적 고지",
-    compareLabel: "비교",
-    mcpServerLabel: "MCP 서버",
-    githubLabel: "GitHub",
-  },
-} as const;
-
 function getSectionCopy(locale: Locale) {
-  return locale === "ko" ? SECTION_COPY.ko : SECTION_COPY.en;
+  return getSectionContent(locale);
 }
 
 function FeatureShowcase({ locale }: { locale: Locale }) {
@@ -263,16 +222,17 @@ function FeatureShowcase({ locale }: { locale: Locale }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map((f) => {
             const Icon = f.icon;
+            const content = getFeatureContent(locale, f.key);
             return (
-              <div key={f.title} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
+              <div key={f.key} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
                 <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${f.gradient}`} />
                 <div className={`w-12 h-12 ${f.iconBg} rounded-xl flex items-center justify-center mb-4`}>
                   <Icon className={`w-6 h-6 ${f.iconColor}`} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{f.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{content.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{content.desc}</p>
                 <div className="mt-4">
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${BADGE_COLORS[f.badgeColor]}`}>{f.badge}</span>
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${BADGE_COLORS[f.badgeColor]}`}>{content.badge}</span>
                 </div>
               </div>
             );
@@ -319,37 +279,37 @@ function KeyIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-const MCP_FEATURES = [
+const MCP_FEATURES: {
+  key: MCPFeatureKey;
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  editors: string[];
+}[] = [
   {
+    key: "mcp-server",
     icon: TerminalIcon,
-    title: "MCP Server for 8 Editors",
-    desc: "Native MCP support for Claude Code, Cursor, Windsurf, Cline. Config file sync for Copilot, Aider, Codex. One memory, every editor.",
     editors: ["Claude Code", "Cursor", "Windsurf", "Copilot", "Cline", "Aider", "Codex"],
   },
   {
+    key: "config-sync",
     icon: SyncIcon,
-    title: "Config Sync Across Tools",
-    desc: "Auto-generate CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules, and more from your Seizn memories. Push or pull — your preferences follow you.",
     editors: ["CLAUDE.md", "AGENTS.md", ".cursorrules", ".windsurfrules"],
   },
   {
+    key: "oauth-device",
     icon: KeyIcon,
-    title: "OAuth Device Flow",
-    desc: "Browser-based auth for CLI tools. No API key copying. Just approve a code like ABCD-1234 in your browser — token saved automatically.",
     editors: ["RFC 8628", "Zero-copy Auth"],
   },
   {
+    key: "auto-context",
     icon: PlugIcon,
-    title: "Auto Context & Webhooks",
-    desc: "Auto-detect projects from package.json/pyproject.toml/Cargo.toml. Get webhook notifications on memory changes. MCP Resources for read-only access.",
     editors: ["Auto-detect", "Webhooks", "MCP Resources"],
   },
-] as const;
+];
 
 function MCPDeveloperTools({ locale }: { locale: Locale }) {
   const copy = getSectionCopy(locale);
   return (
-    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-gray-900/50 to-gray-950/80">
+    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-950">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-xs font-medium text-emerald-700 dark:text-emerald-400 mb-4">
@@ -359,7 +319,7 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
           <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
             {copy.mcpTitle}
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {copy.mcpSubtitle}
           </p>
         </div>
@@ -367,17 +327,18 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {MCP_FEATURES.map((f) => {
             const Icon = f.icon;
+            const content = getMCPFeatureContent(locale, f.key);
             return (
-              <div key={f.title} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
+              <div key={f.key} className="glass-card-premium glass-card-hover rounded-2xl p-6 overflow-hidden relative">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-400 to-teal-500" />
                 <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{f.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">{f.desc}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{content.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">{content.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {f.editors.map((e) => (
-                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">{e}</span>
+                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-gray-200 text-gray-700 dark:bg-zinc-800 dark:text-zinc-400">{e}</span>
                   ))}
                 </div>
               </div>
@@ -396,7 +357,7 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Link>
-          <p className="mt-3 text-sm text-gray-500 dark:text-gray-500">
+          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
             {copy.mcpHint}
           </p>
         </div>
@@ -409,16 +370,20 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
 // Trust & Compliance (replaces TrustBadges)
 // =============================================================================
 
-const TRUST_ITEMS = [
-  { icon: SecurityIcon, title: "RLS + Key Hashing", desc: "Tenant isolation by default", color: "emerald" },
-  { icon: ShieldCheckIcon, title: "OWASP LLM Top 10", desc: "Prompt injection & data leakage protections", color: "rose" },
-  { icon: RateLimitIcon, title: "Rate Limits + Alerts", desc: "Per-agent, per-model throttling", color: "blue" },
-  { icon: AuditIcon, title: "Full Audit Trails", desc: "Every decision, every token logged", color: "purple" },
-  { icon: GlobeIcon, title: "EU AI Act Ready", desc: "Transparency events for high-risk AI", color: "indigo" },
-  { icon: ForgetIcon, title: "GDPR / RTBF", desc: "Right to be forgotten, verified", color: "rose" },
-  { icon: CertificateIcon, title: "SOC 2 Type II Path", desc: "Controls mapped, audit-ready", color: "amber" },
-  { icon: GovernanceIcon, title: "ISO 42001 Aligned", desc: "AI management system standard", color: "emerald" },
-] as const;
+const TRUST_ITEMS: {
+  key: TrustKey;
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  color: string;
+}[] = [
+  { key: "rls", icon: SecurityIcon, color: "emerald" },
+  { key: "owasp", icon: ShieldCheckIcon, color: "rose" },
+  { key: "rate-limits", icon: RateLimitIcon, color: "blue" },
+  { key: "audit", icon: AuditIcon, color: "purple" },
+  { key: "eu-ai-act", icon: GlobeIcon, color: "indigo" },
+  { key: "gdpr", icon: ForgetIcon, color: "rose" },
+  { key: "soc2", icon: CertificateIcon, color: "amber" },
+  { key: "iso42001", icon: GovernanceIcon, color: "emerald" },
+];
 
 const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
   emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-600 dark:text-emerald-400" },
@@ -447,13 +412,14 @@ function TrustAndCompliance({ locale }: { locale: Locale }) {
           {TRUST_ITEMS.map((item) => {
             const Icon = item.icon;
             const style = TRUST_ICON_STYLES[item.color];
+            const content = getTrustContent(locale, item.key);
             return (
-              <div key={item.title} className="glass-card-premium rounded-xl p-5 text-center">
+              <div key={item.key} className="glass-card-premium rounded-xl p-5 text-center">
                 <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center mx-auto mb-3`}>
                   <Icon className={`w-5 h-5 ${style.text}`} />
                 </div>
-                <div className="font-medium text-sm text-gray-900 dark:text-gray-100">{item.title}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.desc}</div>
+                <div className="font-medium text-sm text-gray-900 dark:text-gray-100">{content.title}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{content.desc}</div>
               </div>
             );
           })}

@@ -27,16 +27,16 @@ interface WebhookDelivery {
   payload_preview?: string;
 }
 
-const eventTypes = [
-  { id: "memory.created", label: "Memory Created", description: "When a new memory is stored" },
-  { id: "memory.updated", label: "Memory Updated", description: "When a memory is modified" },
-  { id: "memory.deleted", label: "Memory Deleted", description: "When a memory is removed" },
-  { id: "extraction.completed", label: "Extraction Completed", description: "When memory extraction finishes" },
-  { id: "query.executed", label: "Query Executed", description: "When a RAG query is performed" },
-  { id: "key.created", label: "API Key Created", description: "When a new API key is generated" },
-  { id: "key.revoked", label: "API Key Revoked", description: "When an API key is revoked" },
-  { id: "usage.threshold", label: "Usage Threshold", description: "When usage exceeds threshold" },
-];
+const EVENT_TYPE_IDS = [
+  "memory.created",
+  "memory.updated",
+  "memory.deleted",
+  "extraction.completed",
+  "query.executed",
+  "key.created",
+  "key.revoked",
+  "usage.threshold",
+] as const;
 
 // Mock data
 const mockWebhooks: Webhook[] = [
@@ -205,13 +205,19 @@ export default function WebhooksClient() {
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
+    return new Date(dateStr).toLocaleDateString(undefined, {
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
   };
+
+  const eventTypes = EVENT_TYPE_IDS.map((id) => ({
+    id,
+    label: t(`dashboard.webhooks.events.${id.replace(".", "_")}.label`) || id,
+    description: t(`dashboard.webhooks.events.${id.replace(".", "_")}.desc`) || "",
+  }));
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -232,7 +238,7 @@ export default function WebhooksClient() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
       </div>
     );
   }
@@ -257,7 +263,7 @@ export default function WebhooksClient() {
             setFormEvents([]);
             setShowCreateModal(true);
           }}
-          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -376,7 +382,7 @@ export default function WebhooksClient() {
                   setFormEvents([]);
                   setShowCreateModal(true);
                 }}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-4 px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-colors"
               >
                 {t("dashboard.webhooks.empty.cta")}
               </button>
@@ -434,7 +440,7 @@ export default function WebhooksClient() {
                     <button
                       onClick={() => handleToggleWebhook(webhook)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        webhook.status === "active" ? "bg-blue-600" : "bg-gray-300 dark:bg-gray-600"
+                        webhook.status === "active" ? "bg-teal-500" : "bg-gray-300 dark:bg-gray-600"
                       }`}
                     >
                       <span

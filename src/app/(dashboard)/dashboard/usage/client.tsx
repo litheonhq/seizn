@@ -87,7 +87,7 @@ export function UsageClient() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               {t("dashboard.usagePage.title")}
             </h2>
-            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
+            <p className="text-gray-500 dark:text-gray-400">
               {t("dashboard.usagePage.subtitle")}
             </p>
           </div>
@@ -101,7 +101,7 @@ export function UsageClient() {
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   period === p
                     ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-gray-900 dark:text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-white"
                 }`}
               >
                 {p === "7d" ? t("dashboard.usagePage.days7") : p === "30d" ? t("dashboard.usagePage.days30") : t("dashboard.usagePage.days90")}
@@ -111,43 +111,43 @@ export function UsageClient() {
         </div>
 
         {isLoading ? (
-          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-12">{t("dashboard.usagePage.loading")}</div>
+          <div className="text-gray-500 dark:text-gray-400 text-center py-12">{t("dashboard.usagePage.loading")}</div>
         ) : usage ? (
           <>
             {/* Summary Cards - 2 rows of 3 */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.totalCalls.toLocaleString()}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.totalTokens.toLocaleString()}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent">
                   ${usage.summary.totalCostDollars}
                 </p>
               </div>
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.avgLatency}ms
                 </p>
               </div>
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.p95Latency")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.p95Latency")}</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {usage.summary.p95Latency}ms
                 </p>
               </div>
               <div className="glass-card border border-gray-200 dark:border-gray-600 rounded-2xl p-4">
-                <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">{t("dashboard.usagePage.errorRateKpi")}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t("dashboard.usagePage.errorRateKpi")}</p>
                 <p className={`text-2xl font-bold ${usage.summary.errorRate > 5 ? 'text-red-500' : usage.summary.errorRate > 0 ? 'text-amber-500' : 'text-green-500'}`}>
                   {usage.summary.errorRate}%
                 </p>
@@ -169,7 +169,7 @@ export function UsageClient() {
                       className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                         chartTab === tab
                           ? "bg-white text-gray-900 dark:text-white shadow-sm"
-                          : "text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-200"
+                          : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:text-gray-200"
                       }`}
                     >
                       {t(`dashboard.usagePage.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`)}
@@ -279,7 +279,7 @@ export function UsageClient() {
                           <span className="text-gray-700 dark:text-gray-200 font-mono truncate max-w-[200px]">
                             {ep.endpoint}
                           </span>
-                          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
+                          <span className="text-gray-500 dark:text-gray-400">
                             {ep.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
@@ -328,7 +328,7 @@ export function UsageClient() {
                           <span className="text-gray-700 dark:text-gray-200">
                             {key.name || key.prefix + "..."}
                           </span>
-                          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
+                          <span className="text-gray-500 dark:text-gray-400">
                             {key.calls.toLocaleString()} {t("dashboard.usagePage.calls")}
                           </span>
                         </div>
@@ -369,7 +369,7 @@ export function UsageClient() {
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {t("dashboard.usagePage.noUsageTitle")}
               </h3>
-              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
                 {t("dashboard.usagePage.noUsageDescription")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -415,7 +415,7 @@ function EmptyState({
         {icon}
       </div>
       <h4 className="text-gray-900 dark:text-white font-medium mb-1">{title}</h4>
-      <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{description}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{description}</p>
       {cta && (
         <Link
           href={cta.href}
