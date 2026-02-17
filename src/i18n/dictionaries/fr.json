@@ -53,7 +53,7 @@
       "price": "$0",
       "period": "Gratuit pour toujours",
       "features": [
-        "10 000 souvenirs",
+        "12 000 mémoires",
         "1 000 appels API/mois",
         "Support communautaire"
       ],
@@ -64,10 +64,12 @@
       "price": "$9",
       "period": "par mois",
       "features": [
-        "50 000 souvenirs",
-        "10 000 appels API/mois",
+        "50 000 mémoires",
+        "5 000 appels API/mois",
         "Support email",
-        "E2E encrypted memories"
+        "Mémoires chiffrées E2E",
+        "Reclassement",
+        "Opérations en masse"
       ],
       "cta": "S'abonner"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "par mois",
       "features": [
-        "50 000 souvenirs",
+        "100 000 mémoires",
         "10 000 appels API/mois",
         "Support email",
-        "Analytiques de base"
+        "Tableau de bord analytique",
+        "Webhooks",
+        "Recherche fédérée"
       ],
       "cta": "S'abonner"
     },
@@ -89,11 +93,12 @@
       "period": "par mois",
       "badge": "Populaire",
       "features": [
-        "200 000 souvenirs",
-        "50 000 appels API/mois",
+        "1 000 000 mémoires",
+        "100 000 appels API/mois",
         "Support prioritaire",
         "Analytiques avancées",
-        "Webhooks"
+        "Webhooks",
+        "Recherche fédérée"
       ],
       "cta": "S'abonner"
     },
@@ -102,9 +107,10 @@
       "price": "Sur mesure",
       "period": "Contactez-nous",
       "features": [
-        "Souvenirs illimités",
+        "Mémoires illimitées",
         "Appels API illimités",
         "Support dédié",
+        "SSO / SAML",
         "SLA personnalisé",
         "Option on-premise"
       ],

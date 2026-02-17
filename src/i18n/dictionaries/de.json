@@ -67,7 +67,9 @@
         "50.000 Erinnerungen",
         "5.000 API-Aufrufe/Monat",
         "E-Mail-Support",
-        "E2E encrypted memories"
+        "E2E-verschlüsselte Erinnerungen",
+        "Reranking",
+        "Massenoperationen"
       ],
       "cta": "Abonnieren"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "pro Monat",
       "features": [
-        "50.000 Erinnerungen",
+        "100.000 Erinnerungen",
         "10.000 API-Aufrufe/Monat",
         "E-Mail-Support",
-        "Basis-Analytics"
+        "Analyse-Dashboard",
+        "Webhooks",
+        "Föderierte Suche"
       ],
       "cta": "Abonnieren"
     },
@@ -89,11 +93,12 @@
       "period": "pro Monat",
       "badge": "Beliebt",
       "features": [
-        "200.000 Erinnerungen",
-        "50.000 API-Aufrufe/Monat",
+        "1.000.000 Erinnerungen",
+        "100.000 API-Aufrufe/Monat",
         "Prioritäts-Support",
         "Erweiterte Analytics",
-        "Webhooks"
+        "Webhooks",
+        "Föderierte Suche"
       ],
       "cta": "Abonnieren"
     },
@@ -105,6 +110,7 @@
         "Unbegrenzte Erinnerungen",
         "Unbegrenzte API-Aufrufe",
         "Dedizierter Support",
+        "SSO / SAML",
         "Individuelles SLA",
         "On-Premise-Option"
       ],

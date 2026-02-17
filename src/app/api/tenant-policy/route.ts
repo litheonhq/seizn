@@ -12,6 +12,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { createServerClient } from "@/lib/supabase";
 import { getRequestUser } from "@/lib/api/request-user";
 import {
@@ -44,6 +45,14 @@ async function checkAdminAccess(userId: string, tenantId: string): Promise<boole
 
   if (!membership) return false;
   return ['owner', 'admin'].includes(membership.role);
+}
+
+function buildPolicyEtag(policy: TenantPolicy): string {
+  const hash = createHash('sha256')
+    .update(JSON.stringify(policy))
+    .digest('hex')
+    .slice(0, 16);
+  return `W/\"tenant-policy-${hash}\"`;
 }
 
 /**
@@ -81,6 +90,21 @@ export async function GET(request: NextRequest) {
 
     // Get policy
     const policy = await getTenantPolicy(tenantId);
+    const policyEtag = buildPolicyEtag(policy);
+    const supportsConditionalGet = !includeBudget && !includeDegrade;
+
+    if (supportsConditionalGet) {
+      const ifNoneMatch = request.headers.get('if-none-match');
+      if (ifNoneMatch && ifNoneMatch === policyEtag) {
+        return new NextResponse(null, {
+          status: 304,
+          headers: {
+            ETag: policyEtag,
+            'Cache-Control': 'private, no-cache, must-revalidate',
+          },
+        });
+      }
+    }
 
     // Build response
     const response: Record<string, unknown> = {
@@ -112,7 +136,11 @@ export async function GET(request: NextRequest) {
       response.presets = listPresets();
     }
 
-    return NextResponse.json(response);
+    const jsonResponse = NextResponse.json(response);
+    jsonResponse.headers.set('ETag', policyEtag);
+    jsonResponse.headers.set('Cache-Control', 'private, no-cache, must-revalidate');
+    jsonResponse.headers.set('X-Policy-Version-Hash', policyEtag.replace(/^W\/\"|\"$/g, ''));
+    return jsonResponse;
   } catch (error) {
     console.error("[TenantPolicy] GET error:", error);
     return NextResponse.json(

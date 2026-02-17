@@ -14,6 +14,7 @@ import type {
   StrategyConfig,
   FusionMethod,
 } from '@/lib/hybrid-orchestrator';
+import type { RerankerModel } from '@/lib/reranker';
 import { estimateTokens } from '@/lib/summer/utils/tokens';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 
@@ -29,6 +30,10 @@ import { ValidationErrors, ServerErrors } from '@/lib/api-error';
  *   "config_id"?: "uuid",           // Use specific config (optional)
  *   "strategies"?: [{ type, weight, params }],  // Override strategies
  *   "fusion_method"?: "rrf" | "weighted_sum" | "learned" | "cascade",
+ *   "rerank"?: boolean,           // Optional second-pass reranker
+ *   "rerank_model"?: string,      // Optional reranker model override
+ *   "rerank_top_n"?: number,      // Max candidates to rerank (default: 30)
+ *   "rerank_threshold"?: number,  // Minimum rerank relevance score
  *   "top_k"?: number,               // Max results (default: 20)
  *   "include_strategy_results"?: boolean  // Include per-strategy results
  * }
@@ -118,6 +123,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if (body.rerank !== undefined && typeof body.rerank !== 'boolean') {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/hybrid/retrieve', method: 'POST', startTime },
+        400
+      );
+      return NextResponse.json(
+        { success: false, error: 'rerank must be a boolean' },
+        { status: 400 }
+      );
+    }
+
     // Execute hybrid retrieval
     const result = await hybridRetrieve(
       {
@@ -130,6 +146,10 @@ export async function POST(request: NextRequest) {
         strategies: body.strategies as StrategyConfig[] | undefined,
         fusionMethod: body.fusion_method,
         topK: body.top_k ?? 20,
+        rerank: body.rerank ?? false,
+        rerankModel: body.rerank_model as RerankerModel | undefined,
+        rerankTopN: body.rerank_top_n,
+        rerankThreshold: body.rerank_threshold,
         includeStrategyResults: body.include_strategy_results ?? false,
       }
     );
@@ -165,6 +185,7 @@ export async function POST(request: NextRequest) {
           total_latency_ms: result.metrics.totalLatencyMs,
           strategy_latencies: result.metrics.strategyLatencies,
           fusion_latency_ms: result.metrics.fusionLatencyMs,
+          rerank_latency_ms: result.metrics.rerankLatencyMs ?? null,
         },
         trace_id: result.traceId,
       },

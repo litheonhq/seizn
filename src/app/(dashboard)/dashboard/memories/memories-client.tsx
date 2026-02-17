@@ -172,6 +172,7 @@ export default function MemoriesClient() {
   const [totalCount, setTotalCount] = useState(0);
   const [namespace, setNamespace] = useState("default");
   const [namespaces, setNamespaces] = useState<NamespaceInfo[]>([]);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Date range filters
   const [afterDate, setAfterDate] = useState("");
@@ -229,6 +230,7 @@ export default function MemoriesClient() {
   // Fetch memories
   const fetchMemories = useCallback(async (resetOffset = true) => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const currentOffset = resetOffset ? 0 : offset;
       const params = new URLSearchParams();
@@ -262,25 +264,34 @@ export default function MemoriesClient() {
       if (beforeDate) params.set("before", new Date(beforeDate + "T23:59:59").toISOString());
 
       const res = await fetch(`/api/v1/memories?${params.toString()}`);
-      const data: { success: boolean; data: MemoriesResponse } = await res.json();
 
-      if (data.success) {
-        const responseData = data.data;
-        const newMemories = responseData.results || [];
-
-        if (resetOffset) {
-          setMemories(newMemories);
-          setOffset(ITEMS_PER_PAGE);
-        } else {
-          setMemories(prev => [...prev, ...newMemories]);
-          setOffset(currentOffset + ITEMS_PER_PAGE);
-        }
-
-        setTotalCount(responseData.total ?? responseData.count ?? newMemories.length);
-        setHasMore(newMemories.length === ITEMS_PER_PAGE);
+      if (!res.ok) {
+        throw new Error(`Server error (${res.status})`);
       }
+
+      const data: { success: boolean; data: MemoriesResponse; error?: string } = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fetch memories");
+      }
+
+      const responseData = data.data;
+      const newMemories = responseData.results || [];
+
+      if (resetOffset) {
+        setMemories(newMemories);
+        setOffset(ITEMS_PER_PAGE);
+      } else {
+        setMemories(prev => [...prev, ...newMemories]);
+        setOffset(currentOffset + ITEMS_PER_PAGE);
+      }
+
+      setTotalCount(responseData.total ?? responseData.count ?? newMemories.length);
+      setHasMore(newMemories.length === ITEMS_PER_PAGE);
     } catch (error) {
+      const message = error instanceof Error ? error.message : "An unexpected error occurred";
       console.error("Failed to fetch memories:", error);
+      setFetchError(message);
     } finally {
       setIsLoading(false);
     }
@@ -477,6 +488,7 @@ export default function MemoriesClient() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search memories..."}
+              aria-label={t("dashboard.memoriesPage.search") || "Search memories"}
               className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
             />
           </div>
@@ -512,6 +524,7 @@ export default function MemoriesClient() {
                 <select
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
+                  aria-label={t("dashboard.memoriesPage.namespace") || "Namespace"}
                   className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                 >
                   {namespaces.map((ns) => (
@@ -548,6 +561,7 @@ export default function MemoriesClient() {
                     type="date"
                     value={afterDate}
                     onChange={(e) => setAfterDate(e.target.value)}
+                    aria-label={t("dashboard.memoriesPage.after") || "After date"}
                     className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                   />
                 </div>
@@ -559,6 +573,7 @@ export default function MemoriesClient() {
                     type="date"
                     value={beforeDate}
                     onChange={(e) => setBeforeDate(e.target.value)}
+                    aria-label={t("dashboard.memoriesPage.before") || "Before date"}
                     className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                   />
                 </div>
@@ -646,6 +661,9 @@ export default function MemoriesClient() {
             <div className="relative">
               <button
                 onClick={() => setShowSortDropdown(!showSortDropdown)}
+                aria-expanded={showSortDropdown}
+                aria-haspopup="listbox"
+                aria-label={t("dashboard.memoriesPage.sortBy") || "Sort memories"}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <SortIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -690,7 +708,7 @@ export default function MemoriesClient() {
               {selectedTypes.map(type => (
                 <span key={type} className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}>
                   {type}
-                  <button onClick={() => toggleType(type)} className="hover:opacity-70">
+                  <button onClick={() => toggleType(type)} className="hover:opacity-70" aria-label={`Remove ${type} filter`}>
                     <XIcon className="w-3 h-3" />
                   </button>
                 </span>
@@ -698,7 +716,7 @@ export default function MemoriesClient() {
               {selectedTags.map(tag => (
                 <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200 rounded-full">
                   {tag}
-                  <button onClick={() => toggleTag(tag)} className="hover:opacity-70">
+                  <button onClick={() => toggleTag(tag)} className="hover:opacity-70" aria-label={`Remove ${tag} filter`}>
                     <XIcon className="w-3 h-3" />
                   </button>
                 </span>
@@ -727,6 +745,27 @@ export default function MemoriesClient() {
                   </button>
                 </span>
               )}
+            </div>
+          )}
+
+          {/* Error Banner */}
+          {fetchError && (
+            <div className="glass-card rounded-2xl p-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 flex items-center justify-between" role="alert">
+              <div className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-red-800 dark:text-red-200">{t("dashboard.memoriesPage.fetchError") || "Failed to load memories"}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400">{fetchError}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => fetchMemories(true)}
+                className="px-3 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40 rounded-lg hover:bg-red-200 dark:hover:bg-red-800/60 transition-colors"
+              >
+                {t("dashboard.memoriesPage.retry") || "Retry"}
+              </button>
             </div>
           )}
 

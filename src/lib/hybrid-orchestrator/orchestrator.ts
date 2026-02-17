@@ -7,6 +7,7 @@
 
 import { createServerClient } from '@/lib/supabase';
 import { getEmbeddingProvider } from '@/lib/summer/embedding';
+import { getRerankerService, type RerankerModel } from '@/lib/reranker';
 import { v4 as uuidv4 } from 'uuid';
 
 import type {
@@ -119,6 +120,14 @@ export async function hybridRetrieve(
   );
   const fusionLatencyMs = performance.now() - fusionStartTime;
 
+  // Optional second-pass reranking over fused candidates
+  const rerankStartTime = performance.now();
+  const reranked = await rerankFusedResults(input.query, fusedResults, options);
+  const rerankLatencyMs = reranked.applied
+    ? performance.now() - rerankStartTime
+    : undefined;
+  const finalResults = reranked.results;
+
   const totalLatencyMs = performance.now() - startTime;
 
   // Record result for analytics
@@ -126,7 +135,7 @@ export async function hybridRetrieve(
     config,
     input,
     strategyResults,
-    fusedResults,
+    finalResults,
     fusionMethod,
     totalLatencyMs,
     strategyLatencies,
@@ -134,7 +143,7 @@ export async function hybridRetrieve(
   );
 
   return {
-    results: fusedResults,
+    results: finalResults,
     strategyResults: options?.includeStrategyResults
       ? strategyResults
       : undefined,
@@ -144,9 +153,91 @@ export async function hybridRetrieve(
       totalLatencyMs,
       strategyLatencies,
       fusionLatencyMs,
+      rerankLatencyMs,
     },
     traceId,
   };
+}
+
+export async function rerankFusedResults(
+  query: string,
+  fusedResults: FusedResult[],
+  options?: HybridRetrievalOptions
+): Promise<{ results: FusedResult[]; applied: boolean }> {
+  if (!options?.rerank || fusedResults.length < 2) {
+    return { results: fusedResults, applied: false };
+  }
+
+  const rerankTopN = Math.min(Math.max(options.rerankTopN ?? 30, 2), fusedResults.length);
+  const candidates = fusedResults.slice(0, rerankTopN);
+
+  const documents = candidates.map((candidate) => ({
+    id: candidate.id,
+    content: candidate.data?.text || '',
+    originalScore: candidate.finalScore,
+  }));
+
+  if (documents.every((document) => document.content.trim().length === 0)) {
+    return { results: fusedResults, applied: false };
+  }
+
+  try {
+    const reranker = getRerankerService(
+      options.rerankModel
+        ? {
+            model: options.rerankModel as RerankerModel,
+          }
+        : undefined
+    );
+
+    const rerankResult = await reranker.rerank({
+      query,
+      documents,
+      config: {
+        maxCandidates: rerankTopN,
+        threshold: options.rerankThreshold ?? 0.2,
+      },
+    });
+
+    if (rerankResult.documents.length === 0) {
+      return { results: fusedResults, applied: false };
+    }
+
+    const rerankScoreById = new Map(
+      rerankResult.documents.map((document) => [document.id, document.rerankScore])
+    );
+
+    const rerankedTop = candidates
+      .map((candidate) => {
+        const rerankScore = rerankScoreById.get(candidate.id);
+        if (rerankScore === undefined) {
+          return candidate;
+        }
+
+        return {
+          ...candidate,
+          finalScore: candidate.finalScore * 0.45 + rerankScore * 0.55,
+        };
+      })
+      .sort((a, b) => b.finalScore - a.finalScore)
+      .map((item, index) => ({
+        ...item,
+        rank: index + 1,
+      }));
+
+    const tail = fusedResults.slice(rerankTopN).map((item, index) => ({
+      ...item,
+      rank: rerankedTop.length + index + 1,
+    }));
+
+    return {
+      results: [...rerankedTop, ...tail],
+      applied: true,
+    };
+  } catch (error) {
+    console.warn('Hybrid rerank step failed; using fused results only', error);
+    return { results: fusedResults, applied: false };
+  }
 }
 
 /**

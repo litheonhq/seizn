@@ -41,6 +41,10 @@ import {
 
 import { withRetry, DEFAULT_RETRY_CONFIG } from './retry';
 import {
+  getGatewayResponseCache,
+  setGatewayResponseCache,
+} from './response-cache';
+import {
   buildAnthropicSdkDefaultHeaders,
   buildCachedSystemPrompt,
   extractAnthropicCacheUsage,
@@ -72,7 +76,7 @@ const DEFAULT_CONFIG: GatewayConfig = {
   },
   defaultTimeout: 60000,
   maxRetries: 3,
-  cacheEnabled: false,
+  cacheEnabled: true,
   cacheTTL: 300000,
   costTracking: true,
   telemetryEnabled: true,
@@ -216,6 +220,13 @@ export class AIGateway {
   async chat(request: GatewayRequest): Promise<GatewayResponse> {
     const startTime = Date.now();
 
+    if (this.config.cacheEnabled) {
+      const cachedResponse = getGatewayResponseCache(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+    }
+
     // Select provider
     const routing = this.selectProvider(request.model, request.preferredProvider);
     if (!routing) {
@@ -245,6 +256,10 @@ export class AIGateway {
       recordSuccess(routing.providerId, this.config.circuitBreaker);
       recordLatency(routing.providerId, Date.now() - startTime);
 
+      if (this.config.cacheEnabled && !response.cached) {
+        setGatewayResponseCache(request, response, this.config.cacheTTL);
+      }
+
       return response;
     } catch (error) {
       recordFailure(routing.providerId, this.config.circuitBreaker);
@@ -267,6 +282,11 @@ export class AIGateway {
           });
 
           recordSuccess(alternate.providerId, this.config.circuitBreaker);
+
+          if (this.config.cacheEnabled && !response.cached) {
+            setGatewayResponseCache(request, response, this.config.cacheTTL);
+          }
+
           return response;
         } catch {
           recordFailure(alternate.providerId, this.config.circuitBreaker);

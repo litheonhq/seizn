@@ -304,6 +304,7 @@ function CandidateCard({
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="e.g., Incorrect information, duplicate, not relevant..."
+              aria-label="Rejection reason"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm resize-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               rows={3}
             />
@@ -344,6 +345,7 @@ function CandidateCard({
                 <textarea
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
+                  aria-label="Memory content"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm resize-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   rows={4}
                 />
@@ -355,6 +357,7 @@ function CandidateCard({
                 <select
                   value={editType}
                   onChange={(e) => setEditType(e.target.value as NoteType)}
+                  aria-label="Memory type"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 >
                   {Object.entries(NOTE_TYPE_CONFIG).map(([key, config]) => (
@@ -405,11 +408,19 @@ function CandidateCard({
 
 export default function CandidatesClient() {
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
+  const [page, setPage] = useState(0);
+  const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const PAGE_SIZE = 50;
 
   const { data, error, isLoading } = useSWR<CandidatesResponse>(
-    "/api/spring/memory/candidates?limit=50",
+    `/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`,
     fetcher,
-    { refreshInterval: 30000 }
+    { refreshInterval: 30000, onSuccess: (newData) => {
+      if (page === 0) {
+        setAllCandidates(newData.candidates);
+      }
+    }}
   );
 
   const handleApprove = useCallback(async (id: string) => {
@@ -421,7 +432,7 @@ export default function CandidatesClient() {
         body: JSON.stringify({ action: "approve" }),
       });
       if (res.ok) {
-        mutate("/api/spring/memory/candidates?limit=50");
+        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -441,7 +452,7 @@ export default function CandidatesClient() {
         body: JSON.stringify({ action: "reject", reason }),
       });
       if (res.ok) {
-        mutate("/api/spring/memory/candidates?limit=50");
+        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -468,7 +479,7 @@ export default function CandidatesClient() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "approve" }),
         });
-        mutate("/api/spring/memory/candidates?limit=50");
+        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -480,8 +491,25 @@ export default function CandidatesClient() {
   }, []);
 
   const handleRefresh = useCallback(() => {
-    mutate("/api/spring/memory/candidates?limit=50");
+    setPage(0);
+    setAllCandidates([]);
+    mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=0`);
   }, []);
+
+  const handleLoadMore = useCallback(async () => {
+    setIsLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const res = await fetch(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${nextPage * PAGE_SIZE}`);
+      const newData: CandidatesResponse = await res.json();
+      if (newData.success && newData.candidates.length > 0) {
+        setAllCandidates(prev => [...prev, ...newData.candidates]);
+        setPage(nextPage);
+      }
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [page]);
 
   // Loading state
   if (isLoading) {
@@ -522,7 +550,7 @@ export default function CandidatesClient() {
     );
   }
 
-  const candidates = data?.candidates || [];
+  const candidates = allCandidates.length > 0 ? allCandidates : (data?.candidates || []);
 
   // Empty state
   if (candidates.length === 0) {
@@ -594,8 +622,19 @@ export default function CandidatesClient() {
       {/* Load More */}
       {data?.hasMore && (
         <div className="text-center">
-          <button className="px-4 py-2 text-sm text-teal-600 dark:text-teal-400 hover:underline">
-            Load more candidates
+          <button
+            onClick={handleLoadMore}
+            disabled={isLoadingMore}
+            className="px-4 py-2 text-sm text-teal-600 dark:text-teal-400 hover:underline disabled:opacity-50 inline-flex items-center gap-2"
+          >
+            {isLoadingMore ? (
+              <>
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              "Load more candidates"
+            )}
           </button>
         </div>
       )}

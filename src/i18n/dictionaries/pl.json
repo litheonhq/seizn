@@ -53,8 +53,8 @@
       "price": "$0",
       "period": "Na zawsze za darmo",
       "features": [
-        "10 000 wspomnień",
-        "1 000 wywołań API/mies.",
+        "12 000 wspomnień",
+        "1 000 wywołań API/miesiąc",
         "Wsparcie społeczności"
       ],
       "cta": "Rozpocznij"
@@ -65,9 +65,11 @@
       "period": "miesięcznie",
       "features": [
         "50 000 wspomnień",
-        "10 000 wywołań API/mies.",
+        "5 000 wywołań API/miesiąc",
         "Wsparcie email",
-        "E2E encrypted memories"
+        "Pamięci szyfrowane E2E",
+        "Ponowne rankowanie",
+        "Operacje masowe"
       ],
       "cta": "Subskrybuj"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "miesięcznie",
       "features": [
-        "50 000 wspomnień",
-        "10 000 wywołań API/mies.",
+        "100 000 wspomnień",
+        "10 000 wywołań API/miesiąc",
         "Wsparcie email",
-        "Podstawowe analizy"
+        "Panel analityczny",
+        "Webhooki",
+        "Wyszukiwanie sfederowane"
       ],
       "cta": "Subskrybuj"
     },
@@ -89,11 +93,12 @@
       "period": "miesięcznie",
       "badge": "Popularne",
       "features": [
-        "200 000 wspomnień",
-        "50 000 wywołań API/mies.",
+        "1 000 000 wspomnień",
+        "100 000 wywołań API/miesiąc",
         "Priorytetowe wsparcie",
         "Zaawansowane analizy",
-        "Webhooks"
+        "Webhooki",
+        "Wyszukiwanie sfederowane"
       ],
       "cta": "Subskrybuj"
     },
@@ -105,6 +110,7 @@
         "Nieograniczone wspomnienia",
         "Nieograniczone wywołania API",
         "Dedykowane wsparcie",
+        "SSO / SAML",
         "Indywidualne SLA",
         "Opcja on-premise"
       ],
