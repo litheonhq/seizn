@@ -9,6 +9,7 @@
     "analyze": "node scripts/analyze-build.mjs",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "npm run predeploy && vercel --prod",
     "check:routes": "node scripts/check-route-conflicts.js",
