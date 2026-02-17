@@ -46,6 +46,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
 | Encryption | E2E confidential memory encryption | -- | Opt-in client-side WebCrypto (PBKDF2-SHA256 600k + AES-256-GCM). Contract: `content="[encrypted]"`, `encrypted_content=<base64 ciphertext>`, `is_encrypted=true`. Setup material stored in `profiles.e2e_*` via `/api/profile/e2e`. Encrypted memories excluded from search/embedding/optimizer. |
+| DB Contract Verification | Migration guardrails (`run-migration-file.mjs` + `verify:e2e-encryption-db`) | -- | Every migration run triggers E2E/search-RPC compatibility checks by default; fails fast on overload/RPC regressions unless explicitly bypassed with `SKIP_E2E_VERIFY=1`. |
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
@@ -331,7 +332,7 @@ User Request
 | Tenant Policy (Budget & Cost Controls) | Fully Implemented | `src/lib/tenant-policy/`, `src/app/api/tenant-policy/` | Policy persisted in `organizations.settings.budget_quota_policy`; internal enforcement endpoint |
 | Autopilot PR Bot (GitHub Webhooks) | Fully Implemented | `src/app/api/webhooks/github/`, `src/app/api/autopilot/`, `src/lib/autopilot/` | Idempotent webhook ingestion; persists deliveries in `autopilot_webhooks` |
 | Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (140 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
-| E2E Confidential Memory Encryption | Fully Implemented | `src/lib/memory/encryption.ts`, `src/lib/memory/secure-memory-client.ts`, `src/app/api/profile/e2e/`, `src/app/api/v1/memories/` | Opt-in: `content` placeholder + ciphertext storage. Encrypted memories excluded from search/embedding/optimizer. Key never persisted; PIN loss is irreversible. |
+| E2E Confidential Memory Encryption | Fully Implemented | `src/lib/memory/encryption.ts`, `src/lib/memory/secure-memory-client.ts`, `src/app/api/profile/e2e/`, `src/app/api/v1/memories/`, `scripts/verify-ai-os-memory.mjs` | Opt-in: `content` placeholder + ciphertext storage. Encrypted memories excluded from search/embedding/optimizer. Key never persisted; PIN loss is irreversible. Runtime guard verifies `search_memories` uses normalized params (`match_user_id`, etc.) and blocks legacy `p_*` regressions. |
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |
 | Redis Caching | Fully Implemented | `src/lib/redis.ts` | Embedding cache, rate limit store |

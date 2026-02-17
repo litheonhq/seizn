@@ -409,7 +409,7 @@ export async function reconstructContext(
       query_embedding: queryEmbedding,
       match_threshold: 0.65,
       match_count: 15,
-      p_user_id: userId,
+      match_user_id: userId,
     });
 
     if (semanticResults) {

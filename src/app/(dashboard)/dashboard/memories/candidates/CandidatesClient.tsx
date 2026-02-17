@@ -412,9 +412,10 @@ export default function CandidatesClient() {
   const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const PAGE_SIZE = 50;
+  const currentCandidatesKey = `/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`;
 
   const { data, error, isLoading } = useSWR<CandidatesResponse>(
-    `/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`,
+    currentCandidatesKey,
     fetcher,
     { refreshInterval: 30000, onSuccess: (newData) => {
       if (page === 0) {
@@ -432,7 +433,7 @@ export default function CandidatesClient() {
         body: JSON.stringify({ action: "approve" }),
       });
       if (res.ok) {
-        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
+        mutate(currentCandidatesKey);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -441,7 +442,7 @@ export default function CandidatesClient() {
         return next;
       });
     }
-  }, []);
+  }, [currentCandidatesKey]);
 
   const handleReject = useCallback(async (id: string, reason: string) => {
     setProcessingIds((prev) => new Set(prev).add(id));
@@ -452,7 +453,7 @@ export default function CandidatesClient() {
         body: JSON.stringify({ action: "reject", reason }),
       });
       if (res.ok) {
-        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
+        mutate(currentCandidatesKey);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -461,7 +462,7 @@ export default function CandidatesClient() {
         return next;
       });
     }
-  }, []);
+  }, [currentCandidatesKey]);
 
   const handleEdit = useCallback(async (id: string, edits: Record<string, unknown>) => {
     setProcessingIds((prev) => new Set(prev).add(id));
@@ -479,7 +480,7 @@ export default function CandidatesClient() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "approve" }),
         });
-        mutate(`/api/spring/memory/candidates?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`);
+        mutate(currentCandidatesKey);
       }
     } finally {
       setProcessingIds((prev) => {
@@ -488,7 +489,7 @@ export default function CandidatesClient() {
         return next;
       });
     }
-  }, []);
+  }, [currentCandidatesKey]);
 
   const handleRefresh = useCallback(() => {
     setPage(0);
