@@ -67,7 +67,9 @@
         "50.000 memori",
         "5.000 panggilan API/bulan",
         "Dukungan email",
-        "E2E encrypted memories"
+        "Memori terenkripsi E2E",
+        "Perankingan ulang",
+        "Operasi massal"
       ],
       "cta": "Daftar"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "per bulan",
       "features": [
-        "50.000 memori",
+        "100.000 memori",
         "10.000 panggilan API/bulan",
         "Dukungan email",
-        "Analitik dasar"
+        "Dasbor analitik",
+        "Webhooks",
+        "Pencarian terfederasi"
       ],
       "cta": "Daftar"
     },
@@ -89,11 +93,12 @@
       "period": "per bulan",
       "badge": "Populer",
       "features": [
-        "200.000 memori",
-        "50.000 panggilan API/bulan",
+        "1.000.000 memori",
+        "100.000 panggilan API/bulan",
         "Dukungan prioritas",
         "Analitik lanjutan",
-        "Webhook"
+        "Webhooks",
+        "Pencarian terfederasi"
       ],
       "cta": "Daftar"
     },
@@ -105,6 +110,7 @@
         "Memori tidak terbatas",
         "Panggilan API tidak terbatas",
         "Dukungan khusus",
+        "SSO / SAML",
         "SLA kustom",
         "Opsi On-premise"
       ],

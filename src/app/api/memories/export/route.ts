@@ -49,26 +49,22 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServerClient();
 
-
-    const { data: memories, error } = await supabase
+    let query = supabase
       .from('memories')
       .select('id, content, memory_type, tags, namespace, importance, source, created_at, updated_at', { count: 'exact' })
       .eq('user_id', userId)
-      .eq('is_deleted', false)
+      .eq('is_deleted', false);
+
+    if (namespace) {
+      query = query.eq('namespace', namespace);
+    }
+    if (memory_type) {
+      query = query.eq('memory_type', memory_type);
+    }
+
+    const { data: memories, error, count } = await query
       .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
-      .then(async (res) => {
-        // Apply filters manually since chaining doesn't work well
-        if (res.error) return res;
-        let filtered = res.data;
-        if (namespace) {
-          filtered = filtered?.filter(m => m.namespace === namespace);
-        }
-        if (memory_type) {
-          filtered = filtered?.filter(m => m.memory_type === memory_type);
-        }
-        return { ...res, data: filtered };
-      });
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error('Export error:', error);
@@ -88,12 +84,8 @@ export async function GET(request: NextRequest) {
       200
     );
 
-    // Get total count for pagination info
-    const { count: totalCount } = await supabase
-      .from('memories')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('is_deleted', false);
+    // Use count from the main query (already filtered)
+    const totalCount = count;
 
     if (format === 'csv') {
       // Convert to CSV

@@ -224,7 +224,8 @@ export async function POST(request: NextRequest) {
         response.usage.completionTokens,
         response.latencyMs,
         "/chat",
-        200
+        200,
+        response.cached
       );
     }
 
@@ -387,7 +388,8 @@ async function recordCost(
   completionTokens: number,
   latencyMs: number,
   endpoint: string,
-  statusCode: number
+  statusCode: number,
+  isCached: boolean
 ): Promise<void> {
   try {
     const supabase = createServerClient();
@@ -395,9 +397,12 @@ async function recordCost(
     // Get pricing
     const pricing = MODEL_PRICING[model] || { prompt: 100, completion: 300 };
 
+    const billablePromptTokens = isCached ? 0 : promptTokens;
+    const billableCompletionTokens = isCached ? 0 : completionTokens;
+
     // Calculate costs in microcents (per 1M tokens)
-    const promptCost = Math.round((promptTokens / 1000000) * pricing.prompt * 100000);
-    const completionCost = Math.round((completionTokens / 1000000) * pricing.completion * 100000);
+    const promptCost = Math.round((billablePromptTokens / 1000000) * pricing.prompt * 100000);
+    const completionCost = Math.round((billableCompletionTokens / 1000000) * pricing.completion * 100000);
 
     await supabase.rpc("record_gateway_cost", {
       p_org_id: orgId,
@@ -406,18 +411,21 @@ async function recordCost(
       p_request_id: requestId,
       p_provider: provider,
       p_model: model,
-      p_prompt_tokens: promptTokens,
-      p_completion_tokens: completionTokens,
+      p_prompt_tokens: billablePromptTokens,
+      p_completion_tokens: billableCompletionTokens,
       p_prompt_cost_microcents: promptCost,
       p_completion_cost_microcents: completionCost,
       p_latency_ms: latencyMs,
       p_endpoint: endpoint,
       p_status_code: statusCode,
-      p_is_cached: false,
+      p_is_cached: isCached,
       p_is_streaming: false,
       p_error_type: null,
       p_error_message: null,
-      p_metadata: {},
+      p_metadata: {
+        original_prompt_tokens: promptTokens,
+        original_completion_tokens: completionTokens,
+      },
     });
   } catch (error) {
     console.error("Failed to record cost:", error);

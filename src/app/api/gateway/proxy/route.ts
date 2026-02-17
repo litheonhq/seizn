@@ -31,6 +31,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  authenticateRequest,
+  authErrorResponse,
+  isAuthError,
+} from '@/lib/api-auth';
+import { createServerClient } from '@/lib/supabase';
+import {
   GatewayProxy,
   TraceInjector,
   type ProxyRequest,
@@ -68,13 +74,111 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const trace = TraceInjector.fromHeaders(headers);
 
   try {
+    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
+    }
+
+    const { keyId, rateLimitHeaders } = authResult;
+    const supabase = createServerClient();
+    const { data: keyData } = await supabase
+      .from('api_keys')
+      .select('org_id, scopes')
+      .eq('id', keyId)
+      .eq('is_active', true)
+      .single();
+
+    if (!keyData) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'AUTH_INVALID_KEY',
+            message: 'API key not found or inactive',
+            retryable: false,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    const scopes: string[] = Array.isArray(keyData.scopes) ? keyData.scopes : [];
+    const hasProxyScope = scopes.includes('gateway:*') || scopes.includes('gateway:proxy');
+    if (!hasProxyScope) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'AUTH_FORBIDDEN_SCOPE',
+            message: 'API key lacks gateway:proxy scope',
+            retryable: false,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
+    if (!keyData.org_id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'TENANT_REQUIRED',
+            message: 'API key must belong to an organization for gateway proxy usage',
+            retryable: false,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
     // Parse request body
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown>;
+
+    const requestedConfig = ((body.config ?? {}) as Record<string, unknown>);
+    const requestedOrgId = requestedConfig.orgId as string | undefined;
+
+    if (requestedOrgId && requestedOrgId !== keyData.org_id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'TENANT_MISMATCH',
+            message: 'Requested orgId does not match API key organization',
+            retryable: false,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
+    if (
+      requestedConfig.apiKey &&
+      !scopes.includes('gateway:*') &&
+      !scopes.includes('gateway:proxy:raw-config')
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'FORBIDDEN_RAW_CONFIG',
+            message: 'config.apiKey requires gateway:proxy:raw-config scope',
+            retryable: false,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
+    body.config = {
+      ...requestedConfig,
+      orgId: keyData.org_id,
+    };
 
     // Validate request structure
     const validation = validateRequestBody(body);
     if (!validation.valid) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           success: false,
           error: {
@@ -92,14 +196,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
         { status: 400 }
       );
+
+      if (rateLimitHeaders) {
+        Object.entries(rateLimitHeaders).forEach(([key, value]) => {
+          response.headers.set(key, value);
+        });
+      }
+
+      return response;
     }
 
     // Build proxy request
+    const operation = body.operation as ProxyRequest['operation'];
+    const provider = body.provider as VectorDBProvider;
+    const config = body.config as Record<string, unknown>;
+    const payload = body.payload as ProxyRequest['payload'];
+
     const proxyRequest: ProxyRequest = {
-      operation: body.operation,
-      provider: body.provider,
-      config: buildConfig(body.provider, body.config),
-      payload: body.payload,
+      operation,
+      provider,
+      config: buildConfig(provider, config),
+      payload,
     };
 
     // Execute through proxy
@@ -108,7 +225,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Return response with appropriate status code
     const statusCode = response.success ? 200 : getErrorStatusCode(response.error?.code);
 
-    return NextResponse.json(response, {
+    const apiResponse = NextResponse.json(response, {
       status: statusCode,
       headers: {
         'X-Trace-Id': response.traceId,
@@ -117,6 +234,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         'X-Provider-Latency-Ms': String(response.providerLatencyMs),
       },
     });
+
+    if (rateLimitHeaders) {
+      Object.entries(rateLimitHeaders).forEach(([key, value]) => {
+        apiResponse.headers.set(key, value);
+      });
+    }
+
+    return apiResponse;
   } catch (error) {
     // Handle unexpected errors
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';

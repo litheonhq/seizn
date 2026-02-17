@@ -67,7 +67,9 @@
         "50,000 memorias",
         "5,000 llamadas API/mes",
         "Soporte por correo",
-        "E2E encrypted memories"
+        "Memorias cifradas E2E",
+        "Reclasificación",
+        "Operaciones masivas"
       ],
       "cta": "Suscribirse"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "por mes",
       "features": [
-        "50,000 memorias",
+        "100,000 memorias",
         "10,000 llamadas API/mes",
         "Soporte por correo",
-        "Analíticas básicas"
+        "Panel de análisis",
+        "Webhooks",
+        "Búsqueda federada"
       ],
       "cta": "Suscribirse"
     },
@@ -89,11 +93,12 @@
       "period": "por mes",
       "badge": "Popular",
       "features": [
-        "200,000 memorias",
-        "50,000 llamadas API/mes",
+        "1,000,000 memorias",
+        "100,000 llamadas API/mes",
         "Soporte prioritario",
         "Analíticas avanzadas",
-        "Webhooks"
+        "Webhooks",
+        "Búsqueda federada"
       ],
       "cta": "Suscribirse"
     },
@@ -105,6 +110,7 @@
         "Memorias ilimitadas",
         "Llamadas API ilimitadas",
         "Soporte dedicado",
+        "SSO / SAML",
         "SLA personalizado",
         "Opción on-premise"
       ],

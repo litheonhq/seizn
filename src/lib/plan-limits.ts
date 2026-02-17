@@ -59,7 +59,7 @@ export interface PlanConfig {
 export const PLANS: Record<string, PlanConfig> = {
   free: {
     name: 'Free',
-    memories: 100,              // 100 memories
+    memories: 12_000,           // 12K memories
     apiCallsMonthly: 1_000,     // 1K/month
     apiKeys: 2,
     rateLimit: 60,              // 60 RPM (1 req/sec)
@@ -83,8 +83,8 @@ export const PLANS: Record<string, PlanConfig> = {
 
   starter: {
     name: 'Starter',
-    memories: 5_000,            // 5K memories
-    apiCallsMonthly: 50_000,    // 50K/month
+    memories: 50_000,           // 50K memories
+    apiCallsMonthly: 5_000,     // 5K/month
     apiKeys: 3,
     rateLimit: 120,             // 120 RPM (2 req/sec)
     throttle: { rps: 5, burst: 15 },
@@ -107,8 +107,8 @@ export const PLANS: Record<string, PlanConfig> = {
 
   plus: {
     name: 'Plus',
-    memories: 50_000,           // 50K memories
-    apiCallsMonthly: 500_000,   // 500K/month
+    memories: 100_000,          // 100K memories
+    apiCallsMonthly: 10_000,    // 10K/month
     apiKeys: 5,
     rateLimit: 300,             // 300 RPM (5 req/sec)
     throttle: { rps: 10, burst: 30 },
@@ -131,8 +131,8 @@ export const PLANS: Record<string, PlanConfig> = {
 
   pro: {
     name: 'Pro',
-    memories: -1,               // Unlimited
-    apiCallsMonthly: 2_000_000, // 2M/month
+    memories: 1_000_000,        // 1M memories
+    apiCallsMonthly: 100_000,   // 100K/month
     apiKeys: 10,
     rateLimit: 600,             // 600 RPM (10 req/sec)
     throttle: { rps: 30, burst: 100 },

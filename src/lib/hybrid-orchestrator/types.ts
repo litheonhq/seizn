@@ -196,6 +196,14 @@ export interface HybridRetrievalOptions {
   fusionMethod?: FusionMethod;
   /** Maximum results to return after fusion */
   topK?: number;
+  /** Enable a second-pass reranker over fused results */
+  rerank?: boolean;
+  /** Reranker model override */
+  rerankModel?: string;
+  /** Number of fused candidates to rerank */
+  rerankTopN?: number;
+  /** Minimum rerank relevance threshold */
+  rerankThreshold?: number;
   /** Include per-strategy results in response */
   includeStrategyResults?: boolean;
   /** Trace ID for logging */
@@ -247,6 +255,7 @@ export interface HybridRetrievalResult {
     totalLatencyMs: number;
     strategyLatencies: Record<StrategyType, number>;
     fusionLatencyMs: number;
+    rerankLatencyMs?: number;
   };
 
   /** Trace ID for debugging */

@@ -110,3 +110,14 @@ export type {
   FallRequestParams,
   ClampedFallParams,
 } from "./clamp";
+
+// Client-side cache helpers
+export {
+  fetchTenantPolicyWithCache,
+  clearTenantPolicyClientCache,
+  getTenantPolicyCachedEtag,
+} from "./client";
+export type {
+  FetchTenantPolicyOptions,
+  TenantPolicyFetchResult,
+} from "./client";

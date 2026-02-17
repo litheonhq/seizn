@@ -67,7 +67,9 @@
         "50.000 herinneringen",
         "5.000 API-aanroepen/maand",
         "E-mailondersteuning",
-        "E2E encrypted memories"
+        "E2E-versleutelde herinneringen",
+        "Herrangschikking",
+        "Bulkoperaties"
       ],
       "cta": "Abonneren"
     },
@@ -76,10 +78,12 @@
       "price": "$29",
       "period": "per maand",
       "features": [
-        "50.000 herinneringen",
+        "100.000 herinneringen",
         "10.000 API-aanroepen/maand",
         "E-mailondersteuning",
-        "Basis-analytics"
+        "Analyse-dashboard",
+        "Webhooks",
+        "Gefedereerd zoeken"
       ],
       "cta": "Abonneren"
     },
@@ -89,11 +93,12 @@
       "period": "per maand",
       "badge": "Populair",
       "features": [
-        "200.000 herinneringen",
-        "50.000 API-aanroepen/maand",
+        "1.000.000 herinneringen",
+        "100.000 API-aanroepen/maand",
         "Prioriteitsondersteuning",
         "Geavanceerde analytics",
-        "Webhooks"
+        "Webhooks",
+        "Gefedereerd zoeken"
       ],
       "cta": "Abonneren"
     },
@@ -105,6 +110,7 @@
         "Onbeperkte herinneringen",
         "Onbeperkte API-aanroepen",
         "Toegewijde ondersteuning",
+        "SSO / SAML",
         "Aangepaste SLA",
         "On-premise optie"
       ],

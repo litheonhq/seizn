@@ -67,7 +67,9 @@
         "50,000 memories",
         "5,000 API calls/month",
         "Email support",
-        "E2E encrypted memories"
+        "E2E encrypted memories",
+        "Reranking",
+        "Bulk operations"
       ],
       "cta": "Subscribe"
     },
@@ -80,7 +82,8 @@
         "10,000 API calls/month",
         "Email support",
         "Analytics dashboard",
-        "Webhooks"
+        "Webhooks",
+        "Federated search"
       ],
       "cta": "Subscribe"
     },
