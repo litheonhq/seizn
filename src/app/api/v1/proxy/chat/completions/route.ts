@@ -152,7 +152,7 @@ async function searchRelevantMemories(
       query_embedding: queryEmbedding,
       match_threshold: threshold,
       match_count: limit,
-      p_user_id: userId,
+      match_user_id: userId,
     });
 
     if (error || !memories) return [];
@@ -276,7 +276,7 @@ async function extractAndStoreMemories(
         query_embedding: embedding,
         match_threshold: 0.92,
         match_count: 1,
-        p_user_id: userId,
+        match_user_id: userId,
       });
 
       if (existing && existing.length > 0) continue; // Already exists

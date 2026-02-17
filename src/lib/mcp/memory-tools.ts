@@ -314,10 +314,10 @@ async function handleMemorySearch(
 
   // Build base query
   const rpcQuery = supabase.rpc('search_memories', {
-    p_user_id: context.userId,
-    p_query_embedding: queryEmbedding,
-    p_match_threshold: minRelevance,
-    p_match_count: limit,
+    match_user_id: context.userId,
+    query_embedding: queryEmbedding,
+    match_threshold: minRelevance,
+    match_count: limit,
   });
 
   // Note: Additional filters would be applied via RPC parameters
@@ -332,6 +332,7 @@ async function handleMemorySearch(
       .select('id, content, memory_type, tags, scope, importance, created_at')
       .eq('user_id', context.userId)
       .eq('is_deleted', false)
+      .eq('is_encrypted', false)
       .limit(limit);
 
     if (fallbackError) {

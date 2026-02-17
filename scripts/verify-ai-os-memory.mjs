@@ -145,6 +145,48 @@ async function main() {
       .join(' | ')
   );
 
+  // 8) search_memories RPC parameter normalization (legacy p_* args must not be used in runtime code)
+  const legacySearchRpcUsage = [];
+  for (const file of allSrcFiles) {
+    const r = rel(file);
+    const isRuntimeFile =
+      !r.includes('/__tests__/') &&
+      !r.endsWith('.test.ts') &&
+      !r.endsWith('.test.tsx') &&
+      !r.includes('/errors/examples/');
+    if (!isRuntimeFile) continue;
+
+    const text = await fs.readFile(file, 'utf8');
+    const hasLegacySearchParams = /rpc\(\s*['"]search_memories['"]\s*,\s*\{[\s\S]{0,360}?\b(p_user_id|p_query_embedding|p_match_threshold|p_match_count)\b/m.test(
+      text
+    );
+    if (hasLegacySearchParams) {
+      legacySearchRpcUsage.push(r);
+    }
+  }
+
+  record(
+    'search-rpc-param-normalization',
+    legacySearchRpcUsage.length === 0,
+    legacySearchRpcUsage.length === 0
+      ? 'ok'
+      : `legacy search_memories params found: ${legacySearchRpcUsage.join(', ')}`
+  );
+
+  // 9) MCP memory fallback must exclude encrypted rows
+  const mcpMemoryToolsPath = 'src/lib/mcp/memory-tools.ts';
+  if (await fileExists(mcpMemoryToolsPath)) {
+    const mcpMemoryTools = await read(mcpMemoryToolsPath);
+    const hasEncryptedFilter = mcpMemoryTools.includes(".eq('is_encrypted', false)");
+    record(
+      'mcp-fallback-encrypted-filter',
+      hasEncryptedFilter,
+      hasEncryptedFilter ? 'ok' : "missing .eq('is_encrypted', false) in MCP fallback query"
+    );
+  } else {
+    record('mcp-fallback-encrypted-filter', false, `missing: ${mcpMemoryToolsPath}`);
+  }
+
   // Print report
   let failures = 0;
   for (const row of results) {
