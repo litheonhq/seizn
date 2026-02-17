@@ -23,7 +23,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Semantic Memory & Context",
       desc: "Persistent agent memory with graph knowledge, multilingual hybrid search across 100+ languages, and automatic context reconciliation. Your agents remember everything and never hallucinate on stale data.",
-      badge: "Mem0-level + Graph",
+      badge: "Graph + E2E",
     },
     "policy-engine": {
       title: "Policy Engine & Governance",
@@ -55,7 +55,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "시맨틱 메모리 & 컨텍스트",
       desc: "그래프 지식 기반의 영속적 에이전트 메모리, 100개 이상 언어를 지원하는 다국어 하이브리드 검색, 자동 컨텍스트 조정. 에이전트가 모든 것을 기억하고 오래된 데이터로 환각하지 않습니다.",
-      badge: "Mem0 수준 + 그래프",
+      badge: "그래프 + E2E",
     },
     "policy-engine": {
       title: "정책 엔진 & 거버넌스",
@@ -87,7 +87,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "セマンティックメモリ & コンテキスト",
       desc: "グラフ知識を備えた永続的エージェントメモリ、100以上の言語に対応する多言語ハイブリッド検索、自動コンテキスト調整。エージェントはすべてを記憶し、古いデータによる幻覚を起こしません。",
-      badge: "Mem0レベル + グラフ",
+      badge: "グラフ + E2E",
     },
     "policy-engine": {
       title: "ポリシーエンジン & ガバナンス",
@@ -119,7 +119,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "语义记忆与上下文",
       desc: "基于图谱知识的持久化代理记忆，支持100多种语言的多语言混合搜索，以及自动上下文协调。您的代理记住一切，永远不会基于过时数据产生幻觉。",
-      badge: "Mem0级 + 图谱",
+      badge: "图谱 + E2E",
     },
     "policy-engine": {
       title: "策略引擎与治理",
@@ -151,7 +151,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "語義記憶與上下文",
       desc: "基於圖譜知識的持久化代理記憶，支援100多種語言的多語言混合搜尋，以及自動上下文協調。您的代理記住一切，永遠不會基於過時資料產生幻覺。",
-      badge: "Mem0級 + 圖譜",
+      badge: "圖譜 + E2E",
     },
     "policy-engine": {
       title: "策略引擎與治理",
@@ -183,7 +183,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Memoria semántica y contexto",
       desc: "Memoria persistente de agentes con conocimiento en grafo, búsqueda híbrida multilingüe en más de 100 idiomas y reconciliación automática de contexto. Tus agentes recuerdan todo y nunca alucinan con datos obsoletos.",
-      badge: "Nivel Mem0 + Grafo",
+      badge: "Grafo + E2E",
     },
     "policy-engine": {
       title: "Motor de políticas y gobernanza",
@@ -215,7 +215,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Семантическая память и контекст",
       desc: "Постоянная память агентов с графом знаний, мультиязычный гибридный поиск на более чем 100 языках и автоматическое согласование контекста. Ваши агенты помнят всё и никогда не галлюцинируют на устаревших данных.",
-      badge: "Уровень Mem0 + Граф",
+      badge: "Граф + E2E",
     },
     "policy-engine": {
       title: "Движок политик и управление",
@@ -247,7 +247,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Семантична пам'ять і контекст",
       desc: "Постійна пам'ять агентів із графом знань, мультимовний гібридний пошук понад 100 мовами та автоматичне узгодження контексту. Ваші агенти пам'ятають усе й ніколи не галюцинують на застарілих даних.",
-      badge: "Рівень Mem0 + Граф",
+      badge: "Граф + E2E",
     },
     "policy-engine": {
       title: "Движок політик і керування",
@@ -279,7 +279,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "זיכרון סמנטי והקשר",
       desc: "זיכרון סוכן מתמשך עם ידע גרפי, חיפוש היברידי רב-לשוני ביותר מ-100 שפות, והתאמת הקשר אוטומטית. הסוכנים שלך זוכרים הכל ולעולם לא יוצרים הזיות מנתונים מיושנים.",
-      badge: "רמת Mem0 + גרף",
+      badge: "גרף + E2E",
     },
     "policy-engine": {
       title: "מנוע מדיניות וממשל",
@@ -311,7 +311,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "الذاكرة الدلالية والسياق",
       desc: "ذاكرة وكيل دائمة مع معرفة رسومية، بحث هجين متعدد اللغات عبر أكثر من 100 لغة، وتسوية سياق تلقائية. وكلاؤك يتذكرون كل شيء ولا يهلوسون أبداً ببيانات قديمة.",
-      badge: "مستوى Mem0 + رسم بياني",
+      badge: "رسم بياني + E2E",
     },
     "policy-engine": {
       title: "محرك السياسات والحوكمة",
@@ -343,7 +343,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Mémoire sémantique et contexte",
       desc: "Mémoire d'agent persistante avec graphe de connaissances, recherche hybride multilingue dans plus de 100 langues et réconciliation automatique du contexte. Vos agents se souviennent de tout et n'hallucinent jamais sur des données obsolètes.",
-      badge: "Niveau Mem0 + Graphe",
+      badge: "Graphe + E2E",
     },
     "policy-engine": {
       title: "Moteur de politiques et gouvernance",
@@ -375,7 +375,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Semantischer Speicher & Kontext",
       desc: "Persistenter Agentenspeicher mit Wissensgraph, mehrsprachige hybride Suche in über 100 Sprachen und automatische Kontextabstimmung. Ihre Agenten merken sich alles und halluzinieren nie mit veralteten Daten.",
-      badge: "Mem0-Niveau + Graph",
+      badge: "Graph + E2E",
     },
     "policy-engine": {
       title: "Richtlinien-Engine & Governance",
@@ -407,7 +407,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Memoria semantica e contesto",
       desc: "Memoria agente persistente con grafo della conoscenza, ricerca ibrida multilingue in oltre 100 lingue e riconciliazione automatica del contesto. I tuoi agenti ricordano tutto e non allucinano mai con dati obsoleti.",
-      badge: "Livello Mem0 + Grafo",
+      badge: "Grafo + E2E",
     },
     "policy-engine": {
       title: "Motore di policy e governance",
@@ -439,7 +439,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Semantiskt minne och kontext",
       desc: "Beständigt agentminne med kunskapsgraf, flerspråkig hybridsökning på över 100 språk och automatisk kontextavstämning. Dina agenter minns allt och hallucinerar aldrig på föråldrad data.",
-      badge: "Mem0-nivå + Graf",
+      badge: "Graf + E2E",
     },
     "policy-engine": {
       title: "Policymotor och styrning",
@@ -471,7 +471,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Semantisch geheugen en context",
       desc: "Persistent agentgeheugen met kennisgraaf, meertalig hybride zoeken in meer dan 100 talen en automatische contextafstemming. Je agenten onthouden alles en hallucineren nooit op verouderde data.",
-      badge: "Mem0-niveau + Graaf",
+      badge: "Graaf + E2E",
     },
     "policy-engine": {
       title: "Beleidsengine en governance",
@@ -503,7 +503,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Pamięć semantyczna i kontekst",
       desc: "Trwała pamięć agentów z grafem wiedzy, wielojęzyczne wyszukiwanie hybrydowe w ponad 100 językach i automatyczne uzgadnianie kontekstu. Twoi agenci pamiętają wszystko i nigdy nie halucynują na nieaktualnych danych.",
-      badge: "Poziom Mem0 + Graf",
+      badge: "Graf + E2E",
     },
     "policy-engine": {
       title: "Silnik polityk i zarządzanie",
@@ -535,7 +535,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "सिमैंटिक मेमोरी और संदर्भ",
       desc: "ग्राफ नॉलेज के साथ स्थायी एजेंट मेमोरी, 100+ भाषाओं में बहुभाषी हाइब्रिड सर्च, और स्वचालित संदर्भ समायोजन। आपके एजेंट सब कुछ याद रखते हैं और पुराने डेटा पर कभी भ्रमित नहीं होते।",
-      badge: "Mem0-स्तर + ग्राफ",
+      badge: "ग्राफ + E2E",
     },
     "policy-engine": {
       title: "पॉलिसी इंजन और गवर्नेंस",
@@ -567,7 +567,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "หน่วยความจำเชิงความหมายและบริบท",
       desc: "หน่วยความจำเอเจนต์แบบถาวรพร้อมกราฟความรู้ การค้นหาแบบไฮบริดหลายภาษาในกว่า 100 ภาษา และการปรับบริบทอัตโนมัติ เอเจนต์ของคุณจดจำทุกอย่างและไม่มีวันเกิดภาพหลอนจากข้อมูลเก่า",
-      badge: "ระดับ Mem0 + กราฟ",
+      badge: "กราฟ + E2E",
     },
     "policy-engine": {
       title: "เอนจินนโยบายและธรรมาภิบาล",
@@ -599,7 +599,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Memori Semantik & Konteks",
       desc: "Memori agen persisten dengan graf pengetahuan, pencarian hibrida multibahasa di lebih dari 100 bahasa, dan rekonsiliasi konteks otomatis. Agen Anda mengingat segalanya dan tidak pernah berhalusinasi dengan data usang.",
-      badge: "Level Mem0 + Graf",
+      badge: "Graf + E2E",
     },
     "policy-engine": {
       title: "Mesin Kebijakan & Tata Kelola",
@@ -631,7 +631,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Bộ nhớ ngữ nghĩa & Ngữ cảnh",
       desc: "Bộ nhớ tác nhân bền vững với đồ thị tri thức, tìm kiếm kết hợp đa ngôn ngữ trên hơn 100 ngôn ngữ, và đối chiếu ngữ cảnh tự động. Tác nhân của bạn ghi nhớ mọi thứ và không bao giờ ảo giác với dữ liệu cũ.",
-      badge: "Cấp Mem0 + Đồ thị",
+      badge: "Đồ thị + E2E",
     },
     "policy-engine": {
       title: "Công cụ chính sách & Quản trị",
@@ -663,7 +663,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Memória semântica e contexto",
       desc: "Memória de agente persistente com grafo de conhecimento, busca híbrida multilíngue em mais de 100 idiomas e reconciliação automática de contexto. Seus agentes lembram de tudo e nunca alucinam com dados desatualizados.",
-      badge: "Nível Mem0 + Grafo",
+      badge: "Grafo + E2E",
     },
     "policy-engine": {
       title: "Motor de políticas e governança",
@@ -695,7 +695,7 @@ const FEATURE_I18N: Partial<Record<Locale, Record<FeatureKey, FeatureContent>>> 
     "semantic-memory": {
       title: "Memória semântica e contexto",
       desc: "Memória de agente persistente com grafo de conhecimento, pesquisa híbrida multilingue em mais de 100 idiomas e reconciliação automática de contexto. Os seus agentes recordam tudo e nunca alucinam com dados desatualizados.",
-      badge: "Nível Mem0 + Grafo",
+      badge: "Grafo + E2E",
     },
     "policy-engine": {
       title: "Motor de políticas e governação",
