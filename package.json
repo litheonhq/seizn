@@ -11,7 +11,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "predeploy": "bash scripts/pre-deploy.sh",
-    "deploy": "npm run predeploy && vercel --prod",
+    "deploy": "vercel --prod",
     "check:routes": "node scripts/check-route-conflicts.js",
     "generate:docs": "npx ts-node --project tsconfig.node.json scripts/generate-docs.ts",
     "test": "vitest",
