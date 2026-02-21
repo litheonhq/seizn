@@ -301,12 +301,12 @@ Deduplicate facts. Resolve contradictions (prefer newer). Extract user profile i
     });
   }
 
-  // Store consolidated scenes
-  if (scenes.length > 0) {
-    await storeMemScenes(userId, scenes);
+  // Store consolidated scenes and return persisted identifiers
+  if (scenes.length === 0) {
+    return [];
   }
 
-  return scenes;
+  return storeMemScenes(userId, scenes);
 }
 
 /**
@@ -357,27 +357,199 @@ function clusterBySimilarity(
 /**
  * Store MemScenes in database for persistent consolidation.
  */
+function normalizeEmbeddingVector(raw: unknown): number[] | undefined {
+  if (Array.isArray(raw)) {
+    const vector = raw
+      .map((value) => (typeof value === 'number' ? value : Number(value)))
+      .filter((value) => Number.isFinite(value));
+    return vector.length > 0 ? vector : undefined;
+  }
+
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      return normalizeEmbeddingVector(parsed);
+    } catch {
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
+function inferUrgencyFromImportance(importance: number): MemCell['foresight']['urgency'] {
+  if (importance >= 8) return 'high';
+  if (importance >= 6) return 'medium';
+  return 'low';
+}
+
+function calculateSceneImportance(scene: MemScene): number {
+  if (scene.profileUpdates.length === 0) {
+    return 5;
+  }
+
+  const avgConfidence =
+    scene.profileUpdates.reduce((sum, update) => sum + update.confidence, 0) /
+    scene.profileUpdates.length;
+
+  return Math.min(10, Math.max(1, Math.round((5 + avgConfidence * 3) * 100) / 100));
+}
+
+/**
+ * Load lifecycle-extracted memories that are not yet included in any active cluster.
+ * These are the candidate MemCells for phase-2 semantic consolidation.
+ */
+async function loadUnclusteredLifecycleMemCells(
+  userId: string,
+  maxCells: number
+): Promise<MemCell[]> {
+  const supabase = createServerClient();
+  const readLimit = Math.max(maxCells * 3, maxCells);
+
+  const [memoriesResult, clustersResult] = await Promise.all([
+    supabase
+      .from('memories')
+      .select('id, content, embedding, created_at, importance')
+      .eq('user_id', userId)
+      .eq('namespace', 'default')
+      .eq('source', 'lifecycle_extraction')
+      .eq('is_deleted', false)
+      .order('created_at', { ascending: false })
+      .limit(readLimit),
+    supabase
+      .from('memory_clusters')
+      .select('member_ids')
+      .eq('user_id', userId)
+      .eq('is_archived', false)
+      .order('created_at', { ascending: false })
+      .limit(200),
+  ]);
+
+  if (memoriesResult.error || !memoriesResult.data || memoriesResult.data.length === 0) {
+    return [];
+  }
+
+  const clusteredIds = new Set<string>();
+  if (!clustersResult.error && clustersResult.data) {
+    for (const cluster of clustersResult.data as Array<{ member_ids?: unknown }>) {
+      if (!Array.isArray(cluster.member_ids)) continue;
+      for (const id of cluster.member_ids) {
+        clusteredIds.add(String(id));
+      }
+    }
+  }
+
+  const candidates = (memoriesResult.data as Array<{
+    id: string;
+    content: string;
+    embedding?: unknown;
+    created_at: string;
+    importance?: number;
+  }>)
+    .filter((memory) => !clusteredIds.has(String(memory.id)))
+    .slice(0, maxCells);
+
+  return candidates.map((memory) => {
+    const importance = typeof memory.importance === 'number' ? memory.importance : 5;
+    const content = memory.content || '';
+    return {
+      id: String(memory.id),
+      content,
+      atomicFacts: content.length > 0 ? [content] : [],
+      episodicTrace: {
+        speaker: 'user',
+        timestamp: new Date(memory.created_at),
+        conversationTurn: 0,
+      },
+      foresight: {
+        urgency: inferUrgencyFromImportance(importance),
+      },
+      status: 'extracted',
+      embedding: normalizeEmbeddingVector(memory.embedding),
+    } satisfies MemCell;
+  });
+}
+
 async function storeMemScenes(
   userId: string,
   scenes: MemScene[]
-): Promise<void> {
+): Promise<MemScene[]> {
   const supabase = createServerClient();
+  const persisted: MemScene[] = [];
 
   for (const scene of scenes) {
-    await supabase.from('memory_clusters').upsert({
-      id: scene.id,
-      user_id: userId,
-      name: scene.theme,
-      summary: scene.summary,
-      memory_ids: scene.cellIds,
-      metadata: {
-        semanticFacts: scene.semanticFacts,
-        profileUpdates: scene.profileUpdates,
-        cellCount: scene.cellIds.length,
-      },
-      created_at: scene.createdAt.toISOString(),
+    const { data, error } = await supabase
+      .from('memory_clusters')
+      .insert({
+        user_id: userId,
+        namespace: 'default',
+        cluster_name: scene.theme,
+        cluster_type: 'semantic',
+        summary: scene.summary,
+        member_ids: scene.cellIds,
+        member_count: scene.cellIds.length,
+        importance: calculateSceneImportance(scene),
+      })
+      .select('id, cluster_name, summary, member_ids, created_at, updated_at')
+      .single();
+
+    if (error || !data) {
+      console.error('Failed to persist consolidated MemScene:', error);
+      continue;
+    }
+
+    persisted.push({
+      ...scene,
+      id: String(data.id),
+      theme: data.cluster_name ?? scene.theme,
+      summary: data.summary ?? scene.summary,
+      cellIds: Array.isArray(data.member_ids)
+        ? data.member_ids.map((id: unknown) => String(id))
+        : scene.cellIds,
+      createdAt: data.created_at ? new Date(data.created_at) : scene.createdAt,
+      lastConsolidatedAt: data.updated_at ? new Date(data.updated_at) : scene.lastConsolidatedAt,
     });
   }
+
+  return persisted;
+}
+
+async function loadRecentSceneSummaries(
+  userId: string,
+  limit: number
+): Promise<Array<{ name: string; summary: string }>> {
+  const supabase = createServerClient();
+
+  const modern = await supabase
+    .from('memory_clusters')
+    .select('cluster_name, summary')
+    .eq('user_id', userId)
+    .eq('is_archived', false)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (!modern.error && modern.data) {
+    return (modern.data as Array<{ cluster_name?: string; summary?: string }>).map((scene) => ({
+      name: scene.cluster_name || 'Cluster',
+      summary: scene.summary || '',
+    }));
+  }
+
+  const legacy = await supabase
+    .from('memory_clusters')
+    .select('name, summary')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (legacy.error || !legacy.data) {
+    return [];
+  }
+
+  return (legacy.data as Array<{ name?: string; summary?: string }>).map((scene) => ({
+    name: scene.name || 'Cluster',
+    summary: scene.summary || '',
+  }));
 }
 
 // ============================================
@@ -474,23 +646,16 @@ export async function reconstructContext(
 
   // 4. Check consolidated scenes for thematic context
   try {
-    const { data: scenes } = await supabase
-      .from('memory_clusters')
-      .select('name, summary')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(5);
+    const scenes = await loadRecentSceneSummaries(userId, 5);
 
-    if (scenes) {
-      for (const scene of scenes) {
-        fragments.push({
-          content: `[${scene.name}] ${scene.summary}`,
-          source: 'episodic',
-          relevance: 0.6,
-        });
-      }
-      fragmentsConsidered += scenes.length;
+    for (const scene of scenes) {
+      fragments.push({
+        content: `[${scene.name}] ${scene.summary}`,
+        source: 'episodic',
+        relevance: 0.6,
+      });
     }
+    fragmentsConsidered += scenes.length;
   } catch {
     // Non-fatal
   }
@@ -579,17 +744,14 @@ export async function processConversationTurn(
   let scenes: MemScene[] | undefined;
 
   if (config.autoConsolidate) {
-    const supabase = createServerClient();
-    const { count } = await supabase
-      .from('memories')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('source', 'lifecycle_extraction')
-      .eq('is_deleted', false);
+    const candidates = await loadUnclusteredLifecycleMemCells(
+      userId,
+      config.consolidationThreshold * 2
+    );
 
-    if ((count || 0) >= config.consolidationThreshold) {
-      // Phase 2: Consolidate (placeholder -> would need recent unclustered cells)
-      consolidated = true;
+    if (candidates.length >= config.consolidationThreshold) {
+      scenes = await consolidateMemCells(userId, candidates, config);
+      consolidated = scenes.length > 0;
     }
   }
 
