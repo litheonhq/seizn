@@ -22,3 +22,15 @@
 **원인:** 임시 마이그레이션 실행 편의를 위해 하드코딩된 것으로 추정.  
 **해결:** 파일을 “credential-less wrapper”로 변경하여 `.env.local`의 `POSTGRES_URL_NON_POOLING`을 사용하는 `scripts/run-migration-file.mjs`로 위임.  
 **후속 조치:** 이미 커밋/배포된 이력이 있다면 해당 비밀번호는 유출로 간주하고 즉시 회전(rotate) 권장. 히스토리 purge는 별도 승인 후 진행.
+
+### Content Hash Dedup Scope Mismatch (Import API)
+**날짜:** 2026-02-20  
+**증상:** `/api/memories/import` with `skip_duplicates=true` skipped memories across different namespaces and could fail an entire batch on a single duplicate/conflict.  
+**원인:** Dedup pre-check used user-level comparison only, while DB uniqueness is scoped to `(user_id, namespace, content_hash)`. Batch insert also treated one insert error as full-batch failure.  
+**해결:** Switched dedup key to `namespace + content_hash`, added in-request dedup tracking, and changed insert flow to row-level resilient insert with `upsert(... ignoreDuplicates)` when dedup is enabled.
+
+### Memory Personalization Migration FK Type Mismatch
+**날짜:** 2026-02-21  
+**증상:** `20260221_memory_personalization_learning.sql` 적용 시 `foreign key constraint "user_memory_learning_profiles_user_id_fkey" cannot be implemented` 오류로 롤백됨.  
+**원인:** 실DB 스키마에서 `profiles.id` / `memories.user_id` 타입이 `text`인데 신규 마이그레이션의 `user_id`를 `uuid`로 정의하여 FK 타입 불일치 발생.  
+**해결:** 마이그레이션을 `user_id TEXT REFERENCES profiles(id)`로 수정하고 RLS 비교를 `auth.uid()::text`로 변경 후 재적용. 생성 테이블/RLS/policies 검증 완료.
