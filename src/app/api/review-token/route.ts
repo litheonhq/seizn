@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { constantTimeEqual } from '@/lib/security/constant-time';
 
 function getConfiguredSecrets(): { adminSecret: string; tokenSecret: string } | null {
   const adminSecret = process.env.REVIEW_ADMIN_SECRET;
@@ -54,7 +55,7 @@ function verifyToken(
       .update(payloadStr)
       .digest('base64url');
 
-    if (signature !== expectedSignature) {
+    if (!constantTimeEqual(signature, expectedSignature)) {
       return { valid: false, error: 'Invalid signature' };
     }
 
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
       note,
     } = body;
 
-    if (adminSecret !== secrets.adminSecret) {
+    if (!constantTimeEqual(adminSecret, secrets.adminSecret)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -161,7 +162,7 @@ export async function DELETE(request: NextRequest) {
 
   const { adminSecret } = await request.json();
 
-  if (adminSecret !== secrets.adminSecret) {
+  if (!constantTimeEqual(adminSecret, secrets.adminSecret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

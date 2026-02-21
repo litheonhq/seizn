@@ -12,22 +12,11 @@ import {
   updateImportanceScores,
 } from '@/lib/memory-optimizer';
 import { createEmbedding } from '@/lib/ai';
-
-// Verify internal request (cron secret or admin)
-function isAuthorized(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
-    return true;
-  }
-
-  return false;
-}
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // POST /api/internal/optimize - Run optimization for all users
 export async function POST(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -125,7 +114,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/internal/optimize - Get optimization stats
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

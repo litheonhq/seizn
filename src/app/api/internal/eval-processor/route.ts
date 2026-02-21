@@ -12,17 +12,13 @@ import { getPendingTriggers, markTriggerProcessed } from '@/lib/eval/events';
 import { autoEvalService } from '@/lib/eval/auto-eval-service';
 import { runEvalPolicyClosedLoop } from '@/lib/network-learning';
 import { runScheduledMemoryQualityEvalCheck } from '@/lib/memory/eval-automation';
+import { verifyCronSecret } from '@/lib/cron-auth';
 
-const CRON_SECRET = process.env.CRON_SECRET;
 const MAX_TRIGGERS_PER_RUN = 10;
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify cron secret
-    const authHeader = request.headers.get('authorization');
-    const providedSecret = authHeader?.replace('Bearer ', '');
-
-    if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+    if (!verifyCronSecret(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -169,11 +165,7 @@ export async function POST(request: NextRequest) {
 // Also support GET for health checks
 export async function GET(request: NextRequest) {
   try {
-    // Verify cron secret
-    const authHeader = request.headers.get('authorization');
-    const providedSecret = authHeader?.replace('Bearer ', '');
-
-    if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+    if (!verifyCronSecret(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

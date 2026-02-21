@@ -11,9 +11,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { createServerClient } from "@/lib/supabase";
+import {
+  authenticateRequest,
+  isAuthError,
+  authErrorResponse,
+} from "@/lib/api-auth";
 import { getGateway } from "@/lib/ai-gateway";
 import { getPolicyRouter } from "@/lib/ai-gateway/policy-router";
 import type { GatewayRequest, ChatMessage } from "@/lib/ai-gateway/types";
@@ -53,9 +57,19 @@ export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
 
   try {
-    // Authenticate
+    // Authenticate (session or API key required)
     const session = await auth();
-    const userId = session?.user?.id;
+    const sessionUserId = session?.user?.id ?? null;
+    const hasApiKeyHeader = Boolean(
+      request.headers.get("x-api-key") || request.headers.get("authorization")
+    );
+
+    if (!sessionUserId && !hasApiKeyHeader) {
+      return NextResponse.json(
+        { error: { code: "UNAUTHORIZED", message: "Authentication required" } },
+        { status: 401 }
+      );
+    }
 
     // Parse request
     const body: ChatRequest = await request.json();
@@ -76,15 +90,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Get org context from API key or session
-    const apiKey = request.headers.get("x-api-key");
+    let resolvedUserId = sessionUserId;
     let orgId: string | null = null;
 
-    if (apiKey) {
+    if (hasApiKeyHeader) {
+      const apiAuth = await authenticateRequest(request, { skipUsageCheck: false });
+      if (isAuthError(apiAuth)) {
+        return authErrorResponse(apiAuth.authError);
+      }
+
+      resolvedUserId = apiAuth.userId;
       const supabase = createServerClient();
       const { data: keyData } = await supabase
         .from("api_keys")
         .select("org_id, scopes")
-        .eq("key_hash", hashApiKey(apiKey))
+        .eq("id", apiAuth.keyId)
         .eq("is_active", true)
         .single();
 
@@ -104,22 +124,32 @@ export async function POST(request: NextRequest) {
       }
 
       orgId = keyData.org_id;
-    } else if (userId) {
+    } else if (sessionUserId) {
       const supabase = createServerClient();
       const { data: membership } = await supabase
         .from("org_members")
         .select("org_id")
-        .eq("user_id", userId)
+        .eq("user_id", sessionUserId)
         .limit(1)
         .single();
 
       orgId = membership?.org_id || null;
     }
 
+    if (!orgId) {
+      return NextResponse.json(
+        { error: { code: "TENANT_REQUIRED", message: "Organization context required" } },
+        { status: 403 }
+      );
+    }
+
     // Check rate limits
     if (orgId) {
-      const rateLimitResult = await checkRateLimit(orgId, userId || "anonymous", model);
+      const rateLimitResult = await checkRateLimit(orgId, resolvedUserId || "anonymous", model);
       if (!rateLimitResult.allowed) {
+        const retryAfterSeconds = rateLimitResult.retryAfter
+          ? Math.max(1, Math.ceil((rateLimitResult.retryAfter.getTime() - Date.now()) / 1000))
+          : 60;
         return NextResponse.json(
           {
             error: {
@@ -132,7 +162,7 @@ export async function POST(request: NextRequest) {
           {
             status: 429,
             headers: {
-              "Retry-After": String(Math.ceil((rateLimitResult.retryAfter?.getTime() || 0 - Date.now()) / 1000)),
+              "Retry-After": String(retryAfterSeconds),
               "X-RateLimit-Remaining": String(rateLimitResult.remaining || 0),
             },
           }
@@ -169,14 +199,14 @@ export async function POST(request: NextRequest) {
       metadata: {
         ...metadata,
         org_id: orgId,
-        user_id: userId,
+        user_id: resolvedUserId,
         source: "gateway_api",
       },
     };
 
     const policyDecision = await policyRouter.evaluateRequest(
       gatewayRequest,
-      userId || "anonymous",
+      resolvedUserId || "anonymous",
       orgId || undefined
     );
 
@@ -216,7 +246,7 @@ export async function POST(request: NextRequest) {
     if (orgId) {
       await recordCost(
         orgId,
-        userId || null,
+        resolvedUserId || null,
         requestId,
         response.provider,
         response.model,
@@ -278,13 +308,6 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Hash API key for lookup
- */
-function hashApiKey(key: string): string {
-  return createHash("sha256").update(key).digest("hex");
-}
-
-/**
  * Check rate limits
  */
 async function checkRateLimit(
@@ -306,7 +329,7 @@ async function checkRateLimit(
 
     if (error) {
       console.error("Rate limit check error:", error);
-      return { allowed: true }; // Fail open
+      return { allowed: false }; // Fail closed
     }
 
     return {
@@ -315,7 +338,7 @@ async function checkRateLimit(
       retryAfter: data?.retry_after ? new Date(data.retry_after) : undefined,
     };
   } catch {
-    return { allowed: true }; // Fail open
+    return { allowed: false }; // Fail closed
   }
 }
 
@@ -371,7 +394,7 @@ async function checkPolicies(
 
     return { allowed: true };
   } catch {
-    return { allowed: true }; // Fail open
+    return { allowed: false }; // Fail closed
   }
 }
 

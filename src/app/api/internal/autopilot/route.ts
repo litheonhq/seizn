@@ -13,15 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-
-const CRON_SECRET = process.env.CRON_SECRET;
-
-function isAuthorized(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization');
-  const providedSecret = authHeader?.replace('Bearer ', '');
-
-  return Boolean(CRON_SECRET && providedSecret === CRON_SECRET);
-}
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 function isoHoursAgo(hours: number): string {
   return new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
@@ -32,7 +24,7 @@ function isoMinutesAgo(minutes: number): string {
 }
 
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -153,4 +145,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

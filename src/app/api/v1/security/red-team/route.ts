@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createServerClient } from '@/lib/supabase';
+import { validateOutboundUrl } from '@/lib/security/outbound-url';
 import {
   createRedTeamRunner,
   type RedTeamConfig,
@@ -45,6 +46,28 @@ export async function POST(request: NextRequest) {
 
     const body = (await request.json()) as RedTeamRequest;
 
+    let validatedTargetUrl: string | null = null;
+    if (body.target_url) {
+      const urlValidation = await validateOutboundUrl(body.target_url, {
+        allowHttp:
+          process.env.NODE_ENV !== 'production' &&
+          process.env.ALLOW_UNSAFE_PROVIDER_TARGETS === 'true',
+        allowPrivateNetwork:
+          process.env.NODE_ENV !== 'production' &&
+          process.env.ALLOW_UNSAFE_PROVIDER_TARGETS === 'true',
+      });
+      if (!urlValidation.valid || !urlValidation.normalizedUrl) {
+        return NextResponse.json(
+          {
+            error: 'Validation Error',
+            message: `Invalid target_url: ${urlValidation.reason || 'unsafe URL'}`,
+          },
+          { status: 400 }
+        );
+      }
+      validatedTargetUrl = urlValidation.normalizedUrl;
+    }
+
     const config: RedTeamConfig = {
       categories: body.categories,
       maxTests: body.max_tests || 50,
@@ -55,8 +78,8 @@ export async function POST(request: NextRequest) {
 
     // Create mock target function (in production, would call actual endpoint)
     const targetFn = async (prompt: string): Promise<string> => {
-      if (body.target_url) {
-        const response = await fetch(body.target_url, {
+      if (validatedTargetUrl) {
+        const response = await fetch(validatedTargetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt }),

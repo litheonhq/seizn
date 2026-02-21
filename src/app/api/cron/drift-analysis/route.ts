@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { DriftCollector } from '@/lib/drift';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { validateOutboundUrl } from '@/lib/security/outbound-url';
 
 export async function GET(request: NextRequest) {
   // Verify cron authorization
@@ -110,7 +111,20 @@ export async function GET(request: NextRequest) {
           // Send webhook notification if configured
           if (prefs?.webhook_url) {
             try {
-              await fetch(prefs.webhook_url, {
+              const webhookUrlValidation = await validateOutboundUrl(prefs.webhook_url, {
+                allowHttp: process.env.NODE_ENV !== 'production',
+                allowPrivateNetwork: false,
+              });
+
+              if (!webhookUrlValidation.valid || !webhookUrlValidation.normalizedUrl) {
+                console.warn('[DriftAnalysis] Skipping unsafe webhook URL', {
+                  collectionId: collection.id,
+                  reason: webhookUrlValidation.reason,
+                });
+                continue;
+              }
+
+              await fetch(webhookUrlValidation.normalizedUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
