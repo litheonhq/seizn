@@ -14,6 +14,10 @@ import {
   type MemoryFeedbackEventType,
   recordFeedbackAndLearn,
 } from '@/lib/memory/personalization';
+import {
+  recordRouterFeedbackReward,
+  type RouterStrategy,
+} from '@/lib/memory/router-learning';
 import { hasConsent } from '@/lib/network-learning';
 
 const VALID_EVENT_TYPES = new Set<MemoryFeedbackEventType>([
@@ -26,6 +30,30 @@ const VALID_EVENT_TYPES = new Set<MemoryFeedbackEventType>([
 const NAMESPACE_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/;
 const MAX_METADATA_BYTES = 4096;
 const MAX_QUERY_LENGTH = 1000;
+
+function parseRouterStrategy(value: unknown): RouterStrategy | null {
+  if (value === 'slot' || value === 'keyword' || value === 'hybrid' || value === 'vector') {
+    return value;
+  }
+  return null;
+}
+
+function rewardFromEvent(eventType: MemoryFeedbackEventType): number {
+  switch (eventType) {
+    case 'thumbs_up':
+      return 1.0;
+    case 'thumbs_down':
+      return -1.0;
+    case 'reuse':
+      return 0.6;
+    case 'open':
+      return 0.3;
+    case 'click':
+      return 0.2;
+    default:
+      return 0;
+  }
+}
 
 function withHeaders(response: NextResponse, headers?: Record<string, string>): NextResponse {
   if (headers) {
@@ -175,6 +203,23 @@ export async function POST(request: NextRequest) {
       tags: Array.isArray(memory.tags) ? memory.tags : [],
       metadata: metadataValue,
     });
+
+    const strategyFromBody = parseRouterStrategy(body.strategy);
+    const strategyFromMetadata = parseRouterStrategy(
+      metadataValue.search_mode ?? metadataValue.mode ?? metadataValue.strategy
+    );
+    const routerStrategy = strategyFromBody || strategyFromMetadata;
+    if (routerStrategy && query) {
+      recordRouterFeedbackReward(supabase, {
+        userId,
+        namespace,
+        query,
+        strategy: routerStrategy,
+        reward: rewardFromEvent(eventType),
+      }).catch((routerRewardError) => {
+        console.error('[v1/memories/feedback] Router reward update failed:', routerRewardError);
+      });
+    }
 
     if (keyId) {
       await logRequest(

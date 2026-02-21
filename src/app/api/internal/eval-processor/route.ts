@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPendingTriggers, markTriggerProcessed } from '@/lib/eval/events';
 import { autoEvalService } from '@/lib/eval/auto-eval-service';
 import { runEvalPolicyClosedLoop } from '@/lib/network-learning';
+import { runScheduledMemoryQualityEvalCheck } from '@/lib/memory/eval-automation';
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const MAX_TRIGGERS_PER_RUN = 10;
@@ -25,6 +26,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Run memory quality scheduler before fetching pending triggers.
+    // This can enqueue a synthetic trigger when online quality degrades.
+    const memoryScheduler = await runScheduledMemoryQualityEvalCheck();
+
     // Get pending triggers
     const triggers = await getPendingTriggers(MAX_TRIGGERS_PER_RUN);
 
@@ -32,6 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         processed: 0,
         message: 'No pending triggers',
+        scheduler: memoryScheduler,
       });
     }
 
@@ -148,6 +154,7 @@ export async function POST(request: NextRequest) {
       success: successCount,
       failed: failedCount,
       closedLoop: closedLoopAggregate,
+      scheduler: memoryScheduler,
       results,
     });
   } catch (error) {

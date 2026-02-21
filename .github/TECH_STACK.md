@@ -1,5 +1,5 @@
 # Seizn -- Tech Stack Documentation
-> Auto-generated on 2026-02-16
+> Auto-generated on 2026-02-21
 
 Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
 
@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 140 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 141 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -359,6 +359,10 @@ User Request
 | Docker Self-Hosting | Fully Implemented | `Dockerfile`, `docker-compose.yml`, `deploy/` | Multi-stage build, Helm charts |
 | E2E Tests (Playwright) | Fully Implemented | `e2e/` (3 spec files), `playwright.config.ts` | Chromium + Firefox |
 | Offline Local Memory Store (CLI) | Fully Implemented | `cli/seizn/src/commands/local.ts`, `cli/seizn/src/local-store.ts` | JSONL at `~/.seizn/local/memories.jsonl` (offline-only, no API key); supports at-rest encryption via `SEIZN_LOCAL_ENCRYPTION_PASSPHRASE` and refuses likely secrets by default |
+| Adaptive Memory Router Learning | Fully Implemented | `src/lib/memory/router-learning.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/v1/memories/feedback/route.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Online strategy stats by query bucket + automatic override in `mode=auto` + feedback reward loop |
+| Lifecycle Scene Profile Sync | Fully Implemented | `src/lib/memory/lifecycle.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Consolidation scene profile updates now sync into slots/profile card and persist trace logs (`memory_scene_profile_sync_events`) |
+| Scheduled Memory Quality Auto-Eval | Fully Implemented | `src/lib/memory/eval-automation.ts`, `src/app/api/internal/eval-processor/route.ts` | Internal cron path emits synthetic auto-eval triggers when feedback degradation / zero-result ratio crosses thresholds |
+| Memory Search Canary Linkage | Fully Implemented | `src/app/api/v1/memories/route.ts`, `src/lib/fall/canary/` | v1 memory search now records canary quality/latency outcomes and supports canary forced mode override in auto routing |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
