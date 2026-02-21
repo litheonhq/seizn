@@ -87,6 +87,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Limit request body size (16 KB max for demo)
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > 16384) {
+      return ValidationErrors.invalidField('body', 'Request body too large (max 16 KB)');
+    }
+
     // Parse request
     const body: DemoQueryRequest = await request.json();
 

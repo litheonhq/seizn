@@ -85,6 +85,7 @@ const DEFAULT_MEMORY_TYPE_WEIGHTS: Record<MemoryTypeKey, number> = {
 const DEFAULT_RECENCY_WEIGHT = 0.2;
 const DEFAULT_IMPORTANCE_WEIGHT = 0.2;
 const DEFAULT_SIMILARITY_WEIGHT = 0.6;
+const FEEDBACK_DEDUP_WINDOW_MS = 10_000;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -242,9 +243,9 @@ export async function getOrCreateLearningProfile(
     return { available: true, profile: normalizeProfileRow(data as LearningProfileRow) };
   }
 
-  const { data: inserted, error: insertError } = await supabase
+  const { error: upsertError } = await supabase
     .from('user_memory_learning_profiles')
-    .insert({
+    .upsert({
       user_id: userId,
       namespace,
       personalization_enabled: true,
@@ -253,15 +254,34 @@ export async function getOrCreateLearningProfile(
       recency_weight: DEFAULT_RECENCY_WEIGHT,
       importance_weight: DEFAULT_IMPORTANCE_WEIGHT,
       similarity_weight: DEFAULT_SIMILARITY_WEIGHT,
-    })
-    .select('*')
-    .single();
+    }, {
+      onConflict: 'user_id,namespace',
+      ignoreDuplicates: true,
+    });
 
-  if (insertError) {
-    if (isMissingPersonalizationTableError(insertError)) {
+  if (upsertError) {
+    if (isMissingPersonalizationTableError(upsertError)) {
       return { available: false, profile: fallback, reason: 'schema_missing' };
     }
-    throw insertError;
+    throw upsertError;
+  }
+
+  const { data: inserted, error: insertedError } = await supabase
+    .from('user_memory_learning_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('namespace', namespace)
+    .maybeSingle();
+
+  if (insertedError) {
+    if (isMissingPersonalizationTableError(insertedError)) {
+      return { available: false, profile: fallback, reason: 'schema_missing' };
+    }
+    throw insertedError;
+  }
+
+  if (!inserted) {
+    return { available: false, profile: fallback, reason: 'profile_upsert_missing' };
   }
 
   return { available: true, profile: normalizeProfileRow(inserted as LearningProfileRow) };
@@ -325,6 +345,35 @@ export async function recordFeedbackAndLearn(
   const { userId, namespace, memoryId, eventType, memoryType, tags, query, metadata } = input;
   const reward = scoreFromEvent(eventType);
   const profileState = await getOrCreateLearningProfile(supabase, userId, namespace);
+
+  const dedupSince = new Date(Date.now() - FEEDBACK_DEDUP_WINDOW_MS).toISOString();
+  let dedupQuery = supabase
+    .from('memory_feedback_events')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('namespace', namespace)
+    .eq('memory_id', memoryId)
+    .eq('event_type', eventType)
+    .gte('created_at', dedupSince)
+    .limit(1);
+
+  if (query) {
+    dedupQuery = dedupQuery.eq('query_text', query);
+  } else {
+    dedupQuery = dedupQuery.is('query_text', null);
+  }
+
+  const { data: recentDuplicate, error: dedupError } = await dedupQuery.maybeSingle();
+  if (dedupError && !isMissingPersonalizationTableError(dedupError)) {
+    throw dedupError;
+  }
+  if (recentDuplicate) {
+    return {
+      applied: false,
+      profile: profileState.available ? profileState.profile : undefined,
+      reason: 'duplicate_feedback',
+    };
+  }
 
   const { error: eventError } = await supabase
     .from('memory_feedback_events')

@@ -899,7 +899,15 @@
       "noMatchingMemories": "Thử điều chỉnh bộ lọc hoặc truy vấn tìm kiếm",
       "noMemoriesHint": "Bắt đầu thêm ký ức qua API để xem chúng ở đây",
       "match": "khớp",
-      "loadMore": "Tải thêm"
+      "loadMore": "Tải thêm",
+      "export": "Xuất",
+      "import": "Nhập",
+      "imported": "đã nhập",
+      "skipped": "bỏ qua",
+      "failed": "thất bại",
+      "afterDate": "Sau",
+      "beforeDate": "Trước",
+      "sortImportance": "Theo mức độ quan trọng"
     },
     "budgetPage": {
       "title": "Ngân sách & Kiểm soát chi phí",
@@ -1271,7 +1279,8 @@
       "manageOrgs": "Quản lý Tổ chức",
       "create": "Tạo",
       "createApiKey": "API Key Mới",
-      "createOrg": "Tổ chức Mới"
+      "createOrg": "Tổ chức Mới",
+      "switchOrg": "Chuyển tổ chức"
     },
     "share": {
       "title": "Chia sẻ Trace",
@@ -1492,6 +1501,24 @@
       "noQueries": "Chưa có query",
       "noData": "Không có dữ liệu phân tích",
       "noDataDescription": "Bắt đầu thực hiện lượt gọi API để xem phân tích chi tiết ở đây."
+    },
+    "skipToContent": "Chuyển đến nội dung",
+    "menu": "Mở menu",
+    "errorBoundary": {
+      "title": "Đã xảy ra lỗi",
+      "description": "Đã xảy ra lỗi không mong muốn khi tải trang này.",
+      "errorId": "Mã lỗi: {digest}",
+      "tryAgain": "Thử lại",
+      "backToDashboard": "Quay lại bảng điều khiển"
+    },
+    "commandPalette": {
+      "title": "Bảng lệnh",
+      "placeholder": "Tìm kiếm trang...",
+      "noResults": "Không tìm thấy kết quả",
+      "navigate": "Điều hướng",
+      "open": "Mở",
+      "close": "Đóng",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

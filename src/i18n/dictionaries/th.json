@@ -929,7 +929,15 @@
       "noMatchingMemories": "ลองปรับตัวกรองหรือคำค้นหาของคุณ",
       "noMemoriesHint": "เริ่มเพิ่มความทรงจำผ่าน API เพื่อดูที่นี่",
       "match": "ตรงกัน",
-      "loadMore": "โหลดเพิ่มเติม"
+      "loadMore": "โหลดเพิ่มเติม",
+      "export": "ส่งออก",
+      "import": "นำเข้า",
+      "imported": "นำเข้าแล้ว",
+      "skipped": "ข้ามแล้ว",
+      "failed": "ล้มเหลว",
+      "afterDate": "หลังจาก",
+      "beforeDate": "ก่อน",
+      "sortImportance": "ตามความสำคัญ"
     },
     "budgetPage": {
       "title": "งบประมาณและการควบคุมต้นทุน",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "จัดการองค์กร",
       "create": "สร้าง",
       "createApiKey": "API Key ใหม่",
-      "createOrg": "องค์กรใหม่"
+      "createOrg": "องค์กรใหม่",
+      "switchOrg": "เปลี่ยนองค์กร"
     },
     "share": {
       "title": "แชร์ Trace",
@@ -1492,6 +1501,24 @@
           "description": "ดูทุกขั้นตอนของไปป์ไลน์ - ตั้งแต่การสร้างการฝังจนถึงการจัดอันดับผลลัพธ์ - พร้อมรายละเอียดเวลาและค่าใช้จ่าย"
         }
       }
+    },
+    "skipToContent": "ข้ามไปยังเนื้อหา",
+    "menu": "เปิดเมนู",
+    "errorBoundary": {
+      "title": "เกิดข้อผิดพลาด",
+      "description": "เกิดข้อผิดพลาดที่ไม่คาดคิดขณะโหลดหน้านี้",
+      "errorId": "รหัสข้อผิดพลาด: {digest}",
+      "tryAgain": "ลองอีกครั้ง",
+      "backToDashboard": "กลับไปแดชบอร์ด"
+    },
+    "commandPalette": {
+      "title": "คอมมานด์พาเลท",
+      "placeholder": "ค้นหาหน้า...",
+      "noResults": "ไม่พบผลลัพธ์",
+      "navigate": "นำทาง",
+      "open": "เปิด",
+      "close": "ปิด",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

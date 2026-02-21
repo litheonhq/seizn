@@ -8,6 +8,7 @@ import {
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { ServerErrors, ValidationErrors } from '@/lib/api-error';
+import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import {
   getLearningDiagnostics,
   resetLearningProfile,
@@ -38,12 +39,7 @@ function withHeaders(response: NextResponse, headers?: Record<string, string>): 
 async function resolveAuth(
   request: NextRequest
 ): Promise<
-  | {
-      userId: string;
-      keyId: string | null;
-      authMode: 'api_key' | 'session';
-      rateLimitHeaders?: Record<string, string>;
-    }
+  | { userId: string; keyId: string | null; rateLimitHeaders?: Record<string, string> }
   | { error: NextResponse }
 > {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
@@ -51,30 +47,16 @@ async function resolveAuth(
     return {
       userId: authResult.userId,
       keyId: authResult.keyId,
-      authMode: 'api_key',
       rateLimitHeaders: authResult.rateLimitHeaders,
     };
   }
 
   const session = await auth();
   if (session?.user?.id) {
-    return { userId: session.user.id, keyId: null, authMode: 'session' };
+    return { userId: session.user.id, keyId: null };
   }
 
   return { error: authErrorResponse(authResult.authError) };
-}
-
-function isSameOriginRequest(request: NextRequest): boolean {
-  const origin = request.headers.get('origin');
-  const referer = request.headers.get('referer');
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
-  if (!host) return false;
-  const proto = request.headers.get('x-forwarded-proto') || 'https';
-  const expectedOrigin = `${proto}://${host}`;
-
-  if (origin) return origin === expectedOrigin;
-  if (referer) return referer.startsWith(`${expectedOrigin}/`) || referer === expectedOrigin;
-  return false;
 }
 
 export async function GET(request: NextRequest) {
@@ -108,40 +90,44 @@ export async function GET(request: NextRequest) {
     }
 
     if (format === 'export') {
+      const response = NextResponse.json({
+        success: true,
+        namespace,
+        exported_at: new Date().toISOString(),
+        available: diagnostics.available,
+        reason: diagnostics.reason || null,
+        profile: diagnostics.profile,
+        recent_events: diagnostics.recentEvents,
+        top_tags: diagnostics.topTags,
+      });
+      const withCsrf = ensureCsrfCookie(request, response);
       return withHeaders(
-        NextResponse.json({
-          success: true,
-          namespace,
-          exported_at: new Date().toISOString(),
-          available: diagnostics.available,
-          reason: diagnostics.reason || null,
-          profile: diagnostics.profile,
-          recent_events: diagnostics.recentEvents,
-          top_tags: diagnostics.topTags,
-        }),
+        withCsrf,
         rateLimitHeaders
       );
     }
 
+    const response = NextResponse.json({
+      success: true,
+      available: diagnostics.available,
+      reason: diagnostics.reason || null,
+      namespace,
+      profile: {
+        personalization_enabled: diagnostics.profile.personalizationEnabled,
+        recency_weight: diagnostics.profile.recencyWeight,
+        importance_weight: diagnostics.profile.importanceWeight,
+        similarity_weight: diagnostics.profile.similarityWeight,
+        total_feedback_count: diagnostics.profile.totalFeedbackCount,
+        positive_feedback_count: diagnostics.profile.positiveFeedbackCount,
+        negative_feedback_count: diagnostics.profile.negativeFeedbackCount,
+        last_feedback_at: diagnostics.profile.lastFeedbackAt,
+        updated_at: diagnostics.profile.updatedAt,
+      },
+      top_tags: diagnostics.topTags,
+    });
+    const withCsrf = ensureCsrfCookie(request, response);
     return withHeaders(
-      NextResponse.json({
-        success: true,
-        available: diagnostics.available,
-        reason: diagnostics.reason || null,
-        namespace,
-        profile: {
-          personalization_enabled: diagnostics.profile.personalizationEnabled,
-          recency_weight: diagnostics.profile.recencyWeight,
-          importance_weight: diagnostics.profile.importanceWeight,
-          similarity_weight: diagnostics.profile.similarityWeight,
-          total_feedback_count: diagnostics.profile.totalFeedbackCount,
-          positive_feedback_count: diagnostics.profile.positiveFeedbackCount,
-          negative_feedback_count: diagnostics.profile.negativeFeedbackCount,
-          last_feedback_at: diagnostics.profile.lastFeedbackAt,
-          updated_at: diagnostics.profile.updatedAt,
-        },
-        top_tags: diagnostics.topTags,
-      }),
+      withCsrf,
       rateLimitHeaders
     );
   } catch (error) {
@@ -157,13 +143,9 @@ export async function POST(request: NextRequest) {
     const authState = await resolveAuth(request);
     if ('error' in authState) return authState.error;
 
-    const { userId, keyId, authMode, rateLimitHeaders } = authState;
-    if (authMode === 'session' && !isSameOriginRequest(request)) {
-      return NextResponse.json(
-        { error: 'Cross-origin session request is not allowed' },
-        { status: 403 }
-      );
-    }
+    const { userId, keyId, rateLimitHeaders } = authState;
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
     const body = await request.json();
     const namespace = String(body.namespace || 'default');
     const namespaceError = validateNamespace(namespace);
@@ -235,13 +217,9 @@ export async function DELETE(request: NextRequest) {
     const authState = await resolveAuth(request);
     if ('error' in authState) return authState.error;
 
-    const { userId, keyId, authMode, rateLimitHeaders } = authState;
-    if (authMode === 'session' && !isSameOriginRequest(request)) {
-      return NextResponse.json(
-        { error: 'Cross-origin session request is not allowed' },
-        { status: 403 }
-      );
-    }
+    const { userId, keyId, rateLimitHeaders } = authState;
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
     const body = await request.json().catch(() => ({}));
     const namespace = String(body.namespace || 'default');
     const namespaceError = validateNamespace(namespace);

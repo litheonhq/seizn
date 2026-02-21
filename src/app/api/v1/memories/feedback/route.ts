@@ -8,6 +8,8 @@ import {
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { ServerErrors } from '@/lib/api-error';
+import { verifyCsrfToken } from '@/lib/csrf';
+import { checkRateLimitAsync } from '@/lib/rate-limit';
 import {
   type MemoryFeedbackEventType,
   recordFeedbackAndLearn,
@@ -36,12 +38,7 @@ function withHeaders(response: NextResponse, headers?: Record<string, string>): 
 async function resolveAuth(
   request: NextRequest
 ): Promise<
-  | {
-      userId: string;
-      keyId: string | null;
-      authMode: 'api_key' | 'session';
-      rateLimitHeaders?: Record<string, string>;
-    }
+  | { userId: string; keyId: string | null; rateLimitHeaders?: Record<string, string> }
   | { error: NextResponse }
 > {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
@@ -49,30 +46,24 @@ async function resolveAuth(
     return {
       userId: authResult.userId,
       keyId: authResult.keyId,
-      authMode: 'api_key',
       rateLimitHeaders: authResult.rateLimitHeaders,
     };
   }
 
   const session = await auth();
   if (session?.user?.id) {
-    return { userId: session.user.id, keyId: null, authMode: 'session' };
+    return { userId: session.user.id, keyId: null };
   }
 
   return { error: authErrorResponse(authResult.authError) };
 }
 
-function isSameOriginRequest(request: NextRequest): boolean {
-  const origin = request.headers.get('origin');
-  const referer = request.headers.get('referer');
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
-  if (!host) return false;
-  const proto = request.headers.get('x-forwarded-proto') || 'https';
-  const expectedOrigin = `${proto}://${host}`;
-
-  if (origin) return origin === expectedOrigin;
-  if (referer) return referer.startsWith(`${expectedOrigin}/`) || referer === expectedOrigin;
-  return false;
+function getFeedbackRateLimitHeaders(remaining: number, limit: number, resetAt: number): Record<string, string> {
+  return {
+    'X-Feedback-RateLimit-Limit': String(limit),
+    'X-Feedback-RateLimit-Remaining': String(remaining),
+    'X-Feedback-RateLimit-Reset': String(Math.ceil(resetAt / 1000)),
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -82,11 +73,20 @@ export async function POST(request: NextRequest) {
     const authState = await resolveAuth(request);
     if ('error' in authState) return authState.error;
 
-    const { userId, keyId, authMode, rateLimitHeaders } = authState;
-    if (authMode === 'session' && !isSameOriginRequest(request)) {
-      return NextResponse.json(
-        { error: 'Cross-origin session request is not allowed' },
-        { status: 403 }
+    const { userId, keyId, rateLimitHeaders } = authState;
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
+
+    const feedbackRate = await checkRateLimitAsync(`memory_feedback:${userId}`, 'free');
+    const feedbackRateHeaders = getFeedbackRateLimitHeaders(
+      feedbackRate.remaining,
+      feedbackRate.limit,
+      feedbackRate.resetAt
+    );
+    if (!feedbackRate.allowed) {
+      return withHeaders(
+        NextResponse.json({ error: 'Too many feedback requests. Please retry shortly.' }, { status: 429 }),
+        { ...(rateLimitHeaders || {}), ...feedbackRateHeaders }
       );
     }
     const body = await request.json();
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
         : null,
     });
 
-    return withHeaders(response, rateLimitHeaders);
+    return withHeaders(response, { ...(rateLimitHeaders || {}), ...feedbackRateHeaders });
   } catch (error) {
     console.error('[v1/memories/feedback] POST error:', error);
     return ServerErrors.internal('record_memory_feedback');

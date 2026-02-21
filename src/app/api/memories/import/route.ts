@@ -7,6 +7,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import crypto from 'crypto';
 
 interface ImportMemory {
   content: string;
@@ -20,6 +21,14 @@ interface ImportMemory {
 interface ImportRequest {
   memories: ImportMemory[];
   skip_duplicates?: boolean; // Skip if content already exists
+}
+
+function isMissingContentHashColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error) return false;
+  if (error.code === '42703') return true;
+  return (error.message || '').toLowerCase().includes('content_hash');
 }
 
 // POST /api/memories/import - Bulk import memories
@@ -59,17 +68,35 @@ export async function POST(request: NextRequest) {
     const supabase = createServerClient();
     const skipDuplicates = body.skip_duplicates !== false; // Default to true
 
-    // If skip_duplicates, get existing content hashes
-    let existingContents = new Set<string>();
+    // If skip_duplicates, get existing content hashes for comparison.
+    // Key format: `${namespace}:${content_hash}`
+    let existingHashes = new Set<string>();
+    let hasContentHashColumn = true;
     if (skipDuplicates) {
-      const { data: existing } = await supabase
-        .from('memories')
-        .select('content')
-        .eq('user_id', userId)
-        .eq('is_deleted', false);
+      const requestedNamespaces = Array.from(
+        new Set(body.memories.map((m) => m.namespace || 'default'))
+      );
 
-      if (existing) {
-        existingContents = new Set(existing.map(m => m.content.toLowerCase().trim()));
+      const { data: existing, error: existingError } = await supabase
+        .from('memories')
+        .select('namespace, content_hash')
+        .eq('user_id', userId)
+        .eq('is_deleted', false)
+        .in('namespace', requestedNamespaces)
+        .not('content_hash', 'is', null);
+
+      if (existingError) {
+        if (isMissingContentHashColumnError(existingError)) {
+          hasContentHashColumn = false;
+        } else {
+          console.error('Failed to load existing hashes:', existingError);
+        }
+      } else if (existing) {
+        existingHashes = new Set(
+          existing
+            .filter((m) => m.content_hash)
+            .map((m) => `${m.namespace || 'default'}:${m.content_hash as string}`)
+        );
       }
     }
 
@@ -98,8 +125,15 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      // Skip duplicates
-      if (skipDuplicates && existingContents.has(memory.content.toLowerCase().trim())) {
+      const namespace = memory.namespace || 'default';
+      const contentHash = crypto
+        .createHash('sha256')
+        .update(memory.content.replace(/\x00/g, ''))
+        .digest('hex');
+      const dedupKey = `${namespace}:${contentHash}`;
+
+      // Skip duplicates using namespace-aware content hash
+      if (skipDuplicates && hasContentHashColumn && existingHashes.has(dedupKey)) {
         results.skipped++;
         continue;
       }
@@ -119,35 +153,76 @@ export async function POST(request: NextRequest) {
         const cleanContent = memory.content.replace(/\x00/g, '');
         const embedding = await createEmbedding(cleanContent);
 
-        memoriesToInsert.push({
+        const row: Record<string, unknown> = {
           user_id: userId,
           content: cleanContent,
           embedding,
           memory_type: memoryType,
           tags: memory.tags || [],
-          namespace: memory.namespace || 'default',
+          namespace,
           importance: memory.importance || 5,
           source: memory.source || 'import',
           confidence: 1.0,
-        });
+        };
+
+        if (hasContentHashColumn) {
+          row.content_hash = contentHash;
+        }
+
+        memoriesToInsert.push(row);
+
+        // Add accepted item to dedup set to prevent in-request duplicates
+        if (skipDuplicates && hasContentHashColumn) {
+          existingHashes.add(dedupKey);
+        }
       } catch {
         results.failed++;
         results.errors.push(`Memory ${i}: Failed to create embedding`);
       }
     }
 
-    // Batch insert
+    // Insert per row so one conflict/error won't fail the whole import batch.
     if (memoriesToInsert.length > 0) {
-      const { error: insertError } = await supabase
-        .from('memories')
-        .insert(memoriesToInsert);
+      if (skipDuplicates && !hasContentHashColumn) {
+        results.errors.push(
+          'content_hash column is unavailable; skip_duplicates could not be applied reliably'
+        );
+      }
 
-      if (insertError) {
-        console.error('Batch insert error:', insertError);
-        results.failed += memoriesToInsert.length;
-        results.errors.push(`Batch insert failed: ${insertError.message}`);
-      } else {
-        results.imported = memoriesToInsert.length;
+      for (const row of memoriesToInsert) {
+        if (skipDuplicates && hasContentHashColumn) {
+          const { data, error: insertError } = await supabase
+            .from('memories')
+            .upsert(row, {
+              onConflict: 'user_id,namespace,content_hash',
+              ignoreDuplicates: true,
+            })
+            .select('id');
+
+          if (insertError) {
+            results.failed++;
+            results.errors.push(`Insert failed: ${insertError.message}`);
+            continue;
+          }
+
+          if (Array.isArray(data) && data.length > 0) {
+            results.imported++;
+          } else {
+            results.skipped++;
+          }
+        } else {
+          const { error: insertError } = await supabase
+            .from('memories')
+            .insert(row);
+
+          if (insertError) {
+            results.failed++;
+            results.errors.push(`Insert failed: ${insertError.message}`);
+            continue;
+          }
+
+          results.imported++;
+        }
       }
     }
 

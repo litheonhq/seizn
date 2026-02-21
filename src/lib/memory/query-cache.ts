@@ -46,7 +46,7 @@ export interface HotBundle {
  */
 function hashQuery(query: string): string {
   const normalized = query.toLowerCase().trim().replace(/\s+/g, ' ');
-  return crypto.createHash('sha1').update(normalized).digest('hex').slice(0, 16);
+  return crypto.createHash('sha256').update(normalized).digest('hex').slice(0, 32);
 }
 
 /**

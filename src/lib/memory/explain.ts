@@ -129,7 +129,7 @@ interface ExplainableMemoryRow {
 /**
  * Get comprehensive explanation for a memory
  */
-export async function explainMemory(memoryId: string): Promise<MemoryExplanation> {
+export async function explainMemory(memoryId: string, userId: string): Promise<MemoryExplanation> {
   const supabase = createServerClient();
 
   // Fetch memory with all metadata
@@ -152,6 +152,7 @@ export async function explainMemory(memoryId: string): Promise<MemoryExplanation
       provenance_span_id
     `)
     .eq('id', memoryId)
+    .eq('user_id', userId)
     .single();
 
   if (memError || !memory) {
@@ -159,7 +160,7 @@ export async function explainMemory(memoryId: string): Promise<MemoryExplanation
   }
 
   // Get related memories via edges
-  const relatedMemories = await getRelatedMemories(supabase, memoryId);
+  const relatedMemories = await getRelatedMemories(supabase, memoryId, userId);
 
   // Build storage reason
   const storageReason = buildStorageReason(memory);
@@ -260,7 +261,7 @@ export async function explainRetrieval(
 /**
  * Get provenance chain for a memory
  */
-export async function getProvenanceChain(memoryId: string): Promise<MemoryProvenance[]> {
+export async function getProvenanceChain(memoryId: string, userId: string): Promise<MemoryProvenance[]> {
   const supabase = createServerClient();
   const chain: MemoryProvenance[] = [];
   const visited = new Set<string>();
@@ -281,6 +282,7 @@ export async function getProvenanceChain(memoryId: string): Promise<MemoryProven
         provenance_span_id
       `)
       .eq('id', id)
+      .eq('user_id', userId)
       .single();
 
     if (!memory) return;
@@ -318,7 +320,8 @@ export async function getProvenanceChain(memoryId: string): Promise<MemoryProven
  */
 export async function explainExclusion(
   memoryId: string,
-  query: string
+  query: string,
+  userId: string
 ): Promise<{
   reason: string;
   factors: Array<{ factor: string; value: string; threshold?: string }>;
@@ -329,6 +332,7 @@ export async function explainExclusion(
     .from('memories')
     .select('id, content, is_deleted, importance, confidence, created_at, scope')
     .eq('id', memoryId)
+    .eq('user_id', userId)
     .single();
 
   if (!memory) {
@@ -382,7 +386,8 @@ export async function explainExclusion(
 
 async function getRelatedMemories(
   supabase: ReturnType<typeof createServerClient>,
-  memoryId: string
+  memoryId: string,
+  _userId: string
 ): Promise<RelatedMemory[]> {
   const { data: edges, error } = await supabase
     .from('memory_edges')

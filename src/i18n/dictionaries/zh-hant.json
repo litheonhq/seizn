@@ -928,7 +928,15 @@
       "noMatchingMemories": "請嘗試調整篩選器或搜尋條件",
       "noMemoriesHint": "透過API開始新增記憶即可在此查看",
       "match": "匹配",
-      "loadMore": "載入更多"
+      "loadMore": "載入更多",
+      "export": "匯出",
+      "import": "匯入",
+      "imported": "已匯入",
+      "skipped": "已略過",
+      "failed": "失敗",
+      "afterDate": "之後",
+      "beforeDate": "之前",
+      "sortImportance": "依重要性"
     },
     "budgetPage": {
       "title": "預算與成本控制",
@@ -1300,7 +1308,8 @@
       "manageOrgs": "管理組織",
       "create": "建立",
       "createApiKey": "新增 API 金鑰",
-      "createOrg": "新增組織"
+      "createOrg": "新增組織",
+      "switchOrg": "切換組織"
     },
     "share": {
       "title": "分享追蹤",
@@ -1492,7 +1501,25 @@
         }
       }
     },
-    "analytics": "分析"
+    "analytics": "分析",
+    "skipToContent": "跳至內容",
+    "menu": "開啟選單",
+    "errorBoundary": {
+      "title": "發生了問題",
+      "description": "載入此頁面時發生了意外錯誤。",
+      "errorId": "錯誤ID：{digest}",
+      "tryAgain": "重試",
+      "backToDashboard": "返回儀表板"
+    },
+    "commandPalette": {
+      "title": "命令面板",
+      "placeholder": "搜尋頁面...",
+      "noResults": "未找到結果",
+      "navigate": "導航",
+      "open": "開啟",
+      "close": "關閉",
+      "enter": "Enter"
+    }
   },
   "pricingPage": {
     "title": "定價",

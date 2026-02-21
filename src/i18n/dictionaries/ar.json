@@ -997,7 +997,15 @@
       "noMatchingMemories": "حاول تعديل الفلاتر أو استعلام البحث",
       "noMemoriesHint": "ابدأ بإضافة ذكريات عبر API لرؤيتها هنا",
       "match": "تطابق",
-      "loadMore": "تحميل المزيد"
+      "loadMore": "تحميل المزيد",
+      "export": "تصدير",
+      "import": "استيراد",
+      "imported": "مستوردة",
+      "skipped": "تم تخطيها",
+      "failed": "فشلت",
+      "afterDate": "بعد",
+      "beforeDate": "قبل",
+      "sortImportance": "حسب الأهمية"
     },
     "budgetPage": {
       "title": "الميزانية والتحكم بالتكاليف",
@@ -1271,7 +1279,8 @@
       "manageOrgs": "إدارة المؤسسات",
       "create": "إنشاء",
       "createApiKey": "مفتاح API جديد",
-      "createOrg": "مؤسسة جديدة"
+      "createOrg": "مؤسسة جديدة",
+      "switchOrg": "تبديل المنظمة"
     },
     "share": {
       "title": "مشاركة التتبع",
@@ -1492,6 +1501,24 @@
       "noQueries": "لا توجد استعلامات حتى الآن",
       "noData": "لا توجد بيانات تحليلات",
       "noDataDescription": "ابدأ بإجراء استدعاءات API لرؤية التحليلات التفصيلية هنا."
+    },
+    "skipToContent": "انتقل إلى المحتوى",
+    "menu": "فتح القائمة",
+    "errorBoundary": {
+      "title": "حدث خطأ ما",
+      "description": "حدث خطأ غير متوقع أثناء تحميل هذه الصفحة.",
+      "errorId": "معرّف الخطأ: {digest}",
+      "tryAgain": "حاول مرة أخرى",
+      "backToDashboard": "العودة إلى لوحة التحكم"
+    },
+    "commandPalette": {
+      "title": "لوحة الأوامر",
+      "placeholder": "البحث في الصفحات...",
+      "noResults": "لم يتم العثور على نتائج",
+      "navigate": "تنقل",
+      "open": "فتح",
+      "close": "إغلاق",
+      "enter": "إدخال"
     }
   },
   "pricingPage": {

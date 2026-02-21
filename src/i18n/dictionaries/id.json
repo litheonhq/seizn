@@ -929,7 +929,15 @@
       "noMatchingMemories": "Coba sesuaikan filter atau kata pencarian Anda",
       "noMemoriesHint": "Mulai tambahkan memori melalui API untuk melihatnya di sini",
       "match": "cocok",
-      "loadMore": "Muat Lebih Banyak"
+      "loadMore": "Muat Lebih Banyak",
+      "export": "Ekspor",
+      "import": "Impor",
+      "imported": "diimpor",
+      "skipped": "dilewati",
+      "failed": "gagal",
+      "afterDate": "Setelah",
+      "beforeDate": "Sebelum",
+      "sortImportance": "Berdasarkan kepentingan"
     },
     "budgetPage": {
       "title": "Anggaran & Kontrol Biaya",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "Kelola Organisasi",
       "create": "Buat",
       "createApiKey": "API Key Baru",
-      "createOrg": "Organisasi Baru"
+      "createOrg": "Organisasi Baru",
+      "switchOrg": "Ganti organisasi"
     },
     "share": {
       "title": "Bagikan Trace",
@@ -1492,6 +1501,24 @@
           "description": "Lihat setiap langkah pipeline - dari pembuatan embedding hingga peringkat hasil - dengan rincian waktu dan biaya."
         }
       }
+    },
+    "skipToContent": "Langsung ke konten",
+    "menu": "Buka menu",
+    "errorBoundary": {
+      "title": "Terjadi kesalahan",
+      "description": "Terjadi kesalahan tak terduga saat memuat halaman ini.",
+      "errorId": "ID Kesalahan: {digest}",
+      "tryAgain": "Coba Lagi",
+      "backToDashboard": "Kembali ke Dasbor"
+    },
+    "commandPalette": {
+      "title": "Palet perintah",
+      "placeholder": "Cari halaman...",
+      "noResults": "Tidak ada hasil ditemukan",
+      "navigate": "Navigasi",
+      "open": "Buka",
+      "close": "Tutup",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

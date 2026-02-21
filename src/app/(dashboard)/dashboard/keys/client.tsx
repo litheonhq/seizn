@@ -3,14 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { getErrorMessage } from "@/lib/ui-error";
-
-interface ApiKey {
-  id: string;
-  name: string;
-  key_prefix: string;
-  created_at: string;
-  last_used_at: string | null;
-}
+import type { ApiKey } from "@/types/dashboard";
 
 export default function ApiKeysClient() {
   const { t, locale } = useDashboardTranslation();

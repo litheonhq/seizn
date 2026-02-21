@@ -216,12 +216,31 @@
     "docs": "문서",
     "settings": "설정",
     "signOut": "로그아웃",
+    "skipToContent": "본문으로 건너뛰기",
+    "menu": "메뉴 열기",
+    "errorBoundary": {
+      "title": "문제가 발생했습니다",
+      "description": "페이지를 불러오는 중 예상치 못한 오류가 발생했습니다.",
+      "errorId": "오류 ID: {digest}",
+      "tryAgain": "다시 시도",
+      "backToDashboard": "대시보드로 돌아가기"
+    },
     "topBar": {
       "personal": "개인 계정",
       "manageOrgs": "조직 관리",
       "create": "새로 만들기",
       "createApiKey": "새 API 키",
-      "createOrg": "새 조직"
+      "createOrg": "새 조직",
+      "switchOrg": "조직 전환"
+    },
+    "commandPalette": {
+      "title": "명령 팔레트",
+      "placeholder": "페이지 검색...",
+      "noResults": "결과 없음",
+      "navigate": "이동",
+      "open": "열기",
+      "close": "닫기",
+      "enter": "선택"
     },
     "nav": {
       "overview": "개요",
@@ -1049,7 +1068,15 @@
       "noMatchingMemories": "필터 또는 검색어를 조정해 보세요",
       "noMemoriesHint": "API로 메모리를 추가하면 여기에 표시됩니다",
       "match": "일치",
-      "loadMore": "더 보기"
+      "loadMore": "더 보기",
+      "export": "내보내기",
+      "import": "가져오기",
+      "imported": "가져옴",
+      "skipped": "건너뜀",
+      "failed": "실패",
+      "afterDate": "이후",
+      "beforeDate": "이전",
+      "sortImportance": "중요도순"
     },
     "budgetPage": {
       "title": "예산 및 비용 관리",

@@ -6,56 +6,13 @@ import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
 import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
-
-interface User {
-  id: string;
-  email?: string | null;
-  name?: string | null;
-  image?: string | null;
-}
-
-interface Stats {
-  memories: {
-    count: number;
-    limit: number;
-    percentage: number;
-  };
-  apiCalls: {
-    today: number;
-    limit: number;
-    percentage: number;
-  };
-  keys: number;
-  plan: string;
-  planDisplay: string;
-}
-
-interface RecentMemory {
-  id: string;
-  content: string;
-  memory_type: string;
-  created_at: string;
-}
-
-interface DailyUsage {
-  date: string;
-  calls: number;
-  tokens: number;
-  cost: number;
-}
-
-interface RecentActivity {
-  id: string;
-  endpoint: string;
-  method: string;
-  status: number;
-  statusCategory: 'success' | 'redirect' | 'client_error' | 'server_error';
-  latencyMs: number | null;
-  costCents: number;
-  keyPrefix: string;
-  timestamp: string;
-  tokens: number;
-}
+import type {
+  DashboardUser as User,
+  DashboardStats as Stats,
+  RecentMemory,
+  DailyUsage,
+  RecentActivity,
+} from "@/types/dashboard";
 
 const RELIABILITY_CARD_META = [
   {
@@ -122,6 +79,11 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
 
   useEffect(() => {
     fetchData();
+    // Auto-refresh every 30 seconds when tab is visible
+    const interval = setInterval(() => {
+      if (!document.hidden) fetchData();
+    }, 30_000);
+    return () => clearInterval(interval);
   }, [fetchData]);
 
   const getGreeting = () => {

@@ -929,7 +929,15 @@
       "noMatchingMemories": "अपने फ़िल्टर या खोज क्वेरी को समायोजित करके देखें",
       "noMemoriesHint": "यहां देखने के लिए API के माध्यम से यादें जोड़ना शुरू करें",
       "match": "मैच",
-      "loadMore": "और लोड करें"
+      "loadMore": "और लोड करें",
+      "export": "निर्यात",
+      "import": "आयात",
+      "imported": "आयातित",
+      "skipped": "छोड़ा गया",
+      "failed": "विफल",
+      "afterDate": "के बाद",
+      "beforeDate": "से पहले",
+      "sortImportance": "महत्व के अनुसार"
     },
     "budgetPage": {
       "title": "बजट और लागत नियंत्रण",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "संगठनों का प्रबंधन करें",
       "create": "बनाएं",
       "createApiKey": "नई API Key",
-      "createOrg": "नया संगठन"
+      "createOrg": "नया संगठन",
+      "switchOrg": "संगठन बदलें"
     },
     "share": {
       "title": "Trace साझा करें",
@@ -1492,6 +1501,24 @@
           "description": "पाइपलाइन के हर चरण को देखें - embedding निर्माण से लेकर परिणाम रैंकिंग तक - समय और लागत विवरण के साथ।"
         }
       }
+    },
+    "skipToContent": "सामग्री पर जाएं",
+    "menu": "मेनू खोलें",
+    "errorBoundary": {
+      "title": "कुछ गलत हो गया",
+      "description": "इस पृष्ठ को लोड करते समय एक अनपेक्षित त्रुटि हुई।",
+      "errorId": "त्रुटि ID: {digest}",
+      "tryAgain": "पुनः प्रयास करें",
+      "backToDashboard": "डैशबोर्ड पर वापस जाएं"
+    },
+    "commandPalette": {
+      "title": "कमांड पैलेट",
+      "placeholder": "पृष्ठ खोजें...",
+      "noResults": "कोई परिणाम नहीं मिला",
+      "navigate": "नेविगेट",
+      "open": "खोलें",
+      "close": "बंद करें",
+      "enter": "एंटर"
     }
   },
   "pricingPage": {

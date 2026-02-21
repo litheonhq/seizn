@@ -9,6 +9,9 @@ const isWindows = process.platform === 'win32';
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker (disabled on Windows due to Turbopack compatibility)
   output: isWindows ? undefined : 'standalone',
+  turbopack: {
+    root: process.cwd(),
+  },
 
   // Disable devtools indicator in development
   devIndicators: false,

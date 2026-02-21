@@ -997,7 +997,15 @@
       "noMatchingMemories": "נסה להתאים את המסננים או שאילתת החיפוש",
       "noMemoriesHint": "התחל להוסיף זיכרונות דרך ה-API כדי לראות אותם כאן",
       "match": "התאמה",
-      "loadMore": "טען עוד"
+      "loadMore": "טען עוד",
+      "export": "ייצוא",
+      "import": "ייבוא",
+      "imported": "יובאו",
+      "skipped": "דולגו",
+      "failed": "נכשלו",
+      "afterDate": "אחרי",
+      "beforeDate": "לפני",
+      "sortImportance": "לפי חשיבות"
     },
     "budgetPage": {
       "title": "תקציב ובקרת עלויות",
@@ -1271,7 +1279,8 @@
       "manageOrgs": "ניהול ארגונים",
       "create": "יצירה",
       "createApiKey": "מפתח API חדש",
-      "createOrg": "ארגון חדש"
+      "createOrg": "ארגון חדש",
+      "switchOrg": "החלף ארגון"
     },
     "share": {
       "title": "שתף מעקב",
@@ -1492,6 +1501,24 @@
       "noQueries": "אין שאילתות עדיין",
       "noData": "אין נתוני אנליטיקה",
       "noDataDescription": "התחל לבצע קריאות API כדי לראות ניתוח מפורט כאן."
+    },
+    "skipToContent": "דלג לתוכן",
+    "menu": "פתח תפריט",
+    "errorBoundary": {
+      "title": "משהו השתבש",
+      "description": "אירעה שגיאה בלתי צפויה בטעינת דף זה.",
+      "errorId": "מזהה שגיאה: {digest}",
+      "tryAgain": "נסה שוב",
+      "backToDashboard": "חזרה ללוח הבקרה"
+    },
+    "commandPalette": {
+      "title": "לוח פקודות",
+      "placeholder": "חיפוש דפים...",
+      "noResults": "לא נמצאו תוצאות",
+      "navigate": "ניווט",
+      "open": "פתח",
+      "close": "סגור",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

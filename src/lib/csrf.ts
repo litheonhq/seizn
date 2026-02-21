@@ -8,6 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { randomBytes, timingSafeEqual } from 'crypto';
 
 const ALLOWED_ORIGINS = new Set([
   process.env.NEXT_PUBLIC_SITE_URL,
@@ -15,6 +16,25 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:3000',
   'http://localhost:3001',
 ].filter(Boolean) as string[]);
+const CSRF_TOKEN_BYTES = 32;
+
+export const CSRF_COOKIE_NAME = 'seizn_csrf_token';
+export const CSRF_HEADER_NAME = 'x-csrf-token';
+
+function isApiKeyAuthenticatedRequest(request: NextRequest): boolean {
+  const auth = request.headers.get('authorization');
+  const apiKey = request.headers.get('x-api-key');
+  if (auth?.startsWith('Bearer ') && auth.length > 15) return true;
+  if (apiKey && apiKey.startsWith('szn_') && apiKey.length > 10) return true;
+  return false;
+}
+
+function safeTokenEquals(left: string, right: string): boolean {
+  const a = Buffer.from(left, 'utf8');
+  const b = Buffer.from(right, 'utf8');
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 /**
  * Verify that a state-changing request originates from our own site.
@@ -31,10 +51,7 @@ export function verifyCsrf(request: NextRequest): NextResponse | null {
 
   // Skip CSRF only for properly formatted Bearer / API-key headers.
   // Require valid prefix to prevent bypass via empty or garbage auth headers.
-  const auth = request.headers.get('authorization');
-  const apiKey = request.headers.get('x-api-key');
-  if (auth?.startsWith('Bearer ') && auth.length > 15) return null;
-  if (apiKey && apiKey.startsWith('szn_') && apiKey.length > 10) return null;
+  if (isApiKeyAuthenticatedRequest(request)) return null;
 
   // Check Origin header first (most reliable)
   if (origin) {
@@ -62,5 +79,51 @@ export function verifyCsrf(request: NextRequest): NextResponse | null {
   // No Origin or Referer — this can happen with same-origin requests in some
   // browsers or non-browser clients. Allow it (defense-in-depth: cookie SameSite
   // attribute provides additional protection).
+  return null;
+}
+
+/**
+ * Issue (if missing) a per-session CSRF token cookie for browser clients.
+ * API-key traffic is excluded because it does not rely on browser cookies.
+ */
+export function ensureCsrfCookie(request: NextRequest, response: NextResponse): NextResponse {
+  if (isApiKeyAuthenticatedRequest(request)) return response;
+
+  const existing = request.cookies.get(CSRF_COOKIE_NAME)?.value;
+  if (existing && existing.length >= CSRF_TOKEN_BYTES * 2) {
+    return response;
+  }
+
+  response.cookies.set(CSRF_COOKIE_NAME, randomBytes(CSRF_TOKEN_BYTES).toString('hex'), {
+    httpOnly: false, // must be readable by browser JS to send as header
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30,
+  });
+  return response;
+}
+
+/**
+ * Stronger CSRF check for state-changing cookie-authenticated requests.
+ * Requires both Origin/Referer validation and double-submit token match.
+ */
+export function verifyCsrfToken(request: NextRequest): NextResponse | null {
+  const baseCheck = verifyCsrf(request);
+  if (baseCheck) return baseCheck;
+
+  const method = request.method.toUpperCase();
+  if (['GET', 'HEAD', 'OPTIONS'].includes(method)) return null;
+  if (isApiKeyAuthenticatedRequest(request)) return null;
+
+  const cookieToken = request.cookies.get(CSRF_COOKIE_NAME)?.value ?? '';
+  const headerToken = request.headers.get(CSRF_HEADER_NAME) ?? '';
+  if (!cookieToken || !headerToken || !safeTokenEquals(cookieToken, headerToken)) {
+    return NextResponse.json(
+      { error: 'CSRF validation failed: token mismatch' },
+      { status: 403 },
+    );
+  }
+
   return null;
 }
