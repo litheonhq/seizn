@@ -104,7 +104,10 @@ export interface PolicyUpdate {
   changes: Record<string, unknown>;
   basedOnInsights: string[];
   confidence: number;
+  status?: 'pending' | 'approved' | 'applied' | 'rejected';
   appliedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface PolicyUpdateRecord {

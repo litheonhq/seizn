@@ -62,6 +62,8 @@ import {
   applyPersonalizedRanking,
   getOrCreateLearningProfile,
 } from '@/lib/memory/personalization';
+import { createDetector } from '@/lib/prompt-firewall/scanner';
+import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
 import { emitWebhookEvent } from '@/lib/webhook-emit';
 import type { AddMemoryRequest } from '@/types/database';
@@ -244,7 +246,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
-    const sanitizedContent = (body.content || '').replace(/\x00/g, '');
+    let sanitizedContent = (body.content || '').replace(/\x00/g, '');
+    if (!isEncrypted && sanitizedContent) {
+      const detector = createDetector({ mode: 'sanitize' });
+      const firewallResult = detector.scan(sanitizedContent);
+      if (firewallResult.detected && compareThreatLevel(firewallResult.threatLevel, 'critical') >= 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'prompt_firewall_blocked',
+              message: 'Content blocked by security policy',
+              threatLevel: firewallResult.threatLevel,
+            },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          },
+          { status: 400 }
+        );
+      }
+      if (firewallResult.sanitizedInput && firewallResult.sanitizedInput.trim().length > 0) {
+        sanitizedContent = firewallResult.sanitizedInput;
+      }
+    }
 
     // Dedup check (opt-out with dedup=false)
     let embedding: number[] | null = null;
@@ -529,13 +552,22 @@ export async function GET(request: NextRequest) {
     // SEARCH MODE - query provided
     // ----------------------------------------------
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
+    let effectiveQuery = query;
+    const queryDetector = createDetector({ mode: 'sanitize' });
+    const queryFirewall = queryDetector.scan(query);
+    if (queryFirewall.detected && compareThreatLevel(queryFirewall.threatLevel, 'critical') >= 0) {
+      return ValidationErrors.invalidField('query', 'Query blocked by security policy');
+    }
+    if (queryFirewall.sanitizedInput && queryFirewall.sanitizedInput.trim().length > 0) {
+      effectiveQuery = queryFirewall.sanitizedInput.trim();
+    }
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
 
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
 
     if (requestedMode === 'auto') {
-      routerDecision = routeQuery(query);
+      routerDecision = routeQuery(effectiveQuery);
       actualMode = routerDecision.strategy;
     } else {
       actualMode = requestedMode as Exclude<SearchMode, 'auto'>;
@@ -543,7 +575,7 @@ export async function GET(request: NextRequest) {
 
     // Slot lookups
     if (actualMode === 'slot') {
-      const slotKey = detectSlotQuery(query);
+      const slotKey = detectSlotQuery(effectiveQuery);
       if (slotKey) {
         const slotValues = await getSlots(userId, [slotKey], namespace);
         const slotValue = slotValues.get(slotKey);
@@ -557,7 +589,7 @@ export async function GET(request: NextRequest) {
         }
         logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
           memoryId: `slot:${slotKey}`,
-          query,
+          query: effectiveQuery,
         }).catch(console.error);
 
         if (slotValue) {
@@ -587,12 +619,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache check
-    const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
+    const cacheResult = await getCachedQueryResults(userId, effectiveQuery, namespace, actualMode);
     if (cacheResult.hit && cacheResult.results.length > 0) {
       const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
       const personalizedResults =
         personalizationState.available && personalizationState.profile.personalizationEnabled
-          ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, query)
+          ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
 
       if (keyId) {
@@ -605,7 +637,7 @@ export async function GET(request: NextRequest) {
       Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
-        query,
+        query: effectiveQuery,
       }).catch(console.error);
 
       return NextResponse.json({
@@ -642,7 +674,7 @@ export async function GET(request: NextRequest) {
 
     if (actualMode === 'keyword') {
       const { data, error } = await supabase.rpc('keyword_search_memories', {
-        query_text: query,
+        query_text: effectiveQuery,
         match_user_id: userId,
         match_count: limit,
         match_namespace: nsParam,
@@ -650,9 +682,9 @@ export async function GET(request: NextRequest) {
       results = data;
       searchError = error;
     } else if (actualMode === 'hybrid') {
-      const queryEmbedding = await createQueryEmbedding(query);
+      const queryEmbedding = await createQueryEmbedding(effectiveQuery);
       const { data, error } = await supabase.rpc('hybrid_search_memories', {
-        query_text: query,
+        query_text: effectiveQuery,
         query_embedding: queryEmbedding,
         match_user_id: userId,
         match_count: limit,
@@ -664,7 +696,7 @@ export async function GET(request: NextRequest) {
       results = data;
       searchError = error;
     } else {
-      const queryEmbedding = await createQueryEmbedding(query);
+      const queryEmbedding = await createQueryEmbedding(effectiveQuery);
       const { data, error } = await supabase.rpc('search_memories', {
         query_embedding: queryEmbedding,
         match_user_id: userId,
@@ -714,7 +746,7 @@ export async function GET(request: NextRequest) {
         similarity: r.similarity,
         rrf_score: r.rrf_score,
       }));
-      setCachedQueryResults(userId, query, namespace, actualMode, cacheableResults).catch(
+      setCachedQueryResults(userId, effectiveQuery, namespace, actualMode, cacheableResults).catch(
         console.error
       );
     }
@@ -722,14 +754,14 @@ export async function GET(request: NextRequest) {
     const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
     const personalizedResults =
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
-        ? applyPersonalizedRanking(results, personalizationState.profile, query)
+        ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
 
     if (keyId) {
       await logRequest(
         { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
         200,
-        { embedding: actualMode !== 'keyword' ? query.length : 0 }
+        { embedding: actualMode !== 'keyword' ? effectiveQuery.length : 0 }
       );
     }
 
@@ -741,7 +773,7 @@ export async function GET(request: NextRequest) {
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
       memoryCount: personalizedResults.length,
-      query,
+      query: effectiveQuery,
     }).catch(console.error);
 
     return withHeaders(

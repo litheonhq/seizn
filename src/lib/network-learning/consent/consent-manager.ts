@@ -26,6 +26,8 @@ const ALL_SIGNAL_TYPES: SignalType[] = [
   'feedback',
 ];
 
+const DEFAULT_CONSENT_DATA_TYPES: SignalType[] = [...ALL_SIGNAL_TYPES];
+
 // ============================================
 // Consent Operations
 // ============================================
@@ -61,7 +63,7 @@ export async function getConsent(userId: string): Promise<UserConsent | null> {
  */
 export async function optIn(
   userId: string,
-  dataTypes: SignalType[] = ALL_SIGNAL_TYPES,
+  dataTypes: SignalType[] = DEFAULT_CONSENT_DATA_TYPES,
   config: NetworkLearningConfig = DEFAULT_NETWORK_LEARNING_CONFIG
 ): Promise<UserConsent> {
   const supabase = createServerClient();
@@ -183,20 +185,25 @@ export async function updateDataTypes(
   userId: string,
   dataTypes: SignalType[]
 ): Promise<UserConsent> {
-  const supabase = createServerClient();
-
-  const existing = await getConsent(userId);
-
-  if (!existing || existing.status !== 'opted_in') {
-    throw new Error('User must be opted in to update data types');
-  }
-
   const validDataTypes = dataTypes.filter((dt) => ALL_SIGNAL_TYPES.includes(dt));
 
   if (validDataTypes.length === 0) {
     // If no valid types, treat as opt-out
     return optOut(userId);
   }
+
+  const existing = await getConsent(userId);
+
+  // Default behavior is opted-in when no record exists.
+  if (!existing) {
+    return optIn(userId, validDataTypes);
+  }
+
+  if (existing.status !== 'opted_in') {
+    throw new Error('User must be opted in to update data types');
+  }
+
+  const supabase = createServerClient();
 
   const { data, error } = await supabase
     .from('network_learning_consent')
@@ -227,11 +234,7 @@ export async function hasConsent(
   userId: string,
   signalType: SignalType
 ): Promise<boolean> {
-  const consent = await getConsent(userId);
-
-  if (!consent) {
-    return false;
-  }
+  const consent = await getEffectiveConsent(userId);
 
   return (
     consent.status === 'opted_in' &&
@@ -246,9 +249,9 @@ export async function hasAllConsents(
   userId: string,
   signalTypes: SignalType[]
 ): Promise<boolean> {
-  const consent = await getConsent(userId);
+  const consent = await getEffectiveConsent(userId);
 
-  if (!consent || consent.status !== 'opted_in') {
+  if (consent.status !== 'opted_in') {
     return false;
   }
 
@@ -295,9 +298,36 @@ function recordToUserConsent(record: ConsentRecord): UserConsent {
   };
 }
 
+function buildDefaultConsent(
+  userId: string,
+  config: NetworkLearningConfig = DEFAULT_NETWORK_LEARNING_CONFIG
+): UserConsent {
+  return {
+    userId,
+    status: 'opted_in',
+    dataTypes: [...DEFAULT_CONSENT_DATA_TYPES],
+    version: config.consentVersion,
+  };
+}
+
+/**
+ * Get effective consent.
+ * Default behavior is opted-in unless the user explicitly opted out.
+ */
+export async function getEffectiveConsent(
+  userId: string,
+  config: NetworkLearningConfig = DEFAULT_NETWORK_LEARNING_CONFIG
+): Promise<UserConsent> {
+  const consent = await getConsent(userId);
+  if (consent) {
+    return consent;
+  }
+  return buildDefaultConsent(userId, config);
+}
+
 /**
  * Get all available signal types
  */
 export function getAvailableSignalTypes(): SignalType[] {
-  return [...ALL_SIGNAL_TYPES];
+  return [...DEFAULT_CONSENT_DATA_TYPES];
 }
