@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import {
+  DEFAULT_NETWORK_LEARNING_CONFIG,
   getConsent,
   optIn,
   optOut,
@@ -27,27 +28,20 @@ export async function GET(request: NextRequest) {
 
     const { userId } = authResult;
 
-    const consent = await getConsent(userId);
-
-    if (!consent) {
-      // No consent record - return pending status with available options
-      return NextResponse.json({
-        success: true,
-        consent: {
-          userId,
-          status: 'pending',
-          dataTypes: [],
-          version: '1.0.0',
-        },
-        availableDataTypes: getAvailableSignalTypes(),
-      } satisfies ConsentResponse & { availableDataTypes: SignalType[] });
-    }
+    const explicitConsent = await getConsent(userId);
+    const consent = explicitConsent ?? {
+      userId,
+      status: 'opted_in' as const,
+      dataTypes: getAvailableSignalTypes(),
+      version: DEFAULT_NETWORK_LEARNING_CONFIG.consentVersion,
+    };
 
     return NextResponse.json({
       success: true,
       consent,
+      defaultApplied: !explicitConsent,
       availableDataTypes: getAvailableSignalTypes(),
-    } satisfies ConsentResponse & { availableDataTypes: SignalType[] });
+    } satisfies ConsentResponse & { availableDataTypes: SignalType[]; defaultApplied: boolean });
   } catch (err) {
     console.error('Network learning consent GET error:', err);
     return ServerErrors.internal('consent_get');
@@ -106,13 +100,20 @@ export async function POST(request: NextRequest) {
 
     // For opt_in and update, dataTypes is required
     if (action === 'opt_in' || action === 'update') {
-      if (!dataTypes || !Array.isArray(dataTypes)) {
+      const availableTypes = getAvailableSignalTypes();
+      const typedDataTypes =
+        action === 'opt_in' && !dataTypes
+          ? availableTypes
+          : Array.isArray(dataTypes)
+            ? (dataTypes as SignalType[])
+            : null;
+
+      if (!typedDataTypes) {
         return ValidationErrors.missingField('dataTypes (array)');
       }
 
       // Validate data types
-      const availableTypes = getAvailableSignalTypes();
-      const invalidTypes = dataTypes.filter((dt) => !availableTypes.includes(dt as SignalType));
+      const invalidTypes = typedDataTypes.filter((dt) => !availableTypes.includes(dt as SignalType));
 
       if (invalidTypes.length > 0) {
         return ValidationErrors.invalidValue(
@@ -122,11 +123,9 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      if (dataTypes.length === 0) {
+      if (typedDataTypes.length === 0) {
         return ValidationErrors.invalidField('dataTypes', 'At least one data type must be selected');
       }
-
-      const typedDataTypes = dataTypes as SignalType[];
 
       if (action === 'opt_in') {
         const consent = await optIn(userId, typedDataTypes);

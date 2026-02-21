@@ -22,6 +22,7 @@ vi.mock('@/lib/supabase', () => ({
 
 import {
   getConsent,
+  getEffectiveConsent,
   optIn,
   optOut,
   updateDataTypes,
@@ -499,7 +500,7 @@ describe('ConsentManager', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false if no consent record exists', async () => {
+    it('should return true when no consent record exists (default opt-in)', async () => {
       mockSupabaseFrom.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
@@ -517,7 +518,32 @@ describe('ConsentManager', () => {
 
       const result = await hasConsent(userId, 'query_pattern');
 
-      expect(result).toBe(false);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('getEffectiveConsent', () => {
+    it('should return default opted-in consent when no record exists', async () => {
+      mockSupabaseFrom.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            order: vi.fn().mockReturnValue({
+              limit: vi.fn().mockReturnValue({
+                maybeSingle: vi.fn().mockResolvedValue({
+                  data: null,
+                  error: null,
+                }),
+              }),
+            }),
+          }),
+        }),
+      });
+
+      const result = await getEffectiveConsent(userId);
+
+      expect(result.status).toBe('opted_in');
+      expect(result.dataTypes).toContain('query_pattern');
+      expect(result.dataTypes).toContain('feedback');
     });
   });
 

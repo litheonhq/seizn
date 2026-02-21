@@ -14,6 +14,7 @@ import {
   type MemoryFeedbackEventType,
   recordFeedbackAndLearn,
 } from '@/lib/memory/personalization';
+import { hasConsent } from '@/lib/network-learning';
 
 const VALID_EVENT_TYPES = new Set<MemoryFeedbackEventType>([
   'thumbs_up',
@@ -147,6 +148,21 @@ export async function POST(request: NextRequest) {
         { error: 'metadata is too large' },
         { status: 400 }
       );
+    }
+
+    const feedbackConsent = await hasConsent(userId, 'feedback');
+    if (!feedbackConsent) {
+      const response = NextResponse.json({
+        success: true,
+        feedback: {
+          memory_id: memoryId,
+          event_type: eventType,
+          applied: false,
+          reason: 'consent_opted_out',
+        },
+        profile: null,
+      });
+      return withHeaders(response, { ...(rateLimitHeaders || {}), ...feedbackRateHeaders });
     }
 
     const result = await recordFeedbackAndLearn(supabase, {

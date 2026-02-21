@@ -29,6 +29,7 @@ export { DEFAULT_NETWORK_LEARNING_CONFIG } from './types';
 // Consent Management
 export {
   getConsent,
+  getEffectiveConsent,
   optIn,
   optOut,
   updateDataTypes,
@@ -80,3 +81,13 @@ export type {
   PolicyRecommendation,
   ABTestConfig,
 } from './policy/policy-updater';
+
+// Eval -> Policy closed loop
+export {
+  runEvalPolicyClosedLoop,
+} from './policy/eval-closed-loop';
+
+export type {
+  EvalPolicyClosedLoopConfig,
+  EvalPolicyClosedLoopResult,
+} from './policy/eval-closed-loop';

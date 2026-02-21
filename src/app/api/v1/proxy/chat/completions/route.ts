@@ -40,6 +40,8 @@ import {
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { computeEmbedding } from '@/lib/embeddings';
+import { createDetector } from '@/lib/prompt-firewall/scanner';
+import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 
 // ============================================
 // Types
@@ -67,6 +69,13 @@ interface MemoryContext {
   content: string;
   type: string;
   relevance: number;
+}
+
+interface FirewallSanitizeResult {
+  blocked: boolean;
+  detected: boolean;
+  threatLevel: string;
+  content: string;
 }
 
 // Provider URL mapping
@@ -169,16 +178,55 @@ async function searchRelevantMemories(
   }
 }
 
+function sanitizeWithFirewall(
+  input: string,
+  blockThreshold: 'critical' | 'high' = 'critical'
+): FirewallSanitizeResult {
+  const detector = createDetector({ mode: 'sanitize' });
+  const result = detector.scan(input);
+  const blocked =
+    result.detected &&
+    compareThreatLevel(result.threatLevel, blockThreshold) >= 0;
+  const content =
+    result.sanitizedInput && result.sanitizedInput.trim().length > 0
+      ? result.sanitizedInput
+      : input;
+
+  return {
+    blocked,
+    detected: result.detected,
+    threatLevel: result.threatLevel,
+    content,
+  };
+}
+
 /**
  * Inject memories into the system message.
  */
 function injectMemories(
   messages: ChatMessage[],
   memories: MemoryContext[]
-): ChatMessage[] {
-  if (memories.length === 0) return messages;
+): { messages: ChatMessage[]; injectedMemories: MemoryContext[] } {
+  if (memories.length === 0) return { messages, injectedMemories: [] };
 
-  const memoryBlock = memories
+  const injectedMemories = memories
+    .map((memory) => {
+      const scan = sanitizeWithFirewall(memory.content, 'high');
+      if (scan.blocked || !scan.content.trim()) {
+        return null;
+      }
+      return {
+        ...memory,
+        content: scan.content,
+      };
+    })
+    .filter((memory): memory is MemoryContext => Boolean(memory));
+
+  if (injectedMemories.length === 0) {
+    return { messages, injectedMemories: [] };
+  }
+
+  const memoryBlock = injectedMemories
     .map((m) => `- [${m.type}] ${m.content}`)
     .join('\n');
 
@@ -199,7 +247,7 @@ function injectMemories(
     });
   }
 
-  return result;
+  return { messages: result, injectedMemories };
 }
 
 /**
@@ -268,8 +316,10 @@ async function extractAndStoreMemories(
     // Store each extracted memory
     for (const item of extracted.slice(0, 5)) {
       if (!item.content || item.content.length < 10) continue;
+      const scan = sanitizeWithFirewall(item.content, 'critical');
+      if (scan.blocked || !scan.content.trim()) continue;
 
-      const embedding = await computeEmbedding(item.content, 'document');
+      const embedding = await computeEmbedding(scan.content, 'document');
 
       // Dedup check
       const { data: existing } = await supabase.rpc('search_memories', {
@@ -283,7 +333,7 @@ async function extractAndStoreMemories(
 
       await supabase.from('memories').insert({
         user_id: userId,
-        content: item.content,
+        content: scan.content,
         embedding,
         memory_type: item.type || 'fact',
         source: 'proxy_extraction',
@@ -340,21 +390,37 @@ export async function POST(request: NextRequest) {
 
   // 4. Extract query and search memories
   const query = extractQuery(messages);
+  const queryScan = query ? sanitizeWithFirewall(query, 'critical') : null;
+  if (queryScan?.blocked) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          message: 'Query blocked by security policy',
+          type: 'invalid_request_error',
+          code: 'prompt_firewall_blocked',
+          threat_level: queryScan.threatLevel,
+        },
+      },
+      { status: 400 }
+    );
+  }
+  const effectiveQuery = queryScan?.content?.trim() || query;
   let memories: MemoryContext[] = [];
 
-  if (query) {
+  if (effectiveQuery) {
     // Check proxy-specific headers for memory config
     const memoryLimit = parseInt(request.headers.get('x-seizn-memory-limit') || '5', 10);
     const memoryThreshold = parseFloat(request.headers.get('x-seizn-memory-threshold') || '0.65');
     const disableMemory = request.headers.get('x-seizn-memory') === 'false';
 
     if (!disableMemory) {
-      memories = await searchRelevantMemories(userId, query, memoryLimit, memoryThreshold);
+      memories = await searchRelevantMemories(userId, effectiveQuery, memoryLimit, memoryThreshold);
     }
   }
 
   // 5. Inject memories into messages
-  const enhancedMessages = injectMemories(messages, memories);
+  const { messages: enhancedMessages, injectedMemories } = injectMemories(messages, memories);
 
   // 6. Forward to target provider
   const forwardBody = {
@@ -379,7 +445,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
-        'x-seizn-memories-injected': String(memories.length),
+        'x-seizn-memories-injected': String(injectedMemories.length),
         'x-seizn-proxy-latency': String(Date.now() - startTime),
       });
 
@@ -406,8 +472,8 @@ export async function POST(request: NextRequest) {
     const enhancedResponse = {
       ...responseData,
       seizn: {
-        memories_injected: memories.length,
-        memory_ids: memories.map((m) => m.id),
+        memories_injected: injectedMemories.length,
+        memory_ids: injectedMemories.map((m) => m.id),
         proxy_latency_ms: Date.now() - startTime,
       },
     };
@@ -429,14 +495,14 @@ export async function POST(request: NextRequest) {
 
     // 9. Fire-and-forget: extract memories from the response
     const assistantContent = responseData.choices?.[0]?.message?.content;
-    if (assistantContent && query.length > 20) {
+    if (assistantContent && effectiveQuery.length > 20) {
       extractAndStoreMemories(userId, messages, assistantContent).catch(console.error);
     }
 
     return NextResponse.json(enhancedResponse, {
       status: 200,
       headers: {
-        'x-seizn-memories-injected': String(memories.length),
+        'x-seizn-memories-injected': String(injectedMemories.length),
         'x-seizn-proxy-latency': String(Date.now() - startTime),
       },
     });

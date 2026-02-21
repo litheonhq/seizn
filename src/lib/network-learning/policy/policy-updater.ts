@@ -500,7 +500,10 @@ function recordToPolicyUpdate(record: PolicyUpdateRecord): PolicyUpdate {
     changes: record.changes,
     basedOnInsights: record.based_on_insights,
     confidence: record.confidence,
+    status: record.status,
     appliedAt: record.applied_at ?? undefined,
+    createdAt: record.created_at,
+    updatedAt: record.updated_at,
   };
 }
 
