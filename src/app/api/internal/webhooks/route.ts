@@ -4,22 +4,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { processPendingWebhooks } from '@/lib/webhook';
-
-// Verify internal request (cron secret)
-function isAuthorized(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
-    return true;
-  }
-
-  return false;
-}
+import { verifyCronSecret } from '@/lib/cron-auth';
 
 // POST /api/internal/webhooks - Process pending webhook deliveries
 export async function POST(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -48,7 +37,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/internal/webhooks - Health check for webhook processing
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!verifyCronSecret(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

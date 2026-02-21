@@ -42,6 +42,7 @@ import { createServerClient } from '@/lib/supabase';
 import { computeEmbedding } from '@/lib/embeddings';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
+import { validateOutboundUrl } from '@/lib/security/outbound-url';
 
 // ============================================
 // Types
@@ -88,6 +89,10 @@ const PROVIDER_URLS: Record<string, string> = {
   deepseek: 'https://api.deepseek.com/v1/chat/completions',
   mistral: 'https://api.mistral.ai/v1/chat/completions',
 };
+
+function allowUnsafeProviderTargets(): boolean {
+  return process.env.NODE_ENV !== 'production' && process.env.ALLOW_UNSAFE_PROVIDER_TARGETS === 'true';
+}
 
 // ============================================
 // Helpers
@@ -373,6 +378,25 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+
+  const providerUrlValidation = await validateOutboundUrl(providerConfig.targetUrl, {
+    allowHttp: allowUnsafeProviderTargets(),
+    allowPrivateNetwork: allowUnsafeProviderTargets(),
+  });
+  if (!providerUrlValidation.valid || !providerUrlValidation.normalizedUrl) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          message: providerUrlValidation.reason || 'Unsafe upstream provider URL',
+          type: 'invalid_request_error',
+          code: 'unsafe_provider_url',
+        },
+      },
+      { status: 400 }
+    );
+  }
+  providerConfig.targetUrl = providerUrlValidation.normalizedUrl;
 
   // 3. Parse request body
   let body: Record<string, unknown>;

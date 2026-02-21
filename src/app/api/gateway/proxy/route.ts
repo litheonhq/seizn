@@ -36,6 +36,7 @@ import {
   isAuthError,
 } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
+import { validateOutboundUrl } from '@/lib/security/outbound-url';
 import {
   GatewayProxy,
   TraceInjector,
@@ -56,6 +57,70 @@ const VALID_OPERATIONS = ['search', 'upsert', 'delete', 'health'] as const;
 
 // Supported providers
 const VALID_PROVIDERS: VectorDBProvider[] = ['pinecone', 'weaviate', 'pgvector', 'qdrant'];
+
+function allowUnsafeGatewayTargets(): boolean {
+  return process.env.NODE_ENV !== 'production' && process.env.ALLOW_PRIVATE_GATEWAY_TARGETS === 'true';
+}
+
+interface GatewayTargetResolution {
+  targetUrl: string | null;
+  error?: string;
+}
+
+function getGatewayTargetUrl(
+  provider: VectorDBProvider,
+  config: Record<string, unknown>
+): GatewayTargetResolution {
+  if (provider === 'pinecone') {
+    const host = config.host as string | undefined;
+    if (!host) return { targetUrl: null };
+    // Pinecone host should be hostname only. If full URL is provided, keep as-is.
+    return {
+      targetUrl:
+        host.startsWith('http://') || host.startsWith('https://')
+          ? host
+          : `https://${host}`,
+    };
+  }
+
+  if (provider === 'weaviate' || provider === 'qdrant') {
+    const host = config.host as string | undefined;
+    if (!host) return { targetUrl: null };
+    if (host.startsWith('http://') || host.startsWith('https://')) {
+      return { targetUrl: host };
+    }
+    const scheme = (config.scheme as string | undefined) || 'https';
+    return { targetUrl: `${scheme}://${host}` };
+  }
+
+  if (provider === 'pgvector') {
+    const host = config.host as string | undefined;
+    if (host) {
+      return {
+        targetUrl:
+          host.startsWith('http://') || host.startsWith('https://')
+            ? host
+            : `https://${host}`,
+      };
+    }
+
+    const connectionString = config.connectionString as string | undefined;
+    if (!connectionString) return { targetUrl: null };
+
+    try {
+      const parsed = new URL(connectionString);
+      const hostName = parsed.hostname;
+      if (!hostName) {
+        return { targetUrl: null, error: 'pgvector connectionString is missing a hostname' };
+      }
+      return { targetUrl: `https://${hostName}` };
+    } catch {
+      return { targetUrl: null, error: 'Invalid pgvector connectionString format' };
+    }
+  }
+
+  return { targetUrl: null };
+}
 
 /**
  * POST /api/gateway/proxy
@@ -174,6 +239,44 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ...requestedConfig,
       orgId: keyData.org_id,
     };
+
+    const targetResolution = getGatewayTargetUrl(
+      body.provider as VectorDBProvider,
+      body.config as Record<string, unknown>
+    );
+    if (targetResolution.error) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'UNSAFE_TARGET_URL',
+            message: targetResolution.error,
+            retryable: false,
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    if (targetResolution.targetUrl) {
+      const targetValidation = await validateOutboundUrl(targetResolution.targetUrl, {
+        allowHttp: allowUnsafeGatewayTargets(),
+        allowPrivateNetwork: allowUnsafeGatewayTargets(),
+      });
+      if (!targetValidation.valid) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'UNSAFE_TARGET_URL',
+              message: targetValidation.reason || 'Unsafe gateway target URL',
+              retryable: false,
+            },
+          },
+          { status: 400 }
+        );
+      }
+    }
 
     // Validate request structure
     const validation = validateRequestBody(body);

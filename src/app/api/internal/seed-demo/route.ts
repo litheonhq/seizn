@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding } from '@/lib/ai';
+import { constantTimeEqual } from '@/lib/security/constant-time';
 
 // Demo user ID (fixed UUID for demo namespace)
 const DEMO_USER_ID = 'demo-user-00000000-0000-0000-0000-000000000000';
 const DEMO_NAMESPACE = 'demo:public';
+
+function isAuthorizedInternalRequest(request: NextRequest): boolean {
+  const expected = process.env.INTERNAL_API_KEY;
+  const provided = request.headers.get('x-internal-key');
+  return constantTimeEqual(provided, expected);
+}
 
 // Sample memories showcasing Seizn capabilities
 const DEMO_MEMORIES = [
@@ -65,9 +72,7 @@ const DEMO_MEMORIES = [
  * Requires INTERNAL_API_KEY header
  */
 export async function POST(request: NextRequest) {
-  // Verify internal API key
-  const internalKey = request.headers.get('x-internal-key');
-  if (internalKey !== process.env.INTERNAL_API_KEY) {
+  if (!isAuthorizedInternalRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -131,8 +136,7 @@ export async function POST(request: NextRequest) {
  * GET /api/internal/seed-demo - Check demo memory status
  */
 export async function GET(request: NextRequest) {
-  const internalKey = request.headers.get('x-internal-key');
-  if (internalKey !== process.env.INTERNAL_API_KEY) {
+  if (!isAuthorizedInternalRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

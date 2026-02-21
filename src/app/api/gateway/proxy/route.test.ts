@@ -74,7 +74,7 @@ describe('POST /api/gateway/proxy auth and tenant isolation', () => {
     const response = await POST(makeRequest({
       operation: 'health',
       provider: 'pgvector',
-      config: { host: 'http://localhost:5432' },
+      config: { host: 'https://db.example.com:5432' },
       payload: {},
     }));
 
@@ -90,7 +90,7 @@ describe('POST /api/gateway/proxy auth and tenant isolation', () => {
     const response = await POST(makeRequest({
       operation: 'health',
       provider: 'pgvector',
-      config: { host: 'http://localhost:5432', orgId: 'org-2' },
+      config: { host: 'https://db.example.com:5432', orgId: 'org-2' },
       payload: {},
     }));
 
@@ -106,7 +106,7 @@ describe('POST /api/gateway/proxy auth and tenant isolation', () => {
     const response = await POST(makeRequest({
       operation: 'health',
       provider: 'pgvector',
-      config: { host: 'http://localhost:5432', apiKey: 'secret-value', orgId: 'org-1' },
+      config: { host: 'https://db.example.com:5432', apiKey: 'secret-value', orgId: 'org-1' },
       payload: {},
     }));
 
@@ -122,12 +122,44 @@ describe('POST /api/gateway/proxy auth and tenant isolation', () => {
     const response = await POST(makeRequest({
       operation: 'health',
       provider: 'pgvector',
-      config: { host: 'http://localhost:5432', orgId: 'org-1' },
+      config: { host: 'https://db.example.com:5432', orgId: 'org-1' },
       payload: {},
     }));
 
     expect(response.status).toBe(200);
     expect(executeMock).toHaveBeenCalledTimes(1);
     expect(response.headers.get('x-ratelimit-remaining')).toBe('99');
+  });
+
+  it('rejects unsafe private target hosts', async () => {
+    setKeyData({ org_id: 'org-1', scopes: ['gateway:proxy'] });
+    const { POST } = await import('./route');
+
+    const response = await POST(makeRequest({
+      operation: 'health',
+      provider: 'pgvector',
+      config: { host: 'http://localhost:5432', orgId: 'org-1' },
+      payload: {},
+    }));
+
+    expect(response.status).toBe(400);
+    const json = await response.json();
+    expect(json.error.code).toBe('UNSAFE_TARGET_URL');
+  });
+
+  it('rejects malformed pgvector connection strings', async () => {
+    setKeyData({ org_id: 'org-1', scopes: ['gateway:proxy'] });
+    const { POST } = await import('./route');
+
+    const response = await POST(makeRequest({
+      operation: 'health',
+      provider: 'pgvector',
+      config: { connectionString: 'not-a-valid-url', orgId: 'org-1' },
+      payload: {},
+    }));
+
+    expect(response.status).toBe(400);
+    const json = await response.json();
+    expect(json.error.code).toBe('UNSAFE_TARGET_URL');
   });
 });
