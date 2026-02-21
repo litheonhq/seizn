@@ -18,6 +18,10 @@ import { createTierManagerService, type MemoryTier } from '@/lib/spring/memory-v
 import { createHybridRetriever } from '@/lib/retrieval/late-interaction';
 import { createCommunitySummaryService } from '@/lib/graph-rag/community';
 import type { SearchFiltersV3 } from '@/lib/spring/memory-v4';
+import {
+  applyPersonalizedRanking,
+  getOrCreateLearningProfile,
+} from '@/lib/memory/personalization';
 
 // =============================================================================
 // Types
@@ -57,6 +61,7 @@ interface SearchV4Response {
     content: string;
     type: string;
     similarity: number;
+    personalizationScore?: number;
     tier?: MemoryTier;
     lateInteractionScore?: number;
     tags?: string[];
@@ -82,6 +87,7 @@ interface SearchV4Response {
     tierDistribution?: Record<MemoryTier, number>;
     usedLateInteraction: boolean;
     usedGraphRAG: boolean;
+    personalizationApplied?: boolean;
   };
 }
 
@@ -268,19 +274,50 @@ export async function POST(request: NextRequest) {
     // Step 5: Trim to final topK
     searchResults.results = searchResults.results.slice(0, topK);
 
+    const namespace =
+      typeof filters.namespace === 'string' && filters.namespace.trim().length > 0
+        ? filters.namespace
+        : 'default';
+
+    const mappedResults = searchResults.results.map((r) => ({
+      id: r.id,
+      content: r.content,
+      type: r.type,
+      memory_type: r.type,
+      similarity: r.combinedScore,
+      personalization_score: r.combinedScore,
+      tier: advanced.includeTiers ? (r as { tier?: MemoryTier }).tier : undefined,
+      lateInteractionScore: lateInteractionApplied
+        ? (r as { lateInteractionScore?: number }).lateInteractionScore
+        : undefined,
+      tags: r.tags,
+      categories: r.category ? [r.category] : [],
+    }));
+
+    const personalizationState = await getOrCreateLearningProfile(
+      supabase,
+      userId,
+      namespace
+    );
+    const rankedResults =
+      personalizationState.available && personalizationState.profile.personalizationEnabled
+        ? applyPersonalizedRanking(mappedResults, personalizationState.profile, query)
+        : mappedResults;
+
     // Build response
     const response: SearchV4Response = {
-      results: searchResults.results.map((r) => ({
+      results: rankedResults.map((r) => ({
         id: r.id,
         content: r.content,
         type: r.type,
-        similarity: r.combinedScore,
-        tier: advanced.includeTiers ? (r as { tier?: MemoryTier }).tier : undefined,
-        lateInteractionScore: lateInteractionApplied ? (r as { lateInteractionScore?: number }).lateInteractionScore : undefined,
+        similarity: r.similarity,
+        personalizationScore: r.personalization_score,
+        tier: r.tier,
+        lateInteractionScore: r.lateInteractionScore,
         tags: r.tags,
-        categories: r.category ? [r.category] : [],
+        categories: r.categories,
       })),
-      totalResults: searchResults.results.length,
+      totalResults: rankedResults.length,
       query,
       graphContext,
       metadata: {
@@ -289,6 +326,9 @@ export async function POST(request: NextRequest) {
         tierDistribution,
         usedLateInteraction: lateInteractionApplied,
         usedGraphRAG: graphRAGApplied,
+        // exposed via metadata instead of response contract change for clients
+        personalizationApplied:
+          personalizationState.available && personalizationState.profile.personalizationEnabled,
       },
     };
 
