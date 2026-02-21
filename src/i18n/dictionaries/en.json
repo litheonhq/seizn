@@ -216,12 +216,31 @@
     "docs": "Docs",
     "settings": "Settings",
     "signOut": "Sign Out",
+    "skipToContent": "Skip to content",
+    "menu": "Open menu",
+    "errorBoundary": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred while loading this page.",
+      "errorId": "Error ID: {digest}",
+      "tryAgain": "Try Again",
+      "backToDashboard": "Back to Dashboard"
+    },
     "topBar": {
       "personal": "Personal Account",
       "manageOrgs": "Manage Organizations",
       "create": "Create",
       "createApiKey": "New API Key",
-      "createOrg": "New Organization"
+      "createOrg": "New Organization",
+      "switchOrg": "Switch organization"
+    },
+    "commandPalette": {
+      "title": "Command palette",
+      "placeholder": "Search pages...",
+      "noResults": "No results found",
+      "navigate": "Navigate",
+      "open": "Open",
+      "close": "Close",
+      "enter": "Enter"
     },
     "nav": {
       "overview": "Overview",
@@ -1140,7 +1159,15 @@
       "noMatchingMemories": "Try adjusting your filters or search query",
       "noMemoriesHint": "Start adding memories via the API to see them here",
       "match": "match",
-      "loadMore": "Load More"
+      "loadMore": "Load More",
+      "export": "Export",
+      "import": "Import",
+      "imported": "imported",
+      "skipped": "skipped",
+      "failed": "failed",
+      "afterDate": "After",
+      "beforeDate": "Before",
+      "sortImportance": "By Importance"
     },
     "budgetPage": {
       "title": "Budget & Cost Controls",

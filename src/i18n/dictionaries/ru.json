@@ -932,7 +932,15 @@
       "noMatchingMemories": "Попробуйте изменить фильтры или поисковый запрос",
       "noMemoriesHint": "Начните добавлять воспоминания через API, чтобы увидеть их здесь",
       "match": "совпадение",
-      "loadMore": "Загрузить ещё"
+      "loadMore": "Загрузить ещё",
+      "export": "Экспорт",
+      "import": "Импорт",
+      "imported": "импортировано",
+      "skipped": "пропущено",
+      "failed": "не удалось",
+      "afterDate": "После",
+      "beforeDate": "До",
+      "sortImportance": "По важности"
     },
     "budgetPage": {
       "title": "Бюджет и контроль расходов",
@@ -1304,7 +1312,8 @@
       "manageOrgs": "Управление организациями",
       "create": "Создать",
       "createApiKey": "Новый API ключ",
-      "createOrg": "Новая организация"
+      "createOrg": "Новая организация",
+      "switchOrg": "Сменить организацию"
     },
     "share": {
       "title": "Поделиться трассировкой",
@@ -1496,7 +1505,25 @@
         }
       }
     },
-    "analytics": "Аналитика"
+    "analytics": "Аналитика",
+    "skipToContent": "Перейти к содержимому",
+    "menu": "Открыть меню",
+    "errorBoundary": {
+      "title": "Что-то пошло не так",
+      "description": "При загрузке этой страницы произошла непредвиденная ошибка.",
+      "errorId": "ID ошибки: {digest}",
+      "tryAgain": "Попробовать снова",
+      "backToDashboard": "Вернуться на панель"
+    },
+    "commandPalette": {
+      "title": "Палитра команд",
+      "placeholder": "Поиск страниц...",
+      "noResults": "Результатов не найдено",
+      "navigate": "Навигация",
+      "open": "Открыть",
+      "close": "Закрыть",
+      "enter": "Enter"
+    }
   },
   "pricingPage": {
     "title": "Цены",

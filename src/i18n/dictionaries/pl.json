@@ -929,7 +929,15 @@
       "noMatchingMemories": "Spróbuj dostosować filtry lub zapytanie wyszukiwania",
       "noMemoriesHint": "Zacznij dodawać wspomnienia przez API, aby zobaczyć je tutaj",
       "match": "dopasowanie",
-      "loadMore": "Załaduj więcej"
+      "loadMore": "Załaduj więcej",
+      "export": "Eksportuj",
+      "import": "Importuj",
+      "imported": "zaimportowano",
+      "skipped": "pominięto",
+      "failed": "nieudane",
+      "afterDate": "Po",
+      "beforeDate": "Przed",
+      "sortImportance": "Wg ważności"
     },
     "budgetPage": {
       "title": "Budżet i kontrola kosztów",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "Zarządzaj organizacjami",
       "create": "Utwórz",
       "createApiKey": "Nowy klucz API",
-      "createOrg": "Nowa organizacja"
+      "createOrg": "Nowa organizacja",
+      "switchOrg": "Zmień organizację"
     },
     "share": {
       "title": "Udostępnij śledzenie",
@@ -1492,6 +1501,24 @@
           "description": "Zobacz każdy krok potoku - od tworzenia embeddings do rankingu wyników - z podziałem na czas i koszt."
         }
       }
+    },
+    "skipToContent": "Przejdź do treści",
+    "menu": "Otwórz menu",
+    "errorBoundary": {
+      "title": "Coś poszło nie tak",
+      "description": "Wystąpił nieoczekiwany błąd podczas ładowania tej strony.",
+      "errorId": "ID błędu: {digest}",
+      "tryAgain": "Spróbuj ponownie",
+      "backToDashboard": "Wróć do panelu"
+    },
+    "commandPalette": {
+      "title": "Paleta poleceń",
+      "placeholder": "Szukaj stron...",
+      "noResults": "Nie znaleziono wyników",
+      "navigate": "Nawiguj",
+      "open": "Otwórz",
+      "close": "Zamknij",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

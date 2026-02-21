@@ -932,7 +932,15 @@
       "noMatchingMemories": "Prova a modificare i filtri o la query di ricerca",
       "noMemoriesHint": "Inizia ad aggiungere memorie tramite l'API per vederle qui",
       "match": "corrispondenza",
-      "loadMore": "Carica Altro"
+      "loadMore": "Carica Altro",
+      "export": "Esporta",
+      "import": "Importa",
+      "imported": "importati",
+      "skipped": "saltati",
+      "failed": "falliti",
+      "afterDate": "Dopo",
+      "beforeDate": "Prima",
+      "sortImportance": "Per importanza"
     },
     "budgetPage": {
       "title": "Budget e Controllo Costi",
@@ -1304,7 +1312,8 @@
       "manageOrgs": "Gestisci Organizzazioni",
       "create": "Crea",
       "createApiKey": "Nuova Chiave API",
-      "createOrg": "Nuova Organizzazione"
+      "createOrg": "Nuova Organizzazione",
+      "switchOrg": "Cambia organizzazione"
     },
     "share": {
       "title": "Condividi Traccia",
@@ -1496,7 +1505,25 @@
         }
       }
     },
-    "analytics": "Analisi"
+    "analytics": "Analisi",
+    "skipToContent": "Vai al contenuto",
+    "menu": "Apri menu",
+    "errorBoundary": {
+      "title": "Qualcosa è andato storto",
+      "description": "Si è verificato un errore imprevisto durante il caricamento di questa pagina.",
+      "errorId": "ID errore: {digest}",
+      "tryAgain": "Riprova",
+      "backToDashboard": "Torna alla dashboard"
+    },
+    "commandPalette": {
+      "title": "Palette comandi",
+      "placeholder": "Cerca pagine...",
+      "noResults": "Nessun risultato trovato",
+      "navigate": "Naviga",
+      "open": "Apri",
+      "close": "Chiudi",
+      "enter": "Invio"
+    }
   },
   "pricingPage": {
     "title": "Prezzi",

@@ -1,36 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { hashApiKey } from '@/lib/api-key';
+import {
+  authenticateRequest,
+  isAuthError,
+  authErrorResponse,
+} from '@/lib/api-auth';
 import { logMemoryAccess } from '@/lib/audit';
-import { extractApiKey } from '@/lib/api-auth';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-// Helper function to verify API key
-async function verifyApiKey(apiKey: string): Promise<{ userId: string; keyId: string } | null> {
-  const supabase = createServerClient();
-  const keyHash = hashApiKey(apiKey);
-
-  const { data: keyData, error: keyError } = await supabase
-    .from('api_keys')
-    .select('id, user_id')
-    .eq('key_hash', keyHash)
-    .eq('is_active', true)
-    .single();
-
-  if (keyError || !keyData) {
-    return null;
+/** Merge extra headers into a NextResponse */
+function withHeaders(response: NextResponse, headers?: Record<string, string>): NextResponse {
+  if (headers) {
+    for (const [key, value] of Object.entries(headers)) {
+      response.headers.set(key, value);
+    }
   }
-
-  // Update last_used_at
-  await supabase
-    .from('api_keys')
-    .update({ last_used_at: new Date().toISOString() })
-    .eq('key_hash', keyHash);
-
-  return { userId: keyData.user_id, keyId: keyData.id };
+  return response;
 }
 
 // GET /api/memories/[id] - Get a specific memory
@@ -38,20 +26,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const { apiKey } = extractApiKey(request);
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
-        { status: 401 }
-      );
-    }
-
-    const authResult = await verifyApiKey(apiKey);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
-        { status: 401 }
-      );
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
     }
 
     const { userId, keyId } = authResult;
@@ -78,10 +55,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       memoryId: id,
     }).catch(console.error);
 
-    return NextResponse.json({
-      success: true,
-      memory: memory,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        memory: memory,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Get memory error:', error);
     return NextResponse.json(
@@ -97,26 +77,44 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const body = await request.json();
 
-    const { apiKey } = extractApiKey(request);
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
-        { status: 401 }
-      );
-    }
-
-    const authResult = await verifyApiKey(apiKey);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
-        { status: 401 }
-      );
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
     }
 
     const { userId } = authResult;
     const supabase = createServerClient();
 
-    // Build update object (only allowed fields)
+    // Validate fields before building update object
+    const VALID_MEMORY_TYPES = ['fact', 'preference', 'experience', 'relationship', 'instruction'];
+    if (body.memory_type && !VALID_MEMORY_TYPES.includes(body.memory_type)) {
+      return NextResponse.json(
+        { error: `memory_type must be one of: ${VALID_MEMORY_TYPES.join(', ')}` },
+        { status: 400 }
+      );
+    }
+    if (body.tags) {
+      if (!Array.isArray(body.tags) || body.tags.length > 50 ||
+          body.tags.some((t: unknown) => typeof t !== 'string' || (t as string).length > 100)) {
+        return NextResponse.json(
+          { error: 'tags must be an array of max 50 strings, each max 100 characters' },
+          { status: 400 }
+        );
+      }
+      // Deduplicate tags
+      body.tags = [...new Set(body.tags)];
+    }
+    if (body.importance !== undefined) {
+      const imp = Number(body.importance);
+      if (!Number.isFinite(imp) || imp < 1 || imp > 10) {
+        return NextResponse.json(
+          { error: 'importance must be a number between 1 and 10' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Build update object (only allowed fields — namespace is not updatable)
     const updateData: Record<string, unknown> = {};
     if (body.memory_type) updateData.memory_type = body.memory_type;
     if (body.tags) updateData.tags = body.tags;
@@ -146,10 +144,13 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      memory: memory,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        memory: memory,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Update memory error:', error);
     return NextResponse.json(
@@ -164,20 +165,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    const { apiKey } = extractApiKey(request);
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key required. Use Authorization: Bearer <your-api-key> header.' },
-        { status: 401 }
-      );
-    }
-
-    const authResult = await verifyApiKey(apiKey);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
-        { status: 401 }
-      );
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
     }
 
     const { userId } = authResult;
@@ -203,11 +193,14 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Memory deleted',
-      id: memory.id,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        message: 'Memory deleted',
+        id: memory.id,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Delete memory error:', error);
     return NextResponse.json(

@@ -928,7 +928,15 @@
       "noMatchingMemories": "Intenta ajustar tus filtros o consulta de búsqueda",
       "noMemoriesHint": "Comienza a agregar memorias vía la API para verlas aquí",
       "match": "coincidencia",
-      "loadMore": "Cargar Más"
+      "loadMore": "Cargar Más",
+      "export": "Exportar",
+      "import": "Importar",
+      "imported": "importados",
+      "skipped": "omitidos",
+      "failed": "fallidos",
+      "afterDate": "Después de",
+      "beforeDate": "Antes de",
+      "sortImportance": "Por importancia"
     },
     "budgetPage": {
       "title": "Presupuesto y Control de Costos",
@@ -1300,7 +1308,8 @@
       "manageOrgs": "Administrar Organizaciones",
       "create": "Crear",
       "createApiKey": "Nueva Clave API",
-      "createOrg": "Nueva Organización"
+      "createOrg": "Nueva Organización",
+      "switchOrg": "Cambiar organización"
     },
     "share": {
       "title": "Compartir Traza",
@@ -1492,7 +1501,25 @@
         }
       }
     },
-    "analytics": "Analíticas"
+    "analytics": "Analíticas",
+    "skipToContent": "Ir al contenido",
+    "menu": "Abrir menú",
+    "errorBoundary": {
+      "title": "Algo salió mal",
+      "description": "Ocurrió un error inesperado al cargar esta página.",
+      "errorId": "ID de error: {digest}",
+      "tryAgain": "Reintentar",
+      "backToDashboard": "Volver al panel"
+    },
+    "commandPalette": {
+      "title": "Paleta de comandos",
+      "placeholder": "Buscar páginas...",
+      "noResults": "No se encontraron resultados",
+      "navigate": "Navegar",
+      "open": "Abrir",
+      "close": "Cerrar",
+      "enter": "Enter"
+    }
   },
   "pricingPage": {
     "title": "Precios",

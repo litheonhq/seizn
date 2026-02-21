@@ -887,7 +887,15 @@
       "noMatchingMemories": "フィルターや検索クエリを調整してみてください",
       "noMemoriesHint": "APIからメモリを追加すると、ここに表示されます",
       "match": "一致",
-      "loadMore": "さらに読み込む"
+      "loadMore": "さらに読み込む",
+      "export": "エクスポート",
+      "import": "インポート",
+      "imported": "インポート済み",
+      "skipped": "スキップ",
+      "failed": "失敗",
+      "afterDate": "以降",
+      "beforeDate": "以前",
+      "sortImportance": "重要度順"
     },
     "budgetPage": {
       "title": "予算とコスト管理",
@@ -1259,7 +1267,8 @@
       "manageOrgs": "組織を管理",
       "create": "作成",
       "createApiKey": "新しいAPIキー",
-      "createOrg": "新しい組織"
+      "createOrg": "新しい組織",
+      "switchOrg": "組織を切り替え"
     },
     "theme": {
       "light": "ライト",
@@ -1404,6 +1413,24 @@
         "cancel": "キャンセル",
         "create": "Webhookを作成"
       }
+    },
+    "skipToContent": "本文へスキップ",
+    "menu": "メニューを開く",
+    "errorBoundary": {
+      "title": "問題が発生しました",
+      "description": "ページの読み込み中に予期しないエラーが発生しました。",
+      "errorId": "エラーID: {digest}",
+      "tryAgain": "再試行",
+      "backToDashboard": "ダッシュボードに戻る"
+    },
+    "commandPalette": {
+      "title": "コマンドパレット",
+      "placeholder": "ページを検索...",
+      "noResults": "結果が見つかりません",
+      "navigate": "移動",
+      "open": "開く",
+      "close": "閉じる",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

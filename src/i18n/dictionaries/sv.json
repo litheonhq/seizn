@@ -929,7 +929,15 @@
       "noMatchingMemories": "Försök justera dina filter eller sökfråga",
       "noMemoriesHint": "Börja lägga till minnen via API:et för att se dem här",
       "match": "matchning",
-      "loadMore": "Ladda fler"
+      "loadMore": "Ladda fler",
+      "export": "Exportera",
+      "import": "Importera",
+      "imported": "importerade",
+      "skipped": "hoppade över",
+      "failed": "misslyckade",
+      "afterDate": "Efter",
+      "beforeDate": "Före",
+      "sortImportance": "Efter vikt"
     },
     "budgetPage": {
       "title": "Budget och kostnadskontroller",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "Hantera Organisationer",
       "create": "Skapa",
       "createApiKey": "Ny API-nyckel",
-      "createOrg": "Ny Organisation"
+      "createOrg": "Ny Organisation",
+      "switchOrg": "Byt organisation"
     },
     "share": {
       "title": "Dela Spårning",
@@ -1492,6 +1501,24 @@
           "description": "Se varje steg i pipeline - från skapande av inbäddning till resultatrankning - med tids- och kostnadsuppdelningar."
         }
       }
+    },
+    "skipToContent": "Hoppa till innehåll",
+    "menu": "Öppna meny",
+    "errorBoundary": {
+      "title": "Något gick fel",
+      "description": "Ett oväntat fel uppstod vid laddning av denna sida.",
+      "errorId": "Fel-ID: {digest}",
+      "tryAgain": "Försök igen",
+      "backToDashboard": "Tillbaka till instrumentpanelen"
+    },
+    "commandPalette": {
+      "title": "Kommandopalett",
+      "placeholder": "Sök sidor...",
+      "noResults": "Inga resultat hittades",
+      "navigate": "Navigera",
+      "open": "Öppna",
+      "close": "Stäng",
+      "enter": "Enter"
     }
   },
   "pricingPage": {

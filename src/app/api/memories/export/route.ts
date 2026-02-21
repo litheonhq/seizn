@@ -87,20 +87,27 @@ export async function GET(request: NextRequest) {
     // Use count from the main query (already filtered)
     const totalCount = count;
 
+    // Build rate limit headers
+    const rlHeaders = authResult.rateLimitHeaders || {};
+
     if (format === 'csv') {
       // Convert to CSV
       const csv = convertToCSV(memories as ExportedMemory[]);
-      return new NextResponse(csv, {
+      const csvResponse = new NextResponse(csv, {
         status: 200,
         headers: {
           'Content-Type': 'text/csv; charset=utf-8',
           'Content-Disposition': `attachment; filename="seizn-memories-${new Date().toISOString().split('T')[0]}.csv"`,
         },
       });
+      for (const [k, v] of Object.entries(rlHeaders)) {
+        csvResponse.headers.set(k, v);
+      }
+      return csvResponse;
     }
 
     // Return JSON
-    return NextResponse.json({
+    const jsonResponse = NextResponse.json({
       success: true,
       export: {
         format: 'json',
@@ -113,6 +120,10 @@ export async function GET(request: NextRequest) {
       },
       memories: memories || [],
     });
+    for (const [k, v] of Object.entries(rlHeaders)) {
+      jsonResponse.headers.set(k, v);
+    }
+    return jsonResponse;
   } catch (error) {
     console.error('Export memory error:', error);
     return NextResponse.json(
@@ -150,9 +161,14 @@ function convertToCSV(memories: ExportedMemory[]): string {
 
 function escapeCSV(value: string): string {
   if (!value) return '';
+  // Spreadsheet formula injection hardening:
+  // Prefix values whose first non-whitespace char is =,+,-,@
+  const trimmed = value.trimStart();
+  const safeValue = /^[=+\-@]/.test(trimmed) ? `'${value}` : value;
+
   // If value contains comma, newline, or quote, wrap in quotes and escape quotes
-  if (value.includes(',') || value.includes('\n') || value.includes('"')) {
-    return `"${value.replace(/"/g, '""')}"`;
+  if (safeValue.includes(',') || safeValue.includes('\n') || safeValue.includes('"')) {
+    return `"${safeValue.replace(/"/g, '""')}"`;
   }
-  return value;
+  return safeValue;
 }

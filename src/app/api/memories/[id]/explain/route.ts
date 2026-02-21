@@ -7,6 +7,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  authenticateRequest,
+  isAuthError,
+  authErrorResponse,
+} from '@/lib/api-auth';
 import { auth } from '@/lib/auth';
 import {
   explainMemory,
@@ -14,41 +19,74 @@ import {
   explainExclusion,
 } from '@/lib/memory/explain';
 
+/** Resolve userId from API key auth or session auth (same pattern as v1) */
+async function resolveAuth(
+  request: NextRequest
+): Promise<
+  | { userId: string; rateLimitHeaders?: Record<string, string> }
+  | { error: NextResponse }
+> {
+  const authResult = await authenticateRequest(request, { skipUsageCheck: false });
+  if (!isAuthError(authResult)) {
+    return { userId: authResult.userId, rateLimitHeaders: authResult.rateLimitHeaders };
+  }
+
+  const session = await auth();
+  if (session?.user?.id) {
+    return { userId: session.user.id };
+  }
+
+  return { error: authErrorResponse(authResult.authError) };
+}
+
+/** Merge extra headers into a NextResponse */
+function withHeaders(response: NextResponse, headers?: Record<string, string>): NextResponse {
+  if (headers) {
+    for (const [key, value] of Object.entries(headers)) {
+      response.headers.set(key, value);
+    }
+  }
+  return response;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const result = await resolveAuth(request);
+    if ('error' in result) return result.error;
 
+    const { userId } = result;
     const { id } = await params;
     const memoryId = id;
     const searchParams = request.nextUrl.searchParams;
 
     // Get full provenance chain
     if (searchParams.get('provenance') === 'true') {
-      const chain = await getProvenanceChain(memoryId);
-      return NextResponse.json({ memoryId, provenanceChain: chain });
+      const chain = await getProvenanceChain(memoryId, userId);
+      return withHeaders(
+        NextResponse.json({ memoryId, provenanceChain: chain }),
+        result.rateLimitHeaders
+      );
     }
 
     // Explain exclusion
     if (searchParams.get('excluded') === 'true') {
       const query = searchParams.get('query') || '';
-      const exclusion = await explainExclusion(memoryId, query);
-      return NextResponse.json({ memoryId, exclusion });
+      const exclusion = await explainExclusion(memoryId, query, userId);
+      return withHeaders(
+        NextResponse.json({ memoryId, exclusion }),
+        result.rateLimitHeaders
+      );
     }
 
     // Get memory explanation
-    const explanation = await explainMemory(memoryId);
+    const explanation = await explainMemory(memoryId, userId);
 
     // If query provided, also explain retrieval
     const query = searchParams.get('query');
     if (query) {
-      // In a real implementation, we'd pass the actual search results
-      // For now, we'll provide a simplified retrieval explanation
       explanation.retrievalReason = {
         query,
         matchType: 'semantic',
@@ -65,11 +103,14 @@ export async function GET(
       };
     }
 
-    return NextResponse.json(explanation);
+    return withHeaders(
+      NextResponse.json(explanation),
+      result.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Memory explain error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to explain memory' },
+      { error: 'Failed to explain memory' },
       { status: 500 }
     );
   }

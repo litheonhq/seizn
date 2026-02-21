@@ -929,7 +929,15 @@
       "noMatchingMemories": "尝试调整筛选条件或搜索查询",
       "noMemoriesHint": "通过 API 添加记忆后将在此显示",
       "match": "匹配",
-      "loadMore": "加载更多"
+      "loadMore": "加载更多",
+      "export": "导出",
+      "import": "导入",
+      "imported": "已导入",
+      "skipped": "已跳过",
+      "failed": "失败",
+      "afterDate": "之后",
+      "beforeDate": "之前",
+      "sortImportance": "按重要性"
     },
     "budgetPage": {
       "title": "预算与成本控制",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "管理组织",
       "create": "创建",
       "createApiKey": "新建 API 密钥",
-      "createOrg": "新建组织"
+      "createOrg": "新建组织",
+      "switchOrg": "切换组织"
     },
     "share": {
       "title": "分享追踪",
@@ -1492,6 +1501,24 @@
           "description": "查看从嵌入创建到结果排名的每个步骤，包含时间和费用明细。"
         }
       }
+    },
+    "skipToContent": "跳转到内容",
+    "menu": "打开菜单",
+    "errorBoundary": {
+      "title": "出了点问题",
+      "description": "加载此页面时发生了意外错误。",
+      "errorId": "错误ID：{digest}",
+      "tryAgain": "重试",
+      "backToDashboard": "返回仪表板"
+    },
+    "commandPalette": {
+      "title": "命令面板",
+      "placeholder": "搜索页面...",
+      "noResults": "未找到结果",
+      "navigate": "导航",
+      "open": "打开",
+      "close": "关闭",
+      "enter": "回车"
     }
   },
   "pricingPage": {

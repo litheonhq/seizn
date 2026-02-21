@@ -932,7 +932,15 @@
       "noMatchingMemories": "Versuchen Sie, Ihre Filter oder Suchanfrage anzupassen",
       "noMemoriesHint": "Beginnen Sie, über die API Erinnerungen hinzuzufügen, um sie hier zu sehen",
       "match": "Übereinstimmung",
-      "loadMore": "Mehr laden"
+      "loadMore": "Mehr laden",
+      "export": "Exportieren",
+      "import": "Importieren",
+      "imported": "importiert",
+      "skipped": "übersprungen",
+      "failed": "fehlgeschlagen",
+      "afterDate": "Nach",
+      "beforeDate": "Vor",
+      "sortImportance": "Nach Wichtigkeit"
     },
     "budgetPage": {
       "title": "Budget & Kostenkontrolle",
@@ -1304,7 +1312,8 @@
       "manageOrgs": "Organisationen verwalten",
       "create": "Erstellen",
       "createApiKey": "Neuer API-Schlüssel",
-      "createOrg": "Neue Organisation"
+      "createOrg": "Neue Organisation",
+      "switchOrg": "Organisation wechseln"
     },
     "share": {
       "title": "Ablaufverfolgung teilen",
@@ -1496,7 +1505,25 @@
         }
       }
     },
-    "analytics": "Analytik"
+    "analytics": "Analytik",
+    "skipToContent": "Zum Inhalt springen",
+    "menu": "Menü öffnen",
+    "errorBoundary": {
+      "title": "Etwas ist schiefgelaufen",
+      "description": "Beim Laden dieser Seite ist ein unerwarteter Fehler aufgetreten.",
+      "errorId": "Fehler-ID: {digest}",
+      "tryAgain": "Erneut versuchen",
+      "backToDashboard": "Zurück zum Dashboard"
+    },
+    "commandPalette": {
+      "title": "Befehlspalette",
+      "placeholder": "Seiten suchen...",
+      "noResults": "Keine Ergebnisse gefunden",
+      "navigate": "Navigieren",
+      "open": "Öffnen",
+      "close": "Schließen",
+      "enter": "Enter"
+    }
   },
   "pricingPage": {
     "title": "Preise",

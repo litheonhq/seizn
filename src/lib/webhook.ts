@@ -1,6 +1,8 @@
 // Webhook delivery service for Seizn
 
 import crypto from 'crypto';
+import dns from 'dns/promises';
+import { isIP } from 'net';
 import { createServerClient } from './supabase';
 
 interface WebhookDelivery {
@@ -24,14 +26,28 @@ export function generateSignature(payload: string, secret: string): string {
   return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-/** Validate webhook URL — block private/internal IPs (SSRF prevention) */
+/** Validate webhook URL and block private/internal IPs (SSRF prevention). */
 export function isValidWebhookUrl(urlString: string): boolean {
   try {
     const url = new URL(urlString);
     if (!['http:', 'https:'].includes(url.protocol)) return false;
-    const host = url.hostname.toLowerCase();
+    // Strip brackets from IPv6 hostname (e.g. [::ffff:127.0.0.1] -> ::ffff:127.0.0.1)
+    const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    // Block well-known private/internal addresses
     if (['localhost', '127.0.0.1', '::1', '0.0.0.0', '169.254.169.254'].includes(host)) return false;
+    // Block IPv4 private ranges
     if (/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)) return false;
+    // Block IPv6-mapped IPv4 private addresses (::ffff:10.x.x.x, ::ffff:127.x.x.x, etc.)
+    const v4Mapped = host.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+    if (v4Mapped) {
+      const ipv4 = v4Mapped[1];
+      if (ipv4.startsWith('10.') || ipv4.startsWith('127.') || ipv4.startsWith('192.168.') ||
+          /^172\.(1[6-9]|2\d|3[01])\./.test(ipv4) || ipv4 === '0.0.0.0' || ipv4 === '169.254.169.254') {
+        return false;
+      }
+    }
+    // Block IPv6 link-local (fe80::), unique local (fc00::/fd::), loopback, multicast (ff00::)
+    if (/^(fe80|fc|fd|ff)[0-9a-f]*:/.test(host) || host === '::' || host === '::1') return false;
     if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') return false;
     return true;
   } catch {
@@ -58,9 +74,30 @@ export async function deliverWebhook(
     headers['X-Seizn-Signature'] = `sha256=${generateSignature(payloadString, webhook.secret)}`;
   }
 
-  // SSRF check before delivery
+  // SSRF check before delivery (URL-level)
   if (!isValidWebhookUrl(webhook.url)) {
     return { success: false, error: 'Webhook URL blocked by SSRF policy' };
+  }
+
+  // DNS rebinding defense: resolve hostname and verify resolved IPs are not private.
+  const url = new URL(webhook.url);
+  const hostname = url.hostname.replace(/^\[|\]$/g, '');
+  // Only resolve DNS for hostnames (not IPv4/IPv6 literals).
+  if (isIP(hostname) === 0) {
+    const addresses = await dns.resolve4(hostname).catch(() => [] as string[]);
+    const addresses6 = await dns.resolve6(hostname).catch(() => [] as string[]);
+    const resolvedIps = [...addresses, ...addresses6];
+
+    // Fail closed when hostname cannot be resolved.
+    if (resolvedIps.length === 0) {
+      return { success: false, error: 'Webhook hostname resolution failed' };
+    }
+
+    for (const ip of resolvedIps) {
+      if (!isValidWebhookUrl(`https://${ip.includes(':') ? `[${ip}]` : ip}/`)) {
+        return { success: false, error: 'Webhook URL resolved to blocked IP address' };
+      }
+    }
   }
 
   try {

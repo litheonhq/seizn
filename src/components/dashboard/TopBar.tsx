@@ -1,0 +1,154 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import {
+  OrgIcon, ChevronDownIcon, UserIcon, SettingsIcon,
+  PlusIcon, KeyIcon, UsersIcon, SearchIcon,
+} from "./dashboard-icons";
+import type { Organization } from "./navigation";
+
+interface TopBarProps {
+  t: (key: string) => string;
+  isAuthenticated: boolean;
+  onCommandPaletteOpen?: () => void;
+}
+
+export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: TopBarProps) {
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+  const [showOrgDropdown, setShowOrgDropdown] = useState(false);
+  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+  const orgDropdownRef = useRef<HTMLDivElement>(null);
+  const createDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      let cancelled = false;
+      fetch("/api/dashboard/organizations")
+        .then((res) => res.json())
+        .then((data) => {
+          if (cancelled) return;
+          if (data.success && data.organizations) {
+            setOrganizations(data.organizations);
+          }
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.error("Failed to fetch orgs:", err);
+        });
+      return () => { cancelled = true; };
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (orgDropdownRef.current && !orgDropdownRef.current.contains(e.target as Node)) {
+        setShowOrgDropdown(false);
+      }
+      if (createDropdownRef.current && !createDropdownRef.current.contains(e.target as Node)) {
+        setShowCreateDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <header className="hidden lg:flex fixed top-0 right-0 left-20 z-30 h-14 items-center justify-between px-6 glass-card border-b theme-border">
+      <div ref={orgDropdownRef} className="relative">
+        <button
+          onClick={() => setShowOrgDropdown(!showOrgDropdown)}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200"
+          aria-expanded={showOrgDropdown}
+          aria-haspopup="true"
+          aria-label={t("dashboard.topBar.switchOrg") || "Switch organization"}
+        >
+          <OrgIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <span>{selectedOrg?.name || t("dashboard.topBar.personal")}</span>
+          <ChevronDownIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+        </button>
+        {showOrgDropdown && (
+          <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
+            <button
+              onClick={() => { setSelectedOrg(null); setShowOrgDropdown(false); }}
+              className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${!selectedOrg ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300" : "text-gray-700 dark:text-gray-300"}`}
+            >
+              <UserIcon className="w-4 h-4" />
+              {t("dashboard.topBar.personal")}
+            </button>
+            {organizations.length > 0 && <div className="border-t border-gray-100 dark:border-gray-700 my-1" />}
+            {organizations.map((org) => (
+              <button
+                key={org.id}
+                onClick={() => { setSelectedOrg(org); setShowOrgDropdown(false); }}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedOrg?.id === org.id ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300" : "text-gray-700 dark:text-gray-300"}`}
+              >
+                <OrgIcon className="w-4 h-4" />
+                {org.name}
+              </button>
+            ))}
+            <div className="border-t border-gray-100 dark:border-gray-700 my-1" />
+            <Link
+              href="/dashboard/organizations"
+              onClick={() => setShowOrgDropdown(false)}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              <SettingsIcon className="w-4 h-4" />
+              {t("dashboard.topBar.manageOrgs")}
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        {/* Command Palette trigger */}
+        {onCommandPaletteOpen && (
+          <button
+            onClick={onCommandPaletteOpen}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm text-gray-500 dark:text-gray-400"
+          >
+            <SearchIcon className="w-4 h-4" />
+            <span className="hidden xl:inline">{t("dashboard.commandPalette.placeholder") || "Search..."}</span>
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-gray-100 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
+              <span className="text-xs">&#8984;</span>K
+            </kbd>
+          </button>
+        )}
+
+        {/* Create dropdown */}
+        <div ref={createDropdownRef} className="relative">
+          <button
+            onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl theme-gradient-btn text-white text-sm font-medium shadow-md hover:shadow-lg transition-all"
+            aria-expanded={showCreateDropdown}
+            aria-haspopup="true"
+          >
+            <PlusIcon className="w-4 h-4" />
+            {t("dashboard.topBar.create")}
+          </button>
+          {showCreateDropdown && (
+            <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
+              <Link
+                href="/dashboard/keys"
+                onClick={() => setShowCreateDropdown(false)}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <KeyIcon className="w-4 h-4 text-amber-500" />
+                {t("dashboard.topBar.createApiKey")}
+              </Link>
+              <Link
+                href="/dashboard/organizations"
+                onClick={() => setShowCreateDropdown(false)}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <UsersIcon className="w-4 h-4 text-teal-500" />
+                {t("dashboard.topBar.createOrg")}
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}

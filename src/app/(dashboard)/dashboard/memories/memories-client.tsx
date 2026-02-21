@@ -141,6 +141,21 @@ function sortToApiParams(sort: SortOption): { sort: string; order: string } {
   }
 }
 
+function getCsrfToken(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/(?:^|; )seizn_csrf_token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function getJsonHeaders(): Record<string, string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const csrfToken = getCsrfToken();
+  if (csrfToken) {
+    headers["x-csrf-token"] = csrfToken;
+  }
+  return headers;
+}
+
 // ============================================
 // Component
 // ============================================
@@ -348,7 +363,7 @@ export default function MemoriesClient() {
     try {
       const res = await fetch("/api/v1/memories/personalization", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getJsonHeaders(),
         body: JSON.stringify({
           namespace,
           personalization_enabled: !personalizationEnabled,
@@ -388,7 +403,7 @@ export default function MemoriesClient() {
     try {
       const res = await fetch("/api/v1/memories/personalization", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: getJsonHeaders(),
         body: JSON.stringify({
           namespace,
           delete_feedback_history: true,
@@ -422,7 +437,7 @@ export default function MemoriesClient() {
     try {
       const res = await fetch("/api/v1/memories/feedback", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getJsonHeaders(),
         body: JSON.stringify({
           memory_id: memory.id,
           event_type: eventType,

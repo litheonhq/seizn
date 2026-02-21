@@ -929,7 +929,15 @@
       "noMatchingMemories": "Probeer uw filters of zoekopdracht aan te passen",
       "noMemoriesHint": "Begin met het toevoegen van herinneringen via de API om ze hier te zien",
       "match": "overeenkomst",
-      "loadMore": "Meer laden"
+      "loadMore": "Meer laden",
+      "export": "Exporteren",
+      "import": "Importeren",
+      "imported": "geïmporteerd",
+      "skipped": "overgeslagen",
+      "failed": "mislukt",
+      "afterDate": "Na",
+      "beforeDate": "Vóór",
+      "sortImportance": "Op belang"
     },
     "budgetPage": {
       "title": "Budget en kostenbeheer",
@@ -1301,7 +1309,8 @@
       "manageOrgs": "Organisaties Beheren",
       "create": "Aanmaken",
       "createApiKey": "Nieuwe API-sleutel",
-      "createOrg": "Nieuwe Organisatie"
+      "createOrg": "Nieuwe Organisatie",
+      "switchOrg": "Organisatie wisselen"
     },
     "share": {
       "title": "Tracering Delen",
@@ -1492,6 +1501,24 @@
           "description": "Zie elke stap van de pipeline - van embedding-creatie tot resultaatrangschikking - met timing- en kostenuitsplitsingen."
         }
       }
+    },
+    "skipToContent": "Ga naar inhoud",
+    "menu": "Menu openen",
+    "errorBoundary": {
+      "title": "Er is iets misgegaan",
+      "description": "Er is een onverwachte fout opgetreden bij het laden van deze pagina.",
+      "errorId": "Fout-ID: {digest}",
+      "tryAgain": "Opnieuw proberen",
+      "backToDashboard": "Terug naar dashboard"
+    },
+    "commandPalette": {
+      "title": "Opdrachtenpalet",
+      "placeholder": "Pagina's zoeken...",
+      "noResults": "Geen resultaten gevonden",
+      "navigate": "Navigeren",
+      "open": "Openen",
+      "close": "Sluiten",
+      "enter": "Enter"
     }
   },
   "pricingPage": {
