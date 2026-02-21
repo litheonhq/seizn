@@ -62,10 +62,20 @@ import {
   applyPersonalizedRanking,
   getOrCreateLearningProfile,
 } from '@/lib/memory/personalization';
+import {
+  applyRouterLearning,
+  recordRouterOutcome,
+  type RouterLearningDecision,
+} from '@/lib/memory/router-learning';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
 import { emitWebhookEvent } from '@/lib/webhook-emit';
+import {
+  getActiveAssignment,
+  recordRequestResult,
+  type TrafficAssignment,
+} from '@/lib/fall/canary';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
@@ -87,6 +97,28 @@ function withHeaders(response: NextResponse, headers?: Record<string, string>): 
     }
   }
   return response;
+}
+
+function parseCanaryForcedMode(
+  assignment: TrafficAssignment | null
+): Exclude<SearchMode, 'auto'> | null {
+  const raw =
+    assignment &&
+    assignment.assignedVersion === 'canary' &&
+    assignment.version?.config &&
+    typeof assignment.version.config === 'object'
+      ? (assignment.version.config as Record<string, unknown>).force_mode
+      : null;
+
+  if (raw === 'slot' || raw === 'keyword' || raw === 'hybrid' || raw === 'vector') {
+    return raw;
+  }
+
+  return null;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 /**
@@ -562,15 +594,34 @@ export async function GET(request: NextRequest) {
       effectiveQuery = queryFirewall.sanitizedInput.trim();
     }
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
+    const canaryAssignment = getActiveAssignment(userId, {
+      collectionId: namespace,
+      sessionId: searchParams.get('session_id') || request.headers.get('x-session-id') || undefined,
+    });
+    const canaryForcedMode = parseCanaryForcedMode(canaryAssignment);
+    let canaryOverrideApplied = false;
 
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
+    let routerLearningDecision: RouterLearningDecision | null = null;
 
     if (requestedMode === 'auto') {
       routerDecision = routeQuery(effectiveQuery);
-      actualMode = routerDecision.strategy;
+      routerLearningDecision = await applyRouterLearning(
+        supabase,
+        userId,
+        namespace,
+        effectiveQuery,
+        routerDecision
+      );
+      actualMode = routerLearningDecision.strategy;
     } else {
       actualMode = requestedMode as Exclude<SearchMode, 'auto'>;
+    }
+
+    if (requestedMode === 'auto' && canaryForcedMode && canaryForcedMode !== actualMode) {
+      actualMode = canaryForcedMode;
+      canaryOverrideApplied = true;
     }
 
     // Slot lookups
@@ -593,10 +644,35 @@ export async function GET(request: NextRequest) {
         }).catch(console.error);
 
         if (slotValue) {
+          recordRouterOutcome(supabase, {
+            userId,
+            namespace,
+            query: effectiveQuery,
+            strategy: 'slot',
+            latencyMs: Date.now() - startTime,
+            resultCount: 1,
+            topScore: 1,
+          }).catch(console.error);
+
+          if (canaryAssignment) {
+            try {
+              recordRequestResult({
+                deploymentId: canaryAssignment.deploymentId,
+                version: canaryAssignment.assignedVersion,
+                success: true,
+                latencyMs: Date.now() - startTime,
+                qualityScore: 1,
+              });
+            } catch (canaryMetricError) {
+              console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+            }
+          }
+
           return NextResponse.json({
             success: true,
             data: {
               mode: 'slot',
+              requestedMode,
               results: [{
                 id: `slot:${slotKey}`,
                 content: slotValue,
@@ -608,6 +684,26 @@ export async function GET(request: NextRequest) {
               total: 1,
               offset: 0,
               limit,
+              routerDecision: routerDecision ? {
+                strategy: routerDecision.strategy,
+                confidence: routerDecision.confidence,
+                reason: routerDecision.reason,
+              } : null,
+              routerLearning: routerLearningDecision ? {
+                applied: routerLearningDecision.learningApplied,
+                reason: routerLearningDecision.reason,
+                queryBucket: routerLearningDecision.queryBucket,
+                statsAvailable: routerLearningDecision.statsAvailable,
+                sampleCount: routerLearningDecision.sampleCount,
+                scoreDelta: routerLearningDecision.scoreDelta,
+                scores: routerLearningDecision.scores,
+              } : null,
+              canary: canaryAssignment ? {
+                deploymentId: canaryAssignment.deploymentId,
+                assignedVersion: canaryAssignment.assignedVersion,
+                overrideApplied: canaryOverrideApplied,
+                forcedMode: canaryForcedMode,
+              } : null,
             },
             meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
           });
@@ -640,6 +736,38 @@ export async function GET(request: NextRequest) {
         query: effectiveQuery,
       }).catch(console.error);
 
+      recordRouterOutcome(supabase, {
+        userId,
+        namespace,
+        query: effectiveQuery,
+        strategy: actualMode,
+        latencyMs: Date.now() - startTime,
+        resultCount: personalizedResults.length,
+        topScore: Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+          ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+          ?? 0),
+      }).catch(console.error);
+
+      if (canaryAssignment) {
+        try {
+          recordRequestResult({
+            deploymentId: canaryAssignment.deploymentId,
+            version: canaryAssignment.assignedVersion,
+            success: true,
+            latencyMs: Date.now() - startTime,
+            qualityScore: clamp(
+              Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+                ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+                ?? 0),
+              0,
+              1
+            ),
+          });
+        } catch (canaryMetricError) {
+          console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+        }
+      }
+
       return NextResponse.json({
         success: true,
         data: {
@@ -654,6 +782,21 @@ export async function GET(request: NextRequest) {
             strategy: routerDecision.strategy,
             confidence: routerDecision.confidence,
             reason: routerDecision.reason,
+          } : null,
+          routerLearning: routerLearningDecision ? {
+            applied: routerLearningDecision.learningApplied,
+            reason: routerLearningDecision.reason,
+            queryBucket: routerLearningDecision.queryBucket,
+            statsAvailable: routerLearningDecision.statsAvailable,
+            sampleCount: routerLearningDecision.sampleCount,
+            scoreDelta: routerLearningDecision.scoreDelta,
+            scores: routerLearningDecision.scores,
+          } : null,
+          canary: canaryAssignment ? {
+            deploymentId: canaryAssignment.deploymentId,
+            assignedVersion: canaryAssignment.assignedVersion,
+            overrideApplied: canaryOverrideApplied,
+            forcedMode: canaryForcedMode,
           } : null,
           personalization: {
             enabled: personalizationState.profile.personalizationEnabled,
@@ -716,6 +859,19 @@ export async function GET(request: NextRequest) {
           500
         );
       }
+      if (canaryAssignment) {
+        try {
+          recordRequestResult({
+            deploymentId: canaryAssignment.deploymentId,
+            version: canaryAssignment.assignedVersion,
+            success: false,
+            latencyMs: Date.now() - startTime,
+            errorMessage: String((searchError as { message?: string }).message || 'search_error'),
+          });
+        } catch (canaryMetricError) {
+          console.error('[v1/memories] Canary failure metric record failed:', canaryMetricError);
+        }
+      }
       return ServerErrors.database('search_memories');
     }
 
@@ -776,6 +932,38 @@ export async function GET(request: NextRequest) {
       query: effectiveQuery,
     }).catch(console.error);
 
+    const topSimilarity = clamp(
+      Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+        ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+        ?? 0),
+      0,
+      1
+    );
+
+    recordRouterOutcome(supabase, {
+      userId,
+      namespace,
+      query: effectiveQuery,
+      strategy: actualMode,
+      latencyMs: Date.now() - startTime,
+      resultCount: personalizedResults.length,
+      topScore: topSimilarity,
+    }).catch(console.error);
+
+    if (canaryAssignment) {
+      try {
+        recordRequestResult({
+          deploymentId: canaryAssignment.deploymentId,
+          version: canaryAssignment.assignedVersion,
+          success: true,
+          latencyMs: Date.now() - startTime,
+          qualityScore: topSimilarity,
+        });
+      } catch (canaryMetricError) {
+        console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+      }
+    }
+
     return withHeaders(
       NextResponse.json({
         success: true,
@@ -791,6 +979,21 @@ export async function GET(request: NextRequest) {
             strategy: routerDecision.strategy,
             confidence: routerDecision.confidence,
             reason: routerDecision.reason,
+          } : null,
+          routerLearning: routerLearningDecision ? {
+            applied: routerLearningDecision.learningApplied,
+            reason: routerLearningDecision.reason,
+            queryBucket: routerLearningDecision.queryBucket,
+            statsAvailable: routerLearningDecision.statsAvailable,
+            sampleCount: routerLearningDecision.sampleCount,
+            scoreDelta: routerLearningDecision.scoreDelta,
+            scores: routerLearningDecision.scores,
+          } : null,
+          canary: canaryAssignment ? {
+            deploymentId: canaryAssignment.deploymentId,
+            assignedVersion: canaryAssignment.assignedVersion,
+            overrideApplied: canaryOverrideApplied,
+            forcedMode: canaryForcedMode,
           } : null,
           personalization: {
             enabled: personalizationState.profile.personalizationEnabled,
