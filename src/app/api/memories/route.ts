@@ -1,3 +1,15 @@
+/**
+ * REST API v0 — Memories (DEPRECATED)
+ *
+ * This is the legacy v0 API. New integrations should use /api/v1/memories instead.
+ * v0 will continue to be supported but will not receive new features.
+ *
+ * Migration guide:
+ *   - Replace /api/memories → /api/v1/memories
+ *   - Response shape changes: v1 wraps data in { success, data: {...}, meta }
+ *   - v1 supports dual auth (API key + session fallback)
+ *   - v1 adds dedup, auto-scoring, webhook events, and encrypted memory support
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding, createQueryEmbedding } from '@/lib/ai';
@@ -24,7 +36,22 @@ import {
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import { parsePagination } from '@/lib/parse-params';
+import {
+  applyPersonalizedRanking,
+  getOrCreateLearningProfile,
+} from '@/lib/memory/personalization';
 import type { AddMemoryRequest } from '@/types/database';
+import crypto from 'crypto';
+
+/** Merge extra headers into a NextResponse */
+function withHeaders(response: NextResponse, headers?: Record<string, string>): NextResponse {
+  if (headers) {
+    for (const [key, value] of Object.entries(headers)) {
+      response.headers.set(key, value);
+    }
+  }
+  return response;
+}
 
 /** Valid sort columns for browse mode */
 const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
@@ -34,6 +61,14 @@ const MEMORY_SELECT_FIELDS =
   'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
 
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
+
+function isMissingContentHashColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error) return false;
+  if (error.code === '42703') return true;
+  return (error.message || '').toLowerCase().includes('content_hash');
+}
 
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
@@ -96,8 +131,37 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Validate memory_type
+    const VALID_MEMORY_TYPES = ['fact', 'preference', 'experience', 'relationship', 'instruction'];
+    if (body.memory_type && !VALID_MEMORY_TYPES.includes(body.memory_type)) {
+      return ValidationErrors.invalidField('memory_type', `Must be one of: ${VALID_MEMORY_TYPES.join(', ')}`);
+    }
+
+    // Validate tags
+    if (body.tags) {
+      if (!Array.isArray(body.tags)) {
+        return ValidationErrors.invalidField('tags', 'Must be an array of strings');
+      }
+      if (body.tags.length > 50) {
+        return ValidationErrors.invalidField('tags', 'Maximum 50 tags allowed');
+      }
+      if (body.tags.some((t: unknown) => typeof t !== 'string' || (t as string).length > 100)) {
+        return ValidationErrors.invalidField('tags', 'Each tag must be a string of max 100 characters');
+      }
+    }
+
+    // Validate namespace (alphanumeric start, 1-64 chars)
+    if (body.namespace && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(body.namespace)) {
+      return ValidationErrors.invalidField('namespace', 'Must start with alphanumeric, contain only alphanumeric/hyphens/underscores, and be 1-64 characters');
+    }
+
+    // Deduplicate tags
+    if (body.tags && Array.isArray(body.tags)) {
+      body.tags = [...new Set(body.tags)];
+    }
+
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
-     
+
     const sanitizedContent = (body.content || '').replace(/\x00/g, '');
 
     step = 'supabase_client';
@@ -115,35 +179,95 @@ export async function POST(request: NextRequest) {
     }
 
     step = 'insert';
-    const { data: memory, error: insertError } = await supabase
-      .from('memories')
-      .insert({
-        user_id: userId,
-        content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
-        encrypted_content: isEncrypted ? encryptedContent : null,
-        is_encrypted: isEncrypted,
-        embedding: isEncrypted ? null : embedding,
-        memory_type: body.memory_type || 'fact',
-        tags: body.tags || [],
-        namespace: body.namespace || 'default',
-        scope: body.scope || 'user',
-        session_id: body.session_id || null,
-        agent_id: body.agent_id || null,
-        source: body.source || 'api',
-        confidence: 1.0,
-        importance: 5,
-      })
-      .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
-      .single();
+    const namespace = body.namespace || 'default';
+    const contentHash = isEncrypted
+      ? null
+      : crypto.createHash('sha256').update(sanitizedContent).digest('hex');
+
+    const insertPayload = {
+      user_id: userId,
+      content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
+      encrypted_content: isEncrypted ? encryptedContent : null,
+      is_encrypted: isEncrypted,
+      embedding: isEncrypted ? null : embedding,
+      memory_type: body.memory_type || 'fact',
+      tags: body.tags || [],
+      namespace,
+      scope: body.scope || 'user',
+      session_id: body.session_id || null,
+      agent_id: body.agent_id || null,
+      source: body.source || 'api',
+      confidence: 1.0,
+      importance: 5,
+      content_hash: contentHash,
+    };
+
+    let memory: {
+      id: string;
+      content: string;
+      encrypted_content: string | null;
+      is_encrypted: boolean;
+      memory_type: string;
+      tags: string[];
+      namespace: string;
+      created_at: string;
+    } | null = null;
+    let insertError: { code?: string | null; message?: string | null } | null = null;
+
+    {
+      const result = await supabase
+        .from('memories')
+        .insert(insertPayload)
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
+        .single();
+      memory = result.data;
+      insertError = result.error;
+    }
+
+    // Backward compatibility: if migration isn't applied yet, retry without content_hash.
+    if (insertError && isMissingContentHashColumnError(insertError)) {
+      const { content_hash: _ignored, ...legacyPayload } = insertPayload;
+      const retry = await supabase
+        .from('memories')
+        .insert(legacyPayload)
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
+        .single();
+      memory = retry.data;
+      insertError = retry.error;
+    }
 
     if (insertError) {
+      // Handle unique constraint violation (concurrent duplicate insert)
+      if (insertError.code === '23505' && !isEncrypted && contentHash) {
+        const { data: existing } = await supabase
+          .from('memories')
+          .select('id, content')
+          .eq('user_id', userId)
+          .eq('namespace', namespace)
+          .eq('content_hash', contentHash)
+          .eq('is_deleted', false)
+          .single();
+
+        if (existing) {
+          return NextResponse.json({
+            success: true,
+            memory: existing,
+            deduplicated: true,
+          });
+        }
+      }
+
       console.error('[memory:POST] Insert failed:', insertError.message || insertError);
+      return ServerErrors.database('insert_memory');
+    }
+
+    if (!memory) {
       return ServerErrors.database('insert_memory');
     }
 
     step = 'post_insert';
     // Invalidate cache for this namespace
-    incrementMemoryVersion(userId, body.namespace || 'default').catch(console.error);
+    await incrementMemoryVersion(userId, namespace);
 
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
@@ -233,16 +357,19 @@ export async function GET(request: NextRequest) {
         memoryCount: memories?.length || 0,
       }).catch(console.error);
 
-      return NextResponse.json({
-        success: true,
-        mode: 'browse',
-        results: memories || [],
-        count: memories?.length || 0,
-        total: count ?? 0,
-        offset,
-        limit,
-        cached: false,
-      });
+      return withHeaders(
+        NextResponse.json({
+          success: true,
+          mode: 'browse',
+          results: memories || [],
+          count: memories?.length || 0,
+          total: count ?? 0,
+          offset,
+          limit,
+          cached: false,
+        }),
+        authResult.rateLimitHeaders
+      );
     }
 
     // ----------------------------------------------
@@ -250,6 +377,7 @@ export async function GET(request: NextRequest) {
     // ----------------------------------------------
     const threshold = parseFloat(searchParams.get('threshold') || '0.7');
     const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
+    const supabase = createServerClient();
 
     let actualMode: Exclude<SearchMode, 'auto'>;
     let routerDecision = null;
@@ -308,6 +436,12 @@ export async function GET(request: NextRequest) {
     // Cache check
     const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
     if (cacheResult.hit && cacheResult.results.length > 0) {
+      const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
+      const rankedCachedResults =
+        personalizationState.available && personalizationState.profile.personalizationEnabled
+          ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, query)
+          : cacheResult.results;
+
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
         200,
@@ -319,22 +453,31 @@ export async function GET(request: NextRequest) {
         query,
       }).catch(console.error);
 
-      return NextResponse.json({
-        success: true,
-        mode: actualMode,
-        requestedMode,
-        results: cacheResult.results,
-        count: cacheResult.results.length,
-        total: cacheResult.results.length,
-        cached: true,
-        routerDecision: routerDecision
-          ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
-          : null,
-      });
+      return withHeaders(
+        NextResponse.json({
+          success: true,
+          mode: actualMode,
+          requestedMode,
+          results: rankedCachedResults,
+          count: rankedCachedResults.length,
+          total: rankedCachedResults.length,
+          cached: true,
+          personalization: {
+            enabled: personalizationState.profile.personalizationEnabled,
+            applied:
+              personalizationState.available && personalizationState.profile.personalizationEnabled,
+            available: personalizationState.available,
+            reason: personalizationState.reason || null,
+          },
+          routerDecision: routerDecision
+            ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
+            : null,
+        }),
+        authResult.rateLimitHeaders
+      );
     }
 
     // Search
-    const supabase = createServerClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
     let searchError: Error | null = null;
@@ -415,35 +558,51 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
+    const rankedResults =
+      results && personalizationState.available && personalizationState.profile.personalizationEnabled
+        ? applyPersonalizedRanking(results, personalizationState.profile, query)
+        : results;
+
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
       200,
       { embedding: actualMode !== 'keyword' ? query.length : 0 }
     );
 
-    if (results && results.length > 0) {
-      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
+    if (rankedResults && rankedResults.length > 0) {
+      Promise.all(rankedResults.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
         console.error
       );
     }
 
     logMemoryAccess(request, userId, keyId, 'search', {
-      memoryCount: results?.length || 0,
+      memoryCount: rankedResults?.length || 0,
       query,
     }).catch(console.error);
 
-    return NextResponse.json({
-      success: true,
-      mode: actualMode,
-      requestedMode,
-      results: results || [],
-      count: results?.length || 0,
-      total: results?.length || 0,
-      cached: false,
-      routerDecision: routerDecision
-        ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
-        : null,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        mode: actualMode,
+        requestedMode,
+        results: rankedResults || [],
+        count: rankedResults?.length || 0,
+        total: rankedResults?.length || 0,
+        cached: false,
+        personalization: {
+          enabled: personalizationState.profile.personalizationEnabled,
+          applied:
+            personalizationState.available && personalizationState.profile.personalizationEnabled,
+          available: personalizationState.available,
+          reason: personalizationState.reason || null,
+        },
+        routerDecision: routerDecision
+          ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
+          : null,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Search memory error:', error);
     return ServerErrors.internal('search_memories');
@@ -487,7 +646,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Invalidate cache
-    incrementMemoryVersion(userId, namespace).catch(console.error);
+    await incrementMemoryVersion(userId, namespace);
 
     await logRequest(
       { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },

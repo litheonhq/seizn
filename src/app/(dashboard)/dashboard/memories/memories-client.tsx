@@ -6,43 +6,7 @@ import type { PinDialogMode } from "@/components/memories/pin-dialog";
 import { PinDialog } from "@/components/memories/pin-dialog";
 import { LockedMemoryCard } from "@/components/memories/locked-memory-card";
 import { secureMemory } from "@/lib/memory/secure-memory-client";
-
-// ============================================
-// Types
-// ============================================
-
-interface Memory {
-  id: string;
-  content: string;
-  encrypted_content?: string | null;
-  is_encrypted?: boolean;
-  memory_type: string;
-  tags: string[];
-  namespace: string;
-  similarity?: number;
-  created_at: string;
-  updated_at?: string;
-  importance?: number;
-  source?: string;
-  scope?: string;
-  agent_id?: string;
-}
-
-interface MemoriesResponse {
-  success: boolean;
-  results: Memory[];
-  count: number;
-  total: number;
-  offset: number;
-  limit: number;
-  mode?: string;
-  cached?: boolean;
-}
-
-interface NamespaceInfo {
-  name: string;
-  count: number;
-}
+import type { Memory, MemoriesResponse, NamespaceInfo, SortOption, ImportResult } from "@/types/dashboard";
 
 interface NamespacesResponse {
   success: boolean;
@@ -52,7 +16,20 @@ interface NamespacesResponse {
   };
 }
 
-type SortOption = "date_desc" | "date_asc" | "importance" | "relevance";
+type FeedbackEventType = "thumbs_up" | "thumbs_down";
+
+interface PersonalizationProfileResponse {
+  success: boolean;
+  available?: boolean;
+  reason?: string | null;
+  profile?: {
+    personalization_enabled: boolean;
+    total_feedback_count: number;
+    positive_feedback_count?: number;
+    negative_feedback_count?: number;
+    updated_at?: string;
+  };
+}
 
 // ============================================
 // Icons
@@ -126,6 +103,30 @@ const StarIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const DownloadIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+  </svg>
+);
+
+const UploadIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+  </svg>
+);
+
+const ThumbUpIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9V5.25A2.25 2.25 0 0012 3l-.665.665a3.75 3.75 0 00-1.033 2.652V9H5.25A2.25 2.25 0 003 11.25v6A2.25 2.25 0 005.25 19.5h10.098a2.25 2.25 0 002.184-1.707l1.08-4.32a2.25 2.25 0 00-2.184-2.793H14.25z" />
+  </svg>
+);
+
+const ThumbDownIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 15v3.75A2.25 2.25 0 0012 21l.665-.665a3.75 3.75 0 001.033-2.652V15h5.052A2.25 2.25 0 0021 12.75v-6A2.25 2.25 0 0018.75 4.5H8.652a2.25 2.25 0 00-2.184 1.707l-1.08 4.32a2.25 2.25 0 002.184 2.793H9.75z" />
+  </svg>
+);
+
 // ============================================
 // Helpers
 // ============================================
@@ -173,10 +174,24 @@ export default function MemoriesClient() {
   const [namespace, setNamespace] = useState("default");
   const [namespaces, setNamespaces] = useState<NamespaceInfo[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [personalizationEnabled, setPersonalizationEnabled] = useState(true);
+  const [personalizationAvailable, setPersonalizationAvailable] = useState(true);
+  const [personalizationLoading, setPersonalizationLoading] = useState(true);
+  const [personalizationActionLoading, setPersonalizationActionLoading] = useState(false);
+  const [personalizationMessage, setPersonalizationMessage] = useState<string | null>(null);
+  const [feedbackCount, setFeedbackCount] = useState(0);
+  const [feedbackSubmittingById, setFeedbackSubmittingById] = useState<Record<string, boolean>>({});
+  const [feedbackStateById, setFeedbackStateById] = useState<Record<string, FeedbackEventType>>({});
 
   // Date range filters
   const [afterDate, setAfterDate] = useState("");
   const [beforeDate, setBeforeDate] = useState("");
+
+  // Export / Import state
+  const [isExporting, setIsExporting] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
 
   const ITEMS_PER_PAGE = 20;
 
@@ -197,6 +212,37 @@ export default function MemoriesClient() {
       })
       .catch(() => { /* ignore */ });
   }, []);
+
+  const refreshPersonalization = useCallback(async () => {
+    setPersonalizationLoading(true);
+    try {
+      const params = new URLSearchParams({ namespace });
+      const res = await fetch(`/api/v1/memories/personalization?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error(`Failed to load personalization (${res.status})`);
+      }
+      const data: PersonalizationProfileResponse = await res.json();
+      setPersonalizationAvailable(data.available !== false);
+      setPersonalizationEnabled(data.profile?.personalization_enabled !== false);
+      setFeedbackCount(data.profile?.total_feedback_count || 0);
+      if (data.reason === "schema_missing") {
+        setPersonalizationMessage("Personalization schema is not applied yet. Run the latest migration.");
+      } else {
+        setPersonalizationMessage(null);
+      }
+    } catch (error) {
+      console.error("Failed to load personalization:", error);
+      setPersonalizationAvailable(false);
+      setPersonalizationEnabled(false);
+      setPersonalizationMessage("Could not load personalization settings.");
+    } finally {
+      setPersonalizationLoading(false);
+    }
+  }, [namespace]);
+
+  useEffect(() => {
+    void refreshPersonalization();
+  }, [refreshPersonalization]);
 
   // Fetch E2E setup status on mount
   const refreshE2E = useCallback(async () => {
@@ -296,6 +342,115 @@ export default function MemoriesClient() {
       setIsLoading(false);
     }
   }, [debouncedQuery, selectedTags, selectedTypes, namespace, sortOption, afterDate, beforeDate, offset]);
+
+  const handleTogglePersonalization = useCallback(async () => {
+    setPersonalizationActionLoading(true);
+    try {
+      const res = await fetch("/api/v1/memories/personalization", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          namespace,
+          personalization_enabled: !personalizationEnabled,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to update personalization (${res.status})`);
+      }
+
+      const data: PersonalizationProfileResponse = await res.json();
+      setPersonalizationEnabled(data.profile?.personalization_enabled !== false);
+      setFeedbackCount(data.profile?.total_feedback_count || 0);
+      setPersonalizationMessage(
+        data.profile?.personalization_enabled
+          ? "Adaptive ranking is enabled."
+          : "Adaptive ranking is disabled."
+      );
+
+      if (debouncedQuery.trim()) {
+        void fetchMemories(true);
+      }
+    } catch (error) {
+      console.error("Failed to toggle personalization:", error);
+      setPersonalizationMessage("Failed to update personalization setting.");
+    } finally {
+      setPersonalizationActionLoading(false);
+    }
+  }, [debouncedQuery, fetchMemories, namespace, personalizationEnabled]);
+
+  const handleResetPersonalization = useCallback(async () => {
+    if (!confirm("Reset personalized learning signals for this namespace?")) {
+      return;
+    }
+
+    setPersonalizationActionLoading(true);
+    try {
+      const res = await fetch("/api/v1/memories/personalization", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          namespace,
+          delete_feedback_history: true,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to reset personalization (${res.status})`);
+      }
+
+      setFeedbackStateById({});
+      setFeedbackCount(0);
+      setPersonalizationMessage("Personalized learning signals were reset.");
+      await refreshPersonalization();
+
+      if (debouncedQuery.trim()) {
+        void fetchMemories(true);
+      }
+    } catch (error) {
+      console.error("Failed to reset personalization:", error);
+      setPersonalizationMessage("Failed to reset personalization.");
+    } finally {
+      setPersonalizationActionLoading(false);
+    }
+  }, [debouncedQuery, fetchMemories, namespace, refreshPersonalization]);
+
+  const submitFeedback = useCallback(async (memory: Memory, eventType: FeedbackEventType) => {
+    if (!personalizationAvailable) return;
+
+    setFeedbackSubmittingById((prev) => ({ ...prev, [memory.id]: true }));
+    try {
+      const res = await fetch("/api/v1/memories/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          memory_id: memory.id,
+          event_type: eventType,
+          namespace,
+          query: debouncedQuery.trim() || null,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Feedback failed (${res.status})`);
+      }
+
+      setFeedbackStateById((prev) => ({ ...prev, [memory.id]: eventType }));
+      setPersonalizationMessage(
+        eventType === "thumbs_up" ? "Marked as helpful." : "Marked as not helpful."
+      );
+      await refreshPersonalization();
+
+      if (debouncedQuery.trim()) {
+        void fetchMemories(true);
+      }
+    } catch (error) {
+      console.error("Failed to submit feedback:", error);
+      setPersonalizationMessage("Failed to submit feedback.");
+    } finally {
+      setFeedbackSubmittingById((prev) => ({ ...prev, [memory.id]: false }));
+    }
+  }, [debouncedQuery, fetchMemories, namespace, personalizationAvailable, refreshPersonalization]);
 
   // Reset & fetch on filter/sort changes
   useEffect(() => {
@@ -413,6 +568,64 @@ export default function MemoriesClient() {
   const hasActiveFilters = selectedTags.length > 0 || selectedTypes.length > 0 || searchQuery.length > 0 || afterDate || beforeDate;
   const activeFilterCount = selectedTags.length + selectedTypes.length + (afterDate ? 1 : 0) + (beforeDate ? 1 : 0);
 
+  // Export handler
+  const handleExport = async (format: "json" | "csv") => {
+    setIsExporting(true);
+    setShowExportMenu(false);
+    try {
+      const params = new URLSearchParams({ format, namespace });
+      const res = await fetch(`/api/memories/export?${params.toString()}`);
+      if (!res.ok) throw new Error(`Export failed (${res.status})`);
+
+      const blob = await res.blob();
+      const ext = format === "csv" ? "csv" : "json";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `seizn-memories-${new Date().toISOString().split("T")[0]}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Export failed:", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Import handler
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsImporting(true);
+    setImportResult(null);
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const memories = Array.isArray(parsed) ? parsed : parsed.memories;
+      if (!Array.isArray(memories)) throw new Error("Invalid format: expected array or { memories: [...] }");
+
+      const res = await fetch("/api/memories/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memories, skip_duplicates: true }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setImportResult(data.results);
+        if (data.results.imported > 0) fetchMemories(true);
+      } else {
+        setFetchError(data.error || "Import failed");
+      }
+    } catch (err) {
+      setFetchError(err instanceof Error ? err.message : "Import failed");
+    } finally {
+      setIsImporting(false);
+      e.target.value = "";
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -471,6 +684,63 @@ export default function MemoriesClient() {
               </p>
             )}
           </div>
+        </div>
+
+        {/* Export / Import Actions */}
+        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+          {/* Export Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowExportMenu(v => !v)}
+              disabled={isExporting}
+              className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+            >
+              {isExporting ? <LoadingSpinner className="w-4 h-4" /> : <DownloadIcon className="w-4 h-4" />}
+              {t("dashboard.memoriesPage.export") || "Export"}
+            </button>
+            {showExportMenu && (
+              <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-10">
+                <button
+                  onClick={() => handleExport("json")}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-t-xl"
+                >
+                  JSON
+                </button>
+                <button
+                  onClick={() => handleExport("csv")}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-b-xl"
+                >
+                  CSV
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Import */}
+          <label className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+            {isImporting ? <LoadingSpinner className="w-4 h-4" /> : <UploadIcon className="w-4 h-4" />}
+            {t("dashboard.memoriesPage.import") || "Import"}
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              disabled={isImporting}
+              className="hidden"
+            />
+          </label>
+
+          {/* Import Result Toast */}
+          {importResult && (
+            <div className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800">
+              <span>{importResult.imported} imported</span>
+              {importResult.skipped > 0 && <span>/ {importResult.skipped} skipped</span>}
+              {importResult.failed > 0 && <span className="text-red-600 dark:text-red-400">/ {importResult.failed} failed</span>}
+              <button onClick={() => setImportResult(null)} className="ml-1 hover:opacity-70">
+                <XIcon className="w-3 h-3" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -541,6 +811,64 @@ export default function MemoriesClient() {
                   placeholder="default"
                   className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400"
                 />
+              )}
+            </div>
+
+            {/* Adaptive Learning */}
+            <div className="glass-card rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Adaptive Learning
+                </span>
+                {personalizationLoading ? (
+                  <LoadingSpinner className="w-4 h-4 text-teal-500" />
+                ) : (
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      personalizationEnabled
+                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                        : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                    }`}
+                  >
+                    {personalizationEnabled ? "ON" : "OFF"}
+                  </span>
+                )}
+              </div>
+
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                Learns from your feedback and re-ranks search results for this namespace.
+              </p>
+
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
+                <span>Feedback signals</span>
+                <span>{feedbackCount}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleTogglePersonalization}
+                  disabled={personalizationActionLoading || personalizationLoading || !personalizationAvailable}
+                  className={`flex-1 px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                    personalizationEnabled
+                      ? "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                      : "bg-teal-500 text-white hover:bg-teal-600"
+                  } disabled:opacity-50`}
+                >
+                  {personalizationEnabled ? "Disable" : "Enable"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetPersonalization}
+                  disabled={personalizationActionLoading || personalizationLoading || !personalizationAvailable}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-900/50 disabled:opacity-50"
+                >
+                  Reset
+                </button>
+              </div>
+
+              {personalizationMessage && (
+                <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">{personalizationMessage}</p>
               )}
             </div>
 
@@ -894,7 +1222,46 @@ export default function MemoriesClient() {
                             {(memory.similarity * 100).toFixed(1)}% {t("dashboard.memoriesPage.match") || "match"}
                           </span>
                         )}
+
+                        {/* Personalized Score */}
+                        {debouncedQuery.trim() && memory.personalization_score !== undefined && (
+                          <span className="text-indigo-600 dark:text-indigo-400">
+                            {(memory.personalization_score * 100).toFixed(1)}% personalized
+                          </span>
+                        )}
                       </div>
+
+                      {/* Feedback Actions */}
+                      {debouncedQuery.trim() && personalizationAvailable && (
+                        <div className="mt-3 flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => void submitFeedback(memory, "thumbs_up")}
+                            disabled={feedbackSubmittingById[memory.id]}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-lg transition-colors disabled:opacity-50 ${
+                              feedbackStateById[memory.id] === "thumbs_up"
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            }`}
+                          >
+                            <ThumbUpIcon className="w-3.5 h-3.5" />
+                            Helpful
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void submitFeedback(memory, "thumbs_down")}
+                            disabled={feedbackSubmittingById[memory.id]}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-lg transition-colors disabled:opacity-50 ${
+                              feedbackStateById[memory.id] === "thumbs_down"
+                                ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            }`}
+                          >
+                            <ThumbDownIcon className="w-3.5 h-3.5" />
+                            Not Helpful
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

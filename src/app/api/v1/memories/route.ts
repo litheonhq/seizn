@@ -58,29 +58,69 @@ import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import { parsePagination } from '@/lib/parse-params';
 import { findDuplicate } from '@/lib/memory/dedup';
 import { scoreImportance } from '@/lib/memory/auto-score';
+import {
+  applyPersonalizedRanking,
+  getOrCreateLearningProfile,
+} from '@/lib/memory/personalization';
+import crypto from 'crypto';
 import { emitWebhookEvent } from '@/lib/webhook-emit';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
 
+function isMissingContentHashColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error) return false;
+  if (error.code === '42703') return true;
+  return (error.message || '').toLowerCase().includes('content_hash');
+}
+
+/** Merge extra headers into a NextResponse */
+function withHeaders(response: NextResponse, headers?: Record<string, string>): NextResponse {
+  if (headers) {
+    for (const [key, value] of Object.entries(headers)) {
+      response.headers.set(key, value);
+    }
+  }
+  return response;
+}
+
 /**
  * Resolve userId from API key auth or session auth.
+ *
+ * Design note: The session fallback exists so that logged-in dashboard users
+ * can call v1 endpoints without needing an API key (e.g. the "Try it" panel).
+ * When the session fallback is used, we resolve the user's plan from their
+ * profile so that plan-gated features (encrypted memory, etc.) work correctly.
  */
 async function resolveAuth(
   request: NextRequest
 ): Promise<
-  | { userId: string; keyId: string | null; plan: string | null }
+  | { userId: string; keyId: string | null; plan: string | null; rateLimitHeaders?: Record<string, string> }
   | { error: NextResponse }
 > {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (!isAuthError(authResult)) {
-    return { userId: authResult.userId, keyId: authResult.keyId, plan: authResult.plan };
+    return {
+      userId: authResult.userId,
+      keyId: authResult.keyId,
+      plan: authResult.plan,
+      rateLimitHeaders: authResult.rateLimitHeaders,
+    };
   }
 
   const session = await auth();
   if (session?.user?.id) {
-    return { userId: session.user.id, keyId: null, plan: null };
+    // Resolve plan from profile for session-based users
+    const supabase = createServerClient();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('plan')
+      .eq('id', session.user.id)
+      .maybeSingle();
+    return { userId: session.user.id, keyId: null, plan: profile?.plan || 'free' };
   }
 
   return { error: authErrorResponse(authResult.authError) };
@@ -125,6 +165,50 @@ export async function POST(request: NextRequest) {
       if (body.content.length > 10000) {
         return ValidationErrors.invalidField('content', 'Content too long (max 10,000 chars)');
       }
+    }
+
+    // Validate memory_type
+    const VALID_MEMORY_TYPES = ['fact', 'preference', 'experience', 'relationship', 'instruction'];
+    if (body.memory_type && !VALID_MEMORY_TYPES.includes(body.memory_type)) {
+      return NextResponse.json(
+        { success: false, error: { code: 'invalid_field', message: `memory_type must be one of: ${VALID_MEMORY_TYPES.join(', ')}` }, meta: META },
+        { status: 400 }
+      );
+    }
+
+    // Validate tags
+    if (body.tags) {
+      if (!Array.isArray(body.tags)) {
+        return NextResponse.json(
+          { success: false, error: { code: 'invalid_field', message: 'tags must be an array of strings' }, meta: META },
+          { status: 400 }
+        );
+      }
+      if (body.tags.length > 50) {
+        return NextResponse.json(
+          { success: false, error: { code: 'invalid_field', message: 'Maximum 50 tags allowed' }, meta: META },
+          { status: 400 }
+        );
+      }
+      if (body.tags.some((t: unknown) => typeof t !== 'string' || (t as string).length > 100)) {
+        return NextResponse.json(
+          { success: false, error: { code: 'invalid_field', message: 'Each tag must be a string of max 100 characters' }, meta: META },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Validate namespace (alphanumeric start, 1-64 chars)
+    if (body.namespace && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(body.namespace)) {
+      return NextResponse.json(
+        { success: false, error: { code: 'invalid_field', message: 'namespace must start with alphanumeric, contain only alphanumeric/hyphens/underscores, and be 1-64 characters' }, meta: META },
+        { status: 400 }
+      );
+    }
+
+    // Deduplicate tags
+    if (body.tags && Array.isArray(body.tags)) {
+      body.tags = [...new Set(body.tags)];
     }
 
     const supabase = createServerClient();
@@ -196,28 +280,96 @@ export async function POST(request: NextRequest) {
       importance = await scoreImportance(sanitizedContent);
     }
 
-    const { data: memory, error: insertError } = await supabase
-      .from('memories')
-      .insert({
-        user_id: userId,
-        content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
-        encrypted_content: isEncrypted ? encryptedContent : null,
-        is_encrypted: isEncrypted,
-        embedding: isEncrypted ? null : embedding,
-        memory_type: body.memory_type || 'fact',
-        tags: body.tags || [],
-        namespace,
-        scope: body.scope || 'user',
-        session_id: body.session_id || null,
-        agent_id: body.agent_id || null,
-        source: body.source || 'api',
-        confidence: 1.0,
-        importance,
-      })
-      .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
-      .single();
+    // Compute content hash for dedup safety net (unique index on user_id + namespace + content_hash)
+    const contentHash = isEncrypted
+      ? null
+      : crypto.createHash('sha256').update(sanitizedContent).digest('hex');
+
+    const insertPayload = {
+      user_id: userId,
+      content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
+      encrypted_content: isEncrypted ? encryptedContent : null,
+      is_encrypted: isEncrypted,
+      embedding: isEncrypted ? null : embedding,
+      memory_type: body.memory_type || 'fact',
+      tags: body.tags || [],
+      namespace,
+      scope: body.scope || 'user',
+      session_id: body.session_id || null,
+      agent_id: body.agent_id || null,
+      source: body.source || 'api',
+      confidence: 1.0,
+      importance,
+      content_hash: contentHash,
+    };
+
+    let memory: {
+      id: string;
+      content: string;
+      encrypted_content: string | null;
+      is_encrypted: boolean;
+      memory_type: string;
+      tags: string[];
+      namespace: string;
+      importance: number;
+      created_at: string;
+    } | null = null;
+
+    let insertError: { code?: string | null; message?: string | null } | null = null;
+
+    {
+      const result = await supabase
+        .from('memories')
+        .insert(insertPayload)
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
+        .single();
+      memory = result.data;
+      insertError = result.error;
+    }
+
+    // Backward compatibility: if migration isn't applied yet, retry without content_hash.
+    if (insertError && isMissingContentHashColumnError(insertError)) {
+      const { content_hash: _ignored, ...legacyPayload } = insertPayload;
+      const retry = await supabase
+        .from('memories')
+        .insert(legacyPayload)
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
+        .single();
+      memory = retry.data;
+      insertError = retry.error;
+    }
 
     if (insertError) {
+      // Handle unique constraint violation (concurrent duplicate insert)
+      if (insertError.code === '23505' && !isEncrypted && contentHash) {
+        const { data: existing } = await supabase
+          .from('memories')
+          .select('id, content')
+          .eq('user_id', userId)
+          .eq('namespace', namespace)
+          .eq('content_hash', contentHash)
+          .eq('is_deleted', false)
+          .single();
+
+        if (existing) {
+          if (keyId) {
+            await logRequest(
+              { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+              200
+            );
+          }
+          return NextResponse.json({
+            success: true,
+            data: {
+              memory: { id: existing.id, content: existing.content },
+              deduplicated: true,
+              similarity: 1.0,
+            },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          });
+        }
+      }
+
       console.error('[v1/memories] Insert error:', insertError);
       if (keyId) {
         await logRequest(
@@ -228,7 +380,17 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('insert_memory');
     }
 
-    incrementMemoryVersion(userId, namespace).catch(console.error);
+    if (!memory) {
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+          500
+        );
+      }
+      return ServerErrors.database('insert_memory');
+    }
+
+    await incrementMemoryVersion(userId, namespace);
 
     // Emit webhook event (non-blocking)
     emitWebhookEvent(userId, 'memory.created', {
@@ -243,11 +405,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: { memory },
-      meta: { ...META, latencyMs: Date.now() - startTime },
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        data: { memory },
+        meta: { ...META, latencyMs: Date.now() - startTime },
+      }),
+      result.rateLimitHeaders
+    );
   } catch (error) {
     console.error('[v1/memories] POST error:', error);
     return ServerErrors.internal('add_memory');
@@ -287,13 +452,12 @@ export async function GET(request: NextRequest) {
       ? (sortRaw as BrowseSortColumn)
       : 'created_at';
     const order = searchParams.get('order') === 'asc' ? true : false; // ascending?
+    const supabase = createServerClient();
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
     // ----------------------------------------------
     if (!query) {
-      const supabase = createServerClient();
-
       let q = supabase
         .from('memories')
         .select(MEMORY_SELECT_FIELDS, { count: 'exact' })
@@ -344,18 +508,21 @@ export async function GET(request: NextRequest) {
         memoryCount: memories?.length || 0,
       }).catch(console.error);
 
-      return NextResponse.json({
-        success: true,
-        data: {
-          mode: 'browse',
-          results: memories || [],
-          count: memories?.length || 0,
-          total: count ?? 0,
-          offset,
-          limit,
-        },
-        meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
-      });
+      return withHeaders(
+        NextResponse.json({
+          success: true,
+          data: {
+            mode: 'browse',
+            results: memories || [],
+            count: memories?.length || 0,
+            total: count ?? 0,
+            offset,
+            limit,
+          },
+          meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
+        }),
+        result.rateLimitHeaders
+      );
     }
 
     // ----------------------------------------------
@@ -422,6 +589,12 @@ export async function GET(request: NextRequest) {
     // Cache check
     const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
     if (cacheResult.hit && cacheResult.results.length > 0) {
+      const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
+      const personalizedResults =
+        personalizationState.available && personalizationState.profile.personalizationEnabled
+          ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, query)
+          : cacheResult.results;
+
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
@@ -440,9 +613,9 @@ export async function GET(request: NextRequest) {
         data: {
           mode: actualMode,
           requestedMode,
-          results: cacheResult.results,
-          count: cacheResult.results.length,
-          total: cacheResult.results.length,
+          results: personalizedResults,
+          count: personalizedResults.length,
+          total: personalizedResults.length,
           offset: 0,
           limit,
           routerDecision: routerDecision ? {
@@ -450,13 +623,18 @@ export async function GET(request: NextRequest) {
             confidence: routerDecision.confidence,
             reason: routerDecision.reason,
           } : null,
+          personalization: {
+            enabled: personalizationState.profile.personalizationEnabled,
+            applied:
+              personalizationState.available && personalizationState.profile.personalizationEnabled,
+            available: personalizationState.available,
+          },
         },
         meta: { ...META, cached: true, latencyMs: Date.now() - startTime },
       });
     }
 
     // Search
-    const supabase = createServerClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
     let searchError: Error | null = null;
@@ -526,7 +704,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Cache results
+    // Cache base results before personalization (profile can change quickly).
     if (results && results.length > 0) {
       const cacheableResults: CachedMemory[] = results.map((r) => ({
         id: r.id,
@@ -540,6 +718,12 @@ export async function GET(request: NextRequest) {
         console.error
       );
     }
+
+    const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
+    const personalizedResults =
+      results && personalizationState.available && personalizationState.profile.personalizationEnabled
+        ? applyPersonalizedRanking(results, personalizationState.profile, query)
+        : (results || []);
 
     if (keyId) {
       await logRequest(
@@ -556,28 +740,37 @@ export async function GET(request: NextRequest) {
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-      memoryCount: results?.length || 0,
+      memoryCount: personalizedResults.length,
       query,
     }).catch(console.error);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        mode: actualMode,
-        requestedMode,
-        results: results || [],
-        count: results?.length || 0,
-        total: results?.length || 0,
-        offset: 0,
-        limit,
-        routerDecision: routerDecision ? {
-          strategy: routerDecision.strategy,
-          confidence: routerDecision.confidence,
-          reason: routerDecision.reason,
-        } : null,
-      },
-      meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        data: {
+          mode: actualMode,
+          requestedMode,
+          results: personalizedResults,
+          count: personalizedResults.length,
+          total: personalizedResults.length,
+          offset: 0,
+          limit,
+          routerDecision: routerDecision ? {
+            strategy: routerDecision.strategy,
+            confidence: routerDecision.confidence,
+            reason: routerDecision.reason,
+          } : null,
+          personalization: {
+            enabled: personalizationState.profile.personalizationEnabled,
+            applied:
+              personalizationState.available && personalizationState.profile.personalizationEnabled,
+            available: personalizationState.available,
+          },
+        },
+        meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
+      }),
+      result.rateLimitHeaders
+    );
   } catch (error) {
     console.error('[v1/memories] GET error:', error);
     return ServerErrors.internal('search_memories');
@@ -627,7 +820,7 @@ export async function DELETE(request: NextRequest) {
       return ServerErrors.database('delete_memories');
     }
 
-    incrementMemoryVersion(userId, namespace).catch(console.error);
+    await incrementMemoryVersion(userId, namespace);
 
     // Emit webhook event (non-blocking)
     emitWebhookEvent(userId, 'memory.deleted', {
@@ -642,11 +835,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: { deleted: ids.length },
-      meta: { ...META, latencyMs: Date.now() - startTime },
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        data: { deleted: ids.length },
+        meta: { ...META, latencyMs: Date.now() - startTime },
+      }),
+      result.rateLimitHeaders
+    );
   } catch (error) {
     console.error('[v1/memories] DELETE error:', error);
     return ServerErrors.internal('delete_memories');
