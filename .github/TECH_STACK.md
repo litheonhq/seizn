@@ -1,5 +1,5 @@
 # Seizn -- Tech Stack Documentation
-> Auto-generated on 2026-02-21
+> Auto-generated on 2026-02-22
 
 Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
 
@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 141 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 142 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -363,6 +363,7 @@ User Request
 | Lifecycle Scene Profile Sync | Fully Implemented | `src/lib/memory/lifecycle.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Consolidation scene profile updates now sync into slots/profile card and persist trace logs (`memory_scene_profile_sync_events`) |
 | Scheduled Memory Quality Auto-Eval | Fully Implemented | `src/lib/memory/eval-automation.ts`, `src/app/api/internal/eval-processor/route.ts` | Internal cron path emits synthetic auto-eval triggers when feedback degradation / zero-result ratio crosses thresholds |
 | Memory Search Canary Linkage | Fully Implemented | `src/app/api/v1/memories/route.ts`, `src/lib/fall/canary/` | v1 memory search now records canary quality/latency outcomes and supports canary forced mode override in auto routing |
+| Companion Memory Metadata & Analytics (v0) | Fully Implemented | `src/app/api/memories/route.ts`, `src/app/api/memories/[id]/route.ts`, `src/app/api/memories/analytics/route.ts`, `supabase/migrations/20260222_001_companion_meta_and_analytics.sql` | Added `search` alias filtering (`ILIKE`), `sort=-field` syntax, `companion_meta` POST/PATCH/filter support, JWT fallback auth for legacy v0 routes, CSRF validation for state-changing cookie-auth requests, and analytics endpoint backed by companion RPC functions with timing-safe admin token checks |
 | Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |

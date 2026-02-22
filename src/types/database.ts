@@ -4,6 +4,7 @@ export type Plan = 'free' | 'plus' | 'pro' | 'enterprise';
 export type MemoryType = 'fact' | 'preference' | 'experience' | 'relationship' | 'instruction';
 export type MemoryScope = 'user' | 'session' | 'agent';
 export type SupportedLocale = 'en' | 'ko' | 'ja';
+export type CompanionMeta = Record<string, unknown>;
 
 // Data Residency Regions
 export type DataRegion = 'us-east' | 'us-west' | 'eu-west' | 'eu-central' | 'ap-northeast' | 'ap-southeast';
@@ -78,6 +79,7 @@ export interface Memory {
   source: string | null;
   confidence: number;
   importance: number;
+  companion_meta?: CompanionMeta | null;
 
   // Preferences
   language: SupportedLocale;
@@ -225,6 +227,7 @@ export interface AddMemoryRequest {
   session_id?: string;
   agent_id?: string;
   source?: string;
+  companion_meta?: CompanionMeta | null;
 }
 
 export interface SearchMemoryRequest {
@@ -280,6 +283,7 @@ export interface Database {
           source?: string | null;
           confidence?: number;
           importance?: number;
+          companion_meta?: CompanionMeta | null;
         };
         Update: Partial<Memory>;
       };
