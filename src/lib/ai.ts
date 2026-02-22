@@ -5,6 +5,7 @@ import {
   buildAnthropicHeaders,
   buildCachedSystemPrompt,
 } from './anthropic/prompt-caching';
+import { getSanitizedEnv } from './env';
 
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
@@ -12,7 +13,7 @@ const VOYAGE_MODEL = 'voyage-3'; // 1024 dimensions
 
 // Internal function to call Voyage API
 async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Promise<number[]> {
-  const apiKey = process.env.VOYAGE_API_KEY;
+  const apiKey = getSanitizedEnv('VOYAGE_API_KEY');
   if (!apiKey) throw new Error('VOYAGE_API_KEY not set');
 
   const response = await fetch(VOYAGE_API_URL, {
@@ -117,7 +118,7 @@ export async function extractMemories(
 ): Promise<ExtractedMemory[]> {
   const { model = 'haiku', existingMemories = [] } = options;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const modelId = model === 'haiku'
@@ -177,7 +178,7 @@ export async function generateWithMemories(
   memories: string[],
   model: 'haiku' | 'sonnet' = 'haiku'
 ): Promise<string> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const modelId = model === 'haiku'
@@ -273,7 +274,7 @@ export async function extractMemoriesFromImage(
 ): Promise<ExtractedMemory[]> {
   const { model = 'sonnet', context, existingMemories = [] } = options;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   // Use Sonnet for vision tasks (better quality)
@@ -350,7 +351,7 @@ export async function describeImageForEmbedding(
   imageData: string,
   mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
 ): Promise<string> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const response = await fetch(ANTHROPIC_API_URL, {
@@ -437,7 +438,7 @@ export async function summarizeConversation(
 ): Promise<ConversationSummary> {
   const { model = 'haiku', existingMemories = [] } = options;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const modelId = model === 'haiku'

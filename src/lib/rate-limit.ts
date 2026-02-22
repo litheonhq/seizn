@@ -150,6 +150,34 @@ async function checkRateLimitRedis(
   }
 }
 
+/**
+ * Peek current rate limit state in Redis without incrementing.
+ */
+async function peekRateLimitRedis(
+  redis: Redis,
+  key: string,
+  limit: number,
+  windowMs: number
+): Promise<RateLimitResult> {
+  const now = Date.now();
+  const redisKey = `rate_limit:${key}:${Math.floor(now / windowMs)}`;
+  const resetAt = (Math.floor(now / windowMs) + 1) * windowMs;
+
+  try {
+    const count = (await redis.get<number>(redisKey)) || 0;
+
+    return {
+      allowed: count < limit,
+      remaining: Math.max(0, limit - count),
+      resetAt,
+      limit,
+    };
+  } catch (error) {
+    console.error('[RateLimit] Redis peek error, falling back to in-memory:', error);
+    return peekRateLimitMemory(key, limit, windowMs);
+  }
+}
+
 // =============================================================================
 // In-Memory Rate Limiting
 // =============================================================================
@@ -197,6 +225,37 @@ function checkRateLimitMemory(
   return {
     allowed: true,
     remaining: limit - entry.count,
+    resetAt: entry.resetAt,
+    limit,
+  };
+}
+
+/**
+ * Peek current rate limit state in memory without incrementing.
+ */
+function peekRateLimitMemory(
+  key: string,
+  limit: number,
+  windowMs: number
+): RateLimitResult {
+  cleanup();
+
+  const now = Date.now();
+  const memKey = `ratelimit:${key}`;
+  const entry = rateLimitStore.get(memKey);
+
+  if (!entry || entry.resetAt < now) {
+    return {
+      allowed: true,
+      remaining: limit,
+      resetAt: now + windowMs,
+      limit,
+    };
+  }
+
+  return {
+    allowed: entry.count < limit,
+    remaining: Math.max(0, limit - entry.count),
     resetAt: entry.resetAt,
     limit,
   };
@@ -274,6 +333,24 @@ export async function checkAuthFailRateLimit(ip: string): Promise<RateLimitResul
   const redis = getRedisClient();
 
   if (redis) {
+    return peekRateLimitRedis(redis, key, limit, windowMs);
+  }
+
+  return peekRateLimitMemory(key, limit, windowMs);
+}
+
+/**
+ * Record one failed auth attempt for an IP.
+ * Use only when authentication actually fails.
+ */
+export async function recordAuthFailureAttempt(ip: string): Promise<RateLimitResult> {
+  const limit = 5;
+  const windowMs = 15 * 60 * 1000; // 15 minutes
+  const key = `auth_fail:${ip}`;
+
+  const redis = getRedisClient();
+
+  if (redis) {
     return checkRateLimitRedis(redis, key, limit, windowMs);
   }
 
@@ -318,6 +395,8 @@ export async function resetRateLimit(identifier: string): Promise<boolean> {
     const now = Date.now();
     const windowMs = 60 * 1000;
     const currentWindow = Math.floor(now / windowMs);
+    const authWindowMs = 15 * 60 * 1000;
+    const currentAuthWindow = Math.floor(now / authWindowMs);
 
     // Delete current and previous window keys
     const keys = [
@@ -325,6 +404,8 @@ export async function resetRateLimit(identifier: string): Promise<boolean> {
       `rate_limit:${identifier}:${currentWindow - 1}`,
       `rate_limit:ip:${identifier}:${currentWindow}`,
       `rate_limit:ip:${identifier}:${currentWindow - 1}`,
+      `rate_limit:auth_fail:${identifier}:${currentAuthWindow}`,
+      `rate_limit:auth_fail:${identifier}:${currentAuthWindow - 1}`,
     ];
 
     await Promise.all(keys.map(key => redis.del(key)));
