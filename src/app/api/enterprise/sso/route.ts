@@ -3,6 +3,7 @@ import { validateApiKey } from '@/lib/api-auth';
 import { ServerErrors } from '@/lib/api-error';
 import { SSOService } from '@/lib/enterprise';
 import { getRequestUser } from '@/lib/api/request-user';
+import { verifyCsrf } from '@/lib/csrf';
 import { createServerClient } from '@/lib/supabase';
 import { getSSOConnections } from '@/lib/sso';
 
@@ -94,6 +95,11 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(_request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(_request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     // This endpoint is a dashboard convenience wrapper.
     // Use the organization-scoped SSO APIs for actual configuration:
     // - POST /api/organizations/[orgId]/sso
@@ -115,6 +121,11 @@ export async function POST(_request: NextRequest) {
  */
 export async function DELETE(_request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(_request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     return NextResponse.json(
       {
         error: 'Not implemented. Use /api/organizations/[orgId]/sso endpoints.',

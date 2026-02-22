@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createServerClient } from "@/lib/supabase";
 import { getRequestUser } from "@/lib/api/request-user";
+import { verifyCsrf } from "@/lib/csrf";
 import {
   getTenantPolicy,
   getTenantBudgetState,
@@ -156,6 +157,11 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -252,6 +258,11 @@ export async function POST(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

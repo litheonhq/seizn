@@ -8,6 +8,7 @@ import {
   ErrorCodes,
   createApiError,
 } from '@/lib/api-error';
+import { verifyCsrf } from '@/lib/csrf';
 
 // GET /api/organizations - List user's organizations
 export async function GET(request: NextRequest) {
@@ -95,6 +96,11 @@ export async function GET(request: NextRequest) {
 // POST /api/organizations - Create a new organization
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
@@ -185,6 +191,11 @@ export async function POST(request: NextRequest) {
 // PATCH /api/organizations - Update an organization
 export async function PATCH(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
@@ -275,6 +286,11 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/organizations - Delete an organization
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organizations');
