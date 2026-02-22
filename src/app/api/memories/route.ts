@@ -40,6 +40,8 @@ import {
   applyPersonalizedRanking,
   getOrCreateLearningProfile,
 } from '@/lib/memory/personalization';
+import { getRequestUser } from '@/lib/api/request-user';
+import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -58,7 +60,7 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, companion_meta, source, scope, agent_id, created_at, updated_at';
 
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
 
@@ -70,6 +72,128 @@ function isMissingContentHashColumnError(
   return (error.message || '').toLowerCase().includes('content_hash');
 }
 
+type ResolvedAuth =
+  | {
+      userId: string;
+      keyId: string | null;
+      plan: string;
+      rateLimitHeaders?: Record<string, string>;
+    }
+  | { error: NextResponse };
+
+function escapeLikePattern(input: string): string {
+  return input.replace(/[\\%_]/g, '\\$&');
+}
+
+function getBearerToken(request: NextRequest): string | null {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader) return null;
+  const match = authHeader.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1] : null;
+}
+
+function looksLikeJwt(token: string): boolean {
+  return token.split('.').length === 3;
+}
+
+async function resolvePlanForUser(userId: string): Promise<string> {
+  const supabase = createServerClient();
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('plan')
+    .eq('id', userId)
+    .maybeSingle();
+  return profile?.plan || 'free';
+}
+
+function parseBrowseSort(
+  sortRaw: string | null,
+  orderRaw: string | null
+): { column: BrowseSortColumn; ascending: boolean } {
+  if (!sortRaw || sortRaw.trim().length === 0) {
+    return { column: 'created_at', ascending: orderRaw === 'asc' };
+  }
+
+  const trimmed = sortRaw.trim();
+  const normalized = trimmed.replace(/^[-+]/, '');
+  const column: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(normalized as BrowseSortColumn)
+    ? (normalized as BrowseSortColumn)
+    : 'created_at';
+
+  if (trimmed.startsWith('-')) {
+    return { column, ascending: false };
+  }
+  if (trimmed.startsWith('+')) {
+    return { column, ascending: true };
+  }
+
+  // Backward-compatible order support: ?sort=created_at&order=asc
+  if (orderRaw === 'asc') {
+    return { column, ascending: true };
+  }
+  if (orderRaw === 'desc') {
+    return { column, ascending: false };
+  }
+
+  return { column, ascending: false };
+}
+
+async function resolveAuth(
+  request: NextRequest,
+  options?: { skipUsageCheck?: boolean }
+): Promise<ResolvedAuth> {
+  const bearerToken = getBearerToken(request);
+  const hasLegacyApiKey = Boolean(request.headers.get('x-api-key'));
+
+  if (bearerToken && !hasLegacyApiKey && looksLikeJwt(bearerToken)) {
+    const jwtUser = await getRequestUser(request);
+    if (jwtUser?.id) {
+      return {
+        userId: jwtUser.id,
+        keyId: null,
+        plan: await resolvePlanForUser(jwtUser.id),
+      };
+    }
+  }
+
+  // Avoid recording spurious auth failures for session-only requests.
+  if (!bearerToken && !hasLegacyApiKey) {
+    const sessionUser = await getRequestUser(request);
+    if (sessionUser?.id) {
+      return {
+        userId: sessionUser.id,
+        keyId: null,
+        plan: await resolvePlanForUser(sessionUser.id),
+      };
+    }
+  }
+
+  const authResult = await authenticateRequest(request, options);
+  if (!isAuthError(authResult)) {
+    return {
+      userId: authResult.userId,
+      keyId: authResult.keyId,
+      plan: authResult.plan,
+      rateLimitHeaders: authResult.rateLimitHeaders,
+    };
+  }
+
+  // Preserve previous dual-auth behavior when an invalid auth header is sent
+  // but a valid dashboard session is present.
+  if (bearerToken || hasLegacyApiKey) {
+    const requestUser = await getRequestUser(request);
+    if (requestUser?.id) {
+      return {
+        userId: requestUser.id,
+        keyId: null,
+        plan: await resolvePlanForUser(requestUser.id),
+      };
+    }
+  }
+
+  return { error: authErrorResponse(authResult.authError) };
+}
+
 // POST /api/memories - Add a new memory
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -77,9 +201,14 @@ export async function POST(request: NextRequest) {
 
   try {
     step = 'auth';
-    const authResult = await authenticateRequest(request);
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await resolveAuth(request);
+    if ('error' in authResult) {
+      return authResult.error;
+    }
+
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) {
+      return csrfError;
     }
 
     const { userId, keyId, plan } = authResult;
@@ -102,17 +231,21 @@ export async function POST(request: NextRequest) {
 
     if (isEncrypted) {
       if (!canUseEncryptedMemories(plan)) {
-        await logRequest(
-          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-          403
-        );
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+            403
+          );
+        }
         return NextResponse.json(getEncryptedMemoryPlanError(), { status: 403 });
       }
       if (!encryptedContent || encryptedContent.trim().length === 0) {
-        await logRequest(
-          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-          400
-        );
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+            400
+          );
+        }
         return ValidationErrors.missingField('encrypted_content');
       }
       if (encryptedContent.length > 20000) {
@@ -120,10 +253,12 @@ export async function POST(request: NextRequest) {
       }
     } else {
       if (!body.content || body.content.trim().length === 0) {
-        await logRequest(
-          { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-          400
-        );
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+            400
+          );
+        }
         return ValidationErrors.missingField('content');
       }
       if (body.content.length > 10000) {
@@ -153,6 +288,13 @@ export async function POST(request: NextRequest) {
     // Validate namespace (alphanumeric start, 1-64 chars)
     if (body.namespace && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(body.namespace)) {
       return ValidationErrors.invalidField('namespace', 'Must start with alphanumeric, contain only alphanumeric/hyphens/underscores, and be 1-64 characters');
+    }
+    if (
+      body.companion_meta !== undefined &&
+      body.companion_meta !== null &&
+      (typeof body.companion_meta !== 'object' || Array.isArray(body.companion_meta))
+    ) {
+      return ValidationErrors.invalidField('companion_meta', 'Must be a JSON object');
     }
 
     // Deduplicate tags
@@ -199,6 +341,7 @@ export async function POST(request: NextRequest) {
       source: body.source || 'api',
       confidence: 1.0,
       importance: 5,
+      companion_meta: body.companion_meta ?? null,
       content_hash: contentHash,
     };
 
@@ -210,6 +353,7 @@ export async function POST(request: NextRequest) {
       memory_type: string;
       tags: string[];
       namespace: string;
+      companion_meta: Record<string, unknown> | null;
       created_at: string;
     } | null = null;
     let insertError: { code?: string | null; message?: string | null } | null = null;
@@ -218,7 +362,7 @@ export async function POST(request: NextRequest) {
       const result = await supabase
         .from('memories')
         .insert(insertPayload)
-        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, companion_meta, created_at')
         .single();
       memory = result.data;
       insertError = result.error;
@@ -230,7 +374,7 @@ export async function POST(request: NextRequest) {
       const retry = await supabase
         .from('memories')
         .insert(legacyPayload)
-        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, created_at')
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, companion_meta, created_at')
         .single();
       memory = retry.data;
       insertError = retry.error;
@@ -269,16 +413,21 @@ export async function POST(request: NextRequest) {
     // Invalidate cache for this namespace
     await incrementMemoryVersion(userId, namespace);
 
-    await logRequest(
-      { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
-      200,
-      { embedding: isEncrypted ? 0 : sanitizedContent.length }
-    );
+    if (keyId) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+        200,
+        { embedding: isEncrypted ? 0 : sanitizedContent.length }
+      );
+    }
 
-    return NextResponse.json({
-      success: true,
-      memory: memory,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        memory: memory,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error(`[memory:POST] Uncaught at step=${step}:`, msg);
@@ -291,27 +440,30 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    const authResult = await authenticateRequest(request);
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await resolveAuth(request);
+    if ('error' in authResult) {
+      return authResult.error;
     }
 
     const { userId, keyId } = authResult;
     const { searchParams } = new URL(request.url);
 
     // Common params
-    const query = searchParams.get('query');
+    const query = searchParams.get('query')?.trim() || null;
+    const search = searchParams.get('search')?.trim() || null;
     const { limit, offset } = parsePagination(searchParams, { limit: 20 });
     const namespace = searchParams.get('namespace') || 'default';
     const memoryType = searchParams.get('memory_type');
     const tagsParam = searchParams.get('tags');
     const after = searchParams.get('after');
     const before = searchParams.get('before');
-    const sortRaw = searchParams.get('sort') || 'created_at';
-    const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
-      ? (sortRaw as BrowseSortColumn)
-      : 'created_at';
-    const orderAsc = searchParams.get('order') === 'asc';
+    const characterSubtype = searchParams.get('character_subtype');
+    const nsfwLevel = searchParams.get('nsfw_level');
+    const scenario = searchParams.get('scenario');
+    const { column: sort, ascending: orderAsc } = parseBrowseSort(
+      searchParams.get('sort'),
+      searchParams.get('order')
+    );
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
@@ -333,6 +485,18 @@ export async function GET(request: NextRequest) {
         const tags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
         if (tags.length > 0) q = q.overlaps('tags', tags);
       }
+      if (search) {
+        q = q.ilike('content', `%${escapeLikePattern(search)}%`);
+      }
+      if (characterSubtype) {
+        q = q.filter('companion_meta->>character_subtype', 'eq', characterSubtype);
+      }
+      if (nsfwLevel) {
+        q = q.filter('companion_meta->>nsfw_level', 'eq', nsfwLevel);
+      }
+      if (scenario) {
+        q = q.filter('companion_meta->>scenario', 'eq', scenario);
+      }
 
       q = q.order(sort, { ascending: orderAsc }).range(offset, offset + limit - 1);
 
@@ -340,36 +504,39 @@ export async function GET(request: NextRequest) {
 
       if (browseError) {
         console.error('[api/memories] Browse error:', browseError);
-        await logRequest(
-          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-          500
-        );
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+            500
+          );
+        }
         return ServerErrors.database('browse_memories');
       }
 
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-        200,
-        { embedding: 0 }
-      );
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+          200,
+          { embedding: 0 }
+        );
+      }
 
-      logMemoryAccess(request, userId, keyId, 'search', {
+      logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: memories?.length || 0,
       }).catch(console.error);
 
-      return withHeaders(
-        NextResponse.json({
-          success: true,
-          mode: 'browse',
-          results: memories || [],
-          count: memories?.length || 0,
-          total: count ?? 0,
-          offset,
-          limit,
-          cached: false,
-        }),
-        authResult.rateLimitHeaders
-      );
+      const response = NextResponse.json({
+        success: true,
+        mode: 'browse',
+        results: memories || [],
+        count: memories?.length || 0,
+        total: count ?? 0,
+        offset,
+        limit,
+        cached: false,
+      });
+      const withCsrf = ensureCsrfCookie(request, response);
+      return withHeaders(withCsrf, authResult.rateLimitHeaders);
     }
 
     // ----------------------------------------------
@@ -396,18 +563,20 @@ export async function GET(request: NextRequest) {
         const slotValues = await getSlots(userId, [slotKey], namespace);
         const slotValue = slotValues.get(slotKey);
 
-        await logRequest(
-          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-          200,
-          { embedding: 0 }
-        );
-        logMemoryAccess(request, userId, keyId, 'read', {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+            200,
+            { embedding: 0 }
+          );
+        }
+        logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
           memoryId: `slot:${slotKey}`,
           query,
         }).catch(console.error);
 
         if (slotValue) {
-          return NextResponse.json({
+          const response = NextResponse.json({
             success: true,
             mode: 'slot',
             requestedMode,
@@ -426,6 +595,8 @@ export async function GET(request: NextRequest) {
               ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
               : null,
           });
+          const withCsrf = ensureCsrfCookie(request, response);
+          return withHeaders(withCsrf, authResult.rateLimitHeaders);
         }
         actualMode = 'keyword';
       } else {
@@ -442,39 +613,40 @@ export async function GET(request: NextRequest) {
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, query)
           : cacheResult.results;
 
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-        200,
-        { embedding: 0 }
-      );
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+          200,
+          { embedding: 0 }
+        );
+      }
       Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
-      logMemoryAccess(request, userId, keyId, 'search', {
+      logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
         query,
       }).catch(console.error);
 
-      return withHeaders(
-        NextResponse.json({
-          success: true,
-          mode: actualMode,
-          requestedMode,
-          results: rankedCachedResults,
-          count: rankedCachedResults.length,
-          total: rankedCachedResults.length,
-          cached: true,
-          personalization: {
-            enabled: personalizationState.profile.personalizationEnabled,
-            applied:
-              personalizationState.available && personalizationState.profile.personalizationEnabled,
-            available: personalizationState.available,
-            reason: personalizationState.reason || null,
-          },
-          routerDecision: routerDecision
-            ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
-            : null,
-        }),
-        authResult.rateLimitHeaders
-      );
+      const response = NextResponse.json({
+        success: true,
+        mode: actualMode,
+        requestedMode,
+        results: rankedCachedResults,
+        count: rankedCachedResults.length,
+        total: rankedCachedResults.length,
+        cached: true,
+        personalization: {
+          enabled: personalizationState.profile.personalizationEnabled,
+          applied:
+            personalizationState.available && personalizationState.profile.personalizationEnabled,
+          available: personalizationState.available,
+          reason: personalizationState.reason || null,
+        },
+        routerDecision: routerDecision
+          ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
+          : null,
+      });
+      const withCsrf = ensureCsrfCookie(request, response);
+      return withHeaders(withCsrf, authResult.rateLimitHeaders);
     }
 
     // Search
@@ -521,10 +693,12 @@ export async function GET(request: NextRequest) {
 
     if (searchError) {
       console.error('[api/memories] Search error:', searchError);
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-        500
-      );
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+          500
+        );
+      }
       return ServerErrors.database('search_memories');
     }
 
@@ -538,6 +712,28 @@ export async function GET(request: NextRequest) {
           const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
           const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
           if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
+        }
+        if (search) {
+          const content = typeof m.content === 'string' ? m.content.toLowerCase() : '';
+          if (!content.includes(search.toLowerCase())) return false;
+        }
+        if (characterSubtype) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.character_subtype !== characterSubtype) return false;
+        }
+        if (nsfwLevel) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.nsfw_level !== nsfwLevel) return false;
+        }
+        if (scenario) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.scenario !== scenario) return false;
         }
         return true;
       });
@@ -564,11 +760,13 @@ export async function GET(request: NextRequest) {
         ? applyPersonalizedRanking(results, personalizationState.profile, query)
         : results;
 
-    await logRequest(
-      { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-      200,
-      { embedding: actualMode !== 'keyword' ? query.length : 0 }
-    );
+    if (keyId) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
+        200,
+        { embedding: actualMode !== 'keyword' ? query.length : 0 }
+      );
+    }
 
     if (rankedResults && rankedResults.length > 0) {
       Promise.all(rankedResults.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
@@ -576,33 +774,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    logMemoryAccess(request, userId, keyId, 'search', {
+    logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
       memoryCount: rankedResults?.length || 0,
       query,
     }).catch(console.error);
 
-    return withHeaders(
-      NextResponse.json({
-        success: true,
-        mode: actualMode,
-        requestedMode,
-        results: rankedResults || [],
-        count: rankedResults?.length || 0,
-        total: rankedResults?.length || 0,
-        cached: false,
-        personalization: {
-          enabled: personalizationState.profile.personalizationEnabled,
-          applied:
-            personalizationState.available && personalizationState.profile.personalizationEnabled,
-          available: personalizationState.available,
-          reason: personalizationState.reason || null,
-        },
-        routerDecision: routerDecision
-          ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
-          : null,
-      }),
-      authResult.rateLimitHeaders
-    );
+    const response = NextResponse.json({
+      success: true,
+      mode: actualMode,
+      requestedMode,
+      results: rankedResults || [],
+      count: rankedResults?.length || 0,
+      total: rankedResults?.length || 0,
+      cached: false,
+      personalization: {
+        enabled: personalizationState.profile.personalizationEnabled,
+        applied:
+          personalizationState.available && personalizationState.profile.personalizationEnabled,
+        available: personalizationState.available,
+        reason: personalizationState.reason || null,
+      },
+      routerDecision: routerDecision
+        ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
+        : null,
+    });
+    const withCsrf = ensureCsrfCookie(request, response);
+    return withHeaders(withCsrf, authResult.rateLimitHeaders);
   } catch (error) {
     console.error('Search memory error:', error);
     return ServerErrors.internal('search_memories');
@@ -614,9 +811,14 @@ export async function DELETE(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await resolveAuth(request, { skipUsageCheck: true });
+    if ('error' in authResult) {
+      return authResult.error;
+    }
+
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) {
+      return csrfError;
     }
 
     const { userId, keyId } = authResult;
@@ -638,25 +840,32 @@ export async function DELETE(request: NextRequest) {
 
     if (error) {
       console.error('Delete error:', error);
-      await logRequest(
-        { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
-        500
-      );
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
+          500
+        );
+      }
       return ServerErrors.database('delete_memories');
     }
 
     // Invalidate cache
     await incrementMemoryVersion(userId, namespace);
 
-    await logRequest(
-      { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
-      200
-    );
+    if (keyId) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
+        200
+      );
+    }
 
-    return NextResponse.json({
-      success: true,
-      deleted: ids.length,
-    });
+    return withHeaders(
+      NextResponse.json({
+        success: true,
+        deleted: ids.length,
+      }),
+      authResult.rateLimitHeaders
+    );
   } catch (error) {
     console.error('Delete memory error:', error);
     return ServerErrors.internal('delete_memories');

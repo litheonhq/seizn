@@ -139,6 +139,24 @@ function formatDate(date: Date | string): string {
   });
 }
 
+function getCsrfToken(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/(?:^|; )seizn_csrf_token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function getCsrfHeaders(contentType?: string): Record<string, string> {
+  const headers: Record<string, string> = {};
+  if (contentType) {
+    headers["Content-Type"] = contentType;
+  }
+  const csrfToken = getCsrfToken();
+  if (csrfToken) {
+    headers["x-csrf-token"] = csrfToken;
+  }
+  return headers;
+}
+
 // ============================================
 // Component
 // ============================================
@@ -167,6 +185,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
     try {
       const res = await fetch(`/api/memories/${note.id}`, {
         method: "DELETE",
+        headers: getCsrfHeaders(),
       });
       if (res.ok) {
         onRefresh();
@@ -185,7 +204,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
     try {
       const res = await fetch(`/api/memories/${note.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: getCsrfHeaders("application/json"),
         body: JSON.stringify({ status: "contradicted" }),
       });
       if (res.ok) {
@@ -205,7 +224,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         note.privacyClass === "restricted" ? "internal" : "restricted";
       const res = await fetch(`/api/memories/${note.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: getCsrfHeaders("application/json"),
         body: JSON.stringify({ privacyClass: newPrivacy }),
       });
       if (res.ok) {
@@ -223,7 +242,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
     try {
       const res = await fetch(`/api/memories/${note.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: getCsrfHeaders("application/json"),
         body: JSON.stringify({ privacyClass: "confidential" }),
       });
       if (res.ok) {
