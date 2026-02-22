@@ -22,11 +22,22 @@ import { getEmbeddingProvider } from './embedding';
 import { getRerankProvider } from './rerank';
 import { getVectorStore } from './vectorstore';
 import { federatedRetrieve } from './federated/search';
+import { resolveCompetitiveFeatures, type CompetitiveExecutionFeatures } from './competitive/phase-config';
+import { inferQueryIntent, type QueryIntentDecision } from './competitive/query-intent';
+import {
+  expandQueryVariants,
+  fuseRetrievalRounds,
+  calculateOverlapAtK,
+  type RetrievalRound,
+} from './competitive/retrieval-fusion';
+import { applyTrustGuard } from './competitive/trust-guard';
 import { buildAnswerContractSystemPrompt, buildAnswerContractUserPrompt } from './answer-contract/prompt';
 import { estimateTokens } from './utils/tokens';
+import { createServerClient } from '@/lib/supabase';
 
 import { getPlan, hasFeature } from '@/lib/plan-limits';
 import { resolveBudget, applyBudgetLimits, estimateCost } from '@/lib/core/primitives/budget';
+import { getActiveAssignment, recordRequestResult } from '@/lib/fall/canary';
 import {
   startTrace,
   addEvent,
@@ -68,6 +79,26 @@ export interface RAGOptions {
   system_prompt?: string;
   /** Include trace in response */
   include_trace?: boolean;
+  /** Competitive phase override (0-7) */
+  competitive_phase?: number;
+  /** Enable aggressive competitive mode */
+  competitive_aggressive?: boolean;
+  /** Enable intent-aware query routing */
+  intent_routing?: boolean;
+  /** Enable query expansion */
+  query_expansion?: boolean;
+  /** Enable late-interaction rerank signal */
+  late_interaction?: boolean;
+  /** Enable graph context augmentation */
+  graph_augmentation?: boolean;
+  /** Enable trust guard filtering */
+  trust_guard?: boolean;
+  /** Enable shadow evaluation metadata */
+  shadow_eval?: boolean;
+  /** Optional graph id for augmentation */
+  graph_id?: string;
+  /** Optional blocked retrieval sources */
+  blocked_sources?: string[];
 }
 
 export interface RAGParams {
@@ -115,6 +146,22 @@ export interface RAGTrace {
     degraded: boolean;
     reason?: string;
   };
+  competitive?: {
+    phase: number;
+    aggressive: boolean;
+    intent?: QueryIntentDecision;
+    expanded_queries?: string[];
+    trust_guard_filtered?: number;
+    shadow_eval?: {
+      mode: 'semantic' | 'keyword' | 'hybrid';
+      overlap_at_k: number;
+      candidate_count: number;
+    };
+    graph_augmentation?: {
+      graph_id: string;
+      source_count: number;
+    };
+  };
 }
 
 export interface RAGResponse {
@@ -124,6 +171,20 @@ export interface RAGResponse {
   latency_ms: number;
   trace_id: string;
   trace?: RAGTrace;
+  competitive?: {
+    phase: number;
+    aggressive: boolean;
+    search_type: RAGSearchType;
+    canary?: {
+      deployment_id: string;
+      assigned_version: 'baseline' | 'canary';
+    };
+    shadow_eval?: {
+      mode: 'semantic' | 'keyword' | 'hybrid';
+      overlap_at_k: number;
+      candidate_count: number;
+    };
+  };
 }
 
 export interface RAGStreamChunk {
@@ -131,6 +192,7 @@ export interface RAGStreamChunk {
   content?: string;
   sources?: RAGSource[];
   usage?: RAGUsage;
+  competitive?: RAGResponse['competitive'];
   latency_ms?: number;
   trace_id?: string;
   error?: string;
@@ -535,6 +597,317 @@ function buildSources(results: VectorSearchResult[]): RAGSource[] {
   }));
 }
 
+interface SearchExecutionResult {
+  candidates: VectorSearchResult[];
+  searchMs: number;
+  effectiveSearchType: RAGSearchType;
+  intentDecision?: QueryIntentDecision;
+  expandedQueries: string[];
+  trustGuardFiltered: number;
+}
+
+interface ShadowEvalResult {
+  mode: RAGSearchType;
+  overlapAtK: number;
+  candidateCount: number;
+}
+
+function clampInt(value: number, min: number, max: number): number {
+  if (!Number.isFinite(value)) return min;
+  return Math.max(min, Math.min(max, Math.floor(value)));
+}
+
+function getTopScore(results: VectorSearchResult[]): number {
+  if (results.length === 0) return 0;
+  const top = results[0];
+  return Number(top.combinedScore ?? top.similarity ?? 0);
+}
+
+async function runSearchByType(params: {
+  userId: string;
+  collectionId: string;
+  queryText: string;
+  queryEmbedding: number[];
+  searchType: RAGSearchType;
+  topK: number;
+}): Promise<VectorSearchResult[]> {
+  const store = getVectorStore();
+  const mode = mapRAGSearchType(params.searchType);
+
+  if (mode === 'vector') {
+    return store.search({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      queryEmbedding: params.queryEmbedding,
+      topK: params.topK,
+      threshold: 0.5,
+    });
+  }
+
+  if (mode === 'keyword') {
+    return store.keywordSearch({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      queryText: params.queryText,
+      topK: params.topK,
+    });
+  }
+
+  return store.hybridSearch({
+    userId: params.userId,
+    collectionId: params.collectionId,
+    queryText: params.queryText,
+    queryEmbedding: params.queryEmbedding,
+    topK: params.topK,
+    threshold: 0.5,
+    keywordWeight: 0.3,
+    vectorWeight: 0.7,
+  });
+}
+
+async function executeCompetitiveSearch(params: {
+  userId: string;
+  collectionId: string;
+  query: string;
+  queryEmbedding: number[];
+  topK: number;
+  defaultSearchType: RAGSearchType;
+  options: RAGOptions;
+  features: CompetitiveExecutionFeatures;
+  traceHandle: TraceHandle;
+}): Promise<SearchExecutionResult> {
+  const start = Date.now();
+  const embedder = getEmbeddingProvider();
+  let effectiveSearchType = params.defaultSearchType;
+  let effectiveTopK = params.topK;
+  let intentDecision: QueryIntentDecision | undefined;
+
+  if (params.features.intentRouting) {
+    intentDecision = inferQueryIntent(params.query, params.defaultSearchType);
+    effectiveSearchType = intentDecision.recommendedSearchType;
+    effectiveTopK = clampInt(Math.ceil(params.topK * intentDecision.topKMultiplier), params.topK, params.topK * 2);
+    addEvent(params.traceHandle, 'custom', {
+      stage: 'competitive_intent_routing',
+      decision: intentDecision,
+      effectiveTopK,
+    });
+  }
+
+  const rounds: RetrievalRound[] = [];
+
+  const primaryResults = await runSearchByType({
+    userId: params.userId,
+    collectionId: params.collectionId,
+    queryText: params.query,
+    queryEmbedding: params.queryEmbedding,
+    searchType: effectiveSearchType,
+    topK: effectiveTopK,
+  });
+
+  rounds.push({
+    query: params.query,
+    source: `primary:${effectiveSearchType}`,
+    results: primaryResults.map((result) => ({ ...result, source: result.source ?? 'managed' })),
+    weight: 1,
+  });
+
+  const expandedQueries =
+    params.features.queryExpansion
+      ? expandQueryVariants(params.query, params.features.aggressive).filter((variant) => variant !== params.query)
+      : [];
+
+  for (const expandedQuery of expandedQueries) {
+    let expandedEmbedding = params.queryEmbedding;
+    if (effectiveSearchType !== 'keyword') {
+      const [embedding] = await embedder.embed([expandedQuery], 'query');
+      expandedEmbedding = embedding;
+    }
+
+    const expandedResults = await runSearchByType({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      queryText: expandedQuery,
+      queryEmbedding: expandedEmbedding,
+      searchType: effectiveSearchType,
+      topK: Math.max(4, Math.floor(effectiveTopK * 0.8)),
+    });
+
+    rounds.push({
+      query: expandedQuery,
+      source: `expanded:${effectiveSearchType}`,
+      results: expandedResults.map((result) => ({ ...result, source: result.source ?? 'managed' })),
+      weight: 0.85,
+    });
+  }
+
+  if (params.options.federated) {
+    const fed = await federatedRetrieve({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      queryText: params.query,
+      queryEmbedding: params.queryEmbedding,
+      mode: mapRAGSearchType(effectiveSearchType),
+      topKPerSource: Math.min(5, effectiveTopK),
+    });
+
+    if (fed.length > 0) {
+      rounds.push({
+        query: params.query,
+        source: 'federated',
+        results: fed.map((result) => ({ ...result, source: result.source ?? 'federated' })),
+        weight: 0.8,
+      });
+    }
+  }
+
+  let candidates =
+    params.features.retrievalFusion || rounds.length > 1
+      ? fuseRetrievalRounds(rounds, effectiveTopK)
+      : rounds[0]?.results.slice(0, effectiveTopK) ?? [];
+
+  candidates = dedupeByChunkId(candidates).slice(0, effectiveTopK);
+
+  let trustGuardFiltered = 0;
+  if (params.features.trustGuard && candidates.length > 0) {
+    const trustGuard = applyTrustGuard(candidates, {
+      blockedSources: params.options.blocked_sources,
+    });
+    candidates = trustGuard.accepted;
+    trustGuardFiltered = trustGuard.filteredCount;
+    addEvent(params.traceHandle, 'custom', {
+      stage: 'competitive_trust_guard',
+      filteredCount: trustGuard.filteredCount,
+      keptCount: candidates.length,
+      reasons: trustGuard.reasons.slice(0, 20),
+    });
+  }
+
+  return {
+    candidates: candidates.map((candidate) => ({
+      ...candidate,
+      source: candidate.source ?? 'managed',
+    })),
+    searchMs: Date.now() - start,
+    effectiveSearchType,
+    intentDecision,
+    expandedQueries,
+    trustGuardFiltered,
+  };
+}
+
+async function runShadowEvaluation(params: {
+  userId: string;
+  collectionId: string;
+  query: string;
+  queryEmbedding: number[];
+  primaryResults: VectorSearchResult[];
+  primarySearchType: RAGSearchType;
+  topK: number;
+}): Promise<ShadowEvalResult | undefined> {
+  const altMode: RAGSearchType =
+    params.primarySearchType === 'keyword'
+      ? 'semantic'
+      : params.primarySearchType === 'semantic'
+        ? 'keyword'
+        : 'semantic';
+
+  const shadowCandidates = await runSearchByType({
+    userId: params.userId,
+    collectionId: params.collectionId,
+    queryText: params.query,
+    queryEmbedding: params.queryEmbedding,
+    searchType: altMode,
+    topK: params.topK,
+  });
+
+  return {
+    mode: altMode,
+    overlapAtK: calculateOverlapAtK(params.primaryResults, shadowCandidates, Math.min(5, params.topK)),
+    candidateCount: shadowCandidates.length,
+  };
+}
+
+async function augmentContextWithGraph(
+  query: string,
+  graphId: string,
+  context: { id: string; text: string }[]
+): Promise<{
+  context: { id: string; text: string }[];
+  graphSourceCount: number;
+}> {
+  const supabase = createServerClient();
+  const queryTerms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 3)
+    .slice(0, 5);
+
+  let graphRows:
+    | Array<{ id: string; name: string | null; summary: string | null; level: number | null; member_count: number | null }>
+    | null
+    = null;
+
+  // Query-specific fetch first.
+  for (const term of queryTerms) {
+    const { data, error } = await supabase
+      .from('graph_communities')
+      .select('id, name, summary, level, member_count')
+      .eq('graph_id', graphId)
+      .ilike('summary', `%${term}%`)
+      .order('member_count', { ascending: false })
+      .limit(2);
+
+    if (!error && data && data.length > 0) {
+      graphRows = data;
+      break;
+    }
+  }
+
+  if (!graphRows || graphRows.length === 0) {
+    const { data, error } = await supabase
+      .from('graph_communities')
+      .select('id, name, summary, level, member_count')
+      .eq('graph_id', graphId)
+      .not('summary', 'is', null)
+      .order('member_count', { ascending: false })
+      .limit(2);
+
+    if (error || !data || data.length === 0) {
+      return { context, graphSourceCount: 0 };
+    }
+
+    graphRows = data;
+  }
+
+  const graphContextChunks = graphRows
+    .filter((row) => typeof row.summary === 'string' && row.summary.trim().length > 0)
+    .map((row) => {
+      const title = row.name?.trim() || `Community ${row.id.slice(0, 8)}`;
+      const level = typeof row.level === 'number' ? row.level : null;
+      const memberCount = typeof row.member_count === 'number' ? row.member_count : null;
+      const header = `Graph Context: ${title}`;
+      const meta = [
+        level !== null ? `level=${level}` : null,
+        memberCount !== null ? `members=${memberCount}` : null,
+      ].filter(Boolean).join(', ');
+
+      return {
+        id: `graph:${row.id}`,
+        text: `${header}${meta ? ` (${meta})` : ''}\n${row.summary}`,
+      };
+    });
+
+  if (graphContextChunks.length === 0) {
+    return { context, graphSourceCount: 0 };
+  }
+
+  return {
+    context: [...graphContextChunks, ...context],
+    graphSourceCount: graphContextChunks.length,
+  };
+}
+
 // ===========================================
 // Main RAG Pipeline
 // ===========================================
@@ -545,6 +918,30 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
   const options = params.options ?? {};
+  const canaryAssignment = getActiveAssignment(params.userId, {
+    collectionId: params.collectionId,
+    apiKeyId: params.apiKeyId,
+  });
+  const canaryConfig =
+    canaryAssignment?.assignedVersion === 'canary' &&
+    canaryAssignment.version?.config &&
+    typeof canaryAssignment.version.config === 'object'
+      ? (canaryAssignment.version.config as Record<string, unknown>)
+      : null;
+  const canaryPhaseOverride =
+    canaryConfig && typeof canaryConfig.competitive_phase === 'number'
+      ? canaryConfig.competitive_phase
+      : undefined;
+  const competitiveFeatures = resolveCompetitiveFeatures({
+    phaseOverride: options.competitive_phase ?? canaryPhaseOverride,
+    aggressive: options.competitive_aggressive,
+    queryExpansion: options.query_expansion,
+    lateInteraction: options.late_interaction,
+    intentRouting: options.intent_routing,
+    graphAugmentation: options.graph_augmentation,
+    trustGuard: options.trust_guard,
+    shadowEval: options.shadow_eval,
+  });
 
   // Start Flight Recorder trace
   const traceHandle = await startTrace({
@@ -569,6 +966,7 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
     addEvent(traceHandle, 'custom', {
       stage: 'budget_planning',
       plan: budgetPlan,
+      competitive: competitiveFeatures,
     });
 
     // 2. Embed query
@@ -579,67 +977,36 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
     const embedMs = Date.now() - embedStart;
     endSpan(traceHandle, embedSpan, { dimensions: queryEmbedding.length, latencyMs: embedMs });
 
-    // 3. Search candidates
+    // 3. Search candidates (competitive-aware)
     const searchSpan = startSpan(traceHandle, 'vector_search', {
       type: budgetPlan.searchType,
       topK: budgetPlan.topK,
+      competitivePhase: competitiveFeatures.phase,
     });
-    const searchStart = Date.now();
-    const store = getVectorStore();
-
-    let candidates: VectorSearchResult[] = [];
-    const searchMode = mapRAGSearchType(budgetPlan.searchType);
-
-    if (searchMode === 'vector') {
-      candidates = await store.search({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryEmbedding,
-        topK: budgetPlan.topK,
-        threshold: 0.5,
-      });
-    } else if (searchMode === 'keyword') {
-      candidates = await store.keywordSearch({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        topK: budgetPlan.topK,
-      });
-    } else {
-      candidates = await store.hybridSearch({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        queryEmbedding,
-        topK: budgetPlan.topK,
-        threshold: 0.5,
-        keywordWeight: 0.3,
-        vectorWeight: 0.7,
-      });
-    }
-
-    candidates = candidates.map((c) => ({ ...c, source: c.source ?? 'managed' }));
-    const searchMs = Date.now() - searchStart;
+    const searchExecution = await executeCompetitiveSearch({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      query: params.query,
+      queryEmbedding,
+      topK: budgetPlan.topK,
+      defaultSearchType: budgetPlan.searchType,
+      options,
+      features: competitiveFeatures,
+      traceHandle,
+    });
+    const searchMs = searchExecution.searchMs;
+    const candidates = searchExecution.candidates;
     endSpan(traceHandle, searchSpan, { candidateCount: candidates.length, latencyMs: searchMs });
+    addEvent(traceHandle, 'custom', {
+      stage: 'competitive_retrieval',
+      effectiveSearchType: searchExecution.effectiveSearchType,
+      expandedQueries: searchExecution.expandedQueries,
+      trustGuardFiltered: searchExecution.trustGuardFiltered,
+      intentDecision: searchExecution.intentDecision,
+      candidateCount: candidates.length,
+    });
 
-    // 4. Federated search (optional)
-    if (options.federated) {
-      const fedSpan = startSpan(traceHandle, 'custom', { operation: 'federated_search' });
-      const fedStart = Date.now();
-      const fed = await federatedRetrieve({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        queryEmbedding,
-        mode: searchMode,
-        topKPerSource: Math.min(5, budgetPlan.topK),
-      });
-      const fedMs = Date.now() - fedStart;
-      candidates = dedupeByChunkId([...candidates, ...fed]);
-      endSpan(traceHandle, fedSpan, { federatedCount: fed.length, latencyMs: fedMs });
-    }
-
-    // 5. Rerank (if enabled)
+    // 4. Rerank (if enabled)
     let rerankMs = 0;
     let finalResults = candidates.slice(0, budgetPlan.topK);
 
@@ -665,18 +1032,40 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
       endSpan(traceHandle, rerankSpan, { rerankedCount: reranked.length, latencyMs: rerankMs });
     }
 
-    // 6. Build context
+    // 5. Build context
     const contextSpan = startSpan(traceHandle, 'custom', { operation: 'context_build' });
     const contextStart = Date.now();
     const planConfig = getPlan(params.plan);
     const maxContextTokens = Math.min(planConfig.maxInputTokens, 16000);
-    const context = buildContext(finalResults, maxContextTokens);
+    let context = buildContext(finalResults, maxContextTokens);
+    let graphSourceCount = 0;
+
+    if (competitiveFeatures.graphAugmentation && options.graph_id) {
+      try {
+        const graphAugmentation = await augmentContextWithGraph(params.query, options.graph_id, context);
+        context = graphAugmentation.context;
+        graphSourceCount = graphAugmentation.graphSourceCount;
+
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_graph_augmentation',
+          graphId: options.graph_id,
+          graphSourceCount,
+        });
+      } catch (graphError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_graph_augmentation_failed',
+          graphId: options.graph_id,
+          error: graphError instanceof Error ? graphError.message : String(graphError),
+        });
+      }
+    }
+
     const contextMs = Date.now() - contextStart;
 
     addContextEvent(traceHandle, context.map((c) => ({ id: c.id, text: c.text })));
     endSpan(traceHandle, contextSpan, { chunkCount: context.length, latencyMs: contextMs });
 
-    // 7. Generate LLM response
+    // 6. Generate LLM response
     const llmSpan = startSpan(traceHandle, 'llm_generation', {
       model: budgetPlan.llmModel,
       maxTokens: budgetPlan.maxTokens,
@@ -723,11 +1112,48 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
       latencyMs: llmMs,
     });
 
-    // 8. Calculate usage and cost
+    // 7. Optional shadow evaluation
+    let shadowEvalResult: ShadowEvalResult | undefined;
+    if (competitiveFeatures.shadowEval && finalResults.length > 0) {
+      try {
+        shadowEvalResult = await runShadowEvaluation({
+          userId: params.userId,
+          collectionId: params.collectionId,
+          query: params.query,
+          queryEmbedding,
+          primaryResults: finalResults,
+          primarySearchType: searchExecution.effectiveSearchType,
+          topK: budgetPlan.topK,
+        });
+
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_shadow_eval',
+          result: shadowEvalResult,
+        });
+      } catch (shadowError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_shadow_eval_failed',
+          error: shadowError instanceof Error ? shadowError.message : String(shadowError),
+        });
+      }
+    }
+
+    // 8. Emit online learning signal
+    if (competitiveFeatures.onlineLearning) {
+      addEvent(traceHandle, 'custom', {
+        stage: 'competitive_online_learning_signal',
+        topScore: getTopScore(finalResults),
+        sourceDiversity: new Set(finalResults.map((result) => result.source || 'managed')).size,
+        candidateCount: finalResults.length,
+      });
+    }
+
+    // 9. Calculate usage and cost
     const embeddingTokens = estimateTokens(params.query);
+    const vectorSearchOps = 1 + searchExecution.expandedQueries.length + (options.federated ? 1 : 0);
     const cost = calculateTraceCost({
       embeddingTokens,
-      vectorSearchOps: 1,
+      vectorSearchOps,
       rerankItems: budgetPlan.rerankEnabled ? finalResults.length : 0,
       llmInputTokens: llmResult.inputTokens,
       llmOutputTokens: llmResult.outputTokens,
@@ -757,12 +1183,48 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
       cost,
     });
 
+    const topQualityScore = Math.min(Math.max(getTopScore(finalResults), 0), 1);
+    if (canaryAssignment) {
+      try {
+        recordRequestResult({
+          deploymentId: canaryAssignment.deploymentId,
+          version: canaryAssignment.assignedVersion,
+          success: true,
+          latencyMs: totalMs,
+          qualityScore: topQualityScore,
+        });
+      } catch (canaryMetricError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'canary_metric_record_failed',
+          error: canaryMetricError instanceof Error ? canaryMetricError.message : String(canaryMetricError),
+        });
+      }
+    }
+
     const response: RAGResponse = {
       answer: llmResult.text,
       sources,
       usage,
       latency_ms: totalMs,
       trace_id: traceId,
+      competitive: {
+        phase: competitiveFeatures.phase,
+        aggressive: competitiveFeatures.aggressive,
+        search_type: searchExecution.effectiveSearchType,
+        canary: canaryAssignment
+          ? {
+              deployment_id: canaryAssignment.deploymentId,
+              assigned_version: canaryAssignment.assignedVersion,
+            }
+          : undefined,
+        shadow_eval: shadowEvalResult
+          ? {
+              mode: shadowEvalResult.mode,
+              overlap_at_k: shadowEvalResult.overlapAtK,
+              candidate_count: shadowEvalResult.candidateCount,
+            }
+          : undefined,
+      },
     };
 
     if (options.include_trace) {
@@ -778,7 +1240,7 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
           total: totalMs,
         },
         config: {
-          search_type: budgetPlan.searchType,
+          search_type: searchExecution.effectiveSearchType,
           top_k: budgetPlan.topK,
           rerank_enabled: budgetPlan.rerankEnabled,
           llm_model: budgetPlan.llmModel,
@@ -786,6 +1248,27 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
         budget_info: budgetPlan.degraded
           ? { degraded: true, reason: budgetPlan.degradeReason }
           : undefined,
+        competitive: {
+          phase: competitiveFeatures.phase,
+          aggressive: competitiveFeatures.aggressive,
+          intent: searchExecution.intentDecision,
+          expanded_queries: searchExecution.expandedQueries,
+          trust_guard_filtered: searchExecution.trustGuardFiltered,
+          shadow_eval: shadowEvalResult
+            ? {
+                mode: shadowEvalResult.mode,
+                overlap_at_k: shadowEvalResult.overlapAtK,
+                candidate_count: shadowEvalResult.candidateCount,
+              }
+            : undefined,
+          graph_augmentation:
+            graphSourceCount > 0 && options.graph_id
+              ? {
+                  graph_id: options.graph_id,
+                  source_count: graphSourceCount,
+                }
+              : undefined,
+        },
       };
     }
 
@@ -794,6 +1277,23 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
     addEvent(traceHandle, 'error', {
       message: error instanceof Error ? error.message : String(error),
     });
+
+    if (canaryAssignment) {
+      try {
+        recordRequestResult({
+          deploymentId: canaryAssignment.deploymentId,
+          version: canaryAssignment.assignedVersion,
+          success: false,
+          latencyMs: Date.now() - t0,
+          errorMessage: error instanceof Error ? error.message : String(error),
+        });
+      } catch (canaryMetricError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'canary_metric_record_failed',
+          error: canaryMetricError instanceof Error ? canaryMetricError.message : String(canaryMetricError),
+        });
+      }
+    }
 
     await finishTrace(traceHandle, {
       error: error instanceof Error ? error.message : String(error),
@@ -814,6 +1314,30 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
   const traceId = randomUUID();
   const t0 = Date.now();
   const options = params.options ?? {};
+  const canaryAssignment = getActiveAssignment(params.userId, {
+    collectionId: params.collectionId,
+    apiKeyId: params.apiKeyId,
+  });
+  const canaryConfig =
+    canaryAssignment?.assignedVersion === 'canary' &&
+    canaryAssignment.version?.config &&
+    typeof canaryAssignment.version.config === 'object'
+      ? (canaryAssignment.version.config as Record<string, unknown>)
+      : null;
+  const canaryPhaseOverride =
+    canaryConfig && typeof canaryConfig.competitive_phase === 'number'
+      ? canaryConfig.competitive_phase
+      : undefined;
+  const competitiveFeatures = resolveCompetitiveFeatures({
+    phaseOverride: options.competitive_phase ?? canaryPhaseOverride,
+    aggressive: options.competitive_aggressive,
+    queryExpansion: options.query_expansion,
+    lateInteraction: options.late_interaction,
+    intentRouting: options.intent_routing,
+    graphAugmentation: options.graph_augmentation,
+    trustGuard: options.trust_guard,
+    shadowEval: options.shadow_eval,
+  });
 
   // Start Flight Recorder trace
   const traceHandle = await startTrace({
@@ -841,57 +1365,22 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
     const [queryEmbedding] = await embedder.embed([params.query], 'query');
     const embedMs = Date.now() - embedStart;
 
-    // 3. Search candidates
-    const searchStart = Date.now();
-    const store = getVectorStore();
-    let candidates: VectorSearchResult[] = [];
-    const searchMode = mapRAGSearchType(budgetPlan.searchType);
+    // 3. Search candidates (competitive-aware)
+    const searchExecution = await executeCompetitiveSearch({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      query: params.query,
+      queryEmbedding,
+      topK: budgetPlan.topK,
+      defaultSearchType: budgetPlan.searchType,
+      options,
+      features: competitiveFeatures,
+      traceHandle,
+    });
+    const searchMs = searchExecution.searchMs;
+    const candidates = searchExecution.candidates;
 
-    if (searchMode === 'vector') {
-      candidates = await store.search({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryEmbedding,
-        topK: budgetPlan.topK,
-        threshold: 0.5,
-      });
-    } else if (searchMode === 'keyword') {
-      candidates = await store.keywordSearch({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        topK: budgetPlan.topK,
-      });
-    } else {
-      candidates = await store.hybridSearch({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        queryEmbedding,
-        topK: budgetPlan.topK,
-        threshold: 0.5,
-        keywordWeight: 0.3,
-        vectorWeight: 0.7,
-      });
-    }
-
-    candidates = candidates.map((c) => ({ ...c, source: c.source ?? 'managed' }));
-    const searchMs = Date.now() - searchStart;
-
-    // 4. Federated search (optional)
-    if (options.federated) {
-      const fed = await federatedRetrieve({
-        userId: params.userId,
-        collectionId: params.collectionId,
-        queryText: params.query,
-        queryEmbedding,
-        mode: searchMode,
-        topKPerSource: Math.min(5, budgetPlan.topK),
-      });
-      candidates = dedupeByChunkId([...candidates, ...fed]);
-    }
-
-    // 5. Rerank (if enabled)
+    // 4. Rerank (if enabled)
     let rerankMs = 0;
     let finalResults = candidates.slice(0, budgetPlan.topK);
 
@@ -915,14 +1404,28 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       finalResults = rerankedCandidates.slice(0, budgetPlan.topK);
     }
 
-    // 6. Build context
+    // 5. Build context
     const planConfig = getPlan(params.plan);
     const maxContextTokens = Math.min(planConfig.maxInputTokens, 16000);
-    const context = buildContext(finalResults, maxContextTokens);
+    let context = buildContext(finalResults, maxContextTokens);
+    let graphSourceCount = 0;
+
+    if (competitiveFeatures.graphAugmentation && options.graph_id) {
+      try {
+        const graphAugmentation = await augmentContextWithGraph(params.query, options.graph_id, context);
+        context = graphAugmentation.context;
+        graphSourceCount = graphAugmentation.graphSourceCount;
+      } catch (graphError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_graph_augmentation_failed',
+          error: graphError instanceof Error ? graphError.message : String(graphError),
+        });
+      }
+    }
 
     addContextEvent(traceHandle, context.map((c) => ({ id: c.id, text: c.text })));
 
-    // 7. Stream LLM response
+    // 6. Stream LLM response
     const llmStart = Date.now();
     const systemPrompt = options.system_prompt ?? buildAnswerContractSystemPrompt();
     const userPrompt = buildAnswerContractUserPrompt({ question: params.query, context });
@@ -961,12 +1464,34 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
     const llmMs = Date.now() - llmStart;
     const totalMs = Date.now() - t0;
 
+    // 7. Optional shadow evaluation
+    let shadowEvalResult: ShadowEvalResult | undefined;
+    if (competitiveFeatures.shadowEval && finalResults.length > 0) {
+      try {
+        shadowEvalResult = await runShadowEvaluation({
+          userId: params.userId,
+          collectionId: params.collectionId,
+          query: params.query,
+          queryEmbedding,
+          primaryResults: finalResults,
+          primarySearchType: searchExecution.effectiveSearchType,
+          topK: budgetPlan.topK,
+        });
+      } catch (shadowError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'competitive_shadow_eval_failed',
+          error: shadowError instanceof Error ? shadowError.message : String(shadowError),
+        });
+      }
+    }
+
     // 8. Send sources
     const sources = buildSources(finalResults);
     yield { type: 'sources', sources };
 
     // 9. Send usage
     const embeddingTokens = estimateTokens(params.query);
+    const vectorSearchOps = 1 + searchExecution.expandedQueries.length + (options.federated ? 1 : 0);
     const usage: RAGUsage = {
       embedding_tokens: embeddingTokens,
       llm_input_tokens: inputTokens,
@@ -974,7 +1499,7 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       total_cost_credits: Math.round(
         calculateTraceCost({
           embeddingTokens,
-          vectorSearchOps: 1,
+          vectorSearchOps,
           rerankItems: budgetPlan.rerankEnabled ? finalResults.length : 0,
           llmInputTokens: inputTokens,
           llmOutputTokens: outputTokens,
@@ -982,7 +1507,30 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       ) / 10000,
     };
 
-    yield { type: 'usage', usage, latency_ms: totalMs, trace_id: traceId };
+    yield {
+      type: 'usage',
+      usage,
+      latency_ms: totalMs,
+      trace_id: traceId,
+      competitive: {
+        phase: competitiveFeatures.phase,
+        aggressive: competitiveFeatures.aggressive,
+        search_type: searchExecution.effectiveSearchType,
+        canary: canaryAssignment
+          ? {
+              deployment_id: canaryAssignment.deploymentId,
+              assigned_version: canaryAssignment.assignedVersion,
+            }
+          : undefined,
+        shadow_eval: shadowEvalResult
+          ? {
+              mode: shadowEvalResult.mode,
+              overlap_at_k: shadowEvalResult.overlapAtK,
+              candidate_count: shadowEvalResult.candidateCount,
+            }
+          : undefined,
+      },
+    };
     yield { type: 'done' };
 
     // Finish trace
@@ -993,6 +1541,15 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       outputTokens,
       latencyMs: llmMs,
       streamed: true,
+    });
+    addEvent(traceHandle, 'custom', {
+      stage: 'competitive_streaming_summary',
+      phase: competitiveFeatures.phase,
+      effectiveSearchType: searchExecution.effectiveSearchType,
+      expandedQueries: searchExecution.expandedQueries,
+      trustGuardFiltered: searchExecution.trustGuardFiltered,
+      graphSourceCount,
+      shadowEval: shadowEvalResult,
     });
 
     await finishTrace(traceHandle, {
@@ -1005,6 +1562,23 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       },
       resultsCount: finalResults.length,
     });
+
+    if (canaryAssignment) {
+      try {
+        recordRequestResult({
+          deploymentId: canaryAssignment.deploymentId,
+          version: canaryAssignment.assignedVersion,
+          success: true,
+          latencyMs: totalMs,
+          qualityScore: Math.min(Math.max(getTopScore(finalResults), 0), 1),
+        });
+      } catch (canaryMetricError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'canary_metric_record_failed',
+          error: canaryMetricError instanceof Error ? canaryMetricError.message : String(canaryMetricError),
+        });
+      }
+    }
   } catch (error) {
     yield {
       type: 'error',
@@ -1014,6 +1588,23 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
     addEvent(traceHandle, 'error', {
       message: error instanceof Error ? error.message : String(error),
     });
+
+    if (canaryAssignment) {
+      try {
+        recordRequestResult({
+          deploymentId: canaryAssignment.deploymentId,
+          version: canaryAssignment.assignedVersion,
+          success: false,
+          latencyMs: Date.now() - t0,
+          errorMessage: error instanceof Error ? error.message : String(error),
+        });
+      } catch (canaryMetricError) {
+        addEvent(traceHandle, 'custom', {
+          stage: 'canary_metric_record_failed',
+          error: canaryMetricError instanceof Error ? canaryMetricError.message : String(canaryMetricError),
+        });
+      }
+    }
 
     await finishTrace(traceHandle, {
       error: error instanceof Error ? error.message : String(error),

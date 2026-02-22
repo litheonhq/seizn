@@ -363,6 +363,7 @@ User Request
 | Lifecycle Scene Profile Sync | Fully Implemented | `src/lib/memory/lifecycle.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Consolidation scene profile updates now sync into slots/profile card and persist trace logs (`memory_scene_profile_sync_events`) |
 | Scheduled Memory Quality Auto-Eval | Fully Implemented | `src/lib/memory/eval-automation.ts`, `src/app/api/internal/eval-processor/route.ts` | Internal cron path emits synthetic auto-eval triggers when feedback degradation / zero-result ratio crosses thresholds |
 | Memory Search Canary Linkage | Fully Implemented | `src/app/api/v1/memories/route.ts`, `src/lib/fall/canary/` | v1 memory search now records canary quality/latency outcomes and supports canary forced mode override in auto routing |
+| Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
