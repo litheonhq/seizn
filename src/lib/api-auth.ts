@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
-import { checkRateLimitAsync, getRateLimitHeaders, checkAuthFailRateLimit } from './rate-limit';
+import {
+  checkRateLimitAsync,
+  getRateLimitHeaders,
+  checkAuthFailRateLimit,
+  recordAuthFailureAttempt,
+} from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
 import {
   ErrorCodes,
@@ -116,7 +121,10 @@ export async function authenticateRequest(
 
   if (!apiKey) {
     // Log auth failure (no key provided)
-    logAuthFailure(request, 'no_api_key_provided').catch(console.error);
+    await Promise.allSettled([
+      logAuthFailure(request, 'no_api_key_provided'),
+      recordAuthFailureAttempt(clientIp),
+    ]);
     return {
       authError: {
         code: ErrorCodes.AUTH_MISSING_KEY,
@@ -153,7 +161,10 @@ export async function authenticateRequest(
 
   if (keyError || !keyData) {
     // Log auth failure with key prefix for investigation
-    logAuthFailure(request, 'invalid_api_key', apiKey).catch(console.error);
+    await Promise.allSettled([
+      logAuthFailure(request, 'invalid_api_key', apiKey),
+      recordAuthFailureAttempt(clientIp),
+    ]);
     return {
       authError: {
         code: ErrorCodes.AUTH_INVALID_KEY,
@@ -165,7 +176,10 @@ export async function authenticateRequest(
 
   // Check if key has expired
   if (keyData.expires_at && new Date(keyData.expires_at) < new Date()) {
-    logAuthFailure(request, 'expired_api_key', apiKey).catch(console.error);
+    await Promise.allSettled([
+      logAuthFailure(request, 'expired_api_key', apiKey),
+      recordAuthFailureAttempt(clientIp),
+    ]);
     return {
       authError: {
         code: ErrorCodes.AUTH_EXPIRED_KEY,

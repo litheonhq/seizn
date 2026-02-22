@@ -34,6 +34,7 @@ import { applyTrustGuard } from './competitive/trust-guard';
 import { buildAnswerContractSystemPrompt, buildAnswerContractUserPrompt } from './answer-contract/prompt';
 import { estimateTokens } from './utils/tokens';
 import { createServerClient } from '@/lib/supabase';
+import { getSanitizedEnv } from '@/lib/env';
 
 import { getPlan, hasFeature } from '@/lib/plan-limits';
 import { resolveBudget, applyBudgetLimits, estimateCost } from '@/lib/core/primitives/budget';
@@ -141,6 +142,8 @@ export interface RAGTrace {
     top_k: number;
     rerank_enabled: boolean;
     llm_model: string;
+    requested_llm_model?: string;
+    llm_fallback_used?: boolean;
   };
   budget_info?: {
     degraded: boolean;
@@ -152,6 +155,8 @@ export interface RAGTrace {
     intent?: QueryIntentDecision;
     expanded_queries?: string[];
     trust_guard_filtered?: number;
+    zero_source_recovered?: boolean;
+    recovery_search_type?: RAGSearchType;
     shadow_eval?: {
       mode: 'semantic' | 'keyword' | 'hybrid';
       overlap_at_k: number;
@@ -212,6 +217,13 @@ const MODEL_MAP: Record<LLMModel, { provider: 'anthropic' | 'openai'; modelId: s
   'gpt-4o-mini': { provider: 'openai', modelId: 'gpt-4o-mini' },
 };
 
+const FALLBACK_MODEL_MAP: Record<LLMModel, LLMModel> = {
+  'claude-3-5-sonnet': 'gpt-4o-mini',
+  'claude-3-5-haiku': 'gpt-4o-mini',
+  'gpt-4o': 'claude-3-5-haiku',
+  'gpt-4o-mini': 'claude-3-5-haiku',
+};
+
 async function callAnthropicLLM(params: {
   modelId: string;
   systemPrompt: string;
@@ -219,7 +231,7 @@ async function callAnthropicLLM(params: {
   maxTokens: number;
   temperature: number;
 }): Promise<{ text: string; inputTokens: number; outputTokens: number }> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const response = await fetch(ANTHROPIC_API_URL, {
@@ -254,7 +266,7 @@ async function* streamAnthropicLLM(params: {
   maxTokens: number;
   temperature: number;
 }): AsyncGenerator<{ type: 'content' | 'usage'; content?: string; inputTokens?: number; outputTokens?: number }> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const response = await fetch(ANTHROPIC_API_URL, {
@@ -330,7 +342,7 @@ async function callOpenAILLM(params: {
   maxTokens: number;
   temperature: number;
 }): Promise<{ text: string; inputTokens: number; outputTokens: number }> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = getSanitizedEnv('OPENAI_API_KEY');
   if (!apiKey) throw new Error('OPENAI_API_KEY not set');
 
   const response = await fetch(OPENAI_API_URL, {
@@ -370,7 +382,7 @@ async function* streamOpenAILLM(params: {
   maxTokens: number;
   temperature: number;
 }): AsyncGenerator<{ type: 'content' | 'usage'; content?: string; inputTokens?: number; outputTokens?: number }> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = getSanitizedEnv('OPENAI_API_KEY');
   if (!apiKey) throw new Error('OPENAI_API_KEY not set');
 
   const response = await fetch(OPENAI_API_URL, {
@@ -440,6 +452,73 @@ async function* streamOpenAILLM(params: {
   }
 
   yield { type: 'usage', inputTokens, outputTokens };
+}
+
+function resolveFallbackModel(model: LLMModel): LLMModel | undefined {
+  const fallback = FALLBACK_MODEL_MAP[model];
+  if (!fallback || fallback === model) return undefined;
+  return fallback;
+}
+
+async function callModelLLM(params: {
+  model: LLMModel;
+  systemPrompt: string;
+  userPrompt: string;
+  maxTokens: number;
+  temperature: number;
+}): Promise<{
+  model: LLMModel;
+  provider: 'anthropic' | 'openai';
+  modelId: string;
+  text: string;
+  inputTokens: number;
+  outputTokens: number;
+}> {
+  const modelConfig = MODEL_MAP[params.model];
+  const request = {
+    modelId: modelConfig.modelId,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    maxTokens: params.maxTokens,
+    temperature: params.temperature,
+  };
+
+  if (modelConfig.provider === 'anthropic') {
+    const result = await callAnthropicLLM(request);
+    return { model: params.model, provider: modelConfig.provider, modelId: modelConfig.modelId, ...result };
+  }
+
+  const result = await callOpenAILLM(request);
+  return { model: params.model, provider: modelConfig.provider, modelId: modelConfig.modelId, ...result };
+}
+
+function streamModelLLM(params: {
+  model: LLMModel;
+  systemPrompt: string;
+  userPrompt: string;
+  maxTokens: number;
+  temperature: number;
+}): {
+  model: LLMModel;
+  provider: 'anthropic' | 'openai';
+  modelId: string;
+  stream: AsyncGenerator<{ type: 'content' | 'usage'; content?: string; inputTokens?: number; outputTokens?: number }>;
+} {
+  const modelConfig = MODEL_MAP[params.model];
+  const request = {
+    modelId: modelConfig.modelId,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    maxTokens: params.maxTokens,
+    temperature: params.temperature,
+  };
+
+  return {
+    model: params.model,
+    provider: modelConfig.provider,
+    modelId: modelConfig.modelId,
+    stream: modelConfig.provider === 'anthropic' ? streamAnthropicLLM(request) : streamOpenAILLM(request),
+  };
 }
 
 // ===========================================
@@ -612,6 +691,39 @@ interface ShadowEvalResult {
   candidateCount: number;
 }
 
+interface ZeroSourceRecoveryAttempt {
+  searchType: RAGSearchType;
+  candidateCount: number;
+}
+
+interface ZeroSourceRecoveryResult {
+  recoveredResults: VectorSearchResult[];
+  recoveredBy?: RAGSearchType;
+  attempts: ZeroSourceRecoveryAttempt[];
+}
+
+interface RagMetricsPayload {
+  requestedModel: LLMModel;
+  usedModel: LLMModel;
+  fallbackUsed: boolean;
+  searchType: RAGSearchType;
+  retrievedCandidates: number;
+  finalSourceCount: number;
+  zeroSourceRecovered: boolean;
+  recoverySearchType?: RAGSearchType;
+  expandedQueryCount: number;
+  trustGuardFiltered: number;
+  llmInputTokens: number;
+  llmOutputTokens: number;
+  timingsMs: {
+    search: number;
+    rerank: number;
+    context: number;
+    llm: number;
+    total: number;
+  };
+}
+
 function clampInt(value: number, min: number, max: number): number {
   if (!Number.isFinite(value)) return min;
   return Math.max(min, Math.min(max, Math.floor(value)));
@@ -623,6 +735,55 @@ function getTopScore(results: VectorSearchResult[]): number {
   return Number(top.combinedScore ?? top.similarity ?? 0);
 }
 
+async function recoverZeroSourceResults(params: {
+  userId: string;
+  collectionId: string;
+  query: string;
+  queryEmbedding: number[];
+  topK: number;
+  primarySearchType: RAGSearchType;
+}): Promise<ZeroSourceRecoveryResult> {
+  const attempts: ZeroSourceRecoveryAttempt[] = [];
+  const recoveryOrder: RAGSearchType[] = ['hybrid', 'semantic', 'keyword'];
+  const candidateTopK = Math.max(params.topK, 8);
+
+  for (const searchType of recoveryOrder) {
+    if (searchType === params.primarySearchType) continue;
+
+    const candidates = await runSearchByType({
+      userId: params.userId,
+      collectionId: params.collectionId,
+      queryText: params.query,
+      queryEmbedding: params.queryEmbedding,
+      searchType,
+      topK: candidateTopK,
+      threshold: 0.35,
+    });
+
+    attempts.push({ searchType, candidateCount: candidates.length });
+
+    if (candidates.length > 0) {
+      return {
+        recoveredResults: dedupeByChunkId(candidates).slice(0, params.topK),
+        recoveredBy: searchType,
+        attempts,
+      };
+    }
+  }
+
+  return {
+    recoveredResults: [],
+    attempts,
+  };
+}
+
+function emitRagMetrics(traceHandle: TraceHandle, payload: RagMetricsPayload): void {
+  addEvent(traceHandle, 'custom', {
+    stage: 'rag_metrics',
+    ...payload,
+  });
+}
+
 async function runSearchByType(params: {
   userId: string;
   collectionId: string;
@@ -630,9 +791,11 @@ async function runSearchByType(params: {
   queryEmbedding: number[];
   searchType: RAGSearchType;
   topK: number;
+  threshold?: number;
 }): Promise<VectorSearchResult[]> {
   const store = getVectorStore();
   const mode = mapRAGSearchType(params.searchType);
+  const threshold = params.threshold ?? 0.5;
 
   if (mode === 'vector') {
     return store.search({
@@ -640,7 +803,7 @@ async function runSearchByType(params: {
       collectionId: params.collectionId,
       queryEmbedding: params.queryEmbedding,
       topK: params.topK,
-      threshold: 0.5,
+      threshold,
     });
   }
 
@@ -659,7 +822,7 @@ async function runSearchByType(params: {
     queryText: params.queryText,
     queryEmbedding: params.queryEmbedding,
     topK: params.topK,
-    threshold: 0.5,
+    threshold,
     keywordWeight: 0.3,
     vectorWeight: 0.7,
   });
@@ -1032,6 +1195,32 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
       endSpan(traceHandle, rerankSpan, { rerankedCount: reranked.length, latencyMs: rerankMs });
     }
 
+    let zeroSourceRecovered = false;
+    let recoverySearchType: RAGSearchType | undefined;
+    if (finalResults.length === 0) {
+      const recovery = await recoverZeroSourceResults({
+        userId: params.userId,
+        collectionId: params.collectionId,
+        query: params.query,
+        queryEmbedding,
+        topK: budgetPlan.topK,
+        primarySearchType: searchExecution.effectiveSearchType,
+      });
+
+      if (recovery.recoveredResults.length > 0) {
+        finalResults = recovery.recoveredResults;
+        zeroSourceRecovered = true;
+        recoverySearchType = recovery.recoveredBy;
+      }
+
+      addEvent(traceHandle, 'custom', {
+        stage: 'zero_source_recovery',
+        recovered: recovery.recoveredResults.length > 0,
+        recoverySearchType: recovery.recoveredBy,
+        attempts: recovery.attempts,
+      });
+    }
+
     // 5. Build context
     const contextSpan = startSpan(traceHandle, 'custom', { operation: 'context_build' });
     const contextStart = Date.now();
@@ -1075,38 +1264,93 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
     const systemPrompt = options.system_prompt ?? buildAnswerContractSystemPrompt();
     const userPrompt = buildAnswerContractUserPrompt({ question: params.query, context });
     const temperature = options.temperature ?? 0.3;
-
-    const modelConfig = MODEL_MAP[budgetPlan.llmModel];
+    const requestedModel = budgetPlan.llmModel;
+    let usedModel = requestedModel;
+    let llmProvider: 'anthropic' | 'openai' = MODEL_MAP[requestedModel].provider;
+    let llmModelId = MODEL_MAP[requestedModel].modelId;
     let llmResult: { text: string; inputTokens: number; outputTokens: number };
+    let llmFallbackUsed = false;
 
-    if (modelConfig.provider === 'anthropic') {
-      llmResult = await callAnthropicLLM({
-        modelId: modelConfig.modelId,
+    try {
+      const primaryResult = await callModelLLM({
+        model: requestedModel,
         systemPrompt,
         userPrompt,
         maxTokens: budgetPlan.maxTokens,
         temperature,
       });
-    } else {
-      llmResult = await callOpenAILLM({
-        modelId: modelConfig.modelId,
-        systemPrompt,
-        userPrompt,
-        maxTokens: budgetPlan.maxTokens,
-        temperature,
+      usedModel = primaryResult.model;
+      llmProvider = primaryResult.provider;
+      llmModelId = primaryResult.modelId;
+      llmResult = {
+        text: primaryResult.text,
+        inputTokens: primaryResult.inputTokens,
+        outputTokens: primaryResult.outputTokens,
+      };
+    } catch (primaryError) {
+      const fallbackModel = resolveFallbackModel(requestedModel);
+      const primaryErrorMessage = primaryError instanceof Error ? primaryError.message : String(primaryError);
+
+      if (!fallbackModel) {
+        throw primaryError;
+      }
+
+      addEvent(traceHandle, 'custom', {
+        stage: 'llm_failover_attempt',
+        requestedModel,
+        fallbackModel,
+        primaryError: primaryErrorMessage,
       });
+
+      try {
+        const fallbackResult = await callModelLLM({
+          model: fallbackModel,
+          systemPrompt,
+          userPrompt,
+          maxTokens: budgetPlan.maxTokens,
+          temperature,
+        });
+
+        usedModel = fallbackResult.model;
+        llmProvider = fallbackResult.provider;
+        llmModelId = fallbackResult.modelId;
+        llmResult = {
+          text: fallbackResult.text,
+          inputTokens: fallbackResult.inputTokens,
+          outputTokens: fallbackResult.outputTokens,
+        };
+        llmFallbackUsed = true;
+
+        addEvent(traceHandle, 'custom', {
+          stage: 'llm_failover_success',
+          requestedModel,
+          usedModel,
+          primaryError: primaryErrorMessage,
+        });
+      } catch (fallbackError) {
+        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+        throw new Error(
+          `LLM call failed for requested model (${requestedModel}) and fallback model (${fallbackModel}): ${primaryErrorMessage}; ${fallbackErrorMessage}`
+        );
+      }
     }
 
     const llmMs = Date.now() - llmStart;
     endSpan(traceHandle, llmSpan, {
       inputTokens: llmResult.inputTokens,
       outputTokens: llmResult.outputTokens,
+      requestedModel,
+      usedModel,
+      fallbackUsed: llmFallbackUsed,
       latencyMs: llmMs,
     });
 
     addEvent(traceHandle, 'llm', {
-      provider: modelConfig.provider,
-      model: modelConfig.modelId,
+      provider: llmProvider,
+      model: llmModelId,
+      requestedModel,
+      usedModel,
+      fallbackUsed: llmFallbackUsed,
       inputTokens: llmResult.inputTokens,
       outputTokens: llmResult.outputTokens,
       latencyMs: llmMs,
@@ -1169,6 +1413,29 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
     };
 
     const sources = buildSources(finalResults);
+    const effectiveSearchType = recoverySearchType ?? searchExecution.effectiveSearchType;
+
+    emitRagMetrics(traceHandle, {
+      requestedModel,
+      usedModel,
+      fallbackUsed: llmFallbackUsed,
+      searchType: effectiveSearchType,
+      retrievedCandidates: candidates.length,
+      finalSourceCount: finalResults.length,
+      zeroSourceRecovered,
+      recoverySearchType,
+      expandedQueryCount: searchExecution.expandedQueries.length,
+      trustGuardFiltered: searchExecution.trustGuardFiltered,
+      llmInputTokens: llmResult.inputTokens,
+      llmOutputTokens: llmResult.outputTokens,
+      timingsMs: {
+        search: searchMs,
+        rerank: rerankMs,
+        context: contextMs,
+        llm: llmMs,
+        total: totalMs,
+      },
+    });
 
     // Finish trace
     await finishTrace(traceHandle, {
@@ -1210,7 +1477,7 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
       competitive: {
         phase: competitiveFeatures.phase,
         aggressive: competitiveFeatures.aggressive,
-        search_type: searchExecution.effectiveSearchType,
+        search_type: effectiveSearchType,
         canary: canaryAssignment
           ? {
               deployment_id: canaryAssignment.deploymentId,
@@ -1240,10 +1507,12 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
           total: totalMs,
         },
         config: {
-          search_type: searchExecution.effectiveSearchType,
+          search_type: effectiveSearchType,
           top_k: budgetPlan.topK,
           rerank_enabled: budgetPlan.rerankEnabled,
-          llm_model: budgetPlan.llmModel,
+          llm_model: usedModel,
+          requested_llm_model: requestedModel,
+          llm_fallback_used: llmFallbackUsed,
         },
         budget_info: budgetPlan.degraded
           ? { degraded: true, reason: budgetPlan.degradeReason }
@@ -1254,6 +1523,8 @@ export async function ragQuery(params: RAGParams): Promise<RAGResponse> {
           intent: searchExecution.intentDecision,
           expanded_queries: searchExecution.expandedQueries,
           trust_guard_filtered: searchExecution.trustGuardFiltered,
+          zero_source_recovered: zeroSourceRecovered,
+          recovery_search_type: recoverySearchType,
           shadow_eval: shadowEvalResult
             ? {
                 mode: shadowEvalResult.mode,
@@ -1404,7 +1675,34 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       finalResults = rerankedCandidates.slice(0, budgetPlan.topK);
     }
 
+    let zeroSourceRecovered = false;
+    let recoverySearchType: RAGSearchType | undefined;
+    if (finalResults.length === 0) {
+      const recovery = await recoverZeroSourceResults({
+        userId: params.userId,
+        collectionId: params.collectionId,
+        query: params.query,
+        queryEmbedding,
+        topK: budgetPlan.topK,
+        primarySearchType: searchExecution.effectiveSearchType,
+      });
+
+      if (recovery.recoveredResults.length > 0) {
+        finalResults = recovery.recoveredResults;
+        zeroSourceRecovered = true;
+        recoverySearchType = recovery.recoveredBy;
+      }
+
+      addEvent(traceHandle, 'custom', {
+        stage: 'zero_source_recovery',
+        recovered: recovery.recoveredResults.length > 0,
+        recoverySearchType: recovery.recoveredBy,
+        attempts: recovery.attempts,
+      });
+    }
+
     // 5. Build context
+    const contextStart = Date.now();
     const planConfig = getPlan(params.plan);
     const maxContextTokens = Math.min(planConfig.maxInputTokens, 16000);
     let context = buildContext(finalResults, maxContextTokens);
@@ -1423,6 +1721,7 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       }
     }
 
+    const contextMs = Date.now() - contextStart;
     addContextEvent(traceHandle, context.map((c) => ({ id: c.id, text: c.text })));
 
     // 6. Stream LLM response
@@ -1430,34 +1729,87 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
     const systemPrompt = options.system_prompt ?? buildAnswerContractSystemPrompt();
     const userPrompt = buildAnswerContractUserPrompt({ question: params.query, context });
     const temperature = options.temperature ?? 0.3;
-
-    const modelConfig = MODEL_MAP[budgetPlan.llmModel];
+    const requestedModel = budgetPlan.llmModel;
+    let usedModel = requestedModel;
+    let llmProvider: 'anthropic' | 'openai' = MODEL_MAP[requestedModel].provider;
+    let llmModelId = MODEL_MAP[requestedModel].modelId;
+    let llmFallbackUsed = false;
     let inputTokens = 0;
     let outputTokens = 0;
+    let emittedContent = false;
 
-    const llmStream =
-      modelConfig.provider === 'anthropic'
-        ? streamAnthropicLLM({
-            modelId: modelConfig.modelId,
-            systemPrompt,
-            userPrompt,
-            maxTokens: budgetPlan.maxTokens,
-            temperature,
-          })
-        : streamOpenAILLM({
-            modelId: modelConfig.modelId,
-            systemPrompt,
-            userPrompt,
-            maxTokens: budgetPlan.maxTokens,
-            temperature,
-          });
+    const primaryStreamExecution = streamModelLLM({
+      model: requestedModel,
+      systemPrompt,
+      userPrompt,
+      maxTokens: budgetPlan.maxTokens,
+      temperature,
+    });
+    usedModel = primaryStreamExecution.model;
+    llmProvider = primaryStreamExecution.provider;
+    llmModelId = primaryStreamExecution.modelId;
 
-    for await (const chunk of llmStream) {
-      if (chunk.type === 'content' && chunk.content) {
-        yield { type: 'content', content: chunk.content };
-      } else if (chunk.type === 'usage') {
-        inputTokens = chunk.inputTokens ?? 0;
-        outputTokens = chunk.outputTokens ?? 0;
+    try {
+      for await (const chunk of primaryStreamExecution.stream) {
+        if (chunk.type === 'content' && chunk.content) {
+          emittedContent = true;
+          yield { type: 'content', content: chunk.content };
+        } else if (chunk.type === 'usage') {
+          inputTokens = chunk.inputTokens ?? 0;
+          outputTokens = chunk.outputTokens ?? 0;
+        }
+      }
+    } catch (primaryError) {
+      const fallbackModel = resolveFallbackModel(requestedModel);
+      const primaryErrorMessage = primaryError instanceof Error ? primaryError.message : String(primaryError);
+
+      if (emittedContent || !fallbackModel) {
+        throw primaryError;
+      }
+
+      addEvent(traceHandle, 'custom', {
+        stage: 'llm_failover_attempt',
+        requestedModel,
+        fallbackModel,
+        primaryError: primaryErrorMessage,
+        stream: true,
+      });
+
+      try {
+        const fallbackStreamExecution = streamModelLLM({
+          model: fallbackModel,
+          systemPrompt,
+          userPrompt,
+          maxTokens: budgetPlan.maxTokens,
+          temperature,
+        });
+        usedModel = fallbackStreamExecution.model;
+        llmProvider = fallbackStreamExecution.provider;
+        llmModelId = fallbackStreamExecution.modelId;
+        llmFallbackUsed = true;
+
+        for await (const chunk of fallbackStreamExecution.stream) {
+          if (chunk.type === 'content' && chunk.content) {
+            emittedContent = true;
+            yield { type: 'content', content: chunk.content };
+          } else if (chunk.type === 'usage') {
+            inputTokens = chunk.inputTokens ?? 0;
+            outputTokens = chunk.outputTokens ?? 0;
+          }
+        }
+
+        addEvent(traceHandle, 'custom', {
+          stage: 'llm_failover_success',
+          requestedModel,
+          usedModel,
+          primaryError: primaryErrorMessage,
+          stream: true,
+        });
+      } catch (fallbackError) {
+        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+        throw new Error(
+          `LLM stream failed for requested model (${requestedModel}) and fallback model (${fallbackModel}): ${primaryErrorMessage}; ${fallbackErrorMessage}`
+        );
       }
     }
 
@@ -1487,6 +1839,7 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
 
     // 8. Send sources
     const sources = buildSources(finalResults);
+    const effectiveSearchType = recoverySearchType ?? searchExecution.effectiveSearchType;
     yield { type: 'sources', sources };
 
     // 9. Send usage
@@ -1515,7 +1868,7 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
       competitive: {
         phase: competitiveFeatures.phase,
         aggressive: competitiveFeatures.aggressive,
-        search_type: searchExecution.effectiveSearchType,
+        search_type: effectiveSearchType,
         canary: canaryAssignment
           ? {
               deployment_id: canaryAssignment.deploymentId,
@@ -1535,8 +1888,11 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
 
     // Finish trace
     addEvent(traceHandle, 'llm', {
-      provider: modelConfig.provider,
-      model: modelConfig.modelId,
+      provider: llmProvider,
+      model: llmModelId,
+      requestedModel,
+      usedModel,
+      fallbackUsed: llmFallbackUsed,
       inputTokens,
       outputTokens,
       latencyMs: llmMs,
@@ -1545,11 +1901,35 @@ export async function* ragQueryStream(params: RAGParams): AsyncGenerator<RAGStre
     addEvent(traceHandle, 'custom', {
       stage: 'competitive_streaming_summary',
       phase: competitiveFeatures.phase,
-      effectiveSearchType: searchExecution.effectiveSearchType,
+      effectiveSearchType,
       expandedQueries: searchExecution.expandedQueries,
       trustGuardFiltered: searchExecution.trustGuardFiltered,
+      zeroSourceRecovered,
+      recoverySearchType,
       graphSourceCount,
       shadowEval: shadowEvalResult,
+    });
+
+    emitRagMetrics(traceHandle, {
+      requestedModel,
+      usedModel,
+      fallbackUsed: llmFallbackUsed,
+      searchType: effectiveSearchType,
+      retrievedCandidates: candidates.length,
+      finalSourceCount: finalResults.length,
+      zeroSourceRecovered,
+      recoverySearchType,
+      expandedQueryCount: searchExecution.expandedQueries.length,
+      trustGuardFiltered: searchExecution.trustGuardFiltered,
+      llmInputTokens: inputTokens,
+      llmOutputTokens: outputTokens,
+      timingsMs: {
+        search: searchMs,
+        rerank: rerankMs,
+        context: contextMs,
+        llm: llmMs,
+        total: totalMs,
+      },
     });
 
     await finishTrace(traceHandle, {
