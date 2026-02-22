@@ -34,3 +34,12 @@
 **증상:** `20260221_memory_personalization_learning.sql` 적용 시 `foreign key constraint "user_memory_learning_profiles_user_id_fkey" cannot be implemented` 오류로 롤백됨.  
 **원인:** 실DB 스키마에서 `profiles.id` / `memories.user_id` 타입이 `text`인데 신규 마이그레이션의 `user_id`를 `uuid`로 정의하여 FK 타입 불일치 발생.  
 **해결:** 마이그레이션을 `user_id TEXT REFERENCES profiles(id)`로 수정하고 RLS 비교를 `auth.uid()::text`로 변경 후 재적용. 생성 테이블/RLS/policies 검증 완료.
+
+### Summer Vector RPC Overload Ambiguity (PGRST203)
+**날짜:** 2026-02-22
+**증상:** `/api/summer/rag` 요청 시 Supabase RPC 호출이 `PGRST203`로 실패하며 500 반환. `summer_hybrid_search_chunks`/`summer_search_chunks`의 `real` vs `double precision` 시그니처 선택 실패.
+**원인:** PostgREST가 동일 함수명 오버로드 중 인자 타입을 단일 후보로 해석하지 못해 RPC 라우팅이 불안정.
+**해결:** `src/lib/summer/vectorstore/supabase.ts`에 RPC 실패(`PGRST203`) fallback 추가.
+- Hybrid: semantic + keyword를 개별 실행 후 JS 로컬 RRF fusion
+- Semantic: `summer_chunks` 직접 조회 후 임베딩 cosine 유사도 로컬 계산
+결과적으로 오버로드 충돌 상황에서도 검색이 정상 동작하며 RAG가 200으로 복구됨.

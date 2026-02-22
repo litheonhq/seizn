@@ -39,7 +39,15 @@ interface RAGRequestBody {
  *     "rerank_top_n": 20,           // Rerank top-N candidates
  *     "federated": false,           // Enable federated search
  *     "system_prompt": "...",       // Custom system prompt
- *     "include_trace": false        // Include detailed trace in response
+ *     "include_trace": false,       // Include detailed trace in response
+ *     "competitive_phase": 6,       // Optional override (0-7)
+ *     "competitive_aggressive": true,
+ *     "query_expansion": true,
+ *     "intent_routing": true,
+ *     "graph_augmentation": true,
+ *     "trust_guard": true,
+ *     "shadow_eval": true,
+ *     "graph_id": "uuid"
  *   }
  * }
  *
@@ -58,7 +66,13 @@ interface RAGRequestBody {
  *   },
  *   "latency_ms": 1234,
  *   "trace_id": "uuid",
- *   "trace": {...}  // If include_trace is true
+ *   "trace": {...},  // If include_trace is true
+ *   "competitive": {
+ *     "phase": 6,
+ *     "aggressive": true,
+ *     "search_type": "hybrid",
+ *     "canary": { "deployment_id": "...", "assigned_version": "canary" }
+ *   }
  * }
  *
  * Streaming Response (SSE):
@@ -153,6 +167,77 @@ export async function POST(request: NextRequest) {
               code: 'INVALID_REQUEST',
               message:
                 'options.llm_model must be one of: claude-3-5-sonnet, claude-3-5-haiku, gpt-4o, gpt-4o-mini',
+            },
+          },
+          { status: 400 }
+        );
+      }
+
+      if (
+        options.competitive_phase !== undefined &&
+        (!Number.isInteger(options.competitive_phase) || options.competitive_phase < 0 || options.competitive_phase > 7)
+      ) {
+        await logRequest({ userId, keyId, endpoint: '/api/summer/rag', method: 'POST', startTime }, 400);
+        return NextResponse.json(
+          {
+            error: {
+              code: 'INVALID_REQUEST',
+              message: 'options.competitive_phase must be an integer between 0 and 7',
+            },
+          },
+          { status: 400 }
+        );
+      }
+
+      const booleanOptionKeys: Array<keyof RAGOptions> = [
+        'competitive_aggressive',
+        'intent_routing',
+        'query_expansion',
+        'late_interaction',
+        'graph_augmentation',
+        'trust_guard',
+        'shadow_eval',
+      ];
+
+      for (const key of booleanOptionKeys) {
+        const value = options[key];
+        if (value !== undefined && typeof value !== 'boolean') {
+          await logRequest({ userId, keyId, endpoint: '/api/summer/rag', method: 'POST', startTime }, 400);
+          return NextResponse.json(
+            {
+              error: {
+                code: 'INVALID_REQUEST',
+                message: `options.${key} must be a boolean`,
+              },
+            },
+            { status: 400 }
+          );
+        }
+      }
+
+      if (options.graph_id !== undefined && typeof options.graph_id !== 'string') {
+        await logRequest({ userId, keyId, endpoint: '/api/summer/rag', method: 'POST', startTime }, 400);
+        return NextResponse.json(
+          {
+            error: {
+              code: 'INVALID_REQUEST',
+              message: 'options.graph_id must be a string',
+            },
+          },
+          { status: 400 }
+        );
+      }
+
+      if (
+        options.blocked_sources !== undefined &&
+        (!Array.isArray(options.blocked_sources) || options.blocked_sources.some((source) => typeof source !== 'string'))
+      ) {
+        await logRequest({ userId, keyId, endpoint: '/api/summer/rag', method: 'POST', startTime }, 400);
+        return NextResponse.json(
+          {
+            error: {
+              code: 'INVALID_REQUEST',
+              message: 'options.blocked_sources must be an array of strings',
             },
           },
           { status: 400 }
@@ -259,6 +344,7 @@ export async function POST(request: NextRequest) {
         latency_ms: result.latency_ms,
         trace_id: result.trace_id,
         trace: result.trace,
+        competitive: result.competitive,
       },
       { status: 200 }
     );
