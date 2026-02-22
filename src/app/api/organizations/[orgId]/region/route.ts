@@ -8,6 +8,7 @@ import {
   createApiError,
   ErrorCodes,
 } from '@/lib/api-error';
+import { verifyCsrf } from '@/lib/csrf';
 import {
   getRegion,
   isRegionAvailableForPlan,
@@ -96,6 +97,11 @@ export async function PATCH(
   context: RouteContext
 ) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organization_region');
@@ -239,6 +245,11 @@ export async function POST(
   context: RouteContext
 ) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('organization_region');

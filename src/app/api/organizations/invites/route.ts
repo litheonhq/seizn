@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { verifyCsrf } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { organizationInviteEmail } from '@/lib/email/templates';
 
@@ -70,6 +71,11 @@ export async function GET(request: NextRequest) {
 // POST /api/organizations/invites - create invite
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -195,6 +201,11 @@ export async function POST(request: NextRequest) {
 // DELETE /api/organizations/invites?id=...
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

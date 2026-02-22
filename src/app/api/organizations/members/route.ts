@@ -3,6 +3,7 @@ import { sendEmail } from '@/lib/email';
 import { organizationInviteEmail } from '@/lib/email/templates';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { verifyCsrf } from '@/lib/csrf';
 import crypto from 'crypto';
 
 // GET /api/organizations/members - List organization members
@@ -107,6 +108,11 @@ export async function GET(request: NextRequest) {
 // POST /api/organizations/members - Invite a new member
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -241,6 +247,11 @@ export async function POST(request: NextRequest) {
 // PATCH /api/organizations/members - Update member role
 export async function PATCH(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -306,6 +317,11 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/organizations/members - Remove a member
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
