@@ -104,3 +104,81 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+// DELETE /api/summer/collections?collection_id=... - delete
+export async function DELETE(request: NextRequest) {
+  const startTime = Date.now();
+
+  try {
+    const authResult = await authenticateRequest(request);
+    if (isAuthError(authResult)) {
+      return authErrorResponse(authResult.authError);
+    }
+
+    const { userId, keyId } = authResult;
+    const searchParams = request.nextUrl.searchParams;
+    let collectionId = searchParams.get('collection_id') ?? searchParams.get('id') ?? '';
+
+    if (!collectionId) {
+      try {
+        const body = await request.json();
+        collectionId = String(body?.collection_id ?? body?.id ?? '');
+      } catch {
+        // Ignore parse error and validate empty id below
+      }
+    }
+
+    collectionId = collectionId.trim();
+    if (!collectionId) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/summer/collections', method: 'DELETE', startTime },
+        400
+      );
+      return NextResponse.json({ error: 'collection_id is required' }, { status: 400 });
+    }
+
+    const uuidLike = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidLike.test(collectionId)) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/summer/collections', method: 'DELETE', startTime },
+        400
+      );
+      return NextResponse.json({ error: 'collection_id must be a valid UUID' }, { status: 400 });
+    }
+
+    const supabase = createServerClient();
+    const { data, error } = await supabase
+      .from('summer_collections')
+      .delete()
+      .eq('id', collectionId)
+      .eq('user_id', userId)
+      .select('id, name')
+      .maybeSingle();
+
+    if (error) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/summer/collections', method: 'DELETE', startTime },
+        500
+      );
+      return NextResponse.json({ error: 'Failed to delete collection' }, { status: 500 });
+    }
+
+    if (!data) {
+      await logRequest(
+        { userId, keyId, endpoint: '/api/summer/collections', method: 'DELETE', startTime },
+        404
+      );
+      return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
+    }
+
+    await logRequest(
+      { userId, keyId, endpoint: '/api/summer/collections', method: 'DELETE', startTime },
+      200
+    );
+
+    return NextResponse.json({ success: true, deleted: data });
+  } catch (err) {
+    console.error('Summer collections DELETE error:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
