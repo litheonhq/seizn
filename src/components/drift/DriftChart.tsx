@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react-hooks/rules-of-hooks */
 
 import { useMemo } from "react";
 import type { DriftTimeSeries, DriftTimeSeriesPoint } from "@/lib/drift/types";
@@ -65,6 +64,32 @@ export function DriftChart({
     };
   }, [timeSeries]);
 
+  // X-axis labels (must be computed before early returns to keep hook order stable)
+  const xLabels = useMemo(() => {
+    if (!chartData || chartData.points.length <= 1) return [];
+
+    const points = chartData.points;
+    const step = Math.ceil(points.length / 5);
+    const labels: Array<{ label: string; x: number }> = [];
+
+    for (let i = 0; i < points.length; i += step) {
+      labels.push({
+        label: formatDate(points[i].date),
+        x: (i / (points.length - 1)) * 100,
+      });
+    }
+
+    const lastIndex = points.length - 1;
+    if (labels.length === 0 || labels[labels.length - 1]?.x !== 100) {
+      labels.push({
+        label: formatDate(points[lastIndex].date),
+        x: 100,
+      });
+    }
+
+    return labels;
+  }, [chartData]);
+
   if (loading) {
     return (
       <div
@@ -111,18 +136,6 @@ export function DriftChart({
   const centroidPath = generatePath(points, (p) => p.centroidShift, maxCentroid);
   const scorePath = generatePath(points, (p) => p.avgScore, 1);
   const queryPath = generatePath(points, (p) => p.queryCount, maxQuery);
-
-  // X-axis labels
-  const xLabels = useMemo(() => {
-    if (points.length <= 1) return [];
-    const step = Math.ceil(points.length / 5);
-    return points
-      .filter((_, i) => i % step === 0 || i === points.length - 1)
-      .map((p) => ({
-        label: formatDate(p.date),
-        x: (points.indexOf(p) / (points.length - 1)) * 100,
-      }));
-  }, [points]);
 
   return (
     <div className="w-full" style={{ height }}>
