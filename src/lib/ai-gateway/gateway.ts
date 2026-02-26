@@ -486,17 +486,23 @@ export class AIGateway {
   private selectProvider(model: string, preferred?: LLMProvider): RoutingDecision | null {
     const providers = Array.from(this.providers.values());
 
-    // Filter by preferred provider if specified
-    const filteredProviders = preferred
-      ? providers.filter((p) => p.provider === preferred)
-      : providers;
+    if (preferred) {
+      const preferredProviders = providers.filter((p) => p.provider === preferred);
+      if (preferredProviders.length > 0) {
+        const preferredRouting = selectProvider(
+          preferredProviders,
+          this.config.loadBalancer.strategy,
+          model,
+          providerHealth
+        );
+        if (preferredRouting) {
+          return preferredRouting;
+        }
+      }
+    }
 
-    return selectProvider(
-      filteredProviders.length > 0 ? filteredProviders : providers,
-      this.config.loadBalancer.strategy,
-      model,
-      providerHealth
-    );
+    // Fallback to all providers when preferred provider cannot serve model or is unhealthy.
+    return selectProvider(providers, this.config.loadBalancer.strategy, model, providerHealth);
   }
 
   /**

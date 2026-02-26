@@ -221,6 +221,36 @@ describe('PolicyRouter', () => {
       expect(result.modifications).toBeDefined();
       expect(result.modifications?.maxTokens).toBeDefined();
     });
+
+    it('uses org budget limit (not default budget) when calculating optimization threshold', async () => {
+      // 10,000 remaining out of 40,000 => 25% remaining (should optimize).
+      asMock(getBudgetStatus).mockResolvedValueOnce({
+        isOverBudget: false,
+        currentSpend: 30000,
+        budgetLimit: 40000,
+      });
+
+      const result = await router.evaluateRequest(makeRequest(), 'user-1', 'org-1');
+      expect(result.allowed).toBe(true);
+      expect(result.modifications?.maxTokens).toBe(2048);
+    });
+
+    it('does not force incompatible provider for high-tier models', async () => {
+      asMock(getBudgetStatus).mockResolvedValueOnce({
+        isOverBudget: false,
+        currentSpend: 9000,
+        budgetLimit: 10000,
+      });
+
+      const result = await router.evaluateRequest(
+        makeRequest({ model: 'claude-3-opus-20240229' }),
+        'user-1',
+        'org-1'
+      );
+
+      expect(result.allowed).toBe(true);
+      expect(result.modifications?.preferredProvider).toBe('anthropic');
+    });
   });
 
   // -------------------------------------------------------------------------
