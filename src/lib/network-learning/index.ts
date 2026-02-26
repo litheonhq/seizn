@@ -70,6 +70,7 @@ export {
   createPolicyUpdate,
   getPendingUpdates,
   getPolicyUpdates,
+  getPolicyUpdateCount,
   approvePolicyUpdate,
   rejectPolicyUpdate,
   applyPolicyUpdate,

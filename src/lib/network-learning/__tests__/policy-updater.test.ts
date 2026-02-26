@@ -31,6 +31,7 @@ import {
   createPolicyUpdate,
   getPendingUpdates,
   getPolicyUpdates,
+  getPolicyUpdateCount,
   approvePolicyUpdate,
   rejectPolicyUpdate,
   applyPolicyUpdate,
@@ -321,7 +322,7 @@ describe('PolicyUpdater', () => {
           eq: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               select: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({
+                maybeSingle: vi.fn().mockResolvedValue({
                   data: {
                     id: 'pu_1',
                     target_policy: 'policy_a',
@@ -343,6 +344,36 @@ describe('PolicyUpdater', () => {
 
       expect(update).toBeDefined();
     });
+
+    it('should reject already processed updates', async () => {
+      mockSupabaseFrom
+        .mockReturnValueOnce({
+          update: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                select: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({
+                    data: null,
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              maybeSingle: vi.fn().mockResolvedValue({
+                data: { id: 'pu_1', status: 'applied' },
+                error: null,
+              }),
+            }),
+          }),
+        });
+
+      await expect(approvePolicyUpdate('pu_1')).rejects.toThrow('already applied');
+    });
   });
 
   describe('rejectPolicyUpdate', () => {
@@ -352,7 +383,7 @@ describe('PolicyUpdater', () => {
           eq: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               select: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({
+                maybeSingle: vi.fn().mockResolvedValue({
                   data: {
                     id: 'pu_1',
                     target_policy: 'policy_a',
@@ -378,42 +409,23 @@ describe('PolicyUpdater', () => {
 
   describe('applyPolicyUpdate', () => {
     it('should apply approved update', async () => {
-      // First call: fetch update
-      mockSupabaseFrom.mockReturnValueOnce({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: {
-                id: 'pu_1',
-                target_policy: 'policy_a',
-                changes: { key: 'value' },
-                based_on_insights: [],
-                confidence: 0.9,
-                status: 'approved',
-                applied_at: null,
-              },
-              error: null,
-            }),
-          }),
-        }),
-      });
-
-      // Second call: update status
-      mockSupabaseFrom.mockReturnValueOnce({
+      mockSupabaseFrom.mockReturnValue({
         update: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: {
-                  id: 'pu_1',
-                  target_policy: 'policy_a',
-                  changes: { key: 'value' },
-                  based_on_insights: [],
-                  confidence: 0.9,
-                  status: 'applied',
-                  applied_at: new Date().toISOString(),
-                },
-                error: null,
+            eq: vi.fn().mockReturnValue({
+              select: vi.fn().mockReturnValue({
+                maybeSingle: vi.fn().mockResolvedValue({
+                  data: {
+                    id: 'pu_1',
+                    target_policy: 'policy_a',
+                    changes: { key: 'value' },
+                    based_on_insights: [],
+                    confidence: 0.9,
+                    status: 'applied',
+                    applied_at: new Date().toISOString(),
+                  },
+                  error: null,
+                }),
               }),
             }),
           }),
@@ -426,23 +438,96 @@ describe('PolicyUpdater', () => {
     });
 
     it('should reject non-approved updates', async () => {
-      mockSupabaseFrom.mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: {
-                id: 'pu_1',
-                status: 'pending', // Not approved
-              },
-              error: null,
+      mockSupabaseFrom
+        .mockReturnValueOnce({
+          update: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                select: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({
+                    data: null,
+                    error: null,
+                  }),
+                }),
+              }),
             }),
           }),
-        }),
-      });
+        })
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              maybeSingle: vi.fn().mockResolvedValue({
+                data: {
+                  id: 'pu_1',
+                  status: 'pending', // Not approved
+                },
+                error: null,
+              }),
+            }),
+          }),
+        });
 
       await expect(applyPolicyUpdate('pu_1')).rejects.toThrow(
         'Policy update must be approved'
       );
+    });
+
+    it('should return not found for missing updates', async () => {
+      mockSupabaseFrom
+        .mockReturnValueOnce({
+          update: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                select: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({
+                    data: null,
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              maybeSingle: vi.fn().mockResolvedValue({
+                data: null,
+                error: null,
+              }),
+            }),
+          }),
+        });
+
+      await expect(applyPolicyUpdate('pu_404')).rejects.toThrow('not found');
+    });
+  });
+
+  describe('getPolicyUpdateCount', () => {
+    it('should return exact count by status', async () => {
+      mockSupabaseFrom.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({
+            count: 42,
+            error: null,
+          }),
+        }),
+      });
+
+      const count = await getPolicyUpdateCount('pending');
+      expect(count).toBe(42);
+    });
+
+    it('should return zero when count is null', async () => {
+      mockSupabaseFrom.mockReturnValue({
+        select: vi.fn().mockResolvedValue({
+          count: null,
+          error: null,
+        }),
+      });
+
+      const count = await getPolicyUpdateCount();
+      expect(count).toBe(0);
     });
   });
 

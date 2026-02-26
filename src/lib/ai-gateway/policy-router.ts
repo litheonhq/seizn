@@ -65,12 +65,20 @@ const MODEL_COST_TIERS: Record<string, 'low' | 'medium' | 'high'> = {
   'claude-3-opus-20240229': 'high',
 };
 
+const configuredFailureMode = process.env.POLICY_ROUTER_FAILURE_MODE;
+const defaultFailureMode: 'open' | 'closed' =
+  configuredFailureMode === 'open' || configuredFailureMode === 'closed'
+    ? configuredFailureMode
+    : process.env.NODE_ENV === 'production'
+      ? 'closed'
+      : 'open';
+
 const DEFAULT_CONFIG: PolicyRouterConfig = {
   enableBudgetEnforcement: true,
   enableContentPolicy: true,
   enableCostOptimization: true,
   defaultBudgetCents: 10000, // $100/month default
-  failureMode: process.env.POLICY_ROUTER_FAILURE_MODE === 'closed' ? 'closed' : 'open',
+  failureMode: defaultFailureMode,
   failClosedOnToolCalls: true,
 };
 
