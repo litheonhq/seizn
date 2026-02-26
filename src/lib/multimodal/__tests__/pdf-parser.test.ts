@@ -18,10 +18,9 @@ vi.mock('pdf-parse', () => ({
 }));
 
 // Import after mock
-// import { parsePdf } skipped - pdf-parse requires DOMMatrix
-const parsePdf = async (_b: Buffer, _o?: unknown) => ({ blocks: [], pageCount: 0, mimeType: '', filename: '', metadata: {}, parsedAt: '' } as never);
+import { parsePdf } from '../parsers/pdf-parser';
 
-describe.skip('PdfParser (requires DOMMatrix)', () => {
+describe('PdfParser', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

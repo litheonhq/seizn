@@ -64,7 +64,7 @@ const RELATION_PATTERNS: RelationPattern[] = [
   },
   // part_of patterns
   {
-    pattern: /([A-Za-z][A-Za-z0-9\s]+)\s+is\s+part\s+of\s+([A-Za-z][A-Za-z0-9\s]+)/gi,
+    pattern: /([A-Za-z][A-Za-z0-9.\-\s]+?)\s+is\s+part\s+of\s+([A-Za-z][A-Za-z0-9.\-\s]+?)(?=[.,;!?]|\s*$)/gi,
     type: 'part_of',
     sourceGroup: 1,
     targetGroup: 2,
@@ -87,14 +87,14 @@ const RELATION_PATTERNS: RelationPattern[] = [
   },
   // authored_by patterns
   {
-    pattern: /([A-Za-z][A-Za-z0-9\s]+)\s+(?:was\s+)?(?:created|authored|written|developed)\s+by\s+([A-Za-z][A-Za-z0-9\s]+)/gi,
+    pattern: /([A-Za-z][A-Za-z0-9.\-\s]+?)\s+(?:was\s+)?(?:created|authored|written|developed)\s+by\s+([A-Za-z][A-Za-z0-9.\-\s]+?)(?=[.,;!?]|\s*$)/gi,
     type: 'authored_by',
     sourceGroup: 1,
     targetGroup: 2,
     confidence: 0.8,
   },
   {
-    pattern: /([A-Za-z][A-Za-z0-9\s]+)\s+(?:created|authored|wrote|developed)\s+([A-Za-z][A-Za-z0-9\s]+)/gi,
+    pattern: /([A-Za-z][A-Za-z0-9.\-\s]+?)\s+(?:created|authored|wrote|developed)\s+([A-Za-z][A-Za-z0-9.\-\s]+?)(?=[.,;!?]|\s+(?:in|on|at|for|during|with|from|to)\b|\s*$)/gi,
     type: 'authored_by',
     sourceGroup: 2,
     targetGroup: 1,
@@ -110,7 +110,7 @@ const RELATION_PATTERNS: RelationPattern[] = [
   },
   // located_in patterns
   {
-    pattern: /([A-Za-z][A-Za-z0-9\s]+)\s+(?:is\s+)?(?:located|based|headquartered)\s+in\s+([A-Za-z][A-Za-z0-9\s]+)/gi,
+    pattern: /([A-Za-z][A-Za-z0-9.\-\s]+?)\s+(?:is\s+)?(?:located|based|headquartered)\s+in\s+([A-Za-z][A-Za-z0-9.\-\s]+?)(?=[.,;!?]|\s*$)/gi,
     type: 'located_in',
     sourceGroup: 1,
     targetGroup: 2,
@@ -118,7 +118,7 @@ const RELATION_PATTERNS: RelationPattern[] = [
   },
   // depends_on patterns
   {
-    pattern: /([A-Za-z][A-Za-z0-9\s]+)\s+(?:depends|relies)\s+on\s+([A-Za-z][A-Za-z0-9\s]+)/gi,
+    pattern: /([A-Za-z][A-Za-z0-9.\-\s]+?)\s+(?:depends|relies)\s+on\s+([A-Za-z][A-Za-z0-9.\-\s]+?)(?=[.,;!?]|\s*$)/gi,
     type: 'depends_on',
     sourceGroup: 1,
     targetGroup: 2,

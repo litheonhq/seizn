@@ -94,35 +94,35 @@ export default function TermsOfServicePage() {
                   <span className="text-emerald-600 font-semibold">
                     &quot;Service&quot;
                   </span>{" "}
-                  ??refers to the Seizn platform, API, website, and all related
+                  - refers to the Seizn platform, API, website, and all related
                   services.
                 </li>
                 <li>
                   <span className="text-emerald-600 font-semibold">
                     &quot;User&quot;
                   </span>{" "}
-                  ??refers to any individual or entity that accesses or uses the
+                  - refers to any individual or entity that accesses or uses the
                   Service.
                 </li>
                 <li>
                   <span className="text-emerald-600 font-semibold">
                     &quot;API&quot;
                   </span>{" "}
-                  ??refers to the Application Programming Interface provided by
+                  - refers to the Application Programming Interface provided by
                   Seizn.
                 </li>
                 <li>
                   <span className="text-emerald-600 font-semibold">
                     &quot;Content&quot;
                   </span>{" "}
-                  ??refers to any data, text, or information submitted to or
+                  - refers to any data, text, or information submitted to or
                   processed by the Service.
                 </li>
                 <li>
                   <span className="text-emerald-600 font-semibold">
                     &quot;API Key&quot;
                   </span>{" "}
-                  ??refers to the unique authentication credential issued to
+                  - refers to the unique authentication credential issued to
                   Users for API access.
                 </li>
               </ul>
