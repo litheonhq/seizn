@@ -40,6 +40,7 @@ import {
   applyPersonalizedRanking,
   getOrCreateLearningProfile,
 } from '@/lib/memory/personalization';
+import { analyzeContentIntegrity } from '@/lib/memory/content-integrity';
 import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import type { AddMemoryRequest } from '@/types/database';
@@ -305,6 +306,9 @@ export async function POST(request: NextRequest) {
     // Sanitize: strip null bytes (PostgreSQL text columns reject \0)
 
     const sanitizedContent = (body.content || '').replace(/\x00/g, '');
+    const integrityWarnings = !isEncrypted
+      ? analyzeContentIntegrity(sanitizedContent).warnings
+      : [];
 
     step = 'supabase_client';
     const supabase = createServerClient();
@@ -397,6 +401,7 @@ export async function POST(request: NextRequest) {
             success: true,
             memory: existing,
             deduplicated: true,
+            integrity_warnings: integrityWarnings,
           });
         }
       }
@@ -425,6 +430,7 @@ export async function POST(request: NextRequest) {
       NextResponse.json({
         success: true,
         memory: memory,
+        integrity_warnings: integrityWarnings,
       }),
       authResult.rateLimitHeaders
     );
@@ -449,7 +455,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Common params
-    const query = searchParams.get('query')?.trim() || null;
+    const query = searchParams.get('query')?.trim() || searchParams.get('q')?.trim() || null;
     const search = searchParams.get('search')?.trim() || null;
     const { limit, offset } = parsePagination(searchParams, { limit: 20 });
     const namespace = searchParams.get('namespace') || 'default';
@@ -653,7 +659,76 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
     let searchError: Error | null = null;
+    let resolvedMode: Exclude<SearchMode, 'auto'> = actualMode;
+    let fallback: { applied: boolean; from: Exclude<SearchMode, 'auto'>; to: 'keyword'; reason: string } | null = null;
     const nsParam = namespace === 'default' ? null : namespace;
+    const applyResultFilters = (input: any[] | null): any[] | null => {
+      if (!input) return input;
+      return input.filter((m: Record<string, unknown>) => {
+        if (memoryType && m.memory_type !== memoryType) return false;
+        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
+        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
+        if (tagsParam) {
+          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+          const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
+          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
+        }
+        if (search) {
+          const content = typeof m.content === 'string' ? m.content.toLowerCase() : '';
+          if (!content.includes(search.toLowerCase())) return false;
+        }
+        if (characterSubtype) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.character_subtype !== characterSubtype) return false;
+        }
+        if (nsfwLevel) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.nsfw_level !== nsfwLevel) return false;
+        }
+        if (scenario) {
+          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
+            ? (m.companion_meta as Record<string, unknown>)
+            : null;
+          if (cm?.scenario !== scenario) return false;
+        }
+        return true;
+      });
+    };
+    const tryKeywordFallback = async (
+      reason: 'search_error' | 'zero_results' | 'post_filter_zero_results'
+    ): Promise<boolean> => {
+      if (resolvedMode === 'keyword') return false;
+      const fromMode = resolvedMode;
+      const { data: fallbackData, error: fallbackError } = await supabase.rpc('keyword_search_memories', {
+        query_text: query,
+        match_user_id: userId,
+        match_count: limit,
+        match_namespace: nsParam,
+      });
+
+      if (!fallbackError && fallbackData && fallbackData.length > 0) {
+        results = fallbackData;
+        fallback = {
+          applied: true,
+          from: fromMode,
+          to: 'keyword',
+          reason,
+        };
+        resolvedMode = 'keyword';
+        searchError = null;
+        return true;
+      }
+
+      if (fallbackError) {
+        searchError = fallbackError;
+      }
+
+      return false;
+    };
 
     if (actualMode === 'keyword') {
       const { data, error } = await supabase.rpc('keyword_search_memories', {
@@ -691,6 +766,9 @@ export async function GET(request: NextRequest) {
       searchError = error;
     }
 
+    if (searchError && actualMode !== 'keyword') {
+      await tryKeywordFallback('search_error');
+    }
     if (searchError) {
       console.error('[api/memories] Search error:', searchError);
       if (keyId) {
@@ -702,41 +780,20 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
+    // Zero-result fallback: keep default UX resilient by retrying keyword search.
+    if ((!results || results.length === 0) && actualMode !== 'keyword') {
+      await tryKeywordFallback('zero_results');
+    }
+
     // Post-search filtering
-    if (results) {
-      results = results.filter((m: Record<string, unknown>) => {
-        if (memoryType && m.memory_type !== memoryType) return false;
-        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
-        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
-        if (tagsParam) {
-          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
-          const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
-          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
-        }
-        if (search) {
-          const content = typeof m.content === 'string' ? m.content.toLowerCase() : '';
-          if (!content.includes(search.toLowerCase())) return false;
-        }
-        if (characterSubtype) {
-          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
-            ? (m.companion_meta as Record<string, unknown>)
-            : null;
-          if (cm?.character_subtype !== characterSubtype) return false;
-        }
-        if (nsfwLevel) {
-          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
-            ? (m.companion_meta as Record<string, unknown>)
-            : null;
-          if (cm?.nsfw_level !== nsfwLevel) return false;
-        }
-        if (scenario) {
-          const cm = (m.companion_meta && typeof m.companion_meta === 'object')
-            ? (m.companion_meta as Record<string, unknown>)
-            : null;
-          if (cm?.scenario !== scenario) return false;
-        }
-        return true;
-      });
+    results = applyResultFilters(results);
+
+    // If filtering removed all results, retry keyword mode once and re-apply filters.
+    if ((!results || results.length === 0) && resolvedMode !== 'keyword') {
+      const recovered = await tryKeywordFallback('post_filter_zero_results');
+      if (recovered) {
+        results = applyResultFilters(results);
+      }
     }
 
     // Cache results
@@ -749,7 +806,7 @@ export async function GET(request: NextRequest) {
         similarity: r.similarity,
         rrf_score: r.rrf_score,
       }));
-      setCachedQueryResults(userId, query, namespace, actualMode, cacheableResults).catch(
+      setCachedQueryResults(userId, query, namespace, resolvedMode, cacheableResults).catch(
         console.error
       );
     }
@@ -764,7 +821,7 @@ export async function GET(request: NextRequest) {
       await logRequest(
         { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
         200,
-        { embedding: actualMode !== 'keyword' ? query.length : 0 }
+        { embedding: resolvedMode !== 'keyword' ? query.length : 0 }
       );
     }
 
@@ -781,7 +838,7 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
-      mode: actualMode,
+      mode: resolvedMode,
       requestedMode,
       results: rankedResults || [],
       count: rankedResults?.length || 0,
@@ -797,6 +854,7 @@ export async function GET(request: NextRequest) {
       routerDecision: routerDecision
         ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
         : null,
+      fallback,
     });
     const withCsrf = ensureCsrfCookie(request, response);
     return withHeaders(withCsrf, authResult.rateLimitHeaders);

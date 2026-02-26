@@ -62,6 +62,7 @@ import {
   applyPersonalizedRanking,
   getOrCreateLearningProfile,
 } from '@/lib/memory/personalization';
+import { analyzeContentIntegrity } from '@/lib/memory/content-integrity';
 import {
   applyRouterLearning,
   recordRouterOutcome,
@@ -300,6 +301,9 @@ export async function POST(request: NextRequest) {
         sanitizedContent = firewallResult.sanitizedInput;
       }
     }
+    const integrityWarnings = !isEncrypted
+      ? analyzeContentIntegrity(sanitizedContent).warnings
+      : [];
 
     // Dedup check (opt-out with dedup=false)
     let embedding: number[] | null = null;
@@ -323,7 +327,7 @@ export async function POST(request: NextRequest) {
               deduplicated: true,
               similarity: duplicate.similarity,
             },
-            meta: { ...META, latencyMs: Date.now() - startTime },
+            meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
           });
         }
       }
@@ -420,7 +424,7 @@ export async function POST(request: NextRequest) {
               deduplicated: true,
               similarity: 1.0,
             },
-            meta: { ...META, latencyMs: Date.now() - startTime },
+            meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
           });
         }
       }
@@ -464,7 +468,7 @@ export async function POST(request: NextRequest) {
       NextResponse.json({
         success: true,
         data: { memory },
-        meta: { ...META, latencyMs: Date.now() - startTime },
+        meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
       }),
       result.rateLimitHeaders
     );
@@ -493,7 +497,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Common params
-    const query = searchParams.get('query');
+    const query =
+      searchParams.get('query')?.trim() || searchParams.get('q')?.trim() || null;
     const { limit, offset } = parsePagination(searchParams, { limit: 20 });
     const namespace = searchParams.get('namespace') || 'default';
     const agentId = searchParams.get('agent_id');
@@ -813,7 +818,56 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let results: any[] | null = null;
     let searchError: Error | null = null;
+    let resolvedMode: Exclude<SearchMode, 'auto'> = actualMode;
+    let fallback: { applied: boolean; from: Exclude<SearchMode, 'auto'>; to: 'keyword'; reason: string } | null = null;
     const nsParam = namespace === 'default' ? null : namespace;
+    const applyResultFilters = (input: any[] | null): any[] | null => {
+      if (!input) return input;
+      return input.filter((m: Record<string, unknown>) => {
+        if (agentId && m.agent_id !== agentId) return false;
+        if (scope && m.scope !== scope) return false;
+        if (memoryType && m.memory_type !== memoryType) return false;
+        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
+        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
+        if (tagsParam) {
+          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
+          const memTags = Array.isArray(m.tags) ? (m.tags as string[]) : [];
+          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
+        }
+        return true;
+      });
+    };
+    const tryKeywordFallback = async (
+      reason: 'search_error' | 'zero_results' | 'post_filter_zero_results'
+    ): Promise<boolean> => {
+      if (resolvedMode === 'keyword') return false;
+      const fromMode = resolvedMode;
+      const { data: fallbackData, error: fallbackError } = await supabase.rpc('keyword_search_memories', {
+        query_text: effectiveQuery,
+        match_user_id: userId,
+        match_count: limit,
+        match_namespace: nsParam,
+      });
+
+      if (!fallbackError && fallbackData && fallbackData.length > 0) {
+        results = fallbackData;
+        fallback = {
+          applied: true,
+          from: fromMode,
+          to: 'keyword',
+          reason,
+        };
+        resolvedMode = 'keyword';
+        searchError = null;
+        return true;
+      }
+
+      if (fallbackError) {
+        searchError = fallbackError;
+      }
+
+      return false;
+    };
 
     if (actualMode === 'keyword') {
       const { data, error } = await supabase.rpc('keyword_search_memories', {
@@ -851,6 +905,9 @@ export async function GET(request: NextRequest) {
       searchError = error;
     }
 
+    if (searchError && actualMode !== 'keyword') {
+      await tryKeywordFallback('search_error');
+    }
     if (searchError) {
       console.error('[v1/memories] Search error:', searchError);
       if (keyId) {
@@ -875,21 +932,20 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
+    // Zero-result fallback for better consumer UX: retry keyword search once.
+    if ((!results || results.length === 0) && actualMode !== 'keyword') {
+      await tryKeywordFallback('zero_results');
+    }
+
     // Post-search filtering (agent, scope, type, tags, date)
-    if (results) {
-      results = results.filter((m: Record<string, unknown>) => {
-        if (agentId && m.agent_id !== agentId) return false;
-        if (scope && m.scope !== scope) return false;
-        if (memoryType && m.memory_type !== memoryType) return false;
-        if (after && typeof m.created_at === 'string' && m.created_at <= after) return false;
-        if (before && typeof m.created_at === 'string' && m.created_at >= before) return false;
-        if (tagsParam) {
-          const filterTags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
-          const memTags = Array.isArray(m.tags) ? m.tags as string[] : [];
-          if (filterTags.length > 0 && !filterTags.some((t) => memTags.includes(t))) return false;
-        }
-        return true;
-      });
+    results = applyResultFilters(results);
+
+    // If filtering removed all results, retry keyword mode once and re-apply filters.
+    if ((!results || results.length === 0) && resolvedMode !== 'keyword') {
+      const recovered = await tryKeywordFallback('post_filter_zero_results');
+      if (recovered) {
+        results = applyResultFilters(results);
+      }
     }
 
     // Cache base results before personalization (profile can change quickly).
@@ -902,7 +958,7 @@ export async function GET(request: NextRequest) {
         similarity: r.similarity,
         rrf_score: r.rrf_score,
       }));
-      setCachedQueryResults(userId, effectiveQuery, namespace, actualMode, cacheableResults).catch(
+      setCachedQueryResults(userId, effectiveQuery, namespace, resolvedMode, cacheableResults).catch(
         console.error
       );
     }
@@ -917,7 +973,7 @@ export async function GET(request: NextRequest) {
       await logRequest(
         { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
         200,
-        { embedding: actualMode !== 'keyword' ? effectiveQuery.length : 0 }
+        { embedding: resolvedMode !== 'keyword' ? effectiveQuery.length : 0 }
       );
     }
 
@@ -944,7 +1000,7 @@ export async function GET(request: NextRequest) {
       userId,
       namespace,
       query: effectiveQuery,
-      strategy: actualMode,
+      strategy: resolvedMode,
       latencyMs: Date.now() - startTime,
       resultCount: personalizedResults.length,
       topScore: topSimilarity,
@@ -968,7 +1024,7 @@ export async function GET(request: NextRequest) {
       NextResponse.json({
         success: true,
         data: {
-          mode: actualMode,
+          mode: resolvedMode,
           requestedMode,
           results: personalizedResults,
           count: personalizedResults.length,
@@ -995,6 +1051,7 @@ export async function GET(request: NextRequest) {
             overrideApplied: canaryOverrideApplied,
             forcedMode: canaryForcedMode,
           } : null,
+          fallback,
           personalization: {
             enabled: personalizationState.profile.personalizationEnabled,
             applied:
