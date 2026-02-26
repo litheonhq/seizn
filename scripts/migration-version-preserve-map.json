@@ -1,0 +1,16 @@
+{
+  "003": "nextauth_compatibility",
+  "20260114": "001_auto_pr_fixer",
+  "20260115": "001_memory_version",
+  "20260123": "003_functions_only",
+  "20260202": "001_dlq",
+  "20260204": "admin_audit_events",
+  "20260205": "beyond_mem0_graph_communities",
+  "20260206": "content_alt",
+  "20260207": "langgraph_checkpoints",
+  "20260209": "001_advanced_memory_features",
+  "20260214": "autopilot_prbot_schema",
+  "20260215": "budget_degrade_events",
+  "20260221": "20260221_memory_personalization_learning",
+  "20260222": "001_companion_meta_and_analytics"
+}
