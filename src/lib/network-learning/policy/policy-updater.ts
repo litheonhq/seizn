@@ -29,6 +29,8 @@ export interface PolicyRecommendation {
   basedOnInsights: string[];
 }
 
+type PolicyUpdateStatus = 'pending' | 'approved' | 'applied' | 'rejected';
+
 /**
  * Generate policy recommendations from insights
  */
@@ -338,7 +340,7 @@ export async function getPendingUpdates(): Promise<PolicyUpdate[]> {
  * Get all policy updates with optional filtering
  */
 export async function getPolicyUpdates(options: {
-  status?: 'pending' | 'approved' | 'applied' | 'rejected';
+  status?: PolicyUpdateStatus;
   limit?: number;
 }): Promise<PolicyUpdate[]> {
   const supabase = createServerClient();
@@ -365,6 +367,46 @@ export async function getPolicyUpdates(options: {
 }
 
 /**
+ * Get count of policy updates with optional status filter.
+ */
+export async function getPolicyUpdateCount(status?: PolicyUpdateStatus): Promise<number> {
+  const supabase = createServerClient();
+
+  let query = supabase
+    .from('network_learning_policy_updates')
+    .select('*', { count: 'exact', head: true });
+
+  if (status) {
+    query = query.eq('status', status);
+  }
+
+  const { count, error } = await query;
+
+  if (error) {
+    console.error('Failed to count policy updates:', error);
+    throw error;
+  }
+
+  return count ?? 0;
+}
+
+async function resolvePolicyUpdateState(updateId: string): Promise<{ id: string; status: PolicyUpdateStatus } | null> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from('network_learning_policy_updates')
+    .select('id, status')
+    .eq('id', updateId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Failed to resolve policy update state:', error);
+    throw error;
+  }
+
+  return (data as { id: string; status: PolicyUpdateStatus } | null) ?? null;
+}
+
+/**
  * Approve a policy update
  */
 export async function approvePolicyUpdate(updateId: string): Promise<PolicyUpdate> {
@@ -379,11 +421,19 @@ export async function approvePolicyUpdate(updateId: string): Promise<PolicyUpdat
     .eq('id', updateId)
     .eq('status', 'pending')
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Failed to approve policy update:', error);
     throw error;
+  }
+
+  if (!data) {
+    const existing = await resolvePolicyUpdateState(updateId);
+    if (!existing) {
+      throw new Error('Policy update not found');
+    }
+    throw new Error(`Policy update is already ${existing.status}`);
   }
 
   return recordToPolicyUpdate(data as PolicyUpdateRecord);
@@ -404,11 +454,19 @@ export async function rejectPolicyUpdate(updateId: string): Promise<PolicyUpdate
     .eq('id', updateId)
     .eq('status', 'pending')
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Failed to reject policy update:', error);
     throw error;
+  }
+
+  if (!data) {
+    const existing = await resolvePolicyUpdateState(updateId);
+    if (!existing) {
+      throw new Error('Policy update not found');
+    }
+    throw new Error(`Policy update is already ${existing.status}`);
   }
 
   return recordToPolicyUpdate(data as PolicyUpdateRecord);
@@ -424,23 +482,6 @@ export async function applyPolicyUpdate(
 ): Promise<{ update: PolicyUpdate; applied: boolean }> {
   const supabase = createServerClient();
 
-  // Get the update
-  const { data: updateData, error: fetchError } = await supabase
-    .from('network_learning_policy_updates')
-    .select('*')
-    .eq('id', updateId)
-    .single();
-
-  if (fetchError || !updateData) {
-    throw new Error('Policy update not found');
-  }
-
-  const record = updateData as PolicyUpdateRecord;
-
-  if (record.status !== 'approved') {
-    throw new Error('Policy update must be approved before applying');
-  }
-
   // Mark as applied
   const now = new Date().toISOString();
 
@@ -452,12 +493,21 @@ export async function applyPolicyUpdate(
       updated_at: now,
     })
     .eq('id', updateId)
+    .eq('status', 'approved')
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Failed to apply policy update:', error);
     throw error;
+  }
+
+  if (!data) {
+    const existing = await resolvePolicyUpdateState(updateId);
+    if (!existing) {
+      throw new Error('Policy update not found');
+    }
+    throw new Error(`Policy update must be approved before applying (current status: ${existing.status})`);
   }
 
   return {

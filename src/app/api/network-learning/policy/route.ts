@@ -8,9 +8,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import { createServerClient } from '@/lib/supabase';
 import {
   getPolicyUpdates,
-  getPendingUpdates,
+  getPolicyUpdateCount,
   approvePolicyUpdate,
   rejectPolicyUpdate,
   applyPolicyUpdate,
@@ -19,6 +20,95 @@ import {
   createABTestConfig,
 } from '@/lib/network-learning';
 import type { PolicyResponse, AggregationPeriod } from '@/lib/network-learning';
+
+const POLICY_READ_SCOPES = [
+  'network-learning:policy:read',
+  'network-learning:policy:write',
+  'network-learning:*',
+  'admin',
+] as const;
+
+const POLICY_WRITE_SCOPES = [
+  'network-learning:policy:write',
+  'network-learning:*',
+  'admin',
+] as const;
+
+const POLICY_ADMIN_ROLES = new Set(['owner', 'admin']);
+
+async function enforcePolicyAccess(
+  keyId: string,
+  requiredScopes: readonly string[],
+  operation: 'read' | 'write'
+): Promise<NextResponse | null> {
+  const supabase = createServerClient();
+
+  const { data: keyData, error: keyError } = await supabase
+    .from('api_keys')
+    .select('id, user_id, org_id, scopes')
+    .eq('id', keyId)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  if (keyError) {
+    console.error('Policy access key lookup failed:', {
+      keyId,
+      code: keyError.code,
+      message: keyError.message,
+      details: keyError.details,
+    });
+    return ServerErrors.internal('policy_access_key_lookup');
+  }
+
+  if (!keyData) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const scopes = Array.isArray(keyData.scopes)
+    ? keyData.scopes.filter((scope): scope is string => typeof scope === 'string')
+    : [];
+
+  const hasScope = requiredScopes.some((scope) => scopes.includes(scope));
+  if (!hasScope) {
+    return NextResponse.json(
+      {
+        error: `Insufficient scope for policy ${operation}`,
+        required_scopes: requiredScopes,
+      },
+      { status: 403 }
+    );
+  }
+
+  if (keyData.org_id) {
+    const { data: membership, error: membershipError } = await supabase
+      .from('org_members')
+      .select('role')
+      .eq('org_id', keyData.org_id)
+      .eq('user_id', keyData.user_id)
+      .maybeSingle();
+
+    if (membershipError) {
+      console.error('Policy access membership lookup failed:', {
+        keyId,
+        orgId: keyData.org_id,
+        userId: keyData.user_id,
+        code: membershipError.code,
+        message: membershipError.message,
+        details: membershipError.details,
+      });
+      return ServerErrors.internal('policy_access_membership_lookup');
+    }
+
+    if (!membership || !POLICY_ADMIN_ROLES.has(membership.role)) {
+      return NextResponse.json(
+        { error: 'Forbidden: organization admin role required for policy changes' },
+        { status: 403 }
+      );
+    }
+  }
+
+  return null;
+}
 
 // GET /api/network-learning/policy
 // Query params:
@@ -29,6 +119,11 @@ export async function GET(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
+    }
+
+    const readAccessError = await enforcePolicyAccess(authResult.keyId, POLICY_READ_SCOPES, 'read');
+    if (readAccessError) {
+      return readAccessError;
     }
 
     const { searchParams } = new URL(request.url);
@@ -65,14 +160,16 @@ export async function GET(request: NextRequest) {
     const updates = await getPolicyUpdates({ status, limit });
 
     // Get counts
-    const pendingUpdates = await getPendingUpdates();
-    const appliedUpdates = await getPolicyUpdates({ status: 'applied', limit: 1000 });
+    const [pendingCount, appliedCount] = await Promise.all([
+      getPolicyUpdateCount('pending'),
+      getPolicyUpdateCount('applied'),
+    ]);
 
     const response: PolicyResponse = {
       success: true,
       updates,
-      pendingCount: pendingUpdates.length,
-      appliedCount: appliedUpdates.length,
+      pendingCount,
+      appliedCount,
     };
 
     return NextResponse.json(response);
@@ -95,6 +192,11 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
       return authErrorResponse(authResult.authError);
+    }
+
+    const writeAccessError = await enforcePolicyAccess(authResult.keyId, POLICY_WRITE_SCOPES, 'write');
+    if (writeAccessError) {
+      return writeAccessError;
     }
 
     let body: unknown;
@@ -174,6 +276,12 @@ export async function POST(request: NextRequest) {
         if (err instanceof Error && err.message.includes('not found')) {
           return NotFoundErrors.resource('PolicyUpdate', updateId);
         }
+        if (err instanceof Error && err.message.includes('already')) {
+          return NextResponse.json(
+            { error: err.message },
+            { status: 409 }
+          );
+        }
         throw err;
       }
     }
@@ -191,6 +299,12 @@ export async function POST(request: NextRequest) {
       } catch (err) {
         if (err instanceof Error && err.message.includes('not found')) {
           return NotFoundErrors.resource('PolicyUpdate', updateId);
+        }
+        if (err instanceof Error && err.message.includes('already')) {
+          return NextResponse.json(
+            { error: err.message },
+            { status: 409 }
+          );
         }
         throw err;
       }
@@ -228,7 +342,10 @@ export async function POST(request: NextRequest) {
             return NotFoundErrors.resource('PolicyUpdate', updateId);
           }
           if (err.message.includes('must be approved')) {
-            return ValidationErrors.invalidField('updateId', 'Policy update must be approved before applying');
+            return NextResponse.json(
+              { error: err.message },
+              { status: 409 }
+            );
           }
         }
         throw err;
