@@ -108,8 +108,10 @@ describe('Network Learning Policy Route', () => {
 
     const { GET } = await import('./route');
     const response = await GET(makeRequest('/api/network-learning/policy'));
+    const body = await response.json();
 
     expect(response.status).toBe(403);
+    expect(body.error?.error_code).toBe('AUTH_UNAUTHORIZED');
   });
 
   it('GET returns exact counts from count queries', async () => {
@@ -212,5 +214,40 @@ describe('Network Learning Policy Route', () => {
     );
 
     expect(response.status).toBe(409);
+  });
+
+  it('POST generate returns 500 when one or more policy updates fail to persist', async () => {
+    createServerClientMock.mockReturnValue(
+      buildAccessClient({
+        keyData: {
+          id: 'key_1',
+          user_id: 'user_1',
+          org_id: null,
+          scopes: ['network-learning:policy:write'],
+        },
+      })
+    );
+    generatePolicyRecommendationsMock.mockResolvedValue([
+      { targetPolicy: 'planner.latency_budget' },
+      { targetPolicy: 'planner.rerank_config' },
+    ]);
+    createPolicyUpdateMock
+      .mockResolvedValueOnce({ id: 'pu_1' })
+      .mockRejectedValueOnce(new Error('insert failed'));
+
+    const { POST } = await import('./route');
+    const response = await POST(
+      makeRequest('/api/network-learning/policy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'generate', period: 'weekly' }),
+      })
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.error?.error_code).toBe('DATABASE_ERROR');
+    expect(body.error?.details?.updates_created).toBe(1);
+    expect(body.error?.details?.recommendations_generated).toBe(2);
   });
 });

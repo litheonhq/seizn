@@ -29,6 +29,7 @@ export interface PolicyDecision {
     requireLogging?: boolean;  // Force trace logging
   };
   budgetRemaining?: number;
+  budgetLimit?: number;
   policyId?: string;
 }
 
@@ -64,6 +65,12 @@ const MODEL_COST_TIERS: Record<string, 'low' | 'medium' | 'high'> = {
   'o1': 'high',
   'claude-3-opus-20240229': 'high',
 };
+
+const MODEL_PROVIDER_HINTS: Array<{ pattern: RegExp; providers: LLMProvider[] }> = [
+  { pattern: /^(gpt-|o1)/, providers: ['openai', 'azure'] },
+  { pattern: /^claude-/, providers: ['anthropic', 'bedrock'] },
+  { pattern: /^gemini-/, providers: ['google'] },
+];
 
 const configuredFailureMode = process.env.POLICY_ROUTER_FAILURE_MODE;
 const defaultFailureMode: 'open' | 'closed' =
@@ -130,13 +137,15 @@ export class PolicyRouter {
         if (this.config.enableCostOptimization && budgetDecision.budgetRemaining !== undefined) {
           const modifications = this.computeCostOptimizations(
             request,
-            budgetDecision.budgetRemaining
+            budgetDecision.budgetRemaining,
+            budgetDecision.budgetLimit ?? this.config.defaultBudgetCents
           );
           if (modifications) {
             return {
               allowed: true,
               modifications,
               budgetRemaining: budgetDecision.budgetRemaining,
+              budgetLimit: budgetDecision.budgetLimit,
             };
           }
 
@@ -192,6 +201,7 @@ export class PolicyRouter {
       return {
         allowed: true,
         budgetRemaining: Math.max(0, remaining),
+        budgetLimit,
       };
     } catch (error) {
       // Fail open/closed based on configured failure mode.
@@ -360,15 +370,20 @@ export class PolicyRouter {
    */
   private computeCostOptimizations(
     request: GatewayRequest,
-    budgetRemainingCents: number
+    budgetRemainingCents: number,
+    budgetLimitCents: number
   ): PolicyDecision['modifications'] | null {
+    if (budgetLimitCents <= 0) {
+      return null;
+    }
+
     // If no budget pressure, skip optimizations
-    if (budgetRemainingCents > this.config.defaultBudgetCents * 0.5) {
+    if (budgetRemainingCents > budgetLimitCents * 0.5) {
       return null;
     }
 
     const modifications: PolicyDecision['modifications'] = {};
-    const budgetPercent = budgetRemainingCents / this.config.defaultBudgetCents;
+    const budgetPercent = budgetRemainingCents / budgetLimitCents;
     const modelTier = MODEL_COST_TIERS[request.model] || 'medium';
 
     if (budgetPercent <= 0.2) {
@@ -378,7 +393,10 @@ export class PolicyRouter {
 
       // Force cheaper provider if using a high-cost model
       if (modelTier === 'high') {
-        modifications.preferredProvider = 'google'; // Cheapest option
+        const cheaperProvider = this.findCheaperProvider(request);
+        if (cheaperProvider) {
+          modifications.preferredProvider = cheaperProvider;
+        }
       }
     } else if (budgetPercent <= 0.5) {
       // Moderate cost reduction
@@ -406,9 +424,14 @@ export class PolicyRouter {
       return undefined;
     }
 
-    // Return the first cost-optimized provider that isn't the model's default
+    const compatibleProviders = MODEL_PROVIDER_HINTS.find(({ pattern }) => pattern.test(request.model))?.providers;
+    if (!compatibleProviders || compatibleProviders.length === 0) {
+      return undefined;
+    }
+
+    // Return the first cost-optimized provider that can serve this model family
     for (const provider of COST_OPTIMIZED_PROVIDERS) {
-      if (provider !== request.preferredProvider) {
+      if (provider !== request.preferredProvider && compatibleProviders.includes(provider)) {
         return provider;
       }
     }

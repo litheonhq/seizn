@@ -7,7 +7,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
-import { ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import {
+  AuthErrors,
+  ErrorCodes,
+  NotFoundErrors,
+  ServerErrors,
+  ValidationErrors,
+  createApiError,
+} from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import {
   getPolicyUpdates,
@@ -61,7 +68,7 @@ async function enforcePolicyAccess(
   }
 
   if (!keyData) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return AuthErrors.invalidKey();
   }
 
   const scopes = Array.isArray(keyData.scopes)
@@ -70,13 +77,15 @@ async function enforcePolicyAccess(
 
   const hasScope = requiredScopes.some((scope) => scopes.includes(scope));
   if (!hasScope) {
-    return NextResponse.json(
-      {
-        error: `Insufficient scope for policy ${operation}`,
+    return createApiError({
+      code: ErrorCodes.AUTH_UNAUTHORIZED,
+      message: `Insufficient scope for policy ${operation}`,
+      status: 403,
+      details: {
         required_scopes: requiredScopes,
+        operation,
       },
-      { status: 403 }
-    );
+    });
   }
 
   if (keyData.org_id) {
@@ -100,10 +109,15 @@ async function enforcePolicyAccess(
     }
 
     if (!membership || !POLICY_ADMIN_ROLES.has(membership.role)) {
-      return NextResponse.json(
-        { error: 'Forbidden: organization admin role required for policy changes' },
-        { status: 403 }
-      );
+      return createApiError({
+        code: ErrorCodes.AUTH_UNAUTHORIZED,
+        message: 'Organization admin role required for policy changes',
+        status: 403,
+        details: {
+          required_roles: Array.from(POLICY_ADMIN_ROLES),
+          operation,
+        },
+      });
     }
   }
 
@@ -239,13 +253,31 @@ export async function POST(request: NextRequest) {
 
       // Create policy updates from recommendations
       const createdUpdates = [];
+      const failedUpdates: Array<{ targetPolicy: string; error: string }> = [];
       for (const rec of recommendations) {
         try {
           const update = await createPolicyUpdate(rec);
           createdUpdates.push(update);
         } catch (createError) {
           console.error('Failed to create policy update:', createError);
+          failedUpdates.push({
+            targetPolicy: rec.targetPolicy,
+            error: createError instanceof Error ? createError.message : String(createError),
+          });
         }
+      }
+
+      if (failedUpdates.length > 0) {
+        return createApiError({
+          code: ErrorCodes.DATABASE_ERROR,
+          message: 'Failed to create one or more policy updates',
+          status: 500,
+          details: {
+            recommendations_generated: recommendations.length,
+            updates_created: createdUpdates.length,
+            failed_updates: failedUpdates,
+          },
+        });
       }
 
       return NextResponse.json({
@@ -277,10 +309,12 @@ export async function POST(request: NextRequest) {
           return NotFoundErrors.resource('PolicyUpdate', updateId);
         }
         if (err instanceof Error && err.message.includes('already')) {
-          return NextResponse.json(
-            { error: err.message },
-            { status: 409 }
-          );
+          return createApiError({
+            code: ErrorCodes.RESOURCE_ALREADY_EXISTS,
+            message: err.message,
+            status: 409,
+            details: { update_id: updateId },
+          });
         }
         throw err;
       }
@@ -301,10 +335,12 @@ export async function POST(request: NextRequest) {
           return NotFoundErrors.resource('PolicyUpdate', updateId);
         }
         if (err instanceof Error && err.message.includes('already')) {
-          return NextResponse.json(
-            { error: err.message },
-            { status: 409 }
-          );
+          return createApiError({
+            code: ErrorCodes.RESOURCE_ALREADY_EXISTS,
+            message: err.message,
+            status: 409,
+            details: { update_id: updateId },
+          });
         }
         throw err;
       }
@@ -342,10 +378,12 @@ export async function POST(request: NextRequest) {
             return NotFoundErrors.resource('PolicyUpdate', updateId);
           }
           if (err.message.includes('must be approved')) {
-            return NextResponse.json(
-              { error: err.message },
-              { status: 409 }
-            );
+            return createApiError({
+              code: ErrorCodes.RESOURCE_ALREADY_EXISTS,
+              message: err.message,
+              status: 409,
+              details: { update_id: updateId },
+            });
           }
         }
         throw err;
