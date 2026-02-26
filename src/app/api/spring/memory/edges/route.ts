@@ -95,19 +95,17 @@ export async function GET(request: NextRequest) {
     const service = createMemoryV3Service(supabase);
     const edges = await service.getEdges(query);
 
-    // Filter edges to only those where user owns at least one of the notes
-    // This is a safety check - the service should already handle this
-    const filteredEdges = [];
-    for (const edge of edges) {
-      const sourceNote = await service.getNote(edge.sourceId);
-      const targetNote = await service.getNote(edge.targetId);
-      if (
-        (sourceNote && sourceNote.userId === userId) ||
-        (targetNote && targetNote.userId === userId)
-      ) {
-        filteredEdges.push(edge);
-      }
-    }
+    // Filter edges to only those where user owns at least one of the notes.
+    // Batch note lookup to avoid per-edge DB round-trips (N+1 pattern).
+    const noteIds = Array.from(new Set(edges.flatMap((edge) => [edge.sourceId, edge.targetId])));
+    const { notes } = noteIds.length
+      ? await service.listNotes({ ids: noteIds, limit: noteIds.length })
+      : { notes: [] };
+
+    const ownedNoteIds = new Set(notes.filter((note) => note.userId === userId).map((note) => note.id));
+    const filteredEdges = edges.filter(
+      (edge) => ownedNoteIds.has(edge.sourceId) || ownedNoteIds.has(edge.targetId)
+    );
 
     // Log request
     await logRequest(

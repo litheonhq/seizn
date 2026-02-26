@@ -45,14 +45,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Audit logs error:', error);
-      // Return mock data if table doesn't exist
-      return NextResponse.json({
-        success: true,
-        logs: generateMockAuditLogs(),
-        total: 50,
-        limit,
-        offset,
-      });
+      return ServerErrors.internal('audit_logs');
     }
 
     return NextResponse.json({
@@ -106,11 +99,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Audit log creation error:', error);
-      // Still return success if table doesn't exist (graceful degradation)
-      return NextResponse.json({
-        success: true,
-        log: logEntry,
-      });
+      return ServerErrors.internal('audit_log_create');
     }
 
     return NextResponse.json({
@@ -121,35 +110,4 @@ export async function POST(request: NextRequest) {
     console.error('Audit log creation error:', error);
     return ServerErrors.internal('audit_log_create');
   }
-}
-
-function generateMockAuditLogs() {
-  const actions = [
-    { action: 'api_key.created', resource: 'api_key', details: { key_prefix: 'szn_live_abc' } },
-    { action: 'api_key.rotated', resource: 'api_key', details: { key_prefix: 'szn_live_xyz' } },
-    { action: 'collection.created', resource: 'collection', details: { name: 'documents' } },
-    { action: 'collection.deleted', resource: 'collection', details: { name: 'old-docs' } },
-    { action: 'user.login', resource: 'user', details: { method: 'oauth', provider: 'google' } },
-    { action: 'settings.updated', resource: 'settings', details: { field: 'rerank_enabled' } },
-    { action: 'connector.added', resource: 'connector', details: { type: 'pinecone' } },
-    { action: 'export.requested', resource: 'data', details: { format: 'json', rows: 1000 } },
-  ];
-
-  const logs = [];
-  const now = Date.now();
-
-  for (let i = 0; i < 50; i++) {
-    const randomAction = actions[Math.floor(Math.random() * actions.length)];
-    logs.push({
-      id: crypto.randomUUID(),
-      ...randomAction,
-      ip_address: `192.168.1.${Math.floor(Math.random() * 255)}`,
-      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      created_at: new Date(now - i * 3600000 * Math.random() * 24).toISOString(),
-    });
-  }
-
-  return logs.sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
 }
