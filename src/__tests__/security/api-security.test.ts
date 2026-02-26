@@ -11,13 +11,24 @@ import { describe, it, expect } from 'vitest';
 
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 
-// Skip if no test server is running
-const shouldRun = process.env.SECURITY_TEST_LIVE === 'true';
+// Live security suite runs when explicitly enabled OR when full live config is present.
+const liveOptIn = process.env.SECURITY_TEST_LIVE === 'true';
+const hasLiveConfig = Boolean(process.env.TEST_BASE_URL && process.env.TEST_API_KEY);
+const shouldRun = liveOptIn || hasLiveConfig;
 const allowRateLimit = shouldRun;
 
 function expectedStatuses(base: number[]): number[] {
   return allowRateLimit ? [...base, 429] : base;
 }
+
+describe('API Security Tests configuration', () => {
+  it('has valid live-test configuration when explicitly enabled', () => {
+    if (!liveOptIn) return;
+
+    expect(process.env.TEST_BASE_URL).toBeTruthy();
+    expect(process.env.TEST_API_KEY).toBeTruthy();
+  });
+});
 
 describe.skipIf(!shouldRun)('API Security Tests', () => {
   // ============================================
