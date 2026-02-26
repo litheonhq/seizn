@@ -138,7 +138,7 @@ src/app/api/retention/holds/
 
 **검증 파일:**
 ```
-supabase/migrations/20260202_012_deletion_verification.sql
+supabase/migrations/20260202012_012_deletion_verification.sql
 src/lib/winter/rtbf/verification.ts     # 512 lines
 src/app/api/winter/rtbf/route.ts
 src/app/api/cron/winter/rtbf/verify-pending/route.ts
@@ -169,7 +169,7 @@ src/app/api/tool-tokens/route.ts           # Token 관리 API
 src/app/api/tool-tokens/[id]/route.ts      # Token CRUD
 src/app/api/tool-approvals/route.ts        # 승인 워크플로우 API
 src/app/api/tool-approvals/[id]/route.ts   # 승인 CRUD
-supabase/migrations/20260202_013_tool_gating.sql
+supabase/migrations/20260202013_013_tool_gating.sql
 ```
 
 ### 3.5 Policy Pack Registry
@@ -191,7 +191,7 @@ src/lib/policy-packs/signing.ts             # 서명 검증
 src/lib/policy-packs/auto-eval-integration.ts # Auto-Eval 통합
 src/lib/policy-packs/index.ts               # Export
 src/app/api/policy-packs/route.ts           # Policy Pack API
-supabase/migrations/20260202_014_policy_pack_registry.sql
+supabase/migrations/20260202014_014_policy_pack_registry.sql
 ```
 
 ---
@@ -275,9 +275,9 @@ deploy/helm/seizn/
 | Core Tables | **FULL** | `001_initial.sql` |
 | Summer RAG | **SCHEMA** | `021_summer_schema.sql` |
 | Winter Governance | **FULL** | `024_winter_governance.sql` |
-| Deletion Verification | **FULL** | `20260202_012_deletion_verification.sql` |
-| Tool Gating | **SCHEMA** | `20260202_013_tool_gating.sql` |
-| Policy Pack Registry | **SCHEMA** | `20260202_014_policy_pack_registry.sql` |
+| Deletion Verification | **FULL** | `20260202012_012_deletion_verification.sql` |
+| Tool Gating | **SCHEMA** | `20260202013_013_tool_gating.sql` |
+| Policy Pack Registry | **SCHEMA** | `20260202014_014_policy_pack_registry.sql` |
 | Security Lint Fixes | **FULL** | `20260202_015_security_lint_fixes.sql` |
 
 ---
@@ -342,7 +342,7 @@ src/lib/integrations/vercel-ai/memory-middleware.ts  # withSeizNMemory middlewar
 
 ```text
 # Database Migration
-supabase/migrations/20260204_spring_memory_v3.sql
+supabase/migrations/20260204014_spring_memory_v3.sql
 
 # Types & Service
 src/lib/spring/memory-v3/types.ts

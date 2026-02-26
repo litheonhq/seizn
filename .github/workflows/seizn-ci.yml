@@ -47,6 +47,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate migration version prefixes
+        run: node scripts/normalize-migration-versions.mjs --keep-name-map=scripts/migration-version-preserve-map.json --fail-on-duplicates
+
       - name: Build project
         run: npm run build
         env:
@@ -59,7 +62,6 @@ jobs:
 
       - name: Run tests with trace collection
         id: collect
-        continue-on-error: true
         run: |
           echo "[DEBUG] Starting trace collection..."
           echo "[DEBUG] SEIZN_TEST_COMMAND=$SEIZN_TEST_COMMAND"

@@ -82,7 +82,7 @@
 ```
 src/lib/fall/record.ts
 src/lib/fall/wrapper.ts
-supabase/migrations/022_fall_recorder.sql
+supabase/migrations/022_fall_observability.sql
 ```
 
 ---
