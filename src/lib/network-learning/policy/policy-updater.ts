@@ -169,7 +169,8 @@ function analyzePlanPathPatterns(
           rerank_top_k: 10,
         },
         rationale: `High-traffic path lacks reranking. Recommend enabling for improved relevance.`,
-        confidence: 0.75,
+        // Keep above default minConfidence (0.8) so this recommendation is actionable.
+        confidence: 0.8,
         basedOnInsights: insights.slice(0, 10).map((i) => i.id),
       });
     }

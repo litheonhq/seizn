@@ -50,13 +50,13 @@ describe('PolicyUpdater', () => {
   });
 
   describe('generatePolicyRecommendations', () => {
-    it.skip('should generate recommendations from high latency clusters', async () => {
+    it('should generate recommendations from high latency clusters', async () => {
       const mockInsights: AggregatedInsight[] = [
         {
           id: 'insight_1',
           period: 'weekly',
           queryCluster: 'cluster_slow',
-          sampleCount: 500,
+          sampleCount: 1000,
           avgLatencyMs: 2000, // High latency
           avgResultsCount: 10,
           topPlanPaths: [{ path: ['retrieve', 'generate'], count: 400 }],
@@ -70,20 +70,23 @@ describe('PolicyUpdater', () => {
       const recommendations = await generatePolicyRecommendations('weekly');
 
       expect(recommendations.length).toBeGreaterThan(0);
-      expect(recommendations[0].targetPolicy).toContain('latency');
+      const latencyRec = recommendations.find((r) =>
+        r.targetPolicy.includes('latency')
+      );
+      expect(latencyRec).toBeDefined();
     });
 
-    it.skip('should recommend caching when not present in common paths', async () => {
+    it('should recommend caching when not present in common paths', async () => {
       const mockInsights: AggregatedInsight[] = [
         {
           id: 'insight_1',
           period: 'weekly',
           queryCluster: 'cluster_a',
-          sampleCount: 200,
+          sampleCount: 800,
           avgLatencyMs: 300,
           avgResultsCount: 10,
           topPlanPaths: [
-            { path: ['retrieve', 'generate'], count: 150 }, // No cache_check
+            { path: ['retrieve', 'generate'], count: 400 }, // No cache_check
           ],
           createdAt: '2024-01-15T00:00:00Z',
         },
@@ -100,17 +103,17 @@ describe('PolicyUpdater', () => {
       expect(cachingRec).toBeDefined();
     });
 
-    it.skip('should recommend reranking when not present', async () => {
+    it('should recommend reranking when not present', async () => {
       const mockInsights: AggregatedInsight[] = [
         {
           id: 'insight_1',
           period: 'weekly',
           queryCluster: 'cluster_a',
-          sampleCount: 200,
+          sampleCount: 800,
           avgLatencyMs: 300,
           avgResultsCount: 10,
           topPlanPaths: [
-            { path: ['retrieve', 'generate'], count: 150 }, // No rerank
+            { path: ['retrieve', 'generate'], count: 400 }, // No rerank
           ],
           createdAt: '2024-01-15T00:00:00Z',
         },
@@ -127,13 +130,13 @@ describe('PolicyUpdater', () => {
       expect(rerankRec).toBeDefined();
     });
 
-    it.skip('should generate quality recommendations for low feedback', async () => {
+    it('should generate quality recommendations for low feedback', async () => {
       const mockInsights: AggregatedInsight[] = [
         {
           id: 'insight_1',
           period: 'weekly',
           queryCluster: 'cluster_low',
-          sampleCount: 200,
+          sampleCount: 400,
           avgLatencyMs: 100,
           avgResultsCount: 10,
           avgFeedbackScore: 2.5, // Low feedback
@@ -144,7 +147,7 @@ describe('PolicyUpdater', () => {
           id: 'insight_2',
           period: 'weekly',
           queryCluster: 'cluster_low2',
-          sampleCount: 200,
+          sampleCount: 400,
           avgLatencyMs: 100,
           avgResultsCount: 10,
           avgFeedbackScore: 2.0,
@@ -155,7 +158,7 @@ describe('PolicyUpdater', () => {
           id: 'insight_3',
           period: 'weekly',
           queryCluster: 'cluster_low3',
-          sampleCount: 200,
+          sampleCount: 400,
           avgLatencyMs: 100,
           avgResultsCount: 10,
           avgFeedbackScore: 2.8,
