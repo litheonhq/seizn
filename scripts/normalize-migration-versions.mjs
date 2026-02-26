@@ -5,6 +5,7 @@ import path from 'node:path';
 
 const args = new Set(process.argv.slice(2));
 const apply = args.has('--apply');
+const failOnDuplicates = args.has('--fail-on-duplicates');
 
 const writeMapArg = process.argv.find((arg) => arg.startsWith('--write-map='));
 const writeMapPath = writeMapArg ? writeMapArg.split('=')[1] : null;
@@ -53,6 +54,15 @@ const usedVersions = new Set([...byVersion.keys()]);
 const usedFilenames = new Set(files);
 const renamePlan = [];
 
+function nextAvailableVersion(initialVersion, usedVersions) {
+  let candidateVersion = initialVersion;
+  while (usedVersions.has(candidateVersion)) {
+    const numeric = Number(candidateVersion);
+    candidateVersion = String(Number.isFinite(numeric) ? numeric + 1 : `${candidateVersion}1`);
+  }
+  return candidateVersion;
+}
+
 for (const [version, entries] of [...byVersion.entries()].sort()) {
   if (entries.length <= 1) {
     continue;
@@ -76,14 +86,34 @@ for (const [version, entries] of [...byVersion.entries()].sort()) {
 
   const renamingTargets = entries.filter((entry) => entry.file !== keepEntry.file);
 
+  const keepTargetVersion = nextAvailableVersion(`${version}001`, usedVersions);
+  const keepTargetFile = `${keepTargetVersion}${keepEntry.suffix}`;
+
+  if (keepEntry.file !== keepTargetFile) {
+    if (usedFilenames.has(keepTargetFile)) {
+      console.error(`Target filename collision detected: ${keepTargetFile}`);
+      process.exit(1);
+    }
+
+    renamePlan.push({
+      from: keepEntry.file,
+      to: keepTargetFile,
+      oldVersion: version,
+      newVersion: keepTargetVersion,
+      preserved: keepEntry.file,
+      isBaseNormalization: true,
+    });
+
+    usedVersions.add(keepTargetVersion);
+    usedFilenames.add(keepTargetFile);
+  }
+
   for (let index = 0; index < renamingTargets.length; index += 1) {
     const entry = renamingTargets[index];
-    let candidateVersion = `${version}${String(index + 2).padStart(3, '0')}`;
-
-    while (usedVersions.has(candidateVersion)) {
-      const numeric = Number(candidateVersion);
-      candidateVersion = String(Number.isFinite(numeric) ? numeric + 1 : `${candidateVersion}1`);
-    }
+    const candidateVersion = nextAvailableVersion(
+      `${version}${String(index + 2).padStart(3, '0')}`,
+      usedVersions
+    );
 
     const candidateFile = `${candidateVersion}${entry.suffix}`;
 
@@ -114,6 +144,13 @@ const summary = {
 };
 
 console.log(JSON.stringify({ summary, renamePlan }, null, 2));
+
+if (failOnDuplicates && summary.duplicateGroups > 0) {
+  console.error(
+    `Duplicate migration version prefixes detected: ${summary.duplicateGroups} groups (${summary.renamedFiles} files need renaming).`
+  );
+  process.exit(1);
+}
 
 if (writeMapPath) {
   const absoluteWriteMapPath = path.isAbsolute(writeMapPath)

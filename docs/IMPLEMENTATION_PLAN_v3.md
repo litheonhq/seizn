@@ -42,7 +42,7 @@ GET  /api/winter/rtbf/certificate // 인증서 다운로드
 ```
 
 ### 1.2 Memory v3 스키마 마이그레이션
-**파일**: `supabase/migrations/20260204_spring_memory_v3.sql`
+**파일**: `supabase/migrations/20260204014_spring_memory_v3.sql`
 
 **테이블 생성**:
 ```sql
@@ -583,7 +583,7 @@ export function createSeizNMemoryProvider(config: SeizNConfig) {
 | LlamaIndex | `src/lib/integrations/llamaindex/` |
 | Vercel AI SDK | `src/lib/integrations/vercel-ai/` |
 | Marketplace UI | `src/app/(dashboard)/dashboard/marketplace/` |
-| Migration | `supabase/migrations/20260204_spring_memory_v3.sql` |
+| Migration | `supabase/migrations/20260204014_spring_memory_v3.sql` |
 
 ---
 

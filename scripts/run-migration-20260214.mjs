@@ -23,7 +23,7 @@ if (!connectionString) {
 
 const migrationPath = resolve(
   __dirname,
-  '../supabase/migrations/20260214_autopilot_prbot_schema.sql'
+  '../supabase/migrations/20260214001_autopilot_prbot_schema.sql'
 );
 
 function pgConfigFromConnectionString(cs) {
@@ -54,7 +54,7 @@ async function run() {
       '../supabase/migrations/045_combo_b_autopilot.sql'
     );
 
-    console.log('Running migration 20260214_autopilot_prbot_schema.sql...');
+    console.log('Running migration 20260214001_autopilot_prbot_schema.sql...');
     await client.query('BEGIN');
 
     // Pre-req: base autopilot tables must exist before we can ALTER them.
