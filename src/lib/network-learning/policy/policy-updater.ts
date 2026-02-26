@@ -30,6 +30,7 @@ export interface PolicyRecommendation {
 }
 
 type PolicyUpdateStatus = 'pending' | 'approved' | 'applied' | 'rejected';
+const POLICY_UPDATES_TABLE = 'network_policy_updates';
 
 /**
  * Generate policy recommendations from insights
@@ -303,7 +304,7 @@ export async function createPolicyUpdate(
   };
 
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .insert(record)
     .select()
     .single();
@@ -323,7 +324,7 @@ export async function getPendingUpdates(): Promise<PolicyUpdate[]> {
   const supabase = createServerClient();
 
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .select('*')
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
@@ -347,7 +348,7 @@ export async function getPolicyUpdates(options: {
   const { status, limit = 50 } = options;
 
   let query = supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .select('*')
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -373,7 +374,7 @@ export async function getPolicyUpdateCount(status?: PolicyUpdateStatus): Promise
   const supabase = createServerClient();
 
   let query = supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .select('*', { count: 'exact', head: true });
 
   if (status) {
@@ -393,7 +394,7 @@ export async function getPolicyUpdateCount(status?: PolicyUpdateStatus): Promise
 async function resolvePolicyUpdateState(updateId: string): Promise<{ id: string; status: PolicyUpdateStatus } | null> {
   const supabase = createServerClient();
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .select('id, status')
     .eq('id', updateId)
     .maybeSingle();
@@ -413,7 +414,7 @@ export async function approvePolicyUpdate(updateId: string): Promise<PolicyUpdat
   const supabase = createServerClient();
 
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .update({
       status: 'approved',
       updated_at: new Date().toISOString(),
@@ -446,7 +447,7 @@ export async function rejectPolicyUpdate(updateId: string): Promise<PolicyUpdate
   const supabase = createServerClient();
 
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .update({
       status: 'rejected',
       updated_at: new Date().toISOString(),
@@ -486,7 +487,7 @@ export async function applyPolicyUpdate(
   const now = new Date().toISOString();
 
   const { data, error } = await supabase
-    .from('network_learning_policy_updates')
+    .from(POLICY_UPDATES_TABLE)
     .update({
       status: 'applied',
       applied_at: now,
