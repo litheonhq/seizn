@@ -68,6 +68,7 @@ import {
   recordRouterOutcome,
   type RouterLearningDecision,
 } from '@/lib/memory/router-learning';
+import { executeMemorySearch } from '@/lib/memory/search-executor';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -81,6 +82,20 @@ import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
+
+type SearchResultRow = {
+  id: string;
+  content: string;
+  memory_type: string;
+  importance?: number;
+  similarity?: number;
+  rrf_score?: number;
+  created_at?: string;
+  tags?: string[];
+  companion_meta?: Record<string, unknown>;
+  agent_id?: string;
+  scope?: string;
+};
 
 function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
@@ -814,14 +829,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Search
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let results: any[] | null = null;
-    let searchError: Error | null = null;
-    let resolvedMode: Exclude<SearchMode, 'auto'> = actualMode;
-    let fallback: { applied: boolean; from: Exclude<SearchMode, 'auto'>; to: 'keyword'; reason: string } | null = null;
     const nsParam = namespace === 'default' ? null : namespace;
-    const applyResultFilters = (input: any[] | null): any[] | null => {
+    const applyResultFilters = (input: SearchResultRow[] | null): SearchResultRow[] | null => {
       if (!input) return input;
       return input.filter((m: Record<string, unknown>) => {
         if (agentId && m.agent_id !== agentId) return false;
@@ -837,77 +846,23 @@ export async function GET(request: NextRequest) {
         return true;
       });
     };
-    const tryKeywordFallback = async (
-      reason: 'search_error' | 'zero_results' | 'post_filter_zero_results'
-    ): Promise<boolean> => {
-      if (resolvedMode === 'keyword') return false;
-      const fromMode = resolvedMode;
-      const { data: fallbackData, error: fallbackError } = await supabase.rpc('keyword_search_memories', {
-        query_text: effectiveQuery,
-        match_user_id: userId,
-        match_count: limit,
-        match_namespace: nsParam,
-      });
+    const searchExecution = await executeMemorySearch<SearchResultRow>({
+      rpcCall: async (fn, args) => {
+        const { data, error } = await supabase.rpc(fn, args);
+        return { data: (data as SearchResultRow[] | null), error };
+      },
+      initialMode: actualMode,
+      queryText: effectiveQuery,
+      userId,
+      limit,
+      namespaceParam: nsParam,
+      threshold: routerDecision?.suggestedParams.threshold || threshold,
+      createQueryEmbedding,
+      applyFilters: applyResultFilters,
+    });
 
-      if (!fallbackError && fallbackData && fallbackData.length > 0) {
-        results = fallbackData;
-        fallback = {
-          applied: true,
-          from: fromMode,
-          to: 'keyword',
-          reason,
-        };
-        resolvedMode = 'keyword';
-        searchError = null;
-        return true;
-      }
+    const { results, resolvedMode, fallback, error: searchError } = searchExecution;
 
-      if (fallbackError) {
-        searchError = fallbackError;
-      }
-
-      return false;
-    };
-
-    if (actualMode === 'keyword') {
-      const { data, error } = await supabase.rpc('keyword_search_memories', {
-        query_text: effectiveQuery,
-        match_user_id: userId,
-        match_count: limit,
-        match_namespace: nsParam,
-      });
-      results = data;
-      searchError = error;
-    } else if (actualMode === 'hybrid') {
-      const queryEmbedding = await createQueryEmbedding(effectiveQuery);
-      const { data, error } = await supabase.rpc('hybrid_search_memories', {
-        query_text: effectiveQuery,
-        query_embedding: queryEmbedding,
-        match_user_id: userId,
-        match_count: limit,
-        match_threshold: routerDecision?.suggestedParams.threshold || threshold,
-        match_namespace: nsParam,
-        keyword_weight: 0.3,
-        vector_weight: 0.7,
-      });
-      results = data;
-      searchError = error;
-    } else {
-      const queryEmbedding = await createQueryEmbedding(effectiveQuery);
-      const { data, error } = await supabase.rpc('search_memories', {
-        query_embedding: queryEmbedding,
-        match_user_id: userId,
-        match_count: limit,
-        match_threshold: routerDecision?.suggestedParams.threshold || threshold,
-        match_namespace: nsParam,
-      });
-      results = data;
-      searchError = error;
-    }
-
-    if (searchError && actualMode !== 'keyword') {
-      await tryKeywordFallback('search_error');
-    }
     if (searchError) {
       console.error('[v1/memories] Search error:', searchError);
       if (keyId) {
@@ -923,7 +878,7 @@ export async function GET(request: NextRequest) {
             version: canaryAssignment.assignedVersion,
             success: false,
             latencyMs: Date.now() - startTime,
-            errorMessage: String((searchError as { message?: string }).message || 'search_error'),
+            errorMessage: searchError.message || 'search_error',
           });
         } catch (canaryMetricError) {
           console.error('[v1/memories] Canary failure metric record failed:', canaryMetricError);
@@ -932,31 +887,15 @@ export async function GET(request: NextRequest) {
       return ServerErrors.database('search_memories');
     }
 
-    // Zero-result fallback for better consumer UX: retry keyword search once.
-    if ((!results || results.length === 0) && actualMode !== 'keyword') {
-      await tryKeywordFallback('zero_results');
-    }
-
-    // Post-search filtering (agent, scope, type, tags, date)
-    results = applyResultFilters(results);
-
-    // If filtering removed all results, retry keyword mode once and re-apply filters.
-    if ((!results || results.length === 0) && resolvedMode !== 'keyword') {
-      const recovered = await tryKeywordFallback('post_filter_zero_results');
-      if (recovered) {
-        results = applyResultFilters(results);
-      }
-    }
-
     // Cache base results before personalization (profile can change quickly).
     if (results && results.length > 0) {
       const cacheableResults: CachedMemory[] = results.map((r) => ({
         id: r.id,
         content: r.content,
         memory_type: r.memory_type,
-        importance: r.importance || 5,
-        similarity: r.similarity,
-        rrf_score: r.rrf_score,
+        importance: typeof r.importance === 'number' ? r.importance : 5,
+        similarity: typeof r.similarity === 'number' ? r.similarity : undefined,
+        rrf_score: typeof r.rrf_score === 'number' ? r.rrf_score : undefined,
       }));
       setCachedQueryResults(userId, effectiveQuery, namespace, resolvedMode, cacheableResults).catch(
         console.error
