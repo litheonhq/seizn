@@ -54,14 +54,14 @@ Improve real-user search quality under load by reducing timeout failure impact a
 - [x] Timeout fallback tests
 - [x] Dashboard adaptive threshold + request abort
 - [x] Dashboard diagnostics + accessibility status message
-- [ ] Semantic cache (P1 follow-up)
+- [x] Semantic cache A/B rollout guardrails (`MEMORY_SEMANTIC_CACHE_AB_ENABLED`, `MEMORY_SEMANTIC_CACHE_AB_SCOPE`, `MEMORY_SEMANTIC_CACHE_AB_RATIO`)
 - [x] DB-level statement timeout / per-query budget at SQL layer via bounded RPC wrappers (`*_search_memories_bounded`)
 
 ## Rollout plan
 1. Deploy with timeout default `2500ms`
 2. Observe timeout/fallback ratio and p95 latency for 24h
 3. If timeout > target, increase to `3000ms` and re-evaluate
-4. Start P1 follow-up: semantic cache A/B on dashboard traffic
+4. Tune semantic cache A/B ratio on dashboard traffic and compare hit/latency/zero-result deltas
 
 ## Risk and mitigation
 - Risk: stricter threshold may reduce recall for very short queries

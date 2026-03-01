@@ -69,6 +69,7 @@ import {
 } from '@/lib/memory/router-learning';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
 import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
+import { resolveSemanticCacheDecision } from '@/lib/memory/semantic-cache-experiment';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -661,6 +662,16 @@ export async function GET(request: NextRequest) {
       actualMode = canaryForcedMode;
       canaryOverrideApplied = true;
     }
+    const semanticCacheDecision = resolveSemanticCacheDecision({ userId, keyId });
+    const semanticCacheMeta = {
+      enabled: semanticCacheDecision.enabled,
+      variant: semanticCacheDecision.variant,
+      scope: semanticCacheDecision.scope,
+      readEnabled: semanticCacheDecision.allowRead,
+      writeEnabled: semanticCacheDecision.allowWrite,
+      reason: semanticCacheDecision.reason,
+      bucket: semanticCacheDecision.bucket,
+    };
 
     // Slot lookups
     if (actualMode === 'slot') {
@@ -753,8 +764,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache check
-    const cacheResult = await getCachedQueryResults(userId, effectiveQuery, namespace, actualMode);
-    if (cacheResult.hit && cacheResult.results.length > 0) {
+    const cacheResult = semanticCacheDecision.allowRead
+      ? await getCachedQueryResults(userId, effectiveQuery, namespace, actualMode)
+      : { hit: false, results: [], fromCache: false as const, version: undefined };
+    const semanticCacheHit = cacheResult.hit && cacheResult.results.length > 0;
+    if (semanticCacheHit) {
       const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
       const personalizedResults =
         personalizationState.available && personalizationState.profile.personalizationEnabled
@@ -843,7 +857,15 @@ export async function GET(request: NextRequest) {
             available: personalizationState.available,
           },
         },
-        meta: { ...META, cached: true, latencyMs: Date.now() - startTime },
+        meta: {
+          ...META,
+          cached: true,
+          latencyMs: Date.now() - startTime,
+          semanticCache: {
+            ...semanticCacheMeta,
+            hit: true,
+          },
+        },
       });
     }
 
@@ -913,7 +935,14 @@ export async function GET(request: NextRequest) {
                 code: 'search_timeout',
                 message: 'Search timed out. Try a shorter query or retry.',
               },
-              meta: { ...META, latencyMs: Date.now() - startTime },
+              meta: {
+                ...META,
+                latencyMs: Date.now() - startTime,
+                semanticCache: {
+                  ...semanticCacheMeta,
+                  hit: false,
+                },
+              },
             },
             { status: 504 }
           ),
@@ -924,7 +953,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache base results before personalization (profile can change quickly).
-    if (results && results.length > 0) {
+    if (semanticCacheDecision.allowWrite && results && results.length > 0) {
       setCachedQueryResults(
         userId,
         effectiveQuery,
@@ -1032,7 +1061,15 @@ export async function GET(request: NextRequest) {
             available: personalizationState.available,
           },
         },
-        meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
+        meta: {
+          ...META,
+          cached: false,
+          latencyMs: Date.now() - startTime,
+          semanticCache: {
+            ...semanticCacheMeta,
+            hit: false,
+          },
+        },
       }),
       result.rateLimitHeaders
     );
