@@ -44,6 +44,7 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
 import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
+import { resolveSemanticCacheDecision } from '@/lib/memory/semantic-cache-experiment';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -592,6 +593,16 @@ export async function GET(request: NextRequest) {
     } else {
       actualMode = requestedMode as Exclude<SearchMode, 'auto'>;
     }
+    const semanticCacheDecision = resolveSemanticCacheDecision({ userId, keyId });
+    const semanticCacheInfo = {
+      enabled: semanticCacheDecision.enabled,
+      variant: semanticCacheDecision.variant,
+      scope: semanticCacheDecision.scope,
+      read_enabled: semanticCacheDecision.allowRead,
+      write_enabled: semanticCacheDecision.allowWrite,
+      reason: semanticCacheDecision.reason,
+      bucket: semanticCacheDecision.bucket,
+    };
 
     // Handle slot lookups
     if (actualMode === 'slot') {
@@ -642,8 +653,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache check
-    const cacheResult = await getCachedQueryResults(userId, query, namespace, actualMode);
-    if (cacheResult.hit && cacheResult.results.length > 0) {
+    const cacheResult = semanticCacheDecision.allowRead
+      ? await getCachedQueryResults(userId, query, namespace, actualMode)
+      : { hit: false, results: [], fromCache: false as const, version: undefined };
+    const semanticCacheHit = cacheResult.hit && cacheResult.results.length > 0;
+    if (semanticCacheHit) {
       const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
       const rankedCachedResults =
         personalizationState.available && personalizationState.profile.personalizationEnabled
@@ -671,6 +685,10 @@ export async function GET(request: NextRequest) {
         count: rankedCachedResults.length,
         total: rankedCachedResults.length,
         cached: true,
+        semantic_cache: {
+          ...semanticCacheInfo,
+          hit: true,
+        },
         personalization: {
           enabled: personalizationState.profile.personalizationEnabled,
           applied:
@@ -768,7 +786,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Cache results
-    if (results && results.length > 0) {
+    if (semanticCacheDecision.allowWrite && results && results.length > 0) {
       setCachedQueryResults(userId, query, namespace, resolvedMode, toCachedMemories(results)).catch(
         console.error
       );
@@ -807,6 +825,10 @@ export async function GET(request: NextRequest) {
       count: rankedResults?.length || 0,
       total: rankedResults?.length || 0,
       cached: false,
+      semantic_cache: {
+        ...semanticCacheInfo,
+        hit: false,
+      },
       personalization: {
         enabled: personalizationState.profile.personalizationEnabled,
         applied:

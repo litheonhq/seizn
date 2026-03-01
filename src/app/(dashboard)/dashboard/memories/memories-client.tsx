@@ -39,6 +39,16 @@ interface MemoriesApiEnvelope {
     version?: string;
     cached?: boolean;
     latencyMs?: number;
+    semanticCache?: {
+      enabled?: boolean;
+      variant?: "control" | "treatment" | null;
+      scope?: "dashboard" | "all";
+      readEnabled?: boolean;
+      writeEnabled?: boolean;
+      reason?: string;
+      bucket?: number | null;
+      hit?: boolean;
+    };
   };
 }
 
@@ -49,6 +59,7 @@ interface SearchDiagnostics {
   latencyMs: number | null;
   fallbackReason: string | null;
   routerLearningApplied: boolean | null;
+  semanticCacheVariant: "control" | "treatment" | null;
 }
 
 // ============================================
@@ -404,6 +415,7 @@ export default function MemoriesClient() {
           typeof responseData.routerLearning?.applied === "boolean"
             ? responseData.routerLearning.applied
             : null,
+        semanticCacheVariant: data.meta?.semanticCache?.variant ?? null,
       });
       setScreenReaderStatus(
         `${newMemories.length} results loaded. ${
@@ -1147,6 +1159,11 @@ export default function MemoriesClient() {
                 {searchDiagnostics.fallbackReason && (
                   <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                     fallback: {searchDiagnostics.fallbackReason}
+                  </span>
+                )}
+                {searchDiagnostics.semanticCacheVariant && (
+                  <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">
+                    semantic cache: {searchDiagnostics.semanticCacheVariant}
                   </span>
                 )}
                 {searchDiagnostics.routerLearningApplied !== null && (

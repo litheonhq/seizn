@@ -95,6 +95,16 @@ export interface MemoriesResponse {
   mode?: string;
   requestedMode?: string;
   cached?: boolean;
+  semantic_cache?: {
+    enabled: boolean;
+    variant: 'control' | 'treatment' | null;
+    scope: 'dashboard' | 'all';
+    read_enabled: boolean;
+    write_enabled: boolean;
+    reason: string;
+    bucket: number | null;
+    hit: boolean;
+  };
   fallback?: {
     applied: boolean;
     from: string;
