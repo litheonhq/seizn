@@ -1,6 +1,6 @@
 # Competitive Positioning Research
 
-Last refreshed: 2026-02-16
+Last refreshed: 2026-03-01
 
 This is a category-based positioning sheet (not a direct numeric price benchmark).
 
