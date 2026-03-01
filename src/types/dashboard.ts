@@ -93,7 +93,32 @@ export interface MemoriesResponse {
   offset: number;
   limit: number;
   mode?: string;
+  requestedMode?: string;
   cached?: boolean;
+  fallback?: {
+    applied: boolean;
+    from: string;
+    to: string;
+    reason: string;
+  } | null;
+  routerDecision?: {
+    strategy: string;
+    confidence: number;
+    reason: string;
+  } | null;
+  routerLearning?: {
+    applied: boolean;
+    reason: string;
+    queryBucket?: string;
+    statsAvailable?: boolean;
+    sampleCount?: number;
+    scoreDelta?: number;
+  } | null;
+  personalization?: {
+    enabled: boolean;
+    applied: boolean;
+    available: boolean;
+  };
 }
 
 export interface NamespaceInfo {

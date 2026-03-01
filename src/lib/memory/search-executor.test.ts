@@ -7,7 +7,13 @@ import {
 
 type Row = { id: string; content?: string };
 
-type RpcFn = 'keyword_search_memories' | 'hybrid_search_memories' | 'search_memories';
+type RpcFn =
+  | 'keyword_search_memories'
+  | 'hybrid_search_memories'
+  | 'search_memories'
+  | 'keyword_search_memories_bounded'
+  | 'hybrid_search_memories_bounded'
+  | 'search_memories_bounded';
 
 function createRpcStub(
   plan: Partial<Record<RpcFn, Array<{ data: Row[] | null; error: unknown }>>>
@@ -126,5 +132,57 @@ describe('executeMemorySearch', () => {
     expect(result.error?.message).toBe('keyword failed');
     expect(result.fallback).toBeNull();
   });
-});
 
+  it('falls back to keyword when vector embedding times out', async () => {
+    const result = await executeMemorySearch<Row>(
+      baseParams({
+        rpcCall: createRpcStub({
+          keyword_search_memories_bounded: [{ data: [{ id: 'timeout-fallback' }], error: null }],
+        }),
+        initialMode: 'vector',
+        searchTimeoutMs: 5,
+        createQueryEmbedding: async () =>
+          await new Promise<number[]>((resolve) => setTimeout(() => resolve([0.1, 0.2]), 20)),
+      })
+    );
+
+    expect(result.error).toBeNull();
+    expect(result.resolvedMode).toBe('keyword');
+    expect(result.fallback?.reason).toBe('search_error');
+    expect(result.results).toEqual([{ id: 'timeout-fallback' }]);
+  });
+
+  it('returns timeout error when keyword search times out', async () => {
+    const result = await executeMemorySearch<Row>(
+      baseParams({
+        rpcCall: async () =>
+          await new Promise((resolve) =>
+            setTimeout(() => resolve({ data: [{ id: 'late' }], error: null }), 20)
+          ),
+        initialMode: 'keyword',
+        searchTimeoutMs: 5,
+      })
+    );
+
+    expect(result.error?.message).toBe('rpc_timeout');
+    expect(result.fallback).toBeNull();
+  });
+
+  it('uses bounded RPC names when timeout budget is enabled', async () => {
+    const calledFns: string[] = [];
+    const result = await executeMemorySearch<Row>(
+      baseParams({
+        rpcCall: async (fn) => {
+          calledFns.push(fn);
+          return { data: [{ id: 'bounded-1' }], error: null };
+        },
+        initialMode: 'keyword',
+        searchTimeoutMs: 100,
+      })
+    );
+
+    expect(result.error).toBeNull();
+    expect(result.results).toEqual([{ id: 'bounded-1' }]);
+    expect(calledFns).toEqual(['keyword_search_memories_bounded']);
+  });
+});

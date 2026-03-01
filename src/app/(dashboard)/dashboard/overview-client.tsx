@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
@@ -677,7 +677,6 @@ function ReliabilitySection({
     if (typeof window === "undefined") return true;
     return localStorage.getItem("seizn:reliability-collapsed") !== "true";
   });
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const toggle = () => {
     const next = !isOpen;
@@ -716,10 +715,9 @@ function ReliabilitySection({
         </div>
       </button>
       <div
-        ref={contentRef}
         className="transition-all duration-300 ease-in-out overflow-hidden"
         style={{
-          maxHeight: isOpen ? contentRef.current?.scrollHeight ? `${contentRef.current.scrollHeight}px` : "500px" : "0px",
+          maxHeight: isOpen ? "1000px" : "0px",
           opacity: isOpen ? 1 : 0,
         }}
       >
