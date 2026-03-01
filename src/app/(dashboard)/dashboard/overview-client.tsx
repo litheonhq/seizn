@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
@@ -123,13 +123,13 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Onboarding Wizard - Shows until all steps are complete */}
       <OnboardingWizard userId={user.id} />
 
       {/* Welcome Section */}
       <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-40" style={{ background: "linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))" }} />
         <div className="relative">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {greeting}, {user.name || user.email?.split("@")[0]}
@@ -140,47 +140,19 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
       </div>
 
-      {/* Security & Reliability Updates */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="p-4 border-b theme-border flex items-center justify-between">
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-white">
-              {reliabilityCopy.heading}
-            </h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              {reliabilityCopy.subtitle}
-            </p>
-          </div>
-          <Link href={`/${locale}/docs/security`} className="text-sm theme-primary hover:underline">
-            {reliabilityCopy.docsCta}
-          </Link>
-        </div>
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          {reliabilityUpdates.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className={`rounded-xl border p-4 bg-gradient-to-br ${item.tone} hover:shadow-md transition-all`}
-            >
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{item.title}</p>
-              <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-                {item.description}
-              </p>
-              <span className="mt-3 inline-flex items-center text-xs font-medium theme-primary">
-                {item.cta}
-                <ArrowIcon className="w-3.5 h-3.5 ml-1" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      {/* Security & Reliability Updates - Collapsible */}
+      <ReliabilitySection
+        reliabilityCopy={reliabilityCopy}
+        reliabilityUpdates={reliabilityUpdates}
+        locale={locale}
+      />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Memories Card */}
         <div className="glass-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <BrainIcon className="w-6 h-6 text-white" />
             </div>
             <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full dark:bg-gray-800 dark:text-gray-300">
@@ -206,7 +178,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             </div>
             <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full transition-all duration-500"
+                className="h-full rounded-full transition-all duration-500 theme-gradient-btn"
                 style={{
                   width: `${Math.min(stats?.memories.percentage || 0, 100)}%`,
                 }}
@@ -218,7 +190,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         {/* API Calls Card */}
         <div className="glass-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.85 }}>
               <ApiIcon className="w-6 h-6 text-white" />
             </div>
             <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full dark:bg-gray-800 dark:text-gray-300">
@@ -244,9 +216,10 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             </div>
             <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500"
+                className="h-full rounded-full transition-all duration-500 theme-gradient-btn"
                 style={{
                   width: `${Math.min(stats?.apiCalls.percentage || 0, 100)}%`,
+                  opacity: 0.85,
                 }}
               />
             </div>
@@ -256,7 +229,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         {/* API Keys Card */}
         <div className="glass-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>
               <KeyIcon className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -280,7 +253,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         {/* Plan Card */}
         <div className="glass-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.55 }}>
               <SparkleIcon className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -310,7 +283,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-4 border-b theme-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.8 }}>
               <ChartIcon className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -342,7 +315,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-4 border-b theme-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.65 }}>
               <ActivityIcon className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -370,8 +343,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             </div>
           ) : recentActivity.length === 0 ? (
             <div className="p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 flex items-center justify-center">
-                <ActivityIcon className="w-8 h-8 text-emerald-400 dark:text-emerald-300" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--theme-primary) 10%, transparent)" }}>
+                <ActivityIcon className="w-8 h-8 theme-primary" />
               </div>
               <h3 className="text-gray-900 dark:text-white font-medium mb-2">{t("dashboard.overviewPage.noActivityYet")}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
@@ -379,7 +352,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               </p>
               <Link
                 href="/dashboard/keys"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium hover:from-emerald-600 hover:to-teal-600 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium theme-gradient-btn"
               >
                 <KeyIcon className="w-4 h-4" />
                 {t("dashboard.overviewPage.sendFirstRequest")}
@@ -541,7 +514,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               href="/dashboard/keys"
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform">
                 <KeyIcon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -553,7 +526,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               href="/docs"
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform" style={{ opacity: 0.85 }}>
                 <BookIcon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -565,7 +538,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               href="/dashboard/organizations"
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>
                 <UsersIcon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -690,8 +663,108 @@ function ErrorIcon({ className }: { className?: string }) {
   );
 }
 
+// Collapsible Reliability Section
+function ReliabilitySection({
+  reliabilityCopy,
+  reliabilityUpdates,
+  locale,
+}: {
+  reliabilityCopy: { heading: string; subtitle: string; docsCta: string };
+  reliabilityUpdates: { title: string; description: string; cta: string; href: string; tone: string }[];
+  locale: string;
+}) {
+  const [isOpen, setIsOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("seizn:reliability-collapsed") !== "true";
+  });
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    const next = !isOpen;
+    setIsOpen(next);
+    localStorage.setItem("seizn:reliability-collapsed", next ? "false" : "true");
+  };
+
+  return (
+    <div className="glass-card rounded-2xl overflow-hidden">
+      <button
+        onClick={toggle}
+        className="w-full p-4 border-b theme-border flex items-center justify-between text-left hover:bg-white/30 dark:hover:bg-gray-800/30 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.7 }}>
+            <ShieldSmallIcon className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-white text-sm">
+              {reliabilityCopy.heading}
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              {reliabilityCopy.subtitle}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/${locale}/docs/security`}
+            className="text-xs theme-primary hover:underline hidden sm:inline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {reliabilityCopy.docsCta}
+          </Link>
+          <ChevronIcon className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        </div>
+      </button>
+      <div
+        ref={contentRef}
+        className="transition-all duration-300 ease-in-out overflow-hidden"
+        style={{
+          maxHeight: isOpen ? contentRef.current?.scrollHeight ? `${contentRef.current.scrollHeight}px` : "500px" : "0px",
+          opacity: isOpen ? 1 : 0,
+        }}
+      >
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          {reliabilityUpdates.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className={`rounded-xl border p-4 bg-gradient-to-br ${item.tone} hover:shadow-md transition-all`}
+            >
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{item.title}</p>
+              <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                {item.description}
+              </p>
+              <span className="mt-3 inline-flex items-center text-xs font-medium theme-primary">
+                {item.cta}
+                <ArrowIcon className="w-3.5 h-3.5 ml-1" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ShieldSmallIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    </svg>
+  );
+}
+
 // Usage Chart Component
 function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const maxCalls = Math.max(...data.map(d => d.calls), 1);
   const chartHeight = 120;
 
@@ -730,15 +803,37 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
       </div>
 
       {/* Bar Chart */}
-      <div className="relative">
+      <div className="relative" onMouseLeave={() => setHoveredIdx(null)}>
+        {/* Hover Tooltip */}
+        {hoveredIdx !== null && data[hoveredIdx] && (
+          <div
+            className="absolute -top-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-lg pointer-events-none z-10 theme-gradient-btn"
+            style={{ left: `${(hoveredIdx / data.length) * 100 + 100 / data.length / 2}%`, transform: "translateX(-50%)" }}
+          >
+            {formatFullDate(data[hoveredIdx].date)}: {data[hoveredIdx].calls.toLocaleString()}
+          </div>
+        )}
         <svg width="100%" height={chartHeight + 40} className="overflow-visible">
           {data.map((day, i) => {
             const barWidth = 100 / data.length;
-            const barHeight = (day.calls / maxCalls) * chartHeight;
+            const barHeight = Math.max((day.calls / maxCalls) * chartHeight, 2);
             const x = i * barWidth + barWidth / 2;
+            const isHovered = hoveredIdx === i;
 
             return (
-              <g key={day.date}>
+              <g
+                key={day.date}
+                onMouseEnter={() => setHoveredIdx(i)}
+                className="cursor-pointer"
+              >
+                {/* Hit area */}
+                <rect
+                  x={`${x - barWidth / 2}%`}
+                  y={0}
+                  width={`${barWidth}%`}
+                  height={chartHeight + 30}
+                  fill="transparent"
+                />
                 {/* Bar */}
                 <rect
                   x={`${x - barWidth / 3}%`}
@@ -746,10 +841,10 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
                   width={`${barWidth * 0.6}%`}
                   height={barHeight}
                   rx={4}
-                  className="fill-cyan-400 hover:fill-cyan-500 transition-colors cursor-pointer"
+                  fill={isHovered ? "var(--theme-primary)" : "var(--theme-secondary)"}
+                  opacity={isHovered ? 1 : 0.6}
+                  className="transition-all duration-150"
                 />
-                {/* Value on hover area */}
-                <title>{`${formatFullDate(day.date)}: ${day.calls.toLocaleString()} calls`}</title>
                 {/* Day label */}
                 <text
                   x={`${x}%`}
@@ -757,11 +852,12 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
                   textAnchor="middle"
                   className="fill-gray-500 dark:fill-gray-400 text-xs"
                   fontSize="11"
+                  fontWeight={isHovered ? 600 : 400}
                 >
                   {formatDate(day.date)}
                 </text>
                 {/* Call count (only show if > 0) */}
-                {day.calls > 0 && (
+                {day.calls > 0 && !isHovered && (
                   <text
                     x={`${x}%`}
                     y={chartHeight - barHeight - 5}
