@@ -49,8 +49,18 @@ function isBuildRelevant(filePath) {
   return BUILD_TRIGGER_PATTERNS.some((pattern) => pattern.test(filePath));
 }
 
+const SKIP_BRANCH_PATTERNS = [
+  /^dependabot\//,
+];
+
 function main() {
   try {
+    const branch = process.env.VERCEL_GIT_COMMIT_REF || '';
+    if (SKIP_BRANCH_PATTERNS.some((pattern) => pattern.test(branch))) {
+      console.log(`[vercel-ignore] Skipping build for branch: ${branch}`);
+      process.exit(0);
+    }
+
     const { base, head } = getRange();
     const changedFiles = getChangedFiles(base, head);
 
