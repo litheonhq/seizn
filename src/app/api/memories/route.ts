@@ -31,7 +31,6 @@ import {
   getCachedQueryResults,
   setCachedQueryResults,
   incrementMemoryVersion,
-  type CachedMemory,
 } from '@/lib/memory/query-cache';
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
@@ -44,6 +43,7 @@ import { analyzeContentIntegrity } from '@/lib/memory/content-integrity';
 import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
+import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -65,20 +65,12 @@ const MEMORY_SELECT_FIELDS =
   'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, companion_meta, source, scope, agent_id, created_at, updated_at';
 
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
-
-type SearchResultRow = {
-  id: string;
-  content: string;
-  memory_type: string;
-  importance?: number;
-  similarity?: number;
-  rrf_score?: number;
-  created_at?: string;
-  tags?: string[];
-  companion_meta?: Record<string, unknown>;
-  agent_id?: string;
-  scope?: string;
-};
+const SEARCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_SEARCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 2500;
+})();
+const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
 
 function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
@@ -152,6 +144,24 @@ function parseBrowseSort(
   }
 
   return { column, ascending: false };
+}
+
+function parseSearchThreshold(searchParams: URLSearchParams): number | null {
+  const raw = searchParams.get('threshold');
+  if (raw == null || raw.trim().length === 0) return 0.7;
+  const parsed = Number.parseFloat(raw);
+  if (!Number.isFinite(parsed) || parsed < 0 || parsed > 1) {
+    return null;
+  }
+  return parsed;
+}
+
+function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
+  const raw = (searchParams.get('mode') || 'auto').toLowerCase();
+  if (!ALLOWED_SEARCH_MODES.includes(raw as SearchMode)) {
+    return null;
+  }
+  return raw as SearchMode;
 }
 
 async function resolveAuth(
@@ -563,8 +573,14 @@ export async function GET(request: NextRequest) {
     // ----------------------------------------------
     // SEARCH MODE - query provided
     // ----------------------------------------------
-    const threshold = parseFloat(searchParams.get('threshold') || '0.7');
-    const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
+    const threshold = parseSearchThreshold(searchParams);
+    if (threshold == null) {
+      return ValidationErrors.invalidField('threshold', 'Must be a number between 0 and 1');
+    }
+    const requestedMode = parseRequestedMode(searchParams);
+    if (requestedMode == null) {
+      return ValidationErrors.invalidField('mode', `Must be one of: ${ALLOWED_SEARCH_MODES.join(', ')}`);
+    }
     const supabase = createServerClient();
 
     let actualMode: Exclude<SearchMode, 'auto'>;
@@ -718,6 +734,7 @@ export async function GET(request: NextRequest) {
       limit,
       namespaceParam: nsParam,
       threshold: routerDecision?.suggestedParams.threshold || threshold,
+      searchTimeoutMs: SEARCH_TIMEOUT_MS,
       createQueryEmbedding,
       applyFilters: applyResultFilters,
     });
@@ -726,26 +743,33 @@ export async function GET(request: NextRequest) {
 
     if (searchError) {
       console.error('[api/memories] Search error:', searchError);
+      const isTimeoutError = searchError.message.includes('timeout');
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
-          500
+          isTimeoutError ? 504 : 500
         );
+      }
+      if (isTimeoutError) {
+        const response = NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'search_timeout',
+              message: 'Search timed out. Try a shorter query or retry.',
+            },
+          },
+          { status: 504 }
+        );
+        const withCsrf = ensureCsrfCookie(request, response);
+        return withHeaders(withCsrf, authResult.rateLimitHeaders);
       }
       return ServerErrors.database('search_memories');
     }
 
     // Cache results
     if (results && results.length > 0) {
-      const cacheableResults: CachedMemory[] = results.map((r) => ({
-        id: r.id,
-        content: r.content,
-        memory_type: r.memory_type,
-        importance: typeof r.importance === 'number' ? r.importance : 5,
-        similarity: typeof r.similarity === 'number' ? r.similarity : undefined,
-        rrf_score: typeof r.rrf_score === 'number' ? r.rrf_score : undefined,
-      }));
-      setCachedQueryResults(userId, query, namespace, resolvedMode, cacheableResults).catch(
+      setCachedQueryResults(userId, query, namespace, resolvedMode, toCachedMemories(results)).catch(
         console.error
       );
     }

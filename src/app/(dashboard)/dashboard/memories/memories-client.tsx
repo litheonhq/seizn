@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import type { PinDialogMode } from "@/components/memories/pin-dialog";
 import { PinDialog } from "@/components/memories/pin-dialog";
@@ -29,6 +29,26 @@ interface PersonalizationProfileResponse {
     negative_feedback_count?: number;
     updated_at?: string;
   };
+}
+
+interface MemoriesApiEnvelope {
+  success: boolean;
+  data?: MemoriesResponse;
+  error?: string | { code?: string; message?: string };
+  meta?: {
+    version?: string;
+    cached?: boolean;
+    latencyMs?: number;
+  };
+}
+
+interface SearchDiagnostics {
+  mode: string;
+  requestedMode: string;
+  cached: boolean;
+  latencyMs: number | null;
+  fallbackReason: string | null;
+  routerLearningApplied: boolean | null;
 }
 
 // ============================================
@@ -156,6 +176,13 @@ function getJsonHeaders(): Record<string, string> {
   return headers;
 }
 
+function getAdaptiveThreshold(query: string): string {
+  const length = query.trim().length;
+  if (length <= 8) return "0.45";
+  if (length <= 24) return "0.55";
+  return "0.65";
+}
+
 // ============================================
 // Component
 // ============================================
@@ -197,6 +224,10 @@ export default function MemoriesClient() {
   const [feedbackCount, setFeedbackCount] = useState(0);
   const [feedbackSubmittingById, setFeedbackSubmittingById] = useState<Record<string, boolean>>({});
   const [feedbackStateById, setFeedbackStateById] = useState<Record<string, FeedbackEventType>>({});
+  const [searchDiagnostics, setSearchDiagnostics] = useState<SearchDiagnostics | null>(null);
+  const [screenReaderStatus, setScreenReaderStatus] = useState("");
+  const activeRequestIdRef = useRef(0);
+  const activeAbortRef = useRef<AbortController | null>(null);
 
   // Date range filters
   const [afterDate, setAfterDate] = useState("");
@@ -290,6 +321,12 @@ export default function MemoriesClient() {
 
   // Fetch memories
   const fetchMemories = useCallback(async (resetOffset = true) => {
+    const requestId = activeRequestIdRef.current + 1;
+    activeRequestIdRef.current = requestId;
+    activeAbortRef.current?.abort();
+    const controller = new AbortController();
+    activeAbortRef.current = controller;
+
     setIsLoading(true);
     setFetchError(null);
     try {
@@ -298,9 +335,10 @@ export default function MemoriesClient() {
 
       // Browse mode: no query param. Search mode: include query.
       if (debouncedQuery.trim()) {
-        params.set("query", debouncedQuery.trim());
+        const normalizedQuery = debouncedQuery.trim();
+        params.set("query", normalizedQuery);
         params.set("mode", "auto");
-        params.set("threshold", "0.0");
+        params.set("threshold", getAdaptiveThreshold(normalizedQuery));
       }
 
       params.set("limit", String(ITEMS_PER_PAGE));
@@ -324,16 +362,23 @@ export default function MemoriesClient() {
       if (afterDate) params.set("after", new Date(afterDate).toISOString());
       if (beforeDate) params.set("before", new Date(beforeDate + "T23:59:59").toISOString());
 
-      const res = await fetch(`/api/v1/memories?${params.toString()}`);
+      const res = await fetch(`/api/v1/memories?${params.toString()}`, {
+        signal: controller.signal,
+      });
 
       if (!res.ok) {
         throw new Error(`Server error (${res.status})`);
       }
 
-      const data: { success: boolean; data: MemoriesResponse; error?: string } = await res.json();
+      const data: MemoriesApiEnvelope = await res.json();
+      if (requestId !== activeRequestIdRef.current) return;
 
-      if (!data.success) {
-        throw new Error(data.error || "Failed to fetch memories");
+      if (!data.success || !data.data) {
+        const errorMessage =
+          typeof data.error === "string"
+            ? data.error
+            : data.error?.message || "Failed to fetch memories";
+        throw new Error(errorMessage);
       }
 
       const responseData = data.data;
@@ -349,14 +394,46 @@ export default function MemoriesClient() {
 
       setTotalCount(responseData.total ?? responseData.count ?? newMemories.length);
       setHasMore(newMemories.length === ITEMS_PER_PAGE);
+      setSearchDiagnostics({
+        mode: responseData.mode || (debouncedQuery.trim() ? "search" : "browse"),
+        requestedMode: responseData.requestedMode || (debouncedQuery.trim() ? "auto" : "browse"),
+        cached: data.meta?.cached ?? responseData.cached ?? false,
+        latencyMs: typeof data.meta?.latencyMs === "number" ? data.meta.latencyMs : null,
+        fallbackReason: responseData.fallback?.reason || null,
+        routerLearningApplied:
+          typeof responseData.routerLearning?.applied === "boolean"
+            ? responseData.routerLearning.applied
+            : null,
+      });
+      setScreenReaderStatus(
+        `${newMemories.length} results loaded. ${
+          data.meta?.cached ? "Cache hit." : "Cache miss."
+        } ${typeof data.meta?.latencyMs === "number" ? `Latency ${data.meta.latencyMs}ms.` : ""}`
+      );
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+      if (requestId !== activeRequestIdRef.current) return;
       const message = error instanceof Error ? error.message : "An unexpected error occurred";
       console.error("Failed to fetch memories:", error);
       setFetchError(message);
+      setScreenReaderStatus(`Memory search failed: ${message}`);
     } finally {
-      setIsLoading(false);
+      if (requestId === activeRequestIdRef.current) {
+        setIsLoading(false);
+      }
+      if (activeAbortRef.current === controller) {
+        activeAbortRef.current = null;
+      }
     }
   }, [debouncedQuery, selectedTags, selectedTypes, namespace, sortOption, afterDate, beforeDate, offset]);
+
+  useEffect(() => {
+    return () => {
+      activeAbortRef.current?.abort();
+    };
+  }, []);
 
   const handleTogglePersonalization = useCallback(async () => {
     setPersonalizationActionLoading(true);
@@ -643,6 +720,7 @@ export default function MemoriesClient() {
 
   return (
     <div className="space-y-6">
+      <p className="sr-only" aria-live="polite">{screenReaderStatus}</p>
       {/* Header */}
       <div className="glass-card rounded-2xl p-6">
         <div className="flex items-center justify-between">
@@ -1043,6 +1121,47 @@ export default function MemoriesClient() {
               )}
             </div>
           </div>
+
+          {searchDiagnostics && (
+            <div
+              className="glass-card rounded-2xl p-3 border border-gray-200 dark:border-gray-700"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800">
+                  mode: {searchDiagnostics.mode}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800">
+                  requested: {searchDiagnostics.requestedMode}
+                </span>
+                <span
+                  className={`px-2 py-0.5 rounded-full ${
+                    searchDiagnostics.cached
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                      : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                  }`}
+                >
+                  {searchDiagnostics.cached ? "cache hit" : "cache miss"}
+                </span>
+                {searchDiagnostics.fallbackReason && (
+                  <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    fallback: {searchDiagnostics.fallbackReason}
+                  </span>
+                )}
+                {searchDiagnostics.routerLearningApplied !== null && (
+                  <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                    router learning: {searchDiagnostics.routerLearningApplied ? "applied" : "not applied"}
+                  </span>
+                )}
+                {typeof searchDiagnostics.latencyMs === "number" && (
+                  <span className="px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300">
+                    latency: {searchDiagnostics.latencyMs}ms
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Active Filters */}
           {hasActiveFilters && (

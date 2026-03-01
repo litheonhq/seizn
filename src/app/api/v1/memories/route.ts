@@ -51,7 +51,6 @@ import {
   getCachedQueryResults,
   setCachedQueryResults,
   incrementMemoryVersion,
-  type CachedMemory,
 } from '@/lib/memory/query-cache';
 import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
@@ -69,6 +68,7 @@ import {
   type RouterLearningDecision,
 } from '@/lib/memory/router-learning';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
+import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -82,20 +82,12 @@ import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
 const ENCRYPTED_PLACEHOLDER = '[encrypted]';
-
-type SearchResultRow = {
-  id: string;
-  content: string;
-  memory_type: string;
-  importance?: number;
-  similarity?: number;
-  rrf_score?: number;
-  created_at?: string;
-  tags?: string[];
-  companion_meta?: Record<string, unknown>;
-  agent_id?: string;
-  scope?: string;
-};
+const SEARCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_SEARCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 2500;
+})();
+const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
 
 function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
@@ -135,6 +127,24 @@ function parseCanaryForcedMode(
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
+}
+
+function parseSearchThreshold(searchParams: URLSearchParams): number | null {
+  const raw = searchParams.get('threshold');
+  if (raw == null || raw.trim().length === 0) return 0.7;
+  const parsed = Number.parseFloat(raw);
+  if (!Number.isFinite(parsed) || parsed < 0 || parsed > 1) {
+    return null;
+  }
+  return parsed;
+}
+
+function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
+  const raw = (searchParams.get('mode') || 'auto').toLowerCase();
+  if (!ALLOWED_SEARCH_MODES.includes(raw as SearchMode)) {
+    return null;
+  }
+  return raw as SearchMode;
 }
 
 /**
@@ -603,7 +613,16 @@ export async function GET(request: NextRequest) {
     // ----------------------------------------------
     // SEARCH MODE - query provided
     // ----------------------------------------------
-    const threshold = parseFloat(searchParams.get('threshold') || '0.7');
+    const threshold = parseSearchThreshold(searchParams);
+    if (threshold == null) {
+      return ValidationErrors.invalidField('threshold', 'Must be a number between 0 and 1');
+    }
+
+    const requestedMode = parseRequestedMode(searchParams);
+    if (requestedMode == null) {
+      return ValidationErrors.invalidField('mode', `Must be one of: ${ALLOWED_SEARCH_MODES.join(', ')}`);
+    }
+
     let effectiveQuery = query;
     const queryDetector = createDetector({ mode: 'sanitize' });
     const queryFirewall = queryDetector.scan(query);
@@ -613,7 +632,6 @@ export async function GET(request: NextRequest) {
     if (queryFirewall.sanitizedInput && queryFirewall.sanitizedInput.trim().length > 0) {
       effectiveQuery = queryFirewall.sanitizedInput.trim();
     }
-    const requestedMode = (searchParams.get('mode') || 'auto') as SearchMode;
     const canaryAssignment = getActiveAssignment(userId, {
       collectionId: namespace,
       sessionId: searchParams.get('session_id') || request.headers.get('x-session-id') || undefined,
@@ -857,6 +875,7 @@ export async function GET(request: NextRequest) {
       limit,
       namespaceParam: nsParam,
       threshold: routerDecision?.suggestedParams.threshold || threshold,
+      searchTimeoutMs: SEARCH_TIMEOUT_MS,
       createQueryEmbedding,
       applyFilters: applyResultFilters,
     });
@@ -865,10 +884,11 @@ export async function GET(request: NextRequest) {
 
     if (searchError) {
       console.error('[v1/memories] Search error:', searchError);
+      const isTimeoutError = searchError.message.includes('timeout');
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
-          500
+          isTimeoutError ? 504 : 500
         );
       }
       if (canaryAssignment) {
@@ -884,20 +904,34 @@ export async function GET(request: NextRequest) {
           console.error('[v1/memories] Canary failure metric record failed:', canaryMetricError);
         }
       }
+      if (isTimeoutError) {
+        return withHeaders(
+          NextResponse.json(
+            {
+              success: false,
+              error: {
+                code: 'search_timeout',
+                message: 'Search timed out. Try a shorter query or retry.',
+              },
+              meta: { ...META, latencyMs: Date.now() - startTime },
+            },
+            { status: 504 }
+          ),
+          result.rateLimitHeaders
+        );
+      }
       return ServerErrors.database('search_memories');
     }
 
     // Cache base results before personalization (profile can change quickly).
     if (results && results.length > 0) {
-      const cacheableResults: CachedMemory[] = results.map((r) => ({
-        id: r.id,
-        content: r.content,
-        memory_type: r.memory_type,
-        importance: typeof r.importance === 'number' ? r.importance : 5,
-        similarity: typeof r.similarity === 'number' ? r.similarity : undefined,
-        rrf_score: typeof r.rrf_score === 'number' ? r.rrf_score : undefined,
-      }));
-      setCachedQueryResults(userId, effectiveQuery, namespace, resolvedMode, cacheableResults).catch(
+      setCachedQueryResults(
+        userId,
+        effectiveQuery,
+        namespace,
+        resolvedMode,
+        toCachedMemories(results)
+      ).catch(
         console.error
       );
     }
