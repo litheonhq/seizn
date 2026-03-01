@@ -1,5 +1,8 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { resolveSemanticCacheDecision } from '@/lib/memory/semantic-cache-experiment';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  recordSemanticCacheExperimentEvent,
+  resolveSemanticCacheDecision,
+} from '@/lib/memory/semantic-cache-experiment';
 
 function resetEnv() {
   delete process.env.MEMORY_SEMANTIC_CACHE_AB_ENABLED;
@@ -68,5 +71,53 @@ describe('resolveSemanticCacheDecision', () => {
     expect(decision.variant).toBeNull();
     expect(decision.allowRead).toBe(true);
     expect(decision.reason).toBe('invalid_ratio');
+  });
+});
+
+describe('recordSemanticCacheExperimentEvent', () => {
+  it('ignores missing table errors to keep rollout non-blocking', async () => {
+    const insert = vi.fn().mockResolvedValue({
+      error: { code: '42P01', message: 'relation "memory_semantic_cache_experiment_events" does not exist' },
+    });
+    const supabase = {
+      from: vi.fn().mockReturnValue({ insert }),
+    } as unknown as Parameters<typeof recordSemanticCacheExperimentEvent>[0];
+
+    await expect(
+      recordSemanticCacheExperimentEvent(supabase, {
+        userId: 'user-1',
+        namespace: 'default',
+        source: 'v1',
+        requestedMode: 'auto',
+        resolvedMode: 'hybrid',
+        variant: 'treatment',
+        cacheHit: true,
+        latencyMs: 42,
+        resultCount: 3,
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it('throws non-schema errors so callers can observe unexpected failures', async () => {
+    const insert = vi.fn().mockResolvedValue({
+      error: { code: '42501', message: 'permission denied' },
+    });
+    const supabase = {
+      from: vi.fn().mockReturnValue({ insert }),
+    } as unknown as Parameters<typeof recordSemanticCacheExperimentEvent>[0];
+
+    await expect(
+      recordSemanticCacheExperimentEvent(supabase, {
+        userId: 'user-1',
+        namespace: 'default',
+        source: 'v0',
+        requestedMode: 'keyword',
+        resolvedMode: 'keyword',
+        variant: 'control',
+        cacheHit: false,
+        latencyMs: 55,
+        resultCount: 0,
+      })
+    ).rejects.toEqual({ code: '42501', message: 'permission denied' });
   });
 });
