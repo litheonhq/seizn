@@ -109,22 +109,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {t("dashboard.skipToContent") || "Skip to content"}
       </a>
 
-      {/* Seasonal particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
-        {config.particles.map((particle, i) => (
-          <div
-            key={i}
-            className={`absolute w-3 h-3 rounded-full ${particle.className}`}
-            style={{
-              left: `${10 + (i * 12) % 80}%`,
-              top: `${5 + (i * 7) % 30}%`,
-              backgroundColor: "var(--theme-particle-color)",
-              animationDelay: `${particle.delay}s`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* Sidebar Backdrop - Desktop */}
       {isSidebarExpanded && (
         <div

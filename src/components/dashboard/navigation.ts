@@ -40,38 +40,10 @@ export interface NavGroup {
 // =============================================================================
 
 export const seasonConfig = {
-  spring: {
-    name: "Spring",
-    icon: "🌸",
-    particles: Array.from({ length: 8 }, (_, i) => ({
-      className: "animate-float-slow",
-      delay: i * 0.5,
-    })),
-  },
-  summer: {
-    name: "Summer",
-    icon: "🌊",
-    particles: Array.from({ length: 6 }, (_, i) => ({
-      className: "animate-wave",
-      delay: i * 0.3,
-    })),
-  },
-  autumn: {
-    name: "Autumn",
-    icon: "🍂",
-    particles: Array.from({ length: 6 }, (_, i) => ({
-      className: "animate-leaffall",
-      delay: i * 2,
-    })),
-  },
-  winter: {
-    name: "Winter",
-    icon: "❄️",
-    particles: Array.from({ length: 10 }, (_, i) => ({
-      className: "animate-snowfall",
-      delay: i * 1,
-    })),
-  },
+  spring: { name: "Spring", icon: "🌸" },
+  summer: { name: "Summer", icon: "🌊" },
+  autumn: { name: "Autumn", icon: "🍂" },
+  winter: { name: "Winter", icon: "❄️" },
 };
 
 export type Season = keyof typeof seasonConfig;
