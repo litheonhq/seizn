@@ -69,7 +69,10 @@ import {
 } from '@/lib/memory/router-learning';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
 import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
-import { resolveSemanticCacheDecision } from '@/lib/memory/semantic-cache-experiment';
+import {
+  recordSemanticCacheExperimentEvent,
+  resolveSemanticCacheDecision,
+} from '@/lib/memory/semantic-cache-experiment';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -672,6 +675,29 @@ export async function GET(request: NextRequest) {
       reason: semanticCacheDecision.reason,
       bucket: semanticCacheDecision.bucket,
     };
+    const recordSemanticCacheOutcome = (payload: {
+      resolvedMode: string;
+      cacheHit: boolean;
+      resultCount: number;
+      latencyMs: number;
+      fallbackReason?: string | null;
+      errorCode?: string | null;
+    }) => {
+      if (!semanticCacheDecision.variant) return;
+      recordSemanticCacheExperimentEvent(supabase, {
+        userId,
+        namespace,
+        source: 'v1',
+        requestedMode,
+        resolvedMode: payload.resolvedMode,
+        variant: semanticCacheDecision.variant,
+        cacheHit: payload.cacheHit,
+        latencyMs: payload.latencyMs,
+        resultCount: payload.resultCount,
+        fallbackReason: payload.fallbackReason || null,
+        errorCode: payload.errorCode || null,
+      }).catch(console.error);
+    };
 
     // Slot lookups
     if (actualMode === 'slot') {
@@ -717,45 +743,64 @@ export async function GET(request: NextRequest) {
             }
           }
 
-          return NextResponse.json({
-            success: true,
-            data: {
-              mode: 'slot',
-              requestedMode,
-              results: [{
-                id: `slot:${slotKey}`,
-                content: slotValue,
-                memory_type: 'fact',
-                slot_key: slotKey,
-                similarity: 1.0,
-              }],
-              count: 1,
-              total: 1,
-              offset: 0,
-              limit,
-              routerDecision: routerDecision ? {
-                strategy: routerDecision.strategy,
-                confidence: routerDecision.confidence,
-                reason: routerDecision.reason,
-              } : null,
-              routerLearning: routerLearningDecision ? {
-                applied: routerLearningDecision.learningApplied,
-                reason: routerLearningDecision.reason,
-                queryBucket: routerLearningDecision.queryBucket,
-                statsAvailable: routerLearningDecision.statsAvailable,
-                sampleCount: routerLearningDecision.sampleCount,
-                scoreDelta: routerLearningDecision.scoreDelta,
-                scores: routerLearningDecision.scores,
-              } : null,
-              canary: canaryAssignment ? {
-                deploymentId: canaryAssignment.deploymentId,
-                assignedVersion: canaryAssignment.assignedVersion,
-                overrideApplied: canaryOverrideApplied,
-                forcedMode: canaryForcedMode,
-              } : null,
-            },
-            meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
+          const slotLatencyMs = Date.now() - startTime;
+          recordSemanticCacheOutcome({
+            resolvedMode: 'slot',
+            cacheHit: false,
+            resultCount: 1,
+            latencyMs: slotLatencyMs,
           });
+
+          return withHeaders(
+            NextResponse.json({
+              success: true,
+              data: {
+                mode: 'slot',
+                requestedMode,
+                results: [{
+                  id: `slot:${slotKey}`,
+                  content: slotValue,
+                  memory_type: 'fact',
+                  slot_key: slotKey,
+                  similarity: 1.0,
+                }],
+                count: 1,
+                total: 1,
+                offset: 0,
+                limit,
+                routerDecision: routerDecision ? {
+                  strategy: routerDecision.strategy,
+                  confidence: routerDecision.confidence,
+                  reason: routerDecision.reason,
+                } : null,
+                routerLearning: routerLearningDecision ? {
+                  applied: routerLearningDecision.learningApplied,
+                  reason: routerLearningDecision.reason,
+                  queryBucket: routerLearningDecision.queryBucket,
+                  statsAvailable: routerLearningDecision.statsAvailable,
+                  sampleCount: routerLearningDecision.sampleCount,
+                  scoreDelta: routerLearningDecision.scoreDelta,
+                  scores: routerLearningDecision.scores,
+                } : null,
+                canary: canaryAssignment ? {
+                  deploymentId: canaryAssignment.deploymentId,
+                  assignedVersion: canaryAssignment.assignedVersion,
+                  overrideApplied: canaryOverrideApplied,
+                  forcedMode: canaryForcedMode,
+                } : null,
+              },
+              meta: {
+                ...META,
+                cached: false,
+                latencyMs: slotLatencyMs,
+                semanticCache: {
+                  ...semanticCacheMeta,
+                  hit: false,
+                },
+              },
+            }),
+            result.rateLimitHeaders
+          );
         }
         actualMode = 'keyword';
       } else {
@@ -820,53 +865,63 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      return NextResponse.json({
-        success: true,
-        data: {
-          mode: actualMode,
-          requestedMode,
-          results: personalizedResults,
-          count: personalizedResults.length,
-          total: personalizedResults.length,
-          offset: 0,
-          limit,
-          routerDecision: routerDecision ? {
-            strategy: routerDecision.strategy,
-            confidence: routerDecision.confidence,
-            reason: routerDecision.reason,
-          } : null,
-          routerLearning: routerLearningDecision ? {
-            applied: routerLearningDecision.learningApplied,
-            reason: routerLearningDecision.reason,
-            queryBucket: routerLearningDecision.queryBucket,
-            statsAvailable: routerLearningDecision.statsAvailable,
-            sampleCount: routerLearningDecision.sampleCount,
-            scoreDelta: routerLearningDecision.scoreDelta,
-            scores: routerLearningDecision.scores,
-          } : null,
-          canary: canaryAssignment ? {
-            deploymentId: canaryAssignment.deploymentId,
-            assignedVersion: canaryAssignment.assignedVersion,
-            overrideApplied: canaryOverrideApplied,
-            forcedMode: canaryForcedMode,
-          } : null,
-          personalization: {
-            enabled: personalizationState.profile.personalizationEnabled,
-            applied:
-              personalizationState.available && personalizationState.profile.personalizationEnabled,
-            available: personalizationState.available,
-          },
-        },
-        meta: {
-          ...META,
-          cached: true,
-          latencyMs: Date.now() - startTime,
-          semanticCache: {
-            ...semanticCacheMeta,
-            hit: true,
-          },
-        },
+      recordSemanticCacheOutcome({
+        resolvedMode: actualMode,
+        cacheHit: true,
+        resultCount: personalizedResults.length,
+        latencyMs: Date.now() - startTime,
       });
+
+      return withHeaders(
+        NextResponse.json({
+          success: true,
+          data: {
+            mode: actualMode,
+            requestedMode,
+            results: personalizedResults,
+            count: personalizedResults.length,
+            total: personalizedResults.length,
+            offset: 0,
+            limit,
+            routerDecision: routerDecision ? {
+              strategy: routerDecision.strategy,
+              confidence: routerDecision.confidence,
+              reason: routerDecision.reason,
+            } : null,
+            routerLearning: routerLearningDecision ? {
+              applied: routerLearningDecision.learningApplied,
+              reason: routerLearningDecision.reason,
+              queryBucket: routerLearningDecision.queryBucket,
+              statsAvailable: routerLearningDecision.statsAvailable,
+              sampleCount: routerLearningDecision.sampleCount,
+              scoreDelta: routerLearningDecision.scoreDelta,
+              scores: routerLearningDecision.scores,
+            } : null,
+            canary: canaryAssignment ? {
+              deploymentId: canaryAssignment.deploymentId,
+              assignedVersion: canaryAssignment.assignedVersion,
+              overrideApplied: canaryOverrideApplied,
+              forcedMode: canaryForcedMode,
+            } : null,
+            personalization: {
+              enabled: personalizationState.profile.personalizationEnabled,
+              applied:
+                personalizationState.available && personalizationState.profile.personalizationEnabled,
+              available: personalizationState.available,
+            },
+          },
+          meta: {
+            ...META,
+            cached: true,
+            latencyMs: Date.now() - startTime,
+            semanticCache: {
+              ...semanticCacheMeta,
+              hit: true,
+            },
+          },
+        }),
+        result.rateLimitHeaders
+      );
     }
 
     const nsParam = namespace === 'default' ? null : namespace;
@@ -926,6 +981,13 @@ export async function GET(request: NextRequest) {
           console.error('[v1/memories] Canary failure metric record failed:', canaryMetricError);
         }
       }
+      recordSemanticCacheOutcome({
+        resolvedMode,
+        cacheHit: false,
+        resultCount: 0,
+        latencyMs: Date.now() - startTime,
+        errorCode: isTimeoutError ? 'search_timeout' : 'search_error',
+      });
       if (isTimeoutError) {
         return withHeaders(
           NextResponse.json(
@@ -1021,6 +1083,13 @@ export async function GET(request: NextRequest) {
         console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
       }
     }
+    recordSemanticCacheOutcome({
+      resolvedMode,
+      cacheHit: false,
+      resultCount: personalizedResults.length,
+      latencyMs: Date.now() - startTime,
+      fallbackReason: fallback?.reason || null,
+    });
 
     return withHeaders(
       NextResponse.json({

@@ -44,7 +44,10 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import { executeMemorySearch } from '@/lib/memory/search-executor';
 import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
-import { resolveSemanticCacheDecision } from '@/lib/memory/semantic-cache-experiment';
+import {
+  recordSemanticCacheExperimentEvent,
+  resolveSemanticCacheDecision,
+} from '@/lib/memory/semantic-cache-experiment';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -603,6 +606,29 @@ export async function GET(request: NextRequest) {
       reason: semanticCacheDecision.reason,
       bucket: semanticCacheDecision.bucket,
     };
+    const recordSemanticCacheOutcome = (payload: {
+      resolvedMode: string;
+      cacheHit: boolean;
+      resultCount: number;
+      latencyMs: number;
+      fallbackReason?: string | null;
+      errorCode?: string | null;
+    }) => {
+      if (!semanticCacheDecision.variant) return;
+      recordSemanticCacheExperimentEvent(supabase, {
+        userId,
+        namespace,
+        source: 'v0',
+        requestedMode,
+        resolvedMode: payload.resolvedMode,
+        variant: semanticCacheDecision.variant,
+        cacheHit: payload.cacheHit,
+        latencyMs: payload.latencyMs,
+        resultCount: payload.resultCount,
+        fallbackReason: payload.fallbackReason || null,
+        errorCode: payload.errorCode || null,
+      }).catch(console.error);
+    };
 
     // Handle slot lookups
     if (actualMode === 'slot') {
@@ -624,6 +650,12 @@ export async function GET(request: NextRequest) {
         }).catch(console.error);
 
         if (slotValue) {
+          recordSemanticCacheOutcome({
+            resolvedMode: 'slot',
+            cacheHit: false,
+            resultCount: 1,
+            latencyMs: Date.now() - startTime,
+          });
           const response = NextResponse.json({
             success: true,
             mode: 'slot',
@@ -638,6 +670,10 @@ export async function GET(request: NextRequest) {
             count: 1,
             total: 1,
             cached: false,
+            semantic_cache: {
+              ...semanticCacheInfo,
+              hit: false,
+            },
             slot: { key: slotKey, value: slotValue },
             routerDecision: routerDecision
               ? { strategy: routerDecision.strategy, confidence: routerDecision.confidence, reason: routerDecision.reason }
@@ -676,6 +712,12 @@ export async function GET(request: NextRequest) {
         memoryCount: cacheResult.results.length,
         query,
       }).catch(console.error);
+      recordSemanticCacheOutcome({
+        resolvedMode: actualMode,
+        cacheHit: true,
+        resultCount: rankedCachedResults.length,
+        latencyMs: Date.now() - startTime,
+      });
 
       const response = NextResponse.json({
         success: true,
@@ -769,6 +811,13 @@ export async function GET(request: NextRequest) {
         );
       }
       if (isTimeoutError) {
+        recordSemanticCacheOutcome({
+          resolvedMode,
+          cacheHit: false,
+          resultCount: 0,
+          latencyMs: Date.now() - startTime,
+          errorCode: 'search_timeout',
+        });
         const response = NextResponse.json(
           {
             success: false,
@@ -776,12 +825,23 @@ export async function GET(request: NextRequest) {
               code: 'search_timeout',
               message: 'Search timed out. Try a shorter query or retry.',
             },
+            semantic_cache: {
+              ...semanticCacheInfo,
+              hit: false,
+            },
           },
           { status: 504 }
         );
         const withCsrf = ensureCsrfCookie(request, response);
         return withHeaders(withCsrf, authResult.rateLimitHeaders);
       }
+      recordSemanticCacheOutcome({
+        resolvedMode,
+        cacheHit: false,
+        resultCount: 0,
+        latencyMs: Date.now() - startTime,
+        errorCode: 'search_error',
+      });
       return ServerErrors.database('search_memories');
     }
 
@@ -816,6 +876,13 @@ export async function GET(request: NextRequest) {
       memoryCount: rankedResults?.length || 0,
       query,
     }).catch(console.error);
+    recordSemanticCacheOutcome({
+      resolvedMode,
+      cacheHit: false,
+      resultCount: rankedResults?.length || 0,
+      latencyMs: Date.now() - startTime,
+      fallbackReason: fallback?.reason || null,
+    });
 
     const response = NextResponse.json({
       success: true,

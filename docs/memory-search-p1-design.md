@@ -19,6 +19,7 @@ Improve real-user search quality under load by reducing timeout failure impact a
 - Search timeout rate decreases for interactive dashboard usage
 - Zero-result rate does not regress after threshold normalization
 - Cached-hit and fallback behavior visible in UI and auditable from logs
+- Semantic cache experiment variant-level outcomes (`hit`, `latency`, `result_count`) are persisted for analysis
 - Build/lint/tests remain green
 
 ## Design
@@ -55,6 +56,7 @@ Improve real-user search quality under load by reducing timeout failure impact a
 - [x] Dashboard adaptive threshold + request abort
 - [x] Dashboard diagnostics + accessibility status message
 - [x] Semantic cache A/B rollout guardrails (`MEMORY_SEMANTIC_CACHE_AB_ENABLED`, `MEMORY_SEMANTIC_CACHE_AB_SCOPE`, `MEMORY_SEMANTIC_CACHE_AB_RATIO`)
+- [x] Semantic cache experiment outcome events (`memory_semantic_cache_experiment_events`)
 - [x] DB-level statement timeout / per-query budget at SQL layer via bounded RPC wrappers (`*_search_memories_bounded`)
 
 ## Rollout plan
