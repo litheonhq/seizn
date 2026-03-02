@@ -617,11 +617,9 @@ body {
   background: #a1a1a1;
 }
 
-/* Thin scrollbar for sidebar navigation */
-.scrollbar-thin::-webkit-scrollbar { width: 4px; }
-.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 2px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+/* Hidden scrollbar for sidebar navigation (scroll via mouse wheel) */
+.scrollbar-hidden { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hidden::-webkit-scrollbar { display: none; }
 
 /* Stagger delays */
 .animate-delay-50 { animation-delay: 50ms; }

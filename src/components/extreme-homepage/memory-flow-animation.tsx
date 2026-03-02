@@ -133,7 +133,7 @@ const FlowNode = memo(function FlowNode({
       {/* Tooltip on hover */}
       {isHovered && (
         <div
-          className="absolute top-full mt-2 z-20 szn-card rounded-lg px-3 py-2 text-xs text-szn-text-2 max-w-[160px] text-center animate-fade-in pointer-events-none whitespace-nowrap"
+          className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 szn-card rounded-lg px-3 py-2 text-xs text-szn-text-2 w-max max-w-[200px] text-center animate-fade-in pointer-events-none"
           role="tooltip"
         >
           {step.description}

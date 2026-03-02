@@ -152,9 +152,9 @@ export function ThemeToggleSidebar({ expanded = false }: { expanded?: boolean })
     <button
       onClick={cycleTheme}
       title={`${t("theme.toggle")}: ${getThemeLabel()}`}
-      className={`group flex items-center rounded-2xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden ${
-        expanded ? "gap-3 px-4 py-3" : "justify-center p-3"
-      } text-szn-text-2 hover:bg-szn-surface-2 hover:text-szn-text-1 hover:shadow-md`}
+      className={`group flex items-center rounded-xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden ${
+        expanded ? "gap-3 px-4 py-3" : "justify-center w-full h-10"
+      } text-szn-text-2 hover:bg-szn-surface-2 hover:text-szn-text-1`}
     >
       {resolvedTheme === "dark" ? (
         <MoonIcon className="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 text-szn-text-3 group-hover:text-szn-text-2" />
