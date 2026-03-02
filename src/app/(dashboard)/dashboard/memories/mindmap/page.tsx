@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 // Loading skeleton component
 function MindMapSkeleton() {
   return (
-    <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-2xl">
+    <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
       <div className="text-center space-y-4">
-        <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-gray-500 dark:text-gray-400">Loading mind map...</p>
+        <div className="w-12 h-12 border-4 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-szn-text-2">Loading mind map...</p>
       </div>
     </div>
   );

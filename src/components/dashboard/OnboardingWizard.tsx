@@ -110,18 +110,18 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
   if (isLoading || translationLoading) {
     return (
-      <div className="glass-card rounded-2xl overflow-hidden mb-6 border-2 border-emerald-500/20 animate-pulse">
-        <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10">
+      <div className="szn-card rounded-2xl overflow-hidden mb-6 border-2 border-szn-accent/20 animate-pulse">
+        <div className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-200" />
-            <div className="space-y-2"><div className="h-4 w-40 bg-gray-200 rounded" /><div className="h-3 w-24 bg-gray-200 rounded" /></div>
+            <div className="w-10 h-10 rounded-full bg-szn-border" />
+            <div className="space-y-2"><div className="h-4 w-40 bg-szn-border rounded" /><div className="h-3 w-24 bg-szn-border rounded" /></div>
           </div>
         </div>
         <div className="p-4 space-y-3">
           {[1,2,3,4,5].map((i) => (
-            <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-gray-50">
-              <div className="w-8 h-8 rounded-full bg-gray-200" />
-              <div className="flex-1 space-y-2"><div className="h-4 w-32 bg-gray-200 rounded" /><div className="h-3 w-48 bg-gray-200 rounded" /></div>
+            <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-szn-bg">
+              <div className="w-8 h-8 rounded-full bg-szn-border" />
+              <div className="flex-1 space-y-2"><div className="h-4 w-32 bg-szn-border rounded" /><div className="h-3 w-48 bg-szn-border rounded" /></div>
             </div>
           ))}
         </div>
@@ -135,19 +135,19 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
   return (
     <>
-      <div className="glass-card rounded-2xl overflow-hidden mb-6 border-2 border-emerald-500/20">
-        <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 cursor-pointer flex items-center justify-between" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="szn-card rounded-2xl overflow-hidden mb-6 border-2 border-szn-accent/20">
+        <div className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5 cursor-pointer flex items-center justify-between" onClick={() => setIsExpanded(!isExpanded)}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center"><RocketIcon className="w-5 h-5 text-white" /></div>
-            <div><h3 className="font-semibold text-gray-900">{t("dashboard.onboarding.title")}</h3><p className="text-sm text-gray-500">{t("dashboard.onboarding.progress", { completed: completedSteps.size, total: steps.length })}</p></div>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-accent to-szn-accent/80 flex items-center justify-center"><RocketIcon className="w-5 h-5 text-white" /></div>
+            <div><h3 className="font-semibold text-szn-text-1">{t("dashboard.onboarding.title")}</h3><p className="text-sm text-szn-text-2">{t("dashboard.onboarding.progress", { completed: completedSteps.size, total: steps.length })}</p></div>
           </div>
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12">
-              <svg className="w-12 h-12 transform -rotate-90"><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="none" className="text-gray-200" /><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 20}`} strokeDashoffset={`${2 * Math.PI * 20 * (1 - completionPercentage / 100)}`} className="text-emerald-500 transition-all duration-500" strokeLinecap="round" /></svg>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">{completionPercentage}%</span>
+              <svg className="w-12 h-12 transform -rotate-90"><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="none" className="text-szn-border" /><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray={`${2 * Math.PI * 20}`} strokeDashoffset={`${2 * Math.PI * 20 * (1 - completionPercentage / 100)}`} className="text-szn-accent transition-all duration-500" strokeLinecap="round" /></svg>
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-szn-text-1">{completionPercentage}%</span>
             </div>
-            {onStartTour && <button onClick={(e) => { e.stopPropagation(); onStartTour(); }} className="text-emerald-600 hover:text-emerald-700 p-1" title={t("dashboard.onboarding.takeTour")}><PlayIcon className="w-5 h-5" /></button>}
-            <button onClick={(e) => { e.stopPropagation(); handleDismiss(); }} className="text-gray-400 hover:text-gray-600 p-1" title={t("dashboard.onboarding.dismiss")}><XIcon className="w-5 h-5" /></button>
+            {onStartTour && <button onClick={(e) => { e.stopPropagation(); onStartTour(); }} className="text-szn-accent hover:text-szn-accent/80 p-1" title={t("dashboard.onboarding.takeTour")}><PlayIcon className="w-5 h-5" /></button>}
+            <button onClick={(e) => { e.stopPropagation(); handleDismiss(); }} className="text-szn-text-3 hover:text-szn-text-2 p-1" title={t("dashboard.onboarding.dismiss")}><XIcon className="w-5 h-5" /></button>
           </div>
         </div>
         {isExpanded && (
@@ -157,16 +157,16 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
               const isNext = index === nextStepIndex;
               const handleClick = step.id === "install_sdk" ? () => { handleStepClick(step, index); setShowSdkModal(true); } : null;
               return (
-                <div key={step.id} className={`flex items-center gap-4 p-3 rounded-xl transition-all ${isComplete ? "bg-emerald-50" : isNext ? "bg-gradient-to-r from-emerald-50 to-cyan-50 ring-2 ring-emerald-500/30" : "bg-gray-50 hover:bg-gray-100"}`}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${isComplete ? "bg-emerald-500 text-white" : isNext ? "bg-gradient-to-br from-emerald-400 to-cyan-500 text-white" : "bg-gray-200 text-gray-600"}`}>
+                <div key={step.id} className={`flex items-center gap-4 p-3 rounded-xl transition-all ${isComplete ? "bg-szn-success/10" : isNext ? "bg-gradient-to-r from-szn-accent/10 to-szn-accent/5 ring-2 ring-szn-accent/30" : "bg-szn-bg hover:bg-szn-surface"}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${isComplete ? "bg-szn-success text-white" : isNext ? "bg-gradient-to-br from-szn-accent to-szn-accent/80 text-white" : "bg-szn-border text-szn-text-2"}`}>
                     {isComplete ? <CheckIcon className="w-5 h-5" /> : <StepIcon type={step.iconType} className="w-5 h-5" />}
                   </div>
-                  <div className="flex-1 min-w-0"><p className={`font-medium ${isComplete ? "text-emerald-700" : isNext ? "text-emerald-800" : "text-gray-900"}`}>{t(step.titleKey)}</p><p className="text-sm text-gray-500 truncate">{t(step.descriptionKey)}</p></div>
-                  {!isComplete && (handleClick ? <button onClick={handleClick} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 ${isNext ? "bg-emerald-600 text-white hover:bg-emerald-700" : "bg-gray-900 text-white hover:bg-gray-800"}`}>{t(step.action.labelKey)}</button> : <Link href={step.action.href || "#"} onClick={() => handleStepClick(step, index)} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 ${isNext ? "bg-emerald-600 text-white hover:bg-emerald-700" : "bg-gray-900 text-white hover:bg-gray-800"}`}>{t(step.action.labelKey)}</Link>)}
+                  <div className="flex-1 min-w-0"><p className={`font-medium ${isComplete ? "text-szn-success" : isNext ? "text-szn-accent" : "text-szn-text-1"}`}>{t(step.titleKey)}</p><p className="text-sm text-szn-text-2 truncate">{t(step.descriptionKey)}</p></div>
+                  {!isComplete && (handleClick ? <button onClick={handleClick} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 ${isNext ? "bg-szn-accent text-white hover:bg-szn-accent/90" : "bg-szn-text-1 text-white hover:bg-szn-text-1/90"}`}>{t(step.action.labelKey)}</button> : <Link href={step.action.href || "#"} onClick={() => handleStepClick(step, index)} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 ${isNext ? "bg-szn-accent text-white hover:bg-szn-accent/90" : "bg-szn-text-1 text-white hover:bg-szn-text-1/90"}`}>{t(step.action.labelKey)}</Link>)}
                 </div>
               );
             })}
-            <div className="text-center pt-2"><button onClick={handleDismiss} className="text-sm text-gray-400 hover:text-gray-600">{t("dashboard.onboarding.doLater")}</button></div>
+            <div className="text-center pt-2"><button onClick={handleDismiss} className="text-sm text-szn-text-3 hover:text-szn-text-2">{t("dashboard.onboarding.doLater")}</button></div>
           </div>
         )}
       </div>
@@ -183,17 +183,17 @@ function SdkModal({ onClose, onCopy, copiedSdk, t }: { onClose: () => void; onCo
   ];
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl">
-        <div className="flex items-center justify-between p-4 border-b"><h3 className="text-lg font-semibold text-gray-900">{t("dashboard.onboarding.sdkModal.title")}</h3><button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1"><XIcon className="w-5 h-5" /></button></div>
-        <div className="p-4 space-y-4"><p className="text-sm text-gray-500">{t("dashboard.onboarding.sdkModal.description")}</p>
+      <div className="bg-szn-card rounded-2xl max-w-lg w-full shadow-xl">
+        <div className="flex items-center justify-between p-4 border-b border-szn-border"><h3 className="text-lg font-semibold text-szn-text-1">{t("dashboard.onboarding.sdkModal.title")}</h3><button onClick={onClose} className="text-szn-text-3 hover:text-szn-text-2 p-1"><XIcon className="w-5 h-5" /></button></div>
+        <div className="p-4 space-y-4"><p className="text-sm text-szn-text-2">{t("dashboard.onboarding.sdkModal.description")}</p>
           {sdkOptions.map((sdk) => (
-            <div key={sdk.id} className="border rounded-xl p-4 hover:border-emerald-300 transition-colors">
-              <div className="flex items-center justify-between mb-2"><span className="font-medium text-gray-900">{sdk.name}</span><button onClick={() => onCopy(sdk.id, sdk.command)} className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${copiedSdk === sdk.id ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>{copiedSdk === sdk.id ? <span className="flex items-center gap-1"><CheckIcon className="w-4 h-4" />{t("dashboard.onboarding.sdkModal.copied")}</span> : t("dashboard.onboarding.sdkModal.copy")}</button></div>
+            <div key={sdk.id} className="border border-szn-border rounded-xl p-4 hover:border-szn-accent/50 transition-colors">
+              <div className="flex items-center justify-between mb-2"><span className="font-medium text-szn-text-1">{sdk.name}</span><button onClick={() => onCopy(sdk.id, sdk.command)} className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${copiedSdk === sdk.id ? "bg-szn-accent/10 text-szn-accent" : "bg-szn-surface text-szn-text-1 hover:bg-szn-surface-1"}`}>{copiedSdk === sdk.id ? <span className="flex items-center gap-1"><CheckIcon className="w-4 h-4" />{t("dashboard.onboarding.sdkModal.copied")}</span> : t("dashboard.onboarding.sdkModal.copy")}</button></div>
               <pre className="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm overflow-x-auto"><code>{sdk.command}</code></pre>
             </div>
           ))}
         </div>
-        <div className="p-4 border-t bg-gray-50 rounded-b-2xl"><div className="flex items-center justify-between"><Link href="/docs#sdks" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">{t("dashboard.onboarding.sdkModal.viewDocs")}</Link><button onClick={onClose} className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">{t("dashboard.onboarding.sdkModal.done")}</button></div></div>
+        <div className="p-4 border-t border-szn-border bg-szn-bg rounded-b-2xl"><div className="flex items-center justify-between"><Link href="/docs#sdks" className="text-sm text-szn-accent hover:text-szn-accent/80 font-medium">{t("dashboard.onboarding.sdkModal.viewDocs")}</Link><button onClick={onClose} className="px-4 py-2 bg-szn-text-1 text-white text-sm font-medium rounded-lg hover:bg-szn-text-1/90">{t("dashboard.onboarding.sdkModal.done")}</button></div></div>
       </div>
     </div>
   );

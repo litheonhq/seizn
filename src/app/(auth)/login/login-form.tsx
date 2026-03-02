@@ -95,15 +95,15 @@ export default function LoginForm() {
             <div className="w-10 h-10 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-lg">S</span>
             </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold bg-gradient-to-r from-szn-text-1 to-szn-text-3 bg-clip-text text-transparent">
               Seizn
             </span>
           </Link>
-          <p className="text-gray-500 mt-3">Sign in to your account</p>
+          <p className="text-szn-text-2 mt-3">Sign in to your account</p>
         </div>
 
         {/* Card */}
-        <div className="glass-card-premium rounded-3xl p-8 shadow-xl">
+        <div className="szn-card rounded-3xl p-8 shadow-xl">
           {/* Error Message */}
           {authError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm flex items-center gap-3">
@@ -130,7 +130,7 @@ export default function LoginForm() {
             <button
               onClick={() => handleOAuthLogin("google")}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-medium transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-szn-card hover:bg-szn-surface-1 border border-szn-border rounded-xl text-szn-text-1 font-medium transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -156,15 +156,15 @@ export default function LoginForm() {
 
           {/* Divider */}
           <div className="flex items-center my-6">
-            <div className="flex-1 border-t border-gray-200"></div>
-            <span className="px-4 text-gray-400 text-sm">or</span>
-            <div className="flex-1 border-t border-gray-200"></div>
+            <div className="flex-1 border-t border-szn-border"></div>
+            <span className="px-4 text-szn-text-3 text-sm">or</span>
+            <div className="flex-1 border-t border-szn-border"></div>
           </div>
 
           {/* Email/Password Form */}
           <form onSubmit={handleCredentialsLogin} className="space-y-4">
             <div>
-              <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="login-email" className="block text-sm font-medium text-szn-text-1 mb-2">
                 Email
               </label>
               <input
@@ -179,7 +179,7 @@ export default function LoginForm() {
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="login-password" className="block text-sm font-medium text-szn-text-1 mb-2">
                 Password
               </label>
               <input
@@ -225,7 +225,7 @@ export default function LoginForm() {
           </form>
 
           {/* Sign Up Link */}
-          <p className="mt-6 text-center text-gray-500 text-sm">
+          <p className="mt-6 text-center text-szn-text-2 text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-purple-600 hover:text-purple-500 font-medium transition-colors">
               Sign up
@@ -235,7 +235,7 @@ export default function LoginForm() {
 
         {/* Back to home */}
         <p className="mt-6 text-center">
-          <Link href="/" className="text-gray-400 hover:text-gray-600 text-sm flex items-center justify-center gap-1 transition-colors">
+          <Link href="/" className="text-szn-text-3 hover:text-szn-text-2 text-sm flex items-center justify-center gap-1 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

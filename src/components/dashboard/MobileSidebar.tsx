@@ -110,7 +110,7 @@ export default function MobileSidebar({
       {/* Sidebar Drawer */}
       <aside
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] glass-card flex flex-col transform transition-transform duration-300 ease-out lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] szn-card flex flex-col transform transition-transform duration-300 ease-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-label="Mobile navigation"
@@ -127,17 +127,17 @@ export default function MobileSidebar({
               className="w-10 h-10 rounded-2xl shadow-lg"
             />
             <div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white block">
+              <span className="text-xl font-bold text-szn-text-1 block">
                 Seizn<span className="theme-primary">.</span>
               </span>
-              <p className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1">
+              <p className="text-[10px] text-szn-text-3 flex items-center gap-1">
                 {"Agent OS"} <span>{seasonConfig.icon}</span>
               </p>
             </div>
           </Link>
           <button
             onClick={onClose}
-            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 rounded-xl transition-colors"
             aria-label="Close menu"
           >
             <CloseIcon className="w-6 h-6" />
@@ -152,10 +152,10 @@ export default function MobileSidebar({
               {group.key && (
                 <>
                   {groupIdx > 0 && (
-                    <div className="mx-3 my-2 border-t border-gray-200/60 dark:border-gray-700/60" />
+                    <div className="mx-3 my-2 border-t border-szn-border" />
                   )}
                   <div className="px-3 pt-3 pb-1">
-                    <span className="text-[10px] font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase">
+                    <span className="text-[10px] font-semibold tracking-widest text-szn-text-3 uppercase">
                       {group.label}
                     </span>
                   </div>
@@ -173,18 +173,18 @@ export default function MobileSidebar({
                       onClick={onClose}
                       className={`group relative flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-xl text-[13px] font-medium transition-all duration-200 ${
                         active
-                          ? "bg-white/70 dark:bg-gray-800/70 text-gray-900 dark:text-white"
-                          : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white active:bg-white/80"
+                          ? "bg-szn-surface-2 text-szn-text-1"
+                          : "text-szn-text-2 hover:bg-szn-surface-1 hover:text-szn-text-1 active:bg-szn-surface-2"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-[color:var(--theme-primary)]" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-szn-accent" />
                       )}
                       <item.icon
                         className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-200 ${
                           active
-                            ? "text-[color:var(--theme-primary)]"
-                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
+                            ? "text-szn-accent"
+                            : "text-szn-text-3 group-hover:text-szn-text-2"
                         }`}
                       />
                       <span>{item.label}</span>
@@ -198,7 +198,7 @@ export default function MobileSidebar({
 
         {/* User Profile */}
         <div className="p-4 border-t theme-border">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-szn-surface-1">
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -214,10 +214,10 @@ export default function MobileSidebar({
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+              <p className="text-sm font-semibold text-szn-text-1 truncate">
                 {session?.user?.name || "User"}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+              <p className="text-xs text-szn-text-2 truncate">
                 {session?.user?.email}
               </p>
             </div>
@@ -227,7 +227,7 @@ export default function MobileSidebar({
               onClose();
               onSignOut();
             }}
-            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3.5 min-h-[48px] rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-white/60 dark:hover:bg-gray-700/50 active:bg-white/80 transition-colors"
+            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3.5 min-h-[48px] rounded-xl text-sm font-medium text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 active:bg-szn-surface-2 transition-colors"
           >
             <LogoutIcon className="w-5 h-5" />
             {t("dashboard.signOut")}

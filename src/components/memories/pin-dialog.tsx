@@ -147,16 +147,16 @@ export function PinDialog({
       />
 
       {/* Modal */}
-      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full mx-4 border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="relative bg-szn-card rounded-2xl shadow-xl max-w-md w-full mx-4 border border-szn-border overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-teal-50 dark:bg-teal-900/10">
+        <div className="px-6 py-4 border-b border-szn-border bg-szn-accent/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-              <LockIcon className="w-5 h-5 text-teal-700 dark:text-teal-300" />
+            <div className="w-10 h-10 rounded-xl bg-szn-accent/10 flex items-center justify-center">
+              <LockIcon className="w-5 h-5 text-szn-accent" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>
+              <h2 className="text-lg font-semibold text-szn-text-1">{title}</h2>
+              <p className="text-sm text-szn-text-2">{subtitle}</p>
             </div>
           </div>
         </div>
@@ -173,11 +173,11 @@ export function PinDialog({
           )}
 
           {mode === "unlock" && (
-            <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="p-4 rounded-xl bg-szn-surface border border-szn-border">
+              <p className="text-sm text-szn-text-2">
                 This unlock only lasts for the current session. Refreshing the page will lock again.
               </p>
-              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <div className="mt-2 text-xs text-szn-text-2">
                 Attempts: {Math.min(securityState.failedAttempts, 3)}/3
                 {isCooldown && <span className="ml-2 text-red-600 dark:text-red-400">Cooldown: {cooldownSeconds}s</span>}
               </div>
@@ -186,7 +186,7 @@ export function PinDialog({
 
           {/* PIN input */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-szn-text-2">
               PIN (4-6 digits)
             </label>
             <input
@@ -196,14 +196,14 @@ export function PinDialog({
               value={pin}
               onChange={(e) => setPin(digitsOnly(e.target.value).slice(0, 6))}
               disabled={loading || isCooldown}
-              className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 disabled:opacity-60"
+              className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent disabled:opacity-60"
               placeholder="1234"
             />
           </div>
 
           {mode === "setup" && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="block text-sm font-medium text-szn-text-2">
                 Confirm PIN
               </label>
               <input
@@ -213,7 +213,7 @@ export function PinDialog({
                 value={confirmPin}
                 onChange={(e) => setConfirmPin(digitsOnly(e.target.value).slice(0, 6))}
                 disabled={loading}
-                className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 disabled:opacity-60"
+                className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent disabled:opacity-60"
                 placeholder="1234"
               />
             </div>
@@ -226,7 +226,7 @@ export function PinDialog({
           )}
 
           {isCooldown && (
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-sm text-szn-text-2">
               Please wait {cooldownSeconds}s before trying again.
             </div>
           )}
@@ -237,7 +237,7 @@ export function PinDialog({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-60 transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 disabled:opacity-60 transition-colors"
             >
               {mode === "unlock" ? "Continue locked" : "Cancel"}
             </button>
@@ -245,7 +245,7 @@ export function PinDialog({
               type="button"
               onClick={handleSubmit}
               disabled={!canSubmit}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white font-medium hover:from-szn-accent hover:to-szn-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

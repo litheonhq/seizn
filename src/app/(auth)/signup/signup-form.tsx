@@ -141,33 +141,33 @@ export default function SignupForm() {
             <div className="w-10 h-10 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-lg">S</span>
             </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold bg-gradient-to-r from-szn-text-1 to-szn-text-3 bg-clip-text text-transparent">
               Seizn
             </span>
           </Link>
-          <p className="text-gray-500 mt-3">Create your account</p>
+          <p className="text-szn-text-2 mt-3">Create your account</p>
         </div>
 
         {/* Card */}
-        <div className="glass-card-premium rounded-3xl p-8 shadow-xl">
+        <div className="szn-card rounded-3xl p-8 shadow-xl">
           {/* Success Message with API Key */}
           {success && apiKey && (
             <div className="mb-6 space-y-4">
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-600 text-sm flex items-center gap-3">
+              <div className="p-4 bg-szn-success/10 border border-szn-success/30 rounded-xl text-szn-success text-sm flex items-center gap-3">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Account created successfully!
               </div>
-              <div className="p-4 bg-white/50 border border-gray-200 rounded-xl">
-                <p className="text-sm text-gray-700 mb-2 font-medium">Your API Key</p>
+              <div className="p-4 bg-szn-card/50 border border-szn-border rounded-xl">
+                <p className="text-sm text-szn-text-1 mb-2 font-medium">Your API Key</p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 px-3 py-2 bg-gray-100 rounded-lg text-purple-600 text-xs font-mono break-all">
+                  <code className="flex-1 px-3 py-2 bg-szn-bg rounded-lg text-szn-accent text-xs font-mono break-all">
                     {apiKey}
                   </code>
                   <button
                     onClick={copyApiKey}
-                    className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 text-sm transition-colors"
+                    className="px-3 py-2 bg-szn-surface-1 hover:bg-szn-surface-2 rounded-lg text-szn-text-1 text-sm transition-colors"
                   >
                     {copied ? "Copied!" : "Copy"}
                   </button>
@@ -190,7 +190,7 @@ export default function SignupForm() {
 
           {/* Success without API Key */}
           {success && !apiKey && (
-            <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-600 text-sm flex items-center gap-3">
+            <div className="mb-6 p-4 bg-szn-success/10 border border-szn-success/30 rounded-xl text-szn-success text-sm flex items-center gap-3">
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -227,7 +227,7 @@ export default function SignupForm() {
                 <button
                   onClick={() => handleOAuthSignup("google")}
                   disabled={isLoading}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-medium transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-szn-card hover:bg-szn-surface-1 border border-szn-border rounded-xl text-szn-text-1 font-medium transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -241,15 +241,15 @@ export default function SignupForm() {
 
               {/* Divider */}
               <div className="flex items-center my-6">
-                <div className="flex-1 border-t border-gray-200"></div>
-                <span className="px-4 text-gray-400 text-sm">or</span>
-                <div className="flex-1 border-t border-gray-200"></div>
+                <div className="flex-1 border-t border-szn-border"></div>
+                <span className="px-4 text-szn-text-3 text-sm">or</span>
+                <div className="flex-1 border-t border-szn-border"></div>
               </div>
 
               {/* Email/Password Form */}
               <form onSubmit={handleSignup} className="space-y-4">
                 <div>
-                  <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label htmlFor="signup-name" className="block text-sm font-medium text-szn-text-1 mb-2">Name</label>
                   <input
                     id="signup-name"
                     type="text"
@@ -261,7 +261,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label htmlFor="signup-email" className="block text-sm font-medium text-szn-text-1 mb-2">Email</label>
                   <input
                     id="signup-email"
                     type="email"
@@ -274,7 +274,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                  <label htmlFor="signup-password" className="block text-sm font-medium text-szn-text-1 mb-2">Password</label>
                   <input
                     id="signup-password"
                     type="password"
@@ -288,7 +288,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-confirm-password" className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                  <label htmlFor="signup-confirm-password" className="block text-sm font-medium text-szn-text-1 mb-2">Confirm Password</label>
                   <input
                     id="signup-confirm-password"
                     type="password"
@@ -333,17 +333,17 @@ export default function SignupForm() {
               </form>
 
               {/* Terms */}
-              <p className="mt-4 text-xs text-gray-500 text-center">
+              <p className="mt-4 text-xs text-szn-text-2 text-center">
                 By signing up, you agree to our{" "}
-                <Link href="/terms" className="text-purple-600 hover:underline">Terms of Service</Link>{" "}
+                <Link href="/terms" className="text-szn-accent hover:underline">Terms of Service</Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-purple-600 hover:underline">Privacy Policy</Link>
+                <Link href="/privacy" className="text-szn-accent hover:underline">Privacy Policy</Link>
               </p>
 
               {/* Sign In Link */}
-              <p className="mt-6 text-center text-gray-500 text-sm">
+              <p className="mt-6 text-center text-szn-text-2 text-sm">
                 Already have an account?{" "}
-                <Link href="/login" className="text-purple-600 hover:text-purple-500 font-medium transition-colors">
+                <Link href="/login" className="text-szn-accent hover:text-szn-accent/80 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>
@@ -353,7 +353,7 @@ export default function SignupForm() {
 
         {/* Back to home */}
         <p className="mt-6 text-center">
-          <Link href="/" className="text-gray-400 hover:text-gray-600 text-sm flex items-center justify-center gap-1 transition-colors">
+          <Link href="/" className="text-szn-text-3 hover:text-szn-text-2 text-sm flex items-center justify-center gap-1 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

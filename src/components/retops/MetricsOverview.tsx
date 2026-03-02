@@ -36,27 +36,27 @@ function MetricCard({
 }: MetricCardProps) {
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+      <div className="bg-szn-card rounded-xl border border-szn-border p-6 animate-pulse">
         <div className="flex items-start justify-between">
           <div className="space-y-3">
-            <div className="h-4 w-24 bg-gray-200 rounded" />
-            <div className="h-8 w-32 bg-gray-200 rounded" />
-            <div className="h-3 w-20 bg-gray-200 rounded" />
+            <div className="h-4 w-24 bg-szn-surface rounded" />
+            <div className="h-8 w-32 bg-szn-surface rounded" />
+            <div className="h-3 w-20 bg-szn-surface rounded" />
           </div>
-          <div className="w-12 h-12 bg-gray-200 rounded-xl" />
+          <div className="w-12 h-12 bg-szn-surface rounded-xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-szn-card rounded-xl border border-szn-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-500">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+          <p className="text-sm font-medium text-szn-text-2">{title}</p>
+          <p className="text-2xl font-bold text-szn-text-1 mt-1">{value}</p>
           {subtitle && (
-            <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-sm text-szn-text-2 mt-1">{subtitle}</p>
           )}
           {trend && (
             <div className="flex items-center mt-2">
@@ -68,7 +68,7 @@ function MetricCard({
                 {trend.isPositive ? "+" : ""}
                 {trend.value.toFixed(1)}%
               </span>
-              <span className="text-xs text-gray-500 ml-2">vs last period</span>
+              <span className="text-xs text-szn-text-2 ml-2">vs last period</span>
             </div>
           )}
         </div>
@@ -122,7 +122,7 @@ export function MetricsOverview({ metrics, loading }: MetricsOverviewProps) {
       subtitle: `${metrics?.errors?.total ?? 0} errors`,
       trend: errorRate > 0 ? { value: -errorRate, isPositive: errorRate < 1 } : undefined,
       icon: <ErrorIcon className="w-6 h-6 text-red-600" />,
-      colorClass: errorRate > 5 ? "bg-red-100" : "bg-gray-100",
+      colorClass: errorRate > 5 ? "bg-red-100" : "bg-szn-surface",
       loading,
     },
     {
@@ -137,8 +137,8 @@ export function MetricsOverview({ metrics, loading }: MetricsOverviewProps) {
       title: "Groundedness",
       value: `${((metrics?.quality?.groundedness ?? 0) * 100).toFixed(1)}%`,
       subtitle: "RAG response quality",
-      icon: <ShieldIcon className="w-6 h-6 text-teal-600" />,
-      colorClass: "bg-teal-100",
+      icon: <ShieldIcon className="w-6 h-6 text-szn-accent" />,
+      colorClass: "bg-szn-accent/10",
       loading,
     },
   ];

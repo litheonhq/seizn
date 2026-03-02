@@ -94,7 +94,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       case "stable":
         return <TrendFlatIcon className="w-4 h-4 text-blue-500" />;
       default:
-        return <QuestionIcon className="w-4 h-4 text-gray-400" />;
+        return <QuestionIcon className="w-4 h-4 text-szn-text-3" />;
     }
   };
 
@@ -120,7 +120,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       case "stable":
         return "text-blue-600 bg-blue-50";
       default:
-        return "text-gray-500 bg-gray-50";
+        return "text-szn-text-2 bg-szn-bg";
     }
   };
 
@@ -144,15 +144,15 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (isLoading) {
     return (
-      <div className={`glass-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
+      <div className={`szn-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-48 mb-4" />
+          <div className="h-6 bg-szn-surface rounded w-48 mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="space-y-2">
-                <div className="h-4 bg-gray-100 rounded w-24" />
-                <div className="h-8 bg-gray-200 rounded w-16" />
-                <div className="h-3 bg-gray-100 rounded w-20" />
+                <div className="h-4 bg-szn-surface rounded w-24" />
+                <div className="h-8 bg-szn-surface rounded w-16" />
+                <div className="h-3 bg-szn-surface rounded w-20" />
               </div>
             ))}
           </div>
@@ -163,7 +163,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (error) {
     return (
-      <div className={`glass-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
+      <div className={`szn-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
         <div className="flex items-center gap-3 text-amber-600">
           <WarningIcon className="w-5 h-5" />
           <p className="text-sm">{error}</p>
@@ -178,12 +178,12 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (compact) {
     return (
-      <div className="glass-card rounded-2xl p-4">
+      <div className="szn-card rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900 text-sm">
+          <h3 className="font-semibold text-szn-text-1 text-sm">
             {t("dashboard.northStar.title") || "North Star Metrics"}
           </h3>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-szn-text-3">
             {new Date(metrics.lastUpdated).toLocaleDateString(locale)}
           </span>
         </div>
@@ -214,7 +214,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
   }
 
   return (
-    <div className="glass-card rounded-2xl overflow-hidden">
+    <div className="szn-card rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b theme-border flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -222,20 +222,20 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
             <ChartIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900">
+            <h2 className="font-semibold text-szn-text-1">
               {t("dashboard.northStar.title") || "North Star Metrics"}
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-szn-text-2">
               {t("dashboard.northStar.subtitle") || "Key performance indicators"}
             </p>
           </div>
         </div>
         <button
           onClick={fetchMetrics}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-szn-surface-1 rounded-lg transition-colors"
           title={t("dashboard.northStar.refresh") || "Refresh"}
         >
-          <RefreshIcon className="w-4 h-4 text-gray-500" />
+          <RefreshIcon className="w-4 h-4 text-szn-text-2" />
         </button>
       </div>
 
@@ -298,7 +298,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendIcon={getTrendIcon(metrics.costPredictability.trend)}
           sampleSize={metrics.costPredictability.totalBudgetChecks}
           icon={<ShieldIcon className="w-5 h-5 text-white" />}
-          gradient="from-green-400 to-emerald-500"
+          gradient="from-green-400 to-szn-success"
         />
 
         {/* Regression Rate */}
@@ -323,7 +323,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 pb-4 flex items-center justify-between text-xs text-gray-400">
+      <div className="px-6 pb-4 flex items-center justify-between text-xs text-szn-text-3">
         <span>
           {t("dashboard.northStar.lastUpdated") || "Last updated"}:{" "}
           {new Date(metrics.lastUpdated).toLocaleString(locale)}
@@ -365,7 +365,7 @@ function MetricCard({
   gradient,
 }: MetricCardProps) {
   return (
-    <div className="bg-white/50 rounded-xl p-4 border border-gray-100 hover:shadow-md transition-shadow">
+    <div className="bg-szn-surface-1 rounded-xl p-4 border border-szn-border hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center`}>
           {icon}
@@ -375,17 +375,17 @@ function MetricCard({
           <span>{trendLabel}</span>
         </div>
       </div>
-      <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
-      <p className="text-xs text-gray-500 mb-2">{subtitle}</p>
+      <h3 className="font-semibold text-szn-text-1 text-sm">{title}</h3>
+      <p className="text-xs text-szn-text-2 mb-2">{subtitle}</p>
       <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-gray-900">{value}</span>
+        <span className="text-2xl font-bold text-szn-text-1">{value}</span>
         {secondaryValue && (
-          <span className="text-xs text-gray-500">{secondaryValue}</span>
+          <span className="text-xs text-szn-text-2">{secondaryValue}</span>
         )}
       </div>
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-xs text-gray-400">{target}</span>
-        <span className="text-xs text-gray-400">n={sampleSize}</span>
+        <span className="text-xs text-szn-text-3">{target}</span>
+        <span className="text-xs text-szn-text-3">n={sampleSize}</span>
       </div>
     </div>
   );
@@ -405,12 +405,12 @@ function MetricMini({ label, value, trend }: MetricMiniProps) {
       ? "border-red-200 bg-red-50"
       : trend === "stable"
       ? "border-blue-200 bg-blue-50"
-      : "border-gray-200 bg-gray-50";
+      : "border-szn-border bg-szn-bg";
 
   return (
     <div className={`p-2 rounded-lg border ${trendColorClass}`}>
-      <p className="text-xs text-gray-500 truncate">{label}</p>
-      <p className="text-lg font-bold text-gray-900">{value}</p>
+      <p className="text-xs text-szn-text-2 truncate">{label}</p>
+      <p className="text-lg font-bold text-szn-text-1">{value}</p>
     </div>
   );
 }

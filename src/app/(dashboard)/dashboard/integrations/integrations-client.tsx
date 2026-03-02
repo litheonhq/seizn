@@ -191,43 +191,43 @@ export default function IntegrationsClient() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-bold text-szn-text-1">
           {t("dashboard.integrations.title") || "Integrations"}
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-szn-text-2 mt-1">
           {t("dashboard.integrations.subtitle") || "Connect Seizn with your favorite tools and frameworks"}
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-card rounded-xl p-4">
+        <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔌</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{integrations.length}</p>
+          <p className="text-2xl font-bold text-szn-text-1">{integrations.length}</p>
         </div>
-        <div className="glass-card rounded-xl p-4">
+        <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.integrations.stats.available") || "Available"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.available") || "Available"}</span>
           </div>
-          <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{integrations.filter(i => i.status === "available").length}</p>
+          <p className="text-2xl font-bold text-szn-success">{integrations.filter(i => i.status === "available").length}</p>
         </div>
-        <div className="glass-card rounded-xl p-4">
+        <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🧪</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{integrations.filter(i => i.status === "beta").length}</p>
         </div>
-        <div className="glass-card rounded-xl p-4">
+        <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔜</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
           </div>
-          <p className="text-2xl font-bold text-gray-600 dark:text-gray-300">{integrations.filter(i => i.status === "coming_soon").length}</p>
+          <p className="text-2xl font-bold text-szn-text-2">{integrations.filter(i => i.status === "coming_soon").length}</p>
         </div>
       </div>
 
@@ -239,22 +239,22 @@ export default function IntegrationsClient() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t("dashboard.integrations.searchPlaceholder") || "Search integrations..."}
-            className="w-full px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400"
+            className="w-full px-4 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
           />
         </div>
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 overflow-x-auto">
+        <div className="flex gap-1 bg-szn-surface rounded-lg p-1 overflow-x-auto">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 selectedCategory === category.id
-                  ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                  ? "bg-szn-card text-szn-text-1 shadow-sm"
+                  : "text-szn-text-2 hover:text-szn-text-1"
               }`}
             >
               {category.label}
-              <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">({category.count})</span>
+              <span className="ml-1 text-xs text-szn-text-3">({category.count})</span>
             </button>
           ))}
         </div>
@@ -266,22 +266,22 @@ export default function IntegrationsClient() {
           <div
             key={integration.id}
             onClick={() => setSelectedIntegration(integration)}
-            className={`glass-card rounded-xl p-4 cursor-pointer transition-all hover:shadow-md hover:ring-1 hover:ring-emerald-300/60 dark:hover:ring-emerald-700/40 ${
-              selectedIntegration?.id === integration.id ? "ring-2 ring-emerald-500 dark:ring-emerald-400" : ""
+            className={`szn-card rounded-xl p-4 cursor-pointer transition-all hover:shadow-md hover:ring-1 hover:ring-szn-accent/40 ${
+              selectedIntegration?.id === integration.id ? "ring-2 ring-szn-accent" : ""
             }`}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{integration.icon}</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{integration.name}</h3>
+                  <h3 className="font-semibold text-szn-text-1">{integration.name}</h3>
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
                       integration.status === "available"
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200"
+                        ? "bg-szn-success/10 text-szn-success"
                         : integration.status === "beta"
                           ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200"
-                          : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                          : "bg-szn-surface text-szn-text-2"
                     }`}
                   >
                     {integration.status === "available"
@@ -293,7 +293,7 @@ export default function IntegrationsClient() {
                 </div>
               </div>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{integration.description}</p>
+            <p className="text-sm text-szn-text-2 line-clamp-2">{integration.description}</p>
 
             {integration.status === "available" && (
               <div className="mt-3 flex gap-2">
@@ -301,7 +301,7 @@ export default function IntegrationsClient() {
                   <a
                     href={integration.docsUrl}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    className="text-xs px-3 py-1.5 bg-szn-surface text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
                   >
                     Docs
                   </a>
@@ -312,7 +312,7 @@ export default function IntegrationsClient() {
                       e.stopPropagation();
                       navigator.clipboard.writeText(integration.installCommand || "");
                     }}
-                    className="text-xs px-3 py-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors"
+                    className="text-xs px-3 py-1.5 bg-szn-success/10 text-szn-success rounded-lg hover:bg-szn-success/20 transition-colors"
                   >
                     Copy Install
                   </button>
@@ -325,7 +325,7 @@ export default function IntegrationsClient() {
 
       {filteredIntegrations.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400">No integrations found matching your criteria</p>
+          <p className="text-szn-text-2">No integrations found matching your criteria</p>
         </div>
       )}
 
@@ -363,21 +363,21 @@ function IntegrationModal({
         onClick={onClose}
       >
       <div
-        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl max-w-lg w-full p-6 shadow-xl"
+        className="bg-szn-card border border-szn-border rounded-2xl max-w-lg w-full p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-4 mb-4">
           <span className="text-4xl">{integration.icon}</span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{integration.name}</h2>
+              <h2 className="text-xl font-bold text-szn-text-1">{integration.name}</h2>
               <span
                 className={`text-xs px-2 py-0.5 rounded-full ${
                   integration.status === "available"
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200"
+                    ? "bg-szn-success/10 text-szn-success"
                     : integration.status === "beta"
                       ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200"
-                      : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                      : "bg-szn-surface text-szn-text-2"
                 }`}
               >
                 {integration.status === "available"
@@ -387,7 +387,7 @@ function IntegrationModal({
                     : "Coming Soon"}
               </span>
             </div>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">{integration.description}</p>
+            <p className="text-szn-text-2 mt-1">{integration.description}</p>
           </div>
         </div>
 
@@ -395,11 +395,11 @@ function IntegrationModal({
           <>
             {integration.installCommand && (
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-szn-text-1 mb-2">
                   Installation
                 </label>
                 <div className="flex items-center gap-2 bg-gray-900 rounded-lg p-3">
-                  <code className="flex-1 text-sm text-emerald-400 font-mono">
+                  <code className="flex-1 text-sm text-szn-success font-mono">
                     {integration.installCommand}
                   </code>
                   <button
@@ -413,11 +413,11 @@ function IntegrationModal({
             )}
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-szn-text-1 mb-2">
                 Quick Start
               </label>
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                <pre className="text-sm text-gray-700 dark:text-gray-200 overflow-x-auto">
+              <div className="bg-szn-bg rounded-lg p-4">
+                <pre className="text-sm text-szn-text-1 overflow-x-auto">
                   {getQuickStartCode(integration.id)}
                 </pre>
               </div>
@@ -426,11 +426,11 @@ function IntegrationModal({
         )}
 
         {integration.status === "coming_soon" && (
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="bg-szn-bg rounded-lg p-4 mb-4">
+            <p className="text-sm text-szn-text-2">
               This integration is currently in development. Sign up to get notified when it&apos;s available.
             </p>
-            <button className="mt-3 px-4 py-2 bg-emerald-500 text-white text-sm rounded-lg hover:bg-emerald-600">
+            <button className="mt-3 px-4 py-2 bg-szn-success text-white text-sm rounded-lg hover:bg-szn-success/90">
               Notify Me
             </button>
           </div>
@@ -447,14 +447,14 @@ function IntegrationModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="flex-1 px-4 py-2 border border-szn-border text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
           >
             Close
           </button>
           {integration.docsUrl && (
             <a
               href={integration.docsUrl}
-              className="flex-1 px-4 py-2 bg-emerald-500 text-white text-center rounded-lg hover:bg-emerald-600"
+              className="flex-1 px-4 py-2 bg-szn-accent text-white text-center rounded-lg hover:bg-szn-accent/90"
             >
               View Documentation
             </a>

@@ -775,16 +775,16 @@ function PropTable({ props }: { props: PropDoc[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">{t("propName")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">{t("propType")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">{t("propDefault")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">{t("propDescription")}</th>
+          <tr className="border-b border-szn-border">
+            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propName")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propType")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propDefault")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propDescription")}</th>
           </tr>
         </thead>
         <tbody>
           {props.map((prop) => (
-            <tr key={prop.name} className="border-b border-gray-100 dark:border-gray-800">
+            <tr key={prop.name} className="border-b border-szn-border">
               <td className="py-3 px-4">
                 <code className="text-indigo-600 dark:text-indigo-400 font-mono text-xs">
                   {prop.name}
@@ -792,14 +792,14 @@ function PropTable({ props }: { props: PropDoc[] }) {
                 </code>
               </td>
               <td className="py-3 px-4">
-                <code className="text-gray-600 dark:text-gray-400 font-mono text-xs bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                <code className="text-szn-text-2 font-mono text-xs bg-szn-surface px-2 py-0.5 rounded">
                   {prop.type}
                 </code>
               </td>
-              <td className="py-3 px-4 text-gray-500 dark:text-gray-400 text-xs">
+              <td className="py-3 px-4 text-szn-text-2 text-xs">
                 {prop.default || "-"}
               </td>
-              <td className="py-3 px-4 text-gray-600 dark:text-gray-300 text-xs">
+              <td className="py-3 px-4 text-szn-text-2 text-xs">
                 {prop.description}
               </td>
             </tr>
@@ -824,7 +824,7 @@ function CodeBlock({ code, language = "tsx" }: { code: string; language?: string
     <div className="relative">
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        className="absolute top-3 right-3 px-2 py-1 text-xs font-medium text-szn-text-2 bg-szn-surface rounded hover:bg-szn-surface-1 transition-colors"
       >
         {copied ? t("copied") : t("copy")}
       </button>
@@ -842,24 +842,24 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
   return (
     <div
       id={doc.id}
-      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden scroll-mt-24"
+      className="bg-szn-card border border-szn-border rounded-xl overflow-hidden scroll-mt-24"
     >
       {/* Header */}
       <div
-        className="p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+        className="p-6 cursor-pointer hover:bg-szn-surface-1 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h3 className="text-xl font-bold text-szn-text-1">
               {doc.name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono">
+            <p className="text-sm text-szn-text-2 mt-1 font-mono">
               {doc.path}
             </p>
           </div>
           <svg
-            className={`w-6 h-6 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+            className={`w-6 h-6 text-szn-text-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -872,10 +872,10 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="border-t border-gray-200 dark:border-gray-700">
+        <div className="border-t border-szn-border">
           {/* Props */}
           <div className="p-6">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h4 className="text-lg font-semibold text-szn-text-1 mb-4">
               {t("props")}
             </h4>
             <PropTable props={doc.props} />
@@ -883,8 +883,8 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
 
           {/* Usage Example */}
           {codeExamples[doc.id] && (
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="p-6 border-t border-szn-border bg-szn-surface">
+              <h4 className="text-lg font-semibold text-szn-text-1 mb-4">
                 {t("usage")}
               </h4>
               <CodeBlock code={codeExamples[doc.id]} />
@@ -909,21 +909,21 @@ export default function ComponentsPage() {
     : componentDocs;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-szn-bg">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="bg-szn-card border-b border-szn-border">
         <div className="max-w-6xl mx-auto px-4 py-12">
-          <nav className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            <Link href="/docs" className="hover:text-gray-700 dark:hover:text-gray-300">
+          <nav className="text-sm text-szn-text-2 mb-4">
+            <Link href="/docs" className="hover:text-szn-text-1">
               Docs
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900 dark:text-white">{t("title")}</span>
+            <span className="text-szn-text-1">{t("title")}</span>
           </nav>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold text-szn-text-1">
             {t("title")}
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mt-4 max-w-3xl">
+          <p className="text-lg text-szn-text-2 mt-4 max-w-3xl">
             {t("subtitle")}
           </p>
         </div>
@@ -938,7 +938,7 @@ export default function ComponentsPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeCategory === null
                 ? "bg-indigo-600 text-white"
-                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                : "bg-szn-card text-szn-text-1 border border-szn-border hover:bg-szn-surface-1"
             }`}
           >
             {t("all")}
@@ -950,12 +950,12 @@ export default function ComponentsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
                 activeCategory === cat.id
                   ? "bg-indigo-600 text-white"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  : "bg-szn-card text-szn-text-1 border border-szn-border hover:bg-szn-surface-1"
               }`}
             >
               <CategoryIcon path={cat.icon} />
               {cat.label}
-              <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+              <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-szn-surface text-szn-text-2">
                 {componentDocs.filter((d) => d.category === cat.id).length}
               </span>
             </button>
@@ -975,7 +975,7 @@ export default function ComponentsPage() {
                   <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
                     <CategoryIcon path={category.icon} />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-2xl font-bold text-szn-text-1">
                     {category.label} {t("components")}
                   </h2>
                 </div>

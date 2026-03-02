@@ -241,7 +241,7 @@ export function SettingsClient() {
   return (
     <div className="space-y-6">
       {isSessionLoading && (
-        <div className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.loading")}</div>
+        <div className="text-sm text-szn-text-2">{t("dashboard.settingsPage.loading")}</div>
       )}
       {isUnauthenticated && (
         <div className="rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3 sm:p-4">
@@ -273,24 +273,24 @@ export function SettingsClient() {
       {/* Header */}
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.title")}</p>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{t("dashboard.settingsPage.subtitle")}</h1>
+          <p className="text-sm text-szn-text-2">{t("dashboard.settingsPage.title")}</p>
+          <h1 className="text-2xl font-semibold text-szn-text-1">{t("dashboard.settingsPage.subtitle")}</h1>
         </div>
-        {saveStatus === "saving" && <span className="text-sm text-gray-600 dark:text-gray-400">{t("dashboard.settingsPage.saving")}</span>}
-        {saveStatus === "saved" && <span className="text-sm text-emerald-600">{t("dashboard.settingsPage.saved")}</span>}
+        {saveStatus === "saving" && <span className="text-sm text-szn-text-2">{t("dashboard.settingsPage.saving")}</span>}
+        {saveStatus === "saved" && <span className="text-sm text-szn-success">{t("dashboard.settingsPage.saved")}</span>}
         {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
 
       {/* Tabs */}
-      <div className="grid grid-cols-2 gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">
+      <div className="grid grid-cols-2 gap-1 p-1 bg-szn-surface rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors sm:justify-start sm:px-4 ${
               activeTab === tab.id
-                ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
+                ? "bg-szn-card text-szn-text-1 shadow-sm"
+                : "text-szn-text-2 hover:text-szn-text-1"
             }`}
           >
             {tab.icon}
@@ -300,44 +300,44 @@ export function SettingsClient() {
       </div>
 
       {/* Tab Content */}
-      <div className="glass-card border border-gray-200 dark:border-gray-700 rounded-2xl p-4 sm:p-6">
+      <div className="szn-card border border-szn-border rounded-2xl p-4 sm:p-6">
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
                 {t("dashboard.settingsPage.account")}
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
                     {t("dashboard.settingsPage.email")}
                   </label>
                   <input
                     type="email"
                     value={profile.email || ""}
                     disabled
-                    className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-bg text-szn-text-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
                     {t("dashboard.settingsPage.name")}
                   </label>
                   <input
                     type="text"
                     value={profile.name || ""}
                     disabled
-                    className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-bg text-szn-text-1"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="pt-4 border-t border-szn-border">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-medium text-gray-900 dark:text-white">{t("dashboard.language")}</h3>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.languageHint")}</span>
+                <h3 className="text-base font-medium text-szn-text-1">{t("dashboard.language")}</h3>
+                <span className="text-xs text-szn-text-2">{t("dashboard.settingsPage.languageHint")}</span>
               </div>
               <select
                 value={language}
@@ -346,7 +346,7 @@ export function SettingsClient() {
                   setLanguage(lang);
                   saveLanguage(lang);
                 }}
-                className="w-full max-w-xs rounded-xl border border-gray-200 dark:border-gray-600 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full max-w-xs rounded-xl border border-szn-border px-4 py-2 text-sm text-szn-text-2 bg-szn-card focus:outline-none focus:ring-2 focus:ring-szn-accent"
               >
                 {locales.map((l) => (
                   <option key={l} value={l}>
@@ -355,9 +355,9 @@ export function SettingsClient() {
                 ))}
               </select>
             </div>
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="pt-4 border-t border-szn-border">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-medium text-gray-900 dark:text-white">{t("dashboard.theme.toggle")}</h3>
+                <h3 className="text-base font-medium text-szn-text-1">{t("dashboard.theme.toggle")}</h3>
               </div>
               <ThemeToggle variant="dropdown" />
             </div>
@@ -368,16 +368,16 @@ export function SettingsClient() {
         {activeTab === "billing" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
                 {t("dashboard.settingsPage.billing.title") || "Billing & Quota"}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-sm text-szn-text-2 mb-6">
                 {t("dashboard.settingsPage.billing.subtitle") || "Manage your subscription and usage limits"}
               </p>
             </div>
 
             {quotaLoading ? (
-              <div className="py-12 text-center text-gray-500 dark:text-gray-400">
+              <div className="py-12 text-center text-szn-text-2">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
@@ -407,7 +407,7 @@ export function SettingsClient() {
                 )}
 
                 {/* Current Plan Card */}
-                <div className="p-5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
+                <div className="p-5 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm opacity-90">{t("dashboard.settingsPage.billing.currentPlan") || "Current Plan"}</p>
@@ -454,14 +454,14 @@ export function SettingsClient() {
                 </div>
 
                 {/* Plan Comparison */}
-                <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <h3 className="text-base font-medium text-gray-900 dark:text-white mb-4">
+                <div className="pt-6 border-t border-szn-border">
+                  <h3 className="text-base font-medium text-szn-text-1 mb-4">
                     {t("dashboard.settingsPage.billing.planComparison") || "Plan Comparison"}
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-left text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                        <tr className="text-left text-szn-text-2 border-b border-szn-border">
                           <th className="pb-3 font-medium">{t("dashboard.settingsPage.billing.feature") || "Feature"}</th>
                           <th className="pb-3 font-medium">Free</th>
                           <th className="pb-3 font-medium">Plus</th>
@@ -469,22 +469,22 @@ export function SettingsClient() {
                           <th className="pb-3 font-medium">Enterprise</th>
                         </tr>
                       </thead>
-                      <tbody className="text-gray-700 dark:text-gray-300">
-                        <tr className="border-b border-gray-100 dark:border-gray-800">
+                      <tbody className="text-szn-text-2">
+                        <tr className="border-b border-szn-border">
                           <td className="py-3">{t("dashboard.settingsPage.billing.memoriesLabel") || "Memories"}</td>
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
                           <td className="py-3">1,000,000</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <tr className="border-b border-szn-border">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiCallsLabel") || "API Calls/mo"}</td>
                           <td className="py-3">1,000</td>
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
-                        <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <tr className="border-b border-szn-border">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiKeysLabel") || "API Keys"}</td>
                           <td className="py-3">3</td>
                           <td className="py-3">10</td>
@@ -511,16 +511,16 @@ export function SettingsClient() {
         {activeTab === "budget" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
                 {t("dashboard.settingsPage.budget.title")}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-sm text-szn-text-2 mb-6">
                 {t("dashboard.settingsPage.budget.subtitle")}
               </p>
             </div>
 
             {budgetLoading ? (
-              <div className="py-12 text-center text-gray-500 dark:text-gray-400">
+              <div className="py-12 text-center text-szn-text-2">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
@@ -528,11 +528,11 @@ export function SettingsClient() {
                 {/* Budget Limits */}
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-szn-text-2 mb-1">
                       {t("dashboard.settingsPage.budget.dailyLimit")}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
                       <input
                         type="number"
                         min={0}
@@ -542,16 +542,16 @@ export function SettingsClient() {
                           ...prev,
                           dailyBudgetUsd: parseFloat(e.target.value) || 0
                         }))}
-                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-szn-text-2 mb-1">
                       {t("dashboard.settingsPage.budget.monthlyLimit")}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
                       <input
                         type="number"
                         min={0}
@@ -561,7 +561,7 @@ export function SettingsClient() {
                           ...prev,
                           monthlyBudgetUsd: parseFloat(e.target.value) || 0
                         }))}
-                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                       />
                     </div>
                   </div>
@@ -569,11 +569,11 @@ export function SettingsClient() {
 
                 {/* Per-Query Limit */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
                     {t("dashboard.settingsPage.budget.perQueryMax")}
                   </label>
                   <div className="relative max-w-xs">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
                     <input
                       type="number"
                       min={0}
@@ -583,14 +583,14 @@ export function SettingsClient() {
                         ...prev,
                         perQueryMaxUsd: parseFloat(e.target.value) || 0
                       }))}
-                      className="w-full pl-8 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                     />
                   </div>
                 </div>
 
                 {/* Alert Threshold */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
                     {t("dashboard.settingsPage.budget.alertThreshold")}
                   </label>
                   <div className="flex items-center gap-4">
@@ -604,20 +604,20 @@ export function SettingsClient() {
                         ...prev,
                         alertAtPercent: parseInt(e.target.value)
                       }))}
-                      className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
+                      className="flex-1 h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-szn-accent"
                     />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                    <span className="text-sm font-medium text-szn-text-2 w-12 text-right">
                       {budgetSettings.alertAtPercent}%
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-szn-text-2 mt-1">
                     {t("dashboard.settingsPage.budget.alertThresholdHint")}
                   </p>
                 </div>
 
                 {/* Budget Mode */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-2">
                     {t("dashboard.settingsPage.budget.budgetMode")}
                   </label>
                   <div className="flex gap-4">
@@ -628,13 +628,13 @@ export function SettingsClient() {
                         value="soft"
                         checked={budgetSettings.mode === "soft"}
                         onChange={() => setBudgetSettings(prev => ({ ...prev, mode: "soft" }))}
-                        className="w-4 h-4 text-teal-500 focus:ring-teal-500"
+                        className="w-4 h-4 text-szn-accent focus:ring-szn-accent"
                       />
                       <div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="text-sm font-medium text-szn-text-2">
                           {t("dashboard.settingsPage.budget.soft")}
                         </span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-szn-text-2">
                           {t("dashboard.settingsPage.budget.softDesc")}
                         </p>
                       </div>
@@ -646,13 +646,13 @@ export function SettingsClient() {
                         value="hard"
                         checked={budgetSettings.mode === "hard"}
                         onChange={() => setBudgetSettings(prev => ({ ...prev, mode: "hard" }))}
-                        className="w-4 h-4 text-teal-500 focus:ring-teal-500"
+                        className="w-4 h-4 text-szn-accent focus:ring-szn-accent"
                       />
                       <div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="text-sm font-medium text-szn-text-2">
                           {t("dashboard.settingsPage.budget.hard")}
                         </span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-szn-text-2">
                           {t("dashboard.settingsPage.budget.hardDesc")}
                         </p>
                       </div>
@@ -662,7 +662,7 @@ export function SettingsClient() {
 
                 {/* Fallback Strategy */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-szn-text-2 mb-2">
                     {t("dashboard.settingsPage.budget.fallbackStrategy")}
                   </label>
                   <select
@@ -671,7 +671,7 @@ export function SettingsClient() {
                       ...prev,
                       fallbackStrategy: e.target.value as "degrade" | "reject" | "queue"
                     }))}
-                    className="w-full max-w-xs rounded-xl border border-gray-200 dark:border-gray-600 px-4 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full max-w-xs rounded-xl border border-szn-border px-4 py-2 text-sm bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                   >
                     <option value="degrade">{t("dashboard.settingsPage.budget.degrade")}</option>
                     <option value="reject">{t("dashboard.settingsPage.budget.reject")}</option>
@@ -680,11 +680,11 @@ export function SettingsClient() {
                 </div>
 
                 {/* Save Button */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="pt-4 border-t border-szn-border">
                   <button
                     onClick={saveBudgetSettings}
                     disabled={saveStatus === "saving"}
-                    className="px-6 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 transition-all"
+                    className="px-6 py-2 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white font-medium hover:from-szn-accent/90 hover:to-szn-accent/70 disabled:opacity-50 transition-all"
                   >
                     {saveStatus === "saving" ? t("dashboard.settingsPage.saving") : t("dashboard.settingsPage.save")}
                   </button>
@@ -698,10 +698,10 @@ export function SettingsClient() {
         {activeTab === "notifications" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
                 {t("dashboard.settingsPage.notifications.title")}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-sm text-szn-text-2 mb-6">
                 {t("dashboard.settingsPage.notifications.subtitle")}
               </p>
             </div>
@@ -734,23 +734,23 @@ export function SettingsClient() {
             </div>
 
             {/* Telegram Connection (Future) */}
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-              <h3 className="text-base font-medium text-gray-900 dark:text-white mb-3">
+            <div className="pt-4 border-t border-szn-border">
+              <h3 className="text-base font-medium text-szn-text-1 mb-3">
                 {t("dashboard.settingsPage.notifications.integrations")}
               </h3>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-szn-bg border border-szn-border">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center">
                     <TelegramIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Telegram</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{t("dashboard.settingsPage.notifications.telegramDesc")}</p>
+                    <p className="text-sm font-medium text-szn-text-1">Telegram</p>
+                    <p className="text-xs text-szn-text-2">{t("dashboard.settingsPage.notifications.telegramDesc")}</p>
                   </div>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -763,28 +763,28 @@ export function SettingsClient() {
         {activeTab === "security" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
                 {t("dashboard.settingsPage.security.title")}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-sm text-szn-text-2 mb-6">
                 {t("dashboard.settingsPage.security.subtitle")}
               </p>
             </div>
 
             {/* Password Change */}
-            <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-szn-text-1">
                     {t("dashboard.settingsPage.security.changePassword")}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-szn-text-2">
                     {t("dashboard.settingsPage.security.changePasswordDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -792,19 +792,19 @@ export function SettingsClient() {
             </div>
 
             {/* Two-Factor Auth */}
-            <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-szn-text-1">
                     {t("dashboard.settingsPage.security.twoFactor")}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-szn-text-2">
                     {t("dashboard.settingsPage.security.twoFactorDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -812,19 +812,19 @@ export function SettingsClient() {
             </div>
 
             {/* Session Management */}
-            <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-szn-text-1">
                     {t("dashboard.settingsPage.security.sessions")}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-szn-text-2">
                     {t("dashboard.settingsPage.security.sessionsDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -840,25 +840,25 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-red-600 mb-2">
                 {t("dashboard.settingsPage.dangerZone.title")}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-sm text-szn-text-2 mb-6">
                 {t("dashboard.settingsPage.dangerZone.titleDesc")}
               </p>
             </div>
 
             {/* Export Data */}
-            <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+            <div className="p-4 rounded-xl border border-szn-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-szn-text-1">
                     {t("dashboard.settingsPage.dangerZone.exportData")}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-szn-text-2">
                     {t("dashboard.settingsPage.dangerZone.exportDataDesc")}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowExportModal(true)}
-                  className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium hover:bg-szn-surface-1 transition-colors"
                 >
                   {t("dashboard.settingsPage.dangerZone.exportData")}
                 </button>
@@ -948,27 +948,27 @@ function UsageCard({
         ? "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
         : warning
         ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20"
-        : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
+        : "border-szn-border bg-szn-bg"
     }`}>
       <div className="flex items-center gap-2 mb-3">
-        <span className={critical ? "text-red-600 dark:text-red-400" : warning ? "text-amber-600 dark:text-amber-400" : "text-gray-600 dark:text-gray-400"}>
+        <span className={critical ? "text-red-600 dark:text-red-400" : warning ? "text-amber-600 dark:text-amber-400" : "text-szn-text-2"}>
           {icon}
         </span>
-        <span className="text-sm font-medium text-gray-900 dark:text-white">{title}</span>
+        <span className="text-sm font-medium text-szn-text-1">{title}</span>
       </div>
       <div className="flex items-end justify-between mb-2">
-        <span className="text-2xl font-bold text-gray-900 dark:text-white">
+        <span className="text-2xl font-bold text-szn-text-1">
           {used.toLocaleString()}
         </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-szn-text-2">
           / {limit === -1 ? (t("dashboard.settingsPage.billing.unlimited") || "Unlimited") : limit.toLocaleString()}
         </span>
       </div>
       {limit !== -1 && (
-        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-szn-surface rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all ${
-              critical ? "bg-red-500" : warning ? "bg-amber-500" : "bg-teal-500"
+              critical ? "bg-red-500" : warning ? "bg-amber-500" : "bg-szn-accent"
             }`}
             style={{ width: `${percent}%` }}
           />
@@ -990,15 +990,15 @@ function NotificationToggle({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+    <div className="flex items-center justify-between p-4 rounded-xl bg-szn-bg border border-szn-border">
       <div>
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{title}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="text-sm font-medium text-szn-text-1">{title}</p>
+        <p className="text-xs text-szn-text-2">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
         className={`relative w-11 h-6 rounded-full transition-colors ${
-          checked ? "bg-teal-500" : "bg-gray-300 dark:bg-gray-600"
+          checked ? "bg-szn-accent" : "bg-szn-surface"
         }`}
       >
         <span

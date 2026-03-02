@@ -55,7 +55,7 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
         <svg className="animate-spin w-8 h-8 mb-4" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -67,7 +67,7 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
 
   if (!trace) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
@@ -79,32 +79,32 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
   return (
     <div className="space-y-4 h-full overflow-auto max-h-[calc(100%-2rem)]">
       {/* Summary Bar */}
-      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+      <div className="flex items-center justify-between p-4 bg-szn-bg rounded-xl">
         <div className="flex items-center gap-6">
           <div>
-            <div className="text-xs text-gray-500 mb-1">{t?.latency || "Latency"}</div>
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-xs text-szn-text-2 mb-1">{t?.latency || "Latency"}</div>
+            <div className="text-lg font-semibold text-szn-text-1">
               {trace.totalLatencyMs.toFixed(0)}ms
             </div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-szn-border" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">{t?.cost || "Cost"}</div>
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-xs text-szn-text-2 mb-1">{t?.cost || "Cost"}</div>
+            <div className="text-lg font-semibold text-szn-text-1">
               ${trace.totalCost.toFixed(4)}
             </div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-szn-border" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">{t?.tokens || "Tokens"}</div>
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-xs text-szn-text-2 mb-1">{t?.tokens || "Tokens"}</div>
+            <div className="text-lg font-semibold text-szn-text-1">
               {trace.tokensUsed.toLocaleString()}
             </div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-szn-border" />
           <div>
-            <div className="text-xs text-gray-500 mb-1">{t?.vectorOps || "Vector Ops"}</div>
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-xs text-szn-text-2 mb-1">{t?.vectorOps || "Vector Ops"}</div>
+            <div className="text-lg font-semibold text-szn-text-1">
               {trace.vectorOps}
             </div>
           </div>
@@ -113,7 +113,7 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
 
       {/* Timeline View */}
       <div className="relative">
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-szn-border" />
         <div className="space-y-3">
           {trace.steps.map((step, index) => {
             const colors = STAGE_COLORS[step.stage];
@@ -131,7 +131,7 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
                   className={`w-full text-left p-4 rounded-xl border transition-all ${
                     isExpanded
                       ? `${colors.bg} ${colors.border}`
-                      : "bg-white border-gray-100 hover:border-gray-200"
+                      : "bg-szn-card border-szn-border hover:border-szn-border"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -139,26 +139,26 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
                         {step.stage}
                       </span>
-                      <span className="font-medium text-gray-900 text-sm">
+                      <span className="font-medium text-szn-text-1 text-sm">
                         {step.name}
                       </span>
                       {step.cached && (
-                        <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-szn-accent/10 text-szn-accent px-2 py-0.5 rounded-full">
                           {t?.cached || "cached"}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-sm text-gray-600 font-medium">
+                      <span className="text-sm text-szn-text-2 font-medium">
                         {duration.toFixed(0)}ms
                       </span>
                       {step.cost !== undefined && (
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-szn-text-3">
                           ${step.cost.toFixed(5)}
                         </span>
                       )}
                       <svg
-                        className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        className={`w-4 h-4 text-szn-text-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -169,7 +169,7 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
                   </div>
 
                   {/* Meta Info */}
-                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                  <div className="flex items-center gap-4 text-xs text-szn-text-2">
                     {step.model && <span>{t?.model || "Model"}: {step.model}</span>}
                     {step.inputSize !== undefined && <span>{t?.input || "Input"}: {step.inputSize}</span>}
                     {step.outputSize !== undefined && <span>{t?.output || "Output"}: {step.outputSize}</span>}
@@ -177,8 +177,8 @@ export function TracePanel({ trace, isLoading, translations: t }: TracePanelProp
 
                   {/* Expanded Details */}
                   {isExpanded && step.details && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <pre className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg overflow-auto max-h-40">
+                    <div className="mt-4 pt-4 border-t border-szn-border">
+                      <pre className="text-xs text-szn-text-2 bg-szn-bg p-3 rounded-lg overflow-auto max-h-40">
                         {JSON.stringify(step.details, null, 2)}
                       </pre>
                     </div>

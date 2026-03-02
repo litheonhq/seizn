@@ -83,14 +83,14 @@ export default function AlertsPage() {
             <Bell className="w-6 h-6" />
             Alerts
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-szn-text-2 text-sm mt-1">
             Manage and review system alerts
           </p>
         </div>
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard/control-tower/alerts/rules"
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-szn-border rounded-lg hover:bg-szn-surface-1"
           >
             Manage Rules
           </Link>
@@ -108,8 +108,8 @@ export default function AlertsPage() {
       {/* Filters */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-500">Filters:</span>
+          <Filter className="w-4 h-4 text-szn-text-3" />
+          <span className="text-sm text-szn-text-2">Filters:</span>
         </div>
 
         <button
@@ -117,7 +117,7 @@ export default function AlertsPage() {
           className={`px-3 py-1.5 rounded-lg text-sm ${
             filter.activeOnly
               ? 'bg-blue-100 text-blue-700'
-              : 'bg-gray-100 text-gray-600'
+              : 'bg-szn-surface text-szn-text-2'
           }`}
         >
           Active Only
@@ -131,7 +131,7 @@ export default function AlertsPage() {
               severity: (e.target.value as AlertSeverity) || undefined,
             }))
           }
-          className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm"
+          className="px-3 py-1.5 rounded-lg border border-szn-border text-sm"
         >
           <option value="">All Severities</option>
           <option value="critical">Critical</option>
@@ -148,7 +148,7 @@ export default function AlertsPage() {
               status: (e.target.value as AlertStatus) || undefined,
             }))
           }
-          className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm"
+          className="px-3 py-1.5 rounded-lg border border-szn-border text-sm"
         >
           <option value="">All Statuses</option>
           <option value="firing">Firing</option>
@@ -160,7 +160,7 @@ export default function AlertsPage() {
         {(filter.severity || filter.status || filter.activeOnly) && (
           <button
             onClick={() => setFilter({ activeOnly: false })}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-szn-text-2 hover:text-szn-text-1"
           >
             Clear filters
           </button>
@@ -168,18 +168,18 @@ export default function AlertsPage() {
       </div>
 
       {/* Alerts List */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+      <div className="bg-szn-card rounded-xl border border-szn-border">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="w-6 h-6 animate-spin text-gray-400" />
+            <RefreshCw className="w-6 h-6 animate-spin text-szn-text-3" />
           </div>
         ) : alerts.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-szn-text-2">
             <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500" />
             <p>No alerts found</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-gray-700">
+          <div className="divide-y divide-szn-border">
             {alerts.map((alert) => {
               const StatusIcon = statusIcons[alert.status];
               return (
@@ -206,14 +206,14 @@ export default function AlertsPage() {
                           >
                             {alert.severity}
                           </span>
-                          <span className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700">
+                          <span className="text-xs px-2 py-0.5 rounded bg-szn-surface">
                             {alert.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-szn-text-2 mt-1">
                           {alert.description}
                         </p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-4 mt-2 text-xs text-szn-text-2">
                           <span>Source: {alert.source}</span>
                           <span>
                             Created: {new Date(alert.createdAt).toLocaleString()}
@@ -231,7 +231,7 @@ export default function AlertsPage() {
                         <>
                           <button
                             onClick={() => handleAction(alert.id, 'acknowledge')}
-                            className="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                            className="px-3 py-1.5 text-sm border border-szn-border rounded hover:bg-szn-surface-1"
                           >
                             Acknowledge
                           </button>

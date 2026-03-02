@@ -124,19 +124,19 @@ interface MatchedTermItemProps {
 
 function MatchedTermItem({ term }: MatchedTermItemProps) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+    <div className="flex items-center gap-2 p-2 bg-szn-surface rounded-lg">
       <span className={`px-2 py-0.5 text-xs font-medium rounded ${MATCH_TYPE_STYLES[term.matchType]}`}>
         {term.matchType}
       </span>
-      <span className="font-medium text-gray-900 dark:text-white">
+      <span className="font-medium text-szn-text-1">
         &quot;{term.term}&quot;
       </span>
       {term.queryTerm && term.queryTerm !== term.term && (
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-szn-text-2">
           (from &quot;{term.queryTerm}&quot;)
         </span>
       )}
-      <span className="ml-auto text-xs text-gray-500 dark:text-gray-400">
+      <span className="ml-auto text-xs text-szn-text-2">
         {term.positions.length}x
       </span>
     </div>
@@ -158,10 +158,10 @@ function SemanticMatchItem({ match }: SemanticMatchItemProps) {
           {(match.similarity * 100).toFixed(0)}% similar
         </span>
       </div>
-      <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+      <p className="text-sm text-szn-text-2 italic">
         &quot;{match.matchedPassage}&quot;
       </p>
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-szn-text-2">
         {match.reason}
       </p>
     </div>
@@ -176,12 +176,12 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border border-szn-border rounded-lg overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-3 flex items-center justify-between bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="w-full p-3 flex items-center justify-between bg-szn-surface hover:bg-szn-surface-1 transition-colors"
       >
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <span className="text-sm font-medium text-szn-text-2">
           vs Result #{comparison.comparedToRank}
         </span>
         <ChevronDownIcon
@@ -192,7 +192,7 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
       {expanded && (
         <div className="p-3 space-y-3">
           {/* Summary */}
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-szn-text-2">
             {comparison.summary}
           </p>
 
@@ -201,7 +201,7 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
             {comparison.factors.map((factor, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 p-2 bg-white dark:bg-gray-900 rounded border border-gray-100 dark:border-gray-700"
+                className="flex items-center gap-2 p-2 bg-szn-bg rounded border border-szn-border"
               >
                 {/* Impact indicator */}
                 {factor.impact === "positive" && (
@@ -214,10 +214,10 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
                   <div className="w-4 h-4 rounded-full bg-gray-300 dark:bg-gray-600" />
                 )}
 
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-medium text-szn-text-2">
                   {factor.factor}
                 </span>
-                <span className="ml-auto text-xs text-gray-500 dark:text-gray-400">
+                <span className="ml-auto text-xs text-szn-text-2">
                   {typeof factor.thisValue === "number"
                     ? factor.thisValue.toFixed(2)
                     : factor.thisValue}{" "}
@@ -253,14 +253,14 @@ export function AttributionList({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Source Information */}
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="p-4 bg-szn-surface rounded-lg">
         <div className="flex items-start gap-3">
           <DocumentIcon className="w-5 h-5 text-gray-400 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-gray-900 dark:text-white truncate">
+            <h4 className="font-medium text-szn-text-1 truncate">
               {attribution.documentTitle || "Untitled Document"}
             </h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-szn-text-2 mt-1">
               ID: {attribution.documentId.substring(0, 20)}...
             </p>
             {attribution.source && (
@@ -269,13 +269,13 @@ export function AttributionList({
               </p>
             )}
             {attribution.page && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-szn-text-2">
                 Page {attribution.page}
               </p>
             )}
           </div>
           <div className="text-right">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-szn-text-2">
               Confidence
             </div>
             <div
@@ -298,7 +298,7 @@ export function AttributionList({
             <TagIcon className="w-4 h-4 text-gray-400" />
             {attribution.sections.map((section, index) => (
               <span key={index}>
-                <span className="text-xs text-gray-600 dark:text-gray-400">
+                <span className="text-xs text-szn-text-2">
                   {section}
                 </span>
                 {index < attribution.sections!.length - 1 && (
@@ -323,7 +323,7 @@ export function AttributionList({
       {/* Matched Terms */}
       {attribution.matchedTerms.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
             Matched Terms ({attribution.matchedTerms.length})
           </h4>
           <div className="space-y-2">
@@ -347,7 +347,7 @@ export function AttributionList({
       {/* Semantic Matches */}
       {attribution.semanticMatches.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
             Semantic Matches ({attribution.semanticMatches.length})
           </h4>
           <div className="space-y-3">
@@ -361,7 +361,7 @@ export function AttributionList({
       {/* Comparisons */}
       {comparisons && comparisons.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
             Ranking Comparisons
           </h4>
           <div className="space-y-2">
@@ -375,18 +375,18 @@ export function AttributionList({
       {/* Metadata */}
       {attribution.metadata && Object.keys(attribution.metadata).length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
             Document Metadata
           </h4>
-          <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="p-3 bg-szn-surface rounded-lg">
             <dl className="grid grid-cols-2 gap-2 text-sm">
               {Object.entries(attribution.metadata)
                 .filter(([key]) => !["title", "source", "page", "sections"].includes(key))
                 .slice(0, 6)
                 .map(([key, value]) => (
                   <div key={key}>
-                    <dt className="text-gray-500 dark:text-gray-400">{key}</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white truncate">
+                    <dt className="text-szn-text-2">{key}</dt>
+                    <dd className="font-medium text-szn-text-1 truncate">
                       {String(value)}
                     </dd>
                   </div>

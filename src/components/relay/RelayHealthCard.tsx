@@ -68,12 +68,12 @@ export function RelayHealthCard({
 
   if (loading) {
     return (
-      <div className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <div className="p-6 bg-szn-card border border-szn-border rounded-lg">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+          <div className="h-6 bg-szn-surface rounded w-1/3" />
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded" />
+              <div key={i} className="h-20 bg-szn-surface rounded" />
             ))}
           </div>
         </div>
@@ -94,10 +94,10 @@ export function RelayHealthCard({
   }
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div className="p-6 bg-szn-card border border-szn-border rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="text-lg font-semibold text-szn-text-1">
           Relay Health
         </h2>
         <OverallStatus healthy={health.overallHealthy} />
@@ -130,7 +130,7 @@ export function RelayHealthCard({
       {/* Individual relay health */}
       {health.relays && health.relays.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <h3 className="text-sm font-medium text-szn-text-2">
             Relay Details
           </h3>
           {health.relays.map((relay) => (
@@ -165,14 +165,14 @@ interface StatCardProps {
 
 function StatCard({ label, value, color }: StatCardProps) {
   const colors = {
-    gray: 'bg-gray-50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-700',
+    gray: 'bg-szn-bg border-szn-border',
     green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
     red: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
     yellow: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
   };
 
   const textColors = {
-    gray: 'text-gray-900 dark:text-gray-100',
+    gray: 'text-szn-text-1',
     green: 'text-green-700 dark:text-green-400',
     red: 'text-red-700 dark:text-red-400',
     yellow: 'text-yellow-700 dark:text-yellow-400',
@@ -180,7 +180,7 @@ function StatCard({ label, value, color }: StatCardProps) {
 
   return (
     <div className={`p-4 rounded-lg border ${colors[color]}`}>
-      <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="text-sm text-szn-text-2">{label}</p>
       <p className={`text-2xl font-semibold ${textColors[color]}`}>{value}</p>
     </div>
   );
@@ -194,18 +194,18 @@ function RelayHealthRow({ relay }: RelayHealthRowProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border border-szn-border rounded-lg overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+        className="w-full p-4 flex items-center justify-between hover:bg-szn-surface-1 transition-colors"
       >
         <div className="flex items-center gap-3">
           <StatusIndicator healthy={relay.healthy} status={relay.status} />
-          <span className="font-medium text-gray-900 dark:text-gray-100">
+          <span className="font-medium text-szn-text-1">
             {relay.name}
           </span>
         </div>
-        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-4 text-sm text-szn-text-2">
           <span>{relay.metrics.successRate.toFixed(1)}% success</span>
           <span>{Math.round(relay.metrics.avgLatencyMs)}ms</span>
           <ChevronIcon expanded={expanded} />
@@ -213,7 +213,7 @@ function RelayHealthRow({ relay }: RelayHealthRowProps) {
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="px-4 pb-4 border-t border-szn-border">
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             <MetricItem
               label="Total Requests"
@@ -234,8 +234,8 @@ function RelayHealthRow({ relay }: RelayHealthRowProps) {
           </div>
 
           {relay.details && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div className="mt-4 pt-4 border-t border-szn-border">
+              <h4 className="text-sm font-medium text-szn-text-2 mb-2">
                 Diagnostics
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -298,8 +298,8 @@ function StatusIndicator({ healthy, status }: { healthy: boolean; status: string
 function MetricItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
-      <p className="font-medium text-gray-900 dark:text-gray-100">{value}</p>
+      <p className="text-xs text-szn-text-2">{label}</p>
+      <p className="font-medium text-szn-text-1">{value}</p>
     </div>
   );
 }

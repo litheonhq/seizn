@@ -200,7 +200,7 @@ export function RequestBuilder({
     <div className="flex flex-col h-full">
       {/* Query Input */}
       <div className="mb-4">
-        <label htmlFor={queryId} className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor={queryId} className="block text-sm font-medium text-szn-text-1 mb-2">
           {t?.query || "Query"}
         </label>
         <div className="relative">
@@ -209,7 +209,7 @@ export function RequestBuilder({
             value={config.query}
             onChange={(e) => updateConfig({ query: e.target.value })}
             placeholder={t?.queryPlaceholder || "Enter your search query..."}
-            className={`w-full border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 resize-none transition-all text-gray-900 placeholder:text-gray-400 ${
+            className={`w-full border border-szn-border rounded-xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-szn-border resize-none transition-all text-szn-text-1 placeholder:text-szn-text-3 ${
               compact ? "px-3 py-2.5 text-sm" : "px-4 py-3"
             }`}
             rows={compact ? 2 : 3}
@@ -219,13 +219,13 @@ export function RequestBuilder({
           <button
             type="button"
             onClick={() => setShowSampleQueries(!showSampleQueries)}
-            className="absolute right-3 bottom-3 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 bottom-3 text-xs text-szn-text-3 hover:text-szn-text-2 transition-colors"
           >
             {t?.tryExamples || "Try examples"}
           </button>
         </div>
         {showSampleQueries && (
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg space-y-2">
+          <div className="mt-2 p-3 bg-szn-bg rounded-lg space-y-2">
             {SAMPLE_QUERIES.map((q, i) => (
               <button
                 key={i}
@@ -233,7 +233,7 @@ export function RequestBuilder({
                   updateConfig({ query: q });
                   setShowSampleQueries(false);
                 }}
-                className="block w-full text-left text-sm text-gray-600 hover:text-black hover:bg-white px-3 py-2 rounded-lg transition-colors"
+                className="block w-full text-left text-sm text-szn-text-2 hover:text-black hover:bg-szn-card px-3 py-2 rounded-lg transition-colors"
               >
                 {q}
               </button>
@@ -244,7 +244,7 @@ export function RequestBuilder({
 
       {/* Preset Selector - Reduces cognitive load per Hick's Law */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-szn-text-1 mb-2">
           {t?.presets?.label || "Mode"}
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -253,20 +253,20 @@ export function RequestBuilder({
             onClick={() => applyPreset("fast")}
             className={`rounded-xl border text-left transition-all ${
               currentPreset === "fast"
-                ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
-                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                ? "border-szn-accent bg-szn-accent/10 ring-1 ring-szn-accent"
+                : "border-szn-border hover:border-szn-border hover:bg-szn-bg"
             } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
-              <svg className={`w-4 h-4 ${currentPreset === "fast" ? "text-emerald-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-4 h-4 ${currentPreset === "fast" ? "text-szn-accent" : "text-szn-text-3"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className={`text-sm font-medium ${currentPreset === "fast" ? "text-emerald-700" : "text-gray-700"}`}>
+              <span className={`text-sm font-medium ${currentPreset === "fast" ? "text-szn-accent" : "text-szn-text-1"}`}>
                 {t?.presets?.fast || "Fast"}
               </span>
             </div>
-            {!compact && <p className="text-xs text-gray-500">{t?.presets?.fastDesc || "~200ms, basic"}</p>}
+            {!compact && <p className="text-xs text-szn-text-2">{t?.presets?.fastDesc || "~200ms, basic"}</p>}
           </button>
 
           <button
@@ -275,19 +275,19 @@ export function RequestBuilder({
             className={`rounded-xl border text-left transition-all ${
               currentPreset === "balanced"
                 ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
-                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                : "border-szn-border hover:border-szn-border hover:bg-szn-bg"
             } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
-              <svg className={`w-4 h-4 ${currentPreset === "balanced" ? "text-blue-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-4 h-4 ${currentPreset === "balanced" ? "text-blue-600" : "text-szn-text-3"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
               </svg>
-              <span className={`text-sm font-medium ${currentPreset === "balanced" ? "text-blue-700" : "text-gray-700"}`}>
+              <span className={`text-sm font-medium ${currentPreset === "balanced" ? "text-blue-700" : "text-szn-text-1"}`}>
                 {t?.presets?.balanced || "Balanced"}
               </span>
             </div>
-            {!compact && <p className="text-xs text-gray-500">{t?.presets?.balancedDesc || "~500ms, rerank"}</p>}
+            {!compact && <p className="text-xs text-szn-text-2">{t?.presets?.balancedDesc || "~500ms, rerank"}</p>}
           </button>
 
           <button
@@ -296,19 +296,19 @@ export function RequestBuilder({
             className={`rounded-xl border text-left transition-all ${
               currentPreset === "precise"
                 ? "border-purple-500 bg-purple-50 ring-1 ring-purple-500"
-                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                : "border-szn-border hover:border-szn-border hover:bg-szn-bg"
             } ${compact ? "p-2.5" : "p-3"}`}
             disabled={disabled}
           >
             <div className="flex items-center gap-1.5 mb-1">
-              <svg className={`w-4 h-4 ${currentPreset === "precise" ? "text-purple-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-4 h-4 ${currentPreset === "precise" ? "text-purple-600" : "text-szn-text-3"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
-              <span className={`text-sm font-medium ${currentPreset === "precise" ? "text-purple-700" : "text-gray-700"}`}>
+              <span className={`text-sm font-medium ${currentPreset === "precise" ? "text-purple-700" : "text-szn-text-1"}`}>
                 {t?.presets?.precise || "Precise"}
               </span>
             </div>
-            {!compact && <p className="text-xs text-gray-500">{t?.presets?.preciseDesc || "~1.5s, full suite"}</p>}
+            {!compact && <p className="text-xs text-szn-text-2">{t?.presets?.preciseDesc || "~1.5s, full suite"}</p>}
           </button>
         </div>
       </div>
@@ -318,7 +318,7 @@ export function RequestBuilder({
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex items-center justify-between w-full py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+          className="flex items-center justify-between w-full py-2 text-sm font-medium text-szn-text-2 hover:text-szn-text-1 transition-colors"
         >
           <span className="flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -339,10 +339,10 @@ export function RequestBuilder({
 
         {/* Advanced Content */}
         {showAdvanced && (
-          <div className="mt-3 p-4 bg-gray-50 rounded-xl space-y-4">
+          <div className="mt-3 p-4 bg-szn-bg rounded-xl space-y-4">
             {/* Dataset Selector */}
             <div>
-              <label htmlFor={datasetId} className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor={datasetId} className="block text-sm font-medium text-szn-text-1 mb-2">
                 {t?.dataset || "Dataset"}
               </label>
               <div className="relative">
@@ -350,7 +350,7 @@ export function RequestBuilder({
                   id={datasetId}
                   value={config.dataset}
                   onChange={(e) => updateConfig({ dataset: e.target.value })}
-                  className="w-full px-4 py-2.5 pr-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 bg-white transition-all text-gray-900 text-sm appearance-none cursor-pointer"
+                  className="w-full px-4 py-2.5 pr-10 border border-szn-border rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-szn-border bg-szn-card transition-all text-szn-text-1 text-sm appearance-none cursor-pointer"
                   disabled={disabled}
                 >
                   {SAMPLE_DATASETS.map((ds) => (
@@ -360,7 +360,7 @@ export function RequestBuilder({
                   ))}
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -370,10 +370,10 @@ export function RequestBuilder({
             {/* Budget Slider */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor={budgetId} className="text-sm font-medium text-gray-700">
+                <label htmlFor={budgetId} className="text-sm font-medium text-szn-text-1">
                   {t?.latencyBudget || "Latency Budget"}
                 </label>
-                <span className="text-sm text-gray-500">{config.budgetMs}ms</span>
+                <span className="text-sm text-szn-text-2">{config.budgetMs}ms</span>
               </div>
               <input
                 id={budgetId}
@@ -383,11 +383,11 @@ export function RequestBuilder({
                 step={50}
                 value={config.budgetMs}
                 onChange={(e) => updateConfig({ budgetMs: Number(e.target.value) })}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-black"
                 aria-describedby={budgetHelpId}
                 disabled={disabled}
               />
-              <div id={budgetHelpId} className="flex justify-between text-xs text-gray-400 mt-1">
+              <div id={budgetHelpId} className="flex justify-between text-xs text-szn-text-3 mt-1">
                 <span>50ms ({t?.fast || "fast"})</span>
                 <span>2000ms ({t?.thorough || "thorough"})</span>
               </div>
@@ -396,8 +396,8 @@ export function RequestBuilder({
             {/* Top K */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor={topKId} className="text-sm font-medium text-gray-700">{t?.topK || "Top K"}</label>
-                <span className="text-sm text-gray-500">{config.topK} {t?.results || "results"}</span>
+                <label htmlFor={topKId} className="text-sm font-medium text-szn-text-1">{t?.topK || "Top K"}</label>
+                <span className="text-sm text-szn-text-2">{config.topK} {t?.results || "results"}</span>
               </div>
               <input
                 id={topKId}
@@ -406,7 +406,7 @@ export function RequestBuilder({
                 max={20}
                 value={config.topK}
                 onChange={(e) => updateConfig({ topK: Number(e.target.value) })}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-black"
                 aria-describedby={topKHelpId}
                 disabled={disabled}
               />
@@ -420,48 +420,48 @@ export function RequestBuilder({
 
       {/* Feature Toggles */}
       <div className="mb-6 space-y-3">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-szn-text-1 mb-2">
           {t?.features || "Features"}
         </label>
 
-        <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+        <label className="flex items-center justify-between p-3 bg-szn-bg rounded-xl cursor-pointer hover:bg-szn-surface transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">{t?.hybridSearch || "Hybrid Search"}</span>
-            {!compact && <p className="text-xs text-gray-500">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>}
+            <span className="text-sm font-medium text-szn-text-1">{t?.hybridSearch || "Hybrid Search"}</span>
+            {!compact && <p className="text-xs text-szn-text-2">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>}
           </div>
           <input
             type="checkbox"
             checked={config.hybridSearch}
             onChange={(e) => updateConfig({ hybridSearch: e.target.checked })}
-            className="w-5 h-5 rounded border-gray-300 text-black focus:ring-black/20 accent-black"
+            className="w-5 h-5 rounded border-szn-border text-black focus:ring-black/20 accent-black"
             disabled={disabled}
           />
         </label>
 
-        <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+        <label className="flex items-center justify-between p-3 bg-szn-bg rounded-xl cursor-pointer hover:bg-szn-surface transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">{t?.rerank || "Rerank"}</span>
-            {!compact && <p className="text-xs text-gray-500">{t?.rerankDesc || "Re-score with cross-encoder"}</p>}
+            <span className="text-sm font-medium text-szn-text-1">{t?.rerank || "Rerank"}</span>
+            {!compact && <p className="text-xs text-szn-text-2">{t?.rerankDesc || "Re-score with cross-encoder"}</p>}
           </div>
           <input
             type="checkbox"
             checked={config.rerank}
             onChange={(e) => updateConfig({ rerank: e.target.checked })}
-            className="w-5 h-5 rounded border-gray-300 text-black focus:ring-black/20 accent-black"
+            className="w-5 h-5 rounded border-szn-border text-black focus:ring-black/20 accent-black"
             disabled={disabled}
           />
         </label>
 
-        <label className="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+        <label className="flex items-center justify-between p-3 bg-szn-bg rounded-xl cursor-pointer hover:bg-szn-surface transition-colors">
           <div>
-            <span className="text-sm font-medium text-gray-800">{t?.answerContract || "Answer Contract"}</span>
-            {!compact && <p className="text-xs text-gray-500">{t?.answerContractDesc || "Validate answer quality"}</p>}
+            <span className="text-sm font-medium text-szn-text-1">{t?.answerContract || "Answer Contract"}</span>
+            {!compact && <p className="text-xs text-szn-text-2">{t?.answerContractDesc || "Validate answer quality"}</p>}
           </div>
           <input
             type="checkbox"
             checked={config.answerContract}
             onChange={(e) => updateConfig({ answerContract: e.target.checked })}
-            className="w-5 h-5 rounded border-gray-300 text-black focus:ring-black/20 accent-black"
+            className="w-5 h-5 rounded border-szn-border text-black focus:ring-black/20 accent-black"
             disabled={disabled}
           />
         </label>
@@ -469,7 +469,7 @@ export function RequestBuilder({
 
       {/* Estimated Latency & Cost Preview */}
       {compact ? (
-        <div className="mb-5 px-3 py-2 rounded-lg bg-gray-50 border border-gray-100 text-xs text-gray-600">
+        <div className="mb-5 px-3 py-2 rounded-lg bg-szn-bg border border-szn-border text-xs text-szn-text-2">
           {`${t?.estimatedLatency || "Est. Latency"} ${estimates.latencyP50}ms | ${t?.estimatedCost || "Est. Cost"} $${estimates.costPerRequest.toFixed(4)}`}
         </div>
       ) : (
@@ -497,23 +497,23 @@ export function RequestBuilder({
         </div>
 
         {/* Cost Card */}
-        <div className="p-3 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-100">
+        <div className="p-3 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 rounded-xl border border-szn-accent/20">
           <div className="flex items-center gap-2 mb-2">
-            <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-xs font-medium text-emerald-800">
+            <span className="text-xs font-medium text-szn-accent">
               {t?.estimatedCost || "Est. Cost"}
             </span>
           </div>
           <div className="space-y-1">
             <div className="flex items-baseline justify-between">
-              <span className="text-xs text-emerald-600">{t?.perRequest || "/req"}</span>
-              <span className="text-lg font-bold text-emerald-900">${estimates.costPerRequest.toFixed(4)}</span>
+              <span className="text-xs text-szn-accent/70">{t?.perRequest || "/req"}</span>
+              <span className="text-lg font-bold text-szn-accent">${estimates.costPerRequest.toFixed(4)}</span>
             </div>
             <div className="flex items-baseline justify-between">
-              <span className="text-xs text-emerald-600">{t?.per1000 || "/1K"}</span>
-              <span className="text-sm font-medium text-emerald-700">${estimates.costPer1000.toFixed(2)}</span>
+              <span className="text-xs text-szn-accent/70">{t?.per1000 || "/1K"}</span>
+              <span className="text-sm font-medium text-szn-accent">${estimates.costPer1000.toFixed(2)}</span>
             </div>
           </div>
         </div>

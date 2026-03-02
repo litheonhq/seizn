@@ -94,8 +94,8 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
     return (
       <div className={`flex items-center justify-center p-12 ${className}`}>
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-sm text-gray-400">Loading receipt...</p>
+          <div className="animate-spin w-8 h-8 border-2 border-szn-accent border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-sm text-szn-text-3">Loading receipt...</p>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
       <div className={`p-6 ${className}`}>
         <div className="bg-gray-800/50 rounded-lg p-6 text-center">
           <svg
-            className="w-12 h-12 text-gray-600 mx-auto mb-3"
+            className="w-12 h-12 text-szn-text-2 mx-auto mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -149,7 +149,7 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
               d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"
             />
           </svg>
-          <p className="text-gray-400">No receipt available for this trace</p>
+          <p className="text-szn-text-3">No receipt available for this trace</p>
         </div>
       </div>
     );
@@ -164,8 +164,8 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
             onClick={() => setViewMode("detail")}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               viewMode === "detail"
-                ? "bg-emerald-600 text-white"
-                : "bg-gray-800 text-gray-400 hover:text-white"
+                ? "bg-szn-accent text-white"
+                : "bg-gray-800 text-szn-text-3 hover:text-white"
             }`}
           >
             Detailed View
@@ -174,8 +174,8 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
             onClick={() => setViewMode("raw")}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               viewMode === "raw"
-                ? "bg-emerald-600 text-white"
-                : "bg-gray-800 text-gray-400 hover:text-white"
+                ? "bg-szn-accent text-white"
+                : "bg-gray-800 text-szn-text-3 hover:text-white"
             }`}
           >
             Raw JSON
@@ -193,12 +193,12 @@ export function ReceiptTab({ traceId, className = "" }: ReceiptTabProps) {
         <div className="px-4 pb-4">
           <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
             <div className="p-3 border-b border-gray-800 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-400">Raw Receipt JSON</span>
+              <span className="text-sm font-medium text-szn-text-3">Raw Receipt JSON</span>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(JSON.stringify(receipt, null, 2));
                 }}
-                className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
+                className="text-xs text-szn-text-2 hover:text-white transition-colors flex items-center gap-1"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path

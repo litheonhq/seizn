@@ -38,7 +38,7 @@ const statusColors: Record<HealthStatus, string> = {
   healthy: 'text-green-500 bg-green-500/10',
   degraded: 'text-yellow-500 bg-yellow-500/10',
   unhealthy: 'text-red-500 bg-red-500/10',
-  unknown: 'text-gray-500 bg-gray-500/10',
+  unknown: 'text-szn-text-2 bg-szn-surface-1',
 };
 
 const statusIcons: Record<HealthStatus, React.ComponentType<{ className?: string }>> = {
@@ -115,7 +115,7 @@ export default function ControlTowerPage() {
   if (loading && !health) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
+        <RefreshCw className="w-8 h-8 animate-spin text-szn-text-3" />
       </div>
     );
   }
@@ -126,12 +126,12 @@ export default function ControlTowerPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Control Tower</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-szn-text-2 text-sm mt-1">
             System monitoring and management dashboard
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-szn-text-2">
             Last updated: {lastRefresh.toLocaleTimeString()}
           </span>
           <button
@@ -139,7 +139,7 @@ export default function ControlTowerPage() {
             className={`px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 ${
               autoRefresh
                 ? 'bg-green-500/10 text-green-600'
-                : 'bg-gray-100 text-gray-600'
+                : 'bg-szn-surface text-szn-text-2'
             }`}
           >
             <RefreshCw className={`w-4 h-4 ${autoRefresh ? 'animate-spin' : ''}`} />
@@ -165,7 +165,7 @@ export default function ControlTowerPage() {
       {/* System Health Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Overall Health Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Server className="w-5 h-5" />
@@ -189,7 +189,7 @@ export default function ControlTowerPage() {
                 return (
                   <div
                     key={service.name}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0"
+                    className="flex items-center justify-between py-2 border-b border-szn-border last:border-0"
                   >
                     <div className="flex items-center gap-3">
                       <StatusIcon
@@ -203,7 +203,7 @@ export default function ControlTowerPage() {
                       />
                       <span className="text-sm">{service.displayName}</span>
                     </div>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-szn-text-2">
                       {service.latencyMs ? `${service.latencyMs}ms` : '-'}
                     </span>
                   </div>
@@ -212,7 +212,7 @@ export default function ControlTowerPage() {
             </div>
           )}
 
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500">
+          <div className="mt-4 pt-4 border-t border-szn-border text-xs text-szn-text-2">
             Uptime: {health ? formatUptime(health.uptimeSeconds) : '-'}
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function ControlTowerPage() {
       </div>
 
       {/* Alerts Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-szn-card rounded-xl border border-szn-border p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Bell className="w-5 h-5" />
@@ -292,7 +292,7 @@ export default function ControlTowerPage() {
         </div>
 
         {alerts.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-szn-text-2">
             <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500" />
             <p>No active alerts</p>
           </div>
@@ -396,21 +396,21 @@ function SignalCard({
   }>;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+    <div className="bg-szn-card rounded-xl border border-szn-border p-6">
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
         <Icon className="w-5 h-5" />
         {title}
       </h2>
 
       {items.length === 0 ? (
-        <div className="text-sm text-gray-500 py-6">{emptyLabel}</div>
+        <div className="text-sm text-szn-text-2 py-6">{emptyLabel}</div>
       ) : (
         <div className="space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="border border-gray-100 dark:border-gray-700 rounded-lg p-3">
+            <div key={item.id} className="border border-szn-border rounded-lg p-3">
               <div className="text-sm font-medium">{item.headline}</div>
-              <div className="text-xs text-gray-500 mt-1">{item.subline}</div>
-              <div className="text-xs text-gray-400 mt-2">
+              <div className="text-xs text-szn-text-2 mt-1">{item.subline}</div>
+              <div className="text-xs text-szn-text-3 mt-2">
                 {new Date(item.timestamp).toLocaleString()}
               </div>
             </div>
@@ -447,10 +447,10 @@ function MetricCard({
       : value.toLocaleString();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+    <div className="bg-szn-card rounded-xl border border-szn-border p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-500">{title}</span>
-        <Icon className="w-4 h-4 text-gray-400" />
+        <span className="text-sm text-szn-text-2">{title}</span>
+        <Icon className="w-4 h-4 text-szn-text-3" />
       </div>
       <div className="flex items-baseline gap-1">
         <span
@@ -460,10 +460,10 @@ function MetricCard({
         >
           {formattedValue}
         </span>
-        {unit && <span className="text-sm text-gray-500">{unit}</span>}
+        {unit && <span className="text-sm text-szn-text-2">{unit}</span>}
       </div>
       {trend !== undefined && (
-        <div className="text-xs text-gray-500 mt-1">
+        <div className="text-xs text-szn-text-2 mt-1">
           {trend.toFixed(1)} {trendLabel}
         </div>
       )}
@@ -506,7 +506,7 @@ function AlertRow({
 
   return (
     <div
-      className={`p-4 rounded-lg border ${severityColors[alert.severity] || 'bg-gray-100'}`}
+      className={`p-4 rounded-lg border ${severityColors[alert.severity] || 'bg-szn-surface'}`}
     >
       <div className="flex items-start justify-between">
         <div>
@@ -527,7 +527,7 @@ function AlertRow({
             <>
               <button
                 onClick={handleAcknowledge}
-                className="px-3 py-1 text-xs bg-white rounded border hover:bg-gray-50"
+                className="px-3 py-1 text-xs bg-szn-card rounded border border-szn-border hover:bg-szn-surface-1"
               >
                 Acknowledge
               </button>
@@ -568,11 +568,11 @@ function QuickActionCard({
   return (
     <a
       href={href}
-      className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+      className="block bg-szn-card rounded-xl border border-szn-border p-4 hover:border-blue-300 hover:shadow-sm transition-all"
     >
       <Icon className="w-6 h-6 text-blue-600 mb-2" />
       <h3 className="font-medium">{title}</h3>
-      <p className="text-sm text-gray-500 mt-1">{description}</p>
+      <p className="text-sm text-szn-text-2 mt-1">{description}</p>
     </a>
   );
 }

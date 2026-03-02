@@ -217,7 +217,7 @@ const Navigation = memo(function Navigation({
   t: ExtremeHomeMessages;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-szn-bg/95 backdrop-blur-sm border-b border-szn-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left: Logo + Navigation Links */}
         <div className="flex items-center gap-8">
@@ -231,32 +231,32 @@ const Navigation = memo(function Navigation({
               priority
               unoptimized
             />
-            <span className="font-semibold text-xl tracking-tight text-gray-900 dark:text-gray-100">Seizn</span>
+            <span className="font-semibold text-xl tracking-tight text-szn-text-1">Seizn</span>
           </Link>
 
           {/* Desktop Nav - Links next to logo */}
           <div className="hidden md:flex items-center gap-6">
             <Link
               href={`/${locale}/docs`}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.docs || "Docs"}
             </Link>
             <Link
               href={`/${locale}/pricing`}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.pricing || "Pricing"}
             </Link>
             <Link
               href={`/${locale}/comparison`}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.compare || "Compare"}
             </Link>
             <Link
               href={`/${locale}/enterprise`}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.enterprise || "Enterprise"}
             </Link>
@@ -264,13 +264,13 @@ const Navigation = memo(function Navigation({
               href="https://github.com/seizn-ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.github || "GitHub"}
             </a>
             <Link
               href="/status"
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.status || "Status"}
             </Link>
@@ -282,7 +282,7 @@ const Navigation = memo(function Navigation({
           <LanguageSwitcher currentLocale={locale} />
           <Link
             href="/dashboard/keys"
-            className="text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+            className="text-sm bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
           >
             {t.nav?.getApiKey || "Get API Key"}
           </Link>
@@ -290,7 +290,7 @@ const Navigation = memo(function Navigation({
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-gray-600 dark:text-gray-400"
+          className="md:hidden p-2 text-szn-text-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -303,33 +303,33 @@ const Navigation = memo(function Navigation({
       {/* Mobile Menu - animated */}
       <div
         id="extreme-home-mobile-menu"
-        className={`md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-szn-bg border-t border-szn-border overflow-hidden transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-4 py-4 space-y-3">
-          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.docs || "Docs"}
           </Link>
-          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.pricing || "Pricing"}
           </Link>
-          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.compare || "Compare"}
           </Link>
-          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.enterprise || "Enterprise"}
           </Link>
-          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.github || "GitHub"}
           </a>
-          <Link href="/status" className="block py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+          <Link href="/status" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
             {t.nav?.status || "Status"}
           </Link>
-          <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+          <div className="pt-2 border-t border-szn-border">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 rounded-full mt-3">
+          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white py-3 rounded-full mt-3">
             {t.nav?.getApiKey || "Get API Key"}
           </Link>
         </div>
@@ -625,7 +625,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           </div>
 
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80 dark:from-gray-950/70 dark:via-gray-950/50 dark:to-gray-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-szn-bg/60 via-szn-bg/40 to-szn-bg/80" />
         </div>
 
         {/* Knowledge Graph Animation Layer */}
@@ -637,12 +637,12 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
-            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-gray-900 dark:text-gray-100 leading-[1.08] animate-fade-in">
+            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-szn-text-1 leading-[1.08] animate-fade-in">
               {t.heroTitle || "The standard backend for agent runtime persistence."}
             </h1>
 
             {/* Subtitle - Value prop */}
-            <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
+            <p className="text-lg lg:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
               {t.heroSubtitle || "MCP server, checkpointer, and policy/trace layer\u2014one SDK to persist, govern, and observe every agent session."}
             </p>
 
@@ -660,7 +660,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               </Link>
               <button
                 onClick={() => scrollToDemo("hero_cta")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 font-medium rounded-xl border border-gray-200/80 dark:border-gray-700/80 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-white dark:hover:bg-gray-800 transition-all"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-szn-card/80 backdrop-blur-sm text-szn-text-1 font-medium rounded-xl border border-szn-border/80 hover:border-szn-border hover:bg-szn-card transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -673,10 +673,10 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             {/* Social Proof */}
             <div className="flex items-center justify-center gap-2 pt-4 animate-fade-in-up animate-delay-400">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-szn-accent opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-szn-accent" />
               </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-szn-text-2">
                 {t.socialProof || "Trusted by teams shipping agents at scale"}
               </span>
             </div>
@@ -689,36 +689,36 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         </div>
 
         {/* Bottom gradient fade into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-gray-950 to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-szn-bg to-transparent z-10 pointer-events-none" />
       </section>
 
       {/* Playground Section - Visually distinct with subtle background */}
-      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950">
+      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-szn-bg/50 to-szn-bg">
         <div className="max-w-7xl mx-auto">
           {/* Playground Header with Mode Toggle */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-surface text-xs font-medium text-szn-text-2 mb-4">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               </svg>
               {t.liveDemo || "Live Demo"}
             </div>
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            <h2 className="text-3xl font-semibold text-szn-text-1 mb-2">
               <span className="theme-gradient-text">{t.playgroundTitle || "Playground"}</span>
             </h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
+            <p className="text-szn-text-2 mb-6">
               {t.heroTagline || "Try the API live - no signup required"}
             </p>
 
             {/* Mode Toggle */}
             <div className="inline-flex items-center gap-2">
-              <div className="inline-flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+              <div className="inline-flex items-center gap-1 p-1 bg-szn-surface rounded-xl">
                 <button
                   onClick={() => handleModeChange("mock")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "mock"
-                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                      : "text-szn-text-2 hover:text-szn-text-1"
                   }`}
                 >
                   Mock
@@ -727,8 +727,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                   onClick={() => handleModeChange("real")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "real"
-                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                      : "text-szn-text-2 hover:text-szn-text-1"
                   }`}
                 >
                   Real API
@@ -751,22 +751,22 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           {hasRun && (
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                  <CheckIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <div className="w-6 h-6 rounded-full bg-szn-accent/10 flex items-center justify-center">
+                  <CheckIcon className="w-4 h-4 text-szn-accent" />
                 </div>
-                <span className="text-sm text-gray-600 dark:text-gray-400">{t.firstRetrievalComplete || "First retrieval complete"}</span>
+                <span className="text-sm text-szn-text-2">{t.firstRetrievalComplete || "First retrieval complete"}</span>
               </div>
-              <span className="text-gray-300 dark:text-gray-600">|</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">{t.copySnippetHint || "Copy the snippet below to reproduce"}</span>
+              <span className="text-szn-text-3">|</span>
+              <span className="text-sm text-szn-text-2">{t.copySnippetHint || "Copy the snippet below to reproduce"}</span>
             </div>
           )}
 
           {/* Live Console - Desktop */}
-          <div className="hidden md:block bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div className="hidden md:block bg-szn-bg rounded-2xl p-6 border border-szn-border">
             <div className="grid grid-cols-2 gap-6">
               {/* Left: Request Builder */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">{(t.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
+              <div className="bg-szn-card rounded-xl p-6 border border-szn-border">
+                <h3 className="text-sm font-medium text-szn-text-2 mb-4">{(t.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
                 <RequestBuilder
                   config={config}
                   onConfigChange={setConfig}
@@ -777,7 +777,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               </div>
 
               {/* Right: Results + Trace */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700 flex flex-col min-h-[600px]">
+              <div className="bg-szn-card rounded-xl p-6 border border-szn-border flex flex-col min-h-[600px]">
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
@@ -787,13 +787,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "results"
-                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        ? "bg-szn-surface text-szn-text-1"
+                        : "text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {t.tabs?.results || "Results"}
                     {results.length > 0 && (
-                      <span className="ml-2 text-xs bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-szn-surface text-szn-text-2 px-1.5 py-0.5 rounded-full">
                         {results.length}
                       </span>
                     )}
@@ -805,13 +805,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "trace"
-                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        ? "bg-szn-surface text-szn-text-1"
+                        : "text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {t.tabs?.trace || "Trace"}
                     {trace && (
-                      <span className="ml-2 text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-szn-accent/10 text-szn-accent px-1.5 py-0.5 rounded-full">
                         {trace.totalLatencyMs.toFixed(0)}ms
                       </span>
                     )}
@@ -823,8 +823,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "cost"
-                        ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        ? "bg-szn-surface text-szn-text-1"
+                        : "text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {t.tabs?.cost || "Cost"}
@@ -884,7 +884,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           </div>
 
           {/* Live Console - Mobile */}
-          <div className="md:hidden bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800">
+          <div className="md:hidden bg-szn-bg rounded-2xl p-4 border border-szn-border">
             {/* Mobile Tabs */}
             <div className="flex items-center gap-2 mb-4 overflow-x-auto" role="tablist" aria-label="Mobile demo console tabs">
               <button
@@ -894,8 +894,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "request"
-                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                    : "text-gray-500 dark:text-gray-400"
+                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                    : "text-szn-text-2"
                 }`}
               >
                 {(t.requestBuilder as RequestBuilderTranslations)?.title || "Request"}
@@ -907,8 +907,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "results"
-                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                    : "text-gray-500 dark:text-gray-400"
+                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                    : "text-szn-text-2"
                 }`}
               >
                 {t.tabs?.results || "Results"}
@@ -920,8 +920,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "trace"
-                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                    : "text-gray-500 dark:text-gray-400"
+                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                    : "text-szn-text-2"
                 }`}
               >
                 {t.tabs?.trace || "Trace"}
@@ -933,15 +933,15 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "cost"
-                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-                    : "text-gray-500 dark:text-gray-400"
+                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
+                    : "text-szn-text-2"
                 }`}
               >
                 {t.tabs?.cost || "Cost"}
               </button>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700 min-h-[400px]">
+            <div className="bg-szn-card rounded-xl p-4 border border-szn-border min-h-[400px]">
               {mobileConsoleTab === "request" && (
                 <RequestBuilder
                   config={config}
@@ -987,15 +987,15 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
       {/* Copy Snippet Section - Lazy loaded */}
       <section className="py-12 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto glass-card-premium rounded-2xl p-8">
+        <div className="max-w-4xl mx-auto szn-card rounded-2xl p-8">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 mb-3">
-              <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-szn-surface mb-3">
+              <svg className="w-5 h-5 text-szn-text-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.copySnippetTitle || "Copy this snippet"}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <h2 className="text-xl font-semibold text-szn-text-1 mb-2">{t.copySnippetTitle || "Copy this snippet"}</h2>
+            <p className="text-sm text-szn-text-2">
               {t.copySnippetSubtitle || "Generated from your exact settings above"}
             </p>
           </div>
@@ -1013,7 +1013,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
       {/* Share Trace Toast Notification */}
       {shareToastVisible && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-gray-900 text-white rounded-xl shadow-lg flex items-center gap-3 animate-fade-in-up">
-          <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <span className="text-sm">Trace link copied to clipboard!</span>

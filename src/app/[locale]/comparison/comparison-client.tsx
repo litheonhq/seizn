@@ -222,7 +222,7 @@ function capabilityStyle(value: Capability): string {
   if (value === "native") return "bg-emerald-100 text-emerald-700";
   if (value === "integrated") return "bg-blue-100 text-blue-700";
   if (value === "partial") return "bg-amber-100 text-amber-700";
-  return "bg-gray-100 text-gray-600";
+  return "bg-szn-surface text-szn-text-2";
 }
 
 function getCopy(locale: Locale): { copy: Copy; rows: Row[] } {
@@ -245,21 +245,21 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
         />
       </div>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/20">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-sm">S</span>
             </div>
-            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-szn-text-1 to-szn-text-2 bg-clip-text text-transparent">
               Seizn
             </span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">
+            <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">
               {dict.nav.pricing}
             </Link>
-            <Link href={`/${locale}/enterprise`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors hidden md:block">
+            <Link href={`/${locale}/enterprise`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">
               {dict.extremeHome?.nav?.enterprise || "Enterprise"}
             </Link>
             <LanguageSwitcher currentLocale={locale} />
@@ -269,35 +269,35 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
 
       <section className="pt-32 pb-10 px-6 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 glass-card-premium rounded-full px-4 py-1.5 mb-6">
+          <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-6">
             <span className="w-2 h-2 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full animate-pulse" />
-            <span className="text-sm text-gray-600 font-medium">{copy.snapshotLabel}</span>
+            <span className="text-sm text-szn-text-2 font-medium">{copy.snapshotLabel}</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4">{copy.title}</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-3">{copy.subtitle}</p>
-          <p className="text-sm text-gray-500 max-w-3xl mx-auto">{copy.description}</p>
-          <p className="text-xs text-gray-500 mt-5">{copy.refreshLabel}</p>
-          <p className="text-xs text-gray-500 mt-1">{copy.sourceLabel}</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-szn-text-1 mb-4">{copy.title}</h1>
+          <p className="text-lg text-szn-text-2 max-w-3xl mx-auto mb-3">{copy.subtitle}</p>
+          <p className="text-sm text-szn-text-2 max-w-3xl mx-auto">{copy.description}</p>
+          <p className="text-xs text-szn-text-3 mt-5">{copy.refreshLabel}</p>
+          <p className="text-xs text-szn-text-3 mt-1">{copy.sourceLabel}</p>
         </div>
       </section>
 
       <section className="pb-10 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto glass-card-premium rounded-3xl p-6 md:p-8">
+        <div className="max-w-6xl mx-auto szn-card rounded-3xl p-6 md:p-8">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px]">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 pr-4 text-sm font-semibold text-gray-900">{copy.columns.category}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-gray-900">{copy.columns.seizn}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-gray-900">{copy.columns.memoryApis}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-gray-900">{copy.columns.vectorStack}</th>
-                  <th className="text-left py-3 pl-2 text-sm font-semibold text-gray-900">{copy.columns.observabilityTools}</th>
+                <tr className="border-b border-szn-border">
+                  <th className="text-left py-3 pr-4 text-sm font-semibold text-szn-text-1">{copy.columns.category}</th>
+                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.seizn}</th>
+                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.memoryApis}</th>
+                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.vectorStack}</th>
+                  <th className="text-left py-3 pl-2 text-sm font-semibold text-szn-text-1">{copy.columns.observabilityTools}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={row.category} className="border-b border-gray-100">
-                    <td className="py-3 pr-4 text-sm text-gray-800">{row.category}</td>
+                  <tr key={row.category} className="border-b border-szn-border/50">
+                    <td className="py-3 pr-4 text-sm text-szn-text-1">{row.category}</td>
                     <td className="py-3 px-2">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${capabilityStyle(row.seizn)}`}>
                         {copy.legend[row.seizn]}
@@ -328,7 +328,7 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
 
       <section className="pb-16 px-6 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-gray-600 mb-6">{copy.disclaimer}</p>
+          <p className="text-sm text-szn-text-2 mb-6">{copy.disclaimer}</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href={`/${locale}/pricing`}
@@ -338,7 +338,7 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
             </Link>
             <Link
               href={`/${locale}/enterprise`}
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 bg-white/60 text-gray-900 text-sm font-medium hover:bg-white transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-szn-border bg-white/60 text-szn-text-1 text-sm font-medium hover:bg-white transition-colors"
             >
               {copy.cta.enterprise}
             </Link>

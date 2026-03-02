@@ -113,14 +113,14 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
 
       {/* Dialog */}
       <div
-        className="relative w-full max-w-lg mx-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-scale-in"
+        className="relative w-full max-w-lg mx-4 bg-szn-card rounded-2xl shadow-2xl border border-szn-border overflow-hidden animate-scale-in"
         role="dialog"
         aria-modal="true"
         aria-label={t("dashboard.commandPalette.title") || "Command palette"}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-          <SearchIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-szn-border">
+          <SearchIcon className="w-5 h-5 text-szn-text-3 flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -128,9 +128,9 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
             onChange={(e) => { setQuery(e.target.value); setActiveIndex(0); }}
             onKeyDown={handleKeyDown}
             placeholder={t("dashboard.commandPalette.placeholder") || "Search pages..."}
-            className="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none text-sm"
+            className="flex-1 bg-transparent text-szn-text-1 placeholder-szn-text-3 outline-none text-sm"
           />
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded border border-gray-200 dark:border-gray-700">
+          <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-szn-surface-1 text-szn-text-3 rounded border border-szn-border">
             ESC
           </kbd>
         </div>
@@ -138,7 +138,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
         {/* Results */}
         <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
           {filtered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="px-4 py-8 text-center text-sm text-szn-text-3">
               {t("dashboard.commandPalette.noResults") || "No results found"}
             </div>
           ) : (
@@ -152,7 +152,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
                   return (
                     <div key={item.href}>
                       {showHeader && (
-                        <div className="px-4 pt-3 pb-1 text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">
+                        <div className="px-4 pt-3 pb-1 text-[10px] font-semibold tracking-widest text-szn-text-3 uppercase">
                           {item.group}
                         </div>
                       )}
@@ -162,18 +162,18 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
                         onMouseEnter={() => setActiveIndex(idx)}
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                           idx === safeActiveIndex
-                            ? "bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                            ? "bg-szn-accent/10 text-szn-accent"
+                            : "text-szn-text-2 hover:bg-szn-surface-1"
                         }`}
                       >
                         <item.icon className={`w-4 h-4 flex-shrink-0 ${
                           idx === safeActiveIndex
-                            ? "text-teal-500 dark:text-teal-400"
-                            : "text-gray-400 dark:text-gray-500"
+                            ? "text-szn-accent"
+                            : "text-szn-text-3"
                         }`} />
                         <span className="flex-1 text-left truncate">{item.label}</span>
                         {idx === safeActiveIndex && (
-                          <span className="text-[10px] text-gray-400 dark:text-gray-500">
+                          <span className="text-[10px] text-szn-text-3">
                             {t("dashboard.commandPalette.enter") || "Enter"}
                           </span>
                         )}
@@ -187,18 +187,18 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-4 px-4 py-2 border-t border-gray-100 dark:border-gray-800 text-[10px] text-gray-400 dark:text-gray-500">
+        <div className="flex items-center gap-4 px-4 py-2 border-t border-szn-border text-[10px] text-szn-text-3">
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 font-mono">&#8593;</kbd>
-            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 font-mono">&#8595;</kbd>
+            <kbd className="px-1 py-0.5 bg-szn-surface-1 rounded border border-szn-border font-mono">&#8593;</kbd>
+            <kbd className="px-1 py-0.5 bg-szn-surface-1 rounded border border-szn-border font-mono">&#8595;</kbd>
             {t("dashboard.commandPalette.navigate") || "Navigate"}
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 font-mono">&#9166;</kbd>
+            <kbd className="px-1 py-0.5 bg-szn-surface-1 rounded border border-szn-border font-mono">&#9166;</kbd>
             {t("dashboard.commandPalette.open") || "Open"}
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 font-mono">Esc</kbd>
+            <kbd className="px-1 py-0.5 bg-szn-surface-1 rounded border border-szn-border font-mono">Esc</kbd>
             {t("dashboard.commandPalette.close") || "Close"}
           </span>
         </div>

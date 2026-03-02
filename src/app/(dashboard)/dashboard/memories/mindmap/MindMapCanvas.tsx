@@ -324,10 +324,10 @@ export default function MindMapCanvas() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-gray-500 dark:text-gray-400">Loading mind map...</p>
+          <div className="w-12 h-12 border-4 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-szn-text-2">Loading mind map...</p>
         </div>
       </div>
     );
@@ -336,7 +336,7 @@ export default function MindMapCanvas() {
   // Error state
   if (error) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
         <div className="text-center space-y-4 max-w-md">
           <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto">
             <svg
@@ -353,13 +353,13 @@ export default function MindMapCanvas() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-szn-text-1">
             Failed to load mind map
           </h3>
-          <p className="text-gray-500 dark:text-gray-400">{error.message}</p>
+          <p className="text-szn-text-2">{error.message}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/90 text-white rounded-lg transition-colors"
           >
             Try Again
           </button>
@@ -371,11 +371,11 @@ export default function MindMapCanvas() {
   // Empty state
   if (!data || data.nodes.length === 0) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
         <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-szn-surface flex items-center justify-center mx-auto">
             <svg
-              className="w-8 h-8 text-gray-400"
+              className="w-8 h-8 text-szn-text-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -388,10 +388,10 @@ export default function MindMapCanvas() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-szn-text-1">
             No memories yet
           </h3>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-szn-text-2">
             Start adding memories via the API to see them visualized here as a knowledge graph.
           </p>
         </div>
@@ -415,7 +415,7 @@ export default function MindMapCanvas() {
       )}
 
       {/* Main Canvas */}
-      <div className="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="flex-1 bg-szn-bg rounded-2xl border border-szn-border overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -442,11 +442,11 @@ export default function MindMapCanvas() {
             className="dark:!bg-gray-900"
           />
           <Controls
-            className="!bg-white dark:!bg-gray-800 !border-gray-200 dark:!border-gray-700 !rounded-lg !shadow-lg"
+            className="!bg-szn-card !border-szn-border !rounded-lg !shadow-lg"
             showInteractive={false}
           />
           <MiniMap
-            className="!bg-white dark:!bg-gray-800 !border-gray-200 dark:!border-gray-700 !rounded-lg"
+            className="!bg-szn-card !border-szn-border !rounded-lg"
             nodeColor={(node) => {
               const data = node.data as MindMapNodeData;
               switch (data?.type) {
@@ -474,11 +474,11 @@ export default function MindMapCanvas() {
             <Panel position="top-left">
               <button
                 onClick={() => setShowFilters(true)}
-                className="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 bg-szn-card border border-szn-border rounded-lg shadow-lg hover:bg-szn-surface-1 transition-colors"
                 title="Show Filters"
               >
                 <svg
-                  className="w-5 h-5 text-gray-600 dark:text-gray-300"
+                  className="w-5 h-5 text-szn-text-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -496,16 +496,16 @@ export default function MindMapCanvas() {
 
           {/* Stats Panel */}
           <Panel position="top-right">
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg px-4 py-2 flex items-center gap-4 text-sm">
-              <span className="text-gray-500 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+            <div className="bg-szn-card border border-szn-border rounded-lg shadow-lg px-4 py-2 flex items-center gap-4 text-sm">
+              <span className="text-szn-text-2">
+                <span className="font-semibold text-szn-text-1">
                   {nodes.length}
                 </span>{" "}
                 nodes
               </span>
-              <span className="text-gray-300 dark:text-gray-600">|</span>
-              <span className="text-gray-500 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="text-szn-text-3">|</span>
+              <span className="text-szn-text-2">
+                <span className="font-semibold text-szn-text-1">
                   {edges.length}
                 </span>{" "}
                 connections

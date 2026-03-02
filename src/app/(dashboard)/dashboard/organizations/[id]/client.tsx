@@ -253,7 +253,7 @@ export default function OrganizationDetailClient({
       case "admin":
         return "bg-gradient-to-r from-purple-400 to-indigo-500 text-white";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-szn-surface text-szn-text-2";
     }
   };
 
@@ -262,9 +262,9 @@ export default function OrganizationDetailClient({
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="glass-card rounded-2xl p-6 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />
-          <div className="h-4 bg-gray-100 rounded w-1/2" />
+        <div className="szn-card rounded-2xl p-6 animate-pulse">
+          <div className="h-8 bg-szn-surface-1 rounded w-1/3 mb-4" />
+          <div className="h-4 bg-szn-surface rounded w-1/2" />
         </div>
       </div>
     );
@@ -272,9 +272,9 @@ export default function OrganizationDetailClient({
 
   if (!organization) {
     return (
-      <div className="glass-card rounded-2xl p-12 text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Organization not found</h2>
-        <p className="text-gray-500 mb-4">This organization doesn&apos;t exist or you don&apos;t have access.</p>
+      <div className="szn-card rounded-2xl p-12 text-center">
+        <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Organization not found</h2>
+        <p className="text-szn-text-2 mb-4">This organization doesn&apos;t exist or you don&apos;t have access.</p>
         <Link href="/dashboard/organizations" className="theme-gradient-btn text-white px-4 py-2 rounded-xl">
           Back to Organizations
         </Link>
@@ -287,14 +287,14 @@ export default function OrganizationDetailClient({
       {/* Back button */}
       <Link
         href="/dashboard/organizations"
-        className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
+        className="inline-flex items-center gap-2 text-szn-text-2 hover:text-szn-text-2 transition-colors"
       >
         <BackIcon className="w-4 h-4" />
         Back to Organizations
       </Link>
 
       {/* Organization Header */}
-      <div className="glass-card rounded-2xl p-6">
+      <div className="szn-card rounded-2xl p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
@@ -303,15 +303,15 @@ export default function OrganizationDetailClient({
               </span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{organization.name}</h1>
-              <p className="text-gray-500">/{organization.slug}</p>
+              <h1 className="text-2xl font-bold text-szn-text-1">{organization.name}</h1>
+              <p className="text-szn-text-2">/{organization.slug}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${getRoleBadgeColor(currentUserRole || "member")}`}>
               {currentUserRole}
             </span>
-            <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
+            <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-szn-surface text-szn-text-2">
               {organization.plan || "Free"} Plan
             </span>
           </div>
@@ -332,13 +332,13 @@ export default function OrganizationDetailClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === tab.id
                 ? "theme-gradient-btn text-white shadow-md"
-                : "text-gray-600 hover:bg-white/80"
+                : "text-szn-text-2 hover:bg-white/80"
             }`}
           >
             {tab.label}
             {tab.count !== undefined && tab.count > 0 && (
               <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${
-                activeTab === tab.id ? "bg-white/20" : "bg-gray-200"
+                activeTab === tab.id ? "bg-white/20" : "bg-szn-surface-1"
               }`}>
                 {tab.count}
               </span>
@@ -349,9 +349,9 @@ export default function OrganizationDetailClient({
 
       {/* Members Tab */}
       {activeTab === "members" && (
-        <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="szn-card rounded-2xl overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Team Members</h2>
+            <h2 className="font-semibold text-szn-text-1">Team Members</h2>
             {canManageMembers && (
               <button
                 onClick={() => setShowInviteModal(true)}
@@ -362,7 +362,7 @@ export default function OrganizationDetailClient({
               </button>
             )}
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-szn-border">
             {members.map((member) => (
               <div key={member.id} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -370,15 +370,15 @@ export default function OrganizationDetailClient({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={member.avatar} alt="" className="w-10 h-10 rounded-full" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                      <span className="text-gray-600 font-medium">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-surface-1 to-szn-surface-2 flex items-center justify-center">
+                      <span className="text-szn-text-2 font-medium">
                         {(member.name || member.email)[0].toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-900">{member.name || "Unknown"}</p>
-                    <p className="text-sm text-gray-500">{member.email}</p>
+                    <p className="font-medium text-szn-text-1">{member.name || "Unknown"}</p>
+                    <p className="text-sm text-szn-text-2">{member.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -386,7 +386,7 @@ export default function OrganizationDetailClient({
                     <select
                       value={member.role}
                       onChange={(e) => handleUpdateRole(member.id, e.target.value)}
-                      className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      className="px-3 py-1.5 bg-white border border-szn-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
                     >
                       <option value="admin">Admin</option>
                       <option value="member">Member</option>
@@ -399,7 +399,7 @@ export default function OrganizationDetailClient({
                   {canManageMembers && member.role !== "owner" && (
                     <button
                       onClick={() => handleRemoveMember(member.id, member.email)}
-                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-szn-text-3 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                       <TrashIcon className="w-4 h-4" />
                     </button>
@@ -413,9 +413,9 @@ export default function OrganizationDetailClient({
 
       {/* Invites Tab */}
       {activeTab === "invites" && (
-        <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="szn-card rounded-2xl overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Pending Invitations</h2>
+            <h2 className="font-semibold text-szn-text-1">Pending Invitations</h2>
             {canManageMembers && (
               <button
                 onClick={() => setShowInviteModal(true)}
@@ -427,11 +427,11 @@ export default function OrganizationDetailClient({
             )}
           </div>
           {invites.filter((i) => i.status === "pending").length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-szn-text-2">
               No pending invitations
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-szn-border">
               {invites
                 .filter((i) => i.status === "pending")
                 .map((invite) => (
@@ -441,8 +441,8 @@ export default function OrganizationDetailClient({
                         <MailIcon className="w-5 h-5 text-pink-500" />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{invite.email}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-medium text-szn-text-1">{invite.email}</p>
+                        <p className="text-sm text-szn-text-2">
                           Expires {new Date(invite.expires_at).toLocaleDateString("ja-JP")}
                         </p>
                       </div>
@@ -454,7 +454,7 @@ export default function OrganizationDetailClient({
                       {canManageMembers && (
                         <button
                           onClick={() => handleCancelInvite(invite.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-szn-text-3 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <TrashIcon className="w-4 h-4" />
                         </button>
@@ -480,7 +480,7 @@ export default function OrganizationDetailClient({
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                     usagePeriod === p
                       ? "theme-gradient-btn text-white shadow-md"
-                      : "text-gray-600 hover:bg-white/80"
+                      : "text-szn-text-2 hover:bg-white/80"
                   }`}
                 >
                   {p === "7d" ? "7 Days" : p === "30d" ? "30 Days" : "90 Days"}
@@ -493,36 +493,36 @@ export default function OrganizationDetailClient({
           {isLoadingUsage ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="glass-card rounded-2xl p-5 animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
-                  <div className="h-8 bg-gray-100 rounded w-2/3" />
+                <div key={i} className="szn-card rounded-2xl p-5 animate-pulse">
+                  <div className="h-4 bg-szn-surface-1 rounded w-1/2 mb-3" />
+                  <div className="h-8 bg-szn-surface rounded w-2/3" />
                 </div>
               ))}
             </div>
           ) : usageSummary ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="glass-card rounded-2xl p-5">
-                <p className="text-sm text-gray-500 mb-1">Total API Calls</p>
-                <p className="text-2xl font-bold text-gray-900">{usageSummary.totalCalls.toLocaleString()}</p>
+              <div className="szn-card rounded-2xl p-5">
+                <p className="text-sm text-szn-text-2 mb-1">Total API Calls</p>
+                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalCalls.toLocaleString()}</p>
               </div>
-              <div className="glass-card rounded-2xl p-5">
-                <p className="text-sm text-gray-500 mb-1">Total Tokens</p>
-                <p className="text-2xl font-bold text-gray-900">{usageSummary.totalTokens.toLocaleString()}</p>
+              <div className="szn-card rounded-2xl p-5">
+                <p className="text-sm text-szn-text-2 mb-1">Total Tokens</p>
+                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalTokens.toLocaleString()}</p>
               </div>
-              <div className="glass-card rounded-2xl p-5">
-                <p className="text-sm text-gray-500 mb-1">Estimated Cost</p>
-                <p className="text-2xl font-bold text-gray-900">${usageSummary.totalCostDollars}</p>
+              <div className="szn-card rounded-2xl p-5">
+                <p className="text-sm text-szn-text-2 mb-1">Estimated Cost</p>
+                <p className="text-2xl font-bold text-szn-text-1">${usageSummary.totalCostDollars}</p>
               </div>
-              <div className="glass-card rounded-2xl p-5">
-                <p className="text-sm text-gray-500 mb-1">Active API Keys</p>
-                <p className="text-2xl font-bold text-gray-900">{usageSummary.activeKeys}</p>
+              <div className="szn-card rounded-2xl p-5">
+                <p className="text-sm text-szn-text-2 mb-1">Active API Keys</p>
+                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.activeKeys}</p>
               </div>
             </div>
           ) : null}
 
           {/* Usage Chart */}
-          <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Daily API Calls</h3>
+          <div className="szn-card rounded-2xl p-6">
+            <h3 className="font-semibold text-szn-text-1 mb-4">Daily API Calls</h3>
             {dailyUsage.length > 0 ? (
               <div className="h-48 flex items-end gap-1">
                 {dailyUsage.map((day, i) => {
@@ -539,7 +539,7 @@ export default function OrganizationDetailClient({
                         title={`${day.date}: ${day.calls} calls`}
                       />
                       {i % Math.ceil(dailyUsage.length / 7) === 0 && (
-                        <span className="text-[10px] text-gray-400 truncate w-full text-center">
+                        <span className="text-[10px] text-szn-text-3 truncate w-full text-center">
                           {day.date.slice(5)}
                         </span>
                       )}
@@ -548,41 +548,41 @@ export default function OrganizationDetailClient({
                 })}
               </div>
             ) : (
-              <div className="h-48 flex items-center justify-center text-gray-400">
+              <div className="h-48 flex items-center justify-center text-szn-text-3">
                 No usage data for this period
               </div>
             )}
           </div>
 
           {/* Member Usage Breakdown */}
-          <div className="glass-card rounded-2xl overflow-hidden">
+          <div className="szn-card rounded-2xl overflow-hidden">
             <div className="p-4 border-b theme-border">
-              <h3 className="font-semibold text-gray-900">Usage by Member</h3>
+              <h3 className="font-semibold text-szn-text-1">Usage by Member</h3>
             </div>
             {memberUsage.length > 0 ? (
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-szn-border">
                 {memberUsage.map((member) => (
                   <div key={member.userId} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                        <span className="text-gray-600 font-medium">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-surface-1 to-szn-surface-2 flex items-center justify-center">
+                        <span className="text-szn-text-2 font-medium">
                           {(member.name || member.email)[0].toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{member.name || member.email}</p>
-                        {member.name && <p className="text-sm text-gray-500">{member.email}</p>}
+                        <p className="font-medium text-szn-text-1">{member.name || member.email}</p>
+                        {member.name && <p className="text-sm text-szn-text-2">{member.email}</p>}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">{member.calls.toLocaleString()} calls</p>
-                      <p className="text-sm text-gray-500">{member.tokens.toLocaleString()} tokens</p>
+                      <p className="font-semibold text-szn-text-1">{member.calls.toLocaleString()} calls</p>
+                      <p className="text-sm text-szn-text-2">{member.tokens.toLocaleString()} tokens</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-szn-text-2">
                 No usage data for this period
               </div>
             )}
@@ -606,10 +606,10 @@ export default function OrganizationDetailClient({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowInviteModal(false)}
           />
-          <div className="relative glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowInviteModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -618,8 +618,8 @@ export default function OrganizationDetailClient({
               <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
                 <MailIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Invite Team Member</h2>
-              <p className="text-gray-500 text-sm mt-1">
+              <h2 className="text-xl font-bold text-szn-text-1">Invite Team Member</h2>
+              <p className="text-szn-text-2 text-sm mt-1">
                 Send an invitation to join {organization.name}
               </p>
             </div>
@@ -639,7 +639,7 @@ export default function OrganizationDetailClient({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -647,11 +647,11 @@ export default function OrganizationDetailClient({
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
                   Role
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -665,11 +665,11 @@ export default function OrganizationDetailClient({
                       className={`p-3 rounded-xl border-2 text-left transition-all ${
                         inviteRole === role.value
                           ? "border-pink-400 bg-pink-50"
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-szn-border hover:border-szn-border"
                       }`}
                     >
-                      <p className="font-medium text-gray-900">{role.label}</p>
-                      <p className="text-xs text-gray-500">{role.desc}</p>
+                      <p className="font-medium text-szn-text-1">{role.label}</p>
+                      <p className="text-xs text-szn-text-2">{role.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -679,7 +679,7 @@ export default function OrganizationDetailClient({
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-2 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
               >
                 Cancel
               </button>
@@ -776,8 +776,8 @@ function OrgSettingsTab({
   return (
     <div className="space-y-6">
       {/* General Settings */}
-      <div className="glass-card rounded-2xl p-6">
-        <h2 className="font-semibold text-gray-900 mb-6">General Settings</h2>
+      <div className="szn-card rounded-2xl p-6">
+        <h2 className="font-semibold text-szn-text-1 mb-6">General Settings</h2>
 
         {saveMessage && (
           <div className={`mb-4 p-3 rounded-xl text-sm ${
@@ -791,7 +791,7 @@ function OrgSettingsTab({
 
         <div className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
               Organization Name
             </label>
             <input
@@ -799,47 +799,47 @@ function OrgSettingsTab({
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={!canManage}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500 transition-all"
+              className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
               URL Slug
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-gray-400 text-sm">seizn.com/org/</span>
+              <span className="text-szn-text-3 text-sm">seizn.com/org/</span>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
                 disabled={!canManage}
-                className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500 transition-all"
+                className="flex-1 px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
               Plan
             </label>
-            <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600">
+            <div className="px-4 py-3 bg-szn-surface border border-szn-border rounded-xl text-szn-text-2">
               {organization.plan || "Free"} Plan
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
               Organization ID
             </label>
-            <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-400 font-mono text-sm">
+            <div className="px-4 py-3 bg-szn-surface border border-szn-border rounded-xl text-szn-text-3 font-mono text-sm">
               {organization.id}
             </div>
           </div>
         </div>
 
         {canManage && (
-          <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="mt-6 pt-6 border-t border-szn-border">
             <button
               onClick={handleSave}
               disabled={!hasChanges || isSaving}
@@ -853,15 +853,15 @@ function OrgSettingsTab({
 
       {/* Danger Zone */}
       {canManage && (
-        <div className="glass-card rounded-2xl p-6 border-2 border-red-100">
+        <div className="szn-card rounded-2xl p-6 border-2 border-red-100">
           <h2 className="font-semibold text-red-600 mb-2">Danger Zone</h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-szn-text-2 mb-4">
             Deleting an organization is permanent and cannot be undone. All members will lose access and all data will be removed.
           </p>
 
           {showDeleteConfirm ? (
             <div className="space-y-3">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-szn-text-2">
                 Type <strong>{organization.name}</strong> to confirm:
               </p>
               <input
@@ -869,12 +869,12 @@ function OrgSettingsTab({
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
                 placeholder={organization.name}
-                className="w-full px-4 py-3 bg-white border border-red-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+                className="w-full px-4 py-3 bg-white border border-red-200 rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
               />
               <div className="flex gap-3">
                 <button
                   onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(""); }}
-                  className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                  className="px-4 py-2.5 bg-szn-surface text-szn-text-2 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
                 >
                   Cancel
                 </button>

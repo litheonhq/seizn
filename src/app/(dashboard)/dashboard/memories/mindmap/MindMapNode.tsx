@@ -235,7 +235,7 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
         ${status.borderStyle} ${status.opacity}
         rounded-xl shadow-md
         transition-all duration-200
-        ${selected ? "ring-2 ring-teal-400 ring-offset-2 dark:ring-offset-gray-900" : ""}
+        ${selected ? "ring-2 ring-szn-accent ring-offset-2 dark:ring-offset-gray-900" : ""}
         ${isHovered ? "shadow-lg scale-105" : ""}
         relative cursor-pointer
       `}
@@ -246,24 +246,24 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-gray-400 dark:!bg-gray-500 !border-2 !border-white dark:!border-gray-800 !w-3 !h-3"
+        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
       />
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-gray-400 dark:!bg-gray-500 !border-2 !border-white dark:!border-gray-800 !w-3 !h-3"
+        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
       />
       <Handle
         type="target"
         position={Position.Left}
         id="left"
-        className="!bg-gray-400 dark:!bg-gray-500 !border-2 !border-white dark:!border-gray-800 !w-3 !h-3"
+        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
       />
       <Handle
         type="source"
         position={Position.Right}
         id="right"
-        className="!bg-gray-400 dark:!bg-gray-500 !border-2 !border-white dark:!border-gray-800 !w-3 !h-3"
+        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
       />
 
       {/* Privacy Indicator */}
@@ -272,7 +272,7 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       {/* Status Indicator */}
       <div className="absolute -bottom-1 -left-1">
         <div
-          className={`w-3 h-3 rounded-full ${status.indicator} border-2 border-white dark:border-gray-800`}
+          className={`w-3 h-3 rounded-full ${status.indicator} border-2 border-szn-card`}
           title={`Status: ${nodeData.status}`}
         />
       </div>
@@ -292,12 +292,12 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       </div>
 
       {/* Content */}
-      <p className={`${size.fontSize} text-gray-700 dark:text-gray-300 line-clamp-3`}>
+      <p className={`${size.fontSize} text-szn-text-1 line-clamp-3`}>
         {truncatedContent}
       </p>
 
       {/* Importance Bar */}
-      <div className="mt-2 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="mt-2 h-1 bg-szn-surface rounded-full overflow-hidden">
         <div
           className={`h-full ${colors.border.replace("border-", "bg-")} dark:bg-opacity-70 rounded-full transition-all`}
           style={{ width: `${nodeData.importance * 100}%` }}
@@ -306,11 +306,11 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
 
       {/* Hover Preview */}
       {isHovered && nodeData.content.length > 80 && (
-        <div className="absolute z-50 left-full ml-2 top-0 w-72 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl">
-          <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+        <div className="absolute z-50 left-full ml-2 top-0 w-72 p-3 bg-szn-card border border-szn-border rounded-lg shadow-xl">
+          <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
             {nodeData.content}
           </p>
-          <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+          <div className="mt-2 flex items-center gap-2 text-xs text-szn-text-2">
             <span className={`px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
               {nodeData.type}
             </span>

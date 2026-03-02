@@ -61,10 +61,10 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-szn-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-500">Loading shared trace...</p>
+          <div className="animate-spin w-8 h-8 border-2 border-szn-accent border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-szn-text-2">Loading shared trace...</p>
         </div>
       </div>
     );
@@ -72,8 +72,8 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+      <div className="min-h-screen bg-szn-bg flex items-center justify-center">
+        <div className="bg-szn-card rounded-2xl shadow-lg p-8 max-w-md text-center">
           <svg
             className="w-16 h-16 text-red-400 mx-auto mb-4"
             fill="none"
@@ -87,15 +87,15 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
             />
           </svg>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
             {error === "This shared trace has expired"
               ? "Trace Expired"
               : "Trace Not Found"}
           </h2>
-          <p className="text-gray-500 mb-6">{error}</p>
+          <p className="text-szn-text-2 mb-6">{error}</p>
           <Link
             href="/"
-            className="inline-block px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors"
+            className="inline-block px-6 py-3 bg-szn-accent text-white rounded-xl hover:bg-szn-accent/80 transition-colors"
           >
             Go to Seizn
           </Link>
@@ -115,16 +115,16 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-szn-bg">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-szn-card border-b">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-emerald-600">Seizn</span>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-600">Shared Trace</span>
+            <span className="text-xl font-bold text-szn-accent">Seizn</span>
+            <span className="text-szn-text-3">/</span>
+            <span className="text-szn-text-2">Shared Trace</span>
           </Link>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-szn-text-2">
             <span>{trace.view_count} views</span>
             <span>Shared {new Date(trace.shared_at).toLocaleDateString()}</span>
           </div>
@@ -166,9 +166,9 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
         )}
 
         {/* Summary Card */}
-        <div className="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+        <div className="bg-szn-card rounded-2xl shadow-sm border p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-lg font-semibold text-gray-900">
+            <h1 className="text-lg font-semibold text-szn-text-1">
               Trace Overview
             </h1>
             {trace.error ? (
@@ -184,9 +184,9 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
           {/* Query */}
           {trace.query_text && (
-            <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-              <div className="text-xs text-gray-500 mb-1">Query</div>
-              <div className="text-gray-900 font-mono text-sm">
+            <div className="mb-4 p-4 bg-szn-bg rounded-xl">
+              <div className="text-xs text-szn-text-2 mb-1">Query</div>
+              <div className="text-szn-text-1 font-mono text-sm">
                 {trace.query_text}
               </div>
             </div>
@@ -194,27 +194,27 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <div className="text-xs text-gray-500 mb-1">Total Latency</div>
-              <div className="text-xl font-semibold text-gray-900">
+            <div className="p-4 bg-szn-bg rounded-xl">
+              <div className="text-xs text-szn-text-2 mb-1">Total Latency</div>
+              <div className="text-xl font-semibold text-szn-text-1">
                 {totalLatency.toFixed(0)}ms
               </div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <div className="text-xs text-gray-500 mb-1">Results</div>
-              <div className="text-xl font-semibold text-gray-900">
+            <div className="p-4 bg-szn-bg rounded-xl">
+              <div className="text-xs text-szn-text-2 mb-1">Results</div>
+              <div className="text-xl font-semibold text-szn-text-1">
                 {trace.results_count}
               </div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <div className="text-xs text-gray-500 mb-1">Plan</div>
-              <div className="text-xl font-semibold text-gray-900 capitalize">
+            <div className="p-4 bg-szn-bg rounded-xl">
+              <div className="text-xs text-szn-text-2 mb-1">Plan</div>
+              <div className="text-xl font-semibold text-szn-text-1 capitalize">
                 {trace.plan}
               </div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <div className="text-xs text-gray-500 mb-1">Created</div>
-              <div className="text-sm font-semibold text-gray-900">
+            <div className="p-4 bg-szn-bg rounded-xl">
+              <div className="text-xs text-szn-text-2 mb-1">Created</div>
+              <div className="text-sm font-semibold text-szn-text-1">
                 {new Date(trace.created_at).toLocaleString()}
               </div>
             </div>
@@ -233,12 +233,12 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
         {/* Timeline */}
         {events.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-szn-card rounded-2xl shadow-sm border p-6">
+            <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
               Pipeline Timeline
             </h2>
             <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-szn-border" />
               <div className="space-y-3">
                 {events.map((event, index) => {
                   const colors = STAGE_COLORS[event.stage] || STAGE_COLORS.validate;
@@ -260,7 +260,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                         className={`w-full text-left p-4 rounded-xl border transition-all ${
                           isExpanded
                             ? `${colors.bg} ${colors.border}`
-                            : "bg-white border-gray-100 hover:border-gray-200"
+                            : "bg-szn-card border-szn-border hover:border-szn-border"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -270,26 +270,26 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                             >
                               {event.stage}
                             </span>
-                            <span className="font-medium text-gray-900 text-sm">
+                            <span className="font-medium text-szn-text-1 text-sm">
                               {event.name}
                             </span>
                             {event.cached && (
-                              <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">
+                              <span className="text-xs bg-szn-accent/10 text-szn-accent px-2 py-0.5 rounded-full">
                                 cached
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm text-gray-600 font-medium">
+                            <span className="text-sm text-szn-text-2 font-medium">
                               {duration.toFixed(0)}ms
                             </span>
                             {event.cost !== undefined && (
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-szn-text-3">
                                 ${event.cost.toFixed(5)}
                               </span>
                             )}
                             <svg
-                              className={`w-4 h-4 text-gray-400 transition-transform ${
+                              className={`w-4 h-4 text-szn-text-3 transition-transform ${
                                 isExpanded ? "rotate-180" : ""
                               }`}
                               fill="none"
@@ -307,7 +307,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                         </div>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <div className="flex items-center gap-4 text-xs text-szn-text-2">
                           {event.model && <span>Model: {event.model}</span>}
                           {event.input !== undefined && (
                             <span>Input: {event.input}</span>
@@ -319,8 +319,8 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
                         {/* Expanded Details */}
                         {isExpanded && event.details && (
-                          <div className="mt-4 pt-4 border-t border-gray-100">
-                            <pre className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg overflow-auto max-h-40">
+                          <div className="mt-4 pt-4 border-t border-szn-border">
+                            <pre className="text-xs text-szn-text-2 bg-szn-bg p-3 rounded-lg overflow-auto max-h-40">
                               {JSON.stringify(event.details, null, 2)}
                             </pre>
                           </div>
@@ -337,11 +337,11 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
         {/* Config Section */}
         {trace.effective_config &&
           Object.keys(trace.effective_config).length > 0 && (
-            <div className="bg-white rounded-2xl shadow-sm border p-6 mt-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-szn-card rounded-2xl shadow-sm border p-6 mt-6">
+              <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
                 Configuration
               </h2>
-              <pre className="text-xs text-gray-600 bg-gray-50 p-4 rounded-xl overflow-auto max-h-60">
+              <pre className="text-xs text-szn-text-2 bg-szn-bg p-4 rounded-xl overflow-auto max-h-60">
                 {JSON.stringify(trace.effective_config, null, 2)}
               </pre>
             </div>
@@ -349,11 +349,11 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-white mt-12">
+      <footer className="border-t bg-szn-card mt-12">
         <div className="max-w-5xl mx-auto px-4 py-6 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-szn-text-2">
             Powered by{" "}
-            <Link href="/" className="text-emerald-600 hover:underline">
+            <Link href="/" className="text-szn-accent hover:underline">
               Seizn
             </Link>{" "}
             - AI Memory Platform

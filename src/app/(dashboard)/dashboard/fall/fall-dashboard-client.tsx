@@ -37,22 +37,22 @@ function OnboardingChecklist({
   }
 
   return (
-    <div className="mb-8 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6">
+    <div className="mb-8 bg-gradient-to-r from-szn-accent/5 to-szn-accent/10 border border-szn-accent/20 rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 bg-szn-accent/10 rounded-xl flex items-center justify-center">
+            <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Getting Started</h3>
-            <p className="text-sm text-gray-600">{completedCount}/{steps.length} steps completed</p>
+            <h3 className="font-semibold text-szn-text-1">Getting Started</h3>
+            <p className="text-sm text-szn-text-2">{completedCount}/{steps.length} steps completed</p>
           </div>
         </div>
         <button
           onClick={onDismiss}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-szn-text-3 hover:text-szn-text-2"
           title="Dismiss"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,9 +62,9 @@ function OnboardingChecklist({
       </div>
 
       {/* Progress bar */}
-      <div className="h-2 bg-emerald-100 rounded-full mb-6">
+      <div className="h-2 bg-szn-accent/10 rounded-full mb-6">
         <div
-          className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+          className="h-full bg-szn-accent rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -76,16 +76,16 @@ function OnboardingChecklist({
             key={step.id}
             className={`p-4 rounded-lg border transition-all ${
               step.completed
-                ? "bg-emerald-50 border-emerald-200"
-                : "bg-white border-gray-200 hover:border-emerald-300"
+                ? "bg-szn-accent/5 border-szn-accent/20"
+                : "bg-szn-card border-szn-border hover:border-szn-accent/30"
             }`}
           >
             <div className="flex items-start gap-3">
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                   step.completed
-                    ? "bg-emerald-500 text-white"
-                    : "bg-gray-200 text-gray-600"
+                    ? "bg-szn-accent text-white"
+                    : "bg-gray-200 text-szn-text-2"
                 }`}
               >
                 {step.completed ? (
@@ -97,15 +97,15 @@ function OnboardingChecklist({
                 )}
               </div>
               <div className="flex-1">
-                <h4 className={`font-medium text-sm ${step.completed ? "text-emerald-700" : "text-gray-900"}`}>
+                <h4 className={`font-medium text-sm ${step.completed ? "text-szn-success" : "text-szn-text-1"}`}>
                   {step.title}
                 </h4>
-                <p className="text-xs text-gray-500 mt-0.5">{step.description}</p>
+                <p className="text-xs text-szn-text-2 mt-0.5">{step.description}</p>
                 {!step.completed && step.action && (
                   step.action.href ? (
                     <Link
                       href={step.action.href}
-                      className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                      className="mt-2 inline-flex items-center gap-1 text-xs text-szn-accent hover:text-szn-accent font-medium"
                     >
                       {step.action.label}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@ function OnboardingChecklist({
                   ) : (
                     <button
                       onClick={step.action.onClick}
-                      className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                      className="mt-2 inline-flex items-center gap-1 text-xs text-szn-accent hover:text-szn-accent font-medium"
                     >
                       {step.action.label}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,10 +131,10 @@ function OnboardingChecklist({
       </div>
 
       {/* Quick action */}
-      <div className="mt-4 pt-4 border-t border-emerald-200">
+      <div className="mt-4 pt-4 border-t border-szn-accent/20">
         <button
           onClick={onRunSample}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-szn-accent hover:bg-szn-accent/90 text-white rounded-lg text-sm font-medium transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -310,8 +310,8 @@ export function FallDashboardClient() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Fall Dashboard</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-szn-text-1">Fall Dashboard</h1>
+        <p className="text-szn-text-2 mt-1">
           Observability for your RAG pipeline
         </p>
       </div>
@@ -364,15 +364,15 @@ export function FallDashboardClient() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">
         {(["traces", "eval", "experiments"] as TabType[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-szn-card text-szn-text-1 shadow-sm"
+                : "text-szn-text-2 hover:text-szn-text-1"
             }`}
           >
             {tab === "traces" && "Traces"}
@@ -419,7 +419,7 @@ export function FallDashboardClient() {
       {/* Content */}
       {loading ? (
         <div className="p-8 text-center">
-          <div className="animate-spin w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
+          <div className="animate-spin w-6 h-6 border-2 border-szn-accent border-t-transparent rounded-full mx-auto" />
         </div>
       ) : (
         <>
@@ -457,9 +457,9 @@ function StatCard({
   positive: boolean;
 }) {
   return (
-    <div className="bg-white rounded-xl border p-4">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+    <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+      <p className="text-sm text-szn-text-2">{label}</p>
+      <p className="text-2xl font-bold text-szn-text-1 mt-1">{value}</p>
       <p className={`text-sm mt-1 ${positive ? "text-green-600" : "text-red-600"}`}>
         {trend} vs last period
       </p>
@@ -470,9 +470,9 @@ function StatCard({
 function TracesTable({ traces, onShare }: { traces: Trace[]; onShare: (traceId: string) => void }) {
   if (traces.length === 0) {
     return (
-      <div className="bg-white rounded-xl border p-8 text-center">
-        <p className="text-gray-500">No traces found</p>
-        <p className="text-sm text-gray-400 mt-1">
+      <div className="bg-szn-card rounded-xl border border-szn-border p-8 text-center">
+        <p className="text-szn-text-2">No traces found</p>
+        <p className="text-sm text-szn-text-3 mt-1">
           Make some API requests to see traces here
         </p>
       </div>
@@ -480,51 +480,51 @@ function TracesTable({ traces, onShare }: { traces: Trace[]; onShare: (traceId: 
   }
 
   return (
-    <div className="bg-white rounded-xl border overflow-hidden">
+    <div className="bg-szn-card rounded-xl border border-szn-border overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50 border-b">
+        <thead className="bg-szn-bg border-b border-szn-border">
           <tr>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Query
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Collection
             </th>
-            <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-right px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Latency
             </th>
-            <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-right px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Cost
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Status
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Time
             </th>
             <th className="px-4 py-3"></th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y divide-szn-border">
           {traces.map((trace) => (
-            <tr key={trace.id} className="hover:bg-gray-50">
+            <tr key={trace.id} className="hover:bg-szn-surface-1">
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-900 truncate block max-w-xs">
+                <span className="text-sm text-szn-text-1 truncate block max-w-xs">
                   {trace.query?.slice(0, 50)}...
                 </span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-600">{trace.collection}</span>
+                <span className="text-sm text-szn-text-2">{trace.collection}</span>
               </td>
               <td className="px-4 py-3 text-right">
                 <span className={`text-sm font-mono ${
-                  (trace.latency?.total_ms || 0) > 500 ? "text-red-600" : "text-gray-600"
+                  (trace.latency?.total_ms || 0) > 500 ? "text-red-600" : "text-szn-text-2"
                 }`}>
                   {trace.latency?.total_ms || 0}ms
                 </span>
               </td>
               <td className="px-4 py-3 text-right">
-                <span className="text-sm font-mono text-gray-600">
+                <span className="text-sm font-mono text-szn-text-2">
                   ${(trace.cost_usd || 0).toFixed(6)}
                 </span>
               </td>
@@ -540,7 +540,7 @@ function TracesTable({ traces, onShare }: { traces: Trace[]; onShare: (traceId: 
                 )}
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-szn-text-2">
                   {new Date(trace.created_at).toLocaleString()}
                 </span>
               </td>
@@ -554,7 +554,7 @@ function TracesTable({ traces, onShare }: { traces: Trace[]; onShare: (traceId: 
                   </Link>
                   <button
                     onClick={() => onShare(trace.id)}
-                    className="text-sm text-gray-500 hover:text-emerald-600 flex items-center gap-1"
+                    className="text-sm text-szn-text-2 hover:text-szn-accent flex items-center gap-1"
                     title="Share trace"
                   >
                     <svg
@@ -585,12 +585,12 @@ function TracesTable({ traces, onShare }: { traces: Trace[]; onShare: (traceId: 
 function EvalTable({ runs }: { runs: EvalRun[] }) {
   if (runs.length === 0) {
     return (
-      <div className="bg-white rounded-xl border p-8 text-center">
-        <p className="text-gray-500">No evaluation runs yet</p>
-        <p className="text-sm text-gray-400 mt-1">
+      <div className="bg-szn-card rounded-xl border border-szn-border p-8 text-center">
+        <p className="text-szn-text-2">No evaluation runs yet</p>
+        <p className="text-sm text-szn-text-3 mt-1">
           Create an evaluation to measure your RAG quality
         </p>
-        <button className="mt-4 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">
+        <button className="mt-4 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90">
           Create Evaluation
         </button>
       </div>
@@ -598,54 +598,54 @@ function EvalTable({ runs }: { runs: EvalRun[] }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border overflow-hidden">
+    <div className="bg-szn-card rounded-xl border border-szn-border overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50 border-b">
+        <thead className="bg-szn-bg border-b border-szn-border">
           <tr>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Name
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Dataset
             </th>
-            <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-right px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               MRR
             </th>
-            <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-right px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Recall@5
             </th>
-            <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-right px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               NDCG
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Status
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               Time
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y divide-szn-border">
           {runs.map((run) => (
-            <tr key={run.id} className="hover:bg-gray-50">
+            <tr key={run.id} className="hover:bg-szn-surface-1">
               <td className="px-4 py-3">
-                <span className="text-sm font-medium text-gray-900">{run.name}</span>
+                <span className="text-sm font-medium text-szn-text-1">{run.name}</span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-600">{run.dataset}</span>
+                <span className="text-sm text-szn-text-2">{run.dataset}</span>
               </td>
               <td className="px-4 py-3 text-right">
-                <span className="text-sm font-mono text-gray-900">
+                <span className="text-sm font-mono text-szn-text-1">
                   {(run.metrics?.mrr || 0).toFixed(3)}
                 </span>
               </td>
               <td className="px-4 py-3 text-right">
-                <span className="text-sm font-mono text-gray-900">
+                <span className="text-sm font-mono text-szn-text-1">
                   {(run.metrics?.recall_at_5 || 0).toFixed(3)}
                 </span>
               </td>
               <td className="px-4 py-3 text-right">
-                <span className="text-sm font-mono text-gray-900">
+                <span className="text-sm font-mono text-szn-text-1">
                   {(run.metrics?.ndcg || 0).toFixed(3)}
                 </span>
               </td>
@@ -653,7 +653,7 @@ function EvalTable({ runs }: { runs: EvalRun[] }) {
                 <StatusBadge status={run.status} />
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-szn-text-2">
                   {new Date(run.created_at).toLocaleString()}
                 </span>
               </td>
@@ -668,12 +668,12 @@ function EvalTable({ runs }: { runs: EvalRun[] }) {
 function ExperimentsTable({ experiments }: { experiments: Experiment[] }) {
   if (experiments.length === 0) {
     return (
-      <div className="bg-white rounded-xl border p-8 text-center">
-        <p className="text-gray-500">No experiments running</p>
-        <p className="text-sm text-gray-400 mt-1">
+      <div className="bg-szn-card rounded-xl border border-szn-border p-8 text-center">
+        <p className="text-szn-text-2">No experiments running</p>
+        <p className="text-sm text-szn-text-3 mt-1">
           Create an A/B test to compare different configurations
         </p>
-        <button className="mt-4 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">
+        <button className="mt-4 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90">
           Create Experiment
         </button>
       </div>
@@ -683,11 +683,11 @@ function ExperimentsTable({ experiments }: { experiments: Experiment[] }) {
   return (
     <div className="space-y-4">
       {experiments.map((exp) => (
-        <div key={exp.id} className="bg-white rounded-xl border p-6">
+        <div key={exp.id} className="bg-szn-card rounded-xl border border-szn-border p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-900">{exp.name}</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold text-szn-text-1">{exp.name}</h3>
+              <p className="text-sm text-szn-text-2">
                 {exp.variants.length} variants • Started{" "}
                 {new Date(exp.created_at).toLocaleDateString()}
               </p>
@@ -702,22 +702,22 @@ function ExperimentsTable({ experiments }: { experiments: Experiment[] }) {
                 className={`p-4 rounded-lg border ${
                   exp.winner === variant.name
                     ? "border-green-500 bg-green-50"
-                    : "border-gray-200"
+                    : "border-szn-border"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium text-gray-900">{variant.name}</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="font-medium text-szn-text-1">{variant.name}</span>
+                  <span className="text-sm text-szn-text-2">
                     {variant.traffic_percent}% traffic
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-gray-500">MRR:</span>{" "}
+                    <span className="text-szn-text-2">MRR:</span>{" "}
                     <span className="font-mono">{variant.metrics?.mrr?.toFixed(3) || "N/A"}</span>
                   </div>
                   <div>
-                    <span className="text-gray-500">P50:</span>{" "}
+                    <span className="text-szn-text-2">P50:</span>{" "}
                     <span className="font-mono">{variant.metrics?.latency_p50 || "N/A"}ms</span>
                   </div>
                 </div>
@@ -746,7 +746,7 @@ function StatusBadge({ status }: { status: string }) {
   return (
     <span
       className={`px-2 py-1 text-xs rounded-full ${
-        colors[status as keyof typeof colors] || "bg-gray-100 text-gray-700"
+        colors[status as keyof typeof colors] || "bg-szn-surface text-szn-text-1"
       }`}
     >
       {status}

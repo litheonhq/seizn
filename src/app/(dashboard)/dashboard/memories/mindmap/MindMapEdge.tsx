@@ -28,8 +28,8 @@ const edgeStyles: Record<EdgeType | "belongs_to", EdgeStyle> = {
     stroke: "#9CA3AF", // gray
     strokeDasharray: "5,5",
     animated: false,
-    labelBg: "bg-gray-100 dark:bg-gray-700",
-    labelText: "text-gray-600 dark:text-gray-300",
+    labelBg: "bg-szn-surface",
+    labelText: "text-szn-text-2",
   },
   supersedes: {
     stroke: "#3B82F6", // blue
@@ -220,8 +220,8 @@ function MindMapEdgeComponent({
               px-2 py-1 rounded-md text-xs font-medium
               border shadow-sm transition-all duration-200
               ${style.labelBg} ${style.labelText}
-              border-gray-200 dark:border-gray-600
-              ${selected ? "scale-110 ring-2 ring-teal-400" : ""}
+              border-szn-border
+              ${selected ? "scale-110 ring-2 ring-szn-accent" : ""}
             `}
           >
             {displayLabel}

@@ -62,11 +62,11 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
             className={`w-3 h-3 rounded-full ${bgColor}`}
             style={{ backgroundColor: color }}
           />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-sm font-medium text-szn-text-2">
             {component.label}
           </span>
         </div>
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-szn-text-2">
           {(component.normalizedValue * 100).toFixed(1)}%
           {component.weight < 1 && (
             <span className="text-xs ml-1">
@@ -77,7 +77,7 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
       </div>
 
       {/* Bar */}
-      <div className="relative h-6 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+      <div className="relative h-6 bg-szn-surface rounded-lg overflow-hidden">
         {/* Base bar (normalized value) */}
         <div
           className="absolute inset-y-0 left-0 bg-opacity-30 rounded-lg"
@@ -104,7 +104,7 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
       </div>
 
       {/* Description */}
-      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+      <p className="text-xs text-szn-text-2 leading-relaxed">
         {component.description}
       </p>
     </div>
@@ -157,7 +157,7 @@ export function ScoreBreakdownChart({
 
       {/* Score Components */}
       <div className="space-y-6">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+        <h4 className="text-sm font-semibold text-szn-text-1">
           Score Components
         </h4>
 
@@ -172,22 +172,22 @@ export function ScoreBreakdownChart({
       </div>
 
       {/* Relative Score Indicator */}
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="p-4 bg-szn-surface rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-sm text-szn-text-2">
             Relative to Best Result
           </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">
+          <span className="text-sm font-medium text-szn-text-1">
             {(scoreBreakdown.relativeScore * 100).toFixed(0)}%
           </span>
         </div>
-        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
             style={{ width: `${scoreBreakdown.relativeScore * 100}%` }}
           />
         </div>
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-szn-text-2">
           {scoreBreakdown.rank === 1
             ? "This is the highest-scoring result"
             : `This result scored ${((1 - scoreBreakdown.relativeScore) * 100).toFixed(0)}% lower than the top result`}
@@ -195,8 +195,8 @@ export function ScoreBreakdownChart({
       </div>
 
       {/* Legend */}
-      <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-        <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+      <div className="pt-4 border-t border-szn-border">
+        <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wide mb-3">
           Score Types Legend
         </h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -208,7 +208,7 @@ export function ScoreBreakdownChart({
                   backgroundColor: SCORE_COLORS[component.type] || "#6b7280",
                 }}
               />
-              <span className="text-xs text-gray-600 dark:text-gray-400">
+              <span className="text-xs text-szn-text-2">
                 {component.label}
               </span>
             </div>

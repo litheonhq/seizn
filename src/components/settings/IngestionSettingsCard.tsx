@@ -121,11 +121,11 @@ export function IngestionSettingsCard() {
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
-          <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded" />
+          <div className="h-6 bg-szn-surface rounded w-1/3" />
+          <div className="h-4 bg-szn-surface rounded w-2/3" />
+          <div className="h-10 bg-szn-surface rounded" />
         </div>
       </div>
     );
@@ -133,25 +133,25 @@ export function IngestionSettingsCard() {
 
   if (error || !localSettings) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
         <p className="text-red-500">Failed to load ingestion settings</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="p-6 border-b border-szn-border">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-teal-100 dark:bg-teal-900/30 rounded-xl">
-            <SparklesIcon className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+          <div className="p-2 bg-szn-accent/10 rounded-xl">
+            <SparklesIcon className="w-5 h-5 text-szn-accent" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">
+            <h3 className="font-semibold text-szn-text-1">
               Memory Ingestion Controls
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-szn-text-2">
               Control what gets remembered and how
             </p>
           </div>
@@ -163,8 +163,8 @@ export function IngestionSettingsCard() {
         {/* Auto-save Toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Auto-save memories</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="font-medium text-szn-text-1">Auto-save memories</p>
+            <p className="text-sm text-szn-text-2">
               Automatically extract and store memories from conversations
             </p>
           </div>
@@ -173,7 +173,7 @@ export function IngestionSettingsCard() {
               setLocalSettings({ ...localSettings, autoSaveEnabled: !localSettings.autoSaveEnabled })
             }
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              localSettings.autoSaveEnabled ? "bg-teal-600" : "bg-gray-300 dark:bg-gray-600"
+              localSettings.autoSaveEnabled ? "bg-szn-accent" : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
@@ -187,8 +187,8 @@ export function IngestionSettingsCard() {
         {/* Candidate Mode Toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Review before saving</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="font-medium text-szn-text-1">Review before saving</p>
+            <p className="text-sm text-szn-text-2">
               Send extracted memories to candidate queue for approval
             </p>
           </div>
@@ -200,7 +200,7 @@ export function IngestionSettingsCard() {
               })
             }
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              localSettings.candidateModeEnabled ? "bg-teal-600" : "bg-gray-300 dark:bg-gray-600"
+              localSettings.candidateModeEnabled ? "bg-szn-accent" : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
@@ -214,8 +214,8 @@ export function IngestionSettingsCard() {
         {/* Strictness Level */}
         <div className="space-y-3">
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Extraction strictness</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="font-medium text-szn-text-1">Extraction strictness</p>
+            <p className="text-sm text-szn-text-2">
               How confident should the AI be before storing a memory?
             </p>
           </div>
@@ -232,20 +232,20 @@ export function IngestionSettingsCard() {
                 }
                 className={`p-3 rounded-xl border text-center transition-colors ${
                   localSettings.strictness === level.value
-                    ? "border-teal-500 bg-teal-50 dark:bg-teal-900/20"
-                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                    ? "border-szn-accent bg-szn-accent/10"
+                    : "border-szn-border hover:border-szn-border"
                 }`}
               >
                 <p
                   className={`font-medium text-sm ${
                     localSettings.strictness === level.value
-                      ? "text-teal-700 dark:text-teal-300"
-                      : "text-gray-900 dark:text-white"
+                      ? "text-szn-accent"
+                      : "text-szn-text-1"
                   }`}
                 >
                   {level.label}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-szn-text-2 mt-1">
                   {Math.round(level.threshold * 100)}%
                 </p>
               </button>
@@ -256,8 +256,8 @@ export function IngestionSettingsCard() {
         {/* Blocked Categories */}
         <div className="space-y-3">
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Never store these topics</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="font-medium text-szn-text-1">Never store these topics</p>
+            <p className="text-sm text-szn-text-2">
               Block memories containing sensitive categories
             </p>
           </div>
@@ -269,7 +269,7 @@ export function IngestionSettingsCard() {
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   localSettings.blockedCategories.includes(cat.id)
                     ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-transparent"
+                    : "bg-szn-surface text-szn-text-2 border border-transparent"
                 }`}
               >
                 {cat.label}
@@ -330,8 +330,8 @@ export function IngestionSettingsCard() {
       </div>
 
       {/* Footer */}
-      <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+      <div className="p-6 border-t border-szn-border flex items-center justify-between">
+        <div className="text-sm text-szn-text-2">
           {saveStatus === "success" && (
             <span className="text-green-600 dark:text-green-400">Settings saved!</span>
           )}
@@ -342,7 +342,7 @@ export function IngestionSettingsCard() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-600/50 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/90 disabled:bg-szn-accent/50 text-white rounded-lg text-sm font-medium transition-colors"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>

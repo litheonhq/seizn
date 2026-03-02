@@ -110,17 +110,17 @@ export function BudgetSettings({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Budget Limits */}
-      <div className="bg-white dark:bg-gray-900/60 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Budget Limits</h3>
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+        <h3 className="text-lg font-semibold text-szn-text-1 mb-4">Budget Limits</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Daily Budget */}
           <div>
-            <label htmlFor="budget-daily" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="budget-daily" className="block text-sm font-medium text-szn-text-2 mb-1">
               Daily Budget (USD)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-szn-text-2">$</span>
               <input
                 id="budget-daily"
                 type="number"
@@ -129,19 +129,19 @@ export function BudgetSettings({
                 value={form.dailyBudgetUsd}
                 onChange={(e) => setForm({ ...form, dailyBudgetUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full pl-7 pr-3 py-2 border border-szn-border rounded-md bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-szn-surface"
               />
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Max spend per day</p>
+            <p className="text-xs text-szn-text-2 mt-1">Max spend per day</p>
           </div>
 
           {/* Monthly Budget */}
           <div>
-            <label htmlFor="budget-monthly" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="budget-monthly" className="block text-sm font-medium text-szn-text-2 mb-1">
               Monthly Budget (USD)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-szn-text-2">$</span>
               <input
                 id="budget-monthly"
                 type="number"
@@ -150,19 +150,19 @@ export function BudgetSettings({
                 value={form.monthlyBudgetUsd}
                 onChange={(e) => setForm({ ...form, monthlyBudgetUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full pl-7 pr-3 py-2 border border-szn-border rounded-md bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-szn-surface"
               />
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Max spend per month</p>
+            <p className="text-xs text-szn-text-2 mt-1">Max spend per month</p>
           </div>
 
           {/* Per-Query Max */}
           <div>
-            <label htmlFor="budget-per-query" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="budget-per-query" className="block text-sm font-medium text-szn-text-2 mb-1">
               Per-Query Max (USD)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-szn-text-2">$</span>
               <input
                 id="budget-per-query"
                 type="number"
@@ -171,20 +171,20 @@ export function BudgetSettings({
                 value={form.perQueryMaxUsd}
                 onChange={(e) => setForm({ ...form, perQueryMaxUsd: e.target.value })}
                 disabled={disabled || saving}
-                className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full pl-7 pr-3 py-2 border border-szn-border rounded-md bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-szn-surface"
               />
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Max cost per query</p>
+            <p className="text-xs text-szn-text-2 mt-1">Max cost per query</p>
           </div>
         </div>
       </div>
 
       {/* Alert Settings */}
-      <div className="bg-white dark:bg-gray-900/60 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Alert Settings</h3>
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+        <h3 className="text-lg font-semibold text-szn-text-1 mb-4">Alert Settings</h3>
 
         <div>
-          <label htmlFor="budget-alert-threshold" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="budget-alert-threshold" className="block text-sm font-medium text-szn-text-2 mb-1">
             Alert Threshold
           </label>
           <div className="flex items-center gap-4">
@@ -198,24 +198,24 @@ export function BudgetSettings({
               disabled={disabled || saving}
               className="flex-1 accent-blue-600 dark:accent-blue-400"
             />
-            <span className="text-sm font-medium text-gray-900 dark:text-white w-12">
+            <span className="text-sm font-medium text-szn-text-1 w-12">
               {form.alertAtPercent}%
             </span>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-szn-text-2 mt-1">
             Receive alerts when budget usage reaches this percentage
           </p>
         </div>
       </div>
 
       {/* Enforcement Mode */}
-      <div className="bg-white dark:bg-gray-900/60 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Enforcement Mode</h3>
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+        <h3 className="text-lg font-semibold text-szn-text-1 mb-4">Enforcement Mode</h3>
 
         <div className="space-y-4">
           {/* Mode Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-szn-text-2 mb-2">
               Budget Mode
             </label>
             <div className="flex gap-4">
@@ -229,7 +229,7 @@ export function BudgetSettings({
                   disabled={disabled || saving}
                   className="w-4 h-4 text-blue-600 dark:text-blue-400"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-200">Soft</span>
+                <span className="text-sm text-szn-text-1">Soft</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -241,10 +241,10 @@ export function BudgetSettings({
                   disabled={disabled || saving}
                   className="w-4 h-4 text-blue-600 dark:text-blue-400"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-200">Hard</span>
+                <span className="text-sm text-szn-text-1">Hard</span>
               </label>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-szn-text-2 mt-1">
               {form.mode === "soft"
                 ? "Warn but allow queries when over budget"
                 : "Reject queries when budget is exceeded"}
@@ -254,7 +254,7 @@ export function BudgetSettings({
           {/* Fallback Strategy */}
           {form.mode === "soft" && (
             <div>
-              <label htmlFor="budget-fallback-strategy" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="budget-fallback-strategy" className="block text-sm font-medium text-szn-text-2 mb-2">
                 Fallback Strategy
               </label>
               <select
@@ -264,13 +264,13 @@ export function BudgetSettings({
                   setForm({ ...form, fallbackStrategy: e.target.value as FallbackStrategy })
                 }
                 disabled={disabled || saving}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full px-3 py-2 border border-szn-border rounded-md bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:bg-szn-surface"
               >
                 <option value="degrade">Degrade - Use cheaper models/fewer results</option>
                 <option value="reject">Reject - Return error when over budget</option>
                 <option value="queue">Queue - Queue queries for later</option>
               </select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-szn-text-2 mt-1">
                 What to do when a query would exceed the budget
               </p>
             </div>

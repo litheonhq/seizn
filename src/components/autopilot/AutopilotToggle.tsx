@@ -94,14 +94,14 @@ export function AutopilotToggle({
   );
 
   return (
-    <div className={`rounded-lg border border-gray-800 bg-gray-900/50 p-4 ${className}`}>
+    <div className={`rounded-lg border border-szn-border bg-gray-900/50 p-4 ${className}`}>
       {/* Toggle Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* Autopilot Icon */}
-          <div className={`p-2 rounded-lg ${enabled ? "bg-emerald-500/20" : "bg-gray-800"}`}>
+          <div className={`p-2 rounded-lg ${enabled ? "bg-szn-accent/20" : "bg-gray-800"}`}>
             <svg
-              className={`w-5 h-5 ${enabled ? "text-emerald-400" : "text-gray-500"}`}
+              className={`w-5 h-5 ${enabled ? "text-szn-accent" : "text-szn-text-2"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -118,10 +118,10 @@ export function AutopilotToggle({
             <p className="text-sm font-medium text-white flex items-center gap-2">
               Autopilot Retrieval
               {loading && (
-                <span className="inline-block w-3 h-3 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                <span className="inline-block w-3 h-3 border-2 border-szn-accent border-t-transparent rounded-full animate-spin" />
               )}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-szn-text-2">
               Automatically select the best retrieval strategy
             </p>
           </div>
@@ -133,7 +133,7 @@ export function AutopilotToggle({
           disabled={disabled || loading}
           className={`relative w-12 h-6 rounded-full transition-colors ${
             disabled || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-          } ${enabled ? "bg-emerald-600" : "bg-gray-700"}`}
+          } ${enabled ? "bg-szn-accent" : "bg-gray-700"}`}
           role="switch"
           aria-checked={enabled}
           aria-label="Toggle autopilot retrieval"
@@ -148,12 +148,12 @@ export function AutopilotToggle({
 
       {/* Mode Selection (shown when enabled) */}
       {enabled && (
-        <div className="mt-4 pt-4 border-t border-gray-800">
+        <div className="mt-4 pt-4 border-t border-szn-border">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs text-gray-400">Autopilot Mode</span>
+            <span className="text-xs text-szn-text-3">Autopilot Mode</span>
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="text-xs text-szn-accent hover:text-szn-accent/80 transition-colors"
             >
               {showAdvanced ? "Hide Advanced" : "Show Advanced"}
             </button>
@@ -171,14 +171,14 @@ export function AutopilotToggle({
                   disabled={disabled || loading}
                   className={`p-2 rounded-lg border text-left transition-all ${
                     isSelected
-                      ? "border-emerald-500/50 bg-emerald-500/10"
-                      : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+                      ? "border-szn-accent/50 bg-szn-accent/10"
+                      : "border-szn-border bg-gray-800/50 hover:border-szn-border"
                   } ${disabled || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                 >
-                  <p className={`text-xs font-medium ${isSelected ? info.color : "text-gray-300"}`}>
+                  <p className={`text-xs font-medium ${isSelected ? info.color : "text-szn-text-2"}`}>
                     {info.label}
                   </p>
-                  <p className="text-[10px] text-gray-500 mt-0.5">{info.description}</p>
+                  <p className="text-[10px] text-szn-text-2 mt-0.5">{info.description}</p>
                 </button>
               );
             })}
@@ -186,13 +186,13 @@ export function AutopilotToggle({
 
           {/* Advanced Settings */}
           {showAdvanced && (
-            <div className="mt-4 pt-4 border-t border-gray-800 space-y-4">
+            <div className="mt-4 pt-4 border-t border-szn-border space-y-4">
               {/* Exploration Rate Slider */}
               {explorationRate !== undefined && onExplorationRateChange && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-400">Custom Exploration Rate</span>
-                    <span className="text-xs font-mono text-emerald-400">
+                    <span className="text-xs text-szn-text-3">Custom Exploration Rate</span>
+                    <span className="text-xs font-mono text-szn-accent">
                       {Math.round(explorationRate * 100)}%
                     </span>
                   </div>
@@ -209,21 +209,21 @@ export function AutopilotToggle({
                                [&::-webkit-slider-thumb]:w-3
                                [&::-webkit-slider-thumb]:h-3
                                [&::-webkit-slider-thumb]:rounded-full
-                               [&::-webkit-slider-thumb]:bg-emerald-500
+                               [&::-webkit-slider-thumb]:bg-szn-accent
                                [&::-webkit-slider-thumb]:cursor-pointer
                                [&::-webkit-slider-thumb]:transition-transform
                                [&::-webkit-slider-thumb]:hover:scale-125"
                   />
                   <div className="flex justify-between mt-1">
-                    <span className="text-[10px] text-gray-600">0% (Exploit only)</span>
-                    <span className="text-[10px] text-gray-600">50% (High exploration)</span>
+                    <span className="text-[10px] text-szn-text-2">0% (Exploit only)</span>
+                    <span className="text-[10px] text-szn-text-2">50% (High exploration)</span>
                   </div>
                 </div>
               )}
 
               {/* Info Box */}
-              <div className="p-3 rounded-lg bg-gray-800/50 text-xs text-gray-400">
-                <p className="font-medium text-gray-300 mb-1">How Autopilot Works</p>
+              <div className="p-3 rounded-lg bg-gray-800/50 text-xs text-szn-text-3">
+                <p className="font-medium text-szn-text-2 mb-1">How Autopilot Works</p>
                 <ul className="space-y-1 list-disc list-inside text-[11px]">
                   <li>Uses multi-armed bandit to learn best strategies</li>
                   <li>Balances exploration (trying new) vs exploitation (using best)</li>

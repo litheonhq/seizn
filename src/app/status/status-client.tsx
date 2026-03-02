@@ -100,9 +100,9 @@ export function StatusClient({ initialData }: StatusClientProps) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-48" />
-          <div className="h-32 bg-gray-200 rounded" />
-          <div className="h-64 bg-gray-200 rounded" />
+          <div className="h-8 bg-szn-surface rounded w-48" />
+          <div className="h-32 bg-szn-surface rounded" />
+          <div className="h-64 bg-szn-surface rounded" />
         </div>
       </div>
     );
@@ -111,7 +111,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500">Unable to load status information</p>
+        <p className="text-szn-text-2">Unable to load status information</p>
       </div>
     );
   }
@@ -155,11 +155,11 @@ export function StatusClient({ initialData }: StatusClientProps) {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <Link href="/" className="text-2xl font-bold text-gray-900">
+        <Link href="/" className="text-2xl font-bold text-szn-text-1">
           Seizn
         </Link>
         <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center gap-2 text-sm text-szn-text-2">
             <input
               type="checkbox"
               checked={autoRefresh}
@@ -170,7 +170,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
           </label>
           <button
             onClick={loadStatus}
-            className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-surface-1"
           >
             Refresh
           </button>
@@ -193,7 +193,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
             <h1 className={`text-xl font-bold ${currentStatus.textColor}`}>
               {currentStatus.label}
             </h1>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-szn-text-2 text-sm mt-1">
               Last updated: {new Date(data.last_updated).toLocaleString()}
             </p>
           </div>
@@ -203,7 +203,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
       {/* Active Incidents */}
       {data.incidents.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Active Incidents</h2>
+          <h2 className="text-lg font-semibold text-szn-text-1 mb-4">Active Incidents</h2>
           <div className="space-y-4">
             {data.incidents.map((incident) => (
               <IncidentCard key={incident.id} incident={incident} />
@@ -221,9 +221,9 @@ export function StatusClient({ initialData }: StatusClientProps) {
       </div>
 
       {/* Services Status */}
-      <div className="bg-white rounded-2xl border mb-8">
+      <div className="bg-szn-card rounded-2xl border mb-8">
         <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900">Service Status</h2>
+          <h2 className="font-semibold text-szn-text-1">Service Status</h2>
         </div>
         <div className="divide-y">
           {data.services.map((service) => (
@@ -234,9 +234,9 @@ export function StatusClient({ initialData }: StatusClientProps) {
 
       {/* Status History (30 day grid) */}
       {data.status_history && (
-        <div className="bg-white rounded-2xl border mb-8">
+        <div className="bg-szn-card rounded-2xl border mb-8">
           <div className="p-4 border-b">
-            <h2 className="font-semibold text-gray-900">30-Day History</h2>
+            <h2 className="font-semibold text-szn-text-1">30-Day History</h2>
           </div>
           <div className="p-4">
             <div className="flex gap-1">
@@ -250,7 +250,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
                 />
               ))}
             </div>
-            <div className="flex justify-between mt-2 text-xs text-gray-500">
+            <div className="flex justify-between mt-2 text-xs text-szn-text-2">
               <span>30 days ago</span>
               <span>Today</span>
             </div>
@@ -262,14 +262,14 @@ export function StatusClient({ initialData }: StatusClientProps) {
       <IncidentHistory incidents={data.incident_history} />
 
       {/* Footer */}
-      <div className="mt-8 text-center text-sm text-gray-500">
+      <div className="mt-8 text-center text-sm text-szn-text-2">
         <p>
           Subscribe to status updates via{" "}
-          <a href="#" className="text-emerald-600 hover:underline">
+          <a href="#" className="text-szn-accent hover:underline">
             RSS
           </a>{" "}
           or{" "}
-          <a href="#" className="text-emerald-600 hover:underline">
+          <a href="#" className="text-szn-accent hover:underline">
             Email
           </a>
         </p>
@@ -280,15 +280,15 @@ export function StatusClient({ initialData }: StatusClientProps) {
 
 function UptimeCard({ period, value }: { period: string; value: number }) {
   const _getColor = (v: number) => {
-    if (v >= 99.9) return "text-emerald-600";
+    if (v >= 99.9) return "text-szn-accent";
     if (v >= 99) return "text-yellow-600";
     return "text-red-600";
   };
 
   return (
-    <div className="bg-white rounded-xl border p-4 text-center">
-      <p className="text-2xl font-bold text-gray-900">{value.toFixed(2)}%</p>
-      <p className="text-sm text-gray-500">{period}</p>
+    <div className="bg-szn-card rounded-xl border p-4 text-center">
+      <p className="text-2xl font-bold text-szn-text-1">{value.toFixed(2)}%</p>
+      <p className="text-sm text-szn-text-2">{period}</p>
     </div>
   );
 }
@@ -310,15 +310,15 @@ function ServiceRow({ service }: { service: ServiceStatus }) {
     <div className="flex items-center justify-between px-4 py-3">
       <div className="flex items-center gap-3">
         <div className={`w-2.5 h-2.5 rounded-full ${statusColors[service.status]}`} />
-        <span className="font-medium text-gray-900">{service.name}</span>
+        <span className="font-medium text-szn-text-1">{service.name}</span>
       </div>
       <div className="flex items-center gap-4">
         {service.latency_ms && (
-          <span className="text-sm text-gray-500">{service.latency_ms}ms</span>
+          <span className="text-sm text-szn-text-2">{service.latency_ms}ms</span>
         )}
         <span
           className={`text-sm ${
-            service.status === "operational" ? "text-emerald-600" :
+            service.status === "operational" ? "text-szn-accent" :
             service.status === "degraded" ? "text-yellow-600" : "text-red-600"
           }`}
         >
@@ -386,11 +386,11 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
 
   if (!incidents || incidents.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border">
+      <div className="bg-szn-card rounded-2xl border">
         <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900">Past Incidents</h2>
+          <h2 className="font-semibold text-szn-text-1">Past Incidents</h2>
         </div>
-        <div className="p-8 text-center text-gray-500">
+        <div className="p-8 text-center text-szn-text-2">
           <p>No past incidents to display.</p>
           <p className="text-sm mt-1">All systems have been running smoothly.</p>
         </div>
@@ -426,9 +426,9 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border">
+    <div className="bg-szn-card rounded-2xl border">
       <div className="p-4 border-b">
-        <h2 className="font-semibold text-gray-900">Past Incidents</h2>
+        <h2 className="font-semibold text-szn-text-1">Past Incidents</h2>
       </div>
       <div className="divide-y">
         {incidents.map((incident) => {
@@ -443,12 +443,12 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-gray-900">{incident.title}</h3>
+                      <h3 className="font-medium text-szn-text-1">{incident.title}</h3>
                       <span className={`px-2 py-0.5 text-xs rounded-full ${severityBadge[incident.severity]}`}>
                         {incident.severity}
                       </span>
                     </div>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                    <div className="flex items-center gap-4 mt-1 text-sm text-szn-text-2">
                       <span>{new Date(incident.started_at).toLocaleDateString()}</span>
                       <span>Duration: {formatDuration(incident.started_at, incident.resolved_at)}</span>
                       <span>Affected: {incident.affected_services.join(", ")}</span>
@@ -459,7 +459,7 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
                       {incident.status}
                     </span>
                     <svg
-                      className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      className={`w-5 h-5 text-szn-text-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -472,35 +472,35 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
 
               {/* Expanded Details */}
               {isExpanded && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="mt-4 pt-4 border-t border-szn-border">
                   {/* Impact */}
                   {incident.impact && (
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-1">Impact</h4>
-                      <p className="text-sm text-gray-600">{incident.impact}</p>
+                      <h4 className="text-sm font-medium text-szn-text-1 mb-1">Impact</h4>
+                      <p className="text-sm text-szn-text-2">{incident.impact}</p>
                     </div>
                   )}
 
                   {/* Root Cause */}
                   {incident.root_cause && (
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-1">Root Cause</h4>
-                      <p className="text-sm text-gray-600">{incident.root_cause}</p>
+                      <h4 className="text-sm font-medium text-szn-text-1 mb-1">Root Cause</h4>
+                      <p className="text-sm text-szn-text-2">{incident.root_cause}</p>
                     </div>
                   )}
 
                   {/* Timeline */}
                   {incident.updates && incident.updates.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Timeline</h4>
-                      <div className="relative pl-4 border-l-2 border-gray-200 space-y-3">
+                      <h4 className="text-sm font-medium text-szn-text-1 mb-2">Timeline</h4>
+                      <div className="relative pl-4 border-l-2 border-szn-border space-y-3">
                         {incident.updates.map((update, idx) => (
                           <div key={idx} className="relative">
-                            <div className="absolute -left-[21px] w-3 h-3 bg-white border-2 border-gray-300 rounded-full" />
-                            <div className="text-xs text-gray-500">
+                            <div className="absolute -left-[21px] w-3 h-3 bg-szn-card border-2 border-szn-border rounded-full" />
+                            <div className="text-xs text-szn-text-2">
                               {new Date(update.timestamp).toLocaleString()}
                             </div>
-                            <p className="text-sm text-gray-700 mt-0.5">{update.message}</p>
+                            <p className="text-sm text-szn-text-1 mt-0.5">{update.message}</p>
                           </div>
                         ))}
                       </div>

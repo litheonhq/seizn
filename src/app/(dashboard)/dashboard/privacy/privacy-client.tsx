@@ -188,66 +188,66 @@ export default function PrivacyClient() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-szn-text-1">
           {t("dashboard.privacy.title") || "Privacy & RTBF"}
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-szn-text-2 mt-1">
           {t("dashboard.privacy.subtitle") || "Manage GDPR Right to be Forgotten requests and data subject rights"}
         </p>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⏳</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-szn-text-2">
               {t("dashboard.privacy.stats.pending") || "Pending"}
             </span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+          <p className="text-2xl font-bold text-szn-text-1">{pendingCount}</p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔄</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-szn-text-2">
               {t("dashboard.privacy.stats.inProgress") || "In Progress"}
             </span>
           </div>
           <p className="text-2xl font-bold text-blue-600">{inProgressCount}</p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-szn-text-2">
               {t("dashboard.privacy.stats.completed") || "Completed"}
             </span>
           </div>
-          <p className="text-2xl font-bold text-emerald-600">{completedCount}</p>
+          <p className="text-2xl font-bold text-szn-accent">{completedCount}</p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⚠️</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-szn-text-2">
               {t("dashboard.privacy.stats.overdue") || "Overdue"}
             </span>
           </div>
-          <p className={`text-2xl font-bold ${overdueCount > 0 ? "text-red-600" : "text-gray-900"}`}>
+          <p className={`text-2xl font-bold ${overdueCount > 0 ? "text-red-600" : "text-szn-text-1"}`}>
             {overdueCount}
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               activeTab === tab.id
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-szn-card text-szn-text-1 shadow-sm"
+                : "text-szn-text-2 hover:text-szn-text-1"
             }`}
           >
             <span>{tab.icon}</span>
@@ -259,7 +259,7 @@ export default function PrivacyClient() {
       {/* Content */}
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-szn-accent" />
         </div>
       ) : (
         <>
@@ -298,13 +298,13 @@ function RTBFRequestsTab({
       case "in_progress":
         return "bg-blue-100 text-blue-700";
       case "completed":
-        return "bg-emerald-100 text-emerald-700";
+        return "bg-szn-success/10 text-szn-success";
       case "rejected":
         return "bg-red-100 text-red-700";
       case "expired":
-        return "bg-gray-100 text-gray-700";
+        return "bg-szn-surface text-szn-text-1";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-szn-surface text-szn-text-1";
     }
   };
 
@@ -369,40 +369,40 @@ function RTBFRequestsTab({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-szn-text-2">
           Manage Right to be Forgotten requests under GDPR Article 17
         </p>
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
+          className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
         >
           New Request
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border overflow-hidden">
+      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-szn-bg border-b border-szn-border">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Subject</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Phase</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Due Date</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Scope</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Subject</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Status</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Phase</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Due Date</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Scope</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-szn-border">
             {requests.map((request) => {
               const daysRemaining = getDaysRemaining(request.due_date);
               const isOverdue = daysRemaining < 0 && request.status !== "completed";
 
               return (
-                <tr key={request.id} className="hover:bg-gray-50">
+                <tr key={request.id} className="hover:bg-szn-surface-1">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-gray-900">{request.subject_email}</p>
-                      <p className="text-xs text-gray-500">{request.id}</p>
+                      <p className="font-medium text-szn-text-1">{request.subject_email}</p>
+                      <p className="text-xs text-szn-text-2">{request.id}</p>
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -413,16 +413,16 @@ function RTBFRequestsTab({
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span>{getPhaseIcon(request.phase)}</span>
-                      <span className="text-sm text-gray-700">{request.phase}</span>
+                      <span className="text-sm text-szn-text-1">{request.phase}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div>
-                      <p className={`text-sm ${isOverdue ? "text-red-600 font-medium" : "text-gray-900"}`}>
+                      <p className={`text-sm ${isOverdue ? "text-red-600 font-medium" : "text-szn-text-1"}`}>
                         {new Date(request.due_date).toLocaleDateString()}
                       </p>
                       {request.status !== "completed" && (
-                        <p className={`text-xs ${isOverdue ? "text-red-500" : "text-gray-500"}`}>
+                        <p className={`text-xs ${isOverdue ? "text-red-500" : "text-szn-text-2"}`}>
                           {isOverdue ? `${Math.abs(daysRemaining)} days overdue` : `${daysRemaining} days left`}
                         </p>
                       )}
@@ -431,7 +431,7 @@ function RTBFRequestsTab({
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {request.deletion_scope.map((scope) => (
-                        <span key={scope} className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full">
+                        <span key={scope} className="px-2 py-0.5 bg-szn-surface text-szn-text-1 text-xs rounded-full">
                           {scope}
                         </span>
                       ))}
@@ -448,7 +448,7 @@ function RTBFRequestsTab({
                       {request.status === "completed" && request.phase === "verified" && (
                         <button
                           onClick={() => handleDownloadCertificate(request.id)}
-                          className="text-emerald-600 hover:text-emerald-800 text-sm"
+                          className="text-szn-accent hover:text-szn-accent text-sm"
                         >
                           Certificate
                         </button>
@@ -507,13 +507,13 @@ function RequestDetailModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-szn-card rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">RTBF Request Details</h2>
-            <p className="text-sm text-gray-500 mt-1">{request.id}</p>
+            <h2 className="text-xl font-bold text-szn-text-1">RTBF Request Details</h2>
+            <p className="text-sm text-szn-text-2 mt-1">{request.id}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-szn-text-3 hover:text-szn-text-2">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -527,12 +527,12 @@ function RequestDetailModal({
               <div
                 key={phase}
                 className={`flex flex-col items-center ${
-                  index <= currentPhaseIndex ? "text-emerald-600" : "text-gray-400"
+                  index <= currentPhaseIndex ? "text-szn-accent" : "text-szn-text-3"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                    index <= currentPhaseIndex ? "bg-emerald-100" : "bg-gray-100"
+                    index <= currentPhaseIndex ? "bg-szn-accent/10" : "bg-gray-100"
                   }`}
                 >
                   {index < currentPhaseIndex ? "✓" : index + 1}
@@ -543,7 +543,7 @@ function RequestDetailModal({
           </div>
           <div className="h-2 bg-gray-100 rounded-full">
             <div
-              className="h-full bg-emerald-500 rounded-full transition-all"
+              className="h-full bg-szn-accent rounded-full transition-all"
               style={{ width: `${((currentPhaseIndex + 1) / phases.length) * 100}%` }}
             />
           </div>
@@ -551,31 +551,31 @@ function RequestDetailModal({
 
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-gray-50 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Data Subject</p>
-            <p className="font-medium text-gray-900">{request.subject_email}</p>
+          <div className="bg-szn-surface rounded-lg p-4">
+            <p className="text-sm text-szn-text-2">Data Subject</p>
+            <p className="font-medium text-szn-text-1">{request.subject_email}</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Requested At</p>
-            <p className="font-medium text-gray-900">
+          <div className="bg-szn-surface rounded-lg p-4">
+            <p className="text-sm text-szn-text-2">Requested At</p>
+            <p className="font-medium text-szn-text-1">
               {new Date(request.requested_at).toLocaleString()}
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Due Date</p>
-            <p className="font-medium text-gray-900">
+          <div className="bg-szn-surface rounded-lg p-4">
+            <p className="text-sm text-szn-text-2">Due Date</p>
+            <p className="font-medium text-szn-text-1">
               {new Date(request.due_date).toLocaleString()}
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Status</p>
-            <p className="font-medium text-gray-900 capitalize">{request.status}</p>
+          <div className="bg-szn-surface rounded-lg p-4">
+            <p className="text-sm text-szn-text-2">Status</p>
+            <p className="font-medium text-szn-text-1 capitalize">{request.status}</p>
           </div>
         </div>
 
         {/* Data Categories */}
         <div className="mb-6">
-          <h3 className="font-medium text-gray-900 mb-2">Data Categories</h3>
+          <h3 className="font-medium text-szn-text-1 mb-2">Data Categories</h3>
           <div className="flex flex-wrap gap-2">
             {request.data_categories.map((cat) => (
               <span key={cat} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
@@ -587,10 +587,10 @@ function RequestDetailModal({
 
         {/* Deletion Scope */}
         <div className="mb-6">
-          <h3 className="font-medium text-gray-900 mb-2">Deletion Scope</h3>
+          <h3 className="font-medium text-szn-text-1 mb-2">Deletion Scope</h3>
           <div className="flex flex-wrap gap-2">
             {request.deletion_scope.map((scope) => (
-              <span key={scope} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+              <span key={scope} className="px-3 py-1 bg-szn-surface text-szn-text-1 rounded-full text-sm">
                 {scope}
               </span>
             ))}
@@ -599,15 +599,15 @@ function RequestDetailModal({
 
         {/* Timestamps */}
         {(request.completed_at || request.verified_at) && (
-          <div className="mb-6 p-4 bg-emerald-50 rounded-lg">
-            <h3 className="font-medium text-emerald-800 mb-2">Completion Details</h3>
+          <div className="mb-6 p-4 bg-szn-accent/5 rounded-lg">
+            <h3 className="font-medium text-szn-accent mb-2">Completion Details</h3>
             {request.completed_at && (
-              <p className="text-sm text-emerald-700">
+              <p className="text-sm text-szn-success">
                 Completed: {new Date(request.completed_at).toLocaleString()}
               </p>
             )}
             {request.verified_at && (
-              <p className="text-sm text-emerald-700">
+              <p className="text-sm text-szn-success">
                 Verified: {new Date(request.verified_at).toLocaleString()}
               </p>
             )}
@@ -616,7 +616,7 @@ function RequestDetailModal({
 
         {/* Actions */}
         <div className="flex gap-3">
-          <button onClick={onClose} className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50">
+          <button onClick={onClose} className="flex-1 px-4 py-2 border rounded-lg hover:bg-szn-surface-1">
             Close
           </button>
           {request.status === "completed" && request.phase !== "verified" && (
@@ -635,7 +635,7 @@ function RequestDetailModal({
               onClick={() => {
                 onDownloadCertificate(request.id);
               }}
-              className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
+              className="flex-1 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
             >
               Download Certificate
             </button>
@@ -692,15 +692,15 @@ function NewRequestModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">New RTBF Request</h2>
-        <p className="text-sm text-gray-500 mb-6">
+      <div className="bg-szn-card rounded-2xl max-w-md w-full p-6">
+        <h2 className="text-xl font-bold text-szn-text-1 mb-4">New RTBF Request</h2>
+        <p className="text-sm text-szn-text-2 mb-6">
           Create a new Right to be Forgotten request. The deadline will be set to 30 days from now per GDPR requirements.
         </p>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-szn-text-1 mb-1">
               Data Subject Email
             </label>
             <input
@@ -713,7 +713,7 @@ function NewRequestModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-szn-text-1 mb-2">
               Deletion Scope
             </label>
             <div className="flex flex-wrap gap-2">
@@ -723,8 +723,8 @@ function NewRequestModal({
                   onClick={() => toggleScope(s)}
                   className={`px-3 py-1.5 text-sm rounded-full border ${
                     scope.includes(s)
-                      ? "bg-emerald-500 text-white border-emerald-500"
-                      : "border-gray-300 text-gray-600 hover:border-gray-400"
+                      ? "bg-szn-accent text-white border-szn-accent"
+                      : "border-szn-border text-szn-text-2 hover:border-szn-border/80"
                   }`}
                 >
                   {s}
@@ -738,14 +738,14 @@ function NewRequestModal({
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            className="flex-1 px-4 py-2 border rounded-lg hover:bg-szn-surface-1 disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!email || scope.length === 0 || isSubmitting}
-            className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
           >
             {isSubmitting ? "Creating..." : "Create Request"}
           </button>
@@ -758,36 +758,36 @@ function NewRequestModal({
 function DataSubjectsTab({ subjects }: { subjects: DataSubject[] }) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-szn-text-2">
         View and manage data subjects who have interacted with your system
       </p>
 
-      <div className="bg-white rounded-2xl border overflow-hidden">
+      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-szn-bg border-b border-szn-border">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Email</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">External ID</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Requests</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Data Categories</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Email</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">External ID</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Requests</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Data Categories</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-szn-border">
             {subjects.map((subject) => (
-              <tr key={subject.id} className="hover:bg-gray-50">
+              <tr key={subject.id} className="hover:bg-szn-surface-1">
                 <td className="px-4 py-3">
-                  <span className="font-medium text-gray-900">{subject.email}</span>
+                  <span className="font-medium text-szn-text-1">{subject.email}</span>
                 </td>
                 <td className="px-4 py-3">
                   {subject.external_id ? (
                     <code className="px-2 py-0.5 bg-gray-100 rounded text-sm">{subject.external_id}</code>
                   ) : (
-                    <span className="text-gray-400">-</span>
+                    <span className="text-szn-text-3">-</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-gray-900">{subject.request_count}</span>
+                  <span className="text-szn-text-1">{subject.request_count}</span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
@@ -825,52 +825,52 @@ function CertificatesTab({ certificates }: { certificates: DeletionCertificate[]
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-szn-text-2">
         Cryptographic proof of data deletion for compliance audits
       </p>
 
       {certificates.length === 0 ? (
-        <div className="bg-white rounded-2xl border p-12 text-center">
+        <div className="bg-szn-card rounded-2xl border border-szn-border p-12 text-center">
           <span className="text-4xl mb-4 block">📜</span>
-          <h3 className="font-medium text-gray-900 mb-2">No Certificates Yet</h3>
-          <p className="text-gray-500 text-sm">
+          <h3 className="font-medium text-szn-text-1 mb-2">No Certificates Yet</h3>
+          <p className="text-szn-text-2 text-sm">
             Certificates are generated when RTBF requests are verified
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           {certificates.map((cert) => (
-            <div key={cert.id} className="bg-white rounded-xl border p-4">
+            <div key={cert.id} className="bg-szn-card rounded-xl border border-szn-border p-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-szn-accent/10 rounded-lg flex items-center justify-center">
                     <span className="text-xl">📜</span>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{cert.subject_email}</h3>
-                    <p className="text-sm text-gray-500">Request: {cert.request_id}</p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <h3 className="font-medium text-szn-text-1">{cert.subject_email}</h3>
+                    <p className="text-sm text-szn-text-2">Request: {cert.request_id}</p>
+                    <p className="text-xs text-szn-text-3 mt-1">
                       Issued: {new Date(cert.issued_at).toLocaleString()}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   {cert.gdpr_compliant && (
-                    <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-szn-success/10 text-szn-success text-xs rounded-full">
                       GDPR Compliant
                     </span>
                   )}
                   <button
                     onClick={() => handleDownload(cert)}
-                    className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+                    className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-surface-1"
                   >
                     Download
                   </button>
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 mb-1">Certificate Hash</p>
-                <code className="text-sm text-gray-700 break-all">{cert.hash}</code>
+              <div className="mt-4 p-3 bg-szn-surface rounded-lg">
+                <p className="text-xs text-szn-text-2 mb-1">Certificate Hash</p>
+                <code className="text-sm text-szn-text-1 break-all">{cert.hash}</code>
               </div>
             </div>
           ))}
@@ -903,23 +903,23 @@ function SettingsTab({
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-szn-text-2">
         Configure RTBF processing and compliance settings
       </p>
 
-      <div className="bg-white rounded-2xl border p-6 space-y-6">
+      <div className="bg-szn-card rounded-2xl border border-szn-border p-6 space-y-6">
         {/* Auto Discovery */}
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium text-gray-900">Auto Discovery</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="font-medium text-szn-text-1">Auto Discovery</h3>
+            <p className="text-sm text-szn-text-2">
               Automatically discover all data associated with a subject
             </p>
           </div>
           <button
             onClick={() => setLocalSettings({ ...localSettings, auto_discovery: !localSettings.auto_discovery })}
             className={`w-12 h-6 rounded-full transition-colors ${
-              localSettings.auto_discovery ? "bg-emerald-500" : "bg-gray-200"
+              localSettings.auto_discovery ? "bg-szn-accent" : "bg-gray-200"
             }`}
           >
             <div
@@ -933,15 +933,15 @@ function SettingsTab({
         {/* Verification Required */}
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium text-gray-900">Verification Required</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="font-medium text-szn-text-1">Verification Required</h3>
+            <p className="text-sm text-szn-text-2">
               Require verification before issuing deletion certificates
             </p>
           </div>
           <button
             onClick={() => setLocalSettings({ ...localSettings, verification_required: !localSettings.verification_required })}
             className={`w-12 h-6 rounded-full transition-colors ${
-              localSettings.verification_required ? "bg-emerald-500" : "bg-gray-200"
+              localSettings.verification_required ? "bg-szn-accent" : "bg-gray-200"
             }`}
           >
             <div
@@ -954,10 +954,10 @@ function SettingsTab({
 
         {/* Response Deadline */}
         <div>
-          <label className="block font-medium text-gray-900 mb-1">
+          <label className="block font-medium text-szn-text-1 mb-1">
             Response Deadline (Days)
           </label>
-          <p className="text-sm text-gray-500 mb-2">
+          <p className="text-sm text-szn-text-2 mb-2">
             GDPR requires response within 30 days (extendable to 90 for complex requests)
           </p>
           <input
@@ -972,10 +972,10 @@ function SettingsTab({
 
         {/* Notification Email */}
         <div>
-          <label className="block font-medium text-gray-900 mb-1">
+          <label className="block font-medium text-szn-text-1 mb-1">
             Notification Email
           </label>
-          <p className="text-sm text-gray-500 mb-2">
+          <p className="text-sm text-szn-text-2 mb-2">
             Email address for RTBF request notifications
           </p>
           <input
@@ -988,10 +988,10 @@ function SettingsTab({
 
         {/* Audit Retention */}
         <div>
-          <label className="block font-medium text-gray-900 mb-1">
+          <label className="block font-medium text-szn-text-1 mb-1">
             Audit Log Retention (Days)
           </label>
-          <p className="text-sm text-gray-500 mb-2">
+          <p className="text-sm text-szn-text-2 mb-2">
             How long to retain audit logs for compliance purposes
           </p>
           <input
@@ -1002,7 +1002,7 @@ function SettingsTab({
             max={3650}
             className="w-32 px-3 py-2 border rounded-lg"
           />
-          <span className="text-sm text-gray-500 ml-2">
+          <span className="text-sm text-szn-text-2 ml-2">
             (~{Math.round(localSettings.audit_retention_days / 365)} years)
           </span>
         </div>
@@ -1012,7 +1012,7 @@ function SettingsTab({
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+          className="px-6 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
         >
           {isSaving ? "Saving..." : "Save Settings"}
         </button>

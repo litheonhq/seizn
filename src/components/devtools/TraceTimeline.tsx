@@ -29,7 +29,7 @@ export interface TraceTimelineProps {
 const STAGE_COLORS: Record<string, { bg: string; border: string; text: string }> = {
   embedding: { bg: "bg-blue-500/20", border: "border-blue-500", text: "text-blue-400" },
   vector_search: { bg: "bg-green-500/20", border: "border-green-500", text: "text-green-400" },
-  keyword_search: { bg: "bg-teal-500/20", border: "border-teal-500", text: "text-teal-400" },
+  keyword_search: { bg: "bg-szn-accent/20", border: "border-szn-accent", text: "text-szn-accent" },
   rerank: { bg: "bg-purple-500/20", border: "border-purple-500", text: "text-purple-400" },
   llm_generation: { bg: "bg-orange-500/20", border: "border-orange-500", text: "text-orange-400" },
   postprocess: { bg: "bg-gray-500/20", border: "border-gray-500", text: "text-gray-400" },
@@ -108,7 +108,7 @@ export function TraceTimeline({
   if (stages.length === 0) {
     return (
       <div className={`bg-gray-900 rounded-lg border border-gray-800 p-6 ${className}`}>
-        <p className="text-center text-gray-500">No timeline data available</p>
+        <p className="text-center text-szn-text-2">No timeline data available</p>
       </div>
     );
   }
@@ -119,7 +119,7 @@ export function TraceTimeline({
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white">Pipeline Timeline</h3>
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-szn-text-3">
             Total: {formatDuration(totalDurationMs)}
           </span>
         </div>
@@ -132,7 +132,7 @@ export function TraceTimeline({
           {timeMarkers.map((ms) => (
             <div
               key={ms}
-              className="absolute transform -translate-x-1/2 text-xs text-gray-500"
+              className="absolute transform -translate-x-1/2 text-xs text-szn-text-2"
               style={{ left: `${(ms / totalDurationMs) * 100}%` }}
             >
               {formatDuration(ms)}
@@ -179,7 +179,7 @@ export function TraceTimeline({
 
       {/* Stage Details */}
       <div className="p-4 border-t border-gray-800">
-        <h4 className="text-sm font-medium text-gray-400 mb-3">Stage Breakdown</h4>
+        <h4 className="text-sm font-medium text-szn-text-3 mb-3">Stage Breakdown</h4>
         <div className="space-y-2">
           {stagesWithPosition.map((stage, index) => {
             const colors = STAGE_COLORS[stage.name] || STAGE_COLORS.default;
@@ -211,7 +211,7 @@ export function TraceTimeline({
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-szn-text-2">
                     Started at {formatDuration(stage.start_offset_ms)}
                   </span>
                 </div>
@@ -220,7 +220,7 @@ export function TraceTimeline({
                 <div className="w-32">
                   <div className="flex items-center justify-between text-xs mb-1">
                     <span className={colors.text}>{formatDuration(stage.duration_ms)}</span>
-                    <span className="text-gray-500">{stage.widthPercent.toFixed(1)}%</span>
+                    <span className="text-szn-text-2">{stage.widthPercent.toFixed(1)}%</span>
                   </div>
                   <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
                     <div
@@ -237,14 +237,14 @@ export function TraceTimeline({
 
       {/* Waterfall Legend */}
       <div className="p-4 border-t border-gray-800">
-        <h4 className="text-sm font-medium text-gray-400 mb-3">Legend</h4>
+        <h4 className="text-sm font-medium text-szn-text-3 mb-3">Legend</h4>
         <div className="flex flex-wrap gap-3">
           {Object.entries(STAGE_COLORS)
             .filter(([key]) => key !== "default")
             .map(([name, colors]) => (
               <div key={name} className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded ${colors.bg} ${colors.border} border`} />
-                <span className="text-xs text-gray-500 capitalize">
+                <span className="text-xs text-szn-text-2 capitalize">
                   {name.replace(/_/g, " ")}
                 </span>
               </div>

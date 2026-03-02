@@ -129,9 +129,9 @@ export default function DeviceForm() {
     <div className="min-h-screen gradient-hero relative overflow-hidden flex items-center justify-center p-4">
       {/* Decorative */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
-        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-teal-200/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s" }} />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-szn-accent/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-40 right-20 w-96 h-96 bg-szn-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
+        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-szn-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s" }} />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -145,22 +145,22 @@ export default function DeviceForm() {
               Seizn
             </span>
           </Link>
-          <p className="text-gray-500 mt-3">Authorize Device</p>
+          <p className="text-szn-text-2 mt-3">Authorize Device</p>
         </div>
 
         {/* Card */}
-        <div className="glass-card-premium rounded-3xl p-8 shadow-xl">
+        <div className="szn-card rounded-3xl p-8 shadow-xl">
           {/* Step: Input user code */}
           {step === "input" && (
             <>
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-16 h-16 bg-szn-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-szn-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Enter Device Code</h2>
-                <p className="text-gray-500 text-sm">
+                <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Enter Device Code</h2>
+                <p className="text-szn-text-2 text-sm">
                   Enter the code shown in your terminal or editor to authorize access to your Seizn account.
                 </p>
               </div>
@@ -191,7 +191,7 @@ export default function DeviceForm() {
                 <button
                   type="submit"
                   disabled={isLoading || userCode.length < 9}
-                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
+                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -210,7 +210,7 @@ export default function DeviceForm() {
               </form>
 
               {isAuthenticated === false && (
-                <p className="mt-4 text-center text-gray-400 text-xs">
+                <p className="mt-4 text-center text-szn-text-3 text-xs">
                   You&apos;ll be asked to sign in first.
                 </p>
               )}
@@ -225,28 +225,28 @@ export default function DeviceForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Confirm Device Access</h2>
-              <p className="text-gray-500 text-sm mb-2">
+              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Confirm Device Access</h2>
+              <p className="text-szn-text-2 text-sm mb-2">
                 A device or application is requesting access to your Seizn account.
               </p>
-              <div className="inline-block px-4 py-2 bg-gray-100 rounded-lg font-mono text-lg tracking-widest mb-6">
+              <div className="inline-block px-4 py-2 bg-szn-surface rounded-lg font-mono text-lg tracking-widest mb-6">
                 {userCode}
               </div>
-              <p className="text-gray-400 text-xs mb-6">
+              <p className="text-szn-text-3 text-xs mb-6">
                 Only approve if you initiated this request from your terminal or editor.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={handleDeny}
                   disabled={isLoading}
-                  className="flex-1 py-3 border border-gray-200 rounded-xl text-gray-600 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 border border-szn-border rounded-xl text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors disabled:opacity-50"
                 >
                   Deny
                 </button>
                 <button
                   onClick={handleApprove}
                   disabled={isLoading}
-                  className="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+                  className="flex-1 py-3 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                 >
                   {isLoading ? "Approving..." : "Approve"}
                 </button>
@@ -257,18 +257,18 @@ export default function DeviceForm() {
           {/* Step: Approved */}
           {step === "approved" && (
             <div className="text-center">
-              <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-16 h-16 bg-szn-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-szn-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Device Authorized</h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Device Authorized</h2>
+              <p className="text-szn-text-2 text-sm mb-6">
                 Your device has been authorized. You can close this window and return to your terminal or editor.
               </p>
               <Link
                 href="/dashboard"
-                className="text-emerald-600 hover:text-emerald-500 font-medium text-sm transition-colors"
+                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
               >
                 Go to Dashboard
               </Link>
@@ -283,13 +283,13 @@ export default function DeviceForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Access Denied</h2>
+              <p className="text-szn-text-2 text-sm mb-6">
                 The device request has been denied. If you didn&apos;t initiate this, your account is safe.
               </p>
               <button
                 onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="text-emerald-600 hover:text-emerald-500 font-medium text-sm transition-colors"
+                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
               >
                 Try Another Code
               </button>
@@ -299,18 +299,18 @@ export default function DeviceForm() {
           {/* Step: Expired */}
           {step === "expired" && (
             <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-16 h-16 bg-szn-surface rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-szn-text-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Code Expired</h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Code Expired</h2>
+              <p className="text-szn-text-2 text-sm mb-6">
                 This code has expired. Please generate a new code from your terminal or editor.
               </p>
               <button
                 onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="text-emerald-600 hover:text-emerald-500 font-medium text-sm transition-colors"
+                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
               >
                 Enter New Code
               </button>
@@ -325,11 +325,11 @@ export default function DeviceForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Something Went Wrong</h2>
-              <p className="text-gray-500 text-sm mb-6">{errorMsg || "An unexpected error occurred."}</p>
+              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Something Went Wrong</h2>
+              <p className="text-szn-text-2 text-sm mb-6">{errorMsg || "An unexpected error occurred."}</p>
               <button
                 onClick={() => { setStep("input"); setErrorMsg(null); }}
-                className="text-emerald-600 hover:text-emerald-500 font-medium text-sm transition-colors"
+                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
               >
                 Try Again
               </button>
@@ -339,7 +339,7 @@ export default function DeviceForm() {
 
         {/* Back to home */}
         <p className="mt-6 text-center">
-          <Link href="/" className="text-gray-400 hover:text-gray-600 text-sm flex items-center justify-center gap-1 transition-colors">
+          <Link href="/" className="text-szn-text-3 hover:text-szn-text-1 text-sm flex items-center justify-center gap-1 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

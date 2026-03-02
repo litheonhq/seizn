@@ -67,7 +67,7 @@ export function RelayRequestLog({
     return (
       <div className="animate-pulse space-y-2">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-12 bg-gray-100 dark:bg-gray-800 rounded" />
+          <div key={i} className="h-12 bg-szn-surface rounded" />
         ))}
       </div>
     );
@@ -83,7 +83,7 @@ export function RelayRequestLog({
 
   if (requests.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+      <div className="text-center py-8 text-szn-text-2">
         <svg
           className="mx-auto h-12 w-12 text-gray-400"
           fill="none"
@@ -104,54 +104,54 @@ export function RelayRequestLog({
   }
 
   return (
-    <div className="overflow-hidden border border-gray-200 dark:border-gray-700 rounded-lg">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-800">
+    <div className="overflow-hidden border border-szn-border rounded-lg">
+      <table className="min-w-full divide-y divide-szn-border">
+        <thead className="bg-szn-surface">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Request ID
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Collection
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Status
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Results
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Latency
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
               Time
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody className="bg-szn-bg divide-y divide-szn-border">
           {requests.map((request) => (
             <tr
               key={request.id}
-              className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="hover:bg-szn-surface-1 transition-colors"
             >
               <td className="px-4 py-3 whitespace-nowrap">
-                <code className="text-xs text-gray-600 dark:text-gray-400 font-mono">
+                <code className="text-xs text-szn-text-2 font-mono">
                   {request.requestId.substring(0, 16)}...
                 </code>
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-1">
                 {request.collectionId || '-'}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <RequestStatusBadge status={request.status} />
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
                 {request.resultCount ?? '-'}
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
                 {request.latencyMs ? `${Math.round(request.latencyMs)}ms` : '-'}
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
                 {formatTime(request.createdAt)}
               </td>
             </tr>

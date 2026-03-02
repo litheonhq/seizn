@@ -50,7 +50,7 @@ function getTypeColor(type: string) {
     case "experience": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
     case "relationship": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
     case "instruction": return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300";
-    default: return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300";
+    default: return "bg-szn-surface text-szn-text-2";
   }
 }
 
@@ -67,18 +67,18 @@ function formatDate(dateStr: string) {
 
 export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemoryCardProps) {
   return (
-    <div className="glass-card rounded-2xl p-4 hover:border-teal-200 dark:hover:border-teal-700/50 transition-colors">
+    <div className="szn-card rounded-2xl p-4 hover:border-szn-accent/50 transition-colors">
       <div className="flex items-start gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <LockIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <div className="w-10 h-10 rounded-xl bg-szn-surface flex items-center justify-center">
+              <LockIcon className="w-5 h-5 text-szn-text-2" />
             </div>
             <div className="min-w-0">
-              <p className="text-gray-900 dark:text-gray-100 font-medium">
+              <p className="text-szn-text-1 font-medium">
                 This memory is encrypted
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-szn-text-2">
                 Enter your PIN to decrypt and view its contents.
               </p>
             </div>
@@ -87,7 +87,7 @@ export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemo
           <button
             type="button"
             onClick={onUnlockRequest}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-medium hover:from-teal-600 hover:to-cyan-600 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white text-sm font-medium hover:from-szn-accent hover:to-szn-accent transition-colors"
           >
             <LockIcon className="w-4 h-4" />
             Unlock
@@ -101,25 +101,25 @@ export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemo
 
             {memory.tags && memory.tags.length > 0 && (
               <div className="flex items-center gap-1">
-                <TagIcon className="w-3 h-3 text-gray-400 dark:text-gray-500" />
+                <TagIcon className="w-3 h-3 text-szn-text-3" />
                 {memory.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="text-gray-500 dark:text-gray-400">
+                  <span key={tag} className="text-szn-text-2">
                     {tag}
                   </span>
                 ))}
                 {memory.tags.length > 3 && (
-                  <span className="text-gray-400 dark:text-gray-500">+{memory.tags.length - 3}</span>
+                  <span className="text-szn-text-3">+{memory.tags.length - 3}</span>
                 )}
               </div>
             )}
 
-            <span className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
+            <span className="flex items-center gap-1 text-szn-text-3">
               <CalendarIcon className="w-3 h-3" />
               {formatDate(memory.created_at)}
             </span>
 
             {memory.similarity !== undefined && memory.similarity > 0 && (
-              <span className="text-teal-600 dark:text-teal-400">
+              <span className="text-szn-accent">
                 {(memory.similarity * 100).toFixed(1)}% match
               </span>
             )}
