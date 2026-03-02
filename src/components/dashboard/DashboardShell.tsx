@@ -144,7 +144,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
 
         {/* Navigation - Grouped */}
-        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-thin">
+        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-hidden">
           {isSidebarExpanded ? (
             <ExpandedNav
               groups={navigationGroups}
@@ -347,7 +347,7 @@ function CollapsedNav({
   onExpand: () => void;
 }) {
   return (
-    <div className="space-y-1 pt-1">
+    <div className="space-y-0.5 pt-1">
       {items.map((item) => {
         const active = isActive(item.href);
         const handleClick = (e: React.MouseEvent) => {
@@ -360,7 +360,7 @@ function CollapsedNav({
             href={item.href}
             title={item.label}
             onClick={handleClick}
-            className={`group relative flex items-center justify-center p-2.5 rounded-xl transition-all duration-200 ${
+            className={`group relative flex items-center justify-center w-full h-10 rounded-xl transition-all duration-200 ${
               active
                 ? "bg-szn-surface-2"
                 : "text-szn-text-2 hover:bg-szn-surface-1"
@@ -370,7 +370,7 @@ function CollapsedNav({
               <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-szn-accent" />
             )}
             <item.icon
-              className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-200 ${
+              className={`w-5 h-5 flex-shrink-0 transition-colors duration-200 ${
                 active
                   ? "text-szn-accent"
                   : "text-szn-text-3 group-hover:text-szn-text-2"
