@@ -123,7 +123,7 @@ export function PlanList({
       <div className={`p-4 ${className}`}>
         <div className="animate-pulse space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded" />
+            <div key={i} className="h-16 bg-szn-surface rounded" />
           ))}
         </div>
       </div>
@@ -153,13 +153,13 @@ export function PlanList({
     <div className={`space-y-4 ${className}`}>
       {/* User Plans */}
       <div>
-        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+        <h3 className="text-sm font-medium text-szn-text-2 mb-2">
           Custom Plans ({plans.length})
         </h3>
 
         {!hasPlans ? (
-          <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <p className="text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 bg-szn-surface rounded-lg">
+            <p className="text-szn-text-2">
               No custom plans yet. Create one to optimize retrieval for your use case.
             </p>
           </div>
@@ -183,7 +183,7 @@ export function PlanList({
       {/* Default Plans */}
       {showDefaults && hasDefaults && (
         <div>
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+          <h3 className="text-sm font-medium text-szn-text-2 mb-2">
             System Defaults ({defaults.length})
           </h3>
 
@@ -230,7 +230,7 @@ function PlanCard({
         relative p-4 rounded-lg border transition-all cursor-pointer
         ${isSelected
           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-          : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+          : "border-szn-border hover:border-gray-300 dark:hover:border-gray-600"
         }
         ${!plan.isActive ? "opacity-60" : ""}
       `}
@@ -239,7 +239,7 @@ function PlanCard({
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="font-medium text-gray-900 dark:text-white truncate">
+            <h4 className="font-medium text-szn-text-1 truncate">
               {plan.planName}
             </h4>
             {plan.isLearned && (
@@ -248,20 +248,20 @@ function PlanCard({
               </span>
             )}
             {!plan.isActive && (
-              <span className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 rounded">
+              <span className="px-2 py-0.5 text-xs bg-szn-surface text-gray-500 rounded">
                 Inactive
               </span>
             )}
           </div>
 
-          <div className="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-1 flex items-center gap-4 text-sm text-szn-text-2">
             {plan.queryIntents && plan.queryIntents.length > 0 && (
               <span>Intents: {plan.queryIntents.join(", ")}</span>
             )}
             <span>Priority: {plan.priority}</span>
           </div>
 
-          <div className="mt-2 flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+          <div className="mt-2 flex items-center gap-4 text-xs text-szn-text-3">
             <span>Uses: {plan.usageCount}</span>
             <span>Success: {(plan.successRate * 100).toFixed(0)}%</span>
             {plan.avgLatencyMs > 0 && (
@@ -339,7 +339,7 @@ function DefaultPlanCard({ plan, isSelected, onClick }: DefaultPlanCardProps) {
         p-3 rounded-lg border transition-all cursor-pointer
         ${isSelected
           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-          : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+          : "border-szn-border hover:border-gray-300 dark:hover:border-gray-600"
         }
       `}
       onClick={onClick}
@@ -347,15 +347,15 @@ function DefaultPlanCard({ plan, isSelected, onClick }: DefaultPlanCardProps) {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300">
+            <h4 className="font-medium text-szn-text-2">
               {plan.planName}
             </h4>
-            <span className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 rounded">
+            <span className="px-2 py-0.5 text-xs bg-szn-surface text-gray-500 rounded">
               System
             </span>
           </div>
           {plan.description && (
-            <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-0.5 text-sm text-szn-text-2">
               {plan.description}
             </p>
           )}
@@ -363,12 +363,12 @@ function DefaultPlanCard({ plan, isSelected, onClick }: DefaultPlanCardProps) {
 
         <div className="flex gap-2 text-xs">
           {plan.queryIntents && plan.queryIntents.length > 0 && (
-            <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+            <span className="px-2 py-1 bg-szn-surface text-szn-text-2 rounded">
               {plan.queryIntents.join(", ")}
             </span>
           )}
           {plan.complexity && (
-            <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+            <span className="px-2 py-1 bg-szn-surface text-szn-text-2 rounded">
               {plan.complexity}
             </span>
           )}
@@ -384,7 +384,7 @@ function DefaultPlanCard({ plan, isSelected, onClick }: DefaultPlanCardProps) {
 
 function ConfigBadge({ label, value }: { label: string; value: string | number }) {
   return (
-    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+    <span className="px-2 py-1 bg-szn-surface text-szn-text-2 rounded">
       {label}: {value}
     </span>
   );

@@ -148,7 +148,7 @@ export default function BudgetPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
+        <RefreshCw className="w-8 h-8 animate-spin text-szn-text-3" />
       </div>
     );
   }
@@ -168,13 +168,13 @@ export default function BudgetPage() {
             <CreditCard className="w-6 h-6" />
             Budget Management
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-szn-text-2 text-sm mt-1">
             Monitor spending and configure budget limits
           </p>
         </div>
         <button
           onClick={fetchData}
-          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-200"
+          className="px-4 py-2 bg-szn-surface text-szn-text-1 rounded-lg flex items-center gap-2 hover:bg-szn-surface-1"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh
@@ -221,7 +221,7 @@ export default function BudgetPage() {
 
       {/* Budget Progress */}
       {budget?.budgetLimit && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Budget Usage</h2>
             <span className={`text-sm font-medium ${
@@ -233,14 +233,14 @@ export default function BudgetPage() {
             </span>
           </div>
 
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-4">
+          <div className="w-full bg-szn-surface rounded-full h-4 mb-4">
             <div
               className={`h-4 rounded-full transition-all ${progressColor}`}
               style={{ width: `${Math.min(spendPercent, 100)}%` }}
             />
           </div>
 
-          <div className="flex justify-between text-sm text-gray-500">
+          <div className="flex justify-between text-sm text-szn-text-2">
             <span>$0</span>
             <span className="flex items-center gap-1">
               Alert threshold: {budget.alertThreshold}%
@@ -255,7 +255,7 @@ export default function BudgetPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Budget Settings */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Settings className="w-5 h-5" />
             Budget Settings
@@ -263,26 +263,26 @@ export default function BudgetPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-szn-text-2 mb-2">
                 Monthly Budget Limit ($)
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-szn-text-3" />
                 <input
                   type="number"
                   value={budgetLimit}
                   onChange={(e) => setBudgetLimit(e.target.value)}
                   placeholder="Enter monthly limit"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-szn-border rounded-lg bg-szn-card focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-szn-text-2 mt-1">
                 Leave empty to disable budget tracking
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-szn-text-2 mb-2">
                 Alert Threshold (%)
               </label>
               <div className="relative">
@@ -294,13 +294,13 @@ export default function BudgetPage() {
                   onChange={(e) => setAlertThreshold(e.target.value)}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="flex justify-between text-xs text-szn-text-2 mt-1">
                   <span>50%</span>
                   <span className="font-medium">{alertThreshold}%</span>
                   <span>100%</span>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-szn-text-2 mt-1">
                 Receive alerts when spending reaches this percentage
               </p>
             </div>
@@ -321,14 +321,14 @@ export default function BudgetPage() {
         </div>
 
         {/* Cost Alerts */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Bell className="w-5 h-5" />
             Cost Alerts
           </h2>
 
           {alerts.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-szn-text-2">
               <Check className="w-12 h-12 mx-auto mb-2 text-green-500" />
               <p>No cost alerts</p>
               <p className="text-sm">Your spending is within normal limits</p>
@@ -345,7 +345,7 @@ export default function BudgetPage() {
 
       {/* Spending Breakdown */}
       {costs && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Zap className="w-5 h-5" />
             Spending Breakdown by Model
@@ -354,32 +354,32 @@ export default function BudgetPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Model</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Provider</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">Requests</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">Total Cost</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">Avg/Request</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">% of Total</th>
+                <tr className="border-b border-szn-border">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-szn-text-2">Model</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-szn-text-2">Provider</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Requests</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Total Cost</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Avg/Request</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">% of Total</th>
                 </tr>
               </thead>
               <tbody>
                 {costs.byModel.map((model) => (
-                  <tr key={model.model} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750">
+                  <tr key={model.model} className="border-b border-szn-border hover:bg-szn-surface-1">
                     <td className="py-3 px-4 text-sm font-medium">{model.model}</td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{model.provider}</td>
+                    <td className="py-3 px-4 text-sm text-szn-text-2">{model.provider}</td>
                     <td className="py-3 px-4 text-sm text-right">{model.requestCount.toLocaleString()}</td>
                     <td className="py-3 px-4 text-sm text-right font-medium">${model.totalCost.toFixed(4)}</td>
-                    <td className="py-3 px-4 text-sm text-right text-gray-500">${model.avgCostPerRequest.toFixed(6)}</td>
+                    <td className="py-3 px-4 text-sm text-right text-szn-text-2">${model.avgCostPerRequest.toFixed(6)}</td>
                     <td className="py-3 px-4 text-sm text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                        <div className="w-16 bg-szn-surface rounded-full h-2">
                           <div
                             className="bg-blue-500 h-2 rounded-full"
                             style={{ width: `${(model.totalCost / costs.totalCost) * 100}%` }}
                           />
                         </div>
-                        <span className="text-gray-500">
+                        <span className="text-szn-text-2">
                           {((model.totalCost / costs.totalCost) * 100).toFixed(1)}%
                         </span>
                       </div>
@@ -388,7 +388,7 @@ export default function BudgetPage() {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="bg-gray-50 dark:bg-gray-750">
+                <tr className="bg-szn-bg">
                   <td colSpan={2} className="py-3 px-4 text-sm font-semibold">Total</td>
                   <td className="py-3 px-4 text-sm text-right font-semibold">{costs.totalRequests.toLocaleString()}</td>
                   <td className="py-3 px-4 text-sm text-right font-semibold">${costs.totalCost.toFixed(4)}</td>
@@ -402,7 +402,7 @@ export default function BudgetPage() {
 
       {/* Daily Spending Chart */}
       {costs?.byDay && costs.byDay.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5" />
             Daily Spending Trend
@@ -434,12 +434,12 @@ function BudgetCard({
   isWarning?: boolean;
 }) {
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl border p-4 ${
-      isWarning ? 'border-yellow-300 dark:border-yellow-600' : 'border-gray-200 dark:border-gray-700'
+    <div className={`bg-szn-card rounded-xl border p-4 ${
+      isWarning ? 'border-yellow-300 dark:border-yellow-600' : 'border-szn-border'
     }`}>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-500">{title}</span>
-        <Icon className={`w-5 h-5 ${isWarning ? 'text-yellow-500' : 'text-gray-400'}`} />
+        <span className="text-sm text-szn-text-2">{title}</span>
+        <Icon className={`w-5 h-5 ${isWarning ? 'text-yellow-500' : 'text-szn-text-3'}`} />
       </div>
       <div className="flex items-baseline gap-2">
         <span className={`text-2xl font-bold ${isWarning ? 'text-yellow-600' : ''}`}>
@@ -454,7 +454,7 @@ function BudgetCard({
           </span>
         )}
       </div>
-      <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+      <p className="text-xs text-szn-text-2 mt-1">{subtitle}</p>
     </div>
   );
 }
@@ -518,7 +518,7 @@ function SpendingChart({ data }: { data: DailyCost[] }) {
                 {day.requestCount} requests
               </div>
             </div>
-            <span className="text-xs text-gray-500 mt-2 transform -rotate-45 origin-top-left">
+            <span className="text-xs text-szn-text-2 mt-2 transform -rotate-45 origin-top-left">
               {dayLabel}
             </span>
           </div>

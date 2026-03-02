@@ -161,37 +161,37 @@ export function PlaygroundClient() {
 
       {/* Header */}
       <header>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-szn-text-1 mb-2">
           {t("dashboard.playground.title")}
         </h1>
-        <p className="text-gray-500">
+        <p className="text-szn-text-2">
           {t("dashboard.playground.subtitle")}
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Query Builder */}
-        <div className="glass-card border border-gray-200 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="szn-card border border-szn-border rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
             {t("dashboard.playground.queryBuilder")}
           </h2>
 
           {/* Query Input */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-szn-text-1 mb-1">
               {t("dashboard.playground.query")}
             </label>
             <textarea
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("dashboard.playground.queryPlaceholder")}
-              className="w-full h-24 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+              className="w-full h-24 px-4 py-3 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent resize-none"
             />
           </div>
 
           {/* Namespace */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-szn-text-1 mb-1">
               {t("dashboard.playground.namespace")}
             </label>
             <input
@@ -199,7 +199,7 @@ export function PlaygroundClient() {
               value={namespace}
               onChange={(e) => setNamespace(e.target.value)}
               placeholder="default"
-              className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
             />
           </div>
 
@@ -207,7 +207,7 @@ export function PlaygroundClient() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             {/* Top K */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-szn-text-1 mb-1">
                 Top K
               </label>
               <input
@@ -216,13 +216,13 @@ export function PlaygroundClient() {
                 max={100}
                 value={topK}
                 onChange={(e) => setTopK(Math.max(1, Math.min(100, parseInt(e.target.value) || 5)))}
-                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
               />
             </div>
 
             {/* Threshold */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-szn-text-1 mb-1">
                 {t("dashboard.playground.threshold")}
               </label>
               <input
@@ -232,14 +232,14 @@ export function PlaygroundClient() {
                 step={0.05}
                 value={threshold}
                 onChange={(e) => setThreshold(Math.max(0, Math.min(1, parseFloat(e.target.value) || 0.7)))}
-                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
               />
             </div>
           </div>
 
           {/* Search Mode */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-szn-text-1 mb-2">
               {t("dashboard.playground.searchMode")}
             </label>
             <div className="flex gap-2">
@@ -249,8 +249,8 @@ export function PlaygroundClient() {
                   onClick={() => setMode(m)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     mode === m
-                      ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white"
+                      : "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
                   }`}
                 >
                   {t(`dashboard.playground.mode.${m}`)}
@@ -266,13 +266,13 @@ export function PlaygroundClient() {
                 type="checkbox"
                 checked={enableRerank}
                 onChange={(e) => setEnableRerank(e.target.checked)}
-                className="w-5 h-5 rounded border-gray-300 text-teal-500 focus:ring-teal-500"
+                className="w-5 h-5 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
               />
               <div>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-szn-text-1">
                   {t("dashboard.playground.enableRerank")}
                 </span>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-szn-text-2">
                   {t("dashboard.playground.rerankDesc")}
                 </p>
               </div>
@@ -284,7 +284,7 @@ export function PlaygroundClient() {
             onClick={runQuery}
             disabled={isLoading || !query.trim()}
             data-action="run-query"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold hover:from-teal-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold hover:from-szn-accent/90 hover:to-szn-accent-2/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -301,22 +301,22 @@ export function PlaygroundClient() {
         </div>
 
         {/* Right Panel - Results & Trace */}
-        <div className="glass-card border border-gray-200 rounded-2xl overflow-hidden">
+        <div className="szn-card border border-szn-border rounded-2xl overflow-hidden">
           {/* Tabs */}
-          <div className="flex border-b border-gray-200">
+          <div className="flex border-b border-szn-border">
             {(["results", "trace", "cost"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? "bg-white text-gray-900 border-b-2 border-teal-500"
-                    : "bg-gray-50 text-gray-500 hover:text-gray-700"
+                    ? "bg-szn-card text-szn-text-1 border-b-2 border-szn-accent"
+                    : "bg-szn-bg text-szn-text-2 hover:text-szn-text-1"
                 }`}
               >
                 {t(`dashboard.playground.tabs.${tab}`)}
                 {tab === "results" && results.length > 0 && (
-                  <span className="ml-2 px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full text-xs">
+                  <span className="ml-2 px-2 py-0.5 bg-szn-accent/10 text-szn-accent rounded-full text-xs">
                     {results.length}
                   </span>
                 )}
@@ -347,29 +347,29 @@ export function PlaygroundClient() {
 
       {/* Rerank Comparison (if enabled and has results) */}
       {enableRerank && results.length > 0 && (
-        <div className="glass-card border border-gray-200 rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="szn-card border border-szn-border rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
             {t("dashboard.playground.rerankComparison")}
           </h3>
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-2">
+              <h4 className="text-sm font-medium text-szn-text-2 mb-2">
                 {t("dashboard.playground.beforeRerank")}
               </h4>
               <div className="space-y-2">
                 {results.slice(0, 5).map((r, i) => (
                   <div key={r.id} className="flex items-center gap-2 text-sm">
-                    <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                    <span className="w-6 h-6 rounded-full bg-szn-surface flex items-center justify-center text-szn-text-2">
                       {i + 1}
                     </span>
-                    <span className="flex-1 truncate text-gray-700">{r.content}</span>
-                    <span className="text-gray-400">{(r.similarity * 100).toFixed(1)}%</span>
+                    <span className="flex-1 truncate text-szn-text-1">{r.content}</span>
+                    <span className="text-szn-text-3">{(r.similarity * 100).toFixed(1)}%</span>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-2">
+              <h4 className="text-sm font-medium text-szn-text-2 mb-2">
                 {t("dashboard.playground.afterRerank")}
               </h4>
               <div className="space-y-2">
@@ -378,11 +378,11 @@ export function PlaygroundClient() {
                   .slice(0, 5)
                   .map((r, i) => (
                     <div key={r.id} className="flex items-center gap-2 text-sm">
-                      <span className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-teal-700">
+                      <span className="w-6 h-6 rounded-full bg-szn-accent/10 flex items-center justify-center text-szn-accent">
                         {i + 1}
                       </span>
-                      <span className="flex-1 truncate text-gray-700">{r.content}</span>
-                      <span className="text-teal-600">{((r.rerank_score || r.similarity) * 100).toFixed(1)}%</span>
+                      <span className="flex-1 truncate text-szn-text-1">{r.content}</span>
+                      <span className="text-szn-accent">{((r.rerank_score || r.similarity) * 100).toFixed(1)}%</span>
                     </div>
                   ))}
               </div>
@@ -407,7 +407,7 @@ function ResultsPanel({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="flex items-center justify-center h-64 text-szn-text-2">
         <LoadingSpinner className="w-8 h-8 mr-3" />
         {t("dashboard.playground.searching")}
       </div>
@@ -416,17 +416,17 @@ function ResultsPanel({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-red-500">
+      <div className="flex flex-col items-center justify-center h-64 text-szn-danger">
         <ErrorIcon className="w-12 h-12 mb-3" />
         <p className="font-medium">{t("dashboard.playground.error")}</p>
-        <p className="text-sm text-gray-500 mt-1">{error}</p>
+        <p className="text-sm text-szn-text-2 mt-1">{error}</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
         <SearchIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noResults")}</p>
       </div>
@@ -438,26 +438,26 @@ function ResultsPanel({
       {results.map((result, index) => (
         <div
           key={result.id}
-          className="p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-teal-200 transition-colors"
+          className="p-4 rounded-xl bg-szn-bg border border-szn-border hover:border-szn-accent/30 transition-colors"
         >
           <div className="flex items-start gap-3">
-            <span className="w-6 h-6 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center text-white text-sm font-medium">
+            <span className="w-6 h-6 rounded-full bg-gradient-to-r from-szn-accent to-szn-accent-2 flex items-center justify-center text-white text-sm font-medium">
               {index + 1}
             </span>
             <div className="flex-1">
-              <p className="text-gray-900">{result.content}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+              <p className="text-szn-text-1">{result.content}</p>
+              <div className="flex items-center gap-4 mt-2 text-xs text-szn-text-2">
                 <span className="flex items-center gap-1">
                   <ScoreIcon className="w-3 h-3" />
                   {(result.similarity * 100).toFixed(1)}%
                 </span>
                 {result.memory_type && (
-                  <span className="px-2 py-0.5 bg-gray-200 rounded-full">
+                  <span className="px-2 py-0.5 bg-szn-surface rounded-full">
                     {result.memory_type}
                   </span>
                 )}
                 {result.rerank_score !== undefined && (
-                  <span className="flex items-center gap-1 text-teal-600">
+                  <span className="flex items-center gap-1 text-szn-accent">
                     <RerankIcon className="w-3 h-3" />
                     {(result.rerank_score * 100).toFixed(1)}%
                   </span>
@@ -484,7 +484,7 @@ function TracePanel({
 
   if (steps.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
         <TraceIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noTrace")}</p>
       </div>
@@ -495,11 +495,11 @@ function TracePanel({
     <div className="space-y-4">
       {/* Total Latency */}
       {totalLatency > 0 && (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-teal-50 border border-teal-200">
-          <span className="text-sm font-medium text-teal-700">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-szn-accent/10 border border-szn-accent/20">
+          <span className="text-sm font-medium text-szn-accent">
             {t("dashboard.playground.totalLatency")}
           </span>
-          <span className="text-lg font-bold text-teal-600">
+          <span className="text-lg font-bold text-szn-accent">
             {totalLatency}ms
           </span>
         </div>
@@ -512,19 +512,19 @@ function TracePanel({
             {/* Timeline Line */}
             <div className="relative flex flex-col items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                step.status === "completed" ? "bg-green-100" :
-                step.status === "running" ? "bg-blue-100 animate-pulse" :
-                step.status === "error" ? "bg-red-100" :
-                "bg-gray-100"
+                step.status === "completed" ? "bg-szn-success/10" :
+                step.status === "running" ? "bg-szn-accent/10 animate-pulse" :
+                step.status === "error" ? "bg-szn-danger/10" :
+                "bg-szn-surface"
               }`}>
-                {step.status === "completed" && <CheckIcon className="w-4 h-4 text-green-600" />}
-                {step.status === "running" && <LoadingSpinner className="w-4 h-4 text-blue-600" />}
-                {step.status === "error" && <ErrorIcon className="w-4 h-4 text-red-600" />}
-                {step.status === "pending" && <span className="w-2 h-2 rounded-full bg-gray-300" />}
+                {step.status === "completed" && <CheckIcon className="w-4 h-4 text-szn-success" />}
+                {step.status === "running" && <LoadingSpinner className="w-4 h-4 text-szn-accent" />}
+                {step.status === "error" && <ErrorIcon className="w-4 h-4 text-szn-danger" />}
+                {step.status === "pending" && <span className="w-2 h-2 rounded-full bg-szn-text-3" />}
               </div>
               {index < steps.length - 1 && (
                 <div className={`w-0.5 h-8 ${
-                  step.status === "completed" ? "bg-green-200" : "bg-gray-200"
+                  step.status === "completed" ? "bg-szn-success/30" : "bg-szn-border"
                 }`} />
               )}
             </div>
@@ -533,15 +533,15 @@ function TracePanel({
             <div className="flex-1 pt-1">
               <div className="flex items-center justify-between">
                 <span className={`text-sm font-medium ${
-                  step.status === "completed" ? "text-gray-900" :
-                  step.status === "running" ? "text-blue-600" :
-                  step.status === "error" ? "text-red-600" :
-                  "text-gray-400"
+                  step.status === "completed" ? "text-szn-text-1" :
+                  step.status === "running" ? "text-szn-accent" :
+                  step.status === "error" ? "text-szn-danger" :
+                  "text-szn-text-3"
                 }`}>
                   {step.name}
                 </span>
                 {step.status === "completed" && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-szn-text-2">
                     {step.latencyMs}ms
                   </span>
                 )}
@@ -571,7 +571,7 @@ function CostPanel({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="flex items-center justify-center h-64 text-szn-text-2">
         <LoadingSpinner className="w-8 h-8 mr-3" />
         {t("dashboard.playground.calculating")}
       </div>
@@ -580,7 +580,7 @@ function CostPanel({
 
   if (totalCost === "$0.00000") {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
         <CostIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noCost")}</p>
       </div>
@@ -596,16 +596,16 @@ function CostPanel({
   return (
     <div className="space-y-6">
       {/* Total Cost */}
-      <div className="text-center py-6 rounded-xl bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100">
-        <p className="text-sm text-gray-500 mb-1">{t("dashboard.playground.totalCost")}</p>
-        <p className="text-3xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <div className="text-center py-6 rounded-xl bg-szn-accent/10 border border-szn-accent/20">
+        <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.playground.totalCost")}</p>
+        <p className="text-3xl font-bold bg-gradient-to-r from-szn-accent to-szn-accent-2 bg-clip-text text-transparent">
           {totalCost}
         </p>
       </div>
 
       {/* Cost Breakdown */}
       <div>
-        <h4 className="text-sm font-medium text-gray-700 mb-3">
+        <h4 className="text-sm font-medium text-szn-text-1 mb-3">
           {t("dashboard.playground.costBreakdown")}
         </h4>
         <div className="space-y-2">
@@ -632,7 +632,7 @@ function CostPanel({
               model="cross-encoder"
             />
           )}
-          <div className="pt-2 mt-2 border-t border-gray-200">
+          <div className="pt-2 mt-2 border-t border-szn-border">
             <CostRow
               label={t("dashboard.playground.total")}
               cost={estimatedTotal}
@@ -643,11 +643,11 @@ function CostPanel({
       </div>
 
       {/* Monthly Estimate */}
-      <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
-        <p className="text-sm text-gray-500 mb-1">{t("dashboard.playground.monthlyEstimate")}</p>
-        <p className="text-lg font-semibold text-gray-900">
+      <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
+        <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.playground.monthlyEstimate")}</p>
+        <p className="text-lg font-semibold text-szn-text-1">
           ${(estimatedTotal * 1000 * 30).toFixed(2)}
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-szn-text-2 ml-2">
             @ 1000 {t("dashboard.playground.queriesDay")}
           </span>
         </p>
@@ -672,13 +672,13 @@ function CostRow({
   return (
     <div className="flex items-center justify-between text-sm">
       <div className="flex items-center gap-2">
-        <span className={isBold ? "font-semibold text-gray-900" : "text-gray-600"}>
+        <span className={isBold ? "font-semibold text-szn-text-1" : "text-szn-text-2"}>
           {label}
         </span>
-        {model && <span className="text-xs text-gray-400">({model})</span>}
-        {note && <span className="text-xs text-gray-400">({note})</span>}
+        {model && <span className="text-xs text-szn-text-3">({model})</span>}
+        {note && <span className="text-xs text-szn-text-3">({note})</span>}
       </div>
-      <span className={isBold ? "font-semibold text-gray-900" : "text-gray-700"}>
+      <span className={isBold ? "font-semibold text-szn-text-1" : "text-szn-text-1"}>
         ${cost.toFixed(5)}
       </span>
     </div>

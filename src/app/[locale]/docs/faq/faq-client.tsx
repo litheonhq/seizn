@@ -84,30 +84,30 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <div className="min-h-screen bg-zinc-950">
+      <div className="min-h-screen bg-szn-bg">
         {/* Header */}
-        <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-10">
+        <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href={`/${locale}`} className="text-xl font-bold text-white">
-              Seizn<span className="text-emerald-400">.</span>
+              Seizn<span className="text-szn-accent">.</span>
             </Link>
             <nav className="flex items-center gap-4">
               <LanguageSwitcher currentLocale={locale} />
               <Link
                 href={`/${locale}/docs`}
-                className="text-zinc-400 hover:text-white transition-colors"
+                className="text-szn-text-2 hover:text-white transition-colors"
               >
                 {dictionary.nav?.docs || "Docs"}
               </Link>
               <Link
                 href="/dashboard"
-                className="text-zinc-400 hover:text-white transition-colors"
+                className="text-szn-text-2 hover:text-white transition-colors"
               >
                 {dictionary.docs?.nav?.dashboard || "Dashboard"}
               </Link>
               <Link
                 href="/login"
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+                className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
               >
                 {dictionary.docs?.nav?.getStarted || dictionary.nav?.getStarted || "Get Started"}
               </Link>
@@ -121,7 +121,7 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
             <h1 className="text-4xl font-bold text-white mb-4">
               {faqPage?.title || "Frequently Asked Questions"}
             </h1>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+            <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
               {faqPage?.subtitle || "Common questions about Seizn Memory API, from getting started to advanced operations."}
             </p>
           </div>
@@ -134,8 +134,8 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
                 onClick={() => setActiveCategory(catKey)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === catKey
-                    ? "bg-emerald-600 text-white"
-                    : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                    ? "bg-szn-accent text-white"
+                    : "bg-szn-surface-1 text-szn-text-2 hover:bg-szn-surface hover:text-szn-text-1"
                 }`}
               >
                 {getCategoryDisplayName(catKey)}
@@ -152,30 +152,30 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
               return (
                 <div
                   key={globalIndex}
-                  className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden"
+                  className="bg-szn-surface border border-szn-border rounded-xl overflow-hidden"
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : globalIndex)}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-zinc-800/50 transition-colors"
+                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-szn-surface-1/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 font-mono text-sm">
+                      <span className="text-szn-accent font-mono text-sm">
                         Q{globalIndex + 1}
                       </span>
                       <span className="text-white font-medium">
                         {item.question}
                       </span>
                     </div>
-                    <ChevronIcon className={`w-5 h-5 text-zinc-400 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+                    <ChevronIcon className={`w-5 h-5 text-szn-text-2 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {isOpen && (
                     <div className="px-6 pb-4">
-                      <div className="pl-10 text-zinc-400 leading-relaxed">
+                      <div className="pl-10 text-szn-text-2 leading-relaxed">
                         {item.answer}
                       </div>
                       <div className="pl-10 mt-3">
-                        <span className="text-xs px-2 py-1 bg-zinc-800 text-zinc-500 rounded">
+                        <span className="text-xs px-2 py-1 bg-szn-surface-1 text-szn-text-3 rounded">
                           {getCategoryDisplayName(item.category)}
                         </span>
                       </div>
@@ -188,23 +188,23 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
 
           {/* CTA */}
           <div className="mt-16 text-center">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
+            <div className="bg-szn-surface border border-szn-border rounded-2xl p-8">
               <h2 className="text-2xl font-bold text-white mb-4">
                 {faqPage?.stillHaveQuestions || "Still have questions?"}
               </h2>
-              <p className="text-zinc-400 mb-6">
+              <p className="text-szn-text-2 mb-6">
                 {faqPage?.stillHaveQuestionsDesc || "Check out our documentation or get in touch with our support team."}
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
                   href={`/${locale}/docs`}
-                  className="px-6 py-3 bg-zinc-800 text-white font-medium rounded-lg hover:bg-zinc-700 transition-colors"
+                  className="px-6 py-3 bg-szn-surface-1 text-szn-text-1 font-medium rounded-lg hover:bg-szn-surface-1 transition-colors"
                 >
                   {faqPage?.readDocs || "Read Docs"}
                 </Link>
                 <Link
                   href="mailto:support@seizn.com"
-                  className="px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-500 transition-colors"
+                  className="px-6 py-3 bg-szn-accent text-white font-medium rounded-lg hover:bg-szn-accent/80 transition-colors"
                 >
                   {faqPage?.contactSupport || "Contact Support"}
                 </Link>
@@ -214,8 +214,8 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800 py-8">
-          <div className="max-w-6xl mx-auto px-6 text-center text-zinc-500 text-sm">
+        <footer className="border-t border-szn-border py-8">
+          <div className="max-w-6xl mx-auto px-6 text-center text-szn-text-3 text-sm">
             {dictionary.docs?.footer?.copyright?.replace("{year}", String(currentYear)) || `© ${currentYear} Seizn. All rights reserved.`}
           </div>
         </footer>

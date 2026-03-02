@@ -191,12 +191,12 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
       {/* Search Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 text-sm text-szn-text-2 bg-szn-surface border border-szn-border rounded-lg hover:bg-szn-surface-1 hover:text-szn-text-1 transition-colors"
         aria-label="Search documentation (Ctrl+K)"
       >
         <SearchIcon className="w-4 h-4" />
         <span className="hidden sm:inline">{t.buttonText}</span>
-        <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-zinc-700 rounded">⌘K</kbd>
+        <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-szn-surface-1 rounded">⌘K</kbd>
       </button>
 
       {/* Search Dialog */}
@@ -204,11 +204,11 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm">
           <div
             ref={dialogRef}
-            className="w-full max-w-xl bg-white border border-gray-300 rounded-xl shadow-2xl overflow-hidden"
+            className="w-full max-w-xl bg-szn-card border border-szn-border rounded-xl shadow-2xl overflow-hidden"
           >
             {/* Search Input */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-300">
-              <SearchIcon className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-szn-border">
+              <SearchIcon className="w-5 h-5 text-szn-text-2" />
               <input
                 ref={inputRef}
                 type="text"
@@ -216,15 +216,15 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t.placeholder}
-                className="flex-1 bg-transparent text-gray-900 placeholder-zinc-500 outline-none"
+                className="flex-1 bg-transparent text-szn-text-1 placeholder-szn-text-2 outline-none"
               />
-              <kbd className="px-2 py-1 text-xs text-gray-400 bg-gray-100 rounded">ESC</kbd>
+              <kbd className="px-2 py-1 text-xs text-szn-text-3 bg-szn-surface rounded">ESC</kbd>
             </div>
 
             {/* Results */}
             <div className="max-h-96 overflow-y-auto">
               {query && results.length === 0 ? (
-                <div className="px-4 py-8 text-center text-gray-400">
+                <div className="px-4 py-8 text-center text-szn-text-3">
                   {t.noResults} &quot;{query}&quot;
                 </div>
               ) : results.length > 0 ? (
@@ -236,17 +236,17 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                       onClick={() => setIsOpen(false)}
                       className={`flex flex-col gap-1 px-4 py-3 ${
                         index === selectedIndex
-                          ? "bg-emerald-600/20 border-l-2 border-emerald-500"
-                          : "hover:bg-gray-100"
+                          ? "bg-szn-accent/20 border-l-2 border-szn-accent"
+                          : "hover:bg-szn-surface"
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded">
+                        <span className="text-xs px-2 py-0.5 bg-szn-surface text-szn-text-2 rounded">
                           {item.section}
                         </span>
-                        <span className="text-gray-900 font-medium">{item.title}</span>
+                        <span className="text-szn-text-1 font-medium">{item.title}</span>
                       </div>
-                      <p className="text-sm text-gray-500 line-clamp-1">
+                      <p className="text-sm text-szn-text-2 line-clamp-1">
                         {item.content}
                       </p>
                     </Link>
@@ -254,7 +254,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                 </div>
               ) : (
                 <div className="px-4 py-6">
-                  <p className="text-sm text-gray-400 mb-4">
+                  <p className="text-sm text-szn-text-3 mb-4">
                     {t.hint}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -262,7 +262,7 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
                       <button
                         key={term}
                         onClick={() => setQuery(term)}
-                        className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                        className="px-3 py-1.5 text-sm text-szn-text-2 bg-szn-surface rounded-full hover:bg-szn-surface-1 hover:text-szn-text-1 transition-colors"
                         aria-label={`Search for ${term}`}
                       >
                         {term}
@@ -274,15 +274,15 @@ export function DocsSearch({ locale = "en", translations = {} }: Props) {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-300 text-xs text-gray-400">
+            <div className="flex items-center justify-between px-4 py-2 border-t border-szn-border text-xs text-szn-text-3">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↑</kbd>
-                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↓</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-szn-surface rounded">↑</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-szn-surface rounded">↓</kbd>
                   {t.navigate}
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↵</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-szn-surface rounded">↵</kbd>
                   {t.select}
                 </span>
               </div>

@@ -112,9 +112,9 @@ const typeColors: Record<NoteType, { bg: string; text: string }> = {
 const statusColors: Record<NoteStatus, { bg: string; text: string }> = {
   candidate: { bg: "bg-yellow-100 dark:bg-yellow-900/50", text: "text-yellow-700 dark:text-yellow-300" },
   active: { bg: "bg-green-100 dark:bg-green-900/50", text: "text-green-700 dark:text-green-300" },
-  superseded: { bg: "bg-gray-100 dark:bg-gray-700", text: "text-gray-600 dark:text-gray-300" },
+  superseded: { bg: "bg-szn-surface", text: "text-szn-text-2" },
   contradicted: { bg: "bg-red-100 dark:bg-red-900/50", text: "text-red-700 dark:text-red-300" },
-  deleted: { bg: "bg-gray-100 dark:bg-gray-700", text: "text-gray-500 dark:text-gray-400" },
+  deleted: { bg: "bg-szn-surface", text: "text-szn-text-2" },
 };
 
 const privacyColors: Record<PrivacyClass, { bg: string; text: string }> = {
@@ -256,15 +256,15 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
   }, [note.id, onRefresh]);
 
   return (
-    <div className="h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden flex flex-col">
+    <div className="h-full bg-szn-card border border-szn-border rounded-2xl overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Node Inspector</h2>
+      <div className="p-4 border-b border-szn-border flex items-center justify-between">
+        <h2 className="font-semibold text-szn-text-1">Node Inspector</h2>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          className="p-1 hover:bg-szn-surface-1 rounded-lg transition-colors"
         >
-          <XIcon className="w-5 h-5 text-gray-500" />
+          <XIcon className="w-5 h-5 text-szn-text-2" />
         </button>
       </div>
 
@@ -272,9 +272,9 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Full Content */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Content</h3>
-          <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <p className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">
+          <h3 className="text-sm font-medium text-szn-text-2">Content</h3>
+          <div className="p-3 bg-szn-bg rounded-lg">
+            <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
               {data.content}
             </p>
           </div>
@@ -282,11 +282,11 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
         {/* Metadata */}
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Metadata</h3>
+          <h3 className="text-sm font-medium text-szn-text-2">Metadata</h3>
 
           {/* Type */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Type</span>
+            <span className="text-sm text-szn-text-2">Type</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${typeColors[data.type].bg} ${typeColors[data.type].text}`}
             >
@@ -296,7 +296,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Status */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Status</span>
+            <span className="text-sm text-szn-text-2">Status</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[data.status].bg} ${statusColors[data.status].text}`}
             >
@@ -306,7 +306,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Privacy Class */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Privacy</span>
+            <span className="text-sm text-szn-text-2">Privacy</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${privacyColors[data.privacyClass].bg} ${privacyColors[data.privacyClass].text}`}
             >
@@ -316,49 +316,49 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Importance */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Importance</span>
+            <span className="text-sm text-szn-text-2">Importance</span>
             <div className="flex items-center gap-2">
-              <div className="w-16 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="w-16 h-2 bg-szn-surface rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-teal-500 rounded-full"
+                  className="h-full bg-szn-accent rounded-full"
                   style={{ width: `${data.importance * 100}%` }}
                 />
               </div>
-              <span className="text-xs text-gray-500">{Math.round(data.importance * 100)}%</span>
+              <span className="text-xs text-szn-text-2">{Math.round(data.importance * 100)}%</span>
             </div>
           </div>
 
           {/* Created At */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Created</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-szn-text-2">Created</span>
+            <span className="text-sm text-szn-text-2">
               {formatDate(note.createdAt)}
             </span>
           </div>
 
           {/* Updated At */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Updated</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-szn-text-2">Updated</span>
+            <span className="text-sm text-szn-text-2">
               {formatDate(note.updatedAt)}
             </span>
           </div>
 
           {/* Scope */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Scope</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{note.scope}</span>
+            <span className="text-sm text-szn-text-2">Scope</span>
+            <span className="text-sm text-szn-text-2">{note.scope}</span>
           </div>
 
           {/* Tags */}
           {note.tags && note.tags.length > 0 && (
             <div className="space-y-1">
-              <span className="text-sm text-gray-600 dark:text-gray-300">Tags</span>
+              <span className="text-sm text-szn-text-2">Tags</span>
               <div className="flex flex-wrap gap-1">
                 {note.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full"
+                    className="px-2 py-0.5 text-xs bg-szn-surface text-szn-text-2 rounded-full"
                   >
                     {tag}
                   </span>
@@ -371,10 +371,10 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {/* Where Used / Usage Stats */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Usage</h3>
+            <h3 className="text-sm font-medium text-szn-text-2">Usage</h3>
             <button
               onClick={() => setShowUsageTab(!showUsageTab)}
-              className="text-xs text-teal-600 dark:text-teal-400 hover:underline"
+              className="text-xs text-szn-accent hover:underline"
             >
               {showUsageTab ? "Hide details" : "Show details"}
             </button>
@@ -386,30 +386,30 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: heatColor }}
             />
-            <span className="text-sm text-gray-600 dark:text-gray-300 capitalize">
+            <span className="text-sm text-szn-text-2 capitalize">
               {heatLevel === "unused" ? "Never used" : `${heatLevel} (${stats.totalUsages} uses)`}
             </span>
           </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
-              <div className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="p-2 bg-szn-bg rounded-lg text-center">
+              <div className="text-lg font-semibold text-szn-text-1">
                 {stats.recallCount}
               </div>
-              <div className="text-xs text-gray-500">Recalls</div>
+              <div className="text-xs text-szn-text-2">Recalls</div>
             </div>
-            <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
-              <div className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="p-2 bg-szn-bg rounded-lg text-center">
+              <div className="text-lg font-semibold text-szn-text-1">
                 {Math.round(stats.successRate * 100)}%
               </div>
-              <div className="text-xs text-gray-500">Success</div>
+              <div className="text-xs text-szn-text-2">Success</div>
             </div>
-            <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
-              <div className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="p-2 bg-szn-bg rounded-lg text-center">
+              <div className="text-lg font-semibold text-szn-text-1">
                 {Math.round(stats.positiveRate * 100)}%
               </div>
-              <div className="text-xs text-gray-500">Positive</div>
+              <div className="text-xs text-szn-text-2">Positive</div>
             </div>
           </div>
 
@@ -417,34 +417,34 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           {showUsageTab && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {usageLoading ? (
-                <div className="text-sm text-gray-500 text-center py-2">Loading...</div>
+                <div className="text-sm text-szn-text-2 text-center py-2">Loading...</div>
               ) : usage.length === 0 ? (
-                <div className="text-sm text-gray-500 text-center py-2">
+                <div className="text-sm text-szn-text-2 text-center py-2">
                   No usage recorded yet
                 </div>
               ) : (
                 usage.map((u) => (
                   <div
                     key={u.id}
-                    className="p-2 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs space-y-1"
+                    className="p-2 bg-szn-bg rounded-lg text-xs space-y-1"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-700 dark:text-gray-300 capitalize">
+                      <span className="font-medium text-szn-text-1 capitalize">
                         {u.usageType}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-szn-text-2">
                         {new Date(u.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     {u.queryText && (
-                      <div className="text-gray-600 dark:text-gray-400 truncate">
+                      <div className="text-szn-text-2 truncate">
                         Query: {u.queryText}
                       </div>
                     )}
                     {u.traceId && (
                       <a
                         href={`/dashboard/traces/${u.traceId}`}
-                        className="text-teal-600 dark:text-teal-400 hover:underline"
+                        className="text-szn-accent hover:underline"
                       >
                         View trace →
                       </a>
@@ -459,11 +459,11 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {/* Provenance */}
         {note.provenance && (
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Provenance</h3>
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg space-y-2">
+            <h3 className="text-sm font-medium text-szn-text-2">Provenance</h3>
+            <div className="p-3 bg-szn-bg rounded-lg space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-300">Source Type</span>
-                <span className="text-gray-500 dark:text-gray-400">
+                <span className="text-szn-text-2">Source Type</span>
+                <span className="text-szn-text-2">
                   {note.provenance.source.type}
                 </span>
               </div>
@@ -472,15 +472,15 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
                   href={note.provenance.source.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm text-teal-600 dark:text-teal-400 hover:underline"
+                  className="flex items-center gap-1 text-sm text-szn-accent hover:underline"
                 >
                   <ExternalLinkIcon className="w-4 h-4" />
                   View Source
                 </a>
               )}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-300">Created By</span>
-                <span className="text-gray-500 dark:text-gray-400">
+                <span className="text-szn-text-2">Created By</span>
+                <span className="text-szn-text-2">
                   {note.provenance.createdBy}
                 </span>
               </div>
@@ -490,13 +490,13 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       </div>
 
       {/* Actions */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+      <div className="p-4 border-t border-szn-border space-y-2">
         {/* Primary Actions */}
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={handleEdit}
             disabled={isLoading}
-            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
           >
             <EditIcon className="w-4 h-4" />
             Edit
@@ -547,7 +547,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         <button
           onClick={onRefresh}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-2 bg-szn-bg hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
         >
           <ArrowPathIcon className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
           Refresh
@@ -557,17 +557,17 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       {/* Delete Confirmation Modal */}
       {showConfirmDelete && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <div className="bg-szn-card rounded-xl p-6 max-w-sm w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">
               Delete Memory?
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-sm text-szn-text-2 mb-4">
               This action cannot be undone. The memory will be permanently removed.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors"
               >
                 Cancel
               </button>

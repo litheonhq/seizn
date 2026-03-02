@@ -55,44 +55,44 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
   }, []);
 
   return (
-    <header className="hidden lg:flex fixed top-0 right-0 left-20 z-30 h-14 items-center justify-between px-6 glass-card border-b theme-border">
+    <header className="hidden lg:flex fixed top-0 right-0 left-20 z-30 h-14 items-center justify-between px-6 szn-card border-b theme-border">
       <div ref={orgDropdownRef} className="relative">
         <button
           onClick={() => setShowOrgDropdown(!showOrgDropdown)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-szn-surface-2 transition-colors text-sm font-medium text-szn-text-2"
           aria-expanded={showOrgDropdown}
           aria-haspopup="true"
           aria-label={t("dashboard.topBar.switchOrg") || "Switch organization"}
         >
-          <OrgIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <OrgIcon className="w-4 h-4 text-szn-text-3" />
           <span>{selectedOrg?.name || t("dashboard.topBar.personal")}</span>
-          <ChevronDownIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <ChevronDownIcon className="w-4 h-4 text-szn-text-3" />
         </button>
         {showOrgDropdown && (
-          <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
+          <div className="absolute top-full left-0 mt-1 w-56 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 animate-fade-in">
             <button
               onClick={() => { setSelectedOrg(null); setShowOrgDropdown(false); }}
-              className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${!selectedOrg ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300" : "text-gray-700 dark:text-gray-300"}`}
+              className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 ${!selectedOrg ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
             >
               <UserIcon className="w-4 h-4" />
               {t("dashboard.topBar.personal")}
             </button>
-            {organizations.length > 0 && <div className="border-t border-gray-100 dark:border-gray-700 my-1" />}
+            {organizations.length > 0 && <div className="border-t border-szn-border my-1" />}
             {organizations.map((org) => (
               <button
                 key={org.id}
                 onClick={() => { setSelectedOrg(org); setShowOrgDropdown(false); }}
-                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedOrg?.id === org.id ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300" : "text-gray-700 dark:text-gray-300"}`}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 ${selectedOrg?.id === org.id ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
               >
                 <OrgIcon className="w-4 h-4" />
                 {org.name}
               </button>
             ))}
-            <div className="border-t border-gray-100 dark:border-gray-700 my-1" />
+            <div className="border-t border-szn-border my-1" />
             <Link
               href="/dashboard/organizations"
               onClick={() => setShowOrgDropdown(false)}
-              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-szn-text-3 hover:bg-szn-surface-1"
             >
               <SettingsIcon className="w-4 h-4" />
               {t("dashboard.topBar.manageOrgs")}
@@ -106,11 +106,11 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
         {onCommandPaletteOpen && (
           <button
             onClick={onCommandPaletteOpen}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors text-sm text-gray-500 dark:text-gray-400"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-szn-border hover:bg-szn-surface-2 transition-colors text-sm text-szn-text-3"
           >
             <SearchIcon className="w-4 h-4" />
             <span className="hidden xl:inline">{t("dashboard.commandPalette.placeholder") || "Search..."}</span>
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-gray-100 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-szn-surface-1 rounded border border-szn-border">
               <span className="text-xs">&#8984;</span>K
             </kbd>
           </button>
@@ -128,21 +128,21 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
             {t("dashboard.topBar.create")}
           </button>
           {showCreateDropdown && (
-            <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 animate-fade-in">
+            <div className="absolute top-full right-0 mt-1 w-48 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 animate-fade-in">
               <Link
                 href="/dashboard/keys"
                 onClick={() => setShowCreateDropdown(false)}
-                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-szn-text-2 hover:bg-szn-surface-1"
               >
-                <KeyIcon className="w-4 h-4 text-amber-500" />
+                <KeyIcon className="w-4 h-4 text-szn-warning" />
                 {t("dashboard.topBar.createApiKey")}
               </Link>
               <Link
                 href="/dashboard/organizations"
                 onClick={() => setShowCreateDropdown(false)}
-                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-szn-text-2 hover:bg-szn-surface-1"
               >
-                <UsersIcon className="w-4 h-4 text-teal-500" />
+                <UsersIcon className="w-4 h-4 text-szn-accent" />
                 {t("dashboard.topBar.createOrg")}
               </Link>
             </div>

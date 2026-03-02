@@ -108,7 +108,7 @@ export function FeatureFlagsDebugPanel({
           🚩 Flags
         </button>
       ) : (
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 w-80 overflow-hidden">
+        <div className="bg-szn-bg rounded-lg shadow-2xl border border-szn-border w-80 overflow-hidden">
           {/* Header */}
           <div className="bg-purple-600 text-white px-4 py-3 flex items-center justify-between">
             <h3 className="font-semibold text-sm">Feature Flags</h3>
@@ -130,7 +130,7 @@ export function FeatureFlagsDebugPanel({
           </div>
 
           {/* Status */}
-          <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
+          <div className="px-4 py-2 bg-szn-surface text-xs text-szn-text-2 flex items-center gap-2">
             <span
               className={`w-2 h-2 rounded-full ${
                 isReady ? 'bg-green-500' : 'bg-yellow-500'
@@ -153,8 +153,8 @@ export function FeatureFlagsDebugPanel({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="px-4 py-2 bg-szn-surface border-t border-szn-border">
+            <p className="text-xs text-szn-text-2">
               Overrides are local only
             </p>
           </div>
@@ -203,7 +203,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
   return (
     <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+        <span className="text-sm font-medium text-szn-text-1">
           {flag.label}
         </span>
         {isOverridden && (
@@ -217,7 +217,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
       </div>
 
       <div className="flex items-center justify-between">
-        <code className="text-xs text-gray-500 dark:text-gray-400">
+        <code className="text-xs text-szn-text-2">
           {flag.key}
         </code>
 
@@ -238,7 +238,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
           <select
             value={(value as string) || 'control'}
             onChange={(e) => handleVariantChange(e.target.value)}
-            className="text-xs border border-gray-200 dark:border-gray-700 rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            className="text-xs border border-szn-border rounded px-2 py-1 bg-szn-card text-szn-text-1"
           >
             {flag.variants?.map((variant) => (
               <option key={variant} value={variant}>

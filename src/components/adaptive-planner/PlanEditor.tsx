@@ -180,10 +180,10 @@ export function PlanEditor({
     <form onSubmit={handleSubmit} className={`space-y-6 ${className}`}>
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-szn-text-1">
           {isEditMode ? "Edit Plan" : "Create Plan"}
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-szn-text-2">
           Configure retrieval strategy for specific query types
         </p>
       </div>
@@ -198,7 +198,7 @@ export function PlanEditor({
       {/* Basic Info */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-szn-text-2 mb-1">
             Plan Name *
           </label>
           <input
@@ -206,13 +206,13 @@ export function PlanEditor({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., technical_queries"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-szn-text-2 mb-1">
               Priority
             </label>
             <input
@@ -221,7 +221,7 @@ export function PlanEditor({
               onChange={(e) => setPriority(parseInt(e.target.value, 10) || 0)}
               min={0}
               max={100}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
             />
             <p className="mt-1 text-xs text-gray-500">Higher = selected first (0-100)</p>
           </div>
@@ -235,7 +235,7 @@ export function PlanEditor({
                   onChange={(e) => setIsActive(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Active</span>
+                <span className="text-sm text-szn-text-2">Active</span>
               </label>
             </div>
           )}
@@ -244,13 +244,13 @@ export function PlanEditor({
 
       {/* Matching Criteria */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+        <h3 className="text-sm font-medium text-szn-text-1">
           Matching Criteria
         </h3>
 
         {/* Intent Selection */}
         <div>
-          <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm text-szn-text-2 mb-2">
             Query Intents
           </label>
           <div className="flex flex-wrap gap-2">
@@ -263,7 +263,7 @@ export function PlanEditor({
                   px-3 py-1.5 text-sm rounded-full border transition-colors
                   ${intents.includes(intent)
                     ? "bg-blue-100 dark:bg-blue-900/30 border-blue-500 text-blue-700 dark:text-blue-300"
-                    : "bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    : "bg-szn-surface border-szn-border text-szn-text-2 hover:bg-szn-surface-1"
                   }
                 `}
               >
@@ -275,7 +275,7 @@ export function PlanEditor({
 
         {/* Patterns */}
         <div>
-          <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm text-szn-text-2 mb-1">
             Query Patterns (regex, one per line)
           </label>
           <textarea
@@ -283,14 +283,14 @@ export function PlanEditor({
             onChange={(e) => setPatterns(e.target.value)}
             placeholder="^how (do|can|to)\b&#10;.*implement.*"
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500 font-mono text-sm"
           />
         </div>
 
         {/* Length Constraints */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm text-szn-text-2 mb-1">
               Min Query Length
             </label>
             <input
@@ -299,11 +299,11 @@ export function PlanEditor({
               onChange={(e) => setMinLength(e.target.value ? parseInt(e.target.value, 10) : undefined)}
               placeholder="No minimum"
               min={1}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm text-szn-text-2 mb-1">
               Max Query Length
             </label>
             <input
@@ -312,7 +312,7 @@ export function PlanEditor({
               onChange={(e) => setMaxLength(e.target.value ? parseInt(e.target.value, 10) : undefined)}
               placeholder="No maximum"
               min={1}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -320,13 +320,13 @@ export function PlanEditor({
 
       {/* Retrieval Config */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+        <h3 className="text-sm font-medium text-szn-text-1">
           Retrieval Configuration
         </h3>
 
         {/* Mode */}
         <div>
-          <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm text-szn-text-2 mb-1">
             Retrieval Mode
           </label>
           <div className="flex gap-2">
@@ -339,7 +339,7 @@ export function PlanEditor({
                   px-4 py-2 text-sm rounded-lg border transition-colors
                   ${config.mode === mode
                     ? "bg-blue-600 border-blue-600 text-white"
-                    : "bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    : "bg-szn-surface border-szn-border text-szn-text-2 hover:bg-szn-surface-1"
                   }
                 `}
               >
@@ -352,7 +352,7 @@ export function PlanEditor({
         {/* Top K and Threshold */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm text-szn-text-2 mb-1">
               Top K Results
             </label>
             <input
@@ -361,11 +361,11 @@ export function PlanEditor({
               onChange={(e) => updateConfig("topK", parseInt(e.target.value, 10) || 10)}
               min={1}
               max={100}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm text-szn-text-2 mb-1">
               Similarity Threshold
             </label>
             <input
@@ -375,7 +375,7 @@ export function PlanEditor({
               min={0}
               max={1}
               step={0.05}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -383,7 +383,7 @@ export function PlanEditor({
         {/* Hybrid Alpha */}
         {config.mode === "hybrid" && (
           <div>
-            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm text-szn-text-2 mb-1">
               Hybrid Alpha (0 = keyword, 1 = vector)
             </label>
             <div className="flex items-center gap-4">
@@ -396,7 +396,7 @@ export function PlanEditor({
                 step={0.05}
                 className="flex-1"
               />
-              <span className="text-sm text-gray-600 dark:text-gray-400 w-12">
+              <span className="text-sm text-szn-text-2 w-12">
                 {config.hybridAlpha.toFixed(2)}
               </span>
             </div>
@@ -412,14 +412,14 @@ export function PlanEditor({
               onChange={(e) => updateConfig("rerankEnabled", e.target.checked)}
               className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span className="text-sm text-gray-700 dark:text-gray-300">
+            <span className="text-sm text-szn-text-2">
               Enable Reranking
             </span>
           </label>
 
           {config.rerankEnabled && (
             <div className="ml-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm text-szn-text-2 mb-1">
                 Rerank Top N
               </label>
               <input
@@ -428,7 +428,7 @@ export function PlanEditor({
                 onChange={(e) => updateConfig("rerankTopN", parseInt(e.target.value, 10) || 5)}
                 min={1}
                 max={config.topK}
-                className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-32 px-3 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -436,13 +436,13 @@ export function PlanEditor({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex justify-end gap-3 pt-4 border-t border-szn-border">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={saving}
-            className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50"
+            className="px-4 py-2 text-sm text-szn-text-2 bg-szn-surface rounded-lg hover:bg-szn-surface-1 disabled:opacity-50"
           >
             Cancel
           </button>

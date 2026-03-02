@@ -207,58 +207,58 @@ export function SecurityClient() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.securityPage.title")}</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.securityPage.title")}</h1>
+        <p className="text-szn-text-2 mt-1">
           {t("dashboard.securityPage.subtitle")}
         </p>
       </div>
 
       {/* Security Overview Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔐</span>
-            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.activeKeys")}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.securityPage.stats.activeKeys")}</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{apiKeys.length}</p>
+          <p className="text-2xl font-bold text-szn-text-1">{apiKeys.length}</p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">📋</span>
-            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.auditEvents")}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.securityPage.stats.auditEvents")}</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-szn-text-1">
             {auditLogs.filter(
               (l) => new Date(l.created_at).getTime() > Date.now() - 86400000
             ).length}
           </p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🛡️</span>
-            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.securityScore")}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.securityPage.stats.securityScore")}</span>
           </div>
           <p className="text-2xl font-bold text-green-600">A+</p>
         </div>
-        <div className="bg-white rounded-xl border p-4">
+        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⚠️</span>
-            <span className="text-sm text-gray-500">{t("dashboard.securityPage.stats.alerts")}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.securityPage.stats.alerts")}</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">0</p>
+          <p className="text-2xl font-bold text-szn-text-1">0</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">
         {(["audit", "keys", "policies", "settings"] as TabType[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-szn-card text-szn-text-1 shadow-sm"
+                : "text-szn-text-2 hover:text-szn-text-1"
             }`}
           >
             {tab === "audit" && t("dashboard.securityPage.tabs.audit")}
@@ -272,7 +272,7 @@ export function SecurityClient() {
       {/* Content */}
       {loading ? (
         <div className="p-8 text-center">
-          <div className="animate-spin w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
+          <div className="animate-spin w-6 h-6 border-2 border-szn-accent border-t-transparent rounded-full mx-auto" />
         </div>
       ) : (
         <>
@@ -348,9 +348,9 @@ function AuditLogTable({
   };
 
   return (
-    <div className="bg-white rounded-2xl border">
+    <div className="bg-szn-card rounded-2xl border border-szn-border">
       {/* Filters */}
-      <div className="p-4 border-b flex gap-4">
+      <div className="p-4 border-b border-szn-border flex gap-4">
         <select
           value={actionFilter}
           onChange={(e) => onActionFilterChange(e.target.value)}
@@ -376,7 +376,7 @@ function AuditLogTable({
         <button
           onClick={onExport}
           disabled={exporting || logs.length === 0}
-          className="ml-auto px-4 py-2 border rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 flex items-center gap-2"
+          className="ml-auto px-4 py-2 border border-szn-border rounded-lg text-sm hover:bg-szn-surface-1 disabled:opacity-50 flex items-center gap-2"
         >
           {exporting ? (
             <>
@@ -399,28 +399,28 @@ function AuditLogTable({
 
       {/* Table */}
       <table className="w-full">
-        <thead className="bg-gray-50 border-b">
+        <thead className="bg-szn-bg border-b border-szn-border">
           <tr>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               {t("dashboard.securityPage.audit.action")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               {t("dashboard.securityPage.audit.resource")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               {t("dashboard.securityPage.audit.details")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               {t("dashboard.securityPage.audit.ipAddress")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+            <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">
               {t("dashboard.securityPage.audit.time")}
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y divide-szn-border">
           {logs.map((log) => (
-            <tr key={log.id} className="hover:bg-gray-50">
+            <tr key={log.id} className="hover:bg-szn-surface-1">
               <td className="px-4 py-3">
                 <span className={`flex items-center gap-2 text-sm ${getActionColor(log.action)}`}>
                   <span>{getActionIcon(log.action)}</span>
@@ -428,18 +428,18 @@ function AuditLogTable({
                 </span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-600">{log.resource}</span>
+                <span className="text-sm text-szn-text-2">{log.resource}</span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-500 font-mono">
+                <span className="text-sm text-szn-text-2 font-mono">
                   {JSON.stringify(log.details).slice(0, 50)}...
                 </span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm font-mono text-gray-600">{log.ip_address}</span>
+                <span className="text-sm font-mono text-szn-text-2">{log.ip_address}</span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-szn-text-2">
                   {new Date(log.created_at).toLocaleString()}
                 </span>
               </td>
@@ -449,7 +449,7 @@ function AuditLogTable({
       </table>
 
       {logs.length === 0 && (
-        <div className="p-8 text-center text-gray-500">{t("dashboard.securityPage.audit.noLogs")}</div>
+        <div className="p-8 text-center text-szn-text-2">{t("dashboard.securityPage.audit.noLogs")}</div>
       )}
     </div>
   );
@@ -470,12 +470,12 @@ function ApiKeysTable({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-szn-text-2">
           {t("dashboard.securityPage.keys.description")}
         </p>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
+          className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
         >
           {t("dashboard.securityPage.keys.createNew")}
         </button>
@@ -483,29 +483,29 @@ function ApiKeysTable({
 
       <div className="space-y-4">
         {keys.map((key) => (
-          <div key={key.id} className="bg-white rounded-xl border p-4">
+          <div key={key.id} className="bg-szn-card rounded-xl border border-szn-border p-4">
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-gray-900">{key.name}</h3>
+                  <h3 className="font-semibold text-szn-text-1">{key.name}</h3>
                   <span
                     className={`px-2 py-0.5 text-xs rounded-full ${
                       key.type === "live"
-                        ? "bg-emerald-100 text-emerald-700"
+                        ? "bg-szn-success/10 text-szn-success"
                         : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
                     {key.type}
                   </span>
                 </div>
-                <p className="text-sm font-mono text-gray-500 mt-1">
+                <p className="text-sm font-mono text-szn-text-2 mt-1">
                   {key.key_prefix}...
                 </p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => onRotate(key.id)}
-                  className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+                  className="px-3 py-1.5 text-sm border border-szn-border rounded-lg hover:bg-szn-surface-1"
                 >
                   {t("dashboard.securityPage.keys.rotate")}
                 </button>
@@ -520,22 +520,22 @@ function ApiKeysTable({
 
             <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-gray-500">{t("dashboard.securityPage.keys.created")}</span>
-                <p className="text-gray-900">
+                <span className="text-szn-text-2">{t("dashboard.securityPage.keys.created")}</span>
+                <p className="text-szn-text-1">
                   {new Date(key.created_at).toLocaleDateString()}
                 </p>
               </div>
               <div>
-                <span className="text-gray-500">{t("dashboard.securityPage.keys.lastUsed")}</span>
-                <p className="text-gray-900">
+                <span className="text-szn-text-2">{t("dashboard.securityPage.keys.lastUsed")}</span>
+                <p className="text-szn-text-1">
                   {key.last_used_at
                     ? new Date(key.last_used_at).toLocaleString()
                     : t("dashboard.securityPage.keys.never")}
                 </p>
               </div>
               <div>
-                <span className="text-gray-500">{t("dashboard.securityPage.keys.permissions")}</span>
-                <p className="text-gray-900">{key.permissions.join(", ")}</p>
+                <span className="text-szn-text-2">{t("dashboard.securityPage.keys.permissions")}</span>
+                <p className="text-szn-text-1">{key.permissions.join(", ")}</p>
               </div>
             </div>
           </div>
@@ -562,12 +562,12 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">{t("dashboard.securityPage.keys.createTitle")}</h2>
+      <div className="bg-szn-card rounded-2xl max-w-md w-full p-6">
+        <h2 className="text-xl font-bold text-szn-text-1 mb-4">{t("dashboard.securityPage.keys.createTitle")}</h2>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-szn-text-1 mb-1">
               {t("dashboard.securityPage.keys.keyName")}
             </label>
             <input
@@ -580,7 +580,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-szn-text-1 mb-1">
               {t("dashboard.securityPage.keys.keyType")}
             </label>
             <div className="flex gap-4">
@@ -603,7 +603,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
                 <span className="text-sm">{t("dashboard.securityPage.keys.live")}</span>
               </label>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-szn-text-2 mt-1">
               {t("dashboard.securityPage.keys.testKeysNote")}
             </p>
           </div>
@@ -612,14 +612,14 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
         <div className="flex gap-3 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
+            className="flex-1 px-4 py-2 border border-szn-border rounded-lg hover:bg-szn-surface-1"
           >
             {t("dashboard.securityPage.keys.cancel")}
           </button>
           <button
             onClick={handleCreate}
             disabled={!name}
-            className="flex-1 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
           >
             {t("dashboard.securityPage.keys.createKey")}
           </button>
@@ -640,14 +640,14 @@ function SecuritySettings() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl border p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.securityPage.settings.authentication")}</h3>
+      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+        <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.securityPage.settings.authentication")}</h3>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.twoFactor")}</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-szn-text-1">{t("dashboard.securityPage.settings.twoFactor")}</p>
+              <p className="text-sm text-szn-text-2">
                 {t("dashboard.securityPage.settings.twoFactorDescription")}
               </p>
             </div>
@@ -656,7 +656,7 @@ function SecuritySettings() {
                 setSettings({ ...settings, twoFactorEnabled: !settings.twoFactorEnabled })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                settings.twoFactorEnabled ? "bg-emerald-500" : "bg-gray-200"
+                settings.twoFactorEnabled ? "bg-szn-accent" : "bg-gray-200"
               }`}
             >
               <div
@@ -669,8 +669,8 @@ function SecuritySettings() {
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.sessionTimeout")}</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-szn-text-1">{t("dashboard.securityPage.settings.sessionTimeout")}</p>
+              <p className="text-sm text-szn-text-2">
                 {t("dashboard.securityPage.settings.sessionTimeoutDescription")}
               </p>
             </div>
@@ -690,14 +690,14 @@ function SecuritySettings() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">{t("dashboard.securityPage.settings.apiSecurity")}</h3>
+      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+        <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.securityPage.settings.apiSecurity")}</h3>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.ipWhitelist")}</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-szn-text-1">{t("dashboard.securityPage.settings.ipWhitelist")}</p>
+              <p className="text-sm text-szn-text-2">
                 {t("dashboard.securityPage.settings.ipWhitelistDescription")}
               </p>
             </div>
@@ -706,7 +706,7 @@ function SecuritySettings() {
                 setSettings({ ...settings, ipWhitelist: !settings.ipWhitelist })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                settings.ipWhitelist ? "bg-emerald-500" : "bg-gray-200"
+                settings.ipWhitelist ? "bg-szn-accent" : "bg-gray-200"
               }`}
             >
               <div
@@ -719,8 +719,8 @@ function SecuritySettings() {
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">{t("dashboard.securityPage.settings.rateLimit")}</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-szn-text-1">{t("dashboard.securityPage.settings.rateLimit")}</p>
+              <p className="text-sm text-szn-text-2">
                 {t("dashboard.securityPage.settings.rateLimitDescription")}
               </p>
             </div>
@@ -810,8 +810,8 @@ function PoliciesPanel({
         );
       case "compliance":
         return (
-          <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
@@ -881,8 +881,8 @@ function PoliciesPanel({
         {policies.map((policy) => (
           <div
             key={policy.id}
-            className={`bg-white rounded-xl border p-5 transition-all ${
-              policy.status === "active" ? "border-green-200" : "border-gray-200"
+            className={`bg-szn-card rounded-xl border p-5 transition-all ${
+              policy.status === "active" ? "border-green-200" : "border-szn-border"
             }`}
           >
             <div className="flex items-start justify-between">
@@ -890,17 +890,17 @@ function PoliciesPanel({
                 {getTypeIcon(policy.type)}
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <h3 className="font-semibold text-gray-900">{policy.name}</h3>
+                    <h3 className="font-semibold text-szn-text-1">{policy.name}</h3>
                     {getStatusBadge(policy.status)}
                   </div>
-                  <p className="text-sm text-gray-500 mb-3">{policy.description}</p>
+                  <p className="text-sm text-szn-text-2 mb-3">{policy.description}</p>
 
                   {/* Conditions */}
                   <div className="flex flex-wrap gap-2">
                     {policy.conditions.map((condition, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md"
+                        className="px-2 py-1 text-xs bg-szn-surface text-szn-text-2 rounded-md"
                       >
                         {condition}
                       </span>
@@ -910,14 +910,14 @@ function PoliciesPanel({
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-szn-text-3">
                   Updated {new Date(policy.lastUpdated).toLocaleDateString()}
                 </span>
                 {policy.status !== "pending" && (
                   <button
                     onClick={() => onToggle(policy.id)}
                     className={`w-12 h-6 rounded-full transition-colors ${
-                      policy.status === "active" ? "bg-emerald-500" : "bg-gray-200"
+                      policy.status === "active" ? "bg-szn-accent" : "bg-gray-200"
                     }`}
                   >
                     <div
@@ -938,7 +938,7 @@ function PoliciesPanel({
 
       {/* Add Policy Button */}
       <div className="flex justify-center">
-        <button className="px-6 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-emerald-500 hover:text-emerald-600 transition-colors flex items-center gap-2">
+        <button className="px-6 py-3 border-2 border-dashed border-szn-border rounded-xl text-szn-text-2 hover:border-szn-accent hover:text-szn-accent transition-colors flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>

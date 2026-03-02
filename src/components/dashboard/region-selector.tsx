@@ -109,9 +109,9 @@ export function RegionSelector({
   return (
     <div className={className}>
       {/* Current Region Display */}
-      <div className="glass-card rounded-2xl p-6">
+      <div className="szn-card rounded-2xl p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-szn-text-1">
             Data Residency
           </h3>
           {regionLocked && (
@@ -127,10 +127,10 @@ export function RegionSelector({
             {currentRegionConfig.flag}
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">
+            <p className="font-medium text-szn-text-1">
               {currentRegionConfig.name}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-szn-text-2">
               {currentRegionConfig.dataCenter.city}, {currentRegionConfig.dataCenter.country}
             </p>
           </div>
@@ -157,7 +157,7 @@ export function RegionSelector({
           </button>
           <button
             onClick={() => setShowHistoryModal(true)}
-            className="px-4 py-2.5 rounded-xl font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+            className="px-4 py-2.5 rounded-xl font-medium bg-szn-surface text-szn-text-1 hover:bg-szn-surface-1 transition-all"
           >
             <HistoryIcon className="w-5 h-5" />
           </button>
@@ -171,10 +171,10 @@ export function RegionSelector({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative glass-card rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface-1 rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -183,10 +183,10 @@ export function RegionSelector({
               <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
                 <GlobeIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-szn-text-1">
                 Change Data Region
               </h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+              <p className="text-szn-text-2 text-sm mt-1">
                 Select where your organization&apos;s data will be stored
               </p>
             </div>
@@ -213,15 +213,15 @@ export function RegionSelector({
                       isSelected
                         ? "border-pink-400 bg-pink-50 dark:bg-pink-900/20"
                         : isAvailable && region.available
-                        ? "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
-                        : "border-gray-100 dark:border-gray-700 opacity-50 cursor-not-allowed"
+                        ? "border-szn-border hover:border-szn-text-3"
+                        : "border-szn-border opacity-50 cursor-not-allowed"
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{region.flag}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium text-gray-900 dark:text-white truncate">
+                          <p className="font-medium text-szn-text-1 truncate">
                             {region.name}
                           </p>
                           {isCurrent && (
@@ -230,19 +230,19 @@ export function RegionSelector({
                             </span>
                           )}
                           {!region.available && (
-                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded">
+                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-szn-surface text-szn-text-2 rounded">
                               Coming Soon
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        <p className="text-xs text-szn-text-2 mt-0.5">
                           {region.dataCenter.city}
                         </p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {region.compliance.slice(0, 3).map((cert) => (
                             <span
                               key={cert}
-                              className="px-1.5 py-0.5 text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded"
+                              className="px-1.5 py-0.5 text-[10px] bg-szn-surface text-szn-text-2 rounded"
                             >
                               {cert}
                             </span>
@@ -298,7 +298,7 @@ export function RegionSelector({
             {/* Reason Input */}
             {selectedRegion !== currentRegion && (
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1.5">
+                <label className="block text-sm font-medium text-szn-text-1 mb-1.5">
                   Reason for change (optional)
                 </label>
                 <input
@@ -306,7 +306,7 @@ export function RegionSelector({
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="e.g., Compliance requirement, latency optimization"
-                  className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
                 />
               </div>
             )}
@@ -314,7 +314,7 @@ export function RegionSelector({
             <div className="flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
               >
                 Cancel
               </button>
@@ -337,24 +337,24 @@ export function RegionSelector({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowHistoryModal(false)}
           />
-          <div className="relative glass-card rounded-3xl p-8 w-full max-w-lg shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-3xl p-8 w-full max-w-lg shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowHistoryModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface-1 rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
 
             <div className="text-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-szn-text-1">
                 Region Change History
               </h2>
             </div>
 
             {isLoadingHistory ? (
-              <div className="py-8 text-center text-gray-500">Loading...</div>
+              <div className="py-8 text-center text-szn-text-2">Loading...</div>
             ) : history.length === 0 ? (
-              <div className="py-8 text-center text-gray-500 dark:text-gray-400">
+              <div className="py-8 text-center text-szn-text-2">
                 No region changes recorded
               </div>
             ) : (
@@ -362,7 +362,7 @@ export function RegionSelector({
                 {history.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl"
+                    className="p-4 bg-szn-bg rounded-xl"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       {item.from_region && (
@@ -370,24 +370,24 @@ export function RegionSelector({
                           <span className="text-lg">
                             {REGIONS[item.from_region]?.flag || "?"}
                           </span>
-                          <span className="text-gray-400">→</span>
+                          <span className="text-szn-text-3">→</span>
                         </>
                       )}
                       <span className="text-lg">
                         {REGIONS[item.to_region]?.flag || "?"}
                       </span>
-                      <span className="font-medium text-gray-900 dark:text-white">
+                      <span className="font-medium text-szn-text-1">
                         {REGIONS[item.to_region]?.name || item.to_region}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-2 text-xs text-szn-text-2">
                       <span>{new Date(item.created_at).toLocaleDateString()}</span>
-                      <span className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">
+                      <span className="px-1.5 py-0.5 bg-szn-surface rounded">
                         {item.change_type.replace("_", " ")}
                       </span>
                     </div>
                     {item.reason && (
-                      <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                      <p className="mt-2 text-sm text-szn-text-2">
                         {item.reason}
                       </p>
                     )}
@@ -398,7 +398,7 @@ export function RegionSelector({
 
             <button
               onClick={() => setShowHistoryModal(false)}
-              className="w-full mt-6 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className="w-full mt-6 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
             >
               Close
             </button>

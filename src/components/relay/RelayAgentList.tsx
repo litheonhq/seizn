@@ -75,7 +75,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
     return (
       <div className="animate-pulse space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-gray-100 dark:bg-gray-800 rounded-lg" />
+          <div key={i} className="h-24 bg-szn-surface rounded-lg" />
         ))}
       </div>
     );
@@ -97,7 +97,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
 
   if (agents.length === 0) {
     return (
-      <div className="text-center py-12 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
+      <div className="text-center py-12 border border-dashed border-szn-border rounded-lg">
         <svg
           className="mx-auto h-12 w-12 text-gray-400"
           fill="none"
@@ -111,10 +111,10 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
             d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
           />
         </svg>
-        <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h3 className="mt-4 text-lg font-medium text-szn-text-1">
           No relay agents
         </h3>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-szn-text-2">
           Create a relay agent to enable edge federated search.
         </p>
       </div>
@@ -126,25 +126,25 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
       {agents.map((agent) => (
         <div
           key={agent.id}
-          className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
+          className="p-4 bg-szn-card border border-szn-border rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
           onClick={() => onSelectAgent?.(agent)}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                <h3 className="text-lg font-medium text-szn-text-1">
                   {agent.name}
                 </h3>
                 <StatusBadge status={agent.status} />
               </div>
 
               {agent.description && (
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-sm text-szn-text-2">
                   {agent.description}
                 </p>
               )}
 
-              <div className="mt-3 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
+              <div className="mt-3 flex flex-wrap gap-4 text-sm text-szn-text-2">
                 <span className="flex items-center gap-1">
                   <CollectionIcon />
                   {agent.collections.length} collection{agent.collections.length !== 1 ? 's' : ''}
@@ -169,7 +169,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
               </div>
 
               {agent.lastHeartbeat && (
-                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                <p className="mt-2 text-xs text-szn-text-3">
                   Last heartbeat: {formatRelativeTime(agent.lastHeartbeat)}
                 </p>
               )}

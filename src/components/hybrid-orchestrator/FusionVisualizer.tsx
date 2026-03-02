@@ -74,13 +74,13 @@ export function FusionVisualizer({
           {Object.entries(STRATEGY_COLORS).map(([strategy, color]) => (
             <div key={strategy} className="flex items-center gap-2">
               <div className={`w-3 h-3 rounded-full ${color}`} />
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm text-szn-text-2">
                 {STRATEGY_LABELS[strategy as StrategyType]}
               </span>
             </div>
           ))}
         </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-szn-text-2">
           Fusion: {fusionMethod.toUpperCase()}
         </span>
       </div>
@@ -127,11 +127,11 @@ function FusionResultRow({
   const normalizedScore = (result.finalScore / maxScore) * 100;
 
   return (
-    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+    <div className="p-4 border border-szn-border rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
       <div className="flex items-start gap-4">
         {/* Rank Badge */}
-        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full">
-          <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-szn-surface rounded-full">
+          <span className="text-sm font-bold text-szn-text-2">
             {rank}
           </span>
         </div>
@@ -154,20 +154,20 @@ function FusionResultRow({
 
           {/* Score Bar */}
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-szn-surface rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
                 style={{ width: `${normalizedScore}%` }}
               />
             </div>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16 text-right">
+            <span className="text-sm font-medium text-szn-text-2 w-16 text-right">
               {result.finalScore.toFixed(4)}
             </span>
           </div>
 
           {/* Result Text */}
           {result.data?.text && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+            <p className="text-sm text-szn-text-2 line-clamp-2">
               {result.data.text}
             </p>
           )}
@@ -182,7 +182,7 @@ function FusionResultRow({
                       STRATEGY_COLORS[strategy as StrategyType]
                     }`}
                   />
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-szn-text-2">
                     {score.toFixed(3)}
                   </span>
                 </div>
@@ -315,9 +315,9 @@ export function FusionFlowDiagram({ strategies, fusionMethod }: FusionFlowProps)
       </div>
 
       {/* Results Node */}
-      <div className="px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg">
-        <div className="text-xs text-gray-500 dark:text-gray-400">Fused</div>
-        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <div className="px-4 py-3 border-2 border-szn-border rounded-lg">
+        <div className="text-xs text-szn-text-2">Fused</div>
+        <div className="text-sm font-medium text-szn-text-2">
           Results
         </div>
       </div>

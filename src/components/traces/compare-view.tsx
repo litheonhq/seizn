@@ -284,10 +284,10 @@ function MetricComparisonRow({
     valueA && valueB && valueB !== 0 ? ((valueA - valueB) / valueB) * 100 : 0;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800 last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-szn-border last:border-0">
       <div className="flex items-center gap-2">
         {icon && <span className="text-gray-400">{icon}</span>}
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
+        <span className="text-sm font-medium text-szn-text-2">{label}</span>
       </div>
       <div className="flex items-center gap-6">
         {/* Value A */}
@@ -341,7 +341,7 @@ interface SummaryCardProps {
 
 function SummaryCard({ label, value, detail, positive, icon }: SummaryCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+    <div className="bg-szn-card rounded-xl p-4 border border-szn-border">
       <div className="flex items-center gap-2 mb-2">
         {icon && <span className="text-gray-400">{icon}</span>}
         <span className="text-xs text-gray-500 uppercase tracking-wide">{label}</span>
@@ -352,7 +352,7 @@ function SummaryCard({ label, value, detail, positive, icon }: SummaryCardProps)
             ? "text-green-600 dark:text-green-400"
             : positive === false
             ? "text-red-600 dark:text-red-400"
-            : "text-gray-900 dark:text-white"
+            : "text-szn-text-1"
         }`}
       >
         {value}
@@ -398,7 +398,7 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
         return (
           <div key={name} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700 dark:text-gray-300 capitalize">
+              <span className="font-medium text-szn-text-2 capitalize">
                 {label.replace(/_/g, " ")}
               </span>
               <span className="text-gray-500">
@@ -407,14 +407,14 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
             </div>
             <div className="flex gap-2">
               {/* Bar A */}
-              <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div className="flex-1 bg-szn-surface rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full bg-blue-500 rounded-full transition-all duration-300"
                   style={{ width: `${widthA}%` }}
                 />
               </div>
               {/* Bar B */}
-              <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div className="flex-1 bg-szn-surface rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full bg-purple-500 rounded-full transition-all duration-300"
                   style={{ width: `${widthB}%` }}
@@ -426,7 +426,7 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
       })}
 
       {/* Legend */}
-      <div className="flex items-center gap-4 pt-2 border-t border-gray-100 dark:border-gray-700">
+      <div className="flex items-center gap-4 pt-2 border-t border-szn-border">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-blue-500" />
           <span className="text-xs text-gray-500">Trace A</span>
@@ -463,10 +463,10 @@ function RankingChangeList({ changes }: RankingChangeListProps) {
               ? "bg-green-50 dark:bg-green-900/20 border-l-3 border-green-500"
               : change.delta < 0
               ? "bg-red-50 dark:bg-red-900/20 border-l-3 border-red-500"
-              : "bg-gray-50 dark:bg-gray-800"
+              : "bg-szn-surface"
           }`}
         >
-          <span className="text-sm font-mono text-gray-600 dark:text-gray-400 flex-1 truncate">
+          <span className="text-sm font-mono text-szn-text-2 flex-1 truncate">
             {change.id}
           </span>
           <div className="flex items-center gap-2">
@@ -515,11 +515,11 @@ function ConfigDiff({ config }: ConfigDiffProps) {
           className={`p-3 rounded-lg ${
             value.changed
               ? "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800"
-              : "bg-gray-50 dark:bg-gray-800"
+              : "bg-szn-surface"
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-szn-text-2">
               {key.replace(/_/g, " ")}
             </span>
             {value.changed && (
@@ -803,8 +803,8 @@ export function CompareView({
   }) => {
     if (!active || !payload) return null;
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-        <p className="font-medium text-gray-900 dark:text-white mb-2">{label}</p>
+      <div className="bg-szn-card border border-szn-border rounded-lg shadow-lg p-3">
+        <p className="font-medium text-szn-text-1 mb-2">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {entry.name}: {entry.value}ms
@@ -825,7 +825,7 @@ export function CompareView({
 
   if (loading) {
     return (
-      <div className={`bg-white dark:bg-gray-900 rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
         <div className="flex flex-col items-center justify-center">
           <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
           <p className="mt-4 text-gray-500">Loading comparison...</p>
@@ -836,12 +836,12 @@ export function CompareView({
 
   if (error) {
     return (
-      <div className={`bg-white dark:bg-gray-900 rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={loadComparison}
-            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="px-4 py-2 bg-szn-surface rounded-lg hover:bg-szn-surface-1"
           >
             Retry
           </button>
@@ -852,7 +852,7 @@ export function CompareView({
 
   if (!computedDiff && mode === "traces") {
     return (
-      <div className={`bg-white dark:bg-gray-900 rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
         <p className="text-center text-gray-500">
           Select two traces to compare
         </p>
@@ -862,13 +862,13 @@ export function CompareView({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden ${className}`}
+      className={`bg-szn-bg rounded-2xl border border-szn-border shadow-lg overflow-hidden ${className}`}
     >
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-gray-100 dark:border-gray-800">
+      <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-szn-border">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">
+            <h3 className="font-semibold text-szn-text-1">
               {mode === "traces" ? "Trace Comparison" : "Eval Run Comparison"}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
@@ -902,7 +902,7 @@ export function CompareView({
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? "bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm"
+                  ? "bg-szn-card text-blue-600 dark:text-blue-400 shadow-sm"
                   : "text-gray-500 hover:text-gray-700 hover:bg-white/50 dark:hover:bg-gray-800/50"
               }`}
             >
@@ -962,8 +962,8 @@ export function CompareView({
             </div>
 
             {/* Quick Metrics */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-              <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-szn-surface rounded-xl p-4">
+              <h4 className="font-medium text-szn-text-1 mb-4">
                 Key Metrics Comparison
               </h4>
               <MetricComparisonRow
@@ -1037,8 +1037,8 @@ export function CompareView({
 
             {/* Radar Chart */}
             {evalRadarData.length > 0 && (
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+              <div className="bg-szn-surface rounded-xl p-4">
+                <h4 className="font-medium text-szn-text-1 mb-4">
                   Multi-Metric Overview
                 </h4>
                 <div className="h-80">
@@ -1057,8 +1057,8 @@ export function CompareView({
             )}
 
             {/* Metrics Comparison */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-              <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-szn-surface rounded-xl p-4">
+              <h4 className="font-medium text-szn-text-1 mb-4">
                 Detailed Metrics
               </h4>
               <MetricComparisonRow
@@ -1118,8 +1118,8 @@ export function CompareView({
         {activeTab === "latency" && computedDiff && (
           <div className="space-y-6">
             {/* Latency Breakdown */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-              <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-szn-surface rounded-xl p-4">
+              <h4 className="font-medium text-szn-text-1 mb-4">
                 Latency Breakdown
               </h4>
               <MetricComparisonRow
@@ -1153,8 +1153,8 @@ export function CompareView({
             </div>
 
             {/* Bar Chart */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-              <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-szn-surface rounded-xl p-4">
+              <h4 className="font-medium text-szn-text-1 mb-4">
                 Latency Comparison Chart
               </h4>
               <div className="h-64">
@@ -1179,8 +1179,8 @@ export function CompareView({
           <div className="space-y-6">
             {/* Results Summary */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="bg-szn-surface rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-szn-text-1">
                   {computedDiff.results.overlap_count}
                 </div>
                 <div className="text-sm text-gray-500">Overlapping Results</div>
@@ -1200,9 +1200,9 @@ export function CompareView({
             </div>
 
             {/* Ranking Changes */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+            <div className="bg-szn-surface rounded-xl p-4">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-medium text-gray-900 dark:text-white">
+                <h4 className="font-medium text-szn-text-1">
                   Ranking Changes
                 </h4>
                 <div className="flex items-center gap-4 text-sm">
@@ -1274,8 +1274,8 @@ export function CompareView({
         {activeTab === "pipeline" && (
           <div className="space-y-6">
             {traceA?.stages && traceB?.stages ? (
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+              <div className="bg-szn-surface rounded-xl p-4">
+                <h4 className="font-medium text-szn-text-1 mb-4">
                   Pipeline Stage Comparison
                 </h4>
                 <StageComparison stagesA={traceA.stages} stagesB={traceB.stages} />
@@ -1295,8 +1295,8 @@ export function CompareView({
         {/* Config Tab */}
         {activeTab === "config" && computedDiff && (
           <div className="space-y-6">
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-              <h4 className="font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-szn-surface rounded-xl p-4">
+              <h4 className="font-medium text-szn-text-1 mb-4">
                 Configuration Differences
               </h4>
               <ConfigDiff config={computedDiff.config} />

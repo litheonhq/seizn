@@ -125,10 +125,10 @@ function SSRStatusContent({ data }: { data: StatusData }) {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <Link href="/" className="text-2xl font-bold text-gray-900">
+        <Link href="/" className="text-2xl font-bold text-szn-text-1">
           Seizn
         </Link>
-        <span className="text-sm text-gray-500">System Status</span>
+        <span className="text-sm text-szn-text-2">System Status</span>
       </div>
 
       <div className={colors.bg + ' rounded-2xl p-6 mb-8 border ' + colors.border}>
@@ -140,7 +140,7 @@ function SSRStatusContent({ data }: { data: StatusData }) {
             <h1 className={'text-xl font-bold ' + colors.text}>
               {statusLabel}
             </h1>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-szn-text-2 text-sm mt-1">
               Last updated: {new Date(data.last_updated).toISOString()}
             </p>
           </div>
@@ -148,33 +148,33 @@ function SSRStatusContent({ data }: { data: StatusData }) {
       </div>
 
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{data.uptime.last_24h.toFixed(2)}%</p>
-          <p className="text-sm text-gray-500">24 hours</p>
+        <div className="bg-szn-card rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_24h.toFixed(2)}%</p>
+          <p className="text-sm text-szn-text-2">24 hours</p>
         </div>
-        <div className="bg-white rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{data.uptime.last_7d.toFixed(2)}%</p>
-          <p className="text-sm text-gray-500">7 days</p>
+        <div className="bg-szn-card rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_7d.toFixed(2)}%</p>
+          <p className="text-sm text-szn-text-2">7 days</p>
         </div>
-        <div className="bg-white rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{data.uptime.last_30d.toFixed(2)}%</p>
-          <p className="text-sm text-gray-500">30 days</p>
+        <div className="bg-szn-card rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_30d.toFixed(2)}%</p>
+          <p className="text-sm text-szn-text-2">30 days</p>
         </div>
-        <div className="bg-white rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{data.uptime.last_90d.toFixed(2)}%</p>
-          <p className="text-sm text-gray-500">90 days</p>
+        <div className="bg-szn-card rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_90d.toFixed(2)}%</p>
+          <p className="text-sm text-szn-text-2">90 days</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border mb-8">
+      <div className="bg-szn-card rounded-2xl border mb-8">
         <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900">Service Status</h2>
+          <h2 className="font-semibold text-szn-text-1">Service Status</h2>
         </div>
         <div className="divide-y">
           {data.services.map((service) => {
             const dotColor = service.status === 'operational' ? 'bg-emerald-500' :
               service.status === 'degraded' ? 'bg-yellow-500' : 'bg-red-500';
-            const textColor = service.status === 'operational' ? 'text-emerald-600' :
+            const textColor = service.status === 'operational' ? 'text-szn-accent' :
               service.status === 'degraded' ? 'text-yellow-600' : 'text-red-600';
             const statusText = service.status === 'operational' ? 'Operational' :
               service.status === 'degraded' ? 'Degraded' : 'Down';
@@ -182,11 +182,11 @@ function SSRStatusContent({ data }: { data: StatusData }) {
               <div key={service.name} className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-3">
                   <div className={'w-2.5 h-2.5 rounded-full ' + dotColor} />
-                  <span className="font-medium text-gray-900">{service.name}</span>
+                  <span className="font-medium text-szn-text-1">{service.name}</span>
                 </div>
                 <div className="flex items-center gap-4">
                   {service.latency_ms && (
-                    <span className="text-sm text-gray-500">{service.latency_ms}ms</span>
+                    <span className="text-sm text-szn-text-2">{service.latency_ms}ms</span>
                   )}
                   <span className={'text-sm ' + textColor}>{statusText}</span>
                 </div>
@@ -218,7 +218,7 @@ export default async function StatusPage() {
   const data = await getStatusData();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-szn-bg">
       {data && (
         <noscript>
           <SSRStatusContent data={data} />

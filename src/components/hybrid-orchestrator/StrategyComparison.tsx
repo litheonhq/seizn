@@ -84,7 +84,7 @@ export function StrategyComparison({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter a query to compare strategies..."
-          className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          className="flex-1 px-4 py-2 border border-szn-border rounded-lg bg-szn-surface text-szn-text-1"
           onKeyDown={(e) => e.key === 'Enter' && handleCompare()}
         />
         <button
@@ -105,8 +105,8 @@ export function StrategyComparison({
       {result && (
         <div className="space-y-6">
           {/* Overlap Analysis */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+          <div className="p-4 bg-szn-bg rounded-lg">
+            <h3 className="text-lg font-medium text-szn-text-1 mb-3">
               Overlap Analysis
             </h3>
             <div className="grid grid-cols-3 gap-4 text-center">
@@ -114,7 +114,7 @@ export function StrategyComparison({
                 <div className="text-2xl font-bold text-blue-600">
                   {result.overlap_analysis.total_unique}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-szn-text-2">
                   Total Unique Results
                 </div>
               </div>
@@ -122,7 +122,7 @@ export function StrategyComparison({
                 <div className="text-2xl font-bold text-green-600">
                   {result.overlap_analysis.overlapping}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-szn-text-2">
                   Overlapping
                 </div>
               </div>
@@ -130,7 +130,7 @@ export function StrategyComparison({
                 <div className="text-2xl font-bold text-purple-600">
                   {result.overlap_analysis.overlap_percentage}%
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-szn-text-2">
                   Overlap Rate
                 </div>
               </div>
@@ -138,17 +138,17 @@ export function StrategyComparison({
           </div>
 
           {/* Latency Comparison */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+          <div className="p-4 bg-szn-bg rounded-lg">
+            <h3 className="text-lg font-medium text-szn-text-1 mb-3">
               Latency Comparison
             </h3>
             <div className="space-y-2">
               {Object.entries(result.strategy_latencies).map(([strategy, latency]) => (
                 <div key={strategy} className="flex items-center gap-3">
-                  <span className="w-24 text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+                  <span className="w-24 text-sm font-medium text-szn-text-2 capitalize">
                     {strategy}
                   </span>
-                  <div className="flex-1 h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="flex-1 h-4 bg-szn-surface rounded-full overflow-hidden">
                     <div
                       className="h-full bg-blue-500 rounded-full"
                       style={{
@@ -156,7 +156,7 @@ export function StrategyComparison({
                       }}
                     />
                   </div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400 w-16 text-right">
+                  <span className="text-sm text-szn-text-2 w-16 text-right">
                     {Math.round(latency)}ms
                   </span>
                 </div>
@@ -166,20 +166,20 @@ export function StrategyComparison({
 
           {/* Side-by-Side Results */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+            <h3 className="text-lg font-medium text-szn-text-1 mb-3">
               Results Comparison
             </h3>
             <div className="grid grid-cols-2 gap-4">
               {Object.entries(result.strategy_results).map(([strategy, results]) => (
                 <div
                   key={strategy}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+                  className="border border-szn-border rounded-lg overflow-hidden"
                 >
-                  <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <span className="font-medium text-gray-900 dark:text-gray-100 capitalize">
+                  <div className="px-4 py-2 bg-szn-surface border-b border-szn-border">
+                    <span className="font-medium text-szn-text-1 capitalize">
                       {strategy}
                     </span>
-                    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="ml-2 text-sm text-szn-text-2">
                       ({results.length} results)
                     </span>
                   </div>
@@ -190,14 +190,14 @@ export function StrategyComparison({
                         className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                          <span className="text-xs font-medium text-szn-text-2">
                             #{index + 1}
                           </span>
                           <span className="text-xs text-blue-600 dark:text-blue-400">
                             {result.score.toFixed(4)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
+                        <p className="text-sm text-szn-text-2 line-clamp-2">
                           {result.data?.text ?? result.id}
                         </p>
                       </div>
@@ -214,20 +214,20 @@ export function StrategyComparison({
           </div>
 
           {/* Overlap Matrix */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+          <div className="p-4 bg-szn-bg rounded-lg">
+            <h3 className="text-lg font-medium text-szn-text-1 mb-3">
               Overlap Matrix
             </h3>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
                   <tr>
-                    <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400" />
+                    <th className="px-3 py-2 text-left text-szn-text-2" />
                     {Object.keys(result.overlap_analysis.overlap_matrix).map(
                       (strategy) => (
                         <th
                           key={strategy}
-                          className="px-3 py-2 text-center text-gray-500 dark:text-gray-400 capitalize"
+                          className="px-3 py-2 text-center text-szn-text-2 capitalize"
                         >
                           {strategy}
                         </th>
@@ -239,7 +239,7 @@ export function StrategyComparison({
                   {Object.entries(result.overlap_analysis.overlap_matrix).map(
                     ([rowStrategy, overlaps]) => (
                       <tr key={rowStrategy}>
-                        <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 capitalize">
+                        <td className="px-3 py-2 font-medium text-szn-text-2 capitalize">
                           {rowStrategy}
                         </td>
                         {Object.entries(overlaps).map(([colStrategy, count]) => (
@@ -247,7 +247,7 @@ export function StrategyComparison({
                             key={colStrategy}
                             className={`px-3 py-2 text-center ${
                               rowStrategy === colStrategy
-                                ? 'bg-gray-100 dark:bg-gray-800'
+                                ? 'bg-szn-surface'
                                 : count > 0
                                 ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
                                 : ''

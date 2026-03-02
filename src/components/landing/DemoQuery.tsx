@@ -139,10 +139,10 @@ const SAMPLE_QUERIES = [
 function PanelSkeleton() {
   return (
     <div className="animate-pulse space-y-3">
-      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-      <div className="h-20 bg-gray-200 rounded"></div>
-      <div className="h-20 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-szn-surface rounded w-3/4"></div>
+      <div className="h-4 bg-szn-surface rounded w-1/2"></div>
+      <div className="h-20 bg-szn-surface rounded"></div>
+      <div className="h-20 bg-szn-surface rounded"></div>
     </div>
   );
 }
@@ -180,7 +180,7 @@ const ResultsPanel = memo(function ResultsPanel({
 
   if (results.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-szn-text-3">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
@@ -194,30 +194,30 @@ const ResultsPanel = memo(function ResultsPanel({
       {results.map((result, index) => (
         <div
           key={result.id}
-          className="p-4 bg-white border border-gray-100 rounded-xl hover:border-gray-200 transition-colors"
+          className="p-4 bg-szn-card border border-szn-border rounded-xl hover:border-szn-border transition-colors"
         >
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
+              <span className="text-xs font-medium text-szn-text-3 bg-szn-surface px-2 py-1 rounded">
                 #{index + 1}
               </span>
-              <h4 className="font-medium text-gray-900 text-sm">{result.title}</h4>
+              <h4 className="font-medium text-szn-text-1 text-sm">{result.title}</h4>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-szn-text-2">
                 {t.score || "Score"}: {result.score.toFixed(2)}
               </span>
               {showRerankDelta && result.rerankScore && (
-                <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                <span className="text-xs text-szn-accent bg-szn-accent/10 px-2 py-0.5 rounded">
                   {t.rerankScore || "Rerank"}: {result.rerankScore.toFixed(2)}
                 </span>
               )}
             </div>
           </div>
-          <p className="text-sm text-gray-600 line-clamp-2">{result.content}</p>
+          <p className="text-sm text-szn-text-2 line-clamp-2">{result.content}</p>
           <div className="mt-2 flex items-center gap-2">
             {result.metadata.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
+              <span key={tag} className="text-xs text-szn-text-3 bg-szn-bg px-2 py-0.5 rounded">
                 {tag}
               </span>
             ))}
@@ -249,7 +249,7 @@ const TracePanel = memo(function TracePanel({
 
   if (!trace) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-szn-text-3">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
@@ -261,28 +261,28 @@ const TracePanel = memo(function TracePanel({
   return (
     <div className="space-y-4 h-full overflow-auto max-h-[400px]">
       {/* Summary Bar */}
-      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl text-sm">
+      <div className="flex items-center justify-between p-3 bg-szn-bg rounded-xl text-sm">
         <div className="flex items-center gap-4">
           <div>
-            <span className="text-gray-500">{t.latency || "Latency"}:</span>{" "}
-            <span className="font-semibold text-gray-900">{trace.totalLatencyMs.toFixed(0)}ms</span>
+            <span className="text-szn-text-2">{t.latency || "Latency"}:</span>{" "}
+            <span className="font-semibold text-szn-text-1">{trace.totalLatencyMs.toFixed(0)}ms</span>
           </div>
-          <div className="w-px h-6 bg-gray-200" />
+          <div className="w-px h-6 bg-szn-border" />
           <div>
-            <span className="text-gray-500">{t.cost || "Cost"}:</span>{" "}
-            <span className="font-semibold text-gray-900">${trace.totalCost.toFixed(4)}</span>
+            <span className="text-szn-text-2">{t.cost || "Cost"}:</span>{" "}
+            <span className="font-semibold text-szn-text-1">${trace.totalCost.toFixed(4)}</span>
           </div>
-          <div className="w-px h-6 bg-gray-200" />
+          <div className="w-px h-6 bg-szn-border" />
           <div>
-            <span className="text-gray-500">{t.tokens || "Tokens"}:</span>{" "}
-            <span className="font-semibold text-gray-900">{trace.tokensUsed.toLocaleString()}</span>
+            <span className="text-szn-text-2">{t.tokens || "Tokens"}:</span>{" "}
+            <span className="font-semibold text-szn-text-1">{trace.tokensUsed.toLocaleString()}</span>
           </div>
         </div>
       </div>
 
       {/* Timeline */}
       <div className="relative">
-        <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200" />
+        <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-szn-border" />
         <div className="space-y-2">
           {trace.steps.map((step, index) => {
             const colors = STAGE_COLORS[step.stage] || STAGE_COLORS.search;
@@ -295,7 +295,7 @@ const TracePanel = memo(function TracePanel({
                 <button
                   onClick={() => setExpandedStep(isExpanded ? null : index)}
                   className={`w-full text-left p-3 rounded-lg border transition-all ${
-                    isExpanded ? `${colors.bg} ${colors.border}` : "bg-white border-gray-100 hover:border-gray-200"
+                    isExpanded ? `${colors.bg} ${colors.border}` : "bg-szn-card border-szn-border hover:border-szn-border"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -303,27 +303,27 @@ const TracePanel = memo(function TracePanel({
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
                         {step.stage}
                       </span>
-                      <span className="font-medium text-gray-900 text-sm">{step.name}</span>
+                      <span className="font-medium text-szn-text-1 text-sm">{step.name}</span>
                       {step.cached && (
-                        <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-szn-accent/10 text-szn-accent px-2 py-0.5 rounded-full">
                           {t.cached || "cached"}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">{duration.toFixed(0)}ms</span>
+                      <span className="text-sm text-szn-text-2">{duration.toFixed(0)}ms</span>
                       {step.cost !== undefined && step.cost > 0 && (
-                        <span className="text-xs text-gray-400">${step.cost.toFixed(5)}</span>
+                        <span className="text-xs text-szn-text-3">${step.cost.toFixed(5)}</span>
                       )}
                     </div>
                   </div>
                   {step.model && (
-                    <div className="mt-1 text-xs text-gray-500">
+                    <div className="mt-1 text-xs text-szn-text-2">
                       {t.model || "Model"}: {step.model}
                     </div>
                   )}
                   {isExpanded && step.details && (
-                    <pre className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded overflow-auto max-h-24">
+                    <pre className="mt-2 text-xs text-szn-text-2 bg-szn-bg p-2 rounded overflow-auto max-h-24">
                       {JSON.stringify(step.details, null, 2)}
                     </pre>
                   )}
@@ -356,7 +356,7 @@ const CostPanel = memo(function CostPanel({
 
   if (!cost) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-szn-text-3">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -375,26 +375,26 @@ const CostPanel = memo(function CostPanel({
   return (
     <div className="space-y-4 h-full overflow-auto max-h-[400px]">
       {/* Total Cost */}
-      <div className="p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
-        <div className="text-sm text-emerald-600">{t.total || "Total Cost"}</div>
-        <div className="text-3xl font-bold text-emerald-700">${cost.total.toFixed(6)}</div>
-        <div className="text-xs text-emerald-500 mt-1">Per query</div>
+      <div className="p-4 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 rounded-xl border border-szn-accent/20">
+        <div className="text-sm text-szn-accent">{t.total || "Total Cost"}</div>
+        <div className="text-3xl font-bold text-szn-accent">${cost.total.toFixed(6)}</div>
+        <div className="text-xs text-szn-accent/70 mt-1">Per query</div>
       </div>
 
       {/* Breakdown */}
       {costItems.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-3">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">{t.costBreakdown || "Breakdown"}</h3>
+        <div className="bg-szn-card rounded-xl border border-szn-border p-3">
+          <h3 className="text-sm font-medium text-szn-text-1 mb-3">{t.costBreakdown || "Breakdown"}</h3>
           <div className="space-y-2">
             {costItems.map((item, index) => {
               const percentage = cost.total > 0 ? (item.value / cost.total) * 100 : 0;
               return (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-1 text-sm">
-                    <span className="text-gray-600">{item.label}</span>
-                    <span className="font-medium text-gray-900">${item.value.toFixed(6)}</span>
+                    <span className="text-szn-text-2">{item.label}</span>
+                    <span className="font-medium text-szn-text-1">${item.value.toFixed(6)}</span>
                   </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-szn-surface rounded-full overflow-hidden">
                     <div className={`h-full ${item.color} rounded-full`} style={{ width: `${percentage}%` }} />
                   </div>
                 </div>
@@ -405,20 +405,20 @@ const CostPanel = memo(function CostPanel({
       )}
 
       {/* Usage Stats */}
-      <div className="bg-white rounded-xl border border-gray-100 p-3">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">Usage</h3>
+      <div className="bg-szn-card rounded-xl border border-szn-border p-3">
+        <h3 className="text-sm font-medium text-szn-text-1 mb-3">Usage</h3>
         <div className="grid grid-cols-3 gap-2">
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
-            <div className="text-lg font-semibold text-gray-900">{cost.tokensIn.toLocaleString()}</div>
-            <div className="text-xs text-gray-500">{t.tokensIn || "Tokens In"}</div>
+          <div className="text-center p-2 bg-szn-bg rounded-lg">
+            <div className="text-lg font-semibold text-szn-text-1">{cost.tokensIn.toLocaleString()}</div>
+            <div className="text-xs text-szn-text-2">{t.tokensIn || "Tokens In"}</div>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
-            <div className="text-lg font-semibold text-gray-900">{cost.tokensOut.toLocaleString()}</div>
-            <div className="text-xs text-gray-500">{t.tokensOut || "Tokens Out"}</div>
+          <div className="text-center p-2 bg-szn-bg rounded-lg">
+            <div className="text-lg font-semibold text-szn-text-1">{cost.tokensOut.toLocaleString()}</div>
+            <div className="text-xs text-szn-text-2">{t.tokensOut || "Tokens Out"}</div>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
-            <div className="text-lg font-semibold text-gray-900">{cost.queryUnits.toFixed(1)}</div>
-            <div className="text-xs text-gray-500">{t.queryUnits || "Query Units"}</div>
+          <div className="text-center p-2 bg-szn-bg rounded-lg">
+            <div className="text-lg font-semibold text-szn-text-1">{cost.queryUnits.toFixed(1)}</div>
+            <div className="text-xs text-szn-text-2">{t.queryUnits || "Query Units"}</div>
           </div>
         </div>
       </div>
@@ -500,31 +500,31 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
   }, []);
 
   return (
-    <section id="live-demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-gray-50 to-white">
+    <section id="live-demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-szn-bg to-szn-card">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-szn-accent/10 text-szn-accent rounded-full text-sm font-medium mb-4">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             {t.tryItNow || "Try it now - No signup required"}
           </div>
-          <h2 className="text-3xl font-semibold text-gray-900 mb-3">
+          <h2 className="text-3xl font-semibold text-szn-text-1 mb-3">
             {t.title || "Live Demo"}
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto">
+          <p className="text-szn-text-2 max-w-xl mx-auto">
             {t.subtitle || "Experience Seizn's retrieval pipeline with full tracing and cost transparency."}
           </p>
         </div>
 
         {/* Demo Console */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="grid md:grid-cols-2 gap-0 divide-x divide-gray-100">
+        <div className="bg-szn-card rounded-2xl border border-szn-border shadow-sm overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-0 divide-x divide-szn-border">
             {/* Left: Query Input */}
             <div className="p-6">
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-szn-text-1 mb-2">
                   {t.queryPlaceholder || "Search Query"}
                 </label>
                 <div className="relative">
@@ -532,23 +532,23 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
                     value={config.query}
                     onChange={(e) => setConfig((prev) => ({ ...prev, query: e.target.value }))}
                     placeholder="Enter your search query..."
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none text-gray-900"
+                    className="w-full px-4 py-3 border border-szn-border rounded-xl focus:outline-none focus:ring-2 focus:ring-szn-accent/20 focus:border-szn-accent resize-none text-szn-text-1"
                     rows={3}
                   />
                   <button
                     onClick={() => setShowSamples(!showSamples)}
-                    className="absolute right-3 bottom-3 text-xs text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 bottom-3 text-xs text-szn-text-3 hover:text-szn-text-2"
                   >
                     {t.prefilledQueries?.[0] || "Try examples"}
                   </button>
                 </div>
                 {showSamples && (
-                  <div className="mt-2 p-3 bg-gray-50 rounded-lg space-y-1">
+                  <div className="mt-2 p-3 bg-szn-bg rounded-lg space-y-1">
                     {SAMPLE_QUERIES.map((q, i) => (
                       <button
                         key={i}
                         onClick={() => selectSampleQuery(q)}
-                        className="block w-full text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white px-3 py-2 rounded-lg transition-colors"
+                        className="block w-full text-left text-sm text-szn-text-2 hover:text-szn-text-1 hover:bg-szn-card px-3 py-2 rounded-lg transition-colors"
                       >
                         {q}
                       </button>
@@ -559,31 +559,31 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
 
               {/* Feature Toggles */}
               <div className="space-y-2 mb-6">
-                <label className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                  <span className="text-sm text-gray-700">Hybrid Search</span>
+                <label className="flex items-center justify-between p-3 bg-szn-bg rounded-lg cursor-pointer hover:bg-szn-surface">
+                  <span className="text-sm text-szn-text-1">Hybrid Search</span>
                   <input
                     type="checkbox"
                     checked={config.hybridSearch}
                     onChange={(e) => setConfig((prev) => ({ ...prev, hybridSearch: e.target.checked }))}
-                    className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                   />
                 </label>
-                <label className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                  <span className="text-sm text-gray-700">Rerank</span>
+                <label className="flex items-center justify-between p-3 bg-szn-bg rounded-lg cursor-pointer hover:bg-szn-surface">
+                  <span className="text-sm text-szn-text-1">Rerank</span>
                   <input
                     type="checkbox"
                     checked={config.rerank}
                     onChange={(e) => setConfig((prev) => ({ ...prev, rerank: e.target.checked }))}
-                    className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                   />
                 </label>
-                <label className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                  <span className="text-sm text-gray-700">Answer Contract</span>
+                <label className="flex items-center justify-between p-3 bg-szn-bg rounded-lg cursor-pointer hover:bg-szn-surface">
+                  <span className="text-sm text-szn-text-1">Answer Contract</span>
                   <input
                     type="checkbox"
                     checked={config.answerContract}
                     onChange={(e) => setConfig((prev) => ({ ...prev, answerContract: e.target.checked }))}
-                    className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                   />
                 </label>
               </div>
@@ -592,7 +592,7 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
               <button
                 onClick={handleRun}
                 disabled={isLoading || !config.query.trim()}
-                className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-medium rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -632,18 +632,18 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
             </div>
 
             {/* Right: Results Panel */}
-            <div className="p-6 bg-gray-50/50">
+            <div className="p-6 bg-szn-bg/50">
               {/* Tabs */}
               <div className="flex items-center gap-2 mb-4">
                 <button
                   onClick={() => setActiveTab("results")}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === "results" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                    activeTab === "results" ? "bg-szn-card text-szn-text-1 shadow-sm" : "text-szn-text-2 hover:text-szn-text-1"
                   }`}
                 >
                   {t.results || "Results"}
                   {results.length > 0 && (
-                    <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full">
+                    <span className="ml-2 text-xs bg-szn-surface text-szn-text-2 px-1.5 py-0.5 rounded-full">
                       {results.length}
                     </span>
                   )}
@@ -651,12 +651,12 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
                 <button
                   onClick={() => setActiveTab("trace")}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === "trace" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                    activeTab === "trace" ? "bg-szn-card text-szn-text-1 shadow-sm" : "text-szn-text-2 hover:text-szn-text-1"
                   }`}
                 >
                   {t.trace || "Trace"}
                   {trace && (
-                    <span className="ml-2 text-xs bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded-full">
+                    <span className="ml-2 text-xs bg-szn-accent/10 text-szn-accent px-1.5 py-0.5 rounded-full">
                       {trace.totalLatencyMs.toFixed(0)}ms
                     </span>
                   )}
@@ -664,7 +664,7 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
                 <button
                   onClick={() => setActiveTab("cost")}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === "cost" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                    activeTab === "cost" ? "bg-szn-card text-szn-text-1 shadow-sm" : "text-szn-text-2 hover:text-szn-text-1"
                   }`}
                 >
                   {t.cost || "Cost"}
@@ -687,12 +687,12 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
 
               {/* Trace ID */}
               {traceId && hasRun && !isLoading && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-szn-border">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-400">Trace ID: {traceId}</span>
+                    <span className="text-xs text-szn-text-3">Trace ID: {traceId}</span>
                     <button
                       onClick={() => navigator.clipboard.writeText(traceId)}
-                      className="text-xs text-gray-500 hover:text-gray-700"
+                      className="text-xs text-szn-text-2 hover:text-szn-text-1"
                     >
                       Copy
                     </button>
@@ -705,7 +705,7 @@ export function DemoQuery({ translations, dict }: DemoQueryProps) {
 
         {/* CTA Below Demo */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-szn-text-2 mb-4">
             Ready to integrate? Get your API key in seconds.
           </p>
           <Link

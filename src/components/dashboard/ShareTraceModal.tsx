@@ -134,13 +134,13 @@ export function ShareTraceModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
+      <div className="bg-szn-card rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">Share Trace</h2>
+        <div className="flex items-center justify-between p-6 border-b border-szn-border">
+          <h2 className="text-xl font-semibold text-szn-text-1">Share Trace</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-szn-text-3 hover:text-szn-text-2"
           >
             <svg
               className="w-6 h-6"
@@ -184,7 +184,7 @@ export function ShareTraceModal({
                   type="text"
                   value={shareUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-white border rounded-lg text-sm font-mono"
+                  className="flex-1 px-3 py-2 bg-szn-card border border-szn-border rounded-lg text-sm font-mono"
                 />
                 <button
                   onClick={() => handleCopy(shareUrl)}
@@ -207,7 +207,7 @@ export function ShareTraceModal({
           {!shareUrl && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-szn-text-1 mb-2">
                   Expiration
                 </label>
                 <select
@@ -223,7 +223,7 @@ export function ShareTraceModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-szn-text-1 mb-3">
                   Privacy Settings
                 </label>
                 <div className="space-y-3">
@@ -232,13 +232,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={maskPii}
                       onChange={(e) => setMaskPii(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                     />
                     <div>
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-szn-text-1">
                         Mask PII (emails, phones, etc.)
                       </span>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-szn-text-2">
                         Automatically redact personal information
                       </p>
                     </div>
@@ -249,13 +249,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={maskSecrets}
                       onChange={(e) => setMaskSecrets(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                     />
                     <div>
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-szn-text-1">
                         Mask API Keys & Secrets
                       </span>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-szn-text-2">
                         Hide API keys, tokens, and passwords
                       </p>
                     </div>
@@ -266,13 +266,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={hideRawContent}
                       onChange={(e) => setHideRawContent(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
                     />
                     <div>
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm text-szn-text-1">
                         Hide Raw Content
                       </span>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-szn-text-2">
                         Don&apos;t show original chunk text
                       </p>
                     </div>
@@ -283,7 +283,7 @@ export function ShareTraceModal({
               <button
                 onClick={handleCreateShare}
                 disabled={loading}
-                className="w-full py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="w-full py-3 bg-szn-accent text-white rounded-xl hover:bg-szn-accent/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -318,7 +318,7 @@ export function ShareTraceModal({
           {/* Existing Shares */}
           {existingShares.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">
+              <h3 className="text-sm font-medium text-szn-text-1 mb-3">
                 Existing Share Links
               </h3>
               <div className="space-y-2">
@@ -327,13 +327,13 @@ export function ShareTraceModal({
                     key={share.id}
                     className={`flex items-center justify-between p-3 rounded-lg border ${
                       share.isExpired
-                        ? "bg-gray-50 border-gray-200"
-                        : "bg-white border-gray-200"
+                        ? "bg-szn-bg border-szn-border"
+                        : "bg-szn-card border-szn-border"
                     }`}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-mono text-gray-600 truncate">
+                        <span className="text-sm font-mono text-szn-text-2 truncate">
                           {share.shareUrl}
                         </span>
                         {share.isExpired && (
@@ -342,7 +342,7 @@ export function ShareTraceModal({
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-szn-text-2">
                         <span>{share.viewCount} views</span>
                         <span>
                           Created{" "}
@@ -360,7 +360,7 @@ export function ShareTraceModal({
                       {!share.isExpired && (
                         <button
                           onClick={() => handleCopy(share.shareUrl)}
-                          className="p-2 text-gray-400 hover:text-gray-600"
+                          className="p-2 text-szn-text-3 hover:text-szn-text-2"
                           title="Copy link"
                         >
                           <svg
@@ -406,8 +406,8 @@ export function ShareTraceModal({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t bg-gray-50 rounded-b-2xl">
-          <p className="text-xs text-gray-500 text-center">
+        <div className="p-6 border-t border-szn-border bg-szn-bg rounded-b-2xl">
+          <p className="text-xs text-szn-text-2 text-center">
             Shared traces are automatically redacted to protect sensitive
             information. Anyone with the link can view the trace.
           </p>

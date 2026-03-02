@@ -151,19 +151,19 @@ export function DataExportModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-gray-200 dark:border-gray-700">
+      <div className="relative bg-szn-card rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-szn-border">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-6 py-4 border-b border-szn-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                 <DownloadIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h2 className="text-lg font-semibold text-szn-text-1">
                   Export Your Data
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-szn-text-2">
                   GDPR Data Portability
                 </p>
               </div>
@@ -171,7 +171,7 @@ export function DataExportModal({
             {step !== "exporting" && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="text-szn-text-3 hover:text-szn-text-2"
               >
                 <CloseIcon className="w-6 h-6" />
               </button>
@@ -184,13 +184,13 @@ export function DataExportModal({
           {/* Step: Options */}
           {step === "options" && (
             <div className="space-y-6">
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-szn-text-2">
                 Download a copy of all your data stored in our systems. Choose your preferred format and data categories.
               </p>
 
               {/* Format Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-medium text-szn-text-2 mb-3">
                   Export Format
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -199,30 +199,30 @@ export function DataExportModal({
                     className={`p-4 rounded-xl border-2 transition-all ${
                       format === "json"
                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                        : "border-szn-border hover:border-szn-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         format === "json"
                           ? "bg-blue-100 dark:bg-blue-900/50"
-                          : "bg-gray-100 dark:bg-gray-800"
+                          : "bg-szn-surface"
                       }`}>
                         <JSONIcon className={`w-5 h-5 ${
                           format === "json"
                             ? "text-blue-600 dark:text-blue-400"
-                            : "text-gray-500 dark:text-gray-400"
+                            : "text-szn-text-2"
                         }`} />
                       </div>
                       <div className="text-left">
                         <p className={`font-medium ${
                           format === "json"
                             ? "text-blue-700 dark:text-blue-300"
-                            : "text-gray-700 dark:text-gray-300"
+                            : "text-szn-text-2"
                         }`}>
                           JSON
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-szn-text-2">
                           Structured data format
                         </p>
                       </div>
@@ -234,30 +234,30 @@ export function DataExportModal({
                     className={`p-4 rounded-xl border-2 transition-all ${
                       format === "csv"
                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                        : "border-szn-border hover:border-szn-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         format === "csv"
                           ? "bg-blue-100 dark:bg-blue-900/50"
-                          : "bg-gray-100 dark:bg-gray-800"
+                          : "bg-szn-surface"
                       }`}>
                         <CSVIcon className={`w-5 h-5 ${
                           format === "csv"
                             ? "text-blue-600 dark:text-blue-400"
-                            : "text-gray-500 dark:text-gray-400"
+                            : "text-szn-text-2"
                         }`} />
                       </div>
                       <div className="text-left">
                         <p className={`font-medium ${
                           format === "csv"
                             ? "text-blue-700 dark:text-blue-300"
-                            : "text-gray-700 dark:text-gray-300"
+                            : "text-szn-text-2"
                         }`}>
                           CSV
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-szn-text-2">
                           Spreadsheet compatible
                         </p>
                       </div>
@@ -268,7 +268,7 @@ export function DataExportModal({
 
               {/* Data Categories */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-medium text-szn-text-2 mb-3">
                   Include Data
                 </label>
                 <div className="space-y-3">
@@ -330,28 +330,28 @@ export function DataExportModal({
                 <Spinner className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
                   Preparing Your Export
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-szn-text-2">
                   Please wait while we compile your data...
                 </p>
               </div>
 
               {/* Progress Bar */}
               <div className="space-y-2">
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-500"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-szn-text-2">
                   {progress}% complete
                 </p>
               </div>
 
-              <p className="text-xs text-gray-400 dark:text-gray-500">
+              <p className="text-xs text-szn-text-3">
                 This may take a few moments depending on the amount of data
               </p>
             </div>
@@ -364,43 +364,43 @@ export function DataExportModal({
                 <CheckIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
                   Export Ready
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-szn-text-2">
                   Your data export has been prepared and is ready to download.
                 </p>
               </div>
 
               {/* Export Summary */}
-              <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-left">
+              <div className="p-4 rounded-xl bg-szn-surface border border-szn-border text-left">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-500 dark:text-gray-400">Format</p>
-                    <p className="font-medium text-gray-900 dark:text-white uppercase">
+                    <p className="text-szn-text-2">Format</p>
+                    <p className="font-medium text-szn-text-1 uppercase">
                       {result.format || format}
                     </p>
                   </div>
                   {result.file_size && (
                     <div>
-                      <p className="text-gray-500 dark:text-gray-400">File Size</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="text-szn-text-2">File Size</p>
+                      <p className="font-medium text-szn-text-1">
                         {formatFileSize(result.file_size)}
                       </p>
                     </div>
                   )}
                   {result.records_exported && (
                     <div>
-                      <p className="text-gray-500 dark:text-gray-400">Records</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="text-szn-text-2">Records</p>
+                      <p className="font-medium text-szn-text-1">
                         {result.records_exported.toLocaleString()}
                       </p>
                     </div>
                   )}
                   {result.expires_at && (
                     <div>
-                      <p className="text-gray-500 dark:text-gray-400">Expires</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="text-szn-text-2">Expires</p>
+                      <p className="font-medium text-szn-text-1">
                         {new Date(result.expires_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -411,7 +411,7 @@ export function DataExportModal({
               {/* Download Button */}
               <button
                 onClick={downloadExport}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:from-emerald-600 hover:to-teal-600 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-szn-success to-szn-accent text-white font-medium hover:from-szn-success hover:to-szn-accent transition-all flex items-center justify-center gap-2"
               >
                 <DownloadIcon className="w-5 h-5" />
                 Download {format.toUpperCase()} File
@@ -419,7 +419,7 @@ export function DataExportModal({
 
               <button
                 onClick={onClose}
-                className="w-full py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="w-full py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
               >
                 Done
               </button>
@@ -433,7 +433,7 @@ export function DataExportModal({
                 <ErrorIcon className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
                   Export Failed
                 </h3>
                 <p className="text-red-600 dark:text-red-400">{error}</p>
@@ -442,7 +442,7 @@ export function DataExportModal({
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep("options")}
-                  className="flex-1 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
                 >
                   Try Again
                 </button>
@@ -458,8 +458,8 @@ export function DataExportModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+        <div className="px-6 py-4 border-t border-szn-border bg-szn-surface/50 rounded-b-2xl">
+          <p className="text-xs text-szn-text-2 text-center">
             Under GDPR Article 20, you have the right to receive your personal data in a structured,
             commonly used, and machine-readable format.
           </p>
@@ -485,10 +485,10 @@ function DataCategoryToggle({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+    <div className="flex items-center justify-between p-4 rounded-xl bg-szn-surface border border-szn-border">
       <div>
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="text-sm font-medium text-szn-text-1">{label}</p>
+        <p className="text-xs text-szn-text-2">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}

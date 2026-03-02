@@ -76,7 +76,7 @@ const FlowNode = memo(function FlowNode({
       {/* Node card */}
       <div
         className={[
-          "glass-card-premium rounded-xl p-2.5 sm:p-3 md:p-4",
+          "szn-card rounded-xl p-2.5 sm:p-3 md:p-4",
           "flex flex-col items-center gap-1.5 sm:gap-2",
           "transition-all duration-300 ease-out",
           "cursor-default select-none border",
@@ -97,7 +97,7 @@ const FlowNode = memo(function FlowNode({
             "transition-colors duration-300",
             isActive
               ? "bg-[color:var(--theme-primary)]/10 text-[color:var(--theme-primary)]"
-              : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500",
+              : "bg-szn-surface text-szn-text-3",
           ].join(" ")}
         >
           <Icon className="w-4 h-4 md:w-5 md:h-5" />
@@ -109,7 +109,7 @@ const FlowNode = memo(function FlowNode({
             "text-[11px] sm:text-xs md:text-sm font-medium transition-colors duration-300",
             isActive
               ? "theme-gradient-text"
-              : "text-gray-400 dark:text-gray-500",
+              : "text-szn-text-3",
           ].join(" ")}
         >
           {step.label}
@@ -124,7 +124,7 @@ const FlowNode = memo(function FlowNode({
           "transition-all duration-300",
           isActive
             ? "bg-[color:var(--theme-primary)] text-white scale-100"
-            : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 scale-75",
+            : "bg-szn-surface text-szn-text-3 scale-75",
         ].join(" ")}
       >
         {index + 1}
@@ -133,7 +133,7 @@ const FlowNode = memo(function FlowNode({
       {/* Tooltip on hover */}
       {isHovered && (
         <div
-          className="absolute top-full mt-2 z-20 glass-card-premium rounded-lg px-3 py-2 text-xs text-gray-600 dark:text-gray-300 max-w-[160px] text-center animate-fade-in pointer-events-none whitespace-nowrap"
+          className="absolute top-full mt-2 z-20 szn-card rounded-lg px-3 py-2 text-xs text-szn-text-2 max-w-[160px] text-center animate-fade-in pointer-events-none whitespace-nowrap"
           role="tooltip"
         >
           {step.description}

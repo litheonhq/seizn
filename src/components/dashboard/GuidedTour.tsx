@@ -183,7 +183,7 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
       {/* Spotlight border */}
       {targetRect && (
         <div
-          className="fixed border-2 border-emerald-500 rounded-lg pointer-events-none animate-pulse"
+          className="fixed border-2 border-szn-accent rounded-lg pointer-events-none animate-pulse"
           style={{
             top: targetRect.top - (step.spotlightPadding || 8),
             left: targetRect.left - (step.spotlightPadding || 8),
@@ -195,21 +195,21 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
 
       {/* Tooltip */}
       <div
-        className="fixed bg-white rounded-xl shadow-2xl w-80 p-4 z-[10000]"
+        className="fixed bg-szn-card rounded-xl shadow-2xl w-80 p-4 z-[10000]"
         style={tooltipPosition}
       >
         {/* Arrow indicator */}
         <div className="mb-3">
-          <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+          <span className="text-xs font-medium text-szn-accent bg-szn-accent/10 px-2 py-1 rounded-full">
             {t("dashboard.onboarding.tour.stepOf", { current: currentStep + 1, total: steps.length })}
           </span>
         </div>
 
         {/* Content */}
-        <h4 className="text-lg font-semibold text-gray-900 mb-2">
+        <h4 className="text-lg font-semibold text-szn-text-1 mb-2">
           {t(step.titleKey)}
         </h4>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-szn-text-2 mb-4">
           {t(step.descriptionKey)}
         </p>
 
@@ -217,13 +217,13 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
         <div className="flex items-center justify-between">
           <button
             onClick={handleSkip}
-            className="text-sm text-gray-400 hover:text-gray-600"
+            className="text-sm text-szn-text-3 hover:text-szn-text-2"
           >
             {t("dashboard.onboarding.tour.skip")}
           </button>
           <button
             onClick={handleNext}
-            className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+            className="px-4 py-2 bg-szn-accent text-white text-sm font-medium rounded-lg hover:bg-szn-accent/90 transition-colors"
           >
             {isLastStep ? t("dashboard.onboarding.tour.finish") : t("dashboard.onboarding.tour.next")}
           </button>
@@ -235,7 +235,7 @@ export function GuidedTour({ isOpen, onClose, steps = defaultSteps }: Props) {
             <div
               key={index}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentStep ? "bg-emerald-500" : "bg-gray-200"
+                index === currentStep ? "bg-szn-accent" : "bg-szn-border"
               }`}
             />
           ))}

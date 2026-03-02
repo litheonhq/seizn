@@ -62,15 +62,15 @@ function CopyButton({
   return (
     <button
       onClick={onCopy}
-      className={`${baseClasses} bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg transition-all duration-200 flex items-center gap-1.5`}
+      className={`${baseClasses} bg-szn-surface-1 hover:bg-szn-surface-1 text-szn-text-1 rounded-lg transition-all duration-200 flex items-center gap-1.5`}
       aria-label={isCopied ? copiedText : defaultText}
     >
       {isCopied ? (
         <>
-          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          <span className="text-emerald-400">{copiedText}</span>
+          <span className="text-szn-accent">{copiedText}</span>
         </>
       ) : (
         <>
@@ -105,7 +105,7 @@ function CodeBlock({
   }, [code]);
 
   return (
-    <div className="relative group bg-zinc-100 dark:bg-zinc-900 rounded-lg overflow-hidden">
+    <div className="relative group bg-szn-surface rounded-lg overflow-hidden">
       <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <CopyButton
           text={code}
@@ -116,9 +116,9 @@ function CodeBlock({
           size="small"
         />
       </div>
-      <div className="absolute top-3 left-3 text-xs text-zinc-500 font-mono">{language}</div>
+      <div className="absolute top-3 left-3 text-xs text-szn-text-3 font-mono">{language}</div>
       <pre className="pt-10 pb-4 px-4 overflow-x-auto">
-        <code className="text-sm text-zinc-700 dark:text-zinc-300 font-mono">{code}</code>
+        <code className="text-sm text-szn-text-1 font-mono">{code}</code>
       </pre>
     </div>
   );
@@ -146,8 +146,8 @@ function TutorialStep({
     <div
       className={`border rounded-xl transition-all duration-300 ${
         isCompleted
-          ? "bg-emerald-500/5 border-emerald-500/30"
-          : "bg-zinc-100 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+          ? "bg-szn-accent/5 border-szn-accent/30"
+          : "bg-szn-surface/50 border-szn-border hover:border-szn-border"
       }`}
     >
       {/* Step Header */}
@@ -159,8 +159,8 @@ function TutorialStep({
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
             isCompleted
-              ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20"
-              : "bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-300 dark:border-zinc-700"
+              ? "bg-szn-accent text-white shadow-lg shadow-szn-accent/20"
+              : "bg-szn-surface-1 text-szn-text-3 border border-szn-border"
           }`}
         >
           {isCompleted ? (
@@ -173,16 +173,16 @@ function TutorialStep({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-1.5">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h3>
-            <span className="text-xs text-zinc-500 bg-zinc-200 dark:bg-zinc-800 px-2.5 py-1 rounded-full font-medium">
+            <h3 className="text-lg font-semibold text-szn-text-1">{title}</h3>
+            <span className="text-xs text-szn-text-3 bg-szn-surface-1 px-2.5 py-1 rounded-full font-medium">
               {time}
             </span>
           </div>
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">{description}</p>
+          <p className="text-szn-text-2 text-sm leading-relaxed">{description}</p>
         </div>
         <div className="shrink-0 mt-1">
           <div className={`w-6 h-6 rounded border-2 transition-colors ${
-            isCompleted ? "bg-emerald-500 border-emerald-500" : "border-zinc-400 dark:border-zinc-600"
+            isCompleted ? "bg-szn-accent border-szn-accent" : "border-szn-border"
           }`}>
             {isCompleted && (
               <svg className="w-full h-full text-white p-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -319,26 +319,26 @@ for memory in results:
   const tabs = ["TypeScript", "Python", "curl"];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-szn-bg">
       {/* Header */}
-      <header className="border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm z-10">
+      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href={`/${locale}`} className="text-xl font-bold text-zinc-900 dark:text-white">
-              Seizn<span className="text-emerald-500 dark:text-emerald-400">.</span>
+            <Link href={`/${locale}`} className="text-xl font-bold text-szn-text-1">
+              Seizn<span className="text-szn-accent">.</span>
             </Link>
-            <span className="text-zinc-400 dark:text-zinc-600">/</span>
-            <Link href={`/${locale}/docs`} className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+            <span className="text-szn-text-3">/</span>
+            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
               Docs
             </Link>
-            <span className="text-zinc-400 dark:text-zinc-600">/</span>
-            <span className="text-zinc-900 dark:text-white">{t("docs.tutorialPage.breadcrumb")}</span>
+            <span className="text-szn-text-3">/</span>
+            <span className="text-szn-text-1">{t("docs.tutorialPage.breadcrumb")}</span>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href="/dashboard/keys"
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-sm"
+              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors text-sm"
             >
               {t("docs.tutorialPage.getApiKey")}
             </Link>
@@ -350,32 +350,32 @@ for memory in results:
         {/* Hero */}
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-3 mb-6">
-            <span className="px-4 py-1.5 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-full">
+            <span className="px-4 py-1.5 bg-szn-accent/10 text-szn-accent text-sm font-semibold rounded-full">
               {t("docs.tutorialPage.badge")}
             </span>
-            <span className="text-zinc-400 dark:text-zinc-500">|</span>
-            <span className="text-zinc-500 dark:text-zinc-400 text-sm">{t("docs.tutorialPage.noCreditCard")}</span>
+            <span className="text-szn-text-3">|</span>
+            <span className="text-szn-text-3 text-sm">{t("docs.tutorialPage.noCreditCard")}</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-szn-text-1 mb-4">
             {t("docs.tutorialPage.title")}
           </h1>
-          <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
             {t("docs.tutorialPage.subtitle")}
           </p>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-10 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
+        <div className="mb-10 bg-szn-surface border border-szn-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-zinc-900 dark:text-white">{t("docs.tutorialPage.progress")}</span>
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">{completedSteps.size} / 5 {t("docs.tutorialPage.stepsLabel")}</span>
+              <span className="text-sm font-medium text-szn-text-1">{t("docs.tutorialPage.progress")}</span>
+              <span className="text-sm text-szn-text-3">{completedSteps.size} / 5 {t("docs.tutorialPage.stepsLabel")}</span>
             </div>
-            <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{progress}%</span>
+            <span className="text-sm font-bold text-szn-accent">{progress}%</span>
           </div>
-          <div className="w-full h-3 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-szn-surface-1 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-szn-accent to-szn-accent-2 transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -393,8 +393,8 @@ for memory in results:
             onToggle={() => toggleStep(0)}
           >
             <div className="space-y-4">
-              <div className="p-4 bg-zinc-200/50 dark:bg-zinc-800/50 rounded-lg border border-zinc-300 dark:border-zinc-700">
-                <ol className="list-decimal list-inside space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+              <div className="p-4 bg-szn-surface-1 rounded-lg border border-szn-border">
+                <ol className="list-decimal list-inside space-y-2 text-sm text-szn-text-1">
                   <li>{t("docs.tutorialPage.steps.step1.instruction1")}</li>
                   <li>{t("docs.tutorialPage.steps.step1.instruction2")}</li>
                   <li>{t("docs.tutorialPage.steps.step1.instruction3")}</li>
@@ -402,7 +402,7 @@ for memory in results:
               </div>
               <Link
                 href="/dashboard/keys"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
               >
                 {t("docs.tutorialPage.steps.step1.actionLabel")}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -429,8 +429,8 @@ for memory in results:
                     onClick={() => setTabIndex(2, idx)}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       getTabIndex(2) === idx
-                        ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                        : "bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                        ? "bg-szn-accent/20 text-szn-accent"
+                        : "bg-szn-surface-1 text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {tab}
@@ -463,8 +463,8 @@ for memory in results:
                     onClick={() => setTabIndex(3, idx)}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       getTabIndex(3) === idx
-                        ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                        : "bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                        ? "bg-szn-accent/20 text-szn-accent"
+                        : "bg-szn-surface-1 text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {tab}
@@ -497,8 +497,8 @@ for memory in results:
                     onClick={() => setTabIndex(4, idx)}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       getTabIndex(4) === idx
-                        ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                        : "bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                        ? "bg-szn-accent/20 text-szn-accent"
+                        : "bg-szn-surface-1 text-szn-text-2 hover:text-szn-text-1"
                     }`}
                   >
                     {tab}
@@ -524,21 +524,21 @@ for memory in results:
             onToggle={() => toggleStep(4)}
           >
             <div className="space-y-4">
-              <p className="text-sm text-zinc-400">{t("docs.tutorialPage.steps.step5.hint")}</p>
+              <p className="text-sm text-szn-text-3">{t("docs.tutorialPage.steps.step5.hint")}</p>
               <CodeBlock
                 code={expectedOutput}
                 language="json"
                 copyText={t("docs.tutorialPage.copy")}
                 copiedText={t("docs.tutorialPage.copied")}
               />
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+              <div className="p-4 bg-szn-accent/10 border border-szn-accent/20 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-szn-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div>
-                    <p className="text-sm font-medium text-emerald-400">{t("docs.tutorialPage.steps.step5.successTitle")}</p>
-                    <p className="text-sm text-emerald-300/80 mt-1">{t("docs.tutorialPage.steps.step5.successDescription")}</p>
+                    <p className="text-sm font-medium text-szn-accent">{t("docs.tutorialPage.steps.step5.successTitle")}</p>
+                    <p className="text-sm text-szn-accent/80 mt-1">{t("docs.tutorialPage.steps.step5.successDescription")}</p>
                   </div>
                 </div>
               </div>
@@ -548,26 +548,26 @@ for memory in results:
 
         {/* Completion Banner */}
         {progress === 100 && (
-          <div className="mt-12 p-8 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-2xl text-center animate-fade-in">
-            <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+          <div className="mt-12 p-8 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 border border-szn-accent/30 rounded-2xl text-center animate-fade-in">
+            <div className="w-20 h-20 bg-szn-accent rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-szn-accent/30">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-3">{t("docs.tutorialPage.completion.title")}</h2>
-            <p className="text-zinc-600 dark:text-zinc-400 mb-8 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold text-szn-text-1 mb-3">{t("docs.tutorialPage.completion.title")}</h2>
+            <p className="text-szn-text-2 mb-8 max-w-md mx-auto">
               {t("docs.tutorialPage.completion.description")}
             </p>
             <div className="flex items-center justify-center gap-4">
               <Link
                 href={`/${locale}/docs`}
-                className="px-6 py-3 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-medium rounded-lg transition-colors"
+                className="px-6 py-3 bg-szn-surface-1 hover:bg-szn-surface-1 text-szn-text-1 font-medium rounded-lg transition-colors"
               >
                 {t("docs.tutorialPage.completion.readDocs")}
               </Link>
               <Link
                 href="/dashboard"
-                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+                className="px-6 py-3 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
               >
                 {t("docs.tutorialPage.completion.goToDashboard")}
               </Link>
@@ -577,46 +577,46 @@ for memory in results:
 
         {/* Next Steps */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{t("docs.tutorialPage.nextSteps.title")}</h2>
+          <h2 className="text-2xl font-bold text-szn-text-1 mb-6">{t("docs.tutorialPage.nextSteps.title")}</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Link href={`/${locale}/docs#endpoints`} className="p-6 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-emerald-500/30 transition-all group">
+            <Link href={`/${locale}/docs#endpoints`} className="p-6 bg-szn-surface border border-szn-border rounded-xl hover:border-szn-accent/30 transition-all group">
               <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-lg font-semibold text-szn-text-1 mb-2 group-hover:text-szn-accent dark:group-hover:text-szn-accent transition-colors">
                 {t("docs.tutorialPage.nextSteps.apiReference.title")}
               </h3>
-              <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+              <p className="text-szn-text-2 text-sm">
                 {t("docs.tutorialPage.nextSteps.apiReference.description")}
               </p>
             </Link>
 
-            <Link href={`/${locale}/docs#sdks`} className="p-6 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-emerald-500/30 transition-all group">
+            <Link href={`/${locale}/docs#sdks`} className="p-6 bg-szn-surface border border-szn-border rounded-xl hover:border-szn-accent/30 transition-all group">
               <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-lg font-semibold text-szn-text-1 mb-2 group-hover:text-szn-accent dark:group-hover:text-szn-accent transition-colors">
                 {t("docs.tutorialPage.nextSteps.sdkExamples.title")}
               </h3>
-              <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+              <p className="text-szn-text-2 text-sm">
                 {t("docs.tutorialPage.nextSteps.sdkExamples.description")}
               </p>
             </Link>
 
-            <Link href={`/${locale}/docs/faq`} className="p-6 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-emerald-500/30 transition-all group">
+            <Link href={`/${locale}/docs/faq`} className="p-6 bg-szn-surface border border-szn-border rounded-xl hover:border-szn-accent/30 transition-all group">
               <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-lg font-semibold text-szn-text-1 mb-2 group-hover:text-szn-accent dark:group-hover:text-szn-accent transition-colors">
                 {t("docs.tutorialPage.nextSteps.faq.title")}
               </h3>
-              <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+              <p className="text-szn-text-2 text-sm">
                 {t("docs.tutorialPage.nextSteps.faq.description")}
               </p>
             </Link>
@@ -625,8 +625,8 @@ for memory in results:
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-8 mt-16">
-        <div className="max-w-4xl mx-auto px-6 text-center text-zinc-500 text-sm">
+      <footer className="border-t border-szn-border py-8 mt-16">
+        <div className="max-w-4xl mx-auto px-6 text-center text-szn-text-3 text-sm">
           {t("docs.footer.copyright", { year: currentYear })}
         </div>
       </footer>

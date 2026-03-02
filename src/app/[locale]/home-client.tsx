@@ -45,7 +45,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100" role="navigation" aria-label="Main navigation">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-szn-card/80 backdrop-blur-md border-b border-szn-border" role="navigation" aria-label="Main navigation">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2" aria-label="Seizn Home">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
@@ -56,10 +56,10 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.features}</a>
-            <Link href={`/${locale}/pricing`} className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.pricing}</Link>
-            <a href={`/${locale}/docs`} className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.docs}</a>
-            <Link href="/login" className="text-sm text-gray-600 hover:text-black transition-colors">{t.nav.login}</Link>
+            <a href="#features" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.features}</a>
+            <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.pricing}</Link>
+            <a href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.docs}</a>
+            <Link href="/login" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.login}</Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link href="/login" className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors btn-hover-lift">
               {t.nav.getStarted}
@@ -68,7 +68,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-gray-600 hover:text-black transition-colors"
+            className="md:hidden p-2 text-szn-text-2 hover:text-szn-text-1 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
@@ -87,12 +87,12 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 animate-fade-in">
+          <div className="md:hidden bg-szn-card border-t border-szn-border animate-fade-in">
             <div className="px-6 py-4 space-y-4">
-              <a href="#features" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
-              <Link href={`/${locale}/pricing`} className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
-              <a href={`/${locale}/docs`} className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
-              <Link href="/login" className="block text-gray-600 hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
+              <a href="#features" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
+              <Link href={`/${locale}/pricing`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
+              <a href={`/${locale}/docs`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
+              <Link href="/login" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
               <div className="py-2">
                 <LanguageSwitcher currentLocale={locale} />
               </div>
@@ -108,27 +108,27 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm text-gray-600">{t.hero.badge}</span>
+          <div className="inline-flex items-center gap-2 bg-szn-surface rounded-full px-4 py-1.5 mb-8 animate-fade-in">
+            <span className="w-2 h-2 bg-szn-accent rounded-full animate-pulse" />
+            <span className="text-sm text-szn-text-2">{t.hero.badge}</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-gray-900 mb-6 animate-fade-in-up">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-szn-text-1 mb-6 animate-fade-in-up">
             {t.hero.title}
             <br />
-            <span className="text-gray-400">{t.hero.titleHighlight}</span>
+            <span className="text-szn-text-3">{t.hero.titleHighlight}</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up animate-delay-100">
+          <p className="text-lg sm:text-xl text-szn-text-2 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up animate-delay-100">
             {t.hero.subtitle}
           </p>
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             {status === "success" ? (
-              <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-6 py-3 rounded-full">
+              <div className="flex items-center gap-2 text-szn-accent bg-szn-accent/10 px-6 py-3 rounded-full">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -141,7 +141,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t.hero.emailPlaceholder}
-                  className="flex-1 px-5 py-3 rounded-full border border-gray-200 focus:outline-none focus:border-gray-400 transition-colors text-gray-900"
+                  className="flex-1 px-5 py-3 rounded-full border border-szn-border focus:outline-none focus:border-gray-400 transition-colors text-szn-text-1"
                   required
                 />
                 <button
@@ -158,71 +158,71 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
           {/* Stats */}
           <div className="flex items-center justify-center gap-12 text-center">
             <div>
-              <div className="text-3xl font-semibold text-gray-900">90%</div>
-              <div className="text-sm text-gray-500">{t.hero.stats.tokenSavings}</div>
+              <div className="text-3xl font-semibold text-szn-text-1">90%</div>
+              <div className="text-sm text-szn-text-2">{t.hero.stats.tokenSavings}</div>
             </div>
-            <div className="w-px h-12 bg-gray-200" />
+            <div className="w-px h-12 bg-szn-border" />
             <div>
-              <div className="text-3xl font-semibold text-gray-900">&lt;50ms</div>
-              <div className="text-sm text-gray-500">{t.hero.stats.retrievalTime}</div>
+              <div className="text-3xl font-semibold text-szn-text-1">&lt;50ms</div>
+              <div className="text-sm text-szn-text-2">{t.hero.stats.retrievalTime}</div>
             </div>
-            <div className="w-px h-12 bg-gray-200" />
+            <div className="w-px h-12 bg-szn-border" />
             <div>
-              <div className="text-3xl font-semibold text-gray-900">99.9%</div>
-              <div className="text-sm text-gray-500">{t.hero.stats.uptimeSla}</div>
+              <div className="text-3xl font-semibold text-szn-text-1">99.9%</div>
+              <div className="text-sm text-szn-text-2">{t.hero.stats.uptimeSla}</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 bg-gray-50">
+      <section id="features" className="py-20 px-6 bg-szn-bg">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
               {t.features.title}
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto">
+            <p className="text-szn-text-2 max-w-xl mx-auto">
               {t.features.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-100 card-hover">
+            <div className="bg-szn-card p-8 rounded-2xl border border-szn-border card-hover">
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.features.smartExtraction.title}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-semibold text-szn-text-1 mb-2">{t.features.smartExtraction.title}</h3>
+              <p className="text-szn-text-2 leading-relaxed">
                 {t.features.smartExtraction.description}
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-100 card-hover">
+            <div className="bg-szn-card p-8 rounded-2xl border border-szn-border card-hover">
               <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.features.instantRetrieval.title}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-semibold text-szn-text-1 mb-2">{t.features.instantRetrieval.title}</h3>
+              <p className="text-szn-text-2 leading-relaxed">
                 {t.features.instantRetrieval.description}
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-100 card-hover">
+            <div className="bg-szn-card p-8 rounded-2xl border border-szn-border card-hover">
               <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.features.enterpriseSecurity.title}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-semibold text-szn-text-1 mb-2">{t.features.enterpriseSecurity.title}</h3>
+              <p className="text-szn-text-2 leading-relaxed">
                 {t.features.enterpriseSecurity.description}
               </p>
             </div>
@@ -234,10 +234,10 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
               {t.codePreview.title}
             </h2>
-            <p className="text-gray-500">
+            <p className="text-szn-text-2">
               {t.codePreview.subtitle}
             </p>
           </div>
@@ -270,47 +270,47 @@ const memories = await seizn.search({
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-6 bg-gray-50">
+      <section id="pricing" className="py-20 px-6 bg-szn-bg">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
               {t.pricing.title}
             </h2>
-            <p className="text-gray-500">
+            <p className="text-szn-text-2">
               {t.pricing.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {/* Free */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
-              <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.free.name}</div>
-              <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.free.price}</div>
-              <div className="text-sm text-gray-500 mb-6">{t.pricing.free.period}</div>
+            <div className="bg-szn-card p-6 rounded-2xl border border-szn-border card-hover">
+              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.free.name}</div>
+              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.free.price}</div>
+              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.free.period}</div>
               <ul className="space-y-3 mb-8">
                 {t.pricing.free.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-2 text-sm text-szn-text-2">
+                    <svg className="w-4 h-4 text-szn-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {feature}
                   </li>
                 ))}
               </ul>
-              <Link href="/login" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
+              <Link href="/login" className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center">
                 {t.pricing.free.cta}
               </Link>
             </div>
 
             {/* Starter */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
-              <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.starter.name}</div>
-              <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.starter.price}</div>
-              <div className="text-sm text-gray-500 mb-6">{t.pricing.starter.period}</div>
+            <div className="bg-szn-card p-6 rounded-2xl border border-szn-border card-hover">
+              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.starter.name}</div>
+              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.starter.price}</div>
+              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.starter.period}</div>
               <ul className="space-y-3 mb-8">
                 {t.pricing.starter.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-2 text-sm text-szn-text-2">
+                    <svg className="w-4 h-4 text-szn-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {feature}
@@ -319,21 +319,21 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.starter}
-                className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center"
+                className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.starter.cta}
               </CheckoutButton>
             </div>
 
             {/* Plus */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
-              <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.plus.name}</div>
-              <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.plus.price}</div>
-              <div className="text-sm text-gray-500 mb-6">{t.pricing.plus.period}</div>
+            <div className="bg-szn-card p-6 rounded-2xl border border-szn-border card-hover">
+              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.plus.name}</div>
+              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.plus.price}</div>
+              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.plus.period}</div>
               <ul className="space-y-3 mb-8">
                 {t.pricing.plus.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-2 text-sm text-szn-text-2">
+                    <svg className="w-4 h-4 text-szn-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {feature}
@@ -342,7 +342,7 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.plus}
-                className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center"
+                className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.plus.cta}
               </CheckoutButton>
@@ -350,7 +350,7 @@ const memories = await seizn.search({
 
             {/* Pro */}
             <div className="bg-black p-6 rounded-2xl relative card-hover">
-              <div className="absolute top-4 right-4 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
+              <div className="absolute top-4 right-4 bg-szn-accent text-white text-xs px-2 py-1 rounded-full">
                 {t.pricing.pro.badge}
               </div>
               <div className="text-sm font-medium text-gray-400 mb-2">{t.pricing.pro.name}</div>
@@ -359,7 +359,7 @@ const memories = await seizn.search({
               <ul className="space-y-3 mb-8">
                 {t.pricing.pro.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                    <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-szn-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {feature}
@@ -375,21 +375,21 @@ const memories = await seizn.search({
             </div>
 
             {/* Enterprise */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 card-hover">
-              <div className="text-sm font-medium text-gray-500 mb-2">{t.pricing.enterprise.name}</div>
-              <div className="text-3xl font-semibold text-gray-900 mb-1">{t.pricing.enterprise.price}</div>
-              <div className="text-sm text-gray-500 mb-6">{t.pricing.enterprise.period}</div>
+            <div className="bg-szn-card p-6 rounded-2xl border border-szn-border card-hover">
+              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.enterprise.name}</div>
+              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.enterprise.price}</div>
+              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.enterprise.period}</div>
               <ul className="space-y-3 mb-8">
                 {t.pricing.enterprise.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                    <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-2 text-sm text-szn-text-2">
+                    <svg className="w-4 h-4 text-szn-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {feature}
                   </li>
                 ))}
               </ul>
-              <a href="mailto:enterprise@seizn.com" className="block w-full py-3 rounded-full border border-gray-200 text-gray-900 font-medium hover:bg-gray-50 transition-colors text-center">
+              <a href="mailto:enterprise@seizn.com" className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center">
                 {t.pricing.enterprise.cta}
               </a>
             </div>
@@ -398,7 +398,7 @@ const memories = await seizn.search({
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-gray-100" role="contentinfo">
+      <footer className="py-12 px-6 border-t border-szn-border" role="contentinfo">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
           <div className="flex flex-col gap-2">
             <Link href={`/${locale}`} className="flex items-center gap-2" aria-label="Seizn Home">
@@ -407,14 +407,14 @@ const memories = await seizn.search({
               </div>
               <span className="font-medium">Seizn</span>
             </Link>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-szn-text-2">
               {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
             </div>
           </div>
           <nav className="flex flex-wrap items-center gap-6" aria-label="Footer navigation">
-            <a href={`/${locale}/privacy`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.terms}</a>
-            <a href={`/${locale}/docs/faq`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">{t.footer.contact}</a>
+            <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
+            <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
+            <a href={`/${locale}/docs/faq`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</a>
           </nav>
         </div>
       </footer>

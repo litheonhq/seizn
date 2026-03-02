@@ -202,8 +202,8 @@ export function RerankerClient() {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-48" />
-          <div className="h-64 bg-gray-200 rounded" />
+          <div className="h-8 bg-szn-surface rounded w-48" />
+          <div className="h-64 bg-szn-surface rounded" />
         </div>
       </div>
     );
@@ -264,8 +264,8 @@ export function RerankerClient() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Domain-adaptive Reranker</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-szn-text-1">Domain-adaptive Reranker</h1>
+        <p className="text-szn-text-2 mt-1">
           Configure reranking models optimized for your content domain
         </p>
       </div>
@@ -278,8 +278,8 @@ export function RerankerClient() {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab
-                ? "border-emerald-500 text-emerald-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                ? "border-szn-accent text-szn-accent"
+                : "border-transparent text-szn-text-2 hover:text-szn-text-1"
             }`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -327,16 +327,16 @@ export function RerankerClient() {
         {/* Configuration Panel */}
         <div className="space-y-6">
           {/* Model Selection */}
-          <div className="bg-white rounded-2xl border p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Reranker Model</h2>
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <h2 className="font-semibold text-szn-text-1 mb-4">Reranker Model</h2>
             <div className="space-y-3">
               {models.map((model) => (
                 <label
                   key={model.id}
                   className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     selectedModel === model.id
-                      ? "border-emerald-500 bg-emerald-50"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? "border-szn-accent bg-szn-accent/10"
+                      : "border-szn-border hover:border-szn-border/80"
                   }`}
                 >
                   <input
@@ -348,8 +348,8 @@ export function RerankerClient() {
                     className="mt-1"
                   />
                   <div>
-                    <p className="font-medium text-gray-900">{model.name}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium text-szn-text-1">{model.name}</p>
+                    <p className="text-sm text-szn-text-2">
                       {model.provider} - {model.description}
                     </p>
                   </div>
@@ -359,9 +359,9 @@ export function RerankerClient() {
           </div>
 
           {/* Domain Selection */}
-          <div className="bg-white rounded-2xl border p-6">
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-gray-900">Content Domain</h2>
+              <h2 className="font-semibold text-szn-text-1">Content Domain</h2>
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
@@ -381,25 +381,25 @@ export function RerankerClient() {
                   disabled={autoDetect}
                   className={`p-3 rounded-lg border text-left transition-colors ${
                     selectedDomain === domain.type && !autoDetect
-                      ? "border-emerald-500 bg-emerald-50"
+                      ? "border-szn-accent bg-szn-accent/10"
                       : autoDetect
                       ? "opacity-50 cursor-not-allowed"
-                      : "border-gray-200 hover:border-gray-300"
+                      : "border-szn-border hover:border-szn-border/80"
                   }`}
                 >
-                  <p className="font-medium text-gray-900">{domain.name}</p>
-                  <p className="text-xs text-gray-500 mt-1">{domain.description}</p>
+                  <p className="font-medium text-szn-text-1">{domain.name}</p>
+                  <p className="text-xs text-szn-text-2 mt-1">{domain.description}</p>
                 </button>
               ))}
             </div>
 
             {!autoDetect && domains[selectedDomain] && (
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600">
+              <div className="mt-4 p-3 bg-szn-surface rounded-lg">
+                <p className="text-sm text-szn-text-2">
                   <span className="font-medium">Specializations:</span>{" "}
                   {domains[selectedDomain].specializations.join(", ")}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-szn-text-2 mt-1">
                   <span className="font-medium">Recommended model:</span>{" "}
                   {domains[selectedDomain].recommendedModel}
                 </p>
@@ -408,8 +408,8 @@ export function RerankerClient() {
           </div>
 
           {/* Threshold */}
-          <div className="bg-white rounded-2xl border p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Relevance Threshold</h2>
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <h2 className="font-semibold text-szn-text-1 mb-4">Relevance Threshold</h2>
             <div className="space-y-4">
               <input
                 type="range"
@@ -420,12 +420,12 @@ export function RerankerClient() {
                 onChange={(e) => setThreshold(parseFloat(e.target.value))}
                 className="w-full"
               />
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-sm text-szn-text-2">
                 <span>0 (Include all)</span>
-                <span className="font-medium text-gray-900">{threshold.toFixed(2)}</span>
+                <span className="font-medium text-szn-text-1">{threshold.toFixed(2)}</span>
                 <span>1 (Strict)</span>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-szn-text-2">
                 Documents with rerank score below this threshold will be filtered out
               </p>
             </div>
@@ -434,12 +434,12 @@ export function RerankerClient() {
 
         {/* Test Panel */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Test Reranker</h2>
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <h2 className="font-semibold text-szn-text-1 mb-4">Test Reranker</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-szn-text-1 mb-1">
                   Query
                 </label>
                 <input
@@ -452,7 +452,7 @@ export function RerankerClient() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-szn-text-1 mb-1">
                   Documents (one per line)
                 </label>
                 <textarea
@@ -469,7 +469,7 @@ Document 3 content here...`}
               <button
                 onClick={handleTest}
                 disabled={testLoading || !testQuery.trim() || !testDocuments.trim()}
-                className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+                className="w-full px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
               >
                 {testLoading ? "Reranking..." : "Test Rerank"}
               </button>
@@ -477,46 +477,46 @@ Document 3 content here...`}
 
             {testResult !== null && (
               <div className="mt-4">
-                <h3 className="font-medium text-gray-900 mb-2">Results</h3>
+                <h3 className="font-medium text-szn-text-1 mb-2">Results</h3>
                 {(testResult as { success?: boolean; documents?: Array<{ rank: number; content: string; rerankScore: number }> }).success ? (
                   <div className="space-y-2">
-                    <div className="flex gap-4 text-sm text-gray-500 mb-3">
+                    <div className="flex gap-4 text-sm text-szn-text-2 mb-3">
                       <span>
-                        Model: <span className="text-gray-900">{(testResult as { model: string }).model}</span>
+                        Model: <span className="text-szn-text-1">{(testResult as { model: string }).model}</span>
                       </span>
                       <span>
-                        Domain: <span className="text-gray-900">{(testResult as { domain: string }).domain}</span>
+                        Domain: <span className="text-szn-text-1">{(testResult as { domain: string }).domain}</span>
                       </span>
                       <span>
-                        Latency: <span className="text-gray-900">{(testResult as { latency_ms: number }).latency_ms}ms</span>
+                        Latency: <span className="text-szn-text-1">{(testResult as { latency_ms: number }).latency_ms}ms</span>
                       </span>
                     </div>
                     {((testResult as { documents: Array<{ rank: number; content: string; rerankScore: number }> }).documents || []).map((doc: { rank: number; content: string; rerankScore: number }, idx: number) => (
                       <div
                         key={idx}
-                        className="p-3 bg-gray-50 rounded-lg flex items-start gap-3"
+                        className="p-3 bg-szn-surface rounded-lg flex items-start gap-3"
                       >
                         <span
                           className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                             doc.rank === 1
-                              ? "bg-emerald-500 text-white"
-                              : "bg-gray-200 text-gray-600"
+                              ? "bg-szn-accent text-white"
+                              : "bg-gray-200 text-szn-text-2"
                           }`}
                         >
                           {doc.rank}
                         </span>
                         <div className="flex-1">
-                          <p className="text-sm text-gray-900 line-clamp-2">
+                          <p className="text-sm text-szn-text-1 line-clamp-2">
                             {doc.content}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-szn-text-2 mt-1">
                             Score: {doc.rerankScore.toFixed(4)}
                           </p>
                         </div>
                       </div>
                     ))}
                     {(testResult as { documents?: unknown[] }).documents?.length === 0 && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-szn-text-2">
                         No documents passed the threshold filter
                       </p>
                     )}
@@ -561,7 +561,7 @@ Document 3 content here...`}
         <div className="space-y-6">
           {/* Stats Overview */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl border p-6">
+            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -569,29 +569,29 @@ Document 3 content here...`}
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Clicks</p>
-                  <p className="text-2xl font-bold text-gray-900">{dataStats.clicks.toLocaleString()}</p>
+                  <p className="text-sm text-szn-text-2">Total Clicks</p>
+                  <p className="text-2xl font-bold text-szn-text-1">{dataStats.clicks.toLocaleString()}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400">User click signals</p>
+              <p className="text-xs text-szn-text-3">User click signals</p>
             </div>
 
-            <div className="bg-white rounded-2xl border p-6">
+            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Adoptions</p>
-                  <p className="text-2xl font-bold text-gray-900">{dataStats.adoptions.toLocaleString()}</p>
+                  <p className="text-sm text-szn-text-2">Adoptions</p>
+                  <p className="text-2xl font-bold text-szn-text-1">{dataStats.adoptions.toLocaleString()}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400">Result used in context</p>
+              <p className="text-xs text-szn-text-3">Result used in context</p>
             </div>
 
-            <div className="bg-white rounded-2xl border p-6">
+            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -599,14 +599,14 @@ Document 3 content here...`}
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Corrections</p>
-                  <p className="text-2xl font-bold text-gray-900">{dataStats.corrections}</p>
+                  <p className="text-sm text-szn-text-2">Corrections</p>
+                  <p className="text-2xl font-bold text-szn-text-1">{dataStats.corrections}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400">User re-ordered results</p>
+              <p className="text-xs text-szn-text-3">User re-ordered results</p>
             </div>
 
-            <div className="bg-white rounded-2xl border p-6">
+            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -614,26 +614,26 @@ Document 3 content here...`}
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Queries</p>
-                  <p className="text-2xl font-bold text-gray-900">{dataStats.totalQueries.toLocaleString()}</p>
+                  <p className="text-sm text-szn-text-2">Total Queries</p>
+                  <p className="text-2xl font-bold text-szn-text-1">{dataStats.totalQueries.toLocaleString()}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400">Rerank API calls</p>
+              <p className="text-xs text-szn-text-3">Rerank API calls</p>
             </div>
           </div>
 
           {/* Data Quality Indicators */}
-          <div className="bg-white rounded-2xl border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Data Quality</h3>
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <h3 className="font-semibold text-szn-text-1 mb-4">Data Quality</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Click-through Rate</span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm text-szn-text-2">Click-through Rate</span>
+                  <span className="text-sm font-medium text-szn-text-1">
                     {((dataStats.clicks / dataStats.totalQueries) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-500 rounded-full"
                     style={{ width: `${(dataStats.clicks / dataStats.totalQueries) * 100}%` }}
@@ -643,14 +643,14 @@ Document 3 content here...`}
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Adoption Rate</span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm text-szn-text-2">Adoption Rate</span>
+                  <span className="text-sm font-medium text-szn-text-1">
                     {((dataStats.adoptions / dataStats.clicks) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-emerald-500 rounded-full"
+                    className="h-full bg-szn-accent rounded-full"
                     style={{ width: `${(dataStats.adoptions / dataStats.clicks) * 100}%` }}
                   />
                 </div>
@@ -658,12 +658,12 @@ Document 3 content here...`}
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Correction Rate</span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm text-szn-text-2">Correction Rate</span>
+                  <span className="text-sm font-medium text-szn-text-1">
                     {((dataStats.corrections / dataStats.clicks) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
                   <div
                     className="h-full bg-amber-500 rounded-full"
                     style={{ width: `${(dataStats.corrections / dataStats.clicks) * 100}%` }}
@@ -672,28 +672,28 @@ Document 3 content here...`}
               </div>
             </div>
 
-            <p className="mt-4 text-xs text-gray-400">
+            <p className="mt-4 text-xs text-szn-text-3">
               Last updated: {new Date(dataStats.lastUpdated).toLocaleString()}
             </p>
           </div>
 
           {/* Recommendation */}
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-6">
+          <div className="bg-gradient-to-r from-szn-accent/5 to-szn-accent/10 rounded-2xl border border-szn-accent/20 p-6">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
               <div>
-                <h4 className="font-medium text-emerald-900 mb-1">Ready for Training</h4>
-                <p className="text-sm text-emerald-700">
+                <h4 className="font-medium text-szn-accent mb-1">Ready for Training</h4>
+                <p className="text-sm text-szn-success">
                   You have collected enough feedback data ({dataStats.clicks.toLocaleString()} clicks) to train a custom reranker model.
                   Training typically takes 10-15 minutes.
                 </p>
                 <button
                   onClick={() => setActiveTab("train")}
-                  className="mt-3 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                  className="mt-3 px-4 py-2 bg-szn-accent text-white text-sm font-medium rounded-lg hover:bg-szn-accent/90 transition-colors"
                 >
                   Start Training
                 </button>
@@ -707,45 +707,45 @@ Document 3 content here...`}
       {activeTab === "train" && (
         <div className="space-y-6">
           {/* Current Model Info */}
-          <div className="bg-white rounded-2xl border p-6">
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Current Model</h3>
-              <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-full">
+              <h3 className="font-semibold text-szn-text-1">Current Model</h3>
+              <span className="px-3 py-1 bg-szn-success/10 text-szn-success text-sm font-medium rounded-full">
                 {trainingJob.modelVersion || "v1.0.0"}
               </span>
             </div>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <p className="text-gray-500">Base Model</p>
-                <p className="font-medium text-gray-900">{selectedModel}</p>
+                <p className="text-szn-text-2">Base Model</p>
+                <p className="font-medium text-szn-text-1">{selectedModel}</p>
               </div>
               <div>
-                <p className="text-gray-500">Domain</p>
-                <p className="font-medium text-gray-900">{domains[selectedDomain]?.name || selectedDomain}</p>
+                <p className="text-szn-text-2">Domain</p>
+                <p className="font-medium text-szn-text-1">{domains[selectedDomain]?.name || selectedDomain}</p>
               </div>
               <div>
-                <p className="text-gray-500">Training Data</p>
-                <p className="font-medium text-gray-900">{dataStats.clicks.toLocaleString()} samples</p>
+                <p className="text-szn-text-2">Training Data</p>
+                <p className="font-medium text-szn-text-1">{dataStats.clicks.toLocaleString()} samples</p>
               </div>
             </div>
           </div>
 
           {/* Training Controls */}
-          <div className="bg-white rounded-2xl border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Training Job</h3>
+          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <h3 className="font-semibold text-szn-text-1 mb-4">Training Job</h3>
 
             {trainingJob.status === "idle" && (
               <div className="text-center py-8">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-szn-surface rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="text-gray-600 mb-4">No training job running</p>
+                <p className="text-szn-text-2 mb-4">No training job running</p>
                 <button
                   onClick={handleStartTraining}
-                  className="px-6 py-3 bg-emerald-500 text-white font-medium rounded-xl hover:bg-emerald-600 transition-colors"
+                  className="px-6 py-3 bg-szn-accent text-white font-medium rounded-xl hover:bg-szn-accent/90 transition-colors"
                 >
                   Start Training
                 </button>
@@ -763,8 +763,8 @@ Document 3 content here...`}
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Training in progress</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-medium text-szn-text-1">Training in progress</p>
+                      <p className="text-sm text-szn-text-2">
                         Started {trainingJob.startedAt ? new Date(trainingJob.startedAt).toLocaleTimeString() : "now"}
                       </p>
                     </div>
@@ -773,7 +773,7 @@ Document 3 content here...`}
                     {Math.min(100, Math.round(trainingJob.progress || 0))}%
                   </span>
                 </div>
-                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-3 bg-szn-surface rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-500 rounded-full transition-all duration-500"
                     style={{ width: `${Math.min(100, trainingJob.progress || 0)}%` }}
@@ -784,15 +784,15 @@ Document 3 content here...`}
 
             {trainingJob.status === "completed" && (
               <div className="py-4">
-                <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl mb-4">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-3 p-4 bg-szn-accent/5 rounded-xl mb-4">
+                  <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <div>
-                    <p className="font-medium text-emerald-900">Training completed!</p>
-                    <p className="text-sm text-emerald-700">
+                    <p className="font-medium text-szn-accent">Training completed!</p>
+                    <p className="text-sm text-szn-success">
                       New model version: {trainingJob.modelVersion}
                     </p>
                   </div>
@@ -800,13 +800,13 @@ Document 3 content here...`}
                 <div className="flex gap-3">
                   <button
                     onClick={() => setActiveTab("evaluate")}
-                    className="flex-1 px-4 py-2 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+                    className="flex-1 px-4 py-2 bg-szn-accent text-white font-medium rounded-lg hover:bg-szn-accent/90 transition-colors"
                   >
                     Run Evaluation
                   </button>
                   <button
                     onClick={() => setTrainingJob({ id: "job-new", status: "idle", modelVersion: trainingJob.modelVersion })}
-                    className="px-4 py-2 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2 border border-szn-border text-szn-text-1 font-medium rounded-lg hover:bg-szn-surface-1 transition-colors"
                   >
                     Train Again
                   </button>
@@ -863,10 +863,10 @@ Document 3 content here...`}
         <div className="space-y-6">
           {/* Run New Evaluation */}
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">Evaluation Results</h3>
+            <h3 className="font-semibold text-szn-text-1">Evaluation Results</h3>
             <button
               onClick={handleRunEvaluation}
-              className="px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-szn-accent text-white text-sm font-medium rounded-lg hover:bg-szn-accent/90 transition-colors flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -877,40 +877,40 @@ Document 3 content here...`}
           </div>
 
           {/* Results Table */}
-          <div className="bg-white rounded-2xl border overflow-hidden">
+          <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-szn-bg">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     Run
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     P@1
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     P@5
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     P@10
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     MRR
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     nDCG
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-szn-border">
                 {evalResults.map((result, idx) => (
-                  <tr key={result.id} className={idx === 0 ? "bg-emerald-50" : ""}>
+                  <tr key={result.id} className={idx === 0 ? "bg-szn-accent/5" : ""}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{result.name}</p>
-                        <p className="text-xs text-gray-500">{result.dataset}</p>
+                        <p className="text-sm font-medium text-szn-text-1">{result.name}</p>
+                        <p className="text-xs text-szn-text-2">{result.dataset}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -943,7 +943,7 @@ Document 3 content here...`}
                         baseline={result.baseline?.ndcg}
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-szn-text-2">
                       {new Date(result.runAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -953,24 +953,24 @@ Document 3 content here...`}
           </div>
 
           {/* Metrics Explanation */}
-          <div className="bg-gray-50 rounded-2xl border p-6">
-            <h4 className="font-medium text-gray-900 mb-3">Metrics Explained</h4>
+          <div className="bg-szn-surface rounded-2xl border p-6">
+            <h4 className="font-medium text-szn-text-1 mb-3">Metrics Explained</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="font-medium text-gray-700">Precision@K (P@K)</p>
-                <p className="text-gray-500">Percentage of relevant documents in top K results</p>
+                <p className="font-medium text-szn-text-1">Precision@K (P@K)</p>
+                <p className="text-szn-text-2">Percentage of relevant documents in top K results</p>
               </div>
               <div>
-                <p className="font-medium text-gray-700">MRR (Mean Reciprocal Rank)</p>
-                <p className="text-gray-500">Average of reciprocal ranks of first relevant result</p>
+                <p className="font-medium text-szn-text-1">MRR (Mean Reciprocal Rank)</p>
+                <p className="text-szn-text-2">Average of reciprocal ranks of first relevant result</p>
               </div>
               <div>
-                <p className="font-medium text-gray-700">nDCG (Normalized DCG)</p>
-                <p className="text-gray-500">Measures ranking quality with graded relevance</p>
+                <p className="font-medium text-szn-text-1">nDCG (Normalized DCG)</p>
+                <p className="text-szn-text-2">Measures ranking quality with graded relevance</p>
               </div>
               <div>
-                <p className="font-medium text-gray-700">Baseline Comparison</p>
-                <p className="text-gray-500">Green = improvement, Red = regression vs baseline</p>
+                <p className="font-medium text-szn-text-1">Baseline Comparison</p>
+                <p className="text-szn-text-2">Green = improvement, Red = regression vs baseline</p>
               </div>
             </div>
           </div>
@@ -988,11 +988,11 @@ function MetricCell({ value, baseline }: { value: number; baseline?: number }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-900">{(value * 100).toFixed(1)}%</span>
+      <span className="text-sm font-medium text-szn-text-1">{(value * 100).toFixed(1)}%</span>
       {baseline !== undefined && delta !== 0 && (
         <span
           className={`text-xs font-medium ${
-            isImproved ? "text-emerald-600" : isRegressed ? "text-red-600" : "text-gray-400"
+            isImproved ? "text-szn-accent" : isRegressed ? "text-red-600" : "text-szn-text-3"
           }`}
         >
           {isImproved ? "+" : ""}{(delta * 100).toFixed(1)}%

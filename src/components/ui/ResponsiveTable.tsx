@@ -58,7 +58,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
 
   if (data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+      <div className="flex flex-col items-center justify-center py-12 text-szn-text-2">
         {emptyIcon && <div className="mb-4">{emptyIcon}</div>}
         <p className="text-sm sm:text-base">{emptyMessage}</p>
       </div>
@@ -83,11 +83,11 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-szn-border">
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
-                  className={`text-left py-3 px-4 text-sm font-semibold text-gray-600 ${col.className || ""}`}
+                  className={`text-left py-3 px-4 text-sm font-semibold text-szn-text-2 ${col.className || ""}`}
                 >
                   {col.header}
                 </th>
@@ -99,7 +99,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
               <tr
                 key={keyExtractor(item)}
                 onClick={() => onRowClick?.(item)}
-                className={`border-b border-gray-100 hover:bg-gray-50/50 transition-colors ${
+                className={`border-b border-szn-border/50 hover:bg-szn-surface-1 transition-colors ${
                   onRowClick ? "cursor-pointer" : ""
                 }`}
               >
@@ -125,7 +125,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
           <div
             key={keyExtractor(item)}
             onClick={() => onRowClick?.(item)}
-            className={`glass-card rounded-2xl p-4 space-y-3 ${
+            className={`szn-card rounded-2xl p-4 space-y-3 ${
               onRowClick ? "cursor-pointer active:scale-[0.98] transition-transform" : ""
             } ${mobileCardClassName}`}
           >
@@ -138,7 +138,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
               // First item is usually the title/name - render it prominently
               if (index === 0) {
                 return (
-                  <div key={String(col.key)} className="font-semibold text-gray-900">
+                  <div key={String(col.key)} className="font-semibold text-szn-text-1">
                     {content}
                   </div>
                 );
@@ -149,8 +149,8 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
                   key={String(col.key)}
                   className="flex items-center justify-between text-sm"
                 >
-                  <span className="text-gray-500">{label}</span>
-                  <span className="text-gray-900 font-medium">{content}</span>
+                  <span className="text-szn-text-2">{label}</span>
+                  <span className="text-szn-text-1 font-medium">{content}</span>
                 </div>
               );
             })}
@@ -181,9 +181,9 @@ export function TableAction({
     "p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:p-1.5 flex items-center justify-center rounded-lg transition-colors";
 
   const variantClasses = {
-    default: "text-gray-400 hover:text-gray-600 hover:bg-gray-100",
+    default: "text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface",
     danger: "text-red-400 hover:text-red-600 hover:bg-red-50",
-    primary: "text-teal-500 hover:text-teal-600 hover:bg-teal-50",
+    primary: "text-szn-accent hover:text-szn-accent hover:bg-szn-accent/10",
   };
 
   return (

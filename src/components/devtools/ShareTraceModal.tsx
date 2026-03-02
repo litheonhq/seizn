@@ -98,10 +98,10 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
-      <div className="relative bg-gray-900 rounded-xl border border-gray-700 shadow-2xl w-full max-w-md p-6">
+      <div className="relative bg-gray-900 rounded-xl border border-szn-border shadow-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">Share Trace</h2>
-          <button onClick={handleClose} className="text-gray-400 hover:text-white">
+          <button onClick={handleClose} className="text-szn-text-3 hover:text-white">
             <XIcon className="w-5 h-5" />
           </button>
         </div>
@@ -109,9 +109,9 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
         {shareUrl ? (
           <div className="space-y-4">
             <div className="p-3 bg-gray-800 rounded-lg">
-              <div className="text-xs text-gray-500 mb-1">Share URL</div>
+              <div className="text-xs text-szn-text-2 mb-1">Share URL</div>
               <div className="flex items-center gap-2">
-                <code className="text-sm text-emerald-400 flex-1 truncate">
+                <code className="text-sm text-szn-accent flex-1 truncate">
                   {shareUrl}
                 </code>
                 <button
@@ -121,12 +121,12 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                   {copied ? (
                     <CheckIcon className="w-4 h-4 text-green-400" />
                   ) : (
-                    <CopyIcon className="w-4 h-4 text-gray-300" />
+                    <CopyIcon className="w-4 h-4 text-szn-text-2" />
                   )}
                 </button>
               </div>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-szn-text-2">
               {expiresIn === "never"
                 ? "This link never expires."
                 : `This link expires in ${expiresIn}.`}
@@ -142,7 +142,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
           <div className="space-y-4">
             {/* Expiration */}
             <div>
-              <label className="block text-sm text-gray-400 mb-2">
+              <label className="block text-sm text-szn-text-3 mb-2">
                 Link Expiration
               </label>
               <div className="flex gap-2">
@@ -153,7 +153,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                     className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                       expiresIn === option
                         ? "bg-blue-600 text-white"
-                        : "bg-gray-800 text-gray-400 hover:text-white"
+                        : "bg-gray-800 text-szn-text-3 hover:text-white"
                     }`}
                   >
                     {option === "never" ? "Never" : option.toUpperCase()}
@@ -164,7 +164,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
 
             {/* Redaction Options */}
             <div>
-              <label className="block text-sm text-gray-400 mb-2">
+              <label className="block text-sm text-szn-text-3 mb-2">
                 Privacy Options
               </label>
               <div className="space-y-2">
@@ -173,9 +173,9 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                     type="checkbox"
                     checked={redactPii}
                     onChange={(e) => setRedactPii(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500"
+                    className="w-4 h-4 rounded border-szn-border bg-gray-800 text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-gray-300">
+                  <span className="text-sm text-szn-text-2">
                     Mask PII (emails, phones, IPs)
                   </span>
                 </label>
@@ -184,9 +184,9 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                     type="checkbox"
                     checked={redactSecrets}
                     onChange={(e) => setRedactSecrets(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500"
+                    className="w-4 h-4 rounded border-szn-border bg-gray-800 text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-gray-300">
+                  <span className="text-sm text-szn-text-2">
                     Mask API keys and secrets
                   </span>
                 </label>

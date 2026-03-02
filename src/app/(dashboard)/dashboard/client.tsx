@@ -132,7 +132,7 @@ export function DashboardClient({ user }: { user: User }) {
       <header className="border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-white">
-            Seizn<span className="text-emerald-400">.</span>
+            Seizn<span className="text-szn-accent">.</span>
           </Link>
           <div className="flex items-center gap-6">
             <nav className="flex items-center gap-4">
@@ -207,12 +207,12 @@ export function DashboardClient({ user }: { user: User }) {
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
             <p className="text-zinc-400 text-sm mb-1">Plan</p>
-            <p className="text-3xl font-bold text-emerald-400">
+            <p className="text-3xl font-bold text-szn-accent">
               {stats?.planDisplay || "Free"}
             </p>
             <Link
               href="/pricing"
-              className="text-emerald-400 text-sm hover:underline mt-1 inline-block"
+              className="text-szn-accent text-sm hover:underline mt-1 inline-block"
             >
               Upgrade
             </Link>
@@ -237,8 +237,8 @@ export function DashboardClient({ user }: { user: User }) {
 
           {/* New Key Created */}
           {newKey && (
-            <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-              <p className="text-emerald-400 font-medium mb-2">
+            <div className="mb-6 p-4 bg-szn-accent/10 border border-szn-accent/20 rounded-lg">
+              <p className="text-szn-accent font-medium mb-2">
                 New API Key Created
               </p>
               <p className="text-zinc-300 text-sm mb-2">
@@ -249,7 +249,7 @@ export function DashboardClient({ user }: { user: User }) {
               </code>
               <button
                 onClick={() => copyToClipboard(newKey)}
-                className="mt-3 text-sm text-emerald-400 hover:text-emerald-300"
+                className="mt-3 text-sm text-szn-accent hover:text-szn-accent/80"
               >
                 {copied ? "Copied!" : "Copy to clipboard"}
               </button>
@@ -263,13 +263,13 @@ export function DashboardClient({ user }: { user: User }) {
               value={newKeyName}
               onChange={(e) => setNewKeyName(e.target.value)}
               placeholder="Key name (e.g., Production)"
-              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-szn-accent"
               onKeyDown={(e) => e.key === "Enter" && createApiKey()}
             />
             <button
               onClick={createApiKey}
               disabled={isLoading || !newKeyName.trim()}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
             >
               {isLoading ? "Creating..." : "Create Key"}
             </button>
@@ -343,7 +343,7 @@ curl -X POST https://seizn.com/api/extract \\
           <div className="mt-4">
             <Link
               href="/docs"
-              className="text-emerald-400 hover:text-emerald-300 text-sm"
+              className="text-szn-accent hover:text-szn-accent/80 text-sm"
             >
               View full documentation →
             </Link>

@@ -54,14 +54,14 @@ export function ReceiptDetail({
   }, [receipt.execution.plan_path]);
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-gray-900 rounded-lg border border-szn-border ${className}`}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-800">
+      <div className="p-6 border-b border-szn-border">
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3">
               <svg
-                className="w-6 h-6 text-emerald-400"
+                className="w-6 h-6 text-szn-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -80,7 +80,7 @@ export function ReceiptDetail({
                 </span>
               )}
             </div>
-            <p className="mt-2 text-sm text-gray-400 font-mono">{receipt.receipt_id}</p>
+            <p className="mt-2 text-sm text-szn-text-3 font-mono">{receipt.receipt_id}</p>
           </div>
 
           {/* Download Buttons */}
@@ -88,7 +88,7 @@ export function ReceiptDetail({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onDownload("json")}
-                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-szn-text-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -102,7 +102,7 @@ export function ReceiptDetail({
               </button>
               <button
                 onClick={() => onDownload("pdf")}
-                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-szn-text-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -121,17 +121,17 @@ export function ReceiptDetail({
         {/* Query Preview */}
         {receipt.query_preview && (
           <div className="mt-4 p-3 bg-gray-800/50 rounded-lg">
-            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Query</div>
-            <p className="text-sm text-gray-200">&ldquo;{receipt.query_preview}&rdquo;</p>
+            <div className="text-xs text-szn-text-2 uppercase tracking-wide mb-1">Query</div>
+            <p className="text-sm text-szn-text-1">&ldquo;{receipt.query_preview}&rdquo;</p>
           </div>
         )}
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid md:grid-cols-2 divide-x divide-gray-800">
+      <div className="grid md:grid-cols-2 divide-x divide-szn-border">
         {/* Cost Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -145,36 +145,36 @@ export function ReceiptDetail({
 
           <div className="space-y-4">
             {/* Total Cost */}
-            <div className="flex items-center justify-between p-3 bg-emerald-900/20 rounded-lg border border-emerald-800/50">
-              <span className="text-emerald-400">Total Cost</span>
-              <span className="text-2xl font-bold text-emerald-400">
+            <div className="flex items-center justify-between p-3 bg-szn-accent/10 rounded-lg border border-szn-accent/30">
+              <span className="text-szn-accent">Total Cost</span>
+              <span className="text-2xl font-bold text-szn-accent">
                 {formatCost(receipt.cost.estimated_cost_usd)}
               </span>
             </div>
 
             {/* Cost Details */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                <span className="text-sm text-gray-400">Embedding Tokens</span>
-                <span className="text-sm text-gray-200">
+              <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                <span className="text-sm text-szn-text-3">Embedding Tokens</span>
+                <span className="text-sm text-szn-text-1">
                   {receipt.cost.embedding_tokens.toLocaleString()}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                <span className="text-sm text-gray-400">Rerank Candidates</span>
-                <span className="text-sm text-gray-200">{receipt.cost.rerank_candidates}</span>
+              <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                <span className="text-sm text-szn-text-3">Rerank Candidates</span>
+                <span className="text-sm text-szn-text-1">{receipt.cost.rerank_candidates}</span>
               </div>
               {receipt.cost.llm_tokens !== undefined && (
-                <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                  <span className="text-sm text-gray-400">LLM Tokens</span>
-                  <span className="text-sm text-gray-200">
+                <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                  <span className="text-sm text-szn-text-3">LLM Tokens</span>
+                  <span className="text-sm text-szn-text-1">
                     {receipt.cost.llm_tokens.toLocaleString()}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-gray-400">Query Units</span>
-                <span className="text-sm font-medium text-gray-200">
+                <span className="text-sm text-szn-text-3">Query Units</span>
+                <span className="text-sm font-medium text-szn-text-1">
                   {receipt.cost.total_query_units} QU
                 </span>
               </div>
@@ -184,7 +184,7 @@ export function ReceiptDetail({
 
         {/* Execution Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -207,16 +207,16 @@ export function ReceiptDetail({
 
             {/* Pipeline Path */}
             <div className="space-y-2">
-              <div className="text-sm text-gray-400 mb-2">Pipeline Path</div>
+              <div className="text-sm text-szn-text-3 mb-2">Pipeline Path</div>
               <div className="flex flex-wrap gap-2">
                 {pipelineStages.map((stage, i) => (
                   <div key={i} className="flex items-center gap-1">
-                    <span className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded capitalize">
+                    <span className="px-2 py-1 text-xs bg-gray-800 text-szn-text-2 rounded capitalize">
                       {stage.label}
                     </span>
                     {i < pipelineStages.length - 1 && (
                       <svg
-                        className="w-3 h-3 text-gray-600"
+                        className="w-3 h-3 text-szn-text-2"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -237,35 +237,35 @@ export function ReceiptDetail({
             {/* Stage Latencies */}
             {receipt.execution.stage_latencies && (
               <div className="space-y-2">
-                <div className="text-sm text-gray-400 mb-2">Stage Breakdown</div>
+                <div className="text-sm text-szn-text-3 mb-2">Stage Breakdown</div>
                 {receipt.execution.stage_latencies.embedding_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                    <span className="text-sm text-gray-400">Embedding</span>
-                    <span className="text-sm text-gray-200">
+                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                    <span className="text-sm text-szn-text-3">Embedding</span>
+                    <span className="text-sm text-szn-text-1">
                       {formatLatency(receipt.execution.stage_latencies.embedding_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.search_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                    <span className="text-sm text-gray-400">Search</span>
-                    <span className="text-sm text-gray-200">
+                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                    <span className="text-sm text-szn-text-3">Search</span>
+                    <span className="text-sm text-szn-text-1">
                       {formatLatency(receipt.execution.stage_latencies.search_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.rerank_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-gray-800">
-                    <span className="text-sm text-gray-400">Rerank</span>
-                    <span className="text-sm text-gray-200">
+                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
+                    <span className="text-sm text-szn-text-3">Rerank</span>
+                    <span className="text-sm text-szn-text-1">
                       {formatLatency(receipt.execution.stage_latencies.rerank_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.llm_ms !== undefined && (
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-gray-400">LLM</span>
-                    <span className="text-sm text-gray-200">
+                    <span className="text-sm text-szn-text-3">LLM</span>
+                    <span className="text-sm text-szn-text-1">
                       {formatLatency(receipt.execution.stage_latencies.llm_ms)}
                     </span>
                   </div>
@@ -277,10 +277,10 @@ export function ReceiptDetail({
       </div>
 
       {/* Evidence & Policy */}
-      <div className="grid md:grid-cols-2 divide-x divide-gray-800 border-t border-gray-800">
+      <div className="grid md:grid-cols-2 divide-x divide-szn-border border-t border-szn-border">
         {/* Evidence Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -298,45 +298,45 @@ export function ReceiptDetail({
                 <div className="text-2xl font-bold text-purple-400">
                   {receipt.evidence.candidates_count}
                 </div>
-                <div className="text-xs text-gray-500">Candidates</div>
+                <div className="text-xs text-szn-text-2">Candidates</div>
               </div>
               <div className="p-3 bg-purple-900/20 rounded-lg text-center border border-purple-800/50">
                 <div className="text-2xl font-bold text-purple-400">
                   {receipt.evidence.reranked_count}
                 </div>
-                <div className="text-xs text-gray-500">Reranked</div>
+                <div className="text-xs text-szn-text-2">Reranked</div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-gray-800 rounded-lg text-center">
-                <div className="text-xl font-bold text-gray-200">
+                <div className="text-xl font-bold text-szn-text-1">
                   {receipt.evidence.context_chunks}
                 </div>
-                <div className="text-xs text-gray-500">Context Chunks</div>
+                <div className="text-xs text-szn-text-2">Context Chunks</div>
               </div>
               <div className="p-3 bg-gray-800 rounded-lg text-center">
                 <div
-                  className={`text-xl font-bold ${receipt.evidence.blocked_chunks > 0 ? "text-red-400" : "text-gray-200"}`}
+                  className={`text-xl font-bold ${receipt.evidence.blocked_chunks > 0 ? "text-red-400" : "text-szn-text-1"}`}
                 >
                   {receipt.evidence.blocked_chunks}
                 </div>
-                <div className="text-xs text-gray-500">Blocked</div>
+                <div className="text-xs text-szn-text-2">Blocked</div>
               </div>
             </div>
 
             {receipt.evidence.score_range && (
               <div className="mt-3 p-3 bg-gray-800/50 rounded-lg">
-                <div className="text-xs text-gray-500 mb-2">Score Distribution</div>
+                <div className="text-xs text-szn-text-2 mb-2">Score Distribution</div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400">
-                    Min: <span className="text-gray-200">{receipt.evidence.score_range.min.toFixed(3)}</span>
+                  <span className="text-szn-text-3">
+                    Min: <span className="text-szn-text-1">{receipt.evidence.score_range.min.toFixed(3)}</span>
                   </span>
-                  <span className="text-gray-400">
-                    Avg: <span className="text-gray-200">{receipt.evidence.score_range.avg.toFixed(3)}</span>
+                  <span className="text-szn-text-3">
+                    Avg: <span className="text-szn-text-1">{receipt.evidence.score_range.avg.toFixed(3)}</span>
                   </span>
-                  <span className="text-gray-400">
-                    Max: <span className="text-gray-200">{receipt.evidence.score_range.max.toFixed(3)}</span>
+                  <span className="text-szn-text-3">
+                    Max: <span className="text-szn-text-1">{receipt.evidence.score_range.max.toFixed(3)}</span>
                   </span>
                 </div>
               </div>
@@ -346,7 +346,7 @@ export function ReceiptDetail({
 
         {/* Policy Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -384,29 +384,29 @@ export function ReceiptDetail({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   ) : (
-                    <svg className="w-6 h-6 text-gray-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-6 h-6 text-szn-text-2 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   )}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-szn-text-2">
                   {receipt.policy.pii_scanned ? "PII Scanned" : "No PII Scan"}
                 </div>
               </div>
               <div className="p-3 bg-gray-800 rounded-lg text-center">
                 <div
-                  className={`text-xl font-bold ${receipt.policy.redactions_applied > 0 ? "text-orange-400" : "text-gray-200"}`}
+                  className={`text-xl font-bold ${receipt.policy.redactions_applied > 0 ? "text-orange-400" : "text-szn-text-1"}`}
                 >
                   {receipt.policy.redactions_applied}
                 </div>
-                <div className="text-xs text-gray-500">Redactions</div>
+                <div className="text-xs text-szn-text-2">Redactions</div>
               </div>
             </div>
 
             {/* Applied Policies */}
             {receipt.policy.policies_applied && receipt.policy.policies_applied.length > 0 && (
               <div className="mt-3">
-                <div className="text-xs text-gray-500 mb-2">Applied Policies</div>
+                <div className="text-xs text-szn-text-2 mb-2">Applied Policies</div>
                 <div className="flex flex-wrap gap-2">
                   {receipt.policy.policies_applied.map((policy, i) => (
                     <span
@@ -424,8 +424,8 @@ export function ReceiptDetail({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-800 bg-gray-800/30">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-500">
+      <div className="p-4 border-t border-szn-border bg-gray-800/30">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-szn-text-2">
           <div className="flex items-center gap-4">
             <span>Trace ID: {receipt.trace_id}</span>
             {receipt.collections && receipt.collections.length > 0 && (
