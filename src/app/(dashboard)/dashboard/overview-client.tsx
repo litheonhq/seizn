@@ -6,6 +6,7 @@ import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
 import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
+import { formatDate } from "@/lib/format-date";
 import type {
   DashboardUser as User,
   DashboardStats as Stats,
@@ -488,12 +489,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                     <div className="flex-1 min-w-0">
                       <p className="text-szn-text-1 text-sm line-clamp-2">{memory.content}</p>
                       <p className="text-xs text-szn-text-3 mt-1">
-                        {new Date(memory.created_at).toLocaleDateString(locale, {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {formatDate(memory.created_at, "long")}
                       </p>
                     </div>
                     <span className="text-xs px-2 py-1 bg-szn-surface text-szn-text-2 rounded-full">
@@ -766,14 +762,9 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
   const maxCalls = Math.max(...data.map(d => d.calls), 1);
   const chartHeight = 120;
 
-  const formatDate = (dateStr: string) => {
+  const formatWeekday = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString(locale, { weekday: 'short' });
-  };
-
-  const formatFullDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
   };
 
   return (
@@ -808,7 +799,7 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
             className="absolute -top-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-lg pointer-events-none z-10 theme-gradient-btn"
             style={{ left: `${(hoveredIdx / data.length) * 100 + 100 / data.length / 2}%`, transform: "translateX(-50%)" }}
           >
-            {formatFullDate(data[hoveredIdx].date)}: {data[hoveredIdx].calls.toLocaleString()}
+            {formatDate(data[hoveredIdx].date, "compact")}: {data[hoveredIdx].calls.toLocaleString()}
           </div>
         )}
         <svg width="100%" height={chartHeight + 40} className="overflow-visible">
@@ -852,7 +843,7 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
                   fontSize="11"
                   fontWeight={isHovered ? 600 : 400}
                 >
-                  {formatDate(day.date)}
+                  {formatWeekday(day.date)}
                 </text>
                 {/* Call count (only show if > 0) */}
                 {day.calls > 0 && !isHovered && (

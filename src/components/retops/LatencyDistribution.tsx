@@ -42,11 +42,11 @@ interface LatencyTrendPoint {
 // ============================================
 
 const PERCENTILE_COLORS = {
-  p50: "#22c55e",
+  p50: "var(--szn-success)",
   p75: "#84cc16",
   p90: "#facc15",
   p95: "#f97316",
-  p99: "#ef4444",
+  p99: "var(--szn-danger)",
   max: "#991b1b",
 };
 
@@ -130,38 +130,38 @@ export function LatencyDistribution({
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={percentileData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
                 <XAxis
                   type="number"
-                  tick={{ fontSize: 12, fill: "#6b7280" }}
+                  tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
+                  axisLine={{ stroke: "var(--szn-border)" }}
                   unit="ms"
                 />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tick={{ fontSize: 12, fill: "#6b7280" }}
+                  tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
+                  axisLine={{ stroke: "var(--szn-border)" }}
                   width={40}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#fff",
-                    border: "1px solid #e5e7eb",
+                    border: "1px solid var(--szn-border)",
                     borderRadius: "8px",
                   }}
                   formatter={(value) => [`${value ?? 0}ms`, "Latency"]}
                 />
                 <ReferenceLine
                   x={SLO_THRESHOLD}
-                  stroke="#ef4444"
+                  stroke="var(--szn-danger)"
                   strokeDasharray="3 3"
                   label={{
                     value: "SLO",
                     position: "top",
-                    fill: "#ef4444",
+                    fill: "var(--szn-danger)",
                     fontSize: 10,
                   }}
                 />
@@ -233,29 +233,29 @@ export function LatencyDistribution({
         <div className="h-32">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
               <XAxis
                 dataKey="time"
-                tick={{ fontSize: 10, fill: "#6b7280" }}
+                tick={{ fontSize: 10, fill: "var(--szn-text-3)" }}
                 tickLine={false}
-                axisLine={{ stroke: "#e5e7eb" }}
+                axisLine={{ stroke: "var(--szn-border)" }}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "#6b7280" }}
+                tick={{ fontSize: 10, fill: "var(--szn-text-3)" }}
                 tickLine={false}
-                axisLine={{ stroke: "#e5e7eb" }}
+                axisLine={{ stroke: "var(--szn-border)" }}
                 unit="ms"
               />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "#fff",
-                  border: "1px solid #e5e7eb",
+                  border: "1px solid var(--szn-border)",
                   borderRadius: "8px",
                 }}
               />
               <ReferenceLine
                 y={SLO_THRESHOLD}
-                stroke="#ef4444"
+                stroke="var(--szn-danger)"
                 strokeDasharray="3 3"
               />
               <Line

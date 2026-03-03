@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ShareTraceModal } from "@/components/dashboard/ShareTraceModal";
+import { formatDate } from "@/lib/format-date";
 
 type TabType = "traces" | "eval" | "experiments";
 
@@ -689,7 +690,7 @@ function ExperimentsTable({ experiments }: { experiments: Experiment[] }) {
               <h3 className="font-semibold text-szn-text-1">{exp.name}</h3>
               <p className="text-sm text-szn-text-2">
                 {exp.variants.length} variants • Started{" "}
-                {new Date(exp.created_at).toLocaleDateString()}
+                {formatDate(exp.created_at)}
               </p>
             </div>
             <StatusBadge status={exp.status} />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { DriftAlert, DriftRecommendation } from "@/lib/drift/types";
+import { formatRelativeTime } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -23,27 +24,27 @@ const severityColors = {
     bg: "bg-blue-50",
     border: "border-blue-200",
     text: "text-blue-700",
-    badge: "bg-blue-100 text-blue-800",
+    badge: "szn-badge-info",
   },
   warning: {
     bg: "bg-yellow-50",
     border: "border-yellow-200",
     text: "text-yellow-700",
-    badge: "bg-yellow-100 text-yellow-800",
+    badge: "szn-badge-warning",
   },
   critical: {
     bg: "bg-red-50",
     border: "border-red-200",
     text: "text-red-700",
-    badge: "bg-red-100 text-red-800",
+    badge: "szn-badge-error",
   },
 };
 
 const statusColors = {
-  active: "bg-red-100 text-red-800",
-  acknowledged: "bg-yellow-100 text-yellow-800",
-  resolved: "bg-green-100 text-green-800",
-  ignored: "bg-gray-100 text-gray-800",
+  active: "szn-badge-error",
+  acknowledged: "szn-badge-warning",
+  resolved: "szn-badge-success",
+  ignored: "szn-badge-muted",
 };
 
 // ============================================
@@ -119,7 +120,7 @@ export function DriftAlertCard({
   const [showResolveForm, setShowResolveForm] = useState(false);
 
   const colors = severityColors[alert.severity];
-  const timeAgo = getTimeAgo(alert.createdAt);
+  const timeAgo = formatRelativeTime(alert.createdAt);
 
   const handleAcknowledge = () => {
     if (onAcknowledge) {
@@ -149,9 +150,7 @@ export function DriftAlertCard({
             </p>
             <p className="text-xs text-gray-500 mt-0.5">{timeAgo}</p>
           </div>
-          <span
-            className={`text-xs font-medium px-2 py-0.5 rounded ${statusColors[alert.status]}`}
-          >
+          <span className={`szn-badge ${statusColors[alert.status]}`}>
             {alert.status}
           </span>
         </div>
@@ -172,12 +171,10 @@ export function DriftAlertCard({
               <h3 className={`text-sm font-semibold ${colors.text}`}>
                 {alert.title}
               </h3>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded ${colors.badge}`}>
+              <span className={`szn-badge ${colors.badge}`}>
                 {alert.severity}
               </span>
-              <span
-                className={`text-xs font-medium px-2 py-0.5 rounded ${statusColors[alert.status]}`}
-              >
+              <span className={`szn-badge ${statusColors[alert.status]}`}>
                 {alert.status}
               </span>
             </div>
@@ -312,9 +309,9 @@ export function DriftAlertCard({
 
 function RecommendationItem({ recommendation }: { recommendation: DriftRecommendation }) {
   const impactColors = {
-    low: "bg-gray-100 text-gray-700",
-    medium: "bg-yellow-100 text-yellow-700",
-    high: "bg-red-100 text-red-700",
+    low: "szn-badge-muted",
+    medium: "szn-badge-warning",
+    high: "szn-badge-error",
   };
 
   return (
@@ -324,13 +321,11 @@ function RecommendationItem({ recommendation }: { recommendation: DriftRecommend
           <span className="text-xs font-medium text-gray-900 capitalize">
             {recommendation.action.replace(/_/g, " ")}
           </span>
-          <span
-            className={`text-xs px-1.5 py-0.5 rounded ${impactColors[recommendation.impact]}`}
-          >
+          <span className={`szn-badge ${impactColors[recommendation.impact]}`}>
             {recommendation.impact} impact
           </span>
           {recommendation.autoApplicable && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+            <span className="szn-badge szn-badge-info">
               Auto-applicable
             </span>
           )}
@@ -344,22 +339,6 @@ function RecommendationItem({ recommendation }: { recommendation: DriftRecommend
 // ============================================
 // Helpers
 // ============================================
-
-function getTimeAgo(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-
-  return date.toLocaleDateString();
-}
 
 function formatValue(value: number, alertType: string): string {
   if (alertType === "centroid_shift") {

@@ -13,6 +13,7 @@ import {
 import type { TimelineStage, Candidate, WhatIfResult } from "@/components/devtools";
 import { ShareTraceModal, ShareIcon } from "@/components/devtools/ShareTraceModal";
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -199,9 +200,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
     return `$${usd.toFixed(4)}`;
   };
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString();
-  };
+  // formatDate imported from @/lib/format-date
 
   // Tabs config
   const tabs: Array<{ id: TabId; label: string; icon: typeof ClockIcon }> = [
@@ -352,7 +351,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
             )}
           </p>
           <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-            <span>Created: {formatDate(traceDetail.timestamps.created_at)}</span>
+            <span>Created: {formatDate(traceDetail.timestamps.created_at, "long")}</span>
             <span>Collection: {traceDetail.collection.primary || "None"}</span>
             {traceDetail.replay.is_replay && traceDetail.replay.original_trace_id && (
               <Link

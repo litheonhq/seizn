@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { formatDate } from "@/lib/format-date";
 
 
 interface TestSuite {
@@ -73,24 +74,19 @@ export function TestSuiteList({
   const getStatusColor = (result?: string) => {
     switch (result) {
       case 'passed':
-        return 'bg-green-100 text-green-800';
+        return 'szn-badge szn-badge-success';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'szn-badge szn-badge-error';
       case 'partial':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'szn-badge szn-badge-warning';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'szn-badge szn-badge-muted';
     }
   };
 
-  const formatDate = (dateStr?: string) => {
+  const formatDateLocal = (dateStr?: string) => {
     if (!dateStr) return 'Never';
-    return new Date(dateStr).toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return formatDate(dateStr, "long");
   };
 
   if (loading) {
@@ -153,7 +149,7 @@ export function TestSuiteList({
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-medium text-gray-900">{suite.name}</h3>
                 {!suite.is_active && (
-                  <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">
+                  <span className="szn-badge szn-badge-muted">
                     Inactive
                   </span>
                 )}
@@ -166,10 +162,10 @@ export function TestSuiteList({
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Last run: {formatDate(suite.last_run_at)}
+                  Last run: {formatDateLocal(suite.last_run_at)}
                 </span>
                 {suite.last_run_result && (
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${getStatusColor(suite.last_run_result)}`}>
+                  <span className={getStatusColor(suite.last_run_result)}>
                     {suite.last_run_result}
                   </span>
                 )}
@@ -179,7 +175,7 @@ export function TestSuiteList({
                   {suite.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded"
+                      className="szn-badge szn-badge-info"
                     >
                       {tag}
                     </span>

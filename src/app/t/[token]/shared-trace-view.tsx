@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { PublicTraceView, RedactionProfile } from "@/lib/sharing/types";
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 interface SharedTraceViewProps {
   token: string;
@@ -126,7 +127,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
           </Link>
           <div className="flex items-center gap-4 text-sm text-szn-text-2">
             <span>{trace.view_count} views</span>
-            <span>Shared {new Date(trace.shared_at).toLocaleDateString()}</span>
+            <span>Shared {formatDate(trace.shared_at)}</span>
           </div>
         </div>
       </header>

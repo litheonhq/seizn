@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { formatDate } from "@/lib/format-date";
 
 
 // =============================================================================
@@ -290,11 +291,11 @@ function TrainingProgress({ run }: { run: TrainingRun }) {
 
 function RunHistoryItem({ run }: { run: TrainingRun }) {
   const statusConfig = {
-    pending: { color: "bg-gray-100 text-gray-700", label: "Pending" },
-    training: { color: "bg-blue-100 text-blue-700", label: "Training" },
-    completed: { color: "bg-green-100 text-green-700", label: "Completed" },
-    failed: { color: "bg-red-100 text-red-700", label: "Failed" },
-    cancelled: { color: "bg-gray-100 text-gray-700", label: "Cancelled" },
+    pending: { badge: "szn-badge szn-badge-muted", label: "Pending" },
+    training: { badge: "szn-badge szn-badge-info", label: "Training" },
+    completed: { badge: "szn-badge szn-badge-success", label: "Completed" },
+    failed: { badge: "szn-badge szn-badge-error", label: "Failed" },
+    cancelled: { badge: "szn-badge szn-badge-muted", label: "Cancelled" },
   };
 
   const config = statusConfig[run.status];
@@ -302,11 +303,11 @@ function RunHistoryItem({ run }: { run: TrainingRun }) {
   return (
     <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
       <div className="flex items-center gap-3">
-        <span className={`px-2 py-0.5 text-xs font-medium rounded ${config.color}`}>
+        <span className={config.badge}>
           {config.label}
         </span>
         <span className="text-xs text-gray-500">
-          {new Date(run.created_at).toLocaleDateString()}
+          {formatDate(run.created_at)}
         </span>
       </div>
       <div className="text-sm">

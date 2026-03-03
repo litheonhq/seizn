@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { formatDate } from "@/lib/format-date";
 
 type TabType = "overview" | "data" | "train" | "evaluate";
 
@@ -944,7 +945,7 @@ Document 3 content here...`}
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-szn-text-2">
-                      {new Date(result.runAt).toLocaleDateString()}
+                      {formatDate(result.runAt)}
                     </td>
                   </tr>
                 ))}

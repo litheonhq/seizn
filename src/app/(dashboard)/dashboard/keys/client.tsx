@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { getErrorMessage } from "@/lib/ui-error";
 import type { ApiKey } from "@/types/dashboard";
+import { formatDate } from "@/lib/format-date";
 
 export default function ApiKeysClient() {
   const { t, locale } = useDashboardTranslation();
@@ -219,11 +220,11 @@ export default function ApiKeysClient() {
                       <code className="text-sm text-szn-text-2 bg-szn-surface px-2 py-0.5 rounded">{key.key_prefix}...</code>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-sm text-szn-text-1">{new Date(key.created_at).toLocaleDateString(locale)}</span>
+                      <span className="text-sm text-szn-text-1">{formatDate(key.created_at)}</span>
                     </td>
                     <td className="px-4 py-3 hidden lg:table-cell">
                       {key.last_used_at ? (
-                        <span className="text-sm text-szn-text-1">{new Date(key.last_used_at).toLocaleDateString(locale)}</span>
+                        <span className="text-sm text-szn-text-1">{formatDate(key.last_used_at)}</span>
                       ) : (
                         <span className="text-sm text-szn-text-3">{t("dashboard.keysPage.neverUsed")}</span>
                       )}

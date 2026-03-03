@@ -171,6 +171,7 @@ export default function MobileSidebar({
                       key={item.href}
                       href={item.href}
                       onClick={onClose}
+                      aria-current={active ? "page" : undefined}
                       className={`group relative flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-xl text-[13px] font-medium transition-all duration-200 ${
                         active
                           ? "bg-szn-surface-2 text-szn-text-1"

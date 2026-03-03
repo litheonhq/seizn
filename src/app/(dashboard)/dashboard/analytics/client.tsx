@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 import {
   LineChart,
   Line,
@@ -77,22 +78,22 @@ interface AnalyticsData {
 }
 
 const CHART_COLORS = {
-  primary: "#2563eb",
+  primary: "var(--szn-chart-1)",
   primaryLight: "#93c5fd",
-  secondary: "#0ea5e9",
+  secondary: "var(--szn-chart-3)",
   secondaryLight: "#7dd3fc",
-  tertiary: "#3b82f6",
+  tertiary: "var(--szn-accent-2)",
   tertiaryLight: "#bfdbfe",
   quaternary: "#60a5fa",
   quaternaryLight: "#dbeafe",
-  error: "#ef4444",
+  error: "var(--szn-danger)",
   errorLight: "#fecaca",
-  success: "#22c55e",
-  warning: "#f59e0b",
+  success: "var(--szn-success)",
+  warning: "var(--szn-warning)",
   warningLight: "#fde68a",
 };
 
-const PIE_COLORS = ["#2563eb", "#0ea5e9", "#3b82f6", "#60a5fa", "#93c5fd", "#f59e0b"];
+const PIE_COLORS = ["var(--szn-chart-1)", "var(--szn-chart-3)", "var(--szn-accent-2)", "#60a5fa", "#93c5fd", "var(--szn-warning)"];
 
 export function AnalyticsClient() {
   const { t } = useDashboardTranslation();
@@ -350,14 +351,14 @@ export function AnalyticsClient() {
                            <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.05} />
                          </linearGradient>
                        </defs>
-                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="var(--szn-border)" opacity={0.7} />
                       <XAxis
                         dataKey="date"
-                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#64748b"
+                        tickFormatter={(value) => formatDate(value, "compact")}
+                        stroke="var(--szn-text-3)"
                         fontSize={12}
                       />
-                      <YAxis stroke="#64748b" fontSize={12} />
+                      <YAxis stroke="var(--szn-text-3)" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Area
                         type="monotone"
@@ -388,14 +389,14 @@ export function AnalyticsClient() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="var(--szn-border)" opacity={0.7} />
                       <XAxis
                         dataKey="date"
-                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#64748b"
+                        tickFormatter={(value) => formatDate(value, "compact")}
+                        stroke="var(--szn-text-3)"
                         fontSize={12}
                       />
-                      <YAxis stroke="#64748b" fontSize={12} />
+                      <YAxis stroke="var(--szn-text-3)" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Line
@@ -445,14 +446,14 @@ export function AnalyticsClient() {
                           <stop offset="95%" stopColor={CHART_COLORS.quaternary} stopOpacity={0.6} />
                         </linearGradient>
                       </defs>
-                       <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
+                       <CartesianGrid strokeDasharray="4 4" stroke="var(--szn-border)" opacity={0.7} />
                       <XAxis
                         dataKey="date"
-                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#64748b"
+                        tickFormatter={(value) => formatDate(value, "compact")}
+                        stroke="var(--szn-text-3)"
                         fontSize={12}
                       />
-                      <YAxis stroke="#64748b" fontSize={12} />
+                      <YAxis stroke="var(--szn-text-3)" fontSize={12} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar
@@ -486,14 +487,14 @@ export function AnalyticsClient() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.7} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="var(--szn-border)" opacity={0.7} />
                       <XAxis
                         dataKey="date"
-                        tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        stroke="#64748b"
+                        tickFormatter={(value) => formatDate(value, "compact")}
+                        stroke="var(--szn-text-3)"
                         fontSize={12}
                       />
-                      <YAxis stroke="#64748b" fontSize={12} unit="ms" />
+                      <YAxis stroke="var(--szn-text-3)" fontSize={12} unit="ms" />
                       <Tooltip content={<CustomTooltip />} />
                       <Line
                         type="monotone"
@@ -529,14 +530,14 @@ export function AnalyticsClient() {
                           <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.6} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="4 4" stroke="#dbeafe" opacity={0.5} />
+                      <CartesianGrid strokeDasharray="4 4" stroke="var(--szn-border)" opacity={0.5} />
                       <XAxis
                         dataKey="hour"
                         tickFormatter={(value) => `${value}:00`}
-                        stroke="#64748b"
+                        stroke="var(--szn-text-3)"
                         fontSize={10}
                       />
-                      <YAxis stroke="#64748b" fontSize={10} />
+                      <YAxis stroke="var(--szn-text-3)" fontSize={10} />
                       <Tooltip
                         formatter={(value) => [typeof value === 'number' ? value.toLocaleString() : String(value), t("dashboard.analyticsPage.calls")]}
                         labelFormatter={(label) => `${label}:00 - ${label}:59`}

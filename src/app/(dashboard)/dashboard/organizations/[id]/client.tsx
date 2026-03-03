@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 interface Organization {
   id: string;
@@ -443,7 +444,7 @@ export default function OrganizationDetailClient({
                       <div>
                         <p className="font-medium text-szn-text-1">{invite.email}</p>
                         <p className="text-sm text-szn-text-2">
-                          Expires {new Date(invite.expires_at).toLocaleDateString("ja-JP")}
+                          Expires {formatDate(invite.expires_at)}
                         </p>
                       </div>
                     </div>

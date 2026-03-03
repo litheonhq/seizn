@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
 import { verifyCsrf } from '@/lib/csrf';
+import { formatDate } from "@/lib/format-date";
 import {
   AuthErrors,
   ValidationErrors,
@@ -166,7 +167,7 @@ Host/Name: _seizn-verification.${verification.domain}
 Type: TXT
 Value: ${verification.verificationToken}
 
-The verification token expires on ${new Date(verification.expiresAt).toLocaleDateString()}.
+The verification token expires on ${formatDate(verification.expiresAt)}.
 After adding the record, click "Verify" to complete the process.`;
 
     case 'dns_cname':

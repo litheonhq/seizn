@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { formatDate } from "@/lib/format-date";
 
 interface TraceSnapshot {
   request_id: string;
@@ -222,7 +223,7 @@ export function TraceViewerClient({ shareId }: Props) {
 
         {/* Footer */}
         <div className="mt-8 text-center text-zinc-500 text-sm">
-          Expires {new Date(data.expires_at).toLocaleDateString()}
+          Expires {formatDate(data.expires_at)}
         </div>
       </div>
     </div>

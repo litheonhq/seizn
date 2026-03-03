@@ -40,17 +40,17 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
         {/* Desktop skeleton */}
         <div className="hidden md:block">
           <div className="animate-pulse space-y-3">
-            <div className="h-12 bg-gray-200 rounded-lg" />
-            <div className="h-16 bg-gray-100 rounded-lg" />
-            <div className="h-16 bg-gray-100 rounded-lg" />
-            <div className="h-16 bg-gray-100 rounded-lg" />
+            <div className="h-12 bg-szn-surface-2 rounded-lg" />
+            <div className="h-16 bg-szn-surface-1 rounded-lg" />
+            <div className="h-16 bg-szn-surface-1 rounded-lg" />
+            <div className="h-16 bg-szn-surface-1 rounded-lg" />
           </div>
         </div>
         {/* Mobile skeleton */}
         <div className="md:hidden space-y-3">
-          <div className="animate-pulse h-32 bg-gray-100 rounded-2xl" />
-          <div className="animate-pulse h-32 bg-gray-100 rounded-2xl" />
-          <div className="animate-pulse h-32 bg-gray-100 rounded-2xl" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
         </div>
       </div>
     );
@@ -212,15 +212,15 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, label }: StatusBadgeProps) {
   const statusClasses = {
-    active: "bg-green-100 text-green-700",
-    inactive: "bg-gray-100 text-gray-600",
-    warning: "bg-amber-100 text-amber-700",
-    error: "bg-red-100 text-red-700",
+    active: "szn-badge szn-badge-success",
+    inactive: "szn-badge szn-badge-muted",
+    warning: "szn-badge szn-badge-warning",
+    error: "szn-badge szn-badge-error",
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusClasses[status]}`}
+      className={statusClasses[status]}
     >
       {label}
     </span>

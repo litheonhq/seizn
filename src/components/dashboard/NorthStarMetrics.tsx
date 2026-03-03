@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 interface TTFTMetric {
   p75Minutes: number | null;
@@ -184,7 +185,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
             {t("dashboard.northStar.title") || "North Star Metrics"}
           </h3>
           <span className="text-xs text-szn-text-3">
-            {new Date(metrics.lastUpdated).toLocaleDateString(locale)}
+            {formatDate(metrics.lastUpdated)}
           </span>
         </div>
         <div className="grid grid-cols-4 gap-3">

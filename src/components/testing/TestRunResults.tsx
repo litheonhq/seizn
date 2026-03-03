@@ -95,15 +95,15 @@ export function TestRunResults({
   const getResultColor = (result: string) => {
     switch (result) {
       case 'pass':
-        return 'text-green-600 bg-green-50';
+        return 'szn-badge szn-badge-success';
       case 'fail':
-        return 'text-red-600 bg-red-50';
+        return 'szn-badge szn-badge-error';
       case 'skip':
-        return 'text-gray-600 bg-gray-50';
+        return 'szn-badge szn-badge-muted';
       case 'error':
-        return 'text-orange-600 bg-orange-50';
+        return 'szn-badge szn-badge-warning';
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'szn-badge szn-badge-muted';
     }
   };
 
@@ -154,12 +154,12 @@ export function TestRunResults({
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Test Run Summary</h3>
           <span
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
+            className={`szn-badge ${
               run.status === 'completed'
                 ? run.failed === 0
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'
-                : 'bg-gray-100 text-gray-800'
+                  ? 'szn-badge-success'
+                  : 'szn-badge-error'
+                : 'szn-badge-muted'
             }`}
           >
             {run.status === 'completed'
@@ -256,9 +256,7 @@ export function TestRunResults({
                 >
                   <div className="flex items-center gap-3">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded ${getResultColor(
-                        result.result
-                      )}`}
+                      className={getResultColor(result.result)}
                     >
                       {result.result.toUpperCase()}
                     </span>

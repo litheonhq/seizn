@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 
 type TabType = "requests" | "subjects" | "certificates" | "settings";
 type RTBFStatus = "pending" | "in_progress" | "completed" | "rejected" | "expired";
@@ -419,7 +420,7 @@ function RTBFRequestsTab({
                   <td className="px-4 py-3">
                     <div>
                       <p className={`text-sm ${isOverdue ? "text-red-600 font-medium" : "text-szn-text-1"}`}>
-                        {new Date(request.due_date).toLocaleDateString()}
+                        {formatDate(request.due_date)}
                       </p>
                       {request.status !== "completed" && (
                         <p className={`text-xs ${isOverdue ? "text-red-500" : "text-szn-text-2"}`}>

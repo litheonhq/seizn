@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 import {
   BarChart,
   Bar,
@@ -470,15 +471,7 @@ export default function EvalsClient() {
     return () => clearTimeout(timer);
   }, []);
 
-  const formatDate = useCallback((dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }, []);
+  // formatDate imported from @/lib/format-date (using "long" style for date+time)
 
   const formatPercent = (value: number) => `${(Number(value) * 100).toFixed(1)}%`;
   const formatLatency = (ms: number) => `${ms}ms`;
@@ -666,7 +659,7 @@ export default function EvalsClient() {
                   <p className="text-sm text-szn-text-2 mb-2">{run.dataset_name}</p>
                   <div className="flex items-center gap-2 text-xs text-szn-text-3">
                     <ClockIcon className="w-3 h-3" />
-                    {formatDate(run.created_at)}
+                    {formatDate(run.created_at, "long")}
                     {run.metrics?.winner && (
                       <span className="ml-auto px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full inline-flex items-center gap-1">
                         <TrophyIcon className="w-3 h-3" />
@@ -852,12 +845,12 @@ export default function EvalsClient() {
                           <div className="h-80">
                             <ResponsiveContainer width="100%" height="100%">
                               <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                                <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 12 }} />
-                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[0, 100]} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
+                                <XAxis dataKey="name" tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} domain={[0, 100]} />
                                 <Tooltip content={<CustomTooltip />} />
                                 <Legend />
-                                <Bar dataKey="Config A" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="Config A" fill="var(--szn-chart-2)" radius={[4, 4, 0, 0]} />
                                 {selectedRun.config_b && (
                                   <Bar dataKey="Config B" fill="#60a5fa" radius={[4, 4, 0, 0]} />
                                 )}
@@ -872,10 +865,10 @@ export default function EvalsClient() {
                           <div className="h-80">
                             <ResponsiveContainer width="100%" height="100%">
                               <RadarChart data={radarChartData}>
-                                <PolarGrid stroke="#e5e7eb" />
-                                <PolarAngleAxis dataKey="subject" tick={{ fill: "#6b7280", fontSize: 12 }} />
+                                <PolarGrid stroke="var(--szn-border)" />
+                                <PolarAngleAxis dataKey="subject" tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} />
                                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#9ca3af", fontSize: 10 }} />
-                                <Radar name="Config A" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.5} />
+                                <Radar name="Config A" dataKey="A" stroke="var(--szn-chart-2)" fill="var(--szn-chart-2)" fillOpacity={0.5} />
                                 {selectedRun.config_b && (
                                   <Radar name="Config B" dataKey="B" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.5} />
                                 )}
@@ -900,21 +893,21 @@ export default function EvalsClient() {
                           <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
                               <LineChart data={HISTORICAL_TRENDS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                                <XAxis dataKey="date" tick={{ fill: "#6b7280", fontSize: 12 }} />
-                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[0.6, 1]} tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
+                                <XAxis dataKey="date" tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} domain={[0.6, 1]} tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} />
                                 <Tooltip
                                   formatter={(value) => [`${(Number(value) * 100).toFixed(1)}%`]}
                                   contentStyle={{
                                     backgroundColor: "rgba(255, 255, 255, 0.95)",
                                     borderRadius: "8px",
-                                    border: "1px solid #e5e7eb",
+                                    border: "1px solid var(--szn-border)",
                                   }}
                                 />
                                 <Legend />
-                                <Line type="monotone" dataKey="f1" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: "#8b5cf6" }} name="F1 Score" />
-                                <Line type="monotone" dataKey="ndcg" stroke="#10b981" strokeWidth={2} dot={{ fill: "#10b981" }} name="NDCG" />
-                                <Line type="monotone" dataKey="mrr" stroke="#f59e0b" strokeWidth={2} dot={{ fill: "#f59e0b" }} name="MRR" />
+                                <Line type="monotone" dataKey="f1" stroke="var(--szn-chart-2)" strokeWidth={2} dot={{ fill: "var(--szn-chart-2)" }} name="F1 Score" />
+                                <Line type="monotone" dataKey="ndcg" stroke="var(--szn-success)" strokeWidth={2} dot={{ fill: "var(--szn-success)" }} name="NDCG" />
+                                <Line type="monotone" dataKey="mrr" stroke="var(--szn-warning)" strokeWidth={2} dot={{ fill: "var(--szn-warning)" }} name="MRR" />
                               </LineChart>
                             </ResponsiveContainer>
                           </div>
@@ -926,18 +919,18 @@ export default function EvalsClient() {
                           <div className="h-48">
                             <ResponsiveContainer width="100%" height="100%">
                               <AreaChart data={HISTORICAL_TRENDS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                                <XAxis dataKey="date" tick={{ fill: "#6b7280", fontSize: 12 }} />
-                                <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} domain={[200, 300]} tickFormatter={(v) => `${v}ms`} />
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
+                                <XAxis dataKey="date" tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} />
+                                <YAxis tick={{ fill: "var(--szn-text-3)", fontSize: 12 }} domain={[200, 300]} tickFormatter={(v) => `${v}ms`} />
                                 <Tooltip
                                   formatter={(value) => value !== undefined ? [`${value}ms`] : [""]}
                                   contentStyle={{
                                     backgroundColor: "rgba(255, 255, 255, 0.95)",
                                     borderRadius: "8px",
-                                    border: "1px solid #e5e7eb",
+                                    border: "1px solid var(--szn-border)",
                                   }}
                                 />
-                                <Area type="monotone" dataKey="latency" stroke="#ef4444" fill="#fecaca" strokeWidth={2} name="Latency" />
+                                <Area type="monotone" dataKey="latency" stroke="var(--szn-danger)" fill="#fecaca" strokeWidth={2} name="Latency" />
                               </AreaChart>
                             </ResponsiveContainer>
                           </div>
@@ -958,7 +951,7 @@ export default function EvalsClient() {
                                 >
                                   <div>
                                     <p className="font-medium text-szn-text-1">{run.name}</p>
-                                    <p className="text-xs text-szn-text-2">{formatDate(run.created_at)}</p>
+                                    <p className="text-xs text-szn-text-2">{formatDate(run.created_at, "long")}</p>
                                   </div>
                                   {run.metrics?.winner && (
                                     <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">

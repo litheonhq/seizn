@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { TranslationModel } from "@/lib/ecl/types";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -26,41 +27,34 @@ interface ApiResponse {
 // Status Badge
 // ============================================
 
-const statusColors: Record<string, { bg: string; text: string; label: string }> = {
+const STATUS_STYLES: Record<string, { badge: string; label: string }> = {
   pending: {
-    bg: "bg-gray-100",
-    text: "text-gray-700",
+    badge: "szn-badge szn-badge-muted",
     label: "Pending",
   },
   training: {
-    bg: "bg-blue-100",
-    text: "text-blue-700",
+    badge: "szn-badge szn-badge-info",
     label: "Training",
   },
   ready: {
-    bg: "bg-green-100",
-    text: "text-green-700",
+    badge: "szn-badge szn-badge-success",
     label: "Ready",
   },
   failed: {
-    bg: "bg-red-100",
-    text: "text-red-700",
+    badge: "szn-badge szn-badge-error",
     label: "Failed",
   },
   archived: {
-    bg: "bg-yellow-100",
-    text: "text-yellow-700",
+    badge: "szn-badge szn-badge-warning",
     label: "Archived",
   },
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const colors = statusColors[status] || statusColors.pending;
+  const style = STATUS_STYLES[status] || STATUS_STYLES.pending;
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors.bg} ${colors.text}`}
-    >
-      {colors.label}
+    <span className={style.badge}>
+      {style.label}
     </span>
   );
 }
@@ -172,14 +166,7 @@ function ModelCard({
     }
   };
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  // formatDate imported from @/lib/format-date
 
   const formatModelName = (name: string) => {
     // Shorten common embedding model names

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 
 interface Webhook {
   id: string;
@@ -204,14 +205,7 @@ export default function WebhooksClient() {
     ));
   };
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  // formatDate imported from @/lib/format-date (using "long" style for date+time)
 
   const eventTypes = EVENT_TYPE_IDS.map((id) => ({
     id,
@@ -431,7 +425,7 @@ export default function WebhooksClient() {
                       </span>
                       {webhook.last_triggered && (
                         <span className="col-span-2">
-                          {t("dashboard.webhooks.lastTriggered")}: {formatDate(webhook.last_triggered)}
+                          {t("dashboard.webhooks.lastTriggered")}: {formatDate(webhook.last_triggered, "long")}
                         </span>
                       )}
                     </div>
@@ -499,7 +493,7 @@ export default function WebhooksClient() {
                   </span>
                 </div>
                 <div className="mt-2 text-xs text-szn-text-2 space-y-1">
-                  <div>{formatDate(delivery.created_at)}</div>
+                  <div>{formatDate(delivery.created_at, "long")}</div>
                   <div>
                     {delivery.response_code && (
                       <span className={delivery.response_code < 400 ? "text-green-600" : "text-red-600"}>
@@ -566,7 +560,7 @@ export default function WebhooksClient() {
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-szn-text-2">
-                    {formatDate(delivery.created_at)}
+                    {formatDate(delivery.created_at, "long")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     {delivery.status === "failed" && (

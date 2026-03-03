@@ -8,6 +8,7 @@ import type {
   ErrorType,
   IncidentSummary,
 } from "@/lib/sentry/types";
+import { formatRelativeTime } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -58,11 +59,11 @@ const SEVERITY_CONFIG: Record<
   },
 };
 
-const STATUS_BADGE: Record<IncidentStatus, { bgColor: string; textColor: string }> = {
-  open: { bgColor: "bg-red-100", textColor: "text-red-700" },
-  investigating: { bgColor: "bg-yellow-100", textColor: "text-yellow-700" },
-  resolved: { bgColor: "bg-green-100", textColor: "text-green-700" },
-  ignored: { bgColor: "bg-gray-100", textColor: "text-gray-500" },
+const STATUS_BADGE: Record<IncidentStatus, { badge: string }> = {
+  open: { badge: "szn-badge szn-badge-error" },
+  investigating: { badge: "szn-badge szn-badge-warning" },
+  resolved: { badge: "szn-badge szn-badge-success" },
+  ignored: { badge: "szn-badge szn-badge-muted" },
 };
 
 const ERROR_TYPE_LABELS: Record<ErrorType, string> = {
@@ -123,7 +124,7 @@ export function IncidentList({
           <div className="flex items-center gap-3">
             <h3 className="text-lg font-semibold text-gray-900">Incidents</h3>
             {summary && summary.openIncidents > 0 && (
-              <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-700 rounded-full">
+              <span className="szn-badge szn-badge-error">
                 {summary.openIncidents} open
               </span>
             )}
@@ -258,12 +259,12 @@ function IncidentRow({
               {incident.title}
             </span>
             <span
-              className={`px-1.5 py-0.5 text-xs font-medium rounded ${statusBadge.bgColor} ${statusBadge.textColor}`}
+              className={statusBadge.badge}
             >
               {incident.status}
             </span>
             {incident.errorType && (
-              <span className="px-1.5 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-600">
+              <span className="szn-badge szn-badge-muted">
                 {ERROR_TYPE_LABELS[incident.errorType] ?? incident.errorType}
               </span>
             )}
@@ -320,21 +321,7 @@ function IncidentRow({
 // Utility Functions
 // ============================================
 
-function formatRelativeTime(isoString: string): string {
-  const date = new Date(isoString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-
-  return date.toLocaleDateString([], { month: "short", day: "numeric" });
-}
+// formatRelativeTime imported from @/lib/format-date
 
 // ============================================
 // Icons

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 import type { PinDialogMode } from "@/components/memories/pin-dialog";
 import { PinDialog } from "@/components/memories/pin-dialog";
 import { LockedMemoryCard } from "@/components/memories/locked-memory-card";
@@ -636,17 +637,7 @@ export default function MemoriesClient() {
     );
   };
 
-  // Format date
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  // formatDate imported from @/lib/format-date (using "long" style for date+time)
 
   // Get memory type color
   const getTypeColor = (type: string) => {
@@ -1364,7 +1355,7 @@ export default function MemoriesClient() {
                         {/* Date */}
                         <span className="flex items-center gap-1 text-szn-text-3">
                           <CalendarIcon className="w-3 h-3" />
-                          {formatDate(memory.created_at)}
+                          {formatDate(memory.created_at, "long")}
                         </span>
 
                         {/* Similarity Score */}
