@@ -228,6 +228,12 @@ export interface AddMemoryRequest {
   agent_id?: string;
   source?: string;
   companion_meta?: CompanionMeta | null;
+  // Optional image attachment payload (object storage + asset link)
+  image_url?: string;
+  image_base64?: string;
+  image_mime_type?: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
+  image_filename?: string;
+  image_relation?: 'attachment' | 'source' | 'reference' | 'derived';
 }
 
 export interface SearchMemoryRequest {

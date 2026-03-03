@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
     // Include options
     query.includeExpired = searchParams.get('include_expired') === 'true';
     query.includeEmbedding = searchParams.get('include_embedding') === 'true';
-    query.includeProvenance = searchParams.get('include_provenance') !== 'false';
+    query.includeProvenance = searchParams.get('include_provenance') === 'true';
     query.includeEntityMentions = searchParams.get('include_entities') === 'true';
 
     // Execute query

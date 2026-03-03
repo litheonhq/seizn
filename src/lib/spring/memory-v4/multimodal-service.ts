@@ -8,6 +8,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import { createHash } from 'crypto';
+import { lookup } from 'node:dns/promises';
+import net from 'node:net';
 import type {
   Asset,
   AssetLink,
@@ -21,6 +23,306 @@ import { getLanguageProcessor } from './language-processor';
 import { computeEmbedding } from '@/lib/embeddings';
 import { detectPII } from '@/lib/security/pii-detector';
 import { detectMultilingualPII } from '@/lib/langpack/pii';
+
+const MAX_IMAGE_BYTES = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_IMAGE_MAX_BYTES || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 5 * 1024 * 1024;
+})();
+
+const FETCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_IMAGE_FETCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 10000;
+})();
+
+const MAX_IMAGE_REDIRECTS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_IMAGE_MAX_REDIRECTS || '', 10);
+  if (Number.isFinite(raw) && raw >= 0) return raw;
+  return 3;
+})();
+
+const BLOCKED_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0', '169.254.169.254']);
+const BLOCKED_HOST_SUFFIXES = ['.localhost', '.local', '.internal', '.home.arpa'];
+const ALLOWED_IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+function normalizeMimeType(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return trimmed.split(';')[0].trim().toLowerCase();
+}
+
+function stripUrlQuery(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.search = '';
+    parsed.hash = '';
+    return parsed.toString();
+  } catch {
+    return url.split('?')[0].split('#')[0];
+  }
+}
+
+function verifyImageMagicBytes(bytes: Uint8Array): boolean {
+  if (bytes.length < 4) return false;
+
+  // JPEG: FF D8 FF
+  if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return true;
+  // PNG: 89 50 4E 47
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return true;
+  // GIF: 47 49 46 38
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) return true;
+  // WebP: RIFF....WEBP
+  if (
+    bytes.length >= 12 &&
+    bytes[0] === 0x52 &&
+    bytes[1] === 0x49 &&
+    bytes[2] === 0x46 &&
+    bytes[3] === 0x46 &&
+    bytes[8] === 0x57 &&
+    bytes[9] === 0x45 &&
+    bytes[10] === 0x42 &&
+    bytes[11] === 0x50
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function isBlockedIpv4(ip: string): boolean {
+  const parts = ip.split('.').map((v) => Number.parseInt(v, 10));
+  if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n) || n < 0 || n > 255)) {
+    return true;
+  }
+
+  const [a, b] = parts;
+  if (a === 10 || a === 127 || a === 0) return true;
+  if (a === 169 && b === 254) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  if (a === 100 && b >= 64 && b <= 127) return true;
+  if (a >= 224) return true;
+  return false;
+}
+
+function normalizeIpCandidate(address: string): string {
+  const lowered = address.trim().toLowerCase();
+  const zoneIndex = lowered.indexOf('%');
+  return zoneIndex >= 0 ? lowered.slice(0, zoneIndex) : lowered;
+}
+
+function isBlockedIpAddress(address: string): boolean {
+  const normalized = normalizeIpCandidate(address);
+  const version = net.isIP(normalized);
+  if (!version) return true;
+
+  if (version === 4) {
+    return isBlockedIpv4(normalized);
+  }
+
+  if (normalized === '::' || normalized === '::1') return true;
+  if (normalized.startsWith('fc') || normalized.startsWith('fd')) return true;
+  if (normalized.startsWith('fe80:')) return true;
+  if (normalized.startsWith('ff')) return true;
+  if (normalized.startsWith('::ffff:')) {
+    const mapped = normalized.slice('::ffff:'.length);
+    if (net.isIP(mapped) === 4) {
+      return isBlockedIpv4(mapped);
+    }
+  }
+  return false;
+}
+
+function isBlockedHostname(hostname: string): boolean {
+  if (BLOCKED_HOSTNAMES.has(hostname)) return true;
+  return BLOCKED_HOST_SUFFIXES.some((suffix) => hostname.endsWith(suffix));
+}
+
+function normalizeAddressSet(addresses: string[]): string[] {
+  return Array.from(new Set(addresses.map(normalizeIpCandidate))).sort();
+}
+
+function isSameAddressSet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+async function validateRemoteImageUrl(
+  urlString: string,
+  resolutionPinning?: Map<string, string[]>
+): Promise<URL> {
+  let parsed: URL;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    throw new Error('imageUrl must be a valid URL');
+  }
+
+  if (parsed.protocol !== 'https:') {
+    throw new Error('imageUrl must use https');
+  }
+  if (parsed.username || parsed.password) {
+    throw new Error('imageUrl must not include credentials');
+  }
+
+  const hostname = parsed.hostname.trim().toLowerCase();
+  if (!hostname || isBlockedHostname(hostname)) {
+    throw new Error('imageUrl hostname is not allowed');
+  }
+
+  if (net.isIP(hostname) && isBlockedIpAddress(hostname)) {
+    throw new Error('imageUrl resolves to a private or internal IP');
+  }
+
+  try {
+    const addresses = await lookup(hostname, { all: true, verbatim: true });
+    if (!addresses || addresses.length === 0) {
+      throw new Error('imageUrl hostname could not be resolved');
+    }
+    const normalized = normalizeAddressSet(addresses.map((record) => record.address));
+    for (const record of addresses) {
+      if (isBlockedIpAddress(record.address)) {
+        throw new Error('imageUrl resolves to a private or internal IP');
+      }
+    }
+    if (resolutionPinning) {
+      const pinned = resolutionPinning.get(hostname);
+      if (!pinned) {
+        resolutionPinning.set(hostname, normalized);
+      } else if (!isSameAddressSet(pinned, normalized)) {
+        throw new Error('imageUrl hostname resolution changed during fetch');
+      }
+    }
+  } catch (error) {
+    if (error instanceof Error && /(private or internal ip|resolution changed)/i.test(error.message)) {
+      throw error;
+    }
+    throw new Error('imageUrl hostname could not be resolved');
+  }
+
+  return parsed;
+}
+
+async function readResponseBodyLimited(response: Response, maxBytes: number): Promise<Uint8Array> {
+  if (!response.body) {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes.length > maxBytes) {
+      throw new Error(`Image too large (max ${maxBytes} bytes)`);
+    }
+    return bytes;
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value || value.length === 0) continue;
+
+    total += value.length;
+    if (total > maxBytes) {
+      await reader.cancel('Image too large');
+      throw new Error(`Image too large (max ${maxBytes} bytes)`);
+    }
+    chunks.push(value);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return bytes;
+}
+
+async function fetchRemoteImageAsBase64(imageUrl: string): Promise<{
+  imageBase64: string;
+  mimeType: string;
+  resolvedUrl: string;
+  sizeBytes: number;
+}> {
+  const resolutionPinning = new Map<string, string[]>();
+  const validated = await validateRemoteImageUrl(imageUrl, resolutionPinning);
+  let requestUrl = validated.toString();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let response: Response | null = null;
+
+  try {
+    for (let redirectCount = 0; redirectCount <= MAX_IMAGE_REDIRECTS; redirectCount += 1) {
+      await validateRemoteImageUrl(requestUrl, resolutionPinning);
+      response = await fetch(requestUrl, { signal: controller.signal, redirect: 'manual' });
+      await validateRemoteImageUrl(requestUrl, resolutionPinning);
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('location');
+        if (!location) {
+          throw new Error('imageUrl redirect is missing location');
+        }
+        if (redirectCount >= MAX_IMAGE_REDIRECTS) {
+          throw new Error('Too many redirects while fetching imageUrl');
+        }
+        const redirected = new URL(location, requestUrl).toString();
+        const validatedRedirect = await validateRemoteImageUrl(redirected, resolutionPinning);
+        requestUrl = validatedRedirect.toString();
+        continue;
+      }
+      break;
+    }
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Timed out while fetching imageUrl');
+    }
+    if (error instanceof Error && error.message) {
+      throw error;
+    }
+    throw new Error('Failed to fetch imageUrl');
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (!response || !response.ok) {
+    throw new Error(`Failed to fetch imageUrl (${response?.status ?? 0})`);
+  }
+
+  const headerMime = normalizeMimeType(response.headers.get('content-type'));
+  if (headerMime && !headerMime.startsWith('image/')) {
+    throw new Error('imageUrl must point to an image resource');
+  }
+  const mimeType = headerMime || 'image/png';
+  if (!ALLOWED_IMAGE_MIME_TYPES.has(mimeType)) {
+    throw new Error(`Unsupported image mime type. Allowed: ${Array.from(ALLOWED_IMAGE_MIME_TYPES).join(', ')}`);
+  }
+
+  const contentLength = Number.parseInt(response.headers.get('content-length') || '', 10);
+  if (Number.isFinite(contentLength) && contentLength > MAX_IMAGE_BYTES) {
+    throw new Error(`Image too large (max ${MAX_IMAGE_BYTES} bytes)`);
+  }
+
+  const bytes = await readResponseBodyLimited(response, MAX_IMAGE_BYTES);
+  if (bytes.length === 0) {
+    throw new Error('Decoded image is empty');
+  }
+  if (!verifyImageMagicBytes(bytes)) {
+    throw new Error('Image binary does not match any known image signature');
+  }
+
+  const imageBase64 = Buffer.from(bytes).toString('base64');
+
+  return {
+    imageBase64,
+    mimeType,
+    resolvedUrl: requestUrl,
+    sizeBytes: bytes.length,
+  };
+}
 
 // =============================================================================
 // Multimodal Service
@@ -187,23 +489,52 @@ export class MultimodalService {
     // Get image data
     let imageData: string;
     let mediaType: string;
+    let imageBytes: Uint8Array;
+    let sourceUrl: string | undefined;
 
     if (input.imageBase64) {
-      imageData = input.imageBase64;
-      mediaType = input.mimeType || 'image/png';
+      let base64Payload = input.imageBase64;
+      const dataUrlMatch = base64Payload.match(/^data:([^;]+);base64,(.+)$/i);
+      if (dataUrlMatch) {
+        mediaType = normalizeMimeType(input.mimeType || dataUrlMatch[1]) || 'image/png';
+        base64Payload = dataUrlMatch[2];
+      } else {
+        mediaType = normalizeMimeType(input.mimeType) || 'image/png';
+      }
+      if (!ALLOWED_IMAGE_MIME_TYPES.has(mediaType)) {
+        throw new Error(`Unsupported image mime type. Allowed: ${Array.from(ALLOWED_IMAGE_MIME_TYPES).join(', ')}`);
+      }
+      const compact = base64Payload.replace(/\s/g, '');
+      const estimatedBytes = Math.floor((compact.length * 3) / 4);
+      if (estimatedBytes > MAX_IMAGE_BYTES) {
+        throw new Error(`Image too large (max ${MAX_IMAGE_BYTES} bytes)`);
+      }
+
+      imageBytes = Uint8Array.from(Buffer.from(compact, 'base64'));
+      if (imageBytes.length === 0) {
+        throw new Error('Decoded image is empty');
+      }
+      if (imageBytes.length > MAX_IMAGE_BYTES) {
+        throw new Error(`Image too large (max ${MAX_IMAGE_BYTES} bytes)`);
+      }
+      if (!verifyImageMagicBytes(imageBytes)) {
+        throw new Error('Image binary does not match any known image signature');
+      }
+      imageData = Buffer.from(imageBytes).toString('base64');
     } else {
       // Fetch image from URL
-      const response = await fetch(input.imageUrl!);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch image: ${response.statusText}`);
+      const fetched = await fetchRemoteImageAsBase64(input.imageUrl!);
+      imageData = fetched.imageBase64;
+      mediaType = fetched.mimeType;
+      imageBytes = Uint8Array.from(Buffer.from(imageData, 'base64'));
+      if (!verifyImageMagicBytes(imageBytes)) {
+        throw new Error('Image binary does not match any known image signature');
       }
-      const buffer = await response.arrayBuffer();
-      imageData = Buffer.from(buffer).toString('base64');
-      mediaType = response.headers.get('content-type') || 'image/png';
+      sourceUrl = fetched.resolvedUrl;
     }
 
     // Calculate hash for deduplication
-    const sha256Hash = createHash('sha256').update(imageData).digest('hex');
+    const sha256Hash = createHash('sha256').update(imageBytes).digest('hex');
 
     // Check for existing asset with same hash
     const { data: existingAsset } = await this.supabase
@@ -234,7 +565,7 @@ export class MultimodalService {
       storageKey: `multimodal/${userId}/${sha256Hash.slice(0, 16)}`,
       filename: input.filename,
       mimeType: mediaType,
-      sizeBytes: imageData.length,
+      sizeBytes: imageBytes.length,
       sha256Hash,
     });
 
@@ -347,7 +678,7 @@ export class MultimodalService {
       // Update asset with extraction results
       await this.updateAssetStatus(asset.id, 'processed', {
         extractedText: extraction.text,
-        extractedMetadata: { facts: extraction.facts },
+        extractedMetadata: { facts: extraction.facts, source_url: sourceUrl ? stripUrlQuery(sourceUrl) : null },
       });
 
       return {

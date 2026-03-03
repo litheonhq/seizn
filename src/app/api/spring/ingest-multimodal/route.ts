@@ -15,6 +15,26 @@ import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import { createMultimodalService } from '@/lib/spring/memory-v4/multimodal-service';
 
+const IMAGE_CLIENT_ERROR_PATTERNS = [
+  'imageurl must',
+  'imageurl hostname',
+  'imageurl resolves to a private or internal ip',
+  'imageurl redirect',
+  'too many redirects while fetching imageurl',
+  'timed out while fetching imageurl',
+  'imageurl must point to an image resource',
+  'unsupported image mime type',
+  'image too large',
+  'decoded image is empty',
+] as const;
+
+function getImageClientErrorMessage(error: unknown): string | null {
+  if (!(error instanceof Error) || !error.message) return null;
+  const lowered = error.message.toLowerCase();
+  const matched = IMAGE_CLIENT_ERROR_PATTERNS.some((token) => lowered.includes(token));
+  return matched ? error.message : null;
+}
+
 // =============================================================================
 // POST - Multimodal Ingestion
 // =============================================================================
@@ -92,6 +112,10 @@ export async function POST(request: NextRequest) {
 
     if (message.includes('imageUrl or imageBase64')) {
       return ValidationErrors.missingField('imageUrl or imageBase64');
+    }
+    const clientMessage = getImageClientErrorMessage(error);
+    if (clientMessage) {
+      return ValidationErrors.invalidField('image', clientMessage);
     }
 
     return ServerErrors.internal('multimodal_ingestion');
