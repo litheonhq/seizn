@@ -21,13 +21,14 @@ interface ContractVerdictProps {
  */
 const verdictConfig: Record<
   VerdictType,
-  { label: string; description: string; bgColor: string; textColor: string; icon: string }
+  { label: string; description: string; bgColor: string; textColor: string; badge: string; icon: string }
 > = {
   pass: {
     label: "Grounded",
     description: "Answer is well-supported by evidence",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
+    badge: "szn-badge szn-badge-success",
     icon: "check-circle",
   },
   partial: {
@@ -35,6 +36,7 @@ const verdictConfig: Record<
     description: "Some claims lack sufficient evidence",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
+    badge: "szn-badge szn-badge-warning",
     icon: "alert-circle",
   },
   fail: {
@@ -42,6 +44,7 @@ const verdictConfig: Record<
     description: "Answer is not sufficiently supported",
     bgColor: "bg-red-100",
     textColor: "text-red-800",
+    badge: "szn-badge szn-badge-error",
     icon: "x-circle",
   },
   abstain: {
@@ -49,6 +52,7 @@ const verdictConfig: Record<
     description: "Insufficient evidence to answer",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",
+    badge: "szn-badge szn-badge-muted",
     icon: "minus-circle",
   },
 };
@@ -172,7 +176,7 @@ export default function ContractVerdict({
   if (compact) {
     return (
       <span
-        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.bgColor} ${config.textColor}`}
+        className={`inline-flex items-center gap-1 ${config.badge}`}
       >
         <VerdictIcon type={config.icon} className="w-3 h-3" />
         {config.label}
@@ -279,7 +283,7 @@ export function VerdictBadge({ verdict }: { verdict: VerdictType }) {
   const config = verdictConfig[verdict];
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.textColor}`}
+      className={`inline-flex items-center gap-1 ${config.badge}`}
     >
       <VerdictIcon type={config.icon} className="w-3 h-3" />
       {config.label}

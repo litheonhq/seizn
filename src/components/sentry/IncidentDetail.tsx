@@ -8,6 +8,7 @@ import type {
   TraceSnapshot,
 } from "@/lib/sentry/types";
 import RCAPanel from "./RCAPanel";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -28,10 +29,10 @@ export interface IncidentDetailProps {
 // ============================================
 
 const STATUS_CONFIG = {
-  open: { label: "Open", color: "bg-red-100 text-red-700" },
-  investigating: { label: "Investigating", color: "bg-yellow-100 text-yellow-700" },
-  resolved: { label: "Resolved", color: "bg-green-100 text-green-700" },
-  ignored: { label: "Ignored", color: "bg-gray-100 text-gray-500" },
+  open: { label: "Open", badge: "szn-badge szn-badge-error" },
+  investigating: { label: "Investigating", badge: "szn-badge szn-badge-warning" },
+  resolved: { label: "Resolved", badge: "szn-badge szn-badge-success" },
+  ignored: { label: "Ignored", badge: "szn-badge szn-badge-muted" },
 };
 
 const SEVERITY_CONFIG = {
@@ -90,11 +91,11 @@ export function IncidentDetail({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <span className={`w-3 h-3 rounded-full ${severityConfig.color}`} />
-              <span className={`px-2 py-0.5 text-xs font-medium rounded ${statusConfig.color}`}>
+              <span className={statusConfig.badge}>
                 {statusConfig.label}
               </span>
               {incident.errorType && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded">
+                <span className="szn-badge szn-badge-muted">
                   {incident.errorType.replace(/_/g, " ")}
                 </span>
               )}
@@ -144,11 +145,11 @@ export function IncidentDetail({
           </div>
           <div className="flex items-center gap-1.5">
             <ClockIcon className="w-4 h-4" />
-            <span>First: {formatDate(incident.firstSeenAt)}</span>
+            <span>First: {formatDate(incident.firstSeenAt, "long")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <ClockIcon className="w-4 h-4" />
-            <span>Last: {formatDate(incident.lastSeenAt)}</span>
+            <span>Last: {formatDate(incident.lastSeenAt, "long")}</span>
           </div>
         </div>
       </div>
@@ -279,7 +280,7 @@ function OverviewTab({ incident }: { incident: Incident }) {
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
           <h4 className="text-sm font-medium text-green-800 mb-2">Resolution</h4>
           <p className="text-sm text-green-700">
-            Resolved on {formatDate(incident.resolvedAt)}
+            Resolved on {formatDate(incident.resolvedAt, "long")}
             {incident.resolvedBy && ` by ${incident.resolvedBy}`}
           </p>
           {incident.resolutionNotes && (
@@ -318,7 +319,7 @@ function TimelineTab({ events }: { events: IncidentEvent[] }) {
                 {event.eventType.replace(/_/g, " ")}
               </span>
               <span className="text-xs text-gray-400">
-                {formatDate(event.createdAt)}
+                {formatDate(event.createdAt, "long")}
               </span>
             </div>
             {Object.keys(event.metadata).length > 0 && (
@@ -383,15 +384,7 @@ function TracesTab({ traces }: { traces: TraceSnapshot[] }) {
 // Utility Functions
 // ============================================
 
-function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleString([], {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+// formatDate imported from @/lib/format-date
 
 // ============================================
 // Icons

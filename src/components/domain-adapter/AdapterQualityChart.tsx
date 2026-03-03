@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatDate } from "@/lib/format-date";
 
 // =============================================================================
 // Types
@@ -215,7 +216,7 @@ export function AdapterQualityChart({
         >
           {runs.map((run) => (
             <option key={run.id} value={run.id}>
-              {new Date(run.created_at).toLocaleDateString()} -{" "}
+              {formatDate(run.created_at)} -{" "}
               {run.status === "completed"
                 ? `MRR: ${((run.final_mrr ?? 0) * 100).toFixed(1)}%`
                 : run.status}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -206,15 +207,7 @@ export default function AutopilotClient() {
     setIsSaving(false);
   }, [config]);
 
-  const formatDate = useCallback((dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }, []);
+  // formatDate imported from @/lib/format-date (using "long" style for date+time)
 
   const getOutcomeIcon = (outcome: DecisionLog["outcome"]) => {
     switch (outcome) {
@@ -438,7 +431,7 @@ export default function AutopilotClient() {
                         <span className="text-gray-400 dark:text-gray-600">|</span>
                         <span className="text-szn-text-2">{log.latency_ms}ms</span>
                         <span className="text-szn-text-2">${(log.cost_usd * 1000).toFixed(2)}m</span>
-                        <span className="text-szn-text-3 ml-auto">{formatDate(log.created_at)}</span>
+                        <span className="text-szn-text-3 ml-auto">{formatDate(log.created_at, "long")}</span>
                       </div>
                     </div>
                   </div>

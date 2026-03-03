@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { formatRelativeTime } from "@/lib/format-date";
 
 type ConnectorType = "pinecone" | "weaviate" | "qdrant" | "milvus" | "http-agent" | "s3";
 
@@ -851,16 +852,7 @@ function ConnectorCard({
   // Format last ping time
   const formatLastPing = (isoString?: string) => {
     if (!isoString) return "Never";
-    const date = new Date(isoString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-
-    if (diffMins < 1) return "Just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return date.toLocaleDateString();
+    return formatRelativeTime(isoString);
   };
 
   return (

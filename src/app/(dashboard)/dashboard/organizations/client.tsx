@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 interface Organization {
   id: string;
@@ -201,7 +202,7 @@ export default function OrganizationsClient() {
               <p className="text-sm text-szn-text-2 mb-4">/{org.slug}</p>
               <div className="flex items-center justify-between pt-4 border-t theme-border">
                 <span className="text-xs text-szn-text-3">
-                  {t("dashboard.organizationsPage.created")} {new Date(org.created_at).toLocaleDateString(locale)}
+                  {t("dashboard.organizationsPage.created")} {formatDate(org.created_at)}
                 </span>
                 <span className="text-xs font-medium theme-primary">
                   {org.plan || t("dashboard.organizationsPage.freePlan")} {t("dashboard.organizationsPage.plan")}

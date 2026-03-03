@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { formatDate } from "@/lib/format-date";
 
 type LockedMemory = {
   id: string;
@@ -54,16 +55,7 @@ function getTypeColor(type: string) {
   }
 }
 
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+// formatDate imported from @/lib/format-date
 
 export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemoryCardProps) {
   return (
@@ -115,7 +107,7 @@ export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemo
 
             <span className="flex items-center gap-1 text-szn-text-3">
               <CalendarIcon className="w-3 h-3" />
-              {formatDate(memory.created_at)}
+              {formatDate(memory.created_at, "long")}
             </span>
 
             {memory.similarity !== undefined && memory.similarity > 0 && (

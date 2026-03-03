@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatRelativeTime } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -213,18 +214,7 @@ export function TraceExplorer({
     return `$${usd.toFixed(4)}`;
   };
 
-  // Format date
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return date.toLocaleDateString();
-  };
+  // formatRelativeTime imported from @/lib/format-date
 
   return (
     <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
@@ -438,7 +428,7 @@ export function TraceExplorer({
                 )}
 
                 {/* Time */}
-                <span className="text-gray-500 ml-auto">{formatDate(trace.created_at)}</span>
+                <span className="text-gray-500 ml-auto">{formatRelativeTime(trace.created_at)}</span>
               </div>
             </button>
           ))

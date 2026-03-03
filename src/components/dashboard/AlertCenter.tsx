@@ -41,13 +41,13 @@ export function AlertCenter({ alerts, title = "Alert Center" }: AlertCenterProps
 
 function SeverityBadge({ severity }: { severity: AlertItem["severity"] }) {
   const styles = {
-    high: "bg-red-500/10 text-red-500",
-    medium: "bg-amber-500/10 text-amber-500",
-    low: "bg-green-500/10 text-green-500",
+    high: "szn-badge-error",
+    medium: "szn-badge-warning",
+    low: "szn-badge-success",
   };
 
   return (
-    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${styles[severity]}`}>
+    <span className={`szn-badge ${styles[severity]}`}>
       {severity}
     </span>
   );

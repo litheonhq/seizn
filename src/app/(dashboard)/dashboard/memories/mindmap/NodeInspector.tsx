@@ -5,6 +5,7 @@ import { Node } from "@xyflow/react";
 import type { MindMapNodeData } from "./MindMapCanvas";
 import type { NoteType, NoteStatus, PrivacyClass } from "@/lib/spring/memory-v3/types";
 import { useMemoryUsage, calculateHeatLevel, getHeatColor } from "./hooks/useMemoryUsage";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -128,16 +129,7 @@ const privacyColors: Record<PrivacyClass, { bg: string; text: string }> = {
 // Format Helpers
 // ============================================
 
-function formatDate(date: Date | string): string {
-  const d = new Date(date);
-  return d.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+// formatDate imported from @/lib/format-date
 
 function getCsrfToken(): string | null {
   if (typeof document === "undefined") return null;
@@ -332,7 +324,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           <div className="flex items-center justify-between">
             <span className="text-sm text-szn-text-2">Created</span>
             <span className="text-sm text-szn-text-2">
-              {formatDate(note.createdAt)}
+              {formatDate(note.createdAt, "long")}
             </span>
           </div>
 
@@ -340,7 +332,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           <div className="flex items-center justify-between">
             <span className="text-sm text-szn-text-2">Updated</span>
             <span className="text-sm text-szn-text-2">
-              {formatDate(note.updatedAt)}
+              {formatDate(note.updatedAt, "long")}
             </span>
           </div>
 
@@ -433,7 +425,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
                         {u.usageType}
                       </span>
                       <span className="text-szn-text-2">
-                        {new Date(u.createdAt).toLocaleDateString()}
+                        {formatDate(u.createdAt)}
                       </span>
                     </div>
                     {u.queryText && (

@@ -27,13 +27,13 @@ function SupportBadge({ supported, strength }: { supported: boolean; strength: s
   if (!supported) {
     if (strength === "contradicted") {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span className="szn-badge szn-badge-error">
           Contradicted
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+      <span className="szn-badge szn-badge-muted">
         Unsupported
       </span>
     );
@@ -41,14 +41,14 @@ function SupportBadge({ supported, strength }: { supported: boolean; strength: s
 
   if (strength === "strong") {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+      <span className="szn-badge szn-badge-success">
         Strong Support
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+    <span className="szn-badge szn-badge-warning">
       Weak Support
     </span>
   );
@@ -67,12 +67,12 @@ function EvidenceRefDisplay({ evidenceRef }: { evidenceRef: EvidenceRef }) {
           <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
             <span className="font-mono">{evidenceRef.chunkId.slice(0, 12)}...</span>
             <span
-              className={`px-1.5 py-0.5 rounded ${
+              className={`szn-badge ${
                 evidenceRef.supportType === "supports"
-                  ? "bg-green-100 text-green-700"
+                  ? "szn-badge-success"
                   : evidenceRef.supportType === "contradicts"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-gray-100 text-gray-600"
+                  ? "szn-badge-error"
+                  : "szn-badge-muted"
               }`}
             >
               {evidenceRef.supportType}
@@ -97,7 +97,7 @@ function EvidenceRefDisplay({ evidenceRef }: { evidenceRef: EvidenceRef }) {
           {evidenceRef.highlights.slice(0, 5).map((highlight, idx) => (
             <span
               key={idx}
-              className="px-1.5 py-0.5 text-xs bg-yellow-200 text-yellow-800 rounded"
+              className="szn-badge szn-badge-warning"
             >
               {highlight}
             </span>

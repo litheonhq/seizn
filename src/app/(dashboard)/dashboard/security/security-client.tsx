@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 
 type TabType = "audit" | "keys" | "policies" | "settings";
 
@@ -522,7 +523,7 @@ function ApiKeysTable({
               <div>
                 <span className="text-szn-text-2">{t("dashboard.securityPage.keys.created")}</span>
                 <p className="text-szn-text-1">
-                  {new Date(key.created_at).toLocaleDateString()}
+                  {formatDate(key.created_at)}
                 </p>
               </div>
               <div>
@@ -911,7 +912,7 @@ function PoliciesPanel({
 
               <div className="flex items-center gap-3">
                 <span className="text-xs text-szn-text-3">
-                  Updated {new Date(policy.lastUpdated).toLocaleDateString()}
+                  Updated {formatDate(policy.lastUpdated)}
                 </span>
                 {policy.status !== "pending" && (
                   <button

@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { DriftTimeSeries, DriftTimeSeriesPoint } from "@/lib/drift/types";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -74,7 +75,7 @@ export function DriftChart({
 
     for (let i = 0; i < points.length; i += step) {
       labels.push({
-        label: formatDate(points[i].date),
+        label: formatDate(points[i].date, "compact"),
         x: (i / (points.length - 1)) * 100,
       });
     }
@@ -82,7 +83,7 @@ export function DriftChart({
     const lastIndex = points.length - 1;
     if (labels.length === 0 || labels[labels.length - 1]?.x !== 100) {
       labels.push({
-        label: formatDate(points[lastIndex].date),
+        label: formatDate(points[lastIndex].date, "compact"),
         x: 100,
       });
     }
@@ -246,9 +247,6 @@ export function DriftChart({
 // Helpers
 // ============================================
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return `${date.getMonth() + 1}/${date.getDate()}`;
-}
+// formatDate imported from @/lib/format-date
 
 export default DriftChart;

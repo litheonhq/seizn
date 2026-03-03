@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { formatDate } from "@/lib/format-date";
 
 
 interface DailyUsage {
@@ -242,10 +243,7 @@ export function UsageClient() {
                         i === usage.daily.length - 1 ||
                         i % Math.ceil(usage.daily.length / 7) === 0) && (
                         <span className="text-szn-text-3 text-xs mt-2 transform -rotate-45 origin-left">
-                          {new Date(day.date).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })}
+                          {formatDate(day.date, "compact")}
                         </span>
                       )}
                     </div>

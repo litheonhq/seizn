@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 import { getErrorMessage } from "@/lib/ui-error";
+import { formatDate } from "@/lib/format-date";
 
 interface User {
   id: string;
@@ -296,12 +297,12 @@ export function DashboardClient({ user }: { user: User }) {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="text-zinc-400 text-sm">
-                        Created {new Date(key.created_at).toLocaleDateString()}
+                        Created {formatDate(key.created_at)}
                       </p>
                       {key.last_used_at && (
                         <p className="text-zinc-500 text-xs">
                           Last used{" "}
-                          {new Date(key.last_used_at).toLocaleDateString()}
+                          {formatDate(key.last_used_at)}
                         </p>
                       )}
                     </div>

@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { formatDate } from "@/lib/format-date";
 
 // =============================================================================
 // Types
@@ -401,7 +402,7 @@ export function DataExportModal({
                     <div>
                       <p className="text-szn-text-2">Expires</p>
                       <p className="font-medium text-szn-text-1">
-                        {new Date(result.expires_at).toLocaleDateString()}
+                        {formatDate(result.expires_at)}
                       </p>
                     </div>
                   )}

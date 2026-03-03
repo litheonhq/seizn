@@ -239,10 +239,10 @@ function AdapterCard({
   onDelete: (id: string) => void;
 }) {
   const statusColors: Record<AdapterStatus, string> = {
-    ready: "bg-green-100 text-green-800",
-    training: "bg-blue-100 text-blue-800",
-    untrained: "bg-gray-100 text-gray-800",
-    stale: "bg-yellow-100 text-yellow-800",
+    ready: "szn-badge szn-badge-success",
+    training: "szn-badge szn-badge-info",
+    untrained: "szn-badge szn-badge-muted",
+    stale: "szn-badge szn-badge-warning",
   };
 
   return (
@@ -260,9 +260,7 @@ function AdapterCard({
           )}
         </div>
         <span
-          className={`px-2 py-1 text-xs font-medium rounded-full ${
-            statusColors[adapter.status]
-          }`}
+          className={statusColors[adapter.status]}
         >
           {adapter.status}
         </span>

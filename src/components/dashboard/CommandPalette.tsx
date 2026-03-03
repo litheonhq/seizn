@@ -15,6 +15,7 @@ interface CommandPaletteProps {
 export default function CommandPalette({ isOpen, onClose, navigationGroups, t }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isKeyboardNav, setIsKeyboardNav] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -71,6 +72,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
+          setIsKeyboardNav(true);
           if (filtered.length === 0) return;
           setActiveIndex((prev) => {
             if (prev < 0 || prev >= filtered.length - 1) return 0;
@@ -79,6 +81,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
           break;
         case "ArrowUp":
           e.preventDefault();
+          setIsKeyboardNav(true);
           if (filtered.length === 0) return;
           setActiveIndex((prev) => {
             if (prev <= 0 || prev >= filtered.length) return filtered.length - 1;
@@ -136,7 +139,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
         </div>
 
         {/* Results */}
-        <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
+        <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2 szn-scroll-shadow-y">
           {filtered.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-szn-text-3">
               {t("dashboard.commandPalette.noResults") || "No results found"}
@@ -159,10 +162,10 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
                       <button
                         data-active={idx === activeIndex}
                         onClick={() => navigate(item.href)}
-                        onMouseEnter={() => setActiveIndex(idx)}
+                        onMouseEnter={() => { setIsKeyboardNav(false); setActiveIndex(idx); }}
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
                           idx === safeActiveIndex
-                            ? "bg-szn-accent/10 text-szn-accent"
+                            ? `bg-szn-accent/10 text-szn-accent${isKeyboardNav ? " ring-2 ring-szn-accent ring-inset" : ""}`
                             : "text-szn-text-2 hover:bg-szn-surface-1"
                         }`}
                       >

@@ -5,6 +5,7 @@ import {
   PolicyPackGrid,
 } from "@/components/features/policy-marketplace/PolicyPackGrid";
 import type { PolicyPack } from "@/components/features/policy-marketplace/PolicyPackCard";
+import { useToast } from "@/contexts/ToastContext";
 
 // Default policy packs (curated by Seizn)
 const DEFAULT_PACKS: PolicyPack[] = [
@@ -129,18 +130,7 @@ const DEFAULT_PACKS: PolicyPack[] = [
 
 export function PolicyMarketplaceClient() {
   const [packs, setPacks] = useState<PolicyPack[]>(DEFAULT_PACKS);
-  const [notification, setNotification] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
-  const showNotification = useCallback(
-    (type: "success" | "error", message: string) => {
-      setNotification({ type, message });
-      setTimeout(() => setNotification(null), 3000);
-    },
-    []
-  );
+  const { toast } = useToast();
 
   const handleInstall = useCallback(
     (id: string) => {
@@ -148,9 +138,9 @@ export function PolicyMarketplaceClient() {
         prev.map((p) => (p.id === id ? { ...p, installed: true } : p))
       );
       const pack = packs.find((p) => p.id === id);
-      showNotification("success", `${pack?.name ?? "Pack"} installed successfully`);
+      toast("success", `${pack?.name ?? "Pack"} installed successfully`);
     },
-    [packs, showNotification]
+    [packs, toast]
   );
 
   const handleUninstall = useCallback(
@@ -159,9 +149,9 @@ export function PolicyMarketplaceClient() {
         prev.map((p) => (p.id === id ? { ...p, installed: false } : p))
       );
       const pack = packs.find((p) => p.id === id);
-      showNotification("success", `${pack?.name ?? "Pack"} uninstalled`);
+      toast("success", `${pack?.name ?? "Pack"} uninstalled`);
     },
-    [packs, showNotification]
+    [packs, toast]
   );
 
   const installedCount = packs.filter((p) => p.installed).length;
@@ -171,19 +161,6 @@ export function PolicyMarketplaceClient() {
 
   return (
     <div className="space-y-6">
-      {/* Notification */}
-      {notification && (
-        <div
-          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl text-sm font-medium shadow-lg transition-all ${
-            notification.type === "success"
-              ? "bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-300 ring-1 ring-green-200 dark:ring-green-800"
-              : "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 ring-1 ring-red-200 dark:ring-red-800"
-          }`}
-        >
-          {notification.message}
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">

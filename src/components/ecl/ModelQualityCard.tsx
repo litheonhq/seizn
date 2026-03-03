@@ -1,6 +1,7 @@
 "use client";
 
 import type { TranslationModel, TrainingMetrics } from "@/lib/ecl/types";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -21,7 +22,7 @@ interface QualityRating {
   level: "excellent" | "good" | "fair" | "poor";
   label: string;
   color: string;
-  bgColor: string;
+  badge: string;
 }
 
 function getQualityRating(rmse: number, cosine?: number): QualityRating {
@@ -33,7 +34,7 @@ function getQualityRating(rmse: number, cosine?: number): QualityRating {
       level: "excellent",
       label: "Excellent",
       color: "text-green-700",
-      bgColor: "bg-green-100",
+      badge: "szn-badge szn-badge-success",
     };
   }
   if (rmse < 0.1 && (cosine === undefined || cosine > 0.9)) {
@@ -41,7 +42,7 @@ function getQualityRating(rmse: number, cosine?: number): QualityRating {
       level: "good",
       label: "Good",
       color: "text-blue-700",
-      bgColor: "bg-blue-100",
+      badge: "szn-badge szn-badge-info",
     };
   }
   if (rmse < 0.2 && (cosine === undefined || cosine > 0.8)) {
@@ -49,14 +50,14 @@ function getQualityRating(rmse: number, cosine?: number): QualityRating {
       level: "fair",
       label: "Fair",
       color: "text-yellow-700",
-      bgColor: "bg-yellow-100",
+      badge: "szn-badge szn-badge-warning",
     };
   }
   return {
     level: "poor",
     label: "Poor",
     color: "text-red-700",
-    bgColor: "bg-red-100",
+    badge: "szn-badge szn-badge-error",
   };
 }
 
@@ -299,7 +300,7 @@ export function ModelQualityCard({
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-gray-900">Model Quality</h3>
           <span
-            className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${quality.bgColor} ${quality.color}`}
+            className={`inline-flex items-center gap-1 ${quality.badge}`}
           >
             <CheckCircleIcon />
             {quality.label}
@@ -351,7 +352,7 @@ export function ModelQualityCard({
         {model.trainedAt && (
           <MetricRow
             label="Trained"
-            value={new Date(model.trainedAt).toLocaleDateString()}
+            value={formatDate(model.trainedAt)}
             tooltip="When the model was last trained"
           />
         )}

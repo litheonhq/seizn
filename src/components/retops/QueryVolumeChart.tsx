@@ -54,10 +54,10 @@ export function QueryVolumeChart({
   // Search type distribution data
   const searchTypeData = stats?.searchTypes
     ? [
-        { name: "Hybrid", value: stats.searchTypes.hybrid, color: "#6366f1" },
-        { name: "Vector", value: stats.searchTypes.vector, color: "#22c55e" },
-        { name: "Keyword", value: stats.searchTypes.keyword, color: "#f59e0b" },
-        { name: "Federated", value: stats.searchTypes.federated, color: "#ec4899" },
+        { name: "Hybrid", value: stats.searchTypes.hybrid, color: "var(--szn-accent-2)" },
+        { name: "Vector", value: stats.searchTypes.vector, color: "var(--szn-success)" },
+        { name: "Keyword", value: stats.searchTypes.keyword, color: "var(--szn-warning)" },
+        { name: "Federated", value: stats.searchTypes.federated, color: "var(--szn-chart-5)" },
       ]
     : [];
 
@@ -89,42 +89,42 @@ export function QueryVolumeChart({
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
             <XAxis
               dataKey="time"
-              tick={{ fontSize: 12, fill: "#6b7280" }}
+              tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
               tickLine={false}
-              axisLine={{ stroke: "#e5e7eb" }}
+              axisLine={{ stroke: "var(--szn-border)" }}
             />
             <YAxis
               yAxisId="left"
-              tick={{ fontSize: 12, fill: "#6b7280" }}
+              tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
               tickLine={false}
-              axisLine={{ stroke: "#e5e7eb" }}
+              axisLine={{ stroke: "var(--szn-border)" }}
               label={{
                 value: "QPS",
                 angle: -90,
                 position: "insideLeft",
-                style: { fontSize: 12, fill: "#6b7280" },
+                style: { fontSize: 12, fill: "var(--szn-text-3)" },
               }}
             />
             <YAxis
               yAxisId="right"
               orientation="right"
-              tick={{ fontSize: 12, fill: "#6b7280" }}
+              tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
               tickLine={false}
-              axisLine={{ stroke: "#e5e7eb" }}
+              axisLine={{ stroke: "var(--szn-border)" }}
               label={{
                 value: "Error %",
                 angle: 90,
                 position: "insideRight",
-                style: { fontSize: 12, fill: "#6b7280" },
+                style: { fontSize: 12, fill: "var(--szn-text-3)" },
               }}
             />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#fff",
-                border: "1px solid #e5e7eb",
+                border: "1px solid var(--szn-border)",
                 borderRadius: "8px",
                 boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
               }}
@@ -135,7 +135,7 @@ export function QueryVolumeChart({
               yAxisId="left"
               type="monotone"
               dataKey="qps"
-              stroke="#6366f1"
+              stroke="var(--szn-accent-2)"
               strokeWidth={2}
               dot={false}
               name="QPS"
@@ -144,7 +144,7 @@ export function QueryVolumeChart({
               yAxisId="right"
               type="monotone"
               dataKey="errorRate"
-              stroke="#ef4444"
+              stroke="var(--szn-danger)"
               strokeWidth={2}
               dot={false}
               name="Error Rate (%)"

@@ -11,6 +11,7 @@ import {
   Legend,
 } from "recharts";
 import type { QualityMetrics, QualityTrendPoint } from "@/lib/summer/retops/types";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -29,10 +30,7 @@ export interface QualityTrendProps {
 export function QualityTrend({ quality, trend, loading }: QualityTrendProps) {
   // Transform trend data for chart
   const chartData = trend.map((point) => ({
-    date: new Date(point.timestamp).toLocaleDateString([], {
-      month: "short",
-      day: "numeric",
-    }),
+    date: formatDate(point.timestamp, "compact"),
     mrr: point.mrr * 100,
     ndcg: point.ndcg * 100,
     groundedness: (point.groundedness || 0) * 100,
@@ -80,36 +78,36 @@ export function QualityTrend({ quality, trend, loading }: QualityTrendProps) {
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="mrrGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--szn-accent-2)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--szn-accent-2)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="ndcgGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--szn-success)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--szn-success)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="groundednessGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                <stop offset="5%" stopColor="var(--szn-warning)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--szn-warning)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--szn-border)" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 12, fill: "#6b7280" }}
+              tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
               tickLine={false}
-              axisLine={{ stroke: "#e5e7eb" }}
+              axisLine={{ stroke: "var(--szn-border)" }}
             />
             <YAxis
               domain={[0, 100]}
-              tick={{ fontSize: 12, fill: "#6b7280" }}
+              tick={{ fontSize: 12, fill: "var(--szn-text-3)" }}
               tickLine={false}
-              axisLine={{ stroke: "#e5e7eb" }}
+              axisLine={{ stroke: "var(--szn-border)" }}
               tickFormatter={(v) => `${v}%`}
             />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#fff",
-                border: "1px solid #e5e7eb",
+                border: "1px solid var(--szn-border)",
                 borderRadius: "8px",
                 boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
               }}
@@ -119,7 +117,7 @@ export function QualityTrend({ quality, trend, loading }: QualityTrendProps) {
             <Area
               type="monotone"
               dataKey="mrr"
-              stroke="#6366f1"
+              stroke="var(--szn-accent-2)"
               strokeWidth={2}
               fill="url(#mrrGradient)"
               name="MRR"
@@ -127,7 +125,7 @@ export function QualityTrend({ quality, trend, loading }: QualityTrendProps) {
             <Area
               type="monotone"
               dataKey="ndcg"
-              stroke="#22c55e"
+              stroke="var(--szn-success)"
               strokeWidth={2}
               fill="url(#ndcgGradient)"
               name="nDCG"
@@ -135,7 +133,7 @@ export function QualityTrend({ quality, trend, loading }: QualityTrendProps) {
             <Area
               type="monotone"
               dataKey="groundedness"
-              stroke="#f59e0b"
+              stroke="var(--szn-warning)"
               strokeWidth={2}
               fill="url(#groundednessGradient)"
               name="Groundedness"

@@ -7,6 +7,7 @@ import type {
   PermissionLevel,
   EffectivePermission,
 } from "@/lib/winter/graph/types";
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -295,12 +296,12 @@ function PermissionCard({ permission }: { permission: Permission }) {
         </p>
         <p>
           <span className="text-gray-400">Granted:</span>{" "}
-          {new Date(permission.grantedAt).toLocaleDateString()}
+          {formatDate(permission.grantedAt)}
         </p>
         {permission.expiresAt && (
           <p>
             <span className="text-gray-400">Expires:</span>{" "}
-            {new Date(permission.expiresAt).toLocaleDateString()}
+            {formatDate(permission.expiresAt)}
           </p>
         )}
       </div>

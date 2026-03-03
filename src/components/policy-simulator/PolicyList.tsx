@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { formatDate } from "@/lib/format-date";
 
 // ============================================
 // Types
@@ -151,16 +152,7 @@ export function PolicyList({
     [apiKey, fetchPolicies]
   );
 
-  // Format date
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+  // formatDate imported from @/lib/format-date (using "long" style for date+time)
 
   // Get policy type badge color
   const getTypeBadgeColor = (type: string) => {
@@ -249,7 +241,7 @@ export function PolicyList({
               )}
               <div className="mt-1 flex items-center gap-4 text-xs text-gray-400">
                 <span>v{policy.version}</span>
-                <span>Updated {formatDate(policy.updatedAt)}</span>
+                <span>Updated {formatDate(policy.updatedAt, "long")}</span>
               </div>
             </div>
 

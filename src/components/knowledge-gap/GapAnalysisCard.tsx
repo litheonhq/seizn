@@ -173,18 +173,18 @@ export function GapAnalysisCard({
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
   const percent = Math.round(confidence * 100);
-  let colorClass = "bg-gray-100 text-gray-700";
+  let badgeClass = "szn-badge szn-badge-muted";
 
   if (percent >= 80) {
-    colorClass = "bg-red-100 text-red-700";
+    badgeClass = "szn-badge szn-badge-error";
   } else if (percent >= 60) {
-    colorClass = "bg-orange-100 text-orange-700";
+    badgeClass = "szn-badge szn-badge-warning";
   } else if (percent >= 40) {
-    colorClass = "bg-yellow-100 text-yellow-700";
+    badgeClass = "szn-badge szn-badge-warning";
   }
 
   return (
-    <span className={`px-2 py-1 text-xs font-medium rounded-full ${colorClass}`}>
+    <span className={badgeClass}>
       {percent}% confident
     </span>
   );
@@ -259,7 +259,7 @@ function EntitiesTab({ entities }: { entities: MissingEntity[] }) {
           <div className="flex items-center justify-between mb-2">
             <span className="font-medium text-gray-900">{entity.name}</span>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded">
+              <span className="szn-badge szn-badge-info">
                 {entity.type}
               </span>
               <span className="text-xs text-gray-400">
@@ -325,12 +325,12 @@ function SourcesTab({
                     {source.sourceType.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                   </span>
                   <span
-                    className={`px-1.5 py-0.5 text-xs rounded ${
+                    className={`szn-badge ${
                       source.priority === "high"
-                        ? "bg-red-100 text-red-700"
+                        ? "szn-badge-error"
                         : source.priority === "medium"
-                        ? "bg-orange-100 text-orange-700"
-                        : "bg-gray-100 text-gray-700"
+                        ? "szn-badge-warning"
+                        : "szn-badge-muted"
                     }`}
                   >
                     {source.priority}

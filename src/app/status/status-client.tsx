@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { formatDate } from "@/lib/format-date";
 
 interface ServiceStatus {
   name: string;
@@ -449,7 +450,7 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
                       </span>
                     </div>
                     <div className="flex items-center gap-4 mt-1 text-sm text-szn-text-2">
-                      <span>{new Date(incident.started_at).toLocaleDateString()}</span>
+                      <span>{formatDate(incident.started_at)}</span>
                       <span>Duration: {formatDuration(incident.started_at, incident.resolved_at)}</span>
                       <span>Affected: {incident.affected_services.join(", ")}</span>
                     </div>

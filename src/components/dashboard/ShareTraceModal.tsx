@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import type { ExpiresIn, RedactionProfile } from "@/lib/sharing/types";
+import { formatDate } from "@/lib/format-date";
 
 interface ShareTraceModalProps {
   traceId: string;
@@ -346,12 +347,12 @@ export function ShareTraceModal({
                         <span>{share.viewCount} views</span>
                         <span>
                           Created{" "}
-                          {new Date(share.createdAt).toLocaleDateString()}
+                          {formatDate(share.createdAt)}
                         </span>
                         {share.expiresAt && (
                           <span>
                             Expires{" "}
-                            {new Date(share.expiresAt).toLocaleDateString()}
+                            {formatDate(share.expiresAt)}
                           </span>
                         )}
                       </div>

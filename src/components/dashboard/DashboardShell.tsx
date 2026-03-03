@@ -144,7 +144,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
 
         {/* Navigation - Grouped */}
-        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-hidden">
+        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-hidden szn-scroll-shadow-y">
           {isSidebarExpanded ? (
             <ExpandedNav
               groups={navigationGroups}
@@ -259,8 +259,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       />
 
       {/* Main Content */}
-      <main id="dashboard-main" className={`pt-14 sm:pt-16 ${topBarHeight} min-h-screen relative z-10 ${mainPaddingClass}`}>
-        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
+      <main id="dashboard-main" className={`pt-14 sm:pt-16 ${topBarHeight} min-h-screen relative z-10 ${mainPaddingClass} min-w-[320px]`}>
+        <div className="p-4 sm:p-6 lg:p-6 max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
   );
@@ -308,6 +308,7 @@ function ExpandedNav({
                     <Link
                       key={item.href}
                       href={item.href}
+                      aria-current={active ? "page" : undefined}
                       className={`group relative flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-xl transition-all duration-200 overflow-hidden ${
                         active
                           ? "bg-szn-surface-2 text-szn-text-1"
@@ -360,6 +361,7 @@ function CollapsedNav({
             href={item.href}
             title={item.label}
             onClick={handleClick}
+            aria-current={active ? "page" : undefined}
             className={`group relative flex items-center justify-center w-full h-10 rounded-xl transition-all duration-200 ${
               active
                 ? "bg-szn-surface-2"

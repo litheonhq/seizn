@@ -8,6 +8,7 @@ import {
   getRegionMigrationInfo,
   type RegionCode,
 } from "@/config/regions";
+import { formatDate } from "@/lib/format-date";
 
 interface RegionSelectorProps {
   organizationId: string;
@@ -381,7 +382,7 @@ export function RegionSelector({
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-szn-text-2">
-                      <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                      <span>{formatDate(item.created_at)}</span>
                       <span className="px-1.5 py-0.5 bg-szn-surface rounded">
                         {item.change_type.replace("_", " ")}
                       </span>
