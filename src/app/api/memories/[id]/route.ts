@@ -9,6 +9,10 @@ import {
 import { logMemoryAccess } from '@/lib/audit';
 import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
+import {
+  listMemoryImageAttachments,
+  type MemoryImageAttachmentRecord,
+} from '@/lib/memory/image-attachments';
 import crypto from 'crypto';
 
 interface RouteParams {
@@ -160,6 +164,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    let attachments: MemoryImageAttachmentRecord[] = [];
+    try {
+      attachments = await listMemoryImageAttachments({ supabase, userId, memoryId: id });
+    } catch (attachmentError) {
+      console.error('Get memory attachments error:', attachmentError);
+    }
+
     // Audit log: single memory read
     logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
       memoryId: id,
@@ -168,6 +179,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const response = NextResponse.json({
       success: true,
       memory: memory,
+      attachments,
     });
     const withCsrf = ensureCsrfCookie(request, response);
     return withHeaders(withCsrf, authResult.rateLimitHeaders);

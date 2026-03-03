@@ -9,6 +9,10 @@ import {
 import { auth } from '@/lib/auth';
 import { ServerErrors } from '@/lib/api-error';
 import { logMemoryAccess } from '@/lib/audit';
+import {
+  listMemoryImageAttachments,
+  type MemoryImageAttachmentRecord,
+} from '@/lib/memory/image-attachments';
 
 const META = { version: 'v1' as const };
 
@@ -107,6 +111,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    let attachments: MemoryImageAttachmentRecord[] = [];
+    try {
+      attachments = await listMemoryImageAttachments({ supabase, userId, memoryId: id });
+    } catch (attachmentError) {
+      console.error('[v1/memories/:id] Attachment fetch error:', attachmentError);
+    }
+
     if (keyId) {
       await logRequest(
         { userId, keyId, endpoint: '/api/v1/memories/[id]', method: 'GET', startTime },
@@ -121,7 +132,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     return withHeaders(
       NextResponse.json({
         success: true,
-        data: { memory },
+        data: { memory, attachments },
         meta: { ...META, latencyMs: Date.now() - startTime },
       }),
       authResult.rateLimitHeaders

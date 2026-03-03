@@ -73,6 +73,12 @@ import {
   recordSemanticCacheExperimentEvent,
   resolveSemanticCacheDecision,
 } from '@/lib/memory/semantic-cache-experiment';
+import {
+  attachImageToMemory,
+  hasMemoryImagePayload,
+  validateMemoryImagePayload,
+  type MemoryImageAttachmentRecord,
+} from '@/lib/memory/image-attachments';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -92,6 +98,20 @@ const SEARCH_TIMEOUT_MS = (() => {
   return 2500;
 })();
 const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
+const IMAGE_ATTACHMENT_CLIENT_ERROR_PATTERNS = [
+  'image_url',
+  'image_base64',
+  'image_mime_type',
+  'image_filename',
+  'image_relation',
+  'unsupported image mime type',
+  'decoded image is empty',
+  'no image payload provided',
+  'image too large',
+  'redirect',
+  'private or internal ip',
+  'hostname',
+] as const;
 
 function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
@@ -99,6 +119,13 @@ function isMissingContentHashColumnError(
   if (!error) return false;
   if (error.code === '42703') return true;
   return (error.message || '').toLowerCase().includes('content_hash');
+}
+
+function getImageAttachmentClientErrorMessage(error: unknown): string | null {
+  if (!(error instanceof Error) || !error.message) return null;
+  const lowered = error.message.toLowerCase();
+  const matched = IMAGE_ATTACHMENT_CLIENT_ERROR_PATTERNS.some((token) => lowered.includes(token));
+  return matched ? error.message : null;
 }
 
 /** Merge extra headers into a NextResponse */
@@ -202,6 +229,14 @@ export async function POST(request: NextRequest) {
     const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
     const isEncrypted = (body as unknown as Record<string, unknown>).is_encrypted === true;
     const encryptedContent = body.encrypted_content;
+    const hasImageAttachment = hasMemoryImagePayload(body);
+    const imageValidationError = validateMemoryImagePayload(body);
+    if (imageValidationError) {
+      return NextResponse.json(
+        { success: false, error: { code: 'invalid_field', message: imageValidationError }, meta: META },
+        { status: 400 }
+      );
+    }
 
     if (isEncrypted) {
       if (!encryptedContent || encryptedContent.trim().length === 0) {
@@ -339,7 +374,8 @@ export async function POST(request: NextRequest) {
     if (!isEncrypted) {
       embedding = await createEmbedding(sanitizedContent);
 
-      const dedupEnabled = (body as unknown as Record<string, unknown>).dedup !== false;
+      const dedupEnabled =
+        (body as unknown as Record<string, unknown>).dedup !== false && !hasImageAttachment;
       if (dedupEnabled) {
         const duplicate = await findDuplicate(userId, embedding, namespace);
         if (duplicate) {
@@ -369,9 +405,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Compute content hash for dedup safety net (unique index on user_id + namespace + content_hash)
-    const contentHash = isEncrypted
-      ? null
-      : crypto.createHash('sha256').update(sanitizedContent).digest('hex');
+    const contentHash =
+      isEncrypted || hasImageAttachment
+        ? null
+        : crypto.createHash('sha256').update(sanitizedContent).digest('hex');
 
     const insertPayload = {
       user_id: userId,
@@ -478,6 +515,43 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('insert_memory');
     }
 
+    let attachments: MemoryImageAttachmentRecord[] = [];
+    if (hasImageAttachment) {
+      try {
+        const attached = await attachImageToMemory({
+          supabase,
+          userId,
+          memoryId: memory.id,
+          input: body,
+        });
+        attachments = [attached];
+      } catch (attachmentError) {
+        // Best-effort rollback to avoid keeping a partially-created memory without attachment.
+        const rollback = await supabase
+          .from('memories')
+          .update({ is_deleted: true, deleted_at: new Date().toISOString() })
+          .eq('id', memory.id)
+          .eq('user_id', userId);
+        if (rollback.error) {
+          console.error(
+            '[v1/memories] CRITICAL: rollback soft-delete failed for memory',
+            memory.id,
+            rollback.error.message
+          );
+        }
+
+        console.error('[v1/memories] Image attachment error:', attachmentError);
+        const clientMessage = getImageAttachmentClientErrorMessage(attachmentError);
+        if (clientMessage) {
+          return NextResponse.json(
+            { success: false, error: { code: 'invalid_field', message: clientMessage }, meta: META },
+            { status: 400 }
+          );
+        }
+        return ServerErrors.internal('attach_image');
+      }
+    }
+
     await incrementMemoryVersion(userId, namespace);
 
     // Emit webhook event (non-blocking)
@@ -496,7 +570,7 @@ export async function POST(request: NextRequest) {
     return withHeaders(
       NextResponse.json({
         success: true,
-        data: { memory },
+        data: { memory, attachments },
         meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
       }),
       result.rateLimitHeaders

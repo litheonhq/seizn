@@ -129,6 +129,17 @@ const defaultLogger: Logger = {
   error: (msg, ...args) => console.error(`[MemoryV3] ${msg}`, ...args),
 };
 
+function stripUrlQuery(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.search = '';
+    parsed.hash = '';
+    return parsed.toString();
+  } catch {
+    return url.split('?')[0].split('#')[0];
+  }
+}
+
 // =============================================================================
 // Memory V3 Service Class
 // =============================================================================
@@ -1353,7 +1364,9 @@ export class MemoryV3Service {
       embeddingModel: row.embedding_model as string | undefined,
       salience: row.salience as SalienceScore | undefined,
       utility: row.utility as UtilityScore | undefined,
-      provenance: row.provenance as ProvenanceInfo,
+      provenance:
+        this.sanitizeProvenance(row.provenance as ProvenanceInfo | null | undefined) ||
+        (row.provenance as ProvenanceInfo),
       entityMentions: row.entity_mentions as EntityMention[] | undefined,
       tags: row.tags as string[] | undefined,
       metadata: row.metadata as Record<string, unknown> | undefined,
@@ -1363,6 +1376,29 @@ export class MemoryV3Service {
       version: row.version as number,
       supersedesId: row.supersedes_id as string | undefined,
       contradictedById: row.contradicted_by_id as string | undefined,
+    };
+  }
+
+  private sanitizeProvenance(prov: ProvenanceInfo | null | undefined): ProvenanceInfo | undefined {
+    if (!prov || typeof prov !== 'object') return undefined;
+
+    const source = prov.source
+      ? {
+          ...prov.source,
+          sourceUrl: prov.source.sourceUrl ? stripUrlQuery(prov.source.sourceUrl) : prov.source.sourceUrl,
+        }
+      : prov.source;
+
+    const corroboratingSources = Array.isArray(prov.corroboratingSources)
+      ? prov.corroboratingSources.map((item) =>
+          item?.sourceUrl ? { ...item, sourceUrl: stripUrlQuery(item.sourceUrl) } : item
+        )
+      : prov.corroboratingSources;
+
+    return {
+      ...prov,
+      source,
+      corroboratingSources,
     };
   }
 
