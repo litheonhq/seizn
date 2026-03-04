@@ -33,6 +33,68 @@ export interface TrainingUpdate {
   };
 }
 
+function resolveTrainingDispatcherUrl(runWebhookUrl?: string): string | null {
+  const explicit = runWebhookUrl?.trim();
+  if (explicit) return explicit;
+
+  const globalWebhook = process.env.RERANKER_TRAINING_WEBHOOK_URL?.trim();
+  if (globalWebhook) return globalWebhook;
+
+  return null;
+}
+
+async function dispatchTrainingRun(params: {
+  runId: string;
+  datasetId: string;
+  config: TrainingConfig;
+  webhookUrl?: string;
+}): Promise<{ dispatched: boolean; message: string }> {
+  const dispatcherUrl = resolveTrainingDispatcherUrl(params.webhookUrl);
+  if (!dispatcherUrl) {
+    return {
+      dispatched: false,
+      message: 'No training dispatcher webhook configured; run is waiting for worker pickup',
+    };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const response = await fetch(dispatcherUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'summer.reranker.training.start',
+        runId: params.runId,
+        datasetId: params.datasetId,
+        config: params.config,
+        requestedAt: new Date().toISOString(),
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`dispatcher responded ${response.status}: ${body}`);
+    }
+
+    return {
+      dispatched: true,
+      message: `Training run dispatched to worker via ${dispatcherUrl}`,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Training dispatcher request timed out');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 /**
  * Create a new training run
  */
@@ -116,7 +178,7 @@ export async function startTraining(runId: string): Promise<{ started: boolean; 
   // Get run and dataset
   const { data: run } = await supabase
     .from('summer_reranker_runs')
-    .select('*, summer_reranker_datasets(*)')
+    .select('id, dataset_id, config, status, webhook_url')
     .eq('id', runId)
     .single();
 
@@ -137,13 +199,34 @@ export async function startTraining(runId: string): Promise<{ started: boolean; 
     })
     .eq('id', runId);
 
-  // In production, this would dispatch to a training worker
-  // For now, we'll simulate the training process structure
-  await supabase.from('summer_reranker_runs').update({
-    logs: ['Training started...', `Config: ${JSON.stringify(run.config)}`],
-  }).eq('id', runId);
+  try {
+    const dispatch = await dispatchTrainingRun({
+      runId,
+      datasetId: run.dataset_id as string,
+      config: run.config as TrainingConfig,
+      webhookUrl: (run.webhook_url as string | null) ?? undefined,
+    });
 
-  return { started: true, message: 'Training started' };
+    await supabase
+      .from('summer_reranker_runs')
+      .update({
+        logs: [
+          'Training started...',
+          `Config: ${JSON.stringify(run.config)}`,
+          dispatch.message,
+        ],
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', runId);
+
+    return { started: true, message: dispatch.message };
+  } catch (error) {
+    const message = `Failed to dispatch training run: ${
+      error instanceof Error ? error.message : 'Unknown error'
+    }`;
+    await failTraining(runId, message);
+    return { started: false, message };
+  }
 }
 
 /**

@@ -10,7 +10,8 @@
 
 import { createServerClient } from '@/lib/supabase';
 import { generateSignature } from '@/lib/webhook';
-import type { DLQEntry, DLQStats, DLQAlertPayload, DLQAlertConfig, FailureCode } from './types';
+import { sendEmail } from '@/lib/email';
+import type { DLQEntry, DLQStats, DLQAlertPayload, DLQAlertConfig } from './types';
 import { getDLQStats, listDLQEntries } from './dlq';
 
 // ============================================
@@ -68,15 +69,46 @@ export async function getAlertConfig(
 }
 
 function mapAlertConfigFromDb(config: Record<string, unknown>): DLQAlertConfig {
+  const emailAlerts =
+    typeof config.email_alerts === 'boolean'
+      ? config.email_alerts
+      : DEFAULT_ALERT_CONFIG.emailAlerts;
+  const webhookAlerts =
+    typeof config.webhook_alerts === 'boolean'
+      ? config.webhook_alerts
+      : DEFAULT_ALERT_CONFIG.webhookAlerts;
+
+  const alertThreshold = resolveCountThreshold(
+    config.dlq_alert_threshold ?? config.health_alert_threshold,
+    DEFAULT_ALERT_CONFIG.alertThreshold
+  );
+  const criticalThreshold = Math.max(
+    resolveCountThreshold(
+      config.dlq_critical_threshold ?? config.critical_alert_threshold,
+      DEFAULT_ALERT_CONFIG.criticalThreshold
+    ),
+    alertThreshold + 1
+  );
+
   return {
-    enabled: config.email_alerts || config.webhook_alerts ? true : DEFAULT_ALERT_CONFIG.enabled,
-    emailAlerts: (config.email_alerts as boolean) ?? DEFAULT_ALERT_CONFIG.emailAlerts,
-    webhookAlerts: (config.webhook_alerts as boolean) ?? DEFAULT_ALERT_CONFIG.webhookAlerts,
+    enabled: emailAlerts || webhookAlerts ? true : DEFAULT_ALERT_CONFIG.enabled,
+    emailAlerts,
+    webhookAlerts,
     webhookUrl: config.webhook_url as string | undefined,
-    alertThreshold: (config.health_alert_threshold as number) ? 5 : DEFAULT_ALERT_CONFIG.alertThreshold,
-    criticalThreshold: (config.critical_alert_threshold as number) ? 20 : DEFAULT_ALERT_CONFIG.criticalThreshold,
-    cooldownMinutes: DEFAULT_ALERT_CONFIG.cooldownMinutes,
+    alertThreshold,
+    criticalThreshold,
+    cooldownMinutes: resolveCountThreshold(
+      config.alert_cooldown_minutes ?? config.cooldown_minutes,
+      DEFAULT_ALERT_CONFIG.cooldownMinutes
+    ),
   };
+}
+
+function resolveCountThreshold(value: unknown, fallback: number): number {
+  if (typeof value === 'number' && Number.isFinite(value) && value >= 1) {
+    return Math.max(1, Math.round(value));
+  }
+  return fallback;
 }
 
 // ============================================
@@ -193,7 +225,7 @@ async function sendDLQAlert(
   newEntry?: DLQEntry
 ): Promise<void> {
   // Build alert payload
-  const payload = await buildAlertPayload(userId, collectionId, stats, severity, newEntry);
+  const payload = await buildAlertPayload(userId, collectionId, stats, severity, config, newEntry);
 
   // Send webhook alert
   if (config.webhookAlerts && config.webhookUrl) {
@@ -214,6 +246,7 @@ async function buildAlertPayload(
   collectionId: string | undefined,
   stats: DLQStats,
   severity: 'warning' | 'critical',
+  config: DLQAlertConfig,
   newEntry?: DLQEntry
 ): Promise<DLQAlertPayload> {
   // Get recent failures for context
@@ -235,7 +268,7 @@ async function buildAlertPayload(
     userId,
     collectionId,
     pendingCount: stats.pendingCount,
-    threshold: severity === 'critical' ? 20 : 5,
+    threshold: severity === 'critical' ? config.criticalThreshold : config.alertThreshold,
     oldestPendingAt: stats.oldestPendingAt,
     recentFailures,
     timestamp: new Date().toISOString(),
@@ -256,6 +289,10 @@ async function sendWebhookAlert(
     'X-Seizn-Event': 'dlq.alert',
     'X-Seizn-Timestamp': new Date().toISOString(),
   };
+  const secret = process.env.DLQ_WEBHOOK_SECRET?.trim();
+  if (secret) {
+    headers['X-Seizn-Signature'] = `sha256=${generateSignature(payloadString, secret)}`;
+  }
 
   try {
     const controller = new AbortController();
@@ -285,8 +322,70 @@ async function sendEmailAlert(
   userId: string,
   payload: DLQAlertPayload
 ): Promise<void> {
-  // TODO: Integrate with email service (Resend, SendGrid, etc.)
-  console.log('Email alert would be sent to user:', userId, payload);
+  const supabase = createServerClient();
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('email, full_name')
+    .eq('id', userId)
+    .single();
+
+  if (error || !profile?.email) {
+    console.error('DLQ email alert skipped: recipient not found', {
+      userId,
+      error: error?.message,
+    });
+    return;
+  }
+
+  const subjectPrefix = payload.severity === 'critical' ? '[CRITICAL]' : '[Warning]';
+  const subject = `${subjectPrefix} Seizn DLQ backlog alert (${payload.pendingCount} pending)`;
+  const failureLines = payload.recentFailures
+    .slice(0, 5)
+    .map(
+      (failure, idx) =>
+        `${idx + 1}. ${failure.failureCode ?? 'unknown'} - ${failure.failureReason} (${failure.createdAt})`
+    )
+    .join('\n');
+
+  const text = [
+    `Hello ${profile.full_name || 'there'},`,
+    '',
+    'A Seizn self-healing DLQ alert was triggered.',
+    `Severity: ${payload.severity}`,
+    `Pending entries: ${payload.pendingCount}`,
+    `Alert threshold: ${payload.threshold}`,
+    `Collection: ${payload.collectionId ?? 'all collections'}`,
+    `Oldest pending: ${payload.oldestPendingAt ?? 'n/a'}`,
+    '',
+    'Recent failures:',
+    failureLines || '- none',
+    '',
+    `Timestamp: ${payload.timestamp}`,
+  ].join('\n');
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;">
+      <h2 style="margin-bottom:8px;">Seizn DLQ Alert (${payload.severity.toUpperCase()})</h2>
+      <p style="margin:0 0 12px;">Pending entries: <strong>${payload.pendingCount}</strong> (threshold: ${payload.threshold})</p>
+      <p style="margin:0 0 12px;">Collection: <strong>${payload.collectionId ?? 'all collections'}</strong></p>
+      <p style="margin:0 0 12px;">Oldest pending: <strong>${payload.oldestPendingAt ?? 'n/a'}</strong></p>
+      <h3 style="margin:16px 0 8px;">Recent failures</h3>
+      <pre style="background:#F9FAFB;border:1px solid #E5E7EB;padding:12px;border-radius:8px;white-space:pre-wrap;">${failureLines || '- none'}</pre>
+      <p style="margin-top:12px;color:#6B7280;">Timestamp: ${payload.timestamp}</p>
+    </div>
+  `;
+
+  const result = await sendEmail({
+    to: profile.email as string,
+    subject,
+    html,
+    text,
+  });
+
+  if (!result.success) {
+    console.error('DLQ email alert failed', { userId, error: result.error });
+  }
 }
 
 // ============================================

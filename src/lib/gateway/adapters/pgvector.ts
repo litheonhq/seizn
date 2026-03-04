@@ -19,7 +19,6 @@ import type {
   SearchResultItem,
 } from '../types';
 
-// SQL row types
 interface VectorRow {
   id: string;
   content?: string;
@@ -29,11 +28,67 @@ interface VectorRow {
   similarity?: number;
 }
 
+interface PgPool {
+  query: (text: string, values?: unknown[]) => Promise<{ rows: Record<string, unknown>[]; rowCount: number | null }>;
+  end: () => Promise<void>;
+}
+
+const DEFAULT_DIRECT_POOL_MAX = 10;
+
+function parsePositiveInt(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value ?? '', 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function quoteIdentifier(identifier: string, label: string): string {
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(identifier)) {
+    throw new AdapterError('CONFIG_ERROR', `Invalid ${label}: ${identifier}`, false);
+  }
+  return `"${identifier}"`;
+}
+
+function quoteQualifiedIdentifier(value: string, label: string): string {
+  const parts = value.split('.');
+  if (parts.length === 0 || parts.length > 2) {
+    throw new AdapterError('CONFIG_ERROR', `Invalid ${label}: ${value}`, false);
+  }
+  return parts.map((part) => quoteIdentifier(part, label)).join('.');
+}
+
+function parseVectorValue(value: unknown): number[] | undefined {
+  if (Array.isArray(value)) {
+    return value.map((item) => Number(item)).filter((item) => Number.isFinite(item));
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.trim();
+    if (!normalized.startsWith('[') || !normalized.endsWith(']')) {
+      return undefined;
+    }
+    const body = normalized.slice(1, -1).trim();
+    if (!body) return [];
+
+    const parts = body.split(',');
+    const parsed = parts.map((item) => Number(item.trim()));
+    if (parsed.some((item) => !Number.isFinite(item))) {
+      return undefined;
+    }
+    return parsed;
+  }
+
+  return undefined;
+}
+
+function toVectorLiteral(values: number[]): string {
+  return `[${values.join(',')}]`;
+}
+
 /**
  * pgvector adapter using direct SQL queries.
  *
- * Note: This adapter expects a PostgreSQL client to be provided
- * or uses the Supabase REST API for serverless environments.
+ * Supports:
+ * - Direct PostgreSQL connection (connectionString)
+ * - Supabase PostgREST API (host + apiKey)
  */
 export class PgvectorAdapter extends BaseVectorAdapter {
   readonly provider: VectorDBProvider = 'pgvector';
@@ -42,23 +97,25 @@ export class PgvectorAdapter extends BaseVectorAdapter {
   private tableName: string;
   private embeddingColumn: string;
   private contentColumn: string;
+  private quotedTableName: string;
+  private quotedEmbeddingColumn: string;
+  private quotedContentColumn: string;
   private supabaseUrl?: string;
   private supabaseKey?: string;
   private useSupabase: boolean;
+  private pool: PgPool | null = null;
 
   constructor(config: GatewayConfig) {
     super(config);
 
-    // Support both direct connection and Supabase
     if (config.connectionString) {
       this.connectionString = config.connectionString;
       this.useSupabase = false;
     } else if (config.host && config.apiKey) {
-      // Assume Supabase-style REST API
       this.supabaseUrl = config.host.startsWith('http') ? config.host : `https://${config.host}`;
       this.supabaseKey = config.apiKey;
       this.useSupabase = true;
-      this.connectionString = ''; // Not used in Supabase mode
+      this.connectionString = '';
     } else {
       throw new AdapterError(
         'CONFIG_ERROR',
@@ -70,6 +127,10 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     this.tableName = config.tableName || 'vectors';
     this.embeddingColumn = 'embedding';
     this.contentColumn = 'content';
+
+    this.quotedTableName = quoteQualifiedIdentifier(this.tableName, 'tableName');
+    this.quotedEmbeddingColumn = quoteIdentifier(this.embeddingColumn, 'embedding column');
+    this.quotedContentColumn = quoteIdentifier(this.contentColumn, 'content column');
   }
 
   private get headers(): Record<string, string> {
@@ -78,10 +139,39 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     }
     return {
       'Content-Type': 'application/json',
-      'apikey': this.supabaseKey,
-      'Authorization': `Bearer ${this.supabaseKey}`,
-      'Prefer': 'return=representation',
+      apikey: this.supabaseKey,
+      Authorization: `Bearer ${this.supabaseKey}`,
+      Prefer: 'return=representation',
     };
+  }
+
+  private async getDirectPool(): Promise<PgPool> {
+    if (this.useSupabase) {
+      throw new AdapterError('CONFIG_ERROR', 'Direct pool requested in Supabase mode', false);
+    }
+    if (this.pool) {
+      return this.pool;
+    }
+
+    let pgModule: { Pool: new (config: Record<string, unknown>) => PgPool };
+    try {
+      pgModule = (await import('pg')) as { Pool: new (config: Record<string, unknown>) => PgPool };
+    } catch (error) {
+      throw new AdapterError(
+        'MISSING_DEPENDENCY',
+        `Direct pgvector mode requires the "pg" package at runtime: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+        false
+      );
+    }
+
+    const poolMax = parsePositiveInt(process.env.GATEWAY_PGVECTOR_POOL_MAX, DEFAULT_DIRECT_POOL_MAX);
+    this.pool = new pgModule.Pool({
+      connectionString: this.connectionString,
+      max: poolMax,
+    });
+    return this.pool;
   }
 
   async connect(): Promise<void> {
@@ -92,7 +182,6 @@ export class PgvectorAdapter extends BaseVectorAdapter {
       });
 
       if (this.useSupabase) {
-        // Test Supabase connection
         const response = await fetch(`${this.supabaseUrl}/rest/v1/${this.tableName}?limit=1`, {
           headers: this.headers,
         });
@@ -105,9 +194,8 @@ export class PgvectorAdapter extends BaseVectorAdapter {
           );
         }
       } else {
-        // For direct connection, we'd need a PostgreSQL client
-        // This would typically use 'pg' or 'postgres' package
-        this.log('warn', 'Direct PostgreSQL connection not implemented in this adapter');
+        const pool = await this.getDirectPool();
+        await pool.query('SELECT 1');
       }
 
       this.connected = true;
@@ -123,6 +211,10 @@ export class PgvectorAdapter extends BaseVectorAdapter {
   }
 
   async disconnect(): Promise<void> {
+    if (this.pool) {
+      await this.pool.end();
+      this.pool = null;
+    }
     this.connected = false;
     this.log('info', 'Disconnected from pgvector');
   }
@@ -131,19 +223,14 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     this.validateConnected();
 
     if (!payload.embedding || payload.embedding.length === 0) {
-      throw new AdapterError(
-        'INVALID_PAYLOAD',
-        'pgvector search requires embedding vector',
-        false
-      );
+      throw new AdapterError('INVALID_PAYLOAD', 'pgvector search requires embedding vector', false);
     }
 
     const { result, latencyMs } = await this.measureLatency(async () => {
       if (this.useSupabase) {
         return this.searchViaSupabase(payload);
-      } else {
-        return this.searchViaDirect(payload);
       }
+      return this.searchViaDirect(payload);
     });
 
     this.log('debug', 'pgvector search completed', {
@@ -154,7 +241,7 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     const results: SearchResultItem[] = result.map((row) => ({
       id: row.id,
       score: row.similarity || (row.distance ? 1 / (1 + row.distance) : 1),
-      values: row.embedding,
+      values: payload.includeValues ? row.embedding : undefined,
       metadata: row.metadata,
       content: row.content,
     }));
@@ -167,14 +254,12 @@ export class PgvectorAdapter extends BaseVectorAdapter {
   }
 
   private async searchViaSupabase(payload: SearchPayload): Promise<VectorRow[]> {
-    // Use Supabase RPC function for vector similarity search
     const rpcBody = {
       query_embedding: payload.embedding,
       match_count: payload.topK || 10,
       filter: payload.filter || {},
     };
 
-    // Try to call a stored function first (preferred)
     const rpcResponse = await fetch(`${this.supabaseUrl}/rest/v1/rpc/match_${this.tableName}`, {
       method: 'POST',
       headers: this.headers,
@@ -185,12 +270,9 @@ export class PgvectorAdapter extends BaseVectorAdapter {
       return (await rpcResponse.json()) as VectorRow[];
     }
 
-    // Fallback: Use PostgREST with embedding operator
-    // Note: This requires pgvector extension and proper index
     const embeddingArray = `[${payload.embedding!.join(',')}]`;
     const limit = payload.topK || 10;
 
-    // Using cosine distance operator <=>
     const url = new URL(`${this.supabaseUrl}/rest/v1/${this.tableName}`);
     url.searchParams.set('select', `id,${this.contentColumn},${this.embeddingColumn},metadata`);
     url.searchParams.set('limit', limit.toString());
@@ -207,7 +289,6 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     });
 
     if (!response.ok) {
-      // Try simple query without ordering (for basic connectivity)
       const fallbackResponse = await fetch(
         `${this.supabaseUrl}/rest/v1/${this.tableName}?select=id,${this.contentColumn},metadata&limit=${limit}`,
         { headers: this.headers }
@@ -215,11 +296,7 @@ export class PgvectorAdapter extends BaseVectorAdapter {
 
       if (!fallbackResponse.ok) {
         const errorText = await fallbackResponse.text();
-        throw new AdapterError(
-          'QUERY_FAILED',
-          `pgvector/Supabase query failed: ${errorText}`,
-          false
-        );
+        throw new AdapterError('QUERY_FAILED', `pgvector/Supabase query failed: ${errorText}`, false);
       }
 
       return (await fallbackResponse.json()) as VectorRow[];
@@ -229,48 +306,57 @@ export class PgvectorAdapter extends BaseVectorAdapter {
   }
 
   private async searchViaDirect(payload: SearchPayload): Promise<VectorRow[]> {
-    // Direct PostgreSQL query would go here
-    // This is a placeholder - actual implementation would use 'pg' package
+    const pool = await this.getDirectPool();
 
-    const _sql = `
-      SELECT id, ${this.contentColumn}, metadata,
-             1 - (${this.embeddingColumn} <=> $1::vector) as similarity
-      FROM ${this.tableName}
-      ORDER BY ${this.embeddingColumn} <=> $1::vector
+    const params: unknown[] = [toVectorLiteral(payload.embedding!), payload.topK || 10];
+    const where: string[] = [];
+
+    if (payload.filter && Object.keys(payload.filter).length > 0) {
+      params.push(JSON.stringify(payload.filter));
+      where.push(`metadata @> $${params.length}::jsonb`);
+    }
+
+    const whereClause = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+    const sql = `
+      SELECT
+        id,
+        ${this.quotedContentColumn} AS content,
+        metadata,
+        ${this.quotedEmbeddingColumn} AS embedding,
+        (${this.quotedEmbeddingColumn} <=> $1::vector) AS distance,
+        (1 - (${this.quotedEmbeddingColumn} <=> $1::vector)) AS similarity
+      FROM ${this.quotedTableName}
+      ${whereClause}
+      ORDER BY ${this.quotedEmbeddingColumn} <=> $1::vector
       LIMIT $2
     `;
 
-    // Placeholder - would execute SQL here
-    this.log('warn', 'Direct PostgreSQL queries not implemented, returning empty results');
-
-    // For now, we throw an error indicating this needs configuration
-    throw new AdapterError(
-      'NOT_IMPLEMENTED',
-      'Direct PostgreSQL connection requires additional setup. Use Supabase mode instead.',
-      false
-    );
-
-    // Would return query results
-    // return rows as VectorRow[];
+    const { rows } = await pool.query(sql, params);
+    return rows.map((row) => ({
+      id: String(row.id),
+      content: typeof row.content === 'string' ? row.content : undefined,
+      metadata:
+        row.metadata && typeof row.metadata === 'object'
+          ? (row.metadata as Record<string, unknown>)
+          : undefined,
+      embedding: parseVectorValue(row.embedding),
+      distance: typeof row.distance === 'number' ? row.distance : undefined,
+      similarity: typeof row.similarity === 'number' ? row.similarity : undefined,
+    }));
   }
 
   async upsert(payload: UpsertPayload): Promise<UpsertResponseData> {
     this.validateConnected();
 
     if (!payload.vectors || payload.vectors.length === 0) {
-      throw new AdapterError(
-        'INVALID_PAYLOAD',
-        'pgvector upsert requires vectors array',
-        false
-      );
+      throw new AdapterError('INVALID_PAYLOAD', 'pgvector upsert requires vectors array', false);
     }
 
     const { latencyMs } = await this.measureLatency(async () => {
       if (this.useSupabase) {
         return this.upsertViaSupabase(payload);
-      } else {
-        return this.upsertViaDirect(payload);
       }
+      return this.upsertViaDirect(payload);
     });
 
     this.log('info', 'pgvector upsert completed', {
@@ -292,12 +378,11 @@ export class PgvectorAdapter extends BaseVectorAdapter {
       metadata: vec.metadata || {},
     }));
 
-    // Use upsert (requires unique constraint on id)
     const response = await fetch(`${this.supabaseUrl}/rest/v1/${this.tableName}`, {
       method: 'POST',
       headers: {
         ...this.headers,
-        'Prefer': 'resolution=merge-duplicates',
+        Prefer: 'resolution=merge-duplicates',
       },
       body: JSON.stringify(records),
     });
@@ -312,42 +397,60 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     }
   }
 
-  private async upsertViaDirect(_payload: UpsertPayload): Promise<void> {
-    throw new AdapterError(
-      'NOT_IMPLEMENTED',
-      'Direct PostgreSQL upsert requires additional setup. Use Supabase mode instead.',
-      false
-    );
+  private async upsertViaDirect(payload: UpsertPayload): Promise<void> {
+    const pool = await this.getDirectPool();
+
+    const valuesSql: string[] = [];
+    const params: unknown[] = [];
+
+    payload.vectors.forEach((vector, index) => {
+      const offset = index * 4;
+      valuesSql.push(
+        `($${offset + 1}, $${offset + 2}, $${offset + 3}::vector, $${offset + 4}::jsonb)`
+      );
+      params.push(
+        vector.id,
+        vector.content ?? '',
+        toVectorLiteral(vector.values),
+        JSON.stringify(vector.metadata ?? {})
+      );
+    });
+
+    const sql = `
+      INSERT INTO ${this.quotedTableName} ("id", ${this.quotedContentColumn}, ${this.quotedEmbeddingColumn}, "metadata")
+      VALUES ${valuesSql.join(', ')}
+      ON CONFLICT ("id")
+      DO UPDATE SET
+        ${this.quotedContentColumn} = EXCLUDED.${this.quotedContentColumn},
+        ${this.quotedEmbeddingColumn} = EXCLUDED.${this.quotedEmbeddingColumn},
+        "metadata" = EXCLUDED."metadata"
+    `;
+
+    await pool.query(sql, params);
   }
 
   async delete(payload: DeletePayload): Promise<DeleteResponseData> {
     this.validateConnected();
 
-    if (!payload.ids || payload.ids.length === 0) {
-      if (!payload.deleteAll) {
-        throw new AdapterError(
-          'INVALID_PAYLOAD',
-          'pgvector delete requires ids or deleteAll',
-          false
-        );
-      }
+    const hasIds = Array.isArray(payload.ids) && payload.ids.length > 0;
+    const hasFilter = !!payload.filter && Object.keys(payload.filter).length > 0;
+    if (!payload.deleteAll && !hasIds && !hasFilter) {
+      throw new AdapterError('INVALID_PAYLOAD', 'pgvector delete requires ids, filter, or deleteAll', false);
     }
 
-    const { latencyMs } = await this.measureLatency(async () => {
+    const { result, latencyMs } = await this.measureLatency(async () => {
       if (this.useSupabase) {
-        return this.deleteViaSupabase(payload);
-      } else {
-        return this.deleteViaDirect(payload);
+        await this.deleteViaSupabase(payload);
+        return payload.deleteAll ? -1 : payload.ids?.length || 0;
       }
+      return this.deleteViaDirect(payload);
     });
 
-    const deletedCount = payload.deleteAll ? -1 : (payload.ids?.length || 0);
-
-    this.log('info', 'pgvector delete completed', { latencyMs, deletedCount });
+    this.log('info', 'pgvector delete completed', { latencyMs, deletedCount: result });
 
     return {
       type: 'delete',
-      deletedCount,
+      deletedCount: result,
     };
   }
 
@@ -355,11 +458,15 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     let url = `${this.supabaseUrl}/rest/v1/${this.tableName}`;
 
     if (payload.deleteAll) {
-      // Delete all - be careful with this!
-      url += '?id=neq.null'; // Match all records
+      url += '?id=neq.null';
     } else if (payload.ids && payload.ids.length > 0) {
-      // Delete by IDs
       url += `?id=in.(${payload.ids.map((id) => `"${id}"`).join(',')})`;
+    } else if (payload.filter && Object.keys(payload.filter).length > 0) {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries(payload.filter)) {
+        query.set(key, `eq.${String(value)}`);
+      }
+      url += `?${query.toString()}`;
     }
 
     const response = await fetch(url, {
@@ -377,12 +484,26 @@ export class PgvectorAdapter extends BaseVectorAdapter {
     }
   }
 
-  private async deleteViaDirect(_payload: DeletePayload): Promise<void> {
-    throw new AdapterError(
-      'NOT_IMPLEMENTED',
-      'Direct PostgreSQL delete requires additional setup. Use Supabase mode instead.',
-      false
-    );
+  private async deleteViaDirect(payload: DeletePayload): Promise<number> {
+    const pool = await this.getDirectPool();
+
+    const params: unknown[] = [];
+    const where: string[] = [];
+
+    if (!payload.deleteAll && payload.ids?.length) {
+      params.push(payload.ids);
+      where.push(`"id" = ANY($${params.length}::text[])`);
+    }
+
+    if (payload.filter && Object.keys(payload.filter).length > 0) {
+      params.push(JSON.stringify(payload.filter));
+      where.push(`"metadata" @> $${params.length}::jsonb`);
+    }
+
+    const whereClause = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
+    const sql = `DELETE FROM ${this.quotedTableName}${whereClause}`;
+    const result = await pool.query(sql, params);
+    return result.rowCount ?? 0;
   }
 
   async health(): Promise<HealthResponseData> {
@@ -395,8 +516,6 @@ export class PgvectorAdapter extends BaseVectorAdapter {
         });
 
         const latencyMs = Math.round(performance.now() - start);
-
-        // 404 is OK - table might be empty
         const healthy = response.ok || response.status === 404;
 
         return {
@@ -410,19 +529,24 @@ export class PgvectorAdapter extends BaseVectorAdapter {
             status: response.status,
           },
         };
-      } else {
-        // Direct connection health check
-        return {
-          type: 'health',
-          healthy: false,
-          provider: 'pgvector',
-          details: {
-            latencyMs: Math.round(performance.now() - start),
-            mode: 'direct',
-            error: 'Direct connection not implemented',
-          },
-        };
       }
+
+      const pool = await this.getDirectPool();
+      const { rows } = await pool.query('SELECT to_regclass($1) AS table_name', [this.tableName]);
+      const latencyMs = Math.round(performance.now() - start);
+      const tableExists = typeof rows[0]?.table_name === 'string';
+
+      return {
+        type: 'health',
+        healthy: tableExists,
+        provider: 'pgvector',
+        details: {
+          latencyMs,
+          mode: 'direct',
+          tableName: this.tableName,
+          tableExists,
+        },
+      };
     } catch (error) {
       return {
         type: 'health',
