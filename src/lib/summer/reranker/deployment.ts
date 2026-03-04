@@ -28,6 +28,76 @@ export interface ModelEndpoint {
   healthCheck: string;
 }
 
+function normalizeBaseUrl(baseUrl: string): string {
+  return baseUrl.replace(/\/+$/, '');
+}
+
+function buildModelEndpoint(modelId: string): string {
+  const configuredBase =
+    process.env.RERANKER_ENDPOINT_BASE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    'https://reranker.seizn.com';
+  return `${normalizeBaseUrl(configuredBase)}/v1/models/${modelId}`;
+}
+
+async function resolveTrainingRunOwner(runId: string): Promise<string> {
+  const supabase = createServerClient();
+
+  const { data: run, error: runError } = await supabase
+    .from('summer_reranker_runs')
+    .select('dataset_id')
+    .eq('id', runId)
+    .single();
+  if (runError || !run?.dataset_id) {
+    throw new Error(`Failed to resolve training run dataset: ${runError?.message ?? 'missing dataset_id'}`);
+  }
+
+  const { data: dataset, error: datasetError } = await supabase
+    .from('summer_reranker_datasets')
+    .select('user_id')
+    .eq('id', run.dataset_id as string)
+    .single();
+  if (datasetError || !dataset?.user_id) {
+    throw new Error(
+      `Failed to resolve training dataset owner: ${datasetError?.message ?? 'missing user_id'}`
+    );
+  }
+
+  return dataset.user_id as string;
+}
+
+async function finalizeDeployment(
+  modelId: string,
+  ownerUserId: string,
+  modelName: string
+): Promise<void> {
+  const supabase = createServerClient();
+  const endpoint = buildModelEndpoint(modelId);
+
+  // Ensure at most one active model per (user, name)
+  const { error: deactivateError } = await supabase
+    .from('summer_reranker_models')
+    .update({ status: 'inactive' })
+    .eq('user_id', ownerUserId)
+    .eq('name', modelName)
+    .eq('status', 'active')
+    .neq('id', modelId);
+  if (deactivateError) {
+    throw new Error(`Failed to deactivate prior active models: ${deactivateError.message}`);
+  }
+
+  const { error: activateError } = await supabase
+    .from('summer_reranker_models')
+    .update({
+      status: 'active',
+      endpoint,
+    })
+    .eq('id', modelId);
+  if (activateError) {
+    throw new Error(`Failed to activate model deployment: ${activateError.message}`);
+  }
+}
+
 /**
  * Deploy a trained model
  */
@@ -59,6 +129,8 @@ export async function deployModel(params: DeployModelParams): Promise<DeployedMo
     }
   }
 
+  const ownerUserId = await resolveTrainingRunOwner(params.runId);
+
   const model: DeployedModel = {
     id: crypto.randomUUID(),
     name: params.name,
@@ -81,6 +153,7 @@ export async function deployModel(params: DeployModelParams): Promise<DeployedMo
 
   const { error } = await supabase.from('summer_reranker_models').insert({
     id: model.id,
+    user_id: ownerUserId,
     name: model.name,
     version: model.version,
     run_id: model.runId,
@@ -95,32 +168,22 @@ export async function deployModel(params: DeployModelParams): Promise<DeployedMo
     throw new Error(`Failed to create deployment: ${error.message}`);
   }
 
-  // In production, this would trigger actual model deployment
-  // For now, simulate deployment completion
-  await simulateDeployment(model.id);
+  try {
+    await finalizeDeployment(model.id, ownerUserId, model.name);
+  } catch (deploymentError) {
+    await supabase
+      .from('summer_reranker_models')
+      .update({ status: 'failed' })
+      .eq('id', model.id);
+    throw deploymentError;
+  }
 
-  return model;
-}
+  const deployed = await getDeployedModel(model.id);
+  if (!deployed) {
+    throw new Error('Deployment succeeded but deployed model could not be loaded');
+  }
 
-/**
- * Simulate deployment process (placeholder for actual deployment)
- */
-async function simulateDeployment(modelId: string): Promise<void> {
-  const supabase = createServerClient();
-
-  // Simulate deployment time
-  await new Promise((resolve) => setTimeout(resolve, 100));
-
-  // Generate mock endpoint
-  const endpoint = `https://reranker.seizn.com/v1/models/${modelId}`;
-
-  await supabase
-    .from('summer_reranker_models')
-    .update({
-      status: 'active',
-      endpoint,
-    })
-    .eq('id', modelId);
+  return deployed;
 }
 
 /**
