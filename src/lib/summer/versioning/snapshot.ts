@@ -782,11 +782,16 @@ async function loadSerializedSnapshot(
     data.metadata as Record<string, unknown> | undefined
   );
   if (!storage) {
+    const collectionId = typeof data.collection_id === 'string' ? data.collection_id : '';
+    if (!collectionId) {
+      throw new Error('Snapshot payload not found and collection id is missing');
+    }
+
     const legacySerialized = await regenerateSnapshotPayloadFromCollection({
-      collectionId: data.collection_id as string,
+      collectionId,
       includeEmbeddings: (data.includes_embeddings as boolean) ?? false,
       format,
-      versionId: data.version_id as string,
+      versionId: typeof data.version_id === 'string' ? data.version_id : '',
     });
     return { serialized: legacySerialized, format };
   }
