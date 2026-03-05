@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from "@/lib/supabase";
 import { DEMO_CONFIG, generateDemoToken, hashToken } from "@/lib/demo/session";
 
 export async function POST(request: NextRequest) {
@@ -22,11 +22,8 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + DEMO_CONFIG.ttlMs);
 
     // Store session in Supabase (if configured)
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
+    if (hasServerSupabaseServiceRoleConfig()) {
+      const supabase = createServerClient();
 
       await supabase.from("demo_sessions").insert({
         token_hash: hashToken(demoToken),

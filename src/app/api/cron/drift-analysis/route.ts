@@ -6,10 +6,15 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { DriftCollector } from '@/lib/drift';
 import { verifyCronSecret } from '@/lib/cron-auth';
 import { validateOutboundUrl } from '@/lib/security/outbound-url';
+import {
+  createServerClient,
+  getServerSupabaseServiceRoleKey,
+  getServerSupabaseUrl,
+  hasServerSupabaseServiceRoleConfig,
+} from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   // Verify cron authorization
@@ -20,17 +25,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-  if (!supabaseUrl || !supabaseKey) {
+  if (!hasServerSupabaseServiceRoleConfig()) {
     return NextResponse.json(
       { success: false, error: 'Missing Supabase configuration' },
       { status: 500 }
     );
   }
 
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabaseUrl = getServerSupabaseUrl();
+  const supabaseKey = getServerSupabaseServiceRoleKey();
+  const supabase = createServerClient();
   const collector = new DriftCollector(supabaseUrl, supabaseKey);
 
   const results: {

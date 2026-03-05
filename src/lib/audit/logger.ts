@@ -6,8 +6,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
-import { createClient } from '@supabase/supabase-js';
+import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
 import { AuditActionType, ResourceType } from '@/lib/rbac/types';
 
 /**
@@ -113,12 +112,7 @@ export async function extractUserFromRequest(
   }
 
   const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
+  const supabase = createRequestAuthClient(token);
 
   const {
     data: { user },
@@ -255,66 +249,77 @@ export async function getTeamAuditLogs(
 ): Promise<{ logs: AuditLogEntry[]; total: number }> {
   const supabase = createServerClient();
 
-  let dbQuery = supabase
-    .from('audit_logs')
-    .select(
-      `
-      id,
-      user_id,
-      organization_id,
-      api_key_id,
-      action,
-      resource_type,
-      resource_id,
-      details,
-      previous_state,
-      new_state,
-      ip_address,
-      user_agent,
-      request_id,
-      status,
-      error_message,
-      is_service_role,
-      created_at,
-      user:profiles (
-        email,
-        full_name
+  const runQuery = async (tableName: 'audit_logs' | 'audit_log') => {
+    let dbQuery = supabase
+      .from(tableName)
+      .select(
+        `
+        id,
+        user_id,
+        organization_id,
+        api_key_id,
+        action,
+        resource_type,
+        resource_id,
+        details,
+        previous_state,
+        new_state,
+        ip_address,
+        user_agent,
+        request_id,
+        status,
+        error_message,
+        is_service_role,
+        created_at,
+        user:profiles (
+          email,
+          full_name
+        )
+      `,
+        { count: 'exact' }
       )
-    `,
-      { count: 'exact' }
-    )
-    .eq('organization_id', query.teamId)
-    .order('created_at', { ascending: false });
+      .eq('organization_id', query.teamId)
+      .order('created_at', { ascending: false });
 
-  if (query.action) {
-    dbQuery = dbQuery.eq('action', query.action);
+    if (query.action) {
+      dbQuery = dbQuery.eq('action', query.action);
+    }
+
+    if (query.resourceType) {
+      dbQuery = dbQuery.eq('resource_type', query.resourceType);
+    }
+
+    if (query.userId) {
+      dbQuery = dbQuery.eq('user_id', query.userId);
+    }
+
+    if (query.status) {
+      dbQuery = dbQuery.eq('status', query.status);
+    }
+
+    if (query.startDate) {
+      dbQuery = dbQuery.gte('created_at', query.startDate.toISOString());
+    }
+
+    if (query.endDate) {
+      dbQuery = dbQuery.lte('created_at', query.endDate.toISOString());
+    }
+
+    const limit = Math.min(query.limit || 50, 100);
+    const offset = query.offset || 0;
+    dbQuery = dbQuery.range(offset, offset + limit - 1);
+
+    return dbQuery;
+  };
+
+  let { data, error, count } = await runQuery('audit_logs');
+
+  if (error && isAuditLogsMissingError(error)) {
+    const legacy = await runQuery('audit_log');
+    data = legacy.data;
+    error = legacy.error;
+    count = legacy.count;
   }
-
-  if (query.resourceType) {
-    dbQuery = dbQuery.eq('resource_type', query.resourceType);
-  }
-
-  if (query.userId) {
-    dbQuery = dbQuery.eq('user_id', query.userId);
-  }
-
-  if (query.status) {
-    dbQuery = dbQuery.eq('status', query.status);
-  }
-
-  if (query.startDate) {
-    dbQuery = dbQuery.gte('created_at', query.startDate.toISOString());
-  }
-
-  if (query.endDate) {
-    dbQuery = dbQuery.lte('created_at', query.endDate.toISOString());
-  }
-
-  const limit = Math.min(query.limit || 50, 100);
-  const offset = query.offset || 0;
-  dbQuery = dbQuery.range(offset, offset + limit - 1);
-
-  const { data, error, count } = await dbQuery;
 
   if (error) {
     console.error('Failed to fetch audit logs:', error);
