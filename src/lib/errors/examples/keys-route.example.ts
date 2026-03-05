@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseUserFromBearer } from '@/lib/api/request-user';
 import {
   AuthErrors,
   ValidationErrors,
@@ -26,32 +26,6 @@ import {
 } from '@/lib/errors';
 
 // ============================================
-// Helper: Get user from Authorization header
-// ============================================
-
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
-
-// ============================================
 // GET /api/keys - List user's API keys
 // ============================================
 
@@ -60,7 +34,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const startTime = Date.now();
 
   // 1. Authenticate using session token
-  const user = await getUserFromToken(request);
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) {
     return AuthErrors.accessDenied('API keys', traceId);
   }
@@ -100,7 +74,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   const startTime = Date.now();
 
   // 1. Authenticate using session token
-  const user = await getUserFromToken(request);
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) {
     return AuthErrors.accessDenied('API key creation', traceId);
   }
@@ -211,7 +185,7 @@ export const DELETE = withErrorHandler(async (request: NextRequest) => {
   const startTime = Date.now();
 
   // 1. Authenticate using session token
-  const user = await getUserFromToken(request);
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) {
     return AuthErrors.accessDenied('API key revocation', traceId);
   }
@@ -289,7 +263,7 @@ export async function updateApiKey(
   const startTime = Date.now();
 
   // 1. Authenticate
-  const user = await getUserFromToken(request);
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) {
     return AuthErrors.accessDenied('API key update', traceId);
   }

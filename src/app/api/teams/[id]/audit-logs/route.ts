@@ -7,10 +7,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { requirePermission, PermissionDeniedError, NotTeamMemberError } from '@/lib/rbac';
 import { Permissions } from '@/lib/rbac/types';
 import { getTeamAuditLogs, AuditLogQuery } from '@/lib/audit/logger';
+import { createRequestAuthClient } from '@/lib/supabase';
 
 /**
  * Helper to get user from authorization token
@@ -22,12 +22,7 @@ async function getUserFromToken(request: NextRequest) {
   }
 
   const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
+  const supabase = createRequestAuthClient(token);
 
   const {
     data: { user },

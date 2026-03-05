@@ -11,7 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseUserFromBearer } from '@/lib/api/request-user';
 import {
   validatePolicyConfig,
   getDefaultPolicyConfig,
@@ -247,25 +247,6 @@ interface SimulationSummary {
 // Helper Functions
 // ============================================
 
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
 
 function simulatePiiPolicy(
   config: PiiPolicyConfig,
@@ -861,7 +842,7 @@ function runSimulation(
 export async function POST(request: NextRequest) {
   try {
     // Authentication
-    const user = await getUserFromToken(request);
+    const user = await getSupabaseUserFromBearer(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -1061,7 +1042,7 @@ function generateImpactSummary(
  * Get simulation endpoint info and example payloads
  */
 export async function GET(request: NextRequest) {
-  const user = await getUserFromToken(request);
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

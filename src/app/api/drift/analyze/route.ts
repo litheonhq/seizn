@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/api-auth';
-import { createServerClient } from '@/lib/supabase';
+import { createServerClient, getServerSupabaseServiceRoleKey, getServerSupabaseUrl } from '@/lib/supabase';
 import { DriftCollector } from '@/lib/drift';
 
 export async function POST(request: NextRequest) {
@@ -61,8 +61,8 @@ export async function POST(request: NextRequest) {
   try {
     // Initialize collector
     const collector = new DriftCollector(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      getServerSupabaseUrl(),
+      getServerSupabaseServiceRoleKey()
     );
 
     // Collect snapshot and analyze
