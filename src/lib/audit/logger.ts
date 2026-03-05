@@ -69,6 +69,18 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+type SupabaseInsertError = { code?: string | null; message?: string | null };
+
+function isAuditLogsMissingError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const maybe = error as SupabaseInsertError;
+  const message = (maybe.message || '').toLowerCase();
+  return (
+    maybe.code === 'PGRST205' &&
+    message.includes("could not find the table 'public.audit_logs'")
+  );
+}
+
 /**
  * Extract actor information from a NextRequest
  */
@@ -153,30 +165,43 @@ export async function logAuditEvent(
 ): Promise<string | null> {
   try {
     const supabase = createServerClient();
+    const payload = {
+      user_id: actor.userId,
+      organization_id: event.teamId || null,
+      api_key_id: actor.apiKeyId || null,
+      action: event.action,
+      resource_type: event.resourceType,
+      resource_id: event.resourceId || null,
+      details: event.details || {},
+      previous_state: event.previousState || null,
+      new_state: event.newState || null,
+      ip_address: actor.ipAddress || null,
+      user_agent: actor.userAgent || null,
+      request_id: actor.requestId || null,
+      status: event.status || 'success',
+      error_message: event.errorMessage || null,
+      is_service_role: actor.isServiceRole || false,
+    };
 
     const { data, error } = await supabase
       .from('audit_logs')
-      .insert({
-        user_id: actor.userId,
-        organization_id: event.teamId || null,
-        api_key_id: actor.apiKeyId || null,
-        action: event.action,
-        resource_type: event.resourceType,
-        resource_id: event.resourceId || null,
-        details: event.details || {},
-        previous_state: event.previousState || null,
-        new_state: event.newState || null,
-        ip_address: actor.ipAddress || null,
-        user_agent: actor.userAgent || null,
-        request_id: actor.requestId || null,
-        status: event.status || 'success',
-        error_message: event.errorMessage || null,
-        is_service_role: actor.isServiceRole || false,
-      })
+      .insert(payload)
       .select('id')
       .single();
 
     if (error) {
+      if (isAuditLogsMissingError(error)) {
+        const { data: legacyData, error: legacyError } = await supabase
+          .from('audit_log')
+          .insert(payload)
+          .select('id')
+          .single();
+        if (!legacyError) {
+          return legacyData.id;
+        }
+        console.error('Failed to log audit event (legacy fallback):', legacyError);
+        return null;
+      }
       console.error('Failed to log audit event:', error);
       return null;
     }

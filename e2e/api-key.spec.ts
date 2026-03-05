@@ -7,8 +7,12 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('API Key Management', () => {
-  // Skip auth-required tests in CI without credentials
-  const skipAuth = !process.env.TEST_USER_EMAIL;
+  const hasCreds = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
+  const allowAutoProvision =
+    process.env.PLAYWRIGHT_DISABLE_TURNSTILE === '1' || process.env.E2E_ALLOW_AUTO_PROVISION === '1';
+  const runId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const email = process.env.TEST_USER_EMAIL || `e2e+api-key-${runId}@example.com`;
+  const password = process.env.TEST_USER_PASSWORD || `E2E!ApiKey${runId}Aa`;
 
   test('Dashboard redirects to login when unauthenticated', async ({ page }) => {
     await page.goto('/dashboard');
@@ -42,13 +46,35 @@ test.describe('API Key Management', () => {
   });
 
   test.describe('Authenticated Flow', () => {
-    test.skip(skipAuth, 'Requires test credentials');
+    test.skip(
+      !hasCreds && !allowAutoProvision,
+      'Requires TEST_USER_EMAIL/TEST_USER_PASSWORD (or enable auto-provision with PLAYWRIGHT_DISABLE_TURNSTILE=1)'
+    );
+
+    test.beforeAll(async ({ request }) => {
+      if (hasCreds || !allowAutoProvision) return;
+
+      const res = await request.post('/api/auth/signup', {
+        data: {
+          email,
+          password,
+          name: 'E2E API Key User',
+        },
+      });
+
+      if (!res.ok()) {
+        const body = await res.text().catch(() => '');
+        throw new Error(
+          `Failed to provision e2e user via /api/auth/signup (status ${res.status()}): ${body}`
+        );
+      }
+    });
 
     test('Can access dashboard after login', async ({ page }) => {
       // Login
       await page.goto('/login');
-      await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL!);
-      await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD!);
+      await page.fill('input[type="email"]', email);
+      await page.fill('input[type="password"]', password);
       await page.click('button[type="submit"]');
 
       // Wait for redirect

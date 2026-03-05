@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    ".next/dev",
+    "mcp-server",
+    "examples",
+    "packages",
+    "cli",
+    "relay-agent",
+    "scripts",
+    "src/test",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

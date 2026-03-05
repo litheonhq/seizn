@@ -174,7 +174,11 @@ function isAlreadyExistsError(error: { message?: string | null } | null | undefi
 function isMissingTableError(error: { message?: string | null; code?: string | null } | null | undefined): boolean {
   if (!error) return false;
   if (error.code === '42P01') return true;
-  return (error.message || '').toLowerCase().includes('relation') && (error.message || '').toLowerCase().includes('does not exist');
+  const message = (error.message || '').toLowerCase();
+  return (
+    (message.includes('relation') && message.includes('does not exist')) ||
+    (message.includes('table') && message.includes('schema cache'))
+  );
 }
 
 function isNotFoundStorageError(error: { message?: string | null } | null | undefined): boolean {
