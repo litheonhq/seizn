@@ -67,8 +67,13 @@ import {
   recordRouterOutcome,
   type RouterLearningDecision,
 } from '@/lib/memory/router-learning';
-import { executeMemorySearch } from '@/lib/memory/search-executor';
+import { executeMemorySearch, type SearchExecutionMode } from '@/lib/memory/search-executor';
 import { toCachedMemories, type SearchResultRow } from '@/lib/memory/search-types';
+import {
+  mirrorLegacyMemoryToSpringV4,
+  searchViaSpringV4Bridge,
+  softDeleteSpringMirrorsByLegacyIds,
+} from '@/lib/memory/v1-spring-bridge';
 import {
   recordSemanticCacheExperimentEvent,
   resolveSemanticCacheDecision,
@@ -97,6 +102,12 @@ const SEARCH_TIMEOUT_MS = (() => {
   if (Number.isFinite(raw) && raw > 0) return raw;
   return 2500;
 })();
+const MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED =
+  process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH !== 'false';
+const MEMORY_V1_SPRING_BRIDGE_MIRROR_ENABLED =
+  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR !== 'false';
+const MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED =
+  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED === 'true';
 const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
 const IMAGE_ATTACHMENT_CLIENT_ERROR_PATTERNS = [
   'image_url',
@@ -552,6 +563,50 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    let springMirror: { mirrored: boolean; springNoteId: string | null; skippedReason: string | null } | null = null;
+    if (!MEMORY_V1_SPRING_BRIDGE_MIRROR_ENABLED) {
+      springMirror = { mirrored: false, springNoteId: null, skippedReason: 'bridge_disabled' };
+    } else if (!isEncrypted) {
+      try {
+        springMirror = await mirrorLegacyMemoryToSpringV4(supabase, {
+          userId,
+          memoryId: memory.id,
+          content: sanitizedContent,
+          embedding,
+          memoryType: body.memory_type || 'fact',
+          tags: body.tags || [],
+          namespace,
+          scope: body.scope || 'user',
+          sessionId: body.session_id || null,
+          agentId: body.agent_id || null,
+          source: body.source || 'api',
+          importance,
+          confidence: 1.0,
+          createdAt: memory.created_at || null,
+        });
+      } catch (springMirrorError) {
+        springMirror = { mirrored: false, springNoteId: null, skippedReason: 'mirror_failed' };
+        console.error('[v1/memories] Spring v4 mirror error:', springMirrorError);
+        if (MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED) {
+          const rollback = await supabase
+            .from('memories')
+            .update({ is_deleted: true, deleted_at: new Date().toISOString() })
+            .eq('id', memory.id)
+            .eq('user_id', userId);
+          if (rollback.error) {
+            console.error(
+              '[v1/memories] CRITICAL: rollback after spring mirror failure failed',
+              memory.id,
+              rollback.error.message
+            );
+          }
+          return ServerErrors.internal('spring_v4_mirror_failed');
+        }
+      }
+    } else {
+      springMirror = { mirrored: false, springNoteId: null, skippedReason: 'encrypted_memory' };
+    }
+
     await incrementMemoryVersion(userId, namespace);
 
     // Emit webhook event (non-blocking)
@@ -570,7 +625,13 @@ export async function POST(request: NextRequest) {
     return withHeaders(
       NextResponse.json({
         success: true,
-        data: { memory, attachments },
+        data: {
+          memory,
+          attachments,
+          bridge: {
+            springV4: springMirror,
+          },
+        },
         meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
       }),
       result.rateLimitHeaders
@@ -1015,23 +1076,62 @@ export async function GET(request: NextRequest) {
         return true;
       });
     };
-    const searchExecution = await executeMemorySearch<SearchResultRow>({
-      rpcCall: async (fn, args) => {
-        const { data, error } = await supabase.rpc(fn, args);
-        return { data: (data as SearchResultRow[] | null), error };
-      },
-      initialMode: actualMode,
-      queryText: effectiveQuery,
-      userId,
-      limit,
-      namespaceParam: nsParam,
-      threshold: routerDecision?.suggestedParams.threshold || threshold,
-      searchTimeoutMs: SEARCH_TIMEOUT_MS,
-      createQueryEmbedding,
-      applyFilters: applyResultFilters,
-    });
+    let results: SearchResultRow[] | null = null;
+    let resolvedMode: SearchExecutionMode = actualMode;
+    let fallback: { applied: boolean; from: string; to: string; reason: string } | null = null;
+    let searchError: Error | null = null;
+    let searchBackend: 'spring_v4' | 'legacy' = 'legacy';
+    let backendFallbackReason: 'search_error' | 'zero_results' | null = null;
 
-    const { results, resolvedMode, fallback, error: searchError } = searchExecution;
+    if (MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED) {
+      try {
+        const bridged = await searchViaSpringV4Bridge(supabase, {
+          userId,
+          query: effectiveQuery,
+          limit,
+          mode: actualMode,
+          namespace,
+          memoryType,
+          tags: tagsParam ? tagsParam.split(',').map((t) => t.trim()).filter(Boolean) : [],
+          scope,
+          agentId,
+          after,
+          before,
+        });
+        if (bridged.length > 0) {
+          results = bridged;
+          searchBackend = 'spring_v4';
+        } else {
+          backendFallbackReason = 'zero_results';
+        }
+      } catch (springSearchError) {
+        backendFallbackReason = 'search_error';
+        console.error('[v1/memories] Spring v4 bridge search error:', springSearchError);
+      }
+    }
+
+    if (!results) {
+      const searchExecution = await executeMemorySearch<SearchResultRow>({
+        rpcCall: async (fn, args) => {
+          const { data, error } = await supabase.rpc(fn, args);
+          return { data: (data as SearchResultRow[] | null), error };
+        },
+        initialMode: actualMode,
+        queryText: effectiveQuery,
+        userId,
+        limit,
+        namespaceParam: nsParam,
+        threshold: routerDecision?.suggestedParams.threshold || threshold,
+        searchTimeoutMs: SEARCH_TIMEOUT_MS,
+        createQueryEmbedding,
+        applyFilters: applyResultFilters,
+      });
+      results = searchExecution.results;
+      resolvedMode = searchExecution.resolvedMode;
+      fallback = searchExecution.fallback;
+      searchError = searchExecution.error;
+      searchBackend = 'legacy';
+    }
 
     if (searchError) {
       console.error('[v1/memories] Search error:', searchError);
@@ -1162,7 +1262,7 @@ export async function GET(request: NextRequest) {
       cacheHit: false,
       resultCount: personalizedResults.length,
       latencyMs: Date.now() - startTime,
-      fallbackReason: fallback?.reason || null,
+      fallbackReason: fallback?.reason || backendFallbackReason || null,
     });
 
     return withHeaders(
@@ -1197,6 +1297,8 @@ export async function GET(request: NextRequest) {
             forcedMode: canaryForcedMode,
           } : null,
           fallback,
+          searchBackend,
+          backendFallbackReason,
           personalization: {
             enabled: personalizationState.profile.personalizationEnabled,
             applied:
@@ -1267,6 +1369,19 @@ export async function DELETE(request: NextRequest) {
 
     await incrementMemoryVersion(userId, namespace);
 
+    let springSync: { deletedCount: number; failedIds: string[] } | null = null;
+    try {
+      springSync = await softDeleteSpringMirrorsByLegacyIds(supabase, userId, ids);
+      if (springSync.failedIds.length > 0) {
+        console.warn(
+          '[v1/memories] Spring mirror soft-delete partial failure:',
+          springSync.failedIds
+        );
+      }
+    } catch (springSyncError) {
+      console.error('[v1/memories] Spring mirror soft-delete failed:', springSyncError);
+    }
+
     // Emit webhook event (non-blocking)
     emitWebhookEvent(userId, 'memory.deleted', {
       ids,
@@ -1283,7 +1398,12 @@ export async function DELETE(request: NextRequest) {
     return withHeaders(
       NextResponse.json({
         success: true,
-        data: { deleted: ids.length },
+        data: {
+          deleted: ids.length,
+          bridge: {
+            springV4: springSync,
+          },
+        },
         meta: { ...META, latencyMs: Date.now() - startTime },
       }),
       result.rateLimitHeaders

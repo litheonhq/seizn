@@ -353,6 +353,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
   const [traceId, setTraceId] = useState<string | null>(null);
   const [shareToastVisible, setShareToastVisible] = useState(false);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
+  const [isHeroMotionReady, setIsHeroMotionReady] = useState(false);
   const autoRunAttemptedRef = useRef(false);
   const liveDemoCtaLabel = "Open Live Playground";
 
@@ -375,6 +376,32 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
     };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let idleId: number | null = null;
+
+    const enableHeroMotion = () => setIsHeroMotionReady(true);
+
+    if ("requestIdleCallback" in window) {
+      idleId = window.requestIdleCallback(enableHeroMotion, { timeout: 1200 });
+    } else {
+      timeoutId = setTimeout(enableHeroMotion, 250);
+    }
+
+    return () => {
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const handleRun = useCallback(async (source: "manual" | "auto" = "manual") => {
@@ -630,24 +657,24 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
         {/* Knowledge Graph Animation Layer */}
         <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden="true">
-          <HeroGraphAnimation />
+          {isHeroMotionReady ? <HeroGraphAnimation /> : null}
         </div>
 
         {/* Content Layer */}
         <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
-            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-szn-text-1 leading-[1.08] animate-fade-in">
+            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-szn-text-1 leading-[1.08]">
               {t.heroTitle || "The standard backend for agent runtime persistence."}
             </h1>
 
             {/* Subtitle - Value prop */}
-            <p className="text-lg lg:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
+            <p className="text-lg lg:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed">
               {t.heroSubtitle || "MCP server, checkpointer, and policy/trace layer\u2014one SDK to persist, govern, and observe every agent session."}
             </p>
 
             {/* CTAs - Primary and Secondary */}
-            <div className="flex items-center justify-center gap-4 flex-wrap pt-2 animate-fade-in-up animate-delay-300">
+            <div className={`flex items-center justify-center gap-4 flex-wrap pt-2 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
               <Link
                 href="/signup"
                 onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "signup" })}
@@ -671,9 +698,9 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             </div>
 
             {/* Social Proof */}
-            <div className="flex items-center justify-center gap-2 pt-4 animate-fade-in-up animate-delay-400">
+            <div className={`flex items-center justify-center gap-2 pt-4 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-400" : ""}`}>
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-szn-accent opacity-75" />
+                <span className={`absolute inline-flex h-full w-full rounded-full bg-szn-accent opacity-75 ${isHeroMotionReady ? "animate-ping" : ""}`} />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-szn-accent" />
               </span>
               <span className="text-sm text-szn-text-2">
@@ -682,8 +709,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             </div>
 
             {/* Memory Flow Pipeline Animation */}
-            <div className="pt-8 animate-fade-in-up animate-delay-500">
-              <MemoryFlowAnimation />
+            <div className={`pt-8 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-500" : ""}`}>
+              {isHeroMotionReady ? <MemoryFlowAnimation /> : <div className="h-24" aria-hidden="true" />}
             </div>
           </div>
         </div>

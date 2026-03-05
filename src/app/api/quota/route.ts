@@ -24,15 +24,51 @@ export async function GET() {
     const userId = session.user.id;
 
     // Get user profile
-    const { data: profile, error: profileError } = await supabase
+    const { data: initialProfile, error: profileError } = await supabase
       .from("profiles")
       .select("plan, memory_count, subscription_ends_at, subscription_cancelled")
       .eq("id", userId)
-      .single();
+      .maybeSingle();
+    let profile = initialProfile;
 
     if (profileError) {
       console.error("Failed to fetch profile:", profileError);
       return errorResponse({ code: "SEIZN_405", message: "Failed to fetch profile", status: 500 }, context);
+    }
+
+    // Auto-heal for legacy users missing a profile row.
+    if (!profile) {
+      const fallbackName = session.user.name || (session.user.email?.split("@")[0] ?? "User");
+      const { error: upsertError } = await supabase.from("profiles").upsert(
+        {
+          id: userId,
+          email: session.user.email ?? null,
+          full_name: fallbackName,
+          name: fallbackName,
+          plan: "free",
+          language: "en",
+        },
+        { onConflict: "id" }
+      );
+      if (upsertError) {
+        console.error("Failed to auto-heal missing profile:", upsertError);
+        return errorResponse(
+          { code: "SEIZN_405", message: "Failed to initialize profile", status: 500 },
+          context
+        );
+      }
+
+      const refetch = await supabase
+        .from("profiles")
+        .select("plan, memory_count, subscription_ends_at, subscription_cancelled")
+        .eq("id", userId)
+        .maybeSingle();
+      profile = refetch.data ?? {
+        plan: "free",
+        memory_count: 0,
+        subscription_ends_at: null,
+        subscription_cancelled: false,
+      };
     }
 
     // Get effective plan considering subscription expiry
