@@ -6,6 +6,92 @@ import { welcomeEmail } from '@/lib/email/templates';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const ALLOW_E2E_AUTO_PROVISION = process.env.E2E_ALLOW_AUTO_PROVISION === '1' && !IS_PRODUCTION;
+const DISABLE_WELCOME_EMAIL =
+  process.env.SEIZN_DISABLE_WELCOME_EMAIL === '1' || ALLOW_E2E_AUTO_PROVISION;
+
+type ProfileUpsertResult = { ok: true } | { ok: false; error: unknown };
+
+function buildProfileUpsertPayloads(userId: string, email: string, name?: string) {
+  const localPart = email.split('@')[0] || 'user';
+  const normalized = localPart.toLowerCase().replace(/[^a-z0-9_]/g, '_').slice(0, 20) || 'user';
+  const shortId = userId.replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase();
+  const fallbackHandle = `${normalized}_${shortId}`;
+  const fallbackName = name?.trim() || localPart || 'User';
+
+  const minimalPayload = {
+    id: userId,
+    email,
+  };
+
+  const profilePayload = {
+    ...minimalPayload,
+    full_name: fallbackName,
+    name: fallbackName,
+    plan: 'free',
+    language: 'en',
+  };
+
+  return [
+    minimalPayload,
+    {
+      ...minimalPayload,
+      plan: 'free',
+    },
+    profilePayload,
+    {
+      ...profilePayload,
+      handle: fallbackHandle,
+      username: fallbackHandle,
+    },
+    {
+      ...profilePayload,
+      handle: fallbackHandle,
+      display_name: fallbackName,
+      role: 'buyer',
+    },
+  ];
+}
+
+async function upsertProfileWithFallback(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  userId: string,
+  email: string,
+  name?: string
+): Promise<ProfileUpsertResult> {
+  let lastError: unknown = null;
+  const payloads = buildProfileUpsertPayloads(userId, email, name);
+
+  for (const payload of payloads) {
+    const { error } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' });
+    if (!error) {
+      return { ok: true };
+    }
+    lastError = error;
+  }
+
+  return { ok: false, error: lastError };
+}
+
+async function rollbackFailedSignup(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  userId: string
+) {
+  try {
+    await supabase.from('profiles').delete().eq('id', userId);
+  } catch {
+    // Best-effort rollback only.
+  }
+
+  try {
+    await supabase.auth.admin.deleteUser(userId);
+  } catch {
+    // Best-effort rollback only.
+  }
+}
 
 /**
  * Verify Cloudflare Turnstile token
@@ -80,7 +166,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify Turnstile CAPTCHA (if configured)
-    if (TURNSTILE_SECRET_KEY) {
+    if (TURNSTILE_SECRET_KEY && !ALLOW_E2E_AUTO_PROVISION) {
       if (!turnstileToken) {
         return NextResponse.json(
           { error: 'CAPTCHA verification required. Please try again.' },
@@ -99,6 +185,8 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+    } else if (ALLOW_E2E_AUTO_PROVISION) {
+      console.warn('[auth/signup] CAPTCHA bypassed for local E2E auto-provision');
     }
 
     const supabase = createServerClient();
@@ -136,19 +224,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Profile will be created automatically by the Supabase trigger
-    // But since we changed to NextAuth, let's also create/upsert profile here
-    await supabase.from('profiles').upsert({
-      id: authData.user.id,
-      email: authData.user.email,
-      full_name: name,
-      plan: 'free',
-    });
+    const profileResult = await upsertProfileWithFallback(
+      supabase,
+      authData.user.id,
+      authData.user.email || email,
+      name
+    );
+    if (!profileResult.ok) {
+      console.error('Profile upsert error during signup:', profileResult.error);
+      await rollbackFailedSignup(supabase, authData.user.id);
+      return NextResponse.json(
+        { error: 'Failed to create account profile' },
+        { status: 500 }
+      );
+    }
 
     // Generate instant API key (mem0-style UX)
     const { key, hash, prefix } = generateApiKey();
 
-    await supabase.from('api_keys').insert({
+    const { error: apiKeyInsertError } = await supabase.from('api_keys').insert({
       user_id: authData.user.id,
       name: 'Default Key',
       key_hash: hash,
@@ -156,13 +250,23 @@ export async function POST(request: NextRequest) {
       scopes: ['memory:read', 'memory:write'],
       is_active: true,
     });
+    if (apiKeyInsertError) {
+      console.error('Default API key seed error during signup:', apiKeyInsertError);
+      await rollbackFailedSignup(supabase, authData.user.id);
+      return NextResponse.json(
+        { error: 'Failed to provision default API key' },
+        { status: 500 }
+      );
+    }
 
     // Send welcome email (non-blocking)
-    sendEmail({
-      to: email,
-      subject: 'Welcome to Seizn!',
-      html: welcomeEmail(name || ''),
-    }).catch((err) => console.error('Failed to send welcome email:', err));
+    if (!DISABLE_WELCOME_EMAIL) {
+      sendEmail({
+        to: email,
+        subject: 'Welcome to Seizn!',
+        html: welcomeEmail(name || ''),
+      }).catch((err) => console.error('Failed to send welcome email:', err));
+    }
 
     return NextResponse.json({
       success: true,

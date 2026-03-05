@@ -27,6 +27,18 @@ export interface AuditContext {
   requestId?: string;
 }
 
+type SupabaseInsertError = { code?: string | null; message?: string | null };
+
+function isAuditLogsMissingError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const maybe = error as SupabaseInsertError;
+  const message = (maybe.message || '').toLowerCase();
+  return (
+    maybe.code === 'PGRST205' &&
+    message.includes("could not find the table 'public.audit_logs'")
+  );
+}
+
 /**
  * Extract audit context from a NextRequest
  */
@@ -83,30 +95,43 @@ export async function logAuditEvent(
 
   try {
     const supabase = createServerClient();
+    const payload = {
+      user_id: params.userId,
+      organization_id: params.organizationId || null,
+      api_key_id: params.apiKeyId || null,
+      action: params.action,
+      resource_type: params.resourceType,
+      resource_id: params.resourceId || null,
+      details: sanitizeAuditData(params.details),
+      previous_state: sanitizeAuditData(params.previousState),
+      new_state: sanitizeAuditData(params.newState),
+      ip_address: context?.ipAddress || null,
+      user_agent: context?.userAgent?.substring(0, 500) || null,
+      request_id: context?.requestId || null,
+      status: params.status || 'success',
+      error_message: params.errorMessage?.substring(0, 1000) || null,
+      is_service_role: params.isServiceRole || false,
+    };
 
     const { data, error } = await supabase
       .from('audit_logs')
-      .insert({
-        user_id: params.userId,
-        organization_id: params.organizationId || null,
-        api_key_id: params.apiKeyId || null,
-        action: params.action,
-        resource_type: params.resourceType,
-        resource_id: params.resourceId || null,
-        details: sanitizeAuditData(params.details),
-        previous_state: sanitizeAuditData(params.previousState),
-        new_state: sanitizeAuditData(params.newState),
-        ip_address: context?.ipAddress || null,
-        user_agent: context?.userAgent?.substring(0, 500) || null,
-        request_id: context?.requestId || null,
-        status: params.status || 'success',
-        error_message: params.errorMessage?.substring(0, 1000) || null,
-        is_service_role: params.isServiceRole || false,
-      })
+      .insert(payload)
       .select('id')
       .single();
 
     if (error) {
+      if (isAuditLogsMissingError(error)) {
+        const { data: legacyData, error: legacyError } = await supabase
+          .from('audit_log')
+          .insert(payload)
+          .select('id')
+          .single();
+        if (!legacyError) {
+          return legacyData.id;
+        }
+        console.error('Failed to log audit event (legacy fallback):', legacyError);
+        return null;
+      }
       console.error('Failed to log audit event:', error);
       return null;
     }

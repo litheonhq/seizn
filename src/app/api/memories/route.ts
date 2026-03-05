@@ -195,6 +195,68 @@ function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
   return raw as SearchMode;
 }
 
+function shouldUseDegradedKeywordSearchFallback(error: Error): boolean {
+  const message = error.message.toLowerCase();
+  const missingSearchFunction =
+    message.includes('does not exist') &&
+    (message.includes('keyword_search_memories') ||
+      message.includes('hybrid_search_memories') ||
+      message.includes('search_memories'));
+  return (
+    message.includes('operator does not exist: text = uuid') ||
+    missingSearchFunction
+  );
+}
+
+async function runDegradedKeywordSearch(params: {
+  supabase: ReturnType<typeof createServerClient>;
+  userId: string;
+  queryText: string;
+  limit: number;
+  namespaceParam: string | null;
+}): Promise<{ results: SearchResultRow[] | null; error: Error | null }> {
+  let queryBuilder = params.supabase
+    .from('memories')
+    .select(MEMORY_SELECT_FIELDS)
+    .eq('user_id', params.userId)
+    .eq('is_deleted', false)
+    .order('created_at', { ascending: false })
+    .limit(params.limit);
+
+  if (params.namespaceParam) {
+    queryBuilder = queryBuilder.eq('namespace', params.namespaceParam);
+  }
+
+  const normalizedQuery = params.queryText.trim();
+  if (normalizedQuery.length > 0) {
+    const terms = Array.from(
+      new Set(
+        normalizedQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .map((term) => term.replace(/[^\p{L}\p{N}_-]/gu, ''))
+      .filter((term) => term.length >= 2)
+      )
+    ).slice(0, 5);
+
+    if (terms.length > 0) {
+      const orExpr = terms
+        .map((term) => `content.ilike.%${escapeLikePattern(term)}%`)
+        .join(',');
+      queryBuilder = queryBuilder.or(orExpr);
+    } else {
+      queryBuilder = queryBuilder.ilike('content', `%${escapeLikePattern(normalizedQuery)}%`);
+    }
+  }
+
+  const { data, error } = await queryBuilder;
+  if (error) {
+    return { results: null, error: new Error(error.message || 'degraded_keyword_search_failed') };
+  }
+
+  return { results: (data as SearchResultRow[] | null) || [], error: null };
+}
+
 async function resolveAuth(
   request: NextRequest,
   options?: { skipUsageCheck?: boolean }
@@ -866,7 +928,31 @@ export async function GET(request: NextRequest) {
       applyFilters: applyResultFilters,
     });
 
-    const { results, resolvedMode, fallback, error: searchError } = searchExecution;
+    let { results, resolvedMode, fallback, error: searchError } = searchExecution;
+
+    if (searchError && shouldUseDegradedKeywordSearchFallback(searchError)) {
+      const degraded = await runDegradedKeywordSearch({
+        supabase,
+        userId,
+        queryText: query,
+        limit,
+        namespaceParam: nsParam,
+      });
+
+      if (!degraded.error) {
+        results = applyResultFilters(degraded.results);
+        fallback = {
+          applied: true,
+          from: resolvedMode,
+          to: 'keyword',
+          reason: 'search_error',
+        };
+        resolvedMode = 'keyword';
+        searchError = null;
+      } else {
+        console.error('[api/memories] Degraded keyword fallback failed:', degraded.error);
+      }
+    }
 
     if (searchError) {
       console.error('[api/memories] Search error:', searchError);

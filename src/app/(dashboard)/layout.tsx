@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import "../globals.css";
 import { Providers } from "@/components/providers";
@@ -7,12 +7,6 @@ import { locales, isRtl, type Locale } from "@/i18n/config";
 import { DashboardLocaleProvider } from "@/contexts/DashboardLocaleContext";
 
 import { DashboardClientWrapper } from "@/components/dashboard/DashboardClientWrapper";
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,12 +15,6 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -56,7 +44,7 @@ export default async function DashboardLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased szn-app-bg min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased szn-app-bg min-h-screen`}
       >
         <Providers>
           <DashboardLocaleProvider initialLocale={locale}>

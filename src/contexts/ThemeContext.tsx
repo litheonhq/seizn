@@ -19,13 +19,13 @@ function getSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-function getStoredTheme(): Theme {
-  if (typeof window === "undefined") return "system";
+function getStoredTheme(fallback: Theme = "system"): Theme {
+  if (typeof window === "undefined") return fallback;
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark" || stored === "system") {
     return stored;
   }
-  return "system";
+  return fallback;
 }
 
 interface ThemeProviderProps {
@@ -34,65 +34,36 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
-  const [mounted, setMounted] = useState(false);
+  const [theme, setThemeState] = useState<Theme>(() => getStoredTheme(defaultTheme));
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
+    const initialTheme = getStoredTheme(defaultTheme);
+    return initialTheme === "system" ? getSystemTheme() : initialTheme;
+  });
 
-  // Initialize theme from localStorage
   useEffect(() => {
-    const storedTheme = getStoredTheme();
-    const id = setTimeout(() => {
-      setThemeState(storedTheme);
-      setMounted(true);
-    }, 0);
-    return () => clearTimeout(id);
-  }, []);
-
-  // Update resolved theme and apply class to html element
-  useEffect(() => {
-    if (!mounted) return;
-
-    let resolvedTimeout: ReturnType<typeof setTimeout> | undefined;
-    const updateResolvedTheme = () => {
-      const resolved = theme === "system" ? getSystemTheme() : theme;
-      if (resolvedTimeout) clearTimeout(resolvedTimeout);
-      resolvedTimeout = setTimeout(() => setResolvedTheme(resolved), 0);
-
-      // Apply dark class to html element
-      const root = document.documentElement;
-      if (resolved === "dark") {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
+    const root = document.documentElement;
+    const applyTheme = (nextTheme: Theme) => {
+      const resolved = nextTheme === "system" ? getSystemTheme() : nextTheme;
+      setResolvedTheme(resolved);
+      root.classList.toggle("dark", resolved === "dark");
     };
 
-    updateResolvedTheme();
+    applyTheme(theme);
 
-    // Listen for system theme changes when using system mode
-    if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const handleChange = () => updateResolvedTheme();
-      mediaQuery.addEventListener("change", handleChange);
-      return () => {
-        if (resolvedTimeout) clearTimeout(resolvedTimeout);
-        mediaQuery.removeEventListener("change", handleChange);
-      };
+    if (theme !== "system") {
+      return;
     }
-    return () => {
-      if (resolvedTimeout) clearTimeout(resolvedTimeout);
-    };
-  }, [theme, mounted]);
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => applyTheme("system");
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [theme]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
     localStorage.setItem(STORAGE_KEY, newTheme);
   }, []);
-
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>

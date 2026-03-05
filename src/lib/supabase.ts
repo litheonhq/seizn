@@ -13,7 +13,9 @@ export function createBrowserClient(): AnySupabaseClient {
 
 // Server-side Supabase client (uses service role key)
 export function createServerClient(): AnySupabaseClient {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  // Prefer server-only SUPABASE_URL when available to avoid accidental
+  // cross-project contamination from globally exported NEXT_PUBLIC_* vars.
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
   return createClient(supabaseUrl, supabaseServiceKey, {

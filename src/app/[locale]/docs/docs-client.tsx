@@ -84,7 +84,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-12 flex gap-12">
+      <main className="max-w-7xl mx-auto px-6 py-12 flex gap-12">
         {/* Sidebar Navigation */}
         <nav className="hidden lg:block w-56 shrink-0">
           <div className="sticky top-24 space-y-1">
@@ -625,7 +625,7 @@ npx seizn-mcp@latest
           </div>
         </section>
         </div>
-      </div>
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-szn-border py-8">
