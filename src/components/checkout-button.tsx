@@ -122,19 +122,32 @@ export function CheckoutButton({
 }
 
 // Price IDs for each plan (Paddle uses pri_* format)
-// Replace these with actual Paddle price IDs after account setup
+// NEXT_PUBLIC_* env vars can override defaults per deployment.
+const STARTER_MONTHLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_STARTER_MONTHLY?.trim() || "pri_starter_monthly";
+const STARTER_YEARLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_STARTER_YEARLY?.trim() || "pri_starter_yearly";
+const PLUS_MONTHLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_PLUS_MONTHLY?.trim() || "pri_plus_monthly";
+const PLUS_YEARLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_PLUS_YEARLY?.trim() || "pri_plus_yearly";
+const PRO_MONTHLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_PRO_MONTHLY?.trim() || "pri_pro_monthly";
+const PRO_YEARLY_PRICE_ID =
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_PRO_YEARLY?.trim() || "pri_pro_yearly";
+
 export const PLAN_PRICES = {
   starter: {
-    monthly: "pri_placeholder_starter_monthly",
-    yearly: "pri_placeholder_starter_yearly",
+    monthly: STARTER_MONTHLY_PRICE_ID,
+    yearly: STARTER_YEARLY_PRICE_ID,
   },
   plus: {
-    monthly: "pri_placeholder_plus_monthly",
-    yearly: "pri_placeholder_plus_yearly",
+    monthly: PLUS_MONTHLY_PRICE_ID,
+    yearly: PLUS_YEARLY_PRICE_ID,
   },
   pro: {
-    monthly: "pri_placeholder_pro_monthly",
-    yearly: "pri_placeholder_pro_yearly",
+    monthly: PRO_MONTHLY_PRICE_ID,
+    yearly: PRO_YEARLY_PRICE_ID,
   },
 } as const;
 

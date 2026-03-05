@@ -6,6 +6,11 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { createHash } from 'crypto';
+import { PDFParse } from 'pdf-parse';
+import { validateOutboundUrl } from '@/lib/security/outbound-url';
+import { indexDocuments } from '@/lib/summer/indexer';
+import { encrypt } from '@/lib/winter/crypto';
 import type {
   KnowledgeGap,
   GapFillingAction,
@@ -19,6 +24,12 @@ import type {
   GapStatistics,
   GapOccurrence,
 } from './types';
+
+interface ActionExecutionContext {
+  gapId: string;
+  collectionId?: string;
+  queryText?: string;
+}
 
 // =============================================================================
 // Database Operations
@@ -400,17 +411,36 @@ export async function executeAction(
   actionId: string,
   userId: string
 ): Promise<ActionResult> {
-  // Get the action
+  // Get the action with gap ownership context
   const supabase = createServerClient();
   const { data: actionData, error: fetchError } = await supabase
     .from('gap_filling_actions')
-    .select()
+    .select(`
+      *,
+      gap:knowledge_gaps!inner(
+        id,
+        user_id,
+        collection_id,
+        query_text
+      )
+    `)
     .eq('id', actionId)
     .single();
 
   if (fetchError || !actionData) {
     throw new Error('Action not found');
   }
+
+  const gap = normalizeGapContext(actionData.gap);
+  if (!gap || gap.user_id !== userId) {
+    throw new Error('Action not found');
+  }
+
+  const context: ActionExecutionContext = {
+    gapId: gap.id,
+    collectionId: gap.collection_id ?? undefined,
+    queryText: gap.query_text ?? undefined,
+  };
 
   const action = mapDbToAction(actionData);
 
@@ -422,19 +452,40 @@ export async function executeAction(
 
     switch (action.actionType) {
       case 'ingest_url':
-        result = await executeIngestUrl(action.actionParams as { type: 'ingest_url'; url: string }, userId);
+        result = await executeIngestUrl(
+          action.actionParams as { type: 'ingest_url'; url: string },
+          userId,
+          context
+        );
         break;
 
       case 'ingest_file':
-        result = await executeIngestFile(action.actionParams as { type: 'ingest_file'; fileName: string }, userId);
+        result = await executeIngestFile(
+          action.actionParams as { type: 'ingest_file'; fileName: string },
+          userId,
+          context
+        );
         break;
 
       case 'connect_source':
-        result = await executeConnectSource(action.actionParams as { type: 'connect_source'; name: string; sourceType: string; config: Record<string, unknown> }, userId);
+        result = await executeConnectSource(
+          action.actionParams as {
+            type: 'connect_source';
+            name: string;
+            sourceType: string;
+            config: Record<string, unknown>;
+          },
+          userId,
+          context
+        );
         break;
 
       case 'request_access':
-        result = await executeRequestAccess(action.actionParams as { type: 'request_access'; documentIds: string[]; requestReason: string }, userId);
+        result = await executeRequestAccess(
+          action.actionParams as { type: 'request_access'; documentIds: string[]; requestReason: string },
+          userId,
+          context
+        );
         break;
 
       case 'ignore':
@@ -468,19 +519,47 @@ export async function executeAction(
  */
 async function executeIngestUrl(
   params: { type: 'ingest_url'; url: string; crawlDepth?: number; metadata?: Record<string, unknown> },
-  userId: string
+  userId: string,
+  context: ActionExecutionContext
 ): Promise<ActionResult> {
-  // This would typically call the ingestion pipeline
-  // For now, we'll return a placeholder that indicates the action needs manual processing
+  const normalizedUrl = await normalizeOutboundUrl(params.url);
+  const collectionId = await resolveTargetCollectionId(userId, context.collectionId);
+  const fetched = await fetchRemoteContent(normalizedUrl, URL_FETCH_TIMEOUT_MS);
+  const title = fetched.title ?? deriveTitleFromUrl(normalizedUrl);
 
-  // TODO: Integrate with summer indexing pipeline
-  // const { indexDocuments } = await import('@/lib/summer');
-  // const result = await indexDocuments({ userId, url: params.url, ... });
+  const result = await indexDocuments({
+    userId,
+    collectionId,
+    documents: [
+      {
+        id: `gap-url:${hashStable(normalizedUrl)}`,
+        title,
+        content: fetched.text,
+        source: normalizedUrl,
+        metadata: {
+          source_type: 'gap_filler_url',
+          gap_id: context.gapId,
+          query_text: context.queryText,
+          content_type: fetched.contentType,
+          crawl_depth: params.crawlDepth ?? 0,
+          fetched_at: new Date().toISOString(),
+          ...(params.metadata ?? {}),
+        },
+      },
+    ],
+    options: {
+      chunking_strategy: 'semantic',
+      skip_duplicates: true,
+    },
+  });
+
+  const successfulDocuments = countSuccessfulDocuments(result);
 
   return {
-    resolved: false,
-    notes: `URL ingestion queued for: ${params.url}. Manual processing may be required.`,
-    documentsIndexed: 0,
+    resolved: successfulDocuments > 0,
+    notes: `Indexed ${successfulDocuments} document(s) from ${normalizedUrl}`,
+    documentsIndexed: successfulDocuments,
+    chunksCreated: result.chunks_created,
   };
 }
 
@@ -488,14 +567,78 @@ async function executeIngestUrl(
  * Execute file ingestion action
  */
 async function executeIngestFile(
-  params: { type: 'ingest_file'; fileName: string; filePath?: string; fileUrl?: string },
-  userId: string
+  params: {
+    type: 'ingest_file';
+    fileName?: string;
+    file_name?: string;
+    filePath?: string;
+    file_path?: string;
+    fileUrl?: string;
+    file_url?: string;
+    mimeType?: string;
+    mime_type?: string;
+  },
+  userId: string,
+  context: ActionExecutionContext
 ): Promise<ActionResult> {
-  // TODO: Integrate with file upload/ingestion pipeline
+  const fileName = getStringParam(params, ['fileName', 'file_name']) ?? 'uploaded-file';
+  const filePath = getStringParam(params, ['filePath', 'file_path']);
+  const fileUrl = getStringParam(params, ['fileUrl', 'file_url']);
+  const mimeType = getStringParam(params, ['mimeType', 'mime_type']);
+
+  if (filePath && !fileUrl) {
+    return {
+      resolved: false,
+      documentsIndexed: 0,
+      notes: `Local file path ingestion is restricted for security. Upload ${fileName} through the file upload API or provide fileUrl.`,
+    };
+  }
+
+  if (!fileUrl) {
+    return {
+      resolved: false,
+      documentsIndexed: 0,
+      notes: `No fileUrl provided for ${fileName}. Please upload the file first.`,
+    };
+  }
+
+  const normalizedUrl = await normalizeOutboundUrl(fileUrl);
+  const collectionId = await resolveTargetCollectionId(userId, context.collectionId);
+  const fetched = await fetchRemoteContent(normalizedUrl, FILE_FETCH_TIMEOUT_MS, mimeType);
+
+  const result = await indexDocuments({
+    userId,
+    collectionId,
+    documents: [
+      {
+        id: `gap-file:${hashStable(`${normalizedUrl}:${fileName}`)}`,
+        title: fileName,
+        content: fetched.text,
+        source: normalizedUrl,
+        mime_type: mimeType ?? fetched.contentType,
+        metadata: {
+          source_type: 'gap_filler_file',
+          gap_id: context.gapId,
+          query_text: context.queryText,
+          file_name: fileName,
+          file_url: normalizedUrl,
+          content_type: fetched.contentType,
+          fetched_at: new Date().toISOString(),
+        },
+      },
+    ],
+    options: {
+      chunking_strategy: 'sentence',
+      skip_duplicates: true,
+    },
+  });
+
+  const successfulDocuments = countSuccessfulDocuments(result);
   return {
-    resolved: false,
-    notes: `File ingestion queued for: ${params.fileName}. Manual upload may be required.`,
-    documentsIndexed: 0,
+    resolved: successfulDocuments > 0,
+    notes: `Indexed ${successfulDocuments} file document(s) from ${fileName}`,
+    documentsIndexed: successfulDocuments,
+    chunksCreated: result.chunks_created,
   };
 }
 
@@ -503,14 +646,85 @@ async function executeIngestFile(
  * Execute source connection action
  */
 async function executeConnectSource(
-  params: { type: 'connect_source'; name: string; sourceType: string; config: Record<string, unknown> },
-  userId: string
+  params: {
+    type: 'connect_source';
+    name: string;
+    sourceType?: string;
+    source_type?: string;
+    config: Record<string, unknown>;
+  },
+  userId: string,
+  context: ActionExecutionContext
 ): Promise<ActionResult> {
-  // TODO: Integrate with federated source management
+  const sourceType = (params.sourceType ?? params.source_type ?? 'http').toLowerCase();
+  const config = params.config ?? {};
+  const provider = resolveFederatedProvider(sourceType, config);
+  const encryptedConfig = encrypt(JSON.stringify(config));
+  const capabilities = resolveSourceCapabilities(sourceType, config);
+  const requestedOrganizationId = getStringParam(config, ['organization_id', 'organizationId']);
+  const organizationId = await resolvePermittedOrganizationId(userId, requestedOrganizationId);
+
+  const supabase = createServerClient();
+  const { data: source, error: sourceError } = await supabase
+    .from('summer_federated_sources')
+    .insert({
+      user_id: userId,
+      name: params.name,
+      provider,
+      config_encrypted: encryptedConfig,
+      capabilities,
+      is_active: true,
+      organization_id: organizationId ?? null,
+      created_by: userId,
+      verification_status: 'pending',
+    })
+    .select('id, name, provider')
+    .single();
+
+  if (sourceError || !source) {
+    throw new Error(`Failed to connect source: ${sourceError?.message ?? 'Unknown error'}`);
+  }
+
+  try {
+    await supabase
+      .from('summer_federated_source_access')
+      .upsert(
+        {
+          source_id: source.id,
+          user_id: userId,
+          role: 'owner',
+          granted_by: userId,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'source_id,user_id' }
+      );
+  } catch (error) {
+    console.warn('Failed to upsert owner grant for connected source:', error);
+  }
+
+  try {
+    await supabase
+      .from('summer_federated_operations')
+      .insert({
+        user_id: userId,
+        organization_id: organizationId ?? null,
+        operation: 'source.create',
+        resource_type: 'source',
+        resource_id: source.id,
+        details: {
+          source_type: sourceType,
+          gap_id: context.gapId,
+        },
+        status: 'success',
+      });
+  } catch (error) {
+    console.warn('Failed to log federated source create operation:', error);
+  }
+
   return {
-    resolved: false,
-    notes: `Source connection request created for: ${params.name}. Configuration required.`,
-    sourceConnected: undefined,
+    resolved: true,
+    notes: `Connected federated source "${source.name}" (${source.provider})`,
+    sourceConnected: source.id,
   };
 }
 
@@ -518,15 +732,472 @@ async function executeConnectSource(
  * Execute access request action
  */
 async function executeRequestAccess(
-  params: { type: 'request_access'; documentIds: string[]; requestReason: string },
-  userId: string
+  params: {
+    type: 'request_access';
+    documentIds?: string[];
+    document_ids?: string[];
+    requestReason?: string;
+    request_reason?: string;
+    requestedPermission?: 'read' | 'full';
+    requested_permission?: 'read' | 'full';
+  },
+  userId: string,
+  context: ActionExecutionContext
 ): Promise<ActionResult> {
-  // TODO: Integrate with permission management system
+  const documentIds = normalizeStringArray(params.documentIds ?? params.document_ids ?? []);
+  if (documentIds.length === 0) {
+    throw new Error('No document IDs provided for access request');
+  }
+
+  const requestReason =
+    getStringParam(params, ['requestReason', 'request_reason']) ??
+    'Requested via knowledge gap filler';
+  const requestedPermission =
+    (params.requestedPermission ?? params.requested_permission ?? 'read') === 'full'
+      ? 'full'
+      : 'read';
+
+  const supabase = createServerClient();
+  const now = new Date().toISOString();
+  const operationRows = documentIds.map((documentId) => ({
+    user_id: userId,
+    organization_id: null,
+    operation: 'access.update',
+    resource_type: 'access',
+    resource_id: null,
+    details: {
+      request_type: 'knowledge_gap_access',
+      target_document_id: documentId,
+      request_reason: requestReason,
+      requested_permission: requestedPermission,
+      gap_id: context.gapId,
+      requested_at: now,
+      status: 'pending_review',
+    },
+    status: 'success',
+  }));
+
+  const { error } = await supabase
+    .from('summer_federated_operations')
+    .insert(operationRows);
+
+  if (error) {
+    console.warn('Failed to persist access request operation log:', error);
+    return {
+      resolved: false,
+      accessGranted: false,
+      notes: `Access request for ${documentIds.length} document(s) could not be persisted automatically (${error.message}).`,
+    };
+  }
+
   return {
     resolved: false,
-    notes: `Access request submitted for ${params.documentIds.length} document(s). Awaiting approval.`,
+    notes: `Access request logged for ${documentIds.length} document(s). Awaiting approval.`,
     accessGranted: false,
   };
+}
+
+const URL_FETCH_TIMEOUT_MS = 15_000;
+const FILE_FETCH_TIMEOUT_MS = 20_000;
+const MAX_REMOTE_CONTENT_BYTES = 3 * 1024 * 1024; // 3MB
+const MAX_INDEXABLE_TEXT_CHARS = 200_000;
+const MAX_FETCH_REDIRECTS = 5;
+
+const VALID_FEDERATED_PROVIDERS = new Set([
+  'supabase',
+  'pinecone',
+  'weaviate',
+  'azure_ai_search',
+  'vespa',
+  'custom',
+]);
+
+interface NormalizedGapContext {
+  id: string;
+  user_id: string;
+  collection_id: string | null;
+  query_text: string | null;
+}
+
+interface RemoteContent {
+  text: string;
+  contentType: string;
+  title?: string;
+}
+
+function normalizeGapContext(raw: unknown): NormalizedGapContext | null {
+  const candidate = Array.isArray(raw) ? raw[0] : raw;
+  if (!candidate || typeof candidate !== 'object') {
+    return null;
+  }
+
+  const row = candidate as Record<string, unknown>;
+  const id = typeof row.id === 'string' ? row.id : undefined;
+  const userId = typeof row.user_id === 'string' ? row.user_id : undefined;
+
+  if (!id || !userId) {
+    return null;
+  }
+
+  return {
+    id,
+    user_id: userId,
+    collection_id: typeof row.collection_id === 'string' ? row.collection_id : null,
+    query_text: typeof row.query_text === 'string' ? row.query_text : null,
+  };
+}
+
+function getStringParam(source: unknown, keys: string[]): string | undefined {
+  if (!source || typeof source !== 'object') {
+    return undefined;
+  }
+
+  const row = source as Record<string, unknown>;
+  for (const key of keys) {
+    const value = row[key];
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
+
+  return undefined;
+}
+
+function normalizeStringArray(values: unknown[]): string[] {
+  return values
+    .map((value) => (typeof value === 'string' ? value.trim() : ''))
+    .filter(Boolean);
+}
+
+function hashStable(value: string): string {
+  return createHash('sha256').update(value).digest('hex').slice(0, 32);
+}
+
+function deriveTitleFromUrl(rawUrl: string): string {
+  try {
+    const url = new URL(rawUrl);
+    const pathParts = url.pathname
+      .split('/')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    const lastPath = pathParts[pathParts.length - 1];
+    if (lastPath) {
+      return decodeURIComponent(lastPath).slice(0, 200);
+    }
+
+    return url.hostname;
+  } catch {
+    return rawUrl.slice(0, 200);
+  }
+}
+
+async function normalizeOutboundUrl(rawUrl: string): Promise<string> {
+  const validation = await validateOutboundUrl(rawUrl, {
+    allowHttp: process.env.NODE_ENV !== 'production',
+    allowPrivateNetwork: false,
+  });
+
+  if (!validation.valid || !validation.normalizedUrl) {
+    throw new Error(`URL validation failed: ${validation.reason ?? 'invalid URL'}`);
+  }
+
+  return validation.normalizedUrl;
+}
+
+async function resolveTargetCollectionId(
+  userId: string,
+  preferredCollectionId?: string
+): Promise<string> {
+  const supabase = createServerClient();
+
+  if (preferredCollectionId) {
+    const { data: preferred } = await supabase
+      .from('summer_collections')
+      .select('id')
+      .eq('id', preferredCollectionId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (preferred?.id) {
+      return preferred.id;
+    }
+  }
+
+  const { data: latest } = await supabase
+    .from('summer_collections')
+    .select('id')
+    .eq('user_id', userId)
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (latest?.id) {
+    return latest.id;
+  }
+
+  const { data: created, error: createError } = await supabase
+    .from('summer_collections')
+    .insert({
+      user_id: userId,
+      name: 'Knowledge Gap Auto Collection',
+      description: 'Auto-created for knowledge gap remediation actions',
+      embedding_provider: 'voyage',
+      embedding_model: 'voyage-3',
+      embedding_dimensions: 1024,
+    })
+    .select('id')
+    .single();
+
+  if (createError || !created?.id) {
+    throw new Error(`Failed to resolve target collection: ${createError?.message ?? 'Unknown error'}`);
+  }
+
+  return created.id;
+}
+
+async function resolvePermittedOrganizationId(
+  userId: string,
+  requestedOrganizationId?: string
+): Promise<string | null> {
+  if (!requestedOrganizationId) {
+    return null;
+  }
+
+  const supabase = createServerClient();
+  const { data: membership, error } = await supabase
+    .from('organization_members')
+    .select('organization_id, role')
+    .eq('organization_id', requestedOrganizationId)
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !membership || !['owner', 'admin'].includes(membership.role)) {
+    throw new Error('Organization access denied for source connection');
+  }
+
+  return membership.organization_id;
+}
+
+function resolveFederatedProvider(
+  sourceType: string,
+  config: Record<string, unknown>
+): string {
+  const configuredProvider = getStringParam(config, ['provider'])?.toLowerCase();
+  if (configuredProvider && VALID_FEDERATED_PROVIDERS.has(configuredProvider)) {
+    return configuredProvider;
+  }
+
+  switch (sourceType) {
+    case 'database':
+      return 'supabase';
+    case 'agent':
+    case 'http':
+    default:
+      return 'custom';
+  }
+}
+
+function resolveSourceCapabilities(
+  sourceType: string,
+  config: Record<string, unknown>
+): Record<string, boolean> {
+  const defaults: Record<string, boolean> =
+    sourceType === 'database'
+      ? { vector: true, keyword: true, hybrid: true }
+      : { vector: true, keyword: false, hybrid: false };
+
+  const configured = config.capabilities;
+  if (!configured || typeof configured !== 'object') {
+    return defaults;
+  }
+
+  const configuredObj = configured as Record<string, unknown>;
+  const merged: Record<string, boolean> = { ...defaults };
+
+  for (const key of ['vector', 'keyword', 'hybrid']) {
+    if (typeof configuredObj[key] === 'boolean') {
+      merged[key] = configuredObj[key] as boolean;
+    }
+  }
+
+  return merged;
+}
+
+async function fetchRemoteContent(
+  url: string,
+  timeoutMs: number,
+  mimeTypeHint?: string
+): Promise<RemoteContent> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const { response, finalUrl } = await fetchWithValidatedRedirects(url, controller.signal);
+
+    if (!response.ok) {
+      throw new Error(`Fetch failed with status ${response.status}`);
+    }
+
+    const responseContentType = (response.headers.get('content-type') ?? '').toLowerCase();
+    const hintedContentType = (mimeTypeHint ?? '').toLowerCase();
+    const contentType = responseContentType || hintedContentType;
+    const buffer = Buffer.from(await response.arrayBuffer());
+
+    if (buffer.byteLength === 0) {
+      throw new Error('Fetched content is empty');
+    }
+
+    if (buffer.byteLength > MAX_REMOTE_CONTENT_BYTES) {
+      throw new Error(`Fetched content exceeds ${MAX_REMOTE_CONTENT_BYTES} bytes`);
+    }
+
+    if (
+      responseContentType.includes('application/pdf') ||
+      (!responseContentType && hintedContentType.includes('application/pdf')) ||
+      finalUrl.toLowerCase().endsWith('.pdf')
+    ) {
+      const pdfText = await extractPdfText(buffer);
+      return {
+        text: normalizeIndexText(pdfText),
+        contentType: 'application/pdf',
+        title: deriveTitleFromUrl(finalUrl),
+      };
+    }
+
+    const rawText = buffer.toString('utf-8');
+    if (contentType.includes('text/html') || looksLikeHtml(rawText)) {
+      const parsed = extractHtmlText(rawText);
+      return {
+        text: normalizeIndexText(parsed.text),
+        contentType: contentType || 'text/html',
+        title: parsed.title ?? deriveTitleFromUrl(finalUrl),
+      };
+    }
+
+    return {
+      text: normalizeIndexText(rawText),
+      contentType: contentType || 'text/plain',
+      title: deriveTitleFromUrl(finalUrl),
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`Fetch timed out after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function isRedirectStatus(status: number): boolean {
+  return status === 301 || status === 302 || status === 303 || status === 307 || status === 308;
+}
+
+async function fetchWithValidatedRedirects(
+  initialUrl: string,
+  signal: AbortSignal
+): Promise<{ response: Response; finalUrl: string }> {
+  let currentUrl = initialUrl;
+
+  for (let redirects = 0; redirects <= MAX_FETCH_REDIRECTS; redirects++) {
+    const response = await fetch(currentUrl, {
+      method: 'GET',
+      redirect: 'manual',
+      signal,
+      headers: {
+        Accept: 'text/html,text/plain,text/markdown,application/json,application/pdf;q=0.9,*/*;q=0.5',
+        'User-Agent': 'SeiznKnowledgeGapBot/1.0 (+https://seizn.com)',
+      },
+    });
+
+    if (!isRedirectStatus(response.status)) {
+      return { response, finalUrl: currentUrl };
+    }
+
+    if (redirects === MAX_FETCH_REDIRECTS) {
+      throw new Error(`Too many redirects (max ${MAX_FETCH_REDIRECTS})`);
+    }
+
+    const location = response.headers.get('location');
+    if (!location) {
+      throw new Error(`Redirect response missing location header (${response.status})`);
+    }
+
+    const nextUrl = new URL(location, currentUrl).toString();
+    currentUrl = await normalizeOutboundUrl(nextUrl);
+  }
+
+  throw new Error('Redirect resolution failed');
+}
+
+function looksLikeHtml(content: string): boolean {
+  return /<html[\s>]|<body[\s>]|<main[\s>]|<article[\s>]|<p[\s>]/i.test(content);
+}
+
+function extractHtmlText(rawHtml: string): { title?: string; text: string } {
+  const titleMatch = rawHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  const title = titleMatch ? decodeHtmlEntities(titleMatch[1]).trim() : undefined;
+
+  const text = rawHtml
+    .replace(/<(script|style|noscript|template|iframe)[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|section|article|h[1-6]|tr|td)>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ');
+
+  return {
+    title: title || undefined,
+    text: decodeHtmlEntities(text),
+  };
+}
+
+function decodeHtmlEntities(value: string): string {
+  const map: Record<string, string> = {
+    nbsp: ' ',
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    apos: "'",
+    '#39': "'",
+  };
+
+  return value
+    .replace(/&#(\d+);/g, (_, decimal) => String.fromCharCode(Number(decimal)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&([a-zA-Z0-9#]+);/g, (full, entity) => map[entity] ?? full);
+}
+
+function normalizeIndexText(value: string): string {
+  return value
+    .replace(/\r\n/g, '\n')
+    .replace(/\t/g, ' ')
+    .replace(/\u00a0/g, ' ')
+    .replace(/[ ]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+    .slice(0, MAX_INDEXABLE_TEXT_CHARS);
+}
+
+async function extractPdfText(buffer: Buffer): Promise<string> {
+  const parser = new PDFParse({ data: buffer });
+  try {
+    const parsed = await parser.getText();
+    return parsed.text ?? '';
+  } finally {
+    await parser.destroy();
+  }
+}
+
+function countSuccessfulDocuments(result: {
+  indexed_count: number;
+  results?: Array<{ status: string }>;
+}): number {
+  if (Array.isArray(result.results) && result.results.length > 0) {
+    return result.results.filter((item) => item.status !== 'error').length;
+  }
+
+  return Math.max(0, result.indexed_count);
 }
 
 // =============================================================================

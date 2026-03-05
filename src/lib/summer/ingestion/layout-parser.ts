@@ -5,6 +5,8 @@
  * preserving document structure (headers, columns, sections).
  */
 
+import { PDFParse } from 'pdf-parse';
+
 export type LayoutZone =
   | 'header'
   | 'footer'
@@ -64,6 +66,85 @@ const LAYOUT_CONFIG = {
   titleFontSizeMultiplier: 1.4, // Font size > avg * 1.4 = title
   minBlockHeight: 10, // Ignore blocks smaller than this
 };
+
+const DEFAULT_PAGE_WIDTH = 612; // Letter width in points
+const DEFAULT_PAGE_HEIGHT = 792; // Letter height in points
+const MAX_LINES_PER_PAGE = 1200;
+const MAX_CHARS_PER_LINE = 400;
+
+function normalizeLineText(line: string): string {
+  return line
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function estimateLineFontSize(
+  line: string,
+  index: number,
+  totalLines: number,
+  baseFontSize: number
+): number {
+  if (index === 0 && line.length > 0 && line.length <= 120) {
+    return Math.min(baseFontSize * 1.35, 20);
+  }
+
+  if (index <= Math.max(2, Math.floor(totalLines * 0.08)) && line.length <= 120) {
+    return Math.min(baseFontSize * 1.15, 18);
+  }
+
+  return baseFontSize;
+}
+
+function inferSpecialZone(
+  text: string,
+  options?: {
+    detectTables?: boolean;
+    detectEquations?: boolean;
+  }
+): LayoutZone | null {
+  const value = text.trim();
+  if (!value) return null;
+
+  if (
+    options?.detectTables &&
+    (value.includes('\t') || (value.includes('|') && value.split('|').length >= 3))
+  ) {
+    return 'table';
+  }
+
+  if (
+    options?.detectEquations &&
+    /[=+\-*/^]/.test(value) &&
+    /[A-Za-z0-9]/.test(value) &&
+    !/^https?:\/\//i.test(value)
+  ) {
+    return 'equation';
+  }
+
+  if (/^(figure|fig\.|table)\s+\d+/i.test(value)) {
+    return 'caption';
+  }
+
+  return null;
+}
+
+function parseMetadataDate(infoResult: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getDateNode?: () => any;
+}): Date | undefined {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dates = infoResult.getDateNode?.() as any;
+    const candidate = dates?.CreationDate ?? dates?.XmpCreateDate ?? dates?.ModDate;
+    if (candidate instanceof Date && !Number.isNaN(candidate.getTime())) {
+      return candidate;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 /**
  * Classify text block into layout zone
@@ -235,39 +316,137 @@ export function getReadingOrder(blocks: TextBlock[], columnCount: number): TextB
 }
 
 /**
- * Parse PDF buffer to extract layout (placeholder for actual PDF library integration)
+ * Parse PDF buffer to extract layout-aware document structure.
  */
 export async function parseLayoutFromBuffer(
-  _buffer: Buffer,
-  _options?: {
+  buffer: Buffer,
+  options?: {
     detectTables?: boolean;
     detectEquations?: boolean;
   }
 ): Promise<DocumentLayout> {
-  // This is a placeholder. In production, integrate with pdf.js or pdf-parse.
-  // The actual implementation would:
-  // 1. Load PDF using pdfjs-dist
-  // 2. Extract text items with position data
-  // 3. Build TextBlocks from items
-  // 4. Classify zones and detect columns
-  // 5. Return structured DocumentLayout
+  const parser = new PDFParse({ data: buffer });
+  try {
+    const [textResult, infoResult] = await Promise.all([
+      parser.getText({ lineEnforce: true }),
+      parser.getInfo({ parsePageInfo: true }),
+    ]);
 
-  // For now, return a mock structure
-  return {
-    pageCount: 1,
-    pages: [
-      {
-        pageNumber: 1,
-        width: 612, // Letter size
-        height: 792,
-        blocks: [],
-        columns: 1,
-        hasHeader: false,
-        hasFooter: false,
+    const pageInfoByNumber = new Map(
+      (infoResult.pages ?? []).map((page) => [page.pageNumber, page])
+    );
+
+    const pages: PageLayout[] = [];
+
+    for (const pageText of textResult.pages ?? []) {
+      const pageNumber = pageText.num;
+      const pageInfo = pageInfoByNumber.get(pageNumber);
+      const width = pageInfo?.width ?? DEFAULT_PAGE_WIDTH;
+      const height = pageInfo?.height ?? DEFAULT_PAGE_HEIGHT;
+
+      const lines = pageText.text
+        .split(/\r?\n/)
+        .map(normalizeLineText)
+        .filter((line) => line.length > 0)
+        .slice(0, MAX_LINES_PER_PAGE);
+
+      const avgLineLength =
+        lines.length > 0
+          ? lines.reduce((sum, line) => sum + Math.min(line.length, MAX_CHARS_PER_LINE), 0) /
+            lines.length
+          : 0;
+      const baseFontSize = Math.max(10, Math.min(14, 10 + avgLineLength / 120));
+      const verticalSpacing =
+        lines.length > 0 ? Math.max(12, (height * 0.82) / lines.length) : 14;
+      const topOffset = height * 0.09;
+      const baseX = width * 0.08;
+      const maxTextWidth = width * 0.84;
+
+      const preliminaryBlocks: Array<Omit<TextBlock, 'zone' | 'confidence'>> = lines.map(
+        (line, index) => {
+          const fontSize = estimateLineFontSize(line, index, lines.length, baseFontSize);
+          const blockHeight = Math.max(LAYOUT_CONFIG.minBlockHeight, fontSize * 1.3);
+          const y = Math.min(height - blockHeight, topOffset + index * verticalSpacing);
+          const textWidth = Math.min(
+            maxTextWidth,
+            Math.max(fontSize * 2, Math.min(line.length, MAX_CHARS_PER_LINE) * fontSize * 0.55)
+          );
+
+          return {
+            text: line,
+            page: pageNumber,
+            bounds: {
+              x: baseX,
+              y,
+              width: textWidth,
+              height: blockHeight,
+            },
+            fontSize,
+            fontName: undefined,
+            isBold:
+              /[:：]$/.test(line) ||
+              (line.length > 3 &&
+                line.length <= 100 &&
+                /^[A-Z0-9][A-Z0-9\s,.:;'"()/-]+$/.test(line)),
+            isItalic: false,
+          };
+        }
+      );
+
+      const avgFontSize =
+        preliminaryBlocks.length > 0
+          ? preliminaryBlocks.reduce((sum, block) => sum + block.fontSize, 0) /
+            preliminaryBlocks.length
+          : baseFontSize;
+
+      const classifiedBlocks: TextBlock[] = preliminaryBlocks.map((block) => {
+        const specialZone = inferSpecialZone(block.text, options);
+        if (specialZone) {
+          return {
+            ...block,
+            zone: specialZone,
+            confidence: 0.85,
+          };
+        }
+
+        const classification = classifyZone(block, height, avgFontSize);
+        return {
+          ...block,
+          zone: classification.zone,
+          confidence: classification.confidence,
+        };
+      });
+
+      const mergedBlocks = mergeAdjacentBlocks(classifiedBlocks);
+      const columns = detectColumns(mergedBlocks, width);
+
+      pages.push({
+        pageNumber,
+        width,
+        height,
+        blocks: mergedBlocks,
+        columns,
+        hasHeader: mergedBlocks.some((block) => block.zone === 'header'),
+        hasFooter: mergedBlocks.some((block) => block.zone === 'footer'),
+      });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const info = (infoResult.info ?? {}) as any;
+
+    return {
+      pageCount: pages.length || textResult.total || 0,
+      pages,
+      metadata: {
+        title: typeof info.Title === 'string' ? info.Title : undefined,
+        author: typeof info.Author === 'string' ? info.Author : undefined,
+        createdAt: parseMetadataDate(infoResult),
+        language: typeof info.Language === 'string' ? info.Language : undefined,
       },
-    ],
-    metadata: {},
-  };
+    };
+  } finally {
+    await parser.destroy();
+  }
 }
 
 /**

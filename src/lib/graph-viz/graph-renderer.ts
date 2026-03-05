@@ -174,7 +174,11 @@ export class GraphRenderer {
     this.canvas.width = rect.width * dpr;
     this.canvas.height = rect.height * dpr;
 
-    this.ctx?.scale(dpr, dpr);
+    if (this.ctx) {
+      // Reset transform before scaling to avoid cumulative zoom on repeated resize.
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.ctx.scale(dpr, dpr);
+    }
 
     this.viewportManager.setViewport({
       width: rect.width,
@@ -286,6 +290,10 @@ export class GraphRenderer {
       this.edges.set(edge.id, edge);
     }
 
+    if (this.selectedNodeId && !this.nodes.has(this.selectedNodeId)) {
+      this.selectedNodeId = null;
+    }
+
     this.lodManager.updateNodeCount(this.nodes.size);
 
     // Initialize layout worker
@@ -317,6 +325,69 @@ export class GraphRenderer {
         this.markDirty();
       },
     });
+  }
+
+  /**
+   * Fit the viewport to all nodes.
+   */
+  fitView(margin = 50): void {
+    this.viewportManager.fitToNodes(Array.from(this.nodes.values()), margin);
+    this.markDirty();
+  }
+
+  /**
+   * Zoom in around optional screen center coordinates.
+   */
+  zoomIn(factor = 1.1, centerX?: number, centerY?: number): void {
+    this.viewportManager.zoom(Math.max(factor, 1.01), centerX, centerY);
+    this.markDirty();
+  }
+
+  /**
+   * Zoom out around optional screen center coordinates.
+   */
+  zoomOut(factor = 0.9, centerX?: number, centerY?: number): void {
+    this.viewportManager.zoom(Math.min(factor, 0.99), centerX, centerY);
+    this.markDirty();
+  }
+
+  /**
+   * Reset viewport pan/zoom state.
+   */
+  resetView(): void {
+    this.viewportManager.reset();
+    this.markDirty();
+  }
+
+  /**
+   * Get a node by ID.
+   */
+  getNode(nodeId: string): GraphNode | null {
+    return this.nodes.get(nodeId) ?? null;
+  }
+
+  /**
+   * Select a node by ID.
+   */
+  selectNode(nodeId: string | null): GraphNode | null {
+    if (!nodeId) {
+      this.selectedNodeId = null;
+      this.markDirty();
+      return null;
+    }
+
+    const node = this.nodes.get(nodeId) ?? null;
+    this.selectedNodeId = node?.id ?? null;
+    this.markDirty();
+    return node;
+  }
+
+  /**
+   * Get currently selected node.
+   */
+  getSelectedNode(): GraphNode | null {
+    if (!this.selectedNodeId) return null;
+    return this.nodes.get(this.selectedNodeId) ?? null;
   }
 
   /**
@@ -403,7 +474,14 @@ export class GraphRenderer {
       const source = this.nodes.get(edge.source);
       const target = this.nodes.get(edge.target);
 
-      if (!source?.x || !source?.y || !target?.x || !target?.y) continue;
+      if (
+        source?.x === undefined ||
+        source.y === undefined ||
+        target?.x === undefined ||
+        target.y === undefined
+      ) {
+        continue;
+      }
 
       const color = this.edgeStyles.colorByType[edge.type] || this.edgeStyles.defaultColor;
       const width = edge.weight
@@ -495,6 +573,49 @@ export class GraphRenderer {
   }
 
   /**
+   * Count connected components (undirected) as a proxy for community count.
+   */
+  private computeCommunityCount(): number {
+    if (this.nodes.size === 0) {
+      return 0;
+    }
+
+    const adjacency = new Map<string, Set<string>>();
+    for (const nodeId of this.nodes.keys()) {
+      adjacency.set(nodeId, new Set());
+    }
+
+    for (const edge of this.edges.values()) {
+      if (!adjacency.has(edge.source) || !adjacency.has(edge.target)) {
+        continue;
+      }
+      adjacency.get(edge.source)!.add(edge.target);
+      adjacency.get(edge.target)!.add(edge.source);
+    }
+
+    let communities = 0;
+    const visited = new Set<string>();
+
+    for (const nodeId of adjacency.keys()) {
+      if (visited.has(nodeId)) continue;
+      communities++;
+      const stack = [nodeId];
+      visited.add(nodeId);
+
+      while (stack.length > 0) {
+        const current = stack.pop()!;
+        for (const neighbor of adjacency.get(current) ?? []) {
+          if (visited.has(neighbor)) continue;
+          visited.add(neighbor);
+          stack.push(neighbor);
+        }
+      }
+    }
+
+    return communities;
+  }
+
+  /**
    * Event handling
    */
   on(event: GraphEventType, callback: GraphEventCallback): () => void {
@@ -526,13 +647,17 @@ export class GraphRenderer {
       Array.from(this.edges.values())
     );
 
+    const nodeCount = this.nodes.size;
+    const edgeCount = this.edges.size;
+    const density = nodeCount > 1 ? (2 * edgeCount) / (nodeCount * (nodeCount - 1)) : 0;
+
     return {
-      nodeCount: this.nodes.size,
-      edgeCount: this.edges.size,
+      nodeCount,
+      edgeCount,
       visibleNodes: visibleNodes.length,
       visibleEdges: visibleEdges.length,
-      communities: 0, // TODO: implement
-      density: (2 * this.edges.size) / (this.nodes.size * (this.nodes.size - 1)),
+      communities: this.computeCommunityCount(),
+      density,
     };
   }
 

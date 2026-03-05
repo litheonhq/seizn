@@ -17,7 +17,7 @@ interface Organization {
 }
 
 export default function OrganizationsClient() {
-  const { t, locale } = useDashboardTranslation();
+  const { t } = useDashboardTranslation();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);

@@ -158,3 +158,52 @@ For Seizn DB changes, use this exact flow:
 - This automatic hook applies only when Seizn migrations are applied through `run-migration-file.mjs`.
 - If SQL is applied directly in Supabase Dashboard, the hook does not run.
 - In Dashboard/manual apply cases, run `npm run verify:e2e-encryption-db` once manually.
+
+## 14) 100 Percent Execution Mode (꼼꼼 완성 규칙)
+Use this mode when the user asks for "끝까지", "100%", "완료될 때까지", or equivalent.
+
+### 14.1 Definition of done (must satisfy all)
+- Feature is implemented end-to-end in user-facing flow (no partial wiring).
+- Type safety passes: `npm run typecheck`.
+- Lint passes: `npm run lint`.
+- Relevant unit/integration tests pass (targeted for touched logic).
+- Relevant E2E parity scenario passes (new or updated Playwright test).
+- No known blocker remains undocumented.
+- Tracking docs are updated:
+  - `docs/editor-100-issue-map.md`
+  - `docs/editor-100-execution-log.md`
+  - add/update sign-off doc (e.g., `docs/editor-pX-YY-signoff.md`)
+- Changes are committed and pushed when user asks to persist/publish.
+
+### 14.2 Mandatory execution loop
+1. Analyze exact gap against acceptance criteria (not just code presence).
+2. Implement smallest complete slice that closes a user-visible gap.
+3. Run validation gates (typecheck/lint/unit/e2e).
+4. If any failure occurs, fix root cause and re-run from step 3.
+5. Repeat until all gates are green.
+6. Update docs/sign-off with evidence and commands.
+7. Commit with a scoped message and push.
+
+### 14.3 Quality gates by change type
+- UI/editor behavior change:
+  - `npm run typecheck`
+  - `npm run lint`
+  - targeted Jest tests
+  - targeted Playwright grep for changed scenario
+- Command/extension wiring:
+  - command map tests + wiring matrix tests
+  - E2E command execution scenario
+- Export/parity changes:
+  - API route tests
+  - E2E parity scenario
+
+### 14.4 Anti-partial rule
+- "90% done" is not acceptable in this mode.
+- If backend dependency blocks full completion, ship a robust local-safe fallback and document the limit explicitly in sign-off.
+- Every residual risk must be written under "Known limits" with concrete follow-up action.
+
+### 14.5 Reporting format for each completion
+- What changed (user-visible first)
+- Validation commands and pass/fail status
+- Commit hash and push status
+- Updated documentation paths

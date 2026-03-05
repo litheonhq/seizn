@@ -576,18 +576,32 @@ export class PIIPipeline {
     return `[HASH:${hashHex.slice(0, 8)}]`;
   }
 
+  private toBase64Url(bytes: Uint8Array): string {
+    if (typeof btoa !== 'function' && typeof Buffer !== 'undefined') {
+      return Buffer.from(bytes).toString('base64url');
+    }
+
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  }
+
   /**
    * Encrypt a value
    */
   private async encryptValue(value: string, key: string): Promise<string> {
-    // Simple encryption placeholder - in production use proper encryption
     const encoder = new TextEncoder();
     const data = encoder.encode(value);
-    const keyData = encoder.encode(key.padEnd(32, '0').slice(0, 32));
+    const keyMaterial = await crypto.subtle.digest('SHA-256', encoder.encode(key));
 
     const cryptoKey = await crypto.subtle.importKey(
       'raw',
-      keyData,
+      keyMaterial,
       { name: 'AES-GCM' },
       false,
       ['encrypt']
@@ -605,9 +619,7 @@ export class PIIPipeline {
     combined.set(iv);
     combined.set(encryptedArray, iv.length);
 
-    // Base64 encode
-    const base64 = btoa(String.fromCharCode(...combined));
-    return `[ENC:${base64.slice(0, 20)}...]`;
+    return `[ENCv1:${this.toBase64Url(combined)}]`;
   }
 
   /**

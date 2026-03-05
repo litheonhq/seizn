@@ -263,8 +263,8 @@ Two auth systems coexist: NextAuth manages session/JWT while Supabase Auth handl
 **next-intl in package.json but barely used**
 `next-intl` (^4.7.0) is installed but only imported in 1 file (`docs/components/page.tsx`). The project primarily uses a custom dictionary system. This creates an unnecessary dependency.
 
-**pdf-parse installed but not imported**
-`pdf-parse` (^2.4.5) is in dependencies but no source file imports it. Document parsing for Summer may use a different mechanism or this is an unused dependency.
+**pdf-parse usage is limited to PDF extraction paths**
+`pdf-parse` (^2.4.5) is imported in `src/lib/connectors/external/google-drive.ts` and `src/lib/summer/ingestion/layout-parser.ts`. PDF parsing is implemented, but primarily scoped to ingestion/connectors.
 
 **React 18 on Next.js 16**
 Next.js 16 supports React 19, but this project pins React 18.3.1. This works but prevents access to React 19 features (use, Actions, Server Actions improvements). The `params: Promise<>` pattern in layouts suggests Next.js 16 compatibility is intentional.
@@ -371,7 +371,7 @@ User Request
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
 | next-intl | Partially Implemented | 1 file (`src/app/[locale]/docs/components/page.tsx`) | Mostly unused, custom system preferred |
-| pdf-parse | Not Implemented | `package.json` only | Installed but never imported in `src/` |
+| pdf-parse | Fully Implemented | `src/lib/connectors/external/google-drive.ts`, `src/lib/summer/ingestion/layout-parser.ts` | Used for PDF text extraction in connector sync and Summer layout-aware parsing |
 | Stripe Payments | Configured but Unused | `src/lib/stripe-config.ts`, `.env.example` | Paddle is the active provider |
 | react-markdown | Partially Implemented | 1 file (`src/components/extreme-homepage/snippet-tabs.tsx`) | Homepage only |
 | SWR | Partially Implemented | 3 files | Limited client-side use |
@@ -384,7 +384,6 @@ User Request
 | Package | Evidence |
 |---------|----------|
 | `@auth/supabase-adapter` (^1.11.1) | Not imported anywhere in `src/`. Auth uses custom Supabase + NextAuth integration. |
-| `pdf-parse` (^2.4.5) | No imports found in `src/`. DOCX parsing uses mammoth instead. |
 | `next-intl` (^4.7.0) | Only 1 import in docs components page. The project uses a custom dictionary system for i18n. |
 
 ### Noteworthy Version Choices

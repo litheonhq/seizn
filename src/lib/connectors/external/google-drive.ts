@@ -7,6 +7,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { PDFParse } from 'pdf-parse';
 import {
   BaseExternalConnector,
   type ConnectorConfig,
@@ -79,6 +80,8 @@ const READABLE_MIME_TYPES = [
   'application/json',
   'text/csv',
 ];
+
+const PDF_TEXT_MAX_CHARS = 200_000;
 
 // =============================================================================
 // Google Drive Connector
@@ -317,9 +320,14 @@ export class GoogleDriveConnector extends BaseExternalConnector {
     // Handle based on content type
     const contentType = response.headers.get('content-type') ?? '';
 
-    if (contentType.includes('application/pdf')) {
-      // For PDFs, we'd need a PDF parser - return placeholder
-      return '[PDF content - extraction not implemented]';
+    if (mimeType === 'application/pdf' || contentType.includes('application/pdf')) {
+      const pdfBuffer = Buffer.from(await response.arrayBuffer());
+      try {
+        return await this.extractPdfText(pdfBuffer);
+      } catch (error) {
+        console.warn(`Failed to parse PDF content for ${itemId}:`, error);
+        return '';
+      }
     }
 
     return response.text();
@@ -396,6 +404,21 @@ export class GoogleDriveConnector extends BaseExternalConnector {
         owner: file.owners?.[0]?.emailAddress,
       },
     };
+  }
+
+  private async extractPdfText(buffer: Buffer): Promise<string> {
+    const parser = new PDFParse({ data: buffer });
+    try {
+      const parsed = await parser.getText();
+      const normalized = (parsed.text ?? '')
+        .replace(/\r\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      return normalized.slice(0, PDF_TEXT_MAX_CHARS);
+    } finally {
+      await parser.destroy();
+    }
   }
 }
 

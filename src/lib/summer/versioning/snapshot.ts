@@ -285,12 +285,7 @@ export async function getSnapshotById(snapshotId: string): Promise<VersionSnapsh
 
   const { data, error } = await supabase
     .from('summer_version_snapshots')
-    .select(
-      `
-      *,
-      summer_index_versions!inner (version)
-    `
-    )
+    .select('*')
     .eq('id', snapshotId)
     .single();
 
@@ -298,9 +293,8 @@ export async function getSnapshotById(snapshotId: string): Promise<VersionSnapsh
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const versionInfo = (data as any).summer_index_versions;
-  return rowToVersionSnapshot(data as VersionSnapshotRow, versionInfo?.version ?? '');
+  const version = await getVersionById((data as VersionSnapshotRow).version_id);
+  return rowToVersionSnapshot(data as VersionSnapshotRow, version?.version ?? '');
 }
 
 /**
@@ -321,13 +315,7 @@ export async function listSnapshots(
 
   let query = supabase
     .from('summer_version_snapshots')
-    .select(
-      `
-      *,
-      summer_index_versions!inner (version)
-    `,
-      { count: 'exact' }
-    )
+    .select('*', { count: 'exact' })
     .eq('collection_id', collectionId)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
@@ -346,12 +334,35 @@ export async function listSnapshots(
     throw new Error(`Failed to list snapshots: ${error.message}`);
   }
 
+  const rows = (data ?? []) as VersionSnapshotRow[];
+  const versionIds = Array.from(
+    new Set(
+      rows
+        .map((row) => row.version_id)
+        .filter((versionId): versionId is string => typeof versionId === 'string' && versionId.length > 0)
+    )
+  );
+
+  const versionMap = new Map<string, string>();
+  if (versionIds.length > 0) {
+    const { data: versions, error: versionError } = await supabase
+      .from('summer_index_versions')
+      .select('id, version')
+      .in('id', versionIds);
+
+    if (!versionError && versions) {
+      for (const row of versions) {
+        if (typeof row.id === 'string' && typeof row.version === 'string') {
+          versionMap.set(row.id, row.version);
+        }
+      }
+    }
+  }
+
   return {
-    snapshots: (data ?? []).map((row) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const versionInfo = (row as any).summer_index_versions;
-      return rowToVersionSnapshot(row as VersionSnapshotRow, versionInfo?.version ?? '');
-    }),
+    snapshots: rows.map((row) =>
+      rowToVersionSnapshot(row, versionMap.get(row.version_id) ?? '')
+    ),
     total: count ?? 0,
   };
 }

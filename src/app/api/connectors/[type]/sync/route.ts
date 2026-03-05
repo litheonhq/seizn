@@ -9,7 +9,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
-import { getConnector, type ConnectorType } from '@/lib/connectors/external';
+import {
+  getConnector,
+  getAvailableConnectors,
+  type ConnectorType,
+} from '@/lib/connectors/external';
 
 interface SyncRequest {
   connectionId?: string;
@@ -37,6 +41,15 @@ export async function POST(
     const body = (await request.json()) as SyncRequest;
 
     const supabase = createServerClient();
+    const connectorMeta = getAvailableConnectors().find(
+      (candidate) => candidate.type === connectorType
+    );
+    if (!connectorMeta?.configured) {
+      return NextResponse.json(
+        { error: `Connector ${type} is not configured. Missing OAuth credentials.` },
+        { status: 400 }
+      );
+    }
 
     // Get connection
     let connectionQuery = supabase
@@ -63,8 +76,8 @@ export async function POST(
     const connector = getConnector(connectorType, supabase);
     if (!connector) {
       return NextResponse.json(
-        { error: `Connector ${type} not configured` },
-        { status: 501 }
+        { error: `Connector ${type} is unavailable` },
+        { status: 400 }
       );
     }
 

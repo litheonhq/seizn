@@ -9,7 +9,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
-import { getConnector, type ConnectorType } from '@/lib/connectors/external';
+import {
+  getConnector,
+  getAvailableConnectors,
+  type ConnectorType,
+} from '@/lib/connectors/external';
 import { randomBytes } from 'crypto';
 
 export async function GET(
@@ -35,12 +39,22 @@ export async function GET(
     }
 
     const supabase = createServerClient();
+    const connectorMeta = getAvailableConnectors().find(
+      (candidate) => candidate.type === connectorType
+    );
+    if (!connectorMeta?.configured) {
+      return NextResponse.json(
+        { error: `Connector ${type} is not configured. Missing OAuth credentials.` },
+        { status: 400 }
+      );
+    }
+
     const connector = getConnector(connectorType, supabase);
 
     if (!connector) {
       return NextResponse.json(
-        { error: `Connector ${type} not configured` },
-        { status: 501 }
+        { error: `Connector ${type} is unavailable` },
+        { status: 400 }
       );
     }
 
@@ -48,12 +62,15 @@ export async function GET(
     const state = randomBytes(32).toString('hex');
 
     // Store state in database for verification
-    await supabase.from('external_oauth_states').insert({
+    const { error: stateError } = await supabase.from('external_oauth_states').insert({
       state,
       user_id: session.user.id,
       connector_type: connectorType,
       expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10 minutes
     });
+    if (stateError) {
+      throw new Error(`Failed to persist OAuth state: ${stateError.message}`);
+    }
 
     // Get OAuth URL
     const authUrl = connector.getAuthUrl(state, session.user.id);
