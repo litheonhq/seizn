@@ -10,7 +10,7 @@
  * @module security/red-team
  */
 
-import { createServerClient } from '@/lib/supabase';
+import { createServerClient } from '../supabase';
 
 // ============================================
 // Types
@@ -659,7 +659,13 @@ export class RedTeamRunner {
         mediumCount: run.medium_findings,
         lowCount: run.low_findings,
       },
-      findings: (findings || []).map((f) => ({
+      findings: (findings || []).map((f: {
+        attack_category: AttackCategory;
+        severity: AttackSeverity;
+        attack_name: string;
+        prompt: string;
+        response: string;
+      }) => ({
         category: f.attack_category,
         severity: f.severity,
         description: `${f.attack_name} attack was successful`,

@@ -18,7 +18,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:security": "vitest run src/__tests__/security/llm-top10/",
-    "test:security:strict": "SECURITY_STRICT_MODE=true vitest run src/__tests__/security/llm-top10/",
+    "test:security:strict": "node scripts/run-security-strict.mjs",
     "verify:evidence": "npx ts-node --project tsconfig.node.json scripts/verify-evidence-pack.ts",
     "verify:e2e-encryption-db": "node scripts/db-verify-e2e-encryption.mjs",
     "verify:ai-os-memory": "node scripts/verify-ai-os-memory.mjs",
@@ -72,7 +72,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
-    "@lhci/cli": "^0.14.0",
     "@next/bundle-analyzer": "^16.1.6",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
@@ -87,12 +86,21 @@
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "jsdom": "^27.4.0",
-    "md-to-pdf": "^5.2.5",
     "pg": "^8.16.3",
     "postgres": "^3.4.8",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17",
     "wait-on": "^9.0.3"
+  },
+  "overrides": {
+    "@tootallnate/once": "^3.0.1",
+    "http-proxy-agent": "^7.0.2",
+    "minimatch@3.1.2": "3.1.5",
+    "minimatch@9.0.5": "9.0.9",
+    "serialize-javascript": "^7.0.4",
+    "terser-webpack-plugin": "^5.3.17",
+    "underscore": "^1.13.8",
+    "fast-xml-parser": "^5.3.8"
   }
 }
