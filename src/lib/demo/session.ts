@@ -4,7 +4,7 @@
  * Helper functions for managing anonymous sandbox sessions.
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from "@/lib/supabase";
 
 // Demo session configuration
 export const DEMO_CONFIG = {
@@ -30,15 +30,12 @@ export async function validateDemoSession(
     return { valid: false, reason: "Invalid token format" };
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
+  if (!hasServerSupabaseServiceRoleConfig()) {
     // Allow demo in development without DB
     return { valid: true };
   }
 
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = createServerClient();
 
   const { data, error } = await supabase
     .from("demo_sessions")
@@ -72,12 +69,9 @@ export async function incrementDemoUsage(
   token: string,
   tokensUsed: number
 ): Promise<void> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!hasServerSupabaseServiceRoleConfig()) return;
 
-  if (!supabaseUrl || !supabaseKey) return;
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = createServerClient();
 
   await supabase.rpc("increment_demo_usage", {
     p_token_hash: hashToken(token),

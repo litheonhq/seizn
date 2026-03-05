@@ -21,6 +21,13 @@ vi.mock('@/lib/supabase', () => {
     then: vi.fn().mockResolvedValue({ data: null, error: null }),
   };
 
+  const mockAuthGetUser = vi.fn().mockResolvedValue({ data: { user: null }, error: null });
+  const mockRequestAuthClient = {
+    auth: {
+      getUser: mockAuthGetUser,
+    },
+  };
+
   return {
     createServerClient: vi.fn(() => ({
       from: vi.fn(() => mockQueryBuilder),
@@ -30,6 +37,12 @@ vi.mock('@/lib/supabase', () => {
       from: vi.fn(() => mockQueryBuilder),
       rpc: vi.fn().mockResolvedValue({ data: null, error: null }),
     })),
+    createServerAnonClient: vi.fn(() => mockRequestAuthClient),
+    createRequestAuthClient: vi.fn(() => mockRequestAuthClient),
+    getServerSupabaseUrl: vi.fn(() => 'https://example.supabase.co'),
+    getServerSupabaseServiceRoleKey: vi.fn(() => 'service-role-key'),
+    hasServerSupabasePublicConfig: vi.fn(() => true),
+    hasServerSupabaseServiceRoleConfig: vi.fn(() => true),
     getSupabase: vi.fn(() => ({
       from: vi.fn(() => mockQueryBuilder),
       rpc: vi.fn().mockResolvedValue({ data: null, error: null }),

@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
-import { createClient } from '@supabase/supabase-js';
+import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
+
+type SupabaseInsertError = { code?: string | null; message?: string | null };
+
+function isAuditLogsMissingError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const maybe = error as SupabaseInsertError;
+  const message = (maybe.message || '').toLowerCase();
+  return (
+    maybe.code === 'PGRST205' &&
+    message.includes("could not find the table 'public.audit_logs'")
+  );
+}
 
 // Helper to get user from session
 async function getUserFromToken(request: NextRequest) {
@@ -10,12 +21,7 @@ async function getUserFromToken(request: NextRequest) {
   }
 
   const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
+  const supabase = createRequestAuthClient(token);
 
   const { data: { user } } = await supabase.auth.getUser();
   return user;
@@ -38,31 +44,44 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Build query
-    let query = supabase
-      .from('audit_logs')
-      .select(`
-        id,
-        user_id,
-        organization_id,
-        action,
-        resource_type,
-        resource_id,
-        details,
-        status,
-        ip_address,
-        created_at,
-        user:profiles (
-          email,
-          full_name
-        )
-      `, { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    const buildQuery = (tableName: 'audit_logs' | 'audit_log') => {
+      let query = supabase
+        .from(tableName)
+        .select(`
+          id,
+          user_id,
+          organization_id,
+          action,
+          resource_type,
+          resource_id,
+          details,
+          status,
+          ip_address,
+          created_at,
+          user:profiles (
+            email,
+            full_name
+          )
+        `, { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (orgId) {
+        query = query.eq('organization_id', orgId);
+      } else {
+        query = query.eq('user_id', user.id);
+      }
+      if (action) {
+        query = query.eq('action', action);
+      }
+      if (resourceType) {
+        query = query.eq('resource_type', resourceType);
+      }
+      return query;
+    };
 
     // Filter by org (requires admin role)
     if (orgId) {
-      // Check user is admin/owner
       const { data: membership } = await supabase
         .from('organization_members')
         .select('role')
@@ -73,22 +92,16 @@ export async function GET(request: NextRequest) {
       if (!membership || !['owner', 'admin'].includes(membership.role)) {
         return NextResponse.json({ error: 'Not authorized to view org audit logs' }, { status: 403 });
       }
-
-      query = query.eq('organization_id', orgId);
-    } else {
-      // Personal logs only
-      query = query.eq('user_id', user.id);
     }
 
-    // Additional filters
-    if (action) {
-      query = query.eq('action', action);
-    }
-    if (resourceType) {
-      query = query.eq('resource_type', resourceType);
-    }
+    let { data: logs, error, count } = await buildQuery('audit_logs');
 
-    const { data: logs, error, count } = await query;
+    if (error && isAuditLogsMissingError(error)) {
+      const legacy = await buildQuery('audit_log');
+      logs = legacy.data;
+      error = legacy.error;
+      count = legacy.count;
+    }
 
     if (error) {
       console.error('Fetch audit logs error:', error);

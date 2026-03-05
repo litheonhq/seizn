@@ -6,6 +6,7 @@ import {
   errorResponse,
 } from "@/lib/errors";
 import { getEffectivePlan, getPlan } from "@/lib/plan-limits";
+import { upsertProfileWithFallback } from "@/lib/profile/upsert";
 
 /**
  * GET /api/quota
@@ -38,20 +39,14 @@ export async function GET() {
 
     // Auto-heal for legacy users missing a profile row.
     if (!profile) {
-      const fallbackName = session.user.name || (session.user.email?.split("@")[0] ?? "User");
-      const { error: upsertError } = await supabase.from("profiles").upsert(
-        {
-          id: userId,
-          email: session.user.email ?? null,
-          full_name: fallbackName,
-          name: fallbackName,
-          plan: "free",
-          language: "en",
-        },
-        { onConflict: "id" }
+      const profileInit = await upsertProfileWithFallback(
+        supabase,
+        userId,
+        session.user.email ?? null,
+        session.user.name ?? undefined
       );
-      if (upsertError) {
-        console.error("Failed to auto-heal missing profile:", upsertError);
+      if (!profileInit.ok) {
+        console.error("Failed to auto-heal missing profile:", profileInit.error);
         return errorResponse(
           { code: "SEIZN_405", message: "Failed to initialize profile", status: 500 },
           context

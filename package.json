@@ -9,7 +9,7 @@
     "analyze": "node scripts/analyze-build.mjs",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "vercel --prod",
     "check:routes": "node scripts/check-route-conflicts.js",

@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseUserFromBearer } from '@/lib/api/request-user';
 import {
   getUserOrgRole,
   getAllOrgRoles,
@@ -19,26 +19,6 @@ import {
   DEFAULT_ORG_ROLES,
 } from '@/lib/winter/org';
 
-// Helper to get user from session token
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
 
 interface RouteContext {
   params: Promise<{ orgId: string }>;
@@ -50,7 +30,7 @@ interface RouteContext {
  */
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getSupabaseUserFromBearer(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -93,7 +73,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
  */
 export async function POST(request: NextRequest, context: RouteContext) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getSupabaseUserFromBearer(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -144,7 +124,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
  */
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getSupabaseUserFromBearer(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -186,7 +166,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
  */
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getSupabaseUserFromBearer(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

@@ -1,6 +1,7 @@
+import type { User } from '@supabase/supabase-js';
 import { NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { auth } from '@/lib/auth';
+import { createRequestAuthClient, hasServerSupabasePublicConfig } from '@/lib/supabase';
 
 export type RequestUser = {
   id: string;
@@ -27,20 +28,7 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
     // Ignore and fall back to bearer token auth.
   }
 
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) return null;
-
-  const token = authHeader.substring(7);
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseAnonKey) return null;
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getSupabaseUserFromBearer(request);
   if (!user) return null;
 
   const name =
@@ -57,3 +45,23 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
   };
 }
 
+export async function getSupabaseUserFromBearer(request: NextRequest): Promise<User | null> {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  if (!hasServerSupabasePublicConfig()) return null;
+
+  try {
+    const token = authHeader.substring(7);
+    const supabase = createRequestAuthClient(token);
+
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) return null;
+    return user ?? null;
+  } catch {
+    return null;
+  }
+}
