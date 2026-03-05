@@ -7,7 +7,7 @@ import type { ApiKey } from "@/types/dashboard";
 import { formatDate } from "@/lib/format-date";
 
 export default function ApiKeysClient() {
-  const { t, locale } = useDashboardTranslation();
+  const { t } = useDashboardTranslation();
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);

@@ -202,23 +202,21 @@ export function useGraphRenderer(
 
   // Fit view
   const fitView = useCallback(() => {
-    // Would call renderer's fitToNodes internally
-    if (rendererRef.current) {
-      runLayout();
-    }
-  }, [runLayout]);
+    rendererRef.current?.fitView();
+    updateStats();
+  }, [updateStats]);
 
   // Zoom controls
   const zoomIn = useCallback(() => {
-    // Would call viewport manager's zoom
+    rendererRef.current?.zoomIn();
   }, []);
 
   const zoomOut = useCallback(() => {
-    // Would call viewport manager's zoom
+    rendererRef.current?.zoomOut();
   }, []);
 
   const resetView = useCallback(() => {
-    // Would call viewport manager's reset
+    rendererRef.current?.resetView();
   }, []);
 
   // Set data
@@ -230,13 +228,14 @@ export function useGraphRenderer(
       if (autoLayout) {
         rendererRef.current.runLayout(layoutConfig);
       }
+      updateStats();
     }
-  }, [autoLayout, layoutConfig]);
+  }, [autoLayout, layoutConfig, updateStats]);
 
   // Select node
-  const selectNode = useCallback((_nodeId: string | null) => {
-    // Would update renderer's selected node
-    setSelectedNode(null); // TODO: get node from renderer
+  const selectNode = useCallback((nodeId: string | null) => {
+    const selected = rendererRef.current?.selectNode(nodeId) ?? null;
+    setSelectedNode(selected);
   }, []);
 
   return {

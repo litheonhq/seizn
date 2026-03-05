@@ -1,0 +1,77 @@
+{
+  "project": "C:\\Users\\admin\\Projects\\seizn",
+  "package_manager": "npm",
+  "mode": "full",
+  "timestamp_utc": "2026-03-04T23:26:44.613604+00:00",
+  "results": [
+    {
+      "check": "lint",
+      "script": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "duration_sec": 33.05,
+      "status": "passed",
+      "exit_code": 0,
+      "stdout_tail": "\n> seizn@0.1.0 lint\n> eslint\n",
+      "stderr_tail": ""
+    },
+    {
+      "check": "typecheck",
+      "script": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "duration_sec": 5.48,
+      "status": "passed",
+      "exit_code": 0,
+      "stdout_tail": "\n> seizn@0.1.0 typecheck\n> tsc --noEmit\n",
+      "stderr_tail": ""
+    },
+    {
+      "check": "test",
+      "script": "test",
+      "command": [
+        "npm",
+        "run",
+        "test"
+      ],
+      "duration_sec": 15.96,
+      "status": "passed",
+      "exit_code": 0,
+      "stdout_tail": " \u001b[32m✓\u001b[39m src/lib/autopilot/__tests__/github-webhook-reconcile.test.ts \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/autopilot/__tests__/github-webhook.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/__tests__/api-auth-contract.test.ts \u001b[2m(\u001b[22m\u001b[2m20 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 12\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/memory/lifecycle.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 5\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/memory/content-integrity.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/memory/entitlements.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/ai-gateway/gateway.select-provider.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/security/constant-time.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/memory/search-types.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/__tests__/env.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/memory/router-learning.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 2\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/__tests__/basic.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 2\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/__tests__/security/api-security.test.ts \u001b[2m(\u001b[22m\u001b[2m17 tests\u001b[22m\u001b[2m | \u001b[22m\u001b[33m16 skipped\u001b[39m\u001b[2m)\u001b[22m\u001b[32m 2\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/lib/hybrid-orchestrator/orchestrator.rerank.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m72 passed\u001b[39m\u001b[22m\u001b[90m (72)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m853 passed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[33m16 skipped\u001b[39m\u001b[90m (869)\u001b[39m\n\u001b[2m   Start at \u001b[22m 08:27:23\n\u001b[2m   Duration \u001b[22m 15.13s\u001b[2m (transform 13.38s, setup 3.11s, import 15.37s, tests 6.24s, environment 358.28s)\u001b[22m\n",
+      "stderr_tail": "\n\u001b[90mstderr\u001b[2m | src/lib/ai-gateway/policy-router.test.ts\u001b[2m > \u001b[22m\u001b[2mPolicyRouter\u001b[2m > \u001b[22m\u001b[2menforceBudget\u001b[2m > \u001b[22m\u001b[2mfails open when budget check throws\n\u001b[22m\u001b[39m[PolicyRouter] Budget check failed, applying fallback mode: { userId: \u001b[32m'user-1'\u001b[39m, orgId: \u001b[32m'org-1'\u001b[39m, error: \u001b[32m'Service down'\u001b[39m }\n\n\u001b[90mstderr\u001b[2m | src/lib/ai-gateway/policy-router.test.ts\u001b[2m > \u001b[22m\u001b[2mPolicyRouter\u001b[2m > \u001b[22m\u001b[2menforceBudget\u001b[2m > \u001b[22m\u001b[2mfails closed when budget service throws and failureMode is closed\n\u001b[22m\u001b[39m[PolicyRouter] Budget check failed, applying fallback mode: { userId: \u001b[32m'user-1'\u001b[39m, orgId: \u001b[32m'org-1'\u001b[39m, error: \u001b[32m'Service down'\u001b[39m }\n\n\u001b[90mstderr\u001b[2m | src/lib/network-learning/__tests__/signal-collector.test.ts\u001b[2m > \u001b[22m\u001b[2mSignalCollector\u001b[2m > \u001b[22m\u001b[2mcollectSignal\u001b[2m > \u001b[22m\u001b[2mshould return null on storage error\n\u001b[22m\u001b[39mFailed to store signal: { message: \u001b[32m'Storage error'\u001b[39m }\n\n\u001b[90mstderr\u001b[2m | src/lib/network-learning/__tests__/signal-collector.test.ts\u001b[2m > \u001b[22m\u001b[2mSignalCollector\u001b[2m > \u001b[22m\u001b[2mgetSignalCount\u001b[2m > \u001b[22m\u001b[2mshould return 0 on error\n\u001b[22m\u001b[39mFailed to get signal count: { message: \u001b[32m'Error'\u001b[39m }\n\n\u001b[90mstderr\u001b[2m | src/lib/tenant-policy/enforcer.test.ts\u001b[2m > \u001b[22m\u001b[2mtenant-policy enforceCaps\u001b[2m > \u001b[22m\u001b[2mdoes not hard-deny in monitor mode even when caps are exceeded\n\u001b[22m\u001b[39m[TenantPolicy] Rate limit would deny: rpm_exceeded\n[TenantPolicy] Cost cap would deny: daily_cost_exceeded\n\n\u001b[90mstderr\u001b[2m | src/app/api/tenant-policy/enforce/route.test.ts\u001b[2m > \u001b[22m\u001b[2mtenant-policy enforce route auth\u001b[2m > \u001b[22m\u001b[2mfails closed when INTERNAL_API_KEY is not configured\n\u001b[22m\u001b[39m[TenantPolicy Enforce] INTERNAL_API_KEY not configured\n"
+    },
+    {
+      "check": "build",
+      "script": "build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "duration_sec": 47.73,
+      "status": "passed",
+      "exit_code": 0,
+      "stdout_tail": "├ ƒ /invite/[token]\n├ ○ /login\n├ ○ /offline\n├ ○ /privacy\n├ ○ /refund\n├ ○ /robots.txt\n├ ○ /signup\n├ ○ /sitemap.xml\n├ ○ /status                                                          1m      1y\n├ ƒ /t/[token]\n├ ○ /terms\n└ ƒ /trace/[shareId]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\n●  (SSG)      prerendered as static HTML (uses generateStaticParams)\nƒ  (Dynamic)  server-rendered on demand\n",
+      "stderr_tail": "⚠ Using edge runtime on a page currently disables static generation for that page"
+    },
+    {
+      "check": "e2e",
+      "status": "skipped",
+      "reason": "script_missing"
+    }
+  ],
+  "lighthouse": {
+    "status": "skipped",
+    "reason": "base_url_not_provided"
+  },
+  "ui_capture": {
+    "status": "skipped",
+    "reason": "capture_ui_disabled"
+  }
+}

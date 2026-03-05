@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Node } from "@xyflow/react";
 import type { MindMapNodeData } from "./MindMapCanvas";
 import type { NoteType, NoteStatus, PrivacyClass } from "@/lib/spring/memory-v3/types";
@@ -160,17 +160,75 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showUsageTab, setShowUsageTab] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(data.content);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsEditing(false);
+    setEditedContent(data.content);
+    setEditError(null);
+  }, [note.id, data.content]);
 
   // Usage data
   const { usage, stats, isLoading: usageLoading } = useMemoryUsage(note.id);
   const heatLevel = calculateHeatLevel(stats);
   const heatColor = getHeatColor(heatLevel);
+  const normalizedOriginalContent = data.content.trim();
+  const normalizedEditedContent = editedContent.trim();
+  const hasContentChanges = normalizedEditedContent !== normalizedOriginalContent;
 
   // Action handlers
   const handleEdit = useCallback(() => {
-    // TODO: Open edit modal or navigate to edit page
-    console.log("Edit note:", note.id);
-  }, [note.id]);
+    setEditedContent(data.content);
+    setEditError(null);
+    setIsEditing(true);
+  }, [data.content]);
+
+  const handleCancelEdit = useCallback(() => {
+    setEditedContent(data.content);
+    setEditError(null);
+    setIsEditing(false);
+  }, [data.content]);
+
+  const handleSaveEdit = useCallback(async () => {
+    const nextContent = editedContent.trim();
+    if (!nextContent) {
+      setEditError("Content cannot be empty.");
+      return;
+    }
+
+    if (!hasContentChanges) {
+      setIsEditing(false);
+      setEditError(null);
+      return;
+    }
+
+    setIsLoading(true);
+    setEditError(null);
+    try {
+      const res = await fetch(`/api/memories/${note.id}`, {
+        method: "PATCH",
+        headers: getCsrfHeaders("application/json"),
+        body: JSON.stringify({ content: nextContent }),
+      });
+
+      const payload = await res.json().catch(() => null) as { error?: string } | null;
+      if (!res.ok) {
+        setEditError(payload?.error || "Failed to update memory.");
+        return;
+      }
+
+      setEditedContent(nextContent);
+      setIsEditing(false);
+      onRefresh();
+    } catch (error) {
+      console.error("Failed to edit note:", error);
+      setEditError("Failed to update memory.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [editedContent, hasContentChanges, note.id, onRefresh]);
 
   const handleDelete = useCallback(async () => {
     setIsLoading(true);
@@ -266,9 +324,31 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-szn-text-2">Content</h3>
           <div className="p-3 bg-szn-bg rounded-lg">
-            <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
-              {data.content}
-            </p>
+            {isEditing ? (
+              <div className="space-y-2">
+                <textarea
+                  value={editedContent}
+                  onChange={(event) => setEditedContent(event.target.value)}
+                  className="w-full min-h-28 px-3 py-2 text-sm bg-szn-card border border-szn-border rounded-lg text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent resize-y"
+                  maxLength={10000}
+                  placeholder="Edit memory content..."
+                />
+                <div className="flex items-center justify-between">
+                  {editError ? (
+                    <p className="text-xs text-red-600 dark:text-red-400">{editError}</p>
+                  ) : (
+                    <span />
+                  )}
+                  <p className="text-xs text-szn-text-3">
+                    {normalizedEditedContent.length}/10000
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
+                {editedContent}
+              </p>
+            )}
           </div>
         </div>
 
@@ -438,7 +518,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
                         href={`/dashboard/traces/${u.traceId}`}
                         className="text-szn-accent hover:underline"
                       >
-                        View trace →
+                        View trace
                       </a>
                     )}
                   </div>
@@ -484,30 +564,49 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       {/* Actions */}
       <div className="p-4 border-t border-szn-border space-y-2">
         {/* Primary Actions */}
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            onClick={handleEdit}
-            disabled={isLoading}
-            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <EditIcon className="w-4 h-4" />
-            Edit
-          </button>
-          <button
-            onClick={() => setShowConfirmDelete(true)}
-            disabled={isLoading}
-            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <TrashIcon className="w-4 h-4" />
-            Delete
-          </button>
-        </div>
+        {isEditing ? (
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={handleSaveEdit}
+              disabled={isLoading || normalizedEditedContent.length === 0 || !hasContentChanges}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-szn-accent hover:bg-szn-accent/90 rounded-lg transition-colors disabled:opacity-50"
+            >
+              {isLoading ? "Saving..." : "Save"}
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={handleEdit}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <EditIcon className="w-4 h-4" />
+              Edit
+            </button>
+            <button
+              onClick={() => setShowConfirmDelete(true)}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <TrashIcon className="w-4 h-4" />
+              Delete
+            </button>
+          </div>
+        )}
 
         {/* Secondary Actions */}
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={handleMarkWrong}
-            disabled={isLoading || data.status === "contradicted"}
+            disabled={isLoading || isEditing || data.status === "contradicted"}
             className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 rounded-lg transition-colors disabled:opacity-50"
           >
             <ExclamationIcon className="w-4 h-4" />
@@ -515,7 +614,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           </button>
           <button
             onClick={handleLock}
-            disabled={isLoading}
+            disabled={isLoading || isEditing}
             className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 rounded-lg transition-colors disabled:opacity-50"
           >
             <LockIcon className="w-4 h-4" />
@@ -527,7 +626,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {data.privacyClass !== "confidential" && data.privacyClass !== "restricted" && (
           <button
             onClick={handleMoveToSensitive}
-            disabled={isLoading}
+            disabled={isLoading || isEditing}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded-lg transition-colors disabled:opacity-50"
           >
             <ShieldIcon className="w-4 h-4" />
@@ -538,7 +637,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {/* Refresh */}
         <button
           onClick={onRefresh}
-          disabled={isLoading}
+          disabled={isLoading || isEditing}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-2 bg-szn-bg hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
         >
           <ArrowPathIcon className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
