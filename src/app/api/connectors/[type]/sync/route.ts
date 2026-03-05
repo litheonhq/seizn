@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { verifyCsrf } from '@/lib/csrf';
 import {
   getConnector,
   getAvailableConnectors,
@@ -26,18 +27,44 @@ interface SyncRequest {
   };
 }
 
+function normalizeStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const normalized = value
+    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .filter((item) => item.length > 0);
+
+  return normalized.length > 0 ? normalized : undefined;
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> }
 ) {
+  let connectionIdForCleanup: string | null = null;
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const csrfError = verifyCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const { type } = await params;
     const connectorType = type as ConnectorType;
+    const validTypes: ConnectorType[] = ['google_drive', 'notion', 'github'];
+    if (!validTypes.includes(connectorType)) {
+      return NextResponse.json(
+        { error: `Invalid connector type: ${type}` },
+        { status: 400 }
+      );
+    }
+
     const body = (await request.json()) as SyncRequest;
 
     const supabase = createServerClient();
@@ -52,25 +79,62 @@ export async function POST(
     }
 
     // Get connection
-    let connectionQuery = supabase
+    const baseConnectionQuery = supabase
       .from('external_connections')
       .select('*')
       .eq('user_id', session.user.id)
       .eq('connector_type', connectorType)
       .eq('status', 'active');
 
+    let connection: Record<string, unknown> | null = null;
+
     if (body.connectionId) {
-      connectionQuery = connectionQuery.eq('id', body.connectionId);
+      const { data: selected, error: selectedError } = await baseConnectionQuery
+        .eq('id', body.connectionId)
+        .maybeSingle();
+
+      if (selectedError || !selected) {
+        return NextResponse.json(
+          { error: 'No active connection found' },
+          { status: 404 }
+        );
+      }
+
+      connection = selected;
+    } else {
+      const { data: activeConnections, error: connectionError } = await baseConnectionQuery
+        .order('updated_at', { ascending: false })
+        .limit(2);
+
+      if (connectionError) {
+        throw new Error(`Failed to query active connections: ${connectionError.message}`);
+      }
+
+      if (!activeConnections || activeConnections.length === 0) {
+        return NextResponse.json(
+          { error: 'No active connection found' },
+          { status: 404 }
+        );
+      }
+
+      if (activeConnections.length > 1) {
+        return NextResponse.json(
+          { error: 'Multiple active connections found. Provide connectionId explicitly.' },
+          { status: 409 }
+        );
+      }
+
+      connection = activeConnections[0] as Record<string, unknown>;
     }
 
-    const { data: connection, error: connectionError } = await connectionQuery.single();
-
-    if (connectionError || !connection) {
+    if (!connection) {
       return NextResponse.json(
         { error: 'No active connection found' },
         { status: 404 }
       );
     }
+
+    connectionIdForCleanup = String(connection.id);
 
     // Get connector
     const connector = getConnector(connectorType, supabase);
@@ -82,14 +146,20 @@ export async function POST(
     }
 
     // Check if token needs refresh
-    let accessToken = connection.access_token;
-    if (connection.token_expires_at && new Date(connection.token_expires_at) < new Date()) {
-      if (!connection.refresh_token) {
+    let accessToken = String(connection.access_token ?? '');
+    const tokenExpiresAt = connection.token_expires_at
+      ? new Date(String(connection.token_expires_at))
+      : null;
+    const refreshToken =
+      typeof connection.refresh_token === 'string' ? connection.refresh_token : null;
+
+    if (tokenExpiresAt && tokenExpiresAt < new Date()) {
+      if (!refreshToken) {
         // Mark connection as needing reauth
         await supabase
           .from('external_connections')
           .update({ status: 'expired' })
-          .eq('id', connection.id);
+          .eq('id', connectionIdForCleanup);
 
         return NextResponse.json(
           { error: 'Token expired, please reconnect' },
@@ -98,7 +168,7 @@ export async function POST(
       }
 
       try {
-        const newTokens = await connector.refreshToken(connection.refresh_token);
+        const newTokens = await connector.refreshToken(refreshToken);
         accessToken = newTokens.accessToken;
 
         // Update stored tokens
@@ -106,17 +176,17 @@ export async function POST(
           .from('external_connections')
           .update({
             access_token: newTokens.accessToken,
-            refresh_token: newTokens.refreshToken ?? connection.refresh_token,
+            refresh_token: newTokens.refreshToken ?? refreshToken,
             token_expires_at: newTokens.expiresAt?.toISOString(),
             updated_at: new Date().toISOString(),
           })
-          .eq('id', connection.id);
+          .eq('id', connectionIdForCleanup);
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
         await supabase
           .from('external_connections')
           .update({ status: 'expired' })
-          .eq('id', connection.id);
+          .eq('id', connectionIdForCleanup);
 
         return NextResponse.json(
           { error: 'Token refresh failed, please reconnect' },
@@ -132,18 +202,28 @@ export async function POST(
         sync_status: 'syncing',
         sync_started_at: new Date().toISOString(),
       })
-      .eq('id', connection.id);
+      .eq('id', connectionIdForCleanup);
 
     // List items from external source
-    const syncConfig = connection.sync_config || {};
+    const syncConfig =
+      connection.sync_config && typeof connection.sync_config === 'object'
+        ? (connection.sync_config as Record<string, unknown>)
+        : {};
+    const requestedLimit = body.options?.limit;
+    const normalizedLimit =
+      typeof requestedLimit === 'number'
+        ? Math.max(1, Math.min(500, Math.floor(requestedLimit)))
+        : 100;
     const listOptions = {
       parentId: body.options?.parentId,
-      limit: body.options?.limit ?? 100,
-      includePatterns: body.options?.includePatterns ?? syncConfig.include_patterns,
-      excludePatterns: body.options?.excludePatterns ?? syncConfig.exclude_patterns,
+      limit: normalizedLimit,
+      includePatterns:
+        body.options?.includePatterns ?? normalizeStringArray(syncConfig.include_patterns),
+      excludePatterns:
+        body.options?.excludePatterns ?? normalizeStringArray(syncConfig.exclude_patterns),
       modifiedAfter: body.options?.forceResync
         ? undefined
-        : connection.last_sync_completed_at
+        : connection.last_sync_completed_at && typeof connection.last_sync_completed_at === 'string'
           ? new Date(connection.last_sync_completed_at)
           : undefined,
     };
@@ -154,7 +234,7 @@ export async function POST(
     const syncResult = await connector.syncToMemories(
       items,
       session.user.id,
-      connection.id,
+      connectionIdForCleanup,
       {
         forceResync: body.options?.forceResync,
         tags: [`source:${connectorType}`],
@@ -163,7 +243,7 @@ export async function POST(
 
     // Record sync history
     await supabase.from('external_sync_history').insert({
-      connection_id: connection.id,
+      connection_id: connectionIdForCleanup,
       started_at: new Date().toISOString(),
       completed_at: new Date().toISOString(),
       status: syncResult.failed > 0 ? 'partial' : 'success',
@@ -189,11 +269,11 @@ export async function POST(
           hasMore,
         },
       })
-      .eq('id', connection.id);
+      .eq('id', connectionIdForCleanup);
 
     return NextResponse.json({
       success: true,
-      connectionId: connection.id,
+      connectionId: connectionIdForCleanup,
       result: {
         created: syncResult.created,
         updated: syncResult.updated,
@@ -209,15 +289,12 @@ export async function POST(
 
     // Try to reset sync status on error
     try {
-      const supabase = createServerClient();
-      const { type } = await params;
-      const session = await auth();
-      if (session?.user?.id) {
+      if (connectionIdForCleanup) {
+        const supabase = createServerClient();
         await supabase
           .from('external_connections')
           .update({ sync_status: 'error' })
-          .eq('user_id', session.user.id)
-          .eq('connector_type', type);
+          .eq('id', connectionIdForCleanup);
       }
     } catch {
       // Ignore cleanup errors

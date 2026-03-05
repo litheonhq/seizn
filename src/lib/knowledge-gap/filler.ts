@@ -1042,14 +1042,10 @@ async function fetchRemoteContent(
     const responseContentType = (response.headers.get('content-type') ?? '').toLowerCase();
     const hintedContentType = (mimeTypeHint ?? '').toLowerCase();
     const contentType = responseContentType || hintedContentType;
-    const buffer = Buffer.from(await response.arrayBuffer());
+    const buffer = await readResponseBufferWithLimit(response, MAX_REMOTE_CONTENT_BYTES);
 
     if (buffer.byteLength === 0) {
       throw new Error('Fetched content is empty');
-    }
-
-    if (buffer.byteLength > MAX_REMOTE_CONTENT_BYTES) {
-      throw new Error(`Fetched content exceeds ${MAX_REMOTE_CONTENT_BYTES} bytes`);
     }
 
     if (
@@ -1092,6 +1088,69 @@ async function fetchRemoteContent(
 
 function isRedirectStatus(status: number): boolean {
   return status === 301 || status === 302 || status === 303 || status === 307 || status === 308;
+}
+
+function parseContentLength(response: Response): number | null {
+  const raw = response.headers.get('content-length');
+  if (!raw) {
+    return null;
+  }
+
+  const parsed = Number.parseInt(raw, 10);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+
+  return parsed;
+}
+
+async function readResponseBufferWithLimit(response: Response, maxBytes: number): Promise<Buffer> {
+  const declaredSize = parseContentLength(response);
+  if (declaredSize !== null && declaredSize > maxBytes) {
+    throw new Error(`Fetched content exceeds ${maxBytes} bytes`);
+  }
+
+  if (!response.body) {
+    const fallback = Buffer.from(await response.arrayBuffer());
+    if (fallback.byteLength > maxBytes) {
+      throw new Error(`Fetched content exceeds ${maxBytes} bytes`);
+    }
+    return fallback;
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Buffer[] = [];
+  let totalBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      const chunk = value ?? new Uint8Array();
+      if (chunk.byteLength === 0) {
+        continue;
+      }
+
+      totalBytes += chunk.byteLength;
+      if (totalBytes > maxBytes) {
+        try {
+          await reader.cancel();
+        } catch {
+          // Ignore cancellation errors
+        }
+        throw new Error(`Fetched content exceeds ${maxBytes} bytes`);
+      }
+
+      chunks.push(Buffer.from(chunk));
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  return Buffer.concat(chunks, totalBytes);
 }
 
 async function fetchWithValidatedRedirects(

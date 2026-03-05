@@ -99,6 +99,7 @@ export class GraphRenderer {
   private isDirty = true;
   private performanceMode: boolean;
   private lodThreshold: number;
+  private resizeListener: (() => void) | null = null;
 
   constructor(config: RendererConfig) {
     // Initialize managers
@@ -156,7 +157,8 @@ export class GraphRenderer {
 
     // Handle resize
     this.handleResize();
-    window.addEventListener('resize', () => this.handleResize());
+    this.resizeListener = () => this.handleResize();
+    window.addEventListener('resize', this.resizeListener);
 
     // Set up mouse events
     this.setupMouseEvents();
@@ -667,6 +669,10 @@ export class GraphRenderer {
   destroy(): void {
     this.stopRenderLoop();
     this.layoutManager.terminate();
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+      this.resizeListener = null;
+    }
 
     if (this.canvas && this.container) {
       this.container.removeChild(this.canvas);
