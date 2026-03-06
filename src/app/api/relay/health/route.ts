@@ -11,6 +11,7 @@ import { AuthErrors, ServerErrors, ValidationErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import { checkAllRelayHealth, recordHeartbeat } from '@/lib/relay/health';
 import { hashAgentKey } from '@/lib/relay/auth';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/relay/health - Get aggregate health status
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
       health,
     });
   } catch (error) {
-    console.error('Get relay health error:', error);
+    logServerError('Get relay health error', error);
     return ServerErrors.internal('get_relay_health');
   }
 }
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Relay heartbeat error:', error);
+    logServerError('Relay heartbeat error', error);
     return ServerErrors.internal('relay_heartbeat');
   }
 }

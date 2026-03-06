@@ -14,6 +14,7 @@ import {
   type DeletionType,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 const VALID_DATA_TYPES: RetentionDataType[] = [
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
       has_more: schedules.has_more,
     });
   } catch (error) {
-    console.error('[Retention Schedules] GET error:', error);
+    logServerError('[Retention Schedules] GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -178,7 +179,7 @@ export async function POST(request: NextRequest) {
       schedule,
     });
   } catch (error) {
-    console.error('[Retention Schedules] POST error:', error);
+    logServerError('[Retention Schedules] POST error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

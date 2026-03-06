@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 interface ServiceStatus {
   name: string;
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Status check error:', error);
+    logServerError('Status check error', error);
     return NextResponse.json({
       success: true,
       status: 'unknown',

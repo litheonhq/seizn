@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getSSOConnections } from '@/lib/sso';
 import { generateFullSPMetadataXML } from '@/lib/sso/saml-provider';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ orgSlug: string }>;
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('SAML metadata error:', error);
+    logServerError('SAML metadata error', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

@@ -15,6 +15,7 @@ import { generateSAMLRequest } from '@/lib/sso/saml-provider';
 import { createServerClient } from '@/lib/supabase';
 import { ValidationErrors, NotFoundErrors, ServerErrors, createApiError, ErrorCodes } from '@/lib/api-error';
 import { sanitizeRelativeRedirect } from '@/lib/security/redirect';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/sso/initiate
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (attemptError) {
-        console.error('Failed to persist SSO login attempt:', attemptError);
+        logServerError('Failed to persist SSO login attempt', attemptError);
         return createApiError({
           code: ErrorCodes.INTERNAL_ERROR,
           message: 'Failed to persist SSO login attempt',
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
         },
       });
     } catch (samlError) {
-      console.error('SAML request generation error:', samlError);
+      logServerError('SAML request generation error', samlError);
       return createApiError({
         code: ErrorCodes.INTERNAL_ERROR,
         message: 'Failed to generate SSO request',
@@ -143,7 +144,7 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('SSO initiate error:', error);
+    logServerError('SSO initiate error', error);
     return ServerErrors.internal('sso_initiate');
   }
 }
@@ -214,7 +215,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
-    console.error('SSO redirect error:', error);
+    logServerError('SSO redirect error', error);
     return NextResponse.redirect(
       new URL('/login?error=sso_error', request.url)
     );

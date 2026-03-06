@@ -14,6 +14,7 @@ import {
   deleteRetentionSchedule,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       schedule,
     });
   } catch (error) {
-    console.error('[Retention Schedules] GET error:', error);
+    logServerError('[Retention Schedules] GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -133,7 +134,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       schedule,
     });
   } catch (error) {
-    console.error('[Retention Schedules] PATCH error:', error);
+    logServerError('[Retention Schedules] PATCH error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -170,7 +171,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       deleted: id,
     });
   } catch (error) {
-    console.error('[Retention Schedules] DELETE error:', error);
+    logServerError('[Retention Schedules] DELETE error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

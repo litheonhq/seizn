@@ -14,6 +14,7 @@ import {
   type LegalHoldScopeConfig,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 const VALID_SCOPE_TYPES: LegalHoldScopeType[] = ['all', 'collection', 'user', 'tag', 'date_range'];
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest) {
       has_more: holds.has_more,
     });
   } catch (error) {
-    console.error('[Retention Holds] GET error:', error);
+    logServerError('[Retention Holds] GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -174,7 +175,7 @@ export async function POST(request: NextRequest) {
       hold,
     });
   } catch (error) {
-    console.error('[Retention Holds] POST error:', error);
+    logServerError('[Retention Holds] POST error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

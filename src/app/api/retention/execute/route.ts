@@ -15,6 +15,7 @@ import {
   previewRetention,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 /**
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
       executions: history,
     });
   } catch (error) {
-    console.error('[Retention Execute] GET error:', error);
+    logServerError('[Retention Execute] GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
       message: `Retention executed: ${result.records_processed} records processed`,
     });
   } catch (error) {
-    console.error('[Retention Execute] POST error:', error);
+    logServerError('[Retention Execute] POST error', error);
 
     if (error instanceof Error) {
       if (error.message.includes('legal hold')) {

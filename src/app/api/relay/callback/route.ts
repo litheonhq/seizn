@@ -15,6 +15,7 @@ import {
 } from '@/lib/relay/protocol';
 import { verifyCallbackSignature, verifyCallbackToken } from '@/lib/relay/auth';
 import { type RelayAgentRow } from '@/lib/relay/types';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/relay/callback - Receive callback from relay agent
@@ -188,7 +189,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Relay callback error:', error);
+    logServerError('Relay callback error', error);
     return ServerErrors.internal('relay_callback');
   }
 }
