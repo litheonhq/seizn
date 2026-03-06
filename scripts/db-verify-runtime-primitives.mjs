@@ -64,6 +64,26 @@ async function getColumns(client, tableName) {
   return new Set(rows.map((row) => row.column_name));
 }
 
+async function getColumnType(client, tableName, columnName) {
+  const { rows } = await client.query(
+    `
+      SELECT format_type(a.atttypid, a.atttypmod) AS column_type
+      FROM pg_attribute a
+      JOIN pg_class c ON c.oid = a.attrelid
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+      WHERE n.nspname = 'public'
+        AND c.relname = $1
+        AND a.attname = $2
+        AND a.attnum > 0
+        AND NOT a.attisdropped
+      LIMIT 1;
+    `,
+    [tableName, columnName]
+  );
+
+  return rows[0]?.column_type || null;
+}
+
 async function assertTableColumns(client, tableName, requiredColumns) {
   const exists = await tableExists(client, tableName);
   assertOk(exists, `table exists: public.${tableName}`);
@@ -123,6 +143,23 @@ async function assertFunctionExists(client, name) {
   assertOk(defs.length > 0, `function exists: public.${name}`);
 }
 
+async function assertMatchingColumnTypes(client, leftTable, leftColumn, rightTable, rightColumn) {
+  const leftType = await getColumnType(client, leftTable, leftColumn);
+  const rightType = await getColumnType(client, rightTable, rightColumn);
+
+  assertOk(Boolean(leftType), `column exists: public.${leftTable}.${leftColumn}`);
+  assertOk(Boolean(rightType), `column exists: public.${rightTable}.${rightColumn}`);
+
+  if (!leftType || !rightType) {
+    return;
+  }
+
+  assertOk(
+    leftType === rightType,
+    `column type match: public.${leftTable}.${leftColumn} (${leftType}) = public.${rightTable}.${rightColumn} (${rightType})`
+  );
+}
+
 async function main() {
   const client = new pg.Client({
     ...pgConfigFromConnectionString(connectionString),
@@ -143,6 +180,8 @@ async function main() {
     await assertIndexExists(client, 'idx_device_auth_codes_user_code');
     await assertIndexExists(client, 'idx_device_auth_codes_expires_at');
     await assertFunctionExists(client, 'cleanup_expired_device_codes');
+    await assertMatchingColumnTypes(client, 'device_auth_codes', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'device_auth_codes', 'api_key_id', 'api_keys', 'id');
 
     await assertTableColumns(client, 'sso_connections', [
       'organization_id',
@@ -192,6 +231,8 @@ async function main() {
     ]);
     await assertIndexExists(client, 'idx_sso_sessions_user');
     await assertIndexExists(client, 'idx_sso_sessions_expires');
+    await assertMatchingColumnTypes(client, 'sso_sessions', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'sso_sessions', 'organization_id', 'organizations', 'id');
 
     await assertTableColumns(client, 'sso_login_attempts', [
       'connection_id',
@@ -209,6 +250,11 @@ async function main() {
     await assertIndexExists(client, 'idx_sso_login_attempts_org');
     await assertIndexExists(client, 'idx_sso_login_attempts_created');
     await assertFunctionExists(client, 'find_sso_connection_by_email');
+    await assertMatchingColumnTypes(client, 'sso_login_attempts', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'sso_login_attempts', 'organization_id', 'organizations', 'id');
+    await assertMatchingColumnTypes(client, 'sso_connections', 'organization_id', 'organizations', 'id');
+    await assertMatchingColumnTypes(client, 'sso_connections', 'created_by', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'sso_domain_verifications', 'organization_id', 'organizations', 'id');
 
     await assertTableColumns(client, 'relay_agents', [
       'user_id',
@@ -227,6 +273,8 @@ async function main() {
     await assertIndexExists(client, 'idx_relays_key');
     await assertIndexExists(client, 'idx_relays_status');
     await assertIndexExists(client, 'idx_relays_collections');
+    await assertMatchingColumnTypes(client, 'relay_agents', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'relay_agents', 'org_id', 'organizations', 'id');
 
     await assertTableColumns(client, 'relay_requests', [
       'relay_id',
