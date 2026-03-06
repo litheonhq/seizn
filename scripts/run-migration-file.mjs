@@ -60,20 +60,27 @@ async function run() {
     await client.query('COMMIT');
     console.log('Done.');
 
-    // Guardrail: after any DB migration, run the E2E encryption DB contract verification.
+    // Guardrail: after any DB migration, run DB contract verification.
     // Set SKIP_E2E_VERIFY=1 only for emergency/manual scenarios.
     if (process.env.SKIP_E2E_VERIFY !== '1') {
-      console.log('Running post-migration verification: npm run verify:e2e-encryption-db');
-      const verify = spawnSync('npm', ['run', 'verify:e2e-encryption-db'], {
-        stdio: 'inherit',
-        shell: process.platform === 'win32',
-      });
+      const verifyCommands = [
+        ['verify:e2e-encryption-db', 'npm run verify:e2e-encryption-db'],
+        ['verify:runtime-primitives', 'npm run verify:runtime-primitives'],
+      ];
 
-      if (verify.status !== 0) {
-        throw new Error(
-          'Post-migration verification failed (verify:e2e-encryption-db). ' +
-            'Set SKIP_E2E_VERIFY=1 only if you intentionally need to bypass.'
-        );
+      for (const [scriptName, label] of verifyCommands) {
+        console.log(`Running post-migration verification: ${label}`);
+        const verify = spawnSync('npm', ['run', scriptName], {
+          stdio: 'inherit',
+          shell: process.platform === 'win32',
+        });
+
+        if (verify.status !== 0) {
+          throw new Error(
+            `Post-migration verification failed (${scriptName}). ` +
+              'Set SKIP_E2E_VERIFY=1 only if you intentionally need to bypass.'
+          );
+        }
       }
     } else {
       console.warn('SKIP_E2E_VERIFY=1 set: skipped post-migration verification.');

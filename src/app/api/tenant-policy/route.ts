@@ -16,6 +16,7 @@ import { createHash } from "node:crypto";
 import { createServerClient } from "@/lib/supabase";
 import { getRequestUser } from "@/lib/api/request-user";
 import { verifyCsrf } from "@/lib/csrf";
+import { logServerError } from "@/lib/server/logger";
 import {
   getTenantPolicy,
   getTenantBudgetState,
@@ -143,7 +144,7 @@ export async function GET(request: NextRequest) {
     jsonResponse.headers.set('X-Policy-Version-Hash', policyEtag.replace(/^W\/\"|\"$/g, ''));
     return jsonResponse;
   } catch (error) {
-    console.error("[TenantPolicy] GET error:", error);
+    logServerError("[TenantPolicy] GET error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -244,7 +245,7 @@ export async function POST(request: NextRequest) {
         : "Custom policy applied",
     });
   } catch (error) {
-    console.error("[TenantPolicy] POST error:", error);
+    logServerError("[TenantPolicy] POST error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -302,7 +303,7 @@ export async function DELETE(request: NextRequest) {
       message: "Policy reset to conservative preset",
     });
   } catch (error) {
-    console.error("[TenantPolicy] DELETE error:", error);
+    logServerError("[TenantPolicy] DELETE error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

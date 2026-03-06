@@ -22,6 +22,7 @@ import {
 import { randomUUID } from 'crypto';
 import { encryptSSOSecret } from './secret';
 import { verifyDomainOwnership } from './domain-verification';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Constants
@@ -46,7 +47,7 @@ export async function getSSOConnections(organizationId: string): Promise<SSOConn
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Failed to fetch SSO connections:', error);
+    logServerError('Failed to fetch SSO connections', error);
     throw new Error('Failed to fetch SSO connections');
   }
 
@@ -117,7 +118,7 @@ export async function createSSOConnection(
     .single();
 
   if (error || !data) {
-    console.error('Failed to create SSO connection:', error);
+    logServerError('Failed to create SSO connection', error);
     throw new Error('Failed to create SSO connection');
   }
 
@@ -195,7 +196,7 @@ export async function updateSSOConnection(
     .single();
 
   if (error || !data) {
-    console.error('Failed to update SSO connection:', error);
+    logServerError('Failed to update SSO connection', error);
     throw new Error('Failed to update SSO connection');
   }
 
@@ -218,7 +219,7 @@ export async function deleteSSOConnection(
     .eq('organization_id', organizationId);
 
   if (error) {
-    console.error('Failed to delete SSO connection:', error);
+    logServerError('Failed to delete SSO connection', error);
     throw new Error('Failed to delete SSO connection');
   }
 }
@@ -259,7 +260,7 @@ export async function startDomainVerification(
     .single();
 
   if (error || !data) {
-    console.error('Failed to start domain verification:', error);
+    logServerError('Failed to start domain verification', error);
     throw new Error('Failed to start domain verification');
   }
 

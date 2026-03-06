@@ -11,6 +11,8 @@ Run these commands on the exact commit being deployed.
 ```bash
 npm run lint -- --max-warnings=0
 npm run typecheck
+npm run verify:e2e-encryption-db
+npm run verify:runtime-primitives
 npm run build
 npx vitest run src/__tests__/api/request-user.test.ts src/__tests__/profile/upsert.test.ts src/__tests__/server/logger.test.ts
 PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2e/dashboard-smoke.spec.ts e2e/dashboard-auth-smoke.spec.ts e2e/api-key.spec.ts e2e/spring-memory-crud.spec.ts --project=chromium --workers=1
@@ -33,6 +35,7 @@ PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2
 - `POST /api/auth/device/verify`: verify pending device code lookup works.
 - `POST /api/auth/device/approve`: approve a pending device code and verify API key issuance.
 - OIDC login: start `GET /api/auth/oidc/[connectionId]` and confirm callback completes without server-side 500.
+- SSO runtime primitives: confirm `sso_connections`, `sso_sessions`, `sso_login_attempts`, and `find_sso_connection_by_email` exist in the target DB before deploy.
 
 ### Audit
 
@@ -47,6 +50,7 @@ PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2
 - Memory create/update/delete works from the dashboard.
 - Search works with and without vector/RPC availability.
 - `npm run verify:e2e-encryption-db` still passes against the target database.
+- `npm run verify:runtime-primitives` still passes against the target database.
 
 ### Traces
 

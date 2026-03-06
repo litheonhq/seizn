@@ -19,6 +19,7 @@ import { getSSOConnection, getSSOConnections } from '@/lib/sso';
 import { extractUserAttributes, parseSAMLResponse } from '@/lib/sso/saml-provider';
 import { sanitizeRelativeRedirect, sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 import { createAuthJsSessionToken } from '@/lib/auth/session-token';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ orgSlug: string }>;
@@ -149,7 +150,7 @@ async function handleAcs(
   // Validate response
   const validation = await parseSAMLResponse(samlResponse, connection);
   if ('error' in validation) {
-    console.error('SAML validation failed:', validation.error);
+    logServerError('SAML validation failed', validation.error);
 
     // Best-effort audit trail: update the attempt if we can, otherwise insert a new row.
     try {
@@ -320,7 +321,7 @@ async function handleAcs(
 
     return response;
   } catch (err) {
-    console.error('SAML ACS provisioning error:', err);
+    logServerError('SAML ACS provisioning error', err);
 
     // Mark attempt as error when possible.
     try {

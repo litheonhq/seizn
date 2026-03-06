@@ -14,6 +14,7 @@ import {
   releaseLegalHold,
 } from '@/lib/winter/retention';
 import { getUserOrgRole } from '@/lib/winter/org';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       hold,
     });
   } catch (error) {
-    console.error('[Retention Holds] GET error:', error);
+    logServerError('[Retention Holds] GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -123,7 +124,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       hold,
     });
   } catch (error) {
-    console.error('[Retention Holds] PATCH error:', error);
+    logServerError('[Retention Holds] PATCH error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -160,7 +161,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
     // Get release reason from body
     const body = await request.json().catch((e: unknown) => {
-      console.warn('[Retention Hold] Failed to parse request body:', e instanceof Error ? e.message : e);
+      logServerWarn('[Retention Hold] Failed to parse request body', e);
       return {} as Record<string, unknown>;
     });
     const releaseReason = body.release_reason || 'Released via API';
@@ -173,7 +174,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       message: 'Legal hold released successfully',
     });
   } catch (error) {
-    console.error('[Retention Holds] DELETE error:', error);
+    logServerError('[Retention Holds] DELETE error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
