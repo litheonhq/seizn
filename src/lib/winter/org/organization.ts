@@ -8,6 +8,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { seedDefaultOrganizationIdIfMissing } from '@/lib/profile/organization';
 import type {
   Organization,
   OrganizationSettings,
@@ -109,6 +110,11 @@ export async function createOrganization(
       status: 'active',
     });
 
+    await seedDefaultOrganizationIdIfMissing(supabase, {
+      userId: params.owner_id,
+      organizationId: String(org.id),
+    });
+
     // Log audit event
     await logAuditEvent({
       user_id: params.owner_id,
@@ -139,6 +145,11 @@ export async function createOrganization(
       .update({ settings: params.settings })
       .eq('id', orgId);
   }
+
+  await seedDefaultOrganizationIdIfMissing(supabase, {
+    userId: params.owner_id,
+    organizationId: String(orgId),
+  });
 
   // Log audit event
   await logAuditEvent({

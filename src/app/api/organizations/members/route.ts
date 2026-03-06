@@ -4,6 +4,7 @@ import { organizationInviteEmail } from '@/lib/email/templates';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
 import { verifyCsrf } from '@/lib/csrf';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 import crypto from 'crypto';
 
 // GET /api/organizations/members - List organization members
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('Fetch members error:', error);
+      logServerError('Fetch members error', error);
       return NextResponse.json({ error: 'Failed to fetch members' }, { status: 500 });
     }
 
@@ -100,7 +101,7 @@ export async function GET(request: NextRequest) {
       your_role: membership.role,
     });
   } catch (error) {
-    console.error('Members GET error:', error);
+    logServerError('Members GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -199,7 +200,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (inviteError) {
-      console.error('Create invite error:', inviteError);
+      logServerError('Create invite error', inviteError);
       return NextResponse.json({ error: 'Failed to create invite' }, { status: 500 });
     }
 
@@ -229,7 +230,7 @@ export async function POST(request: NextRequest) {
         ),
       });
     } catch (emailError) {
-      console.error('Failed to send invite email:', emailError);
+      logServerWarn('Failed to send invite email', emailError);
       // Continue anyway - invite was created successfully
     }
 
@@ -239,7 +240,7 @@ export async function POST(request: NextRequest) {
       invite_url: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
     });
   } catch (error) {
-    console.error('Members POST error:', error);
+    logServerError('Members POST error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -303,13 +304,13 @@ export async function PATCH(request: NextRequest) {
       .eq('organization_id', orgId);
 
     if (error) {
-      console.error('Update member role error:', error);
+      logServerError('Update member role error', error);
       return NextResponse.json({ error: 'Failed to update role' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, role });
   } catch (error) {
-    console.error('Members PATCH error:', error);
+    logServerError('Members PATCH error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -371,13 +372,13 @@ export async function DELETE(request: NextRequest) {
       .eq('organization_id', orgId);
 
     if (error) {
-      console.error('Remove member error:', error);
+      logServerError('Remove member error', error);
       return NextResponse.json({ error: 'Failed to remove member' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, removed: memberId });
   } catch (error) {
-    console.error('Members DELETE error:', error);
+    logServerError('Members DELETE error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

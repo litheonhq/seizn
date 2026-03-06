@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { seedDefaultOrganizationIdIfMissing } from '@/lib/profile/organization';
 import { logServerError } from '@/lib/server/logger';
 import {
   AuthErrors,
@@ -178,6 +179,12 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('id', orgId)
       .single();
+
+    await seedDefaultOrganizationIdIfMissing(supabase, {
+      userId: user.id,
+      email: user.email ?? null,
+      organizationId: String(orgId),
+    });
 
     return NextResponse.json({
       success: true,
