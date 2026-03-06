@@ -359,6 +359,34 @@ async function runSmoke(baseUrl, bearerToken) {
     );
   }
 
+  const playgroundQuery = await requestJson(baseUrl, '/api/playground/query', {
+    method: 'POST',
+    bearerToken,
+    body: {
+      query: memoryContent,
+      namespace: 'production-smoke',
+      topK: 3,
+      mode: 'keyword',
+      rerank: false,
+    },
+  });
+  results.push({ path: '/api/playground/query [POST]', status: playgroundQuery.status });
+  if (!playgroundQuery.ok || playgroundQuery.json?.success !== true) {
+    throw new Error(
+      `Playground query smoke failed: ${playgroundQuery.status} ${JSON.stringify(playgroundQuery.json)}`
+    );
+  }
+
+  const tracesList = await requestJson(baseUrl, '/api/traces?limit=1', {
+    apiKey: keyResult.apiKey,
+  });
+  results.push({ path: '/api/traces [GET]', status: tracesList.status });
+  if (!tracesList.ok) {
+    throw new Error(
+      `Traces list smoke failed: ${tracesList.status} ${JSON.stringify(tracesList.json)}`
+    );
+  }
+
   const deleteMemory = await requestJson(
     baseUrl,
     `/api/v1/memories?ids=${encodeURIComponent(memoryId)}`,

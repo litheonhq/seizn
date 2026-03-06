@@ -20,7 +20,7 @@ PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2
 
 ## Dedicated Smoke Account
 
-Use the production smoke helper to pull Vercel production env, ensure a dedicated smoke user exists in Supabase Auth, persist the local-only credentials, mint an Auth.js session cookie, and run authenticated API smoke checks without creating a preview deployment.
+Use the production smoke helper to pull Vercel production env, ensure a dedicated smoke user exists in Supabase Auth, persist the local-only credentials, and run authenticated bearer/API-key smoke checks without creating a preview deployment.
 
 ```bash
 npm run smoke:production
@@ -31,6 +31,16 @@ Expected local artifact:
 - `C:\Users\admin\Projects\seizn\.env.production.smoke.local`
 
 The file is ignored by git and stores the dedicated smoke credentials for repeat runs.
+
+Current automated smoke coverage:
+
+- `GET /api/keys`
+- `POST /api/keys`
+- `POST /api/playground/query`
+- `GET /api/traces`
+- `POST /api/v1/memories`
+- `GET /api/v1/memories`
+- `DELETE /api/v1/memories`
 
 ## Environment Verification
 

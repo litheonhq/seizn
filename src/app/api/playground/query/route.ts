@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createQueryEmbedding } from '@/lib/ai';
+import { logServerError } from '@/lib/server/logger';
 
 interface PlaygroundQueryRequest {
   query: string;
@@ -12,6 +13,79 @@ interface PlaygroundQueryRequest {
   rerank?: boolean;
 }
 
+function escapeLikePattern(input: string): string {
+  return input.replace(/[%_\\]/g, '\\$&');
+}
+
+function shouldUseDegradedKeywordSearchFallback(error: Error): boolean {
+  const message = error.message.toLowerCase();
+  const missingSearchFunction =
+    message.includes('does not exist') &&
+    (message.includes('keyword_search_memories') ||
+      message.includes('hybrid_search_memories') ||
+      message.includes('search_memories'));
+
+  return message.includes('operator does not exist: text = uuid') || missingSearchFunction;
+}
+
+async function runDegradedKeywordSearch(params: {
+  supabase: ReturnType<typeof createServerClient>;
+  userId: string;
+  queryText: string;
+  namespace: string;
+  limit: number;
+}): Promise<{ results: SearchResult[]; error: Error | null }> {
+  let queryBuilder = params.supabase
+    .from('memories')
+    .select('id, content, memory_type, created_at')
+    .eq('user_id', params.userId)
+    .eq('is_deleted', false)
+    .eq('namespace', params.namespace)
+    .order('created_at', { ascending: false })
+    .limit(params.limit);
+
+  const normalizedQuery = params.queryText.trim();
+  if (normalizedQuery.length > 0) {
+    const terms = Array.from(
+      new Set(
+        normalizedQuery
+          .toLowerCase()
+          .split(/\s+/)
+          .map((term) => term.replace(/[^\p{L}\p{N}_-]/gu, ''))
+          .filter((term) => term.length >= 2)
+      )
+    ).slice(0, 5);
+
+    if (terms.length > 0) {
+      const orExpr = terms
+        .map((term) => `content.ilike.%${escapeLikePattern(term)}%`)
+        .join(',');
+      queryBuilder = queryBuilder.or(orExpr);
+    } else {
+      queryBuilder = queryBuilder.ilike('content', `%${escapeLikePattern(normalizedQuery)}%`);
+    }
+  }
+
+  const { data, error } = await queryBuilder;
+  if (error) {
+    return {
+      results: [],
+      error: new Error(error.message || 'degraded_keyword_search_failed'),
+    };
+  }
+
+  return {
+    results: ((data as Array<{ id: string; content: string; memory_type?: string | null }> | null) || [])
+      .map((row, index) => ({
+        id: row.id,
+        content: row.content,
+        memory_type: row.memory_type || undefined,
+        similarity: Math.max(0.1, 1 - index * 0.05),
+      })),
+    error: null,
+  };
+}
+
 /**
  * POST /api/playground/query
  * Execute a debug query with full tracing
@@ -20,8 +94,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const requestUser = await getRequestUser(request);
+    if (!requestUser?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -44,7 +118,10 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
-    const userId = session.user.id;
+    const userId = requestUser.id;
+    let resolvedMode = mode;
+    let fallback: { applied: boolean; from: typeof mode; to: 'keyword'; reason: 'search_error' } | null =
+      null;
 
     // Execute search based on mode
     let results: SearchResult[] = [];
@@ -87,8 +164,40 @@ export async function POST(request: NextRequest) {
       searchError = error;
     }
 
+    if (searchError && shouldUseDegradedKeywordSearchFallback(searchError)) {
+      const degraded = await runDegradedKeywordSearch({
+        supabase,
+        userId,
+        queryText: query.trim(),
+        namespace,
+        limit: topK,
+      });
+
+      if (!degraded.error) {
+        results = degraded.results;
+        resolvedMode = 'keyword';
+        fallback = {
+          applied: true,
+          from: mode,
+          to: 'keyword',
+          reason: 'search_error',
+        };
+        searchError = null;
+      } else {
+        logServerError('Playground degraded keyword fallback failed', degraded.error, {
+          userId,
+          namespace,
+          requestedMode: mode,
+        });
+      }
+    }
+
     if (searchError) {
-      console.error('Playground search error:', searchError);
+      logServerError('Playground search error', searchError, {
+        userId,
+        namespace,
+        requestedMode: mode,
+      });
       return NextResponse.json({ error: 'Search failed' }, { status: 500 });
     }
 
@@ -122,17 +231,19 @@ export async function POST(request: NextRequest) {
       count: results.length,
       trace: {
         latency_ms: latencyMs,
-        mode,
+        mode: resolvedMode,
+        requested_mode: mode,
         namespace,
         topK,
         threshold,
         rerank_enabled: rerank,
         embedding_model: mode !== 'keyword' ? 'text-embedding-3-small' : null,
         estimated_cost: `$${totalCost.toFixed(5)}`,
+        fallback,
       },
     });
   } catch (error) {
-    console.error('Playground query error:', error);
+    logServerError('Playground query error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
