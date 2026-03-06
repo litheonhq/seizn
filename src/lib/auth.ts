@@ -2,8 +2,8 @@ import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { resolveProfileUserId } from './profile/resolve';
-import { createServerClient, hasServerSupabaseServiceRoleConfig } from './supabase';
+import { normalizeProfileUserId } from './profile/normalize';
+import { createServerClient } from './supabase';
 import { logServerError } from '@/lib/server/logger';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
@@ -153,13 +153,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = profile?.id || token.sub;
       }
 
-      if (
-        hasServerSupabaseServiceRoleConfig() &&
-        token.email &&
-        (!token.id || token.id === token.sub)
-      ) {
-        const supabase = createServerClient();
-        const resolvedProfileId = await resolveProfileUserId(supabase, {
+      if (token.email && (!token.id || token.id === token.sub)) {
+        const resolvedProfileId = await normalizeProfileUserId({
           userId:
             typeof token.id === 'string'
               ? token.id
@@ -178,7 +173,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string;
+        const resolvedProfileId = await normalizeProfileUserId({
+          userId:
+            typeof token.id === 'string'
+              ? token.id
+              : typeof token.sub === 'string'
+                ? token.sub
+                : null,
+          email: session.user.email ?? (typeof token.email === 'string' ? token.email : null),
+        });
+
+        if (resolvedProfileId) {
+          session.user.id = resolvedProfileId;
+        } else if (typeof token.id === 'string') {
+          session.user.id = token.id;
+        }
       }
       return session;
     },
