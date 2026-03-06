@@ -69,3 +69,9 @@
 **Cause:** `dotenv.config()` was loading `.env.local` without `override: true`, so pre-existing shell `POSTGRES_*` and `SUPABASE_*` variables could silently win. That sent `run-migration-file.mjs` and DB verification scripts to the wrong database.
 **Fix:** Added `scripts/load-local-env.mjs` and switched DB-facing scripts to load `.env.local` with `override: true`. Then re-applied the `profiles.organization_id` compatibility migration to the actual local target DB and corrected the runtime primitive verifier so budget tables are checked against `auth.users.id`, which matches the live schema.
 
+### Production Status Route Reported Cross-Region DB Latency
+**Date:** 2026-03-06
+**Symptom:** `https://www.seizn.com/api/status` could intermittently report the Database service as degraded even when the rest of production was healthy.
+**Cause:** The public status route was executing in Vercel `iad1` while Supabase was hosted in `ap-northeast-1`, so the DB health probe paid inter-region latency and occasional cold-start spikes. The status endpoint then cached that degraded result.
+**Fix:** Switched the status probe to `profiles`, raised degraded/down thresholds, disabled caching for non-operational states, and pinned `src/app/api/status/route.ts` to `preferredRegion = 'hnd1'` so the DB check runs near the Supabase region.
+
