@@ -11,6 +11,7 @@
 - Hardened security workflows so PR secret scans and red-team checks can run with explicit GitHub token permissions and DB-less CI fallback.
 - Documented the production smoke flow used before deploy and after merge.
 - Added runtime DB primitive verification for device auth, SSO, and relay contracts, and restored missing compat tables/functions for drifted environments.
+- Added a cross-type compat migration for drifted environments where `profiles.id`, `organizations.id`, or related foreign keys no longer share the same base type.
 
 ## Included Areas
 
@@ -39,6 +40,7 @@
 - `scripts/run-migration-file.mjs`
 - `scripts/pre-deploy.sh`
 - `supabase/migrations/20260306006_runtime_auth_relay_primitives_restoration.sql`
+- `supabase/migrations/20260306007_runtime_primitives_cross_type_compat.sql`
 - `src/app/api/status/*`
 - `src/app/api/tenant-policy/*`
 - `src/app/api/retention/*`
@@ -52,8 +54,10 @@
 - Server error paths now pass through redaction before emission.
 - Failure logs from enterprise inquiry, SSO configuration, adapter lifecycle, federated admin routes, connector OAuth flows, budget APIs, recurring operational cron routes, drift analysis, Winter RTBF cron flows, and Spring maintenance cron flows no longer risk leaking bearer tokens, API keys, cookies, or emails.
 - Pre-deploy and migration workflows now fail fast when device auth, SSO, or relay runtime primitives are missing.
+- Runtime verification now also fails when key auth/SSO/relay foreign-key column types drift away from their referenced tables.
 - No API contract changes were introduced.
 - Added a compat restoration migration for missing device auth, SSO, and relay runtime objects in drifted environments.
+- Production `POST /api/auth/device`, `POST /api/auth/device/verify`, and `POST /api/auth/device/token` were re-smoked successfully after the cross-type compat migration was applied.
 
 ## Verification
 

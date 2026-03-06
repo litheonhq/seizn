@@ -22,6 +22,7 @@ PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2
 
 - Confirm `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` target the intended project.
 - Confirm `NEXT_PUBLIC_SUPABASE_URL` matches the same project or is intentionally overridden only for client-side use.
+- Confirm runtime primitive foreign-key columns still match the referenced base types by running `npm run verify:runtime-primitives` against the target database.
 - Confirm `TURNSTILE_SECRET_KEY` exists in production if signup CAPTCHA is expected.
 - Confirm `NEXT_PUBLIC_APP_URL` points to the production hostname used by trace share links and device auth flows.
 - Confirm mail delivery credentials are valid before enabling welcome emails.
@@ -33,6 +34,7 @@ PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2
 - `POST /api/auth/signup`: create a fresh account and verify profile creation plus default API key provisioning.
 - `POST /api/auth/device`: start device flow and verify code creation.
 - `POST /api/auth/device/verify`: verify pending device code lookup works.
+- `POST /api/auth/device/token`: verify a pending code returns `428 authorization_pending` before approval.
 - `POST /api/auth/device/approve`: approve a pending device code and verify API key issuance.
 - OIDC login: start `GET /api/auth/oidc/[connectionId]` and confirm callback completes without server-side 500.
 - SSO runtime primitives: confirm `sso_connections`, `sso_sessions`, `sso_login_attempts`, and `find_sso_connection_by_email` exist in the target DB before deploy.
