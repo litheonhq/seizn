@@ -23,6 +23,7 @@ import {
   type PolicyType,
   type PolicyConfig,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       ...(templates && { templates }),
     });
   } catch (error) {
-    console.error('[WinterOrg Policies] GET error:', error);
+    logServerError('[WinterOrg Policies] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       policy,
     });
   } catch (error) {
-    console.error('[WinterOrg Policies] POST error:', error);
+    logServerError('[WinterOrg Policies] POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -219,7 +220,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       policy,
     });
   } catch (error) {
-    console.error('[WinterOrg Policies] PATCH error:', error);
+    logServerError('[WinterOrg Policies] PATCH error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -257,7 +258,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       deleted: policyId,
     });
   } catch (error) {
-    console.error('[WinterOrg Policies] DELETE error:', error);
+    logServerError('[WinterOrg Policies] DELETE error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

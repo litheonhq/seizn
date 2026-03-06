@@ -16,6 +16,7 @@ import {
   getOrganizationUsage,
   checkOrganizationLimits,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       ...(limits && { limits }),
     });
   } catch (error) {
-    console.error('[WinterOrg] GET [orgId] error:', error);
+    logServerError('[WinterOrg] GET [orgId] error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -116,7 +117,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       organization,
     });
   } catch (error) {
-    console.error('[WinterOrg] PATCH error:', error);
+    logServerError('[WinterOrg] PATCH error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -150,7 +151,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       deleted: orgId,
     });
   } catch (error) {
-    console.error('[WinterOrg] DELETE error:', error);
+    logServerError('[WinterOrg] DELETE error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

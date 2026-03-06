@@ -5,21 +5,20 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createResidencyService } from '@/lib/residency/service';
 import { REGION_DEFINITIONS } from '@/lib/residency/types';
+import { logServerError } from '@/lib/server/logger';
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -61,7 +60,7 @@ export async function GET(_request: NextRequest) {
       allRegions: Object.values(REGION_DEFINITIONS),
     });
   } catch (error) {
-    console.error('Data residency API error:', error);
+    logServerError('Data residency API error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -71,15 +70,12 @@ export async function GET(_request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization and check admin role
     const { data: membership } = await supabase
@@ -134,7 +130,7 @@ export async function PUT(request: NextRequest) {
       message: 'Data residency policy updated',
     });
   } catch (error) {
-    console.error('Data residency update error:', error);
+    logServerError('Data residency update error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(

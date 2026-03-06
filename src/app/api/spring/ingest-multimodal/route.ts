@@ -12,6 +12,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 import { createMultimodalService } from '@/lib/spring/memory-v4/multimodal-service';
 
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Multimodal ingestion error:', error);
+    logServerError('Multimodal ingestion error', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
 
     if (message.includes('imageUrl or imageBase64')) {

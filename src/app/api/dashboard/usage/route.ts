@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/usage - Get detailed usage analytics
 export async function GET(request: NextRequest) {
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (logsError) {
-      console.error('Usage logs error:', logsError);
+      logServerError('Usage logs error', logsError);
       return ServerErrors.database('fetch_usage');
     }
 
@@ -86,7 +87,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Usage analytics error:', error);
+    logServerError('Usage analytics error', error);
     return ServerErrors.internal('usage_analytics');
   }
 }

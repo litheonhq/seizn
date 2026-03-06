@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { getNorthStarMetrics, NorthStarMetrics } from '@/lib/metrics/north-star';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/north-star - Get North Star metrics
 export async function GET(request: NextRequest) {
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
     try {
       metrics = await getNorthStarMetrics(organizationId, timeRange);
     } catch (metricsError) {
-      console.error('Error fetching metrics:', metricsError);
+      logServerError('Error fetching metrics', metricsError);
       // Return placeholder metrics if calculation fails
       metrics = createPlaceholderMetrics();
     }
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
       period,
     });
   } catch (error) {
-    console.error('North Star metrics error:', error);
+    logServerError('North Star metrics error', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

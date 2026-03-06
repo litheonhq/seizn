@@ -15,6 +15,7 @@ import { getOpaPolicyService } from '@/lib/winter/opa';
 import type { OpaPrincipal, OpaDecision } from '@/lib/winter/opa';
 import { getBudgetStatus } from '@/lib/control-tower/cost-attribution';
 import type { BudgetStatus } from '@/lib/control-tower/cost-attribution';
+import { logServerWarn } from '@/lib/server/logger';
 
 // ============================================
 // Types
@@ -205,7 +206,7 @@ export class PolicyRouter {
       };
     } catch (error) {
       // Fail open/closed based on configured failure mode.
-      console.warn('[PolicyRouter] Budget check failed, applying fallback mode:', {
+      logServerWarn('[PolicyRouter] Budget check failed, applying fallback mode', {
         userId,
         orgId,
         error: error instanceof Error ? error.message : String(error),
@@ -317,7 +318,7 @@ export class PolicyRouter {
       return { allowed: true };
     } catch (error) {
       // Fail open/closed based on configured failure mode.
-      console.warn('[PolicyRouter] OPA policy evaluation failed, applying fallback mode:', {
+      logServerWarn('[PolicyRouter] OPA policy evaluation failed, applying fallback mode', {
         requestId: request.id,
         error: error instanceof Error ? error.message : String(error),
       });

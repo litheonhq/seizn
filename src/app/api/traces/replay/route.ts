@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, ValidationErrors, ServerErrors, NotFoundErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import {
   getTraceStore,
   startTrace,
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
       compare_url: `/dashboard/traces/compare?a=${trace_id}&b=${handle.traceId}`,
     });
   } catch (error) {
-    console.error('Trace replay error:', error);
+    logServerError('Trace replay error', error);
     return ServerErrors.internal('trace_replay');
   }
 }
@@ -237,3 +238,4 @@ function generateSimulatedResults(topK: number, reranked: boolean) {
   }
   return results;
 }
+

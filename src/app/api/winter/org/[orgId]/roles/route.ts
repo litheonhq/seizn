@@ -18,6 +18,7 @@ import {
   deleteCustomRole,
   DEFAULT_ORG_ROLES,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       your_permissions: DEFAULT_ORG_ROLES[role]?.permissions || [],
     });
   } catch (error) {
-    console.error('[WinterOrg Roles] GET error:', error);
+    logServerError('[WinterOrg Roles] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       role: customRole,
     });
   } catch (error) {
-    console.error('[WinterOrg Roles] POST error:', error);
+    logServerError('[WinterOrg Roles] POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -155,7 +156,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       role: customRole,
     });
   } catch (error) {
-    console.error('[WinterOrg Roles] PATCH error:', error);
+    logServerError('[WinterOrg Roles] PATCH error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -193,7 +194,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       deleted: roleId,
     });
   } catch (error) {
-    console.error('[WinterOrg Roles] DELETE error:', error);
+    logServerError('[WinterOrg Roles] DELETE error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

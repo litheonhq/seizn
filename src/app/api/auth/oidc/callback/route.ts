@@ -15,6 +15,7 @@ import { logAuditEvent } from '@/lib/enterprise-auth/audit';
 import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 import { buildOIDCConfigFromConnection, type OidcConnectionRecord } from '@/lib/sso/oidc-config';
 import { createAuthJsSessionToken } from '@/lib/auth/session-token';
+import { logServerError } from '@/lib/server/logger';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
 
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
 
   // Handle IdP errors
   if (error) {
-    console.error('OIDC error from IdP:', error, errorDescription);
+    logServerError('OIDC error from IdP', { error, errorDescription });
     const errorUrl = new URL('/login', baseUrl);
     errorUrl.searchParams.set('error', 'OIDCCallback');
     errorUrl.searchParams.set('error_description', errorDescription || error);
@@ -252,7 +253,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('OIDC callback error:', err);
+    logServerError('OIDC callback error', err);
 
     // Log failed login attempt
     try {
@@ -280,3 +281,4 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(errorUrl);
   }
 }
+

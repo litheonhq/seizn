@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { enqueueDeletionJob, runDeletionJob } from '@/lib/winter/forget';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/winter/forget
 // Body:
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, job_id: jobId }, { status: 200 });
   } catch (err) {
-    console.error('Winter forget error:', err);
+    logServerError('Winter forget error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -16,6 +16,7 @@ import {
   type AuditAction,
   type ResourceType,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -150,7 +151,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       has_more: result.has_more,
     });
   } catch (error) {
-    console.error('[WinterOrg Audit] GET error:', error);
+    logServerError('[WinterOrg Audit] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

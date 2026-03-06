@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, NotFoundErrors, ServerErrors } from '@/lib/api-error';
 import { getTraceStore } from '@/lib/fall/flight-recorder';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/traces/[id] - Get a specific trace by ID
@@ -71,7 +72,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Trace get error:', error);
+    logServerError('Trace get error', error);
     return ServerErrors.internal('trace_get');
   }
 }
@@ -108,7 +109,8 @@ export async function DELETE(
       message: 'Trace deleted',
     });
   } catch (error) {
-    console.error('Trace delete error:', error);
+    logServerError('Trace delete error', error);
     return ServerErrors.internal('trace_delete');
   }
 }
+

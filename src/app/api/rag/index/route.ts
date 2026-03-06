@@ -5,20 +5,19 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createRAGService } from '@/lib/rag/service';
+import { logServerError } from '@/lib/server/logger';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const body = await request.json();
 
@@ -81,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ job }, { status: 202 });
   } catch (error) {
-    console.error('RAG index error:', error);
+    logServerError('RAG index error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(
@@ -99,15 +98,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const searchParams = request.nextUrl.searchParams;
     const jobId = searchParams.get('jobId');
@@ -154,7 +150,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ job });
   } catch (error) {
-    console.error('RAG index job get error:', error);
+    logServerError('RAG index job get error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -164,15 +160,12 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const searchParams = request.nextUrl.searchParams;
     const jobId = searchParams.get('jobId');
@@ -228,7 +221,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ message: 'Index job cancelled' });
   } catch (error) {
-    console.error('RAG index job cancel error:', error);
+    logServerError('RAG index job cancel error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

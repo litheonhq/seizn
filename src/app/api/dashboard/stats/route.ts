@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
 import { getPlan } from '@/lib/plan-limits';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/stats - Get user statistics
 export async function GET() {
@@ -71,7 +72,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Stats error:', error);
+    logServerError('Stats error', error);
     return ServerErrors.internal('dashboard_stats');
   }
 }

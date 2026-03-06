@@ -1,4 +1,5 @@
 import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 /**
  * Relation Extractor
  *
@@ -293,7 +294,9 @@ async function extractRelationsByLlm(
 ): Promise<LlmRelation[]> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    console.warn('ANTHROPIC_API_KEY not set, skipping LLM relation extraction');
+    logServerWarn(
+      'ANTHROPIC_API_KEY not set, skipping LLM relation extraction'
+    );
     return [];
   }
 
@@ -334,7 +337,10 @@ async function extractRelationsByLlm(
     });
 
     if (!response.ok) {
-      console.error('LLM relation extraction failed:', await response.text());
+      logServerError(
+        'LLM relation extraction failed',
+        await response.text()
+      );
       return [];
     }
 
@@ -364,7 +370,7 @@ async function extractRelationsByLlm(
         confidence: Math.min(1, Math.max(0, r.confidence || 0.8)),
       }));
   } catch (error) {
-    console.error('LLM relation extraction error:', error);
+    logServerError('LLM relation extraction error', error);
     return [];
   }
 }

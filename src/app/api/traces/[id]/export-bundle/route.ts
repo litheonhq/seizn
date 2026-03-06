@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import {
   generateDebugBundle,
   exportDebugBundle,
@@ -104,7 +105,7 @@ export async function POST(
       },
     });
   } catch (err) {
-    console.error('Export bundle error:', err);
+    logServerError('Export bundle error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -186,10 +187,11 @@ export async function GET(
       downloadUrl: `/api/traces/${traceId}/export-bundle`,
     });
   } catch (err) {
-    console.error('Preview bundle error:', err);
+    logServerError('Preview bundle error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

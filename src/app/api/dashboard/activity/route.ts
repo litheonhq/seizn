@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/dashboard/activity
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
       .limit(limit);
 
     if (logsError) {
-      console.error('Activity logs error:', logsError);
+      logServerError('Activity logs error', logsError);
       return NextResponse.json({ error: 'Failed to fetch activity' }, { status: 500 });
     }
 
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error('Activity fetch error:', error);
+    logServerError('Activity fetch error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

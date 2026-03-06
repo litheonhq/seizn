@@ -12,6 +12,7 @@ import {
   resolveAlert,
   silenceAlert,
 } from '@/lib/control-tower';
+import { logServerError } from '@/lib/server/logger';
 
 export async function PATCH(
   request: NextRequest,
@@ -70,7 +71,7 @@ export async function PATCH(
       data: alert,
     });
   } catch (err) {
-    console.error('Control Tower alert action error:', err);
+    logServerError('Control Tower alert action error', err);
     return ServerErrors.internal('control_tower_alert_action');
   }
 }

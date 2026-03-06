@@ -10,6 +10,7 @@ import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-a
 import { ServerErrors, ValidationErrors } from '@/lib/api-error';
 import { getAlertRules, createAlertRule } from '@/lib/control-tower';
 import type { AlertCondition } from '@/lib/control-tower/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
       data: rules,
     });
   } catch (err) {
-    console.error('Control Tower alert rules error:', err);
+    logServerError('Control Tower alert rules error', err);
     return ServerErrors.internal('control_tower_alert_rules');
   }
 }
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
       data: rule,
     }, { status: 201 });
   } catch (err) {
-    console.error('Control Tower create alert rule error:', err);
+    logServerError('Control Tower create alert rule error', err);
     return ServerErrors.internal('control_tower_create_alert_rule');
   }
 }

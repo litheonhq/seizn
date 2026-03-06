@@ -15,6 +15,7 @@ import {
   type RegoPolicyCategory,
   type RegoPolicyScope,
 } from '@/lib/winter/opa';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Auth Helper
@@ -171,7 +172,7 @@ export async function POST(request: NextRequest) {
       ...(testResults && { testResults }),
     });
   } catch (error) {
-    console.error('[Winter OPA Create] POST error:', error);
+    logServerError('[Winter OPA Create] POST error:', error);
 
     if (error instanceof Error) {
       return NextResponse.json(

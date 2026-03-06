@@ -15,6 +15,7 @@ import {
   resetLearning,
 } from '@/lib/autopilot-retrieval';
 import type { AutopilotConfigInput } from '@/lib/autopilot-retrieval';
+import { logServerError } from '@/lib/server/logger';
 
 // Helper to check if auth result is an error
 function _isAuthErrorResult(result: unknown): result is { authError: { code: string; error: string; status: number } } {
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
       config,
     });
   } catch (err) {
-    console.error('Autopilot config GET error:', err);
+    logServerError('Autopilot config GET error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -208,7 +209,7 @@ export async function POST(request: NextRequest) {
       config,
     });
   } catch (err) {
-    console.error('Autopilot config POST error:', err);
+    logServerError('Autopilot config POST error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -247,7 +248,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Config deleted successfully',
     });
   } catch (err) {
-    console.error('Autopilot config DELETE error:', err);
+    logServerError('Autopilot config DELETE error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

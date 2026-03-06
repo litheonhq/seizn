@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { makeDecision, recordOutcome } from '@/lib/autopilot-retrieval';
 import type { StrategyOutcome, RewardComponents } from '@/lib/autopilot-retrieval';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/autopilot/decide
@@ -148,7 +149,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (err) {
-    console.error('Autopilot decide POST error:', err);
+    logServerError('Autopilot decide POST error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -201,7 +202,7 @@ export async function GET(request: NextRequest) {
       params: selection.params,
     });
   } catch (err) {
-    console.error('Autopilot decide GET error:', err);
+    logServerError('Autopilot decide GET error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

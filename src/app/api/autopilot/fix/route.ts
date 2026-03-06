@@ -29,6 +29,7 @@ import { getTraceAnalyzer, createPRGenerator, DEFAULT_AUTOPILOT_CONFIG } from '@
 import type { StoredTrace } from '@/lib/fall/flight-recorder';
 import type { FixRequest, FixResponse, TraceAnalysis, AutopilotConfig } from '@/lib/autopilot';
 import { randomUUID } from 'crypto';
+import { logServerError } from '@/lib/server/logger';
 
 function toSeverityLabel(severity: number): 'low' | 'medium' | 'high' | 'critical' {
   if (severity >= 9) return 'critical';
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
         });
 
       if (storeError) {
-        console.error('Autopilot analysis store error (fix):', storeError);
+        logServerError('Autopilot analysis store error (fix)', storeError);
       }
 
       analysisId = analysis.traceId;
@@ -247,7 +248,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Autopilot fix error:', error);
+    logServerError('Autopilot fix error', error);
     return ServerErrors.internal('autopilot_fix');
   }
 }

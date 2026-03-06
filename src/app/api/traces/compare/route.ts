@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { getTraceStore } from '@/lib/fall/flight-recorder';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/traces/compare - Compare two traces
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
       } : null,
     });
   } catch (error) {
-    console.error('Trace compare error:', error);
+    logServerError('Trace compare error', error);
     return ServerErrors.internal('trace_compare');
   }
 }
@@ -225,7 +226,8 @@ export async function GET(request: NextRequest) {
       } : null,
     });
   } catch (error) {
-    console.error('Trace compare error:', error);
+    logServerError('Trace compare error', error);
     return ServerErrors.internal('trace_compare');
   }
 }
+

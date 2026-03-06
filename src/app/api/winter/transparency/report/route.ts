@@ -5,8 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { generateArticle50Report } from '@/lib/winter/transparency';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/winter/transparency/report
@@ -14,15 +16,12 @@ import { generateArticle50Report } from '@/lib/winter/transparency';
  */
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(req);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest) {
       data: report,
     });
   } catch (error) {
-    console.error('Failed to generate Article 50 report:', error);
+    logServerError('Failed to generate Article 50 report', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to generate report' },
       { status: 500 }

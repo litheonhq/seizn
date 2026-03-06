@@ -41,6 +41,7 @@ import {
 import { auth } from '@/lib/auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { safeJsonParse } from '@/lib/safe-json';
+import { logServerError } from '@/lib/server/logger';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
@@ -551,7 +552,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        console.error('[v1/memories] Image attachment error:', attachmentError);
+        logServerError('[v1/memories] Image attachment error', attachmentError);
         const clientMessage = getImageAttachmentClientErrorMessage(attachmentError);
         if (clientMessage) {
           return NextResponse.json(
@@ -586,7 +587,7 @@ export async function POST(request: NextRequest) {
         });
       } catch (springMirrorError) {
         springMirror = { mirrored: false, springNoteId: null, skippedReason: 'mirror_failed' };
-        console.error('[v1/memories] Spring v4 mirror error:', springMirrorError);
+        logServerError('[v1/memories] Spring v4 mirror error', springMirrorError);
         if (MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED) {
           const rollback = await supabase
             .from('memories')

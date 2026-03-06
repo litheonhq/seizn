@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device/token - Poll for device authorization result
 export async function POST(request: NextRequest) {
@@ -61,7 +62,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: 'authorization_pending' }, { status: 428 });
   } catch (error) {
-    console.error('Device token poll error:', error);
+    logServerError('Device token poll error', error);
     return NextResponse.json({ error: 'server_error' }, { status: 500 });
   }
 }
+

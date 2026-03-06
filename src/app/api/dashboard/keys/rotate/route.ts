@@ -4,6 +4,7 @@ import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { apiKeyRotatedEmail } from '@/lib/email/templates';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/dashboard/keys/rotate - Rotate an API key (NextAuth session)
 export async function POST(request: NextRequest) {
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
       .eq('user_id', session.user.id);
 
     if (updateError) {
-      console.error('Rotate key error:', updateError);
+      logServerError('Rotate key error', updateError);
       return NextResponse.json(
         { error: 'Failed to rotate key' },
         { status: 500 }
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
         to: session.user.email,
         subject: `API Key Rotated: ${existingKey.name}`,
         html: apiKeyRotatedEmail(existingKey.name, prefix),
-      }).catch((err) => console.error('Failed to send API key rotation notification:', err));
+      }).catch((error) => logServerError('Failed to send API key rotation notification', error));
     }
 
     return NextResponse.json({
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
       message: 'API key rotated successfully. Save this key securely.',
     });
   } catch (error) {
-    console.error('Rotate key error:', error);
+    logServerError('Rotate key error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

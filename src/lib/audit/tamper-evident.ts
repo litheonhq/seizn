@@ -11,6 +11,7 @@
 
 import { createHash, randomBytes } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Types
@@ -287,13 +288,13 @@ export async function logTamperEvidentEvent(params: {
       .single();
 
     if (error) {
-      console.error('[TamperEvidentAudit] Failed to log:', error);
+      logServerError('[TamperEvidentAudit] Failed to log', error);
       return null;
     }
 
     return data as TamperEvidentEntry;
   } catch (err) {
-    console.error('[TamperEvidentAudit] Error:', err);
+    logServerError('[TamperEvidentAudit] Error', err);
     return null;
   }
 }
@@ -481,12 +482,12 @@ export async function createMerkleBatch(
       .in('id', entryIds);
 
     if (updateError) {
-      console.error('[MerkleBatch] Failed to update entries:', updateError);
+      logServerError('[MerkleBatch] Failed to update entries', updateError);
     }
 
     return batch as MerkleBatch;
   } catch (err) {
-    console.error('[MerkleBatch] Error creating batch:', err);
+    logServerError('[MerkleBatch] Error creating batch', err);
     return null;
   }
 }
@@ -634,7 +635,7 @@ export async function generateInclusionProof(entryId: string): Promise<MerklePro
       batch_id: entry.merkle_batch_id,
     };
   } catch (err) {
-    console.error('[MerkleProof] Error generating proof:', err);
+    logServerError('[MerkleProof] Error generating proof', err);
     return null;
   }
 }
@@ -670,3 +671,4 @@ export const TamperEvidentAudit = {
   generateMerkleProof,
   verifyMerkleProof,
 };
+

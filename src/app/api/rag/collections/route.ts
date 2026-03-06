@@ -5,20 +5,19 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createRAGService } from '@/lib/rag/service';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -45,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('RAG collections list error:', error);
+    logServerError('RAG collections list error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -55,15 +54,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -100,7 +96,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ collection }, { status: 201 });
   } catch (error) {
-    console.error('RAG collection create error:', error);
+    logServerError('RAG collection create error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(

@@ -4,6 +4,7 @@ import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { welcomeEmail } from '@/lib/email/templates';
 import { upsertProfileWithFallback } from '@/lib/profile/upsert';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -36,7 +37,7 @@ async function rollbackFailedSignup(
 async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean> {
   if (!TURNSTILE_SECRET_KEY) {
     // Skip verification if not configured (development)
-    console.warn('TURNSTILE_SECRET_KEY not configured, skipping CAPTCHA verification');
+    logServerWarn('TURNSTILE_SECRET_KEY not configured, skipping CAPTCHA verification');
     return true;
   }
 
@@ -55,7 +56,7 @@ async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean
     const data = await response.json();
     return data.success === true;
   } catch (error) {
-    console.error('Turnstile verification error:', error);
+    logServerError('Turnstile verification error', error);
     return false;
   }
 }
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
         );
       }
     } else if (ALLOW_E2E_AUTO_PROVISION) {
-      console.warn('[auth/signup] CAPTCHA bypassed for local E2E auto-provision');
+      logServerWarn('[auth/signup] CAPTCHA bypassed for local E2E auto-provision');
     }
 
     const supabase = createServerClient();
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (authError) {
-      console.error('Signup error:', authError);
+      logServerError('Signup error', authError);
 
       if (authError.message.includes('already registered')) {
         return NextResponse.json(
@@ -168,7 +169,7 @@ export async function POST(request: NextRequest) {
       name
     );
     if (!profileResult.ok) {
-      console.error('Profile upsert error during signup:', profileResult.error);
+      logServerError('Profile upsert error during signup', profileResult.error);
       await rollbackFailedSignup(supabase, authData.user.id);
       return NextResponse.json(
         { error: 'Failed to create account profile' },
@@ -188,7 +189,7 @@ export async function POST(request: NextRequest) {
       is_active: true,
     });
     if (apiKeyInsertError) {
-      console.error('Default API key seed error during signup:', apiKeyInsertError);
+      logServerError('Default API key seed error during signup', apiKeyInsertError);
       await rollbackFailedSignup(supabase, authData.user.id);
       return NextResponse.json(
         { error: 'Failed to provision default API key' },
@@ -202,7 +203,7 @@ export async function POST(request: NextRequest) {
         to: email,
         subject: 'Welcome to Seizn!',
         html: welcomeEmail(name || ''),
-      }).catch((err) => console.error('Failed to send welcome email:', err));
+      }).catch((error) => logServerError('Failed to send welcome email', error));
     }
 
     return NextResponse.json({
@@ -216,10 +217,11 @@ export async function POST(request: NextRequest) {
       apiKeyMessage: 'Save this API key securely. It will not be shown again.',
     });
   } catch (error) {
-    console.error('Signup error:', error);
+    logServerError('Signup error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

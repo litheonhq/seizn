@@ -14,6 +14,7 @@ import {
   createAlert,
 } from '@/lib/control-tower';
 import type { AlertSeverity, AlertStatus } from '@/lib/control-tower/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
       data: alerts,
     });
   } catch (err) {
-    console.error('Control Tower alerts error:', err);
+    logServerError('Control Tower alerts error', err);
     return ServerErrors.internal('control_tower_alerts');
   }
 }
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
       data: alert,
     }, { status: 201 });
   } catch (err) {
-    console.error('Control Tower create alert error:', err);
+    logServerError('Control Tower create alert error', err);
     return ServerErrors.internal('control_tower_create_alert');
   }
 }
