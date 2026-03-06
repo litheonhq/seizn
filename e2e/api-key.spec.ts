@@ -83,5 +83,26 @@ test.describe('API Key Management', () => {
       // Dashboard should render
       await expect(page.locator('main')).toBeVisible();
     });
+
+    test('Key creation shows first-request quickstart actions', async ({ page }) => {
+      await page.goto('/login');
+      await page.fill('input[type="email"]', email);
+      await page.fill('input[type="password"]', password);
+      await page.click('button[type="submit"]');
+      await page.waitForURL(/dashboard/);
+
+      await page.goto('/dashboard/keys');
+      await page.getByRole('button', { name: /Create New Key|새 키 생성/i }).click();
+      await page.getByLabel(/Key Name|키 이름/i).fill(`Onboarding ${runId}`);
+      await page.getByRole('button', { name: /Create Key|키 생성/i }).click();
+
+      await expect(page.getByTestId('copy-api-key-button')).toBeVisible();
+      await expect(page.getByTestId('copy-example-request-button')).toBeVisible();
+      await expect(page.getByTestId('open-playground-link')).toBeVisible();
+
+      await page.getByTestId('open-playground-link').click();
+      await page.waitForURL(/\/dashboard\/playground/);
+      await expect(page.locator('main')).toBeVisible();
+    });
   });
 });

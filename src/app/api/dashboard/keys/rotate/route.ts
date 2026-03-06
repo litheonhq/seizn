@@ -6,6 +6,11 @@ import { sendEmail } from '@/lib/email';
 import { apiKeyRotatedEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const DISABLE_KEY_EMAILS =
+  process.env.SEIZN_DISABLE_WELCOME_EMAIL === '1' ||
+  (process.env.E2E_ALLOW_AUTO_PROVISION === '1' && !IS_PRODUCTION);
+
 // POST /api/dashboard/keys/rotate - Rotate an API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
@@ -68,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send API key rotated notification email (non-blocking)
-    if (user.email) {
+    if (user.email && !DISABLE_KEY_EMAILS) {
       sendEmail({
         to: user.email,
         subject: `API Key Rotated: ${existingKey.name}`,

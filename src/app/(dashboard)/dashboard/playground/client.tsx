@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { ttfsEvents } from "@/lib/analytics";
+import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { PlaygroundTutorial } from "@/components/dashboard/PlaygroundTutorial";
 
@@ -47,6 +49,7 @@ export function PlaygroundClient() {
   const [totalLatency, setTotalLatency] = useState(0);
   const [totalCost, setTotalCost] = useState("$0.00000");
   const [activeTab, setActiveTab] = useState<"results" | "trace" | "cost">("results");
+  const hasTrackedTraceViewRef = useRef(false);
 
   const handleTryExample = useCallback((exampleQuery: string) => {
     setQuery(exampleQuery);
@@ -104,6 +107,7 @@ export function PlaygroundClient() {
 
       // Step 2: Create embedding
       updateStep("running");
+      ttfsEvents.firstRequestSent("/api/playground/query");
 
       // Call actual API
       const res = await fetch("/api/playground/query", {
@@ -137,14 +141,11 @@ export function PlaygroundClient() {
       setResults(data.results || []);
       setTotalLatency(totalTime);
       setTotalCost(data.trace?.estimated_cost || "$0.00000");
+      ttfsEvents.firstSuccessResponse("/api/playground/query", totalTime);
 
       // Mark first query as complete for onboarding
-      if (typeof window !== "undefined") {
-        localStorage.setItem("seizn_first_query", "true");
-        if (window.seiznOnboarding) {
-          window.seiznOnboarding.markComplete("first_query");
-        }
-      }
+      markOnboardingStepComplete("first_query");
+      hasTrackedTraceViewRef.current = false;
 
     } catch (err) {
       updateStep("error");
@@ -153,6 +154,17 @@ export function PlaygroundClient() {
       setIsLoading(false);
     }
   }, [query, namespace, topK, threshold, mode, enableRerank, t]);
+
+  useEffect(() => {
+    const hasTrace = totalLatency > 0 && traceSteps.length > 0;
+    if (activeTab !== "trace" || !hasTrace || hasTrackedTraceViewRef.current) {
+      return;
+    }
+
+    hasTrackedTraceViewRef.current = true;
+    markOnboardingStepComplete("view_trace");
+    ttfsEvents.traceViewOpened("playground-trace");
+  }, [activeTab, totalLatency, traceSteps]);
 
   return (
     <div className="space-y-6">
