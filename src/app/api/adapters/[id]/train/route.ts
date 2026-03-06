@@ -19,6 +19,7 @@ import {
   DEFAULT_LORA_CONFIG,
 } from '@/lib/domain-adapter';
 import type { LoRAConfig, TrainingProgress, TrainingMetrics } from '@/lib/domain-adapter';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -70,7 +71,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Parse training config from body
     const body = await request.json().catch((e: unknown) => {
-      console.warn('[Adapter Train] Failed to parse request body:', e instanceof Error ? e.message : e);
+      logServerWarn('Adapter training request body parsing failed', e, {
+        adapterId: id,
+      });
       return {} as Record<string, unknown>;
     });
     const config: LoRAConfig = {
@@ -139,8 +142,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         console.log(`Training completed for adapter ${id}: MRR=${result.mrr.toFixed(4)}`);
       })
       .catch(async (err) => {
-        console.error(`Training failed for adapter ${id}:`, err);
-        await failTrainingRun(run.id, err.message);
+        logServerError('Adapter training background task failed', err, {
+          adapterId: id,
+          runId: run.id,
+        });
+        const message = err instanceof Error ? err.message : 'Unknown training error';
+        await failTrainingRun(run.id, message);
         await updateAdapterStatus(id, adapter.validationMrr ? 'ready' : 'untrained');
       });
 
@@ -166,7 +173,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       { status: 202 }
     );
   } catch (err) {
-    console.error('Start training error:', err);
+    logServerError('Start adapter training request failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -230,7 +237,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       runs: runs.map(formatTrainingRun),
     });
   } catch (err) {
-    console.error('Get training status error:', err);
+    logServerError('Get adapter training status failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

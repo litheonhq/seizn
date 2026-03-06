@@ -11,6 +11,7 @@ import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { getAvailableConnectors, type ConnectorType } from '@/lib/connectors/external';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(_request: NextRequest) {
   try {
@@ -54,7 +55,7 @@ export async function GET(_request: NextRequest) {
       totalConnections: connections?.length ?? 0,
     });
   } catch (error) {
-    console.error('List connectors error:', error);
+    logServerError('List connectors failed', error);
     return ServerErrors.internal('list_connectors');
   }
 }

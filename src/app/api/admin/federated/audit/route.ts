@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { getFederatedOperationLogs, type FederatedOperation, type FederatedResourceType } from '@/lib/summer/admin';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/admin/federated/audit
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('Get federated audit logs error:', err);
+    logServerError('Get federated audit logs failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

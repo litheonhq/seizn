@@ -7,6 +7,7 @@ import {
   logFederatedOperation,
 } from '@/lib/summer/admin';
 import { encrypt } from '@/lib/winter/crypto';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/admin/federated/sources
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
       total: filtered.length,
     });
   } catch (err) {
-    console.error('List federated sources error:', err);
+    logServerError('List federated sources failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -171,7 +172,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('Create federated source error:', err);
+    logServerError('Create federated source failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

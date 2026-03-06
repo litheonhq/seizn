@@ -15,6 +15,7 @@ import {
   type ConnectorType,
 } from '@/lib/connectors/external';
 import { randomBytes } from 'crypto';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -78,7 +79,7 @@ export async function GET(
     // Redirect to OAuth provider
     return NextResponse.redirect(authUrl);
   } catch (error) {
-    console.error('OAuth start error:', error);
+    logServerError('Connector OAuth start failed', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'OAuth start failed' },
       { status: 500 }

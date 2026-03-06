@@ -26,6 +26,7 @@ import { createFactInvalidationService } from '@/lib/spring/memory-v4/fact-inval
 import { createCommunityDetectionService } from '@/lib/graph-rag/community/detection';
 import { createCommunitySummaryService } from '@/lib/graph-rag/community/summary';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // =============================================================================
 // Configuration
@@ -672,7 +673,7 @@ export async function GET(request: NextRequest) {
       results,
     });
   } catch (error) {
-    console.error('Beyond Mem0 cron job error:', error);
+    logServerError('Beyond Mem0 cron job failed', error);
     return NextResponse.json(
       {
         success: false,

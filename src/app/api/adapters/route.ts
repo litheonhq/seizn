@@ -11,6 +11,7 @@ import {
   getAdapterStats,
 } from '@/lib/domain-adapter';
 import type { CreateAdapterParams, AdapterFilter } from '@/lib/domain-adapter';
+import { logServerError } from '@/lib/server/logger';
 
 // =============================================================================
 // GET /api/adapters - List domain adapters
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
       ...(stats && { stats }),
     });
   } catch (err) {
-    console.error('List adapters error:', err);
+    logServerError('List adapters request failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -143,7 +144,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('Create adapter error:', err);
+    logServerError('Create adapter request failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

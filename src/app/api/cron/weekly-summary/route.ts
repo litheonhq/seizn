@@ -3,6 +3,7 @@ import { createServerClient } from '@/lib/supabase';
 import { sendBatchEmails } from '@/lib/email';
 import { weeklyUsageSummaryEmail } from '@/lib/email/templates';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/cron/weekly-summary - Send weekly usage summaries
 export async function GET(request: NextRequest) {
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
       .not('email', 'is', null);
 
     if (usersError) {
-      console.error('Failed to fetch users:', usersError);
+      logServerError('Weekly summary cron failed to fetch users', usersError);
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
     }
 
@@ -108,7 +109,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Weekly summary cron error:', error);
+    logServerError('Weekly summary cron failed', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

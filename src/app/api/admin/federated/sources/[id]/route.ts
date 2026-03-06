@@ -8,6 +8,7 @@ import {
   logFederatedOperation,
 } from '@/lib/summer/admin';
 import { encrypt } from '@/lib/winter/crypto';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/admin/federated/sources/[id]
@@ -18,6 +19,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: sourceId } = await params;
+
   try {
     const authResult = await authenticateRequest(request);
     if (isAuthError(authResult)) {
@@ -25,7 +28,6 @@ export async function GET(
     }
 
     const { userId } = authResult;
-    const { id: sourceId } = await params;
 
     // Check permission
     const hasAccess = await checkSourcePermission(userId, sourceId, 'viewer');
@@ -77,7 +79,7 @@ export async function GET(
       access_level: accessLevel,
     });
   } catch (err) {
-    console.error('Get federated source error:', err);
+    logServerError('Get federated source failed', err, { sourceId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -101,6 +103,7 @@ export async function PATCH(
 ) {
   const startTime = Date.now();
   const context = getAuditContext(request);
+  const { id: sourceId } = await params;
 
   try {
     const authResult = await authenticateRequest(request);
@@ -109,7 +112,6 @@ export async function PATCH(
     }
 
     const { userId } = authResult;
-    const { id: sourceId } = await params;
     const body = await request.json();
 
     // Check permission (need editor or higher)
@@ -215,7 +217,7 @@ export async function PATCH(
       },
     });
   } catch (err) {
-    console.error('Update federated source error:', err);
+    logServerError('Update federated source failed', err, { sourceId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -231,6 +233,7 @@ export async function DELETE(
 ) {
   const startTime = Date.now();
   const context = getAuditContext(request);
+  const { id: sourceId } = await params;
 
   try {
     const authResult = await authenticateRequest(request);
@@ -239,7 +242,6 @@ export async function DELETE(
     }
 
     const { userId } = authResult;
-    const { id: sourceId } = await params;
 
     // Check permission (need owner)
     const hasAccess = await checkSourcePermission(userId, sourceId, 'owner');
@@ -315,7 +317,7 @@ export async function DELETE(
       message: 'Source deleted successfully',
     });
   } catch (err) {
-    console.error('Delete federated source error:', err);
+    logServerError('Delete federated source failed', err, { sourceId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

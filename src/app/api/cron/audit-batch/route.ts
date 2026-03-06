@@ -19,6 +19,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createMerkleBatch } from '@/lib/audit/tamper-evident';
 import { createServerClient } from '@/lib/supabase';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -92,7 +93,7 @@ export async function GET(request: NextRequest) {
       results,
     });
   } catch (error) {
-    console.error('[AuditBatchCron] Error:', error);
+    logServerError('Audit batch cron failed', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

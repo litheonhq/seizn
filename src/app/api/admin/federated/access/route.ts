@@ -9,6 +9,7 @@ import {
   logFederatedOperation,
   type FederatedRole,
 } from '@/lib/summer/admin';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/admin/federated/access
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (err) {
-    console.error('List access grants error:', err);
+    logServerError('List federated source access failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -204,7 +205,7 @@ export async function POST(request: NextRequest) {
       message: 'Access granted successfully',
     });
   } catch (err) {
-    console.error('Grant access error:', err);
+    logServerError('Grant federated source access failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -313,7 +314,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Access revoked successfully',
     });
   } catch (err) {
-    console.error('Revoke access error:', err);
+    logServerError('Revoke federated source access failed', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

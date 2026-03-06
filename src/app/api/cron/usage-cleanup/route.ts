@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // Retention period in days
 const RETENTION_DAYS = 90;
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (fetchError) {
-      console.error('Failed to fetch old usage logs:', fetchError);
+      logServerError('Usage cleanup cron failed to fetch old usage logs', fetchError);
       return NextResponse.json(
         { error: 'Failed to fetch old usage logs' },
         { status: 500 }
@@ -106,7 +107,9 @@ export async function GET(request: NextRequest) {
           .in('id', batchIds);
 
         if (deleteError) {
-          console.error(`Failed to delete batch ${i / BATCH_SIZE + 1}:`, deleteError);
+          logServerError('Usage cleanup cron failed to delete batch', deleteError, {
+            batchNumber: i / BATCH_SIZE + 1,
+          });
           // Continue with next batch instead of failing completely
         } else {
           results.usage_logs_deleted += batchIds.length;
@@ -149,7 +152,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Usage cleanup cron error:', errorMessage);
+    logServerError('Usage cleanup cron failed', error);
 
     // Log the failure
     try {

@@ -15,6 +15,7 @@ import {
   getAvailableConnectors,
   type ConnectorType,
 } from '@/lib/connectors/external';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 interface SyncRequest {
   connectionId?: string;
@@ -44,6 +45,9 @@ export async function POST(
   { params }: { params: Promise<{ type: string }> }
 ) {
   let connectionIdForCleanup: string | null = null;
+  const { type } = await params;
+  const connectorType = type as ConnectorType;
+
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -55,8 +59,6 @@ export async function POST(
       return csrfError;
     }
 
-    const { type } = await params;
-    const connectorType = type as ConnectorType;
     const validTypes: ConnectorType[] = ['google_drive', 'notion', 'github'];
     if (!validTypes.includes(connectorType)) {
       return NextResponse.json(
@@ -182,7 +184,10 @@ export async function POST(
           })
           .eq('id', connectionIdForCleanup);
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
+        logServerWarn('Connector token refresh failed during sync', refreshError, {
+          connectorType,
+          connectionId: connectionIdForCleanup,
+        });
         await supabase
           .from('external_connections')
           .update({ status: 'expired' })
@@ -285,7 +290,10 @@ export async function POST(
       errors: syncResult.errors.length > 0 ? syncResult.errors : undefined,
     });
   } catch (error) {
-    console.error('Sync error:', error);
+    logServerError('Connector sync failed', error, {
+      connectorType,
+      connectionId: connectionIdForCleanup,
+    });
 
     // Try to reset sync status on error
     try {

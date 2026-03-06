@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { runPendingVerifications, verifyCompliance } from '@/lib/winter/rtbf/verification';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 // Configuration
 const BATCH_SIZE = 50; // Verify up to 50 requests per cron run
@@ -106,7 +107,9 @@ export async function GET(request: NextRequest) {
           })
           .eq('id', request.id);
       } catch (err) {
-        console.error(`[RTBF Verify] Compliance check failed for ${request.id}:`, err);
+        logServerError('RTBF verify compliance check failed', err, {
+          requestId: request.id,
+        });
         results.compliance.issues.push({
           request_id: request.id,
           notes: [err instanceof Error ? err.message : 'Unknown error'],
@@ -129,9 +132,9 @@ export async function GET(request: NextRequest) {
         status: 'warning',
       });
 
-      console.warn(
-        `[RTBF Verify] ALERT: ${results.compliance.non_compliant} RTBF requests are non-compliant`
-      );
+      logServerWarn('RTBF verify detected non-compliant requests', {
+        nonCompliantCount: results.compliance.non_compliant,
+      });
     }
 
     const duration = Date.now() - startTime;
@@ -167,7 +170,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[RTBF Verify] Cron error:', errorMessage);
+    logServerError('RTBF verify cron failed', error);
 
     // Log the failure
     try {
