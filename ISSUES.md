@@ -73,5 +73,5 @@
 **Date:** 2026-03-06
 **Symptom:** `https://www.seizn.com/api/status` could intermittently report the Database service as degraded even when the rest of production was healthy.
 **Cause:** The public status route was executing in Vercel `iad1` while Supabase was hosted in `ap-northeast-1`, so the DB health probe paid inter-region latency and occasional cold-start spikes. The status endpoint then cached that degraded result.
-**Fix:** Switched the status probe to `profiles`, raised degraded/down thresholds, disabled caching for non-operational states, and pinned `src/app/api/status/route.ts` to `preferredRegion = 'hnd1'` so the DB check runs near the Supabase region.
+**Fix:** Switched the status probe to `profiles`, raised degraded/down thresholds, disabled caching for non-operational states, and set `vercel.json` `regions` to `["hnd1"]` so Node functions execute near the Supabase region. A route-level `preferredRegion` hint on the Node status handler did not change the actual runtime region and was removed.
 

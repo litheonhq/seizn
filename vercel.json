@@ -1,5 +1,6 @@
 {
   "ignoreCommand": "npm run vercel:ignore-build",
+  "regions": ["hnd1"],
   "redirects": [
     {
       "source": "/:path*",
