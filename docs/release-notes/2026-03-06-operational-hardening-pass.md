@@ -12,6 +12,7 @@
 - Documented the production smoke flow used before deploy and after merge.
 - Added runtime DB primitive verification for device auth, SSO, and relay contracts, and restored missing compat tables/functions for drifted environments.
 - Added a cross-type compat migration for drifted environments where `profiles.id`, `organizations.id`, or related foreign keys no longer share the same base type.
+- Fixed the device-approval API key insert path to use the live `api_keys.scopes` contract instead of the drifted `permissions` payload.
 
 ## Included Areas
 
@@ -41,6 +42,8 @@
 - `scripts/pre-deploy.sh`
 - `supabase/migrations/20260306006_runtime_auth_relay_primitives_restoration.sql`
 - `supabase/migrations/20260306007_runtime_primitives_cross_type_compat.sql`
+- `src/app/api/auth/device/approve/route.ts`
+- `src/__tests__/api/device-approve-route.test.ts`
 - `src/app/api/status/*`
 - `src/app/api/tenant-policy/*`
 - `src/app/api/retention/*`
@@ -55,9 +58,11 @@
 - Failure logs from enterprise inquiry, SSO configuration, adapter lifecycle, federated admin routes, connector OAuth flows, budget APIs, recurring operational cron routes, drift analysis, Winter RTBF cron flows, and Spring maintenance cron flows no longer risk leaking bearer tokens, API keys, cookies, or emails.
 - Pre-deploy and migration workflows now fail fast when device auth, SSO, or relay runtime primitives are missing.
 - Runtime verification now also fails when key auth/SSO/relay foreign-key column types drift away from their referenced tables.
+- Runtime verification now covers additional auth, organization, memory, usage, budget, trace, and webhook foreign-key contracts that were previously unchecked.
 - No API contract changes were introduced.
 - Added a compat restoration migration for missing device auth, SSO, and relay runtime objects in drifted environments.
 - Production `POST /api/auth/device`, `POST /api/auth/device/verify`, and `POST /api/auth/device/token` were re-smoked successfully after the cross-type compat migration was applied.
+- Production device approval failures were traced to an `api_keys` schema mismatch, and the route now creates scoped keys successfully via the existing `scopes` column contract.
 
 ## Verification
 

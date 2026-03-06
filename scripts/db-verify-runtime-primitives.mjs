@@ -183,6 +183,34 @@ async function main() {
     await assertMatchingColumnTypes(client, 'device_auth_codes', 'user_id', 'profiles', 'id');
     await assertMatchingColumnTypes(client, 'device_auth_codes', 'api_key_id', 'api_keys', 'id');
 
+    await assertTableColumns(client, 'api_keys', [
+      'user_id',
+      'organization_id',
+      'key_hash',
+      'key_prefix',
+      'scopes',
+      'scope_config',
+      'is_active',
+    ]);
+    await assertMatchingColumnTypes(client, 'api_keys', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'api_keys', 'organization_id', 'organizations', 'id');
+
+    await assertTableColumns(client, 'organization_members', [
+      'user_id',
+      'organization_id',
+      'invited_by',
+    ]);
+    await assertMatchingColumnTypes(client, 'organization_members', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'organization_members', 'organization_id', 'organizations', 'id');
+    await assertMatchingColumnTypes(client, 'organization_members', 'invited_by', 'profiles', 'id');
+
+    await assertTableColumns(client, 'memories', [
+      'user_id',
+      'organization_id',
+    ]);
+    await assertMatchingColumnTypes(client, 'memories', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'memories', 'organization_id', 'organizations', 'id');
+
     await assertTableColumns(client, 'sso_connections', [
       'organization_id',
       'name',
@@ -275,6 +303,29 @@ async function main() {
     await assertIndexExists(client, 'idx_relays_collections');
     await assertMatchingColumnTypes(client, 'relay_agents', 'user_id', 'profiles', 'id');
     await assertMatchingColumnTypes(client, 'relay_agents', 'org_id', 'organizations', 'id');
+
+    await assertTableColumns(client, 'usage_logs', [
+      'user_id',
+      'organization_id',
+      'api_key_id',
+    ]);
+    await assertMatchingColumnTypes(client, 'usage_logs', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'usage_logs', 'organization_id', 'organizations', 'id');
+    await assertMatchingColumnTypes(client, 'usage_logs', 'api_key_id', 'api_keys', 'id');
+
+    await assertTableColumns(client, 'retrieval_budgets', ['user_id']);
+    await assertMatchingColumnTypes(client, 'retrieval_budgets', 'user_id', 'profiles', 'id');
+
+    await assertTableColumns(client, 'budget_degrade_events', ['user_id']);
+    await assertMatchingColumnTypes(client, 'budget_degrade_events', 'user_id', 'profiles', 'id');
+
+    await assertTableColumns(client, 'fall_retrieval_traces', ['user_id', 'api_key_id']);
+    await assertMatchingColumnTypes(client, 'fall_retrieval_traces', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'fall_retrieval_traces', 'api_key_id', 'api_keys', 'id');
+
+    await assertTableColumns(client, 'webhooks', ['user_id', 'organization_id']);
+    await assertMatchingColumnTypes(client, 'webhooks', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'webhooks', 'organization_id', 'organizations', 'id');
 
     await assertTableColumns(client, 'relay_requests', [
       'relay_id',
