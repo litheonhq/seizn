@@ -5,6 +5,7 @@ import { SSOService } from '@/lib/enterprise';
 import { getRequestUser } from '@/lib/api/request-user';
 import { verifyCsrf } from '@/lib/csrf';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import {
   getSSOConnections,
   createSSOConnection,
@@ -185,7 +186,7 @@ export async function GET(request: NextRequest) {
         : null,
     });
   } catch (error) {
-    console.error('SSO config error:', error);
+    logServerError('Enterprise SSO GET failed', error);
     return ServerErrors.internal('sso_config');
   }
 }
@@ -279,7 +280,7 @@ export async function POST(_request: NextRequest) {
       config: toConfigShape(updatedConnection),
     });
   } catch (error) {
-    console.error('SSO config error:', error);
+    logServerError('Enterprise SSO POST failed', error);
     return ServerErrors.internal('sso_config_create');
   }
 }
@@ -342,7 +343,7 @@ export async function DELETE(_request: NextRequest) {
       config: toConfigShape(disabledConnection),
     });
   } catch (error) {
-    console.error('SSO disable error:', error);
+    logServerError('Enterprise SSO DELETE failed', error);
     return ServerErrors.internal('sso_disable');
   }
 }

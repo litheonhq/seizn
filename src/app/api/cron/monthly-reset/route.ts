@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/cron/monthly-reset - Reset monthly API call counters for all users
 export async function GET(request: NextRequest) {
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       .gt('api_calls_this_month', 0);
 
     if (resetError) {
-      console.error('Failed to reset API call counters:', resetError);
+      logServerError('Monthly reset cron failed to reset API call counters', resetError);
       return NextResponse.json(
         { error: 'Failed to reset API call counters' },
         { status: 500 }
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Monthly reset cron error:', errorMessage);
+    logServerError('Monthly reset cron failed', error);
 
     // Log the failure
     try {

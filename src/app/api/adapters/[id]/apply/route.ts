@@ -10,6 +10,7 @@ import {
   applyAdapterToEmbedding,
   applyAdapterToEmbeddings,
 } from '@/lib/domain-adapter';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       { status: 400 }
     );
   } catch (err) {
-    console.error('Apply adapter error:', err);
+    logServerError('Apply adapter request failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -196,7 +197,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (err) {
-    console.error('Get apply info error:', err);
+    logServerError('Get adapter apply info failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

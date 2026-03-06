@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { getConnector, type ConnectorType } from '@/lib/connectors/external';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -91,7 +92,7 @@ export async function GET(
       totalConnections: connections?.length ?? 0,
     });
   } catch (error) {
-    console.error('Status error:', error);
+    logServerError('Connector status lookup failed', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get status' },
       { status: 500 }
@@ -148,7 +149,9 @@ export async function DELETE(
         await connector.revokeToken(connection.access_token);
       } catch (revokeError) {
         // Log but continue - we still want to remove local connection
-        console.error('Token revoke failed:', revokeError);
+        logServerWarn('Connector token revoke failed during disconnect', revokeError, {
+          connectorType,
+        });
       }
     }
 
@@ -171,7 +174,7 @@ export async function DELETE(
       message: 'Connection removed',
     });
   } catch (error) {
-    console.error('Disconnect error:', error);
+    logServerError('Connector disconnect failed', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to disconnect' },
       { status: 500 }

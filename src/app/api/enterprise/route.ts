@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { sendEmail } from '@/lib/email';
 import { enterpriseInquiryConfirmationEmail } from '@/lib/email/templates';
+import { logServerError } from '@/lib/server/logger';
 
 interface EnterpriseInquiryRequest {
   company_name: string;
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Enterprise inquiry error:', error);
+      logServerError('Enterprise inquiry insert failed', error);
       return NextResponse.json({ error: 'Failed to submit inquiry' }, { status: 500 });
     }
 
@@ -103,7 +104,7 @@ export async function POST(request: NextRequest) {
       to: body.email,
       subject: `We received your enterprise inquiry - ${body.company_name}`,
       html: enterpriseInquiryConfirmationEmail(body.company_name, body.contact_name),
-    }).catch((err) => console.error('Failed to send enterprise confirmation email:', err));
+    }).catch((err) => logServerError('Enterprise confirmation email failed', err));
 
     // Send notification to sales team (non-blocking)
     sendEmail({
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest) {
         <p><strong>Priority:</strong> ${determineInquiryPriority(body)}</p>
         <p><strong>Inquiry ID:</strong> ${inquiry.id}</p>
       `,
-    }).catch((err) => console.error('Failed to send sales notification:', err));
+    }).catch((err) => logServerError('Enterprise sales notification failed', err));
 
     return NextResponse.json({
       success: true,
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
       inquiry_id: inquiry.id,
     });
   } catch (error) {
-    console.error('Enterprise POST error:', error);
+    logServerError('Enterprise inquiry request failed', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

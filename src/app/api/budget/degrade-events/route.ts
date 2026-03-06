@@ -6,6 +6,7 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
+import { logServerError } from "@/lib/server/logger";
 
 /**
  * GET /api/budget/degrade-events
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
           },
         }, context);
       }
-      console.error("Failed to fetch degrade events:", error);
+      logServerError("Failed to fetch budget degrade events", error);
       return errorResponse({ code: "SEIZN_405", message: "Failed to fetch events", status: 500 }, context);
     }
 
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest) {
       },
     }, context);
   } catch (error) {
-    console.error("Degrade events API error:", error);
+    logServerError("Budget degrade events GET failed", error);
     return errorResponse({ code: "SEIZN_500", message: "Internal server error", status: 500 }, context);
   }
 }

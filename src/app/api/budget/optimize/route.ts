@@ -21,6 +21,7 @@ import {
   type SearchType,
   type EmbeddingModel,
 } from '@/lib/budget-planner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/budget/optimize
@@ -217,7 +218,7 @@ export async function POST(request: NextRequest) {
       headers: auth.rateLimitHeaders,
     });
   } catch (error) {
-    console.error('Error optimizing plan:', error);
+    logServerError('Budget optimize failed', error);
     return NextResponse.json(
       {
         success: false,

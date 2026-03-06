@@ -7,6 +7,7 @@ import {
   errorResponse,
 } from "@/lib/errors";
 import { DEFAULT_BUDGET_SETTINGS } from "@/lib/budget-planner/types";
+import { logServerError } from "@/lib/server/logger";
 
 /**
  * GET /api/budget/settings
@@ -31,7 +32,7 @@ export async function GET() {
 
     // PGRST116: "No rows found". PGRST205: "Table not found" (dev DB not migrated yet).
     if (error && error.code !== "PGRST116" && error.code !== "PGRST205") {
-      console.error("Failed to fetch budget settings:", error);
+      logServerError("Failed to fetch budget settings", error);
       return errorResponse({ code: "SEIZN_405", message: "Failed to fetch settings", status: 500 }, context);
     }
 
@@ -48,7 +49,7 @@ export async function GET() {
 
     return successResponse({ settings }, context);
   } catch (error) {
-    console.error("Budget settings API error:", error);
+    logServerError("Budget settings GET failed", error);
     return errorResponse({ code: "SEIZN_500", message: "Internal server error", status: 500 }, context);
   }
 }
@@ -116,13 +117,13 @@ export async function PUT(request: NextRequest) {
       );
 
     if (error) {
-      console.error("Failed to update budget settings:", error);
+      logServerError("Failed to update budget settings", error);
       return errorResponse({ code: "SEIZN_405", message: "Failed to save settings", status: 500 }, context);
     }
 
     return successResponse({ message: "Settings updated successfully" }, context);
   } catch (error) {
-    console.error("Budget settings API error:", error);
+    logServerError("Budget settings PATCH failed", error);
     return errorResponse({ code: "SEIZN_500", message: "Internal server error", status: 500 }, context);
   }
 }

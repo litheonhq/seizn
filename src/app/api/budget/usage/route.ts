@@ -16,6 +16,7 @@ import {
   getTotalSpending,
   getSpendingTrend,
 } from '@/lib/budget-planner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/budget/usage
@@ -160,7 +161,7 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('Error getting usage:', error);
+    logServerError('Get budget usage failed', error);
     return NextResponse.json(
       {
         success: false,

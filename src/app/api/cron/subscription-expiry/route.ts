@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // Plan limits for downgrade
 const FREE_PLAN_LIMITS = {
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
       .not('subscription_ends_at', 'is', null);
 
     if (fetchError) {
-      console.error('Failed to fetch expired subscriptions:', fetchError);
+      logServerError('Subscription expiry cron failed to fetch expired subscriptions', fetchError);
       return NextResponse.json(
         { error: 'Failed to fetch expired subscriptions' },
         { status: 500 }
@@ -66,7 +67,9 @@ export async function GET(request: NextRequest) {
           .eq('id', user.id);
 
         if (updateError) {
-          console.error(`Failed to downgrade user ${user.id}:`, updateError);
+          logServerError('Subscription expiry cron failed to downgrade user', updateError, {
+            userId: user.id,
+          });
           results.errors++;
           results.details.push({
             userId: user.id,
@@ -103,7 +106,9 @@ export async function GET(request: NextRequest) {
         );
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-        console.error(`Error processing user ${user.id}:`, errorMessage);
+        logServerError('Subscription expiry cron failed to process user', err, {
+          userId: user.id,
+        });
         results.errors++;
         results.details.push({
           userId: user.id,
@@ -128,8 +133,7 @@ export async function GET(request: NextRequest) {
       timestamp: now,
     });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Subscription expiry cron error:', errorMessage);
+    logServerError('Subscription expiry cron failed', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
