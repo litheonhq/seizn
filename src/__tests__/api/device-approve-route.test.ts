@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
 import { POST } from '@/app/api/auth/device/approve/route';
 
-vi.mock('@/lib/auth', () => ({
-  auth: vi.fn(),
+vi.mock('@/lib/api/request-user', () => ({
+  getSessionUser: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase', () => ({
@@ -17,23 +17,15 @@ vi.mock('@/lib/server/logger', () => ({
   logServerError: vi.fn(),
 }));
 
-vi.mock('crypto', async () => {
-  const actual = await vi.importActual<typeof import('crypto')>('crypto');
-  const randomBytes = vi.fn((size: number) => Buffer.alloc(size, 7));
-  const createHash = vi.fn(() => ({
-    update: vi.fn().mockReturnThis(),
-    digest: vi.fn().mockReturnValue('hash-value'),
-  }));
-
+vi.mock('@/lib/api-key', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/api-key')>('@/lib/api-key');
   return {
     ...actual,
-    default: {
-      ...actual,
-      randomBytes,
-      createHash,
-    },
-    randomBytes,
-    createHash,
+    generateApiKey: vi.fn(() => ({
+      key: 'szn_generated_key',
+      hash: 'hash-value',
+      prefix: 'szn_prefix_1',
+    })),
   };
 });
 
@@ -44,11 +36,12 @@ describe('device approve route', () => {
     vi.clearAllMocks();
     insertedApiKeyPayload = null;
 
-    vi.mocked(auth).mockResolvedValue({
-      user: {
-        id: 'user-1',
-      },
-    } as Awaited<ReturnType<typeof auth>>);
+    vi.mocked(getSessionUser).mockResolvedValue({
+      id: 'profile-1',
+      email: 'user@example.com',
+      name: 'User One',
+      lastSignInAt: null,
+    });
 
     const deviceCodesBuilder = {
       select: vi.fn().mockReturnThis(),
@@ -112,9 +105,18 @@ describe('device approve route', () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({ status: 'approved' });
     expect(insertedApiKeyPayload).toMatchObject({
-      user_id: 'user-1',
+      user_id: 'profile-1',
       name: 'MCP Device (ABCD-1234)',
       scopes: ['memory:read', 'memory:write', 'memory:delete'],
+      scope_config: {
+        level: 'user',
+        actions: ['read', 'write'],
+        customPermissions: ['memory:delete'],
+      },
+      metadata: {
+        source: 'device_auth',
+        device_user_code: 'ABCD-1234',
+      },
     });
     expect(insertedApiKeyPayload).not.toHaveProperty('permissions');
     expect(logServerError).not.toHaveBeenCalled();

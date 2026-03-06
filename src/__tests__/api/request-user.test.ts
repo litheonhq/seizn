@@ -3,10 +3,12 @@ import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
 import {
   createRequestAuthClient,
+  createServerClient,
   hasServerSupabasePublicConfig,
 } from '@/lib/supabase';
 import {
   getRequestUser,
+  getSessionUser,
   getSupabaseUserFromBearer,
 } from '@/lib/api/request-user';
 
@@ -29,6 +31,46 @@ describe('request user helpers', () => {
 
     expect(user).toEqual({
       id: 'user-1',
+      email: 'user@example.com',
+      name: 'User One',
+      lastSignInAt: null,
+    });
+  });
+
+  it('resolves Auth.js session ids to profile ids when needed', async () => {
+    vi.mocked(auth).mockResolvedValueOnce({
+      user: {
+        id: 'auth-user-1',
+        email: 'user@example.com',
+        name: 'User One',
+      },
+    } as Awaited<ReturnType<typeof auth>>);
+
+    vi.mocked(createServerClient).mockReturnValueOnce({
+      from: vi.fn(() => ({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn((column: string, value: string) => ({
+          single: vi.fn().mockResolvedValue(
+            column === 'id' && value === 'auth-user-1'
+              ? {
+                  data: null,
+                  error: {
+                    code: 'PGRST116',
+                    message: 'JSON object requested, multiple (or no) rows returned',
+                  },
+                }
+              : {
+                  data: { id: 'profile-1' },
+                  error: null,
+                }
+          ),
+        })),
+      })),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    await expect(getSessionUser()).resolves.toEqual({
+      id: 'profile-1',
       email: 'user@example.com',
       name: 'User One',
       lastSignInAt: null,

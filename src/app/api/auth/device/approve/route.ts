@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSessionUser } from '@/lib/api/request-user';
+import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
 import { createServerClient } from '@/lib/supabase';
-import { auth } from '@/lib/auth';
-import crypto from 'crypto';
 import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device/approve - Approve or deny a device auth request
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getSessionUser();
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -45,26 +45,28 @@ export async function POST(request: NextRequest) {
     if (action === 'deny') {
       await supabase
         .from('device_auth_codes')
-        .update({ status: 'denied', user_id: session.user.id })
+        .update({ status: 'denied', user_id: user.id })
         .eq('id', authCode.id);
 
       return NextResponse.json({ status: 'denied' });
     }
 
     // Approve: create an API key for this device
-    const rawKey = `szn_${crypto.randomBytes(24).toString('hex')}`;
-    const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
-    const keyPrefix = rawKey.slice(0, 12) + '...';
+    const { key, hash, prefix } = generateApiKey();
 
     const { data: apiKey, error: keyError } = await supabase
       .from('api_keys')
-      .insert({
-        user_id: session.user.id,
+      .insert(buildBasicApiKeyInsertPayload({
+        userId: user.id,
         name: `MCP Device (${user_code})`,
-        key_hash: keyHash,
-        key_prefix: keyPrefix,
+        hash,
+        prefix,
         scopes: ['memory:read', 'memory:write', 'memory:delete'],
-      })
+        metadata: {
+          source: 'device_auth',
+          device_user_code: user_code.toUpperCase(),
+        },
+      }))
       .select('id')
       .single();
 
@@ -78,9 +80,9 @@ export async function POST(request: NextRequest) {
       .from('device_auth_codes')
       .update({
         status: 'approved',
-        user_id: session.user.id,
+        user_id: user.id,
         api_key_id: apiKey.id,
-        access_token: rawKey,
+        access_token: key,
         approved_at: new Date().toISOString(),
       })
       .eq('id', authCode.id);
