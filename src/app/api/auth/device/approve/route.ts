@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         name: `MCP Device (${user_code})`,
         key_hash: keyHash,
         key_prefix: keyPrefix,
-        permissions: ['memory:read', 'memory:write', 'memory:delete'],
+        scopes: ['memory:read', 'memory:write', 'memory:delete'],
       })
       .select('id')
       .single();
@@ -91,4 +91,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-
