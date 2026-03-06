@@ -48,6 +48,8 @@ describe('request user helpers', () => {
       email: 'user@example.com',
       name: 'User One',
       lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
     });
   });
 
@@ -96,6 +98,41 @@ describe('request user helpers', () => {
       email: 'user@example.com',
       name: 'User One',
       lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+  });
+
+  it('carries organizationId from the Auth.js session token claims', async () => {
+    process.env.NEXTAUTH_SECRET = 'test-secret';
+    vi.mocked(auth).mockResolvedValueOnce({
+      user: {
+        id: 'profile-2',
+        email: 'user2@example.com',
+        name: 'User Two',
+      },
+    } as Awaited<ReturnType<typeof auth>>);
+    headersMock.mockResolvedValueOnce(
+      new Headers({
+        cookie: '__Secure-authjs.session-token=raw-token',
+      })
+    );
+    getTokenMock.mockResolvedValueOnce({
+      id: 'profile-2',
+      sub: 'profile-2',
+      email: 'user2@example.com',
+      name: 'User Two',
+      organizationId: 'org-2',
+      organizationSelection: 'organization',
+    });
+
+    await expect(getSessionUser()).resolves.toEqual({
+      id: 'profile-2',
+      email: 'user2@example.com',
+      name: 'User Two',
+      lastSignInAt: null,
+      organizationId: 'org-2',
+      organizationSelection: 'organization',
     });
   });
 

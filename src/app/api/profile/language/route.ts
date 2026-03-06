@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { locales, type Locale } from '@/i18n/config';
+import { logServerError } from '@/lib/server/logger';
 
 // PATCH /api/profile/language - Update user's language preference
 export async function PATCH(request: NextRequest) {
@@ -34,7 +35,7 @@ export async function PATCH(request: NextRequest) {
       .eq('id', session.user.id);
 
     if (error) {
-      console.error('Language update error:', { userId: session.user.id, error });
+      logServerError('Language update error', error, { userId: session.user.id });
       return NextResponse.json(
         { error: 'Failed to update language' },
         { status: 500 }
@@ -46,7 +47,7 @@ export async function PATCH(request: NextRequest) {
       language,
     });
   } catch (error) {
-    console.error('Language update error:', error);
+    logServerError('Language update route error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -78,7 +79,7 @@ export async function GET() {
       language: profile?.language || 'en',
     });
   } catch (error) {
-    console.error('Language fetch error:', error);
+    logServerError('Language fetch error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

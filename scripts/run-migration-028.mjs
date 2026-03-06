@@ -1,11 +1,11 @@
-import pg from 'pg';
-import { config } from 'dotenv';
+﻿import pg from 'pg';
+import { loadLocalEnv } from './load-local-env.mjs';
 import { resolve, dirname } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-config({ path: resolve(__dirname, '../.env.local') });
+loadLocalEnv(import.meta.url);
 
 const connectionString = process.env.POSTGRES_URL_NON_POOLING;
 
@@ -15,7 +15,7 @@ if (!connectionString) {
 }
 
 async function runMigration() {
-  console.log('🔧 Running migration 028_fix_search_function_types.sql...\n');
+  console.log('?뵩 Running migration 028_fix_search_function_types.sql...\n');
 
   const client = new pg.Client({
     connectionString,
@@ -24,7 +24,7 @@ async function runMigration() {
 
   try {
     await client.connect();
-    console.log('✅ Connected to database\n');
+    console.log('??Connected to database\n');
 
     const sql = readFileSync(
       resolve(__dirname, '../supabase/migrations/028_fix_search_function_types.sql'),
@@ -34,7 +34,7 @@ async function runMigration() {
     console.log('Executing migration...\n');
     const result = await client.query(sql);
 
-    console.log('✅ Migration completed successfully!\n');
+    console.log('??Migration completed successfully!\n');
 
     // Show result
     if (result && Array.isArray(result)) {
@@ -47,7 +47,7 @@ async function runMigration() {
       }
     }
   } catch (err) {
-    console.error('❌ Migration failed:', err.message);
+    console.error('??Migration failed:', err.message);
     if (err.detail) console.error('Detail:', err.detail);
     process.exit(1);
   } finally {
@@ -56,3 +56,5 @@ async function runMigration() {
 }
 
 runMigration();
+
+

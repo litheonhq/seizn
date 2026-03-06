@@ -5,9 +5,11 @@ import { headers } from 'next/headers';
 
 type CreateAuthJsSessionTokenParams = {
   userId: string;
-  email: string;
+  email?: string | null;
   name?: string;
   picture?: string;
+  organizationId?: string | null;
+  organizationSelection?: 'personal' | 'organization';
   maxAgeSeconds?: number;
 };
 
@@ -16,12 +18,44 @@ type AuthJsSessionTokenClaims = {
   sub?: string | null;
   email?: string | null;
   name?: string | null;
+  organizationId?: string | null;
+  organizationSelection?: 'personal' | 'organization' | null;
 };
 
 export function getAuthJsSessionCookieName(): string {
   const useSecureCookies = process.env.NODE_ENV === 'production';
   const cookiePrefix = useSecureCookies ? '__Secure-' : '';
   return `${cookiePrefix}authjs.session-token`;
+}
+
+function getCookieDomain() {
+  if (process.env.AUTH_COOKIE_DOMAIN) {
+    return process.env.AUTH_COOKIE_DOMAIN;
+  }
+
+  const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
+  if (!url) return undefined;
+
+  try {
+    const hostname = new URL(url).hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
+    return hostname.startsWith('.') ? hostname : `.${hostname}`;
+  } catch {
+    return undefined;
+  }
+}
+
+export function getAuthJsSessionCookieOptions(maxAgeSeconds = 30 * 24 * 60 * 60) {
+  const cookieDomain = getCookieDomain();
+
+  return {
+    httpOnly: true,
+    sameSite: 'lax' as const,
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    ...(cookieDomain ? { domain: cookieDomain } : {}),
+    maxAge: maxAgeSeconds,
+  };
 }
 
 export async function readAuthJsSessionTokenClaims(): Promise<AuthJsSessionTokenClaims | null> {
@@ -47,6 +81,12 @@ export async function readAuthJsSessionTokenClaims(): Promise<AuthJsSessionToken
     sub: typeof decoded.sub === 'string' ? decoded.sub : null,
     email: typeof decoded.email === 'string' ? decoded.email : null,
     name: typeof decoded.name === 'string' ? decoded.name : null,
+    organizationId:
+      typeof decoded.organizationId === 'string' ? decoded.organizationId : null,
+    organizationSelection:
+      decoded.organizationSelection === 'personal' || decoded.organizationSelection === 'organization'
+        ? decoded.organizationSelection
+        : null,
   };
 }
 
@@ -61,6 +101,8 @@ export async function createAuthJsSessionToken({
   email,
   name,
   picture,
+  organizationId,
+  organizationSelection = organizationId ? 'organization' : 'personal',
   maxAgeSeconds = 24 * 60 * 60,
 }: CreateAuthJsSessionTokenParams): Promise<string> {
   const secret = process.env.NEXTAUTH_SECRET;
@@ -74,9 +116,11 @@ export async function createAuthJsSessionToken({
     token: {
       id: userId,
       sub: userId,
-      email,
+      ...(email ? { email } : {}),
       name,
       picture,
+      ...(organizationId ? { organizationId } : {}),
+      organizationSelection,
     },
     secret,
     salt: cookieName,

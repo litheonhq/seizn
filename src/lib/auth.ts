@@ -127,8 +127,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        if (typeof user.organizationId === 'string' && user.organizationId.trim()) {
+        if (user.organizationSelection === 'personal') {
+          token.organizationSelection = 'personal';
+          delete token.organizationId;
+        } else if (typeof user.organizationId === 'string' && user.organizationId.trim()) {
           token.organizationId = user.organizationId;
+          token.organizationSelection = 'organization';
         }
       }
 
@@ -173,7 +177,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-      if (!token.organizationId) {
+      if (token.organizationSelection !== 'personal' && !token.organizationId) {
         const resolvedOrganizationId = await normalizeSessionOrganizationId({
           userId:
             typeof token.id === 'string'
@@ -182,10 +186,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 ? token.sub
                 : null,
           email: typeof token.email === 'string' ? token.email : null,
+          organizationSelection: null,
         });
 
         if (resolvedOrganizationId) {
           token.organizationId = resolvedOrganizationId;
+          token.organizationSelection = 'organization';
         }
       }
 
@@ -209,19 +215,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           session.user.id = token.id;
         }
 
-        const resolvedOrganizationId =
-          typeof token.organizationId === 'string' && token.organizationId.trim()
-            ? token.organizationId
-            : await normalizeSessionOrganizationId({
-                userId: session.user.id,
-                email:
-                  session.user.email ??
-                  (typeof token.email === 'string' ? token.email : null),
-              });
+        if (token.organizationSelection === 'personal') {
+          session.user.organizationId = null;
+          session.user.organizationSelection = 'personal';
+          token.organizationId = null;
+        } else {
+          const resolvedOrganizationId =
+            (await normalizeSessionOrganizationId({
+              userId: session.user.id,
+              email:
+                session.user.email ??
+                (typeof token.email === 'string' ? token.email : null),
+              organizationSelection: null,
+            })) ||
+            (typeof token.organizationId === 'string' && token.organizationId.trim()
+              ? token.organizationId
+              : null);
 
-        if (resolvedOrganizationId) {
-          session.user.organizationId = resolvedOrganizationId;
-          token.organizationId = resolvedOrganizationId;
+          if (resolvedOrganizationId) {
+            session.user.organizationId = resolvedOrganizationId;
+            session.user.organizationSelection = 'organization';
+            token.organizationId = resolvedOrganizationId;
+            token.organizationSelection = 'organization';
+          } else {
+            session.user.organizationId = null;
+            session.user.organizationSelection = undefined;
+            token.organizationId = null;
+          }
         }
       }
       return session;

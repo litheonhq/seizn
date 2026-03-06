@@ -13,6 +13,8 @@ export type RequestUser = {
   email?: string | null;
   name?: string | null;
   lastSignInAt?: string | null;
+  organizationId?: string | null;
+  organizationSelection?: 'personal' | 'organization' | null;
 };
 
 export async function getSessionUser(): Promise<RequestUser | null> {
@@ -28,12 +30,20 @@ export async function getSessionUser(): Promise<RequestUser | null> {
     let userId = session?.user?.id || null;
     let email = session?.user?.email ?? null;
     let name = session?.user?.name ?? null;
+    let organizationId = session?.user?.organizationId ?? null;
+    let organizationSelection = session?.user?.organizationSelection ?? null;
 
     if (!email || !userId) {
       const tokenClaims = await readAuthJsSessionTokenClaims();
       userId = userId || tokenClaims?.id || tokenClaims?.sub || null;
       email = email || tokenClaims?.email || null;
       name = name || tokenClaims?.name || null;
+      organizationId = organizationId || tokenClaims?.organizationId || null;
+      organizationSelection = organizationSelection || tokenClaims?.organizationSelection || null;
+    } else if (!organizationId) {
+      const tokenClaims = await readAuthJsSessionTokenClaims();
+      organizationId = tokenClaims?.organizationId || null;
+      organizationSelection = organizationSelection || tokenClaims?.organizationSelection || null;
     }
 
     userId = await normalizeProfileUserId({ userId, email });
@@ -47,6 +57,8 @@ export async function getSessionUser(): Promise<RequestUser | null> {
       email,
       name,
       lastSignInAt: null,
+      organizationId,
+      organizationSelection,
     };
   } catch {
     return null;
@@ -79,6 +91,8 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
     email: user.email,
     name,
     lastSignInAt: user.last_sign_in_at,
+    organizationId: null,
+    organizationSelection: null,
   };
 }
 

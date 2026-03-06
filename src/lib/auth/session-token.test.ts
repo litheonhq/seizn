@@ -10,6 +10,8 @@ const { getTokenMock, headersMock } = vi.hoisted(() => ({
     sub: 'user-1',
     email: 'user@example.com',
     name: 'User',
+    organizationId: 'org-1',
+    organizationSelection: 'organization',
   })),
   headersMock: vi.fn(async () => new Headers({ cookie: '__Secure-authjs.session-token=raw-session-token' })),
 }));
@@ -108,6 +110,8 @@ describe('readAuthJsSessionTokenClaims', () => {
       sub: 'user-1',
       email: 'user@example.com',
       name: 'User',
+      organizationId: 'org-1',
+      organizationSelection: 'organization',
     });
     expect(getTokenMock).toHaveBeenCalledWith(
       expect.objectContaining({

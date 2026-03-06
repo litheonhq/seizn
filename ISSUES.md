@@ -56,3 +56,16 @@
 **증상:** `POST /api/auth/device/approve` 수정 후에도 production에서 세션 기반 API가 간헐적으로 raw Auth user id를 사용하거나 `Unauthorized`로 떨어졌다.
 **원인:** 커스텀 세션 fallback이 `next/headers`의 `cookies().get()`로 단일 cookie만 읽고 있어서 Auth.js `SessionStore`가 처리하는 production/chunked session cookie를 안정적으로 복원하지 못했다. 또한 `auth()`를 직접 쓰는 라우트들은 `session.user.id`를 별도 정규화하지 않았다.
 **해결:** `C:/Users/admin/Projects/seizn/src/lib/auth/session-token.ts`를 `@auth/core/jwt.getToken()` 기반으로 교체해 Auth.js와 동일한 cookie parsing 경로를 사용하도록 수정했다. 추가로 `C:/Users/admin/Projects/seizn/src/lib/profile/normalize.ts`를 도입하고 `C:/Users/admin/Projects/seizn/src/lib/auth.ts`의 `session` callback과 `C:/Users/admin/Projects/seizn/src/lib/api/request-user.ts`가 공통 profile id 정규화를 사용하도록 통일했다.
+
+### Active Organization Personal Selection Reverted To Default Org
+**Date:** 2026-03-06
+**Symptom:** In dashboard org switching, selecting personal scope could snap back to the default organization, and org-switch persistence in local E2E often fell back to session-only state.
+**Cause:** The session token treated organizationId = null as an unset value, so server callbacks re-resolved a default org from memberships. TopBar also had a same-tab org creation refresh race that could overwrite the current selection.
+**Fix:** Added an explicit organizationSelection session claim, propagated it through Auth.js callbacks, session-token parsing, request-user resolution, and org resolution helpers, and made the dashboard org UI event/session aware. Added a dedicated org switch API, same-tab org-created event detail handling, stale fetch guards in TopBar, and a Playwright regression test for org switching.
+
+### DB Utility Scripts Ignored Local Env Overrides
+**Date:** 2026-03-06
+**Symptom:** Migration and verification scripts could report success against one Supabase project while the local runtime still showed the original schema drift.
+**Cause:** `dotenv.config()` was loading `.env.local` without `override: true`, so pre-existing shell `POSTGRES_*` and `SUPABASE_*` variables could silently win. That sent `run-migration-file.mjs` and DB verification scripts to the wrong database.
+**Fix:** Added `scripts/load-local-env.mjs` and switched DB-facing scripts to load `.env.local` with `override: true`. Then re-applied the `profiles.organization_id` compatibility migration to the actual local target DB and corrected the runtime primitive verifier so budget tables are checked against `auth.users.id`, which matches the live schema.
+

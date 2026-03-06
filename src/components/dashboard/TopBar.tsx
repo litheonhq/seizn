@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   OrgIcon, ChevronDownIcon, UserIcon, SettingsIcon,
   PlusIcon, KeyIcon, UsersIcon, SearchIcon,
 } from "./dashboard-icons";
 import type { Organization } from "./navigation";
+import { useToast } from "@/contexts/ToastContext";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface TopBarProps {
   t: (key: string) => string;
@@ -14,32 +16,151 @@ interface TopBarProps {
   onCommandPaletteOpen?: () => void;
 }
 
+type OrganizationsChangedDetail = {
+  organization?: Organization;
+};
+
 export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: TopBarProps) {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
-  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+  const [activeOrganizationId, setActiveOrganizationId] = useState<string | null>(null);
+  const [isSwitchingOrganization, setIsSwitchingOrganization] = useState(false);
   const [showOrgDropdown, setShowOrgDropdown] = useState(false);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
   const orgDropdownRef = useRef<HTMLDivElement>(null);
   const createDropdownRef = useRef<HTMLDivElement>(null);
+  const organizationLoadRequestIdRef = useRef(0);
+  const { toast } = useToast();
+
+  const selectedOrg =
+    organizations.find((organization) => organization.id === activeOrganizationId) ?? null;
+
+  const loadOrganizations = useCallback(async () => {
+    if (!isAuthenticated) {
+      setOrganizations([]);
+      setActiveOrganizationId(null);
+      return;
+    }
+
+    const requestId = ++organizationLoadRequestIdRef.current;
+    const response = await fetch("/api/dashboard/organizations", { cache: "no-store" });
+    const data = await response.json();
+
+    if (!response.ok || !data.success || !Array.isArray(data.organizations)) {
+      throw new Error(getErrorMessage(data?.error, "Failed to load organizations"));
+    }
+
+    if (requestId !== organizationLoadRequestIdRef.current) {
+      return;
+    }
+
+    setOrganizations(data.organizations);
+    setActiveOrganizationId(
+      typeof data.activeOrganizationId === "string" && data.activeOrganizationId.trim()
+        ? data.activeOrganizationId
+        : null
+    );
+  }, [isAuthenticated]);
+
+  const switchOrganization = useCallback(
+    async (organization: Organization | null) => {
+      if (isSwitchingOrganization) {
+        return;
+      }
+
+      const nextOrganizationId = organization?.id ?? null;
+      if (nextOrganizationId === activeOrganizationId) {
+        setShowOrgDropdown(false);
+        return;
+      }
+
+      const previousOrganizationId = activeOrganizationId;
+
+      organizationLoadRequestIdRef.current += 1;
+      setActiveOrganizationId(nextOrganizationId);
+      setShowOrgDropdown(false);
+      setIsSwitchingOrganization(true);
+
+      try {
+        const response = await fetch("/api/profile/organization", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ organizationId: nextOrganizationId }),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          throw new Error(getErrorMessage(data?.error, "Failed to switch organization"));
+        }
+
+        const persistedOrganizationId =
+          typeof data.organizationId === "string" && data.organizationId.trim()
+            ? data.organizationId
+            : null;
+
+        setActiveOrganizationId(persistedOrganizationId);
+        window.dispatchEvent(
+          new CustomEvent("seizn:active-organization-changed", {
+            detail: { organizationId: persistedOrganizationId },
+          })
+        );
+      } catch (error) {
+        setActiveOrganizationId(previousOrganizationId);
+        toast("error", getErrorMessage(error, "Failed to switch organization"));
+      } finally {
+        setIsSwitchingOrganization(false);
+      }
+    },
+    [activeOrganizationId, isSwitchingOrganization, toast]
+  );
 
   useEffect(() => {
-    if (isAuthenticated) {
-      let cancelled = false;
-      fetch("/api/dashboard/organizations")
-        .then((res) => res.json())
-        .then((data) => {
-          if (cancelled) return;
-          if (data.success && data.organizations) {
-            setOrganizations(data.organizations);
-          }
-        })
-        .catch((err) => {
-          if (cancelled) return;
-          console.error("Failed to fetch orgs:", err);
+    let cancelled = false;
+
+    const refreshOrganizations = async () => {
+      try {
+        await loadOrganizations();
+      } catch (error) {
+        if (cancelled || !isAuthenticated) {
+          return;
+        }
+
+        toast("error", getErrorMessage(error, "Failed to load organizations"));
+      }
+    };
+
+    void refreshOrganizations();
+
+    const handleOrganizationsChanged = (event: Event) => {
+      const detail = (event as CustomEvent<OrganizationsChangedDetail>).detail;
+      const createdOrganization = detail?.organization;
+
+      if (
+        createdOrganization &&
+        typeof createdOrganization.id === "string" &&
+        typeof createdOrganization.name === "string" &&
+        typeof createdOrganization.slug === "string"
+      ) {
+        setOrganizations((previousOrganizations) => {
+          const nextOrganizations = previousOrganizations.filter(
+            (organization) => organization.id !== createdOrganization.id
+          );
+          return [createdOrganization, ...nextOrganizations];
         });
-      return () => { cancelled = true; };
-    }
-  }, [isAuthenticated]);
+        setActiveOrganizationId((previousOrganizationId) =>
+          previousOrganizationId ?? createdOrganization.id
+        );
+        return;
+      }
+
+      void refreshOrganizations();
+    };
+
+    window.addEventListener("seizn:organizations-changed", handleOrganizationsChanged);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("seizn:organizations-changed", handleOrganizationsChanged);
+    };
+  }, [isAuthenticated, loadOrganizations, toast]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -59,6 +180,8 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
       <div ref={orgDropdownRef} className="relative">
         <button
           onClick={() => setShowOrgDropdown(!showOrgDropdown)}
+          disabled={isSwitchingOrganization}
+          data-testid="org-switcher-button"
           className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-szn-surface-2 transition-colors text-sm font-medium text-szn-text-2"
           aria-expanded={showOrgDropdown}
           aria-haspopup="true"
@@ -71,8 +194,10 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
         {showOrgDropdown && (
           <div className="absolute top-full left-0 mt-1 w-56 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 animate-fade-in">
             <button
-              onClick={() => { setSelectedOrg(null); setShowOrgDropdown(false); }}
-              className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 ${!selectedOrg ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
+              onClick={() => { void switchOrganization(null); }}
+              disabled={isSwitchingOrganization}
+              data-testid="org-option-personal"
+              className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 disabled:opacity-60 ${!selectedOrg ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
             >
               <UserIcon className="w-4 h-4" />
               {t("dashboard.topBar.personal")}
@@ -81,8 +206,10 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
             {organizations.map((org) => (
               <button
                 key={org.id}
-                onClick={() => { setSelectedOrg(org); setShowOrgDropdown(false); }}
-                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 ${selectedOrg?.id === org.id ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
+                onClick={() => { void switchOrganization(org); }}
+                disabled={isSwitchingOrganization}
+                data-testid={`org-option-${org.id}`}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-szn-surface-1 disabled:opacity-60 ${selectedOrg?.id === org.id ? "bg-szn-accent/10 text-szn-accent" : "text-szn-text-2"}`}
               >
                 <OrgIcon className="w-4 h-4" />
                 {org.name}
