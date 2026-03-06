@@ -1,7 +1,7 @@
 import 'server-only';
 
-import { decode, encode } from '@auth/core/jwt';
-import { cookies } from 'next/headers';
+import { encode, getToken } from '@auth/core/jwt';
+import { headers } from 'next/headers';
 
 type CreateAuthJsSessionTokenParams = {
   userId: string;
@@ -30,40 +30,24 @@ export async function readAuthJsSessionTokenClaims(): Promise<AuthJsSessionToken
     return null;
   }
 
-  const cookieStore = await cookies();
-  const cookieNames = Array.from(
-    new Set([getAuthJsSessionCookieName(), '__Secure-authjs.session-token', 'authjs.session-token'])
-  );
+  const requestHeaders = await headers();
+  const decoded = await getToken({
+    req: { headers: requestHeaders },
+    secret,
+    secureCookie: process.env.NODE_ENV === 'production',
+    cookieName: getAuthJsSessionCookieName(),
+  });
 
-  for (const cookieName of cookieNames) {
-    const rawToken = cookieStore.get(cookieName)?.value;
-    if (!rawToken) {
-      continue;
-    }
-
-    try {
-      const decoded = await decode({
-        token: rawToken,
-        secret,
-        salt: cookieName,
-      });
-
-      if (!decoded) {
-        continue;
-      }
-
-      return {
-        id: typeof decoded.id === 'string' ? decoded.id : null,
-        sub: typeof decoded.sub === 'string' ? decoded.sub : null,
-        email: typeof decoded.email === 'string' ? decoded.email : null,
-        name: typeof decoded.name === 'string' ? decoded.name : null,
-      };
-    } catch {
-      continue;
-    }
+  if (!decoded) {
+    return null;
   }
 
-  return null;
+  return {
+    id: typeof decoded.id === 'string' ? decoded.id : null,
+    sub: typeof decoded.sub === 'string' ? decoded.sub : null,
+    email: typeof decoded.email === 'string' ? decoded.email : null,
+    name: typeof decoded.name === 'string' ? decoded.name : null,
+  };
 }
 
 /**

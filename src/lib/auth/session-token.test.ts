@@ -4,27 +4,23 @@ const { encodeMock } = vi.hoisted(() => ({
   encodeMock: vi.fn(async () => 'mock-session-token'),
 }));
 
-const { decodeMock, cookiesMock } = vi.hoisted(() => ({
-  decodeMock: vi.fn(async () => ({
+const { getTokenMock, headersMock } = vi.hoisted(() => ({
+  getTokenMock: vi.fn(async () => ({
     id: 'user-1',
     sub: 'user-1',
     email: 'user@example.com',
     name: 'User',
   })),
-  cookiesMock: vi.fn(async () => ({
-    get: vi.fn((name: string) =>
-      name === '__Secure-authjs.session-token' ? { value: 'raw-session-token' } : undefined
-    ),
-  })),
+  headersMock: vi.fn(async () => new Headers({ cookie: '__Secure-authjs.session-token=raw-session-token' })),
 }));
 
 vi.mock('server-only', () => ({}), { virtual: true });
 vi.mock('@auth/core/jwt', () => ({
   encode: encodeMock,
-  decode: decodeMock,
+  getToken: getTokenMock,
 }));
 vi.mock('next/headers', () => ({
-  cookies: cookiesMock,
+  headers: headersMock,
 }));
 
 import {
@@ -40,8 +36,8 @@ const ORIGINAL_ENV = {
 
 beforeEach(() => {
   encodeMock.mockClear();
-  decodeMock.mockClear();
-  cookiesMock.mockClear();
+  getTokenMock.mockClear();
+  headersMock.mockClear();
 });
 
 afterEach(() => {
@@ -113,11 +109,11 @@ describe('readAuthJsSessionTokenClaims', () => {
       email: 'user@example.com',
       name: 'User',
     });
-    expect(decodeMock).toHaveBeenCalledWith(
+    expect(getTokenMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        token: 'raw-session-token',
-        salt: '__Secure-authjs.session-token',
         secret: 'secret-value',
+        secureCookie: true,
+        cookieName: '__Secure-authjs.session-token',
       })
     );
   });
