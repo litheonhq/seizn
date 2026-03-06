@@ -13,6 +13,8 @@
 - Added runtime DB primitive verification for device auth, SSO, and relay contracts, and restored missing compat tables/functions for drifted environments.
 - Added a cross-type compat migration for drifted environments where `profiles.id`, `organizations.id`, or related foreign keys no longer share the same base type.
 - Fixed the device-approval API key insert path to use the live `api_keys.scopes` contract instead of the drifted `permissions` payload.
+- Fixed production device approval failures caused by NextAuth credentials sessions carrying Supabase Auth ids that do not match legacy `profiles.id` rows.
+- Unified legacy API key inserts so they always emit scoped payloads (`scope_config` + metadata) that match the current `api_keys` schema.
 
 ## Included Areas
 
@@ -43,13 +45,21 @@
 - `supabase/migrations/20260306006_runtime_auth_relay_primitives_restoration.sql`
 - `supabase/migrations/20260306007_runtime_primitives_cross_type_compat.sql`
 - `src/app/api/auth/device/approve/route.ts`
+- `src/app/api/auth/signup/route.ts`
+- `src/app/api/keys/route.ts`
+- `src/app/api/dashboard/keys/*`
 - `src/__tests__/api/device-approve-route.test.ts`
+- `src/__tests__/api/request-user.test.ts`
+- `src/__tests__/profile/resolve.test.ts`
 - `src/app/api/status/*`
 - `src/app/api/tenant-policy/*`
 - `src/app/api/retention/*`
 - `src/app/api/relay/*`
 - `src/app/api/sso/*`
 - `src/lib/auth.ts`
+- `src/lib/api/request-user.ts`
+- `src/lib/api-key.ts`
+- `src/lib/profile/resolve.ts`
 - `src/lib/sso/*`
 
 ## Operational Impact
@@ -62,7 +72,8 @@
 - No API contract changes were introduced.
 - Added a compat restoration migration for missing device auth, SSO, and relay runtime objects in drifted environments.
 - Production `POST /api/auth/device`, `POST /api/auth/device/verify`, and `POST /api/auth/device/token` were re-smoked successfully after the cross-type compat migration was applied.
-- Production device approval failures were traced to an `api_keys` schema mismatch, and the route now creates scoped keys successfully via the existing `scopes` column contract.
+- Production device approval failures were traced to auth/profile id drift on credentials sessions, and session ids are now normalized to `profiles.id` before API key and membership flows use them.
+- Legacy default API key creation paths now emit `scope_config` and metadata consistently, so device approval, dashboard key creation, signup seeding, and API key creation share the same schema-safe insert contract.
 
 ## Verification
 
@@ -70,6 +81,7 @@
 - `npm run typecheck`
 - `npm run verify:e2e-encryption-db`
 - `npm run verify:runtime-primitives`
+- `npx vitest run src/__tests__/api/device-approve-route.test.ts src/__tests__/api/request-user.test.ts src/__tests__/profile/resolve.test.ts`
 - `npm run test`
 - `npm run build`
 - `PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2e/dashboard-smoke.spec.ts e2e/dashboard-auth-smoke.spec.ts e2e/api-key.spec.ts e2e/spring-memory-crud.spec.ts --project=chromium --workers=1`

@@ -2,7 +2,8 @@ import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { createServerClient } from './supabase';
+import { resolveProfileUserId } from './profile/resolve';
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from './supabase';
 import { logServerError } from '@/lib/server/logger';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
@@ -150,6 +151,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         token.id = profile?.id || token.sub;
+      }
+
+      if (
+        hasServerSupabaseServiceRoleConfig() &&
+        token.email &&
+        (!token.id || token.id === token.sub)
+      ) {
+        const supabase = createServerClient();
+        const resolvedProfileId = await resolveProfileUserId(supabase, {
+          userId:
+            typeof token.id === 'string'
+              ? token.id
+              : typeof token.sub === 'string'
+                ? token.sub
+                : null,
+          email: typeof token.email === 'string' ? token.email : null,
+        });
+
+        if (resolvedProfileId) {
+          token.id = resolvedProfileId;
+        }
       }
 
       return token;

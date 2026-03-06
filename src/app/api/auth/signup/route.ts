@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { generateApiKey } from '@/lib/api-key';
+import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { welcomeEmail } from '@/lib/email/templates';
 import { upsertProfileWithFallback } from '@/lib/profile/upsert';
@@ -180,14 +180,18 @@ export async function POST(request: NextRequest) {
     // Generate instant API key (mem0-style UX)
     const { key, hash, prefix } = generateApiKey();
 
-    const { error: apiKeyInsertError } = await supabase.from('api_keys').insert({
-      user_id: authData.user.id,
-      name: 'Default Key',
-      key_hash: hash,
-      key_prefix: prefix,
-      scopes: ['memory:read', 'memory:write'],
-      is_active: true,
-    });
+    const { error: apiKeyInsertError } = await supabase.from('api_keys').insert(
+      buildBasicApiKeyInsertPayload({
+        userId: authData.user.id,
+        name: 'Default Key',
+        hash,
+        prefix,
+        scopes: ['memory:read', 'memory:write'],
+        metadata: {
+          source: 'signup',
+        },
+      })
+    );
     if (apiKeyInsertError) {
       logServerError('Default API key seed error during signup', apiKeyInsertError);
       await rollbackFailedSignup(supabase, authData.user.id);
@@ -224,4 +228,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

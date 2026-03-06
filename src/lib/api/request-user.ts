@@ -1,7 +1,13 @@
 import type { User } from '@supabase/supabase-js';
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
-import { createRequestAuthClient, hasServerSupabasePublicConfig } from '@/lib/supabase';
+import { resolveProfileUserId } from '@/lib/profile/resolve';
+import {
+  createRequestAuthClient,
+  createServerClient,
+  hasServerSupabasePublicConfig,
+  hasServerSupabaseServiceRoleConfig,
+} from '@/lib/supabase';
 
 export type RequestUser = {
   id: string;
@@ -10,24 +16,46 @@ export type RequestUser = {
   lastSignInAt?: string | null;
 };
 
+export async function getSessionUser(): Promise<RequestUser | null> {
+  try {
+    const session = await auth();
+    if (!session?.user?.id && !session?.user?.email) {
+      return null;
+    }
+
+    let userId = session?.user?.id || null;
+
+    if (hasServerSupabaseServiceRoleConfig()) {
+      userId = await resolveProfileUserId(createServerClient(), {
+        userId,
+        email: session?.user?.email ?? null,
+      });
+    }
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      id: userId,
+      email: session?.user?.email,
+      name: session?.user?.name,
+      lastSignInAt: null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Resolve the current user from either:
  * 1) Auth.js (NextAuth) session cookie (dashboard usage)
  * 2) Supabase JWT in Authorization: Bearer (API usage)
  */
 export async function getRequestUser(request: NextRequest): Promise<RequestUser | null> {
-  try {
-    const session = await auth();
-    if (session?.user?.id) {
-      return {
-        id: session.user.id,
-        email: session.user.email,
-        name: session.user.name,
-        lastSignInAt: null,
-      };
-    }
-  } catch {
-    // Ignore and fall back to bearer token auth.
+  const sessionUser = await getSessionUser();
+  if (sessionUser) {
+    return sessionUser;
   }
 
   const user = await getSupabaseUserFromBearer(request);

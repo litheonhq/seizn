@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
@@ -9,8 +9,8 @@ import { logServerError } from '@/lib/server/logger';
 // POST /api/dashboard/keys/rotate - Rotate an API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getSessionUser();
+    if (!user?.id) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       .from('api_keys')
       .select('id, name, key_prefix')
       .eq('id', keyId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_active', true)
       .single();
 
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         rotated_at: new Date().toISOString(),
       })
       .eq('id', keyId)
-      .eq('user_id', session.user.id);
+      .eq('user_id', user.id);
 
     if (updateError) {
       logServerError('Rotate key error', updateError);
@@ -68,9 +68,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Send API key rotated notification email (non-blocking)
-    if (session.user.email) {
+    if (user.email) {
       sendEmail({
-        to: session.user.email,
+        to: user.email,
         subject: `API Key Rotated: ${existingKey.name}`,
         html: apiKeyRotatedEmail(existingKey.name, prefix),
       }).catch((error) => logServerError('Failed to send API key rotation notification', error));

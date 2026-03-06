@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
-import { generateApiKey } from '@/lib/api-key';
+import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
@@ -15,8 +15,8 @@ import {
 // GET /api/dashboard/keys - List user's API keys (NextAuth session)
 export async function GET() {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getSessionUser();
+    if (!user?.id) {
       return AuthErrors.unauthorized('API keys');
     }
 
@@ -25,7 +25,7 @@ export async function GET() {
     const { data: keys, error } = await supabase
       .from('api_keys')
       .select('id, name, key_prefix, scopes, last_used_at, expires_at, is_active, created_at')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_active', true)
       .order('created_at', { ascending: false });
 
@@ -47,8 +47,8 @@ export async function GET() {
 // POST /api/dashboard/keys - Create a new API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getSessionUser();
+    if (!user?.id) {
       return AuthErrors.unauthorized('API keys');
     }
 
@@ -61,14 +61,14 @@ export async function POST(request: NextRequest) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('plan')
-      .eq('id', session.user.id)
+      .eq('id', user.id)
       .single();
 
     // Count existing keys
     const { count } = await supabase
       .from('api_keys')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_active', true);
 
     const plan = profile?.plan || 'free';
@@ -90,14 +90,18 @@ export async function POST(request: NextRequest) {
     // Insert key record
     const { data: keyRecord, error: insertError } = await supabase
       .from('api_keys')
-      .insert({
-        user_id: session.user.id,
-        name: name,
-        key_hash: hash,
-        key_prefix: prefix,
-        scopes: ['memory:read', 'memory:write'],
-        is_active: true,
-      })
+      .insert(
+        buildBasicApiKeyInsertPayload({
+          userId: user.id,
+          name,
+          hash,
+          prefix,
+          scopes: ['memory:read', 'memory:write'],
+          metadata: {
+            source: 'dashboard_keys',
+          },
+        })
+      )
       .select('id, name, key_prefix, scopes, created_at')
       .single();
 
@@ -107,9 +111,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Send API key created notification email (non-blocking)
-    if (session.user.email) {
+    if (user.email) {
       sendEmail({
-        to: session.user.email,
+        to: user.email,
         subject: `New API Key Created: ${name}`,
         html: apiKeyCreatedEmail(name, prefix),
       }).catch((error) => logServerError('Failed to send API key notification', error));
@@ -130,8 +134,8 @@ export async function POST(request: NextRequest) {
 // DELETE /api/dashboard/keys - Revoke an API key (NextAuth session)
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getSessionUser();
+    if (!user?.id) {
       return AuthErrors.unauthorized('API keys');
     }
 
@@ -148,7 +152,7 @@ export async function DELETE(request: NextRequest) {
       .from('api_keys')
       .update({ is_active: false })
       .eq('id', keyId)
-      .eq('user_id', session.user.id);
+      .eq('user_id', user.id);
 
     if (error) {
       logServerError('Revoke key error', error);

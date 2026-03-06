@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
-import { generateApiKey } from '@/lib/api-key';
+import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
 import {
   AuthErrors,
   ValidationErrors,
@@ -112,15 +112,19 @@ export async function POST(request: NextRequest) {
     // Insert key record
     const { data: keyRecord, error: insertError } = await supabase
       .from('api_keys')
-      .insert({
-        user_id: user.id,
-        name: name,
-        key_hash: hash,
-        key_prefix: prefix,
-        scopes: ['memory:read', 'memory:write'],
-        is_active: true,
-        expires_at: expiresAt.toISOString(),
-      })
+      .insert(
+        buildBasicApiKeyInsertPayload({
+          userId: user.id,
+          name,
+          hash,
+          prefix,
+          scopes: ['memory:read', 'memory:write'],
+          expiresAt: expiresAt.toISOString(),
+          metadata: {
+            source: 'api_keys_route',
+          },
+        })
+      )
       .select('id, name, key_prefix, scopes, created_at')
       .single();
 
