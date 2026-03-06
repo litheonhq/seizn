@@ -5,7 +5,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
-config({ path: resolve(__dirname, '../.env.local') });
+config({ path: resolve(__dirname, '../.env.local'), override: true });
 
 import { SpringClient, createSpringClient } from '../src/lib/spring';
 import type { Memory, SpringError } from '../src/lib/spring';

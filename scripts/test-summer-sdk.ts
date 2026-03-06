@@ -5,7 +5,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
-config({ path: resolve(__dirname, '../.env.local') });
+config({ path: resolve(__dirname, '../.env.local'), override: true });
 
 import { SummerClient, createSummerClient } from '../src/lib/summer/sdk';
 import type { Collection, SearchResponse, SummerError } from '../src/lib/summer/sdk';
