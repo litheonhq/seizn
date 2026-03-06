@@ -95,6 +95,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
   };
 
   const greeting = getGreeting();
+  const hasApiKeys = (stats?.keys || 0) > 0;
   const reliabilityCopy = getReliabilityUpdatesCopy(locale).dashboard;
   const reliabilityUpdates = reliabilityCopy.cards.map((card, index) => {
     const meta = RELIABILITY_CARD_META[index] ?? RELIABILITY_CARD_META[0];
@@ -352,11 +353,13 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 {t("dashboard.overviewPage.noActivityDescription")}
               </p>
               <Link
-                href="/dashboard/keys"
+                href={hasApiKeys ? "/dashboard/playground" : "/dashboard/keys"}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium theme-gradient-btn"
               >
                 <KeyIcon className="w-4 h-4" />
-                {t("dashboard.overviewPage.sendFirstRequest")}
+                {hasApiKeys
+                  ? t("dashboard.overviewPage.sendFirstRequest")
+                  : t("dashboard.overviewPage.createApiKey")}
               </Link>
             </div>
           ) : (
@@ -507,15 +510,23 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
           <div className="space-y-3">
             <Link
-              href="/dashboard/keys"
+              href={hasApiKeys ? "/dashboard/playground" : "/dashboard/keys"}
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform">
                 <KeyIcon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-medium text-szn-text-1 text-sm">{t("dashboard.overviewPage.createApiKey")}</p>
-                <p className="text-xs text-szn-text-2">{t("dashboard.overviewPage.getStartedApi")}</p>
+                <p className="font-medium text-szn-text-1 text-sm">
+                  {hasApiKeys
+                    ? t("dashboard.overviewPage.sendFirstRequest")
+                    : t("dashboard.overviewPage.createApiKey")}
+                </p>
+                <p className="text-xs text-szn-text-2">
+                  {hasApiKeys
+                    ? t("dashboard.onboarding.steps.firstQuery.description")
+                    : t("dashboard.overviewPage.getStartedApi")}
+                </p>
               </div>
             </Link>
             <Link

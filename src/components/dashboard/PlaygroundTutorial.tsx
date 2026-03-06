@@ -51,11 +51,6 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
 
   const handleTryExample = (query: string) => {
     onTryExample(query);
-    // Mark first query step as complete
-    localStorage.setItem("seizn_first_query", "true");
-    if (typeof window !== "undefined" && window.seiznOnboarding) {
-      window.seiznOnboarding.markComplete("first_query");
-    }
   };
 
   if (!isVisible) {

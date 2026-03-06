@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { useToast } from "@/contexts/ToastContext";
+import { ttfsEvents } from "@/lib/analytics";
+import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
 
@@ -66,6 +68,8 @@ export default function OrganizationsClient() {
 
       if (data.success) {
         setOrganizations([{ ...data.organization, role: "owner" }, ...organizations]);
+        markOnboardingStepComplete("create_org");
+        ttfsEvents.orgCreated(data.organization.name);
         setShowCreateModal(false);
         setNewOrgName("");
         setNewOrgSlug("");

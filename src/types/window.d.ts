@@ -8,10 +8,13 @@ declare global {
     | 'first_query'
     | 'view_trace';
 
+  interface SeiznOnboardingStepCompletedDetail {
+    stepId: SeiznOnboardingStepId;
+  }
+
   interface Window {
     seiznOnboarding?: {
       markComplete: (stepId: SeiznOnboardingStepId) => void;
     };
   }
 }
-

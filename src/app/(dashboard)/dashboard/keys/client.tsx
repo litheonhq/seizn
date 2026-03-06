@@ -1,13 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { useToast } from "@/contexts/ToastContext";
+import { ttfsEvents } from "@/lib/analytics";
+import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { getErrorMessage } from "@/lib/ui-error";
 import type { ApiKey } from "@/types/dashboard";
 import { formatDate } from "@/lib/format-date";
 
 export default function ApiKeysClient() {
   const { t } = useDashboardTranslation();
+  const { toast } = useToast();
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -22,19 +27,33 @@ export default function ApiKeysClient() {
   const [isRotating, setIsRotating] = useState(false);
   const [rotatedKey, setRotatedKey] = useState<string | null>(null);
 
+  const buildExampleRequest = useCallback(
+    (apiKey: string) => `curl -X POST \\
+  https://seizn.com/api/memories \\
+  -H "x-api-key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"content":"Remember that I prefer concise onboarding flows.","memory_type":"preference"}'`,
+    []
+  );
+
   const fetchApiKeys = useCallback(async () => {
     try {
       const res = await fetch("/api/dashboard/keys");
       const data = await res.json();
-      if (data.success) {
-        setApiKeys(data.keys);
+      if (!res.ok || !data.success) {
+        throw new Error(getErrorMessage(data?.error, "Failed to fetch API keys"));
       }
+
+      setApiKeys(data.keys);
+      setError(null);
     } catch (err) {
-      console.error("Failed to fetch API keys:", err);
+      const message = getErrorMessage(err, "Failed to fetch API keys");
+      setError(message);
+      toast("error", message);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     fetchApiKeys();
@@ -55,20 +74,22 @@ export default function ApiKeysClient() {
 
       if (data.success) {
         setNewKey(data.key);
-        setApiKeys([data.keyRecord, ...apiKeys]);
+        setApiKeys((previousKeys) => [data.keyRecord, ...previousKeys]);
+        markOnboardingStepComplete("api_key");
+        ttfsEvents.apiKeyCreated(data.keyRecord?.name || newKeyName);
         setNewKeyName("");
+        setError(null);
       } else {
         setError(getErrorMessage(data.error, "Failed to create key"));
       }
     } catch (err) {
-      console.error("Failed to create API key:", err);
       setError(getErrorMessage(err, "Failed to create key"));
     } finally {
       setIsCreating(false);
     }
   };
 
-  const confirmRevoke = async () => {
+  const confirmRevoke = useCallback(async () => {
     if (!revokeTarget) return;
     setIsRevoking(true);
 
@@ -79,17 +100,19 @@ export default function ApiKeysClient() {
       const data = await res.json();
 
       if (data.success) {
-        setApiKeys(apiKeys.filter((k) => k.id !== revokeTarget.id));
+        setApiKeys((previousKeys) =>
+          previousKeys.filter((key) => key.id !== revokeTarget.id)
+        );
       }
-    } catch (err) {
-      console.error("Failed to revoke API key:", err);
+    } catch {
+      toast("error", "Failed to revoke API key");
     } finally {
       setIsRevoking(false);
       setRevokeTarget(null);
     }
-  };
+  }, [revokeTarget, toast]);
 
-  const confirmRotate = async () => {
+  const confirmRotate = useCallback(async () => {
     if (!rotateTarget) return;
     setIsRotating(true);
 
@@ -104,18 +127,20 @@ export default function ApiKeysClient() {
       if (data.success) {
         setRotatedKey(data.key);
         // Update the key in the list
-        setApiKeys(apiKeys.map((k) =>
-          k.id === rotateTarget.id
-            ? { ...k, key_prefix: data.keyPrefix, created_at: new Date().toISOString() }
-            : k
-        ));
+        setApiKeys((previousKeys) =>
+          previousKeys.map((key) =>
+            key.id === rotateTarget.id
+              ? { ...key, key_prefix: data.keyPrefix, created_at: new Date().toISOString() }
+              : key
+          )
+        );
       }
-    } catch (err) {
-      console.error("Failed to rotate API key:", err);
+    } catch {
+      toast("error", "Failed to rotate API key");
     } finally {
       setIsRotating(false);
     }
-  };
+  }, [rotateTarget, toast]);
 
   const closeRotateModal = () => {
     setRotateTarget(null);
@@ -317,6 +342,7 @@ export default function ApiKeysClient() {
 
                 <button
                   onClick={() => copyToClipboard(newKey)}
+                  data-testid="copy-api-key-button"
                   className={`w-full py-3 rounded-xl font-medium transition-all ${
                     copied
                       ? "bg-green-500 text-white"
@@ -326,12 +352,44 @@ export default function ApiKeysClient() {
                   {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
                 </button>
 
-                <button
-                  onClick={closeModal}
-                  className="w-full mt-3 py-3 text-szn-text-2 hover:text-szn-text-1 transition-colors"
-                >
-                  {t("dashboard.keysPage.done")}
-                </button>
+                <div className="mt-4 rounded-2xl border border-szn-border bg-szn-bg p-4">
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <h3 className="text-sm font-medium text-szn-text-1">
+                        {t("dashboard.keysPage.exampleRequest")}
+                      </h3>
+                      <p className="text-xs text-szn-text-2 mt-1">
+                        {t("dashboard.onboarding.steps.firstQuery.description")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(buildExampleRequest(newKey))}
+                      data-testid="copy-example-request-button"
+                      className="px-3 py-1.5 rounded-lg bg-szn-surface text-szn-text-1 text-sm font-medium hover:bg-szn-surface-1 transition-colors"
+                    >
+                      {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
+                    </button>
+                  </div>
+                  <pre className="rounded-xl bg-gray-900 p-4 overflow-x-auto text-xs text-gray-200">
+                    <code>{buildExampleRequest(newKey)}</code>
+                  </pre>
+                  <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                    <Link
+                      href="/dashboard/playground"
+                      data-testid="open-playground-link"
+                      onClick={closeModal}
+                      className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-xl theme-gradient-btn text-white text-sm font-medium"
+                    >
+                      {t("dashboard.onboarding.steps.firstQuery.action")}
+                    </Link>
+                    <button
+                      onClick={closeModal}
+                      className="flex-1 px-4 py-3 text-szn-text-2 hover:text-szn-text-1 transition-colors"
+                    >
+                      {t("dashboard.keysPage.done")}
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               /* Create Key Form */
@@ -353,10 +411,11 @@ export default function ApiKeysClient() {
                 )}
 
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-szn-text-1 mb-1.5">
+                  <label htmlFor="api-key-name" className="block text-sm font-medium text-szn-text-1 mb-1.5">
                     {t("dashboard.keysPage.keyName")}
                   </label>
                   <input
+                    id="api-key-name"
                     type="text"
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}

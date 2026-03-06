@@ -5,6 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
+import { ttfsEvents } from "@/lib/analytics";
+import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
 import { getErrorMessage } from "@/lib/ui-error";
 
@@ -24,6 +26,15 @@ export default function SignupForm() {
   const [copied, setCopied] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+  const buildExampleRequest = useCallback(
+    (key: string) => `curl -X POST \\
+  https://seizn.com/api/memories \\
+  -H "x-api-key: ${key}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"content":"Remember that I prefer concise onboarding flows.","memory_type":"preference"}'`,
+    []
+  );
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token);
@@ -66,9 +77,12 @@ export default function SignupForm() {
       }
 
       setSuccess(true);
+      ttfsEvents.signupCompleted();
 
       if (data.apiKey) {
         setApiKey(data.apiKey);
+        markOnboardingStepComplete("api_key");
+        ttfsEvents.apiKeyCreated("Default Key");
         setIsLoading(false);
         return;
       }
@@ -109,6 +123,14 @@ export default function SignupForm() {
   const copyApiKey = async () => {
     if (apiKey) {
       await navigator.clipboard.writeText(apiKey);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const copyExampleRequest = async () => {
+    if (apiKey) {
+      await navigator.clipboard.writeText(buildExampleRequest(apiKey));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -178,6 +200,25 @@ export default function SignupForm() {
                   </svg>
                   Save this key securely. It will not be shown again.
                 </p>
+              </div>
+              <div className="p-4 bg-szn-card/50 border border-szn-border rounded-xl">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-sm text-szn-text-1 font-medium">Example Request</p>
+                    <p className="text-xs text-szn-text-2 mt-1">
+                      Copy a working request and send your first memory right away.
+                    </p>
+                  </div>
+                  <button
+                    onClick={copyExampleRequest}
+                    className="px-3 py-2 bg-szn-surface-1 hover:bg-szn-surface-2 rounded-lg text-szn-text-1 text-sm transition-colors"
+                  >
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <pre className="rounded-xl bg-gray-900 p-4 overflow-x-auto text-xs text-gray-200">
+                  <code>{buildExampleRequest(apiKey)}</code>
+                </pre>
               </div>
               <button
                 onClick={proceedToLogin}
