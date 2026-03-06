@@ -1,14 +1,14 @@
-const { cookiesMock, decodeMock } = vi.hoisted(() => ({
-  cookiesMock: vi.fn(),
-  decodeMock: vi.fn(),
+const { headersMock, getTokenMock } = vi.hoisted(() => ({
+  headersMock: vi.fn(),
+  getTokenMock: vi.fn(),
 }));
 
 vi.mock('next/headers', () => ({
-  cookies: cookiesMock,
+  headers: headersMock,
 }));
 
 vi.mock('@auth/core/jwt', () => ({
-  decode: decodeMock,
+  getToken: getTokenMock,
   encode: vi.fn(),
 }));
 
@@ -58,12 +58,10 @@ describe('request user helpers', () => {
         id: 'auth-user-1',
       },
     } as Awaited<ReturnType<typeof auth>>);
-    cookiesMock.mockResolvedValueOnce({
-      get: vi.fn((name: string) =>
-        name === '__Secure-authjs.session-token' ? { value: 'raw-token' } : undefined
-      ),
-    });
-    decodeMock.mockResolvedValueOnce({
+    headersMock.mockResolvedValueOnce(new Headers({
+      cookie: '__Secure-authjs.session-token=raw-token',
+    }));
+    getTokenMock.mockResolvedValueOnce({
       id: 'auth-user-1',
       sub: 'auth-user-1',
       email: 'user@example.com',
