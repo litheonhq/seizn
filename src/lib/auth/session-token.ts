@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { encode } from '@auth/core/jwt';
+import { decode, encode } from '@auth/core/jwt';
+import { cookies } from 'next/headers';
 
 type CreateAuthJsSessionTokenParams = {
   userId: string;
@@ -10,10 +11,59 @@ type CreateAuthJsSessionTokenParams = {
   maxAgeSeconds?: number;
 };
 
-function getSessionCookieName(): string {
+type AuthJsSessionTokenClaims = {
+  id?: string | null;
+  sub?: string | null;
+  email?: string | null;
+  name?: string | null;
+};
+
+export function getAuthJsSessionCookieName(): string {
   const useSecureCookies = process.env.NODE_ENV === 'production';
   const cookiePrefix = useSecureCookies ? '__Secure-' : '';
   return `${cookiePrefix}authjs.session-token`;
+}
+
+export async function readAuthJsSessionTokenClaims(): Promise<AuthJsSessionTokenClaims | null> {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    return null;
+  }
+
+  const cookieStore = await cookies();
+  const cookieNames = Array.from(
+    new Set([getAuthJsSessionCookieName(), '__Secure-authjs.session-token', 'authjs.session-token'])
+  );
+
+  for (const cookieName of cookieNames) {
+    const rawToken = cookieStore.get(cookieName)?.value;
+    if (!rawToken) {
+      continue;
+    }
+
+    try {
+      const decoded = await decode({
+        token: rawToken,
+        secret,
+        salt: cookieName,
+      });
+
+      if (!decoded) {
+        continue;
+      }
+
+      return {
+        id: typeof decoded.id === 'string' ? decoded.id : null,
+        sub: typeof decoded.sub === 'string' ? decoded.sub : null,
+        email: typeof decoded.email === 'string' ? decoded.email : null,
+        name: typeof decoded.name === 'string' ? decoded.name : null,
+      };
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -34,7 +84,7 @@ export async function createAuthJsSessionToken({
     throw new Error('NEXTAUTH_SECRET not configured');
   }
 
-  const cookieName = getSessionCookieName();
+  const cookieName = getAuthJsSessionCookieName();
 
   return encode({
     token: {
@@ -49,4 +99,3 @@ export async function createAuthJsSessionToken({
     maxAge: maxAgeSeconds,
   });
 }
-

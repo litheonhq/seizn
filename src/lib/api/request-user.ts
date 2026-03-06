@@ -1,6 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
+import { readAuthJsSessionTokenClaims } from '@/lib/auth/session-token';
 import { resolveProfileUserId } from '@/lib/profile/resolve';
 import {
   createRequestAuthClient,
@@ -20,15 +21,27 @@ export async function getSessionUser(): Promise<RequestUser | null> {
   try {
     const session = await auth();
     if (!session?.user?.id && !session?.user?.email) {
-      return null;
+      const tokenClaims = await readAuthJsSessionTokenClaims();
+      if (!tokenClaims?.id && !tokenClaims?.sub && !tokenClaims?.email) {
+        return null;
+      }
     }
 
     let userId = session?.user?.id || null;
+    let email = session?.user?.email ?? null;
+    let name = session?.user?.name ?? null;
+
+    if (!email || !userId) {
+      const tokenClaims = await readAuthJsSessionTokenClaims();
+      userId = userId || tokenClaims?.id || tokenClaims?.sub || null;
+      email = email || tokenClaims?.email || null;
+      name = name || tokenClaims?.name || null;
+    }
 
     if (hasServerSupabaseServiceRoleConfig()) {
       userId = await resolveProfileUserId(createServerClient(), {
         userId,
-        email: session?.user?.email ?? null,
+        email,
       });
     }
 
@@ -38,8 +51,8 @@ export async function getSessionUser(): Promise<RequestUser | null> {
 
     return {
       id: userId,
-      email: session?.user?.email,
-      name: session?.user?.name,
+      email,
+      name,
       lastSignInAt: null,
     };
   } catch {

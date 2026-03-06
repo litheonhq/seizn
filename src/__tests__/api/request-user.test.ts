@@ -1,3 +1,17 @@
+const { cookiesMock, decodeMock } = vi.hoisted(() => ({
+  cookiesMock: vi.fn(),
+  decodeMock: vi.fn(),
+}));
+
+vi.mock('next/headers', () => ({
+  cookies: cookiesMock,
+}));
+
+vi.mock('@auth/core/jwt', () => ({
+  decode: decodeMock,
+  encode: vi.fn(),
+}));
+
 import { describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
@@ -38,13 +52,23 @@ describe('request user helpers', () => {
   });
 
   it('resolves Auth.js session ids to profile ids when needed', async () => {
+    process.env.NEXTAUTH_SECRET = 'test-secret';
     vi.mocked(auth).mockResolvedValueOnce({
       user: {
         id: 'auth-user-1',
-        email: 'user@example.com',
-        name: 'User One',
       },
     } as Awaited<ReturnType<typeof auth>>);
+    cookiesMock.mockResolvedValueOnce({
+      get: vi.fn((name: string) =>
+        name === '__Secure-authjs.session-token' ? { value: 'raw-token' } : undefined
+      ),
+    });
+    decodeMock.mockResolvedValueOnce({
+      id: 'auth-user-1',
+      sub: 'auth-user-1',
+      email: 'user@example.com',
+      name: 'User One',
+    });
 
     vi.mocked(createServerClient).mockReturnValueOnce({
       from: vi.fn(() => ({

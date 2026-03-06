@@ -4,12 +4,34 @@ const { encodeMock } = vi.hoisted(() => ({
   encodeMock: vi.fn(async () => 'mock-session-token'),
 }));
 
+const { decodeMock, cookiesMock } = vi.hoisted(() => ({
+  decodeMock: vi.fn(async () => ({
+    id: 'user-1',
+    sub: 'user-1',
+    email: 'user@example.com',
+    name: 'User',
+  })),
+  cookiesMock: vi.fn(async () => ({
+    get: vi.fn((name: string) =>
+      name === '__Secure-authjs.session-token' ? { value: 'raw-session-token' } : undefined
+    ),
+  })),
+}));
+
 vi.mock('server-only', () => ({}), { virtual: true });
 vi.mock('@auth/core/jwt', () => ({
   encode: encodeMock,
+  decode: decodeMock,
+}));
+vi.mock('next/headers', () => ({
+  cookies: cookiesMock,
 }));
 
-import { createAuthJsSessionToken } from './session-token';
+import {
+  createAuthJsSessionToken,
+  getAuthJsSessionCookieName,
+  readAuthJsSessionTokenClaims,
+} from './session-token';
 
 const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
@@ -18,6 +40,8 @@ const ORIGINAL_ENV = {
 
 beforeEach(() => {
   encodeMock.mockClear();
+  decodeMock.mockClear();
+  cookiesMock.mockClear();
 });
 
 afterEach(() => {
@@ -70,6 +94,30 @@ describe('createAuthJsSessionToken', () => {
     expect(encodeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         salt: 'authjs.session-token',
+      })
+    );
+  });
+});
+
+describe('readAuthJsSessionTokenClaims', () => {
+  it('reads and decodes the production session cookie', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.NEXTAUTH_SECRET = 'secret-value';
+
+    const claims = await readAuthJsSessionTokenClaims();
+
+    expect(getAuthJsSessionCookieName()).toBe('__Secure-authjs.session-token');
+    expect(claims).toEqual({
+      id: 'user-1',
+      sub: 'user-1',
+      email: 'user@example.com',
+      name: 'User',
+    });
+    expect(decodeMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        token: 'raw-session-token',
+        salt: '__Secure-authjs.session-token',
+        secret: 'secret-value',
       })
     );
   });
