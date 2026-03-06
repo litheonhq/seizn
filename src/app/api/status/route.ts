@@ -3,7 +3,6 @@ import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
 
 export const runtime = 'nodejs';
-export const preferredRegion = 'hnd1';
 
 interface ServiceStatus {
   name: string;
