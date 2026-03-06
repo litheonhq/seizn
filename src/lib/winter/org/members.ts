@@ -8,6 +8,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { seedDefaultOrganizationIdIfMissing } from '@/lib/profile/organization';
 import crypto from 'crypto';
 import type { OrgMember, OrgRole, MemberStatus, PaginatedResult } from './types';
 import { logAuditEvent } from './audit-log';
@@ -373,6 +374,10 @@ export async function acceptInvite(
   if (existingMember) {
     // Delete the invite and return existing membership
     await supabase.from('organization_invites').delete().eq('id', invite.id);
+    await seedDefaultOrganizationIdIfMissing(supabase, {
+      userId,
+      organizationId: invite.organization_id,
+    });
     const member = await getMemberByUser(invite.organization_id, userId);
     if (!member) throw new Error('Failed to get member');
     return member;
@@ -394,6 +399,11 @@ export async function acceptInvite(
     .single();
 
   if (memberError) throw memberError;
+
+  await seedDefaultOrganizationIdIfMissing(supabase, {
+    userId,
+    organizationId: invite.organization_id,
+  });
 
   // Delete the invite
   await supabase.from('organization_invites').delete().eq('id', invite.id);

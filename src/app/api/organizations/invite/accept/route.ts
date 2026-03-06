@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { seedDefaultOrganizationIdIfMissing } from '@/lib/profile/organization';
+import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
 // GET /api/organizations/invite/accept?token=xxx - Get invite details
@@ -54,7 +56,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Get invite error:', error);
+    logServerError('Get invite error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -115,6 +117,12 @@ export async function POST(request: NextRequest) {
         .delete()
         .eq('id', invite.id);
 
+      await seedDefaultOrganizationIdIfMissing(supabase, {
+        userId: session.user.id,
+        email: session.user.email ?? null,
+        organizationId: invite.organization_id,
+      });
+
       return NextResponse.json({
         success: true,
         message: 'You are already a member of this organization',
@@ -132,9 +140,15 @@ export async function POST(request: NextRequest) {
       });
 
     if (memberError) {
-      console.error('Add member error:', memberError);
+      logServerError('Add member error', memberError);
       return NextResponse.json({ error: 'Failed to join organization' }, { status: 500 });
     }
+
+    await seedDefaultOrganizationIdIfMissing(supabase, {
+      userId: session.user.id,
+      email: session.user.email ?? null,
+      organizationId: invite.organization_id,
+    });
 
     // Delete the invite
     await supabase
@@ -155,7 +169,7 @@ export async function POST(request: NextRequest) {
       organization: org,
     });
   } catch (error) {
-    console.error('Accept invite error:', error);
+    logServerError('Accept invite error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

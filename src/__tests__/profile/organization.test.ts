@@ -3,6 +3,7 @@ import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/su
 import {
   normalizeSessionOrganizationId,
   resolveSessionOrganizationId,
+  seedDefaultOrganizationIdIfMissing,
 } from '@/lib/profile/organization';
 
 function createOrganizationResolverClient(
@@ -148,5 +149,107 @@ describe('normalizeSessionOrganizationId', () => {
         userId: 'profile-3',
       })
     ).resolves.toBe('org-server');
+  });
+});
+
+describe('seedDefaultOrganizationIdIfMissing', () => {
+  it('updates the profile when no default organization is set', async () => {
+    const updateEq = vi.fn().mockResolvedValue({ error: null });
+    const supabase = {
+      from(table: string) {
+        if (table !== 'profiles') {
+          throw new Error(`Unexpected table ${table}`);
+        }
+
+        return {
+          select() {
+            return this;
+          },
+          eq(column: string, value: string) {
+            if (column === 'id' && value === 'profile-4') {
+              return {
+                single: async () => ({
+                  data: { id: 'profile-4', organization_id: null },
+                  error: null,
+                }),
+              };
+            }
+
+            if (column === 'email' && value === 'user@example.com') {
+              return {
+                single: async () => ({
+                  data: { id: 'profile-4' },
+                  error: null,
+                }),
+              };
+            }
+
+            return {
+              single: async () => ({ data: null, error: null }),
+            };
+          },
+          update() {
+            return {
+              eq: updateEq,
+            };
+          },
+        };
+      },
+    };
+
+    await expect(
+      seedDefaultOrganizationIdIfMissing(supabase, {
+        userId: 'profile-4',
+        email: 'user@example.com',
+        organizationId: 'org-seeded',
+      })
+    ).resolves.toBe(true);
+
+    expect(updateEq).toHaveBeenCalledWith('id', 'profile-4');
+  });
+
+  it('does not overwrite an existing default organization', async () => {
+    const updateEq = vi.fn();
+    const supabase = {
+      from(table: string) {
+        if (table !== 'profiles') {
+          throw new Error(`Unexpected table ${table}`);
+        }
+
+        return {
+          select() {
+            return this;
+          },
+          eq(column: string, value: string) {
+            if (column === 'id' && value === 'profile-5') {
+              return {
+                single: async () => ({
+                  data: { id: 'profile-5', organization_id: 'org-existing' },
+                  error: null,
+                }),
+              };
+            }
+
+            return {
+              single: async () => ({ data: null, error: null }),
+            };
+          },
+          update() {
+            return {
+              eq: updateEq,
+            };
+          },
+        };
+      },
+    };
+
+    await expect(
+      seedDefaultOrganizationIdIfMissing(supabase, {
+        userId: 'profile-5',
+        organizationId: 'org-new',
+      })
+    ).resolves.toBe(false);
+
+    expect(updateEq).not.toHaveBeenCalled();
   });
 });

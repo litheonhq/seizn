@@ -1,4 +1,5 @@
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
+import { resolveProfileUserId } from './resolve';
 
 type ProfileIdentity = {
   userId?: string | null;
@@ -152,4 +153,49 @@ export async function normalizeSessionOrganizationId(
   }
 
   return resolveSessionOrganizationId(createServerClient(), identity);
+}
+
+export async function seedDefaultOrganizationIdIfMissing(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  identity: ProfileIdentity
+): Promise<boolean> {
+  const targetOrganizationId = identity.organizationId?.trim() || null;
+  if (!targetOrganizationId) {
+    return false;
+  }
+
+  try {
+    const profileId = await resolveProfileUserId(supabase, {
+      userId: identity.userId,
+      email: identity.email,
+    });
+
+    if (!profileId) {
+      return false;
+    }
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', profileId)
+      .single();
+
+    if (error && !isMissingRowError(error)) {
+      return false;
+    }
+
+    if (typeof profile?.organization_id === 'string' && profile.organization_id.trim()) {
+      return false;
+    }
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ organization_id: targetOrganizationId })
+      .eq('id', profileId);
+
+    return !updateError;
+  } catch {
+    return false;
+  }
 }
