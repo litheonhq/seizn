@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { runDeletionJob } from '@/lib/winter/forget';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // Configuration
 const BATCH_SIZE = 10; // Process up to 10 jobs per cron run
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
       .limit(BATCH_SIZE);
 
     if (fetchError) {
-      console.error('[RTBF Cron] Failed to fetch jobs:', fetchError);
+      logServerError('RTBF process queue failed to fetch jobs', fetchError);
       return NextResponse.json(
         { error: 'Failed to fetch deletion jobs' },
         { status: 500 }
@@ -102,7 +103,9 @@ export async function GET(request: NextRequest) {
         results.failed++;
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
         results.errors.push(`Job ${job.id}: ${errorMessage}`);
-        console.error(`[RTBF Cron] Failed to process job ${job.id}:`, errorMessage);
+        logServerError('RTBF process queue failed to process job', err, {
+          jobId: job.id,
+        });
 
         // Log failure to audit
         await supabase.from('audit_logs').insert({
@@ -144,7 +147,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[RTBF Cron] Cron error:', errorMessage);
+    logServerError('RTBF process queue cron failed', error);
 
     // Log the failure
     try {

@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DriftCollector } from '@/lib/drift';
 import { verifyCronSecret } from '@/lib/cron-auth';
 import { validateOutboundUrl } from '@/lib/security/outbound-url';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 import {
   createServerClient,
   getServerSupabaseServiceRoleKey,
@@ -121,7 +122,7 @@ export async function GET(request: NextRequest) {
               });
 
               if (!webhookUrlValidation.valid || !webhookUrlValidation.normalizedUrl) {
-                console.warn('[DriftAnalysis] Skipping unsafe webhook URL', {
+                logServerWarn('Drift analysis skipped unsafe webhook URL', {
                   collectionId: collection.id,
                   reason: webhookUrlValidation.reason,
                 });
@@ -145,12 +146,16 @@ export async function GET(request: NextRequest) {
                 }),
               });
             } catch (webhookError) {
-              console.error('Failed to send drift webhook:', webhookError);
+              logServerError('Drift analysis failed to send webhook', webhookError, {
+                collectionId: collection.id,
+              });
             }
           }
         }
       } catch (collectionError) {
-        console.error(`Failed to process collection ${collection.id}:`, collectionError);
+        logServerError('Drift analysis failed to process collection', collectionError, {
+          collectionId: collection.id,
+        });
         results.push({
           collectionId: collection.id,
           collectionName: collection.name,
@@ -174,7 +179,7 @@ export async function GET(request: NextRequest) {
       results,
     });
   } catch (error) {
-    console.error('Drift analysis cron job failed:', error);
+    logServerError('Drift analysis cron job failed', error);
     return NextResponse.json(
       {
         success: false,

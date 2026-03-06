@@ -6,6 +6,7 @@
 - Replaced additional raw `console.error` and `console.warn` calls in operationally sensitive API routes with the shared redacted server logger.
 - Extended the redacted logger rollout to connector OAuth and budget planning APIs.
 - Extended the same logger rollout to recurring cron routes for billing, summaries, and audit batch jobs.
+- Extended the rollout to drift analysis and Winter RTBF cron flows.
 - Documented the production smoke flow used before deploy and after merge.
 
 ## Included Areas
@@ -21,13 +22,16 @@
 - `src/app/api/cron/usage-cleanup/*`
 - `src/app/api/cron/usage-alerts/*`
 - `src/app/api/cron/monthly-reset/*`
+- `src/app/api/cron/drift-analysis/*`
+- `src/app/api/cron/winter/rtbf/process-queue/*`
+- `src/app/api/cron/winter/rtbf/verify-pending/*`
 - `src/lib/server/logger.ts`
 - `docs/deployment/production-smoke-checklist.md`
 
 ## Operational Impact
 
 - Server error paths now pass through redaction before emission.
-- Failure logs from enterprise inquiry, SSO configuration, adapter lifecycle, federated admin routes, connector OAuth flows, budget APIs, and recurring operational cron routes no longer risk leaking bearer tokens, API keys, cookies, or emails.
+- Failure logs from enterprise inquiry, SSO configuration, adapter lifecycle, federated admin routes, connector OAuth flows, budget APIs, recurring operational cron routes, drift analysis, and Winter RTBF cron flows no longer risk leaking bearer tokens, API keys, cookies, or emails.
 - No API contract changes were introduced.
 - No database schema changes were introduced.
 
