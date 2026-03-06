@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { logServerError } from '@/lib/server/logger';
 import {
   AuthErrors,
   ValidationErrors,
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id);
 
     if (error) {
-      console.error('Fetch organizations error:', error);
+      logServerError('Fetch organizations error', error);
       return ServerErrors.database('fetch_organizations');
     }
 
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest) {
       count: organizations.length,
     });
   } catch (error) {
-    console.error('Organizations GET error:', error);
+    logServerError('Organizations GET error', error);
     return ServerErrors.internal('list_organizations');
   }
 }
@@ -167,7 +168,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (createError) {
-      console.error('Create organization error:', createError);
+      logServerError('Create organization error', createError);
       return ServerErrors.database('create_organization');
     }
 
@@ -183,7 +184,7 @@ export async function POST(request: NextRequest) {
       organization: org,
     });
   } catch (error) {
-    console.error('Organizations POST error:', error);
+    logServerError('Organizations POST error', error);
     return ServerErrors.internal('create_organization');
   }
 }
@@ -269,7 +270,7 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Update organization error:', error);
+      logServerError('Update organization error', error);
       return ServerErrors.database('update_organization');
     }
 
@@ -278,7 +279,7 @@ export async function PATCH(request: NextRequest) {
       organization: org,
     });
   } catch (error) {
-    console.error('Organizations PATCH error:', error);
+    logServerError('Organizations PATCH error', error);
     return ServerErrors.internal('update_organization');
   }
 }
@@ -324,7 +325,7 @@ export async function DELETE(request: NextRequest) {
       .eq('id', orgId);
 
     if (error) {
-      console.error('Delete organization error:', error);
+      logServerError('Delete organization error', error);
       return ServerErrors.database('delete_organization');
     }
 
@@ -333,7 +334,7 @@ export async function DELETE(request: NextRequest) {
       deleted: orgId,
     });
   } catch (error) {
-    console.error('Organizations DELETE error:', error);
+    logServerError('Organizations DELETE error', error);
     return ServerErrors.internal('delete_organization');
   }
 }

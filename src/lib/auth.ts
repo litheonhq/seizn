@@ -3,6 +3,7 @@ import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { normalizeProfileUserId } from './profile/normalize';
+import { normalizeSessionOrganizationId } from './profile/organization';
 import { createServerClient } from './supabase';
 import { logServerError } from '@/lib/server/logger';
 
@@ -126,6 +127,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
+        if (typeof user.organizationId === 'string' && user.organizationId.trim()) {
+          token.organizationId = user.organizationId;
+        }
       }
 
       // For OAuth providers, create/link Supabase user
@@ -169,6 +173,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
+      if (!token.organizationId) {
+        const resolvedOrganizationId = await normalizeSessionOrganizationId({
+          userId:
+            typeof token.id === 'string'
+              ? token.id
+              : typeof token.sub === 'string'
+                ? token.sub
+                : null,
+          email: typeof token.email === 'string' ? token.email : null,
+        });
+
+        if (resolvedOrganizationId) {
+          token.organizationId = resolvedOrganizationId;
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -187,6 +207,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           session.user.id = resolvedProfileId;
         } else if (typeof token.id === 'string') {
           session.user.id = token.id;
+        }
+
+        const resolvedOrganizationId =
+          typeof token.organizationId === 'string' && token.organizationId.trim()
+            ? token.organizationId
+            : await normalizeSessionOrganizationId({
+                userId: session.user.id,
+                email:
+                  session.user.email ??
+                  (typeof token.email === 'string' ? token.email : null),
+              });
+
+        if (resolvedOrganizationId) {
+          session.user.organizationId = resolvedOrganizationId;
+          token.organizationId = resolvedOrganizationId;
         }
       }
       return session;
