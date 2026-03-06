@@ -6,7 +6,7 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import postgres from 'postgres';
 
-config({ path: resolve(__dirname, '../.env.local') });
+config({ path: resolve(__dirname, '../.env.local'), override: true });
 
 const DATABASE_URL = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
 

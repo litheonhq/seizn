@@ -13,7 +13,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
-config({ path: resolve(__dirname, '../.env.local') });
+config({ path: resolve(__dirname, '../.env.local'), override: true });
 
 // ============================================
 // BM25 Implementation (inline for testing)
