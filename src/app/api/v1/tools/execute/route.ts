@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import {
   authenticateRequest,
   isAuthError,
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       { status }
     );
   } catch (error) {
-    console.error('[v1/tools/execute] Error:', error);
+    logServerError('[v1/tools/execute] Error', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

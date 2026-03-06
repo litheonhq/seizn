@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
 import {
   getCostBreakdown,
   getBudgetStatus,
@@ -26,7 +27,16 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const orgId = searchParams.get('orgId') || session.user.organizationId;
+    let orgId = searchParams.get('orgId') || session.user.organizationId;
+
+    if (!orgId) {
+      orgId =
+        (await normalizeSessionOrganizationId({
+          userId: session.user.id,
+          email: session.user.email ?? null,
+        })) ??
+        undefined;
+    }
 
     if (!orgId) {
       return NextResponse.json(
@@ -93,7 +103,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { orgId, action, ...params } = body;
 
-    const targetOrgId = orgId || session.user.organizationId;
+    let targetOrgId = orgId || session.user.organizationId;
+    if (!targetOrgId) {
+      targetOrgId =
+        (await normalizeSessionOrganizationId({
+          userId: session.user.id,
+          email: session.user.email ?? null,
+        })) ??
+        undefined;
+    }
     if (!targetOrgId) {
       return NextResponse.json(
         { error: 'Organization ID required' },

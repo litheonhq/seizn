@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
 import { hasPermission } from '@/lib/rbac/permissions';
 import { Permissions } from '@/lib/rbac/types';
 import { logServerError } from '@/lib/server/logger';
@@ -30,7 +31,16 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const orgId = searchParams.get('orgId') || session.user.organizationId;
+    let orgId = searchParams.get('orgId') || session.user.organizationId;
+
+    if (!orgId) {
+      orgId =
+        (await normalizeSessionOrganizationId({
+          userId: session.user.id,
+          email: session.user.email ?? null,
+        })) ??
+        undefined;
+    }
 
     if (!orgId) {
       return NextResponse.json(
@@ -169,7 +179,15 @@ export async function POST(request: NextRequest) {
       metadata,
     } = body;
 
-    const orgId = organizationId || session.user.organizationId;
+    let orgId = organizationId || session.user.organizationId;
+    if (!orgId) {
+      orgId =
+        (await normalizeSessionOrganizationId({
+          userId: session.user.id,
+          email: session.user.email ?? null,
+        })) ??
+        undefined;
+    }
     if (!orgId) {
       return NextResponse.json(
         { error: 'Organization ID required' },
@@ -226,4 +244,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
