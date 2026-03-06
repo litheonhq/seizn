@@ -50,3 +50,9 @@
 **??:** `POST /api/auth/device/approve`? production?? `Failed to create API key` 500? ???? device flow? ?? ???? ??.
 **??:** NextAuth credentials ??? `session.user.id`? Supabase Auth user id? ?????, production `api_keys.user_id` FK? `profiles.id`? ???? ?? legacy profile id? ??? ? insert? ???.
 **??:** `C:/Users/admin/Projects/seizn/src/lib/profile/resolve.ts`? ?? id? `profiles.id` ???? ?????, `C:/Users/admin/Projects/seizn/src/lib/auth.ts` JWT/session ??? `C:/Users/admin/Projects/seizn/src/lib/api/request-user.ts` ??? ????. ??? ?? API key ?? ??? scoped payload? ????.
+
+### Auth.js Session Cookie Fallback Missed Chunked Production Cookies
+**날짜:** 2026-03-06
+**증상:** `POST /api/auth/device/approve` 수정 후에도 production에서 세션 기반 API가 간헐적으로 raw Auth user id를 사용하거나 `Unauthorized`로 떨어졌다.
+**원인:** 커스텀 세션 fallback이 `next/headers`의 `cookies().get()`로 단일 cookie만 읽고 있어서 Auth.js `SessionStore`가 처리하는 production/chunked session cookie를 안정적으로 복원하지 못했다. 또한 `auth()`를 직접 쓰는 라우트들은 `session.user.id`를 별도 정규화하지 않았다.
+**해결:** `C:/Users/admin/Projects/seizn/src/lib/auth/session-token.ts`를 `@auth/core/jwt.getToken()` 기반으로 교체해 Auth.js와 동일한 cookie parsing 경로를 사용하도록 수정했다. 추가로 `C:/Users/admin/Projects/seizn/src/lib/profile/normalize.ts`를 도입하고 `C:/Users/admin/Projects/seizn/src/lib/auth.ts`의 `session` callback과 `C:/Users/admin/Projects/seizn/src/lib/api/request-user.ts`가 공통 profile id 정규화를 사용하도록 통일했다.

@@ -15,6 +15,7 @@
 - Fixed the device-approval API key insert path to use the live `api_keys.scopes` contract instead of the drifted `permissions` payload.
 - Fixed production device approval failures caused by NextAuth credentials sessions carrying Supabase Auth ids that do not match legacy `profiles.id` rows.
 - Unified legacy API key inserts so they always emit scoped payloads (`scope_config` + metadata) that match the current `api_keys` schema.
+- Switched custom Auth.js session fallback decoding to `@auth/core/jwt.getToken()` and normalized `auth()` session ids globally so direct session-based APIs also resolve legacy `profiles.id` correctly.
 
 ## Included Areas
 
@@ -60,6 +61,7 @@
 - `src/lib/api/request-user.ts`
 - `src/lib/api-key.ts`
 - `src/lib/profile/resolve.ts`
+- `src/lib/profile/normalize.ts`
 - `src/lib/sso/*`
 
 ## Operational Impact
@@ -73,6 +75,7 @@
 - Added a compat restoration migration for missing device auth, SSO, and relay runtime objects in drifted environments.
 - Production `POST /api/auth/device`, `POST /api/auth/device/verify`, and `POST /api/auth/device/token` were re-smoked successfully after the cross-type compat migration was applied.
 - Production device approval failures were traced to auth/profile id drift on credentials sessions, and session ids are now normalized to `profiles.id` before API key and membership flows use them.
+- Direct `auth()` consumers now receive normalized `session.user.id` values, reducing auth/profile id drift risk across dashboard, profile, quota, connector, annotation, and v1 session routes.
 - Legacy default API key creation paths now emit `scope_config` and metadata consistently, so device approval, dashboard key creation, signup seeding, and API key creation share the same schema-safe insert contract.
 
 ## Verification
@@ -82,6 +85,7 @@
 - `npm run verify:e2e-encryption-db`
 - `npm run verify:runtime-primitives`
 - `npx vitest run src/__tests__/api/device-approve-route.test.ts src/__tests__/api/request-user.test.ts src/__tests__/profile/resolve.test.ts`
+- `npx vitest run src/__tests__/api/device-approve-route.test.ts src/__tests__/api/request-user.test.ts src/__tests__/profile/resolve.test.ts src/__tests__/profile/normalize.test.ts src/lib/auth/session-token.test.ts`
 - `npm run test`
 - `npm run build`
 - `PLAYWRIGHT_DISABLE_TURNSTILE=1 E2E_ALLOW_AUTO_PROVISION=1 npx playwright test e2e/dashboard-smoke.spec.ts e2e/dashboard-auth-smoke.spec.ts e2e/api-key.spec.ts e2e/spring-memory-crud.spec.ts --project=chromium --workers=1`

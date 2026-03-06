@@ -2,12 +2,10 @@ import type { User } from '@supabase/supabase-js';
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
 import { readAuthJsSessionTokenClaims } from '@/lib/auth/session-token';
-import { resolveProfileUserId } from '@/lib/profile/resolve';
+import { normalizeProfileUserId } from '@/lib/profile/normalize';
 import {
   createRequestAuthClient,
-  createServerClient,
   hasServerSupabasePublicConfig,
-  hasServerSupabaseServiceRoleConfig,
 } from '@/lib/supabase';
 
 export type RequestUser = {
@@ -38,12 +36,7 @@ export async function getSessionUser(): Promise<RequestUser | null> {
       name = name || tokenClaims?.name || null;
     }
 
-    if (hasServerSupabaseServiceRoleConfig()) {
-      userId = await resolveProfileUserId(createServerClient(), {
-        userId,
-        email,
-      });
-    }
+    userId = await normalizeProfileUserId({ userId, email });
 
     if (!userId) {
       return null;
