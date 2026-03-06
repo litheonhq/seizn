@@ -12,6 +12,7 @@
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "vercel --prod",
+    "smoke:production": "node scripts/production-smoke.mjs",
     "check:routes": "node scripts/check-route-conflicts.js",
     "generate:docs": "npx ts-node --project tsconfig.node.json scripts/generate-docs.ts",
     "test": "vitest",
