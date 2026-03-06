@@ -7,6 +7,7 @@ import {
   ScopeLevel,
   ActionType,
 } from '@/lib/scoped-api-keys';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/dashboard/keys/scoped - List user's scoped API keys
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
       keys,
     });
   } catch (error) {
-    console.error('List scoped keys error:', error);
+    logServerError('List scoped keys error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
       ...result,
     });
   } catch (error) {
-    console.error('Create scoped key error:', error);
+    logServerError('Create scoped key error', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
     const status = message.includes('limit reached') ? 403 : 500;
 

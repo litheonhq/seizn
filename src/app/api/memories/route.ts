@@ -21,6 +21,7 @@ import {
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { safeJsonParse } from '@/lib/safe-json';
+import { logServerError } from '@/lib/server/logger';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
@@ -442,7 +443,10 @@ export async function POST(request: NextRequest) {
       try {
         embedding = await createEmbedding(sanitizedContent);
       } catch (embErr) {
-        console.error('[memory:POST] Embedding failed:', embErr instanceof Error ? embErr.message : embErr);
+        logServerError(
+          '[memory:POST] Embedding failed',
+          embErr instanceof Error ? embErr.message : embErr
+        );
         return ServerErrors.internal('embedding_failed');
       }
     }
@@ -530,7 +534,10 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      console.error('[memory:POST] Insert failed:', insertError.message || insertError);
+      logServerError(
+        '[memory:POST] Insert failed',
+        insertError.message || insertError
+      );
       return ServerErrors.database('insert_memory');
     }
 
@@ -555,14 +562,14 @@ export async function POST(request: NextRequest) {
           .eq('id', memory.id)
           .eq('user_id', userId);
         if (rollback.error) {
-          console.error(
+          logServerError(
             '[memory:POST] CRITICAL: rollback soft-delete failed for memory',
-            memory.id,
-            rollback.error.message
+            rollback.error.message,
+            { memoryId: memory.id }
           );
         }
 
-        console.error('[memory:POST] Attachment failed:', attachmentError);
+        logServerError('[memory:POST] Attachment failed', attachmentError);
         const clientMessage = getImageAttachmentClientErrorMessage(attachmentError);
         if (clientMessage) {
           return ValidationErrors.invalidField('image', clientMessage);
@@ -594,7 +601,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error(`[memory:POST] Uncaught at step=${step}:`, msg);
+    logServerError(`[memory:POST] Uncaught at step=${step}`, msg);
     return ServerErrors.internal(`add_memory:${step}`);
   }
 }
@@ -950,12 +957,15 @@ export async function GET(request: NextRequest) {
         resolvedMode = 'keyword';
         searchError = null;
       } else {
-        console.error('[api/memories] Degraded keyword fallback failed:', degraded.error);
+        logServerError(
+          '[api/memories] Degraded keyword fallback failed',
+          degraded.error
+        );
       }
     }
 
     if (searchError) {
-      console.error('[api/memories] Search error:', searchError);
+      logServerError('[api/memories] Search error', searchError);
       const isTimeoutError = searchError.message.includes('timeout');
       if (keyId) {
         await logRequest(
@@ -1001,7 +1011,7 @@ export async function GET(request: NextRequest) {
     // Cache results
     if (semanticCacheDecision.allowWrite && results && results.length > 0) {
       setCachedQueryResults(userId, query, namespace, resolvedMode, toCachedMemories(results)).catch(
-        console.error
+        (error) => logServerError('[api/memories] Cache write failed', error)
       );
     }
 
@@ -1021,14 +1031,14 @@ export async function GET(request: NextRequest) {
 
     if (rankedResults && rankedResults.length > 0) {
       Promise.all(rankedResults.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
-        console.error
+        (error) => logServerError('[api/memories] Track access failed', error)
       );
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
       memoryCount: rankedResults?.length || 0,
       query,
-    }).catch(console.error);
+    }).catch((error) => logServerError('[api/memories] Audit log failed', error));
     recordSemanticCacheOutcome({
       resolvedMode,
       cacheHit: false,
@@ -1064,7 +1074,7 @@ export async function GET(request: NextRequest) {
     const withCsrf = ensureCsrfCookie(request, response);
     return withHeaders(withCsrf, authResult.rateLimitHeaders);
   } catch (error) {
-    console.error('Search memory error:', error);
+    logServerError('Search memory error', error);
     return ServerErrors.internal('search_memories');
   }
 }
@@ -1102,7 +1112,7 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', userId);
 
     if (error) {
-      console.error('Delete error:', error);
+      logServerError('Delete error', error);
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/memories', method: 'DELETE', startTime },
@@ -1130,7 +1140,7 @@ export async function DELETE(request: NextRequest) {
       authResult.rateLimitHeaders
     );
   } catch (error) {
-    console.error('Delete memory error:', error);
+    logServerError('Delete memory error', error);
     return ServerErrors.internal('delete_memories');
   }
 }

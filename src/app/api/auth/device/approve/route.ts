@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { auth } from '@/lib/auth';
 import crypto from 'crypto';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device/approve - Approve or deny a device auth request
 export async function POST(request: NextRequest) {
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (keyError || !apiKey) {
-      console.error('API key creation error:', keyError);
+      logServerError('API key creation error', keyError);
       return NextResponse.json({ error: 'Failed to create API key' }, { status: 500 });
     }
 
@@ -86,7 +87,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ status: 'approved' });
   } catch (error) {
-    console.error('Device approve error:', error);
+    logServerError('Device approve error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+

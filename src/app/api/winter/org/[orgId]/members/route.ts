@@ -18,6 +18,7 @@ import {
   cancelInvite,
   getUserOrgRole,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       your_role: role,
     });
   } catch (error) {
-    console.error('[WinterOrg Members] GET error:', error);
+    logServerError('[WinterOrg Members] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -128,7 +129,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       invite_url: result.invite_url,
     });
   } catch (error) {
-    console.error('[WinterOrg Members] POST error:', error);
+    logServerError('[WinterOrg Members] POST error:', error);
 
     if (error instanceof Error) {
       if (
@@ -183,7 +184,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       member,
     });
   } catch (error) {
-    console.error('[WinterOrg Members] PATCH error:', error);
+    logServerError('[WinterOrg Members] PATCH error:', error);
 
     if (error instanceof Error) {
       if (error.message.includes('Cannot change')) {
@@ -251,7 +252,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('[WinterOrg Members] DELETE error:', error);
+    logServerError('[WinterOrg Members] DELETE error:', error);
 
     if (error instanceof Error) {
       if (error.message.includes('Cannot remove')) {

@@ -27,6 +27,7 @@ import {
   createABTestConfig,
 } from '@/lib/network-learning';
 import type { PolicyResponse, AggregationPeriod } from '@/lib/network-learning';
+import { logServerError } from '@/lib/server/logger';
 
 const POLICY_READ_SCOPES = [
   'network-learning:policy:read',
@@ -259,7 +260,7 @@ export async function POST(request: NextRequest) {
           const update = await createPolicyUpdate(rec);
           createdUpdates.push(update);
         } catch (createError) {
-          console.error('Failed to create policy update:', createError);
+          logServerError('Failed to create policy update', createError);
           failedUpdates.push({
             targetPolicy: rec.targetPolicy,
             error: createError instanceof Error ? createError.message : String(createError),

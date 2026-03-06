@@ -5,8 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createRAGService } from '@/lib/rag/service';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -14,15 +16,12 @@ export async function GET(
 ) {
   try {
     const { collectionId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const ragService = createRAGService(supabase);
     const collection = await ragService.getCollection(collectionId);
@@ -58,7 +57,7 @@ export async function GET(
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('RAG documents list error:', error);
+    logServerError('RAG documents list error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -72,15 +71,12 @@ export async function POST(
 ) {
   try {
     const { collectionId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const ragService = createRAGService(supabase);
     const collection = await ragService.getCollection(collectionId);
@@ -141,7 +137,7 @@ export async function POST(
 
     return NextResponse.json({ document }, { status: 201 });
   } catch (error) {
-    console.error('RAG document add error:', error);
+    logServerError('RAG document add error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(

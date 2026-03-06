@@ -5,8 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { generateDeletionCertificate } from '@/lib/winter/rtbf/verification';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ requestId: string }>;
@@ -15,15 +17,12 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { requestId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get the request to verify access
     const { data: rtbfRequest, error: reqError } = await supabase
@@ -86,7 +85,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       formats: ['json', 'pdf'],
     });
   } catch (error) {
-    console.error('Certificate generation error:', error);
+    logServerError('Certificate generation error', error);
 
     if (error instanceof Error && error.message.includes('incomplete')) {
       return NextResponse.json(

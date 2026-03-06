@@ -6,20 +6,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createToolGatingService } from '@/lib/tool-gating';
 import type { ToolCategory, RiskLevel } from '@/lib/tool-gating';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category') as ToolCategory | null;
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ tools });
   } catch (error) {
-    console.error('List tools error:', error);
+    logServerError('List tools error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -45,15 +44,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Only admins can create tools (system-level operation)
     const { data: membership } = await supabase
@@ -76,10 +72,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ tool }, { status: 201 });
   } catch (error) {
-    console.error('Create tool error:', error);
+    logServerError('Create tool error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

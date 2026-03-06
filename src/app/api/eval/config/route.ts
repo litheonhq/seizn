@@ -6,23 +6,20 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getRequestUser } from '@/lib/api/request-user';
+import { createServerClient } from '@/lib/supabase';
 import { autoEvalService } from '@/lib/eval/auto-eval-service';
 import type { AutoEvalConfigInput } from '@/lib/eval/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Verify authentication
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    const user = await getRequestUser(request);
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
@@ -56,7 +53,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(config);
   } catch (error) {
-    console.error('[API] Eval config GET error:', error);
+    logServerError('[API] Eval config GET error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
@@ -66,17 +63,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Verify authentication
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    const user = await getRequestUser(request);
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const body = await request.json();
     const { organizationId, ...updates } = body as AutoEvalConfigInput & {
@@ -138,7 +130,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(updatedConfig);
   } catch (error) {
-    console.error('[API] Eval config POST error:', error);
+    logServerError('[API] Eval config POST error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

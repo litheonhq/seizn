@@ -3,6 +3,7 @@ import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
 import { getTraceStore } from '@/lib/fall/flight-recorder';
 import type { TraceListParams } from '@/lib/fall/flight-recorder';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/traces - List user's traces
@@ -111,7 +112,8 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Traces list error:', error);
+    logServerError('Traces list error', error);
     return ServerErrors.internal('traces_list');
   }
 }
+

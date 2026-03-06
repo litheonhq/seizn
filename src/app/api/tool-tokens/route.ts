@@ -6,19 +6,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createToolGatingService } from '@/lib/tool-gating';
+import { logServerError } from '@/lib/server/logger';
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -50,7 +49,7 @@ export async function GET(_request: NextRequest) {
 
     return NextResponse.json({ tokens: safeTokens });
   } catch (error) {
-    console.error('List tokens error:', error);
+    logServerError('List tokens error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -60,15 +59,12 @@ export async function GET(_request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -112,10 +108,11 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Create token error:', error);
+    logServerError('Create token error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

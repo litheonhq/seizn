@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { runTtlCleanup, previewCleanup } from '@/lib/winter/ttl';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/winter/cleanup
@@ -102,7 +103,7 @@ export async function POST(request: NextRequest) {
       ...(result.errors.length > 0 ? { errors: result.errors } : {}),
     });
   } catch (err) {
-    console.error('Winter cleanup error:', err);
+    logServerError('Winter cleanup error:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -165,7 +166,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('Winter cleanup preview error:', err);
+    logServerError('Winter cleanup preview error:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

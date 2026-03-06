@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import { randomUUID } from 'crypto';
 import { hasConsent } from '../consent/consent-manager';
 import type {
@@ -129,7 +130,7 @@ export async function collectSignal(
     .single();
 
   if (error) {
-    console.error('Failed to store signal:', error);
+    logServerError('Failed to store signal', error);
     return null;
   }
 
@@ -280,7 +281,7 @@ export async function getSignals(
   const { data, error } = await query;
 
   if (error) {
-    console.error('Failed to get signals:', error);
+    logServerError('Failed to get signals', error);
     throw error;
   }
 
@@ -299,7 +300,7 @@ export async function getSignalCount(queryCluster: string): Promise<number> {
     .eq('query_cluster', queryCluster);
 
   if (error) {
-    console.error('Failed to get signal count:', error);
+    logServerError('Failed to get signal count', error);
     return 0;
   }
 

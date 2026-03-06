@@ -5,20 +5,19 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createPolicyPackService } from '@/lib/policy-packs';
+import { logServerError } from '@/lib/server/logger';
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -66,7 +65,7 @@ export async function GET(_request: NextRequest) {
 
     return NextResponse.json({ installations: enriched });
   } catch (error) {
-    console.error('List installations error:', error);
+    logServerError('List installations error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -76,15 +75,12 @@ export async function GET(_request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -118,7 +114,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ installation }, { status: 201 });
   } catch (error) {
-    console.error('Install pack error:', error);
+    logServerError('Install pack error', error);
 
     if (error instanceof Error && error.message.includes('not found')) {
       return NextResponse.json(

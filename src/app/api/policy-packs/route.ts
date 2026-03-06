@@ -5,21 +5,20 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createPolicyPackService } from '@/lib/policy-packs';
 import type { PolicyCategory } from '@/lib/policy-packs';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get('query') || undefined;
@@ -43,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ packs });
   } catch (error) {
-    console.error('Search catalog error:', error);
+    logServerError('Search catalog error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -53,15 +52,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization as publisher
     const { data: membership } = await supabase
@@ -86,7 +82,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ pack }, { status: 201 });
   } catch (error) {
-    console.error('Create pack error:', error);
+    logServerError('Create pack error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

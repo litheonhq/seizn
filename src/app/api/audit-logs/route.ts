@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
+import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 type SupabaseInsertError = { code?: string | null; message?: string | null };
 
@@ -13,24 +15,10 @@ function isAuditLogsMissingError(error: unknown): boolean {
   );
 }
 
-// Helper to get user from session
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabase = createRequestAuthClient(token);
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
-
 // GET /api/audit-logs - Get audit logs
 export async function GET(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -104,7 +92,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (error) {
-      console.error('Fetch audit logs error:', error);
+      logServerError('Fetch audit logs error', error);
       return NextResponse.json({ error: 'Failed to fetch audit logs' }, { status: 500 });
     }
 
@@ -116,7 +104,8 @@ export async function GET(request: NextRequest) {
       offset,
     });
   } catch (error) {
-    console.error('Audit logs GET error:', error);
+    logServerError('Audit logs GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+

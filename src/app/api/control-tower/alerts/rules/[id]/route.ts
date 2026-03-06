@@ -10,6 +10,7 @@ import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-a
 import { ServerErrors, ValidationErrors } from '@/lib/api-error';
 import { updateAlertRule, deleteAlertRule } from '@/lib/control-tower';
 import type { AlertCondition } from '@/lib/control-tower/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function PATCH(
   request: NextRequest,
@@ -72,7 +73,7 @@ export async function PATCH(
       data: rule,
     });
   } catch (err) {
-    console.error('Control Tower update alert rule error:', err);
+    logServerError('Control Tower update alert rule error', err);
     return ServerErrors.internal('control_tower_update_alert_rule');
   }
 }
@@ -105,7 +106,7 @@ export async function DELETE(
       message: 'Alert rule deleted',
     });
   } catch (err) {
-    console.error('Control Tower delete alert rule error:', err);
+    logServerError('Control Tower delete alert rule error', err);
     return ServerErrors.internal('control_tower_delete_alert_rule');
   }
 }

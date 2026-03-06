@@ -14,6 +14,7 @@ import {
   getDraftVersion,
   type PolicyVersionState,
 } from '@/lib/winter/org/policy-versions';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       draft_id: draft?.id || null,
     });
   } catch (error) {
-    console.error('[PolicyVersions] GET error:', error);
+    logServerError('[PolicyVersions] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -122,7 +123,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       version,
     });
   } catch (error) {
-    console.error('[PolicyVersions] POST error:', error);
+    logServerError('[PolicyVersions] POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

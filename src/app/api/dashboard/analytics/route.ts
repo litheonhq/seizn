@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/analytics - Get detailed analytics data
 export async function GET(request: NextRequest) {
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     if (logsError) {
-      console.error('Analytics logs error:', logsError);
+      logServerError('Analytics logs error', logsError);
       return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
     }
 
@@ -100,7 +101,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Analytics error:', error);
+    logServerError('Analytics error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

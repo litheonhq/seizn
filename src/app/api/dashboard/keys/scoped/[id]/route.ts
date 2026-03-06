@@ -6,6 +6,7 @@ import {
   revokeScopedApiKey,
   deleteScopedApiKey,
 } from '@/lib/scoped-api-keys';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       key,
     });
   } catch (error) {
-    console.error('Get scoped key error:', error);
+    logServerError('Get scoped key error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
@@ -86,7 +87,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       key: updatedKey,
     });
   } catch (error) {
-    console.error('Update scoped key error:', error);
+    logServerError('Update scoped key error', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
     const status = message.includes('not found') ? 404 : 500;
 
@@ -128,7 +129,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       });
     }
   } catch (error) {
-    console.error('Delete/revoke scoped key error:', error);
+    logServerError('Delete/revoke scoped key error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

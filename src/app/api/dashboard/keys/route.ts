@@ -4,6 +4,7 @@ import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
+import { logServerError } from '@/lib/server/logger';
 import {
   AuthErrors,
   ValidationErrors,
@@ -29,7 +30,7 @@ export async function GET() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('List keys error:', error);
+      logServerError('List keys error', error);
       return ServerErrors.database('list_keys');
     }
 
@@ -38,7 +39,7 @@ export async function GET() {
       keys: keys || [],
     });
   } catch (error) {
-    console.error('List keys error:', error);
+    logServerError('List keys error', error);
     return ServerErrors.internal('list_keys');
   }
 }
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error('Create key error:', insertError);
+      logServerError('Create key error', insertError);
       return ServerErrors.database('create_key');
     }
 
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
         to: session.user.email,
         subject: `New API Key Created: ${name}`,
         html: apiKeyCreatedEmail(name, prefix),
-      }).catch((err) => console.error('Failed to send API key notification:', err));
+      }).catch((error) => logServerError('Failed to send API key notification', error));
     }
 
     return NextResponse.json({
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
       message: 'Save this key securely. It will not be shown again.',
     });
   } catch (error) {
-    console.error('Create key error:', error);
+    logServerError('Create key error', error);
     return ServerErrors.internal('create_key');
   }
 }
@@ -150,7 +151,7 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', session.user.id);
 
     if (error) {
-      console.error('Revoke key error:', error);
+      logServerError('Revoke key error', error);
       return ServerErrors.database('revoke_key');
     }
 
@@ -159,7 +160,7 @@ export async function DELETE(request: NextRequest) {
       message: 'API key revoked',
     });
   } catch (error) {
-    console.error('Revoke key error:', error);
+    logServerError('Revoke key error', error);
     return ServerErrors.internal('revoke_key');
   }
 }

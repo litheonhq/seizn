@@ -13,6 +13,7 @@ import {
   verifyErasure,
   generateDeletionCertificate,
 } from '@/lib/winter/rtbf';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ requestId: string }>;
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       error: result.error,
     });
   } catch (err) {
-    console.error('RTBF execute error:', err);
+    logServerError('RTBF execute error:', err);
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: 'Failed to execute RTBF request' } },
       { status: 500 }

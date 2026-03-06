@@ -29,6 +29,7 @@ import { ServerErrors, ValidationErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import { createCodeFixer, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { CreatePRRequest, CreatePRResponse, AutopilotConfig, PRContext } from '@/lib/autopilot';
+import { logServerError } from '@/lib/server/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -210,7 +211,7 @@ export async function POST(request: NextRequest) {
       status: prRecord.status === 'failed' ? 500 : 200,
     });
   } catch (error) {
-    console.error('Autopilot PR create error:', error);
+    logServerError('Autopilot PR create error', error);
     return ServerErrors.internal('autopilot_pr_create');
   }
 }

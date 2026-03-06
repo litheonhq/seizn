@@ -8,6 +8,7 @@ import {
   type GraphQueryOptions,
   type GraphFilter,
 } from '@/lib/winter/graph';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/winter/graph/data
@@ -188,7 +189,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Graph data error:', error);
+    logServerError('Graph data error:', error);
     return ServerErrors.internal('graph_data');
   }
 }

@@ -16,6 +16,7 @@ import {
   type CostQueryParams,
 } from '@/lib/control-tower/cost-attribution';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ breakdown });
   } catch (error) {
-    console.error('Cost attribution error:', error);
+    logServerError('Cost attribution error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get cost breakdown' },
       { status: 500 }
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest) {
         );
     }
   } catch (error) {
-    console.error('Cost action error:', error);
+    logServerError('Cost action error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to perform action' },
       { status: 500 }

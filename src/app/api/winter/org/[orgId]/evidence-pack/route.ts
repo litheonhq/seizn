@@ -8,6 +8,7 @@ import {
   type EvidencePackFormat,
 } from '@/lib/winter/org/evidence-pack-builder';
 import { ReportType } from '@/lib/winter/org/types';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/winter/org/[orgId]/evidence-pack
@@ -92,7 +93,7 @@ export async function POST(
       },
     });
   } catch (error) {
-    console.error('[Evidence Pack] Export error:', error);
+    logServerError('[Evidence Pack] Export error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     // Log the failure
@@ -162,7 +163,7 @@ export async function PUT(
       organizationId: pack.manifest.organizationId,
     });
   } catch (error) {
-    console.error('[Evidence Pack] Verification error:', error);
+    logServerError('[Evidence Pack] Verification error:', error);
     return NextResponse.json(
       { error: 'Failed to verify evidence pack' },
       { status: 500 }

@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import { randomUUID } from 'crypto';
 import { getSignals } from '../collection/signal-collector';
 import type {
@@ -234,7 +235,7 @@ export async function storeInsights(insights: AggregatedInsight[]): Promise<void
     .insert(records);
 
   if (error) {
-    console.error('Failed to store insights:', error);
+    logServerError('Failed to store insights', error);
     throw error;
   }
 }
@@ -267,7 +268,7 @@ export async function getInsights(options: {
   const { data, error } = await query;
 
   if (error) {
-    console.error('Failed to get insights:', error);
+    logServerError('Failed to get insights', error);
     throw error;
   }
 
@@ -293,7 +294,7 @@ export async function getLatestInsight(
     .maybeSingle();
 
   if (error) {
-    console.error('Failed to get latest insight:', error);
+    logServerError('Failed to get latest insight', error);
     return null;
   }
 
@@ -437,7 +438,7 @@ export async function runScheduledAggregation(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Aggregation failed: ${message}`);
-    console.error('Scheduled aggregation failed:', error);
+    logServerError('Scheduled aggregation failed', error);
   }
 
   return { insightsCreated, errors };

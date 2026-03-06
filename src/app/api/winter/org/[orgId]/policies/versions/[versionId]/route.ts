@@ -16,6 +16,7 @@ import {
   publishVersion,
   compareWithCurrent,
 } from '@/lib/winter/org/policy-versions';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       ...(diff && { diff }),
     });
   } catch (error) {
-    console.error('[PolicyVersion] GET error:', error);
+    logServerError('[PolicyVersion] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -136,7 +137,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       version: updated,
     });
   } catch (error) {
-    console.error('[PolicyVersion] PATCH error:', error);
+    logServerError('[PolicyVersion] PATCH error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -177,7 +178,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       message: 'Draft version deleted',
     });
   } catch (error) {
-    console.error('[PolicyVersion] DELETE error:', error);
+    logServerError('[PolicyVersion] DELETE error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

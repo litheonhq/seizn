@@ -26,6 +26,7 @@ import {
   DeletionCertificate,
 } from '@/lib/winter/rtbf';
 import { sendEmail, rtbfDeletionConfirmationEmail } from '@/lib/email';
+import { logServerError } from '@/lib/server/logger';
 
 interface RequestBody {
   scope?: ErasureScope;
@@ -166,7 +167,7 @@ export async function DELETE(request: NextRequest) {
         try {
           certificate = await generateDeletionCertificate(rtbfRequest.id);
         } catch (certError) {
-          console.error('Certificate generation failed:', certError);
+          logServerError('Certificate generation failed:', certError);
         }
       }
     }
@@ -203,7 +204,7 @@ export async function DELETE(request: NextRequest) {
           emailSent = emailResult.success;
         }
       } catch (emailError) {
-        console.error('Failed to send confirmation email:', emailError);
+        logServerError('Failed to send confirmation email:', emailError);
       }
     }
 
@@ -235,7 +236,7 @@ export async function DELETE(request: NextRequest) {
       status: result.success ? 200 : 500,
     });
   } catch (err) {
-    console.error('RTBF DELETE error:', err);
+    logServerError('RTBF DELETE error:', err);
     return NextResponse.json(
       {
         error: {
@@ -322,7 +323,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('RTBF LIST error:', err);
+    logServerError('RTBF LIST error:', err);
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: 'Failed to list RTBF requests' } },
       { status: 500 }

@@ -10,6 +10,7 @@ import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-a
 import { ServerErrors } from '@/lib/api-error';
 import { getSystemHealth, getServiceHealthHistory, recordServiceHealth } from '@/lib/control-tower';
 import type { ServiceName } from '@/lib/control-tower/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
       data: health,
     });
   } catch (err) {
-    console.error('Control Tower health error:', err);
+    logServerError('Control Tower health error', err);
     return ServerErrors.internal('control_tower_health');
   }
 }

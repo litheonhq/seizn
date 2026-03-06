@@ -6,6 +6,7 @@ import {
   type FederatedQuery,
   type FederatedQueryResponse,
 } from '@/lib/winter/federated';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/winter/graph/federated/query
@@ -161,7 +162,7 @@ export async function POST(request: NextRequest) {
       ...(query.debug && result.debug ? { debug: result.debug } : {}),
     });
   } catch (error) {
-    console.error('Federated query error:', error);
+    logServerError('Federated query error:', error);
     return ServerErrors.internal('federated_query');
   }
 }
@@ -217,7 +218,7 @@ export async function GET(request: NextRequest) {
       enabledSources: sources.filter((s) => s.enabled).length,
     });
   } catch (error) {
-    console.error('Get federated sources error:', error);
+    logServerError('Get federated sources error:', error);
     return ServerErrors.internal('get_federated_sources');
   }
 }

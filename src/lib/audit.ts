@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createServerClient } from './supabase';
 import { alertAuthFailure, alertSuspiciousActivity } from './telegram';
+import { logServerError } from '@/lib/server/logger';
 
 // Re-export all from audit folder for centralized access
 export * from './audit/logger';
@@ -129,16 +130,16 @@ export async function logAuditEvent(
         if (!legacyError) {
           return legacyData.id;
         }
-        console.error('Failed to log audit event (legacy fallback):', legacyError);
+        logServerError('Failed to log audit event (legacy fallback)', legacyError);
         return null;
       }
-      console.error('Failed to log audit event:', error);
+      logServerError('Failed to log audit event', error);
       return null;
     }
 
     return data.id;
   } catch (error) {
-    console.error('Audit logging error:', error);
+    logServerError('Audit logging error', error);
     return null;
   }
 }
@@ -206,7 +207,7 @@ export async function logAuthFailure(
   alertAuthFailure(
     context.ipAddress || 'unknown',
     reason
-  ).catch(console.error);
+  ).catch((error) => logServerError('Failed to send auth failure alert', error));
 }
 
 /**
@@ -236,7 +237,7 @@ export async function logSuspiciousActivity(
     userId,
     activityType,
     { ...details, ip: context.ipAddress }
-  ).catch(console.error);
+  ).catch((error) => logServerError('Failed to send suspicious activity alert', error));
 }
 
 // Action types for reference
@@ -278,3 +279,4 @@ export const AuditActions = {
   FEDERATED_ACCESS_GRANT: 'federated.access.grant',
   FEDERATED_ACCESS_REVOKE: 'federated.access.revoke',
 } as const;
+

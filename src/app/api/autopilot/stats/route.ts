@@ -13,6 +13,7 @@ import {
   getOrCreateConfig,
 } from '@/lib/autopilot-retrieval';
 import { generateLearningInsights } from '@/lib/autopilot-retrieval/learner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/autopilot/stats
@@ -151,7 +152,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (err) {
-    console.error('Autopilot stats GET error:', err);
+    logServerError('Autopilot stats GET error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -267,7 +268,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('Autopilot stats POST error:', err);
+    logServerError('Autopilot stats POST error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

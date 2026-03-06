@@ -11,6 +11,7 @@ import {
   createOrganization,
   getUserOrganizations,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 /**
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
       count: organizations.length,
     });
   } catch (error) {
-    console.error('[WinterOrg] GET error:', error);
+    logServerError('[WinterOrg] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
       organization,
     });
   } catch (error) {
-    console.error('[WinterOrg] POST error:', error);
+    logServerError('[WinterOrg] POST error:', error);
 
     if (error instanceof Error) {
       if (error.message.includes('already exists')) {

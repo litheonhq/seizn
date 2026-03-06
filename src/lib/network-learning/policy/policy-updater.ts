@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import { randomUUID } from 'crypto';
 import { getInsights, analyzeTrends } from '../aggregation/aggregator';
 import type {
@@ -310,7 +311,7 @@ export async function createPolicyUpdate(
     .single();
 
   if (error) {
-    console.error('Failed to create policy update:', error);
+    logServerError('Failed to create policy update', error);
     throw error;
   }
 
@@ -588,7 +589,7 @@ export async function runScheduledPolicyGeneration(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Policy generation failed: ${message}`);
-    console.error('Scheduled policy generation failed:', error);
+    logServerError('Scheduled policy generation failed', error);
   }
 
   return { updatesCreated, errors };

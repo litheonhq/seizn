@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { getRTBFRequest, getAuditLog } from '@/lib/winter/rtbf';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ requestId: string }>;
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         : null,
     });
   } catch (err) {
-    console.error('RTBF status error:', err);
+    logServerError('RTBF status error:', err);
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: 'Failed to get RTBF status' } },
       { status: 500 }

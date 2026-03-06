@@ -10,6 +10,7 @@ import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-a
 import { ServerErrors, ValidationErrors } from '@/lib/api-error';
 import { getDashboardMetrics, getMetricSeries } from '@/lib/control-tower';
 import type { TimeRange } from '@/lib/control-tower/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
       data: metrics,
     });
   } catch (err) {
-    console.error('Control Tower metrics error:', err);
+    logServerError('Control Tower metrics error', err);
     return ServerErrors.internal('control_tower_metrics');
   }
 }

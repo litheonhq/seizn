@@ -11,6 +11,7 @@ import {
   compareVersions,
   getPolicyVersion,
 } from '@/lib/winter/org/policy-versions';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       diff,
     });
   } catch (error) {
-    console.error('[PolicyVersions Compare] GET error:', error);
+    logServerError('[PolicyVersions Compare] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

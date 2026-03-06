@@ -31,6 +31,7 @@ import { createServerClient } from '@/lib/supabase';
 import { getTraceAnalyzer } from '@/lib/autopilot';
 import type { StoredTrace } from '@/lib/fall/flight-recorder';
 import type { AnalyzeRequest, AnalyzeResponse, TraceAnalysis } from '@/lib/autopilot';
+import { logServerError } from '@/lib/server/logger';
 
 function toSeverityLabel(severity: number): 'low' | 'medium' | 'high' | 'critical' {
   if (severity >= 9) return 'critical';
@@ -162,7 +163,7 @@ export async function POST(request: NextRequest) {
       });
 
     if (storeError) {
-      console.error('Autopilot analysis store error:', storeError);
+      logServerError('Autopilot analysis store error', storeError);
     }
 
     // Fetch related traces if requested
@@ -190,7 +191,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Autopilot analyze error:', error);
+    logServerError('Autopilot analyze error', error);
     return ServerErrors.internal('autopilot_analyze');
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import crypto from 'crypto';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device - Start device authorization flow
 export async function POST() {
@@ -19,7 +20,7 @@ export async function POST() {
     });
 
     if (error) {
-      console.error('Device auth insert error:', error);
+      logServerError('Device auth insert error', error);
       return NextResponse.json({ error: 'Failed to create device code' }, { status: 500 });
     }
 
@@ -31,7 +32,7 @@ export async function POST() {
       interval: 5,
     });
   } catch (error) {
-    console.error('Device auth error:', error);
+    logServerError('Device auth error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -51,3 +52,4 @@ function generateUserCode(): string {
   }
   return code;
 }
+

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device/verify - Look up a user_code (requires auth)
 export async function POST(request: NextRequest) {
@@ -40,7 +41,8 @@ export async function POST(request: NextRequest) {
       device_code: authCode.device_code,
     });
   } catch (error) {
-    console.error('Device verify error:', error);
+    logServerError('Device verify error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
