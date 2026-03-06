@@ -24,6 +24,9 @@ interface Incident {
   }>;
 }
 
+const DATABASE_OPERATIONAL_LATENCY_MS = 1000;
+const DATABASE_DEGRADED_LATENCY_MS = 4000;
+
 /**
  * GET /api/status - Get system status
  *
@@ -69,7 +72,7 @@ export async function GET(request: NextRequest) {
     // Set cache headers for status page
     return NextResponse.json(response, {
       headers: {
-        'Cache-Control': 'public, max-age=60, stale-while-revalidate=30',
+        'Cache-Control': getStatusCacheControl(overallStatus),
       },
     });
   } catch (error) {
@@ -94,13 +97,25 @@ async function checkServices(): Promise<ServiceStatus[]> {
   try {
     const start = performance.now();
     const supabase = createServerClient();
-    await supabase.from('users').select('id').limit(1);
+    await supabase.from('profiles').select('id').limit(1);
     const latency = Math.round(performance.now() - start);
+    const status =
+      latency < DATABASE_OPERATIONAL_LATENCY_MS
+        ? 'operational'
+        : latency < DATABASE_DEGRADED_LATENCY_MS
+          ? 'degraded'
+          : 'down';
 
     services.push({
       name: 'Database',
-      status: latency < 500 ? 'operational' : latency < 2000 ? 'degraded' : 'down',
+      status,
       latency_ms: latency,
+      message:
+        status === 'degraded'
+          ? 'Latency is elevated but the database is still responding.'
+          : status === 'down'
+            ? 'Latency exceeded the public health threshold.'
+            : undefined,
       last_check: now,
     });
   } catch {
@@ -171,6 +186,17 @@ function calculateOverallStatus(
   // Any degraded service should reflect in overall status
   if (degradedCount >= 1) return 'degraded';
   return 'operational';
+}
+
+function getStatusCacheControl(
+  overallStatus: 'operational' | 'degraded' | 'partial_outage' | 'major_outage'
+): string {
+  if (overallStatus === 'operational') {
+    return 'public, max-age=60, stale-while-revalidate=30';
+  }
+
+  // Avoid pinning transient serverless cold-start spikes in shared caches.
+  return 'no-store';
 }
 
 async function getActiveIncidents(): Promise<Incident[]> {
