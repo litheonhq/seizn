@@ -14,6 +14,7 @@ import {
   rowToRelayAgent,
 } from '@/lib/relay/types';
 import { generateAgentKey, hashAgentKey, maskAgentKey } from '@/lib/relay/auth';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/relay/agents - List all relay agents
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error('List relay agents error:', error);
+      logServerError('List relay agents error', error);
       return ServerErrors.database('list_relays');
     }
 
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest) {
       count: agents.length,
     });
   } catch (error) {
-    console.error('List relay agents error:', error);
+    logServerError('List relay agents error', error);
     return ServerErrors.internal('list_relay_agents');
   }
 }
@@ -140,7 +141,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (createError) {
-      console.error('Create relay agent error:', createError);
+      logServerError('Create relay agent error', createError);
       return ServerErrors.database('create_relay');
     }
 
@@ -159,7 +160,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Create relay agent error:', error);
+    logServerError('Create relay agent error', error);
     return ServerErrors.internal('create_relay_agent');
   }
 }

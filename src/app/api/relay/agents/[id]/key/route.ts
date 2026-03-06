@@ -9,6 +9,7 @@ import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, NotFoundErrors, ServerErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import { generateAgentKey, hashAgentKey } from '@/lib/relay/auth';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .eq('id', id);
 
     if (updateError) {
-      console.error('Regenerate agent key error:', updateError);
+      logServerError('Regenerate agent key error', updateError);
       return ServerErrors.database('regenerate_key');
     }
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       previousStatus: existing.status,
     });
   } catch (error) {
-    console.error('Regenerate agent key error:', error);
+    logServerError('Regenerate agent key error', error);
     return ServerErrors.internal('regenerate_agent_key');
   }
 }

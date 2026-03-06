@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("[TenantPolicy Enforce] POST error:", error);
+    logServerError("[TenantPolicy Enforce] POST error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -221,7 +221,7 @@ export async function GET(request: NextRequest) {
       remaining: Math.max(0, policy.caps.rpm - minuteRequests),
     });
   } catch (error) {
-    console.error("[TenantPolicy Enforce] GET error:", error);
+    logServerError("[TenantPolicy Enforce] GET error", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

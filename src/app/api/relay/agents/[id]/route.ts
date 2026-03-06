@@ -14,6 +14,7 @@ import {
   rowToRelayAgent,
 } from '@/lib/relay/types';
 import { maskAgentKey } from '@/lib/relay/auth';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('Get relay agent error:', error);
+    logServerError('Get relay agent error', error);
     return ServerErrors.internal('get_relay_agent');
   }
 }
@@ -146,7 +147,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       .single();
 
     if (updateError) {
-      console.error('Update relay agent error:', updateError);
+      logServerError('Update relay agent error', updateError);
       return ServerErrors.database('update_relay');
     }
 
@@ -160,7 +161,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('Update relay agent error:', error);
+    logServerError('Update relay agent error', error);
     return ServerErrors.internal('update_relay_agent');
   }
 }
@@ -197,7 +198,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .eq('id', id);
 
     if (deleteError) {
-      console.error('Delete relay agent error:', deleteError);
+      logServerError('Delete relay agent error', deleteError);
       return ServerErrors.database('delete_relay');
     }
 
@@ -207,7 +208,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       deletedId: id,
     });
   } catch (error) {
-    console.error('Delete relay agent error:', error);
+    logServerError('Delete relay agent error', error);
     return ServerErrors.internal('delete_relay_agent');
   }
 }

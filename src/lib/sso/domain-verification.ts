@@ -1,5 +1,6 @@
 import { resolve4, resolve6, resolveCname, resolveTxt } from 'dns/promises';
 import net from 'net';
+import { logServerWarn } from '@/lib/server/logger';
 
 const TXT_HOST_PREFIX = '_seizn-verification.';
 const DEFAULT_TIMEOUT_MS = 5000;
@@ -106,11 +107,10 @@ async function verifyDnsTxt(domain: string, token: string): Promise<boolean> {
     const records = await resolveTxt(host);
     return joinTxtRecords(records).some((txt) => txt.includes(token));
   } catch (error) {
-    console.warn('[SSO] DNS TXT verification lookup failed', {
+    logServerWarn('[SSO] DNS TXT verification lookup failed', error, {
       domain,
       host,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      code: (error as any)?.code || 'unknown',
+      code: error && typeof error === 'object' && 'code' in error ? error.code : 'unknown',
     });
     return false;
   }
@@ -132,11 +132,10 @@ async function verifyDnsCname(domain: string, token: string): Promise<boolean> {
     const rootTxt = await resolveTxt(domain);
     return joinTxtRecords(rootTxt).some((txt) => txt.includes(token));
   } catch (error) {
-    console.warn('[SSO] DNS CNAME verification lookup failed', {
+    logServerWarn('[SSO] DNS CNAME verification lookup failed', error, {
       domain,
       host,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      code: (error as any)?.code || 'unknown',
+      code: error && typeof error === 'object' && 'code' in error ? error.code : 'unknown',
     });
     return false;
   }
@@ -252,4 +251,3 @@ export async function verifyDomainOwnership(
       return false;
   }
 }
-
