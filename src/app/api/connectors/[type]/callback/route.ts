@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getConnector, type ConnectorType } from '@/lib/connectors/external';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -26,7 +27,11 @@ export async function GET(
 
     // Handle OAuth errors
     if (error) {
-      console.error('OAuth error:', error, errorDescription);
+      logServerWarn('Connector OAuth provider returned an error', {
+        providerError: error,
+        providerErrorDescription: errorDescription,
+        connectorType,
+      });
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_APP_URL}/settings/connections?error=${encodeURIComponent(
           errorDescription || error
@@ -134,7 +139,7 @@ export async function GET(
       `${process.env.NEXT_PUBLIC_APP_URL}/settings/connections?success=${connectorType}`
     );
   } catch (error) {
-    console.error('OAuth callback error:', error);
+    logServerError('Connector OAuth callback failed', error);
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_APP_URL}/settings/connections?error=${encodeURIComponent(
         error instanceof Error ? error.message : 'OAuth callback failed'

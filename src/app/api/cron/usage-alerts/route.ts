@@ -3,6 +3,7 @@ import { createServerClient } from '@/lib/supabase';
 import { sendBatchEmails } from '@/lib/email';
 import { usageAlertEmail } from '@/lib/email/templates';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // Usage thresholds to trigger alerts (as percentages)
 const USAGE_THRESHOLDS = [80, 90, 100];
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
       .not('email', 'is', null);
 
     if (error) {
-      console.error('Failed to fetch users:', error);
+      logServerError('Usage alerts cron failed to fetch users', error);
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
     }
 
@@ -104,7 +105,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Usage alert cron error:', error);
+    logServerError('Usage alerts cron failed', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

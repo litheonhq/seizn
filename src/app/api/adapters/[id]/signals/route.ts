@@ -11,6 +11,7 @@ import {
   recordSignalsBatch,
 } from '@/lib/domain-adapter';
 import type { SignalType, SignalFilter } from '@/lib/domain-adapter';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -92,7 +93,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       }),
     });
   } catch (err) {
-    console.error('List signals error:', err);
+    logServerError('List adapter signals failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -225,7 +226,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('Record signal error:', err);
+    logServerError('Record adapter signal failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -312,7 +313,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       total: body.signals.length,
     });
   } catch (err) {
-    console.error('Batch record signals error:', err);
+    logServerError('Batch record adapter signals failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -378,7 +379,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, deleted_count: deleted });
   } catch (err) {
-    console.error('Delete signals error:', err);
+    logServerError('Delete adapter signals failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

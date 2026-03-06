@@ -11,6 +11,7 @@ import {
   deleteAdapter,
 } from '@/lib/domain-adapter';
 import type { UpdateAdapterParams } from '@/lib/domain-adapter';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ adapter: formatAdapterResponse(adapter) });
   } catch (err) {
-    console.error('Get adapter error:', err);
+    logServerError('Get adapter request failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -109,7 +110,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ adapter: formatAdapterResponse(adapter) });
   } catch (err) {
-    console.error('Update adapter error:', err);
+    logServerError('Update adapter request failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -149,7 +150,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, deleted_id: id });
   } catch (err) {
-    console.error('Delete adapter error:', err);
+    logServerError('Delete adapter request failed', err, { adapterId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -17,6 +17,7 @@ import {
   acknowledgeAlert,
   acknowledgeAllAlerts,
 } from '@/lib/budget-planner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/budget/alerts
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
       headers: auth.rateLimitHeaders,
     });
   } catch (error) {
-    console.error('Error getting alerts:', error);
+    logServerError('Get budget alerts failed', error);
     return NextResponse.json(
       {
         success: false,
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('Error acknowledging alerts:', error);
+    logServerError('Acknowledge budget alerts failed', error);
     return NextResponse.json(
       {
         success: false,

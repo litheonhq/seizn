@@ -26,6 +26,7 @@ import {
   type SearchType,
   DEFAULT_PLAN_CONFIG,
 } from '@/lib/budget-planner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/budget/estimate
@@ -235,7 +236,7 @@ export async function POST(request: NextRequest) {
       headers: auth.rateLimitHeaders,
     });
   } catch (error) {
-    console.error('Error estimating cost:', error);
+    logServerError('Budget estimate failed', error);
     return NextResponse.json(
       {
         success: false,

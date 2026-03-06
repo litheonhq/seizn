@@ -32,6 +32,11 @@ on:
 env:
   NODE_VERSION: '20'
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   red-team-scan:
     name: Red Team Security Scan
@@ -216,6 +221,9 @@ jobs:
     needs: red-team-scan
     if: always()
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
     steps:
       - name: Download Report
@@ -224,11 +232,12 @@ jobs:
           name: red-team-report-${{ github.run_number }}
         continue-on-error: true
 
+      - name: Skip database store when Supabase secrets are unavailable
+        if: hashFiles('red-team-report.json') != '' && (env.SUPABASE_URL == '' || env.SUPABASE_SERVICE_KEY == '')
+        run: echo "Skipping database store because Supabase secrets are not configured for this context."
+
       - name: Store in Database
-        if: hashFiles('red-team-report.json') != ''
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        if: hashFiles('red-team-report.json') != '' && env.SUPABASE_URL != '' && env.SUPABASE_SERVICE_KEY != ''
         run: |
           # Store scan results for trend analysis
           curl -X POST "$SUPABASE_URL/rest/v1/security_scan_results" \

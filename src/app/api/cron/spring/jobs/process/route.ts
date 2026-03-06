@@ -16,6 +16,7 @@ import { createJobService } from '@/lib/spring/memory-v4/job-service';
 import { createIngestionService } from '@/lib/spring/memory-v4/ingestion-service';
 import { runMemoryFlush, type FlushOptions } from '@/lib/spring/memory-v4/flush-service';
 import { verifyCronSecret } from '@/lib/cron-auth';
+import { logServerError } from '@/lib/server/logger';
 import type { Job, JobType } from '@/lib/spring/memory-v4/types';
 
 // =============================================================================
@@ -534,7 +535,7 @@ export async function GET(request: NextRequest) {
       results,
     });
   } catch (error) {
-    console.error('Cron job error:', error);
+    logServerError('Spring jobs cron failed', error);
     return NextResponse.json(
       {
         success: false,

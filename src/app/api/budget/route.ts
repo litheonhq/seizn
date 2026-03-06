@@ -16,6 +16,7 @@ import {
   updateBudgetSettings,
   type BudgetSettings,
 } from '@/lib/budget-planner';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/budget
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
       headers: auth.rateLimitHeaders,
     });
   } catch (error) {
-    console.error('Error getting budget:', error);
+    logServerError('Get budget failed', error);
     return NextResponse.json(
       {
         success: false,
@@ -221,7 +222,7 @@ export async function PATCH(request: NextRequest) {
       headers: auth.rateLimitHeaders,
     });
   } catch (error) {
-    console.error('Error updating budget:', error);
+    logServerError('Update budget failed', error);
     return NextResponse.json(
       {
         success: false,

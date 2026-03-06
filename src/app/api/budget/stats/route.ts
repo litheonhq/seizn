@@ -5,6 +5,7 @@ import {
   successResponse,
   errorResponse,
 } from "@/lib/errors";
+import { logServerError } from "@/lib/server/logger";
 
 /**
  * GET /api/budget/stats
@@ -78,7 +79,7 @@ export async function GET() {
 
     return successResponse({ stats }, context);
   } catch (error) {
-    console.error("Budget stats API error:", error);
+    logServerError("Budget stats GET failed", error);
     return errorResponse({ code: "SEIZN_500", message: "Internal server error", status: 500 }, context);
   }
 }
