@@ -8,6 +8,7 @@
 - Extended the same logger rollout to recurring cron routes for billing, summaries, and audit batch jobs.
 - Extended the rollout to drift analysis and Winter RTBF cron flows.
 - Extended the rollout to Spring maintenance cron flows.
+- Hardened security workflows so PR secret scans and red-team checks can run with explicit GitHub token permissions and DB-less CI fallback.
 - Documented the production smoke flow used before deploy and after merge.
 
 ## Included Areas
@@ -28,6 +29,9 @@
 - `src/app/api/cron/winter/rtbf/verify-pending/*`
 - `src/app/api/cron/spring/beyond-mem0/*`
 - `src/app/api/cron/spring/jobs/process/*`
+- `src/lib/security/red-team.ts`
+- `.github/workflows/security-tests.yml`
+- `.github/workflows/red-team-security.yml`
 - `src/lib/server/logger.ts`
 - `docs/deployment/production-smoke-checklist.md`
 

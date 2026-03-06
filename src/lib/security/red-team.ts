@@ -10,7 +10,7 @@
  * @module security/red-team
  */
 
-import { createServerClient } from '../supabase';
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from '../supabase';
 
 // ============================================
 // Types
@@ -391,9 +391,11 @@ export class AttackGenerator {
 // ============================================
 
 export class RedTeamRunner {
-  private supabase = createServerClient();
+  private supabase = hasServerSupabaseServiceRoleConfig() ? createServerClient() : null;
   private generator: AttackGenerator;
   private aborted = false;
+  private inMemoryRuns = new Map<string, RedTeamRun>();
+  private inMemoryFindings = new Map<string, RedTeamResult[]>();
 
   constructor() {
     this.generator = new AttackGenerator();
@@ -591,6 +593,15 @@ export class RedTeamRunner {
   }
 
   private async saveRun(run: RedTeamRun): Promise<void> {
+    this.inMemoryRuns.set(run.id, {
+      ...run,
+      config: { ...(run.config || {}) },
+    });
+
+    if (!this.supabase) {
+      return;
+    }
+
     await this.supabase.from('red_team_runs').upsert({
       id: run.id,
       organization_id: run.organizationId,
@@ -610,6 +621,19 @@ export class RedTeamRunner {
   }
 
   private async saveFinding(runId: string, result: RedTeamResult): Promise<void> {
+    const findings = this.inMemoryFindings.get(runId) || [];
+    findings.push({
+      ...result,
+      attackVector: { ...result.attackVector, mutations: [...result.attackVector.mutations] },
+      indicators: [...result.indicators],
+      metadata: result.metadata ? { ...result.metadata } : undefined,
+    });
+    this.inMemoryFindings.set(runId, findings);
+
+    if (!this.supabase) {
+      return;
+    }
+
     await this.supabase.from('red_team_findings').insert({
       id: result.id,
       run_id: runId,
@@ -628,6 +652,13 @@ export class RedTeamRunner {
    * Generate vulnerability report
    */
   async generateReport(runId: string): Promise<VulnerabilityReport> {
+    const fallbackRun = this.inMemoryRuns.get(runId);
+    const fallbackFindings = this.inMemoryFindings.get(runId) || [];
+
+    if (!this.supabase) {
+      return this.buildInMemoryReport(runId, fallbackRun, fallbackFindings);
+    }
+
     const { data: run } = await this.supabase
       .from('red_team_runs')
       .select('*')
@@ -641,7 +672,7 @@ export class RedTeamRunner {
       .order('severity', { ascending: true });
 
     if (!run) {
-      throw new Error('Run not found');
+      return this.buildInMemoryReport(runId, fallbackRun, fallbackFindings);
     }
 
     const attackSuccessRate = run.total_tests > 0
@@ -673,6 +704,43 @@ export class RedTeamRunner {
         remediation: this.getRemediation(f.attack_category),
       })),
       recommendations: this.generateRecommendations(run, findings || []),
+      generatedAt: new Date().toISOString(),
+    };
+  }
+
+  private buildInMemoryReport(
+    runId: string,
+    run: RedTeamRun | undefined,
+    findings: RedTeamResult[]
+  ): VulnerabilityReport {
+    if (!run) {
+      throw new Error('Run not found');
+    }
+
+    const sortedFindings = [...findings].sort((a, b) => a.severity.localeCompare(b.severity));
+    const attackSuccessRate = run.totalTests > 0
+      ? (run.failedTests / run.totalTests) * 100
+      : 0;
+
+    return {
+      runId,
+      summary: {
+        totalTests: run.totalTests,
+        successfulAttacks: run.failedTests,
+        attackSuccessRate,
+        criticalCount: run.criticalFindings,
+        highCount: run.highFindings,
+        mediumCount: run.mediumFindings,
+        lowCount: run.lowFindings,
+      },
+      findings: sortedFindings.map((finding) => ({
+        category: finding.attackVector.category,
+        severity: finding.severity,
+        description: `${finding.attackVector.name} attack was successful`,
+        evidence: `Prompt: ${finding.prompt.slice(0, 100)}...\nResponse: ${finding.response.slice(0, 200)}...`,
+        remediation: this.getRemediation(finding.attackVector.category),
+      })),
+      recommendations: this.generateRecommendations(run, sortedFindings),
       generatedAt: new Date().toISOString(),
     };
   }

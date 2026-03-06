@@ -32,6 +32,11 @@ on:
 env:
   NODE_VERSION: '20'
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   red-team-scan:
     name: Red Team Security Scan
