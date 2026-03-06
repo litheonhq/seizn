@@ -1,5 +1,5 @@
-import pg from 'pg';
-import { config } from 'dotenv';
+﻿import pg from 'pg';
+import { loadLocalEnv } from './load-local-env.mjs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // NOTE: Avoid setting NODE_TLS_REJECT_UNAUTHORIZED=0 (global TLS disable).
 // If your DB requires relaxed verification, use the per-connection `ssl` option below.
-config({ path: resolve(__dirname, '../.env.local') });
+loadLocalEnv(import.meta.url);
 
 const connectionString = process.env.POSTGRES_URL_NON_POOLING;
 if (!connectionString) {
@@ -30,10 +30,10 @@ function pgConfigFromConnectionString(cs) {
 
 function assertOk(ok, message) {
   if (!ok) {
-    console.error(`❌ ${message}`);
+    console.error(`??${message}`);
     process.exitCode = 1;
   } else {
-    console.log(`✅ ${message}`);
+    console.log(`??${message}`);
   }
 }
 
@@ -138,4 +138,6 @@ main().catch((err) => {
   console.error('Verification failed:', err?.message || err);
   process.exit(1);
 });
+
+
 

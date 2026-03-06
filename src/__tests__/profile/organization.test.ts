@@ -66,6 +66,12 @@ describe('resolveSessionOrganizationId', () => {
         data: { id: 'profile-1', organization_id: 'org-profile' },
         error: null,
       },
+      'organization_members:user_id:profile-1': {
+        data: [
+          { organization_id: 'org-profile', role: 'owner', created_at: '2026-03-01T00:00:00Z' },
+        ],
+        error: null,
+      },
     });
 
     await expect(
@@ -84,6 +90,12 @@ describe('resolveSessionOrganizationId', () => {
       },
       'profiles:email:user@example.com': {
         data: { id: 'profile-1', organization_id: 'org-email' },
+        error: null,
+      },
+      'organization_members:user_id:profile-1': {
+        data: [
+          { organization_id: 'org-email', role: 'member', created_at: '2026-03-01T00:00:00Z' },
+        ],
         error: null,
       },
     });
@@ -117,6 +129,28 @@ describe('resolveSessionOrganizationId', () => {
         userId: 'profile-2',
       })
     ).resolves.toBe('org-owner');
+  });
+
+  it('falls back when the stored profile organization is no longer a current membership', async () => {
+    const supabase = createOrganizationResolverClient({
+      'profiles:id:profile-6': {
+        data: { id: 'profile-6', organization_id: 'org-stale' },
+        error: null,
+      },
+      'organization_members:user_id:profile-6': {
+        data: [
+          { organization_id: 'org-admin', role: 'admin', created_at: '2026-03-01T00:00:00Z' },
+          { organization_id: 'org-member', role: 'member', created_at: '2026-03-02T00:00:00Z' },
+        ],
+        error: null,
+      },
+    });
+
+    await expect(
+      resolveSessionOrganizationId(supabase, {
+        userId: 'profile-6',
+      })
+    ).resolves.toBe('org-admin');
   });
 });
 
@@ -154,7 +188,13 @@ describe('normalizeSessionOrganizationId', () => {
 
 describe('seedDefaultOrganizationIdIfMissing', () => {
   it('updates the profile when no default organization is set', async () => {
-    const updateEq = vi.fn().mockResolvedValue({ error: null });
+    const updateEq = vi.fn().mockReturnValue({
+      select() {
+        return {
+          single: async () => ({ data: { id: 'profile-4' }, error: null }),
+        };
+      },
+    });
     const supabase = {
       from(table: string) {
         if (table !== 'profiles') {

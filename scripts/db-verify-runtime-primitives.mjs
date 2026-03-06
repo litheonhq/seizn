@@ -1,11 +1,11 @@
-import pg from 'pg';
-import { config } from 'dotenv';
+﻿import pg from 'pg';
+import { loadLocalEnv } from './load-local-env.mjs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-config({ path: resolve(__dirname, '../.env.local') });
+loadLocalEnv(import.meta.url);
 
 const connectionString = process.env.POSTGRES_URL_NON_POOLING;
 if (!connectionString) {
@@ -24,6 +24,20 @@ function pgConfigFromConnectionString(cs) {
     port: url.port ? Number(url.port) : undefined,
     database,
   };
+}
+
+function parseTableRef(tableRef) {
+  const [maybeSchema, maybeTable] = tableRef.split('.');
+  if (maybeTable) {
+    return { schema: maybeSchema, table: maybeTable };
+  }
+
+  return { schema: 'public', table: maybeSchema };
+}
+
+function formatTableRef(tableRef) {
+  const { schema, table } = parseTableRef(tableRef);
+  return `${schema}.${table}`;
 }
 
 function assertOk(ok, message) {
@@ -64,21 +78,22 @@ async function getColumns(client, tableName) {
   return new Set(rows.map((row) => row.column_name));
 }
 
-async function getColumnType(client, tableName, columnName) {
+async function getColumnType(client, tableRef, columnName) {
+  const { schema, table } = parseTableRef(tableRef);
   const { rows } = await client.query(
     `
       SELECT format_type(a.atttypid, a.atttypmod) AS column_type
       FROM pg_attribute a
       JOIN pg_class c ON c.oid = a.attrelid
       JOIN pg_namespace n ON n.oid = c.relnamespace
-      WHERE n.nspname = 'public'
-        AND c.relname = $1
-        AND a.attname = $2
+      WHERE n.nspname = $1
+        AND c.relname = $2
+        AND a.attname = $3
         AND a.attnum > 0
         AND NOT a.attisdropped
       LIMIT 1;
     `,
-    [tableName, columnName]
+    [schema, table, columnName]
   );
 
   return rows[0]?.column_type || null;
@@ -146,9 +161,11 @@ async function assertFunctionExists(client, name) {
 async function assertMatchingColumnTypes(client, leftTable, leftColumn, rightTable, rightColumn) {
   const leftType = await getColumnType(client, leftTable, leftColumn);
   const rightType = await getColumnType(client, rightTable, rightColumn);
+  const leftTableRef = formatTableRef(leftTable);
+  const rightTableRef = formatTableRef(rightTable);
 
-  assertOk(Boolean(leftType), `column exists: public.${leftTable}.${leftColumn}`);
-  assertOk(Boolean(rightType), `column exists: public.${rightTable}.${rightColumn}`);
+  assertOk(Boolean(leftType), `column exists: ${leftTableRef}.${leftColumn}`);
+  assertOk(Boolean(rightType), `column exists: ${rightTableRef}.${rightColumn}`);
 
   if (!leftType || !rightType) {
     return;
@@ -156,7 +173,7 @@ async function assertMatchingColumnTypes(client, leftTable, leftColumn, rightTab
 
   assertOk(
     leftType === rightType,
-    `column type match: public.${leftTable}.${leftColumn} (${leftType}) = public.${rightTable}.${rightColumn} (${rightType})`
+    `column type match: ${leftTableRef}.${leftColumn} (${leftType}) = ${rightTableRef}.${rightColumn} (${rightType})`
   );
 }
 
@@ -203,6 +220,10 @@ async function main() {
     await assertMatchingColumnTypes(client, 'organization_members', 'user_id', 'profiles', 'id');
     await assertMatchingColumnTypes(client, 'organization_members', 'organization_id', 'organizations', 'id');
     await assertMatchingColumnTypes(client, 'organization_members', 'invited_by', 'profiles', 'id');
+
+    await assertTableColumns(client, 'profiles', ['organization_id']);
+    await assertIndexExists(client, 'idx_profiles_organization_id');
+    await assertMatchingColumnTypes(client, 'profiles', 'organization_id', 'organizations', 'id');
 
     await assertTableColumns(client, 'memories', [
       'user_id',
@@ -314,7 +335,7 @@ async function main() {
     await assertMatchingColumnTypes(client, 'usage_logs', 'api_key_id', 'api_keys', 'id');
 
     await assertTableColumns(client, 'retrieval_budgets', ['user_id']);
-    await assertMatchingColumnTypes(client, 'retrieval_budgets', 'user_id', 'profiles', 'id');
+    await assertMatchingColumnTypes(client, 'retrieval_budgets', 'user_id', 'auth.users', 'id');
 
     await assertTableColumns(client, 'budget_degrade_events', ['user_id']);
     await assertMatchingColumnTypes(client, 'budget_degrade_events', 'user_id', 'profiles', 'id');
@@ -364,3 +385,5 @@ main().catch((error) => {
   console.error('Runtime primitive verification failed:', error?.message || error);
   process.exit(1);
 });
+
+

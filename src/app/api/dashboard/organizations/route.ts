@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
 import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/organizations - minimal org list for dashboard UIs
@@ -48,10 +49,24 @@ export async function GET(request: NextRequest) {
           slug: String(org.slug),
         }));
 
+    const activeOrganizationId = await normalizeSessionOrganizationId({
+      userId: user.id,
+      email: user.email ?? null,
+      organizationId: user.organizationId ?? null,
+      organizationSelection: user.organizationSelection ?? null,
+    });
+
+    const normalizedActiveOrganizationId =
+      typeof activeOrganizationId === 'string' &&
+      organizations.some((organization) => organization.id === activeOrganizationId)
+        ? activeOrganizationId
+        : null;
+
     return NextResponse.json({
       success: true,
       organizations,
       count: organizations.length,
+      activeOrganizationId: normalizedActiveOrganizationId,
     });
   } catch (error) {
     logServerError('Dashboard organizations GET error', error);

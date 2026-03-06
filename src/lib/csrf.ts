@@ -10,11 +10,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes, timingSafeEqual } from 'crypto';
 
+const LOCAL_ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3100',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+  'http://127.0.0.1:3100',
+];
+
 const ALLOWED_ORIGINS = new Set([
   process.env.NEXT_PUBLIC_SITE_URL,
   process.env.NEXT_PUBLIC_APP_URL,
-  'http://localhost:3000',
-  'http://localhost:3001',
+  process.env.NEXTAUTH_URL,
+  process.env.PLAYWRIGHT_BASE_URL,
+  ...LOCAL_ALLOWED_ORIGINS,
 ].filter(Boolean) as string[]);
 const CSRF_TOKEN_BYTES = 32;
 

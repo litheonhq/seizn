@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { useToast } from "@/contexts/ToastContext";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
 
@@ -18,6 +19,7 @@ interface Organization {
 
 export default function OrganizationsClient() {
   const { t } = useDashboardTranslation();
+  const { toast } = useToast();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -30,15 +32,20 @@ export default function OrganizationsClient() {
     try {
       const res = await fetch("/api/organizations");
       const data = await res.json();
-      if (data.success) {
-        setOrganizations(data.organizations);
+      if (!res.ok || !data.success) {
+        throw new Error(getErrorMessage(data?.error, "Failed to fetch organizations"));
       }
+
+      setOrganizations(data.organizations);
+      setError(null);
     } catch (err) {
-      console.error("Failed to fetch organizations:", err);
+      const message = getErrorMessage(err, "Failed to fetch organizations");
+      setError(message);
+      toast("error", message);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     fetchOrganizations();
@@ -62,12 +69,26 @@ export default function OrganizationsClient() {
         setShowCreateModal(false);
         setNewOrgName("");
         setNewOrgSlug("");
+        window.dispatchEvent(
+          new CustomEvent("seizn:organizations-changed", {
+            detail: {
+              organization: {
+                id: data.organization.id,
+                name: data.organization.name,
+                slug: data.organization.slug,
+              },
+            },
+          })
+        );
       } else {
-        setError(getErrorMessage(data.error, "Failed to create organization"));
+        const message = getErrorMessage(data.error, "Failed to create organization");
+        setError(message);
+        toast("error", message);
       }
     } catch (err) {
-      console.error("Failed to create organization:", err);
-      setError(getErrorMessage(err, "Failed to create organization"));
+      const message = getErrorMessage(err, "Failed to create organization");
+      setError(message);
+      toast("error", message);
     } finally {
       setIsCreating(false);
     }

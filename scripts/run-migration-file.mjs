@@ -1,5 +1,5 @@
-import pg from 'pg';
-import { config } from 'dotenv';
+﻿import pg from 'pg';
+import { loadLocalEnv } from './load-local-env.mjs';
 import { resolve, dirname, isAbsolute } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -11,7 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // NOTE: Avoid setting NODE_TLS_REJECT_UNAUTHORIZED=0 (global TLS disable).
 // If your DB requires relaxed verification, use the per-connection `ssl` option below.
 
-config({ path: resolve(__dirname, '../.env.local') });
+loadLocalEnv(import.meta.url);
 
 const connectionString = process.env.POSTGRES_URL_NON_POOLING;
 if (!connectionString) {
@@ -99,3 +99,5 @@ async function run() {
 }
 
 run();
+
+
