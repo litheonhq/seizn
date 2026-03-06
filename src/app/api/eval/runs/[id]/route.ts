@@ -5,9 +5,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getRequestUser } from '@/lib/api/request-user';
+import { createServerClient } from '@/lib/supabase';
 import { autoEvalService } from '@/lib/eval/auto-eval-service';
 import type { EvalRunResponse } from '@/lib/eval/types';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -15,17 +17,12 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createClient();
-
-    // Verify authentication
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    const user = await getRequestUser(request);
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get the run
     const run = await autoEvalService.getRunById(id);
@@ -67,7 +64,7 @@ export async function GET(
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('[API] Eval run detail error:', error);
+    logServerError('[API] Eval run detail error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

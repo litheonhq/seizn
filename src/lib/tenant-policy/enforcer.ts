@@ -16,6 +16,7 @@ import type {
   DenyReason,
 } from "./types";
 import { applyDegradeLadder } from "./degrade";
+import { logServerWarn } from '@/lib/server/logger';
 
 // ============================================================================
 // Types
@@ -68,7 +69,7 @@ export function enforceCaps(
   const rateLimitResult = checkRateLimits(policy, budgetState);
   if (rateLimitResult) {
     if (options.monitorOnly || policy.mode === "monitor") {
-      console.warn(`[TenantPolicy] Rate limit would deny: ${rateLimitResult.reason}`);
+      logServerWarn(`[TenantPolicy] Rate limit would deny: ${rateLimitResult.reason}`);
     } else {
       return rateLimitResult;
     }
@@ -83,7 +84,7 @@ export function enforceCaps(
   );
   if (costCapResult) {
     if (options.monitorOnly || policy.mode === "monitor") {
-      console.warn(`[TenantPolicy] Cost cap would deny: ${costCapResult.reason}`);
+      logServerWarn(`[TenantPolicy] Cost cap would deny: ${costCapResult.reason}`);
     } else {
       return costCapResult;
     }
@@ -94,7 +95,7 @@ export function enforceCaps(
     const ingestResult = checkIngestLimits(policy, budgetState, requestMeta);
     if (ingestResult) {
       if (options.monitorOnly || policy.mode === "monitor") {
-        console.warn(`[TenantPolicy] Ingest limit would deny: ${ingestResult.reason}`);
+        logServerWarn(`[TenantPolicy] Ingest limit would deny: ${ingestResult.reason}`);
       } else {
         return ingestResult;
       }
@@ -110,7 +111,7 @@ export function enforceCaps(
     !degradeResult.effectivePolicy.ingest.enabled
   ) {
     if (options.monitorOnly || policy.mode === "monitor") {
-      console.warn("[TenantPolicy] Ingest disabled by degrade ladder");
+      logServerWarn("[TenantPolicy] Ingest disabled by degrade ladder");
     } else {
       return createDenyResult(
         "ingest_disabled",

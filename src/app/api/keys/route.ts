@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
+import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
 import {
   AuthErrors,
@@ -9,23 +10,10 @@ import {
 } from '@/lib/api-error';
 import { logAuditEvent, getAuditContext, AuditActions } from '@/lib/audit';
 import { checkIpRateLimitAsync } from '@/lib/rate-limit';
+import { logServerError } from '@/lib/server/logger';
 
 /** Session freshness window for sensitive key operations (15 minutes) */
 const SESSION_FRESHNESS_MS = 15 * 60 * 1000;
-
-// Helper to get user from Authorization header (Bearer token)
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabase = createRequestAuthClient(token);
-
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}
 
 /** Check if user session is fresh enough for sensitive operations */
 function isSessionFresh(lastSignInAt: string | undefined): boolean {
@@ -37,7 +25,7 @@ function isSessionFresh(lastSignInAt: string | undefined): boolean {
 // GET /api/keys - List user's API keys
 export async function GET(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('API keys');
     }
@@ -51,7 +39,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('List keys error:', error);
+      logServerError('List keys error', error);
       return ServerErrors.database('list_keys');
     }
 
@@ -60,7 +48,7 @@ export async function GET(request: NextRequest) {
       keys: keys || [],
     });
   } catch (error) {
-    console.error('List keys error:', error);
+    logServerError('List keys error', error);
     return ServerErrors.internal('list_keys');
   }
 }
@@ -75,13 +63,13 @@ export async function POST(request: NextRequest) {
       return RateLimitErrors.rateLimitExceeded();
     }
 
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('API keys');
     }
 
     // Warn if session is stale (not blocking, but logged)
-    const sessionFresh = isSessionFresh(user.last_sign_in_at ?? undefined);
+    const sessionFresh = isSessionFresh(user.lastSignInAt ?? undefined);
 
     const body = await request.json();
     const name = body.name || 'Default Key';
@@ -137,7 +125,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error('Create key error:', insertError);
+      logServerError('Create key error', insertError);
       return ServerErrors.database('create_key');
     }
 
@@ -157,7 +145,7 @@ export async function POST(request: NextRequest) {
         status: 'success',
       },
       getAuditContext(request)
-    ).catch(console.error);
+    ).catch((error) => logServerError('API key create audit error', error));
 
     // Return the full key only once (never stored/shown again)
     return NextResponse.json({
@@ -167,7 +155,7 @@ export async function POST(request: NextRequest) {
       message: 'Save this key securely. It will not be shown again.',
     });
   } catch (error) {
-    console.error('Create key error:', error);
+    logServerError('Create key error', error);
     return ServerErrors.internal('create_key');
   }
 }
@@ -175,7 +163,7 @@ export async function POST(request: NextRequest) {
 // DELETE /api/keys - Revoke an API key
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('API keys');
     }
@@ -209,7 +197,7 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', user.id);
 
     if (error) {
-      console.error('Revoke key error:', error);
+      logServerError('Revoke key error', error);
       return ServerErrors.database('revoke_key');
     }
 
@@ -227,14 +215,14 @@ export async function DELETE(request: NextRequest) {
         status: 'success',
       },
       getAuditContext(request)
-    ).catch(console.error);
+    ).catch((error) => logServerError('API key revoke audit error', error));
 
     return NextResponse.json({
       success: true,
       message: 'API key revoked',
     });
   } catch (error) {
-    console.error('Revoke key error:', error);
+    logServerError('Revoke key error', error);
     return ServerErrors.internal('revoke_key');
   }
 }

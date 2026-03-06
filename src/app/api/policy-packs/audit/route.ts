@@ -5,19 +5,18 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -114,7 +113,7 @@ export async function GET(request: NextRequest) {
       limit,
     });
   } catch (error) {
-    console.error('Policy audit error:', error);
+    logServerError('Policy audit error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

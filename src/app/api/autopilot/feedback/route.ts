@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { recordFeedback, recordOutcome } from '@/lib/autopilot-retrieval';
 import type { StrategyOutcome } from '@/lib/autopilot-retrieval';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/autopilot/feedback
@@ -155,7 +156,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (err) {
-    console.error('Autopilot feedback POST error:', err);
+    logServerError('Autopilot feedback POST error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

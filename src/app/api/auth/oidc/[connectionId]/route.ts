@@ -14,6 +14,7 @@ import {
 } from '@/lib/enterprise-auth/oidc-provider';
 import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 import { buildOIDCConfigFromConnection, type OidcConnectionRecord } from '@/lib/sso/oidc-config';
+import { logServerError } from '@/lib/server/logger';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
 
@@ -119,10 +120,11 @@ export async function GET(
     // Redirect to IdP
     return NextResponse.redirect(authorizationUrl);
   } catch (error) {
-    console.error('OIDC initiation error:', error);
+    logServerError('OIDC initiation error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to initiate OIDC login' },
       { status: 500 }
     );
   }
 }
+

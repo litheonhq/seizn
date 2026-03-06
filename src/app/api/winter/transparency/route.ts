@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import {
   createTransparencyEvent,
@@ -14,6 +15,7 @@ import {
   TransparencyEventFilter,
 } from '@/lib/winter/transparency';
 import { parsePagination } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/winter/transparency
@@ -21,15 +23,12 @@ import { parsePagination } from '@/lib/parse-params';
  */
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(req);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -72,7 +71,7 @@ export async function POST(req: NextRequest) {
       data: event,
     });
   } catch (error) {
-    console.error('Failed to create transparency event:', error);
+    logServerError('Failed to create transparency event', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to create transparency event' },
       { status: 500 }
@@ -86,15 +85,12 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(req);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -140,7 +136,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Failed to query transparency events:', error);
+    logServerError('Failed to query transparency events', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to query transparency events' },
       { status: 500 }

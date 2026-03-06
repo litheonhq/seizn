@@ -22,6 +22,7 @@ import {
   type OpaPrincipal,
   type RegoPolicyCategory,
 } from '@/lib/winter/opa';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Auth Helper
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
       stats: response.stats,
     });
   } catch (error) {
-    console.error('[Winter OPA] POST error:', error);
+    logServerError('[Winter OPA] POST error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -232,7 +233,7 @@ export async function GET(request: NextRequest) {
       ...(templates && { templates }),
     });
   } catch (error) {
-    console.error('[Winter OPA] GET error:', error);
+    logServerError('[Winter OPA] GET error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

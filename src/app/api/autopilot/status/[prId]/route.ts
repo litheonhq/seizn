@@ -23,6 +23,7 @@ import { ServerErrors } from '@/lib/api-error';
 import { createServerClient } from '@/lib/supabase';
 import { createCodeFixer, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { PRStatusResponse, AutopilotConfig, PRRecord } from '@/lib/autopilot';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -119,7 +120,7 @@ export async function GET(
 
           checks = statusResult.checks;
         } catch (error) {
-          console.error('Error fetching GitHub status:', error);
+          logServerError('Error fetching GitHub status', error);
           // Continue without live status
         }
       }
@@ -133,7 +134,7 @@ export async function GET(
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Autopilot status error:', error);
+    logServerError('Autopilot status error', error);
     return ServerErrors.internal('autopilot_status');
   }
 }

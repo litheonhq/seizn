@@ -7,28 +7,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { requirePermission, PermissionDeniedError, NotTeamMemberError } from '@/lib/rbac';
 import { Permissions } from '@/lib/rbac/types';
 import { getTeamAuditLogs, AuditLogQuery } from '@/lib/audit/logger';
-import { createRequestAuthClient } from '@/lib/supabase';
-
-/**
- * Helper to get user from authorization token
- */
-async function getUserFromToken(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.substring(7);
-  const supabase = createRequestAuthClient(token);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/teams/[id]/audit-logs
@@ -51,7 +34,7 @@ export async function GET(
     const { id: teamId } = await context.params;
 
     // Authenticate user
-    const user = await getUserFromToken(request);
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json(
         {
@@ -152,7 +135,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Team audit logs GET error:', error);
+    logServerError('Team audit logs GET error', error);
     return NextResponse.json(
       {
         success: false,

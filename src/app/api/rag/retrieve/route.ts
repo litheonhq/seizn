@@ -5,20 +5,19 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createRAGService } from '@/lib/rag/service';
+import { logServerError } from '@/lib/server/logger';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Get user's organization
     const { data: membership } = await supabase
@@ -79,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ result });
   } catch (error) {
-    console.error('RAG retrieve error:', error);
+    logServerError('RAG retrieve error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(

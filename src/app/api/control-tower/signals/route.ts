@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { ServerErrors } from '@/lib/api-error';
 import { getControlTowerSignals } from '@/lib/control-tower';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
       data: signals,
     });
   } catch (err) {
-    console.error('Control Tower signals error:', err);
+    logServerError('Control Tower signals error', err);
     return ServerErrors.internal('control_tower_signals');
   }
 }

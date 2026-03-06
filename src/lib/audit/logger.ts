@@ -8,6 +8,7 @@
 import { NextRequest } from 'next/server';
 import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
 import { AuditActionType, ResourceType } from '@/lib/rbac/types';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 /**
  * Audit event parameters
@@ -193,16 +194,16 @@ export async function logAuditEvent(
         if (!legacyError) {
           return legacyData.id;
         }
-        console.error('Failed to log audit event (legacy fallback):', legacyError);
+        logServerError('Failed to log audit event (legacy fallback)', legacyError);
         return null;
       }
-      console.error('Failed to log audit event:', error);
+      logServerError('Failed to log audit event', error);
       return null;
     }
 
     return data.id;
   } catch (error) {
-    console.error('Audit logging error:', error);
+    logServerError('Audit logging error', error);
     return null;
   }
 }
@@ -219,7 +220,7 @@ export async function logAuditEventFromRequest(
   const actor = await createActorFromRequest(request, actorOverrides);
 
   if (!actor) {
-    console.warn('Could not extract actor from request for audit logging');
+    logServerWarn('Could not extract actor from request for audit logging');
     return null;
   }
 
@@ -322,7 +323,7 @@ export async function getTeamAuditLogs(
   }
 
   if (error) {
-    console.error('Failed to fetch audit logs:', error);
+    logServerError('Failed to fetch audit logs', error);
     return { logs: [], total: 0 };
   }
 
@@ -471,3 +472,4 @@ export function createSettingsAuditEvent(
     newState: { [changes.field]: changes.newValue },
   };
 }
+

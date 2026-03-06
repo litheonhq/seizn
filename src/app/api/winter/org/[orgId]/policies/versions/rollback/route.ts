@@ -11,6 +11,7 @@ import {
   rollbackToVersion,
   getVersionHistory,
 } from '@/lib/winter/org/policy-versions';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       message: `Created rollback draft from version ${target_version}. Publish to apply.`,
     });
   } catch (error) {
-    console.error('[PolicyVersions Rollback] POST error:', error);
+    logServerError('[PolicyVersions Rollback] POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

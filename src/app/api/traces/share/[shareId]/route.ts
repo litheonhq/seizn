@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { NotFoundErrors, ServerErrors } from '@/lib/api-error';
 import { revokeShareLink, getSharedTrace, isShareExpired } from '@/lib/share-token';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ shareId: string }>;
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('Get share link error:', error);
+    logServerError('Get share link error', error);
     return ServerErrors.internal('get_share_link');
   }
 }
@@ -88,7 +89,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       share_id: shareId,
     });
   } catch (error) {
-    console.error('Revoke share link error:', error);
+    logServerError('Revoke share link error', error);
     return ServerErrors.internal('revoke_share_link');
   }
 }
+

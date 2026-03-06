@@ -19,12 +19,13 @@ import {
   type RequestMeta,
   type SummerRequestParams,
 } from "@/lib/tenant-policy";
+import { logServerError } from "@/lib/server/logger";
 
 export function verifyInternalKey(request: NextRequest): boolean {
   const configured = process.env.INTERNAL_API_KEY;
   if (!configured) {
     // Fail-closed in all environments; this endpoint is internal-only.
-    console.error("[TenantPolicy Enforce] INTERNAL_API_KEY not configured");
+    logServerError("[TenantPolicy Enforce] INTERNAL_API_KEY not configured");
     return false;
   }
 

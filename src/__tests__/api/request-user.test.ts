@@ -31,6 +31,7 @@ describe('request user helpers', () => {
       id: 'user-1',
       email: 'user@example.com',
       name: 'User One',
+      lastSignInAt: null,
     });
   });
 

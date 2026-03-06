@@ -19,6 +19,7 @@ import {
   rollbackPolicy,
   getOpaPolicyEngine,
 } from '@/lib/winter/opa';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Auth Helper
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       ...(history && { history }),
     });
   } catch (error) {
-    console.error('[Winter OPA] GET error:', error);
+    logServerError('[Winter OPA] GET error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -181,7 +182,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       policy,
     });
   } catch (error) {
-    console.error('[Winter OPA] PATCH error:', error);
+    logServerError('[Winter OPA] PATCH error:', error);
 
     if (error instanceof Error && error.message.includes('Invalid policy syntax')) {
       return NextResponse.json(
@@ -218,7 +219,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       deleted: id,
     });
   } catch (error) {
-    console.error('[Winter OPA] DELETE error:', error);
+    logServerError('[Winter OPA] DELETE error:', error);
 
     if (error instanceof Error && error.message === 'Policy not found') {
       return NextResponse.json({ error: 'Policy not found' }, { status: 404 });

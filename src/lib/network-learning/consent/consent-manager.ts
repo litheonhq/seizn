@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import type {
   ConsentStatus,
   SignalType,
@@ -47,7 +48,7 @@ export async function getConsent(userId: string): Promise<UserConsent | null> {
     .maybeSingle();
 
   if (error) {
-    console.error('Failed to get consent:', error);
+    logServerError('Failed to get consent', error);
     throw error;
   }
 
@@ -97,7 +98,7 @@ export async function optIn(
       .single();
 
     if (error) {
-      console.error('Failed to update consent:', error);
+      logServerError('Failed to update consent', error);
       throw error;
     }
 
@@ -119,7 +120,7 @@ export async function optIn(
     .single();
 
   if (error) {
-    console.error('Failed to create consent:', error);
+    logServerError('Failed to create consent', error);
     throw error;
   }
 
@@ -149,7 +150,7 @@ export async function optOut(userId: string): Promise<UserConsent> {
       .single();
 
     if (error) {
-      console.error('Failed to update consent:', error);
+      logServerError('Failed to update consent', error);
       throw error;
     }
 
@@ -171,7 +172,7 @@ export async function optOut(userId: string): Promise<UserConsent> {
     .single();
 
   if (error) {
-    console.error('Failed to create opt-out record:', error);
+    logServerError('Failed to create opt-out record', error);
     throw error;
   }
 
@@ -216,7 +217,7 @@ export async function updateDataTypes(
     .single();
 
   if (error) {
-    console.error('Failed to update data types:', error);
+    logServerError('Failed to update data types', error);
     throw error;
   }
 

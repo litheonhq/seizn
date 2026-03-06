@@ -12,6 +12,7 @@ import {
   getVersionAtTime,
   getVersionChangeSummary,
 } from '@/lib/winter/org/policy-versions';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -116,7 +117,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       has_more: history.has_more,
     });
   } catch (error) {
-    console.error('[PolicyVersions History] GET error:', error);
+    logServerError('[PolicyVersions History] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

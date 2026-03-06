@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/dashboard/organizations - minimal org list for dashboard UIs
 export async function GET(request: NextRequest) {
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id);
 
     if (error) {
-      console.error('Dashboard organizations error:', error);
+      logServerError('Dashboard organizations error', error);
       return NextResponse.json({ error: 'Failed to fetch organizations' }, { status: 500 });
     }
 
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       count: organizations.length,
     });
   } catch (error) {
-    console.error('Dashboard organizations GET error:', error);
+    logServerError('Dashboard organizations GET error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

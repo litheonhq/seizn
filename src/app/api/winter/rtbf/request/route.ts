@@ -13,6 +13,7 @@ import {
   ErasureScope,
   ErasureScopeParams,
 } from '@/lib/winter/rtbf';
+import { logServerError } from '@/lib/server/logger';
 
 interface RequestBody {
   scope: ErasureScope;
@@ -136,7 +137,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('RTBF request error:', err);
+    logServerError('RTBF request error:', err);
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: 'Failed to create RTBF request' } },
       { status: 500 }

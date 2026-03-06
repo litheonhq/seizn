@@ -9,6 +9,7 @@ import {
 import { logMemoryAccess } from '@/lib/audit';
 import { getRequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
+import { logServerError } from '@/lib/server/logger';
 import {
   listMemoryImageAttachments,
   type MemoryImageAttachmentRecord,
@@ -227,7 +228,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         );
       }
 
-      console.error('Lookup memory database error:', existingError);
+      logServerError('Lookup memory database error', existingError);
       return NextResponse.json(
         { error: 'Failed to load existing memory due to a database error' },
         { status: 500 }
@@ -493,7 +494,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         );
       }
 
-      console.error('Update memory database error:', updateError);
+      logServerError('Update memory database error', updateError);
       return NextResponse.json(
         { error: 'Update failed due to a database error' },
         { status: 500 }

@@ -26,6 +26,7 @@ import {
   type PolicyScope,
 } from '@/lib/winter/org';
 import { detectPII, maskPII, type PiiDetection } from '@/lib/winter/pii';
+import { logServerError } from '@/lib/server/logger';
 
 // ============================================
 // Types
@@ -967,7 +968,7 @@ export async function POST(request: NextRequest) {
       simulation: response,
     });
   } catch (error) {
-    console.error('[WinterPolicy Simulate] POST error:', error);
+    logServerError('[WinterPolicy Simulate] POST error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

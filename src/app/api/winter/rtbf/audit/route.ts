@@ -13,6 +13,7 @@ import {
   ErasureScope,
   ErasureStatus,
 } from '@/lib/winter/rtbf';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -92,7 +93,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('RTBF audit error:', err);
+    logServerError('RTBF audit error:', err);
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: 'Failed to query audit logs' } },
       { status: 500 }

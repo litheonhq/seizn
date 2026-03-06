@@ -14,6 +14,7 @@ import {
   getReport,
   type ReportType,
 } from '@/lib/winter/org';
+import { logServerError } from '@/lib/server/logger';
 
 
 interface RouteContext {
@@ -82,7 +83,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       has_more: result.has_more,
     });
   } catch (error) {
-    console.error('[WinterOrg Reports] GET error:', error);
+    logServerError('[WinterOrg Reports] GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -145,7 +146,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       report,
     });
   } catch (error) {
-    console.error('[WinterOrg Reports] POST error:', error);
+    logServerError('[WinterOrg Reports] POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

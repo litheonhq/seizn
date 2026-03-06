@@ -7,6 +7,7 @@ export type RequestUser = {
   id: string;
   email?: string | null;
   name?: string | null;
+  lastSignInAt?: string | null;
 };
 
 /**
@@ -22,6 +23,7 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
         id: session.user.id,
         email: session.user.email,
         name: session.user.name,
+        lastSignInAt: null,
       };
     }
   } catch {
@@ -42,6 +44,7 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
     id: user.id,
     email: user.email,
     name,
+    lastSignInAt: user.last_sign_in_at,
   };
 }
 

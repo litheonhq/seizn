@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { rotateScopedApiKey } from '@/lib/scoped-api-keys';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       ...result,
     });
   } catch (error) {
-    console.error('Rotate scoped key error:', error);
+    logServerError('Rotate scoped key error', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
     const status = message.includes('not found') ? 404 : 500;
 

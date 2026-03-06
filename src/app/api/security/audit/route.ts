@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { validateApiKey } from '@/lib/api-auth';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/security/audit - Get audit logs
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
     const { data: logs, error, count } = await query;
 
     if (error) {
-      console.error('Audit logs error:', error);
+      logServerError('Audit logs error', error);
       return ServerErrors.internal('audit_logs');
     }
 
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
       offset,
     });
   } catch (error) {
-    console.error('Audit logs error:', error);
+    logServerError('Audit logs error', error);
     return ServerErrors.internal('audit_logs');
   }
 }
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.from('audit_logs').insert(logEntry);
 
     if (error) {
-      console.error('Audit log creation error:', error);
+      logServerError('Audit log creation error', error);
       return ServerErrors.internal('audit_log_create');
     }
 
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
       log: logEntry,
     });
   } catch (error) {
-    console.error('Audit log creation error:', error);
+    logServerError('Audit log creation error', error);
     return ServerErrors.internal('audit_log_create');
   }
 }

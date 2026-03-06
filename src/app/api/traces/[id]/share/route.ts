@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
+import { logServerError } from '@/lib/server/logger';
 import {
   generateShareToken,
   calculateExpiry,
@@ -114,7 +115,7 @@ export async function POST(
       .single();
 
     if (insertError) {
-      console.error('Failed to create shared trace:', insertError);
+      logServerError('Failed to create shared trace', insertError);
       return NextResponse.json(
         { error: 'Failed to create shared trace' },
         { status: 500 }
@@ -134,7 +135,7 @@ export async function POST(
       id: sharedTrace.id,
     });
   } catch (err) {
-    console.error('Share trace error:', err);
+    logServerError('Share trace error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -170,7 +171,7 @@ export async function GET(
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Failed to fetch shares:', error);
+      logServerError('Failed to fetch shares', error);
       return NextResponse.json(
         { error: 'Failed to fetch shares' },
         { status: 500 }
@@ -194,7 +195,7 @@ export async function GET(
       })),
     });
   } catch (err) {
-    console.error('Get shares error:', err);
+    logServerError('Get shares error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -241,7 +242,7 @@ export async function DELETE(
       .eq('user_id', userId);
 
     if (error) {
-      console.error('Failed to delete share:', error);
+      logServerError('Failed to delete share', error);
       return NextResponse.json(
         { error: 'Failed to delete share' },
         { status: 500 }
@@ -250,10 +251,11 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('Delete share error:', err);
+    logServerError('Delete share error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

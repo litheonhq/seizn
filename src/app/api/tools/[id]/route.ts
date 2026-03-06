@@ -6,7 +6,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createToolGatingService } from '@/lib/tool-gating';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -15,15 +17,12 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const service = createToolGatingService(supabase);
     const tool = await service.getTool(id);
@@ -34,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ tool });
   } catch (error) {
-    console.error('Get tool error:', error);
+    logServerError('Get tool error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -45,15 +44,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     // Only admins can update tools
     const { data: membership } = await supabase
@@ -76,10 +72,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ tool });
   } catch (error) {
-    console.error('Update tool error:', error);
+    logServerError('Update tool error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
+

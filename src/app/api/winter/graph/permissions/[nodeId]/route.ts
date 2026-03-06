@@ -8,6 +8,7 @@ import {
   type EffectivePermission,
 } from '@/lib/winter/graph';
 import type { Permission, PermissionLevel, PermissionScope, InheritanceMode } from '@/lib/winter/graph/types';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * GET /api/winter/graph/permissions/:nodeId
@@ -47,7 +48,7 @@ export async function GET(
       .eq('scope', 'node');
 
     if (directError) {
-      console.error('Direct permissions error:', directError);
+      logServerError('Direct permissions error:', directError);
     }
 
     const directPermissions: Permission[] = (directPerms || []).map(mapToPermission);
@@ -147,7 +148,7 @@ export async function GET(
       effectivePermissions,
     });
   } catch (error) {
-    console.error('Node permissions error:', error);
+    logServerError('Node permissions error:', error);
     return ServerErrors.internal('node_permissions');
   }
 }

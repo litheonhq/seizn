@@ -10,6 +10,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { logServerWarn } from '@/lib/server/logger';
 import { getEmbeddingProvider } from '@/lib/summer/embedding';
 import type {
   DocumentBlock,
@@ -274,7 +275,9 @@ export async function searchBlocksBySimilarity(
 
   if (error) {
     // Fallback to client-side similarity if RPC not available
-    console.warn('Vector search RPC not available, falling back to basic query');
+    logServerWarn(
+      'Vector search RPC not available, falling back to basic query'
+    );
     return searchBlocksFallback(userId, collectionId, queryEmbedding, options, topK, threshold);
   }
 

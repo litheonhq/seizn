@@ -5,8 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createRAGService } from '@/lib/rag/service';
+import { logServerError } from '@/lib/server/logger';
 
 export async function GET(
   request: NextRequest,
@@ -14,15 +16,12 @@ export async function GET(
 ) {
   try {
     const { collectionId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const ragService = createRAGService(supabase);
     const collection = await ragService.getCollection(collectionId);
@@ -51,7 +50,7 @@ export async function GET(
 
     return NextResponse.json({ collection });
   } catch (error) {
-    console.error('RAG collection get error:', error);
+    logServerError('RAG collection get error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -65,15 +64,12 @@ export async function PUT(
 ) {
   try {
     const { collectionId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const ragService = createRAGService(supabase);
     const existingCollection = await ragService.getCollection(collectionId);
@@ -117,7 +113,7 @@ export async function PUT(
 
     return NextResponse.json({ collection });
   } catch (error) {
-    console.error('RAG collection update error:', error);
+    logServerError('RAG collection update error', error);
 
     if (error instanceof Error) {
       return NextResponse.json(
@@ -139,15 +135,12 @@ export async function DELETE(
 ) {
   try {
     const { collectionId } = await params;
-    const supabase = createServerClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getRequestUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const supabase = createServerClient();
 
     const ragService = createRAGService(supabase);
     const existingCollection = await ragService.getCollection(collectionId);
@@ -185,7 +178,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: 'Collection deleted' });
   } catch (error) {
-    console.error('RAG collection delete error:', error);
+    logServerError('RAG collection delete error', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

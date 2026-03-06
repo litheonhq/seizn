@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { NotFoundErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ shareId: string }>;
@@ -61,7 +62,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       view_count: (share.view_count || 0) + 1,
     });
   } catch (error) {
-    console.error('Get shared trace error:', error);
+    logServerError('Get shared trace error', error);
     return ServerErrors.internal('get_shared_trace');
   }
 }
+

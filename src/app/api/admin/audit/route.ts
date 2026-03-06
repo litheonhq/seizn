@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { hasPermission } from '@/lib/rbac/permissions';
 import { Permissions } from '@/lib/rbac/types';
+import { logServerError } from '@/lib/server/logger';
 import {
   queryAuditEvents,
   getAuditSummary,
@@ -137,7 +138,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Audit query error:', error);
+    logServerError('Audit query error', error);
     return NextResponse.json(
       { error: 'Failed to query audit events' },
       { status: 500 }
@@ -218,10 +219,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ id: eventId, success: true });
   } catch (error) {
-    console.error('Audit log error:', error);
+    logServerError('Audit log error', error);
     return NextResponse.json(
       { error: 'Failed to log audit event' },
       { status: 500 }
     );
   }
 }
+

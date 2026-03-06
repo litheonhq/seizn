@@ -5,6 +5,7 @@ import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { createShareLink, getTraceShareLinks } from '@/lib/share-token';
 import type { ExpiresIn, RedactionProfile } from '@/lib/share-token';
 import type { TraceSnapshot } from '@/lib/sharing/types';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/traces/share - Create a shareable link for a trace
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
       expires_at: shareResult.expiresAt,
     });
   } catch (error) {
-    console.error('Share trace error:', error);
+    logServerError('Share trace error', error);
     return ServerErrors.internal('share_trace');
   }
 }
@@ -137,7 +138,7 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error('List share links error:', error);
+    logServerError('List share links error', error);
     return ServerErrors.internal('list_share_links');
   }
 }
@@ -152,3 +153,4 @@ function validateExpiresIn(value: unknown): ExpiresIn | null {
   }
   return null;
 }
+
