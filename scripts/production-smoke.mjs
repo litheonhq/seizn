@@ -6,7 +6,6 @@ import { tmpdir } from 'os';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
-import { encode } from '@auth/core/jwt';
 import { chromium } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
@@ -42,10 +41,6 @@ function maskEmail(email) {
 
 function generatePassword() {
   return `Smoke!${crypto.randomBytes(12).toString('base64url')}Aa1`;
-}
-
-function getAuthJsSessionCookieName() {
-  return '__Secure-authjs.session-token';
 }
 
 function runVercelEnvPull() {
@@ -202,18 +197,6 @@ async function ensureSmokeUser(supabase, email, password, name) {
   };
 }
 
-async function readOrganizationId(supabase, userId) {
-  const { data } = await supabase
-    .from('profiles')
-    .select('organization_id')
-    .eq('id', userId)
-    .maybeSingle();
-
-  return typeof data?.organization_id === 'string' && data.organization_id.trim()
-    ? data.organization_id
-    : null;
-}
-
 async function createAccessToken(email, password) {
   const publicClient = createClient(
     requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
@@ -236,24 +219,6 @@ async function createAccessToken(email, password) {
   }
 
   return data.session.access_token;
-}
-
-async function createAuthJsSessionToken({ userId, email, name, organizationId }) {
-  const cookieName = getAuthJsSessionCookieName();
-
-  return encode({
-    token: {
-      id: userId,
-      sub: userId,
-      ...(email ? { email } : {}),
-      ...(name ? { name } : {}),
-      ...(organizationId ? { organizationId } : {}),
-      organizationSelection: organizationId ? 'organization' : 'personal',
-    },
-    secret: requireEnv('NEXTAUTH_SECRET'),
-    salt: cookieName,
-    maxAge: 60 * 60,
-  });
 }
 
 async function requestJson(baseUrl, path, { method = 'GET', bearerToken, apiKey, body } = {}) {
@@ -328,7 +293,7 @@ async function ensureSmokeKey(baseUrl, bearerToken) {
   };
 }
 
-async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
+async function runBrowserSmoke(baseUrl, email, password, queryText) {
   await mkdir(browserArtifactsDir, { recursive: true });
 
   const browser = await chromium.launch({ headless: true });
@@ -336,25 +301,37 @@ async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
 
   try {
     const context = await browser.newContext();
-    await context.addCookies([
-      {
-        name: getAuthJsSessionCookieName(),
-        value: sessionToken,
-        url: baseUrl,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax',
-        expires: Math.floor(Date.now() / 1000) + 60 * 60,
-      },
-    ]);
-
     page = await context.newPage();
+    await page.goto(new URL('/login', baseUrl).toString(), {
+      waitUntil: 'domcontentloaded',
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+
+    const turnstileWidget = page.locator('.cf-turnstile, iframe[src*="turnstile"]');
+    if (await turnstileWidget.count()) {
+      throw new Error('Production login requires Turnstile; browser smoke cannot auto-login');
+    }
+
+    await page.locator('#login-email').fill(email, {
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.locator('#login-password').fill(password, {
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.getByRole('button', { name: /sign in/i }).click({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.waitForURL(/dashboard/, { timeout: BROWSER_SMOKE_TIMEOUT_MS });
+
     await page.goto(new URL('/dashboard/playground', baseUrl).toString(), {
       waitUntil: 'domcontentloaded',
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
     await page.waitForURL(/dashboard\/playground/, { timeout: BROWSER_SMOKE_TIMEOUT_MS });
     await page.getByTestId('playground-query-input').fill(queryText, {
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.getByTestId('playground-namespace-input').fill('production-smoke', {
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
 
@@ -399,6 +376,7 @@ async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
     await context.close();
 
     return [
+      { path: '/login [POST credentials]', status: 200 },
       { path: '/dashboard/playground [GET session]', status: 200 },
       { path: '/api/dashboard/stats [GET session]', status: 200 },
       { path: '/dashboard/playground query [UI]', status: 200 },
@@ -410,7 +388,7 @@ async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
       await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {});
 
       if (error instanceof Error) {
-        error.message = `${error.message} (screenshot: ${screenshotPath})`;
+        error.message = `${error.message} (url: ${page.url()}, screenshot: ${screenshotPath})`;
       }
     }
 
@@ -420,7 +398,7 @@ async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
   }
 }
 
-async function runSmoke(baseUrl, bearerToken, sessionToken) {
+async function runSmoke(baseUrl, bearerToken, smokeEmail, smokePassword) {
   const results = [];
   let memoryId = null;
   let smokeApiKey = null;
@@ -510,7 +488,7 @@ async function runSmoke(baseUrl, bearerToken, sessionToken) {
       );
     }
 
-    const browserResults = await runBrowserSmoke(baseUrl, sessionToken, memoryContent);
+    const browserResults = await runBrowserSmoke(baseUrl, smokeEmail, smokePassword, memoryContent);
     results.push(...browserResults);
 
     return results;
@@ -575,14 +553,7 @@ async function main() {
   });
 
   const accessToken = await createAccessToken(smokeEmail, smokePassword);
-  const organizationId = await readOrganizationId(supabase, userId);
-  const sessionToken = await createAuthJsSessionToken({
-    userId,
-    email: smokeEmail,
-    name: smokeName,
-    organizationId,
-  });
-  const results = await runSmoke(nextAuthUrl, accessToken, sessionToken);
+  const results = await runSmoke(nextAuthUrl, accessToken, smokeEmail, smokePassword);
   printResults({
     email: smokeEmail,
     created,

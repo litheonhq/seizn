@@ -212,6 +212,7 @@ export function PlaygroundClient() {
               value={namespace}
               onChange={(e) => setNamespace(e.target.value)}
               placeholder="default"
+              data-testid="playground-namespace-input"
               className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
             />
           </div>
