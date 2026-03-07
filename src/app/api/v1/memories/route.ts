@@ -41,7 +41,7 @@ import {
 import { auth } from '@/lib/auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
 import { safeJsonParse } from '@/lib/safe-json';
-import { logServerError } from '@/lib/server/logger';
+import { logServerError, logServerWarn } from '@/lib/server/logger';
 import { trackMemoryAccess } from '@/lib/memory-optimizer';
 import { logMemoryAccess } from '@/lib/audit';
 import {
@@ -85,6 +85,10 @@ import {
   validateMemoryImagePayload,
   type MemoryImageAttachmentRecord,
 } from '@/lib/memory/image-attachments';
+import {
+  runDegradedKeywordSearch,
+  shouldUseDegradedKeywordSearchFallback,
+} from '@/lib/memory/degraded-keyword-search';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -188,10 +192,6 @@ function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
     return null;
   }
   return raw as SearchMode;
-}
-
-function escapeLikePattern(input: string): string {
-  return input.replace(/[%_\\]/g, '\\$&');
 }
 
 /**
@@ -511,7 +511,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      console.error('[v1/memories] Insert error:', insertError);
+      logServerError('[v1/memories] Insert error', insertError, { userId, namespace });
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
@@ -549,10 +549,10 @@ export async function POST(request: NextRequest) {
           .eq('id', memory.id)
           .eq('user_id', userId);
         if (rollback.error) {
-          console.error(
+          logServerError(
             '[v1/memories] CRITICAL: rollback soft-delete failed for memory',
-            memory.id,
-            rollback.error.message
+            rollback.error.message,
+            { memoryId: memory.id, userId }
           );
         }
 
@@ -599,10 +599,10 @@ export async function POST(request: NextRequest) {
             .eq('id', memory.id)
             .eq('user_id', userId);
           if (rollback.error) {
-            console.error(
+            logServerError(
               '[v1/memories] CRITICAL: rollback after spring mirror failure failed',
-              memory.id,
-              rollback.error.message
+              rollback.error.message,
+              { memoryId: memory.id, userId }
             );
           }
           return ServerErrors.internal('spring_v4_mirror_failed');
@@ -617,7 +617,13 @@ export async function POST(request: NextRequest) {
     // Emit webhook event (non-blocking)
     emitWebhookEvent(userId, 'memory.created', {
       memory: { id: memory.id, content: memory.content, memory_type: memory.memory_type },
-    }, namespace).catch(console.error);
+    }, namespace).catch((error) => {
+      logServerError('[v1/memories] memory.created webhook emit failed', error, {
+        userId,
+        namespace,
+        memoryId: memory.id,
+      });
+    });
 
     if (keyId) {
       await logRequest(
@@ -642,7 +648,7 @@ export async function POST(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
-    console.error('[v1/memories] POST error:', error);
+    logServerError('[v1/memories] POST error', error);
     return ServerErrors.internal('add_memory');
   }
 }
@@ -653,68 +659,6 @@ type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
   'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
-
-function shouldUseDegradedKeywordSearchFallback(error: Error): boolean {
-  const message = error.message.toLowerCase();
-  const missingSearchFunction =
-    message.includes('does not exist') &&
-    (message.includes('keyword_search_memories') ||
-      message.includes('hybrid_search_memories') ||
-      message.includes('search_memories'));
-  return (
-    message.includes('operator does not exist: text = uuid') ||
-    missingSearchFunction
-  );
-}
-
-async function runDegradedKeywordSearch(params: {
-  supabase: ReturnType<typeof createServerClient>;
-  userId: string;
-  queryText: string;
-  limit: number;
-  namespaceParam: string | null;
-}): Promise<{ results: SearchResultRow[] | null; error: Error | null }> {
-  let queryBuilder = params.supabase
-    .from('memories')
-    .select(MEMORY_SELECT_FIELDS)
-    .eq('user_id', params.userId)
-    .eq('is_deleted', false)
-    .order('created_at', { ascending: false })
-    .limit(params.limit);
-
-  if (params.namespaceParam) {
-    queryBuilder = queryBuilder.eq('namespace', params.namespaceParam);
-  }
-
-  const normalizedQuery = params.queryText.trim();
-  if (normalizedQuery.length > 0) {
-    const terms = Array.from(
-      new Set(
-        normalizedQuery
-          .toLowerCase()
-          .split(/\s+/)
-          .map((term) => term.replace(/[^\p{L}\p{N}_-]/gu, ''))
-          .filter((term) => term.length >= 2)
-      )
-    ).slice(0, 5);
-
-    if (terms.length > 0) {
-      const orExpr = terms
-        .map((term) => `content.ilike.%${escapeLikePattern(term)}%`)
-        .join(',');
-      queryBuilder = queryBuilder.or(orExpr);
-    } else {
-      queryBuilder = queryBuilder.ilike('content', `%${escapeLikePattern(normalizedQuery)}%`);
-    }
-  }
-
-  const { data, error } = await queryBuilder;
-  if (error) {
-    return { results: null, error: new Error(error.message || 'degraded_keyword_search_failed') };
-  }
-
-  return { results: (data as SearchResultRow[] | null) || [], error: null };
-}
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
@@ -777,7 +721,7 @@ export async function GET(request: NextRequest) {
       const { data: memories, error: browseError, count } = await q;
 
       if (browseError) {
-        console.error('[v1/memories] Browse error:', browseError);
+        logServerError('[v1/memories] Browse error', browseError, { userId, namespace });
         if (keyId) {
           await logRequest(
             { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
@@ -797,7 +741,12 @@ export async function GET(request: NextRequest) {
 
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: memories?.length || 0,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[v1/memories] Browse audit log failed', error, {
+          userId,
+          namespace,
+        });
+      });
 
       return withHeaders(
         NextResponse.json({
@@ -898,7 +847,13 @@ export async function GET(request: NextRequest) {
         resultCount: payload.resultCount,
         fallbackReason: payload.fallbackReason || null,
         errorCode: payload.errorCode || null,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[v1/memories] Semantic cache event failed', error, {
+          userId,
+          namespace,
+          resolvedMode: payload.resolvedMode,
+        });
+      });
     };
 
     // Slot lookups
@@ -918,7 +873,13 @@ export async function GET(request: NextRequest) {
         logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
           memoryId: `slot:${slotKey}`,
           query: effectiveQuery,
-        }).catch(console.error);
+        }).catch((error) => {
+          logServerError('[v1/memories] Slot audit log failed', error, {
+            userId,
+            namespace,
+            slotKey,
+          });
+        });
 
         if (slotValue) {
           recordRouterOutcome(supabase, {
@@ -929,7 +890,13 @@ export async function GET(request: NextRequest) {
             latencyMs: Date.now() - startTime,
             resultCount: 1,
             topScore: 1,
-          }).catch(console.error);
+          }).catch((error) => {
+            logServerError('[v1/memories] Slot router outcome failed', error, {
+              userId,
+              namespace,
+              slotKey,
+            });
+          });
 
           if (canaryAssignment) {
             try {
@@ -941,7 +908,12 @@ export async function GET(request: NextRequest) {
                 qualityScore: 1,
               });
             } catch (canaryMetricError) {
-              console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+              logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
+                userId,
+                namespace,
+                slotKey,
+                assignedVersion: canaryAssignment.assignedVersion,
+              });
             }
           }
 
@@ -1029,11 +1001,21 @@ export async function GET(request: NextRequest) {
           { embedding: 0 }
         );
       }
-      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
+      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch((error) => {
+        logServerError('[v1/memories] Cache-hit access tracking failed', error, {
+          userId,
+          namespace,
+        });
+      });
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
         query: effectiveQuery,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[v1/memories] Cache-hit audit log failed', error, {
+          userId,
+          namespace,
+        });
+      });
 
       recordRouterOutcome(supabase, {
         userId,
@@ -1045,7 +1027,13 @@ export async function GET(request: NextRequest) {
         topScore: Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
           ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
           ?? 0),
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[v1/memories] Cache-hit router outcome failed', error, {
+          userId,
+          namespace,
+          resolvedMode: actualMode,
+        });
+      });
 
       if (canaryAssignment) {
         try {
@@ -1063,7 +1051,12 @@ export async function GET(request: NextRequest) {
             ),
           });
         } catch (canaryMetricError) {
-          console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+          logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
+            userId,
+            namespace,
+            resolvedMode: actualMode,
+            assignedVersion: canaryAssignment.assignedVersion,
+          });
         }
       }
 
@@ -1173,7 +1166,12 @@ export async function GET(request: NextRequest) {
         }
       } catch (springSearchError) {
         backendFallbackReason = 'search_error';
-        console.error('[v1/memories] Spring v4 bridge search error:', springSearchError);
+        logServerError('[v1/memories] Spring v4 bridge search error', springSearchError, {
+          userId,
+          namespace,
+          requestedMode,
+          actualMode,
+        });
       }
     }
 
@@ -1244,7 +1242,12 @@ export async function GET(request: NextRequest) {
             errorMessage: searchError.message || 'search_error',
           });
         } catch (canaryMetricError) {
-          console.error('[v1/memories] Canary failure metric record failed:', canaryMetricError);
+          logServerError('[v1/memories] Canary failure metric record failed', canaryMetricError, {
+            userId,
+            namespace,
+            resolvedMode,
+            assignedVersion: canaryAssignment.assignedVersion,
+          });
         }
       }
       recordSemanticCacheOutcome({
@@ -1288,9 +1291,13 @@ export async function GET(request: NextRequest) {
         namespace,
         resolvedMode,
         toCachedMemories(results)
-      ).catch(
-        console.error
-      );
+      ).catch((error) => {
+        logServerError('[v1/memories] Cache write failed', error, {
+          userId,
+          namespace,
+          resolvedMode,
+        });
+      });
     }
 
     const personalizationState = await getOrCreateLearningProfile(supabase, userId, namespace);
@@ -1308,15 +1315,25 @@ export async function GET(request: NextRequest) {
     }
 
     if (results && results.length > 0) {
-      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch(
-        console.error
-      );
+      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch((error) => {
+        logServerError('[v1/memories] Access tracking failed', error, {
+          userId,
+          namespace,
+          resolvedMode,
+        });
+      });
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
       memoryCount: personalizedResults.length,
       query: effectiveQuery,
-    }).catch(console.error);
+    }).catch((error) => {
+      logServerError('[v1/memories] Search audit log failed', error, {
+        userId,
+        namespace,
+        resolvedMode,
+      });
+    });
 
     const topSimilarity = clamp(
       Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
@@ -1334,7 +1351,13 @@ export async function GET(request: NextRequest) {
       latencyMs: Date.now() - startTime,
       resultCount: personalizedResults.length,
       topScore: topSimilarity,
-    }).catch(console.error);
+    }).catch((error) => {
+      logServerError('[v1/memories] Router outcome failed', error, {
+        userId,
+        namespace,
+        resolvedMode,
+      });
+    });
 
     if (canaryAssignment) {
       try {
@@ -1346,7 +1369,12 @@ export async function GET(request: NextRequest) {
           qualityScore: topSimilarity,
         });
       } catch (canaryMetricError) {
-        console.error('[v1/memories] Canary metric record failed:', canaryMetricError);
+        logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
+          userId,
+          namespace,
+          resolvedMode,
+          assignedVersion: canaryAssignment.assignedVersion,
+        });
       }
     }
     recordSemanticCacheOutcome({
@@ -1411,7 +1439,7 @@ export async function GET(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
-    console.error('[v1/memories] GET error:', error);
+    logServerError('[v1/memories] GET error', error);
     return ServerErrors.internal('search_memories');
   }
 }
@@ -1449,7 +1477,7 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', userId);
 
     if (error) {
-      console.error('[v1/memories] Delete error:', error);
+      logServerError('[v1/memories] Delete error', error, { userId, namespace });
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'DELETE', startTime },
@@ -1465,20 +1493,29 @@ export async function DELETE(request: NextRequest) {
     try {
       springSync = await softDeleteSpringMirrorsByLegacyIds(supabase, userId, ids);
       if (springSync.failedIds.length > 0) {
-        console.warn(
-          '[v1/memories] Spring mirror soft-delete partial failure:',
-          springSync.failedIds
-        );
+        logServerWarn('[v1/memories] Spring mirror soft-delete partial failure', springSync.failedIds, {
+          userId,
+          namespace,
+          deletedCount: springSync.deletedCount,
+        });
       }
     } catch (springSyncError) {
-      console.error('[v1/memories] Spring mirror soft-delete failed:', springSyncError);
+      logServerError('[v1/memories] Spring mirror soft-delete failed', springSyncError, {
+        userId,
+        namespace,
+      });
     }
 
     // Emit webhook event (non-blocking)
     emitWebhookEvent(userId, 'memory.deleted', {
       ids,
       count: ids.length,
-    }, namespace).catch(console.error);
+    }, namespace).catch((error) => {
+      logServerError('[v1/memories] memory.deleted webhook emit failed', error, {
+        userId,
+        namespace,
+      });
+    });
 
     if (keyId) {
       await logRequest(
@@ -1501,7 +1538,7 @@ export async function DELETE(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
-    console.error('[v1/memories] DELETE error:', error);
+    logServerError('[v1/memories] DELETE error', error);
     return ServerErrors.internal('delete_memories');
   }
 }
