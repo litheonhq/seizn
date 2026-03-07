@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createEvidencePackStore } from '@/lib/provenance/evidence-pack';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('[Evidence] GET error:', error);
+    logServerError('[Evidence] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

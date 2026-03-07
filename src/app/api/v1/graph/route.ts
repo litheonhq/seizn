@@ -8,6 +8,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createKnowledgeGraphStore } from '@/lib/graph/graphrag';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ graph }, { status: 201 });
   } catch (error) {
-    console.error('[Graph] POST error:', error);
+    logServerError('[Graph] POST error', error);
     return NextResponse.json(
       { error: 'Internal Server Error', message: error instanceof Error ? error.message : 'Unknown' },
       { status: 500 }
@@ -52,8 +54,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const limit = boundedInt(searchParams.get('limit'), 20, 1, 100);
+    const offset = boundedInt(searchParams.get('offset'), 0, 0, 100_000);
 
     const supabase = createServerClient();
 
@@ -89,7 +91,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('[Graph] GET error:', error);
+    logServerError('[Graph] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

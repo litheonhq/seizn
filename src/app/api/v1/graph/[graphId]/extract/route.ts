@@ -12,6 +12,7 @@ import {
   createKnowledgeGraphStore,
   type EntityType,
 } from '@/lib/graph/graphrag';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ graphId: string }>;
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('[GraphExtract] POST error:', error);
+    logServerError('[GraphExtract] POST error', error);
     return NextResponse.json(
       { error: 'Internal Server Error', message: error instanceof Error ? error.message : 'Unknown' },
       { status: 500 }

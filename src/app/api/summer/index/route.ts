@@ -12,6 +12,7 @@ import {
 } from '@/lib/api-error';
 import { indexDocuments } from '@/lib/summer/indexer';
 import { estimateTokens } from '@/lib/summer/utils/tokens';
+import { logServerError } from '@/lib/server/logger';
 import type {
   IndexRequest,
   IndexResponse,
@@ -245,14 +246,16 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer index error:', err);
+    logServerError('Summer index error', err, { userId, keyId });
 
     // Log error
     if (userId && keyId) {
       await logRequest(
         { userId, keyId, endpoint: '/api/summer/index', method: 'POST', startTime },
         500
-      ).catch(console.error);
+      ).catch((logError) => {
+        logServerError('Summer index failure log failed', logError, { userId, keyId });
+      });
     }
 
     // Return appropriate error response

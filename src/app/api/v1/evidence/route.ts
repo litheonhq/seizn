@@ -12,6 +12,7 @@ import {
   createEvidencePackStore,
   type EvidencePack,
 } from '@/lib/provenance/evidence-pack';
+import { logServerError } from '@/lib/server/logger';
 
 interface CreateEvidenceRequest {
   trace_id?: string;
@@ -191,7 +192,7 @@ export async function POST(request: NextRequest) {
       },
     }, { status: 201 });
   } catch (error) {
-    console.error('[Evidence] POST error:', error);
+    logServerError('[Evidence] POST error', error);
     return NextResponse.json(
       { error: 'Internal Server Error', message: error instanceof Error ? error.message : 'Unknown' },
       { status: 500 }
@@ -240,7 +241,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('[Evidence] GET error:', error);
+    logServerError('[Evidence] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -19,6 +19,7 @@ import {
   getVersionById,
   verifyCollectionAccess,
 } from '@/lib/summer/versioning';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (err) {
-    console.error('Summer version GET error:', err);
+    logServerError('Summer version GET error', err);
     return ServerErrors.internal('version retrieval');
   }
 }

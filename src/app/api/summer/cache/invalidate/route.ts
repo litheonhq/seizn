@@ -6,6 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { getSemanticCache } from '@/lib/summer/cache';
 
 /**
@@ -101,7 +102,7 @@ export async function DELETE(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Cache invalidation error:', err);
+    logServerError('Cache invalidation error', err);
     return ServerErrors.internal('cache_invalidate');
   }
 }

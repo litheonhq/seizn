@@ -6,6 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { NotFoundErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { explanationStore } from '../route';
 
 /**
@@ -118,7 +119,7 @@ export async function GET(
 
     return response;
   } catch (err) {
-    console.error('Summer explain retrieve error:', err);
+    logServerError('Summer explain retrieve error', err);
     return ServerErrors.internal('explain-retrieve');
   }
 }
@@ -209,7 +210,7 @@ export async function DELETE(
 
     return response;
   } catch (err) {
-    console.error('Summer explain delete error:', err);
+    logServerError('Summer explain delete error', err);
     return ServerErrors.internal('explain-delete');
   }
 }

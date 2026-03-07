@@ -23,6 +23,7 @@ import {
   restoreVersion,
   verifyCollectionAccess,
 } from '@/lib/summer/versioning';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (err) {
-    console.error('Summer version restore error:', err);
+    logServerError('Summer version restore error', err);
     const message = err instanceof Error ? err.message : 'version restoration';
     return ServerErrors.internal(message);
   }

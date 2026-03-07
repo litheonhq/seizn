@@ -6,6 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { getSemanticCache, lookupCache as _lookupCache, storeInCache } from '@/lib/summer/cache';
 import { getEmbeddingProvider } from '@/lib/summer/embedding';
 import type { CachedResponse } from '@/lib/summer/cache';
@@ -171,7 +172,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Cache query error:', err);
+    logServerError('Cache query error', err);
     return ServerErrors.internal('cache_query');
   }
 }

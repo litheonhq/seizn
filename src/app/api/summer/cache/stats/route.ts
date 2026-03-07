@@ -6,6 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import { ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { getSemanticCache } from '@/lib/summer/cache';
 import { getBudgetRouter } from '@/lib/summer/router';
 
@@ -124,7 +125,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Cache stats error:', err);
+    logServerError('Cache stats error', err);
     return ServerErrors.internal('cache_stats');
   }
 }
@@ -216,7 +217,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Cache stats reset error:', err);
+    logServerError('Cache stats reset error', err);
     return ServerErrors.internal('cache_stats_reset');
   }
 }

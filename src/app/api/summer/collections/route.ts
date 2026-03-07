@@ -6,6 +6,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { logServerError } from '@/lib/server/logger';
 
 // GET /api/summer/collections - list
 export async function GET(request: NextRequest) {
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, collections: data ?? [] });
   } catch (err) {
-    console.error('Summer collections GET error:', err);
+    logServerError('Summer collections GET error', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, collection: data });
   } catch (err) {
-    console.error('Summer collections POST error:', err);
+    logServerError('Summer collections POST error', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -178,7 +179,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true, deleted: data });
   } catch (err) {
-    console.error('Summer collections DELETE error:', err);
+    logServerError('Summer collections DELETE error', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
+import { logServerError } from '@/lib/server/logger';
 import { getQualityMetrics, getQualityTrend } from '@/lib/summer/retops';
 import type { TimePeriod } from '@/lib/summer/retops/types';
 
@@ -101,7 +102,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('RetOps quality error:', err);
+    logServerError('RetOps quality error', err);
 
     return NextResponse.json(
       {

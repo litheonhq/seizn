@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
+import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
 // POST /api/summer/feedback
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
-    console.error('Summer feedback error:', err);
+    logServerError('Summer feedback error', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

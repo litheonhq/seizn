@@ -23,6 +23,8 @@ import {
   verifyCollectionAccess,
   VersionType,
 } from '@/lib/summer/versioning';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/summer/versions - Create new version
 export async function POST(request: NextRequest) {
@@ -134,7 +136,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('Summer versions POST error:', err);
+    logServerError('Summer versions POST error', err);
     return ServerErrors.internal('version creation');
   }
 }
@@ -155,8 +157,8 @@ export async function GET(request: NextRequest) {
     // Get query params
     const { searchParams } = new URL(request.url);
     const collectionId = searchParams.get('collection_id');
-    const limit = Math.min(parseInt(searchParams.get('limit') ?? '20', 10), 100);
-    const offset = parseInt(searchParams.get('offset') ?? '0', 10);
+    const limit = boundedInt(searchParams.get('limit'), 20, 1, 100);
+    const offset = boundedInt(searchParams.get('offset'), 0, 0, 100_000);
     const includeInactive = searchParams.get('include_inactive') === 'true';
 
     if (!collectionId) {
@@ -212,7 +214,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('Summer versions GET error:', err);
+    logServerError('Summer versions GET error', err);
     return ServerErrors.internal('version listing');
   }
 }

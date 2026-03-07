@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { batchRerank } from '@/lib/summer/reranker';
 import type { RerankerModel, RerankDocument } from '@/lib/summer/reranker';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/summer/rerank/batch
@@ -198,7 +199,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer rerank batch error:', err);
+    logServerError('Summer rerank batch error', err);
 
     if (err instanceof Error) {
       if (err.message.includes('API_KEY not configured')) {

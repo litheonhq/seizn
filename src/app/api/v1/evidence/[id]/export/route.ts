@@ -16,6 +16,7 @@ import {
   exportToProvN,
   exportToSignedZip,
 } from '@/lib/provenance/evidence-pack';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -225,7 +226,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         );
     }
   } catch (error) {
-    console.error('[EvidenceExport] GET error:', error);
+    logServerError('[EvidenceExport] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
