@@ -33,7 +33,7 @@ type DegradedSearchClient = {
 export type DegradedKeywordSearchResult = {
   id: string;
   content: string;
-  memory_type?: string;
+  memory_type: string;
   similarity: number;
 };
 
@@ -113,7 +113,7 @@ export async function runDegradedKeywordSearch(params: {
       results: (data || []).map((row, index) => ({
         id: row.id,
         content: row.content,
-        memory_type: row.memory_type || undefined,
+        memory_type: row.memory_type || 'fact',
         similarity: Math.max(0.1, 1 - index * 0.05),
       })),
       error: null,
@@ -132,7 +132,7 @@ export async function runDegradedKeywordSearch(params: {
     results: (data || []).map((row, index) => ({
       id: row.id,
       content: row.content,
-      memory_type: row.memory_type || undefined,
+      memory_type: row.memory_type || 'fact',
       similarity: Math.max(0.1, 1 - index * 0.05),
     })),
     error: null,

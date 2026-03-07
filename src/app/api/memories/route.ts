@@ -55,6 +55,10 @@ import {
   validateMemoryImagePayload,
   type MemoryImageAttachmentRecord,
 } from '@/lib/memory/image-attachments';
+import {
+  runDegradedKeywordSearch,
+  shouldUseDegradedKeywordSearchFallback,
+} from '@/lib/memory/degraded-keyword-search';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -194,68 +198,6 @@ function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
     return null;
   }
   return raw as SearchMode;
-}
-
-function shouldUseDegradedKeywordSearchFallback(error: Error): boolean {
-  const message = error.message.toLowerCase();
-  const missingSearchFunction =
-    message.includes('does not exist') &&
-    (message.includes('keyword_search_memories') ||
-      message.includes('hybrid_search_memories') ||
-      message.includes('search_memories'));
-  return (
-    message.includes('operator does not exist: text = uuid') ||
-    missingSearchFunction
-  );
-}
-
-async function runDegradedKeywordSearch(params: {
-  supabase: ReturnType<typeof createServerClient>;
-  userId: string;
-  queryText: string;
-  limit: number;
-  namespaceParam: string | null;
-}): Promise<{ results: SearchResultRow[] | null; error: Error | null }> {
-  let queryBuilder = params.supabase
-    .from('memories')
-    .select(MEMORY_SELECT_FIELDS)
-    .eq('user_id', params.userId)
-    .eq('is_deleted', false)
-    .order('created_at', { ascending: false })
-    .limit(params.limit);
-
-  if (params.namespaceParam) {
-    queryBuilder = queryBuilder.eq('namespace', params.namespaceParam);
-  }
-
-  const normalizedQuery = params.queryText.trim();
-  if (normalizedQuery.length > 0) {
-    const terms = Array.from(
-      new Set(
-        normalizedQuery
-      .toLowerCase()
-      .split(/\s+/)
-      .map((term) => term.replace(/[^\p{L}\p{N}_-]/gu, ''))
-      .filter((term) => term.length >= 2)
-      )
-    ).slice(0, 5);
-
-    if (terms.length > 0) {
-      const orExpr = terms
-        .map((term) => `content.ilike.%${escapeLikePattern(term)}%`)
-        .join(',');
-      queryBuilder = queryBuilder.or(orExpr);
-    } else {
-      queryBuilder = queryBuilder.ilike('content', `%${escapeLikePattern(normalizedQuery)}%`);
-    }
-  }
-
-  const { data, error } = await queryBuilder;
-  if (error) {
-    return { results: null, error: new Error(error.message || 'degraded_keyword_search_failed') };
-  }
-
-  return { results: (data as SearchResultRow[] | null) || [], error: null };
 }
 
 async function resolveAuth(
@@ -674,7 +616,7 @@ export async function GET(request: NextRequest) {
       const { data: memories, error: browseError, count } = await q;
 
       if (browseError) {
-        console.error('[api/memories] Browse error:', browseError);
+        logServerError('[api/memories] Browse error', browseError, { userId, namespace });
         if (keyId) {
           await logRequest(
             { userId, keyId, endpoint: '/api/memories', method: 'GET', startTime },
@@ -694,7 +636,12 @@ export async function GET(request: NextRequest) {
 
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: memories?.length || 0,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[api/memories] Browse audit log failed', error, {
+          userId,
+          namespace,
+        });
+      });
 
       const response = NextResponse.json({
         success: true,
@@ -763,7 +710,13 @@ export async function GET(request: NextRequest) {
         resultCount: payload.resultCount,
         fallbackReason: payload.fallbackReason || null,
         errorCode: payload.errorCode || null,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[api/memories] Semantic cache event failed', error, {
+          userId,
+          namespace,
+          resolvedMode: 'slot',
+        });
+      });
     };
 
     // Handle slot lookups
@@ -783,7 +736,13 @@ export async function GET(request: NextRequest) {
         logMemoryAccess(request, userId, keyId ?? undefined, 'read', {
           memoryId: `slot:${slotKey}`,
           query,
-        }).catch(console.error);
+        }).catch((error) => {
+          logServerError('[api/memories] Slot audit log failed', error, {
+            userId,
+            namespace,
+            slotKey,
+          });
+        });
 
         if (slotValue) {
           recordSemanticCacheOutcome({
@@ -843,11 +802,23 @@ export async function GET(request: NextRequest) {
           { embedding: 0 }
         );
       }
-      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch(console.error);
+      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch((error) => {
+        logServerError('[api/memories] Cache-hit access tracking failed', error, {
+          userId,
+          namespace,
+          actualMode,
+        });
+      });
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
         query,
-      }).catch(console.error);
+      }).catch((error) => {
+        logServerError('[api/memories] Cache-hit audit log failed', error, {
+          userId,
+          namespace,
+          actualMode,
+        });
+      });
       recordSemanticCacheOutcome({
         resolvedMode: actualMode,
         cacheHit: true,
