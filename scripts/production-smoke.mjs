@@ -334,6 +334,9 @@ async function runBrowserSmoke(baseUrl, email, password, queryText) {
     await page.getByTestId('playground-namespace-input').fill('production-smoke', {
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
+    await page.getByRole('button', { name: /keyword/i }).click({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
 
     const dashboardStats = await page.evaluate(async () => {
       const response = await fetch('/api/dashboard/stats');
