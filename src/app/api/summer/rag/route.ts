@@ -4,6 +4,7 @@ import { ragQuery, ragQueryStream } from '@/lib/summer/rag-pipeline';
 import type { RAGOptions, RAGStreamChunk } from '@/lib/summer/rag-pipeline';
 import { hasFeature } from '@/lib/plan-limits';
 import { buildCorsPreflightHeaders } from '@/lib/security/cors';
+import { logServerError } from '@/lib/server/logger';
 
 // ===========================================
 // Request/Response Types
@@ -277,7 +278,12 @@ export async function POST(request: NextRequest) {
                     output: chunk.usage?.llm_output_tokens,
                     embedding: chunk.usage?.embedding_tokens,
                   }
-                ).catch(console.error);
+                ).catch((logError) => {
+                  logServerError('Summer RAG streaming success log failed', logError, {
+                    userId,
+                    keyId,
+                  });
+                });
               }
             }
 
@@ -293,7 +299,12 @@ export async function POST(request: NextRequest) {
             logRequest(
               { userId, keyId, endpoint: '/api/summer/rag', method: 'POST', startTime },
               500
-            ).catch(console.error);
+            ).catch((logError) => {
+              logServerError('Summer RAG streaming failure log failed', logError, {
+                userId,
+                keyId,
+              });
+            });
           }
         },
       });
@@ -356,7 +367,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Summer RAG error:', error);
+    logServerError('Summer RAG error', error);
 
     return NextResponse.json(
       {

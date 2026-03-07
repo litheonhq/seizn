@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 import { getStats } from '@/lib/summer/retops';
 import type { TimePeriod } from '@/lib/summer/retops/types';
 
@@ -57,10 +59,7 @@ export async function GET(request: NextRequest) {
     const period = (searchParams.get('period') as TimePeriod) || '24h';
     const collectionId = searchParams.get('collectionId') || undefined;
     const includeTopQueries = searchParams.get('includeTopQueries') !== 'false';
-    const topQueriesLimit = Math.min(
-      50,
-      Math.max(1, parseInt(searchParams.get('topQueriesLimit') || '10', 10))
-    );
+    const topQueriesLimit = boundedInt(searchParams.get('topQueriesLimit'), 10, 1, 50);
 
     // Validate period
     const validPeriods: TimePeriod[] = ['1h', '6h', '24h', '7d', '30d'];
@@ -107,7 +106,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('RetOps stats error:', err);
+    logServerError('RetOps stats error', err);
 
     return NextResponse.json(
       {

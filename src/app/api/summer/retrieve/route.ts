@@ -3,6 +3,7 @@ import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from 
 import { retrieve } from '@/lib/summer';
 import { estimateTokens } from '@/lib/summer/utils/tokens';
 import { ValidationErrors, ServerErrors } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/summer/retrieve
 // Body:
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer retrieve error:', err);
+    logServerError('Summer retrieve error', err);
     return ServerErrors.internal('summer_retrieve');
   }
 }

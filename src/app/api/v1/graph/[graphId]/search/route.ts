@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createServerClient } from '@/lib/supabase';
 import { createKnowledgeGraphStore } from '@/lib/graph/graphrag';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ graphId: string }>;
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
     const type = searchParams.get('type');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const limit = boundedInt(searchParams.get('limit'), 20, 1, 100);
 
     if (!query) {
       return NextResponse.json(
@@ -70,7 +72,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       count: filteredEntities.length,
     });
   } catch (error) {
-    console.error('[GraphSearch] GET error:', error);
+    logServerError('[GraphSearch] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 import { getAlerts, detectAnomalies, checkThresholds } from '@/lib/summer/retops';
 import type { AlertStatus, AlertSeverity } from '@/lib/summer/retops/types';
 
@@ -52,10 +54,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status') as AlertStatus | null;
     const severity = searchParams.get('severity') as AlertSeverity | null;
-    const limit = Math.min(
-      100,
-      Math.max(1, parseInt(searchParams.get('limit') || '50', 10))
-    );
+    const limit = boundedInt(searchParams.get('limit'), 50, 1, 100);
 
     // Validate status
     const validStatuses: AlertStatus[] = ['active', 'acknowledged', 'resolved'];
@@ -118,7 +117,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('RetOps alerts error:', err);
+    logServerError('RetOps alerts error', err);
 
     return NextResponse.json(
       {
@@ -207,7 +206,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('RetOps alert detection error:', err);
+    logServerError('RetOps alert detection error', err);
 
     return NextResponse.json(
       {

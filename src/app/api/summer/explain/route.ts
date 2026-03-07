@@ -12,6 +12,7 @@ import {
   ValidationErrors,
   ServerErrors,
 } from '@/lib/api-error';
+import { logServerError } from '@/lib/server/logger';
 import { explainRetrieval } from '@/lib/summer/explain';
 import type { ExplainRequest, ExplainResponse as _ExplainResponse, StoredExplanation } from '@/lib/summer/explain/types';
 
@@ -208,7 +209,7 @@ export async function POST(request: NextRequest) {
 
     return apiResponse;
   } catch (err) {
-    console.error('Summer explain error:', err);
+    logServerError('Summer explain error', err);
 
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     const isUserError = errorMessage.includes('not found') || errorMessage.includes('invalid');

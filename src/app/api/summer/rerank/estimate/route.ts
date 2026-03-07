@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { estimateRerankCost, getAvailableModels } from '@/lib/summer/reranker';
 import type { RerankerModel } from '@/lib/summer/reranker';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/summer/rerank/estimate
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer rerank estimate error:', err);
+    logServerError('Summer rerank estimate error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -178,7 +179,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer rerank estimate GET error:', err);
+    logServerError('Summer rerank estimate GET error', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

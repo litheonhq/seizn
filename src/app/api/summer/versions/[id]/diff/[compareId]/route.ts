@@ -22,6 +22,8 @@ import {
   generateVersionDiff,
   verifyCollectionAccess,
 } from '@/lib/summer/versioning';
+import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string; compareId: string }>;
@@ -45,10 +47,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Get query params
     const { searchParams } = new URL(request.url);
     const includeChunkDiffs = searchParams.get('include_chunks') === 'true';
-    const maxChunksPerDoc = Math.min(
-      parseInt(searchParams.get('max_chunks_per_doc') ?? '50', 10),
-      100
-    );
+    const maxChunksPerDoc = boundedInt(searchParams.get('max_chunks_per_doc'), 50, 1, 100);
 
     // Get version pair
     let versionPair;
@@ -127,7 +126,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (err) {
-    console.error('Summer version diff error:', err);
+    logServerError('Summer version diff error', err);
     return ServerErrors.internal('version comparison');
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { acknowledgeAlert } from '@/lib/summer/retops';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/summer/retops/alerts/[alertId]/acknowledge
@@ -90,7 +91,7 @@ export async function POST(
 
     return response;
   } catch (err) {
-    console.error('Alert acknowledge error:', err);
+    logServerError('Alert acknowledge error', err);
 
     return NextResponse.json(
       {

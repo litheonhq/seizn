@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
 import { createServerClient } from '@/lib/supabase';
 import { createGraphRAGRetriever } from '@/lib/graph/graphrag';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ graphId: string }>;
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('[GraphContext] POST error:', error);
+    logServerError('[GraphContext] POST error', error);
     return NextResponse.json(
       { error: 'Internal Server Error', message: error instanceof Error ? error.message : 'Unknown' },
       { status: 500 }

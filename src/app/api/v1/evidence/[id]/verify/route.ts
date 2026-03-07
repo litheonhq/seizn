@@ -10,6 +10,7 @@ import {
   createEvidencePackStore,
   createEvidencePackVerifier,
 } from '@/lib/provenance/evidence-pack';
+import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
-    console.error('[EvidenceVerify] GET error:', error);
+    logServerError('[EvidenceVerify] GET error', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

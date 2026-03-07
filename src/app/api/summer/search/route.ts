@@ -3,6 +3,7 @@ import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from 
 import { search } from '@/lib/summer/search';
 import type { SearchOptions, SearchType, SearchFilter, DateRangeFilter } from '@/lib/summer/search';
 import { estimateTokens } from '@/lib/summer/utils/tokens';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/summer/search
@@ -193,7 +194,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error('Summer search error:', err);
+    logServerError('Summer search error', err);
 
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     const isUserError = errorMessage.includes('not found') || errorMessage.includes('permission');

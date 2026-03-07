@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, isAuthError, authErrorResponse, logRequest } from '@/lib/api-auth';
 import { resolveAlert } from '@/lib/summer/retops';
+import { logServerError } from '@/lib/server/logger';
 
 /**
  * POST /api/summer/retops/alerts/[alertId]/resolve
@@ -90,7 +91,7 @@ export async function POST(
 
     return response;
   } catch (err) {
-    console.error('Alert resolve error:', err);
+    logServerError('Alert resolve error', err);
 
     return NextResponse.json(
       {
