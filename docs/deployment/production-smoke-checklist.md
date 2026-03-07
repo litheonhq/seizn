@@ -36,7 +36,10 @@ Current automated smoke coverage:
 
 - `GET /api/keys`
 - `POST /api/keys`
+- `GET /dashboard/playground` with Auth.js session cookie
+- `GET /api/dashboard/stats` with Auth.js session cookie
 - `POST /api/playground/query`
+- Trace tab rendering on `/dashboard/playground`
 - `GET /api/traces`
 - `POST /api/v1/memories`
 - `GET /api/v1/memories`

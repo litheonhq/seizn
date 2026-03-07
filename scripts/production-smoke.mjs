@@ -1,20 +1,24 @@
 import { spawnSync } from 'child_process';
 import { config as loadEnv } from 'dotenv';
 import { existsSync } from 'fs';
-import { readFile, rm, writeFile } from 'fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
+import { encode } from '@auth/core/jwt';
+import { chromium } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, '..');
 const smokeEnvPath = resolve(repoRoot, '.env.production.smoke.local');
 const tempEnvPath = join(tmpdir(), `seizn-production-env-${process.pid}.tmp`);
+const browserArtifactsDir = resolve(repoRoot, 'output', 'playwright');
 const DEFAULT_SMOKE_EMAIL = 'smoke+production-dashboard@seizn.test';
 const DEFAULT_SMOKE_NAME = 'Production Smoke Account';
 const DEFAULT_SMOKE_KEY_NAME = 'Production Smoke Key';
+const BROWSER_SMOKE_TIMEOUT_MS = 30_000;
 
 function stripWrappingQuotes(value) {
   return value.replace(/^['"]|['"]$/g, '').trim();
@@ -38,6 +42,10 @@ function maskEmail(email) {
 
 function generatePassword() {
   return `Smoke!${crypto.randomBytes(12).toString('base64url')}Aa1`;
+}
+
+function getAuthJsSessionCookieName() {
+  return '__Secure-authjs.session-token';
 }
 
 function runVercelEnvPull() {
@@ -230,6 +238,24 @@ async function createAccessToken(email, password) {
   return data.session.access_token;
 }
 
+async function createAuthJsSessionToken({ userId, email, name, organizationId }) {
+  const cookieName = getAuthJsSessionCookieName();
+
+  return encode({
+    token: {
+      id: userId,
+      sub: userId,
+      ...(email ? { email } : {}),
+      ...(name ? { name } : {}),
+      ...(organizationId ? { organizationId } : {}),
+      organizationSelection: organizationId ? 'organization' : 'personal',
+    },
+    secret: requireEnv('NEXTAUTH_SECRET'),
+    salt: cookieName,
+    maxAge: 60 * 60,
+  });
+}
+
 async function requestJson(baseUrl, path, { method = 'GET', bearerToken, apiKey, body } = {}) {
   const headers = {};
 
@@ -302,107 +328,213 @@ async function ensureSmokeKey(baseUrl, bearerToken) {
   };
 }
 
-async function runSmoke(baseUrl, bearerToken) {
+async function runBrowserSmoke(baseUrl, sessionToken, queryText) {
+  await mkdir(browserArtifactsDir, { recursive: true });
+
+  const browser = await chromium.launch({ headless: true });
+  let page = null;
+
+  try {
+    const context = await browser.newContext();
+    await context.addCookies([
+      {
+        name: getAuthJsSessionCookieName(),
+        value: sessionToken,
+        url: baseUrl,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Lax',
+        expires: Math.floor(Date.now() / 1000) + 60 * 60,
+      },
+    ]);
+
+    page = await context.newPage();
+    await page.goto(new URL('/dashboard/playground', baseUrl).toString(), {
+      waitUntil: 'domcontentloaded',
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.waitForURL(/dashboard\/playground/, { timeout: BROWSER_SMOKE_TIMEOUT_MS });
+    await page.getByTestId('playground-query-input').fill(queryText, {
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+
+    const dashboardStats = await page.evaluate(async () => {
+      const response = await fetch('/api/dashboard/stats');
+      let body = null;
+
+      try {
+        body = await response.json();
+      } catch {
+        body = null;
+      }
+
+      return { status: response.status, body };
+    });
+
+    if (dashboardStats.status !== 200) {
+      throw new Error(
+        `Dashboard stats smoke failed: ${dashboardStats.status} ${JSON.stringify(dashboardStats.body)}`
+      );
+    }
+
+    await page.getByTestId('playground-run-query').click({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.getByTestId('playground-result-item').first().waitFor({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+
+    const resultText = (await page.getByTestId('playground-results-panel').textContent()) || '';
+    if (!resultText.includes(queryText)) {
+      throw new Error('Playground browser smoke did not render the expected query result');
+    }
+
+    await page.getByTestId('playground-tab-trace').click({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+    await page.getByTestId('playground-trace-latency').waitFor({
+      timeout: BROWSER_SMOKE_TIMEOUT_MS,
+    });
+
+    await context.close();
+
+    return [
+      { path: '/dashboard/playground [GET session]', status: 200 },
+      { path: '/api/dashboard/stats [GET session]', status: 200 },
+      { path: '/dashboard/playground query [UI]', status: 200 },
+      { path: '/dashboard/playground trace [UI]', status: 200 },
+    ];
+  } catch (error) {
+    if (page) {
+      const screenshotPath = resolve(browserArtifactsDir, 'production-smoke-browser-failure.png');
+      await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {});
+
+      if (error instanceof Error) {
+        error.message = `${error.message} (screenshot: ${screenshotPath})`;
+      }
+    }
+
+    throw error;
+  } finally {
+    await browser.close();
+  }
+}
+
+async function runSmoke(baseUrl, bearerToken, sessionToken) {
   const results = [];
+  let memoryId = null;
+  let smokeApiKey = null;
+  let capturedError = null;
 
-  const keysGet = await requestJson(baseUrl, '/api/keys', { bearerToken });
-  results.push({ path: '/api/keys [GET]', status: keysGet.status });
-  if (!keysGet.ok) {
-    throw new Error(`API keys GET smoke failed: ${keysGet.status} ${JSON.stringify(keysGet.json)}`);
-  }
-
-  const keyResult = await ensureSmokeKey(baseUrl, bearerToken);
-  results.push({
-    path: '/api/keys [POST]',
-    status: 200,
-    detail: keyResult.action,
-  });
-
-  if (!keyResult.apiKey) {
-    throw new Error('Smoke API key was not returned');
-  }
-
-  const memoryContent = `production smoke ${new Date().toISOString()}`;
-  const createMemory = await requestJson(baseUrl, '/api/v1/memories', {
-    method: 'POST',
-    apiKey: keyResult.apiKey,
-    body: {
-      content: memoryContent,
-      memory_type: 'fact',
-      namespace: 'production-smoke',
-      tags: ['production-smoke'],
-    },
-  });
-  results.push({ path: '/api/v1/memories [POST]', status: createMemory.status });
-  if (!createMemory.ok) {
-    throw new Error(
-      `Memory create smoke failed: ${createMemory.status} ${JSON.stringify(createMemory.json)}`
-    );
-  }
-
-  const memoryId = createMemory.json?.data?.memory?.id || createMemory.json?.memory?.id;
-  if (!memoryId) {
-    throw new Error('Smoke memory id missing from create response');
-  }
-
-  const searchMemory = await requestJson(
-    baseUrl,
-    `/api/v1/memories?query=${encodeURIComponent(memoryContent)}&namespace=production-smoke&mode=keyword`,
-    {
-      apiKey: keyResult.apiKey,
+  try {
+    const keysGet = await requestJson(baseUrl, '/api/keys', { bearerToken });
+    results.push({ path: '/api/keys [GET]', status: keysGet.status });
+    if (!keysGet.ok) {
+      throw new Error(`API keys GET smoke failed: ${keysGet.status} ${JSON.stringify(keysGet.json)}`);
     }
-  );
-  results.push({ path: '/api/v1/memories [GET]', status: searchMemory.status });
-  if (!searchMemory.ok) {
-    throw new Error(
-      `Memory search smoke failed: ${searchMemory.status} ${JSON.stringify(searchMemory.json)}`
-    );
-  }
 
-  const playgroundQuery = await requestJson(baseUrl, '/api/playground/query', {
-    method: 'POST',
-    bearerToken,
-    body: {
-      query: memoryContent,
-      namespace: 'production-smoke',
-      topK: 3,
-      mode: 'keyword',
-      rerank: false,
-    },
-  });
-  results.push({ path: '/api/playground/query [POST]', status: playgroundQuery.status });
-  if (!playgroundQuery.ok || playgroundQuery.json?.success !== true) {
-    throw new Error(
-      `Playground query smoke failed: ${playgroundQuery.status} ${JSON.stringify(playgroundQuery.json)}`
-    );
-  }
+    const keyResult = await ensureSmokeKey(baseUrl, bearerToken);
+    results.push({
+      path: '/api/keys [POST]',
+      status: 200,
+      detail: keyResult.action,
+    });
 
-  const tracesList = await requestJson(baseUrl, '/api/traces?limit=1', {
-    apiKey: keyResult.apiKey,
-  });
-  results.push({ path: '/api/traces [GET]', status: tracesList.status });
-  if (!tracesList.ok) {
-    throw new Error(
-      `Traces list smoke failed: ${tracesList.status} ${JSON.stringify(tracesList.json)}`
-    );
-  }
-
-  const deleteMemory = await requestJson(
-    baseUrl,
-    `/api/v1/memories?ids=${encodeURIComponent(memoryId)}`,
-    {
-      method: 'DELETE',
-      apiKey: keyResult.apiKey,
+    if (!keyResult.apiKey) {
+      throw new Error('Smoke API key was not returned');
     }
-  );
-  results.push({ path: '/api/v1/memories [DELETE]', status: deleteMemory.status });
-  if (!deleteMemory.ok) {
-    throw new Error(
-      `Memory delete smoke failed: ${deleteMemory.status} ${JSON.stringify(deleteMemory.json)}`
-    );
-  }
+    smokeApiKey = keyResult.apiKey;
 
-  return results;
+    const memoryContent = `production smoke ${new Date().toISOString()}`;
+    const createMemory = await requestJson(baseUrl, '/api/v1/memories', {
+      method: 'POST',
+      apiKey: smokeApiKey,
+      body: {
+        content: memoryContent,
+        memory_type: 'fact',
+        namespace: 'production-smoke',
+        tags: ['production-smoke'],
+      },
+    });
+    results.push({ path: '/api/v1/memories [POST]', status: createMemory.status });
+    if (!createMemory.ok) {
+      throw new Error(
+        `Memory create smoke failed: ${createMemory.status} ${JSON.stringify(createMemory.json)}`
+      );
+    }
+
+    memoryId = createMemory.json?.data?.memory?.id || createMemory.json?.memory?.id;
+    if (!memoryId) {
+      throw new Error('Smoke memory id missing from create response');
+    }
+
+    const searchMemory = await requestJson(
+      baseUrl,
+      `/api/v1/memories?query=${encodeURIComponent(memoryContent)}&namespace=production-smoke&mode=keyword`,
+      {
+        apiKey: smokeApiKey,
+      }
+    );
+    results.push({ path: '/api/v1/memories [GET]', status: searchMemory.status });
+    if (!searchMemory.ok) {
+      throw new Error(
+        `Memory search smoke failed: ${searchMemory.status} ${JSON.stringify(searchMemory.json)}`
+      );
+    }
+
+    const playgroundQuery = await requestJson(baseUrl, '/api/playground/query', {
+      method: 'POST',
+      bearerToken,
+      body: {
+        query: memoryContent,
+        namespace: 'production-smoke',
+        topK: 3,
+        mode: 'keyword',
+        rerank: false,
+      },
+    });
+    results.push({ path: '/api/playground/query [POST]', status: playgroundQuery.status });
+    if (!playgroundQuery.ok || playgroundQuery.json?.success !== true) {
+      throw new Error(
+        `Playground query smoke failed: ${playgroundQuery.status} ${JSON.stringify(playgroundQuery.json)}`
+      );
+    }
+
+    const tracesList = await requestJson(baseUrl, '/api/traces?limit=1', {
+      apiKey: smokeApiKey,
+    });
+    results.push({ path: '/api/traces [GET]', status: tracesList.status });
+    if (!tracesList.ok) {
+      throw new Error(
+        `Traces list smoke failed: ${tracesList.status} ${JSON.stringify(tracesList.json)}`
+      );
+    }
+
+    const browserResults = await runBrowserSmoke(baseUrl, sessionToken, memoryContent);
+    results.push(...browserResults);
+
+    return results;
+  } catch (error) {
+    capturedError = error;
+    throw error;
+  } finally {
+    if (memoryId && smokeApiKey) {
+      const deleteMemory = await requestJson(
+        baseUrl,
+        `/api/v1/memories?ids=${encodeURIComponent(memoryId)}`,
+        {
+          method: 'DELETE',
+          apiKey: smokeApiKey,
+        }
+      );
+      results.push({ path: '/api/v1/memories [DELETE]', status: deleteMemory.status });
+      if (!deleteMemory.ok && !capturedError) {
+        throw new Error(
+          `Memory delete smoke failed: ${deleteMemory.status} ${JSON.stringify(deleteMemory.json)}`
+        );
+      }
+    }
+  }
 }
 
 function printResults(summary) {
@@ -443,7 +575,14 @@ async function main() {
   });
 
   const accessToken = await createAccessToken(smokeEmail, smokePassword);
-  const results = await runSmoke(nextAuthUrl, accessToken);
+  const organizationId = await readOrganizationId(supabase, userId);
+  const sessionToken = await createAuthJsSessionToken({
+    userId,
+    email: smokeEmail,
+    name: smokeName,
+    organizationId,
+  });
+  const results = await runSmoke(nextAuthUrl, accessToken, sessionToken);
   printResults({
     email: smokeEmail,
     created,

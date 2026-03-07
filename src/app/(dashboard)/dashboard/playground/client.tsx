@@ -197,6 +197,7 @@ export function PlaygroundClient() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("dashboard.playground.queryPlaceholder")}
+              data-testid="playground-query-input"
               className="w-full h-24 px-4 py-3 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent resize-none"
             />
           </div>
@@ -296,6 +297,7 @@ export function PlaygroundClient() {
             onClick={runQuery}
             disabled={isLoading || !query.trim()}
             data-action="run-query"
+            data-testid="playground-run-query"
             className="w-full py-3 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold hover:from-szn-accent/90 hover:to-szn-accent-2/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? (
@@ -320,6 +322,7 @@ export function PlaygroundClient() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
+                data-testid={`playground-tab-${tab}`}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === tab
                     ? "bg-szn-card text-szn-text-1 border-b-2 border-szn-accent"
@@ -446,10 +449,11 @@ function ResultsPanel({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-testid="playground-results-panel">
       {results.map((result, index) => (
         <div
           key={result.id}
+          data-testid="playground-result-item"
           className="p-4 rounded-xl bg-szn-bg border border-szn-border hover:border-szn-accent/30 transition-colors"
         >
           <div className="flex items-start gap-3">
@@ -507,7 +511,10 @@ function TracePanel({
     <div className="space-y-4">
       {/* Total Latency */}
       {totalLatency > 0 && (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-szn-accent/10 border border-szn-accent/20">
+        <div
+          data-testid="playground-trace-latency"
+          className="flex items-center justify-between p-3 rounded-lg bg-szn-accent/10 border border-szn-accent/20"
+        >
           <span className="text-sm font-medium text-szn-accent">
             {t("dashboard.playground.totalLatency")}
           </span>
