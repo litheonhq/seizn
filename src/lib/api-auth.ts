@@ -9,6 +9,7 @@ import {
   recordAuthFailureAttempt,
 } from './rate-limit';
 import { logAuthFailure, logSuspiciousActivity } from './audit';
+import { logServerWarn } from './server/logger';
 import {
   ErrorCodes,
 } from './api-error';
@@ -223,7 +224,12 @@ export async function authenticateRequest(
       plan,
       remaining: rateLimitResult.remaining,
       limit: rateLimitResult.limit,
-    }).catch(console.error);
+    }).catch((error) => {
+      logServerWarn('Failed to log rate-limit suspicious activity', error, {
+        userId: keyData.user_id,
+        plan,
+      });
+    });
     return {
       authError: {
         code: ErrorCodes.RATE_LIMIT_EXCEEDED,

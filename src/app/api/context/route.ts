@@ -10,11 +10,20 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createContextService, type ContextFormat, type ContextOptions } from '@/lib/spring/memory-v4/context-service';
 import { boundedInt } from '@/lib/parse-params';
+import { logServerError } from '@/lib/server/logger';
+
+function parseTierBudget(raw: string | null): number | undefined {
+  if (raw == null || raw.trim().length === 0) {
+    return undefined;
+  }
+
+  return boundedInt(raw, 0, 0, 100);
+}
 
 /**
  * Resolve userId from session (dashboard) or API key (MCP/SDK).
@@ -30,9 +39,9 @@ async function resolveUserId(
   }
 
   // Fall back to session auth (dashboard users)
-  const session = await auth();
-  if (session?.user?.id) {
-    return { userId: session.user.id };
+  const sessionUser = await getSessionUser();
+  if (sessionUser?.id) {
+    return { userId: sessionUser.id };
   }
 
   // Neither worked → return the API key error (more informative)
@@ -72,9 +81,9 @@ export async function GET(request: NextRequest) {
 
     if (hotBudget || warmBudget || coldBudget) {
       options.tierBudgets = {
-        hot: hotBudget ? parseInt(hotBudget) : undefined,
-        warm: warmBudget ? parseInt(warmBudget) : undefined,
-        cold: coldBudget ? parseInt(coldBudget) : undefined,
+        hot: parseTierBudget(hotBudget),
+        warm: parseTierBudget(warmBudget),
+        cold: parseTierBudget(coldBudget),
       };
     }
 
@@ -94,7 +103,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Context API error:', error);
+    logServerError('Context API error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get context' },
       { status: 500 }
@@ -131,7 +140,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('Context API error:', error);
+    logServerError('Context API error', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get context' },
       { status: 500 }

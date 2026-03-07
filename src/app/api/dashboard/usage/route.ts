@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { AuthErrors, ServerErrors } from '@/lib/api-error';
 import { logServerError } from '@/lib/server/logger';
@@ -7,8 +7,8 @@ import { logServerError } from '@/lib/server/logger';
 // GET /api/dashboard/usage - Get detailed usage analytics
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const sessionUser = await getSessionUser();
+    if (!sessionUser?.id) {
       return AuthErrors.unauthorized('usage analytics');
     }
 
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const period = searchParams.get('period') || '7d'; // 7d, 30d, 90d
 
     const supabase = createServerClient();
-    const userId = session.user.id;
+    const userId = sessionUser.id;
 
     // Calculate date range
     const now = new Date();
@@ -34,17 +34,29 @@ export async function GET(request: NextRequest) {
         startDate.setDate(now.getDate() - 7);
     }
 
-    // Get usage logs for the period
-    const { data: logs, error: logsError } = await supabase
-      .from('usage_logs')
-      .select('endpoint, method, status_code, embedding_tokens, cost_cents, latency_ms, created_at')
-      .eq('user_id', userId)
-      .gte('created_at', startDate.toISOString())
-      .order('created_at', { ascending: true });
+    const [
+      { data: logs, error: logsError },
+      { data: keys, error: keysError },
+    ] = await Promise.all([
+      supabase
+        .from('usage_logs')
+        .select('endpoint, method, status_code, embedding_tokens, cost_cents, latency_ms, created_at, api_key_id')
+        .eq('user_id', userId)
+        .gte('created_at', startDate.toISOString())
+        .order('created_at', { ascending: true }),
+      supabase
+        .from('api_keys')
+        .select('id, name, key_prefix')
+        .eq('user_id', userId),
+    ]);
 
     if (logsError) {
       logServerError('Usage logs error', logsError);
       return ServerErrors.database('fetch_usage');
+    }
+    if (keysError) {
+      logServerError('Usage API key lookup error', keysError, { userId });
+      return ServerErrors.database('fetch_usage_keys');
     }
 
     // Process data for charts
@@ -52,21 +64,7 @@ export async function GET(request: NextRequest) {
     const endpointBreakdown = processEndpoints(logs || []);
     const summary = calculateSummary(logs || []);
 
-    // Get per-API-key usage
-    const { data: keyUsage } = await supabase
-      .from('usage_logs')
-      .select('api_key_id, endpoint')
-      .eq('user_id', userId)
-      .gte('created_at', startDate.toISOString());
-
-    const apiKeyBreakdown = processApiKeyUsage(keyUsage || []);
-
-    // Get API key names
-    const { data: keys } = await supabase
-      .from('api_keys')
-      .select('id, name, key_prefix')
-      .eq('user_id', userId);
-
+    const apiKeyBreakdown = processApiKeyUsage(logs || []);
     const keyMap = new Map(keys?.map(k => [k.id, { name: k.name, prefix: k.key_prefix }]) || []);
 
     // Add names to key breakdown
@@ -100,6 +98,7 @@ interface LogEntry {
   cost_cents: number;
   latency_ms: number | null;
   created_at: string;
+  api_key_id?: string | null;
 }
 
 function processDaily(logs: LogEntry[], startDate: Date, endDate: Date) {
@@ -170,7 +169,7 @@ function processEndpoints(logs: LogEntry[]) {
     .sort((a, b) => b.calls - a.calls);
 }
 
-function processApiKeyUsage(logs: { api_key_id: string | null; endpoint: string }[]) {
+function processApiKeyUsage(logs: { api_key_id?: string | null }[]) {
   const keys: Record<string, number> = {};
 
   for (const log of logs) {

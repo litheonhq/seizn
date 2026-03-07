@@ -3,6 +3,10 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createQueryEmbedding } from '@/lib/ai';
 import { logServerError } from '@/lib/server/logger';
+import {
+  runDegradedKeywordSearch,
+  shouldUseDegradedKeywordSearchFallback,
+} from '@/lib/memory/degraded-keyword-search';
 
 interface PlaygroundQueryRequest {
   query: string;
@@ -11,79 +15,6 @@ interface PlaygroundQueryRequest {
   threshold?: number;
   mode?: 'vector' | 'hybrid' | 'keyword';
   rerank?: boolean;
-}
-
-function escapeLikePattern(input: string): string {
-  return input.replace(/[%_\\]/g, '\\$&');
-}
-
-function shouldUseDegradedKeywordSearchFallback(error: Error): boolean {
-  const message = error.message.toLowerCase();
-  const missingSearchFunction =
-    message.includes('does not exist') &&
-    (message.includes('keyword_search_memories') ||
-      message.includes('hybrid_search_memories') ||
-      message.includes('search_memories'));
-
-  return message.includes('operator does not exist: text = uuid') || missingSearchFunction;
-}
-
-async function runDegradedKeywordSearch(params: {
-  supabase: ReturnType<typeof createServerClient>;
-  userId: string;
-  queryText: string;
-  namespace: string;
-  limit: number;
-}): Promise<{ results: SearchResult[]; error: Error | null }> {
-  let queryBuilder = params.supabase
-    .from('memories')
-    .select('id, content, memory_type, created_at')
-    .eq('user_id', params.userId)
-    .eq('is_deleted', false)
-    .eq('namespace', params.namespace)
-    .order('created_at', { ascending: false })
-    .limit(params.limit);
-
-  const normalizedQuery = params.queryText.trim();
-  if (normalizedQuery.length > 0) {
-    const terms = Array.from(
-      new Set(
-        normalizedQuery
-          .toLowerCase()
-          .split(/\s+/)
-          .map((term) => term.replace(/[^\p{L}\p{N}_-]/gu, ''))
-          .filter((term) => term.length >= 2)
-      )
-    ).slice(0, 5);
-
-    if (terms.length > 0) {
-      const orExpr = terms
-        .map((term) => `content.ilike.%${escapeLikePattern(term)}%`)
-        .join(',');
-      queryBuilder = queryBuilder.or(orExpr);
-    } else {
-      queryBuilder = queryBuilder.ilike('content', `%${escapeLikePattern(normalizedQuery)}%`);
-    }
-  }
-
-  const { data, error } = await queryBuilder;
-  if (error) {
-    return {
-      results: [],
-      error: new Error(error.message || 'degraded_keyword_search_failed'),
-    };
-  }
-
-  return {
-    results: ((data as Array<{ id: string; content: string; memory_type?: string | null }> | null) || [])
-      .map((row, index) => ({
-        id: row.id,
-        content: row.content,
-        memory_type: row.memory_type || undefined,
-        similarity: Math.max(0.1, 1 - index * 0.05),
-      })),
-    error: null,
-  };
 }
 
 /**
@@ -169,7 +100,7 @@ export async function POST(request: NextRequest) {
         supabase,
         userId,
         queryText: query.trim(),
-        namespace,
+        namespaceParam: namespace,
         limit: topK,
       });
 
