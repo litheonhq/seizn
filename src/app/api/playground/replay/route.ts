@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { createQueryEmbedding } from '@/lib/ai';
+import { logServerError } from '@/lib/server/logger';
+import {
+  runDegradedKeywordSearch,
+  shouldUseDegradedKeywordSearchFallback,
+} from '@/lib/memory/degraded-keyword-search';
 
 interface ReplayRequest {
   originalLogId: string;
@@ -45,8 +50,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const requestUser = await getRequestUser(request);
+    if (!requestUser?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -58,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
-    const userId = session.user.id;
+    const userId = requestUser.id;
 
     // Fetch original log
     const { data: originalLog, error: logError } = await supabase
@@ -86,6 +91,13 @@ export async function POST(request: NextRequest) {
     const threshold = overrides.threshold ?? requestBody.threshold ?? 0.7;
     const mode = overrides.mode ?? (requestBody.mode as 'vector' | 'hybrid' | 'keyword') ?? 'vector';
     const rerank = overrides.rerank ?? false;
+    let resolvedMode = mode;
+    let fallback: {
+      applied: boolean;
+      from: typeof mode;
+      to: 'keyword';
+      reason: 'search_error';
+    } | null = null;
 
     // Execute new search
     let newResults: SearchResult[] = [];
@@ -127,8 +139,42 @@ export async function POST(request: NextRequest) {
       searchError = error;
     }
 
+    if (searchError && shouldUseDegradedKeywordSearchFallback(searchError)) {
+      const degraded = await runDegradedKeywordSearch({
+        supabase,
+        userId,
+        queryText: query.trim(),
+        namespaceParam: namespace,
+        limit: topK,
+      });
+
+      if (!degraded.error) {
+        newResults = degraded.results;
+        resolvedMode = 'keyword';
+        fallback = {
+          applied: true,
+          from: mode,
+          to: 'keyword',
+          reason: 'search_error',
+        };
+        searchError = null;
+      } else {
+        logServerError('Replay degraded keyword fallback failed', degraded.error, {
+          userId,
+          originalLogId,
+          requestedMode: mode,
+          namespace,
+        });
+      }
+    }
+
     if (searchError) {
-      console.error('Replay search error:', searchError);
+      logServerError('Replay search error', searchError, {
+        userId,
+        originalLogId,
+        requestedMode: mode,
+        namespace,
+      });
       return NextResponse.json({ error: 'Replay search failed' }, { status: 500 });
     }
 
@@ -206,7 +252,8 @@ export async function POST(request: NextRequest) {
           namespace,
           topK,
           threshold,
-          mode,
+          mode: resolvedMode,
+          requestedMode: mode,
           rerank,
         },
         results: newResults.map(r => ({
@@ -214,6 +261,7 @@ export async function POST(request: NextRequest) {
           content: r.content,
           similarity: r.similarity,
         })),
+        fallback,
       },
       diff: {
         latencyChange: newLatency - typedLog.latency_ms,
@@ -230,7 +278,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Replay error:', error);
+    logServerError('Replay error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
