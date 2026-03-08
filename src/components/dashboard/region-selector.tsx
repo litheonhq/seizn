@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   REGIONS,
   getRegionsForPlan,
@@ -8,7 +8,9 @@ import {
   getRegionMigrationInfo,
   type RegionCode,
 } from "@/config/regions";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { formatDate } from "@/lib/format-date";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface RegionSelectorProps {
   organizationId: string;
@@ -36,6 +38,7 @@ export function RegionSelector({
   onRegionChange,
   className = "",
 }: RegionSelectorProps) {
+  const historyRequestGuardRef = useRef(createLatestRequestGuard());
   const [selectedRegion, setSelectedRegion] = useState<RegionCode>(currentRegion);
   const [showModal, setShowModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -50,25 +53,39 @@ export function RegionSelector({
   const currentRegionConfig = REGIONS[currentRegion];
 
   const fetchHistory = useCallback(async () => {
+    const request = historyRequestGuardRef.current.begin();
     setIsLoadingHistory(true);
     try {
-      const res = await fetch(`/api/organizations/${organizationId}/region`);
+      const res = await fetch(`/api/organizations/${organizationId}/region`, {
+        signal: request.signal,
+      });
       const data = await res.json();
-      if (data.success) {
+      if (!res.ok) {
+        throw new Error(getErrorMessage(data?.message || data?.error, "Failed to fetch region history"));
+      }
+      if (historyRequestGuardRef.current.isCurrent(request.id) && data.success) {
         setHistory(data.history || []);
       }
     } catch (err) {
-      console.error("Failed to fetch region history:", err);
+      if (isAbortError(err) || !historyRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+      setError(getErrorMessage(err, "Failed to fetch region history"));
     } finally {
-      setIsLoadingHistory(false);
+      if (historyRequestGuardRef.current.isCurrent(request.id)) {
+        setIsLoadingHistory(false);
+      }
+      historyRequestGuardRef.current.finish(request.id);
     }
   }, [organizationId]);
 
   useEffect(() => {
     if (showHistoryModal) {
-      fetchHistory();
+      void fetchHistory();
     }
   }, [showHistoryModal, fetchHistory]);
+
+  useEffect(() => () => historyRequestGuardRef.current.cancel(), []);
 
   const handleRegionChange = async () => {
     if (selectedRegion === currentRegion) return;
@@ -95,8 +112,7 @@ export function RegionSelector({
         setError(data.message || "Failed to change region");
       }
     } catch (err) {
-      console.error("Failed to change region:", err);
-      setError("Failed to change region. Please try again.");
+      setError(getErrorMessage(err, "Failed to change region. Please try again."));
     } finally {
       setIsChanging(false);
     }

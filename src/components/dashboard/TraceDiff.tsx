@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface TraceDiffProps {
   traceIdA: string;
@@ -45,11 +48,13 @@ interface DiffData {
 }
 
 export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const [diff, setDiff] = useState<DiffData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadDiff = async () => {
+  const loadDiff = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
     setLoading(true);
     setError(null);
 
@@ -61,25 +66,40 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
           trace_id_a: traceIdA,
           trace_id_b: traceIdB,
         }),
+        signal: request.signal,
       });
 
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(getErrorMessage(data?.error, "Failed to load diff"));
+      }
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
       if (data.success) {
         setDiff(data.diff);
       } else {
-        setError(data.error?.message || "Failed to load diff");
+        setError(getErrorMessage(data.error, "Failed to load diff"));
       }
-    } catch {
-      setError("Failed to load diff");
+    } catch (error) {
+      if (isAbortError(error) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+      setError(getErrorMessage(error, "Failed to load diff"));
     } finally {
-      setLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setLoading(false);
+      }
+      requestGuardRef.current.finish(request.id);
     }
-  };
+  }, [traceIdA, traceIdB]);
 
   // Load diff on mount
-  useState(() => {
-    loadDiff();
-  });
+  useEffect(() => {
+    void loadDiff();
+  }, [loadDiff]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   if (loading) {
     return (

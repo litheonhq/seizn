@@ -90,6 +90,61 @@ interface Relation {
   relationType: string;
 }
 
+const RESOURCE_DEFINITIONS = [
+  {
+    uri: "seizn://memories/recent",
+    name: "Recent Memories",
+    description: "Last 10 memories",
+    mimeType: "application/json",
+  },
+  {
+    uri: "seizn://profile",
+    name: "User Profile",
+    description: "Structured user profile",
+    mimeType: "application/json",
+  },
+  {
+    uri: "seizn://graph/summary",
+    name: "Knowledge Graph Summary",
+    description: "Entity and relation counts",
+    mimeType: "application/json",
+  },
+] as const;
+
+const RESOURCE_TEMPLATE_DEFINITIONS = [
+  {
+    uriTemplate: "seizn://memories/project/{name}",
+    name: "Project Memories",
+    description: "Memories filtered by project namespace",
+  },
+  {
+    uriTemplate: "seizn://context/{format}",
+    name: "Formatted Context",
+    description: "Pre-formatted LLM context (brief/detailed/extended)",
+  },
+  {
+    uriTemplate: "seizn://docs/setup/{editor}",
+    name: "Editor Setup Guide",
+    description: "Setup guide for AI editors (claude-code, cursor, windsurf, copilot, cline, aider, codex)",
+  },
+] as const;
+
+function paginateByCursor<T>(items: readonly T[], cursor?: string | null, pageSize = items.length) {
+  if (!cursor) {
+    return { items: [...items] };
+  }
+
+  const offset = Number.parseInt(cursor, 10);
+  const safeOffset = Number.isFinite(offset) && offset >= 0 ? offset : 0;
+  const slice = items.slice(safeOffset, safeOffset + pageSize);
+  const nextOffset = safeOffset + slice.length;
+
+  return {
+    items: slice,
+    nextCursor: nextOffset < items.length ? String(nextOffset) : undefined,
+  };
+}
+
 // Content-Length framed transport (Claude/Codex clients expect this framing)
 class ContentLengthStdioTransport {
   private buffer = Buffer.alloc(0);
@@ -2098,23 +2153,23 @@ function registerHandlers(server: Server) {
   });
 
   // ── Resources ──────────────────────────────────────────────────────────────
-  server.setRequestHandler(ListResourcesRequestSchema, async () => {
+  server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+    const paginated = paginateByCursor(RESOURCE_DEFINITIONS, request.params?.cursor, 2);
     return {
-      resources: [
-        { uri: "seizn://memories/recent", name: "Recent Memories", description: "Last 10 memories", mimeType: "application/json" },
-        { uri: "seizn://profile", name: "User Profile", description: "Structured user profile", mimeType: "application/json" },
-        { uri: "seizn://graph/summary", name: "Knowledge Graph Summary", description: "Entity and relation counts", mimeType: "application/json" },
-      ],
+      resources: paginated.items,
+      ...(paginated.nextCursor ? { nextCursor: paginated.nextCursor } : {}),
     };
   });
 
-  server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+  server.setRequestHandler(ListResourceTemplatesRequestSchema, async (request) => {
+    const paginated = paginateByCursor(
+      RESOURCE_TEMPLATE_DEFINITIONS,
+      request.params?.cursor,
+      2
+    );
     return {
-      resourceTemplates: [
-        { uriTemplate: "seizn://memories/project/{name}", name: "Project Memories", description: "Memories filtered by project namespace" },
-        { uriTemplate: "seizn://context/{format}", name: "Formatted Context", description: "Pre-formatted LLM context (brief/detailed/extended)" },
-        { uriTemplate: "seizn://docs/setup/{editor}", name: "Editor Setup Guide", description: "Setup guide for AI editors (claude-code, cursor, windsurf, copilot, cline, aider, codex)" },
-      ],
+      resourceTemplates: paginated.items,
+      ...(paginated.nextCursor ? { nextCursor: paginated.nextCursor } : {}),
     };
   });
 
@@ -2204,30 +2259,34 @@ async function main() {
           }
 
           if (body.method === 'resources/list') {
+            const paginated = paginateByCursor(
+              RESOURCE_DEFINITIONS,
+              body.params?.cursor,
+              2
+            );
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
               jsonrpc: '2.0', id: body.id,
               result: {
-                resources: [
-                  { uri: "seizn://memories/recent", name: "Recent Memories", mimeType: "application/json" },
-                  { uri: "seizn://profile", name: "User Profile", mimeType: "application/json" },
-                  { uri: "seizn://graph/summary", name: "Knowledge Graph Summary", mimeType: "application/json" },
-                ],
+                resources: paginated.items,
+                ...(paginated.nextCursor ? { nextCursor: paginated.nextCursor } : {}),
               },
             }));
             return;
           }
 
           if (body.method === 'resources/templates/list') {
+            const paginated = paginateByCursor(
+              RESOURCE_TEMPLATE_DEFINITIONS,
+              body.params?.cursor,
+              2
+            );
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
               jsonrpc: '2.0', id: body.id,
               result: {
-                resourceTemplates: [
-                  { uriTemplate: "seizn://memories/project/{name}", name: "Project Memories" },
-                  { uriTemplate: "seizn://context/{format}", name: "Formatted Context" },
-                  { uriTemplate: "seizn://docs/setup/{editor}", name: "Editor Setup Guide" },
-                ],
+                resourceTemplates: paginated.items,
+                ...(paginated.nextCursor ? { nextCursor: paginated.nextCursor } : {}),
               },
             }));
             return;

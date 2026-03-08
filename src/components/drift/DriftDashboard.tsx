@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { DriftAlertCard } from "./DriftAlertCard";
 import { DriftChart } from "./DriftChart";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 import type {
   DriftSnapshot,
   DriftAlert,
@@ -41,6 +43,7 @@ export function DriftDashboard({
   className = "",
   refreshInterval = 60,
 }: DriftDashboardProps) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const [data, setData] = useState<DashboardData>({
     snapshots: [],
     alerts: [],
@@ -54,6 +57,8 @@ export function DriftDashboard({
 
   // Fetch dashboard data
   const fetchData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+
     try {
       setData((prev) => ({ ...prev, loading: true, error: null }));
 
@@ -65,14 +70,27 @@ export function DriftDashboard({
 
       // Fetch snapshots and alerts in parallel
       const [snapshotsRes, alertsRes] = await Promise.all([
-        fetch(`/api/drift/snapshots?${params}`),
-        fetch(`/api/drift/alerts?${params}`),
+        fetch(`/api/drift/snapshots?${params}`, { signal: request.signal }),
+        fetch(`/api/drift/alerts?${params}`, { signal: request.signal }),
       ]);
 
       const [snapshotsData, alertsData] = await Promise.all([
         snapshotsRes.json(),
         alertsRes.json(),
       ]);
+
+      if (!snapshotsRes.ok || !alertsRes.ok) {
+        throw new Error(
+          getErrorMessage(
+            !snapshotsRes.ok ? snapshotsData?.error : alertsData?.error,
+            "Failed to load drift data"
+          )
+        );
+      }
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
       // Process snapshots into time series
       const timeSeries: DriftTimeSeries | null =
@@ -157,12 +175,17 @@ export function DriftDashboard({
       });
       setLastUpdated(new Date());
     } catch (err) {
-      console.error("Failed to fetch drift data:", err);
+      if (isAbortError(err) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       setData((prev) => ({
         ...prev,
         loading: false,
-        error: "Failed to load drift data",
+        error: getErrorMessage(err, "Failed to load drift data"),
       }));
+    } finally {
+      requestGuardRef.current.finish(request.id);
     }
   }, [collectionId]);
 
@@ -207,15 +230,19 @@ export function DriftDashboard({
 
   // Initial load
   useEffect(() => {
-    fetchData();
+    void fetchData();
   }, [fetchData]);
 
   // Auto-refresh
   useEffect(() => {
     if (refreshInterval <= 0) return;
-    const interval = setInterval(fetchData, refreshInterval * 1000);
+    const interval = setInterval(() => {
+      void fetchData();
+    }, refreshInterval * 1000);
     return () => clearInterval(interval);
   }, [refreshInterval, fetchData]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   return (
     <div className={`space-y-6 ${className}`}>
