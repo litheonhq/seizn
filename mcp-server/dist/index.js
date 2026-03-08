@@ -42,8 +42,6 @@ if (process.platform === 'win32') {
     }
     catch { }
 }
-// Ensure stdin uses UTF-8
-process.stdin.setEncoding('utf8');
 const index_js_1 = require("@modelcontextprotocol/sdk/server/index.js");
 const types_js_1 = require("@modelcontextprotocol/sdk/types.js");
 const fs = __importStar(require("fs"));
@@ -90,6 +88,7 @@ class ContentLengthStdioTransport {
     stdin;
     stdout;
     buffer = Buffer.alloc(0);
+    framingMode = "content-length";
     onmessage;
     onerror;
     onclose;
@@ -108,7 +107,14 @@ class ContentLengthStdioTransport {
     };
     processBuffer() {
         while (true) {
-            const headerEnd = this.buffer.indexOf("\r\n\r\n");
+            const crlfHeaderEnd = this.buffer.indexOf("\r\n\r\n");
+            const lfHeaderEnd = this.buffer.indexOf("\n\n");
+            const headerEnd = crlfHeaderEnd === -1
+                ? lfHeaderEnd
+                : lfHeaderEnd === -1
+                    ? crlfHeaderEnd
+                    : Math.min(crlfHeaderEnd, lfHeaderEnd);
+            const headerSeparatorLength = headerEnd === crlfHeaderEnd ? 4 : headerEnd === lfHeaderEnd ? 2 : 0;
             // Fallback: accept bare newline-delimited JSON if no headers are present
             if (headerEnd === -1) {
                 const newlineIndex = this.buffer.indexOf("\n");
@@ -116,22 +122,24 @@ class ContentLengthStdioTransport {
                     return;
                 const line = this.buffer.slice(0, newlineIndex).toString("utf8").replace(/\r$/, "");
                 this.buffer = this.buffer.slice(newlineIndex + 1);
+                this.framingMode = "newline";
                 this.safeHandle(line);
                 continue;
             }
             const headerText = this.buffer.slice(0, headerEnd).toString("utf8");
             const lengthMatch = headerText.match(/Content-Length:\s*(\d+)/i);
             if (!lengthMatch) {
-                this.buffer = this.buffer.slice(headerEnd + 4);
+                this.buffer = this.buffer.slice(headerEnd + headerSeparatorLength);
                 continue;
             }
             const contentLength = Number(lengthMatch[1]);
-            const messageStart = headerEnd + 4;
+            const messageStart = headerEnd + headerSeparatorLength;
             const messageEnd = messageStart + contentLength;
             if (this.buffer.length < messageEnd)
                 return;
             const jsonText = this.buffer.slice(messageStart, messageEnd).toString("utf8");
             this.buffer = this.buffer.slice(messageEnd);
+            this.framingMode = "content-length";
             this.safeHandle(jsonText);
         }
     }
@@ -159,7 +167,9 @@ class ContentLengthStdioTransport {
     }
     async send(message) {
         const json = JSON.stringify(message);
-        const payload = `Content-Length: ${Buffer.byteLength(json, "utf8")}\r\n\r\n${json}`;
+        const payload = this.framingMode === "newline"
+            ? `${json}\n`
+            : `Content-Length: ${Buffer.byteLength(json, "utf8")}\r\n\r\n${json}`;
         await new Promise((resolve) => {
             if (this.stdout.write(payload)) {
                 resolve();
@@ -1903,7 +1913,6 @@ async function main() {
         // stdio transport (default)
         const transport = new ContentLengthStdioTransport();
         await server.connect(transport);
-        console.error("Seizn MCP Server running on stdio");
     }
 }
 main().catch(console.error);
