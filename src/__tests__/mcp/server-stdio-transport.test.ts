@@ -171,4 +171,26 @@ describe("seizn mcp stdio transport", () => {
     expect(Array.isArray(templatesList.resourceTemplates)).toBe(true);
     expect(templatesList.resourceTemplates?.length).toBeGreaterThan(0);
   });
+
+  it("accepts resource cursors without breaking compatibility", async () => {
+    const harness = createMcpHarness("content-length");
+    harnesses.push(harness);
+
+    await harness.initialize();
+
+    const pagedResources = (await harness.request("resources/list", {
+      cursor: "0",
+    })) as { resources?: unknown[]; nextCursor?: string };
+    const pagedTemplates = (await harness.request("resources/templates/list", {
+      cursor: "0",
+    })) as { resourceTemplates?: unknown[]; nextCursor?: string };
+
+    expect(Array.isArray(pagedResources.resources)).toBe(true);
+    expect(pagedResources.resources?.length).toBe(2);
+    expect(pagedResources.nextCursor).toBe("2");
+
+    expect(Array.isArray(pagedTemplates.resourceTemplates)).toBe(true);
+    expect(pagedTemplates.resourceTemplates?.length).toBe(2);
+    expect(pagedTemplates.nextCursor).toBe("2");
+  });
 });

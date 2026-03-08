@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import type { ExpiresIn, RedactionProfile } from "@/lib/sharing/types";
 import { formatDate } from "@/lib/format-date";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface ShareTraceModalProps {
   traceId: string;
@@ -27,6 +29,7 @@ export function ShareTraceModal({
   onClose,
   onShareCreated,
 }: ShareTraceModalProps) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -41,25 +44,39 @@ export function ShareTraceModal({
 
   // Fetch existing shares on mount
   const fetchExistingShares = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+
     try {
       const response = await fetch(`/api/retrieval/traces/${traceId}/share`, {
         headers: {
           "x-api-key": localStorage.getItem("seizn_api_key") || "",
         },
+        signal: request.signal,
       });
       const data = await response.json();
-      if (data.success && data.shares) {
+      if (!response.ok) {
+        throw new Error(getErrorMessage(data?.error, "Failed to fetch existing shares"));
+      }
+      if (requestGuardRef.current.isCurrent(request.id) && data.success && data.shares) {
         setExistingShares(data.shares);
       }
     } catch (err) {
-      console.error("Failed to fetch existing shares:", err);
+      if (isAbortError(err) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
+      setError(getErrorMessage(err, "Failed to fetch existing shares"));
+    } finally {
+      requestGuardRef.current.finish(request.id);
     }
   }, [traceId]);
 
   // Initial fetch
-  useState(() => {
-    fetchExistingShares();
-  });
+  useEffect(() => {
+    void fetchExistingShares();
+  }, [fetchExistingShares]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   const handleCreateShare = async () => {
     setLoading(true);
@@ -90,9 +107,9 @@ export function ShareTraceModal({
 
       setShareUrl(data.shareUrl);
       onShareCreated?.(data.shareUrl);
-      fetchExistingShares();
+      void fetchExistingShares();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError(getErrorMessage(err, "Failed to create share link"));
     } finally {
       setLoading(false);
     }
@@ -127,9 +144,9 @@ export function ShareTraceModal({
           },
         }
       );
-      fetchExistingShares();
+      void fetchExistingShares();
     } catch (err) {
-      console.error("Failed to delete share:", err);
+      setError(getErrorMessage(err, "Failed to delete share"));
     }
   };
 

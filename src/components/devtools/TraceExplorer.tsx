@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatRelativeTime } from "@/lib/format-date";
 
@@ -102,6 +103,7 @@ export function TraceExplorer({
   selectedTraceId,
   className = "",
 }: TraceExplorerProps) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const [traces, setTraces] = useState<TraceListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -123,6 +125,24 @@ export function TraceExplorer({
     dateRange: "24h",
     search: "",
   });
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const {
+    collectionId: filterCollectionId,
+    searchType,
+    rerankEnabled,
+    hasError,
+    minLatency,
+    maxLatency,
+    dateRange,
+  } = filters;
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(filters.search);
+    }, 250);
+
+    return () => clearTimeout(timeout);
+  }, [filters.search]);
 
   // Build query params from filters
   const buildQueryParams = useCallback(() => {
@@ -132,18 +152,18 @@ export function TraceExplorer({
     params.append("order_by", "created_at");
     params.append("order_dir", "desc");
 
-    if (filters.collectionId) params.append("collection_id", filters.collectionId);
-    if (filters.searchType) params.append("search_type", filters.searchType);
-    if (filters.rerankEnabled) params.append("rerank_enabled", filters.rerankEnabled);
-    if (filters.hasError) params.append("has_error", filters.hasError);
-    if (filters.minLatency) params.append("min_latency", filters.minLatency);
-    if (filters.maxLatency) params.append("max_latency", filters.maxLatency);
-    if (filters.search) params.append("search", filters.search);
+    if (filterCollectionId) params.append("collection_id", filterCollectionId);
+    if (searchType) params.append("search_type", searchType);
+    if (rerankEnabled) params.append("rerank_enabled", rerankEnabled);
+    if (hasError) params.append("has_error", hasError);
+    if (minLatency) params.append("min_latency", minLatency);
+    if (maxLatency) params.append("max_latency", maxLatency);
+    if (debouncedSearch) params.append("search", debouncedSearch);
 
     // Date range
     const now = new Date();
     let startDate: Date | null = null;
-    switch (filters.dateRange) {
+    switch (dateRange) {
       case "1h":
         startDate = new Date(now.getTime() - 60 * 60 * 1000);
         break;
@@ -162,17 +182,40 @@ export function TraceExplorer({
     }
 
     return params.toString();
-  }, [filters, pagination.limit, pagination.offset]);
+  }, [
+    debouncedSearch,
+    filterCollectionId,
+    searchType,
+    rerankEnabled,
+    hasError,
+    minLatency,
+    maxLatency,
+    dateRange,
+    pagination.limit,
+    pagination.offset,
+  ]);
 
   // Fetch traces
   const fetchTraces = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+
     try {
       setLoading(true);
       setError(null);
 
       const queryString = buildQueryParams();
-      const response = await fetch(`/api/retrieval/traces?${queryString}`);
+      const response = await fetch(`/api/retrieval/traces?${queryString}`, {
+        signal: request.signal,
+      });
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(getErrorMessage(data?.error, "Failed to fetch traces"));
+      }
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
       if (data.success) {
         setTraces(data.traces);
@@ -185,22 +228,39 @@ export function TraceExplorer({
         setError(getErrorMessage(data.error, "Failed to fetch traces"));
       }
     } catch (err) {
-      console.error("Failed to fetch traces:", err);
+      if (isAbortError(err) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       setError(getErrorMessage(err, "Failed to fetch traces"));
     } finally {
-      setLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setLoading(false);
+      }
+      requestGuardRef.current.finish(request.id);
     }
   }, [buildQueryParams]);
 
   // Initial load and filter changes
   useEffect(() => {
-    fetchTraces();
+    void fetchTraces();
   }, [fetchTraces]);
 
   // Reset offset when filters change
   useEffect(() => {
     setPagination((prev) => ({ ...prev, offset: 0 }));
-  }, [filters]);
+  }, [
+    filterCollectionId,
+    searchType,
+    rerankEnabled,
+    hasError,
+    minLatency,
+    maxLatency,
+    dateRange,
+    filters.search,
+  ]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   // Format latency
   const formatLatency = (ms: number) => {

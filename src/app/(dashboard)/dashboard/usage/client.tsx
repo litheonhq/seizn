@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { formatDate } from "@/lib/format-date";
+import { getErrorMessage } from "@/lib/ui-error";
 
 
 interface DailyUsage {
@@ -51,30 +53,53 @@ interface UsageData {
 }
 
 export function UsageClient() {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const { t } = useDashboardTranslation();
   const [period, setPeriod] = useState<"7d" | "30d" | "90d">("7d");
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [chartTab, setChartTab] = useState<ChartTab>("calls");
 
   const fetchUsage = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+
     setIsLoading(true);
+    setError(null);
     try {
-      const res = await fetch(`/api/dashboard/usage?period=${period}`);
+      const res = await fetch(`/api/dashboard/usage?period=${period}`, {
+        signal: request.signal,
+      });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(getErrorMessage(data?.error, "Failed to fetch usage"));
+      }
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
       if (data.success) {
         setUsage(data.usage);
+      } else {
+        setError(getErrorMessage(data.error, "Failed to fetch usage"));
       }
     } catch (err) {
-      console.error("Failed to fetch usage:", err);
+      if (isAbortError(err) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+      setError(getErrorMessage(err, "Failed to fetch usage"));
     } finally {
-      setIsLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setIsLoading(false);
+      }
+      requestGuardRef.current.finish(request.id);
     }
   }, [period]);
 
   useEffect(() => {
-    fetchUsage();
+    void fetchUsage();
   }, [fetchUsage]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   return (
     <div className="space-y-8">
@@ -110,6 +135,12 @@ export function UsageClient() {
             ))}
           </div>
         </div>
+
+        {error && (
+          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
 
         {isLoading ? (
           <div className="text-szn-text-2 text-center py-12">{t("dashboard.usagePage.loading")}</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { MetricsOverview } from "./MetricsOverview";
 import {
   DynamicQueryVolumeChart,
@@ -10,6 +10,8 @@ import {
 import { TopQueries } from "./TopQueries";
 import { AlertsPanel } from "./AlertsPanel";
 import { DriftDashboard } from "@/components/drift";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 import type {
   RetOpsMetrics,
   RetrievalStats,
@@ -55,6 +57,7 @@ export function RetOpsDashboard({
   className = "",
   refreshInterval = 30,
 }: RetOpsDashboardProps) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
   const [activeTab, setActiveTab] = useState<DashboardTab>("overview");
   const [period, setPeriod] = useState<TimePeriod>("24h");
   const [data, setData] = useState<DashboardData>({
@@ -71,6 +74,8 @@ export function RetOpsDashboard({
 
   // Fetch dashboard data
   const fetchData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+
     try {
       setData(prev => ({ ...prev, loading: true, error: null }));
 
@@ -81,10 +86,10 @@ export function RetOpsDashboard({
 
       // Fetch all data in parallel
       const [metricsRes, statsRes, qualityRes, alertsRes] = await Promise.all([
-        fetch(`/api/summer/retops/metrics?${params}`),
-        fetch(`/api/summer/retops/stats?${params}`),
-        fetch(`/api/summer/retops/quality?${params}&includeTrend=true`),
-        fetch(`/api/summer/retops/alerts?limit=10`),
+        fetch(`/api/summer/retops/metrics?${params}`, { signal: request.signal }),
+        fetch(`/api/summer/retops/stats?${params}`, { signal: request.signal }),
+        fetch(`/api/summer/retops/quality?${params}&includeTrend=true`, { signal: request.signal }),
+        fetch(`/api/summer/retops/alerts?limit=10`, { signal: request.signal }),
       ]);
 
       const [metricsData, statsData, qualityData, alertsData] = await Promise.all([
@@ -93,6 +98,21 @@ export function RetOpsDashboard({
         qualityRes.json(),
         alertsRes.json(),
       ]);
+
+      const firstFailedResponse =
+        !metricsRes.ok ? metricsData :
+        !statsRes.ok ? statsData :
+        !qualityRes.ok ? qualityData :
+        !alertsRes.ok ? alertsData :
+        null;
+
+      if (firstFailedResponse) {
+        throw new Error(getErrorMessage(firstFailedResponse?.error, "Failed to load dashboard data"));
+      }
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
       setData({
         metrics: metricsData.success ? metricsData.metrics : null,
@@ -106,12 +126,17 @@ export function RetOpsDashboard({
       });
       setLastUpdated(new Date());
     } catch (err) {
-      console.error("Failed to fetch RetOps data:", err);
+      if (isAbortError(err) || !requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       setData(prev => ({
         ...prev,
         loading: false,
-        error: "Failed to load dashboard data",
+        error: getErrorMessage(err, "Failed to load dashboard data"),
       }));
+    } finally {
+      requestGuardRef.current.finish(request.id);
     }
   }, [period, collectionId]);
 
@@ -127,9 +152,13 @@ export function RetOpsDashboard({
   useEffect(() => {
     if (refreshInterval <= 0) return;
 
-    const interval = setInterval(fetchData, refreshInterval * 1000);
+    const interval = setInterval(() => {
+      void fetchData();
+    }, refreshInterval * 1000);
     return () => clearInterval(interval);
   }, [refreshInterval, fetchData]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   // Handle alert acknowledge
   const handleAcknowledgeAlert = async (alertId: string) => {
