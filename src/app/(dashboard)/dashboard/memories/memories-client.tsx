@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { formatDate } from "@/lib/format-date";
+import { getErrorMessage } from "@/lib/ui-error";
 import type { PinDialogMode } from "@/components/memories/pin-dialog";
 import { PinDialog } from "@/components/memories/pin-dialog";
 import { LockedMemoryCard } from "@/components/memories/locked-memory-card";
@@ -240,6 +242,8 @@ export default function MemoriesClient() {
   const [screenReaderStatus, setScreenReaderStatus] = useState("");
   const activeRequestIdRef = useRef(0);
   const activeAbortRef = useRef<AbortController | null>(null);
+  const namespaceRequestGuardRef = useRef(createLatestRequestGuard());
+  const personalizationRequestGuardRef = useRef(createLatestRequestGuard());
 
   // Date range filters
   const [afterDate, setAfterDate] = useState("");
@@ -261,25 +265,50 @@ export default function MemoriesClient() {
 
   // Fetch namespaces on mount
   useEffect(() => {
-    fetch("/api/v1/memories/namespaces")
+    const requestGuard = namespaceRequestGuardRef.current;
+    const request = requestGuard.begin();
+
+    fetch("/api/v1/memories/namespaces", { signal: request.signal })
       .then(res => res.json())
       .then((data: NamespacesResponse) => {
+        if (!requestGuard.isCurrent(request.id)) {
+          return;
+        }
         if (data.success && data.data?.namespaces) {
           setNamespaces(data.data.namespaces);
         }
       })
-      .catch(() => { /* ignore */ });
+      .catch((error) => {
+        if (!isAbortError(error)) {
+          setScreenReaderStatus(getErrorMessage(error, "Failed to load namespaces."));
+        }
+      })
+      .finally(() => {
+        if (requestGuard.isCurrent(request.id)) {
+          requestGuard.finish(request.id);
+        }
+      });
+
+    return () => requestGuard.cancel();
   }, []);
 
   const refreshPersonalization = useCallback(async () => {
+    const request = personalizationRequestGuardRef.current.begin();
     setPersonalizationLoading(true);
     try {
       const params = new URLSearchParams({ namespace });
-      const res = await fetch(`/api/v1/memories/personalization?${params.toString()}`);
+      const res = await fetch(`/api/v1/memories/personalization?${params.toString()}`, {
+        signal: request.signal,
+      });
       if (!res.ok) {
         throw new Error(`Failed to load personalization (${res.status})`);
       }
       const data: PersonalizationProfileResponse = await res.json();
+
+      if (!personalizationRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       setPersonalizationAvailable(data.available !== false);
       setPersonalizationEnabled(data.profile?.personalization_enabled !== false);
       setFeedbackCount(data.profile?.total_feedback_count || 0);
@@ -289,17 +318,23 @@ export default function MemoriesClient() {
         setPersonalizationMessage(null);
       }
     } catch (error) {
-      console.error("Failed to load personalization:", error);
-      setPersonalizationAvailable(false);
-      setPersonalizationEnabled(false);
-      setPersonalizationMessage("Could not load personalization settings.");
+      if (!isAbortError(error) && personalizationRequestGuardRef.current.isCurrent(request.id)) {
+        setPersonalizationAvailable(false);
+        setPersonalizationEnabled(false);
+        setPersonalizationMessage(getErrorMessage(error, "Could not load personalization settings."));
+      }
     } finally {
-      setPersonalizationLoading(false);
+      if (personalizationRequestGuardRef.current.isCurrent(request.id)) {
+        setPersonalizationLoading(false);
+        personalizationRequestGuardRef.current.finish(request.id);
+      }
     }
   }, [namespace]);
 
   useEffect(() => {
+    const requestGuard = personalizationRequestGuardRef.current;
     void refreshPersonalization();
+    return () => requestGuard.cancel();
   }, [refreshPersonalization]);
 
   // Fetch E2E setup status on mount
@@ -424,12 +459,11 @@ export default function MemoriesClient() {
         } ${typeof data.meta?.latencyMs === "number" ? `Latency ${data.meta.latencyMs}ms.` : ""}`
       );
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
+      if (isAbortError(error)) {
         return;
       }
       if (requestId !== activeRequestIdRef.current) return;
-      const message = error instanceof Error ? error.message : "An unexpected error occurred";
-      console.error("Failed to fetch memories:", error);
+      const message = getErrorMessage(error, "An unexpected error occurred");
       setFetchError(message);
       setScreenReaderStatus(`Memory search failed: ${message}`);
     } finally {
@@ -477,8 +511,7 @@ export default function MemoriesClient() {
         void fetchMemories(true);
       }
     } catch (error) {
-      console.error("Failed to toggle personalization:", error);
-      setPersonalizationMessage("Failed to update personalization setting.");
+      setPersonalizationMessage(getErrorMessage(error, "Failed to update personalization setting."));
     } finally {
       setPersonalizationActionLoading(false);
     }
@@ -513,8 +546,7 @@ export default function MemoriesClient() {
         void fetchMemories(true);
       }
     } catch (error) {
-      console.error("Failed to reset personalization:", error);
-      setPersonalizationMessage("Failed to reset personalization.");
+      setPersonalizationMessage(getErrorMessage(error, "Failed to reset personalization."));
     } finally {
       setPersonalizationActionLoading(false);
     }
@@ -550,8 +582,7 @@ export default function MemoriesClient() {
         void fetchMemories(true);
       }
     } catch (error) {
-      console.error("Failed to submit feedback:", error);
-      setPersonalizationMessage("Failed to submit feedback.");
+      setPersonalizationMessage(getErrorMessage(error, "Failed to submit feedback."));
     } finally {
       setFeedbackSubmittingById((prev) => ({ ...prev, [memory.id]: false }));
     }
@@ -683,7 +714,7 @@ export default function MemoriesClient() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Export failed:", err);
+      setFetchError(getErrorMessage(err, "Failed to export memories."));
     } finally {
       setIsExporting(false);
     }

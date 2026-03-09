@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { formatRelativeTime } from "@/lib/format-date";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 
 type ConnectorType = "pinecone" | "weaviate" | "qdrant" | "milvus" | "http-agent" | "s3";
 
@@ -66,9 +68,37 @@ const CONNECTOR_TYPES: { id: ConnectorType; name: string; icon: string; descript
   { id: "s3", name: "S3 / Object Storage", icon: "📦", description: "File-based vector storage" },
 ];
 
+function mergeConnectorHealth(
+  baseConnectors: Connector[],
+  healthByName: Record<string, { healthy?: boolean; latency_ms?: number }> | undefined
+): Connector[] {
+  return baseConnectors.map((connector) => {
+    const healthData = healthByName?.[connector.name];
+    if (!healthData) return connector;
+
+    const latency = typeof healthData.latency_ms === "number" ? healthData.latency_ms : undefined;
+    const status: HealthStatus = healthData.healthy
+      ? ((latency ?? 0) > 500 ? "degraded" : "healthy")
+      : "down";
+
+    return {
+      ...connector,
+      health: {
+        status,
+        latency_p50: latency,
+        latency_p95: latency ? Math.round(latency * 1.3) : undefined,
+        last_ping: new Date().toISOString(),
+        error_rate: healthData.healthy ? 0 : 100,
+      },
+    };
+  });
+}
+
 export function FederatedClient() {
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [wizardStep, setWizardStep] = useState<WizardStep>(1);
   const [testQuery, setTestQuery] = useState("");
@@ -78,6 +108,8 @@ export function FederatedClient() {
   // Connection test state
   const [connectionTest, setConnectionTest] = useState<TestResult | null>(null);
   const [testingConnection, setTestingConnection] = useState(false);
+  const loadRequestGuardRef = useRef(createLatestRequestGuard());
+  const healthRequestGuardRef = useRef(createLatestRequestGuard());
 
   const [form, setForm] = useState<ConnectorForm>({
     type: "pinecone",
@@ -97,42 +129,39 @@ export function FederatedClient() {
     namespaceFilter: "",
   });
 
-  const loadHealth = useCallback(async () => {
+  const loadHealth = useCallback(async (baseConnectors?: Connector[]) => {
+    const request = healthRequestGuardRef.current.begin();
+    setLoadError(null);
     try {
       const response = await fetch("/api/federated", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "health" }),
+        signal: request.signal,
       });
       const data = await response.json();
+
+      if (!healthRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       if (data.success && data.connectors) {
-        setConnectors((prev) =>
-          prev.map((c) => {
-            const healthData = data.connectors[c.name];
-            if (!healthData) return c;
-
-            // Map old health format to new detailed format
-            const status: HealthStatus = healthData.healthy
-              ? (healthData.latency_ms > 500 ? "degraded" : "healthy")
-              : "down";
-
-            return {
-              ...c,
-              health: {
-                status,
-                latency_p50: healthData.latency_ms,
-                latency_p95: Math.round(healthData.latency_ms * 1.3),
-                last_ping: new Date().toISOString(),
-                error_rate: healthData.healthy ? 0 : 100,
-              },
-            };
-          })
-        );
+        const sourceConnectors = baseConnectors ?? connectors;
+        setConnectors(mergeConnectorHealth(sourceConnectors, data.connectors));
+        setLoadError(null);
+      } else {
+        setLoadError(getErrorMessage(data.error, "Failed to load connector health."));
       }
     } catch (error) {
-      console.error("Failed to load health:", error);
+      if (!isAbortError(error) && healthRequestGuardRef.current.isCurrent(request.id)) {
+        setLoadError(getErrorMessage(error, "Failed to load connector health."));
+      }
+    } finally {
+      if (healthRequestGuardRef.current.isCurrent(request.id)) {
+        healthRequestGuardRef.current.finish(request.id);
+      }
     }
-  }, []);
+  }, [connectors]);
 
   // Test connection before adding
   const handleTestConnection = useCallback(async () => {
@@ -183,24 +212,44 @@ export function FederatedClient() {
   }, [form]);
 
   const loadConnectors = useCallback(async () => {
+    const request = loadRequestGuardRef.current.begin();
     setLoading(true);
+    setLoadError(null);
     try {
-      const response = await fetch("/api/federated");
+      const response = await fetch("/api/federated", { signal: request.signal });
       const data = await response.json();
+
+      if (!loadRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
       if (data.success) {
-        setConnectors(data.connectors || []);
-        // Load health status
-        await loadHealth();
+        const nextConnectors = data.connectors || [];
+        setConnectors(nextConnectors);
+        await loadHealth(nextConnectors);
+      } else {
+        setLoadError(getErrorMessage(data.error, "Failed to load connectors."));
       }
     } catch (error) {
-      console.error("Failed to load connectors:", error);
+      if (!isAbortError(error) && loadRequestGuardRef.current.isCurrent(request.id)) {
+        setLoadError(getErrorMessage(error, "Failed to load connectors."));
+      }
     } finally {
-      setLoading(false);
+      if (loadRequestGuardRef.current.isCurrent(request.id)) {
+        setLoading(false);
+        loadRequestGuardRef.current.finish(request.id);
+      }
     }
   }, [loadHealth]);
 
   useEffect(() => {
+    const loadRequestGuard = loadRequestGuardRef.current;
+    const healthRequestGuard = healthRequestGuardRef.current;
     loadConnectors();
+    return () => {
+      loadRequestGuard.cancel();
+      healthRequestGuard.cancel();
+    };
   }, [loadConnectors]);
 
   // Reset form and wizard state
@@ -227,6 +276,7 @@ export function FederatedClient() {
   }, []);
 
   const handleAddConnector = async () => {
+    setActionError(null);
     try {
       let config: Record<string, unknown>;
 
@@ -289,19 +339,19 @@ export function FederatedClient() {
       const data = await response.json();
       if (data.success) {
         setShowAddForm(false);
-        loadConnectors();
+        await loadConnectors();
         resetWizard();
       } else {
-        alert(`Failed to add connector: ${data.error?.message}`);
+        setActionError(getErrorMessage(data.error, "Failed to add connector."));
       }
     } catch (error) {
-      console.error("Failed to add connector:", error);
-      alert("Failed to add connector");
+      setActionError(getErrorMessage(error, "Failed to add connector."));
     }
   };
 
   const handleRemoveConnector = async (name: string) => {
     if (!confirm(`Remove connector "${name}"?`)) return;
+    setActionError(null);
 
     try {
       const response = await fetch("/api/federated", {
@@ -312,10 +362,12 @@ export function FederatedClient() {
 
       const data = await response.json();
       if (data.success) {
-        loadConnectors();
+        await loadConnectors();
+      } else {
+        setActionError(getErrorMessage(data.error, "Failed to remove connector."));
       }
     } catch (error) {
-      console.error("Failed to remove connector:", error);
+      setActionError(getErrorMessage(error, "Failed to remove connector."));
     }
   };
 
@@ -323,6 +375,7 @@ export function FederatedClient() {
     if (!testQuery.trim()) return;
 
     setTestLoading(true);
+    setActionError(null);
     try {
       const response = await fetch("/api/federated", {
         method: "POST",
@@ -338,7 +391,7 @@ export function FederatedClient() {
       const data = await response.json();
       setTestResults(data);
     } catch (error) {
-      console.error("Test search failed:", error);
+      setActionError(getErrorMessage(error, "Test search failed."));
       setTestResults({ error: "Search failed" });
     } finally {
       setTestLoading(false);
@@ -373,6 +426,12 @@ export function FederatedClient() {
           Add Connector
         </button>
       </div>
+
+      {(loadError || actionError) && (
+        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {actionError || loadError}
+        </div>
+      )}
 
       {/* Connectors Grid */}
       {connectors.length === 0 ? (

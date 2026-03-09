@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import DashboardShell from '@/components/dashboard/DashboardShell';
+import { getAuthOrReview } from '@/lib/auth-or-review';
 import { FederatedClient } from './federated-client';
 
 export const metadata = {
@@ -6,9 +8,11 @@ export const metadata = {
   description: 'Manage connections to external vector databases',
 };
 
-export default function FederatedPage() {
+export default async function FederatedPage() {
+  await getAuthOrReview();
+
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <DashboardShell>
       <Suspense
         fallback={
           <div className="p-8 text-center">
@@ -18,6 +22,6 @@ export default function FederatedPage() {
       >
         <FederatedClient />
       </Suspense>
-    </div>
+    </DashboardShell>
   );
 }
