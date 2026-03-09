@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
 
@@ -72,6 +73,8 @@ export default function OrganizationDetailClient({
   const [invites, setInvites] = useState<Invite[]>([]);
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const [usageError, setUsageError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"members" | "invites" | "usage" | "settings">("members");
 
   // Usage state
@@ -80,6 +83,8 @@ export default function OrganizationDetailClient({
   const [memberUsage, setMemberUsage] = useState<MemberUsage[]>([]);
   const [usagePeriod, setUsagePeriod] = useState<"7d" | "30d" | "90d">("7d");
   const [isLoadingUsage, setIsLoadingUsage] = useState(false);
+  const orgRequestGuardRef = useRef(createLatestRequestGuard());
+  const usageRequestGuardRef = useRef(createLatestRequestGuard());
 
   // Invite modal state
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -90,64 +95,110 @@ export default function OrganizationDetailClient({
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
 
   const fetchOrganization = useCallback(async () => {
+    const request = orgRequestGuardRef.current.begin();
+    setPageError(null);
     try {
-      // Fetch organization details
-      const [orgRes, membersRes, invitesRes] = await Promise.all([
-        fetch(`/api/organizations?id=${organizationId}`),
-        fetch(`/api/organizations/members?organization_id=${organizationId}`),
-        fetch(`/api/organizations/invites?organization_id=${organizationId}`),
+      const [orgResult, membersResult, invitesResult] = await Promise.allSettled([
+        fetch(`/api/organizations?id=${organizationId}`, { signal: request.signal }).then((res) => res.json()),
+        fetch(`/api/organizations/members?organization_id=${organizationId}`, { signal: request.signal }).then((res) => res.json()),
+        fetch(`/api/organizations/invites?organization_id=${organizationId}`, { signal: request.signal }).then((res) => res.json()),
       ]);
 
-      const orgData = await orgRes.json();
-      const membersData = await membersRes.json();
-      const invitesData = await invitesRes.json();
+      if (!orgRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
-      if (orgData.success || orgData.organizations) {
-        const org = orgData.organization || orgData.organizations?.find((o: Organization) => o.id === organizationId);
+      let failedCount = 0;
+
+      if (orgResult.status === "fulfilled" && (orgResult.value.success || orgResult.value.organizations)) {
+        const org = orgResult.value.organization || orgResult.value.organizations?.find((o: Organization) => o.id === organizationId);
         setOrganization(org);
         setCurrentUserRole(org?.role);
+      } else if (
+        (orgResult.status === "fulfilled" && !(orgResult.value.success || orgResult.value.organizations)) ||
+        (orgResult.status === "rejected" && !isAbortError(orgResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (membersData.success) {
-        setMembers(membersData.members);
+      if (membersResult.status === "fulfilled" && membersResult.value.success) {
+        setMembers(membersResult.value.members);
+      } else if (
+        (membersResult.status === "fulfilled" && !membersResult.value.success) ||
+        (membersResult.status === "rejected" && !isAbortError(membersResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (invitesData.success) {
-        setInvites(invitesData.invites);
+      if (invitesResult.status === "fulfilled" && invitesResult.value.success) {
+        setInvites(invitesResult.value.invites);
+      } else if (
+        (invitesResult.status === "fulfilled" && !invitesResult.value.success) ||
+        (invitesResult.status === "rejected" && !isAbortError(invitesResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (failedCount > 0) {
+        setPageError("Some organization data could not be refreshed.");
       }
     } catch (err) {
-      console.error("Failed to fetch organization:", err);
+      if (!isAbortError(err) && orgRequestGuardRef.current.isCurrent(request.id)) {
+        setPageError(getErrorMessage(err, "Failed to load organization."));
+      }
     } finally {
-      setIsLoading(false);
+      if (orgRequestGuardRef.current.isCurrent(request.id)) {
+        setIsLoading(false);
+        orgRequestGuardRef.current.finish(request.id);
+      }
     }
   }, [organizationId]);
 
   useEffect(() => {
+    const requestGuard = orgRequestGuardRef.current;
     fetchOrganization();
+    return () => requestGuard.cancel();
   }, [fetchOrganization]);
 
   const fetchOrgUsage = useCallback(async () => {
+    const request = usageRequestGuardRef.current.begin();
     setIsLoadingUsage(true);
+    setUsageError(null);
     try {
-      const res = await fetch(`/api/organizations/usage?organization_id=${organizationId}&period=${usagePeriod}`);
+      const res = await fetch(`/api/organizations/usage?organization_id=${organizationId}&period=${usagePeriod}`, {
+        signal: request.signal,
+      });
       const data = await res.json();
+
+      if (!usageRequestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
       if (data.success) {
         setUsageSummary(data.usage.summary);
         setDailyUsage(data.usage.daily);
         setMemberUsage(data.usage.members);
+      } else {
+        setUsageError(getErrorMessage(data.error, "Failed to load usage data."));
       }
     } catch (err) {
-      console.error("Failed to fetch org usage:", err);
+      if (!isAbortError(err) && usageRequestGuardRef.current.isCurrent(request.id)) {
+        setUsageError(getErrorMessage(err, "Failed to load usage data."));
+      }
     } finally {
-      setIsLoadingUsage(false);
+      if (usageRequestGuardRef.current.isCurrent(request.id)) {
+        setIsLoadingUsage(false);
+        usageRequestGuardRef.current.finish(request.id);
+      }
     }
   }, [organizationId, usagePeriod]);
 
   useEffect(() => {
+    const requestGuard = usageRequestGuardRef.current;
     if (activeTab === "usage") {
-      fetchOrgUsage();
+      void fetchOrgUsage();
     }
+    return () => requestGuard.cancel();
   }, [activeTab, fetchOrgUsage]);
 
   const handleInvite = async () => {
@@ -171,7 +222,7 @@ export default function OrganizationDetailClient({
 
       if (data.success) {
         setInviteSuccess(`Invitation sent to ${inviteEmail}`);
-        setInvites([data.invite, ...invites]);
+        setInvites((currentInvites) => [data.invite, ...currentInvites]);
         setInviteEmail("");
         setTimeout(() => {
           setShowInviteModal(false);
@@ -181,8 +232,7 @@ export default function OrganizationDetailClient({
         setInviteError(getErrorMessage(data.error, "Failed to send invitation"));
       }
     } catch (err) {
-      console.error("Failed to invite:", err);
-      setInviteError("Failed to send invitation");
+      setInviteError(getErrorMessage(err, "Failed to send invitation"));
     } finally {
       setIsInviting(false);
     }
@@ -190,6 +240,7 @@ export default function OrganizationDetailClient({
 
   const handleRemoveMember = async (memberId: string, memberEmail: string) => {
     if (!confirm(`Remove ${memberEmail} from this organization?`)) return;
+    setPageError(null);
 
     try {
       const res = await fetch(
@@ -199,14 +250,17 @@ export default function OrganizationDetailClient({
       const data = await res.json();
 
       if (data.success) {
-        setMembers(members.filter((m) => m.id !== memberId));
+        setMembers((currentMembers) => currentMembers.filter((m) => m.id !== memberId));
+      } else {
+        setPageError(getErrorMessage(data.error, "Failed to remove member."));
       }
     } catch (err) {
-      console.error("Failed to remove member:", err);
+      setPageError(getErrorMessage(err, "Failed to remove member."));
     }
   };
 
   const handleCancelInvite = async (inviteId: string) => {
+    setPageError(null);
     try {
       const res = await fetch(
         `/api/organizations/invites?id=${inviteId}`,
@@ -215,14 +269,17 @@ export default function OrganizationDetailClient({
       const data = await res.json();
 
       if (data.success) {
-        setInvites(invites.filter((i) => i.id !== inviteId));
+        setInvites((currentInvites) => currentInvites.filter((i) => i.id !== inviteId));
+      } else {
+        setPageError(getErrorMessage(data.error, "Failed to cancel invite."));
       }
     } catch (err) {
-      console.error("Failed to cancel invite:", err);
+      setPageError(getErrorMessage(err, "Failed to cancel invite."));
     }
   };
 
   const handleUpdateRole = async (memberId: string, newRole: string) => {
+    setPageError(null);
     try {
       const res = await fetch("/api/organizations/members", {
         method: "PATCH",
@@ -236,14 +293,16 @@ export default function OrganizationDetailClient({
       const data = await res.json();
 
       if (data.success) {
-        setMembers(
-          members.map((m) =>
+        setMembers((currentMembers) =>
+          currentMembers.map((m) =>
             m.id === memberId ? { ...m, role: newRole as Member["role"] } : m
           )
         );
+      } else {
+        setPageError(getErrorMessage(data.error, "Failed to update role."));
       }
     } catch (err) {
-      console.error("Failed to update role:", err);
+      setPageError(getErrorMessage(err, "Failed to update role."));
     }
   };
 
@@ -274,11 +333,22 @@ export default function OrganizationDetailClient({
   if (!organization) {
     return (
       <div className="szn-card rounded-2xl p-12 text-center">
-        <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Organization not found</h2>
-        <p className="text-szn-text-2 mb-4">This organization doesn&apos;t exist or you don&apos;t have access.</p>
-        <Link href="/dashboard/organizations" className="theme-gradient-btn text-white px-4 py-2 rounded-xl">
-          Back to Organizations
-        </Link>
+        <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
+          {pageError ? "Failed to load organization" : "Organization not found"}
+        </h2>
+        <p className="text-szn-text-2 mb-4">
+          {pageError || "This organization doesn't exist or you don't have access."}
+        </p>
+        <div className="flex items-center justify-center gap-3">
+          {pageError && (
+            <button onClick={() => void fetchOrganization()} className="px-4 py-2 rounded-xl bg-szn-surface text-szn-text-1 hover:bg-szn-surface-1">
+              Retry
+            </button>
+          )}
+          <Link href="/dashboard/organizations" className="theme-gradient-btn text-white px-4 py-2 rounded-xl">
+            Back to Organizations
+          </Link>
+        </div>
       </div>
     );
   }
@@ -318,6 +388,18 @@ export default function OrganizationDetailClient({
           </div>
         </div>
       </div>
+
+      {pageError && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {pageError}
+        </div>
+      )}
+
+      {usageError && activeTab === "usage" && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {usageError}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 p-1 bg-white/50 rounded-xl w-fit">

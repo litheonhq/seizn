@@ -57,6 +57,8 @@ test.describe('Dashboard Smoke (Authenticated)', () => {
     const paths = [
       '/dashboard/budget',
       '/dashboard/enterprise',
+      '/dashboard/federated',
+      '/dashboard/memories',
       '/dashboard/organizations',
       '/dashboard/autopilot',
       '/dashboard/webhooks',
