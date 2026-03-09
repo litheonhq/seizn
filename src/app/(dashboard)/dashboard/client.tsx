@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
 
@@ -45,36 +46,62 @@ export function DashboardClient({ user }: { user: User }) {
   const [newKey, setNewKey] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const requestGuardRef = useRef(createLatestRequestGuard());
 
-  const fetchApiKeys = useCallback(async () => {
+  const fetchDashboardData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
     try {
-      const res = await fetch("/api/dashboard/keys");
-      const data = await res.json();
-      if (data.success) {
-        setApiKeys(data.keys);
+      setLoadError(null);
+      const [keysResult, statsResult] = await Promise.allSettled([
+        fetch("/api/dashboard/keys", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/dashboard/stats", { signal: request.signal }).then((res) => res.json()),
+      ]);
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
+      let failedCount = 0;
+
+      if (keysResult.status === "fulfilled" && keysResult.value.success) {
+        setApiKeys(keysResult.value.keys);
+      } else if (
+        (keysResult.status === "fulfilled" && !keysResult.value.success) ||
+        (keysResult.status === "rejected" && !isAbortError(keysResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (statsResult.status === "fulfilled" && statsResult.value.success) {
+        setStats(statsResult.value.stats);
+      } else if (
+        (statsResult.status === "fulfilled" && !statsResult.value.success) ||
+        (statsResult.status === "rejected" && !isAbortError(statsResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (failedCount > 0) {
+        setLoadError("Some dashboard data could not be refreshed.");
       }
     } catch (err) {
-      console.error("Failed to fetch API keys:", err);
-    }
-  }, []);
-
-  const fetchStats = useCallback(async () => {
-    try {
-      const res = await fetch("/api/dashboard/stats");
-      const data = await res.json();
-      if (data.success) {
-        setStats(data.stats);
+      if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
+        setLoadError(getErrorMessage(err, "Failed to load dashboard data."));
       }
-    } catch (err) {
-      console.error("Failed to fetch stats:", err);
+    } finally {
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        requestGuardRef.current.finish(request.id);
+      }
     }
   }, []);
 
   useEffect(() => {
-    fetchApiKeys();
-    fetchStats();
-  }, [fetchApiKeys, fetchStats]);
+    const requestGuard = requestGuardRef.current;
+    fetchDashboardData();
+    return () => requestGuard.cancel();
+  }, [fetchDashboardData]);
 
   const createApiKey = async () => {
     if (!newKeyName.trim()) return;
@@ -91,7 +118,15 @@ export function DashboardClient({ user }: { user: User }) {
 
       if (data.success) {
         setNewKey(data.key);
-        setApiKeys([data.keyRecord, ...apiKeys]);
+        setApiKeys((currentKeys) => [data.keyRecord, ...currentKeys]);
+        setStats((currentStats) =>
+          currentStats
+            ? {
+                ...currentStats,
+                keys: currentStats.keys + 1,
+              }
+            : currentStats
+        );
         setNewKeyName("");
       } else {
         setError(getErrorMessage(data.error, "Failed to create key"));
@@ -114,10 +149,18 @@ export function DashboardClient({ user }: { user: User }) {
       const data = await res.json();
 
       if (data.success) {
-        setApiKeys(apiKeys.filter((k) => k.id !== keyId));
+        setApiKeys((currentKeys) => currentKeys.filter((k) => k.id !== keyId));
+        setStats((currentStats) =>
+          currentStats
+            ? {
+                ...currentStats,
+                keys: Math.max(0, currentStats.keys - 1),
+              }
+            : currentStats
+        );
       }
     } catch (err) {
-      console.error("Failed to revoke API key:", err);
+      setError(getErrorMessage(err, "Failed to revoke API key."));
     }
   };
 
@@ -177,6 +220,12 @@ export function DashboardClient({ user }: { user: User }) {
             Manage your API keys and view your usage.
           </p>
         </div>
+
+        {loadError && (
+          <div className="mb-6 rounded-lg border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
+            {loadError}
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
