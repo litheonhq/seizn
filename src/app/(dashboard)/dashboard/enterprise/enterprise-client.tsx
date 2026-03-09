@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 
 type TabType = "sso" | "scim" | "settings";
 
@@ -44,6 +46,8 @@ export function EnterpriseClient() {
     autoDeprovision: false,
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const requestGuardRef = useRef(createLatestRequestGuard());
 
   // SSO Setup
   const [selectedProvider, setSelectedProvider] = useState("");
@@ -54,30 +58,58 @@ export function EnterpriseClient() {
   const { t } = useDashboardTranslation();
 
   const loadData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
     setLoading(true);
+    setError(null);
     try {
-      // Load SSO providers
-      const providersRes = await fetch("/api/enterprise/sso?info=providers");
-      const providersData = await providersRes.json();
-      if (providersData.success) {
-        setProviders(providersData.providers || []);
+      const [providersResult, configResult] = await Promise.allSettled([
+        fetch("/api/enterprise/sso?info=providers", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/enterprise/sso", { signal: request.signal }).then((res) => res.json()),
+      ]);
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
       }
 
-      // Load SSO config
-      const configRes = await fetch("/api/enterprise/sso");
-      const configData = await configRes.json();
-      if (configData.success && configData.config) {
-        setSSOConfig(configData.config);
+      let failedCount = 0;
+
+      if (providersResult.status === "fulfilled" && providersResult.value.success) {
+        setProviders(providersResult.value.providers || []);
+      } else if (
+        (providersResult.status === "fulfilled" && !providersResult.value.success) ||
+        (providersResult.status === "rejected" && !isAbortError(providersResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (configResult.status === "fulfilled" && configResult.value.success && configResult.value.config) {
+        setSSOConfig(configResult.value.config);
+      } else if (
+        (configResult.status === "fulfilled" && !configResult.value.success) ||
+        (configResult.status === "rejected" && !isAbortError(configResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (failedCount > 0) {
+        setError("Some enterprise settings could not be refreshed.");
       }
     } catch (error) {
-      console.error("Failed to load data:", error);
+      if (!isAbortError(error) && requestGuardRef.current.isCurrent(request.id)) {
+        setError(getErrorMessage(error, "Failed to load enterprise settings."));
+      }
     } finally {
-      setLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setLoading(false);
+        requestGuardRef.current.finish(request.id);
+      }
     }
   }, []);
 
   useEffect(() => {
+    const requestGuard = requestGuardRef.current;
     loadData();
+    return () => requestGuard.cancel();
   }, [loadData]);
 
   const handleEnableSSO = async () => {
@@ -118,6 +150,12 @@ export function EnterpriseClient() {
           {t("dashboard.enterpriseDashboard.subtitle")}
         </p>
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {error}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { BudgetSettings } from "@/components/budget-planner/BudgetSettings";
 import type { BudgetSettings as BudgetSettingsType } from "@/lib/budget-planner/types";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 
 // ============================================
 // Types
@@ -68,49 +70,84 @@ export function BudgetDashboardClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useDashboardTranslation();
+  const requestGuardRef = useRef(createLatestRequestGuard());
 
   // Fetch current settings and usage stats
   const fetchData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
     try {
       setLoading(true);
       setError(null);
 
-      const [settingsRes, statsRes, eventsRes] = await Promise.all([
-        fetch("/api/budget/settings"),
-        fetch("/api/budget/stats"),
-        fetch("/api/budget/degrade-events?limit=10"),
+      const [settingsResult, statsResult, eventsResult] = await Promise.allSettled([
+        fetch("/api/budget/settings", { signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
+        fetch("/api/budget/stats", { signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
+        fetch("/api/budget/degrade-events?limit=10", { signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
       ]);
 
-      if (settingsRes.ok) {
-        const settingsData = await settingsRes.json();
-        if (settingsData.success) {
-          setSettings(settingsData.settings);
-        }
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
       }
 
-      if (statsRes.ok) {
-        const statsData = await statsRes.json();
-        if (statsData.success) {
-          setStats(statsData.stats);
-        }
+      let failedCount = 0;
+
+      if (settingsResult.status === "fulfilled" && settingsResult.value.ok && settingsResult.value.data?.success) {
+        setSettings(settingsResult.value.data.settings);
+      } else if (
+        (settingsResult.status === "fulfilled" &&
+          (!settingsResult.value.ok || !settingsResult.value.data?.success)) ||
+        (settingsResult.status === "rejected" && !isAbortError(settingsResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (eventsRes.ok) {
-        const eventsData = await eventsRes.json();
-        if (eventsData.success) {
-          setDegradeEvents(eventsData.events || []);
-        }
+      if (statsResult.status === "fulfilled" && statsResult.value.ok && statsResult.value.data?.success) {
+        setStats(statsResult.value.data.stats);
+      } else if (
+        (statsResult.status === "fulfilled" && (!statsResult.value.ok || !statsResult.value.data?.success)) ||
+        (statsResult.status === "rejected" && !isAbortError(statsResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (eventsResult.status === "fulfilled" && eventsResult.value.ok && eventsResult.value.data?.success) {
+        setDegradeEvents(eventsResult.value.data.events || []);
+      } else if (
+        (eventsResult.status === "fulfilled" &&
+          (!eventsResult.value.ok || !eventsResult.value.data?.success)) ||
+        (eventsResult.status === "rejected" && !isAbortError(eventsResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (failedCount > 0) {
+        setError("Some budget data could not be refreshed.");
       }
     } catch (err) {
-      console.error("Failed to fetch budget data:", err);
-      setError("Failed to load budget data");
+      if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
+        setError(getErrorMessage(err, "Failed to load budget data."));
+      }
     } finally {
-      setLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setLoading(false);
+        requestGuardRef.current.finish(request.id);
+      }
     }
   }, []);
 
   useEffect(() => {
+    const requestGuard = requestGuardRef.current;
     fetchData();
+    return () => requestGuard.cancel();
   }, [fetchData]);
 
   const handleSaveSettings = async (newSettings: BudgetSettingsType) => {

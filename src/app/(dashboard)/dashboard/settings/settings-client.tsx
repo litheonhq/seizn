@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { getErrorMessage } from "@/lib/ui-error";
 import { RTBFModal, DataExportModal, DeleteMemoriesModal } from '@/components/settings';
 
 interface ProfileData {
@@ -71,6 +73,8 @@ export function SettingsClient() {
   const [language, setLanguage] = useState<Locale>("en");
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const requestGuardRef = useRef(createLatestRequestGuard());
 
   // Budget settings state
   const [budgetSettings, setBudgetSettings] = useState<BudgetSettings>({
@@ -105,78 +109,98 @@ export function SettingsClient() {
   const [showDeleteMemoriesModal, setShowDeleteMemoriesModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const res = await fetch("/api/me", { credentials: "include" });
-        if (res.status === 401) return;
-        const data = await res.json();
+  const loadInitialData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
+    setLoadError(null);
+    setBudgetLoading(true);
+    setQuotaLoading(true);
+
+    try {
+      const [profileResult, budgetResult, quotaResult] = await Promise.allSettled([
+        fetch("/api/me", { credentials: "include", signal: request.signal }).then(async (res) => ({
+          status: res.status,
+          data: res.status === 401 ? null : await res.json(),
+        })),
+        fetch("/api/budget/settings", { credentials: "include", signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
+        fetch("/api/quota", { credentials: "include", signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
+      ]);
+
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
+
+      let failedCount = 0;
+
+      if (profileResult.status === "fulfilled" && profileResult.value.status !== 401 && profileResult.value.data) {
+        const data = profileResult.value.data;
         setProfile({
           email: data?.user?.email,
           name: data?.user?.name,
           language: data?.user?.language || "en",
         });
         setLanguage((data?.user?.language as Locale) || "en");
-      } catch (err) {
-        console.error("Failed to load profile", err);
+      } else if (profileResult.status === "rejected" && !isAbortError(profileResult.reason)) {
+        failedCount += 1;
       }
-    };
-    loadProfile();
-  }, []);
 
-  // Load budget settings
-  useEffect(() => {
-    const loadBudgetSettings = async () => {
-      try {
-        const res = await fetch("/api/budget/settings", { credentials: "include" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.settings) {
-            setBudgetSettings(data.settings);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load budget settings", err);
-      } finally {
+      if (budgetResult.status === "fulfilled" && budgetResult.value.ok && budgetResult.value.data?.settings) {
+        setBudgetSettings(budgetResult.value.data.settings);
+      } else if (
+        (budgetResult.status === "fulfilled" && !budgetResult.value.ok) ||
+        (budgetResult.status === "rejected" && !isAbortError(budgetResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      if (quotaResult.status === "fulfilled" && quotaResult.value.ok && quotaResult.value.data) {
+        const data = quotaResult.value.data;
+        setQuotaData({
+          plan: data.plan || "free",
+          memories: {
+            used: data.memories?.used || 0,
+            limit: data.memories?.limit || PLAN_LIMITS[data.plan || "free"]?.memories || 10000,
+          },
+          apiCalls: {
+            used: data.apiCalls?.used || 0,
+            limit: data.apiCalls?.limit || PLAN_LIMITS[data.plan || "free"]?.apiCalls || 1000,
+          },
+          apiKeys: {
+            used: data.apiKeys?.used || 0,
+            limit: data.apiKeys?.limit || PLAN_LIMITS[data.plan || "free"]?.apiKeys || 3,
+          },
+        });
+      } else if (
+        (quotaResult.status === "fulfilled" && !quotaResult.value.ok) ||
+        (quotaResult.status === "rejected" && !isAbortError(quotaResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
+      setLoadError(failedCount > 0 ? "Some settings data could not be loaded." : null);
+    } catch (err) {
+      if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
+        setLoadError(getErrorMessage(err, "Failed to load settings."));
+      }
+    } finally {
+      if (requestGuardRef.current.isCurrent(request.id)) {
         setBudgetLoading(false);
+        setQuotaLoading(false);
+        requestGuardRef.current.finish(request.id);
       }
-    };
-    loadBudgetSettings();
+    }
   }, []);
 
-  // Load quota data
   useEffect(() => {
-    const loadQuotaData = async () => {
-      try {
-        const res = await fetch("/api/quota", { credentials: "include" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data) {
-            setQuotaData({
-              plan: data.plan || "free",
-              memories: {
-                used: data.memories?.used || 0,
-                limit: data.memories?.limit || PLAN_LIMITS[data.plan || "free"]?.memories || 10000,
-              },
-              apiCalls: {
-                used: data.apiCalls?.used || 0,
-                limit: data.apiCalls?.limit || PLAN_LIMITS[data.plan || "free"]?.apiCalls || 1000,
-              },
-              apiKeys: {
-                used: data.apiKeys?.used || 0,
-                limit: data.apiKeys?.limit || PLAN_LIMITS[data.plan || "free"]?.apiKeys || 3,
-              },
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load quota data", err);
-      } finally {
-        setQuotaLoading(false);
-      }
-    };
-    loadQuotaData();
-  }, []);
+    const requestGuard = requestGuardRef.current;
+    loadInitialData();
+    return () => requestGuard.cancel();
+  }, [loadInitialData]);
 
   const saveLanguage = async (lang: Locale) => {
     setSaveStatus("saving");
@@ -198,7 +222,7 @@ export function SettingsClient() {
       setSaveStatus("saved");
       setTimeout(() => window.location.reload(), 500);
     } catch (err) {
-      console.error(err);
+      setLoadError(getErrorMessage(err, "Failed to save language."));
       setSaveStatus("error");
     }
   };
@@ -216,7 +240,7 @@ export function SettingsClient() {
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (err) {
-      console.error(err);
+      setLoadError(getErrorMessage(err, "Failed to save budget settings."));
       setSaveStatus("error");
     }
   }, [budgetSettings]);
@@ -280,6 +304,12 @@ export function SettingsClient() {
         {saveStatus === "saved" && <span className="text-sm text-szn-success">{t("dashboard.settingsPage.saved")}</span>}
         {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
+
+      {loadError && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {loadError}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="grid grid-cols-2 gap-1 p-1 bg-szn-surface rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">

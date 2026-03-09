@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
+import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
 import { formatDate } from "@/lib/format-date";
+import { getErrorMessage } from "@/lib/ui-error";
 import type {
   DashboardUser as User,
   DashboardStats as Stats,
@@ -41,40 +43,76 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const requestGuardRef = useRef(createLatestRequestGuard());
 
   const fetchData = useCallback(async () => {
+    const request = requestGuardRef.current.begin();
     try {
-      const [statsRes, memoriesRes, usageRes, activityRes] = await Promise.all([
-        fetch("/api/dashboard/stats"),
-        fetch("/api/memories?limit=5"),
-        fetch("/api/dashboard/usage?period=7d"),
-        fetch("/api/dashboard/activity?limit=10"),
+      const results = await Promise.allSettled([
+        fetch("/api/dashboard/stats", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/memories?limit=5", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/dashboard/usage?period=7d", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/dashboard/activity?limit=10", { signal: request.signal }).then((res) => res.json()),
       ]);
 
-      const statsData = await statsRes.json();
-      const memoriesData = await memoriesRes.json();
-      const usageData = await usageRes.json();
-      const activityData = await activityRes.json();
+      if (!requestGuardRef.current.isCurrent(request.id)) {
+        return;
+      }
 
-      if (statsData.success) {
+      const [statsResult, memoriesResult, usageResult, activityResult] = results;
+      let failedCount = 0;
+
+      if (statsResult.status === "fulfilled" && statsResult.value.success) {
+        const statsData = statsResult.value;
         setStats(statsData.stats);
+      } else if (
+        (statsResult.status === "fulfilled" && !statsResult.value.success) ||
+        (statsResult.status === "rejected" && !isAbortError(statsResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (memoriesData.success) {
+      if (memoriesResult.status === "fulfilled" && memoriesResult.value.success) {
+        const memoriesData = memoriesResult.value;
         setRecentMemories(memoriesData.memories || []);
+      } else if (
+        (memoriesResult.status === "fulfilled" && !memoriesResult.value.success) ||
+        (memoriesResult.status === "rejected" && !isAbortError(memoriesResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (usageData.success && usageData.usage?.daily) {
+      if (usageResult.status === "fulfilled" && usageResult.value.success && usageResult.value.usage?.daily) {
+        const usageData = usageResult.value;
         setDailyUsage(usageData.usage.daily);
+      } else if (
+        (usageResult.status === "fulfilled" && !usageResult.value.success) ||
+        (usageResult.status === "rejected" && !isAbortError(usageResult.reason))
+      ) {
+        failedCount += 1;
       }
 
-      if (activityData.success) {
+      if (activityResult.status === "fulfilled" && activityResult.value.success) {
+        const activityData = activityResult.value;
         setRecentActivity(activityData.activity || []);
+      } else if (
+        (activityResult.status === "fulfilled" && !activityResult.value.success) ||
+        (activityResult.status === "rejected" && !isAbortError(activityResult.reason))
+      ) {
+        failedCount += 1;
       }
+
+      setError(failedCount > 0 ? "Some dashboard sections failed to refresh." : null);
     } catch (err) {
-      console.error("Failed to fetch data:", err);
+      if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
+        setError(getErrorMessage(err, "Failed to load dashboard overview."));
+      }
     } finally {
-      setIsLoading(false);
+      if (requestGuardRef.current.isCurrent(request.id)) {
+        setIsLoading(false);
+        requestGuardRef.current.finish(request.id);
+      }
     }
   }, []);
 
@@ -86,6 +124,8 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
     }, 30_000);
     return () => clearInterval(interval);
   }, [fetchData]);
+
+  useEffect(() => () => requestGuardRef.current.cancel(), []);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -128,6 +168,12 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
     <div className="space-y-6">
       {/* Onboarding Wizard - Shows until all steps are complete */}
       <OnboardingWizard userId={user.id} />
+
+      {error && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          {error}
+        </div>
+      )}
 
       {/* Welcome Section */}
       <div className="szn-card rounded-3xl p-8 relative overflow-hidden">

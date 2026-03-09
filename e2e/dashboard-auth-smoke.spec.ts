@@ -52,8 +52,10 @@ test.describe('Dashboard Smoke (Authenticated)', () => {
 
     // Wait for redirect into dashboard.
     await page.waitForURL(/dashboard/);
+    await expect(page.locator('main')).toBeVisible();
 
     const paths = [
+      '/dashboard/budget',
       '/dashboard/enterprise',
       '/dashboard/organizations',
       '/dashboard/autopilot',
