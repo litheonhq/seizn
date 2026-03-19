@@ -81,7 +81,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
   const config = seasonConfig[season];
   const isSidebarExpanded = isSidebarPinned;
-  const mainPaddingClass = "lg:pl-20";
+  const mainPaddingClass = "lg:pl-[68px]";
   const topBarHeight = "lg:pt-14";
 
   const isActive = useCallback((href: string) => {
@@ -93,8 +93,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-szn-bg">
+      <div className="min-h-screen flex items-center justify-center bg-szn-bg" role="status" aria-label="Loading">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-szn-text-1"></div>
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }
@@ -121,19 +122,20 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <aside
         role="navigation"
         aria-label="Main navigation"
-        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col szn-card transition-all duration-300 ease-out ${
-          isSidebarExpanded ? "w-72" : "w-20"
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col bg-szn-card/95 backdrop-blur-xl border-r border-szn-border/60 transition-[width] duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${
+          isSidebarExpanded ? "w-72" : "w-[68px]"
         }`}
+        style={{ boxShadow: "var(--szn-shadow-sm)" }}
       >
         {/* Logo */}
-        <div className="p-4 border-b theme-border">
+        <div className="p-4 border-b border-szn-border/40">
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-10 h-10 rounded-2xl shadow-lg flex-shrink-0" />
-            <div className={`flex-1 min-w-0 transition-all duration-300 ease-out ${
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 rounded-xl flex-shrink-0 shadow-sm" />
+            <div className={`flex-1 min-w-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 w-0"
             }`}>
-              <span className="text-xl font-bold text-szn-text-1 block truncate whitespace-nowrap">
+              <span className="text-lg font-bold text-szn-text-1 block truncate whitespace-nowrap tracking-tight">
                 Seizn<span className="theme-primary">.</span>
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1 whitespace-nowrap">
@@ -144,7 +146,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
 
         {/* Navigation - Grouped */}
-        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-hidden szn-scroll-shadow-y">
+        <nav className="flex-1 px-2 py-3 overflow-y-auto scrollbar-hidden szn-scroll-shadow-y">
           {isSidebarExpanded ? (
             <ExpandedNav
               groups={navigationGroups}
@@ -163,48 +165,48 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </nav>
 
         {/* Theme Toggle */}
-        <div className="px-3 pb-2">
+        <div className="px-2 pb-2">
           <ThemeToggleSidebar expanded={isSidebarExpanded} />
         </div>
 
         {/* User Profile */}
-        <div className="p-4 border-t theme-border">
-          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-szn-surface-1 ${isSidebarExpanded ? "hover:bg-szn-surface-2" : "justify-center"} transition-all duration-300`}>
+        <div className="p-3 border-t border-szn-border/40">
+          <div className={`flex items-center gap-3 p-2.5 rounded-xl bg-szn-surface-1/60 ${isSidebarExpanded ? "hover:bg-szn-surface-2/80" : "justify-center"} transition-all duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]`}>
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className={`rounded-full ring-2 ring-white shadow-md transition-all duration-300 object-cover ${
-                  isSidebarExpanded ? "w-11 h-11" : "w-8 h-8"
+                className={`rounded-lg ring-1 ring-szn-border/40 shadow-sm transition-all duration-300 object-cover ${
+                  isSidebarExpanded ? "w-9 h-9" : "w-8 h-8"
                 }`}
               />
             ) : (
-              <div className={`rounded-full theme-gradient-btn flex items-center justify-center shadow-md transition-all duration-300 ${
-                isSidebarExpanded ? "w-11 h-11" : "w-8 h-8"
+              <div className={`rounded-lg theme-gradient-btn flex items-center justify-center shadow-sm transition-all duration-300 ${
+                isSidebarExpanded ? "w-9 h-9" : "w-8 h-8"
               }`}>
                 <span className={`text-white font-semibold transition-all duration-300 ${
-                  isSidebarExpanded ? "text-base" : "text-sm"
+                  isSidebarExpanded ? "text-sm" : "text-xs"
                 }`}>
                   {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
                 </span>
               </div>
             )}
-            <div className={`flex items-center gap-3 overflow-hidden transition-all duration-300 ease-out ${
+            <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isSidebarExpanded ? "flex-1 opacity-100" : "w-0 opacity-0"
             }`}>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-szn-text-1 truncate whitespace-nowrap">
+                <p className="text-[13px] font-medium text-szn-text-1 truncate whitespace-nowrap">
                   {session?.user?.name || "User"}
                 </p>
-                <p className="text-xs text-szn-text-2 truncate whitespace-nowrap">{session?.user?.email}</p>
+                <p className="text-[11px] text-szn-text-3 truncate whitespace-nowrap">{session?.user?.email}</p>
               </div>
               <button
                 onClick={handleSignOut}
-                className="p-2 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 rounded-xl transition-all duration-200 flex-shrink-0"
+                className="p-1.5 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 rounded-lg transition-colors duration-150 flex-shrink-0"
                 title={t("dashboard.signOut")}
               >
-                <LogoutIcon className="w-5 h-5" />
+                <LogoutIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -223,7 +225,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       />
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 inset-x-0 z-30 szn-card border-b theme-border">
+      <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-card/90 backdrop-blur-xl border-b border-szn-border/50" style={{ boxShadow: "var(--szn-shadow-xs)" }}>
         <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -290,18 +292,18 @@ function ExpandedNav({
           ? (openGroups[group.key] ?? true) || autoExpandedGroupKeys.has(group.key)
           : true;
         return (
-          <div key={group.key || "__top"} className={group.key ? "mt-1" : ""}>
+          <div key={group.key || "__top"} className={group.key ? "mt-0.5" : ""}>
             {group.key && (
               <button
                 onClick={() => toggleGroup(group.key)}
-                className="flex items-center justify-between w-full px-3 pt-4 pb-1.5 text-[10px] font-semibold tracking-widest text-szn-text-3 uppercase hover:text-szn-text-2 transition-colors"
+                className="flex items-center justify-between w-full px-3 pt-4 pb-1 text-[10px] font-semibold tracking-[0.08em] text-szn-text-3/70 uppercase hover:text-szn-text-2 transition-colors duration-150"
               >
                 <span>{group.label}</span>
-                <ChevronDownIcon className={`w-3 h-3 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+                <ChevronDownIcon className={`w-3 h-3 transition-transform duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${isOpen ? "rotate-180" : ""}`} />
               </button>
             )}
             {isOpen && (
-              <div className="space-y-0.5">
+              <div className="space-y-px">
                 {group.items.map((item) => {
                   const active = isActive(item.href);
                   return (
@@ -309,17 +311,17 @@ function ExpandedNav({
                       key={item.href}
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={`group relative flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-xl transition-all duration-200 overflow-hidden ${
+                      className={`group relative flex items-center gap-2.5 px-2.5 py-[7px] text-[13px] font-medium rounded-lg transition-all duration-150 overflow-hidden ${
                         active
-                          ? "bg-szn-surface-2 text-szn-text-1"
-                          : "text-szn-text-2 hover:bg-szn-surface-1 hover:text-szn-text-1"
+                          ? "bg-szn-accent/10 text-szn-text-1"
+                          : "text-szn-text-2 hover:bg-szn-surface-1/80 hover:text-szn-text-1"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-szn-accent" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full bg-szn-accent" />
                       )}
                       <item.icon
-                        className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-200 ${
+                        className={`w-[16px] h-[16px] flex-shrink-0 transition-colors duration-150 ${
                           active
                             ? "text-szn-accent"
                             : "text-szn-text-3 group-hover:text-szn-text-2"
@@ -348,7 +350,7 @@ function CollapsedNav({
   onExpand: () => void;
 }) {
   return (
-    <div className="space-y-0.5 pt-1">
+    <div className="space-y-px pt-1">
       {items.map((item) => {
         const active = isActive(item.href);
         const handleClick = (e: React.MouseEvent) => {
@@ -362,17 +364,17 @@ function CollapsedNav({
             title={item.label}
             onClick={handleClick}
             aria-current={active ? "page" : undefined}
-            className={`group relative flex items-center justify-center w-full h-10 rounded-xl transition-all duration-200 ${
+            className={`group relative flex items-center justify-center w-full h-9 rounded-lg transition-all duration-150 ${
               active
-                ? "bg-szn-surface-2"
-                : "text-szn-text-2 hover:bg-szn-surface-1"
+                ? "bg-szn-accent/10"
+                : "text-szn-text-2 hover:bg-szn-surface-1/80"
             }`}
           >
             {active && (
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-szn-accent" />
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full bg-szn-accent" />
             )}
             <item.icon
-              className={`w-5 h-5 flex-shrink-0 transition-colors duration-200 ${
+              className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-150 ${
                 active
                   ? "text-szn-accent"
                   : "text-szn-text-3 group-hover:text-szn-text-2"

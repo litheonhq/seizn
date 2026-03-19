@@ -40,7 +40,7 @@ export interface NavGroup {
 // =============================================================================
 
 export const seasonConfig = {
-  spring: { name: "Spring", icon: "🌸" },
+  spring: { name: "Spring", icon: "🌿" },
   summer: { name: "Summer", icon: "🌊" },
   autumn: { name: "Autumn", icon: "🍂" },
   winter: { name: "Winter", icon: "❄️" },
