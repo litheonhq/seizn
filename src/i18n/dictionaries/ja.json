@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. All rights reserved.",
+    "copyright": "© {year} Litheon LLC. All rights reserved.",
     "privacy": "プライバシー",
     "terms": "利用規約",
     "contact": "お問い合わせ"
@@ -289,7 +289,7 @@
         },
         "quickStart": {
           "title": "クイックスタートガイド",
-          "description": "これらのカードに従ってSeizinをすばやく設定しましょう。"
+          "description": "これらのカードに従ってSeiznをすばやく設定しましょう。"
         }
       },
       "takeTour": "ツアーを開始"
@@ -355,8 +355,8 @@
       "createApiKey": "APIキーを作成"
     },
     "language": "言語",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "組織",
+    "docs": "ドキュメント",
     "nav": {
       "overview": "概要",
       "memories": "メモリ",
@@ -389,8 +389,8 @@
         "system": "システム"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
+    "pinSidebar": "サイドバーを固定",
+    "unpinSidebar": "サイドバーを折りたたむ",
     "playground": "プレイグラウンド",
     "playgroundPage": {
       "title": "デバッグコンソール",
@@ -485,7 +485,7 @@
       "saving": "保存中...",
       "saved": "保存済み",
       "saveFailed": "保存失敗",
-      "save": "Save Changes",
+      "save": "変更を保存",
       "account": "アカウント",
       "email": "メール",
       "name": "名前",
@@ -518,7 +518,7 @@
         "reject": "リクエスト拒否",
         "cache": "キャッシュを返す",
         "degrade": "品質を下げる",
-        "queue": "Queue Request"
+        "queue": "リクエストをキューに入れる"
       },
       "notifications": {
         "title": "通知設定",
@@ -534,13 +534,13 @@
         "telegram": "Telegram",
         "telegramDesc": "Telegramボットでアラートを受信",
         "comingSoon": "近日公開",
-        "integrations": "Integrations"
+        "integrations": "統合"
       },
       "security": {
         "title": "セキュリティ設定",
         "subtitle": "アカウントのセキュリティを管理",
         "changePassword": "パスワード変更",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "パスワードのセキュリティを管理",
         "currentPassword": "現在のパスワード",
         "newPassword": "新しいパスワード",
         "confirmPassword": "パスワード確認",
@@ -592,33 +592,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "おはようございます",
+      "afternoon": "こんにちは",
+      "evening": "こんばんは"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "AIメモリの使用状況の概要です",
+      "totalMemories": "メモリ総数",
+      "apiCalls": "API呼び出し",
+      "activeKeys": "有効なAPIキー",
+      "currentPlan": "現在のプラン",
+      "usage": "使用状況",
+      "today": "本日",
+      "dailyLimit": "日次制限",
+      "recentMemories": "最近のメモリ",
+      "viewAll": "すべて表示",
+      "noMemories": "メモリがありません",
+      "noMemoriesHint": "APIから最初のメモリを追加してみましょう",
+      "quickStart": "クイックスタート",
+      "createApiKey": "APIキーを作成",
+      "getStartedApi": "APIを始める",
+      "viewDocumentation": "ドキュメントを表示",
+      "learnSeizn": "Seiznの使い方を学ぶ",
+      "createOrganization": "組織を作成",
+      "collaborateTeam": "チームと協力",
+      "quickExample": "クイック例",
+      "manageKeys": "キーを管理",
+      "upgradePlan": "プランをアップグレード",
       "apiUsageChart": "API使用状況",
       "last7days": "過去7日間",
       "viewDetails": "詳細を表示",
@@ -1412,6 +1412,40 @@
         "events": "購読するイベント",
         "cancel": "キャンセル",
         "create": "Webhookを作成"
+      },
+      "events": {
+        "memory_created": {
+          "label": "メモリ作成",
+          "desc": "新しいメモリが保存されたとき"
+        },
+        "memory_updated": {
+          "label": "メモリ更新",
+          "desc": "メモリが変更されたとき"
+        },
+        "memory_deleted": {
+          "label": "メモリ削除",
+          "desc": "メモリが削除されたとき"
+        },
+        "extraction_completed": {
+          "label": "抽出完了",
+          "desc": "メモリ抽出が完了したとき"
+        },
+        "query_executed": {
+          "label": "クエリ実行",
+          "desc": "RAGクエリが実行されたとき"
+        },
+        "key_created": {
+          "label": "APIキー作成",
+          "desc": "新しいAPIキーが生成されたとき"
+        },
+        "key_revoked": {
+          "label": "APIキー取り消し",
+          "desc": "APIキーが取り消されたとき"
+        },
+        "usage_threshold": {
+          "label": "使用量しきい値",
+          "desc": "使用量がしきい値を超えたとき"
+        }
       }
     },
     "skipToContent": "本文へスキップ",
@@ -1430,7 +1464,7 @@
       "navigate": "移動",
       "open": "開く",
       "close": "閉じる",
-      "enter": "Enter"
+      "enter": "決定"
     }
   },
   "pricingPage": {
@@ -1567,48 +1601,51 @@
     "socialProof": "大規模にエージェントを運用するチームに信頼されています",
     "liveDemo": "ライブデモ",
     "heroTagline": "APIをお試しください — サインアップ不要",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "最初の検索が完了しました",
+    "copySnippetHint": "以下のスニペットをコピーして再現してください",
+    "copySnippetTitle": "このスニペットをコピー",
+    "copySnippetSubtitle": "上記の設定をそのまま反映したコードです",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "title": "Seizn vs LangChain + Pinecone",
+      "subtitle": "バラバラのツールを組み合わせる必要はありません。必要なすべてが一つの統合スタックに。",
+      "tracingTitle": "組み込みトレーシング + 評価",
+      "tracingDesc": "すべてのリクエストがデフォルトでトレースされます。LangSmithやカスタムログなしで、評価の実行、リグレッション検出、本番問題のデバッグが可能です。",
+      "tracingBadge": "デフォルトON",
+      "autopilotTitle": "予算対応オートパイロット",
+      "autopilotDesc": "レイテンシまたはコスト予算を設定すると、オートパイロットが最適な検索戦略を自動選択します。手動チューニングは不要です。",
+      "autopilotBadge": "オプション",
+      "governanceTitle": "ガバナンス + 監査ログ",
+      "governanceDesc": "PII検出、GDPR準拠の削除、完全な監査証跡。後付けではなく、コンプライアンスを最初から設計。",
+      "governanceBadge": "チームデフォルト",
+      "lessGlueTitle": "より少ない構成要素",
+      "lessGlueDesc": "LangChain + Pinecone + LangSmith + カスタムPIIフィルターの組み合わせは不要。一つのSDK、一つのダッシュボード、一つの請求書。",
+      "lessGlueBadge": "グルーコード削減"
     },
     "trust": {
-      "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "security": "RLS + キーハッシング",
+      "securityDesc": "デフォルトで安全",
+      "rateLimits": "レート制限",
+      "rateLimitsDesc": "使用量アラート",
+      "auditLogs": "監査ログ",
+      "auditLogsDesc": "完全な追跡性"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "title": "シンプルで透明な料金",
+      "subtitle": "12,000メモリの無料枠から始めましょう。StarterにアップグレードしてE2E暗号化メモリを利用できます。",
+      "viewPricing": "料金を見る",
+      "contactSales": "営業に連絡"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "ドキュメント",
+      "pricing": "料金",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "APIキーを取得",
+      "tryDemo": "デモを試す",
       "github": "OSS",
-      "status": "ステータス"
+      "status": "ステータス",
+      "compare": "比較",
+      "limits": "制限",
+      "help": "ヘルプ"
     },
     "requestBuilder": {
       "title": "リクエストビルダー",
@@ -1634,7 +1671,8 @@
         "techDocs": "技術ドキュメント",
         "legalContracts": "法的契約書",
         "researchPapers": "研究論文"
-      }
+      },
+      "advanced": "詳細設定"
     },
     "resultsPanel": {
       "searching": "検索中...",
@@ -1655,7 +1693,42 @@
     },
     "tabs": {
       "results": "結果",
-      "trace": "トレース"
+      "trace": "トレース",
+      "cost": "コスト"
+    },
+    "chips": {
+      "trace": "トレース",
+      "eval": "評価",
+      "policy": "ポリシー"
+    },
+    "playgroundTitle": "今すぐ試す",
+    "costPanel": {
+      "calculating": "コストを計算中...",
+      "noCost": "クエリを実行してコスト内訳を表示",
+      "costBreakdown": "コスト内訳",
+      "component": "コンポーネント",
+      "cost": "コスト",
+      "embedding": "埋め込み",
+      "vectorSearch": "ベクトル検索",
+      "rerank": "リランク",
+      "answerContract": "回答検証",
+      "total": "合計コスト",
+      "usage": "使用量",
+      "tokensIn": "入力トークン",
+      "tokensOut": "出力トークン",
+      "queryUnits": "クエリ単位",
+      "estimatedMonthly": "月間見積もり",
+      "basedOn": "基準",
+      "queriesPerDay": "クエリ/日"
+    },
+    "errorDisplay": {
+      "error": "エラー",
+      "errorCode": "コード",
+      "traceId": "トレースID",
+      "hint": "ヒント",
+      "tryAgain": "再試行",
+      "copyTraceId": "トレースIDをコピー",
+      "copied": "コピーしました！"
     }
   },
   "docs": {
@@ -1681,7 +1754,8 @@
       "security": "セキュリティ",
       "sdks": "SDK",
       "faq": "FAQ",
-      "tutorial": "5分チュートリアル"
+      "tutorial": "5分チュートリアル",
+      "integrations": "統合"
     },
     "hero": {
       "title": "APIドキュメント",
@@ -1798,7 +1872,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Litheon LLC. All rights reserved."
     },
     "faqPage": {
       "title": "よくある質問",
@@ -1815,7 +1889,8 @@
         "extraction": "抽出",
         "operations": "運用",
         "securityCompliance": "セキュリティとコンプライアンス",
-        "technology": "技術"
+        "technology": "技術",
+        "mcpDevTools": "MCP & 開発ツール"
       },
       "items": [
         {
@@ -2073,6 +2148,16 @@
           "title": "メモリを検索",
           "time": "2分",
           "description": "自然言語検索で関連するメモリを取得します。"
+        },
+        "ingest": {
+          "title": "ドキュメントを取り込む",
+          "time": "30秒",
+          "description": "データセットにドキュメントをアップロードして検索可能にします。"
+        },
+        "query": {
+          "title": "最初のクエリを実行",
+          "time": "10秒",
+          "description": "自然言語クエリでドキュメントを検索します。"
         }
       },
       "completion": {
@@ -2133,11 +2218,11 @@
     },
     "search": {
       "placeholder": "ドキュメントを検索...",
-      "buttonText": "ドキュメント検索...",
-      "noResults": "検索結果が見つかりません:",
-      "hint": "クイック検索:",
-      "navigate": "ナビゲート",
-      "select": "選択"
+      "buttonText": "検索",
+      "noResults": "検索結果が見つかりません：",
+      "hint": "クイック検索：",
+      "navigate": "で移動",
+      "select": "で選択"
     },
     "tutorialPage": {
       "meta": {
@@ -2369,6 +2454,221 @@
       "footer": {
         "rights": "All rights reserved."
       }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "統合 | Seizn",
+        "description": "LangChain、LlamaIndex、OpenTelemetryなどとSeiznを統合"
+      },
+      "breadcrumb": "統合",
+      "title": "統合",
+      "subtitle": "お気に入りのAIフレームワークやオブザーバビリティツールとSeiznを接続します。",
+      "cards": {
+        "mcpServer": {
+          "badge": "新着",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "AIコーディングアシスタント向けのユニバーサルMCPサーバーです。Claude Code、Cursor、Windsurf、Clineをネイティブサポート。"
+        },
+        "langchain": {
+          "badge": "公式",
+          "title": "LangChain",
+          "description": "LangChain RAGパイプライン用のドロップインリトリーバーです。PythonとTypeScriptに対応しています。"
+        },
+        "llamaindex": {
+          "badge": "公式",
+          "title": "LlamaIndex",
+          "description": "LlamaIndexクエリエンジン用のネイティブリトリーバーです。ストリーミングとハイブリッド検索をサポートしています。"
+        },
+        "opentelemetry": {
+          "badge": "公式",
+          "title": "OpenTelemetry",
+          "description": "Datadog、Grafana、Jaeger、およびすべてのOTLP互換バックエンドにトレースをエクスポートします。"
+        }
+      },
+      "comingSoon": {
+        "title": "近日公開",
+        "description": "さらに多くの統合を準備中です。ご要望をお聞かせください！"
+      },
+      "backToDocs": "ドキュメントに戻る"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain統合 | Seizn",
+        "description": "LangChain RAGパイプライン用のドロップインリトリーバー"
+      },
+      "badge": "公式",
+      "title": "LangChain統合",
+      "subtitle": "フルトレーシングサポート付きのLangChain RAGパイプライン用ドロップインリトリーバーです。",
+      "overview": {
+        "title": "60秒で分かる概要",
+        "description": "SeiznRetrieverはあらゆるLangChainリトリーバーのドロップイン代替品です。",
+        "feature1": "すべてのLangChainチェーンとエージェントに対応",
+        "feature2": "すべての検索操作に組み込みトレーシング",
+        "feature3": "フィルタリング、リランキング、ハイブリッド検索をサポート"
+      },
+      "installation": {
+        "title": "インストール",
+        "description": "LangChainとともにSeizn SDKをインストールします。"
+      },
+      "example": {
+        "title": "5分で始める例",
+        "description": "数行のコードでSeiznRetrieverを使用したRAGチェーンを作成します。"
+      },
+      "production": {
+        "title": "本番環境のヒント",
+        "caching": {
+          "title": "キャッシュを有効化",
+          "description": "繰り返しのクエリをキャッシュしてレイテンシとコストを削減します。"
+        },
+        "reranking": {
+          "title": "リランキングを有効化",
+          "description": "クロスエンコーダーリランキングで結果の品質を向上させます。"
+        },
+        "filtering": {
+          "title": "メタデータフィルタリング",
+          "description": "ベクトル検索前にメタデータフィールドで結果をフィルタリングします。"
+        }
+      },
+      "troubleshooting": {
+        "title": "トラブルシューティング",
+        "errorColumn": "エラー",
+        "causeColumn": "原因",
+        "solutionColumn": "解決策",
+        "authCause": "無効または不足しているAPIキー",
+        "authSolution": "SEIZN_API_KEY環境変数を確認してください",
+        "rateCause": "1秒あたりのリクエストが多すぎます",
+        "rateSolution": "指数バックオフの実装またはプランのアップグレード",
+        "emptyCause": "しきい値が高すぎるか一致するドキュメントがありません",
+        "emptySolution": "しきい値を下げるかデータセットの内容を確認してください"
+      },
+      "nav": {
+        "backToIntegrations": "統合に戻る",
+        "nextLlamaIndex": "LlamaIndex統合"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex統合 | Seizn",
+        "description": "LlamaIndexクエリエンジン用のネイティブリトリーバー"
+      },
+      "badge": "公式",
+      "title": "LlamaIndex統合",
+      "subtitle": "ストリーミングとハイブリッド検索をサポートするLlamaIndexクエリエンジン用のネイティブリトリーバーです。",
+      "overview": {
+        "title": "60秒で分かる概要",
+        "description": "SeiznRetrieverはLlamaIndexクエリエンジンのネイティブリトリーバーとして機能します。",
+        "feature1": "LlamaIndexクエリエンジンとネイティブ互換",
+        "feature2": "ストリーミングレスポンスのサポート",
+        "feature3": "ハイブリッド検索とノードポストプロセッサに対応"
+      },
+      "installation": {
+        "title": "インストール",
+        "description": "LlamaIndexとともにSeizn SDKをインストールします。"
+      },
+      "example": {
+        "title": "5分で始める例",
+        "description": "数行のコードでSeiznRetrieverを使用したクエリエンジンを作成します。"
+      },
+      "production": {
+        "title": "本番環境のヒント",
+        "streaming": {
+          "title": "ストリーミングを有効化",
+          "description": "ストリーミングレスポンスで初回トークン表示までの時間を短縮します。"
+        },
+        "hybrid": {
+          "title": "ハイブリッド検索",
+          "description": "ベクトルとキーワード検索を組み合わせて検索精度を向上させます。"
+        },
+        "nodePostprocessors": {
+          "title": "ノードポストプロセッサ",
+          "description": "カスタムポストプロセッサで結果をフィルタリングおよび変換します。"
+        }
+      },
+      "troubleshooting": {
+        "title": "トラブルシューティング",
+        "errorColumn": "エラー",
+        "causeColumn": "原因",
+        "solutionColumn": "解決策",
+        "authCause": "無効または不足しているAPIキー",
+        "authSolution": "SEIZN_API_KEY環境変数を確認してください",
+        "datasetCause": "データセットが空またはインデックスされていません",
+        "datasetSolution": "ドキュメントがアップロードされているか確認してください",
+        "relevanceCause": "しきい値が不適切またはクエリが曖昧",
+        "relevanceSolution": "しきい値を調整するかクエリを具体化してください"
+      },
+      "nav": {
+        "prevLangChain": "LangChain統合",
+        "nextOpenTelemetry": "OpenTelemetry統合"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry統合 | Seizn",
+        "description": "Datadog、Grafana、Jaegerなどにトレースをエクスポート"
+      },
+      "badge": "公式",
+      "title": "OpenTelemetry統合",
+      "subtitle": "Datadog、Grafana、Jaeger、およびすべてのOTLP互換バックエンドにトレースをエクスポートします。",
+      "overview": {
+        "title": "60秒で分かる概要",
+        "description": "SeiznはOpenTelemetryプロトコル（OTLP）でトレースをエクスポートします。",
+        "feature1": "すべてのSeiznリクエストの自動トレーシング",
+        "feature2": "カスタム属性とスパンイベント",
+        "feature3": "Datadog、Grafana、Jaegerなど主要バックエンドに対応",
+        "supportedBackends": "対応バックエンド"
+      },
+      "installation": {
+        "title": "インストール",
+        "description": "OpenTelemetryパッケージとともにSeizn SDKをインストールします。"
+      },
+      "examples": {
+        "title": "設定例",
+        "datadog": {
+          "description": "Datadogでトレースを送信する設定"
+        },
+        "grafana": {
+          "description": "Grafana Tempoでトレースを送信する設定"
+        },
+        "jaeger": {
+          "description": "Jaegerでトレースを送信する設定"
+        }
+      },
+      "production": {
+        "title": "本番環境のヒント",
+        "sampling": {
+          "title": "サンプリング",
+          "description": "コスト管理のためにトレースサンプリング率を設定します。"
+        },
+        "attributes": {
+          "title": "カスタム属性",
+          "description": "スパンにカスタム属性を追加して検索とフィルタリングを強化します。"
+        },
+        "batching": {
+          "title": "バッチ処理",
+          "description": "トレースをバッチ処理してパフォーマンスへの影響を最小限にします。"
+        }
+      },
+      "troubleshooting": {
+        "title": "トラブルシューティング",
+        "issueColumn": "問題",
+        "causeColumn": "原因",
+        "solutionColumn": "解決策",
+        "noTracesIssue": "トレースが表示されない",
+        "noTracesCause": "エクスポーターが設定されていない",
+        "noTracesSolution": "OTLPエクスポーター設定を確認してください",
+        "connectionIssue": "接続が拒否される",
+        "connectionCause": "コレクターが実行されていない",
+        "connectionSolution": "コレクターが実行中でポートが正しいか確認してください",
+        "missingSpansIssue": "スパンが欠落している",
+        "missingSpansCause": "サンプリング率が低すぎる",
+        "missingSpansSolution": "サンプリング率を上げるか開発時はAlwaysOnに設定してください",
+        "debugTitle": "デバッグモード",
+        "debugDescription": "コンソールエクスポーターを有効にして送信されるトレースを確認します。"
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex統合",
+        "backToIntegrations": "統合に戻る"
+      }
     }
   },
   "demoQuery": {
@@ -2430,5 +2730,407 @@
     "redacted": "[削除済み]",
     "piiMasked": "プライバシー保護のためマスク済み",
     "readOnlyNote": "これは共有トレースの読み取り専用ビューです。"
+  },
+  "trustPage": {
+    "title": "トラストセンター",
+    "subtitle": "Seiznのセキュリティとデータ管理の取り組み",
+    "heroDescription": "プライバシーとセキュリティを核として構築しています。このページでは、お客様のデータをどのように扱っているかを正確に記載しています。",
+    "lastUpdated": "最終更新日",
+    "sections": {
+      "dataFlow": {
+        "title": "データフロー",
+        "description": "保存するものと保存しないもの",
+        "stored": {
+          "title": "保存するデータ",
+          "items": [
+            "メモリの内容と埋め込み",
+            "クエリログ（ハッシュ化、平文ではありません）",
+            "APIキーごとの使用量メトリクス",
+            "デバッグ用のトレースデータ（保持期間設定可能）"
+          ]
+        },
+        "notStored": {
+          "title": "保存しないデータ",
+          "items": [
+            "生のAPIキー（ハッシュのみ保存）",
+            "ユーザーパスワード（OAuth認証のみ）",
+            "キャッシュTTLを超えたクエリ結果",
+            "サードパーティLLMのリクエスト/レスポンスログ"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "暗号化",
+        "description": "転送中および保存時のデータ保護",
+        "transit": {
+          "title": "転送中",
+          "items": [
+            "すべての接続にTLS 1.3を強制",
+            "1年間のmax-ageでHSTSを有効化",
+            "証明書の透明性ログ"
+          ]
+        },
+        "atRest": {
+          "title": "保存時",
+          "items": [
+            "すべてのデータをAES-256で暗号化",
+            "データベースレベルの暗号化（Supabase）",
+            "別々のキーで暗号化されたバックアップ"
+          ]
+        },
+        "keyManagement": {
+          "title": "キー管理",
+          "items": [
+            "SHA-256 + ソルトでAPIキーをハッシュ化",
+            "自動キーローテーションリマインダー（90日）",
+            "即時キー取り消し機能"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "テナント分離",
+        "description": "データを分離する仕組み",
+        "items": [
+          "データベースレベルで行レベルセキュリティ（RLS）を強制",
+          "すべてのクエリがuser_id/org_idで自動フィルタリング",
+          "テナント間で共有インデックスなし",
+          "メモリコレクションのネームスペース分離"
+        ],
+        "rbac": {
+          "title": "アクセス制御",
+          "items": [
+            "ロールベースアクセス（オーナー、管理者、メンバー）",
+            "組織ごとのAPIキースコープ",
+            "すべての権限変更の監査ログ"
+          ]
+        }
+      },
+      "retention": {
+        "title": "保持と削除",
+        "description": "データの保持期間と削除方法",
+        "periods": [
+          {
+            "type": "メモリ",
+            "period": "ユーザーが削除するまで"
+          },
+          {
+            "type": "APIログ",
+            "period": "90日間ローリング"
+          },
+          {
+            "type": "トレース",
+            "period": "30日間（設定可能）"
+          },
+          {
+            "type": "監査ログ",
+            "period": "1年間"
+          },
+          {
+            "type": "バックアップ",
+            "period": "30日間暗号化"
+          }
+        ],
+        "deletion": {
+          "title": "削除プロセス",
+          "items": [
+            "DELETE /api/memoriesで即時削除",
+            "アカウント削除：30日間の猶予期間",
+            "バックアップからの完全削除は30日以内",
+            "GDPR/CCPAデータエクスポートはリクエストに応じて対応"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "監査ログとアクセス制御",
+        "description": "誰が何をしたかを追跡",
+        "logged": {
+          "title": "記録されるイベント",
+          "items": [
+            "APIキーの作成、ローテーション、取り消し",
+            "権限変更（RBAC）",
+            "データエクスポートリクエスト",
+            "認証失敗の試行",
+            "組織に対する管理者アクション"
+          ]
+        },
+        "access": {
+          "title": "ログアクセス",
+          "items": [
+            "組織管理者が利用可能",
+            "APIからエクスポート可能（Pro以上のプラン）",
+            "ユーザー、アクション、タイムスタンプで検索可能"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "サブプロセッサー",
+        "description": "データを処理するサードパーティ",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "データベース & 認証",
+            "location": "米国（AWS）"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "ホスティング & CDN",
+            "location": "グローバルエッジ"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "決済",
+            "location": "英国/米国"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "プロダクト分析",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "エラー監視",
+            "location": "米国"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "リランキング（オプション）",
+            "location": "米国/カナダ"
+          }
+        ],
+        "note": "各サービスの機能に必要な最小限のデータのみを共有しています。"
+      },
+      "disclosure": {
+        "title": "まだ対応できていないこと",
+        "description": "セキュリティ体制の正直なギャップ",
+        "items": [
+          "SOC 2 Type II認証（進行中、2026年Q2予定）",
+          "HIPAA準拠（エンタープライズ向けに計画中）",
+          "オンプレミスデプロイメントオプション（検討中）",
+          "キー保存用ハードウェアセキュリティモジュール（HSM）",
+          "バグバウンティプログラム（2026年Q3計画）"
+        ],
+        "cta": "セキュリティに関するご質問はsecurity@seizn.comまでお問い合わせください"
+      }
+    },
+    "contact": {
+      "title": "ご質問はありますか？",
+      "description": "セキュリティに関するご質問にお答えします。",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "制限と請求",
+    "subtitle": "プランの制限、クオータ、請求情報についてご案内します。",
+    "unlimited": "無制限",
+    "custom": "カスタム",
+    "requestsPerSecond": "リクエスト/秒",
+    "sidebar": {
+      "onThisPage": "このページの内容",
+      "quotas": "月間クオータ",
+      "rateLimits": "レート制限",
+      "overage": "超過時の動作",
+      "reset": "リセット時間",
+      "headers": "レスポンスヘッダー"
+    },
+    "table": {
+      "plan": "プラン",
+      "monthlyQuota": "月間クオータ",
+      "rps": "RPS制限"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "overage": "制限後のソフトスロットル"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "ソフトスロットル、メール通知"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "ソフトスロットル、優先キュー"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "カスタムSLA、スロットルなし"
+      }
+    },
+    "quotas": {
+      "title": "月間クオータ",
+      "description": "各プランには月間API呼び出しクオータが含まれています。クオータは毎月1日00:00 UTCにリセットされます。"
+    },
+    "rateLimit": {
+      "title": "レート制限（RPS）",
+      "description": "レート制限はインフラを保護し、公平な利用を保証します。制限はAPIキーごとに適用されます。"
+    },
+    "overage": {
+      "title": "超過時の動作",
+      "softThrottle": {
+        "title": "ソフトスロットル（クオータ超過）",
+        "description": "月間クオータを超過した場合：",
+        "point1": "API呼び出しは優先度を下げて継続",
+        "point2": "レスポンス時間が2-5倍に増加する場合があります",
+        "point3": "使用量80%と100%でメール通知"
+      },
+      "hard429": {
+        "title": "ハード429（レート制限）",
+        "description": "RPSレート制限を超過した場合：",
+        "recommendation": "指数バックオフ（1秒、2秒、4秒、8秒）とジッターを使用したリトライを実装してください。"
+      }
+    },
+    "reset": {
+      "title": "リセット時間",
+      "monthly": {
+        "title": "月間クオータリセット",
+        "description": "クオータは毎月初日にリセットされます。",
+        "time": "毎月1日 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "レート制限ウィンドウ",
+        "description": "レート制限はスライディングウィンドウを使用します。",
+        "time": "ローリング1秒ウィンドウ"
+      }
+    },
+    "headers": {
+      "limit": "ウィンドウあたりの最大リクエスト数",
+      "remaining": "現在のウィンドウの残りリクエスト数",
+      "reset": "ウィンドウがリセットされるUnixタイムスタンプ",
+      "quotaLimit": "月間クオータ制限",
+      "quotaRemaining": "今月の残りAPI呼び出し数",
+      "quotaReset": "クオータがリセットされるISO 8601日付"
+    },
+    "headersSection": {
+      "title": "レスポンスヘッダー",
+      "description": "すべてのAPIレスポンスには、使用量と制限を追跡するためのヘッダーが含まれています。",
+      "header": "ヘッダー",
+      "headerDescription": "説明",
+      "example": "レスポンスヘッダーの例："
+    },
+    "upgrade": {
+      "title": "より高い制限が必要ですか？",
+      "description": "プランをアップグレードして、クオータの増加、より高いレート制限、優先サポートをご利用ください。",
+      "viewPlans": "プランを見る",
+      "contactSales": "営業に連絡"
+    }
+  },
+  "help": {
+    "title": "ヘルプハブ",
+    "subtitle": "回答を見つけ、サポートを受け、リソースにアクセスできます。",
+    "search": {
+      "placeholder": "ヘルプを検索...",
+      "noResults": "結果が見つかりません"
+    },
+    "sections": {
+      "support": {
+        "title": "サポートチャンネル",
+        "description": "チームからサポートを受ける",
+        "email": {
+          "title": "メールサポート",
+          "description": "24時間以内にメールでサポートを受けられます",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discordコミュニティ",
+          "description": "コミュニティに参加してリアルタイムサポートを受けましょう",
+          "action": "Discordに参加"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "バグ報告や機能リクエスト",
+          "action": "Issueを作成"
+        }
+      },
+      "faq": {
+        "title": "よくある質問",
+        "description": "よくある質問への回答",
+        "viewAll": "すべてのFAQを見る"
+      },
+      "status": {
+        "title": "システムステータス",
+        "description": "現在のシステムステータスとインシデントを確認",
+        "viewStatus": "ステータスページを見る",
+        "operational": "すべてのシステムが正常稼働中",
+        "degraded": "パフォーマンス低下",
+        "outage": "サービス障害"
+      },
+      "billing": {
+        "title": "請求とプラン",
+        "description": "サブスクリプションと支払いの管理",
+        "items": {
+          "plans": "料金プランを見る",
+          "usage": "使用量を確認",
+          "invoices": "請求書をダウンロード",
+          "upgrade": "プランをアップグレード"
+        }
+      },
+      "docs": {
+        "title": "ドキュメント",
+        "description": "人気のドキュメントへのクイックリンク",
+        "links": {
+          "quickstart": "クイックスタートガイド",
+          "apiReference": "APIリファレンス",
+          "sdks": "SDK & ライブラリ",
+          "limits": "制限と請求",
+          "security": "セキュリティ"
+        }
+      }
+    },
+    "contact": {
+      "title": "まだお困りですか？",
+      "description": "サポートチームがお手伝いします。",
+      "cta": "サポートに連絡"
+    }
+  },
+  "status": {
+    "title": "システムステータス",
+    "subtitle": "リアルタイムのシステムステータスとインシデント履歴",
+    "lastUpdated": "最終更新日",
+    "overall": {
+      "operational": "すべてのシステムが正常稼働中",
+      "degraded": "パフォーマンス低下",
+      "partialOutage": "部分的なシステム障害",
+      "majorOutage": "重大なシステム障害"
+    },
+    "uptime": {
+      "title": "稼働率",
+      "24h": "24時間",
+      "7d": "7日間",
+      "30d": "30日間",
+      "90d": "90日間"
+    },
+    "services": {
+      "title": "サービスステータス",
+      "operational": "正常",
+      "degraded": "低下",
+      "down": "停止"
+    },
+    "incidents": {
+      "active": "アクティブなインシデント",
+      "history": "インシデント履歴",
+      "noActive": "アクティブなインシデントはありません",
+      "noHistory": "過去のインシデントはありません",
+      "status": {
+        "investigating": "調査中",
+        "identified": "原因特定",
+        "monitoring": "監視中",
+        "resolved": "解決済み"
+      },
+      "severity": {
+        "minor": "軽微",
+        "major": "重大",
+        "critical": "致命的"
+      },
+      "affected": "影響を受けるサービス",
+      "timeline": "タイムライン",
+      "started": "開始",
+      "resolved": "解決",
+      "duration": "期間",
+      "viewDetails": "詳細を表示"
+    },
+    "subscribe": {
+      "title": "更新を購読",
+      "rss": "RSSフィード",
+      "email": "メール通知"
+    }
   }
 }

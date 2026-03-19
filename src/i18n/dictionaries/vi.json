@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Bảo lưu mọi quyền.",
+    "copyright": "© {year} Litheon LLC. Bảo lưu mọi quyền.",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản",
     "contact": "Liên hệ"
@@ -236,38 +236,38 @@
       "noKeys": "Chưa có khóa API. Tạo một khóa để bắt đầu."
     },
     "usagePage": {
-      "title": "Usage Analytics",
-      "period": "Current Period",
-      "memoriesUsed": "Memories Used",
-      "apiCallsUsed": "API Calls Used",
-      "remaining": "Remaining",
-      "upgrade": "Upgrade Plan",
-      "subtitle": "Monitor your API usage and costs.",
+      "title": "Phân tích sử dụng",
+      "period": "Kỳ hiện tại",
+      "memoriesUsed": "Bộ nhớ đã dùng",
+      "apiCallsUsed": "Lệnh gọi API đã dùng",
+      "remaining": "Còn lại",
+      "upgrade": "Nâng cấp gói",
+      "subtitle": "Theo dõi mức sử dụng API và chi phí của bạn.",
       "days7": "7 Days",
       "days30": "30 Days",
       "days90": "90 Days",
-      "loading": "Loading...",
-      "totalApiCalls": "Total API Calls",
-      "totalTokens": "Total Tokens",
-      "estimatedCost": "Estimated Cost",
-      "avgLatency": "Avg Latency",
+      "loading": "Đang tải...",
+      "totalApiCalls": "Tổng lệnh gọi API",
+      "totalTokens": "Tổng token",
+      "estimatedCost": "Chi phí ước tính",
+      "avgLatency": "Độ trễ TB",
       "dailyApiCalls": "Daily API Calls",
-      "calls": "calls",
-      "endpointUsage": "Endpoint Usage",
-      "noData": "No data yet",
+      "calls": "lệnh gọi",
+      "endpointUsage": "Sử dụng điểm cuối",
+      "noData": "Chưa có dữ liệu",
       "avg": "avg",
-      "errors": "errors",
-      "usageByApiKey": "Usage by API Key",
-      "errorsTitle": "Errors",
-      "errorRate": "error rate",
-      "noUsageData": "No usage data available",
+      "errors": "lỗi",
+      "usageByApiKey": "Sử dụng theo khóa API",
+      "errorsTitle": "Lỗi",
+      "errorRate": "tỷ lệ lỗi",
+      "noUsageData": "Không có dữ liệu sử dụng",
       "p95Latency": "p95 Latency",
       "errorRateKpi": "Tỷ lệ Lỗi",
       "monthlyApiCalls": "Lượt gọi API Hàng tháng",
       "dailyTrends": "Xu hướng Hàng ngày",
       "tabCalls": "Lượt gọi",
       "tabCost": "Chi phí",
-      "tabLatency": "Latency",
+      "tabLatency": "Độ trễ",
       "tabErrors": "Lỗi",
       "noUsageTitle": "Chưa có dữ liệu sử dụng",
       "noUsageDescription": "Gửi yêu cầu API đầu tiên của bạn để xem phân tích sử dụng. Dữ liệu sẽ xuất hiện ở đây trong vòng 5 giây.",
@@ -282,8 +282,8 @@
       "createApiKey": "Tạo API Key"
     },
     "language": "Ngôn ngữ",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Tổ chức",
+    "docs": "Tài liệu",
     "nav": {
       "overview": "Tổng quan",
       "memories": "Bộ nhớ",
@@ -316,9 +316,9 @@
         "system": "HỆ THỐNG"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
-    "playground": "Playground",
+    "pinSidebar": "Ghim thanh bên",
+    "unpinSidebar": "Thu gọn thanh bên",
+    "playground": "Sân chơi",
     "playgroundPage": {
       "title": "Bang dieu khien gỡ loi",
       "subtitle": "Kiem tra truy van voi theo dõi va dieu chinh tham so",
@@ -345,7 +345,15 @@
       "tracingDisabled": "Theo dõi da tat",
       "executionTime": "Thoi gian thuc thi",
       "tokensUsed": "So token da dung",
-      "steps": "Buoc",
+      "steps": {
+        "parseQuery": "Phân tích truy vấn",
+        "createEmbedding": "Tạo Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Tìm kiếm từ khóa",
+        "mergeResults": "Hợp nhất kết quả",
+        "rerank": "Xếp hạng lại kết quả",
+        "returnResults": "Trả về kết quả"
+      },
       "embedding": "Nhung",
       "vectorSearch": "Tim kiem vector",
       "reranking": "Xep hang lai",
@@ -389,7 +397,7 @@
       "hybrid": "Hybrid",
       "keyword": "Keyword",
       "rerank": "Bật Rerank",
-      "trace": "Trace",
+      "trace": "Theo dõi",
       "cost": "Chi phí",
       "similarity": "Độ tương tự",
       "memoryType": "Loại",
@@ -430,7 +438,7 @@
       "saving": "Dang luu...",
       "saved": "Da luu",
       "saveFailed": "Luu that bai",
-      "save": "Save Changes",
+      "save": "Lưu thay đổi",
       "account": "Tai khoan",
       "email": "Email",
       "name": "Ten",
@@ -524,7 +532,7 @@
         "revokeSession": "Thu hoi phien",
         "revokeAllSessions": "Thu hoi tat ca phien khac",
         "changePassword": "Doi mat khau",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Quản lý bảo mật mật khẩu của bạn",
         "changePasswordHint": "Cap nhat mat khau thuong xuyen de bao mat",
         "currentPassword": "Mat khau hien tai",
         "newPassword": "Mat khau moi",
@@ -580,7 +588,7 @@
         "feature": "Tính năng",
         "memoriesLabel": "Bộ nhớ",
         "apiCallsLabel": "Lượt gọi API/Tháng",
-        "apiKeysLabel": "API Keys",
+        "apiKeysLabel": "Khóa API",
         "priceLabel": "Giá",
         "contactUs": "Liên hệ Chúng tôi",
         "used": "đã sử dụng",
@@ -588,33 +596,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Tổng quan về mức sử dụng bộ nhớ AI của bạn",
+      "totalMemories": "Tổng bộ nhớ",
+      "apiCalls": "Lệnh gọi API",
+      "activeKeys": "Khóa API đang hoạt động",
+      "currentPlan": "Gói hiện tại",
+      "usage": "Sử dụng",
+      "today": "Hôm nay",
+      "dailyLimit": "Giới hạn hàng ngày",
+      "recentMemories": "Bộ nhớ gần đây",
+      "viewAll": "Xem tất cả",
+      "noMemories": "Chưa có bộ nhớ",
+      "noMemoriesHint": "Bắt đầu bằng cách thêm bộ nhớ đầu tiên qua API",
+      "quickStart": "Bắt đầu nhanh",
+      "createApiKey": "Tạo khóa API",
+      "getStartedApi": "Bắt đầu với API",
+      "viewDocumentation": "Xem tài liệu",
+      "learnSeizn": "Tìm hiểu cách sử dụng Seizn",
+      "createOrganization": "Tạo tổ chức",
+      "collaborateTeam": "Cộng tác với nhóm của bạn",
+      "quickExample": "Ví dụ nhanh",
+      "manageKeys": "Quản lý khóa",
+      "upgradePlan": "Nâng cấp gói",
       "apiUsageChart": "Sử dụng API",
       "last7days": "7 ngày qua",
       "viewDetails": "Xem Chi tiết",
@@ -627,34 +635,34 @@
       "sendFirstRequest": "Gửi Yêu cầu Đầu tiên"
     },
     "keysPage": {
-      "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
-      "createNewKey": "Create New Key",
-      "activeKeys": "Active Keys",
-      "noKeysTitle": "No API keys yet",
-      "noKeysDesc": "Create your first API key to start integrating with Seizn",
-      "createApiKey": "Create API Key",
-      "created": "Created",
-      "neverUsed": "Never used",
-      "lastUsed": "Last used",
-      "revoke": "Revoke",
+      "title": "Khóa API",
+      "subtitle": "Quản lý khóa API để truy cập dịch vụ Seizn",
+      "createNewKey": "Tạo khóa mới",
+      "activeKeys": "Khóa đang hoạt động",
+      "noKeysTitle": "Chưa có khóa API",
+      "noKeysDesc": "Tạo khóa API đầu tiên để bắt đầu tích hợp với Seizn",
+      "createApiKey": "Tạo khóa API",
+      "created": "Đã tạo",
+      "neverUsed": "Chưa từng sử dụng",
+      "lastUsed": "Sử dụng lần cuối",
+      "revoke": "Thu hồi",
       "revokeConfirm": "Revoke API key \"{keyName}\"? This action cannot be undone.",
-      "usageGuide": "Usage Guide",
-      "authentication": "Authentication",
-      "authDesc": "Include your API key in the request header:",
-      "exampleRequest": "Example Request",
-      "keyCreated": "API Key Created!",
-      "keyCreatedDesc": "Copy this key now. You won't see it again.",
-      "copyToClipboard": "Copy to Clipboard",
-      "copied": "Copied!",
-      "done": "Done",
-      "createKeyTitle": "Create API Key",
-      "createKeyDesc": "Give your key a descriptive name",
-      "keyName": "Key Name",
+      "usageGuide": "Hướng dẫn sử dụng",
+      "authentication": "Xác thực",
+      "authDesc": "Đính kèm khóa API trong tiêu đề yêu cầu:",
+      "exampleRequest": "Yêu cầu mẫu",
+      "keyCreated": "Đã tạo khóa API!",
+      "keyCreatedDesc": "Sao chép khóa này ngay bây giờ. Bạn sẽ không thể xem lại.",
+      "copyToClipboard": "Sao chép vào bộ nhớ tạm",
+      "copied": "Đã sao chép!",
+      "done": "Xong",
+      "createKeyTitle": "Tạo khóa API",
+      "createKeyDesc": "Đặt tên mô tả cho khóa của bạn",
+      "keyName": "Tên khóa",
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "createKey": "Create Key",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "createKey": "Tạo khóa",
       "name": "Tên",
       "keyColumn": "Key",
       "actions": "Thao tác",
@@ -668,24 +676,24 @@
       "keyRotatedDesc": "Sao chép key mới này ngay bây giờ. Key cũ không còn hợp lệ."
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
-      "newOrganization": "New Organization",
-      "noOrgsTitle": "No organizations yet",
+      "title": "Tổ chức",
+      "subtitle": "Quản lý nhóm và cộng tác với người khác",
+      "newOrganization": "Tổ chức mới",
+      "noOrgsTitle": "Chưa có tổ chức",
       "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Create Organization",
-      "created": "Created",
-      "plan": "Plan",
-      "freePlan": "Free",
-      "createOrgTitle": "Create Organization",
-      "createOrgDesc": "Set up a new team workspace",
-      "orgName": "Organization Name",
+      "createOrganization": "Tạo tổ chức",
+      "created": "Đã tạo",
+      "plan": "Gói",
+      "freePlan": "Miễn phí",
+      "createOrgTitle": "Tạo tổ chức",
+      "createOrgDesc": "Thiết lập không gian làm việc nhóm mới",
+      "orgName": "Tên tổ chức",
       "orgNamePlaceholder": "Acme Corp",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "create": "Create",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "create": "Tạo",
       "roles": {
         "owner": "owner",
         "admin": "admin",
@@ -1313,9 +1321,9 @@
       "toggle": "Chuyển đổi chủ đề"
     },
     "activity": {
-      "endpoint": "Endpoint",
+      "endpoint": "Điểm cuối",
       "status": "Trạng thái",
-      "latency": "Latency",
+      "latency": "Độ trễ",
       "cost": "Chi phí",
       "key": "Key",
       "time": "Thời gian"
@@ -1341,7 +1349,7 @@
       "exportJSON": "Xuất JSON",
       "tabComparison": "So sánh",
       "tabCharts": "Biểu đồ",
-      "tabTimeline": "Timeline",
+      "tabTimeline": "Dòng thời gian",
       "precision": "Độ chính xác",
       "recall": "Recall",
       "f1Score": "Điểm F1",
@@ -1419,7 +1427,7 @@
         "deliveries": "Tổng Lần gửi"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "Điểm cuối",
         "deliveries": "Lần gửi Gần đây"
       },
       "success": "thành công",
@@ -1448,6 +1456,40 @@
         "events": "Sự kiện Đăng ký",
         "cancel": "Hủy",
         "create": "Tạo Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Bộ nhớ đã tạo",
+          "desc": "Khi một bộ nhớ mới được lưu trữ"
+        },
+        "memory_updated": {
+          "label": "Bộ nhớ đã cập nhật",
+          "desc": "Khi một bộ nhớ được sửa đổi"
+        },
+        "memory_deleted": {
+          "label": "Bộ nhớ đã xóa",
+          "desc": "Khi một bộ nhớ bị xóa"
+        },
+        "extraction_completed": {
+          "label": "Trích xuất hoàn tất",
+          "desc": "Khi trích xuất bộ nhớ hoàn tất"
+        },
+        "query_executed": {
+          "label": "Truy vấn đã thực thi",
+          "desc": "Khi một truy vấn RAG được thực hiện"
+        },
+        "key_created": {
+          "label": "Đã tạo khóa API",
+          "desc": "Khi một khóa API mới được tạo"
+        },
+        "key_revoked": {
+          "label": "Đã thu hồi khóa API",
+          "desc": "Khi một khóa API bị thu hồi"
+        },
+        "usage_threshold": {
+          "label": "Ngưỡng sử dụng",
+          "desc": "Khi mức sử dụng vượt ngưỡng"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,102 +1697,103 @@
     "socialProof": "Được tin tưởng bởi các đội vận hành agent quy mô lớn",
     "liveDemo": "Demo Trực Tiếp",
     "heroTagline": "Thử API trực tiếp — không cần đăng ký",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "Truy xuất đầu tiên hoàn tất",
+    "copySnippetHint": "Sao chép đoạn mã bên dưới để tái tạo",
+    "copySnippetTitle": "Sao chép đoạn mã này",
+    "copySnippetSubtitle": "Được tạo từ cài đặt chính xác của bạn ở trên",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
+      "title": "Tại sao chọn Seizn thay vì LangChain + Pinecone?",
+      "subtitle": "Ngừng ghép nối các công cụ rời rạc. Nhận mọi thứ bạn cần trong một nền tảng tích hợp.",
+      "tracingTitle": "Theo dõi + đánh giá tích hợp",
       "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
       "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotTitle": "Tự động điều khiển theo ngân sách",
       "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
+      "governanceTitle": "Quản trị + nhật ký kiểm toán",
       "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
+      "governanceBadge": "Mặc định cho nhóm",
+      "lessGlueTitle": "Ít thành phần hơn",
       "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "lessGlueBadge": "Ít mã kết nối hơn"
     },
     "trust": {
       "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "securityDesc": "An toàn theo mặc định",
+      "rateLimits": "Giới hạn tốc độ",
+      "rateLimitsDesc": "Cảnh báo sử dụng",
+      "auditLogs": "Nhật ký kiểm toán",
+      "auditLogsDesc": "Khả năng theo dõi đầy đủ"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
+      "title": "Giá cả đơn giản, minh bạch",
       "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "viewPricing": "Xem giá",
+      "contactSales": "Liên hệ bán hàng"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "Tài liệu",
+      "pricing": "Giá cả",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "Lấy khóa API",
+      "tryDemo": "Thử demo",
       "limits": "Giới hạn",
       "status": "Trạng thái",
       "help": "Trợ giúp",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "So sánh"
     },
     "requestBuilder": {
-      "title": "Request Builder",
-      "query": "Query",
-      "queryPlaceholder": "Enter your search query...",
-      "tryExamples": "Try examples",
+      "title": "Trình tạo yêu cầu",
+      "query": "Truy vấn",
+      "queryPlaceholder": "Nhập truy vấn tìm kiếm của bạn...",
+      "tryExamples": "Thử ví dụ",
       "dataset": "Dataset",
-      "latencyBudget": "Latency Budget",
+      "latencyBudget": "Ngân sách độ trễ",
       "fast": "fast",
       "thorough": "thorough",
       "topK": "Top K",
-      "results": "results",
-      "features": "Features",
-      "hybridSearch": "Hybrid Search",
-      "hybridSearchDesc": "Combine vector + keyword",
+      "results": "kết quả",
+      "features": "Tính năng",
+      "hybridSearch": "Tìm kiếm kết hợp",
+      "hybridSearchDesc": "Kết hợp vector + từ khóa",
       "rerank": "Rerank",
-      "rerankDesc": "Re-score with cross-encoder",
+      "rerankDesc": "Chấm điểm lại với cross-encoder",
       "answerContract": "Answer Contract",
-      "answerContractDesc": "Validate answer quality",
-      "running": "Running...",
-      "runQuery": "Run Query",
+      "answerContractDesc": "Xác thực chất lượng câu trả lời",
+      "running": "Đang chạy...",
+      "runQuery": "Chạy truy vấn",
       "datasets": {
-        "techDocs": "Tech Documentation",
-        "legalContracts": "Legal Contracts",
-        "researchPapers": "Research Papers"
+        "techDocs": "Tài liệu kỹ thuật",
+        "legalContracts": "Hợp đồng pháp lý",
+        "researchPapers": "Bài nghiên cứu"
       },
       "advanced": "Nâng cao"
     },
     "resultsPanel": {
-      "searching": "Searching...",
-      "noResults": "Run a query to see results",
-      "score": "Score"
+      "searching": "Đang tìm kiếm...",
+      "noResults": "Chạy truy vấn để xem kết quả",
+      "score": "Điểm"
     },
     "tracePanel": {
-      "tracing": "Tracing pipeline...",
-      "noTrace": "Run a query to see the trace",
-      "latency": "Latency",
-      "cost": "Cost",
-      "tokens": "Tokens",
+      "tracing": "Đang theo dõi pipeline...",
+      "noTrace": "Chạy truy vấn để xem theo dõi",
+      "latency": "Độ trễ",
+      "cost": "Chi phí",
+      "tokens": "Token",
       "vectorOps": "Vector Ops",
       "cached": "cached",
-      "model": "Model",
-      "input": "Input",
-      "output": "Output"
+      "model": "Mô hình",
+      "input": "Đầu vào",
+      "output": "Đầu ra"
     },
     "tabs": {
-      "results": "Results",
-      "trace": "Trace",
+      "results": "Kết quả",
+      "trace": "Theo dõi",
       "cost": "Chi phí"
     },
     "chips": {
-      "trace": "Trace",
+      "trace": "Theo dõi",
       "eval": "Eval",
       "policy": "Chính sách"
     },
@@ -1777,7 +1820,7 @@
     "errorDisplay": {
       "error": "Lỗi",
       "errorCode": "Mã",
-      "traceId": "Trace",
+      "traceId": "Theo dõi",
       "hint": "Gợi ý",
       "tryAgain": "Thử lại",
       "copyTraceId": "Sao chép Trace ID",
@@ -1800,13 +1843,13 @@
       "namespaceScope": "Namespace & Scope",
       "bestPractices": "Thực hành tốt nhất",
       "apiReference": "Tham chiếu API",
-      "endpoints": "Endpoints",
+      "endpoints": "Điểm cuối",
       "rateLimits": "Giới hạn",
       "errorCodes": "Mã lỗi",
       "resources": "Tài nguyên",
       "security": "Bảo mật",
       "sdks": "SDKs",
-      "faq": "FAQ",
+      "faq": "Câu hỏi thường gặp",
       "tutorial": "Hướng dẫn 5 phút",
       "integrations": "Tích hợp"
     },
@@ -1829,8 +1872,8 @@
       "securityText": "Giữ bí mật API key của bạn. Không bao giờ để lộ chúng trong code phía client. Sử dụng biến môi trường hoặc backend proxy."
     },
     "endpoints": {
-      "title": "API Endpoints",
-      "requestBody": "Request Body",
+      "title": "Điểm cuối API",
+      "requestBody": "Nội dung yêu cầu",
       "queryParams": "Query Parameters",
       "response": "Phản hồi",
       "postMemories": {
@@ -1875,7 +1918,7 @@
       "plan": "Gói",
       "dailyApiCalls": "Cuộc gọi API hàng ngày",
       "maxMemories": "Ký ức tối đa",
-      "apiKeys": "API Keys",
+      "apiKeys": "Khóa API",
       "free": "Miễn phí",
       "plus": "Plus",
       "pro": "Pro",
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Bảo lưu mọi quyền."
+      "copyright": "© {year} Litheon LLC. Bảo lưu mọi quyền."
     },
     "faqPage": {
       "title": "Cau Hoi Thuong Gap",
@@ -1942,7 +1985,9 @@
         "searchRetrieval": "Tim Kiem va Truy Xuat",
         "extraction": "Trich Xuat",
         "operations": "Thao Tac",
-        "securityCompliance": "Bao Mat va Tuan Thu"
+        "securityCompliance": "Bao Mat va Tuan Thu",
+        "technology": "Công nghệ",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2049,8 +2094,8 @@
     },
     "componentsPage": {
       "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "subtitle": "Tài liệu đầy đủ cho thư viện thành phần UI của Seizn. Mỗi thành phần bao gồm Props, ví dụ sử dụng và các phương pháp hay nhất.",
+      "all": "Tất cả",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2102,25 +2147,25 @@
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "usage": "Ví dụ sử dụng",
+      "propName": "Tên",
+      "propType": "Loại",
+      "propDefault": "Mặc định",
+      "propDescription": "Mô tả",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép!",
       "categories": {
         "graph": {
           "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "description": "Trực quan hóa đồ thị tương tác cho ánh xạ quyền và mối quan hệ"
         },
         "explain": {
           "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "description": "Trực quan hóa khả năng giải thích và phân bổ cho kết quả RAG"
         },
         "retops": {
           "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "description": "Bảng điều khiển giám sát và phân tích hoạt động truy xuất"
         }
       }
     },
@@ -2366,7 +2411,7 @@
           "description": "Ví dụ sẵn dùng cho Python, TypeScript và nhiều hơn nữa."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Câu hỏi thường gặp",
           "description": "Câu hỏi thường gặp về loại bộ nhớ, namespace và thực tiễn tốt nhất."
         }
       }
@@ -2468,7 +2513,7 @@
           "description": "Ví dụ sẵn dùng cho Python, TypeScript và REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Câu hỏi thường gặp",
           "description": "Tìm hiểu về loại bộ nhớ, namespace và thực tiễn tốt nhất."
         }
       }
@@ -2496,6 +2541,11 @@
           "badge": "Chính thức",
           "title": "OpenTelemetry",
           "description": "Xuất trace đến Datadog, Grafana, Jaeger và bất kỳ backend tương thích OTLP nào."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2589,7 +2639,7 @@
           "description": "Bật streaming để trải nghiệm người dùng tốt hơn với phản hồi dài."
         },
         "hybrid": {
-          "title": "Hybrid Search",
+          "title": "Tìm kiếm kết hợp",
           "description": "Kết hợp tìm kiếm vector và từ khóa để recall tốt hơn."
         },
         "nodePostprocessors": {
@@ -2686,63 +2736,63 @@
   },
   "demoQuery": {
     "title": "Demo trực tiếp",
-    "subtitle": "Trải nghiệm pipeline truy xuất của Seizn với tracing đầy đủ và minh bạch chi phí.",
+    "subtitle": "Trải nghiệm pipeline truy xuất của Seizn với theo dõi đầy đủ và minh bạch chi phí.",
     "tryItNow": "Thử ngay - Không cần đăng ký",
     "queryPlaceholder": "Truy vấn tìm kiếm",
-    "runDemo": "Chạy Demo",
+    "runDemo": "Chạy demo",
     "running": "Đang chạy...",
     "results": "Kết quả",
-    "trace": "Trace",
+    "trace": "Dấu vết",
     "cost": "Chi phí",
     "noResults": "Chạy demo để xem kết quả",
     "errorTitle": "Lỗi",
-    "rateLimitError": "Vượt giới hạn tốc độ. Vui lòng đợi.",
+    "rateLimitError": "Vượt quá giới hạn tốc độ. Vui lòng đợi.",
     "retryIn": "Thử lại sau",
     "seconds": "giây",
     "score": "Điểm",
-    "rerankScore": "Rerank",
+    "rerankScore": "Xếp hạng lại",
     "latency": "Độ trễ",
     "tokens": "Token",
-    "cached": "đã cache",
-    "model": "Model",
+    "cached": "bộ đệm",
+    "model": "Mô hình",
     "input": "Đầu vào",
     "output": "Đầu ra",
     "costBreakdown": "Chi tiết",
     "total": "Tổng chi phí",
     "embedding": "Embedding",
     "vectorSearch": "Tìm kiếm vector",
-    "rerank": "Rerank",
+    "rerank": "Xếp hạng lại",
     "answerContract": "Hợp đồng câu trả lời",
-    "tokensIn": "Token vào",
-    "tokensOut": "Token ra",
+    "tokensIn": "Token đầu vào",
+    "tokensOut": "Token đầu ra",
     "queryUnits": "Đơn vị truy vấn",
     "prefilledQueries": [
       "Thử ví dụ"
     ]
   },
   "publicTrace": {
-    "title": "Trace được chia sẻ",
-    "subtitle": "Xem chi tiết trace truy xuất được chia sẻ",
-    "sharedBy": "Trace được chia sẻ",
+    "title": "Dấu vết chia sẻ",
+    "subtitle": "Xem chi tiết dấu vết truy xuất được chia sẻ",
+    "sharedBy": "Dấu vết chia sẻ",
     "expired": "Liên kết này đã hết hạn",
-    "expiredDesc": "Liên kết chia sẻ không còn hợp lệ. Hãy yêu cầu chủ sở hữu tạo liên kết mới.",
-    "notFound": "Không tìm thấy trace",
-    "notFoundDesc": "Không thể tìm thấy trace được chia sẻ này. Có thể đã bị thu hồi hoặc xóa.",
-    "backToHome": "Quay lại trang chủ",
+    "expiredDesc": "Liên kết chia sẻ không còn hợp lệ. Yêu cầu chủ sở hữu tạo liên kết mới.",
+    "notFound": "Không tìm thấy dấu vết",
+    "notFoundDesc": "Không tìm thấy dấu vết chia sẻ này. Có thể đã bị thu hồi hoặc xóa.",
+    "backToHome": "Về trang chủ",
     "requestId": "ID yêu cầu",
     "collection": "Bộ sưu tập",
-    "createdAt": "Ngày tạo",
+    "createdAt": "Đã tạo",
     "totalLatency": "Tổng độ trễ",
     "totalCost": "Tổng chi phí",
     "resultsCount": "Kết quả",
     "query": "Truy vấn",
     "timeline": "Dòng thời gian",
     "candidates": "Ứng viên",
-    "rerankDiff": "Chênh lệch Rerank",
+    "rerankDiff": "Chênh lệch xếp hạng lại",
     "costAnalysis": "Phân tích chi phí",
     "redacted": "[ĐÃ ẨN]",
-    "piiMasked": "PII được ẩn để bảo vệ quyền riêng tư",
-    "readOnlyNote": "Đây là chế độ xem chỉ đọc của trace được chia sẻ."
+    "piiMasked": "PII đã ẩn vì quyền riêng tư",
+    "readOnlyNote": "Đây là chế độ chỉ đọc của dấu vết được chia sẻ."
   },
   "trustPage": {
     "title": "Trung tâm Tin cậy",

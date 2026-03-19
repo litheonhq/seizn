@@ -141,7 +141,7 @@
       "useCase": "Ceritakan tentang use case Anda",
       "useCasePlaceholder": "Apa yang sedang Anda bangun? Bagaimana Anda akan menggunakan Seizn?",
       "expectedVolume": "Perkiraan panggilan API bulanan",
-      "timeline": "Timeline",
+      "timeline": "Garis waktu",
       "requirements": "Persyaratan khusus",
       "requirementsPlaceholder": "SSO, SLA spesifik, lokasi data, persyaratan kepatuhan, dll.",
       "submit": "Hubungi penjualan",
@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Hak cipta dilindungi.",
+    "copyright": "© {year} Litheon LLC. Hak cipta dilindungi.",
     "privacy": "Privasi",
     "terms": "Ketentuan",
     "contact": "Kontak"
@@ -267,7 +267,7 @@
       "dailyTrends": "Tren Harian",
       "tabCalls": "Panggilan",
       "tabCost": "Biaya",
-      "tabLatency": "Latency",
+      "tabLatency": "Latensi",
       "tabErrors": "Error",
       "noUsageTitle": "Belum ada data penggunaan",
       "noUsageDescription": "Kirim permintaan API pertama Anda untuk melihat analitik penggunaan. Data akan muncul di sini dalam 5 detik.",
@@ -327,7 +327,7 @@
       "parameters": "Parameter",
       "topK": "Top K",
       "topKHint": "Jumlah hasil yang dikembalikan",
-      "threshold": "Threshold",
+      "threshold": "Ambang",
       "thresholdHint": "Skor kesamaan minimum",
       "filters": "Filter",
       "filtersHint": "Filter metadata format JSON",
@@ -345,7 +345,15 @@
       "tracingDisabled": "Pelacakan dinonaktifkan",
       "executionTime": "Waktu eksekusi",
       "tokensUsed": "Token digunakan",
-      "steps": "Langkah",
+      "steps": {
+        "parseQuery": "Parse kueri",
+        "createEmbedding": "Buat Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Pencarian kata kunci",
+        "mergeResults": "Gabungkan hasil",
+        "rerank": "Peringkat ulang hasil",
+        "returnResults": "Kembalikan hasil"
+      },
       "embedding": "Embedding",
       "vectorSearch": "Pencarian vektor",
       "reranking": "Perangkingan ulang",
@@ -430,7 +438,7 @@
       "saving": "Menyimpan...",
       "saved": "Tersimpan",
       "saveFailed": "Gagal menyimpan",
-      "save": "Save Changes",
+      "save": "Simpan perubahan",
       "account": "Akun",
       "email": "Email",
       "name": "Nama",
@@ -524,7 +532,7 @@
         "revokeSession": "Cabut sesi",
         "revokeAllSessions": "Cabut semua sesi lain",
         "changePassword": "Ubah kata sandi",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Kelola keamanan kata sandi Anda",
         "changePasswordHint": "Perbarui kata sandi Anda secara berkala untuk keamanan",
         "currentPassword": "Kata sandi saat ini",
         "newPassword": "Kata sandi baru",
@@ -580,7 +588,7 @@
         "feature": "Fitur",
         "memoriesLabel": "Memori",
         "apiCallsLabel": "Panggilan API/Bulan",
-        "apiKeysLabel": "API Keys",
+        "apiKeysLabel": "Kunci API",
         "priceLabel": "Harga",
         "contactUs": "Hubungi Kami",
         "used": "terpakai",
@@ -968,14 +976,14 @@
     "devtoolsPage": {
       "title": "DevTools Pengambilan",
       "subtitle": "Debug dan analisis pipeline RAG Anda",
-      "query": "Query",
+      "query": "Kueri",
       "noQueryText": "Tidak ada teks query",
       "results": "hasil",
       "error": "Kesalahan",
       "rerank": "rerank",
       "optimizationHints": "Saran Optimasi",
       "tabs": {
-        "timeline": "Timeline",
+        "timeline": "Garis waktu",
         "candidates": "Kandidat",
         "rerank": "Rerank",
         "whatIf": "What-If Lab",
@@ -1345,7 +1353,7 @@
     "activity": {
       "endpoint": "Endpoint",
       "status": "Status",
-      "latency": "Latency",
+      "latency": "Latensi",
       "cost": "Biaya",
       "key": "Key",
       "time": "Waktu"
@@ -1371,7 +1379,7 @@
       "exportJSON": "Ekspor JSON",
       "tabComparison": "Perbandingan",
       "tabCharts": "Grafik",
-      "tabTimeline": "Timeline",
+      "tabTimeline": "Garis waktu",
       "precision": "Presisi",
       "recall": "Recall",
       "f1Score": "Skor F1",
@@ -1449,7 +1457,7 @@
         "deliveries": "Total Pengiriman"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "Endpoint",
         "deliveries": "Pengiriman Terkini"
       },
       "success": "berhasil",
@@ -1478,6 +1486,40 @@
         "events": "Event untuk Berlangganan",
         "cancel": "Batal",
         "create": "Buat Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Memori dibuat",
+          "desc": "Saat memori baru disimpan"
+        },
+        "memory_updated": {
+          "label": "Memori diperbarui",
+          "desc": "Saat memori diubah"
+        },
+        "memory_deleted": {
+          "label": "Memori dihapus",
+          "desc": "Saat memori dihapus"
+        },
+        "extraction_completed": {
+          "label": "Ekstraksi selesai",
+          "desc": "Saat ekstraksi memori selesai"
+        },
+        "query_executed": {
+          "label": "Kueri dijalankan",
+          "desc": "Saat kueri RAG dijalankan"
+        },
+        "key_created": {
+          "label": "Kunci API berhasil dibuat",
+          "desc": "Saat kunci API baru dibuat"
+        },
+        "key_revoked": {
+          "label": "Kunci API telah dicabut",
+          "desc": "Saat kunci API dicabut"
+        },
+        "usage_threshold": {
+          "label": "Ambang penggunaan",
+          "desc": "Saat penggunaan melebihi ambang"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1698,11 +1740,12 @@
       "limits": "Batas",
       "status": "Status",
       "help": "Bantuan",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Bandingkan"
     },
     "requestBuilder": {
       "title": "Pembuat Permintaan",
-      "query": "Query",
+      "query": "Kueri",
       "queryPlaceholder": "Masukkan query pencarian Anda...",
       "tryExamples": "Coba contoh",
       "dataset": "Dataset",
@@ -1806,7 +1849,7 @@
       "resources": "Sumber Daya",
       "security": "Keamanan",
       "sdks": "SDK",
-      "faq": "FAQ",
+      "faq": "Pertanyaan umum",
       "tutorial": "Tutorial 5 Menit",
       "integrations": "Integrasi"
     },
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Hak cipta dilindungi."
+      "copyright": "© {year} Litheon LLC. Hak cipta dilindungi."
     },
     "faqPage": {
       "title": "Pertanyaan yang Sering Diajukan",
@@ -1942,7 +1985,9 @@
         "searchRetrieval": "Pencarian dan Pengambilan",
         "extraction": "Ekstraksi",
         "operations": "Operasi",
-        "securityCompliance": "Keamanan dan Kepatuhan"
+        "securityCompliance": "Keamanan dan Kepatuhan",
+        "technology": "Teknologi",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2366,7 +2411,7 @@
           "description": "Contoh siap pakai untuk Python, TypeScript, dan lainnya."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Pertanyaan umum",
           "description": "Pertanyaan umum tentang jenis memori, namespace, dan praktik terbaik."
         }
       }
@@ -2468,7 +2513,7 @@
           "description": "Contoh siap pakai untuk Python, TypeScript, dan REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Pertanyaan umum",
           "description": "Pelajari tentang jenis memori, namespace, dan praktik terbaik."
         }
       }
@@ -2496,6 +2541,11 @@
           "badge": "Resmi",
           "title": "OpenTelemetry",
           "description": "Ekspor trace ke Datadog, Grafana, Jaeger, dan backend yang kompatibel dengan OTLP."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2589,7 +2639,7 @@
           "description": "Aktifkan streaming untuk pengalaman pengguna yang lebih baik dengan respons panjang."
         },
         "hybrid": {
-          "title": "Hybrid Search",
+          "title": "Pencarian hibrida",
           "description": "Gabungkan pencarian vektor dan kata kunci untuk recall yang lebih baik."
         },
         "nodePostprocessors": {
@@ -2686,63 +2736,63 @@
   },
   "demoQuery": {
     "title": "Demo Langsung",
-    "subtitle": "Rasakan pipeline pengambilan Seizn dengan tracing penuh dan transparansi biaya.",
+    "subtitle": "Rasakan pipeline pengambilan Seizn dengan pelacakan penuh dan transparansi biaya.",
     "tryItNow": "Coba sekarang - Tanpa pendaftaran",
-    "queryPlaceholder": "Kueri Pencarian",
-    "runDemo": "Jalankan Demo",
+    "queryPlaceholder": "Kueri pencarian",
+    "runDemo": "Jalankan demo",
     "running": "Menjalankan...",
     "results": "Hasil",
-    "trace": "Trace",
+    "trace": "Jejak",
     "cost": "Biaya",
     "noResults": "Jalankan demo untuk melihat hasil",
     "errorTitle": "Kesalahan",
-    "rateLimitError": "Batas rate terlampaui. Silakan tunggu.",
+    "rateLimitError": "Batas laju terlampaui. Harap tunggu.",
     "retryIn": "Coba lagi dalam",
     "seconds": "detik",
     "score": "Skor",
-    "rerankScore": "Rerank",
+    "rerankScore": "Pemeringkatan ulang",
     "latency": "Latensi",
     "tokens": "Token",
-    "cached": "ter-cache",
+    "cached": "di-cache",
     "model": "Model",
     "input": "Input",
     "output": "Output",
     "costBreakdown": "Rincian",
-    "total": "Total Biaya",
+    "total": "Total biaya",
     "embedding": "Embedding",
-    "vectorSearch": "Pencarian Vektor",
-    "rerank": "Rerank",
-    "answerContract": "Kontrak Jawaban",
-    "tokensIn": "Token Masuk",
-    "tokensOut": "Token Keluar",
-    "queryUnits": "Unit Kueri",
+    "vectorSearch": "Pencarian vektor",
+    "rerank": "Pemeringkatan ulang",
+    "answerContract": "Kontrak jawaban",
+    "tokensIn": "Token masuk",
+    "tokensOut": "Token keluar",
+    "queryUnits": "Unit kueri",
     "prefilledQueries": [
       "Coba contoh"
     ]
   },
   "publicTrace": {
-    "title": "Trace Bersama",
-    "subtitle": "Lihat detail trace pengambilan yang dibagikan",
-    "sharedBy": "Trace bersama",
+    "title": "Jejak Bersama",
+    "subtitle": "Lihat detail jejak pengambilan bersama",
+    "sharedBy": "Jejak bersama",
     "expired": "Tautan ini telah kedaluwarsa",
-    "expiredDesc": "Tautan berbagi tidak lagi valid. Minta pemilik untuk membuat tautan baru.",
-    "notFound": "Trace tidak ditemukan",
-    "notFoundDesc": "Trace bersama ini tidak dapat ditemukan. Mungkin telah dicabut atau dihapus.",
+    "expiredDesc": "Tautan berbagi sudah tidak valid. Minta pemilik untuk membuat tautan baru.",
+    "notFound": "Jejak tidak ditemukan",
+    "notFoundDesc": "Jejak bersama ini tidak dapat ditemukan. Mungkin telah dicabut atau dihapus.",
     "backToHome": "Kembali ke Beranda",
     "requestId": "ID Permintaan",
     "collection": "Koleksi",
     "createdAt": "Dibuat",
-    "totalLatency": "Total Latensi",
-    "totalCost": "Total Biaya",
+    "totalLatency": "Total latensi",
+    "totalCost": "Total biaya",
     "resultsCount": "Hasil",
     "query": "Kueri",
-    "timeline": "Lini Waktu",
+    "timeline": "Linimasa",
     "candidates": "Kandidat",
-    "rerankDiff": "Selisih Rerank",
-    "costAnalysis": "Analisis Biaya",
-    "redacted": "[DIHAPUS]",
-    "piiMasked": "PII disembunyikan untuk privasi",
-    "readOnlyNote": "Ini adalah tampilan baca-saja dari trace yang dibagikan."
+    "rerankDiff": "Perbedaan pemeringkatan ulang",
+    "costAnalysis": "Analisis biaya",
+    "redacted": "[DISUNTING]",
+    "piiMasked": "PII disamarkan untuk privasi",
+    "readOnlyNote": "Ini adalah tampilan baca-saja dari jejak bersama."
   },
   "trustPage": {
     "title": "Pusat Kepercayaan",

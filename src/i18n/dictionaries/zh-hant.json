@@ -60,7 +60,7 @@
       "cta": "開始使用"
     },
     "starter": {
-      "name": "Starter",
+      "name": "入門版",
       "price": "$9",
       "period": "每月",
       "features": [
@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. 保留所有權利。",
+    "copyright": "© {year} Litheon LLC. 保留所有權利。",
     "privacy": "隱私",
     "terms": "條款",
     "contact": "聯絡"
@@ -351,8 +351,8 @@
       "createApiKey": "建立 API 金鑰"
     },
     "language": "語言",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "組織",
+    "docs": "文件",
     "nav": {
       "overview": "概覽",
       "memories": "記憶",
@@ -385,8 +385,8 @@
         "system": "系統"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
+    "pinSidebar": "固定側邊欄",
+    "unpinSidebar": "摺疊側邊欄",
     "playground": "偵錯台",
     "playgroundPage": {
       "title": "偵錯控制台",
@@ -414,7 +414,15 @@
       "tracingDisabled": "追蹤已停用",
       "executionTime": "執行時間",
       "tokensUsed": "使用的權杖數",
-      "steps": "步驟",
+      "steps": {
+        "parseQuery": "解析查詢",
+        "createEmbedding": "建立嵌入",
+        "vectorSearch": "向量搜尋",
+        "keywordSearch": "關鍵字搜尋",
+        "mergeResults": "合併結果",
+        "rerank": "重排序結果",
+        "returnResults": "回傳結果"
+      },
       "embedding": "嵌入",
       "vectorSearch": "向量搜尋",
       "reranking": "重排序",
@@ -480,12 +488,12 @@
       "rerankBefore": "重新排序前",
       "rerankAfter": "重新排序後",
       "rank": "排名",
-      "replayFromLog": "從日誌重播",
-      "selectLog": "選擇要重播的日誌",
-      "replaySettings": "重播設定",
+      "replayFromLog": "從日誌回放",
+      "selectLog": "選擇要回放的日誌",
+      "replaySettings": "回放設定",
       "compareResults": "比較結果",
       "original": "原始",
-      "replay": "重播",
+      "replay": "回放",
       "diff": "差異",
       "hitAtK": "Hit@K",
       "overlap": "重疊",
@@ -499,7 +507,7 @@
       "saving": "儲存中...",
       "saved": "已儲存",
       "saveFailed": "儲存失敗",
-      "save": "Save Changes",
+      "save": "儲存變更",
       "account": "帳戶",
       "email": "電子郵件",
       "name": "姓名",
@@ -593,7 +601,7 @@
         "revokeSession": "撤銷工作階段",
         "revokeAllSessions": "撤銷所有其他工作階段",
         "changePassword": "變更密碼",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "管理您的密碼安全",
         "changePasswordHint": "定期更新密碼以確保安全",
         "currentPassword": "目前密碼",
         "newPassword": "新密碼",
@@ -657,43 +665,43 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "早安",
+      "afternoon": "午安",
+      "evening": "晚安"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
-      "apiUsageChart": "API 使用情況",
-      "last7days": "過去 7 天",
+      "subtitle": "以下是您的AI記憶使用概覽",
+      "totalMemories": "總記憶數",
+      "apiCalls": "API呼叫",
+      "activeKeys": "活躍API金鑰",
+      "currentPlan": "目前方案",
+      "usage": "使用量",
+      "today": "今天",
+      "dailyLimit": "每日限額",
+      "recentMemories": "最近記憶",
+      "viewAll": "查看全部",
+      "noMemories": "還沒有記憶",
+      "noMemoriesHint": "通過API添加您的第一條記憶",
+      "quickStart": "快速開始",
+      "createApiKey": "建立API金鑰",
+      "getStartedApi": "開始使用API",
+      "viewDocumentation": "查看文件",
+      "learnSeizn": "了解如何使用Seizn",
+      "createOrganization": "建立組織",
+      "collaborateTeam": "與團隊協作",
+      "quickExample": "快速範例",
+      "manageKeys": "管理金鑰",
+      "upgradePlan": "升級方案",
+      "apiUsageChart": "API使用情況",
+      "last7days": "近7天",
       "viewDetails": "查看詳情",
-      "noUsageData": "尚無使用資料",
+      "noUsageData": "暫無使用資料",
       "recentActivity": "最近活動",
-      "last10Requests": "最近 10 次 API 請求",
+      "last10Requests": "最近10個API請求",
       "viewAllActivity": "查看全部",
-      "noActivityYet": "尚無 API 活動",
-      "noActivityDescription": "傳送您的第一個 API 請求即可在此查看活動",
-      "sendFirstRequest": "傳送首次請求"
+      "noActivityYet": "暫無API活動",
+      "noActivityDescription": "發送您的第一個API請求以查看活動",
+      "sendFirstRequest": "發送第一個請求"
     },
     "keysPage": {
       "title": "API金鑰",
@@ -988,7 +996,7 @@
     },
     "enterpriseDashboard": {
       "title": "企業版",
-      "badge": "企業方案",
+      "badge": "企業版方案",
       "subtitle": "設定SSO、SCIM和企業設定",
       "tabs": {
         "sso": "單一登入",
@@ -1067,13 +1075,13 @@
         "users": "使用者",
         "unlimited": "無限制",
         "apiCalls": "API呼叫",
-        "apiCallsValue": "10M / month",
+        "apiCallsValue": "1000萬/月",
         "storage": "儲存空間",
         "storageValue": "1TB",
         "collections": "集合",
         "documents": "文件",
-        "retention": "保留",
-        "retentionValue": "365 days"
+        "retention": "保留期",
+        "retentionValue": "365天"
       },
       "support": {
         "title": "專屬支援",
@@ -1439,13 +1447,13 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "設定 HTTP 回呼以接收即時事件通知",
-      "create": "建立 Webhook",
+      "subtitle": "配置HTTP回調以接收即時事件通知",
+      "create": "建立Webhook",
       "stats": {
-        "total": "Webhook 總數",
+        "total": "Webhook總數",
         "active": "活躍",
-        "failing": "失敗",
-        "deliveries": "投遞總數"
+        "failing": "失敗中",
+        "deliveries": "總投遞數"
       },
       "tabs": {
         "endpoints": "端點",
@@ -1453,15 +1461,15 @@
       },
       "success": "成功",
       "failed": "失敗",
-      "lastTriggered": "上次觸發",
+      "lastTriggered": "最後觸發",
       "edit": "編輯",
       "delete": "刪除",
       "retry": "重試",
-      "deleteConfirm": "確定要刪除此 webhook 嗎？此操作無法復原。",
+      "deleteConfirm": "確定要刪除此Webhook嗎？此操作不可撤消。",
       "empty": {
-        "title": "未設定 webhook",
-        "description": "建立 webhook 以接收有關事件的即時通知。",
-        "cta": "建立您的第一個 Webhook"
+        "title": "尚未配置Webhook",
+        "description": "建立Webhook以接收關於事件的即時通知。",
+        "cta": "建立您的第一個Webhook"
       },
       "table": {
         "event": "事件",
@@ -1471,12 +1479,46 @@
         "actions": "操作"
       },
       "modal": {
-        "title": "建立 Webhook",
+        "title": "建立Webhook",
         "name": "名稱",
-        "url": "端點 URL",
+        "url": "端點URL",
         "events": "訂閱事件",
         "cancel": "取消",
-        "create": "建立 Webhook"
+        "create": "建立Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "記憶已建立",
+          "desc": "當新記憶被儲存時"
+        },
+        "memory_updated": {
+          "label": "記憶已更新",
+          "desc": "當記憶被修改時"
+        },
+        "memory_deleted": {
+          "label": "記憶已刪除",
+          "desc": "當記憶被移除時"
+        },
+        "extraction_completed": {
+          "label": "擷取完成",
+          "desc": "當記憶擷取完成時"
+        },
+        "query_executed": {
+          "label": "查詢已執行",
+          "desc": "當RAG查詢被執行時"
+        },
+        "key_created": {
+          "label": "API金鑰已建立",
+          "desc": "當新API金鑰產生時"
+        },
+        "key_revoked": {
+          "label": "API金鑰已撤銷",
+          "desc": "當API金鑰被撤銷時"
+        },
+        "usage_threshold": {
+          "label": "使用量閾值",
+          "desc": "當使用量超過閾值時"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,46 +1697,51 @@
     "socialProof": "受到大規模運營代理團隊的信賴",
     "liveDemo": "線上演示",
     "heroTagline": "直接試用API — 無需註冊",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "首次檢索完成",
+    "copySnippetHint": "複製以下程式碼片段以重現",
+    "copySnippetTitle": "複製此程式碼片段",
+    "copySnippetSubtitle": "根據您上方的精確設定產生",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "title": "為什麼選擇Seizn而非LangChain + Pinecone？",
+      "subtitle": "停止拼湊碎片化的工具。在一個整合方案中獲得所需的一切。",
+      "tracingTitle": "內建追蹤+評估",
+      "tracingDesc": "每個請求預設被追蹤。執行評估、偵測回歸、除錯生產問題，無需添加LangSmith或自訂日誌。",
+      "tracingBadge": "預設開啟",
+      "autopilotTitle": "預算感知自動駕駛",
+      "autopilotDesc": "設定延遲或費用預算，自動駕駛會自動選擇最佳檢索策略。無需手動調優。",
+      "autopilotBadge": "可選",
+      "governanceTitle": "治理+稽核日誌",
+      "governanceDesc": "PII偵測、GDPR合規遺忘權和完整的稽核追蹤。為需要合規的團隊而設計，而非事後補充。",
+      "governanceBadge": "團隊預設",
+      "lessGlueTitle": "更少的元件",
+      "lessGlueDesc": "不再需要拼湊LangChain + Pinecone + LangSmith + 自訂PII過濾器。一個SDK、一個儀表板、一張帳單。",
+      "lessGlueBadge": "更少黏合程式碼"
     },
     "trust": {
-      "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "security": "RLS + 金鑰雜湊",
+      "securityDesc": "預設安全",
+      "rateLimits": "速率限制",
+      "rateLimitsDesc": "使用量告警",
+      "auditLogs": "稽核日誌",
+      "auditLogsDesc": "完全可追溯"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "title": "簡單透明的定價",
+      "subtitle": "從12,000條記憶免費開始。升級到入門版獲得E2E加密記憶，然後按需擴展。",
+      "viewPricing": "查看定價",
+      "contactSales": "聯繫銷售"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
-      "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "docs": "文件",
+      "pricing": "定價",
+      "enterprise": "企業版",
+      "getApiKey": "取得API金鑰",
+      "tryDemo": "試用示範",
+      "compare": "比較",
+      "limits": "限額",
+      "status": "狀態",
+      "help": "幫助",
+      "github": "開源"
     },
     "requestBuilder": {
       "title": "請求建構器",
@@ -1720,7 +1767,8 @@
         "techDocs": "技術文件",
         "legalContracts": "法律合約",
         "researchPapers": "研究論文"
-      }
+      },
+      "advanced": "進階選項"
     },
     "resultsPanel": {
       "searching": "搜尋中...",
@@ -1741,7 +1789,42 @@
     },
     "tabs": {
       "results": "結果",
-      "trace": "追蹤"
+      "trace": "追蹤",
+      "cost": "費用"
+    },
+    "chips": {
+      "trace": "追蹤",
+      "eval": "評估",
+      "policy": "策略"
+    },
+    "playgroundTitle": "立即體驗",
+    "costPanel": {
+      "calculating": "正在計算費用...",
+      "noCost": "執行查詢以查看費用明細",
+      "costBreakdown": "費用明細",
+      "component": "元件",
+      "cost": "費用",
+      "embedding": "嵌入",
+      "vectorSearch": "向量搜尋",
+      "rerank": "重排序",
+      "answerContract": "回答契約",
+      "total": "總費用",
+      "usage": "使用量",
+      "tokensIn": "輸入Token",
+      "tokensOut": "輸出Token",
+      "queryUnits": "查詢單位",
+      "estimatedMonthly": "預計月費",
+      "basedOn": "基於",
+      "queriesPerDay": "次查詢/天"
+    },
+    "errorDisplay": {
+      "error": "錯誤",
+      "errorCode": "錯誤代碼",
+      "traceId": "追蹤ID",
+      "hint": "提示",
+      "tryAgain": "重試",
+      "copyTraceId": "複製追蹤ID",
+      "copied": "已複製！"
     }
   },
   "docs": {
@@ -1766,7 +1849,9 @@
       "resources": "資源",
       "security": "安全",
       "sdks": "SDK",
-      "faq": "FAQ"
+      "faq": "常見問題",
+      "tutorial": "5分鐘教學",
+      "integrations": "整合"
     },
     "hero": {
       "title": "API文檔",
@@ -1838,9 +1923,11 @@
       "plus": "Plus",
       "pro": "Pro",
       "enterprise": "企業版",
-      "unlimited": "無限",
+      "unlimited": "無限制",
       "exceeded": "當您超過速率限制時，API將返回",
-      "response": "回應。"
+      "response": "回應。",
+      "monthlyApiCalls": "月度API呼叫",
+      "starter": "Starter"
     },
     "errors": {
       "title": "錯誤代碼",
@@ -1882,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. 保留所有權利。"
+      "copyright": "© {year} Litheon LLC. 保留所有權利。"
     },
     "faqPage": {
       "title": "常見問題",
@@ -1899,7 +1986,8 @@
         "extraction": "提取",
         "operations": "操作",
         "securityCompliance": "安全與合規",
-        "technology": "技術"
+        "technology": "技術",
+        "mcpDevTools": "MCP & 開發工具"
       },
       "items": [
         {
@@ -2045,79 +2133,79 @@
       ]
     },
     "componentsPage": {
-      "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "title": "UI元件",
+      "subtitle": "Seizn UI元件庫的完整文件。每個元件包含Props、使用範例和最佳實務。",
+      "all": "全部",
       "components": {
         "graphCanvas": {
-          "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
+          "description": "使用React Flow的主圖畫布元件。渲染節點和邊，具有互動式控制項、迷你地圖和權限面板。"
         },
         "nodeRenderer": {
-          "description": "Custom node renderer for graph visualization. Displays node type, status, permissions with styled appearance."
+          "description": "圖視覺化的自訂節點渲染器。"
         },
         "edgeRenderer": {
-          "description": "Custom edge renderer for graph connections. Supports directed, undirected, and bidirectional edges with custom styling."
+          "description": "圖連接的自訂邊渲染器。"
         },
         "graphControls": {
-          "description": "Control panel for graph filtering and zoom. Filter by node type, edge type, and search."
+          "description": "圖過濾和縮放的控制面板。"
         },
         "permissionPanel": {
-          "description": "Side panel displaying detailed permission information for selected nodes."
+          "description": "顯示所選節點詳細權限資訊的側面板。"
         },
         "explainPanel": {
-          "description": "Expandable panel showing full retrieval explanation including score breakdown and attributions."
+          "description": "可展開面板，顯示完整的檢索解釋。"
         },
         "scoreBreakdown": {
-          "description": "Visual breakdown of relevance score components (vector, keyword, rerank, recency)."
+          "description": "相關性分數組成的視覺化分解。"
         },
         "attributionList": {
-          "description": "List of source attributions showing which documents contributed to the result."
+          "description": "來源歸屬列表。"
         },
         "highlightedPassage": {
-          "description": "Text passage with highlighted matching spans (exact match, semantic match, keyword, entity)."
+          "description": "帶有高亮匹配範圍的文字段落。"
         },
         "retOpsDashboard": {
-          "description": "Main dashboard for retrieval operations monitoring with auto-refresh and period selection."
+          "description": "檢索操作監控的主儀表板。"
         },
         "metricsOverview": {
-          "description": "Overview cards showing key metrics: QPS, latency, cache hit rate, error rate, MRR, groundedness."
+          "description": "顯示關鍵指標的概覽卡片。"
         },
         "queryVolumeChart": {
-          "description": "Line chart showing query volume over time with search type distribution."
+          "description": "顯示查詢量隨時間變化的折線圖。"
         },
         "latencyDistribution": {
-          "description": "Latency percentile bar chart and trend visualization with SLO compliance indicator."
+          "description": "延遲百分位柱狀圖和趨勢視覺化。"
         },
         "qualityTrend": {
-          "description": "Area chart showing search quality trends (MRR, nDCG, groundedness) with precision/recall at K."
+          "description": "顯示搜尋品質趨勢的面積圖。"
         },
         "topQueries": {
-          "description": "Ranked list of most frequent queries with latency, cache hit rate, and result count."
+          "description": "最頻繁查詢的排名列表。"
         },
         "alertsPanel": {
-          "description": "Alert management panel with severity filtering, acknowledgment, and status tracking."
+          "description": "告警管理面板。"
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "usage": "使用範例",
+      "propName": "名稱",
+      "propType": "類型",
+      "propDefault": "預設值",
+      "propDescription": "描述",
+      "copy": "複製",
+      "copied": "已複製！",
       "categories": {
         "graph": {
-          "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "title": "圖元件",
+          "description": "用於權限和關係映射的互動式圖視覺化"
         },
         "explain": {
-          "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "title": "解釋元件",
+          "description": "RAG結果的可解釋性和歸屬視覺化"
         },
         "retops": {
-          "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "title": "RetOps元件",
+          "description": "檢索操作監控和分析儀表板"
         }
       }
     },
@@ -2177,9 +2265,10 @@
         "gettingStarted": "入門指南",
         "coreConcepts": "核心概念",
         "searchRetrieval": "搜尋與檢索",
-        "extraction": "資料提取",
-        "operations": "操作管理",
-        "security": "安全與隱私"
+        "extraction": "擷取",
+        "operations": "操作",
+        "security": "安全與合規",
+        "all": "全部"
       },
       "gettingStarted": {
         "q1": {
@@ -2193,6 +2282,10 @@
         "q3": {
           "question": "支援哪些程式語言？",
           "answer": "我們官方支援JavaScript/TypeScript（Node.js）和Python SDK。對於其他語言，您可以直接使用REST API。"
+        },
+        "q4": {
+          "question": "建構PoC最快的方法是什麼？",
+          "answer": "1) POST /api/memories 儲存使用者偏好。2) GET /api/memories 搜尋。3) 將結果注入LLM提示詞。4) 之後，添加 /api/extract 自動擷取和 /api/query 記憶增強回應。"
         }
       },
       "coreConcepts": {
@@ -2207,6 +2300,14 @@
         "q3": {
           "question": "user_id參數是什麼？",
           "answer": "user_id將記憶與應用程式中的特定用戶關聯。這使您能夠為每個用戶維護單獨的記憶存儲，實現個性化體驗。"
+        },
+        "q4": {
+          "question": "何時應該使用scope（user/session/agent）？",
+          "answer": "user：全域適用於使用者的偏好。session：僅在此對話中有效的目標或上下文。agent：多代理系統中特定代理的規則。正確使用scope可減少提示詞長度並提高回應一致性。"
+        },
+        "q5": {
+          "question": "什麼是memory_types，為什麼重要？",
+          "answer": "memory_type對記憶進行分類：fact（不變的資訊）、preference（使用者選擇）、instruction（遵循的規則）、relationship（人/組織關係）、experience（過去的事件）。這是過濾、刪除和策略應用最強大的維度。"
         }
       },
       "searchRetrieval": {
@@ -2249,6 +2350,10 @@
         "q3": {
           "question": "有速率限制嗎？",
           "answer": "有，速率限制因方案而異。免費層每分鐘允許100個請求，付費方案限制更高。查看定價頁面了解詳情。"
+        },
+        "q4": {
+          "question": "如何降低費用？",
+          "answer": "最大費用驅動因素：1) 擷取頻率 - 減少呼叫。2) 搜尋範圍 - 使用namespace縮小範圍。3) 模型選擇 - 常規用haiku，重要用sonnet。4) 快取 - 快取重複查詢。5) 盡可能批次操作。"
         }
       },
       "security": {
@@ -2272,7 +2377,863 @@
           "question": "你們有SOC 2認證嗎？",
           "answer": "我們正在進行SOC 2認證。聯繫我們的銷售團隊獲取有關我們安全實踐和合規路線圖的最新資訊。"
         }
+      },
+      "title": "常見問題",
+      "subtitle": "關於Seizn Memory API的常見問題，從入門到進階操作。",
+      "nav": {
+        "dashboard": "儀表板"
+      },
+      "cta": {
+        "title": "還有疑問？",
+        "subtitle": "查看我們的文件或聯繫支援團隊。",
+        "readDocs": "閱讀文件",
+        "contactSupport": "聯繫支援"
+      },
+      "footer": {
+        "rights": "保留所有權利。"
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5分鐘快速入門 | Seizn",
+        "description": "只需10行程式碼即可添加AI記憶"
+      },
+      "badge": "5分鐘教學",
+      "noCreditCard": "無需信用卡",
+      "title": "開始使用Seizn",
+      "subtitle": "在5分鐘內為您的AI添加持久記憶。跟隨步驟並在完成時勾選每一步。",
+      "getApiKey": "取得API金鑰",
+      "fullExample": "完整範例（10行）",
+      "copy": "複製",
+      "copied": "已複製！",
+      "progress": "進度",
+      "stepsLabel": "步驟",
+      "steps": {
+        "getApiKey": {
+          "title": "取得您的API金鑰",
+          "time": "30秒",
+          "description": "註冊並從儀表板產生您的API金鑰。",
+          "actionLabel": "前往儀表板"
+        },
+        "install": {
+          "title": "安裝SDK",
+          "time": "30秒",
+          "description": "使用您偏好的套件管理器安裝Seizn SDK。"
+        },
+        "ingest": {
+          "title": "匯入文件",
+          "time": "30秒",
+          "description": "將文件上傳到您的資料集以供檢索。"
+        },
+        "query": {
+          "title": "執行第一個查詢",
+          "time": "10秒",
+          "description": "使用自然語言查詢搜尋您的文件。"
+        }
+      },
+      "completion": {
+        "title": "恭喜！",
+        "description": "您已完成快速入門。您的檢索管道已準備就緒，並內建追蹤功能。",
+        "readDocs": "閱讀文件",
+        "goToDashboard": "前往儀表板"
+      },
+      "expectedOutput": {
+        "title": "預期輸出",
+        "description": "每個查詢回傳結果、追蹤和費用明細："
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "API參考",
+          "description": "探索所有端點和進階用例選項。"
+        },
+        "sdkExamples": {
+          "title": "SDK範例",
+          "description": "Python、TypeScript等的複製貼上範例。"
+        },
+        "faq": {
+          "title": "常見問題",
+          "description": "關於記憶類型、命名空間和最佳實務的常見問題。"
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API參考 | Seizn",
+        "description": "Seizn CI、Autopilot、快取、合約、修復、圖、版本、解釋和RetOps API的完整API文件"
+      },
+      "title": "API參考",
+      "description": "所有Seizn API的完整文件，包括記憶、AI、Webhooks、CI、Autopilot、快取、合約、修復、圖、版本、解釋和RetOps。",
+      "auth": {
+        "title": "認證",
+        "description": "所有API端點需要通過API金鑰進行認證。在X-API-Key標頭中包含您的金鑰。"
+      },
+      "sidebar": {
+        "title": "API群組"
+      },
+      "endpoint": {
+        "parameters": "參數",
+        "requestBody": "請求主體",
+        "response": "回應",
+        "errorCodes": "錯誤代碼"
+      },
+      "table": {
+        "name": "名稱",
+        "type": "類型",
+        "required": "必填",
+        "description": "描述",
+        "code": "代碼",
+        "message": "訊息"
+      },
+      "copy": "複製",
+      "copied": "已複製！"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5分鐘教學 | Seizn",
+        "description": "透過逐步互動式指南學習如何在5分鐘內添加AI記憶"
+      },
+      "breadcrumb": "教學",
+      "badge": "5分鐘教學",
+      "noCreditCard": "無需信用卡",
+      "title": "5分鐘添加AI記憶",
+      "subtitle": "按照此逐步指南為您的AI賦予持久記憶。完成每一步時勾選標記。",
+      "getApiKey": "取得API金鑰",
+      "copy": "複製",
+      "copied": "已複製！",
+      "progress": "進度",
+      "stepsLabel": "步驟",
+      "steps": {
+        "step1": {
+          "title": "取得您的API金鑰",
+          "time": "30秒",
+          "description": "免費註冊並從儀表板產生您的API金鑰。",
+          "instruction1": "註冊或登入您的Seizn帳戶",
+          "instruction2": "在儀表板中導覽至API金鑰",
+          "instruction3": "點擊「建立新金鑰」並複製您的金鑰",
+          "actionLabel": "前往儀表板"
+        },
+        "step2": {
+          "title": "安裝SDK",
+          "time": "30秒",
+          "description": "選擇您偏好的語言並安裝Seizn SDK。"
+        },
+        "step3": {
+          "title": "儲存您的第一條記憶",
+          "time": "2分鐘",
+          "description": "儲存您的AI應在會話間記住的資訊。"
+        },
+        "step4": {
+          "title": "搜尋記憶",
+          "time": "2分鐘",
+          "description": "使用自然語言查詢擷取相關記憶。"
+        },
+        "step5": {
+          "title": "驗證結果",
+          "time": "30秒",
+          "description": "檢查您的記憶是否已成功儲存和擷取。",
+          "hint": "搜尋記憶時應看到如下回應：",
+          "successTitle": "成功！",
+          "successDescription": "您的AI現在擁有持久記憶。使用搜尋結果來增強AI的上下文和回應。"
+        }
+      },
+      "completion": {
+        "title": "恭喜！",
+        "description": "您已完成教學。您的AI現在擁有跨會話的持久記憶。",
+        "readDocs": "閱讀文件",
+        "goToDashboard": "前往儀表板"
+      },
+      "nextSteps": {
+        "title": "接下來做什麼？",
+        "apiReference": {
+          "title": "API參考",
+          "description": "探索記憶、擷取和RAG查詢的所有端點。"
+        },
+        "sdkExamples": {
+          "title": "SDK範例",
+          "description": "Python、TypeScript和REST的複製貼上範例。"
+        },
+        "faq": {
+          "title": "常見問題",
+          "description": "了解記憶類型、命名空間和最佳實務。"
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "整合 | Seizn",
+        "description": "將Seizn與LangChain、LlamaIndex、OpenTelemetry等整合"
+      },
+      "breadcrumb": "整合",
+      "title": "整合",
+      "subtitle": "將Seizn與您喜愛的AI框架和可觀測性工具連接。",
+      "cards": {
+        "mcpServer": {
+          "badge": "新",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "面向AI編碼助手的通用MCP伺服器。原生支援Claude Code、Cursor、Windsurf、Cline。支援GitHub Copilot、Aider、OpenAI Codex的設定檔同步。"
+        },
+        "langchain": {
+          "badge": "官方",
+          "title": "LangChain",
+          "description": "LangChain RAG管道的即插即用檢索器。支援Python和TypeScript。"
+        },
+        "llamaindex": {
+          "badge": "官方",
+          "title": "LlamaIndex",
+          "description": "LlamaIndex查詢引擎的原生檢索器。支援串流傳輸和混合搜尋。"
+        },
+        "opentelemetry": {
+          "badge": "官方",
+          "title": "OpenTelemetry",
+          "description": "將追蹤匯出到Datadog、Grafana、Jaeger和任何相容OTLP的後端。"
+        }
+      },
+      "comingSoon": {
+        "title": "即將推出",
+        "description": "更多整合正在開發中。告訴我們您的需求！"
+      },
+      "backToDocs": "返回文件"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain整合 | Seizn",
+        "description": "LangChain RAG管道的即插即用檢索器"
+      },
+      "badge": "官方",
+      "title": "LangChain整合",
+      "subtitle": "LangChain RAG管道的即插即用檢索器，具有完整的追蹤支援。",
+      "overview": {
+        "title": "60秒概述",
+        "description": "SeiznRetriever是任何LangChain檢索器的即插即用替代品。",
+        "feature1": "相容所有LangChain鏈和代理",
+        "feature2": "每次檢索操作內建追蹤",
+        "feature3": "支援過濾、重排序和混合搜尋"
+      },
+      "installation": {
+        "title": "安裝",
+        "description": "將Seizn SDK與LangChain一起安裝。"
+      },
+      "example": {
+        "title": "5分鐘範例",
+        "description": "只需幾行程式碼即可使用SeiznRetriever建立RAG鏈。"
+      },
+      "production": {
+        "title": "生產環境提示",
+        "caching": {
+          "title": "啟用快取",
+          "description": "透過快取重複查詢來減少延遲和費用。"
+        },
+        "reranking": {
+          "title": "啟用重排序",
+          "description": "使用交叉編碼器重排序提高結果品質。"
+        },
+        "filtering": {
+          "title": "中繼資料過濾",
+          "description": "在向量搜尋之前按中繼資料欄位過濾結果。"
+        }
+      },
+      "troubleshooting": {
+        "title": "疑難排解",
+        "errorColumn": "錯誤",
+        "causeColumn": "原因",
+        "solutionColumn": "解決方案",
+        "authCause": "API金鑰無效或缺失",
+        "authSolution": "檢查SEIZN_API_KEY環境變數",
+        "rateCause": "每秒請求過多",
+        "rateSolution": "實作指數退避或升級方案",
+        "emptyCause": "閾值過高或無匹配文件",
+        "emptySolution": "降低閾值或檢查資料集內容"
+      },
+      "nav": {
+        "backToIntegrations": "返回整合",
+        "nextLlamaIndex": "LlamaIndex整合"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex整合 | Seizn",
+        "description": "LlamaIndex RAG管道的原生檢索器"
+      },
+      "badge": "官方",
+      "title": "LlamaIndex整合",
+      "subtitle": "LlamaIndex查詢引擎的原生檢索器，支援串流傳輸和混合搜尋。",
+      "overview": {
+        "title": "60秒概述",
+        "description": "SeiznRetriever實作了LlamaIndex的BaseRetriever介面。",
+        "feature1": "與LlamaIndex查詢引擎原生整合",
+        "feature2": "開箱即用支援串流回應",
+        "feature3": "相容LlamaIndex節點後處理器"
+      },
+      "installation": {
+        "title": "安裝",
+        "description": "將Seizn SDK與LlamaIndex一起安裝。"
+      },
+      "example": {
+        "title": "5分鐘範例",
+        "description": "使用SeiznRetriever為您的RAG應用程式建立查詢引擎。"
+      },
+      "production": {
+        "title": "生產環境提示",
+        "streaming": {
+          "title": "串流回應",
+          "description": "啟用串流傳輸以改善長回應的使用者體驗。"
+        },
+        "hybrid": {
+          "title": "混合搜尋",
+          "description": "結合向量和關鍵字搜尋以獲得更好的召回率。"
+        },
+        "nodePostprocessors": {
+          "title": "節點後處理器",
+          "description": "鏈式後處理器用於進階過濾和重排序。"
+        }
+      },
+      "troubleshooting": {
+        "title": "疑難排解",
+        "errorColumn": "錯誤",
+        "causeColumn": "原因",
+        "solutionColumn": "解決方案",
+        "authCause": "API金鑰無效或缺失",
+        "authSolution": "檢查SEIZN_API_KEY環境變數",
+        "datasetCause": "未找到資料集名稱",
+        "datasetSolution": "在儀表板中驗證資料集是否存在",
+        "relevanceCause": "查詢與文件不匹配",
+        "relevanceSolution": "嘗試混合搜尋或調整閾值"
+      },
+      "nav": {
+        "prevLangChain": "LangChain整合",
+        "nextOpenTelemetry": "OpenTelemetry整合"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry整合 | Seizn",
+        "description": "透過OTLP將追蹤匯出到Datadog、Grafana、Jaeger"
+      },
+      "badge": "官方",
+      "title": "OpenTelemetry整合",
+      "subtitle": "透過OTLP將檢索追蹤匯出到您的可觀測性工具。",
+      "overview": {
+        "title": "60秒概述",
+        "description": "Seizn原生匯出每次檢索操作的OpenTelemetry追蹤。",
+        "feature1": "零設定OTLP匯出，自動建立span",
+        "feature2": "豐富的屬性，包括延遲、Token數量和費用",
+        "feature3": "分散式追蹤的上下文傳播",
+        "supportedBackends": "支援的後端"
+      },
+      "installation": {
+        "title": "設定",
+        "description": "透過環境變數設定OTLP匯出。"
+      },
+      "examples": {
+        "title": "後端範例",
+        "datadog": {
+          "description": "透過Datadog Agent或直接API將追蹤匯出到Datadog APM。"
+        },
+        "grafana": {
+          "description": "將追蹤傳送到Grafana Tempo（雲端或自架）。"
+        },
+        "jaeger": {
+          "description": "使用原生OTLP接收器匯出到Jaeger。"
+        }
+      },
+      "production": {
+        "title": "生產環境提示",
+        "sampling": {
+          "title": "取樣策略",
+          "description": "透過頭部或尾部取樣控制追蹤量。"
+        },
+        "attributes": {
+          "title": "自訂屬性",
+          "description": "添加資源和span屬性以改善過濾。"
+        },
+        "batching": {
+          "title": "批次設定",
+          "description": "透過批次設定最佳化匯出效能。"
+        }
+      },
+      "troubleshooting": {
+        "title": "疑難排解",
+        "issueColumn": "問題",
+        "causeColumn": "原因",
+        "solutionColumn": "解決方案",
+        "noTracesIssue": "沒有出現追蹤",
+        "noTracesCause": "遙測已停用或端點錯誤",
+        "noTracesSolution": "設定SEIZN_TELEMETRY_ENABLED=true並驗證端點",
+        "connectionIssue": "連線被拒絕",
+        "connectionCause": "收集器未執行或連接埠錯誤",
+        "connectionSolution": "檢查收集器狀態和連接埠4318",
+        "missingSpansIssue": "追蹤中缺少span",
+        "missingSpansCause": "取樣率過低",
+        "missingSpansSolution": "增加取樣率或停用取樣",
+        "debugTitle": "除錯模式",
+        "debugDescription": "啟用除錯日誌以排除遙測問題。"
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex整合",
+        "backToIntegrations": "返回整合"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "線上示範",
+    "subtitle": "體驗Seizn的檢索管道，包含完整的追蹤和費用透明度。",
+    "tryItNow": "立即體驗 - 無需註冊",
+    "queryPlaceholder": "搜尋查詢",
+    "runDemo": "執行示範",
+    "running": "執行中...",
+    "results": "結果",
+    "trace": "追蹤",
+    "cost": "費用",
+    "noResults": "執行示範以查看結果",
+    "errorTitle": "錯誤",
+    "rateLimitError": "超過速率限制，請稍候。",
+    "retryIn": "重試",
+    "seconds": "秒",
+    "score": "分數",
+    "rerankScore": "重排序",
+    "latency": "延遲",
+    "tokens": "Token",
+    "cached": "快取",
+    "model": "模型",
+    "input": "輸入",
+    "output": "輸出",
+    "costBreakdown": "明細",
+    "total": "總費用",
+    "embedding": "嵌入",
+    "vectorSearch": "向量搜尋",
+    "rerank": "重排序",
+    "answerContract": "回答契約",
+    "tokensIn": "輸入Token",
+    "tokensOut": "輸出Token",
+    "queryUnits": "查詢單位",
+    "prefilledQueries": [
+      "試試這些範例"
+    ]
+  },
+  "publicTrace": {
+    "title": "共享追蹤",
+    "subtitle": "查看共享的檢索追蹤詳情",
+    "sharedBy": "共享追蹤",
+    "expired": "此連結已過期",
+    "expiredDesc": "共享連結已失效。請聯繫所有者建立新連結。",
+    "notFound": "未找到追蹤",
+    "notFoundDesc": "無法找到此共享追蹤。它可能已被撤銷或刪除。",
+    "backToHome": "返回首頁",
+    "requestId": "請求ID",
+    "collection": "集合",
+    "createdAt": "建立時間",
+    "totalLatency": "總延遲",
+    "totalCost": "總費用",
+    "resultsCount": "結果",
+    "query": "查詢",
+    "timeline": "時間軸",
+    "candidates": "候選項",
+    "rerankDiff": "重排序差異",
+    "costAnalysis": "費用分析",
+    "redacted": "[已編輯]",
+    "piiMasked": "PII已脫敏",
+    "readOnlyNote": "這是共享追蹤的唯讀視圖。"
+  },
+  "trustPage": {
+    "title": "信任中心",
+    "subtitle": "Seizn的安全和資料實務",
+    "heroDescription": "我們以隱私和安全為核心進行建構。此頁面記錄了我們對您資料的確切處理方式。",
+    "lastUpdated": "最後更新",
+    "sections": {
+      "dataFlow": {
+        "title": "資料流",
+        "description": "我們儲存什麼和不儲存什麼",
+        "stored": {
+          "title": "我們儲存的內容",
+          "items": [
+            "記憶內容和嵌入",
+            "查詢日誌（雜湊化，非明文）",
+            "每個金鑰的API使用指標",
+            "用於除錯的追蹤資料（可設定保留期）"
+          ]
+        },
+        "notStored": {
+          "title": "我們不儲存的內容",
+          "items": [
+            "原始API金鑰（僅儲存雜湊值）",
+            "使用者密碼（僅OAuth）",
+            "超過快取TTL的查詢結果",
+            "第三方LLM請求/回應日誌"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "加密",
+        "description": "傳輸中和靜態的資料保護",
+        "transit": {
+          "title": "傳輸中",
+          "items": [
+            "所有連線強制使用TLS 1.3",
+            "啟用HSTS，最大時效1年",
+            "憑證透明度日誌"
+          ]
+        },
+        "atRest": {
+          "title": "靜態",
+          "items": [
+            "所有儲存資料使用AES-256加密",
+            "資料庫級加密（Supabase）",
+            "使用獨立金鑰的加密備份"
+          ]
+        },
+        "keyManagement": {
+          "title": "金鑰管理",
+          "items": [
+            "API金鑰使用SHA-256+鹽進行雜湊",
+            "自動金鑰輪換提醒（90天）",
+            "即時金鑰撤銷功能"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "租戶隔離",
+        "description": "我們如何保持您的資料分離",
+        "items": [
+          "資料庫級強制列級安全（RLS）",
+          "所有查詢自動按user_id/org_id過濾",
+          "租戶間無共用索引",
+          "記憶集合的命名空間分離"
+        ],
+        "rbac": {
+          "title": "存取控制",
+          "items": [
+            "基於角色的存取（擁有者、管理員、成員）",
+            "按組織範圍的API金鑰",
+            "所有權限變更的稽核日誌"
+          ]
+        }
+      },
+      "retention": {
+        "title": "保留與刪除",
+        "description": "我們保留資料多長時間以及如何刪除",
+        "periods": [
+          {
+            "type": "記憶",
+            "period": "直到使用者刪除"
+          },
+          {
+            "type": "API日誌",
+            "period": "滾動90天"
+          },
+          {
+            "type": "追蹤",
+            "period": "30天（可設定）"
+          },
+          {
+            "type": "稽核日誌",
+            "period": "1年"
+          },
+          {
+            "type": "備份",
+            "period": "加密30天"
+          }
+        ],
+        "deletion": {
+          "title": "刪除流程",
+          "items": [
+            "DELETE /api/memories 立即移除",
+            "帳戶刪除：30天寬限期",
+            "30天內從備份中硬刪除",
+            "可按請求匯出GDPR/CCPA資料"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "稽核日誌與存取控制",
+        "description": "追蹤誰做了什麼",
+        "logged": {
+          "title": "我們記錄的事件",
+          "items": [
+            "API金鑰建立、輪換、撤銷",
+            "權限變更（RBAC）",
+            "資料匯出請求",
+            "失敗的認證嘗試",
+            "組織的管理員操作"
+          ]
+        },
+        "access": {
+          "title": "日誌存取",
+          "items": [
+            "組織管理員可用",
+            "可透過API匯出（Pro+方案）",
+            "可按使用者、操作、時間戳記搜尋"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "子處理者",
+        "description": "處理您資料的第三方",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "資料庫與認證",
+            "location": "美國（AWS）"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "託管與CDN",
+            "location": "全球邊緣"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "付款",
+            "location": "英國/美國"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "產品分析",
+            "location": "歐盟"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "錯誤監控",
+            "location": "美國"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "重排序（可選）",
+            "location": "美國/加拿大"
+          }
+        ],
+        "note": "我們僅共用每項服務運作所需的最少資料。"
+      },
+      "disclosure": {
+        "title": "我們尚未做到的",
+        "description": "我們安全態勢中的誠實差距",
+        "items": [
+          "SOC 2 Type II認證（進行中，預計2026年第二季度）",
+          "HIPAA合規（企業版規劃中）",
+          "本地部署選項（評估中）",
+          "硬體安全模組（HSM）金鑰儲存",
+          "漏洞賞金計劃（規劃2026年第三季度）"
+        ],
+        "cta": "有安全問題？請聯繫 security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "有疑問？",
+      "description": "我們的團隊很樂意回答安全問題。",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "限額與計費",
+    "subtitle": "了解您的方案限額、配額和計費資訊。",
+    "unlimited": "無限制",
+    "custom": "自訂",
+    "requestsPerSecond": "請求/秒",
+    "sidebar": {
+      "onThisPage": "本頁內容",
+      "quotas": "月度配額",
+      "rateLimits": "速率限制",
+      "overage": "超額行為",
+      "reset": "重設時間",
+      "headers": "回應標頭"
+    },
+    "table": {
+      "plan": "方案",
+      "monthlyQuota": "月度配額",
+      "rps": "RPS限制"
+    },
+    "plans": {
+      "free": {
+        "name": "免費版",
+        "overage": "超限後軟限流"
+      },
+      "plus": {
+        "name": "Plus版",
+        "overage": "軟限流，郵件提醒"
+      },
+      "pro": {
+        "name": "Pro版",
+        "overage": "軟限流，優先佇列"
+      },
+      "enterprise": {
+        "name": "企業版",
+        "overage": "自訂SLA，無限流"
+      }
+    },
+    "quotas": {
+      "title": "月度配額",
+      "description": "每個方案包含月度API呼叫配額。配額在每月1日UTC 00:00重設。"
+    },
+    "rateLimit": {
+      "title": "速率限制（RPS）",
+      "description": "速率限制保護我們的基礎設施並確保公平使用。限制按API金鑰套用。"
+    },
+    "overage": {
+      "title": "超額行為",
+      "softThrottle": {
+        "title": "軟限流（配額超額）",
+        "description": "當您超過月度配額時：",
+        "point1": "API呼叫以降低優先順序繼續",
+        "point2": "回應時間可能增加2-5倍",
+        "point3": "在80%和100%使用時傳送郵件通知"
+      },
+      "hard429": {
+        "title": "硬429（速率限制）",
+        "description": "當您超過RPS速率限制時：",
+        "recommendation": "實作指數退避（1秒、2秒、4秒、8秒）並帶抖動重試。"
+      }
+    },
+    "reset": {
+      "title": "重設時間",
+      "monthly": {
+        "title": "月度配額重設",
+        "description": "配額在每月第一天重設。",
+        "time": "每月1日，UTC 00:00"
+      },
+      "rateLimit": {
+        "title": "速率限制視窗",
+        "description": "速率限制使用滑動視窗。",
+        "time": "滾動1秒視窗"
+      }
+    },
+    "headers": {
+      "limit": "每個視窗允許的最大請求數",
+      "remaining": "目前視窗剩餘請求數",
+      "reset": "視窗重設的Unix時間戳記",
+      "quotaLimit": "月度配額限制",
+      "quotaRemaining": "本月剩餘API呼叫",
+      "quotaReset": "配額重設的ISO 8601日期"
+    },
+    "headersSection": {
+      "title": "回應標頭",
+      "description": "每個API回應都包含幫助您追蹤使用量和限額的標頭資訊。",
+      "header": "標頭",
+      "headerDescription": "描述",
+      "example": "範例回應標頭："
+    },
+    "upgrade": {
+      "title": "需要更高限額？",
+      "description": "升級您的方案以獲得更高配額、更高速率限制和優先支援。",
+      "viewPlans": "查看方案",
+      "contactSales": "聯繫銷售"
+    }
+  },
+  "help": {
+    "title": "說明中心",
+    "subtitle": "尋找答案、取得支援和存取資源。",
+    "search": {
+      "placeholder": "搜尋說明...",
+      "noResults": "未找到結果"
+    },
+    "sections": {
+      "support": {
+        "title": "支援管道",
+        "description": "從我們的團隊取得協助",
+        "email": {
+          "title": "郵件支援",
+          "description": "24小時內透過郵件取得協助",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord社群",
+          "description": "加入我們的社群取得即時協助",
+          "action": "加入Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "回報Bug和請求功能",
+          "action": "提交Issue"
+        }
+      },
+      "faq": {
+        "title": "常見問題",
+        "description": "常見問題的快速解答",
+        "viewAll": "查看所有FAQ"
+      },
+      "status": {
+        "title": "系統狀態",
+        "description": "檢查目前系統狀態和事件",
+        "viewStatus": "查看狀態頁面",
+        "operational": "所有系統正常運作",
+        "degraded": "效能降低",
+        "outage": "服務中斷"
+      },
+      "billing": {
+        "title": "計費與方案",
+        "description": "管理您的訂閱和付款",
+        "items": {
+          "plans": "查看定價方案",
+          "usage": "檢查使用量",
+          "invoices": "下載發票",
+          "upgrade": "升級方案"
+        }
+      },
+      "docs": {
+        "title": "文件",
+        "description": "熱門文件快速連結",
+        "links": {
+          "quickstart": "快速入門指南",
+          "apiReference": "API參考",
+          "sdks": "SDK與函式庫",
+          "limits": "限額與計費",
+          "security": "安全"
+        }
+      }
+    },
+    "contact": {
+      "title": "仍需協助？",
+      "description": "我們的支援團隊隨時幫助您成功。",
+      "cta": "聯繫支援"
+    }
+  },
+  "status": {
+    "title": "系統狀態",
+    "subtitle": "即時系統狀態和事件歷史",
+    "lastUpdated": "最後更新",
+    "overall": {
+      "operational": "所有系統正常運作",
+      "degraded": "效能降低",
+      "partialOutage": "部分系統中斷",
+      "majorOutage": "重大系統中斷"
+    },
+    "uptime": {
+      "title": "正常運作時間",
+      "24h": "24小時",
+      "7d": "7天",
+      "30d": "30天",
+      "90d": "90天"
+    },
+    "services": {
+      "title": "服務狀態",
+      "operational": "正常",
+      "degraded": "降級",
+      "down": "停機"
+    },
+    "incidents": {
+      "active": "活躍事件",
+      "history": "事件歷史",
+      "noActive": "無活躍事件",
+      "noHistory": "無歷史事件",
+      "status": {
+        "investigating": "調查中",
+        "identified": "已識別",
+        "monitoring": "監控中",
+        "resolved": "已解決"
+      },
+      "severity": {
+        "minor": "輕微",
+        "major": "重大",
+        "critical": "嚴重"
+      },
+      "affected": "受影響的服務",
+      "timeline": "時間軸",
+      "started": "開始",
+      "resolved": "解決",
+      "duration": "持續時間",
+      "viewDetails": "查看詳情"
+    },
+    "subscribe": {
+      "title": "訂閱更新",
+      "rss": "RSS訂閱",
+      "email": "郵件通知"
     }
   }
 }

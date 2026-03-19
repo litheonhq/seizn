@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. All rights reserved.",
+    "copyright": "© {year} Litheon LLC. All rights reserved.",
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact"
@@ -1850,7 +1850,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Litheon LLC. All rights reserved."
     },
     "faqPage": {
       "title": "Frequently Asked Questions",

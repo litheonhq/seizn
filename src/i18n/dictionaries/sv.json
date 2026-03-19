@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Alla rättigheter förbehållna.",
+    "copyright": "© {year} Litheon LLC. Alla rättigheter förbehållna.",
     "privacy": "Integritet",
     "terms": "Villkor",
     "contact": "Kontakt"
@@ -236,31 +236,31 @@
       "noKeys": "Inga API-nycklar ännu. Skapa en för att komma igång."
     },
     "usagePage": {
-      "title": "Usage Analytics",
-      "period": "Current Period",
-      "memoriesUsed": "Memories Used",
-      "apiCallsUsed": "API Calls Used",
-      "remaining": "Remaining",
-      "upgrade": "Upgrade Plan",
-      "subtitle": "Monitor your API usage and costs.",
+      "title": "Användningsanalys",
+      "period": "Aktuell period",
+      "memoriesUsed": "Använda minnen",
+      "apiCallsUsed": "Använda API-anrop",
+      "remaining": "Återstående",
+      "upgrade": "Uppgradera plan",
+      "subtitle": "Övervaka din API-användning och kostnader.",
       "days7": "7 Days",
       "days30": "30 Days",
       "days90": "90 Days",
-      "loading": "Loading...",
-      "totalApiCalls": "Total API Calls",
-      "totalTokens": "Total Tokens",
-      "estimatedCost": "Estimated Cost",
-      "avgLatency": "Avg Latency",
+      "loading": "Laddar...",
+      "totalApiCalls": "Totala API-anrop",
+      "totalTokens": "Totala tokens",
+      "estimatedCost": "Beräknad kostnad",
+      "avgLatency": "Genomsnittlig latens",
       "dailyApiCalls": "Daily API Calls",
-      "calls": "calls",
-      "endpointUsage": "Endpoint Usage",
-      "noData": "No data yet",
+      "calls": "anrop",
+      "endpointUsage": "Ändpunktsanvändning",
+      "noData": "Inga data ännu",
       "avg": "avg",
-      "errors": "errors",
-      "usageByApiKey": "Usage by API Key",
-      "errorsTitle": "Errors",
-      "errorRate": "error rate",
-      "noUsageData": "No usage data available",
+      "errors": "fel",
+      "usageByApiKey": "Användning per API-nyckel",
+      "errorsTitle": "Fel",
+      "errorRate": "felfrekvens",
+      "noUsageData": "Inga användningsdata tillgängliga",
       "p95Latency": "p95 Latens",
       "errorRateKpi": "Felfrekvens",
       "monthlyApiCalls": "Månatliga API-anrop",
@@ -282,15 +282,15 @@
       "createApiKey": "Skapa API-nyckel"
     },
     "language": "Språk",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Organisationer",
+    "docs": "Dokumentation",
     "nav": {
       "overview": "Översikt",
       "memories": "Minnen",
       "mindMap": "Tankekarta",
       "candidates": "Kandidater",
       "devTools": "DevTools",
-      "playground": "Playground",
+      "playground": "Lekplats",
       "evals": "Utvärderingar",
       "analytics": "Analys",
       "governance": "Styrning",
@@ -316,24 +316,24 @@
         "system": "SYSTEM"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
-    "playground": "Playground",
+    "pinSidebar": "Fäst sidopanelen",
+    "unpinSidebar": "Fäll ihop sidopanelen",
+    "playground": "Lekplats",
     "playgroundPage": {
-      "title": "Debug Console",
+      "title": "Felsökningskonsol",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
       "queryPlaceholder": "Enter your test query...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
-      "threshold": "Threshold",
+      "threshold": "Tröskel",
       "thresholdHint": "Minimum similarity score",
       "filters": "Filters",
       "filtersHint": "Metadata filters in JSON format",
-      "runQuery": "Run Query",
-      "running": "Running...",
-      "results": "Results",
+      "runQuery": "Kör fråga",
+      "running": "Kör...",
+      "results": "Resultat",
       "noResults": "No results found",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
@@ -345,7 +345,15 @@
       "tracingDisabled": "Tracing disabled",
       "executionTime": "Execution Time",
       "tokensUsed": "Tokens Used",
-      "steps": "Steps",
+      "steps": {
+        "parseQuery": "Tolka fråga",
+        "createEmbedding": "Skapa Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Nyckelordssökning",
+        "mergeResults": "Slå samman resultat",
+        "rerank": "Omrangordna resultat",
+        "returnResults": "Returnera resultat"
+      },
       "embedding": "Embedding",
       "vectorSearch": "Vector Search",
       "reranking": "Reranking",
@@ -425,37 +433,37 @@
       "rankChanges": "Rangändringar"
     },
     "settingsPage": {
-      "title": "Settings",
-      "subtitle": "Profile & Preferences",
-      "saving": "Saving...",
-      "saved": "Saved",
-      "saveFailed": "Save failed",
-      "save": "Save Changes",
-      "account": "Account",
-      "email": "Email",
-      "name": "Name",
-      "languageHint": "Affects UI + dashboard",
-      "loading": "Loading...",
-      "loginRequired": "Login required.",
+      "title": "Inställningar",
+      "subtitle": "Profil och inställningar",
+      "saving": "Sparar...",
+      "saved": "Sparat",
+      "saveFailed": "Sparande misslyckades",
+      "save": "Spara ändringar",
+      "account": "Konto",
+      "email": "E-post",
+      "name": "Namn",
+      "languageHint": "Påverkar UI + instrumentpanel",
+      "loading": "Laddar...",
+      "loginRequired": "Inloggning krävs.",
       "tabs": {
-        "profile": "Profile",
+        "profile": "Profil",
         "budget": "Budget",
-        "notifications": "Notifications",
-        "security": "Security",
+        "notifications": "Aviseringar",
+        "security": "Säkerhet",
         "billing": "Fakturering",
         "danger": "Datahantering"
       },
       "budget": {
         "title": "Budget Management",
         "description": "Set API usage limits and notifications",
-        "monthlyLimit": "Monthly Limit",
+        "monthlyLimit": "Månadsgräns",
         "monthlyLimitHint": "Set monthly usage cap",
-        "dailyLimit": "Daily Limit",
+        "dailyLimit": "Daglig gräns",
         "dailyLimitHint": "Set daily usage cap",
         "currentUsage": "Current Usage",
         "remainingBudget": "Remaining Budget",
         "usageHistory": "Usage History",
-        "alertThreshold": "Alert Threshold",
+        "alertThreshold": "Varningströskel",
         "alertThresholdHint": "Get alerted at this percentage of limit",
         "alertEnabled": "Budget alerts enabled",
         "alertDisabled": "Budget alerts disabled",
@@ -478,7 +486,7 @@
         "queue": "Köa Begäran"
       },
       "notifications": {
-        "title": "Notification Settings",
+        "title": "Aviseringsinställningar",
         "description": "Manage your notification preferences",
         "email": "Email Notifications",
         "emailHint": "Receive emails about account activity",
@@ -509,26 +517,26 @@
         "integrations": "Integrationer"
       },
       "security": {
-        "title": "Security Settings",
+        "title": "Säkerhetsinställningar",
         "description": "Manage your account security",
-        "twoFactor": "Two-Factor Authentication",
+        "twoFactor": "Tvåfaktorsautentisering",
         "twoFactorHint": "Add an extra layer of security to your account",
         "twoFactorEnabled": "Two-factor authentication enabled",
         "twoFactorDisabled": "Two-factor authentication disabled",
         "enableTwoFactor": "Enable Two-Factor",
         "disableTwoFactor": "Disable Two-Factor",
-        "sessions": "Active Sessions",
+        "sessions": "Aktiva sessioner",
         "sessionsHint": "Manage your active devices and sessions",
         "currentSession": "Current Session",
         "lastActive": "Last Active",
         "revokeSession": "Revoke Session",
         "revokeAllSessions": "Revoke All Other Sessions",
-        "changePassword": "Change Password",
-        "passwordDesc": "Manage your password security",
+        "changePassword": "Ändra lösenord",
+        "passwordDesc": "Hantera din lösenordssäkerhet",
         "changePasswordHint": "Update your password regularly for security",
-        "currentPassword": "Current Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm Password",
+        "currentPassword": "Nuvarande lösenord",
+        "newPassword": "Nytt lösenord",
+        "confirmPassword": "Bekräfta lösenord",
         "passwordChanged": "Password changed",
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
@@ -545,11 +553,11 @@
       "dangerZone": {
         "title": "Danger Zone",
         "description": "Irreversible actions",
-        "deleteAccount": "Delete Account",
+        "deleteAccount": "Radera konto",
         "deleteAccountHint": "Permanently delete your account and all data",
         "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
         "deleteAccountButton": "Delete My Account",
-        "exportData": "Export Data",
+        "exportData": "Exportera data",
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
@@ -588,33 +596,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "God morgon",
+      "afternoon": "God eftermiddag",
+      "evening": "God kväll"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Här är en översikt av din AI-minnesanvändning",
+      "totalMemories": "Totala minnen",
+      "apiCalls": "API-anrop",
+      "activeKeys": "Aktiva API-nycklar",
+      "currentPlan": "Nuvarande plan",
+      "usage": "Användning",
+      "today": "Idag",
+      "dailyLimit": "Daglig gräns",
+      "recentMemories": "Senaste minnen",
+      "viewAll": "Visa alla",
+      "noMemories": "Inga minnen ännu",
+      "noMemoriesHint": "Börja med att lägga till ditt första minne via API",
+      "quickStart": "Snabbstart",
+      "createApiKey": "Skapa API-nyckel",
+      "getStartedApi": "Kom igång med API:et",
+      "viewDocumentation": "Visa dokumentation",
+      "learnSeizn": "Lär dig använda Seizn",
+      "createOrganization": "Skapa organisation",
+      "collaborateTeam": "Samarbeta med ditt team",
+      "quickExample": "Snabbexempel",
+      "manageKeys": "Hantera nycklar",
+      "upgradePlan": "Uppgradera plan",
       "apiUsageChart": "API-användning",
       "last7days": "Senaste 7 dagarna",
       "viewDetails": "Visa Detaljer",
@@ -627,34 +635,34 @@
       "sendFirstRequest": "Skicka Första Begäran"
     },
     "keysPage": {
-      "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
-      "createNewKey": "Create New Key",
-      "activeKeys": "Active Keys",
-      "noKeysTitle": "No API keys yet",
-      "noKeysDesc": "Create your first API key to start integrating with Seizn",
-      "createApiKey": "Create API Key",
-      "created": "Created",
-      "neverUsed": "Never used",
-      "lastUsed": "Last used",
-      "revoke": "Revoke",
+      "title": "API-nycklar",
+      "subtitle": "Hantera dina API-nycklar för åtkomst till Seizn-tjänster",
+      "createNewKey": "Skapa ny nyckel",
+      "activeKeys": "Aktiva nycklar",
+      "noKeysTitle": "Inga API-nycklar ännu",
+      "noKeysDesc": "Skapa din första API-nyckel för att börja integrera med Seizn",
+      "createApiKey": "Skapa API-nyckel",
+      "created": "Skapad",
+      "neverUsed": "Aldrig använd",
+      "lastUsed": "Senast använd",
+      "revoke": "Återkalla",
       "revokeConfirm": "Revoke API key \"{keyName}\"? This action cannot be undone.",
-      "usageGuide": "Usage Guide",
-      "authentication": "Authentication",
-      "authDesc": "Include your API key in the request header:",
-      "exampleRequest": "Example Request",
-      "keyCreated": "API Key Created!",
-      "keyCreatedDesc": "Copy this key now. You won't see it again.",
-      "copyToClipboard": "Copy to Clipboard",
-      "copied": "Copied!",
-      "done": "Done",
-      "createKeyTitle": "Create API Key",
-      "createKeyDesc": "Give your key a descriptive name",
-      "keyName": "Key Name",
+      "usageGuide": "Användningsguide",
+      "authentication": "Autentisering",
+      "authDesc": "Inkludera din API-nyckel i begäranshuvudet:",
+      "exampleRequest": "Exempelförfrågan",
+      "keyCreated": "API-nyckel skapad!",
+      "keyCreatedDesc": "Kopiera denna nyckel nu. Du kommer inte att se den igen.",
+      "copyToClipboard": "Kopiera till urklipp",
+      "copied": "Kopierat!",
+      "done": "Klart",
+      "createKeyTitle": "Skapa API-nyckel",
+      "createKeyDesc": "Ge din nyckel ett beskrivande namn",
+      "keyName": "Nyckelnamn",
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "createKey": "Create Key",
+      "cancel": "Avbryt",
+      "creating": "Skapar...",
+      "createKey": "Skapa nyckel",
       "name": "Namn",
       "keyColumn": "Nyckel",
       "actions": "Åtgärder",
@@ -668,24 +676,24 @@
       "keyRotatedDesc": "Kopiera denna nya nyckel nu. Den gamla nyckeln är inte längre giltig."
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
-      "newOrganization": "New Organization",
-      "noOrgsTitle": "No organizations yet",
+      "title": "Organisationer",
+      "subtitle": "Hantera dina team och samarbeta med andra",
+      "newOrganization": "Ny organisation",
+      "noOrgsTitle": "Inga organisationer ännu",
       "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Create Organization",
-      "created": "Created",
+      "createOrganization": "Skapa organisation",
+      "created": "Skapad",
       "plan": "Plan",
-      "freePlan": "Free",
-      "createOrgTitle": "Create Organization",
-      "createOrgDesc": "Set up a new team workspace",
-      "orgName": "Organization Name",
+      "freePlan": "Gratis",
+      "createOrgTitle": "Skapa organisation",
+      "createOrgDesc": "Skapa en ny teamarbetsyta",
+      "orgName": "Organisationsnamn",
       "orgNamePlaceholder": "Acme Corp",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "create": "Create",
+      "cancel": "Avbryt",
+      "creating": "Skapar...",
+      "create": "Skapa",
       "roles": {
         "owner": "owner",
         "admin": "admin",
@@ -1343,7 +1351,7 @@
       "toggle": "Växla tema"
     },
     "activity": {
-      "endpoint": "Endpoint",
+      "endpoint": "Ändpunkt",
       "status": "Status",
       "latency": "Latens",
       "cost": "Kostnad",
@@ -1449,7 +1457,7 @@
         "deliveries": "Totalt Leveranser"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "Ändpunkter",
         "deliveries": "Senaste Leveranser"
       },
       "success": "lyckades",
@@ -1478,6 +1486,40 @@
         "events": "Händelser att Prenumerera",
         "cancel": "Avbryt",
         "create": "Skapa Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Minne skapat",
+          "desc": "När ett nytt minne lagras"
+        },
+        "memory_updated": {
+          "label": "Minne uppdaterat",
+          "desc": "När ett minne ändras"
+        },
+        "memory_deleted": {
+          "label": "Minne raderat",
+          "desc": "När ett minne tas bort"
+        },
+        "extraction_completed": {
+          "label": "Extraktion klar",
+          "desc": "När minnesextraktion är klar"
+        },
+        "query_executed": {
+          "label": "Fråga utförd",
+          "desc": "När en RAG-fråga utförs"
+        },
+        "key_created": {
+          "label": "API-nyckel skapad",
+          "desc": "När en ny API-nyckel genereras"
+        },
+        "key_revoked": {
+          "label": "API-nyckel återkallad",
+          "desc": "När en API-nyckel återkallas"
+        },
+        "usage_threshold": {
+          "label": "Användningströskel",
+          "desc": "När användningen överstiger tröskeln"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,102 +1697,103 @@
     "socialProof": "Betrodd av team som kör agenter i stor skala",
     "liveDemo": "Live Demo",
     "heroTagline": "Testa API:et live — ingen registrering krävs",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "Första hämtningen klar",
+    "copySnippetHint": "Kopiera kodavsnittet nedan för att reproducera",
+    "copySnippetTitle": "Kopiera detta kodavsnitt",
+    "copySnippetSubtitle": "Genererat från dina exakta inställningar ovan",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
+      "title": "Varför Seizn istället för LangChain + Pinecone?",
+      "subtitle": "Sluta klistra ihop fragmenterade verktyg. Få allt du behöver i en integrerad stack.",
+      "tracingTitle": "Inbyggd spårning + utvärdering",
       "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
       "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotTitle": "Budgetmedveten autopilot",
       "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
+      "governanceTitle": "Styrning + granskningsloggar",
       "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
+      "governanceBadge": "Standard för team",
+      "lessGlueTitle": "Färre rörliga delar",
       "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "lessGlueBadge": "Mindre limkod"
     },
     "trust": {
       "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "securityDesc": "Säkert som standard",
+      "rateLimits": "Hastighetsbegränsningar",
+      "rateLimitsDesc": "Användningsvarningar",
+      "auditLogs": "Granskningsloggar",
+      "auditLogsDesc": "Fullständig spårbarhet"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
+      "title": "Enkel, transparent prissättning",
       "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "viewPricing": "Visa priser",
+      "contactSales": "Kontakta försäljning"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "Dokumentation",
+      "pricing": "Priser",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "Hämta API-nyckel",
+      "tryDemo": "Prova demo",
       "limits": "Gränser",
       "status": "Status",
       "help": "Hjälp",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Jämför"
     },
     "requestBuilder": {
-      "title": "Request Builder",
-      "query": "Query",
-      "queryPlaceholder": "Enter your search query...",
-      "tryExamples": "Try examples",
+      "title": "Frågebyggare",
+      "query": "Fråga",
+      "queryPlaceholder": "Ange din sökfråga...",
+      "tryExamples": "Prova exempel",
       "dataset": "Dataset",
-      "latencyBudget": "Latency Budget",
+      "latencyBudget": "Latensbudget",
       "fast": "fast",
       "thorough": "thorough",
       "topK": "Top K",
-      "results": "results",
-      "features": "Features",
-      "hybridSearch": "Hybrid Search",
-      "hybridSearchDesc": "Combine vector + keyword",
+      "results": "resultat",
+      "features": "Funktioner",
+      "hybridSearch": "Hybridsökning",
+      "hybridSearchDesc": "Kombinera vektor + nyckelord",
       "rerank": "Rerank",
-      "rerankDesc": "Re-score with cross-encoder",
+      "rerankDesc": "Ompoängsätt med cross-encoder",
       "answerContract": "Answer Contract",
-      "answerContractDesc": "Validate answer quality",
-      "running": "Running...",
-      "runQuery": "Run Query",
+      "answerContractDesc": "Validera svarskvalitet",
+      "running": "Kör...",
+      "runQuery": "Kör fråga",
       "datasets": {
-        "techDocs": "Tech Documentation",
-        "legalContracts": "Legal Contracts",
-        "researchPapers": "Research Papers"
+        "techDocs": "Teknisk dokumentation",
+        "legalContracts": "Juridiska kontrakt",
+        "researchPapers": "Forskningsartiklar"
       },
       "advanced": "Avancerat"
     },
     "resultsPanel": {
-      "searching": "Searching...",
-      "noResults": "Run a query to see results",
-      "score": "Score"
+      "searching": "Söker...",
+      "noResults": "Kör en fråga för att se resultat",
+      "score": "Poäng"
     },
     "tracePanel": {
-      "tracing": "Tracing pipeline...",
-      "noTrace": "Run a query to see the trace",
-      "latency": "Latency",
-      "cost": "Cost",
+      "tracing": "Spårar pipeline...",
+      "noTrace": "Kör en fråga för att se spårningen",
+      "latency": "Latens",
+      "cost": "Kostnad",
       "tokens": "Tokens",
       "vectorOps": "Vector Ops",
       "cached": "cached",
-      "model": "Model",
-      "input": "Input",
-      "output": "Output"
+      "model": "Modell",
+      "input": "Indata",
+      "output": "Utdata"
     },
     "tabs": {
-      "results": "Results",
-      "trace": "Trace",
+      "results": "Resultat",
+      "trace": "Spårning",
       "cost": "Kostnad"
     },
     "chips": {
-      "trace": "Trace",
+      "trace": "Spårning",
       "eval": "Eval",
       "policy": "Policy"
     },
@@ -1777,7 +1820,7 @@
     "errorDisplay": {
       "error": "Fel",
       "errorCode": "Kod",
-      "traceId": "Trace",
+      "traceId": "Spårning",
       "hint": "Tips",
       "tryAgain": "Försök igen",
       "copyTraceId": "Kopiera trace-ID",
@@ -1806,7 +1849,7 @@
       "resources": "Resurser",
       "security": "Säkerhet",
       "sdks": "SDK",
-      "faq": "FAQ",
+      "faq": "Vanliga frågor",
       "tutorial": "5-min-guide",
       "integrations": "Integrationer"
     },
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Alla rättigheter förbehållna."
+      "copyright": "© {year} Litheon LLC. Alla rättigheter förbehållna."
     },
     "faqPage": {
       "title": "Vanliga Frågor",
@@ -1942,7 +1985,9 @@
         "searchRetrieval": "Sök och Hämtning",
         "extraction": "Extraktion",
         "operations": "Operationer",
-        "securityCompliance": "Säkerhet och Efterlevnad"
+        "securityCompliance": "Säkerhet och Efterlevnad",
+        "technology": "Teknik",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2049,8 +2094,8 @@
     },
     "componentsPage": {
       "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "subtitle": "Omfattande dokumentation för Seizns UI-komponentbibliotek. Varje komponent inkluderar Props, användningsexempel och bästa praxis.",
+      "all": "Alla",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2102,25 +2147,25 @@
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "usage": "Användningsexempel",
+      "propName": "Namn",
+      "propType": "Typ",
+      "propDefault": "Standard",
+      "propDescription": "Beskrivning",
+      "copy": "Kopiera",
+      "copied": "Kopierat!",
       "categories": {
         "graph": {
           "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "description": "Interaktiv grafvisualisering för behörighets- och relationsmappning"
         },
         "explain": {
           "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "description": "Förklarbarhet och attribueringsvisualisering för RAG-resultat"
         },
         "retops": {
           "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "description": "Instrumentpanel för övervakning och analys av hämtningsoperationer"
         }
       }
     },
@@ -2366,7 +2411,7 @@
           "description": "Kopiera-klistra-in-exempel för Python, TypeScript och mer."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Vanliga frågor",
           "description": "Vanliga frågor om minnestyper, namnrymder och bästa praxis."
         }
       }
@@ -2468,7 +2513,7 @@
           "description": "Kopiera-klistra-in-exempel för Python, TypeScript och REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Vanliga frågor",
           "description": "Lär dig om minnestyper, namnrymder och bästa praxis."
         }
       }
@@ -2496,6 +2541,11 @@
           "badge": "Officiell",
           "title": "OpenTelemetry",
           "description": "Exportera traces till Datadog, Grafana, Jaeger och alla OTLP-kompatibla backends."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2686,23 +2736,23 @@
   },
   "demoQuery": {
     "title": "Live-demo",
-    "subtitle": "Upplev Seizns hämtningspipeline med fullständig spårning och kostnadstransparens.",
+    "subtitle": "Upplev Seizns hämtningspipeline med full spårning och kostnadstransparens.",
     "tryItNow": "Prova nu - Ingen registrering krävs",
     "queryPlaceholder": "Sökfråga",
     "runDemo": "Kör demo",
     "running": "Kör...",
     "results": "Resultat",
-    "trace": "Trace",
+    "trace": "Spårning",
     "cost": "Kostnad",
     "noResults": "Kör demon för att se resultat",
     "errorTitle": "Fel",
-    "rateLimitError": "Frekvensgräns överskriden. Vänta.",
+    "rateLimitError": "Hastighetsgräns överskriden. Vänta.",
     "retryIn": "Försök igen om",
     "seconds": "sekunder",
     "score": "Poäng",
-    "rerankScore": "Rerank",
+    "rerankScore": "Omrankning",
     "latency": "Latens",
-    "tokens": "Tokens",
+    "tokens": "Token",
     "cached": "cachad",
     "model": "Modell",
     "input": "Indata",
@@ -2711,7 +2761,7 @@
     "total": "Total kostnad",
     "embedding": "Embedding",
     "vectorSearch": "Vektorsökning",
-    "rerank": "Rerank",
+    "rerank": "Omrankning",
     "answerContract": "Svarskontrakt",
     "tokensIn": "Token in",
     "tokensOut": "Token ut",
@@ -2721,15 +2771,15 @@
     ]
   },
   "publicTrace": {
-    "title": "Delad trace",
-    "subtitle": "Visa detaljer för delad hämtningstrace",
-    "sharedBy": "Delad trace",
-    "expired": "Denna länk har löpt ut",
-    "expiredDesc": "Delningslänken är inte längre giltig. Be ägaren att skapa en ny länk.",
-    "notFound": "Trace hittades inte",
-    "notFoundDesc": "Denna delade trace kunde inte hittas. Den kan ha återkallats eller raderats.",
+    "title": "Delad spårning",
+    "subtitle": "Visa detaljer för delad hämtningsspårning",
+    "sharedBy": "Delad spårning",
+    "expired": "Denna länk har gått ut",
+    "expiredDesc": "Delningslänken är inte längre giltig. Be ägaren skapa en ny länk.",
+    "notFound": "Spårning hittades inte",
+    "notFoundDesc": "Denna delade spårning kunde inte hittas. Den kan ha återkallats eller raderats.",
     "backToHome": "Tillbaka till startsidan",
-    "requestId": "Begärande-ID",
+    "requestId": "Förfrågnings-ID",
     "collection": "Samling",
     "createdAt": "Skapad",
     "totalLatency": "Total latens",
@@ -2738,11 +2788,11 @@
     "query": "Fråga",
     "timeline": "Tidslinje",
     "candidates": "Kandidater",
-    "rerankDiff": "Rerank-skillnad",
+    "rerankDiff": "Omrankningsskillnad",
     "costAnalysis": "Kostnadsanalys",
-    "redacted": "[MASKERAD]",
-    "piiMasked": "PII maskerad för integritet",
-    "readOnlyNote": "Detta är en skrivskyddad vy av en delad trace."
+    "redacted": "[DOLT]",
+    "piiMasked": "PII dolt för integritet",
+    "readOnlyNote": "Detta är en skrivskyddad vy av en delad spårning."
   },
   "trustPage": {
     "title": "Förtroendecenter",

@@ -6,7 +6,7 @@
   "nav": {
     "features": "Funzionalita",
     "pricing": "Prezzi",
-    "docs": "Docs",
+    "docs": "Documentazione",
     "login": "Accedi",
     "getStarted": "Inizia"
   },
@@ -181,7 +181,7 @@
     "login": {
       "title": "Bentornato",
       "subtitle": "Accedi al tuo account",
-      "email": "Email",
+      "email": "E-mail",
       "password": "Password",
       "submit": "Accedi",
       "noAccount": "Non hai un account?",
@@ -192,7 +192,7 @@
       "title": "Crea un account",
       "subtitle": "Inizia a costruire con Seizn",
       "name": "Nome completo",
-      "email": "Email",
+      "email": "E-mail",
       "password": "Password",
       "submit": "Crea account",
       "hasAccount": "Hai gia un account?",
@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Tutti i diritti riservati.",
+    "copyright": "© {year} Litheon LLC. Tutti i diritti riservati.",
     "privacy": "Privacy",
     "terms": "Termini",
     "contact": "Contatti"
@@ -345,7 +345,15 @@
       "tracingDisabled": "Tracciamento disattivato",
       "executionTime": "Tempo di esecuzione",
       "tokensUsed": "Token utilizzati",
-      "steps": "Passaggi",
+      "steps": {
+        "parseQuery": "Analizza query",
+        "createEmbedding": "Crea Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Ricerca per parole chiave",
+        "mergeResults": "Unisci risultati",
+        "rerank": "Riordina risultati",
+        "returnResults": "Restituisci risultati"
+      },
       "embedding": "Embedding",
       "vectorSearch": "Ricerca vettoriale",
       "reranking": "Riordinamento",
@@ -381,7 +389,7 @@
       "exportResults": "Esporta risultati",
       "exportFormat": "Formato di esportazione",
       "exportSuccess": "Esportazione riuscita",
-      "queryBuilder": "Query Builder",
+      "queryBuilder": "Costruttore query",
       "namespace": "Namespace",
       "namespacePlaceholder": "predefinito",
       "searchMode": "Modalità di Ricerca",
@@ -430,9 +438,9 @@
       "saving": "Salvataggio...",
       "saved": "Salvato",
       "saveFailed": "Salvataggio fallito",
-      "save": "Save Changes",
+      "save": "Salva modifiche",
       "account": "Account",
-      "email": "Email",
+      "email": "E-mail",
       "name": "Nome",
       "languageHint": "Influisce sull'interfaccia e sul pannello",
       "loading": "Caricamento...",
@@ -524,7 +532,7 @@
         "revokeSession": "Revoca sessione",
         "revokeAllSessions": "Revoca tutte le altre sessioni",
         "changePassword": "Cambia password",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Gestisci la sicurezza della tua password",
         "changePasswordHint": "Aggiorna regolarmente la tua password per maggiore sicurezza",
         "currentPassword": "Password attuale",
         "newPassword": "Nuova password",
@@ -978,7 +986,7 @@
       "rerank": "Rerank",
       "optimizationHints": "Suggerimenti di Ottimizzazione",
       "tabs": {
-        "timeline": "Timeline",
+        "timeline": "Cronologia",
         "candidates": "Candidati",
         "rerank": "Rerank",
         "whatIf": "Laboratorio Cosa-Se",
@@ -1266,7 +1274,7 @@
       },
       "subjects": {
         "description": "Visualizza e gestisci gli interessati che hanno interagito con il tuo sistema",
-        "email": "Email",
+        "email": "E-mail",
         "externalId": "ID Esterno",
         "requests": "Richieste",
         "dataCategories": "Categorie di Dati",
@@ -1388,7 +1396,7 @@
       "waitingForMetrics": "In attesa del completamento della valutazione..."
     },
     "autopilot": {
-      "title": "Autopilot",
+      "title": "Autopilota",
       "subtitle": "Ottimizzazione recupero basata su AI",
       "settings": "Impostazioni",
       "decisionLogs": "Log Decisioni",
@@ -1452,7 +1460,7 @@
         "deliveries": "Consegne Totali"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "Endpoint",
         "deliveries": "Consegne Recenti"
       },
       "success": "riuscito",
@@ -1481,6 +1489,40 @@
         "events": "Eventi da Sottoscrivere",
         "cancel": "Annulla",
         "create": "Crea Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Memoria creata",
+          "desc": "Quando viene salvata una nuova memoria"
+        },
+        "memory_updated": {
+          "label": "Memoria aggiornata",
+          "desc": "Quando una memoria viene modificata"
+        },
+        "memory_deleted": {
+          "label": "Memoria eliminata",
+          "desc": "Quando una memoria viene rimossa"
+        },
+        "extraction_completed": {
+          "label": "Estrazione completata",
+          "desc": "Quando l'estrazione della memoria termina"
+        },
+        "query_executed": {
+          "label": "Query eseguita",
+          "desc": "Quando viene eseguita una query RAG"
+        },
+        "key_created": {
+          "label": "Chiave API creata",
+          "desc": "Quando viene generata una nuova chiave API"
+        },
+        "key_revoked": {
+          "label": "Chiave API revocata",
+          "desc": "Quando una chiave API viene revocata"
+        },
+        "usage_threshold": {
+          "label": "Soglia di utilizzo",
+          "desc": "Quando l'utilizzo supera la soglia"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1702,7 +1744,8 @@
       "limits": "Limiti",
       "status": "Stato",
       "help": "Aiuto",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Confronta"
     },
     "requestBuilder": {
       "title": "Costruttore di Richieste",
@@ -1754,7 +1797,7 @@
       "cost": "Costo"
     },
     "chips": {
-      "trace": "Trace",
+      "trace": "Traccia",
       "eval": "Eval",
       "policy": "Policy"
     },
@@ -1781,7 +1824,7 @@
     "errorDisplay": {
       "error": "Errore",
       "errorCode": "Codice",
-      "traceId": "Trace",
+      "traceId": "Traccia",
       "hint": "Suggerimento",
       "tryAgain": "Riprova",
       "copyTraceId": "Copia ID trace",
@@ -1810,7 +1853,7 @@
       "resources": "Risorse",
       "security": "Sicurezza",
       "sdks": "SDK",
-      "faq": "FAQ",
+      "faq": "Domande frequenti",
       "tutorial": "Tutorial 5 Min",
       "integrations": "Integrazioni"
     },
@@ -1930,7 +1973,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Tutti i diritti riservati."
+      "copyright": "© {year} Litheon LLC. Tutti i diritti riservati."
     },
     "faqPage": {
       "title": "Domande Frequenti",
@@ -1947,7 +1990,8 @@
         "extraction": "Estrazione",
         "operations": "Operazioni",
         "securityCompliance": "Sicurezza e Conformita",
-        "technology": "Tecnologia"
+        "technology": "Tecnologia",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2150,7 +2194,7 @@
       "usage": "Esempio di Utilizzo",
       "propName": "Nome",
       "propType": "Tipo",
-      "propDefault": "Default",
+      "propDefault": "Predefinito",
       "propDescription": "Descrizione",
       "copy": "Copia",
       "copied": "Copiato!",
@@ -2411,7 +2455,7 @@
           "description": "Esempi copia-incolla per Python, TypeScript e altro."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Domande frequenti",
           "description": "Domande frequenti su tipi di memoria, namespace e best practice."
         }
       }
@@ -2513,7 +2557,7 @@
           "description": "Esempi copia-incolla per Python, TypeScript e REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Domande frequenti",
           "description": "Scopri i tipi di memoria, i namespace e le best practice."
         }
       }
@@ -2541,6 +2585,11 @@
           "badge": "Ufficiale",
           "title": "OpenTelemetry",
           "description": "Esporta trace verso Datadog, Grafana, Jaeger e qualsiasi backend compatibile OTLP."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2730,14 +2779,14 @@
     }
   },
   "demoQuery": {
-    "title": "Demo Live",
-    "subtitle": "Prova la pipeline di recupero di Seizn con tracciamento completo e trasparenza dei costi.",
-    "tryItNow": "Prova subito - Nessuna registrazione richiesta",
-    "queryPlaceholder": "Query di Ricerca",
-    "runDemo": "Avvia Demo",
+    "title": "Demo dal vivo",
+    "subtitle": "Sperimenta la pipeline di recupero di Seizn con tracciamento completo e trasparenza dei costi.",
+    "tryItNow": "Provalo ora - Senza registrazione",
+    "queryPlaceholder": "Query di ricerca",
+    "runDemo": "Avvia demo",
     "running": "In esecuzione...",
     "results": "Risultati",
-    "trace": "Trace",
+    "trace": "Traccia",
     "cost": "Costo",
     "noResults": "Avvia la demo per vedere i risultati",
     "errorTitle": "Errore",
@@ -2745,49 +2794,49 @@
     "retryIn": "Riprova tra",
     "seconds": "secondi",
     "score": "Punteggio",
-    "rerankScore": "Rerank",
+    "rerankScore": "Riclassificazione",
     "latency": "Latenza",
     "tokens": "Token",
-    "cached": "dalla cache",
+    "cached": "in cache",
     "model": "Modello",
     "input": "Input",
     "output": "Output",
-    "costBreakdown": "Ripartizione",
-    "total": "Costo Totale",
+    "costBreakdown": "Dettaglio",
+    "total": "Costo totale",
     "embedding": "Embedding",
-    "vectorSearch": "Ricerca Vettoriale",
-    "rerank": "Rerank",
-    "answerContract": "Contratto di Risposta",
-    "tokensIn": "Token in Ingresso",
-    "tokensOut": "Token in Uscita",
-    "queryUnits": "Unità di Query",
+    "vectorSearch": "Ricerca vettoriale",
+    "rerank": "Riclassificazione",
+    "answerContract": "Contratto di risposta",
+    "tokensIn": "Token in ingresso",
+    "tokensOut": "Token in uscita",
+    "queryUnits": "Unità di query",
     "prefilledQueries": [
       "Prova gli esempi"
     ]
   },
   "publicTrace": {
-    "title": "Trace Condiviso",
-    "subtitle": "Visualizza i dettagli della trace di recupero condivisa",
-    "sharedBy": "Trace condiviso",
+    "title": "Traccia condivisa",
+    "subtitle": "Visualizza i dettagli della traccia di recupero condivisa",
+    "sharedBy": "Traccia condivisa",
     "expired": "Questo link è scaduto",
-    "expiredDesc": "Il link di condivisione non è più valido. Chiedi al proprietario di creare un nuovo link.",
-    "notFound": "Trace non trovato",
-    "notFoundDesc": "Questo trace condiviso non è stato trovato. Potrebbe essere stato revocato o eliminato.",
-    "backToHome": "Torna alla Home",
-    "requestId": "ID Richiesta",
+    "expiredDesc": "Il link di condivisione non è più valido. Chiedi al proprietario di crearne uno nuovo.",
+    "notFound": "Traccia non trovata",
+    "notFoundDesc": "Questa traccia condivisa non è stata trovata. Potrebbe essere stata revocata o eliminata.",
+    "backToHome": "Torna alla home",
+    "requestId": "ID richiesta",
     "collection": "Collezione",
     "createdAt": "Creato",
-    "totalLatency": "Latenza Totale",
-    "totalCost": "Costo Totale",
+    "totalLatency": "Latenza totale",
+    "totalCost": "Costo totale",
     "resultsCount": "Risultati",
     "query": "Query",
     "timeline": "Cronologia",
     "candidates": "Candidati",
-    "rerankDiff": "Differenza Rerank",
-    "costAnalysis": "Analisi Costi",
+    "rerankDiff": "Differenza riclassificazione",
+    "costAnalysis": "Analisi dei costi",
     "redacted": "[OSCURATO]",
-    "piiMasked": "PII mascherato per privacy",
-    "readOnlyNote": "Questa è una visualizzazione in sola lettura di un trace condiviso."
+    "piiMasked": "PII oscurati per la privacy",
+    "readOnlyNote": "Questa è una vista di sola lettura di una traccia condivisa."
   },
   "trustPage": {
     "title": "Centro Fiducia",

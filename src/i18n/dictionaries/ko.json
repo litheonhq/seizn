@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. All rights reserved.",
+    "copyright": "© {year} Litheon LLC. All rights reserved.",
     "privacy": "개인정보처리방침",
     "terms": "이용약관",
     "contact": "문의하기"
@@ -908,14 +908,38 @@
         "create": "웹훅 생성"
       },
       "events": {
-        "memory_created": { "label": "메모리 생성", "desc": "새 메모리가 저장될 때" },
-        "memory_updated": { "label": "메모리 수정", "desc": "메모리가 수정될 때" },
-        "memory_deleted": { "label": "메모리 삭제", "desc": "메모리가 삭제될 때" },
-        "extraction_completed": { "label": "추출 완료", "desc": "메모리 추출이 완료될 때" },
-        "query_executed": { "label": "쿼리 실행", "desc": "RAG 쿼리가 수행될 때" },
-        "key_created": { "label": "API 키 생성", "desc": "새 API 키가 생성될 때" },
-        "key_revoked": { "label": "API 키 폐기", "desc": "API 키가 폐기될 때" },
-        "usage_threshold": { "label": "사용량 임계값", "desc": "사용량이 임계값을 초과할 때" }
+        "memory_created": {
+          "label": "메모리 생성",
+          "desc": "새 메모리가 저장될 때"
+        },
+        "memory_updated": {
+          "label": "메모리 수정",
+          "desc": "메모리가 수정될 때"
+        },
+        "memory_deleted": {
+          "label": "메모리 삭제",
+          "desc": "메모리가 삭제될 때"
+        },
+        "extraction_completed": {
+          "label": "추출 완료",
+          "desc": "메모리 추출이 완료될 때"
+        },
+        "query_executed": {
+          "label": "쿼리 실행",
+          "desc": "RAG 쿼리가 수행될 때"
+        },
+        "key_created": {
+          "label": "API 키 생성",
+          "desc": "새 API 키가 생성될 때"
+        },
+        "key_revoked": {
+          "label": "API 키 폐기",
+          "desc": "API 키가 폐기될 때"
+        },
+        "usage_threshold": {
+          "label": "사용량 임계값",
+          "desc": "사용량이 임계값을 초과할 때"
+        }
       }
     },
     "keysPage": {
@@ -1648,7 +1672,8 @@
         "techDocs": "기술 문서",
         "legalContracts": "법률 계약서",
         "researchPapers": "연구 논문"
-      }
+      },
+      "advanced": "상세 설정"
     },
     "resultsPanel": {
       "searching": "검색 중...",
@@ -1699,7 +1724,13 @@
       "tryAgain": "다시 시도",
       "copyTraceId": "추적 ID 복사",
       "copied": "복사됨!"
-    }
+    },
+    "chips": {
+      "trace": "트레이스",
+      "eval": "평가",
+      "policy": "정책"
+    },
+    "playgroundTitle": "지금 체험하기"
   },
   "docs": {
     "nav": {
@@ -1850,7 +1881,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. All rights reserved."
+      "copyright": "© {year} Litheon LLC. All rights reserved."
     },
     "faqPage": {
       "title": "자주 묻는 질문",
@@ -2541,8 +2572,11 @@
         "llamaparse": {
           "title": "LlamaParse",
           "description": "문서 파싱을 위한 직접 인제스트"
-        }
-      }
+        },
+        "description": "더 많은 연동이 준비 중입니다. 필요한 것을 알려주세요!"
+      },
+      "breadcrumb": "연동",
+      "backToDocs": "문서로 돌아가기"
     },
     "langchainPage": {
       "meta": {
@@ -2553,19 +2587,24 @@
       "subtitle": "SeizRetriever는 LangChain 표준 Retriever 인터페이스를 구현하여 기존 RAG 체인에 바로 연결할 수 있습니다.",
       "overview": {
         "title": "60초 개요",
-        "description": "SeizRetriever는 LangChain의 BaseRetriever를 상속하여 retrieval_chain, ConversationalRetrievalChain, 또는 커스텀 LCEL 체인과 호환됩니다. 한 줄만 교체하면 Pinecone/Weaviate에서 전환할 수 있습니다."
+        "description": "SeizRetriever는 LangChain의 BaseRetriever를 상속하여 retrieval_chain, ConversationalRetrievalChain, 또는 커스텀 LCEL 체인과 호환됩니다. 한 줄만 교체하면 Pinecone/Weaviate에서 전환할 수 있습니다.",
+        "feature1": "모든 LangChain 체인 및 에이전트와 호환",
+        "feature2": "모든 검색 작업에 내장 트레이싱",
+        "feature3": "필터링, 리랭킹, 하이브리드 검색 지원"
       },
       "installation": {
         "title": "설치",
         "npm": "npm install seizn @langchain/core",
-        "pip": "pip install seizn langchain"
+        "pip": "pip install seizn langchain",
+        "description": "LangChain과 함께 Seizn SDK를 설치합니다."
       },
       "example": {
         "title": "5분 예제",
         "tabs": {
           "typescript": "TypeScript",
           "python": "Python"
-        }
+        },
+        "description": "몇 줄의 코드로 SeiznRetriever를 사용한 RAG 체인을 만듭니다."
       },
       "productionTips": {
         "title": "프로덕션 팁",
@@ -2601,7 +2640,36 @@
             "issue": "인증 오류",
             "solution": "SEIZN_API_KEY 환경변수가 올바르게 설정되었는지 확인하세요"
           }
+        },
+        "errorColumn": "오류",
+        "causeColumn": "원인",
+        "solutionColumn": "해결책",
+        "authCause": "유효하지 않거나 누락된 API 키",
+        "authSolution": "SEIZN_API_KEY 환경 변수를 확인하세요",
+        "rateCause": "초당 요청이 너무 많음",
+        "rateSolution": "지수 백오프 구현 또는 플랜 업그레이드",
+        "emptyCause": "임계값이 너무 높거나 일치하는 문서가 없음",
+        "emptySolution": "임계값을 낮추거나 데이터셋 내용을 확인하세요"
+      },
+      "badge": "공식",
+      "production": {
+        "title": "프로덕션 팁",
+        "caching": {
+          "title": "캐싱 활성화",
+          "description": "반복 쿼리를 캐싱하여 지연 시간과 비용을 줄입니다."
+        },
+        "reranking": {
+          "title": "리랭킹 활성화",
+          "description": "크로스 인코더 리랭킹으로 결과 품질을 향상시킵니다."
+        },
+        "filtering": {
+          "title": "메타데이터 필터링",
+          "description": "벡터 검색 전에 메타데이터 필드로 결과를 필터링합니다."
         }
+      },
+      "nav": {
+        "backToIntegrations": "연동으로 돌아가기",
+        "nextLlamaIndex": "LlamaIndex 연동"
       }
     },
     "llamaindexPage": {
@@ -2613,19 +2681,24 @@
       "subtitle": "SeizRetriever는 LlamaIndex의 BaseRetriever를 상속하여 query_engine, chat_engine, 또는 커스텀 파이프라인에 바로 사용할 수 있습니다.",
       "overview": {
         "title": "60초 개요",
-        "description": "네이티브 LlamaIndex 리트리버로 기존 워크플로우에 원활하게 통합됩니다. 하이브리드 검색, 재순위, 스트리밍을 지원합니다."
+        "description": "네이티브 LlamaIndex 리트리버로 기존 워크플로우에 원활하게 통합됩니다. 하이브리드 검색, 재순위, 스트리밍을 지원합니다.",
+        "feature1": "LlamaIndex 쿼리 엔진과 네이티브 호환",
+        "feature2": "스트리밍 응답 지원",
+        "feature3": "하이브리드 검색 및 노드 후처리기 지원"
       },
       "installation": {
         "title": "설치",
         "npm": "npm install seizn llamaindex",
-        "pip": "pip install seizn llama-index"
+        "pip": "pip install seizn llama-index",
+        "description": "LlamaIndex와 함께 Seizn SDK를 설치합니다."
       },
       "example": {
         "title": "5분 예제",
         "tabs": {
           "typescript": "TypeScript",
           "python": "Python"
-        }
+        },
+        "description": "몇 줄의 코드로 SeiznRetriever를 사용한 쿼리 엔진을 만듭니다."
       },
       "advancedUsage": {
         "title": "고급 사용법",
@@ -2661,7 +2734,36 @@
             "issue": "메모리 문제",
             "solution": "대용량 데이터셋에는 배치 처리를 사용하고 top_k를 줄이세요"
           }
+        },
+        "errorColumn": "오류",
+        "causeColumn": "원인",
+        "solutionColumn": "해결책",
+        "authCause": "유효하지 않거나 누락된 API 키",
+        "authSolution": "SEIZN_API_KEY 환경 변수를 확인하세요",
+        "datasetCause": "데이터셋이 비어있거나 인덱싱되지 않음",
+        "datasetSolution": "문서가 업로드되었는지 확인하세요",
+        "relevanceCause": "임계값이 부적절하거나 쿼리가 모호함",
+        "relevanceSolution": "임계값을 조정하거나 쿼리를 구체화하세요"
+      },
+      "badge": "공식",
+      "production": {
+        "title": "프로덕션 팁",
+        "streaming": {
+          "title": "스트리밍 활성화",
+          "description": "스트리밍 응답으로 첫 토큰 표시 시간을 단축합니다."
+        },
+        "hybrid": {
+          "title": "하이브리드 검색",
+          "description": "벡터와 키워드 검색을 결합하여 검색 정밀도를 향상시킵니다."
+        },
+        "nodePostprocessors": {
+          "title": "노드 후처리기",
+          "description": "커스텀 후처리기로 결과를 필터링하고 변환합니다."
         }
+      },
+      "nav": {
+        "prevLangChain": "LangChain 연동",
+        "nextOpenTelemetry": "OpenTelemetry 연동"
       }
     },
     "opentelemetryPage": {
@@ -2673,7 +2775,11 @@
       "subtitle": "Seizn 트레이스를 선호하는 관측성 플랫폼으로 익스포트하여 통합 모니터링을 구현하세요.",
       "overview": {
         "title": "60초 개요",
-        "description": "Seizn은 모든 검색 작업에 대해 상세 트레이스를 생성합니다. OpenTelemetry 익스포터를 설정하면 이러한 트레이스가 자동으로 선호하는 백엔드로 전송됩니다."
+        "description": "Seizn은 모든 검색 작업에 대해 상세 트레이스를 생성합니다. OpenTelemetry 익스포터를 설정하면 이러한 트레이스가 자동으로 선호하는 백엔드로 전송됩니다.",
+        "feature1": "모든 Seizn 요청의 자동 트레이싱",
+        "feature2": "커스텀 속성 및 스팬 이벤트",
+        "feature3": "Datadog, Grafana, Jaeger 등 주요 백엔드 지원",
+        "supportedBackends": "지원 백엔드"
       },
       "collectors": {
         "title": "지원되는 수집기",
@@ -2737,7 +2843,45 @@
             "issue": "인증 실패",
             "solution": "OTEL_EXPORTER_OTLP_HEADERS에 올바른 API 키가 설정되었는지 확인하세요"
           }
+        },
+        "issueColumn": "문제",
+        "causeColumn": "원인",
+        "solutionColumn": "해결책",
+        "noTracesIssue": "트레이스가 표시되지 않음",
+        "noTracesCause": "익스포터가 설정되지 않음",
+        "noTracesSolution": "OTLP 익스포터 설정을 확인하세요",
+        "connectionIssue": "연결 거부됨",
+        "connectionCause": "콜렉터가 실행되지 않음",
+        "connectionSolution": "콜렉터가 실행 중이고 포트가 맞는지 확인하세요",
+        "missingSpansIssue": "스팬이 누락됨",
+        "missingSpansCause": "샘플링 비율이 너무 낮음",
+        "missingSpansSolution": "샘플링 비율을 높이거나 개발 시 AlwaysOn으로 설정하세요",
+        "debugTitle": "디버그 모드",
+        "debugDescription": "콘솔 익스포터를 활성화하여 전송되는 트레이스를 확인합니다."
+      },
+      "badge": "공식",
+      "installation": {
+        "title": "설치",
+        "description": "OpenTelemetry 패키지와 함께 Seizn SDK를 설치합니다."
+      },
+      "production": {
+        "title": "프로덕션 팁",
+        "sampling": {
+          "title": "샘플링",
+          "description": "비용 관리를 위해 트레이스 샘플링 비율을 설정합니다."
+        },
+        "attributes": {
+          "title": "커스텀 속성",
+          "description": "스팬에 커스텀 속성을 추가하여 검색과 필터링을 강화합니다."
+        },
+        "batching": {
+          "title": "배치 처리",
+          "description": "트레이스를 배치 처리하여 성능 영향을 최소화합니다."
         }
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex 연동",
+        "backToIntegrations": "연동으로 돌아가기"
       }
     }
   },
@@ -3014,6 +3158,193 @@
       "title": "업데이트 구독",
       "rss": "RSS 피드",
       "email": "이메일 알림"
+    }
+  },
+  "trustPage": {
+    "title": "보안 센터",
+    "subtitle": "Seizn의 보안 및 데이터 관리 방침",
+    "heroDescription": "프라이버시와 보안을 핵심으로 구축합니다. 이 페이지에서는 고객의 데이터를 어떻게 다루는지 정확히 설명합니다.",
+    "lastUpdated": "마지막 업데이트",
+    "sections": {
+      "dataFlow": {
+        "title": "데이터 흐름",
+        "description": "저장하는 것과 저장하지 않는 것",
+        "stored": {
+          "title": "저장하는 데이터",
+          "items": [
+            "메모리 콘텐츠 및 임베딩",
+            "쿼리 로그 (해시화, 평문 아님)",
+            "API 키별 사용량 메트릭",
+            "디버깅용 트레이스 데이터 (보존 기간 설정 가능)"
+          ]
+        },
+        "notStored": {
+          "title": "저장하지 않는 데이터",
+          "items": [
+            "원본 API 키 (해시만 저장)",
+            "사용자 비밀번호 (OAuth만 사용)",
+            "캐시 TTL을 초과한 쿼리 결과",
+            "서드파티 LLM 요청/응답 로그"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "암호화",
+        "description": "전송 중 및 저장 시 데이터 보호",
+        "transit": {
+          "title": "전송 중",
+          "items": [
+            "모든 연결에 TLS 1.3 적용",
+            "1년 max-age HSTS 활성화",
+            "인증서 투명성 로깅"
+          ]
+        },
+        "atRest": {
+          "title": "저장 시",
+          "items": [
+            "모든 데이터 AES-256 암호화",
+            "데이터베이스 수준 암호화 (Supabase)",
+            "별도 키로 암호화된 백업"
+          ]
+        },
+        "keyManagement": {
+          "title": "키 관리",
+          "items": [
+            "SHA-256 + 솔트로 API 키 해시화",
+            "자동 키 순환 알림 (90일)",
+            "즉시 키 폐기 기능"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "테넌트 격리",
+        "description": "데이터를 분리하는 방법",
+        "items": [
+          "데이터베이스 수준에서 행 수준 보안(RLS) 적용",
+          "모든 쿼리가 user_id/org_id로 자동 필터링",
+          "테넌트 간 공유 인덱스 없음",
+          "메모리 컬렉션의 네임스페이스 분리"
+        ],
+        "rbac": {
+          "title": "접근 제어",
+          "items": [
+            "역할 기반 접근 (소유자, 관리자, 멤버)",
+            "조직별 API 키 범위 지정",
+            "모든 권한 변경 감사 로그"
+          ]
+        }
+      },
+      "retention": {
+        "title": "보존 및 삭제",
+        "description": "데이터 보존 기간 및 삭제 방법",
+        "periods": [
+          {
+            "type": "메모리",
+            "period": "사용자가 삭제할 때까지"
+          },
+          {
+            "type": "API 로그",
+            "period": "90일 롤링"
+          },
+          {
+            "type": "트레이스",
+            "period": "30일 (설정 가능)"
+          },
+          {
+            "type": "감사 로그",
+            "period": "1년"
+          },
+          {
+            "type": "백업",
+            "period": "30일 암호화"
+          }
+        ],
+        "deletion": {
+          "title": "삭제 프로세스",
+          "items": [
+            "DELETE /api/memories로 즉시 삭제",
+            "계정 삭제: 30일 유예 기간",
+            "백업에서 30일 이내 완전 삭제",
+            "GDPR/CCPA 데이터 내보내기 요청 시 제공"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "감사 로그 및 접근 제어",
+        "description": "누가 무엇을 했는지 추적",
+        "logged": {
+          "title": "기록되는 이벤트",
+          "items": [
+            "API 키 생성, 순환, 폐기",
+            "권한 변경 (RBAC)",
+            "데이터 내보내기 요청",
+            "인증 실패 시도",
+            "조직에 대한 관리자 작업"
+          ]
+        },
+        "access": {
+          "title": "로그 접근",
+          "items": [
+            "조직 관리자가 사용 가능",
+            "API로 내보내기 가능 (Pro 이상)",
+            "사용자, 작업, 타임스탬프로 검색 가능"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "하위 처리자",
+        "description": "데이터를 처리하는 서드파티",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "데이터베이스 & 인증",
+            "location": "미국 (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "호스팅 & CDN",
+            "location": "글로벌 엣지"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "결제",
+            "location": "영국/미국"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "프로덕트 분석",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "오류 모니터링",
+            "location": "미국"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "리랭킹 (선택사항)",
+            "location": "미국/캐나다"
+          }
+        ],
+        "note": "각 서비스가 작동하는 데 필요한 최소한의 데이터만 공유합니다."
+      },
+      "disclosure": {
+        "title": "아직 미완료 사항",
+        "description": "보안 체계의 솔직한 현황",
+        "items": [
+          "SOC 2 Type II 인증 (진행 중, 2026년 2분기 예정)",
+          "HIPAA 준수 (엔터프라이즈용 계획)",
+          "온프레미스 배포 옵션 (검토 중)",
+          "키 저장용 하드웨어 보안 모듈 (HSM)",
+          "버그 바운티 프로그램 (2026년 3분기 계획)"
+        ],
+        "cta": "보안 관련 질문은 security@seizn.com으로 문의하세요"
+      }
+    },
+    "contact": {
+      "title": "질문이 있으신가요?",
+      "description": "보안 관련 질문에 기꺼이 답변드립니다.",
+      "email": "security@seizn.com"
     }
   }
 }

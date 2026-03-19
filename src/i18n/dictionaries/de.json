@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Alle Rechte vorbehalten.",
+    "copyright": "© {year} Litheon LLC. Alle Rechte vorbehalten.",
     "privacy": "Datenschutz",
     "terms": "AGB",
     "contact": "Kontakt"
@@ -351,8 +351,8 @@
       "createApiKey": "API-Schlüssel erstellen"
     },
     "language": "Sprache",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Organisationen",
+    "docs": "Dokumentation",
     "nav": {
       "overview": "Übersicht",
       "memories": "Erinnerungen",
@@ -385,8 +385,8 @@
         "system": "SYSTEM"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
+    "pinSidebar": "Seitenleiste anheften",
+    "unpinSidebar": "Seitenleiste einklappen",
     "playground": "Playground",
     "playgroundPage": {
       "title": "Debug-Konsole",
@@ -414,7 +414,15 @@
       "tracingDisabled": "Tracing deaktiviert",
       "executionTime": "Ausführungszeit",
       "tokensUsed": "Verwendete Token",
-      "steps": "Schritte",
+      "steps": {
+        "parseQuery": "Abfrage analysieren",
+        "createEmbedding": "Embedding erstellen",
+        "vectorSearch": "Vektorsuche",
+        "keywordSearch": "Schlüsselwortsuche",
+        "mergeResults": "Ergebnisse zusammenführen",
+        "rerank": "Ergebnisse neu bewerten",
+        "returnResults": "Ergebnisse zurückgeben"
+      },
       "embedding": "Einbettung",
       "vectorSearch": "Vektorsuche",
       "reranking": "Neuordnung",
@@ -480,12 +488,12 @@
       "rerankBefore": "Vor Rerank",
       "rerankAfter": "Nach Rerank",
       "rank": "Rang",
-      "replayFromLog": "Aus Protokoll wiederholen",
-      "selectLog": "Wählen Sie ein Protokoll zum Wiederholen",
-      "replaySettings": "Wiederholungseinstellungen",
+      "replayFromLog": "Aus Log wiedergeben",
+      "selectLog": "Log auswählen",
+      "replaySettings": "Wiedergabe-Einstellungen",
       "compareResults": "Ergebnisse vergleichen",
       "original": "Original",
-      "replay": "Wiederholen",
+      "replay": "Wiedergabe",
       "diff": "Unterschied",
       "hitAtK": "Hit@K",
       "overlap": "Überlappung",
@@ -499,7 +507,7 @@
       "saving": "Speichern...",
       "saved": "Gespeichert",
       "saveFailed": "Speichern fehlgeschlagen",
-      "save": "Save Changes",
+      "save": "Änderungen speichern",
       "account": "Konto",
       "email": "E-Mail",
       "name": "Name",
@@ -593,7 +601,7 @@
         "revokeSession": "Sitzung widerrufen",
         "revokeAllSessions": "Alle anderen Sitzungen widerrufen",
         "changePassword": "Passwort ändern",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Verwalten Sie Ihre Passwortsicherheit",
         "changePasswordHint": "Aktualisieren Sie Ihr Passwort regelmäßig für mehr Sicherheit",
         "currentPassword": "Aktuelles Passwort",
         "newPassword": "Neues Passwort",
@@ -657,33 +665,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "Guten Morgen",
+      "afternoon": "Guten Tag",
+      "evening": "Guten Abend"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Übersicht Ihrer AI-Speichernutzung",
+      "totalMemories": "Gesamt-Erinnerungen",
+      "apiCalls": "API-Aufrufe",
+      "activeKeys": "Aktive API-Schlüssel",
+      "currentPlan": "Aktueller Plan",
+      "usage": "Nutzung",
+      "today": "Heute",
+      "dailyLimit": "Tageslimit",
+      "recentMemories": "Aktuelle Erinnerungen",
+      "viewAll": "Alle anzeigen",
+      "noMemories": "Noch keine Erinnerungen",
+      "noMemoriesHint": "Fügen Sie Ihre erste Erinnerung über die API hinzu",
+      "quickStart": "Schnellstart",
+      "createApiKey": "API-Schlüssel erstellen",
+      "getStartedApi": "Mit der API loslegen",
+      "viewDocumentation": "Dokumentation anzeigen",
+      "learnSeizn": "Erfahren Sie, wie Sie Seizn nutzen",
+      "createOrganization": "Organisation erstellen",
+      "collaborateTeam": "Arbeiten Sie mit Ihrem Team zusammen",
+      "quickExample": "Schnellbeispiel",
+      "manageKeys": "Schlüssel verwalten",
+      "upgradePlan": "Plan upgraden",
       "apiUsageChart": "API-Nutzung",
       "last7days": "Letzte 7 Tage",
       "viewDetails": "Details anzeigen",
@@ -692,7 +700,7 @@
       "last10Requests": "Letzte 10 API-Anfragen",
       "viewAllActivity": "Alle anzeigen",
       "noActivityYet": "Noch keine API-Aktivität",
-      "noActivityDescription": "Senden Sie Ihre erste API-Anfrage, um hier Aktivität zu sehen",
+      "noActivityDescription": "Senden Sie Ihre erste API-Anfrage",
       "sendFirstRequest": "Erste Anfrage senden"
     },
     "keysPage": {
@@ -969,7 +977,7 @@
       "step4": "Alle Herabstufungsereignisse werden mit Kosteneinsparungen zur Transparenz protokolliert"
     },
     "devtoolsPage": {
-      "title": "Retrieval DevTools",
+      "title": "Abruf-Entwicklungstools",
       "subtitle": "Debuggen und analysieren Sie Ihre RAG-Pipelines",
       "query": "Abfrage",
       "noQueryText": "Kein Abfragetext",
@@ -1071,7 +1079,7 @@
         "users": "Benutzer",
         "unlimited": "Unbegrenzt",
         "apiCalls": "API-Aufrufe",
-        "apiCallsValue": "10M / Monat",
+        "apiCallsValue": "10M/Monat",
         "storage": "Speicher",
         "storageValue": "1TB",
         "collections": "Sammlungen",
@@ -1443,7 +1451,7 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "HTTP-Callbacks für Echtzeit-Ereignisbenachrichtigungen konfigurieren",
+      "subtitle": "Konfigurieren Sie HTTP-Callbacks für Echtzeit-Ereignisbenachrichtigungen",
       "create": "Webhook erstellen",
       "stats": {
         "total": "Webhooks gesamt",
@@ -1464,7 +1472,7 @@
       "deleteConfirm": "Möchten Sie diesen Webhook wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "empty": {
         "title": "Keine Webhooks konfiguriert",
-        "description": "Erstellen Sie einen Webhook, um Echtzeit-Benachrichtigungen über Ereignisse zu erhalten.",
+        "description": "Erstellen Sie einen Webhook für Echtzeit-Benachrichtigungen.",
         "cta": "Ersten Webhook erstellen"
       },
       "table": {
@@ -1477,10 +1485,44 @@
       "modal": {
         "title": "Webhook erstellen",
         "name": "Name",
-        "url": "Endpunkt-URL",
+        "url": "URL",
         "events": "Zu abonnierende Ereignisse",
         "cancel": "Abbrechen",
         "create": "Webhook erstellen"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Erinnerung erstellt",
+          "desc": "Wenn eine neue Erinnerung gespeichert wird"
+        },
+        "memory_updated": {
+          "label": "Erinnerung aktualisiert",
+          "desc": "Wenn eine Erinnerung geändert wird"
+        },
+        "memory_deleted": {
+          "label": "Erinnerung gelöscht",
+          "desc": "Wenn eine Erinnerung entfernt wird"
+        },
+        "extraction_completed": {
+          "label": "Extraktion abgeschlossen",
+          "desc": "Wenn die Extraktion abgeschlossen ist"
+        },
+        "query_executed": {
+          "label": "Abfrage ausgeführt",
+          "desc": "Wenn eine RAG-Abfrage durchgeführt wird"
+        },
+        "key_created": {
+          "label": "API-Schlüssel erstellt",
+          "desc": "Wenn ein neuer Schlüssel generiert wird"
+        },
+        "key_revoked": {
+          "label": "API-Schlüssel widerrufen",
+          "desc": "Wenn ein Schlüssel widerrufen wird"
+        },
+        "usage_threshold": {
+          "label": "Nutzungsschwelle",
+          "desc": "Wenn die Nutzung den Schwellenwert überschreitet"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1659,56 +1701,57 @@
     "socialProof": "Vertraut von Teams, die Agenten im großen Maßstab betreiben",
     "liveDemo": "Live-Demo",
     "heroTagline": "Testen Sie die API live — ohne Anmeldung",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "Erster Abruf abgeschlossen",
+    "copySnippetHint": "Kopieren Sie das Snippet unten",
+    "copySnippetTitle": "Dieses Snippet kopieren",
+    "copySnippetSubtitle": "Generiert aus Ihren Einstellungen",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
+      "title": "Warum Seizn statt LangChain + Pinecone?",
+      "subtitle": "Hören Sie auf, fragmentierte Tools zusammenzusetzen. Bekommen Sie alles in einem integrierten Stack.",
+      "tracingTitle": "Integriertes Tracing + Evaluation",
+      "tracingDesc": "Jede Anfrage wird standardmäßig getracet. Führen Sie Evaluierungen durch ohne LangSmith.",
+      "tracingBadge": "Standard AN",
+      "autopilotTitle": "Budgetbewusster Autopilot",
+      "autopilotDesc": "Setzen Sie ein Latenz- oder Kostenbudget, und Autopilot wählt automatisch die optimale Strategie.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "governanceTitle": "Governance + Audit-Logs",
+      "governanceDesc": "PII-Erkennung, DSGVO-konformes Vergessen und vollständige Audit-Trails. Für Teams mit Compliance-Anforderungen.",
+      "governanceBadge": "Standard für Teams",
+      "lessGlueTitle": "Weniger bewegliche Teile",
+      "lessGlueDesc": "Kein Jonglieren mehr mit LangChain + Pinecone + LangSmith + PII-Filter. Ein SDK, ein Dashboard, eine Rechnung.",
+      "lessGlueBadge": "Weniger Glue-Code"
     },
     "trust": {
-      "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "security": "RLS + Schlüssel-Hashing",
+      "securityDesc": "Sicher by Default",
+      "rateLimits": "Ratenlimits",
+      "rateLimitsDesc": "Nutzungswarnungen",
+      "auditLogs": "Audit-Logs",
+      "auditLogsDesc": "Volle Nachverfolgbarkeit"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "title": "Einfache, transparente Preise",
+      "subtitle": "Starten Sie kostenlos mit 12.000 Erinnerungen. Upgrade zu Starter für E2E-Verschlüsselung.",
+      "viewPricing": "Preise anzeigen",
+      "contactSales": "Vertrieb kontaktieren"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "Dokumentation",
+      "pricing": "Preise",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "API-Schlüssel erhalten",
+      "tryDemo": "Demo testen",
       "limits": "Limits",
       "status": "Status",
       "help": "Hilfe",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Vergleichen"
     },
     "requestBuilder": {
       "title": "Anfrage-Builder",
       "query": "Abfrage",
       "queryPlaceholder": "Suchanfrage eingeben...",
-      "tryExamples": "Beispiele",
+      "tryExamples": "Beispiele ausprobieren",
       "dataset": "Datensatz",
       "latencyBudget": "Latenz-Budget",
       "fast": "schnell",
@@ -1755,33 +1798,33 @@
     },
     "chips": {
       "trace": "Trace",
-      "eval": "Eval",
-      "policy": "Policy"
+      "eval": "Bewertung",
+      "policy": "Richtlinie"
     },
     "playgroundTitle": "Jetzt ausprobieren",
     "costPanel": {
       "calculating": "Kosten werden berechnet...",
-      "noCost": "Führen Sie eine Abfrage aus, um die Kostenaufschlüsselung zu sehen",
+      "noCost": "Führen Sie eine Abfrage aus, um die Kosten zu sehen",
       "costBreakdown": "Kostenaufschlüsselung",
       "component": "Komponente",
       "cost": "Kosten",
       "embedding": "Embedding",
       "vectorSearch": "Vektorsuche",
-      "rerank": "Rerank",
+      "rerank": "Reranking",
       "answerContract": "Antwortvertrag",
       "total": "Gesamtkosten",
       "usage": "Nutzung",
-      "tokensIn": "Tokens Eingang",
-      "tokensOut": "Tokens Ausgang",
+      "tokensIn": "Token Eingabe",
+      "tokensOut": "Token Ausgabe",
       "queryUnits": "Abfrageeinheiten",
-      "estimatedMonthly": "Geschätzt monatlich",
+      "estimatedMonthly": "Geschätzte Monatskosten",
       "basedOn": "Basierend auf",
       "queriesPerDay": "Abfragen/Tag"
     },
     "errorDisplay": {
       "error": "Fehler",
       "errorCode": "Code",
-      "traceId": "Trace",
+      "traceId": "Trace-ID",
       "hint": "Hinweis",
       "tryAgain": "Erneut versuchen",
       "copyTraceId": "Trace-ID kopieren",
@@ -1810,7 +1853,7 @@
       "resources": "Ressourcen",
       "security": "Sicherheit",
       "sdks": "SDKs",
-      "faq": "FAQ",
+      "faq": "Häufige Fragen",
       "tutorial": "5-Min-Tutorial",
       "integrations": "Integrationen"
     },
@@ -1930,7 +1973,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Alle Rechte vorbehalten."
+      "copyright": "© {year} Litheon LLC. Alle Rechte vorbehalten."
     },
     "faqPage": {
       "title": "Häufig gestellte Fragen",
@@ -1947,7 +1990,8 @@
         "extraction": "Extraktion",
         "operations": "Operationen",
         "securityCompliance": "Sicherheit und Compliance",
-        "technology": "Technologie"
+        "technology": "Technologie",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2094,8 +2138,8 @@
     },
     "componentsPage": {
       "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "subtitle": "Umfassende Dokumentation für die Seizn UI-Komponentenbibliothek. Jede Komponente enthält Props, Nutzungsbeispiele und Best Practices.",
+      "all": "Alle",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2147,25 +2191,25 @@
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
+      "usage": "Nutzungsbeispiel",
       "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "propType": "Typ",
+      "propDefault": "Standard",
+      "propDescription": "Beschreibung",
+      "copy": "Kopieren",
+      "copied": "Kopiert!",
       "categories": {
         "graph": {
           "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "description": "Interaktive Graphvisualisierung für Berechtigungs- und Beziehungszuordnung"
         },
         "explain": {
           "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "description": "Erklärbarkeits- und Attributionsvisualisierung für RAG-Ergebnisse"
         },
         "retops": {
           "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "description": "Dashboard zur Überwachung und Analyse von Abrufoperationen"
         }
       }
     },
@@ -2411,7 +2455,7 @@
           "description": "Copy-Paste-Beispiele für Python, TypeScript und mehr."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Häufige Fragen",
           "description": "Häufige Fragen zu Speichertypen, Namespaces und Best Practices."
         }
       }
@@ -2452,7 +2496,7 @@
         "title": "5-Minuten-Tutorial | Seizn",
         "description": "Erfahren Sie, wie Sie in 5 Minuten mit einer interaktiven Schritt-für-Schritt-Anleitung KI-Speicher hinzufügen"
       },
-      "breadcrumb": "Tutorial",
+      "breadcrumb": "Anleitung",
       "badge": "5-Minuten-Tutorial",
       "noCreditCard": "Keine Kreditkarte erforderlich",
       "title": "KI-Speicher in 5 Minuten hinzufügen",
@@ -2513,7 +2557,7 @@
           "description": "Copy-Paste-Beispiele für Python, TypeScript und REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Häufige Fragen",
           "description": "Erfahren Sie mehr über Speichertypen, Namespaces und Best Practices."
         }
       }
@@ -2541,6 +2585,11 @@
           "badge": "Offiziell",
           "title": "OpenTelemetry",
           "description": "Exportieren Sie Traces nach Datadog, Grafana, Jaeger und jedem OTLP-kompatiblen Backend."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2731,9 +2780,9 @@
   },
   "demoQuery": {
     "title": "Live-Demo",
-    "subtitle": "Erleben Sie Seizns Abruf-Pipeline mit vollständigem Tracing und Kostentransparenz.",
-    "tryItNow": "Jetzt ausprobieren - Keine Registrierung erforderlich",
-    "queryPlaceholder": "Suchabfrage",
+    "subtitle": "Erleben Sie Seizns Abruf-Pipeline mit vollständiger Nachverfolgung und Kostentransparenz.",
+    "tryItNow": "Jetzt ausprobieren - Keine Anmeldung nötig",
+    "queryPlaceholder": "Suchanfrage",
     "runDemo": "Demo starten",
     "running": "Läuft...",
     "results": "Ergebnisse",
@@ -2741,13 +2790,13 @@
     "cost": "Kosten",
     "noResults": "Starten Sie die Demo, um Ergebnisse zu sehen",
     "errorTitle": "Fehler",
-    "rateLimitError": "Rate-Limit überschritten. Bitte warten.",
-    "retryIn": "Erneut versuchen in",
+    "rateLimitError": "Ratenlimit überschritten. Bitte warten.",
+    "retryIn": "Wiederholen in",
     "seconds": "Sekunden",
     "score": "Bewertung",
-    "rerankScore": "Rerank",
+    "rerankScore": "Reranking",
     "latency": "Latenz",
-    "tokens": "Tokens",
+    "tokens": "Token",
     "cached": "gecacht",
     "model": "Modell",
     "input": "Eingabe",
@@ -2756,24 +2805,24 @@
     "total": "Gesamtkosten",
     "embedding": "Embedding",
     "vectorSearch": "Vektorsuche",
-    "rerank": "Rerank",
+    "rerank": "Reranking",
     "answerContract": "Antwortvertrag",
-    "tokensIn": "Tokens Eingang",
-    "tokensOut": "Tokens Ausgang",
+    "tokensIn": "Token Eingabe",
+    "tokensOut": "Token Ausgabe",
     "queryUnits": "Abfrageeinheiten",
     "prefilledQueries": [
       "Beispiele ausprobieren"
     ]
   },
   "publicTrace": {
-    "title": "Geteilter Trace",
-    "subtitle": "Geteilte Abruf-Trace-Details anzeigen",
-    "sharedBy": "Geteilter Trace",
+    "title": "Geteilte Trace",
+    "subtitle": "Details der geteilten Abruf-Trace anzeigen",
+    "sharedBy": "Geteilte Trace",
     "expired": "Dieser Link ist abgelaufen",
-    "expiredDesc": "Der Freigabelink ist nicht mehr gültig. Bitten Sie den Eigentümer, einen neuen Link zu erstellen.",
+    "expiredDesc": "Der geteilte Link ist nicht mehr gültig. Bitten Sie den Eigentümer, einen neuen Link zu erstellen.",
     "notFound": "Trace nicht gefunden",
-    "notFoundDesc": "Dieser geteilte Trace konnte nicht gefunden werden. Er wurde möglicherweise widerrufen oder gelöscht.",
-    "backToHome": "Zurück zur Startseite",
+    "notFoundDesc": "Diese geteilte Trace konnte nicht gefunden werden. Sie wurde möglicherweise widerrufen oder gelöscht.",
+    "backToHome": "Zur Startseite",
     "requestId": "Anfrage-ID",
     "collection": "Sammlung",
     "createdAt": "Erstellt",
@@ -2781,13 +2830,13 @@
     "totalCost": "Gesamtkosten",
     "resultsCount": "Ergebnisse",
     "query": "Abfrage",
-    "timeline": "Zeitverlauf",
+    "timeline": "Zeitachse",
     "candidates": "Kandidaten",
-    "rerankDiff": "Rerank-Differenz",
+    "rerankDiff": "Reranking-Differenz",
     "costAnalysis": "Kostenanalyse",
     "redacted": "[GESCHWÄRZT]",
     "piiMasked": "PII aus Datenschutzgründen maskiert",
-    "readOnlyNote": "Dies ist eine schreibgeschützte Ansicht eines geteilten Traces."
+    "readOnlyNote": "Dies ist eine schreibgeschützte Ansicht einer geteilten Trace."
   },
   "trustPage": {
     "title": "Trust Center",
@@ -2985,7 +3034,7 @@
     "sidebar": {
       "onThisPage": "Auf dieser Seite",
       "quotas": "Monatliche Kontingente",
-      "rateLimits": "Rate Limits",
+      "rateLimits": "Ratenlimits",
       "overage": "Überschreitungsverhalten",
       "reset": "Zurücksetzungszeiten",
       "headers": "Antwort-Header"

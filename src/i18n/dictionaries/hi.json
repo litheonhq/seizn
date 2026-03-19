@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. सर्वाधिकार सुरक्षित।",
+    "copyright": "© {year} Litheon LLC. सर्वाधिकार सुरक्षित।",
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
     "contact": "संपर्क"
@@ -267,7 +267,7 @@
       "dailyTrends": "दैनिक रुझान",
       "tabCalls": "कॉल",
       "tabCost": "लागत",
-      "tabLatency": "Latency",
+      "tabLatency": "विलंबता",
       "tabErrors": "त्रुटियां",
       "noUsageTitle": "अभी तक कोई उपयोग डेटा नहीं",
       "noUsageDescription": "उपयोग विश्लेषण देखने के लिए अपना पहला API अनुरोध भेजें। डेटा 5 सेकंड के भीतर यहां दिखाई देगा।",
@@ -345,7 +345,15 @@
       "tracingDisabled": "ट्रेसिंग बंद है",
       "executionTime": "निष्पादन समय",
       "tokensUsed": "उपयोग किए गए टोकन",
-      "steps": "चरण",
+      "steps": {
+        "parseQuery": "क्वेरी पार्स करें",
+        "createEmbedding": "Embedding बनाएँ",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "कीवर्ड खोज",
+        "mergeResults": "परिणाम मर्ज करें",
+        "rerank": "परिणामों को पुनः रैंक करें",
+        "returnResults": "परिणाम लौटाएँ"
+      },
       "embedding": "एम्बेडिंग",
       "vectorSearch": "वेक्टर खोज",
       "reranking": "पुनः रैंकिंग",
@@ -389,12 +397,12 @@
       "hybrid": "Hybrid",
       "keyword": "Keyword",
       "rerank": "Rerank सक्षम करें",
-      "trace": "Trace",
+      "trace": "ट्रेस",
       "cost": "लागत",
       "similarity": "समानता",
       "memoryType": "प्रकार",
       "rerankScore": "Rerank स्कोर",
-      "traceTimeline": "Trace Timeline",
+      "traceTimeline": "ट्रेस टाइमलाइन",
       "noTrace": "trace देखने के लिए क्वेरी चलाएं",
       "step": "चरण",
       "completed": "पूर्ण",
@@ -430,7 +438,7 @@
       "saving": "सहेजा जा रहा है...",
       "saved": "सहेजा गया",
       "saveFailed": "सहेजना विफल",
-      "save": "Save Changes",
+      "save": "परिवर्तन सहेजें",
       "account": "खाता",
       "email": "ईमेल",
       "name": "नाम",
@@ -524,7 +532,7 @@
         "revokeSession": "सत्र रद्द करें",
         "revokeAllSessions": "अन्य सभी सत्र रद्द करें",
         "changePassword": "पासवर्ड बदलें",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "अपने पासवर्ड की सुरक्षा प्रबंधित करें",
         "changePasswordHint": "सुरक्षा के लिए नियमित रूप से पासवर्ड अपडेट करें",
         "currentPassword": "वर्तमान पासवर्ड",
         "newPassword": "नया पासवर्ड",
@@ -580,7 +588,7 @@
         "feature": "सुविधा",
         "memoriesLabel": "मेमोरी",
         "apiCallsLabel": "API कॉल/माह",
-        "apiKeysLabel": "API Keys",
+        "apiKeysLabel": "API कुंजियाँ",
         "priceLabel": "मूल्य",
         "contactUs": "हमसे संपर्क करें",
         "used": "उपयोग किया गया",
@@ -1343,9 +1351,9 @@
       "toggle": "थीम टॉगल करें"
     },
     "activity": {
-      "endpoint": "Endpoint",
+      "endpoint": "एंडपॉइंट",
       "status": "स्थिति",
-      "latency": "Latency",
+      "latency": "विलंबता",
       "cost": "लागत",
       "key": "Key",
       "time": "समय"
@@ -1449,7 +1457,7 @@
         "deliveries": "कुल डिलीवरी"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "एंडपॉइंट्स",
         "deliveries": "हाल की डिलीवरी"
       },
       "success": "सफल",
@@ -1478,6 +1486,40 @@
         "events": "सदस्यता लेने के लिए इवेंट",
         "cancel": "रद्द करें",
         "create": "Webhook बनाएं"
+      },
+      "events": {
+        "memory_created": {
+          "label": "स्मृति बनाई गई",
+          "desc": "जब एक नई स्मृति संग्रहीत होती है"
+        },
+        "memory_updated": {
+          "label": "स्मृति अपडेट की गई",
+          "desc": "जब एक स्मृति संशोधित होती है"
+        },
+        "memory_deleted": {
+          "label": "स्मृति हटा दी गई",
+          "desc": "जब एक स्मृति हटाई जाती है"
+        },
+        "extraction_completed": {
+          "label": "निष्कर्षण पूरा हुआ",
+          "desc": "जब स्मृति निष्कर्षण समाप्त होता है"
+        },
+        "query_executed": {
+          "label": "क्वेरी निष्पादित",
+          "desc": "जब एक RAG क्वेरी निष्पादित होती है"
+        },
+        "key_created": {
+          "label": "API कुंजी बनाई गई",
+          "desc": "जब एक नई API कुंजी उत्पन्न होती है"
+        },
+        "key_revoked": {
+          "label": "API कुंजी रद्द की गई",
+          "desc": "जब एक API कुंजी रद्द की जाती है"
+        },
+        "usage_threshold": {
+          "label": "उपयोग सीमा",
+          "desc": "जब उपयोग सीमा से अधिक हो जाता है"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1698,7 +1740,8 @@
       "limits": "सीमाएं",
       "status": "स्थिति",
       "help": "सहायता",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "तुलना करें"
     },
     "requestBuilder": {
       "title": "अनुरोध बिल्डर",
@@ -1806,7 +1849,7 @@
       "resources": "संसाधन",
       "security": "सुरक्षा",
       "sdks": "SDKs",
-      "faq": "FAQ",
+      "faq": "अक्सर पूछे जाने वाले प्रश्न",
       "tutorial": "5 मिनट ट्यूटोरियल",
       "integrations": "इंटीग्रेशन"
     },
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. सर्वाधिकार सुरक्षित।"
+      "copyright": "© {year} Litheon LLC. सर्वाधिकार सुरक्षित।"
     },
     "faqPage": {
       "title": "अक्सर पूछे जाने वाले प्रश्न",
@@ -1943,7 +1986,8 @@
         "extraction": "निष्कर्षण",
         "operations": "संचालन",
         "securityCompliance": "सुरक्षा और अनुपालन",
-        "technology": "तकनीक"
+        "technology": "तकनीक",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2407,7 +2451,7 @@
           "description": "Python, TypeScript और अन्य के लिए कॉपी-पेस्ट उदाहरण।"
         },
         "faq": {
-          "title": "FAQ",
+          "title": "अक्सर पूछे जाने वाले प्रश्न",
           "description": "मेमोरी प्रकार, नेमस्पेस और सर्वोत्तम प्रथाओं के बारे में सामान्य प्रश्न।"
         }
       }
@@ -2509,7 +2553,7 @@
           "description": "Python, TypeScript और REST के लिए कॉपी-पेस्ट उदाहरण।"
         },
         "faq": {
-          "title": "FAQ",
+          "title": "अक्सर पूछे जाने वाले प्रश्न",
           "description": "मेमोरी प्रकार, नेमस्पेस और सर्वोत्तम प्रथाओं के बारे में जानें।"
         }
       }
@@ -2537,6 +2581,11 @@
           "badge": "आधिकारिक",
           "title": "OpenTelemetry",
           "description": "Datadog, Grafana, Jaeger और किसी भी OTLP-संगत बैकएंड में ट्रेस एक्सपोर्ट करें।"
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2728,23 +2777,23 @@
   "demoQuery": {
     "title": "लाइव डेमो",
     "subtitle": "पूर्ण ट्रेसिंग और लागत पारदर्शिता के साथ Seizn की पुनर्प्राप्ति पाइपलाइन का अनुभव करें।",
-    "tryItNow": "अभी आज़माएं - साइनअप आवश्यक नहीं",
+    "tryItNow": "अभी आज़माएँ - साइनअप की ज़रूरत नहीं",
     "queryPlaceholder": "खोज क्वेरी",
-    "runDemo": "डेमो चलाएं",
+    "runDemo": "डेमो चलाएँ",
     "running": "चल रहा है...",
     "results": "परिणाम",
     "trace": "ट्रेस",
     "cost": "लागत",
-    "noResults": "परिणाम देखने के लिए डेमो चलाएं",
+    "noResults": "परिणाम देखने के लिए डेमो चलाएँ",
     "errorTitle": "त्रुटि",
     "rateLimitError": "दर सीमा पार हो गई। कृपया प्रतीक्षा करें।",
     "retryIn": "पुनः प्रयास",
     "seconds": "सेकंड",
     "score": "स्कोर",
-    "rerankScore": "रीरैंक",
-    "latency": "लेटेंसी",
+    "rerankScore": "री-रैंक",
+    "latency": "विलंबता",
     "tokens": "टोकन",
-    "cached": "कैश्ड",
+    "cached": "कैश",
     "model": "मॉडल",
     "input": "इनपुट",
     "output": "आउटपुट",
@@ -2752,38 +2801,38 @@
     "total": "कुल लागत",
     "embedding": "एम्बेडिंग",
     "vectorSearch": "वेक्टर खोज",
-    "rerank": "रीरैंक",
+    "rerank": "री-रैंकिंग",
     "answerContract": "उत्तर अनुबंध",
-    "tokensIn": "टोकन इन",
-    "tokensOut": "टोकन आउट",
-    "queryUnits": "क्वेरी यूनिट",
+    "tokensIn": "इनपुट टोकन",
+    "tokensOut": "आउटपुट टोकन",
+    "queryUnits": "क्वेरी इकाइयाँ",
     "prefilledQueries": [
-      "उदाहरण आज़माएं"
+      "उदाहरण आज़माएँ"
     ]
   },
   "publicTrace": {
     "title": "साझा ट्रेस",
-    "subtitle": "साझा पुनर्प्राप्ति ट्रेस विवरण देखें",
+    "subtitle": "साझा रिट्रीवल ट्रेस विवरण देखें",
     "sharedBy": "साझा ट्रेस",
     "expired": "यह लिंक समाप्त हो गया है",
-    "expiredDesc": "शेयर लिंक अब मान्य नहीं है। मालिक से नया लिंक बनाने के लिए कहें।",
+    "expiredDesc": "साझा लिंक अब मान्य नहीं है। मालिक से नया लिंक बनाने को कहें।",
     "notFound": "ट्रेस नहीं मिला",
-    "notFoundDesc": "यह साझा ट्रेस नहीं मिल सका। यह रद्द या हटाया गया हो सकता है।",
-    "backToHome": "होम पर वापस जाएं",
-    "requestId": "रिक्वेस्ट ID",
-    "collection": "कलेक्शन",
+    "notFoundDesc": "यह साझा ट्रेस नहीं मिल सका। हो सकता है इसे रद्द या हटा दिया गया हो।",
+    "backToHome": "होम पर वापस जाएँ",
+    "requestId": "अनुरोध ID",
+    "collection": "संग्रह",
     "createdAt": "बनाया गया",
-    "totalLatency": "कुल लेटेंसी",
+    "totalLatency": "कुल विलंबता",
     "totalCost": "कुल लागत",
     "resultsCount": "परिणाम",
     "query": "क्वेरी",
-    "timeline": "टाइमलाइन",
+    "timeline": "समयरेखा",
     "candidates": "उम्मीदवार",
-    "rerankDiff": "रीरैंक अंतर",
+    "rerankDiff": "री-रैंक अंतर",
     "costAnalysis": "लागत विश्लेषण",
-    "redacted": "[संशोधित]",
+    "redacted": "[संपादित]",
     "piiMasked": "गोपनीयता के लिए PII छिपाया गया",
-    "readOnlyNote": "यह एक साझा ट्रेस का केवल-पठन दृश्य है।"
+    "readOnlyNote": "यह साझा ट्रेस का केवल-पढ़ने योग्य दृश्य है।"
   },
   "trustPage": {
     "title": "ट्रस्ट सेंटर",
