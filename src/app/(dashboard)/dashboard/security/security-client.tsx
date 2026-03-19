@@ -862,7 +862,7 @@ function PoliciesPanel({
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-4">
+        <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-200 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-purple-700">{t("dashboard.securityPage.policies.compliancePolicies")}</p>

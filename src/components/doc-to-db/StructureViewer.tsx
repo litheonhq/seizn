@@ -25,7 +25,7 @@ const dataTypeColors: Record<CellDataType, string> = {
   date: "bg-purple-100 text-purple-600",
   currency: "bg-green-100 text-green-600",
   percentage: "bg-orange-100 text-orange-600",
-  boolean: "bg-pink-100 text-pink-600",
+  boolean: "bg-rose-100 text-rose-600",
   email: "bg-cyan-100 text-cyan-600",
   url: "bg-indigo-100 text-indigo-600",
   phone: "bg-yellow-100 text-yellow-600",

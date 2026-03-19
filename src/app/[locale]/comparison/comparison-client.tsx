@@ -238,7 +238,7 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
   return (
     <div className="min-h-screen gradient-hero relative overflow-hidden">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
         <div
           className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "2s" }}
@@ -248,7 +248,7 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-sm">S</span>
             </div>
             <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-szn-text-1 to-szn-text-2 bg-clip-text text-transparent">
@@ -270,7 +270,7 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
       <section className="pt-32 pb-10 px-6 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full animate-pulse" />
+            <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-pulse" />
             <span className="text-sm text-szn-text-2 font-medium">{copy.snapshotLabel}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-szn-text-1 mb-4">{copy.title}</h1>

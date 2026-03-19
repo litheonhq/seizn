@@ -39,11 +39,11 @@ const typeColors: Record<NoteType, { bg: string; border: string; text: string; d
     darkBorder: "dark:border-green-500",
   },
   procedure: {
-    bg: "bg-pink-50",
-    border: "border-pink-400",
-    text: "text-pink-700",
-    darkBg: "dark:bg-pink-900/30",
-    darkBorder: "dark:border-pink-500",
+    bg: "bg-sky-50",
+    border: "border-sky-400",
+    text: "text-sky-700",
+    darkBg: "dark:bg-sky-900/30",
+    darkBorder: "dark:border-sky-500",
   },
   relationship: {
     bg: "bg-cyan-50",

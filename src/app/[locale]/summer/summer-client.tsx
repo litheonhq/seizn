@@ -85,7 +85,7 @@ export function SummerClient({ dict, locale }: SummerClientProps) {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href={`/${locale}/spring`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌸</Link>
+            <Link href={`/${locale}/spring`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌿</Link>
             <a href="#features" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.features}</a>
             <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.pricing}</Link>
             <a href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.docs}</a>
@@ -119,7 +119,7 @@ export function SummerClient({ dict, locale }: SummerClientProps) {
         {mobileMenuOpen && (
           <div className="md:hidden glass border-t border-white/20 animate-fade-in">
             <div className="px-6 py-4 space-y-4">
-              <Link href={`/${locale}/spring`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌸</Link>
+              <Link href={`/${locale}/spring`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌿</Link>
               <a href="#features" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
               <Link href={`/${locale}/pricing`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
               <a href={`/${locale}/docs`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>

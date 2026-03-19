@@ -145,7 +145,7 @@ export default function SignupForm() {
     <div className="min-h-screen gradient-hero relative overflow-hidden flex items-center justify-center p-4">
       {/* Decorative Floating Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
         <div
           className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "2s" }}
@@ -160,7 +160,7 @@ export default function SignupForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-lg">S</span>
             </div>
             <span className="text-3xl font-bold bg-gradient-to-r from-szn-text-1 to-szn-text-3 bg-clip-text text-transparent">
@@ -222,7 +222,7 @@ export default function SignupForm() {
               </div>
               <button
                 onClick={proceedToLogin}
-                className="w-full py-3.5 btn-premium bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full py-3.5 btn-premium bg-gradient-to-r from-violet-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Continue to Dashboard
               </button>
@@ -357,7 +357,7 @@ export default function SignupForm() {
                 <button
                   type="submit"
                   disabled={isLoading || (turnstileRequired && !turnstileToken)}
-                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
+                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-violet-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

@@ -32,7 +32,7 @@ const SCORE_COLORS: Record<string, string> = {
   bm25: "#22c55e", // green
   hybrid_rrf: "#8b5cf6", // purple
   rerank: "#f59e0b", // amber
-  semantic: "#ec4899", // pink
+  semantic: "#f43f5e", // rose
   keyword_match: "#06b6d4", // cyan
 };
 
@@ -41,7 +41,7 @@ const SCORE_BG_COLORS: Record<string, string> = {
   bm25: "bg-green-500",
   hybrid_rrf: "bg-purple-500",
   rerank: "bg-amber-500",
-  semantic: "bg-pink-500",
+  semantic: "bg-rose-500",
   keyword_match: "bg-cyan-500",
 };
 

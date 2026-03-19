@@ -469,7 +469,7 @@ export default function OrganizationDetailClient({
                     <select
                       value={member.role}
                       onChange={(e) => handleUpdateRole(member.id, e.target.value)}
-                      className="px-3 py-1.5 bg-white border border-szn-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      className="px-3 py-1.5 bg-white border border-szn-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-szn-accent/40"
                     >
                       <option value="admin">Admin</option>
                       <option value="member">Member</option>
@@ -520,8 +520,8 @@ export default function OrganizationDetailClient({
                 .map((invite) => (
                   <div key={invite.id} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-100 to-rose-200 flex items-center justify-center">
-                        <MailIcon className="w-5 h-5 text-pink-500" />
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-violet-200 flex items-center justify-center">
+                        <MailIcon className="w-5 h-5 text-indigo-500" />
                       </div>
                       <div>
                         <p className="font-medium text-szn-text-1">{invite.email}</p>
@@ -730,7 +730,7 @@ export default function OrganizationDetailClient({
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent transition-all"
                 />
               </div>
               <div>
@@ -747,7 +747,7 @@ export default function OrganizationDetailClient({
                       onClick={() => setInviteRole(role.value as typeof inviteRole)}
                       className={`p-3 rounded-xl border-2 text-left transition-all ${
                         inviteRole === role.value
-                          ? "border-pink-400 bg-pink-50"
+                          ? "border-szn-accent bg-szn-accent/5"
                           : "border-szn-border hover:border-szn-border"
                       }`}
                     >
@@ -882,7 +882,7 @@ function OrgSettingsTab({
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={!canManage}
-              className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
+              className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
             />
           </div>
 
@@ -897,7 +897,7 @@ function OrgSettingsTab({
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
                 disabled={!canManage}
-                className="flex-1 px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
+                className="flex-1 px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
               />
             </div>
           </div>

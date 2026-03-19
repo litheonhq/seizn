@@ -319,7 +319,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendIcon={getTrendIcon(metrics.regressionRate.trend)}
           sampleSize={metrics.regressionRate.totalEvals}
           icon={<AlertIcon className="w-5 h-5 text-white" />}
-          gradient="from-rose-400 to-pink-500"
+          gradient="from-rose-400 to-red-500"
         />
       </div>
 
