@@ -123,7 +123,7 @@ export default function CalculatorClient() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,

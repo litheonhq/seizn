@@ -240,7 +240,7 @@ export default function AutopilotClient() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-szn-accent to-szn-accent-2 flex items-center justify-center">
@@ -329,7 +329,7 @@ export default function AutopilotClient() {
       {activeTab === "settings" ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Mode Selection */}
-          <div className="szn-card rounded-2xl p-6">
+          <div className="szn-card rounded-lg p-6">
             <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.autopilot.operationMode") || "Operation Mode"}</h2>
             <div className="space-y-3">
               {(["conservative", "balanced", "aggressive", "experimental"] as const).map((mode) => (
@@ -356,7 +356,7 @@ export default function AutopilotClient() {
           </div>
 
           {/* Parameters */}
-          <div className="szn-card rounded-2xl p-6">
+          <div className="szn-card rounded-lg p-6">
             <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.autopilot.parameters") || "Parameters"}</h2>
             {config && (
               <div className="space-y-4">
@@ -396,7 +396,7 @@ export default function AutopilotClient() {
         </div>
       ) : (
         /* Decision Logs */
-        <div className="szn-card rounded-2xl overflow-hidden">
+        <div className="szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b border-szn-border">
             <h2 className="font-semibold text-szn-text-1">{t("dashboard.autopilot.recentDecisions") || "Recent Decisions"}</h2>
           </div>

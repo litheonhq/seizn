@@ -268,7 +268,7 @@ export function SettingsClient() {
         <div className="text-sm text-szn-text-2">{t("dashboard.settingsPage.loading")}</div>
       )}
       {isUnauthenticated && (
-        <div className="rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3 sm:p-4">
+        <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3 sm:p-4">
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <div className="mt-0.5 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
@@ -306,7 +306,7 @@ export function SettingsClient() {
       </header>
 
       {loadError && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {loadError}
         </div>
       )}
@@ -330,7 +330,7 @@ export function SettingsClient() {
       </div>
 
       {/* Tab Content */}
-      <div className="szn-card border border-szn-border rounded-2xl p-4 sm:p-6">
+      <div className="szn-card border border-szn-border rounded-lg p-4 sm:p-6">
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="space-y-6">

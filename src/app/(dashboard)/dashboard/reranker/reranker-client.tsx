@@ -328,7 +328,7 @@ export function RerankerClient() {
         {/* Configuration Panel */}
         <div className="space-y-6">
           {/* Model Selection */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h2 className="font-semibold text-szn-text-1 mb-4">Reranker Model</h2>
             <div className="space-y-3">
               {models.map((model) => (
@@ -360,7 +360,7 @@ export function RerankerClient() {
           </div>
 
           {/* Domain Selection */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-szn-text-1">Content Domain</h2>
               <label className="flex items-center gap-2 text-sm">
@@ -409,7 +409,7 @@ export function RerankerClient() {
           </div>
 
           {/* Threshold */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h2 className="font-semibold text-szn-text-1 mb-4">Relevance Threshold</h2>
             <div className="space-y-4">
               <input
@@ -435,7 +435,7 @@ export function RerankerClient() {
 
         {/* Test Panel */}
         <div className="space-y-6">
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h2 className="font-semibold text-szn-text-1 mb-4">Test Reranker</h2>
 
             <div className="space-y-4">
@@ -532,7 +532,7 @@ Document 3 content here...`}
           </div>
 
           {/* Usage Tips */}
-          <div className="bg-blue-50 rounded-2xl border border-blue-200 p-6">
+          <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
             <h3 className="font-semibold text-blue-900 mb-3">Tips for Better Reranking</h3>
             <ul className="space-y-2 text-sm text-blue-800">
               <li className="flex items-start gap-2">
@@ -562,7 +562,7 @@ Document 3 content here...`}
         <div className="space-y-6">
           {/* Stats Overview */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -577,7 +577,7 @@ Document 3 content here...`}
               <p className="text-xs text-szn-text-3">User click signals</p>
             </div>
 
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -592,7 +592,7 @@ Document 3 content here...`}
               <p className="text-xs text-szn-text-3">Result used in context</p>
             </div>
 
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -607,7 +607,7 @@ Document 3 content here...`}
               <p className="text-xs text-szn-text-3">User re-ordered results</p>
             </div>
 
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -624,7 +624,7 @@ Document 3 content here...`}
           </div>
 
           {/* Data Quality Indicators */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h3 className="font-semibold text-szn-text-1 mb-4">Data Quality</h3>
             <div className="space-y-4">
               <div>
@@ -679,7 +679,7 @@ Document 3 content here...`}
           </div>
 
           {/* Recommendation */}
-          <div className="bg-gradient-to-r from-szn-accent/5 to-szn-accent/10 rounded-2xl border border-szn-accent/20 p-6">
+          <div className="bg-gradient-to-r from-szn-accent/5 to-szn-accent/10 rounded-lg border border-szn-accent/20 p-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -708,7 +708,7 @@ Document 3 content here...`}
       {activeTab === "train" && (
         <div className="space-y-6">
           {/* Current Model Info */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-szn-text-1">Current Model</h3>
               <span className="px-3 py-1 bg-szn-success/10 text-szn-success text-sm font-medium rounded-full">
@@ -732,7 +732,7 @@ Document 3 content here...`}
           </div>
 
           {/* Training Controls */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h3 className="font-semibold text-szn-text-1 mb-4">Training Job</h3>
 
             {trainingJob.status === "idle" && (
@@ -839,7 +839,7 @@ Document 3 content here...`}
           </div>
 
           {/* Training Tips */}
-          <div className="bg-amber-50 rounded-2xl border border-amber-200 p-6">
+          <div className="bg-amber-50 rounded-lg border border-amber-200 p-6">
             <h4 className="font-medium text-amber-900 mb-3">Training Tips</h4>
             <ul className="space-y-2 text-sm text-amber-800">
               <li className="flex items-start gap-2">
@@ -878,7 +878,7 @@ Document 3 content here...`}
           </div>
 
           {/* Results Table */}
-          <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+          <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
             <table className="w-full">
               <thead className="bg-szn-bg">
                 <tr>
@@ -954,7 +954,7 @@ Document 3 content here...`}
           </div>
 
           {/* Metrics Explanation */}
-          <div className="bg-szn-surface rounded-2xl border p-6">
+          <div className="bg-szn-surface rounded-lg border p-6">
             <h4 className="font-medium text-szn-text-1 mb-3">Metrics Explained</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>

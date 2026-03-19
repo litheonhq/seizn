@@ -216,7 +216,7 @@ export function DeleteMemoriesModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-szn-card rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-szn-border">
+      <div className="relative bg-szn-card rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-szn-border">
         {/* Header */}
         <div className="px-6 py-4 border-b border-szn-border bg-red-50 dark:bg-red-900/20">
           <div className="flex items-center justify-between">

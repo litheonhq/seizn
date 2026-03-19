@@ -175,7 +175,7 @@ export function BudgetDashboardClient() {
     : 0;
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,

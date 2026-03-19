@@ -58,7 +58,7 @@ export function PolicyPackCard({
   const catStyle = CATEGORY_STYLES[pack.category];
 
   return (
-    <div className="rounded-2xl border border-slate-200/70 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 shadow-[0_4px_16px_rgba(15,23,42,0.05)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.1)] transition-all duration-200 p-5 flex flex-col">
+    <div className="rounded-lg border border-slate-200/70 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 shadow-[0_4px_16px_rgba(15,23,42,0.05)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.1)] transition-all duration-200 p-5 flex flex-col">
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">

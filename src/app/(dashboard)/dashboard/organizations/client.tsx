@@ -132,7 +132,7 @@ export default function OrganizationsClient() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="szn-card rounded-2xl p-6 animate-pulse">
+            <div key={i} className="szn-card rounded-lg p-6 animate-pulse">
               <div className="h-6 bg-szn-surface rounded w-2/3 mb-3" />
               <div className="h-4 bg-szn-surface rounded w-1/2 mb-4" />
               <div className="h-8 bg-szn-surface rounded w-1/3" />
@@ -140,7 +140,7 @@ export default function OrganizationsClient() {
           ))}
         </div>
       ) : organizations.length === 0 ? (
-        <div className="szn-card rounded-2xl p-12">
+        <div className="szn-card rounded-lg p-12">
           <div className="max-w-lg mx-auto text-center">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center">
               <UsersIcon className="w-10 h-10 text-purple-400" />
@@ -209,7 +209,7 @@ export default function OrganizationsClient() {
             <Link
               key={org.id}
               href={`/dashboard/organizations/${org.id}`}
-              className="szn-card rounded-2xl p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
+              className="szn-card rounded-lg p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
@@ -254,7 +254,7 @@ export default function OrganizationsClient() {
             </button>
 
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
                 <UsersIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.organizationsPage.createOrgTitle")}</h2>

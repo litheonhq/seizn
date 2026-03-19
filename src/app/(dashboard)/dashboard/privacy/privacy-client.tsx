@@ -381,7 +381,7 @@ function RTBFRequestsTab({
         </button>
       </div>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
         <table className="w-full">
           <thead className="bg-szn-bg border-b border-szn-border">
             <tr>
@@ -508,7 +508,7 @@ function RequestDetailModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-szn-card rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-szn-card rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-xl font-bold text-szn-text-1">RTBF Request Details</h2>
@@ -693,7 +693,7 @@ function NewRequestModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-szn-card rounded-2xl max-w-md w-full p-6">
+      <div className="bg-szn-card rounded-lg max-w-md w-full p-6">
         <h2 className="text-xl font-bold text-szn-text-1 mb-4">New RTBF Request</h2>
         <p className="text-sm text-szn-text-2 mb-6">
           Create a new Right to be Forgotten request. The deadline will be set to 30 days from now per GDPR requirements.
@@ -763,7 +763,7 @@ function DataSubjectsTab({ subjects }: { subjects: DataSubject[] }) {
         View and manage data subjects who have interacted with your system
       </p>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
         <table className="w-full">
           <thead className="bg-szn-bg border-b border-szn-border">
             <tr>
@@ -831,7 +831,7 @@ function CertificatesTab({ certificates }: { certificates: DeletionCertificate[]
       </p>
 
       {certificates.length === 0 ? (
-        <div className="bg-szn-card rounded-2xl border border-szn-border p-12 text-center">
+        <div className="bg-szn-card rounded-lg border border-szn-border p-12 text-center">
           <span className="text-4xl mb-4 block">📜</span>
           <h3 className="font-medium text-szn-text-1 mb-2">No Certificates Yet</h3>
           <p className="text-szn-text-2 text-sm">
@@ -908,7 +908,7 @@ function SettingsTab({
         Configure RTBF processing and compliance settings
       </p>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6 space-y-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6 space-y-6">
         {/* Auto Discovery */}
         <div className="flex items-center justify-between">
           <div>

@@ -101,7 +101,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className={`theme-${season} min-h-screen theme-gradient-bg`}>
+    <div className={`theme-${season} min-h-screen bg-szn-bg`}>
       {/* Skip to content */}
       <a
         href="#dashboard-main"
@@ -113,7 +113,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       {/* Sidebar Backdrop - Desktop */}
       {isSidebarExpanded && (
         <div
-          className="fixed inset-0 z-40 hidden lg:block bg-black/20 backdrop-blur-sm transition-opacity duration-300"
+          className="fixed inset-0 z-40 hidden lg:block bg-black/20 transition-opacity duration-200"
           onClick={() => setIsSidebarPinned(false)}
         />
       )}
@@ -122,21 +122,20 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <aside
         role="navigation"
         aria-label="Main navigation"
-        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col bg-szn-card/95 backdrop-blur-xl border-r border-szn-border/60 transition-[width] duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col bg-szn-card border-r border-szn-border transition-[width] duration-200 ease-out ${
           isSidebarExpanded ? "w-72" : "w-[68px]"
         }`}
-        style={{ boxShadow: "var(--szn-shadow-sm)" }}
       >
         {/* Logo */}
-        <div className="p-4 border-b border-szn-border/40">
+        <div className="p-4 border-b border-szn-border">
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 rounded-xl flex-shrink-0 shadow-sm" />
-            <div className={`flex-1 min-w-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 w-0"
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg flex-shrink-0" />
+            <div className={`flex-1 min-w-0 transition-all duration-200 ease-out ${
+              isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 w-0"
             }`}>
-              <span className="text-lg font-bold text-szn-text-1 block truncate whitespace-nowrap tracking-tight">
-                Seizn<span className="theme-primary">.</span>
+              <span className="text-sm font-semibold text-szn-text-1 block truncate whitespace-nowrap">
+                Seizn
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1 whitespace-nowrap">
                 {"Agent OS"} <span>{config.icon}</span>
@@ -170,29 +169,27 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
 
         {/* User Profile */}
-        <div className="p-3 border-t border-szn-border/40">
-          <div className={`flex items-center gap-3 p-2.5 rounded-xl bg-szn-surface-1/60 ${isSidebarExpanded ? "hover:bg-szn-surface-2/80" : "justify-center"} transition-all duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]`}>
+        <div className="p-3 border-t border-szn-border">
+          <div className={`flex items-center gap-2.5 p-2 rounded-lg ${isSidebarExpanded ? "hover:bg-szn-surface-1" : "justify-center"} transition-colors duration-150`}>
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className={`rounded-lg ring-1 ring-szn-border/40 shadow-sm transition-all duration-300 object-cover ${
-                  isSidebarExpanded ? "w-9 h-9" : "w-8 h-8"
+                className={`rounded-full object-cover ${
+                  isSidebarExpanded ? "w-8 h-8" : "w-7 h-7"
                 }`}
               />
             ) : (
-              <div className={`rounded-lg theme-gradient-btn flex items-center justify-center shadow-sm transition-all duration-300 ${
-                isSidebarExpanded ? "w-9 h-9" : "w-8 h-8"
+              <div className={`rounded-full bg-szn-surface flex items-center justify-center ${
+                isSidebarExpanded ? "w-8 h-8" : "w-7 h-7"
               }`}>
-                <span className={`text-white font-semibold transition-all duration-300 ${
-                  isSidebarExpanded ? "text-sm" : "text-xs"
-                }`}>
+                <span className="text-szn-text-2 font-medium text-xs">
                   {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
                 </span>
               </div>
             )}
-            <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            <div className={`flex items-center gap-2 overflow-hidden transition-all duration-200 ease-out ${
               isSidebarExpanded ? "flex-1 opacity-100" : "w-0 opacity-0"
             }`}>
               <div className="flex-1 min-w-0">
@@ -203,7 +200,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               </div>
               <button
                 onClick={handleSignOut}
-                className="p-1.5 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 rounded-lg transition-colors duration-150 flex-shrink-0"
+                className="p-1.5 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-md transition-colors duration-150 flex-shrink-0"
                 title={t("dashboard.signOut")}
               >
                 <LogoutIcon className="w-4 h-4" />
@@ -225,18 +222,18 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       />
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-card/90 backdrop-blur-xl border-b border-szn-border/50" style={{ boxShadow: "var(--szn-shadow-xs)" }}>
+      <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-card border-b border-szn-border">
         <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md" />
-            <span className="text-base sm:text-lg font-bold text-szn-text-1">Seizn</span>
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg" />
+            <span className="text-sm sm:text-base font-semibold text-szn-text-1">Seizn</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-base sm:text-lg">{config.icon}</span>
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-szn-text-2 hover:text-szn-text-1 hover:bg-szn-surface-2 active:bg-szn-surface-2 rounded-xl transition-colors"
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-szn-text-2 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-md transition-colors"
               aria-label={t("dashboard.menu") || "Open menu"}
             >
               <MenuIcon className="w-6 h-6" />

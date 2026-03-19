@@ -349,7 +349,7 @@ function AuditLogTable({
   };
 
   return (
-    <div className="bg-szn-card rounded-2xl border border-szn-border">
+    <div className="bg-szn-card rounded-lg border border-szn-border">
       {/* Filters */}
       <div className="p-4 border-b border-szn-border flex gap-4">
         <select
@@ -563,7 +563,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-szn-card rounded-2xl max-w-md w-full p-6">
+      <div className="bg-szn-card rounded-lg max-w-md w-full p-6">
         <h2 className="text-xl font-bold text-szn-text-1 mb-4">{t("dashboard.securityPage.keys.createTitle")}</h2>
 
         <div className="space-y-4">
@@ -641,7 +641,7 @@ function SecuritySettings() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
         <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.securityPage.settings.authentication")}</h3>
 
         <div className="space-y-4">
@@ -691,7 +691,7 @@ function SecuritySettings() {
         </div>
       </div>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
         <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.securityPage.settings.apiSecurity")}</h3>
 
         <div className="space-y-4">
@@ -741,7 +741,7 @@ function SecuritySettings() {
         </div>
       </div>
 
-      <div className="bg-yellow-50 rounded-2xl border border-yellow-200 p-6">
+      <div className="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
         <h3 className="font-semibold text-yellow-800 mb-2">{t("dashboard.securityPage.settings.dangerZone")}</h3>
         <p className="text-sm text-yellow-700 mb-4">
           {t("dashboard.securityPage.settings.dangerZoneDescription")}

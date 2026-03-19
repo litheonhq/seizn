@@ -188,7 +188,7 @@ export function AnalyticsClient() {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] dark:border-slate-700/70 dark:bg-slate-900">
+        <div className="rounded-lg border border-slate-200/80 bg-white px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] dark:border-slate-700/70 dark:bg-slate-900">
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-300">{label}</p>
           <div className="mt-2 space-y-1">
             {payload.map((entry, index) => (
@@ -225,7 +225,7 @@ export function AnalyticsClient() {
       <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
         <div className="absolute -z-10 left-0 top-2 h-12 w-full rounded-full bg-slate-50/80 dark:bg-slate-800/40" />
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 flex items-center justify-center dark:bg-slate-900 dark:ring-slate-700">
+          <div className="w-12 h-12 rounded-lg bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 flex items-center justify-center dark:bg-slate-900 dark:ring-slate-700">
             <AnalyticsHeaderIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
@@ -333,7 +333,7 @@ export function AnalyticsClient() {
           {/* Main Charts - with improvements */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Daily Active Users Chart */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
@@ -377,7 +377,7 @@ export function AnalyticsClient() {
             </div>
 
             {/* API Calls Over Time */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
@@ -424,7 +424,7 @@ export function AnalyticsClient() {
             </div>
 
             {/* Memory Usage Chart */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
@@ -475,7 +475,7 @@ export function AnalyticsClient() {
             </div>
 
             {/* Latency Trend */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
@@ -515,7 +515,7 @@ export function AnalyticsClient() {
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Hourly Distribution */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
@@ -555,7 +555,7 @@ export function AnalyticsClient() {
             </div>
 
             {/* Endpoint Breakdown */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.1),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
@@ -602,7 +602,7 @@ export function AnalyticsClient() {
             </div>
 
             {/* Top Queries */}
-            <div className="relative rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
+            <div className="relative rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-6 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-shadow dark:border-slate-700/60 dark:bg-slate-900/60">
               <div className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.12),transparent_70%)] -mr-14 -mt-14 pointer-events-none" />
               <div className="relative">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
@@ -635,7 +635,7 @@ export function AnalyticsClient() {
           </div>
         </>
       ) : (
-        <div className="rounded-2xl border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-12 dark:border-slate-700/60 dark:bg-slate-900/60">
+        <div className="rounded-lg border border-slate-200/70 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] p-12 dark:border-slate-700/60 dark:bg-slate-900/60">
           <div className="max-w-md mx-auto text-center">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center dark:bg-slate-800/60 dark:ring-slate-700">
               <ChartIcon className="w-10 h-10 text-blue-500 dark:text-blue-400" />
@@ -685,7 +685,7 @@ function KpiCard({
     : "bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-200";
 
   return (
-    <div className={`relative rounded-2xl border border-slate-200/70 bg-gradient-to-br ${bgGradient} p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] hover:border-slate-300 dark:border-slate-700/60 dark:hover:border-slate-600`}>
+    <div className={`relative rounded-lg border border-slate-200/70 bg-gradient-to-br ${bgGradient} p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] hover:border-slate-300 dark:border-slate-700/60 dark:hover:border-slate-600`}>
       <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)] -mr-12 -mt-12" />
 
       <div className="relative">

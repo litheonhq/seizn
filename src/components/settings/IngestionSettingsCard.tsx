@@ -121,7 +121,7 @@ export function IngestionSettingsCard() {
 
   if (isLoading) {
     return (
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-szn-surface rounded w-1/3" />
           <div className="h-4 bg-szn-surface rounded w-2/3" />
@@ -133,14 +133,14 @@ export function IngestionSettingsCard() {
 
   if (error || !localSettings) {
     return (
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
         <p className="text-red-500">Failed to load ingestion settings</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+    <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-szn-border">
         <div className="flex items-center gap-3">

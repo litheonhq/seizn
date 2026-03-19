@@ -363,7 +363,7 @@ function IntegrationModal({
         onClick={onClose}
       >
       <div
-        className="bg-szn-card border border-szn-border rounded-2xl max-w-lg w-full p-6 shadow-xl"
+        className="bg-szn-card border border-szn-border rounded-lg max-w-lg w-full p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-4 mb-4">

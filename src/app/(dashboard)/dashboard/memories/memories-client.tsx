@@ -756,7 +756,7 @@ export default function MemoriesClient() {
     <div className="space-y-6">
       <p className="sr-only" aria-live="polite">{screenReaderStatus}</p>
       {/* Header */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-szn-accent flex items-center justify-center">
@@ -875,7 +875,7 @@ export default function MemoriesClient() {
         {/* Sidebar - Filters */}
         <div className="lg:col-span-1 space-y-4">
           {/* Search */}
-          <div className="szn-card rounded-2xl p-4">
+          <div className="szn-card rounded-lg p-4">
             <label className="block text-sm font-medium text-szn-text-2 mb-2">
               <SearchIcon className="w-4 h-4 inline mr-1" />
               {t("dashboard.memoriesPage.search") || "Search"}
@@ -896,7 +896,7 @@ export default function MemoriesClient() {
               type="button"
               onClick={() => setMobileFiltersOpen(open => !open)}
               aria-expanded={mobileFiltersOpen}
-              className="w-full px-4 py-3 text-sm font-medium text-szn-text-1 bg-szn-surface-1 border border-szn-border rounded-2xl hover:bg-szn-surface-1 transition-colors flex items-center justify-between"
+              className="w-full px-4 py-3 text-sm font-medium text-szn-text-1 bg-szn-surface-1 border border-szn-border rounded-lg hover:bg-szn-surface-1 transition-colors flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
                 <FilterIcon className="w-4 h-4 text-szn-text-2" />
@@ -913,7 +913,7 @@ export default function MemoriesClient() {
 
           <div className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block space-y-4`}>
             {/* Namespace */}
-            <div className="szn-card rounded-2xl p-4">
+            <div className="szn-card rounded-lg p-4">
               <label className="block text-sm font-medium text-szn-text-2 mb-2">
                 {t("dashboard.memoriesPage.namespace") || "Namespace"}
               </label>
@@ -942,7 +942,7 @@ export default function MemoriesClient() {
             </div>
 
             {/* Adaptive Learning */}
-            <div className="szn-card rounded-2xl p-4">
+            <div className="szn-card rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-szn-text-2">
                   Adaptive Learning
@@ -1000,7 +1000,7 @@ export default function MemoriesClient() {
             </div>
 
             {/* Date Range */}
-            <div className="szn-card rounded-2xl p-4">
+            <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <CalendarIcon className="w-4 h-4 text-szn-text-2" />
                 <span className="text-sm font-medium text-szn-text-2">
@@ -1036,7 +1036,7 @@ export default function MemoriesClient() {
             </div>
 
             {/* Memory Types */}
-            <div className="szn-card rounded-2xl p-4">
+            <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <FilterIcon className="w-4 h-4 text-szn-text-2" />
                 <span className="text-sm font-medium text-szn-text-2">
@@ -1061,7 +1061,7 @@ export default function MemoriesClient() {
             </div>
 
             {/* Tags */}
-            <div className="szn-card rounded-2xl p-4">
+            <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <TagIcon className="w-4 h-4 text-szn-text-2" />
                 <span className="text-sm font-medium text-szn-text-2">
@@ -1158,7 +1158,7 @@ export default function MemoriesClient() {
 
           {searchDiagnostics && (
             <div
-              className="szn-card rounded-2xl p-3 border border-szn-border"
+              className="szn-card rounded-lg p-3 border border-szn-border"
               role="status"
               aria-live="polite"
             >
@@ -1251,7 +1251,7 @@ export default function MemoriesClient() {
 
           {/* Error Banner */}
           {fetchError && (
-            <div className="szn-card rounded-2xl p-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 flex items-center justify-between" role="alert">
+            <div className="szn-card rounded-lg p-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 flex items-center justify-between" role="alert">
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -1272,12 +1272,12 @@ export default function MemoriesClient() {
 
           {/* Memory Cards */}
           {isLoading && memories.length === 0 ? (
-            <div className="szn-card rounded-2xl p-12 text-center">
+            <div className="szn-card rounded-lg p-12 text-center">
               <LoadingSpinner className="w-8 h-8 text-szn-accent mx-auto" />
               <p className="mt-4 text-szn-text-2">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
             </div>
           ) : memories.length === 0 ? (
-            <div className="szn-card rounded-2xl p-12 text-center">
+            <div className="szn-card rounded-lg p-12 text-center">
               <InboxIcon className="w-16 h-16 text-szn-text-3 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-szn-text-3 mb-2">
                 {t("dashboard.memoriesPage.noMemories") || "No memories found"}
@@ -1318,7 +1318,7 @@ export default function MemoriesClient() {
                 return (
                   <div
                     key={memory.id}
-                    className="szn-card rounded-2xl p-4 hover:border-szn-accent/30 transition-colors"
+                    className="szn-card rounded-lg p-4 hover:border-szn-accent/30 transition-colors"
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex-1 min-w-0">

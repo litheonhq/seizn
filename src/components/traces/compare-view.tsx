@@ -825,7 +825,7 @@ export function CompareView({
 
   if (loading) {
     return (
-      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
         <div className="flex flex-col items-center justify-center">
           <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
           <p className="mt-4 text-gray-500">Loading comparison...</p>
@@ -836,7 +836,7 @@ export function CompareView({
 
   if (error) {
     return (
-      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
           <button
@@ -852,7 +852,7 @@ export function CompareView({
 
   if (!computedDiff && mode === "traces") {
     return (
-      <div className={`bg-szn-bg rounded-2xl border shadow-lg p-8 ${className}`}>
+      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
         <p className="text-center text-gray-500">
           Select two traces to compare
         </p>
@@ -862,7 +862,7 @@ export function CompareView({
 
   return (
     <div
-      className={`bg-szn-bg rounded-2xl border border-szn-border shadow-lg overflow-hidden ${className}`}
+      className={`bg-szn-bg rounded-lg border border-szn-border shadow-lg overflow-hidden ${className}`}
     >
       {/* Header */}
       <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-szn-border">

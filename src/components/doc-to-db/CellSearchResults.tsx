@@ -57,7 +57,7 @@ export function CellSearchResults({
   // Empty state
   if (results.length === 0 && structureResults.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
         <SearchEmptyIcon />
         <p className="text-gray-500 mt-4">No results found for &quot;{query}&quot;</p>
         <p className="text-sm text-gray-400 mt-1">Try adjusting your search terms</p>
@@ -132,7 +132,7 @@ function CellResultsList({
       {Object.values(groupedResults).map((group) => (
         <div
           key={group.structureId}
-          className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
         >
           {/* Structure header */}
           <div className="px-5 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-3">
@@ -229,7 +229,7 @@ function StructureResultsList({
       {results.map((structure) => (
         <div
           key={structure.id}
-          className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-5 ${
+          className={`bg-white rounded-lg shadow-sm border border-gray-200 p-5 ${
             onStructureClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""
           }`}
           onClick={onStructureClick ? () => onStructureClick(structure) : undefined}
@@ -443,7 +443,7 @@ function SearchResultsSkeleton() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
         >
           <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
             <div className="h-5 w-48 bg-gray-200 rounded animate-pulse" />

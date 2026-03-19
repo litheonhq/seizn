@@ -322,7 +322,7 @@ export default function OrganizationDetailClient({
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="szn-card rounded-2xl p-6 animate-pulse">
+        <div className="szn-card rounded-lg p-6 animate-pulse">
           <div className="h-8 bg-szn-surface-1 rounded w-1/3 mb-4" />
           <div className="h-4 bg-szn-surface rounded w-1/2" />
         </div>
@@ -332,7 +332,7 @@ export default function OrganizationDetailClient({
 
   if (!organization) {
     return (
-      <div className="szn-card rounded-2xl p-12 text-center">
+      <div className="szn-card rounded-lg p-12 text-center">
         <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
           {pageError ? "Failed to load organization" : "Organization not found"}
         </h2>
@@ -365,10 +365,10 @@ export default function OrganizationDetailClient({
       </Link>
 
       {/* Organization Header */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-2xl">
                 {organization.name[0].toUpperCase()}
               </span>
@@ -390,13 +390,13 @@ export default function OrganizationDetailClient({
       </div>
 
       {pageError && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {pageError}
         </div>
       )}
 
       {usageError && activeTab === "usage" && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {usageError}
         </div>
       )}
@@ -432,7 +432,7 @@ export default function OrganizationDetailClient({
 
       {/* Members Tab */}
       {activeTab === "members" && (
-        <div className="szn-card rounded-2xl overflow-hidden">
+        <div className="szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
             <h2 className="font-semibold text-szn-text-1">Team Members</h2>
             {canManageMembers && (
@@ -496,7 +496,7 @@ export default function OrganizationDetailClient({
 
       {/* Invites Tab */}
       {activeTab === "invites" && (
-        <div className="szn-card rounded-2xl overflow-hidden">
+        <div className="szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
             <h2 className="font-semibold text-szn-text-1">Pending Invitations</h2>
             {canManageMembers && (
@@ -576,7 +576,7 @@ export default function OrganizationDetailClient({
           {isLoadingUsage ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="szn-card rounded-2xl p-5 animate-pulse">
+                <div key={i} className="szn-card rounded-lg p-5 animate-pulse">
                   <div className="h-4 bg-szn-surface-1 rounded w-1/2 mb-3" />
                   <div className="h-8 bg-szn-surface rounded w-2/3" />
                 </div>
@@ -584,19 +584,19 @@ export default function OrganizationDetailClient({
             </div>
           ) : usageSummary ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="szn-card rounded-2xl p-5">
+              <div className="szn-card rounded-lg p-5">
                 <p className="text-sm text-szn-text-2 mb-1">Total API Calls</p>
                 <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalCalls.toLocaleString()}</p>
               </div>
-              <div className="szn-card rounded-2xl p-5">
+              <div className="szn-card rounded-lg p-5">
                 <p className="text-sm text-szn-text-2 mb-1">Total Tokens</p>
                 <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalTokens.toLocaleString()}</p>
               </div>
-              <div className="szn-card rounded-2xl p-5">
+              <div className="szn-card rounded-lg p-5">
                 <p className="text-sm text-szn-text-2 mb-1">Estimated Cost</p>
                 <p className="text-2xl font-bold text-szn-text-1">${usageSummary.totalCostDollars}</p>
               </div>
-              <div className="szn-card rounded-2xl p-5">
+              <div className="szn-card rounded-lg p-5">
                 <p className="text-sm text-szn-text-2 mb-1">Active API Keys</p>
                 <p className="text-2xl font-bold text-szn-text-1">{usageSummary.activeKeys}</p>
               </div>
@@ -604,7 +604,7 @@ export default function OrganizationDetailClient({
           ) : null}
 
           {/* Usage Chart */}
-          <div className="szn-card rounded-2xl p-6">
+          <div className="szn-card rounded-lg p-6">
             <h3 className="font-semibold text-szn-text-1 mb-4">Daily API Calls</h3>
             {dailyUsage.length > 0 ? (
               <div className="h-48 flex items-end gap-1">
@@ -638,7 +638,7 @@ export default function OrganizationDetailClient({
           </div>
 
           {/* Member Usage Breakdown */}
-          <div className="szn-card rounded-2xl overflow-hidden">
+          <div className="szn-card rounded-lg overflow-hidden">
             <div className="p-4 border-b theme-border">
               <h3 className="font-semibold text-szn-text-1">Usage by Member</h3>
             </div>
@@ -698,7 +698,7 @@ export default function OrganizationDetailClient({
             </button>
 
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
                 <MailIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-xl font-bold text-szn-text-1">Invite Team Member</h2>
@@ -859,7 +859,7 @@ function OrgSettingsTab({
   return (
     <div className="space-y-6">
       {/* General Settings */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <h2 className="font-semibold text-szn-text-1 mb-6">General Settings</h2>
 
         {saveMessage && (
@@ -936,7 +936,7 @@ function OrgSettingsTab({
 
       {/* Danger Zone */}
       {canManage && (
-        <div className="szn-card rounded-2xl p-6 border-2 border-red-100">
+        <div className="szn-card rounded-lg p-6 border-2 border-red-100">
           <h2 className="font-semibold text-red-600 mb-2">Danger Zone</h2>
           <p className="text-sm text-szn-text-2 mb-4">
             Deleting an organization is permanent and cannot be undone. All members will lose access and all data will be removed.

@@ -129,7 +129,7 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
   }
 
   return (
-    <div className="bg-szn-card rounded-2xl border border-szn-border shadow-lg overflow-hidden">
+    <div className="bg-szn-card rounded-lg border border-szn-border shadow-lg overflow-hidden">
       {/* Header */}
       <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-szn-border flex items-center justify-between">
         <div>

@@ -183,7 +183,7 @@ export function PlaygroundClient() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Query Builder */}
-        <div className="szn-card border border-szn-border rounded-2xl p-6">
+        <div className="szn-card border border-szn-border rounded-lg p-6">
           <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
             {t("dashboard.playground.queryBuilder")}
           </h2>
@@ -316,7 +316,7 @@ export function PlaygroundClient() {
         </div>
 
         {/* Right Panel - Results & Trace */}
-        <div className="szn-card border border-szn-border rounded-2xl overflow-hidden">
+        <div className="szn-card border border-szn-border rounded-lg overflow-hidden">
           {/* Tabs */}
           <div className="flex border-b border-szn-border">
             {(["results", "trace", "cost"] as const).map((tab) => (
@@ -363,7 +363,7 @@ export function PlaygroundClient() {
 
       {/* Rerank Comparison (if enabled and has results) */}
       {enableRerank && results.length > 0 && (
-        <div className="szn-card border border-szn-border rounded-2xl p-6">
+        <div className="szn-card border border-szn-border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
             {t("dashboard.playground.rerankComparison")}
           </h3>

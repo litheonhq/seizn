@@ -164,7 +164,7 @@ export function PolicyMarketplaceClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 dark:ring-slate-700 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-lg bg-white dark:bg-slate-800 shadow-[0_8px_24px_rgba(15,23,42,0.08)] ring-1 ring-slate-200 dark:ring-slate-700 flex items-center justify-center">
             <svg
               className="w-6 h-6 text-blue-600 dark:text-blue-400"
               fill="none"

@@ -170,7 +170,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <OnboardingWizard userId={user.id} />
 
       {error && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {error}
         </div>
       )}
@@ -198,7 +198,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Memories Card */}
-        <div className="szn-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
+        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <BrainIcon className="w-6 h-6 text-white" />
@@ -236,7 +236,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
 
         {/* API Calls Card */}
-        <div className="szn-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
+        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.85 }}>
               <ApiIcon className="w-6 h-6 text-white" />
@@ -275,7 +275,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
 
         {/* API Keys Card */}
-        <div className="szn-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
+        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>
               <KeyIcon className="w-6 h-6 text-white" />
@@ -299,7 +299,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
 
         {/* Plan Card */}
-        <div className="szn-card rounded-2xl p-6 group hover:shadow-lg transition-all duration-300">
+        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.55 }}>
               <SparkleIcon className="w-6 h-6 text-white" />
@@ -328,7 +328,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       <NorthStarMetrics />
 
       {/* 7-Day API Usage Chart */}
-      <div className="szn-card rounded-2xl overflow-hidden">
+      <div className="szn-card rounded-lg overflow-hidden">
         <div className="p-4 border-b theme-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.8 }}>
@@ -360,7 +360,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       </div>
 
       {/* Recent Activity */}
-      <div className="szn-card rounded-2xl overflow-hidden">
+      <div className="szn-card rounded-lg overflow-hidden">
         <div className="p-4 border-b theme-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.65 }}>
@@ -502,7 +502,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
       {/* Recent Memories & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Memories */}
-        <div className="lg:col-span-2 szn-card rounded-2xl overflow-hidden">
+        <div className="lg:col-span-2 szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
             <h2 className="font-semibold text-szn-text-1">{t("dashboard.overviewPage.recentMemories")}</h2>
             <Link href="/dashboard/memories" className="text-sm theme-primary hover:underline">
@@ -552,7 +552,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
 
         {/* Quick Actions */}
-        <div className="szn-card rounded-2xl p-6">
+        <div className="szn-card rounded-lg p-6">
           <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
           <div className="space-y-3">
             <Link
@@ -738,7 +738,7 @@ function ReliabilitySection({
   };
 
   return (
-    <div className="szn-card rounded-2xl overflow-hidden">
+    <div className="szn-card rounded-lg overflow-hidden">
       <button
         onClick={toggle}
         className="w-full p-4 border-b theme-border flex items-center justify-between text-left hover:bg-white/30 dark:hover:bg-gray-800/30 transition-colors"

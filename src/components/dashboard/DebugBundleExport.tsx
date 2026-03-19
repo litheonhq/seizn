@@ -214,7 +214,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto border border-gray-800">
+          <div className="bg-gray-900 rounded-lg shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto border border-gray-800">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-800">
               <h2 className="text-xl font-semibold text-white">Export Debug Bundle</h2>

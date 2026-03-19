@@ -428,14 +428,14 @@ export function FederatedClient() {
       </div>
 
       {(loadError || actionError) && (
-        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {actionError || loadError}
         </div>
       )}
 
       {/* Connectors Grid */}
       {connectors.length === 0 ? (
-        <div className="bg-szn-card rounded-2xl border border-szn-border p-8 text-center">
+        <div className="bg-szn-card rounded-lg border border-szn-border p-8 text-center">
           <div className="text-4xl mb-4">🔗</div>
           <h3 className="font-semibold text-szn-text-1 mb-2">No Connectors</h3>
           <p className="text-szn-text-2 mb-4">
@@ -463,7 +463,7 @@ export function FederatedClient() {
 
       {/* Test Search Section */}
       {connectors.length > 0 && (
-        <div className="bg-szn-card rounded-2xl border border-szn-border p-6 mb-8">
+        <div className="bg-szn-card rounded-lg border border-szn-border p-6 mb-8">
           <h3 className="font-semibold text-szn-text-1 mb-4">Test Federated Search</h3>
           <div className="flex gap-4">
             <input
@@ -496,7 +496,7 @@ export function FederatedClient() {
       {/* Add Connector Wizard Modal */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-szn-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+          <div className="bg-szn-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto">
             {/* Wizard Header */}
             <div className="p-6 border-b sticky top-0 bg-szn-card rounded-t-2xl">
               <div className="flex items-center justify-between mb-4">

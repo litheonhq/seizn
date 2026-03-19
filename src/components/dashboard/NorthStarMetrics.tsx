@@ -145,7 +145,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (isLoading) {
     return (
-      <div className={`szn-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
+      <div className={`szn-card rounded-lg overflow-hidden ${compact ? "p-4" : "p-6"}`}>
         <div className="animate-pulse">
           <div className="h-6 bg-szn-surface rounded w-48 mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -164,7 +164,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (error) {
     return (
-      <div className={`szn-card rounded-2xl overflow-hidden ${compact ? "p-4" : "p-6"}`}>
+      <div className={`szn-card rounded-lg overflow-hidden ${compact ? "p-4" : "p-6"}`}>
         <div className="flex items-center gap-3 text-amber-600">
           <WarningIcon className="w-5 h-5" />
           <p className="text-sm">{error}</p>
@@ -179,7 +179,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
 
   if (compact) {
     return (
-      <div className="szn-card rounded-2xl p-4">
+      <div className="szn-card rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-szn-text-1 text-sm">
             {t("dashboard.northStar.title") || "North Star Metrics"}
@@ -215,12 +215,12 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
   }
 
   return (
-    <div className="szn-card rounded-2xl overflow-hidden">
+    <div className="szn-card rounded-lg overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b theme-border flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
-            <ChartIcon className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-lg bg-szn-surface flex items-center justify-center">
+            <ChartIcon className="w-5 h-5 text-szn-text-2" />
           </div>
           <div>
             <h2 className="font-semibold text-szn-text-1">
@@ -258,8 +258,8 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.ttft.trend)}
           trendIcon={getTrendIcon(metrics.ttft.trend)}
           sampleSize={metrics.ttft.sampleSize}
-          icon={<ClockIcon className="w-5 h-5 text-white" />}
-          gradient="from-cyan-400 to-blue-500"
+          icon={<ClockIcon className="w-4 h-4 text-cyan-500" />}
+          gradient=""
         />
 
         {/* TTD - Time to Debug */}
@@ -278,8 +278,8 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.ttd.trend)}
           trendIcon={getTrendIcon(metrics.ttd.trend)}
           sampleSize={metrics.ttd.sampleSize}
-          icon={<BugIcon className="w-5 h-5 text-white" />}
-          gradient="from-amber-400 to-orange-500"
+          icon={<BugIcon className="w-4 h-4 text-amber-500" />}
+          gradient=""
         />
 
         {/* Cost Predictability */}
@@ -298,8 +298,8 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.costPredictability.trend)}
           trendIcon={getTrendIcon(metrics.costPredictability.trend)}
           sampleSize={metrics.costPredictability.totalBudgetChecks}
-          icon={<ShieldIcon className="w-5 h-5 text-white" />}
-          gradient="from-green-400 to-szn-success"
+          icon={<ShieldIcon className="w-4 h-4 text-green-500" />}
+          gradient=""
         />
 
         {/* Regression Rate */}
@@ -318,8 +318,8 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.regressionRate.trend)}
           trendIcon={getTrendIcon(metrics.regressionRate.trend)}
           sampleSize={metrics.regressionRate.totalEvals}
-          icon={<AlertIcon className="w-5 h-5 text-white" />}
-          gradient="from-rose-400 to-red-500"
+          icon={<AlertIcon className="w-4 h-4 text-rose-500" />}
+          gradient=""
         />
       </div>
 
@@ -349,7 +349,7 @@ interface MetricCardProps {
   trendIcon: React.ReactNode;
   sampleSize: number;
   icon: React.ReactNode;
-  gradient: string;
+  gradient?: string;
 }
 
 function MetricCard({
@@ -363,12 +363,12 @@ function MetricCard({
   trendIcon,
   sampleSize,
   icon,
-  gradient,
+  gradient: _gradient,
 }: MetricCardProps) {
   return (
-    <div className="bg-szn-surface-1 rounded-xl p-4 border border-szn-border hover:shadow-md transition-shadow">
+    <div className="bg-szn-surface-1 rounded-lg p-4 border border-szn-border hover:border-szn-text-3/20 transition-colors">
       <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+        <div className="w-9 h-9 rounded-lg bg-szn-card border border-szn-border flex items-center justify-center">
           {icon}
         </div>
         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${trendColor}`}>

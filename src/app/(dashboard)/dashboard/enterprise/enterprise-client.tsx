@@ -152,7 +152,7 @@ export function EnterpriseClient() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
           {error}
         </div>
       )}
@@ -180,7 +180,7 @@ export function EnterpriseClient() {
       {activeTab === "sso" && (
         <div className="space-y-6">
           {ssoConfig ? (
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
@@ -219,8 +219,8 @@ export function EnterpriseClient() {
               </div>
             </div>
           ) : (
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-8 text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-8 text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
                 <span className="text-3xl">🔐</span>
               </div>
               <h3 className="font-semibold text-szn-text-1 mb-2">
@@ -240,7 +240,7 @@ export function EnterpriseClient() {
 
           {/* Provider Selection */}
           {!ssoConfig && !showSSOSetup && (
-            <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
               <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.sso.supportedProviders")}</h3>
               <div className="grid grid-cols-3 gap-4">
                 {providers.map((provider) => (
@@ -264,7 +264,7 @@ export function EnterpriseClient() {
       {/* SCIM Tab */}
       {activeTab === "scim" && (
         <div className="space-y-6">
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="font-semibold text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.title")}</h3>
@@ -410,7 +410,7 @@ export function EnterpriseClient() {
       {/* Settings Tab */}
       {activeTab === "settings" && (
         <div className="space-y-6">
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.features.title")}</h3>
             <div className="grid grid-cols-2 gap-4">
               <FeatureCard
@@ -472,7 +472,7 @@ export function EnterpriseClient() {
             </div>
           </div>
 
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.limits.title")}</h3>
             <div className="grid grid-cols-3 gap-6">
               <LimitCard label={t("dashboard.enterpriseDashboard.limits.users")} value={t("dashboard.enterpriseDashboard.limits.unlimited")} max="∞" />
@@ -484,7 +484,7 @@ export function EnterpriseClient() {
             </div>
           </div>
 
-          <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-szn-text-1">{t("dashboard.enterpriseDashboard.support.title")}</h3>
@@ -506,7 +506,7 @@ export function EnterpriseClient() {
       {/* SSO Setup Modal */}
       {showSSOSetup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-szn-card rounded-2xl max-w-2xl w-full p-6">
+          <div className="bg-szn-card rounded-lg max-w-2xl w-full p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.configure")}</h2>
               <button

@@ -55,7 +55,7 @@ export function TraceDiffClient() {
   return (
     <div className="space-y-6">
       {/* Trace Selection */}
-      <div className="bg-white rounded-2xl border shadow-sm p-6">
+      <div className="bg-white rounded-lg border shadow-sm p-6">
         <h2 className="font-semibold text-gray-900 mb-4">Select Traces to Compare</h2>
 
         <div className="grid grid-cols-2 gap-6">

@@ -60,7 +60,7 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
   const tip = tips[currentTip];
 
   return (
-    <div className="mb-6 szn-card border-2 border-szn-accent/20 rounded-2xl overflow-hidden">
+    <div className="mb-6 szn-card border-2 border-szn-accent/20 rounded-lg overflow-hidden">
       {/* Header */}
       <div className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5 flex items-center justify-between">
         <div className="flex items-center gap-3">

@@ -147,7 +147,7 @@ export function PinDialog({
       />
 
       {/* Modal */}
-      <div className="relative bg-szn-card rounded-2xl shadow-xl max-w-md w-full mx-4 border border-szn-border overflow-hidden">
+      <div className="relative bg-szn-card rounded-lg shadow-xl max-w-md w-full mx-4 border border-szn-border overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-szn-border bg-szn-accent/10">
           <div className="flex items-center gap-3">

@@ -324,7 +324,7 @@ export default function MindMapCanvas() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-szn-text-2">Loading mind map...</p>
@@ -336,7 +336,7 @@ export default function MindMapCanvas() {
   // Error state
   if (error) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
         <div className="text-center space-y-4 max-w-md">
           <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto">
             <svg
@@ -371,7 +371,7 @@ export default function MindMapCanvas() {
   // Empty state
   if (!data || data.nodes.length === 0) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-2xl">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
         <div className="text-center space-y-4 max-w-md">
           <div className="w-16 h-16 rounded-full bg-szn-surface flex items-center justify-center mx-auto">
             <svg
@@ -415,7 +415,7 @@ export default function MindMapCanvas() {
       )}
 
       {/* Main Canvas */}
-      <div className="flex-1 bg-szn-bg rounded-2xl border border-szn-border overflow-hidden">
+      <div className="flex-1 bg-szn-bg rounded-lg border border-szn-border overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}

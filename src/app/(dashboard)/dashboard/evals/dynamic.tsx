@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const EvalsSkeleton = () => (
   <div className="space-y-6">
     {/* Header skeleton */}
-    <div className="szn-card rounded-2xl p-6">
+    <div className="szn-card rounded-lg p-6">
       <div className="animate-pulse flex items-center gap-4">
         <div className="w-12 h-12 rounded-xl bg-szn-surface-1" />
         <div>
@@ -18,7 +18,7 @@ const EvalsSkeleton = () => (
 
     {/* Content skeleton */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="szn-card rounded-2xl p-4">
+      <div className="szn-card rounded-lg p-4">
         <div className="animate-pulse space-y-3">
           <div className="h-5 w-32 bg-szn-surface-1 rounded" />
           {[1, 2, 3].map((i) => (
@@ -26,7 +26,7 @@ const EvalsSkeleton = () => (
           ))}
         </div>
       </div>
-      <div className="lg:col-span-2 szn-card rounded-2xl p-6">
+      <div className="lg:col-span-2 szn-card rounded-lg p-6">
         <div className="animate-pulse">
           <div className="h-6 w-48 bg-szn-surface-1 rounded mb-4" />
           <div className="h-64 bg-szn-surface rounded" />

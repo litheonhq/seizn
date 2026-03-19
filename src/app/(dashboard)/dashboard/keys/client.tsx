@@ -180,7 +180,7 @@ export default function ApiKeysClient() {
       </div>
 
       {/* API Keys List */}
-      <div className="szn-card rounded-2xl overflow-hidden">
+      <div className="szn-card rounded-lg overflow-hidden">
         <div className="p-4 border-b border-szn-border">
           <h2 className="font-semibold text-szn-text-1">{t("dashboard.keysPage.activeKeys")}</h2>
         </div>
@@ -281,7 +281,7 @@ export default function ApiKeysClient() {
       </div>
 
       {/* Usage Guide */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.keysPage.usageGuide")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
@@ -327,7 +327,7 @@ export default function ApiKeysClient() {
               /* Key Created Success */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.keyCreated")}</h2>
@@ -352,7 +352,7 @@ export default function ApiKeysClient() {
                   {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
                 </button>
 
-                <div className="mt-4 rounded-2xl border border-szn-border bg-szn-bg p-4">
+                <div className="mt-4 rounded-lg border border-szn-border bg-szn-bg p-4">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <h3 className="text-sm font-medium text-szn-text-1">
@@ -395,7 +395,7 @@ export default function ApiKeysClient() {
               /* Create Key Form */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl theme-gradient-btn flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
                     <KeyIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.createKeyTitle")}</h2>
@@ -463,7 +463,7 @@ export default function ApiKeysClient() {
             </button>
 
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shadow-lg">
                 <AlertIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-xl font-bold text-szn-text-1">
@@ -521,7 +521,7 @@ export default function ApiKeysClient() {
               /* Key Rotated Success */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.keyRotated")}</h2>
@@ -556,7 +556,7 @@ export default function ApiKeysClient() {
               /* Rotate Confirmation */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-szn-accent to-szn-accent/70 flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-accent to-szn-accent/70 flex items-center justify-center shadow-lg">
                     <RotateIcon className="w-7 h-7 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-szn-text-1">
