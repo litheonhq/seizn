@@ -6,7 +6,7 @@
   "nav": {
     "features": "Funciones",
     "pricing": "Precios",
-    "docs": "Docs",
+    "docs": "Documentación",
     "login": "Iniciar Sesión",
     "getStarted": "Comenzar"
   },
@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Todos los derechos reservados.",
+    "copyright": "© {year} Litheon LLC. Todos los derechos reservados.",
     "privacy": "Privacidad",
     "terms": "Términos",
     "contact": "Contacto"
@@ -248,7 +248,7 @@
       "days90": "90 Días",
       "loading": "Cargando...",
       "totalApiCalls": "Total Llamadas API",
-      "totalTokens": "Total Tokens",
+      "totalTokens": "Total de tokens",
       "estimatedCost": "Costo Estimado",
       "avgLatency": "Latencia Promedio",
       "dailyApiCalls": "Llamadas API Diarias",
@@ -282,8 +282,8 @@
       "createApiKey": "Crear Clave API"
     },
     "language": "Idioma",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Organizaciones",
+    "docs": "Documentación",
     "nav": {
       "overview": "Resumen",
       "memories": "Memorias",
@@ -316,8 +316,8 @@
         "system": "SISTEMA"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
+    "pinSidebar": "Fijar barra lateral",
+    "unpinSidebar": "Contraer barra lateral",
     "playground": "Playground",
     "playgroundPage": {
       "title": "Consola de depuracion",
@@ -345,7 +345,15 @@
       "tracingDisabled": "Rastreo desactivado",
       "executionTime": "Tiempo de ejecucion",
       "tokensUsed": "Tokens utilizados",
-      "steps": "Pasos",
+      "steps": {
+        "parseQuery": "Analizar consulta",
+        "createEmbedding": "Crear embedding",
+        "vectorSearch": "Búsqueda vectorial",
+        "keywordSearch": "Búsqueda por palabras clave",
+        "mergeResults": "Combinar resultados",
+        "rerank": "Reordenar resultados",
+        "returnResults": "Devolver resultados"
+      },
       "embedding": "Incrustacion",
       "vectorSearch": "Busqueda vectorial",
       "reranking": "Reordenamiento",
@@ -411,18 +419,18 @@
       "rerankBefore": "Antes de Rerank",
       "rerankAfter": "Después de Rerank",
       "rank": "Rango",
-      "replayFromLog": "Reproducir desde Registro",
-      "selectLog": "Selecciona un registro para reproducir",
-      "replaySettings": "Configuración de Reproducción",
-      "compareResults": "Comparar Resultados",
+      "replayFromLog": "Reproducir desde registro",
+      "selectLog": "Seleccionar registro",
+      "replaySettings": "Config. reproducción",
+      "compareResults": "Comparar resultados",
       "original": "Original",
       "replay": "Reproducción",
       "diff": "Diferencia",
       "hitAtK": "Hit@K",
-      "overlap": "Superposición",
+      "overlap": "Solapamiento",
       "added": "Agregado",
       "removed": "Eliminado",
-      "rankChanges": "Cambios de Rango"
+      "rankChanges": "Cambios de posición"
     },
     "settingsPage": {
       "title": "Configuracion",
@@ -430,7 +438,7 @@
       "saving": "Guardando...",
       "saved": "Guardado",
       "saveFailed": "Error al guardar",
-      "save": "Save Changes",
+      "save": "Guardar cambios",
       "account": "Cuenta",
       "email": "Correo electronico",
       "name": "Nombre",
@@ -524,7 +532,7 @@
         "revokeSession": "Revocar sesion",
         "revokeAllSessions": "Revocar todas las demas sesiones",
         "changePassword": "Cambiar contrasena",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Gestione la seguridad de su contraseña",
         "changePasswordHint": "Actualiza tu contrasena regularmente para mayor seguridad",
         "currentPassword": "Contrasena actual",
         "newPassword": "Nueva contrasena",
@@ -588,43 +596,43 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Resumen del uso de su memoria AI",
+      "totalMemories": "Memorias totales",
+      "apiCalls": "Llamadas API",
+      "activeKeys": "Claves API activas",
+      "currentPlan": "Plan actual",
+      "usage": "Uso",
+      "today": "Hoy",
+      "dailyLimit": "Límite diario",
+      "recentMemories": "Memorias recientes",
+      "viewAll": "Ver todo",
+      "noMemories": "Sin memorias aún",
+      "noMemoriesHint": "Comience agregando su primera memoria vía API",
+      "quickStart": "Inicio rápido",
+      "createApiKey": "Crear clave API",
+      "getStartedApi": "Comience con la API",
+      "viewDocumentation": "Ver documentación",
+      "learnSeizn": "Aprenda a usar Seizn",
+      "createOrganization": "Crear organización",
+      "collaborateTeam": "Colabore con su equipo",
+      "quickExample": "Ejemplo rápido",
+      "manageKeys": "Gestionar claves",
+      "upgradePlan": "Mejorar plan",
       "apiUsageChart": "Uso de API",
       "last7days": "Últimos 7 días",
-      "viewDetails": "Ver Detalles",
-      "noUsageData": "Aún no hay datos de uso",
-      "recentActivity": "Actividad Reciente",
+      "viewDetails": "Ver detalles",
+      "noUsageData": "Sin datos de uso",
+      "recentActivity": "Actividad reciente",
       "last10Requests": "Últimas 10 solicitudes API",
-      "viewAllActivity": "Ver Todo",
-      "noActivityYet": "Aún no hay actividad API",
-      "noActivityDescription": "Envía tu primera solicitud API para ver actividad aquí",
-      "sendFirstRequest": "Enviar Primera Solicitud"
+      "viewAllActivity": "Ver todo",
+      "noActivityYet": "Sin actividad API",
+      "noActivityDescription": "Envíe su primera solicitud API para ver actividad aquí",
+      "sendFirstRequest": "Enviar primera solicitud"
     },
     "keysPage": {
       "title": "Claves API",
@@ -863,7 +871,7 @@
         "beta": "Beta",
         "comingSoon": "Próximamente"
       },
-      "docs": "Docs",
+      "docs": "Documentación",
       "copyInstall": "Copiar Instalación",
       "noResults": "No se encontraron integraciones que coincidan con tus criterios",
       "installation": "Instalación",
@@ -988,7 +996,7 @@
     },
     "enterpriseDashboard": {
       "title": "Empresa",
-      "badge": "Plan Empresarial",
+      "badge": "Plan Enterprise",
       "subtitle": "Configura SSO, SCIM y ajustes empresariales",
       "tabs": {
         "sso": "Inicio de Sesión Único",
@@ -1063,17 +1071,17 @@
         "disabled": "Deshabilitado"
       },
       "limits": {
-        "title": "Límites del Plan",
+        "title": "Límites del plan",
         "users": "Usuarios",
         "unlimited": "Ilimitado",
         "apiCalls": "Llamadas API",
-        "apiCallsValue": "10M / month",
+        "apiCallsValue": "10M/mes",
         "storage": "Almacenamiento",
         "storageValue": "1TB",
         "collections": "Colecciones",
         "documents": "Documentos",
         "retention": "Retención",
-        "retentionValue": "365 days"
+        "retentionValue": "365 días"
       },
       "support": {
         "title": "Soporte Dedicado",
@@ -1439,29 +1447,29 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "Configura callbacks HTTP para notificaciones de eventos en tiempo real",
+      "subtitle": "Configure callbacks HTTP para notificaciones de eventos en tiempo real",
       "create": "Crear Webhook",
       "stats": {
-        "total": "Total de Webhooks",
+        "total": "Total Webhooks",
         "active": "Activos",
         "failing": "Fallando",
-        "deliveries": "Total de Entregas"
+        "deliveries": "Entregas totales"
       },
       "tabs": {
         "endpoints": "Endpoints",
-        "deliveries": "Entregas Recientes"
+        "deliveries": "Entregas recientes"
       },
       "success": "exitoso",
       "failed": "fallido",
-      "lastTriggered": "Último activado",
+      "lastTriggered": "Último disparo",
       "edit": "Editar",
       "delete": "Eliminar",
       "retry": "Reintentar",
-      "deleteConfirm": "¿Estás seguro de que deseas eliminar este webhook? Esta acción no se puede deshacer.",
+      "deleteConfirm": "¿Está seguro de eliminar este webhook? Esta acción no se puede deshacer.",
       "empty": {
         "title": "No hay webhooks configurados",
-        "description": "Crea un webhook para recibir notificaciones en tiempo real sobre eventos.",
-        "cta": "Crear Tu Primer Webhook"
+        "description": "Cree un webhook para recibir notificaciones en tiempo real.",
+        "cta": "Crear su primer Webhook"
       },
       "table": {
         "event": "Evento",
@@ -1473,10 +1481,44 @@
       "modal": {
         "title": "Crear Webhook",
         "name": "Nombre",
-        "url": "URL del Endpoint",
-        "events": "Eventos a Suscribir",
+        "url": "URL del endpoint",
+        "events": "Eventos a suscribir",
         "cancel": "Cancelar",
         "create": "Crear Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Memoria creada",
+          "desc": "Cuando se almacena una nueva memoria"
+        },
+        "memory_updated": {
+          "label": "Memoria actualizada",
+          "desc": "Cuando se modifica una memoria"
+        },
+        "memory_deleted": {
+          "label": "Memoria eliminada",
+          "desc": "Cuando se elimina una memoria"
+        },
+        "extraction_completed": {
+          "label": "Extracción completada",
+          "desc": "Cuando finaliza la extracción"
+        },
+        "query_executed": {
+          "label": "Consulta ejecutada",
+          "desc": "Cuando se realiza una consulta RAG"
+        },
+        "key_created": {
+          "label": "Clave API creada",
+          "desc": "Cuando se genera una nueva clave"
+        },
+        "key_revoked": {
+          "label": "Clave API revocada",
+          "desc": "Cuando se revoca una clave"
+        },
+        "usage_threshold": {
+          "label": "Umbral de uso",
+          "desc": "Cuando el uso excede el umbral"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,51 +1697,56 @@
     "socialProof": "Confiado por equipos que operan agentes a escala",
     "liveDemo": "Demo en Vivo",
     "heroTagline": "Prueba la API en vivo — sin registro",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "copySnippetHint": "Copie el fragmento de código",
+    "copySnippetTitle": "Copiar este fragmento",
+    "copySnippetSubtitle": "Generado a partir de su configuración exacta",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "title": "¿Por qué Seizn en lugar de LangChain + Pinecone?",
+      "subtitle": "Deje de ensamblar herramientas fragmentadas. Obtenga todo lo que necesita en un stack integrado.",
+      "tracingTitle": "Trazabilidad + Evaluación integrada",
+      "tracingDesc": "Cada solicitud se rastrea por defecto. Ejecute evaluaciones, detecte regresiones y depure problemas de producción sin agregar LangSmith.",
+      "tracingBadge": "Activado por defecto",
+      "autopilotTitle": "Autopilot consciente del presupuesto",
+      "autopilotDesc": "Establezca un presupuesto de latencia o costo, y Autopilot elige automáticamente la estrategia óptima.",
+      "autopilotBadge": "Opcional",
+      "governanceTitle": "Gobernanza + Logs de auditoría",
+      "governanceDesc": "Detección de PII, olvido compatible con GDPR y pistas de auditoría completas. Diseñado para equipos que necesitan cumplimiento.",
+      "governanceBadge": "Por defecto para equipos",
+      "lessGlueTitle": "Menos piezas móviles",
+      "lessGlueDesc": "No más malabares con LangChain + Pinecone + LangSmith + filtros PII personalizados. Un SDK, un panel, una factura.",
+      "lessGlueBadge": "Menos código de unión"
     },
     "trust": {
-      "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "security": "RLS + Hash de claves",
+      "securityDesc": "Seguro por defecto",
+      "rateLimits": "Límites de tasa",
+      "rateLimitsDesc": "Alertas de uso",
+      "auditLogs": "Logs de auditoría",
+      "auditLogsDesc": "Trazabilidad completa"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "title": "Precios simples y transparentes",
+      "subtitle": "Comience gratis con 12.000 memorias. Actualice a Starter para memorias E2E cifradas.",
+      "viewPricing": "Ver precios",
+      "contactSales": "Contactar ventas"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
-      "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "docs": "Documentación",
+      "pricing": "Precios",
+      "enterprise": "Empresa",
+      "getApiKey": "Obtener clave API",
+      "tryDemo": "Probar demo",
+      "compare": "Comparar",
+      "limits": "Límites",
+      "status": "Estado",
+      "help": "Ayuda",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Constructor de Solicitudes",
       "query": "Consulta",
       "queryPlaceholder": "Ingrese su consulta de búsqueda...",
-      "tryExamples": "Ver ejemplos",
+      "tryExamples": "Probar ejemplos",
       "dataset": "Conjunto de datos",
       "latencyBudget": "Presupuesto de latencia",
       "fast": "rápido",
@@ -1719,7 +1766,8 @@
         "techDocs": "Documentación Técnica",
         "legalContracts": "Contratos Legales",
         "researchPapers": "Artículos de Investigación"
-      }
+      },
+      "advanced": "Avanzado"
     },
     "resultsPanel": {
       "searching": "Buscando...",
@@ -1740,7 +1788,43 @@
     },
     "tabs": {
       "results": "Resultados",
-      "trace": "Rastreo"
+      "trace": "Traza",
+      "cost": "Costo"
+    },
+    "chips": {
+      "trace": "Traza",
+      "eval": "Evaluación",
+      "policy": "Política"
+    },
+    "playgroundTitle": "Pruébalo ahora",
+    "firstRetrievalComplete": "Primera recuperación completada",
+    "costPanel": {
+      "calculating": "Calculando costos...",
+      "noCost": "Ejecute una consulta para ver el desglose",
+      "costBreakdown": "Desglose de costos",
+      "component": "Componente",
+      "cost": "Costo",
+      "embedding": "Embedding",
+      "vectorSearch": "Búsqueda vectorial",
+      "rerank": "Reranking",
+      "answerContract": "Contrato de respuesta",
+      "total": "Costo total",
+      "usage": "Uso",
+      "tokensIn": "Tokens entrada",
+      "tokensOut": "Tokens salida",
+      "queryUnits": "Unidades de consulta",
+      "estimatedMonthly": "Estimación mensual",
+      "basedOn": "Basado en",
+      "queriesPerDay": "consultas/día"
+    },
+    "errorDisplay": {
+      "error": "Error",
+      "errorCode": "Código",
+      "traceId": "ID de traza",
+      "hint": "Sugerencia",
+      "tryAgain": "Reintentar",
+      "copyTraceId": "Copiar ID de traza",
+      "copied": "¡Copiado!"
     }
   },
   "docs": {
@@ -1765,7 +1849,9 @@
       "resources": "Recursos",
       "security": "Seguridad",
       "sdks": "SDKs",
-      "faq": "FAQ"
+      "faq": "Preguntas frecuentes",
+      "tutorial": "Tutorial de 5 min",
+      "integrations": "Integraciones"
     },
     "hero": {
       "title": "Documentación API",
@@ -1839,7 +1925,9 @@
       "enterprise": "Empresarial",
       "unlimited": "Ilimitado",
       "exceeded": "Cuando excedes tu límite de tasa, la API devuelve una respuesta",
-      "response": "."
+      "response": ".",
+      "monthlyApiCalls": "Llamadas API mensuales",
+      "starter": "Starter"
     },
     "errors": {
       "title": "Códigos de Error",
@@ -1881,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Todos los derechos reservados."
+      "copyright": "© {year} Litheon LLC. Todos los derechos reservados."
     },
     "faqPage": {
       "title": "Preguntas Frecuentes",
@@ -1898,7 +1986,8 @@
         "extraction": "Extracción",
         "operations": "Operaciones",
         "securityCompliance": "Seguridad y Cumplimiento",
-        "technology": "Tecnología"
+        "technology": "Tecnología",
+        "mcpDevTools": "MCP y herramientas de desarrollo"
       },
       "items": [
         {
@@ -2044,79 +2133,79 @@
       ]
     },
     "componentsPage": {
-      "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "title": "Componentes UI",
+      "subtitle": "Documentación completa de la biblioteca de componentes UI de Seizn.",
+      "all": "Todos",
       "components": {
         "graphCanvas": {
-          "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
+          "description": "Componente principal del lienzo gráfico usando React Flow."
         },
         "nodeRenderer": {
-          "description": "Custom node renderer for graph visualization. Displays node type, status, permissions with styled appearance."
+          "description": "Renderizador de nodos personalizado para visualización gráfica."
         },
         "edgeRenderer": {
-          "description": "Custom edge renderer for graph connections. Supports directed, undirected, and bidirectional edges with custom styling."
+          "description": "Renderizador de aristas personalizado para conexiones gráficas."
         },
         "graphControls": {
-          "description": "Control panel for graph filtering and zoom. Filter by node type, edge type, and search."
+          "description": "Panel de control para filtrado y zoom del gráfico."
         },
         "permissionPanel": {
-          "description": "Side panel displaying detailed permission information for selected nodes."
+          "description": "Panel lateral que muestra información detallada de permisos."
         },
         "explainPanel": {
-          "description": "Expandable panel showing full retrieval explanation including score breakdown and attributions."
+          "description": "Panel expandible que muestra la explicación completa de recuperación."
         },
         "scoreBreakdown": {
-          "description": "Visual breakdown of relevance score components (vector, keyword, rerank, recency)."
+          "description": "Desglose visual de componentes de puntuación de relevancia."
         },
         "attributionList": {
-          "description": "List of source attributions showing which documents contributed to the result."
+          "description": "Lista de atribuciones de fuente mostrando documentos contribuyentes."
         },
         "highlightedPassage": {
-          "description": "Text passage with highlighted matching spans (exact match, semantic match, keyword, entity)."
+          "description": "Pasaje de texto con coincidencias resaltadas."
         },
         "retOpsDashboard": {
-          "description": "Main dashboard for retrieval operations monitoring with auto-refresh and period selection."
+          "description": "Panel principal de monitoreo de operaciones de recuperación."
         },
         "metricsOverview": {
-          "description": "Overview cards showing key metrics: QPS, latency, cache hit rate, error rate, MRR, groundedness."
+          "description": "Tarjetas resumen mostrando métricas clave."
         },
         "queryVolumeChart": {
-          "description": "Line chart showing query volume over time with search type distribution."
+          "description": "Gráfico de líneas mostrando volumen de consultas."
         },
         "latencyDistribution": {
-          "description": "Latency percentile bar chart and trend visualization with SLO compliance indicator."
+          "description": "Gráfico de barras de percentiles de latencia."
         },
         "qualityTrend": {
-          "description": "Area chart showing search quality trends (MRR, nDCG, groundedness) with precision/recall at K."
+          "description": "Gráfico de área mostrando tendencias de calidad de búsqueda."
         },
         "topQueries": {
-          "description": "Ranked list of most frequent queries with latency, cache hit rate, and result count."
+          "description": "Lista clasificada de consultas más frecuentes."
         },
         "alertsPanel": {
-          "description": "Alert management panel with severity filtering, acknowledgment, and status tracking."
+          "description": "Panel de gestión de alertas con filtrado por severidad."
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "usage": "Ejemplo de uso",
+      "propName": "Nombre",
+      "propType": "Tipo",
+      "propDefault": "Predeterminado",
+      "propDescription": "Descripción",
+      "copy": "Copiar",
+      "copied": "¡Copiado!",
       "categories": {
         "graph": {
-          "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "title": "Componentes de gráfico",
+          "description": "Visualización interactiva de gráficos"
         },
         "explain": {
-          "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "title": "Componentes de explicación",
+          "description": "Visualización de explicabilidad para resultados RAG"
         },
         "retops": {
-          "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "title": "Componentes RetOps",
+          "description": "Panel de monitoreo de operaciones de recuperación"
         }
       }
     },
@@ -2174,11 +2263,12 @@
     "faq": {
       "categories": {
         "gettingStarted": "Primeros pasos",
-        "coreConcepts": "Conceptos fundamentales",
-        "searchRetrieval": "Busqueda y recuperacion",
-        "extraction": "Extraccion de datos",
+        "coreConcepts": "Conceptos clave",
+        "searchRetrieval": "Búsqueda y recuperación",
+        "extraction": "Extracción",
         "operations": "Operaciones",
-        "security": "Seguridad y privacidad"
+        "security": "Seguridad y cumplimiento",
+        "all": "Todas"
       },
       "gettingStarted": {
         "q1": {
@@ -2192,6 +2282,10 @@
         "q3": {
           "question": "Que lenguajes de programacion son compatibles?",
           "answer": "Soportamos oficialmente JavaScript/TypeScript (Node.js) y Python. Para otros lenguajes, puedes usar la API REST directamente."
+        },
+        "q4": {
+          "question": "What's the fastest way to build a PoC?",
+          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
         }
       },
       "coreConcepts": {
@@ -2206,6 +2300,14 @@
         "q3": {
           "question": "Que es el parametro user_id?",
           "answer": "El user_id asocia memorias con un usuario especifico, permitiendo experiencias personalizadas para cada usuario."
+        },
+        "q4": {
+          "question": "When should I use scope (user/session/agent)?",
+          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
+        },
+        "q5": {
+          "question": "What are memory_types and why do they matter?",
+          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
         }
       },
       "searchRetrieval": {
@@ -2248,6 +2350,10 @@
         "q3": {
           "question": "Hay limites de tasa?",
           "answer": "Si, los limites varian segun el plan. El plan gratuito permite 100 solicitudes por minuto. Consulta la pagina de precios para mas detalles."
+        },
+        "q4": {
+          "question": "How do I reduce costs?",
+          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
         }
       },
       "security": {
@@ -2271,7 +2377,863 @@
           "question": "Tienen certificacion SOC 2?",
           "answer": "Estamos en proceso de certificacion SOC 2. Contacta a nuestro equipo de ventas para mas informacion."
         }
+      },
+      "title": "Preguntas frecuentes",
+      "subtitle": "Preguntas comunes sobre Seizn Memory API.",
+      "nav": {
+        "dashboard": "Panel"
+      },
+      "cta": {
+        "title": "¿Aún tiene preguntas?",
+        "subtitle": "Consulte nuestra documentación o contacte al equipo de soporte.",
+        "readDocs": "Leer documentación",
+        "contactSupport": "Contactar soporte"
+      },
+      "footer": {
+        "rights": "Todos los derechos reservados."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "Inicio rápido en 5 minutos | Seizn",
+        "description": "Agregue memoria AI en 5 minutos con solo 10 líneas de código"
+      },
+      "badge": "Tutorial de 5 min",
+      "noCreditCard": "Sin tarjeta de crédito",
+      "title": "Comience con Seizn",
+      "subtitle": "Agregue memoria persistente a su AI en menos de 5 minutos.",
+      "getApiKey": "Obtener clave API",
+      "fullExample": "Ejemplo completo (10 líneas)",
+      "copy": "Copiar",
+      "copied": "¡Copiado!",
+      "progress": "Progreso",
+      "stepsLabel": "pasos",
+      "steps": {
+        "getApiKey": {
+          "title": "Obtenga su clave API",
+          "time": "30 seg",
+          "description": "Regístrese y genere su clave API desde el panel.",
+          "actionLabel": "Ir al panel"
+        },
+        "install": {
+          "title": "Instale el SDK",
+          "time": "30 seg",
+          "description": "Instale el SDK de Seizn con su gestor de paquetes preferido."
+        },
+        "ingest": {
+          "title": "Ingrese documentos",
+          "time": "30 seg",
+          "description": "Suba documentos a su dataset para recuperación."
+        },
+        "query": {
+          "title": "Ejecute su primera consulta",
+          "time": "10 seg",
+          "description": "Busque sus documentos con una consulta en lenguaje natural."
+        }
+      },
+      "completion": {
+        "title": "¡Felicitaciones!",
+        "description": "Ha completado el inicio rápido. Su pipeline de recuperación está listo con trazabilidad integrada.",
+        "readDocs": "Leer documentación",
+        "goToDashboard": "Ir al panel"
+      },
+      "expectedOutput": {
+        "title": "Salida esperada",
+        "description": "Cada consulta devuelve resultados, traza y desglose de costos:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "Referencia API",
+          "description": "Explore todos los endpoints y opciones para casos avanzados."
+        },
+        "sdkExamples": {
+          "title": "Ejemplos SDK",
+          "description": "Ejemplos para copiar y pegar en Python, TypeScript y más."
+        },
+        "faq": {
+          "title": "Preguntas frecuentes",
+          "description": "Preguntas comunes sobre tipos de memoria, namespaces y mejores prácticas."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "Referencia API | Seizn",
+        "description": "Documentación completa de la API de Seizn"
+      },
+      "title": "Referencia API",
+      "description": "Documentación completa para todas las APIs de Seizn.",
+      "auth": {
+        "title": "Autenticación",
+        "description": "Todos los endpoints requieren autenticación mediante clave API."
+      },
+      "sidebar": {
+        "title": "Grupos API"
+      },
+      "endpoint": {
+        "parameters": "Parámetros",
+        "requestBody": "Cuerpo de solicitud",
+        "response": "Respuesta",
+        "errorCodes": "Códigos de error"
+      },
+      "table": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "required": "Requerido",
+        "description": "Descripción",
+        "code": "Código",
+        "message": "Mensaje"
+      },
+      "copy": "Copiar",
+      "copied": "¡Copiado!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "Tutorial de 5 minutos | Seizn",
+        "description": "Aprenda a agregar memoria AI en 5 minutos"
+      },
+      "breadcrumb": "Tutorial",
+      "badge": "Tutorial de 5 minutos",
+      "noCreditCard": "Sin tarjeta de crédito",
+      "title": "Agregue memoria AI en 5 minutos",
+      "subtitle": "Siga esta guía paso a paso para dar a su AI memoria persistente.",
+      "getApiKey": "Obtener clave API",
+      "copy": "Copiar",
+      "copied": "¡Copiado!",
+      "progress": "Progreso",
+      "stepsLabel": "pasos",
+      "steps": {
+        "step1": {
+          "title": "Obtenga su clave API",
+          "time": "30 seg",
+          "description": "Regístrese gratis y genere su clave API.",
+          "instruction1": "Regístrese o inicie sesión",
+          "instruction2": "Navegue a Claves API",
+          "instruction3": "Haga clic en \"Crear nueva clave\" y cópiela",
+          "actionLabel": "Ir al panel"
+        },
+        "step2": {
+          "title": "Instale el SDK",
+          "time": "30 seg",
+          "description": "Elija su lenguaje preferido e instale el SDK."
+        },
+        "step3": {
+          "title": "Guarde su primera memoria",
+          "time": "2 min",
+          "description": "Almacene información que su AI debe recordar entre sesiones."
+        },
+        "step4": {
+          "title": "Busque memorias",
+          "time": "2 min",
+          "description": "Recupere memorias relevantes usando consultas en lenguaje natural."
+        },
+        "step5": {
+          "title": "Verifique resultados",
+          "time": "30 seg",
+          "description": "Compruebe que su memoria se almacenó y recuperó correctamente.",
+          "hint": "Debería ver una respuesta como esta:",
+          "successTitle": "¡Éxito!",
+          "successDescription": "Su AI ahora tiene memoria persistente."
+        }
+      },
+      "completion": {
+        "title": "¡Felicitaciones!",
+        "description": "Ha completado el tutorial. Su AI ahora tiene memoria persistente.",
+        "readDocs": "Leer documentación",
+        "goToDashboard": "Ir al panel"
+      },
+      "nextSteps": {
+        "title": "¿Qué sigue?",
+        "apiReference": {
+          "title": "Referencia API",
+          "description": "Explore todos los endpoints."
+        },
+        "sdkExamples": {
+          "title": "Ejemplos SDK",
+          "description": "Ejemplos para Python, TypeScript y REST."
+        },
+        "faq": {
+          "title": "Preguntas frecuentes",
+          "description": "Tipos de memoria, namespaces y mejores prácticas."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integraciones | Seizn",
+        "description": "Integre Seizn con LangChain, LlamaIndex, OpenTelemetry y más"
+      },
+      "breadcrumb": "Integraciones",
+      "title": "Integraciones",
+      "subtitle": "Conecte Seizn con sus frameworks AI y herramientas de observabilidad favoritos.",
+      "cards": {
+        "mcpServer": {
+          "badge": "Nuevo",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Servidor MCP universal para asistentes de codificación AI."
+        },
+        "langchain": {
+          "badge": "Oficial",
+          "title": "LangChain",
+          "description": "Retriever drop-in para pipelines RAG de LangChain."
+        },
+        "llamaindex": {
+          "badge": "Oficial",
+          "title": "LlamaIndex",
+          "description": "Retriever nativo para motores de consulta LlamaIndex."
+        },
+        "opentelemetry": {
+          "badge": "Oficial",
+          "title": "OpenTelemetry",
+          "description": "Exporte trazas a Datadog, Grafana, Jaeger."
+        }
+      },
+      "comingSoon": {
+        "title": "Próximamente",
+        "description": "Más integraciones en desarrollo. ¡Díganos qué necesita!"
+      },
+      "backToDocs": "Volver a documentación"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "Integración LangChain | Seizn",
+        "description": "Retriever drop-in para pipelines RAG de LangChain"
+      },
+      "badge": "Oficial",
+      "title": "Integración LangChain",
+      "subtitle": "Retriever drop-in para pipelines RAG de LangChain con soporte completo de trazabilidad.",
+      "overview": {
+        "title": "Resumen en 60 segundos",
+        "description": "SeiznRetriever es un reemplazo drop-in para cualquier retriever de LangChain.",
+        "feature1": "Compatible con todas las cadenas y agentes LangChain",
+        "feature2": "Trazabilidad integrada para cada operación",
+        "feature3": "Soporta filtrado, reranking y búsqueda híbrida"
+      },
+      "installation": {
+        "title": "Instalación",
+        "description": "Instale el SDK de Seizn junto con LangChain."
+      },
+      "example": {
+        "title": "Ejemplo de 5 minutos",
+        "description": "Cree una cadena RAG con SeiznRetriever en pocas líneas."
+      },
+      "production": {
+        "title": "Consejos de producción",
+        "caching": {
+          "title": "Habilitar caché",
+          "description": "Reduzca latencia y costos cacheando consultas repetidas."
+        },
+        "reranking": {
+          "title": "Habilitar reranking",
+          "description": "Mejore la calidad con reranking de codificador cruzado."
+        },
+        "filtering": {
+          "title": "Filtrado por metadatos",
+          "description": "Filtre resultados por campos de metadatos."
+        }
+      },
+      "troubleshooting": {
+        "title": "Solución de problemas",
+        "errorColumn": "Error",
+        "causeColumn": "Causa",
+        "solutionColumn": "Solución",
+        "authCause": "Clave API inválida o faltante",
+        "authSolution": "Verifique la variable SEIZN_API_KEY",
+        "rateCause": "Demasiadas solicitudes",
+        "rateSolution": "Implemente retroceso exponencial",
+        "emptyCause": "Umbral alto o sin documentos",
+        "emptySolution": "Baje el umbral o verifique el dataset"
+      },
+      "nav": {
+        "backToIntegrations": "Volver a integraciones",
+        "nextLlamaIndex": "Integración LlamaIndex"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "Integración LlamaIndex | Seizn",
+        "description": "Retriever nativo para LlamaIndex"
+      },
+      "badge": "Oficial",
+      "title": "Integración LlamaIndex",
+      "subtitle": "Retriever nativo para motores de consulta LlamaIndex.",
+      "overview": {
+        "title": "Resumen en 60 segundos",
+        "description": "SeiznRetriever implementa la interfaz BaseRetriever de LlamaIndex.",
+        "feature1": "Integración nativa con motores LlamaIndex",
+        "feature2": "Soporte de streaming incluido",
+        "feature3": "Compatible con posprocesadores de nodos"
+      },
+      "installation": {
+        "title": "Instalación",
+        "description": "Instale el SDK junto con LlamaIndex."
+      },
+      "example": {
+        "title": "Ejemplo de 5 minutos",
+        "description": "Construya un motor de consulta con SeiznRetriever."
+      },
+      "production": {
+        "title": "Consejos de producción",
+        "streaming": {
+          "title": "Respuestas en streaming",
+          "description": "Habilite streaming para respuestas largas."
+        },
+        "hybrid": {
+          "title": "Búsqueda híbrida",
+          "description": "Combine búsqueda vectorial y por palabras clave."
+        },
+        "nodePostprocessors": {
+          "title": "Posprocesadores de nodos",
+          "description": "Encadene posprocesadores para filtrado avanzado."
+        }
+      },
+      "troubleshooting": {
+        "title": "Solución de problemas",
+        "errorColumn": "Error",
+        "causeColumn": "Causa",
+        "solutionColumn": "Solución",
+        "authCause": "Clave API inválida",
+        "authSolution": "Verifique SEIZN_API_KEY",
+        "datasetCause": "Dataset no encontrado",
+        "datasetSolution": "Verifique que el dataset existe",
+        "relevanceCause": "Desajuste consulta-documento",
+        "relevanceSolution": "Pruebe búsqueda híbrida"
+      },
+      "nav": {
+        "prevLangChain": "Integración LangChain",
+        "nextOpenTelemetry": "Integración OpenTelemetry"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "Integración OpenTelemetry | Seizn",
+        "description": "Exporte trazas vía OTLP"
+      },
+      "badge": "Oficial",
+      "title": "Integración OpenTelemetry",
+      "subtitle": "Exporte trazas de recuperación a su stack de observabilidad vía OTLP.",
+      "overview": {
+        "title": "Resumen en 60 segundos",
+        "description": "Seizn exporta nativamente trazas OpenTelemetry para cada operación.",
+        "feature1": "Exportación OTLP sin configuración",
+        "feature2": "Atributos ricos incluyendo latencia y costos",
+        "feature3": "Propagación de contexto para trazas distribuidas",
+        "supportedBackends": "Backends soportados"
+      },
+      "installation": {
+        "title": "Configuración",
+        "description": "Configure la exportación OTLP mediante variables de entorno."
+      },
+      "examples": {
+        "title": "Ejemplos de backend",
+        "datadog": {
+          "description": "Exporte trazas a Datadog APM."
+        },
+        "grafana": {
+          "description": "Envíe trazas a Grafana Tempo."
+        },
+        "jaeger": {
+          "description": "Exporte a Jaeger con receptor OTLP nativo."
+        }
+      },
+      "production": {
+        "title": "Consejos de producción",
+        "sampling": {
+          "title": "Estrategia de muestreo",
+          "description": "Controle el volumen de trazas."
+        },
+        "attributes": {
+          "title": "Atributos personalizados",
+          "description": "Agregue atributos para mejor filtrado."
+        },
+        "batching": {
+          "title": "Configuración de lotes",
+          "description": "Optimice el rendimiento de exportación."
+        }
+      },
+      "troubleshooting": {
+        "title": "Solución de problemas",
+        "issueColumn": "Problema",
+        "causeColumn": "Causa",
+        "solutionColumn": "Solución",
+        "noTracesIssue": "No aparecen trazas",
+        "noTracesCause": "Telemetría deshabilitada",
+        "noTracesSolution": "Active SEIZN_TELEMETRY_ENABLED=true",
+        "connectionIssue": "Conexión rechazada",
+        "connectionCause": "Collector no activo",
+        "connectionSolution": "Verifique el collector y puerto 4318",
+        "missingSpansIssue": "Spans faltantes",
+        "missingSpansCause": "Tasa de muestreo baja",
+        "missingSpansSolution": "Aumente la tasa de muestreo",
+        "debugTitle": "Modo debug",
+        "debugDescription": "Active logs de debug para solucionar problemas de telemetría."
+      },
+      "nav": {
+        "prevLlamaIndex": "Integración LlamaIndex",
+        "backToIntegrations": "Volver a integraciones"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "Demostración en vivo",
+    "subtitle": "Experimente el pipeline de recuperación de Seizn con trazabilidad completa y transparencia de costos.",
+    "tryItNow": "Pruébelo ahora - Sin registro",
+    "queryPlaceholder": "Consulta de búsqueda",
+    "runDemo": "Ejecutar demo",
+    "running": "Ejecutando...",
+    "results": "Resultados",
+    "trace": "Traza",
+    "cost": "Costo",
+    "noResults": "Ejecute la demo para ver resultados",
+    "errorTitle": "Error",
+    "rateLimitError": "Límite de tasa excedido. Por favor espere.",
+    "retryIn": "Reintentar en",
+    "seconds": "segundos",
+    "score": "Puntuación",
+    "rerankScore": "Reranking",
+    "latency": "Latencia",
+    "tokens": "Tokens",
+    "cached": "en caché",
+    "model": "Modelo",
+    "input": "Entrada",
+    "output": "Salida",
+    "costBreakdown": "Desglose",
+    "total": "Costo total",
+    "embedding": "Embedding",
+    "vectorSearch": "Búsqueda vectorial",
+    "rerank": "Reranking",
+    "answerContract": "Contrato de respuesta",
+    "tokensIn": "Tokens de entrada",
+    "tokensOut": "Tokens de salida",
+    "queryUnits": "Unidades de consulta",
+    "prefilledQueries": [
+      "Probar ejemplos"
+    ]
+  },
+  "publicTrace": {
+    "title": "Traza compartida",
+    "subtitle": "Ver detalles de la traza de recuperación compartida",
+    "sharedBy": "Traza compartida",
+    "expired": "Este enlace ha expirado",
+    "expiredDesc": "El enlace compartido ya no es válido. Solicite al propietario que cree un nuevo enlace.",
+    "notFound": "Traza no encontrada",
+    "notFoundDesc": "No se pudo encontrar esta traza compartida. Puede haber sido revocada o eliminada.",
+    "backToHome": "Volver al inicio",
+    "requestId": "ID de solicitud",
+    "collection": "Colección",
+    "createdAt": "Creado",
+    "totalLatency": "Latencia total",
+    "totalCost": "Costo total",
+    "resultsCount": "Resultados",
+    "query": "Consulta",
+    "timeline": "Línea temporal",
+    "candidates": "Candidatos",
+    "rerankDiff": "Diferencia de reranking",
+    "costAnalysis": "Análisis de costos",
+    "redacted": "[CENSURADO]",
+    "piiMasked": "PII enmascarada por privacidad",
+    "readOnlyNote": "Esta es una vista de solo lectura de una traza compartida."
+  },
+  "trustPage": {
+    "title": "Centro de confianza",
+    "subtitle": "Seguridad y prácticas de datos en Seizn",
+    "heroDescription": "Construimos con privacidad y seguridad en el centro. Esta página documenta exactamente qué hacemos con sus datos.",
+    "lastUpdated": "Última actualización",
+    "sections": {
+      "dataFlow": {
+        "title": "Flujo de datos",
+        "description": "Qué almacenamos y qué no",
+        "stored": {
+          "title": "Lo que almacenamos",
+          "items": [
+            "Contenido de memorias y embeddings",
+            "Logs de consultas (hasheados)",
+            "Métricas de uso API por clave",
+            "Datos de traza para depuración"
+          ]
+        },
+        "notStored": {
+          "title": "Lo que NO almacenamos",
+          "items": [
+            "Claves API en texto plano",
+            "Contraseñas de usuarios (solo OAuth)",
+            "Resultados de consultas más allá del TTL",
+            "Logs de solicitudes LLM de terceros"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Cifrado",
+        "description": "Protección de datos en tránsito y en reposo",
+        "transit": {
+          "title": "En tránsito",
+          "items": [
+            "TLS 1.3 obligatorio",
+            "HSTS habilitado (1 año)",
+            "Registro de transparencia de certificados"
+          ]
+        },
+        "atRest": {
+          "title": "En reposo",
+          "items": [
+            "Cifrado AES-256 para todos los datos",
+            "Cifrado a nivel de base de datos",
+            "Copias de seguridad cifradas"
+          ]
+        },
+        "keyManagement": {
+          "title": "Gestión de claves",
+          "items": [
+            "Claves API hasheadas con SHA-256",
+            "Recordatorios de rotación (90 días)",
+            "Revocación instantánea"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Aislamiento de inquilinos",
+        "description": "Cómo mantenemos sus datos separados",
+        "items": [
+          "RLS a nivel de base de datos",
+          "Filtrado automático por user_id/org_id",
+          "Sin índices compartidos entre inquilinos",
+          "Separación por namespace"
+        ],
+        "rbac": {
+          "title": "Control de acceso",
+          "items": [
+            "Acceso basado en roles",
+            "Claves API por organización",
+            "Logs de auditoría de cambios de permisos"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Retención y eliminación",
+        "description": "Cuánto tiempo conservamos los datos",
+        "periods": [
+          {
+            "type": "Memorias",
+            "period": "Hasta que el usuario las elimine"
+          },
+          {
+            "type": "Logs API",
+            "period": "90 días rotativo"
+          },
+          {
+            "type": "Trazas",
+            "period": "30 días (configurable)"
+          },
+          {
+            "type": "Logs de auditoría",
+            "period": "1 año"
+          },
+          {
+            "type": "Copias de seguridad",
+            "period": "30 días cifradas"
+          }
+        ],
+        "deletion": {
+          "title": "Proceso de eliminación",
+          "items": [
+            "DELETE /api/memories elimina inmediatamente",
+            "Eliminación de cuenta: período de gracia de 30 días",
+            "Eliminación permanente de copias en 30 días",
+            "Exportación GDPR/CCPA disponible"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Logs de auditoría y control de acceso",
+        "description": "Rastreo de quién hace qué",
+        "logged": {
+          "title": "Eventos registrados",
+          "items": [
+            "Creación, rotación, revocación de claves",
+            "Cambios de permisos (RBAC)",
+            "Solicitudes de exportación",
+            "Intentos de autenticación fallidos",
+            "Acciones de administración"
+          ]
+        },
+        "access": {
+          "title": "Acceso a logs",
+          "items": [
+            "Disponible para administradores",
+            "Exportable vía API (planes Pro+)",
+            "Búsqueda por usuario, acción, fecha"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Subprocesadores",
+        "description": "Terceros que procesan sus datos",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Base de datos y autenticación",
+            "location": "EE.UU. (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting y CDN",
+            "location": "Edge global"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Pagos",
+            "location": "RU/EE.UU."
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Analítica de producto",
+            "location": "UE"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Monitoreo de errores",
+            "location": "EE.UU."
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (opcional)",
+            "location": "EE.UU./Canadá"
+          }
+        ],
+        "note": "Solo compartimos los datos mínimos necesarios."
+      },
+      "disclosure": {
+        "title": "Lo que aún no hacemos",
+        "description": "Brechas honestas en nuestra postura de seguridad",
+        "items": [
+          "Certificación SOC 2 Type II (en progreso)",
+          "Cumplimiento HIPAA (planeado)",
+          "Opción on-premise (evaluando)",
+          "HSM para almacenamiento de claves",
+          "Programa de recompensas por bugs"
+        ],
+        "cta": "¿Preguntas de seguridad? Contacte security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "¿Preguntas?",
+      "description": "Nuestro equipo está feliz de responder preguntas de seguridad.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Límites y facturación",
+    "subtitle": "Comprenda los límites, cuotas y facturación de su plan.",
+    "unlimited": "Ilimitado",
+    "custom": "Personalizado",
+    "requestsPerSecond": "solicitudes/segundo",
+    "sidebar": {
+      "onThisPage": "En esta página",
+      "quotas": "Cuotas mensuales",
+      "rateLimits": "Límites de tasa",
+      "overage": "Comportamiento de exceso",
+      "reset": "Tiempos de reinicio",
+      "headers": "Cabeceras de respuesta"
+    },
+    "table": {
+      "plan": "Plan",
+      "monthlyQuota": "Cuota mensual",
+      "rps": "Límite RPS"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "overage": "Throttle suave después del límite"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Throttle suave, alerta por email"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Throttle suave, cola prioritaria"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "SLA personalizado, sin throttle"
+      }
+    },
+    "quotas": {
+      "title": "Cuotas mensuales",
+      "description": "Cada plan incluye una cuota mensual de llamadas API. Las cuotas se reinician el primer día de cada mes a las 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Límites de tasa (RPS)",
+      "description": "Los límites de tasa protegen nuestra infraestructura y aseguran uso justo."
+    },
+    "overage": {
+      "title": "Comportamiento de exceso",
+      "softThrottle": {
+        "title": "Throttle suave (cuota excedida)",
+        "description": "Cuando excede su cuota mensual:",
+        "point1": "Las llamadas API continúan con prioridad reducida",
+        "point2": "Los tiempos de respuesta pueden aumentar 2-5x",
+        "point3": "Notificación por email al 80% y 100%"
+      },
+      "hard429": {
+        "title": "429 duro (límite de tasa)",
+        "description": "Cuando excede el límite de tasa RPS:",
+        "recommendation": "Implemente retroceso exponencial (1s, 2s, 4s, 8s) con jitter."
+      }
+    },
+    "reset": {
+      "title": "Tiempos de reinicio",
+      "monthly": {
+        "title": "Reinicio de cuota mensual",
+        "description": "Las cuotas se reinician el primer día del mes.",
+        "time": "1ro del mes, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Ventana de límite de tasa",
+        "description": "Los límites de tasa usan una ventana deslizante.",
+        "time": "Ventana rodante de 1 segundo"
+      }
+    },
+    "headers": {
+      "limit": "Máximo de solicitudes por ventana",
+      "remaining": "Solicitudes restantes",
+      "reset": "Timestamp Unix de reinicio",
+      "quotaLimit": "Límite de cuota mensual",
+      "quotaRemaining": "Llamadas API restantes este mes",
+      "quotaReset": "Fecha ISO 8601 de reinicio"
+    },
+    "headersSection": {
+      "title": "Cabeceras de respuesta",
+      "description": "Cada respuesta API incluye cabeceras para rastrear su uso y límites.",
+      "header": "Cabecera",
+      "headerDescription": "Descripción",
+      "example": "Cabeceras de respuesta ejemplo:"
+    },
+    "upgrade": {
+      "title": "¿Necesita límites más altos?",
+      "description": "Mejore su plan para cuotas mayores y soporte prioritario.",
+      "viewPlans": "Ver planes",
+      "contactSales": "Contactar ventas"
+    }
+  },
+  "help": {
+    "title": "Centro de ayuda",
+    "subtitle": "Encuentre respuestas, obtenga soporte y acceda a recursos.",
+    "search": {
+      "placeholder": "Buscar ayuda...",
+      "noResults": "Sin resultados"
+    },
+    "sections": {
+      "support": {
+        "title": "Canales de soporte",
+        "description": "Obtenga ayuda de nuestro equipo",
+        "email": {
+          "title": "Soporte por email",
+          "description": "Respuesta en 24 horas",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Comunidad Discord",
+          "description": "Ayuda en tiempo real",
+          "action": "Unirse a Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Reporte bugs y solicite funciones",
+          "action": "Abrir Issue"
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "description": "Respuestas rápidas",
+        "viewAll": "Ver todas las FAQ"
+      },
+      "status": {
+        "title": "Estado del sistema",
+        "description": "Verifique el estado actual",
+        "viewStatus": "Ver página de estado",
+        "operational": "Todos los sistemas operativos",
+        "degraded": "Rendimiento degradado",
+        "outage": "Interrupción del servicio"
+      },
+      "billing": {
+        "title": "Facturación y planes",
+        "description": "Gestione su suscripción",
+        "items": {
+          "plans": "Ver planes de precios",
+          "usage": "Verificar uso",
+          "invoices": "Descargar facturas",
+          "upgrade": "Mejorar plan"
+        }
+      },
+      "docs": {
+        "title": "Documentación",
+        "description": "Enlaces rápidos a docs populares",
+        "links": {
+          "quickstart": "Guía de inicio rápido",
+          "apiReference": "Referencia API",
+          "sdks": "SDKs y librerías",
+          "limits": "Límites y facturación",
+          "security": "Seguridad"
+        }
+      }
+    },
+    "contact": {
+      "title": "¿Aún necesita ayuda?",
+      "description": "Nuestro equipo de soporte está aquí para ayudarlo.",
+      "cta": "Contactar soporte"
+    }
+  },
+  "status": {
+    "title": "Estado del sistema",
+    "subtitle": "Estado en tiempo real e historial de incidentes",
+    "lastUpdated": "Última actualización",
+    "overall": {
+      "operational": "Todos los sistemas operativos",
+      "degraded": "Rendimiento degradado",
+      "partialOutage": "Interrupción parcial",
+      "majorOutage": "Interrupción mayor"
+    },
+    "uptime": {
+      "title": "Disponibilidad",
+      "24h": "24 horas",
+      "7d": "7 días",
+      "30d": "30 días",
+      "90d": "90 días"
+    },
+    "services": {
+      "title": "Estado de servicios",
+      "operational": "Operativo",
+      "degraded": "Degradado",
+      "down": "Caído"
+    },
+    "incidents": {
+      "active": "Incidentes activos",
+      "history": "Historial de incidentes",
+      "noActive": "Sin incidentes activos",
+      "noHistory": "Sin incidentes pasados",
+      "status": {
+        "investigating": "Investigando",
+        "identified": "Identificado",
+        "monitoring": "Monitoreando",
+        "resolved": "Resuelto"
+      },
+      "severity": {
+        "minor": "Menor",
+        "major": "Mayor",
+        "critical": "Crítico"
+      },
+      "affected": "Servicios afectados",
+      "timeline": "Línea temporal",
+      "started": "Inicio",
+      "resolved": "Resuelto",
+      "duration": "Duración",
+      "viewDetails": "Ver detalles"
+    },
+    "subscribe": {
+      "title": "Suscribirse a actualizaciones",
+      "rss": "Feed RSS",
+      "email": "Notificaciones por email"
     }
   }
 }

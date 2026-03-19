@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. جميع الحقوق محفوظة.",
+    "copyright": "© {year} Litheon LLC. جميع الحقوق محفوظة.",
     "privacy": "الخصوصية",
     "terms": "الشروط",
     "contact": "تواصل معنا"
@@ -305,31 +305,31 @@
       "noKeys": "لا توجد مفاتيح API بعد. أنشئ واحداً للبدء."
     },
     "usagePage": {
-      "title": "Usage Analytics",
-      "period": "Current Period",
-      "memoriesUsed": "Memories Used",
-      "apiCallsUsed": "API Calls Used",
-      "remaining": "Remaining",
-      "upgrade": "Upgrade Plan",
-      "subtitle": "Monitor your API usage and costs.",
+      "title": "تحليلات الاستخدام",
+      "period": "الفترة الحالية",
+      "memoriesUsed": "الذكريات المستخدمة",
+      "apiCallsUsed": "استدعاءات API المستخدمة",
+      "remaining": "المتبقي",
+      "upgrade": "ترقية الخطة",
+      "subtitle": "راقب استخدام API والتكاليف الخاصة بك.",
       "days7": "7 Days",
       "days30": "30 Days",
       "days90": "90 Days",
-      "loading": "Loading...",
-      "totalApiCalls": "Total API Calls",
-      "totalTokens": "Total Tokens",
-      "estimatedCost": "Estimated Cost",
-      "avgLatency": "Avg Latency",
+      "loading": "جارٍ التحميل...",
+      "totalApiCalls": "إجمالي استدعاءات API",
+      "totalTokens": "إجمالي الرموز",
+      "estimatedCost": "التكلفة المقدرة",
+      "avgLatency": "متوسط زمن الاستجابة",
       "dailyApiCalls": "Daily API Calls",
-      "calls": "calls",
-      "endpointUsage": "Endpoint Usage",
-      "noData": "No data yet",
+      "calls": "استدعاءات",
+      "endpointUsage": "استخدام نقاط النهاية",
+      "noData": "لا توجد بيانات بعد",
       "avg": "avg",
-      "errors": "errors",
-      "usageByApiKey": "Usage by API Key",
-      "errorsTitle": "Errors",
-      "errorRate": "error rate",
-      "noUsageData": "No usage data available",
+      "errors": "أخطاء",
+      "usageByApiKey": "الاستخدام حسب مفتاح API",
+      "errorsTitle": "أخطاء",
+      "errorRate": "معدل الأخطاء",
+      "noUsageData": "لا تتوفر بيانات استخدام",
       "p95Latency": "زمن الاستجابة p95",
       "errorRateKpi": "معدل الأخطاء",
       "monthlyApiCalls": "استدعاءات API الشهرية",
@@ -351,8 +351,8 @@
       "createApiKey": "إنشاء مفتاح API"
     },
     "language": "اللغة",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "المؤسسات",
+    "docs": "المستندات",
     "nav": {
       "overview": "نظرة عامة",
       "memories": "الذاكرة",
@@ -385,24 +385,24 @@
         "system": "النظام"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
-    "playground": "Playground",
+    "pinSidebar": "تثبيت الشريط الجانبي",
+    "unpinSidebar": "طي الشريط الجانبي",
+    "playground": "ساحة التجربة",
     "playgroundPage": {
-      "title": "Debug Console",
+      "title": "وحدة تحكم التصحيح",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
       "queryPlaceholder": "Enter your test query...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
-      "threshold": "Threshold",
+      "threshold": "العتبة",
       "thresholdHint": "Minimum similarity score",
       "filters": "Filters",
       "filtersHint": "Metadata filters in JSON format",
-      "runQuery": "Run Query",
-      "running": "Running...",
-      "results": "Results",
+      "runQuery": "تنفيذ الاستعلام",
+      "running": "جارٍ التشغيل...",
+      "results": "النتائج",
       "noResults": "No results found",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
@@ -414,7 +414,15 @@
       "tracingDisabled": "Tracing disabled",
       "executionTime": "Execution Time",
       "tokensUsed": "Tokens Used",
-      "steps": "Steps",
+      "steps": {
+        "parseQuery": "تحليل الاستعلام",
+        "createEmbedding": "إنشاء Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "بحث بالكلمات المفتاحية",
+        "mergeResults": "دمج النتائج",
+        "rerank": "إعادة ترتيب النتائج",
+        "returnResults": "إرجاع النتائج"
+      },
       "embedding": "Embedding",
       "vectorSearch": "Vector Search",
       "reranking": "Reranking",
@@ -494,37 +502,37 @@
       "rankChanges": "تغييرات الترتيب"
     },
     "settingsPage": {
-      "title": "Settings",
-      "subtitle": "Profile & Preferences",
-      "saving": "Saving...",
-      "saved": "Saved",
-      "saveFailed": "Save failed",
-      "save": "Save Changes",
-      "account": "Account",
-      "email": "Email",
-      "name": "Name",
-      "languageHint": "Affects UI + dashboard",
-      "loading": "Loading...",
-      "loginRequired": "Login required.",
+      "title": "الإعدادات",
+      "subtitle": "الملف الشخصي والتفضيلات",
+      "saving": "جارٍ الحفظ...",
+      "saved": "تم الحفظ",
+      "saveFailed": "فشل الحفظ",
+      "save": "حفظ التغييرات",
+      "account": "الحساب",
+      "email": "البريد الإلكتروني",
+      "name": "الاسم",
+      "languageHint": "يؤثر على الواجهة ولوحة التحكم",
+      "loading": "جارٍ التحميل...",
+      "loginRequired": "يلزم تسجيل الدخول.",
       "tabs": {
-        "profile": "Profile",
-        "budget": "Budget",
-        "notifications": "Notifications",
-        "security": "Security",
+        "profile": "الملف الشخصي",
+        "budget": "الميزانية",
+        "notifications": "الإشعارات",
+        "security": "الأمان",
         "billing": "الفوترة",
         "danger": "إدارة البيانات"
       },
       "budget": {
         "title": "Budget Management",
         "description": "Set API usage limits and notifications",
-        "monthlyLimit": "Monthly Limit",
+        "monthlyLimit": "الحد الشهري",
         "monthlyLimitHint": "Set monthly usage cap",
-        "dailyLimit": "Daily Limit",
+        "dailyLimit": "الحد اليومي",
         "dailyLimitHint": "Set daily usage cap",
         "currentUsage": "Current Usage",
         "remainingBudget": "Remaining Budget",
         "usageHistory": "Usage History",
-        "alertThreshold": "Alert Threshold",
+        "alertThreshold": "عتبة التنبيه",
         "alertThresholdHint": "Get alerted at this percentage of limit",
         "alertEnabled": "Budget alerts enabled",
         "alertDisabled": "Budget alerts disabled",
@@ -547,7 +555,7 @@
         "queue": "إضافة إلى قائمة الانتظار"
       },
       "notifications": {
-        "title": "Notification Settings",
+        "title": "إعدادات الإشعارات",
         "description": "Manage your notification preferences",
         "email": "Email Notifications",
         "emailHint": "Receive emails about account activity",
@@ -578,26 +586,26 @@
         "integrations": "التكاملات"
       },
       "security": {
-        "title": "Security Settings",
+        "title": "إعدادات الأمان",
         "description": "Manage your account security",
-        "twoFactor": "Two-Factor Authentication",
+        "twoFactor": "المصادقة الثنائية",
         "twoFactorHint": "Add an extra layer of security to your account",
         "twoFactorEnabled": "Two-factor authentication enabled",
         "twoFactorDisabled": "Two-factor authentication disabled",
         "enableTwoFactor": "Enable Two-Factor",
         "disableTwoFactor": "Disable Two-Factor",
-        "sessions": "Active Sessions",
+        "sessions": "جلسات نشطة",
         "sessionsHint": "Manage your active devices and sessions",
         "currentSession": "Current Session",
         "lastActive": "Last Active",
         "revokeSession": "Revoke Session",
         "revokeAllSessions": "Revoke All Other Sessions",
-        "changePassword": "Change Password",
-        "passwordDesc": "Manage your password security",
+        "changePassword": "تغيير كلمة المرور",
+        "passwordDesc": "أدر أمان كلمة المرور الخاصة بك",
         "changePasswordHint": "Update your password regularly for security",
-        "currentPassword": "Current Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm Password",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
         "passwordChanged": "Password changed",
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
@@ -614,11 +622,11 @@
       "dangerZone": {
         "title": "Danger Zone",
         "description": "Irreversible actions",
-        "deleteAccount": "Delete Account",
+        "deleteAccount": "حذف الحساب",
         "deleteAccountHint": "Permanently delete your account and all data",
         "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
         "deleteAccountButton": "Delete My Account",
-        "exportData": "Export Data",
+        "exportData": "تصدير البيانات",
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
@@ -657,33 +665,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "صباح الخير",
+      "afternoon": "مساء الخير",
+      "evening": "مساء الخير"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "إليك نظرة عامة على استخدام ذاكرة AI الخاص بك",
+      "totalMemories": "إجمالي الذكريات",
+      "apiCalls": "استدعاءات API",
+      "activeKeys": "مفاتيح API النشطة",
+      "currentPlan": "الخطة الحالية",
+      "usage": "الاستخدام",
+      "today": "اليوم",
+      "dailyLimit": "الحد اليومي",
+      "recentMemories": "الذكريات الأخيرة",
+      "viewAll": "عرض الكل",
+      "noMemories": "لا توجد ذكريات بعد",
+      "noMemoriesHint": "ابدأ بإضافة ذاكرتك الأولى عبر API",
+      "quickStart": "البدء السريع",
+      "createApiKey": "إنشاء مفتاح API",
+      "getStartedApi": "ابدأ مع API",
+      "viewDocumentation": "عرض الوثائق",
+      "learnSeizn": "تعلم كيفية استخدام Seizn",
+      "createOrganization": "إنشاء مؤسسة",
+      "collaborateTeam": "تعاون مع فريقك",
+      "quickExample": "مثال سريع",
+      "manageKeys": "إدارة المفاتيح",
+      "upgradePlan": "ترقية الخطة",
       "apiUsageChart": "استخدام API",
       "last7days": "آخر 7 أيام",
       "viewDetails": "عرض التفاصيل",
@@ -696,34 +704,34 @@
       "sendFirstRequest": "إرسال أول طلب"
     },
     "keysPage": {
-      "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
-      "createNewKey": "Create New Key",
-      "activeKeys": "Active Keys",
-      "noKeysTitle": "No API keys yet",
-      "noKeysDesc": "Create your first API key to start integrating with Seizn",
-      "createApiKey": "Create API Key",
-      "created": "Created",
-      "neverUsed": "Never used",
-      "lastUsed": "Last used",
-      "revoke": "Revoke",
+      "title": "مفاتيح API",
+      "subtitle": "أدر مفاتيح API الخاصة بك للوصول إلى خدمات Seizn",
+      "createNewKey": "إنشاء مفتاح جديد",
+      "activeKeys": "المفاتيح النشطة",
+      "noKeysTitle": "لا توجد مفاتيح API بعد",
+      "noKeysDesc": "أنشئ مفتاح API الأول لبدء التكامل مع Seizn",
+      "createApiKey": "إنشاء مفتاح API",
+      "created": "تم الإنشاء",
+      "neverUsed": "لم يُستخدم أبدًا",
+      "lastUsed": "آخر استخدام",
+      "revoke": "إلغاء",
       "revokeConfirm": "Revoke API key \"{keyName}\"? This action cannot be undone.",
-      "usageGuide": "Usage Guide",
-      "authentication": "Authentication",
-      "authDesc": "Include your API key in the request header:",
-      "exampleRequest": "Example Request",
-      "keyCreated": "API Key Created!",
-      "keyCreatedDesc": "Copy this key now. You won't see it again.",
-      "copyToClipboard": "Copy to Clipboard",
-      "copied": "Copied!",
-      "done": "Done",
-      "createKeyTitle": "Create API Key",
-      "createKeyDesc": "Give your key a descriptive name",
-      "keyName": "Key Name",
+      "usageGuide": "دليل الاستخدام",
+      "authentication": "المصادقة",
+      "authDesc": "أدرج مفتاح API في رأس الطلب:",
+      "exampleRequest": "طلب نموذجي",
+      "keyCreated": "تم إنشاء مفتاح API!",
+      "keyCreatedDesc": "انسخ هذا المفتاح الآن. لن تتمكن من رؤيته مرة أخرى.",
+      "copyToClipboard": "نسخ إلى الحافظة",
+      "copied": "تم النسخ!",
+      "done": "تم",
+      "createKeyTitle": "إنشاء مفتاح API",
+      "createKeyDesc": "أعطِ مفتاحك اسمًا وصفيًا",
+      "keyName": "اسم المفتاح",
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "createKey": "Create Key",
+      "cancel": "إلغاء",
+      "creating": "جارٍ الإنشاء...",
+      "createKey": "إنشاء مفتاح",
       "name": "الاسم",
       "keyColumn": "المفتاح",
       "actions": "الإجراءات",
@@ -737,24 +745,24 @@
       "keyRotatedDesc": "انسخ هذا المفتاح الجديد الآن. المفتاح القديم لم يعد صالحاً."
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
-      "newOrganization": "New Organization",
-      "noOrgsTitle": "No organizations yet",
+      "title": "المؤسسات",
+      "subtitle": "أدر فرقك وتعاون مع الآخرين",
+      "newOrganization": "مؤسسة جديدة",
+      "noOrgsTitle": "لا توجد مؤسسات بعد",
       "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Create Organization",
-      "created": "Created",
-      "plan": "Plan",
-      "freePlan": "Free",
-      "createOrgTitle": "Create Organization",
-      "createOrgDesc": "Set up a new team workspace",
-      "orgName": "Organization Name",
+      "createOrganization": "إنشاء مؤسسة",
+      "created": "تم الإنشاء",
+      "plan": "الخطة",
+      "freePlan": "مجاني",
+      "createOrgTitle": "إنشاء مؤسسة",
+      "createOrgDesc": "إعداد مساحة عمل جماعية جديدة",
+      "orgName": "اسم المؤسسة",
       "orgNamePlaceholder": "Acme Corp",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "create": "Create",
+      "cancel": "إلغاء",
+      "creating": "جارٍ الإنشاء...",
+      "create": "إنشاء",
       "roles": {
         "owner": "owner",
         "admin": "admin",
@@ -1448,6 +1456,40 @@
         "events": "الأحداث المراد الاشتراك بها",
         "cancel": "إلغاء",
         "create": "إنشاء Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "تم إنشاء ذاكرة",
+          "desc": "عند تخزين ذاكرة جديدة"
+        },
+        "memory_updated": {
+          "label": "تم تحديث ذاكرة",
+          "desc": "عند تعديل ذاكرة"
+        },
+        "memory_deleted": {
+          "label": "تم حذف ذاكرة",
+          "desc": "عند إزالة ذاكرة"
+        },
+        "extraction_completed": {
+          "label": "اكتمال الاستخراج",
+          "desc": "عند انتهاء استخراج الذاكرة"
+        },
+        "query_executed": {
+          "label": "تم تنفيذ الاستعلام",
+          "desc": "عند تنفيذ استعلام RAG"
+        },
+        "key_created": {
+          "label": "تم إنشاء مفتاح API",
+          "desc": "عند إنشاء مفتاح API جديد"
+        },
+        "key_revoked": {
+          "label": "تم إلغاء مفتاح API",
+          "desc": "عند إلغاء مفتاح API"
+        },
+        "usage_threshold": {
+          "label": "عتبة الاستخدام",
+          "desc": "عند تجاوز الاستخدام للعتبة"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,93 +1697,134 @@
     "socialProof": "موثوق من قبل الفرق التي تشغل الوكلاء على نطاق واسع",
     "liveDemo": "عرض مباشر",
     "heroTagline": "جرّب واجهة API مباشرة — بدون تسجيل",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "اكتمل الاسترجاع الأول",
+    "copySnippetHint": "انسخ المقتطف أدناه للتكرار",
+    "copySnippetTitle": "انسخ هذا المقتطف",
+    "copySnippetSubtitle": "تم إنشاؤه من إعداداتك الدقيقة أعلاه",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
+      "title": "لماذا Seizn بدلاً من LangChain + Pinecone؟",
+      "subtitle": "توقف عن تجميع أدوات متفرقة. احصل على كل ما تحتاجه في منصة واحدة متكاملة.",
+      "tracingTitle": "تتبع + تقييم مدمج",
       "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
       "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotTitle": "طيار آلي واعي بالميزانية",
       "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
+      "governanceTitle": "حوكمة + سجلات تدقيق",
       "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
+      "governanceBadge": "افتراضي للفرق",
+      "lessGlueTitle": "أجزاء متحركة أقل",
       "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "lessGlueBadge": "كود ربط أقل"
     },
     "trust": {
       "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "securityDesc": "آمن بشكل افتراضي",
+      "rateLimits": "حدود المعدل",
+      "rateLimitsDesc": "تنبيهات الاستخدام",
+      "auditLogs": "سجلات التدقيق",
+      "auditLogsDesc": "تتبع كامل"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
+      "title": "تسعير بسيط وشفاف",
       "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "viewPricing": "عرض الأسعار",
+      "contactSales": "اتصل بالمبيعات"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "المستندات",
+      "pricing": "الأسعار",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo"
+      "getApiKey": "احصل على مفتاح API",
+      "tryDemo": "جرب العرض التوضيحي",
+      "compare": "مقارنة",
+      "limits": "Limits",
+      "status": "الحالة",
+      "help": "Help",
+      "github": "OSS"
     },
     "requestBuilder": {
-      "title": "Request Builder",
-      "query": "Query",
-      "queryPlaceholder": "Enter your search query...",
-      "tryExamples": "Try examples",
+      "title": "منشئ الطلبات",
+      "query": "استعلام",
+      "queryPlaceholder": "أدخل استعلام البحث الخاص بك...",
+      "tryExamples": "جرب الأمثلة",
       "dataset": "Dataset",
-      "latencyBudget": "Latency Budget",
+      "latencyBudget": "ميزانية زمن الاستجابة",
       "fast": "fast",
       "thorough": "thorough",
       "topK": "Top K",
-      "results": "results",
-      "features": "Features",
-      "hybridSearch": "Hybrid Search",
-      "hybridSearchDesc": "Combine vector + keyword",
+      "results": "نتائج",
+      "features": "الميزات",
+      "hybridSearch": "بحث هجين",
+      "hybridSearchDesc": "دمج البحث المتجهي + الكلمات المفتاحية",
       "rerank": "Rerank",
-      "rerankDesc": "Re-score with cross-encoder",
+      "rerankDesc": "إعادة التسجيل باستخدام cross-encoder",
       "answerContract": "Answer Contract",
-      "answerContractDesc": "Validate answer quality",
-      "running": "Running...",
-      "runQuery": "Run Query",
+      "answerContractDesc": "التحقق من جودة الإجابة",
+      "running": "جارٍ التشغيل...",
+      "runQuery": "تنفيذ الاستعلام",
       "datasets": {
-        "techDocs": "Tech Documentation",
-        "legalContracts": "Legal Contracts",
-        "researchPapers": "Research Papers"
-      }
+        "techDocs": "وثائق تقنية",
+        "legalContracts": "عقود قانونية",
+        "researchPapers": "أوراق بحثية"
+      },
+      "advanced": "متقدم"
     },
     "resultsPanel": {
-      "searching": "Searching...",
-      "noResults": "Run a query to see results",
-      "score": "Score"
+      "searching": "جارٍ البحث...",
+      "noResults": "شغّل استعلامًا لرؤية النتائج",
+      "score": "الدرجة"
     },
     "tracePanel": {
-      "tracing": "Tracing pipeline...",
-      "noTrace": "Run a query to see the trace",
-      "latency": "Latency",
-      "cost": "Cost",
-      "tokens": "Tokens",
+      "tracing": "تتبع خط الأنابيب...",
+      "noTrace": "شغّل استعلامًا لرؤية التتبع",
+      "latency": "زمن الاستجابة",
+      "cost": "التكلفة",
+      "tokens": "الرموز",
       "vectorOps": "Vector Ops",
       "cached": "cached",
-      "model": "Model",
-      "input": "Input",
-      "output": "Output"
+      "model": "النموذج",
+      "input": "الإدخال",
+      "output": "الإخراج"
     },
     "tabs": {
-      "results": "Results",
-      "trace": "Trace"
+      "results": "النتائج",
+      "trace": "تتبع",
+      "cost": "التكلفة"
+    },
+    "chips": {
+      "trace": "تتبع",
+      "eval": "Eval",
+      "policy": "Policy"
+    },
+    "playgroundTitle": "Try it now",
+    "costPanel": {
+      "calculating": "Calculating costs...",
+      "noCost": "Run a query to see cost breakdown",
+      "costBreakdown": "Cost Breakdown",
+      "component": "Component",
+      "cost": "التكلفة",
+      "embedding": "Embedding",
+      "vectorSearch": "Vector Search",
+      "rerank": "Rerank",
+      "answerContract": "Answer Contract",
+      "total": "Total Cost",
+      "usage": "الاستخدام",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Out",
+      "queryUnits": "Query Units",
+      "estimatedMonthly": "Estimated Monthly",
+      "basedOn": "Based on",
+      "queriesPerDay": "queries/day"
+    },
+    "errorDisplay": {
+      "error": "خطأ",
+      "errorCode": "الرمز",
+      "traceId": "تتبع",
+      "hint": "Hint",
+      "tryAgain": "Try Again",
+      "copyTraceId": "Copy trace ID",
+      "copied": "تم النسخ!"
     }
   },
   "docs": {
@@ -1766,7 +1849,9 @@
       "resources": "الموارد",
       "security": "الأمان",
       "sdks": "SDK",
-      "faq": "الأسئلة الشائعة"
+      "faq": "الأسئلة الشائعة",
+      "tutorial": "5-Min Tutorial",
+      "integrations": "التكاملات"
     },
     "hero": {
       "title": "توثيق API",
@@ -1840,7 +1925,9 @@
       "enterprise": "المؤسسات",
       "unlimited": "غير محدود",
       "exceeded": "عند تجاوز حد المعدل الخاص بك، يرجع API استجابة",
-      "response": "."
+      "response": ".",
+      "monthlyApiCalls": "استدعاءات API الشهرية",
+      "starter": "Starter"
     },
     "errors": {
       "title": "رموز الخطأ",
@@ -1882,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. جميع الحقوق محفوظة."
+      "copyright": "© {year} Litheon LLC. جميع الحقوق محفوظة."
     },
     "faqPage": {
       "title": "الأسئلة الشائعة",
@@ -1898,7 +1985,9 @@
         "searchRetrieval": "البحث والاسترجاع",
         "extraction": "الاستخراج",
         "operations": "العمليات",
-        "securityCompliance": "الأمان والامتثال"
+        "securityCompliance": "الأمان والامتثال",
+        "technology": "التكنولوجيا",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2006,7 +2095,7 @@
     "componentsPage": {
       "title": "UI Components",
       "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "all": "الكل",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2059,12 +2148,12 @@
       },
       "props": "Props",
       "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "propName": "الاسم",
+      "propType": "النوع",
+      "propDefault": "افتراضي",
+      "propDescription": "الوصف",
+      "copy": "نسخ",
+      "copied": "تم النسخ!",
       "categories": {
         "graph": {
           "title": "Graph Components",
@@ -2138,7 +2227,8 @@
         "searchRetrieval": "البحث والاسترجاع",
         "extraction": "استخراج البيانات",
         "operations": "العمليات",
-        "security": "الأمان والخصوصية"
+        "security": "الأمان والخصوصية",
+        "all": "الكل"
       },
       "gettingStarted": {
         "q1": {
@@ -2152,6 +2242,10 @@
         "q3": {
           "question": "ما هي لغات البرمجة المدعومة؟",
           "answer": "ندعم رسمياً JavaScript/TypeScript (Node.js) و Python. للغات أخرى، يمكنك استخدام REST API مباشرة."
+        },
+        "q4": {
+          "question": "What's the fastest way to build a PoC?",
+          "answer": "1) POST /api/memories to store a user preference. 2) GET /api/memories to search. 3) Inject the results into your LLM prompt. 4) Later, add /api/extract for auto-extraction and /api/query for memory-augmented responses."
         }
       },
       "coreConcepts": {
@@ -2166,6 +2260,14 @@
         "q3": {
           "question": "ما هو معامل user_id؟",
           "answer": "يربط user_id الذكريات بمستخدم محدد، مما يتيح تجارب مخصصة لكل مستخدم."
+        },
+        "q4": {
+          "question": "When should I use scope (user/session/agent)?",
+          "answer": "user: Preferences that apply to a user globally. session: Goals or context valid only for this conversation. agent: Rules specific to one agent in a multi-agent system. Using scope properly reduces prompt length and improves response consistency."
+        },
+        "q5": {
+          "question": "What are memory_types and why do they matter?",
+          "answer": "memory_type classifies memories: fact (unchanging info), preference (user choices), instruction (rules to follow), relationship (people/org connections), experience (past events). This is the most powerful axis for filtering, deletion, and policy application."
         }
       },
       "searchRetrieval": {
@@ -2208,6 +2310,10 @@
         "q3": {
           "question": "هل توجد حدود للطلبات؟",
           "answer": "نعم، تختلف الحدود حسب الخطة. تسمح الخطة المجانية بـ 100 طلب في الدقيقة. راجع صفحة التسعير للتفاصيل."
+        },
+        "q4": {
+          "question": "How do I reduce costs?",
+          "answer": "Biggest cost drivers: 1) Extract frequency - reduce calls. 2) Search scope - use namespace to narrow. 3) Model choice - use haiku for routine, sonnet for important. 4) Caching - cache repeated queries. 5) Batch operations when possible."
         }
       },
       "security": {
@@ -2231,7 +2337,863 @@
           "question": "هل لديكم شهادة SOC 2؟",
           "answer": "نحن في طور الحصول على شهادة SOC 2. تواصل مع فريق المبيعات للمزيد من المعلومات."
         }
+      },
+      "title": "Frequently Asked Questions",
+      "subtitle": "Common questions about Seizn Memory API, from getting started to advanced operations.",
+      "nav": {
+        "dashboard": "Dashboard"
+      },
+      "cta": {
+        "title": "Still have questions?",
+        "subtitle": "Check out our documentation or get in touch with our support team.",
+        "readDocs": "Read Docs",
+        "contactSupport": "اتصل بالدعم"
+      },
+      "footer": {
+        "rights": "All rights reserved."
       }
+    },
+    "quickstartPage": {
+      "meta": {
+        "title": "5-Minute Quickstart | Seizn",
+        "description": "Add AI memory in 5 minutes with just 10 lines of code"
+      },
+      "badge": "5 min tutorial",
+      "noCreditCard": "No credit card required",
+      "title": "Get Started with Seizn",
+      "subtitle": "Add persistent memory to your AI in under 5 minutes. Follow along and check off each step as you complete it.",
+      "getApiKey": "احصل على مفتاح API",
+      "fullExample": "Complete Example (10 lines)",
+      "copy": "نسخ",
+      "copied": "تم النسخ!",
+      "progress": "Progress",
+      "stepsLabel": "steps",
+      "steps": {
+        "getApiKey": {
+          "title": "Get Your API Key",
+          "time": "30 sec",
+          "description": "Sign up and generate your API key from the dashboard.",
+          "actionLabel": "انتقل إلى لوحة التحكم"
+        },
+        "install": {
+          "title": "Install the SDK",
+          "time": "30 sec",
+          "description": "Install the Seizn SDK using your preferred package manager."
+        },
+        "ingest": {
+          "title": "Ingest Documents",
+          "time": "30 sec",
+          "description": "Upload documents to your dataset for retrieval."
+        },
+        "query": {
+          "title": "Run Your First Query",
+          "time": "10 sec",
+          "description": "Search your documents with a natural language query."
+        }
+      },
+      "completion": {
+        "title": "Congratulations!",
+        "description": "You've completed the quickstart. Your retrieval pipeline is ready with built-in tracing.",
+        "readDocs": "Read the Docs",
+        "goToDashboard": "انتقل إلى لوحة التحكم"
+      },
+      "expectedOutput": {
+        "title": "Expected Output",
+        "description": "Each query returns results, trace, and cost breakdown:"
+      },
+      "nextSteps": {
+        "apiReference": {
+          "title": "مرجع API",
+          "description": "Explore all endpoints and options for advanced use cases."
+        },
+        "sdkExamples": {
+          "title": "SDK Examples",
+          "description": "Copy-paste examples for Python, TypeScript, and more."
+        },
+        "faq": {
+          "title": "الأسئلة الشائعة",
+          "description": "Common questions about memory types, namespaces, and best practices."
+        }
+      }
+    },
+    "apiReferencePage": {
+      "meta": {
+        "title": "API Reference | Seizn",
+        "description": "Complete API documentation for Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, and RetOps APIs"
+      },
+      "title": "مرجع API",
+      "description": "Complete documentation for all Seizn APIs including Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, and RetOps.",
+      "auth": {
+        "title": "المصادقة",
+        "description": "All API endpoints require authentication via API key. Include your key in the X-API-Key header."
+      },
+      "sidebar": {
+        "title": "مجموعات API"
+      },
+      "endpoint": {
+        "parameters": "Parameters",
+        "requestBody": "نص الطلب",
+        "response": "Response",
+        "errorCodes": "Error Codes"
+      },
+      "table": {
+        "name": "الاسم",
+        "type": "النوع",
+        "required": "Required",
+        "description": "الوصف",
+        "code": "الرمز",
+        "message": "Message"
+      },
+      "copy": "نسخ",
+      "copied": "تم النسخ!"
+    },
+    "tutorialPage": {
+      "meta": {
+        "title": "5-Minute Tutorial | Seizn",
+        "description": "Learn how to add AI memory in 5 minutes with step-by-step interactive guide"
+      },
+      "breadcrumb": "دليل تعليمي",
+      "badge": "5-Minute Tutorial",
+      "noCreditCard": "No credit card required",
+      "title": "Add AI Memory in 5 Minutes",
+      "subtitle": "Follow this step-by-step guide to give your AI persistent memory. Check each step as you complete it.",
+      "getApiKey": "احصل على مفتاح API",
+      "copy": "نسخ",
+      "copied": "تم النسخ!",
+      "progress": "Progress",
+      "stepsLabel": "steps",
+      "steps": {
+        "step1": {
+          "title": "Get Your API Key",
+          "time": "30 sec",
+          "description": "Sign up for free and generate your API key from the dashboard.",
+          "instruction1": "Sign up or log in to your Seizn account",
+          "instruction2": "Navigate to API Keys in the dashboard",
+          "instruction3": "Click 'Create New Key' and copy your key",
+          "actionLabel": "انتقل إلى لوحة التحكم"
+        },
+        "step2": {
+          "title": "Install the SDK",
+          "time": "30 sec",
+          "description": "Choose your preferred language and install the Seizn SDK."
+        },
+        "step3": {
+          "title": "Save Your First Memory",
+          "time": "2 min",
+          "description": "Store information that your AI should remember across sessions."
+        },
+        "step4": {
+          "title": "Search Memories",
+          "time": "2 min",
+          "description": "Retrieve relevant memories using natural language queries."
+        },
+        "step5": {
+          "title": "Verify Results",
+          "time": "30 sec",
+          "description": "Check that your memory was stored and retrieved successfully.",
+          "hint": "You should see a response like this when searching for memories:",
+          "successTitle": "Success!",
+          "successDescription": "Your AI now has persistent memory. Use the search results to enhance your AI's context and responses."
+        }
+      },
+      "completion": {
+        "title": "Congratulations!",
+        "description": "You've completed the tutorial. Your AI now has persistent memory that works across sessions.",
+        "readDocs": "Read the Docs",
+        "goToDashboard": "انتقل إلى لوحة التحكم"
+      },
+      "nextSteps": {
+        "title": "What's Next?",
+        "apiReference": {
+          "title": "مرجع API",
+          "description": "Explore all endpoints for memories, extraction, and RAG queries."
+        },
+        "sdkExamples": {
+          "title": "SDK Examples",
+          "description": "Copy-paste examples for Python, TypeScript, and REST."
+        },
+        "faq": {
+          "title": "الأسئلة الشائعة",
+          "description": "Learn about memory types, namespaces, and best practices."
+        }
+      }
+    },
+    "integrationsPage": {
+      "meta": {
+        "title": "Integrations | Seizn",
+        "description": "Integrate Seizn with LangChain, LlamaIndex, OpenTelemetry, and more"
+      },
+      "breadcrumb": "التكاملات",
+      "title": "التكاملات",
+      "subtitle": "Connect Seizn with your favorite AI frameworks and observability tools.",
+      "cards": {
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
+        },
+        "langchain": {
+          "badge": "Official",
+          "title": "LangChain",
+          "description": "Drop-in retriever for LangChain RAG pipelines. Works with Python and TypeScript."
+        },
+        "llamaindex": {
+          "badge": "Official",
+          "title": "LlamaIndex",
+          "description": "Native retriever for LlamaIndex query engines. Supports streaming and hybrid search."
+        },
+        "opentelemetry": {
+          "badge": "Official",
+          "title": "OpenTelemetry",
+          "description": "Export traces to Datadog, Grafana, Jaeger, and any OTLP-compatible backend."
+        }
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "More integrations are on the way. Let us know what you need!"
+      },
+      "backToDocs": "Back to Documentation"
+    },
+    "langchainPage": {
+      "meta": {
+        "title": "LangChain Integration | Seizn",
+        "description": "Drop-in retriever for LangChain RAG pipelines"
+      },
+      "badge": "Official",
+      "title": "LangChain Integration",
+      "subtitle": "Drop-in retriever for LangChain RAG pipelines with full tracing support.",
+      "overview": {
+        "title": "نظرة عامة في 60 ثانية",
+        "description": "SeiznRetriever is a drop-in replacement for any LangChain retriever. It provides vector search with built-in tracing, caching, and reranking.",
+        "feature1": "Compatible with all LangChain chains and agents",
+        "feature2": "Built-in tracing for every retrieval operation",
+        "feature3": "Supports filtering, reranking, and hybrid search"
+      },
+      "installation": {
+        "title": "التثبيت",
+        "description": "Install the Seizn SDK alongside LangChain."
+      },
+      "example": {
+        "title": "5-Minute Example",
+        "description": "Create a RAG chain with SeiznRetriever in just a few lines of code."
+      },
+      "production": {
+        "title": "نصائح الإنتاج",
+        "caching": {
+          "title": "Enable Caching",
+          "description": "Reduce latency and costs by caching repeated queries."
+        },
+        "reranking": {
+          "title": "Enable Reranking",
+          "description": "Improve result quality with cross-encoder reranking."
+        },
+        "filtering": {
+          "title": "Metadata Filtering",
+          "description": "Filter results by metadata fields before vector search."
+        }
+      },
+      "troubleshooting": {
+        "title": "استكشاف الأخطاء وإصلاحها",
+        "errorColumn": "خطأ",
+        "causeColumn": "السبب",
+        "solutionColumn": "الحل",
+        "authCause": "Invalid or missing API key",
+        "authSolution": "Check SEIZN_API_KEY environment variable",
+        "rateCause": "Too many requests per second",
+        "rateSolution": "Implement exponential backoff or upgrade plan",
+        "emptyCause": "Threshold too high or no matching documents",
+        "emptySolution": "Lower threshold or check dataset contents"
+      },
+      "nav": {
+        "backToIntegrations": "Back to Integrations",
+        "nextLlamaIndex": "LlamaIndex Integration"
+      }
+    },
+    "llamaindexPage": {
+      "meta": {
+        "title": "LlamaIndex Integration | Seizn",
+        "description": "Native retriever for LlamaIndex RAG pipelines"
+      },
+      "badge": "Official",
+      "title": "LlamaIndex Integration",
+      "subtitle": "Native retriever for LlamaIndex query engines with streaming and hybrid search.",
+      "overview": {
+        "title": "نظرة عامة في 60 ثانية",
+        "description": "SeiznRetriever implements the LlamaIndex BaseRetriever interface, making it compatible with all LlamaIndex query engines and pipelines.",
+        "feature1": "Native integration with LlamaIndex query engines",
+        "feature2": "Supports streaming responses out of the box",
+        "feature3": "Compatible with LlamaIndex node postprocessors"
+      },
+      "installation": {
+        "title": "التثبيت",
+        "description": "Install the Seizn SDK alongside LlamaIndex."
+      },
+      "example": {
+        "title": "5-Minute Example",
+        "description": "Build a query engine with SeiznRetriever for your RAG application."
+      },
+      "production": {
+        "title": "نصائح الإنتاج",
+        "streaming": {
+          "title": "Streaming Responses",
+          "description": "Enable streaming for better user experience with long responses."
+        },
+        "hybrid": {
+          "title": "بحث هجين",
+          "description": "Combine vector and keyword search for better recall."
+        },
+        "nodePostprocessors": {
+          "title": "Node Postprocessors",
+          "description": "Chain postprocessors for advanced filtering and reranking."
+        }
+      },
+      "troubleshooting": {
+        "title": "استكشاف الأخطاء وإصلاحها",
+        "errorColumn": "خطأ",
+        "causeColumn": "السبب",
+        "solutionColumn": "الحل",
+        "authCause": "Invalid or missing API key",
+        "authSolution": "Check SEIZN_API_KEY environment variable",
+        "datasetCause": "Dataset name not found",
+        "datasetSolution": "Verify dataset exists in dashboard",
+        "relevanceCause": "Query-document mismatch",
+        "relevanceSolution": "Try hybrid search or adjust threshold"
+      },
+      "nav": {
+        "prevLangChain": "LangChain Integration",
+        "nextOpenTelemetry": "OpenTelemetry Integration"
+      }
+    },
+    "opentelemetryPage": {
+      "meta": {
+        "title": "OpenTelemetry Integration | Seizn",
+        "description": "Export traces to Datadog, Grafana, Jaeger via OTLP"
+      },
+      "badge": "Official",
+      "title": "OpenTelemetry Integration",
+      "subtitle": "Export retrieval traces to your observability stack via OTLP.",
+      "overview": {
+        "title": "نظرة عامة في 60 ثانية",
+        "description": "Seizn natively exports OpenTelemetry traces for every retrieval operation. Connect to any OTLP-compatible backend for end-to-end observability.",
+        "feature1": "Zero-config OTLP export with automatic span creation",
+        "feature2": "Rich attributes including latency, token counts, and costs",
+        "feature3": "Context propagation for distributed tracing",
+        "supportedBackends": "Supported Backends"
+      },
+      "installation": {
+        "title": "Setup",
+        "description": "Configure OTLP export via environment variables."
+      },
+      "examples": {
+        "title": "Backend Examples",
+        "datadog": {
+          "description": "Export traces to Datadog APM via the Datadog Agent or direct API."
+        },
+        "grafana": {
+          "description": "Send traces to Grafana Tempo (Cloud or self-hosted)."
+        },
+        "jaeger": {
+          "description": "Export to Jaeger with native OTLP receiver support."
+        }
+      },
+      "production": {
+        "title": "نصائح الإنتاج",
+        "sampling": {
+          "title": "Sampling Strategy",
+          "description": "Control trace volume with head-based or tail-based sampling."
+        },
+        "attributes": {
+          "title": "Custom Attributes",
+          "description": "Add resource and span attributes for better filtering."
+        },
+        "batching": {
+          "title": "Batch Configuration",
+          "description": "Optimize export performance with batch settings."
+        }
+      },
+      "troubleshooting": {
+        "title": "استكشاف الأخطاء وإصلاحها",
+        "issueColumn": "Issue",
+        "causeColumn": "السبب",
+        "solutionColumn": "الحل",
+        "noTracesIssue": "No traces appearing",
+        "noTracesCause": "Telemetry disabled or endpoint wrong",
+        "noTracesSolution": "Set SEIZN_TELEMETRY_ENABLED=true and verify endpoint",
+        "connectionIssue": "Connection refused",
+        "connectionCause": "Collector not running or wrong port",
+        "connectionSolution": "Check collector status and port 4318",
+        "missingSpansIssue": "Missing spans in trace",
+        "missingSpansCause": "Sampling rate too low",
+        "missingSpansSolution": "Increase sampling rate or disable sampling",
+        "debugTitle": "Debug Mode",
+        "debugDescription": "Enable debug logging to troubleshoot telemetry issues."
+      },
+      "nav": {
+        "prevLlamaIndex": "LlamaIndex Integration",
+        "backToIntegrations": "Back to Integrations"
+      }
+    }
+  },
+  "demoQuery": {
+    "title": "عرض تجريبي مباشر",
+    "subtitle": "جرّب خط أنابيب الاسترجاع في Seizn مع تتبع كامل وشفافية التكاليف.",
+    "tryItNow": "جرّبه الآن - بدون تسجيل",
+    "queryPlaceholder": "استعلام البحث",
+    "runDemo": "تشغيل العرض",
+    "running": "جارٍ التشغيل...",
+    "results": "النتائج",
+    "trace": "تتبع",
+    "cost": "التكلفة",
+    "noResults": "قم بتشغيل العرض لرؤية النتائج",
+    "errorTitle": "خطأ",
+    "rateLimitError": "تم تجاوز حد المعدل. يرجى الانتظار.",
+    "retryIn": "إعادة المحاولة خلال",
+    "seconds": "ثوانٍ",
+    "score": "النقاط",
+    "rerankScore": "إعادة الترتيب",
+    "latency": "زمن الاستجابة",
+    "tokens": "الرموز",
+    "cached": "مخزّن مؤقتاً",
+    "model": "النموذج",
+    "input": "الإدخال",
+    "output": "الإخراج",
+    "costBreakdown": "التفصيل",
+    "total": "التكلفة الإجمالية",
+    "embedding": "Embedding",
+    "vectorSearch": "بحث متجهي",
+    "rerank": "إعادة الترتيب",
+    "answerContract": "عقد الإجابة",
+    "tokensIn": "رموز الإدخال",
+    "tokensOut": "رموز الإخراج",
+    "queryUnits": "وحدات الاستعلام",
+    "prefilledQueries": [
+      "جرّب الأمثلة"
+    ]
+  },
+  "publicTrace": {
+    "title": "تتبع مشترك",
+    "subtitle": "عرض تفاصيل التتبع المشترك",
+    "sharedBy": "تتبع مشترك",
+    "expired": "انتهت صلاحية هذا الرابط",
+    "expiredDesc": "رابط المشاركة لم يعد صالحاً. اطلب من المالك إنشاء رابط جديد.",
+    "notFound": "التتبع غير موجود",
+    "notFoundDesc": "لا يمكن العثور على هذا التتبع المشترك. ربما تم إلغاؤه أو حذفه.",
+    "backToHome": "العودة للصفحة الرئيسية",
+    "requestId": "معرّف الطلب",
+    "collection": "المجموعة",
+    "createdAt": "تاريخ الإنشاء",
+    "totalLatency": "إجمالي زمن الاستجابة",
+    "totalCost": "التكلفة الإجمالية",
+    "resultsCount": "النتائج",
+    "query": "الاستعلام",
+    "timeline": "الجدول الزمني",
+    "candidates": "المرشحون",
+    "rerankDiff": "فرق إعادة الترتيب",
+    "costAnalysis": "تحليل التكاليف",
+    "redacted": "[محجوب]",
+    "piiMasked": "تم إخفاء المعلومات الشخصية للخصوصية",
+    "readOnlyNote": "هذه طريقة عرض للقراءة فقط لتتبع مشترك."
+  },
+  "trustPage": {
+    "title": "Trust Center",
+    "subtitle": "Security and data practices at Seizn",
+    "heroDescription": "We build with privacy and security at the core. This page documents exactly what we do with your data.",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "dataFlow": {
+        "title": "Data Flow",
+        "description": "What we store and what we don't",
+        "stored": {
+          "title": "What We Store",
+          "items": [
+            "Memory content and embeddings",
+            "Query logs (hashed, not plaintext)",
+            "API usage metrics per key",
+            "Trace data for debugging (configurable retention)"
+          ]
+        },
+        "notStored": {
+          "title": "What We DON'T Store",
+          "items": [
+            "Raw API keys (only hashed)",
+            "User passwords (OAuth only)",
+            "Query results beyond cache TTL",
+            "Third-party LLM request/response logs"
+          ]
+        }
+      },
+      "encryption": {
+        "title": "Encryption",
+        "description": "Data protection in transit and at rest",
+        "transit": {
+          "title": "In Transit",
+          "items": [
+            "TLS 1.3 enforced for all connections",
+            "HSTS enabled with 1-year max-age",
+            "Certificate transparency logging"
+          ]
+        },
+        "atRest": {
+          "title": "At Rest",
+          "items": [
+            "AES-256 encryption for all stored data",
+            "Database-level encryption (Supabase)",
+            "Encrypted backups with separate keys"
+          ]
+        },
+        "keyManagement": {
+          "title": "Key Management",
+          "items": [
+            "API keys hashed with SHA-256 + salt",
+            "Automatic key rotation reminders (90 days)",
+            "Instant key revocation capability"
+          ]
+        }
+      },
+      "tenantIsolation": {
+        "title": "Tenant Isolation",
+        "description": "How we keep your data separate",
+        "items": [
+          "Row-Level Security (RLS) enforced at database level",
+          "All queries filtered by user_id/org_id automatically",
+          "No shared indexes across tenants",
+          "Namespace separation for memory collections"
+        ],
+        "rbac": {
+          "title": "Access Control",
+          "items": [
+            "Role-based access (Owner, Admin, Member)",
+            "Per-organization API key scoping",
+            "Audit logs for all permission changes"
+          ]
+        }
+      },
+      "retention": {
+        "title": "Retention & Deletion",
+        "description": "How long we keep data and how to delete it",
+        "periods": [
+          {
+            "type": "Memories",
+            "period": "Until deleted by user"
+          },
+          {
+            "type": "API Logs",
+            "period": "90 days rolling"
+          },
+          {
+            "type": "Traces",
+            "period": "30 days (configurable)"
+          },
+          {
+            "type": "Audit Logs",
+            "period": "1 year"
+          },
+          {
+            "type": "Backups",
+            "period": "30 days encrypted"
+          }
+        ],
+        "deletion": {
+          "title": "Deletion Process",
+          "items": [
+            "DELETE /api/memories removes immediately",
+            "Account deletion: 30-day grace period",
+            "Hard delete from backups within 30 days",
+            "GDPR/CCPA data export available on request"
+          ]
+        }
+      },
+      "auditLogs": {
+        "title": "Audit Logs & Access Controls",
+        "description": "Tracking who does what",
+        "logged": {
+          "title": "Events We Log",
+          "items": [
+            "API key creation, rotation, revocation",
+            "Permission changes (RBAC)",
+            "Data export requests",
+            "Failed authentication attempts",
+            "Admin actions on organization"
+          ]
+        },
+        "access": {
+          "title": "Log Access",
+          "items": [
+            "Available to organization admins",
+            "Exportable via API (Pro+ plans)",
+            "Searchable by user, action, timestamp"
+          ]
+        }
+      },
+      "subprocessors": {
+        "title": "Subprocessors",
+        "description": "Third parties that process your data",
+        "processors": [
+          {
+            "name": "Supabase",
+            "purpose": "Database & Auth",
+            "location": "US (AWS)"
+          },
+          {
+            "name": "Vercel",
+            "purpose": "Hosting & CDN",
+            "location": "Global Edge"
+          },
+          {
+            "name": "Paddle",
+            "purpose": "Payments",
+            "location": "UK/US"
+          },
+          {
+            "name": "PostHog",
+            "purpose": "Product Analytics",
+            "location": "EU"
+          },
+          {
+            "name": "Sentry",
+            "purpose": "Error Monitoring",
+            "location": "US"
+          },
+          {
+            "name": "Cohere",
+            "purpose": "Reranking (optional)",
+            "location": "US/Canada"
+          }
+        ],
+        "note": "We only share the minimum data required for each service to function."
+      },
+      "disclosure": {
+        "title": "What We Don't Do Yet",
+        "description": "Honest gaps in our security posture",
+        "items": [
+          "SOC 2 Type II certification (in progress, ETA Q2 2026)",
+          "HIPAA compliance (planned for Enterprise)",
+          "On-premise deployment option (evaluating)",
+          "Hardware security modules (HSM) for key storage",
+          "Bug bounty program (planned Q3 2026)"
+        ],
+        "cta": "Have security questions? Contact us at security@seizn.com"
+      }
+    },
+    "contact": {
+      "title": "Questions?",
+      "description": "Our team is happy to answer security questions.",
+      "email": "security@seizn.com"
+    }
+  },
+  "limits": {
+    "title": "Limits & Billing",
+    "subtitle": "Understand your plan limits, quotas, and billing information.",
+    "unlimited": "Unlimited",
+    "custom": "Custom",
+    "requestsPerSecond": "requests/second",
+    "sidebar": {
+      "onThisPage": "On This Page",
+      "quotas": "Monthly Quotas",
+      "rateLimits": "حدود المعدل",
+      "overage": "Overage Behavior",
+      "reset": "Reset Times",
+      "headers": "Response Headers"
+    },
+    "table": {
+      "plan": "الخطة",
+      "monthlyQuota": "Monthly Quota",
+      "rps": "RPS Limit"
+    },
+    "plans": {
+      "free": {
+        "name": "مجاني",
+        "overage": "Soft throttle after limit"
+      },
+      "plus": {
+        "name": "Plus",
+        "overage": "Soft throttle, email alert"
+      },
+      "pro": {
+        "name": "Pro",
+        "overage": "Soft throttle, priority queue"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "overage": "Custom SLA, no throttle"
+      }
+    },
+    "quotas": {
+      "title": "Monthly Quotas",
+      "description": "Each plan includes a monthly API call quota. Quotas reset on the 1st of each month at 00:00 UTC."
+    },
+    "rateLimit": {
+      "title": "Rate Limits (RPS)",
+      "description": "Rate limits protect our infrastructure and ensure fair usage. Limits are applied per API key."
+    },
+    "overage": {
+      "title": "Overage Behavior",
+      "softThrottle": {
+        "title": "Soft Throttle (Quota Exceeded)",
+        "description": "When you exceed your monthly quota:",
+        "point1": "API calls continue at reduced priority",
+        "point2": "Response times may increase by 2-5x",
+        "point3": "Email notification at 80% and 100% usage"
+      },
+      "hard429": {
+        "title": "Hard 429 (Rate Limit)",
+        "description": "When you exceed the RPS rate limit:",
+        "recommendation": "Implement exponential backoff (1s, 2s, 4s, 8s) and retry with jitter."
+      }
+    },
+    "reset": {
+      "title": "Reset Times",
+      "monthly": {
+        "title": "Monthly Quota Reset",
+        "description": "Quotas reset on the first day of each month.",
+        "time": "1st of month, 00:00 UTC"
+      },
+      "rateLimit": {
+        "title": "Rate Limit Window",
+        "description": "Rate limits use a sliding window.",
+        "time": "Rolling 1-second window"
+      }
+    },
+    "headers": {
+      "limit": "Maximum requests allowed per window",
+      "remaining": "Remaining requests in current window",
+      "reset": "Unix timestamp when window resets",
+      "quotaLimit": "Monthly quota limit",
+      "quotaRemaining": "Remaining API calls this month",
+      "quotaReset": "ISO 8601 date when quota resets"
+    },
+    "headersSection": {
+      "title": "Response Headers",
+      "description": "Every API response includes headers to help you track your usage and limits.",
+      "header": "Header",
+      "headerDescription": "الوصف",
+      "example": "Example Response Headers:"
+    },
+    "upgrade": {
+      "title": "Need Higher Limits?",
+      "description": "Upgrade your plan for increased quotas, higher rate limits, and priority support.",
+      "viewPlans": "View Plans",
+      "contactSales": "اتصل بالمبيعات"
+    }
+  },
+  "help": {
+    "title": "Help Hub",
+    "subtitle": "Find answers, get support, and access resources.",
+    "search": {
+      "placeholder": "Search for help...",
+      "noResults": "No results found"
+    },
+    "sections": {
+      "support": {
+        "title": "Support Channels",
+        "description": "Get help from our team",
+        "email": {
+          "title": "Email Support",
+          "description": "Get help via email within 24 hours",
+          "action": "support@seizn.com"
+        },
+        "discord": {
+          "title": "Discord Community",
+          "description": "Join our community for real-time help",
+          "action": "Join Discord"
+        },
+        "github": {
+          "title": "GitHub Issues",
+          "description": "Report bugs and request features",
+          "action": "Open Issue"
+        }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "description": "Quick answers to common questions",
+        "viewAll": "View All FAQs"
+      },
+      "status": {
+        "title": "System Status",
+        "description": "Check current system status and incidents",
+        "viewStatus": "View Status Page",
+        "operational": "All Systems Operational",
+        "degraded": "Degraded Performance",
+        "outage": "Service Outage"
+      },
+      "billing": {
+        "title": "Billing & Plans",
+        "description": "Manage your subscription and payments",
+        "items": {
+          "plans": "View pricing plans",
+          "usage": "Check your usage",
+          "invoices": "Download invoices",
+          "upgrade": "Upgrade your plan"
+        }
+      },
+      "docs": {
+        "title": "Documentation",
+        "description": "Quick links to popular docs",
+        "links": {
+          "quickstart": "Quick Start Guide",
+          "apiReference": "مرجع API",
+          "sdks": "SDKs & Libraries",
+          "limits": "Limits & Billing",
+          "security": "الأمان"
+        }
+      }
+    },
+    "contact": {
+      "title": "Still Need Help?",
+      "description": "Our support team is here to help you succeed.",
+      "cta": "اتصل بالدعم"
+    }
+  },
+  "status": {
+    "title": "System Status",
+    "subtitle": "Real-time system status and incident history",
+    "lastUpdated": "Last updated",
+    "overall": {
+      "operational": "All Systems Operational",
+      "degraded": "Degraded Performance",
+      "partialOutage": "Partial System Outage",
+      "majorOutage": "Major System Outage"
+    },
+    "uptime": {
+      "title": "Uptime",
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days",
+      "90d": "90 days"
+    },
+    "services": {
+      "title": "Service Status",
+      "operational": "Operational",
+      "degraded": "Degraded",
+      "down": "Down"
+    },
+    "incidents": {
+      "active": "حوادث نشطة",
+      "history": "Incident History",
+      "noActive": "No active incidents",
+      "noHistory": "No past incidents",
+      "status": {
+        "investigating": "Investigating",
+        "identified": "Identified",
+        "monitoring": "Monitoring",
+        "resolved": "Resolved"
+      },
+      "severity": {
+        "minor": "Minor",
+        "major": "Major",
+        "critical": "Critical"
+      },
+      "affected": "الخدمات المتأثرة",
+      "timeline": "الجدول الزمني",
+      "started": "بدأ",
+      "resolved": "Resolved",
+      "duration": "المدة",
+      "viewDetails": "View Details"
+    },
+    "subscribe": {
+      "title": "Subscribe to Updates",
+      "rss": "RSS Feed",
+      "email": "Email Notifications"
     }
   }
 }

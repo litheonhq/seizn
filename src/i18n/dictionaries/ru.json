@@ -181,7 +181,7 @@
     "login": {
       "title": "С возвращением",
       "subtitle": "Войдите в аккаунт",
-      "email": "Email",
+      "email": "Электронная почта",
       "password": "Пароль",
       "submit": "Войти",
       "noAccount": "Нет аккаунта?",
@@ -192,7 +192,7 @@
       "title": "Создать аккаунт",
       "subtitle": "Начните работать с Seizn",
       "name": "Полное имя",
-      "email": "Email",
+      "email": "Электронная почта",
       "password": "Пароль",
       "submit": "Создать аккаунт",
       "hasAccount": "Уже есть аккаунт?",
@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Все права защищены.",
+    "copyright": "© {year} Litheon LLC. Все права защищены.",
     "privacy": "Конфиденциальность",
     "terms": "Условия",
     "contact": "Контакты"
@@ -351,8 +351,8 @@
       "createApiKey": "Создать API ключ"
     },
     "language": "Язык",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Организации",
+    "docs": "Документация",
     "nav": {
       "overview": "Обзор",
       "memories": "Память",
@@ -385,9 +385,9 @@
         "system": "СИСТЕМА"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
-    "playground": "Playground",
+    "pinSidebar": "Закрепить боковую панель",
+    "unpinSidebar": "Свернуть боковую панель",
+    "playground": "Песочница",
     "playgroundPage": {
       "title": "Консоль отладки",
       "subtitle": "Тестируйте запросы с трассировкой и настройкой параметров",
@@ -414,7 +414,15 @@
       "tracingDisabled": "Трассировка отключена",
       "executionTime": "Время выполнения",
       "tokensUsed": "Использовано токенов",
-      "steps": "Шаги",
+      "steps": {
+        "parseQuery": "Разбор запроса",
+        "createEmbedding": "Создать Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Поиск по ключевым словам",
+        "mergeResults": "Объединить результаты",
+        "rerank": "Переранжировать результаты",
+        "returnResults": "Вернуть результаты"
+      },
       "embedding": "Встраивание",
       "vectorSearch": "Векторный поиск",
       "reranking": "Переранжирование",
@@ -499,7 +507,7 @@
       "saving": "Сохранение...",
       "saved": "Сохранено",
       "saveFailed": "Ошибка сохранения",
-      "save": "Save Changes",
+      "save": "Сохранить изменения",
       "account": "Аккаунт",
       "email": "Эл. почта",
       "name": "Имя",
@@ -593,7 +601,7 @@
         "revokeSession": "Отозвать сессию",
         "revokeAllSessions": "Отозвать все остальные сессии",
         "changePassword": "Изменить пароль",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "Управляйте безопасностью пароля",
         "changePasswordHint": "Регулярно обновляйте пароль для безопасности",
         "currentPassword": "Текущий пароль",
         "newPassword": "Новый пароль",
@@ -657,33 +665,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "Доброе утро",
+      "afternoon": "Добрый день",
+      "evening": "Добрый вечер"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Обзор использования памяти ИИ",
+      "totalMemories": "Всего воспоминаний",
+      "apiCalls": "API-вызовы",
+      "activeKeys": "Активные API-ключи",
+      "currentPlan": "Текущий план",
+      "usage": "Использование",
+      "today": "Сегодня",
+      "dailyLimit": "Дневной лимит",
+      "recentMemories": "Последние воспоминания",
+      "viewAll": "Показать все",
+      "noMemories": "Воспоминаний пока нет",
+      "noMemoriesHint": "Начните с добавления первого воспоминания через API",
+      "quickStart": "Быстрый старт",
+      "createApiKey": "Создать API-ключ",
+      "getStartedApi": "Начните с API",
+      "viewDocumentation": "Просмотреть документацию",
+      "learnSeizn": "Узнайте, как использовать Seizn",
+      "createOrganization": "Создать организацию",
+      "collaborateTeam": "Сотрудничайте со своей командой",
+      "quickExample": "Быстрый пример",
+      "manageKeys": "Управление ключами",
+      "upgradePlan": "Обновить план",
       "apiUsageChart": "Использование API",
       "last7days": "Последние 7 дней",
       "viewDetails": "Подробнее",
@@ -969,7 +977,7 @@
       "step4": "Все события снижения регистрируются с указанием экономии для прозрачности"
     },
     "devtoolsPage": {
-      "title": "Retrieval DevTools",
+      "title": "Инструменты отладки поиска",
       "subtitle": "Отладка и анализ ваших RAG-конвейеров",
       "query": "Запрос",
       "noQueryText": "Нет текста запроса",
@@ -1266,7 +1274,7 @@
       },
       "subjects": {
         "description": "Просмотр и управление субъектами данных, взаимодействовавшими с вашей системой",
-        "email": "Email",
+        "email": "Электронная почта",
         "externalId": "Внешний ID",
         "requests": "Запросы",
         "dataCategories": "Категории данных",
@@ -1481,6 +1489,40 @@
         "events": "События для подписки",
         "cancel": "Отмена",
         "create": "Создать вебхук"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Воспоминание создано",
+          "desc": "Когда сохраняется новое воспоминание"
+        },
+        "memory_updated": {
+          "label": "Воспоминание обновлено",
+          "desc": "Когда воспоминание изменяется"
+        },
+        "memory_deleted": {
+          "label": "Воспоминание удалено",
+          "desc": "Когда воспоминание удаляется"
+        },
+        "extraction_completed": {
+          "label": "Извлечение завершено",
+          "desc": "Когда извлечение воспоминаний завершается"
+        },
+        "query_executed": {
+          "label": "Запрос выполнен",
+          "desc": "Когда выполняется RAG-запрос"
+        },
+        "key_created": {
+          "label": "API-ключ создан",
+          "desc": "Когда создаётся новый API-ключ"
+        },
+        "key_revoked": {
+          "label": "API-ключ отозван",
+          "desc": "Когда API-ключ отзывается"
+        },
+        "usage_threshold": {
+          "label": "Порог использования",
+          "desc": "Когда использование превышает порог"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1659,50 +1701,51 @@
     "socialProof": "Доверяют команды, работающие с агентами в масштабе",
     "liveDemo": "Живое Демо",
     "heroTagline": "Попробуйте API вживую — без регистрации",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "Первый поиск завершён",
+    "copySnippetHint": "Скопируйте фрагмент ниже для воспроизведения",
+    "copySnippetTitle": "Скопировать этот фрагмент",
+    "copySnippetSubtitle": "Сгенерировано из ваших точных настроек выше",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
+      "title": "Почему Seizn, а не LangChain + Pinecone?",
+      "subtitle": "Хватит склеивать разрозненные инструменты. Получите всё необходимое в одном интегрированном стеке.",
+      "tracingTitle": "Встроенный трейсинг + оценка",
       "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
       "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotTitle": "Автопилот с учётом бюджета",
       "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
+      "governanceTitle": "Управление + журналы аудита",
       "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
+      "governanceBadge": "По умолчанию для команд",
+      "lessGlueTitle": "Меньше движущихся частей",
       "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "lessGlueBadge": "Меньше связующего кода"
     },
     "trust": {
       "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "securityDesc": "Безопасно по умолчанию",
+      "rateLimits": "Ограничения скорости",
+      "rateLimitsDesc": "Оповещения об использовании",
+      "auditLogs": "Журналы аудита",
+      "auditLogsDesc": "Полная прослеживаемость"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
+      "title": "Простое, прозрачное ценообразование",
       "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "viewPricing": "Посмотреть цены",
+      "contactSales": "Связаться с отделом продаж"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "Документация",
+      "pricing": "Цены",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "Получить API-ключ",
+      "tryDemo": "Попробовать демо",
       "limits": "Лимиты",
       "status": "Статус",
       "help": "Помощь",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Сравнить"
     },
     "requestBuilder": {
       "title": "Конструктор Запросов",
@@ -1810,7 +1853,7 @@
       "resources": "Ресурсы",
       "security": "Безопасность",
       "sdks": "SDK",
-      "faq": "FAQ",
+      "faq": "Часто задаваемые вопросы",
       "tutorial": "Руководство за 5 минут",
       "integrations": "Интеграции"
     },
@@ -1930,7 +1973,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Все права защищены."
+      "copyright": "© {year} Litheon LLC. Все права защищены."
     },
     "faqPage": {
       "title": "Часто задаваемые вопросы",
@@ -1947,7 +1990,8 @@
         "extraction": "Извлечение",
         "operations": "Операции",
         "securityCompliance": "Безопасность и соответствие",
-        "technology": "Технология"
+        "technology": "Технология",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2094,8 +2138,8 @@
     },
     "componentsPage": {
       "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "subtitle": "Полная документация библиотеки UI-компонентов Seizn. Каждый компонент включает Props, примеры использования и лучшие практики.",
+      "all": "Все",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2147,25 +2191,25 @@
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
-      "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "usage": "Пример использования",
+      "propName": "Имя",
+      "propType": "Тип",
+      "propDefault": "По умолчанию",
+      "propDescription": "Описание",
+      "copy": "Копировать",
+      "copied": "Скопировано!",
       "categories": {
         "graph": {
           "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "description": "Интерактивная визуализация графов для отображения прав и взаимосвязей"
         },
         "explain": {
           "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "description": "Визуализация объяснимости и атрибуции результатов RAG"
         },
         "retops": {
           "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "description": "Панель мониторинга и аналитики операций поиска"
         }
       }
     },
@@ -2541,6 +2585,11 @@
           "badge": "Официальная",
           "title": "OpenTelemetry",
           "description": "Экспорт трейсов в Datadog, Grafana, Jaeger и любой OTLP-совместимый бэкенд."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2730,14 +2779,14 @@
     }
   },
   "demoQuery": {
-    "title": "Живое демо",
-    "subtitle": "Оцените пайплайн извлечения Seizn с полным трейсингом и прозрачностью стоимости.",
-    "tryItNow": "Попробуйте сейчас — регистрация не требуется",
+    "title": "Живая демонстрация",
+    "subtitle": "Испытайте конвейер поиска Seizn с полной трассировкой и прозрачностью затрат.",
+    "tryItNow": "Попробуйте сейчас — без регистрации",
     "queryPlaceholder": "Поисковый запрос",
     "runDemo": "Запустить демо",
     "running": "Выполняется...",
     "results": "Результаты",
-    "trace": "Трейс",
+    "trace": "Трассировка",
     "cost": "Стоимость",
     "noResults": "Запустите демо, чтобы увидеть результаты",
     "errorTitle": "Ошибка",
@@ -2748,35 +2797,35 @@
     "rerankScore": "Переранжирование",
     "latency": "Задержка",
     "tokens": "Токены",
-    "cached": "из кэша",
+    "cached": "кэш",
     "model": "Модель",
     "input": "Вход",
     "output": "Выход",
-    "costBreakdown": "Разбивка",
+    "costBreakdown": "Детализация",
     "total": "Итого",
     "embedding": "Эмбеддинг",
     "vectorSearch": "Векторный поиск",
     "rerank": "Переранжирование",
     "answerContract": "Контракт ответа",
-    "tokensIn": "Токенов на входе",
-    "tokensOut": "Токенов на выходе",
-    "queryUnits": "Единиц запросов",
+    "tokensIn": "Входные токены",
+    "tokensOut": "Выходные токены",
+    "queryUnits": "Единицы запросов",
     "prefilledQueries": [
-      "Примеры запросов"
+      "Попробовать примеры"
     ]
   },
   "publicTrace": {
-    "title": "Общий трейс",
-    "subtitle": "Просмотр деталей общего трейса извлечения",
-    "sharedBy": "Общий трейс",
-    "expired": "Срок действия ссылки истёк",
-    "expiredDesc": "Ссылка для доступа больше не действительна. Попросите владельца создать новую ссылку.",
-    "notFound": "Трейс не найден",
-    "notFoundDesc": "Этот общий трейс не найден. Возможно, доступ был отозван или трейс удалён.",
+    "title": "Общая трассировка",
+    "subtitle": "Просмотр общей трассировки поиска",
+    "sharedBy": "Общая трассировка",
+    "expired": "Эта ссылка истекла",
+    "expiredDesc": "Ссылка больше не действительна. Попросите владельца создать новую.",
+    "notFound": "Трассировка не найдена",
+    "notFoundDesc": "Эта общая трассировка не найдена. Возможно, она была отозвана или удалена.",
     "backToHome": "На главную",
     "requestId": "ID запроса",
     "collection": "Коллекция",
-    "createdAt": "Создан",
+    "createdAt": "Создано",
     "totalLatency": "Общая задержка",
     "totalCost": "Общая стоимость",
     "resultsCount": "Результаты",
@@ -2784,10 +2833,10 @@
     "timeline": "Хронология",
     "candidates": "Кандидаты",
     "rerankDiff": "Разница переранжирования",
-    "costAnalysis": "Анализ стоимости",
+    "costAnalysis": "Анализ затрат",
     "redacted": "[СКРЫТО]",
-    "piiMasked": "Персональные данные скрыты",
-    "readOnlyNote": "Это представление общего трейса доступно только для чтения."
+    "piiMasked": "PII скрыты для конфиденциальности",
+    "readOnlyNote": "Это представление общей трассировки только для чтения."
   },
   "trustPage": {
     "title": "Центр доверия",
@@ -2997,7 +3046,7 @@
     },
     "plans": {
       "free": {
-        "name": "Free",
+        "name": "Бесплатный",
         "overage": "Мягкое ограничение после исчерпания лимита"
       },
       "plus": {

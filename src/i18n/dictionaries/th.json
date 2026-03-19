@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. สงวนลิขสิทธิ์",
+    "copyright": "© {year} Litheon LLC. สงวนลิขสิทธิ์",
     "privacy": "ความเป็นส่วนตัว",
     "terms": "ข้อกำหนด",
     "contact": "ติดต่อ"
@@ -267,7 +267,7 @@
       "dailyTrends": "แนวโน้มรายวัน",
       "tabCalls": "การเรียก",
       "tabCost": "ค่าใช้จ่าย",
-      "tabLatency": "Latency",
+      "tabLatency": "เวลาแฝง",
       "tabErrors": "ข้อผิดพลาด",
       "noUsageTitle": "ยังไม่มีข้อมูลการใช้งาน",
       "noUsageDescription": "ส่งคำขอ API แรกของคุณเพื่อดูการวิเคราะห์การใช้งาน ข้อมูลจะปรากฏที่นี่ภายใน 5 วินาที",
@@ -318,7 +318,7 @@
     },
     "pinSidebar": "ปักหมุดแถบด้านข้าง",
     "unpinSidebar": "ยุบแถบด้านข้าง",
-    "playground": "Playground",
+    "playground": "พื้นที่ทดสอบ",
     "playgroundPage": {
       "title": "แดชบอร์ดการดีบัก",
       "subtitle": "ทดสอบคำค้นหาพร้อมการติดตามและปรับแต่งพารามิเตอร์",
@@ -345,7 +345,15 @@
       "tracingDisabled": "ปิดการติดตามแล้ว",
       "executionTime": "เวลาดำเนินการ",
       "tokensUsed": "Token ที่ใช้",
-      "steps": "ขั้นตอน",
+      "steps": {
+        "parseQuery": "แยกวิเคราะห์คำค้น",
+        "createEmbedding": "สร้าง Embedding",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "ค้นหาด้วยคีย์เวิร์ด",
+        "mergeResults": "รวมผลลัพธ์",
+        "rerank": "จัดอันดับผลลัพธ์ใหม่",
+        "returnResults": "ส่งคืนผลลัพธ์"
+      },
       "embedding": "Embedding",
       "vectorSearch": "การค้นหา Vector",
       "reranking": "การจัดอันดับใหม่",
@@ -389,7 +397,7 @@
       "hybrid": "Hybrid",
       "keyword": "Keyword",
       "rerank": "เปิดใช้งาน Rerank",
-      "trace": "Trace",
+      "trace": "การติดตาม",
       "cost": "ค่าใช้จ่าย",
       "similarity": "ความคล้ายคลึง",
       "memoryType": "ประเภท",
@@ -430,7 +438,7 @@
       "saving": "กำลังบันทึก...",
       "saved": "บันทึกแล้ว",
       "saveFailed": "บันทึกล้มเหลว",
-      "save": "Save Changes",
+      "save": "บันทึกการเปลี่ยนแปลง",
       "account": "บัญชี",
       "email": "อีเมล",
       "name": "ชื่อ",
@@ -524,7 +532,7 @@
         "revokeSession": "เพิกถอนเซสชัน",
         "revokeAllSessions": "เพิกถอนเซสชันอื่นทั้งหมด",
         "changePassword": "เปลี่ยนรหัสผ่าน",
-        "passwordDesc": "Manage your password security",
+        "passwordDesc": "จัดการความปลอดภัยรหัสผ่านของคุณ",
         "changePasswordHint": "อัปเดตรหัสผ่านเป็นประจำเพื่อความปลอดภัย",
         "currentPassword": "รหัสผ่านปัจจุบัน",
         "newPassword": "รหัสผ่านใหม่",
@@ -580,7 +588,7 @@
         "feature": "คุณสมบัติ",
         "memoriesLabel": "หน่วยความจำ",
         "apiCallsLabel": "การเรียก API/เดือน",
-        "apiKeysLabel": "API Keys",
+        "apiKeysLabel": "คีย์ API",
         "priceLabel": "ราคา",
         "contactUs": "ติดต่อเรา",
         "used": "ใช้แล้ว",
@@ -1343,9 +1351,9 @@
       "toggle": "สลับธีม"
     },
     "activity": {
-      "endpoint": "Endpoint",
+      "endpoint": "จุดปลาย",
       "status": "สถานะ",
-      "latency": "Latency",
+      "latency": "เวลาแฝง",
       "cost": "ค่าใช้จ่าย",
       "key": "Key",
       "time": "เวลา"
@@ -1449,7 +1457,7 @@
         "deliveries": "การส่งทั้งหมด"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "จุดปลาย",
         "deliveries": "การส่งล่าสุด"
       },
       "success": "สำเร็จ",
@@ -1478,6 +1486,40 @@
         "events": "เหตุการณ์ที่จะสมัครสมาชิก",
         "cancel": "ยกเลิก",
         "create": "สร้าง Webhook"
+      },
+      "events": {
+        "memory_created": {
+          "label": "สร้างความทรงจำแล้ว",
+          "desc": "เมื่อมีการจัดเก็บความทรงจำใหม่"
+        },
+        "memory_updated": {
+          "label": "อัปเดตความทรงจำแล้ว",
+          "desc": "เมื่อมีการแก้ไขความทรงจำ"
+        },
+        "memory_deleted": {
+          "label": "ลบความทรงจำแล้ว",
+          "desc": "เมื่อมีการลบความทรงจำ"
+        },
+        "extraction_completed": {
+          "label": "การสกัดเสร็จสิ้น",
+          "desc": "เมื่อการสกัดความทรงจำเสร็จสิ้น"
+        },
+        "query_executed": {
+          "label": "ดำเนินการคำค้นแล้ว",
+          "desc": "เมื่อมีการดำเนินการคำค้น RAG"
+        },
+        "key_created": {
+          "label": "สร้างคีย์ API แล้ว",
+          "desc": "เมื่อสร้างคีย์ API ใหม่"
+        },
+        "key_revoked": {
+          "label": "เพิกถอนคีย์ API แล้ว",
+          "desc": "เมื่อเพิกถอนคีย์ API"
+        },
+        "usage_threshold": {
+          "label": "เกณฑ์การใช้งาน",
+          "desc": "เมื่อการใช้งานเกินเกณฑ์"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1678,7 +1720,7 @@
     "trust": {
       "security": "RLS + Key Hashing",
       "securityDesc": "ปลอดภัยโดยค่าเริ่มต้น",
-      "rateLimits": "Rate Limits",
+      "rateLimits": "ข้อจำกัดอัตรา",
       "rateLimitsDesc": "การแจ้งเตือนการใช้งาน",
       "auditLogs": "บันทึกการตรวจสอบ",
       "auditLogsDesc": "ความสามารถในการติดตามแบบเต็ม"
@@ -1698,7 +1740,8 @@
       "limits": "ขีดจำกัด",
       "status": "สถานะ",
       "help": "ช่วยเหลือ",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "เปรียบเทียบ"
     },
     "requestBuilder": {
       "title": "ตัวสร้างคำขอ",
@@ -1735,7 +1778,7 @@
     "tracePanel": {
       "tracing": "กำลังติดตาม pipeline...",
       "noTrace": "รันคำค้นหาเพื่อดูการติดตาม",
-      "latency": "Latency",
+      "latency": "เวลาแฝง",
       "cost": "ค่าใช้จ่าย",
       "tokens": "Token",
       "vectorOps": "Vector Ops",
@@ -1750,7 +1793,7 @@
       "cost": "ต้นทุน"
     },
     "chips": {
-      "trace": "Trace",
+      "trace": "การติดตาม",
       "eval": "Eval",
       "policy": "Policy"
     },
@@ -1777,7 +1820,7 @@
     "errorDisplay": {
       "error": "ข้อผิดพลาด",
       "errorCode": "รหัส",
-      "traceId": "Trace",
+      "traceId": "การติดตาม",
       "hint": "คำแนะนำ",
       "tryAgain": "ลองอีกครั้ง",
       "copyTraceId": "คัดลอก Trace ID",
@@ -1800,13 +1843,13 @@
       "namespaceScope": "Namespace & Scope",
       "bestPractices": "แนวปฏิบัติที่ดี",
       "apiReference": "อ้างอิง API",
-      "endpoints": "Endpoints",
+      "endpoints": "จุดปลาย",
       "rateLimits": "ขีดจำกัด",
       "errorCodes": "รหัสข้อผิดพลาด",
       "resources": "ทรัพยากร",
       "security": "ความปลอดภัย",
       "sdks": "SDKs",
-      "faq": "FAQ",
+      "faq": "คำถามที่พบบ่อย",
       "tutorial": "บทเรียน 5 นาที",
       "integrations": "การเชื่อมต่อ"
     },
@@ -1829,8 +1872,8 @@
       "securityText": "เก็บรักษาคีย์ API ของคุณเป็นความลับ อย่าเปิดเผยในโค้ดฝั่ง client ใช้ตัวแปรสภาพแวดล้อมหรือ backend proxy"
     },
     "endpoints": {
-      "title": "API Endpoints",
-      "requestBody": "Request Body",
+      "title": "จุดปลาย API",
+      "requestBody": "เนื้อหาคำขอ",
       "queryParams": "Query Parameters",
       "response": "การตอบกลับ",
       "postMemories": {
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. สงวนลิขสิทธิ์"
+      "copyright": "© {year} Litheon LLC. สงวนลิขสิทธิ์"
     },
     "faqPage": {
       "title": "คำถามที่พบบ่อย",
@@ -1942,7 +1985,9 @@
         "searchRetrieval": "การค้นหาและเรียกค้น",
         "extraction": "การดึงข้อมูล",
         "operations": "การดำเนินการ",
-        "securityCompliance": "ความปลอดภัยและการปฏิบัติตาม"
+        "securityCompliance": "ความปลอดภัยและการปฏิบัติตาม",
+        "technology": "เทคโนโลยี",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2358,7 +2403,7 @@
       },
       "nextSteps": {
         "apiReference": {
-          "title": "API Reference",
+          "title": "ข้อมูลอ้างอิง API",
           "description": "สำรวจ Endpoint และตัวเลือกทั้งหมดสำหรับกรณีใช้งานขั้นสูง"
         },
         "sdkExamples": {
@@ -2366,7 +2411,7 @@
           "description": "ตัวอย่างพร้อมใช้สำหรับ Python, TypeScript และอื่นๆ"
         },
         "faq": {
-          "title": "FAQ",
+          "title": "คำถามที่พบบ่อย",
           "description": "คำถามที่พบบ่อยเกี่ยวกับประเภทหน่วยความจำ เนมสเปซ และแนวปฏิบัติที่ดี"
         }
       }
@@ -2376,7 +2421,7 @@
         "title": "API Reference | Seizn",
         "description": "เอกสาร API ฉบับสมบูรณ์สำหรับ Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain และ RetOps API"
       },
-      "title": "API Reference",
+      "title": "ข้อมูลอ้างอิง API",
       "description": "เอกสารฉบับสมบูรณ์สำหรับ Seizn API ทั้งหมด ได้แก่ Memory, AI, Webhooks, CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain และ RetOps",
       "auth": {
         "title": "การยืนยันตัวตน",
@@ -2460,7 +2505,7 @@
       "nextSteps": {
         "title": "ขั้นตอนถัดไป",
         "apiReference": {
-          "title": "API Reference",
+          "title": "ข้อมูลอ้างอิง API",
           "description": "สำรวจ Endpoint ทั้งหมดสำหรับหน่วยความจำ การสกัด และ RAG Query"
         },
         "sdkExamples": {
@@ -2468,7 +2513,7 @@
           "description": "ตัวอย่างพร้อมใช้สำหรับ Python, TypeScript และ REST"
         },
         "faq": {
-          "title": "FAQ",
+          "title": "คำถามที่พบบ่อย",
           "description": "เรียนรู้เกี่ยวกับประเภทหน่วยความจำ เนมสเปซ และแนวปฏิบัติที่ดี"
         }
       }
@@ -2496,6 +2541,11 @@
           "badge": "อย่างเป็นทางการ",
           "title": "OpenTelemetry",
           "description": "ส่งออก Trace ไปยัง Datadog, Grafana, Jaeger และแบ็กเอนด์ที่รองรับ OTLP ทั้งหมด"
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2589,7 +2639,7 @@
           "description": "เปิดใช้งาน Streaming เพื่อประสบการณ์ผู้ใช้ที่ดีขึ้นสำหรับการตอบกลับที่ยาว"
         },
         "hybrid": {
-          "title": "Hybrid Search",
+          "title": "ค้นหาแบบผสม",
           "description": "รวมการค้นหาเวกเตอร์และคำสำคัญเพื่อ Recall ที่ดีขึ้น"
         },
         "nodePostprocessors": {
@@ -2685,64 +2735,64 @@
     }
   },
   "demoQuery": {
-    "title": "สาธิตสด",
-    "subtitle": "สัมผัส Pipeline การค้นคืนของ Seizn พร้อม Tracing และความโปร่งใสด้านต้นทุน",
-    "tryItNow": "ลองใช้เลย - ไม่ต้องสมัครสมาชิก",
+    "title": "ตัวอย่างสด",
+    "subtitle": "สัมผัสท่อส่งการค้นคืนของ Seizn พร้อมการติดตามเต็มรูปแบบและความโปร่งใสด้านค่าใช้จ่าย",
+    "tryItNow": "ลองตอนนี้ - ไม่ต้องสมัครสมาชิก",
     "queryPlaceholder": "คำค้นหา",
-    "runDemo": "เรียกใช้สาธิต",
-    "running": "กำลังทำงาน...",
+    "runDemo": "รันเดโม",
+    "running": "กำลังรัน...",
     "results": "ผลลัพธ์",
-    "trace": "Trace",
-    "cost": "ต้นทุน",
-    "noResults": "เรียกใช้สาธิตเพื่อดูผลลัพธ์",
+    "trace": "ร่องรอย",
+    "cost": "ค่าใช้จ่าย",
+    "noResults": "รันเดโมเพื่อดูผลลัพธ์",
     "errorTitle": "ข้อผิดพลาด",
     "rateLimitError": "เกินขีดจำกัดอัตรา กรุณารอสักครู่",
     "retryIn": "ลองใหม่ใน",
     "seconds": "วินาที",
     "score": "คะแนน",
-    "rerankScore": "Rerank",
+    "rerankScore": "จัดอันดับใหม่",
     "latency": "เวลาตอบสนอง",
     "tokens": "โทเค็น",
-    "cached": "แคชแล้ว",
+    "cached": "แคช",
     "model": "โมเดล",
     "input": "อินพุต",
     "output": "เอาต์พุต",
     "costBreakdown": "รายละเอียด",
-    "total": "ต้นทุนรวม",
+    "total": "ค่าใช้จ่ายรวม",
     "embedding": "Embedding",
     "vectorSearch": "ค้นหาเวกเตอร์",
-    "rerank": "Rerank",
+    "rerank": "จัดอันดับใหม่",
     "answerContract": "สัญญาคำตอบ",
-    "tokensIn": "โทเค็นเข้า",
-    "tokensOut": "โทเค็นออก",
-    "queryUnits": "หน่วยคำค้นหา",
+    "tokensIn": "โทเค็นขาเข้า",
+    "tokensOut": "โทเค็นขาออก",
+    "queryUnits": "หน่วยคำค้น",
     "prefilledQueries": [
       "ลองตัวอย่าง"
     ]
   },
   "publicTrace": {
-    "title": "Trace ที่แชร์",
-    "subtitle": "ดูรายละเอียด Trace การค้นคืนที่แชร์",
-    "sharedBy": "Trace ที่แชร์",
+    "title": "แชร์ร่องรอย",
+    "subtitle": "ดูรายละเอียดร่องรอยการค้นคืนที่แชร์",
+    "sharedBy": "ร่องรอยที่แชร์",
     "expired": "ลิงก์นี้หมดอายุแล้ว",
-    "expiredDesc": "ลิงก์แชร์นี้ไม่สามารถใช้งานได้อีก โปรดขอให้เจ้าของสร้างลิงก์ใหม่",
-    "notFound": "ไม่พบ Trace",
-    "notFoundDesc": "ไม่พบ Trace ที่แชร์นี้ อาจถูกเพิกถอนหรือลบแล้ว",
+    "expiredDesc": "ลิงก์แชร์ไม่สามารถใช้ได้อีกต่อไป ขอให้เจ้าของสร้างลิงก์ใหม่",
+    "notFound": "ไม่พบร่องรอย",
+    "notFoundDesc": "ไม่พบร่องรอยที่แชร์นี้ อาจถูกเพิกถอนหรือลบไปแล้ว",
     "backToHome": "กลับหน้าหลัก",
-    "requestId": "Request ID",
-    "collection": "Collection",
+    "requestId": "ID คำขอ",
+    "collection": "คอลเลกชัน",
     "createdAt": "สร้างเมื่อ",
     "totalLatency": "เวลาตอบสนองรวม",
-    "totalCost": "ต้นทุนรวม",
+    "totalCost": "ค่าใช้จ่ายรวม",
     "resultsCount": "ผลลัพธ์",
-    "query": "คำค้นหา",
+    "query": "คำค้น",
     "timeline": "ไทม์ไลน์",
-    "candidates": "ตัวเลือก",
-    "rerankDiff": "ผลต่าง Rerank",
-    "costAnalysis": "การวิเคราะห์ต้นทุน",
-    "redacted": "[ปกปิด]",
-    "piiMasked": "ปกปิด PII เพื่อความเป็นส่วนตัว",
-    "readOnlyNote": "นี่คือมุมมองอ่านอย่างเดียวของ Trace ที่แชร์"
+    "candidates": "ผู้สมัคร",
+    "rerankDiff": "ความแตกต่างการจัดอันดับใหม่",
+    "costAnalysis": "การวิเคราะห์ค่าใช้จ่าย",
+    "redacted": "[ถูกซ่อน]",
+    "piiMasked": "ซ่อน PII เพื่อความเป็นส่วนตัว",
+    "readOnlyNote": "นี่คือมุมมองอ่านอย่างเดียวของร่องรอยที่แชร์"
   },
   "trustPage": {
     "title": "ศูนย์ความเชื่อมั่น",
@@ -3081,7 +3131,7 @@
         "description": "ลิงก์ด่วนไปยังเอกสารยอดนิยม",
         "links": {
           "quickstart": "คู่มือเริ่มต้น",
-          "apiReference": "API Reference",
+          "apiReference": "ข้อมูลอ้างอิง API",
           "sdks": "SDK และไลบรารี",
           "limits": "ขีดจำกัดและการเรียกเก็บเงิน",
           "security": "ความปลอดภัย"

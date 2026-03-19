@@ -201,7 +201,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Seizn. Alle rechten voorbehouden.",
+    "copyright": "© {year} Litheon LLC. Alle rechten voorbehouden.",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "contact": "Contact"
@@ -236,31 +236,31 @@
       "noKeys": "Nog geen API-sleutels. Maak er een om te beginnen."
     },
     "usagePage": {
-      "title": "Usage Analytics",
-      "period": "Current Period",
-      "memoriesUsed": "Memories Used",
-      "apiCallsUsed": "API Calls Used",
-      "remaining": "Remaining",
-      "upgrade": "Upgrade Plan",
-      "subtitle": "Monitor your API usage and costs.",
+      "title": "Gebruiksanalyse",
+      "period": "Huidige periode",
+      "memoriesUsed": "Gebruikte herinneringen",
+      "apiCallsUsed": "Gebruikte API-aanroepen",
+      "remaining": "Resterend",
+      "upgrade": "Plan upgraden",
+      "subtitle": "Houd uw API-gebruik en kosten bij.",
       "days7": "7 Days",
       "days30": "30 Days",
       "days90": "90 Days",
-      "loading": "Loading...",
-      "totalApiCalls": "Total API Calls",
-      "totalTokens": "Total Tokens",
-      "estimatedCost": "Estimated Cost",
-      "avgLatency": "Avg Latency",
+      "loading": "Laden...",
+      "totalApiCalls": "Totaal API-aanroepen",
+      "totalTokens": "Totaal tokens",
+      "estimatedCost": "Geschatte kosten",
+      "avgLatency": "Gem. latentie",
       "dailyApiCalls": "Daily API Calls",
-      "calls": "calls",
-      "endpointUsage": "Endpoint Usage",
-      "noData": "No data yet",
+      "calls": "aanroepen",
+      "endpointUsage": "Eindpuntgebruik",
+      "noData": "Nog geen gegevens",
       "avg": "avg",
-      "errors": "errors",
-      "usageByApiKey": "Usage by API Key",
-      "errorsTitle": "Errors",
-      "errorRate": "error rate",
-      "noUsageData": "No usage data available",
+      "errors": "fouten",
+      "usageByApiKey": "Gebruik per API-sleutel",
+      "errorsTitle": "Fouten",
+      "errorRate": "foutpercentage",
+      "noUsageData": "Geen gebruiksgegevens beschikbaar",
       "p95Latency": "p95 Latentie",
       "errorRateKpi": "Foutpercentage",
       "monthlyApiCalls": "Maandelijkse API-aanroepen",
@@ -282,15 +282,15 @@
       "createApiKey": "API-sleutel Aanmaken"
     },
     "language": "Taal",
-    "organizations": "Organizations",
-    "docs": "Docs",
+    "organizations": "Organisaties",
+    "docs": "Documentatie",
     "nav": {
       "overview": "Overzicht",
       "memories": "Herinneringen",
       "mindMap": "Mindmap",
       "candidates": "Kandidaten",
       "devTools": "DevTools",
-      "playground": "Playground",
+      "playground": "Speeltuin",
       "evals": "Evaluaties",
       "analytics": "Analyse",
       "governance": "Governance",
@@ -316,24 +316,24 @@
         "system": "SYSTEEM"
       }
     },
-    "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Collapse sidebar",
-    "playground": "Playground",
+    "pinSidebar": "Zijbalk vastzetten",
+    "unpinSidebar": "Zijbalk inklappen",
+    "playground": "Speeltuin",
     "playgroundPage": {
-      "title": "Debug Console",
+      "title": "Debugconsole",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
       "queryPlaceholder": "Enter your test query...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
-      "threshold": "Threshold",
+      "threshold": "Drempel",
       "thresholdHint": "Minimum similarity score",
       "filters": "Filters",
       "filtersHint": "Metadata filters in JSON format",
-      "runQuery": "Run Query",
-      "running": "Running...",
-      "results": "Results",
+      "runQuery": "Query uitvoeren",
+      "running": "Uitvoeren...",
+      "results": "Resultaten",
       "noResults": "No results found",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
@@ -345,7 +345,15 @@
       "tracingDisabled": "Tracing disabled",
       "executionTime": "Execution Time",
       "tokensUsed": "Tokens Used",
-      "steps": "Steps",
+      "steps": {
+        "parseQuery": "Query parseren",
+        "createEmbedding": "Embedding aanmaken",
+        "vectorSearch": "Vector Search",
+        "keywordSearch": "Zoeken op trefwoorden",
+        "mergeResults": "Resultaten samenvoegen",
+        "rerank": "Resultaten herrangschikken",
+        "returnResults": "Resultaten retourneren"
+      },
       "embedding": "Embedding",
       "vectorSearch": "Vector Search",
       "reranking": "Reranking",
@@ -425,37 +433,37 @@
       "rankChanges": "Rangschikkingswijzigingen"
     },
     "settingsPage": {
-      "title": "Settings",
-      "subtitle": "Profile & Preferences",
-      "saving": "Saving...",
-      "saved": "Saved",
-      "saveFailed": "Save failed",
-      "save": "Save Changes",
+      "title": "Instellingen",
+      "subtitle": "Profiel & voorkeuren",
+      "saving": "Opslaan...",
+      "saved": "Opgeslagen",
+      "saveFailed": "Opslaan mislukt",
+      "save": "Wijzigingen opslaan",
       "account": "Account",
-      "email": "Email",
-      "name": "Name",
-      "languageHint": "Affects UI + dashboard",
-      "loading": "Loading...",
-      "loginRequired": "Login required.",
+      "email": "E-mail",
+      "name": "Naam",
+      "languageHint": "Beïnvloedt UI + dashboard",
+      "loading": "Laden...",
+      "loginRequired": "Inloggen vereist.",
       "tabs": {
-        "profile": "Profile",
+        "profile": "Profiel",
         "budget": "Budget",
-        "notifications": "Notifications",
-        "security": "Security",
+        "notifications": "Meldingen",
+        "security": "Beveiliging",
         "billing": "Facturering",
         "danger": "Gegevensbeheer"
       },
       "budget": {
         "title": "Budget Management",
         "description": "Set API usage limits and notifications",
-        "monthlyLimit": "Monthly Limit",
+        "monthlyLimit": "Maandelijkse limiet",
         "monthlyLimitHint": "Set monthly usage cap",
-        "dailyLimit": "Daily Limit",
+        "dailyLimit": "Dagelijkse limiet",
         "dailyLimitHint": "Set daily usage cap",
         "currentUsage": "Current Usage",
         "remainingBudget": "Remaining Budget",
         "usageHistory": "Usage History",
-        "alertThreshold": "Alert Threshold",
+        "alertThreshold": "Waarschuwingsdrempel",
         "alertThresholdHint": "Get alerted at this percentage of limit",
         "alertEnabled": "Budget alerts enabled",
         "alertDisabled": "Budget alerts disabled",
@@ -478,7 +486,7 @@
         "queue": "Verzoek in Wachtrij"
       },
       "notifications": {
-        "title": "Notification Settings",
+        "title": "Meldingsinstellingen",
         "description": "Manage your notification preferences",
         "email": "Email Notifications",
         "emailHint": "Receive emails about account activity",
@@ -509,26 +517,26 @@
         "integrations": "Integraties"
       },
       "security": {
-        "title": "Security Settings",
+        "title": "Beveiligingsinstellingen",
         "description": "Manage your account security",
-        "twoFactor": "Two-Factor Authentication",
+        "twoFactor": "Tweefactorauthenticatie",
         "twoFactorHint": "Add an extra layer of security to your account",
         "twoFactorEnabled": "Two-factor authentication enabled",
         "twoFactorDisabled": "Two-factor authentication disabled",
         "enableTwoFactor": "Enable Two-Factor",
         "disableTwoFactor": "Disable Two-Factor",
-        "sessions": "Active Sessions",
+        "sessions": "Actieve sessies",
         "sessionsHint": "Manage your active devices and sessions",
         "currentSession": "Current Session",
         "lastActive": "Last Active",
         "revokeSession": "Revoke Session",
         "revokeAllSessions": "Revoke All Other Sessions",
-        "changePassword": "Change Password",
-        "passwordDesc": "Manage your password security",
+        "changePassword": "Wachtwoord wijzigen",
+        "passwordDesc": "Beheer uw wachtwoordbeveiliging",
         "changePasswordHint": "Update your password regularly for security",
-        "currentPassword": "Current Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm Password",
+        "currentPassword": "Huidig wachtwoord",
+        "newPassword": "Nieuw wachtwoord",
+        "confirmPassword": "Wachtwoord bevestigen",
         "passwordChanged": "Password changed",
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password too short",
@@ -545,11 +553,11 @@
       "dangerZone": {
         "title": "Danger Zone",
         "description": "Irreversible actions",
-        "deleteAccount": "Delete Account",
+        "deleteAccount": "Account verwijderen",
         "deleteAccountHint": "Permanently delete your account and all data",
         "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
         "deleteAccountButton": "Delete My Account",
-        "exportData": "Export Data",
+        "exportData": "Gegevens exporteren",
         "exportDataHint": "Download a copy of all your data",
         "exportDataButton": "Export Data",
         "exportInProgress": "Export in progress...",
@@ -588,33 +596,33 @@
       }
     },
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "morning": "Goedemorgen",
+      "afternoon": "Goedemiddag",
+      "evening": "Goedenavond"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
-      "apiCalls": "API Calls",
-      "activeKeys": "Active API Keys",
-      "currentPlan": "Current Plan",
-      "usage": "Usage",
-      "today": "Today",
-      "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
-      "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
-      "upgradePlan": "Upgrade Plan",
+      "subtitle": "Hier is een overzicht van uw AI-geheugengebruik",
+      "totalMemories": "Totaal herinneringen",
+      "apiCalls": "API-aanroepen",
+      "activeKeys": "Actieve API-sleutels",
+      "currentPlan": "Huidig plan",
+      "usage": "Gebruik",
+      "today": "Vandaag",
+      "dailyLimit": "Dagelijkse limiet",
+      "recentMemories": "Recente herinneringen",
+      "viewAll": "Alles bekijken",
+      "noMemories": "Nog geen herinneringen",
+      "noMemoriesHint": "Begin met het toevoegen van uw eerste herinnering via de API",
+      "quickStart": "Snelstart",
+      "createApiKey": "API-sleutel aanmaken",
+      "getStartedApi": "Begin met de API",
+      "viewDocumentation": "Documentatie bekijken",
+      "learnSeizn": "Leer hoe u Seizn gebruikt",
+      "createOrganization": "Organisatie aanmaken",
+      "collaborateTeam": "Werk samen met uw team",
+      "quickExample": "Snel voorbeeld",
+      "manageKeys": "Sleutels beheren",
+      "upgradePlan": "Plan upgraden",
       "apiUsageChart": "API-gebruik",
       "last7days": "Laatste 7 dagen",
       "viewDetails": "Details Bekijken",
@@ -627,34 +635,34 @@
       "sendFirstRequest": "Eerste Verzoek Versturen"
     },
     "keysPage": {
-      "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
-      "createNewKey": "Create New Key",
-      "activeKeys": "Active Keys",
-      "noKeysTitle": "No API keys yet",
-      "noKeysDesc": "Create your first API key to start integrating with Seizn",
-      "createApiKey": "Create API Key",
-      "created": "Created",
-      "neverUsed": "Never used",
-      "lastUsed": "Last used",
-      "revoke": "Revoke",
+      "title": "API-sleutels",
+      "subtitle": "Beheer uw API-sleutels voor toegang tot Seizn-diensten",
+      "createNewKey": "Nieuwe sleutel aanmaken",
+      "activeKeys": "Actieve sleutels",
+      "noKeysTitle": "Nog geen API-sleutels",
+      "noKeysDesc": "Maak uw eerste API-sleutel aan om te beginnen met Seizn",
+      "createApiKey": "API-sleutel aanmaken",
+      "created": "Aangemaakt",
+      "neverUsed": "Nooit gebruikt",
+      "lastUsed": "Laatst gebruikt",
+      "revoke": "Intrekken",
       "revokeConfirm": "Revoke API key \"{keyName}\"? This action cannot be undone.",
-      "usageGuide": "Usage Guide",
-      "authentication": "Authentication",
-      "authDesc": "Include your API key in the request header:",
-      "exampleRequest": "Example Request",
-      "keyCreated": "API Key Created!",
-      "keyCreatedDesc": "Copy this key now. You won't see it again.",
-      "copyToClipboard": "Copy to Clipboard",
-      "copied": "Copied!",
-      "done": "Done",
-      "createKeyTitle": "Create API Key",
-      "createKeyDesc": "Give your key a descriptive name",
-      "keyName": "Key Name",
+      "usageGuide": "Gebruiksgids",
+      "authentication": "Authenticatie",
+      "authDesc": "Neem uw API-sleutel op in de aanvraagheader:",
+      "exampleRequest": "Voorbeeldverzoek",
+      "keyCreated": "API-sleutel aangemaakt!",
+      "keyCreatedDesc": "Kopieer deze sleutel nu. U zult hem niet meer zien.",
+      "copyToClipboard": "Kopiëren naar klembord",
+      "copied": "Gekopieerd!",
+      "done": "Klaar",
+      "createKeyTitle": "API-sleutel aanmaken",
+      "createKeyDesc": "Geef uw sleutel een beschrijvende naam",
+      "keyName": "Sleutelnaam",
       "keyNamePlaceholder": "e.g., Production, Development, Testing",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "createKey": "Create Key",
+      "cancel": "Annuleren",
+      "creating": "Aanmaken...",
+      "createKey": "Sleutel aanmaken",
       "name": "Naam",
       "keyColumn": "Sleutel",
       "actions": "Acties",
@@ -668,24 +676,24 @@
       "keyRotatedDesc": "Kopieer deze nieuwe sleutel nu. De oude sleutel is niet meer geldig."
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
-      "newOrganization": "New Organization",
-      "noOrgsTitle": "No organizations yet",
+      "title": "Organisaties",
+      "subtitle": "Beheer uw teams en werk samen met anderen",
+      "newOrganization": "Nieuwe organisatie",
+      "noOrgsTitle": "Nog geen organisaties",
       "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Create Organization",
-      "created": "Created",
+      "createOrganization": "Organisatie aanmaken",
+      "created": "Aangemaakt",
       "plan": "Plan",
-      "freePlan": "Free",
-      "createOrgTitle": "Create Organization",
-      "createOrgDesc": "Set up a new team workspace",
-      "orgName": "Organization Name",
+      "freePlan": "Gratis",
+      "createOrgTitle": "Organisatie aanmaken",
+      "createOrgDesc": "Stel een nieuwe teamwerkruimte in",
+      "orgName": "Organisatienaam",
       "orgNamePlaceholder": "Acme Corp",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
-      "cancel": "Cancel",
-      "creating": "Creating...",
-      "create": "Create",
+      "cancel": "Annuleren",
+      "creating": "Aanmaken...",
+      "create": "Aanmaken",
       "roles": {
         "owner": "owner",
         "admin": "admin",
@@ -1343,7 +1351,7 @@
       "toggle": "Thema wisselen"
     },
     "activity": {
-      "endpoint": "Endpoint",
+      "endpoint": "Eindpunt",
       "status": "Status",
       "latency": "Latentie",
       "cost": "Kosten",
@@ -1449,7 +1457,7 @@
         "deliveries": "Totaal Leveringen"
       },
       "tabs": {
-        "endpoints": "Endpoints",
+        "endpoints": "Eindpunten",
         "deliveries": "Recente Leveringen"
       },
       "success": "geslaagd",
@@ -1478,6 +1486,40 @@
         "events": "Gebeurtenissen om op te Abonneren",
         "cancel": "Annuleren",
         "create": "Webhook Aanmaken"
+      },
+      "events": {
+        "memory_created": {
+          "label": "Herinnering aangemaakt",
+          "desc": "Wanneer een nieuwe herinnering wordt opgeslagen"
+        },
+        "memory_updated": {
+          "label": "Herinnering bijgewerkt",
+          "desc": "Wanneer een herinnering wordt gewijzigd"
+        },
+        "memory_deleted": {
+          "label": "Herinnering verwijderd",
+          "desc": "Wanneer een herinnering wordt verwijderd"
+        },
+        "extraction_completed": {
+          "label": "Extractie voltooid",
+          "desc": "Wanneer geheugenextractie is voltooid"
+        },
+        "query_executed": {
+          "label": "Query uitgevoerd",
+          "desc": "Wanneer een RAG-query wordt uitgevoerd"
+        },
+        "key_created": {
+          "label": "API-sleutel aangemaakt",
+          "desc": "Wanneer een nieuwe API-sleutel wordt gegenereerd"
+        },
+        "key_revoked": {
+          "label": "API-sleutel ingetrokken",
+          "desc": "Wanneer een API-sleutel wordt ingetrokken"
+        },
+        "usage_threshold": {
+          "label": "Gebruiksdrempel",
+          "desc": "Wanneer het gebruik de drempel overschrijdt"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1655,97 +1697,98 @@
     "socialProof": "Vertrouwd door teams die agenten op schaal draaien",
     "liveDemo": "Live Demo",
     "heroTagline": "Probeer de API live — geen registratie nodig",
-    "firstRetrievalComplete": "First retrieval complete",
-    "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "firstRetrievalComplete": "Eerste opvraging voltooid",
+    "copySnippetHint": "Kopieer het fragment hieronder om te reproduceren",
+    "copySnippetTitle": "Kopieer dit fragment",
+    "copySnippetSubtitle": "Gegenereerd op basis van uw exacte instellingen hierboven",
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
+      "title": "Waarom Seizn in plaats van LangChain + Pinecone?",
+      "subtitle": "Stop met het aan elkaar plakken van gefragmenteerde tools. Krijg alles wat u nodig heeft in één geïntegreerde stack.",
+      "tracingTitle": "Ingebouwde tracing + evaluatie",
       "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
       "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
+      "autopilotTitle": "Budgetbewuste autopilot",
       "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
       "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
+      "governanceTitle": "Governance + auditlogs",
       "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
+      "governanceBadge": "Standaard voor teams",
+      "lessGlueTitle": "Minder bewegende delen",
       "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "lessGlueBadge": "Minder verbindingscode"
     },
     "trust": {
       "security": "RLS + Key Hashing",
-      "securityDesc": "Secure by default",
-      "rateLimits": "Rate Limits",
-      "rateLimitsDesc": "Usage alerts",
-      "auditLogs": "Audit Logs",
-      "auditLogsDesc": "Full traceability"
+      "securityDesc": "Standaard beveiligd",
+      "rateLimits": "Snelheidslimieten",
+      "rateLimitsDesc": "Gebruikswaarschuwingen",
+      "auditLogs": "Auditlogboeken",
+      "auditLogsDesc": "Volledige traceerbaarheid"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
+      "title": "Eenvoudige, transparante prijzen",
       "subtitle": "Start free, scale as you grow. No hidden fees.",
-      "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "viewPricing": "Prijzen bekijken",
+      "contactSales": "Contact verkoop"
     },
     "nav": {
-      "docs": "Docs",
-      "pricing": "Pricing",
+      "docs": "Documentatie",
+      "pricing": "Prijzen",
       "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "getApiKey": "API-sleutel ophalen",
+      "tryDemo": "Demo proberen",
       "limits": "Limieten",
       "status": "Status",
       "help": "Help",
-      "github": "OSS"
+      "github": "OSS",
+      "compare": "Vergelijken"
     },
     "requestBuilder": {
-      "title": "Request Builder",
+      "title": "Verzoekenbouwer",
       "query": "Query",
-      "queryPlaceholder": "Enter your search query...",
-      "tryExamples": "Try examples",
+      "queryPlaceholder": "Voer uw zoekopdracht in...",
+      "tryExamples": "Voorbeelden proberen",
       "dataset": "Dataset",
-      "latencyBudget": "Latency Budget",
+      "latencyBudget": "Latentiebudget",
       "fast": "fast",
       "thorough": "thorough",
       "topK": "Top K",
-      "results": "results",
-      "features": "Features",
-      "hybridSearch": "Hybrid Search",
-      "hybridSearchDesc": "Combine vector + keyword",
+      "results": "resultaten",
+      "features": "Functies",
+      "hybridSearch": "Hybride zoekopdracht",
+      "hybridSearchDesc": "Combineer vector + trefwoord",
       "rerank": "Rerank",
-      "rerankDesc": "Re-score with cross-encoder",
+      "rerankDesc": "Opnieuw scoren met cross-encoder",
       "answerContract": "Answer Contract",
-      "answerContractDesc": "Validate answer quality",
-      "running": "Running...",
-      "runQuery": "Run Query",
+      "answerContractDesc": "Antwoordkwaliteit valideren",
+      "running": "Uitvoeren...",
+      "runQuery": "Query uitvoeren",
       "datasets": {
-        "techDocs": "Tech Documentation",
-        "legalContracts": "Legal Contracts",
-        "researchPapers": "Research Papers"
+        "techDocs": "Technische documentatie",
+        "legalContracts": "Juridische contracten",
+        "researchPapers": "Onderzoekspapers"
       },
       "advanced": "Geavanceerd"
     },
     "resultsPanel": {
-      "searching": "Searching...",
-      "noResults": "Run a query to see results",
+      "searching": "Zoeken...",
+      "noResults": "Voer een query uit om resultaten te zien",
       "score": "Score"
     },
     "tracePanel": {
-      "tracing": "Tracing pipeline...",
-      "noTrace": "Run a query to see the trace",
-      "latency": "Latency",
-      "cost": "Cost",
+      "tracing": "Pipeline traceren...",
+      "noTrace": "Voer een query uit om de trace te zien",
+      "latency": "Latentie",
+      "cost": "Kosten",
       "tokens": "Tokens",
       "vectorOps": "Vector Ops",
       "cached": "cached",
       "model": "Model",
-      "input": "Input",
-      "output": "Output"
+      "input": "Invoer",
+      "output": "Uitvoer"
     },
     "tabs": {
-      "results": "Results",
+      "results": "Resultaten",
       "trace": "Trace",
       "cost": "Kosten"
     },
@@ -1800,13 +1843,13 @@
       "namespaceScope": "Namespace & Scope",
       "bestPractices": "Best Practices",
       "apiReference": "API Referentie",
-      "endpoints": "Endpoints",
+      "endpoints": "Eindpunten",
       "rateLimits": "Limieten",
       "errorCodes": "Foutcodes",
       "resources": "Bronnen",
       "security": "Beveiliging",
       "sdks": "SDKs",
-      "faq": "FAQ",
+      "faq": "Veelgestelde vragen",
       "tutorial": "5 Min Tutorial",
       "integrations": "Integraties"
     },
@@ -1829,8 +1872,8 @@
       "securityText": "Houd je API-sleutels geheim. Stel ze nooit bloot in client-side code. Gebruik omgevingsvariabelen of een backend proxy."
     },
     "endpoints": {
-      "title": "API Endpoints",
-      "requestBody": "Request Body",
+      "title": "API-eindpunten",
+      "requestBody": "Verzoekinhoud",
       "queryParams": "Query Parameters",
       "response": "Antwoord",
       "postMemories": {
@@ -1926,7 +1969,7 @@
       "javascript": "JavaScript"
     },
     "footer": {
-      "copyright": "© {year} Seizn. Alle rechten voorbehouden."
+      "copyright": "© {year} Litheon LLC. Alle rechten voorbehouden."
     },
     "faqPage": {
       "title": "Veelgestelde Vragen",
@@ -1934,7 +1977,7 @@
       "stillHaveQuestions": "Nog vragen?",
       "stillHaveQuestionsDesc": "Bekijk onze documentatie of neem contact op met ons supportteam.",
       "readDocs": "Lees Documentatie",
-      "contactSupport": "Contact Support",
+      "contactSupport": "Contact ondersteuning",
       "categories": {
         "all": "Alle",
         "gettingStarted": "Aan de Slag",
@@ -1942,7 +1985,9 @@
         "searchRetrieval": "Zoeken en Ophalen",
         "extraction": "Extractie",
         "operations": "Operaties",
-        "securityCompliance": "Beveiliging en Compliance"
+        "securityCompliance": "Beveiliging en Compliance",
+        "technology": "Technologie",
+        "mcpDevTools": "MCP & Dev Tools"
       },
       "items": [
         {
@@ -2049,8 +2094,8 @@
     },
     "componentsPage": {
       "title": "UI Components",
-      "subtitle": "Comprehensive documentation for Seizn's UI component library. Each component includes Props, usage examples, and best practices.",
-      "all": "All",
+      "subtitle": "Uitgebreide documentatie voor de Seizn UI-componentbibliotheek. Elk component bevat Props, gebruiksvoorbeelden en best practices.",
+      "all": "Alle",
       "components": {
         "graphCanvas": {
           "description": "Main graph canvas component using React Flow. Renders nodes and edges with interactive controls, minimap, and permission panel."
@@ -2102,25 +2147,25 @@
         }
       },
       "props": "Props",
-      "usage": "Usage Example",
-      "propName": "Name",
+      "usage": "Gebruiksvoorbeeld",
+      "propName": "Naam",
       "propType": "Type",
-      "propDefault": "Default",
-      "propDescription": "Description",
-      "copy": "Copy",
-      "copied": "Copied!",
+      "propDefault": "Standaard",
+      "propDescription": "Beschrijving",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!",
       "categories": {
         "graph": {
           "title": "Graph Components",
-          "description": "Interactive graph visualization for permission and relationship mapping"
+          "description": "Interactieve grafiekvisualisatie voor toestemming- en relatietoewijzing"
         },
         "explain": {
           "title": "Explain Components",
-          "description": "Explainability and attribution visualization for RAG results"
+          "description": "Uitlegbaarheid en attributievisualisatie voor RAG-resultaten"
         },
         "retops": {
           "title": "RetOps Components",
-          "description": "Retrieval operations monitoring and analytics dashboard"
+          "description": "Dashboard voor monitoring en analyse van ophaalbewerkingen"
         }
       }
     },
@@ -2302,7 +2347,7 @@
         "title": "Nog vragen?",
         "subtitle": "Bekijk onze documentatie of neem contact op met ons supportteam.",
         "readDocs": "Documentatie Lezen",
-        "contactSupport": "Contact Support"
+        "contactSupport": "Contact ondersteuning"
       },
       "footer": {
         "rights": "Alle rechten voorbehouden."
@@ -2366,7 +2411,7 @@
           "description": "Kant-en-klare voorbeelden voor Python, TypeScript en meer."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Veelgestelde vragen",
           "description": "Veelgestelde vragen over geheugentypen, namespaces en best practices."
         }
       }
@@ -2387,7 +2432,7 @@
       },
       "endpoint": {
         "parameters": "Parameters",
-        "requestBody": "Request Body",
+        "requestBody": "Verzoekinhoud",
         "response": "Respons",
         "errorCodes": "Foutcodes"
       },
@@ -2407,7 +2452,7 @@
         "title": "5 Minuten Tutorial | Seizn",
         "description": "Leer hoe u AI-geheugen toevoegt in 5 minuten met een stapsgewijze interactieve handleiding"
       },
-      "breadcrumb": "Tutorial",
+      "breadcrumb": "Handleiding",
       "badge": "5 Minuten Tutorial",
       "noCreditCard": "Geen creditcard vereist",
       "title": "Voeg AI-geheugen Toe in 5 Minuten",
@@ -2468,7 +2513,7 @@
           "description": "Kant-en-klare voorbeelden voor Python, TypeScript en REST."
         },
         "faq": {
-          "title": "FAQ",
+          "title": "Veelgestelde vragen",
           "description": "Meer informatie over geheugentypen, namespaces en best practices."
         }
       }
@@ -2496,6 +2541,11 @@
           "badge": "Officieel",
           "title": "OpenTelemetry",
           "description": "Exporteer traces naar Datadog, Grafana, Jaeger en elke OTLP-compatibele backend."
+        },
+        "mcpServer": {
+          "badge": "New",
+          "title": "MCP Server (seizn-mcp)",
+          "description": "Universal MCP server for AI coding assistants. Native support for Claude Code, Cursor, Windsurf, Cline. Config file sync for GitHub Copilot, Aider, OpenAI Codex. OAuth device flow, auto project detection, webhooks, and MCP Resources included."
         }
       },
       "comingSoon": {
@@ -2685,62 +2735,62 @@
     }
   },
   "demoQuery": {
-    "title": "Live Demo",
-    "subtitle": "Ervaar de ophaalpipeline van Seizn met volledige tracing en kostentransparantie.",
+    "title": "Live demo",
+    "subtitle": "Ervaar Seizns ophaal-pipeline met volledige tracering en kostentransparantie.",
     "tryItNow": "Probeer het nu - Geen registratie nodig",
     "queryPlaceholder": "Zoekopdracht",
-    "runDemo": "Demo Starten",
+    "runDemo": "Demo uitvoeren",
     "running": "Bezig...",
     "results": "Resultaten",
     "trace": "Trace",
     "cost": "Kosten",
-    "noResults": "Start de demo om resultaten te zien",
+    "noResults": "Voer de demo uit om resultaten te zien",
     "errorTitle": "Fout",
-    "rateLimitError": "Limiet overschreden. Even geduld.",
+    "rateLimitError": "Snelheidslimiet overschreden. Even geduld.",
     "retryIn": "Opnieuw proberen over",
     "seconds": "seconden",
     "score": "Score",
-    "rerankScore": "Herordening",
+    "rerankScore": "Herrangschikking",
     "latency": "Latentie",
     "tokens": "Tokens",
-    "cached": "gecachet",
+    "cached": "gecacht",
     "model": "Model",
     "input": "Invoer",
     "output": "Uitvoer",
     "costBreakdown": "Specificatie",
-    "total": "Totale Kosten",
+    "total": "Totale kosten",
     "embedding": "Embedding",
     "vectorSearch": "Vectorzoekopdracht",
-    "rerank": "Herordening",
+    "rerank": "Herrangschikking",
     "answerContract": "Antwoordcontract",
-    "tokensIn": "Tokens In",
-    "tokensOut": "Tokens Uit",
+    "tokensIn": "Tokens in",
+    "tokensOut": "Tokens uit",
     "queryUnits": "Query-eenheden",
     "prefilledQueries": [
-      "Probeer voorbeelden"
+      "Voorbeelden proberen"
     ]
   },
   "publicTrace": {
-    "title": "Gedeelde Trace",
-    "subtitle": "Bekijk details van de gedeelde ophaaltrace",
+    "title": "Gedeelde trace",
+    "subtitle": "Bekijk gedeelde ophaal-trace details",
     "sharedBy": "Gedeelde trace",
     "expired": "Deze link is verlopen",
-    "expiredDesc": "De deellink is niet meer geldig. Vraag de eigenaar om een nieuwe link aan te maken.",
+    "expiredDesc": "De deellink is niet meer geldig. Vraag de eigenaar om een nieuwe link te maken.",
     "notFound": "Trace niet gevonden",
     "notFoundDesc": "Deze gedeelde trace kon niet worden gevonden. Mogelijk is deze ingetrokken of verwijderd.",
-    "backToHome": "Terug naar Home",
-    "requestId": "Request-ID",
+    "backToHome": "Terug naar home",
+    "requestId": "Verzoek-ID",
     "collection": "Collectie",
     "createdAt": "Aangemaakt",
-    "totalLatency": "Totale Latentie",
-    "totalCost": "Totale Kosten",
+    "totalLatency": "Totale latentie",
+    "totalCost": "Totale kosten",
     "resultsCount": "Resultaten",
     "query": "Query",
     "timeline": "Tijdlijn",
     "candidates": "Kandidaten",
-    "rerankDiff": "Herordening Verschil",
+    "rerankDiff": "Herrangschikkingsverschil",
     "costAnalysis": "Kostenanalyse",
-    "redacted": "[VERWIJDERD]",
+    "redacted": "[VERBORGEN]",
     "piiMasked": "PII gemaskeerd voor privacy",
     "readOnlyNote": "Dit is een alleen-lezen weergave van een gedeelde trace."
   },
@@ -3023,7 +3073,7 @@
       "title": "Hogere Limieten Nodig?",
       "description": "Upgrade uw plan voor verhoogde quota, hogere snelheidslimieten en prioriteitsondersteuning.",
       "viewPlans": "Plannen Bekijken",
-      "contactSales": "Contact Sales"
+      "contactSales": "Contact verkoop"
     }
   },
   "help": {
@@ -3091,7 +3141,7 @@
     "contact": {
       "title": "Nog Hulp Nodig?",
       "description": "Ons supportteam staat klaar om u te helpen slagen.",
-      "cta": "Contact Support"
+      "cta": "Contact ondersteuning"
     }
   },
   "status": {
