@@ -110,15 +110,16 @@ export default function MobileSidebar({
       {/* Sidebar Drawer */}
       <aside
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] szn-card flex flex-col transform transition-transform duration-300 ease-out lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-szn-card/95 backdrop-blur-xl border-r border-szn-border/60 flex flex-col transform transition-transform duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{ boxShadow: isOpen ? "var(--szn-shadow-xl)" : "none" }}
         aria-label="Mobile navigation"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b theme-border">
+        <div className="flex items-center justify-between p-4 border-b border-szn-border/40">
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -172,17 +173,17 @@ export default function MobileSidebar({
                       href={item.href}
                       onClick={onClose}
                       aria-current={active ? "page" : undefined}
-                      className={`group relative flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-xl text-[13px] font-medium transition-all duration-200 ${
+                      className={`group relative flex items-center gap-2.5 px-3 py-2.5 min-h-[44px] rounded-lg text-[13px] font-medium transition-all duration-150 ${
                         active
-                          ? "bg-szn-surface-2 text-szn-text-1"
-                          : "text-szn-text-2 hover:bg-szn-surface-1 hover:text-szn-text-1 active:bg-szn-surface-2"
+                          ? "bg-szn-accent/10 text-szn-text-1"
+                          : "text-szn-text-2 hover:bg-szn-surface-1/80 hover:text-szn-text-1 active:bg-szn-surface-2"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-szn-accent" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full bg-szn-accent" />
                       )}
                       <item.icon
-                        className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-200 ${
+                        className={`w-[16px] h-[16px] flex-shrink-0 transition-colors duration-150 ${
                           active
                             ? "text-szn-accent"
                             : "text-szn-text-3 group-hover:text-szn-text-2"
@@ -198,8 +199,8 @@ export default function MobileSidebar({
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t theme-border">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-szn-surface-1">
+        <div className="p-3 border-t border-szn-border/40">
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-szn-surface-1/60">
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img

@@ -176,7 +176,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
   }, []);
 
   return (
-    <header className="hidden lg:flex fixed top-0 right-0 left-20 z-30 h-14 items-center justify-between px-6 szn-card border-b theme-border">
+    <header className="hidden lg:flex fixed top-0 right-0 left-[68px] z-30 h-14 items-center justify-between px-6 bg-szn-card/90 backdrop-blur-xl border-b border-szn-border/50" style={{ boxShadow: "var(--szn-shadow-xs)" }}>
       <div ref={orgDropdownRef} className="relative">
         <button
           onClick={() => setShowOrgDropdown(!showOrgDropdown)}
@@ -192,7 +192,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
           <ChevronDownIcon className="w-4 h-4 text-szn-text-3" />
         </button>
         {showOrgDropdown && (
-          <div className="absolute top-full left-0 mt-1 w-56 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 animate-fade-in">
+          <div className="absolute top-full left-0 mt-1 w-56 bg-szn-card rounded-xl border border-szn-border/60 py-1 animate-dropdown-in" style={{ boxShadow: "var(--szn-shadow-lg)" }}>
             <button
               onClick={() => { void switchOrganization(null); }}
               disabled={isSwitchingOrganization}
@@ -233,7 +233,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
         {onCommandPaletteOpen && (
           <button
             onClick={onCommandPaletteOpen}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-szn-border hover:bg-szn-surface-2 transition-colors text-sm text-szn-text-3"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-szn-border/50 hover:border-szn-border hover:bg-szn-surface-1/80 transition-all duration-150 text-sm text-szn-text-3"
           >
             <SearchIcon className="w-4 h-4" />
             <span className="hidden xl:inline">{t("dashboard.commandPalette.placeholder") || "Search..."}</span>
@@ -247,7 +247,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
         <div ref={createDropdownRef} className="relative">
           <button
             onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl theme-gradient-btn text-white text-sm font-medium shadow-md hover:shadow-lg transition-all"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg theme-gradient-btn text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
             aria-expanded={showCreateDropdown}
             aria-haspopup="true"
           >
@@ -255,7 +255,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
             {t("dashboard.topBar.create")}
           </button>
           {showCreateDropdown && (
-            <div className="absolute top-full right-0 mt-1 w-48 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 animate-fade-in">
+            <div className="absolute top-full right-0 mt-1 w-48 bg-szn-card rounded-xl border border-szn-border/60 py-1 animate-dropdown-in" style={{ boxShadow: "var(--szn-shadow-lg)" }}>
               <Link
                 href="/dashboard/keys"
                 onClick={() => setShowCreateDropdown(false)}

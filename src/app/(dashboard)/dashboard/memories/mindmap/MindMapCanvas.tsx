@@ -459,7 +459,7 @@ export default function MindMapCanvas() {
                 case "episode":
                   return "#10B981";
                 case "procedure":
-                  return "#EC4899";
+                  return "#0EA5E9";
                 case "relationship":
                   return "#06B6D4";
                 default:

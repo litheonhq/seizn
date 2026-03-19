@@ -77,8 +77,8 @@ const DEFAULT_NODE_STYLES: Record<GraphNodeType, GraphNodeStyle> = {
     size: 'medium',
   },
   organization: {
-    backgroundColor: '#FBCFE8',
-    borderColor: '#DB2777',
+    backgroundColor: '#DBEAFE',
+    borderColor: '#2563EB',
     icon: 'building',
     size: 'large',
   },

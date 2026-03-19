@@ -37,7 +37,7 @@ const DEFAULT_NODE_STYLES: NodeStyles = {
     fact: '#10B981', // green
     episode: '#F59E0B', // amber
     entity: '#8B5CF6', // violet
-    topic: '#EC4899', // pink
+    topic: '#14B8A6', // teal
     community: '#6366F1', // indigo
     profile: '#14B8A6', // teal
     default: '#6B7280', // gray
