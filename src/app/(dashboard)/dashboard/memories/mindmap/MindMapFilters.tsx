@@ -72,7 +72,7 @@ const noteTypes: { value: NoteType; label: string; color: string }[] = [
   { value: "preference", label: "Preference", color: "bg-purple-500" },
   { value: "instruction", label: "Instruction", color: "bg-orange-500" },
   { value: "episode", label: "Episode", color: "bg-green-500" },
-  { value: "procedure", label: "Procedure", color: "bg-pink-500" },
+  { value: "procedure", label: "Procedure", color: "bg-sky-500" },
   { value: "relationship", label: "Relationship", color: "bg-cyan-500" },
 ];
 

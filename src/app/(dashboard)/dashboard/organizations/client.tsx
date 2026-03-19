@@ -182,7 +182,7 @@ export default function OrganizationsClient() {
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 rounded-xl bg-szn-surface">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center flex-shrink-0">
                   <AuditIcon className="w-4 h-4 text-white" />
                 </div>
                 <div>
@@ -289,7 +289,7 @@ export default function OrganizationsClient() {
                     }
                   }}
                   placeholder={t("dashboard.organizationsPage.orgNamePlaceholder")}
-                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 dark:focus:ring-szn-accent/50 focus:border-transparent transition-all"
                 />
               </div>
               <div>
@@ -309,7 +309,7 @@ export default function OrganizationsClient() {
                       )
                     }
                     placeholder={t("dashboard.organizationsPage.urlSlugPlaceholder")}
-                    className="flex-1 px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
+                    className="flex-1 px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 dark:focus:ring-szn-accent/50 focus:border-transparent transition-all"
                   />
                 </div>
               </div>

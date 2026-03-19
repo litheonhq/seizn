@@ -75,7 +75,7 @@ const NOTE_TYPE_CONFIG: Record<
   { icon: React.ElementType; color: string; label: string }
 > = {
   fact: { icon: Lightbulb, color: "text-blue-500", label: "Fact" },
-  preference: { icon: Heart, color: "text-pink-500", label: "Preference" },
+  preference: { icon: Heart, color: "text-rose-500", label: "Preference" },
   instruction: { icon: FileText, color: "text-orange-500", label: "Instruction" },
   episode: { icon: Calendar, color: "text-purple-500", label: "Episode" },
   procedure: { icon: GitBranch, color: "text-green-500", label: "Procedure" },

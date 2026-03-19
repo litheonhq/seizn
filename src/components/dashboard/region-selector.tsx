@@ -228,7 +228,7 @@ export function RegionSelector({
                     disabled={!isAvailable || !region.available}
                     className={`p-4 rounded-xl border-2 text-left transition-all ${
                       isSelected
-                        ? "border-pink-400 bg-pink-50 dark:bg-pink-900/20"
+                        ? "border-szn-accent bg-szn-accent/5 dark:bg-szn-accent/10"
                         : isAvailable && region.available
                         ? "border-szn-border hover:border-szn-text-3"
                         : "border-szn-border opacity-50 cursor-not-allowed"
@@ -323,7 +323,7 @@ export function RegionSelector({
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="e.g., Compliance requirement, latency optimization"
-                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 dark:focus:ring-szn-accent/50 focus:border-transparent transition-all"
                 />
               </div>
             )}

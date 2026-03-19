@@ -36,7 +36,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
       <PaddleInit />
       {/* Decorative Floating Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
         <div
           className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "2s" }}
@@ -52,10 +52,10 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border" aria-label="Pricing navigation">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-sm">S</span>
             </div>
             <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-szn-text-1 to-szn-text-2 bg-clip-text text-transparent">
@@ -85,7 +85,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           <div className="max-w-4xl mx-auto text-center">
             {/* Animated Badge */}
             <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-8 animate-fade-in">
-              <span className="w-2 h-2 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-pulse" />
               <span className="text-sm text-szn-text-2 font-medium">Flexible Plans</span>
             </div>
 
@@ -191,7 +191,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
       <footer className="py-12 px-6 glass border-t border-szn-border relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-6 h-6 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-6 h-6 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
               <span className="text-white font-bold text-xs">S</span>
             </div>
             <span className="font-medium text-szn-text-1">Seizn</span>
@@ -230,12 +230,12 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
     >
       {/* Background gradient for Pro */}
       {isPro && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-cyan-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-violet-500/5 to-cyan-500/10" />
       )}
 
       {/* Badge */}
       {isPro && plan.badge && (
-        <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
+        <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-violet-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
           {plan.badge}
         </div>
       )}
@@ -286,7 +286,7 @@ function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; t
         {type === "pro" && (
           <CheckoutButton
             priceId={PLAN_VARIANTS.pro}
-            className="block w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg transition-all text-center"
+            className="block w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-violet-500 text-white font-medium hover:shadow-lg transition-all text-center"
           >
             {plan.cta}
           </CheckoutButton>

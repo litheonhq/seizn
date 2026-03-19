@@ -23,7 +23,7 @@ const SCORE_COLORS = {
   bm25: '#22c55e', // green
   hybrid_rrf: '#8b5cf6', // purple
   rerank: '#f59e0b', // amber
-  semantic: '#ec4899', // pink
+  semantic: '#f43f5e', // rose
   keyword_match: '#06b6d4', // cyan
 };
 

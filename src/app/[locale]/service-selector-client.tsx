@@ -17,7 +17,7 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
     <div className="min-h-screen gradient-hero relative overflow-hidden">
       {/* Decorative Floating Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
         <div
           className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "2s" }}
@@ -32,7 +32,7 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/20">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-sm">S</span>
             </div>
             <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -57,7 +57,7 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
         <div className="max-w-4xl mx-auto text-center">
           {/* Animated Badge */}
           <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full animate-pulse" />
+            <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-pulse" />
             <span className="text-sm text-szn-text-2 font-medium">AI-Powered Platform</span>
           </div>
 
@@ -77,8 +77,8 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
             {/* Spring Card */}
             <Link href={`/${locale}/spring`} className="group h-full">
               <div className="relative h-full szn-card rounded-3xl p-8 szn-card-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-100/50 via-rose-50/30 to-transparent opacity-60" />
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-pink-200/40 to-rose-200/20 rounded-full blur-2xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-100/50 via-teal-50/30 to-transparent opacity-60" />
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-emerald-200/40 to-teal-200/20 rounded-full blur-2xl" />
                 <div className="relative">
                   {t.spring.badge && (
                     <div className="absolute top-0 right-0 spring-gradient-btn text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
@@ -88,14 +88,14 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
                   <div className="text-6xl mb-6 filter drop-shadow-sm">{t.spring.icon}</div>
                   <h2 className="text-2xl font-semibold text-szn-text-1 mb-2 flex items-center gap-2">
                     {t.spring.name}
-                    <span className="text-base font-normal text-pink-600">{t.spring.tagline}</span>
+                    <span className="text-base font-normal text-emerald-600">{t.spring.tagline}</span>
                   </h2>
                   <p className="text-szn-text-2 mb-6 leading-relaxed">{t.spring.description}</p>
                   <ul className="space-y-3 mb-8">
                     {t.spring.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-szn-text-2">
-                        <div className="w-5 h-5 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
@@ -209,7 +209,7 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
       <footer className="py-12 px-6 glass border-t border-white/20 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-6 h-6 bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-6 h-6 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
               <span className="text-white font-bold text-xs">S</span>
             </div>
             <span className="font-medium text-szn-text-1">Seizn</span>
