@@ -264,7 +264,7 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
   if (isLoading || translationLoading) {
     return (
-      <div className="szn-card rounded-2xl overflow-hidden mb-6 border-2 border-szn-accent/20 animate-pulse">
+      <div className="szn-card rounded-lg overflow-hidden mb-6 border-2 border-szn-accent/20 animate-pulse">
         <div className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-szn-border" />
@@ -291,7 +291,7 @@ export function OnboardingWizard({ userId, onStartTour }: OnboardingWizardProps)
 
   return (
     <>
-      <div className="szn-card rounded-2xl overflow-hidden mb-6 border-2 border-szn-accent/20">
+      <div className="szn-card rounded-lg overflow-hidden mb-6 border-2 border-szn-accent/20">
         <div
           className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5 cursor-pointer flex items-center justify-between"
           onClick={() => setIsExpanded((prev) => !prev)}
@@ -491,7 +491,7 @@ function SdkModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-szn-card rounded-2xl max-w-lg w-full shadow-xl">
+      <div className="bg-szn-card rounded-lg max-w-lg w-full shadow-xl">
         <div className="flex items-center justify-between p-4 border-b border-szn-border">
           <h3 className="text-lg font-semibold text-szn-text-1">
             {t("dashboard.onboarding.sdkModal.title")}

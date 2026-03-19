@@ -32,9 +32,9 @@
   --szn-border-subtle: rgba(148, 163, 184, 0.25);
   --szn-surface-1: rgba(0, 0, 0, 0.03);
   --szn-surface-2: rgba(0, 0, 0, 0.06);
-  --szn-radius-sm: 10px;
-  --szn-radius-md: 14px;
-  --szn-radius-lg: 20px;
+  --szn-radius-sm: 8px;
+  --szn-radius-md: 10px;
+  --szn-radius-lg: 16px;
   /* 7-tier shadow system (Vercel/Stripe inspired) */
   --szn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
   --szn-shadow-sm: 0 2px 8px rgba(0, 55, 112, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -43,7 +43,7 @@
   --szn-shadow-xl: 0 20px 60px -16px rgba(0, 55, 112, 0.12), 0 10px 40px -16px rgba(0, 0, 0, 0.06);
   --szn-shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.02), 0 8px 16px -4px rgba(0, 0, 0, 0.04), 0 24px 32px -8px rgba(0, 0, 0, 0.06);
   --szn-shadow-tooltip: 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  --szn-card-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+  --szn-card-gradient: var(--szn-card);
   /* Motion — easing curves */
   --szn-ease-swift: cubic-bezier(0.175, 0.885, 0.32, 1.1);
   --szn-ease-quart-out: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -77,7 +77,7 @@
   --szn-shadow-xl: 0 20px 60px -16px rgba(0, 0, 0, 0.28), 0 10px 40px -16px rgba(0, 0, 0, 0.12);
   --szn-shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.06), 0 8px 16px -4px rgba(0, 0, 0, 0.12), 0 24px 32px -8px rgba(0, 0, 0, 0.16);
   --szn-shadow-tooltip: 0 2px 4px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.06);
-  --szn-card-gradient: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.92));
+  --szn-card-gradient: var(--szn-card);
 }
 
 @theme inline {
@@ -234,24 +234,21 @@ body {
 
 /* Button hover effects */
 .btn-hover-lift {
-  transition: transform 0.25s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1)),
-              box-shadow 0.25s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1));
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--szn-shadow-md);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 /* Card hover effects */
 .card-hover {
-  transition: transform 0.35s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1)),
-              box-shadow 0.35s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--szn-shadow-lg);
+  border-color: color-mix(in srgb, var(--szn-text-3) 30%, var(--szn-border));
+  box-shadow: var(--szn-shadow-md);
 }
 
 /* Gradient text */
@@ -323,42 +320,32 @@ body {
   background-clip: text;
 }
 
-/* Glass morphism card */
+/* Glass morphism card — simplified */
 .glass-card {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow:
-    var(--szn-shadow-sm),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 .dark .glass-card {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  box-shadow:
-    var(--szn-shadow-sm),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 /* Accent button (uses seasonal theme) */
 .btn-accent {
-  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background: var(--theme-primary);
+  transition: background-color 0.2s ease;
 }
 
 .btn-accent:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+  filter: brightness(1.08);
 }
 
 /* Soft shadow (uses seasonal theme) */
 .shadow-accent {
-  box-shadow: 0 4px 24px color-mix(in srgb, var(--theme-primary) 15%, transparent);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 /* Progress bar animation */
@@ -466,9 +453,9 @@ body {
   --theme-particle-color: rgba(139, 92, 246, 0.2);
 }
 
-/* Theme-aware components */
+/* Theme-aware components — subtler bg, just a hint of seasonal color */
 .theme-gradient-bg {
-  background: var(--theme-bg-gradient);
+  background: var(--szn-bg);
 }
 
 .theme-primary {
@@ -480,14 +467,12 @@ body {
 }
 
 .theme-gradient-btn {
-  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
-  transition: all 0.3s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1));
+  background: var(--theme-primary);
+  transition: filter 0.15s ease;
 }
 
 .theme-gradient-btn:hover {
   filter: brightness(1.1);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--theme-primary) 25%, transparent);
 }
 
 .theme-border {
@@ -495,7 +480,7 @@ body {
 }
 
 .theme-shadow {
-  box-shadow: 0 4px 24px color-mix(in srgb, var(--theme-primary) 20%, transparent);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 .theme-gradient-text {
@@ -505,107 +490,41 @@ body {
   background-clip: text;
 }
 
-/* ========== Premium Glass Morphism ========== */
+/* ========== Surface Variants ========== */
 
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
 }
 
 .glass-dark {
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
 }
 
+/* Kept for backwards compatibility — same as .glass-card now */
 .glass-card-premium {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(32px) saturate(1.6);
-  -webkit-backdrop-filter: blur(32px) saturate(1.6);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow:
-    var(--szn-shadow-md),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 .dark .glass-card-premium {
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(32px) saturate(1.3);
-  -webkit-backdrop-filter: blur(32px) saturate(1.3);
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  box-shadow:
-    var(--szn-shadow-md),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: var(--szn-card);
+  border: 1px solid var(--szn-border);
+  box-shadow: var(--szn-shadow-sm);
 }
 
 .glass-card-hover {
-  transition: all 0.4s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glass-card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    var(--szn-shadow-lg),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  border-color: color-mix(in srgb, var(--szn-accent) 20%, rgba(255, 255, 255, 0.6));
+  border-color: color-mix(in srgb, var(--szn-text-3) 30%, var(--szn-border));
+  box-shadow: var(--szn-shadow-md);
 }
 
-/* Premium Button Styles */
-.btn-premium {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-premium::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.btn-premium:hover::before {
-  left: 100%;
-}
-
-.btn-premium:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.2);
-}
-
-/* Gradient Backgrounds */
-.gradient-hero {
-  background:
-    radial-gradient(ellipse at top left, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at top right, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom center, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-}
-
-.gradient-spring {
-  background:
-    radial-gradient(ellipse at top left, rgba(167, 243, 208, 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at top right, rgba(16, 185, 129, 0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at bottom center, rgba(236, 253, 245, 0.5) 0%, transparent 60%),
-    linear-gradient(180deg, #ecfdf5 0%, #ffffff 50%, #d1fae5 100%);
-}
-
-.gradient-summer {
-  background:
-    radial-gradient(ellipse at top left, rgba(186, 230, 253, 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at top right, rgba(6, 182, 212, 0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at bottom center, rgba(240, 249, 255, 0.5) 0%, transparent 60%),
-    linear-gradient(180deg, #f0f9ff 0%, #ffffff 50%, #e0f2fe 100%);
-}
-
-/* Premium Shadow (multi-layer depth) */
+/* Shadow aliases */
 .shadow-premium {
   box-shadow: var(--szn-shadow-md);
 }
@@ -614,50 +533,23 @@ body {
   box-shadow: var(--szn-shadow-xl);
 }
 
-/* Spring Theme Enhancements */
+/* Season-specific buttons — now use flat solid colors */
 .spring-gradient-btn {
-  background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background: #10B981;
+  transition: filter 0.15s ease;
 }
 
 .spring-gradient-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+  filter: brightness(1.1);
 }
 
-/* Summer Theme Enhancements */
 .summer-gradient-btn {
-  background: linear-gradient(135deg, #06B6D4 0%, #0EA5E9 50%, #0284C7 100%);
-  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4);
-  transition: all 0.3s ease;
+  background: #06B6D4;
+  transition: filter 0.15s ease;
 }
 
 .summer-gradient-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.5);
-}
-
-/* Elegant Input Styles */
-.input-elegant {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-  color: #1f2937;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-}
-
-.input-elegant::placeholder {
-  color: #9ca3af;
-}
-
-.input-elegant:focus {
-  background: white;
-  border-color: color-mix(in srgb, var(--szn-accent) 50%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--szn-accent) 10%, transparent);
-  outline: none;
+  filter: brightness(1.1);
 }
 
 /* Smooth Scrollbar */
@@ -706,17 +598,17 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Glow Effects */
+/* Subtle glow effects (reduced) */
 .glow-emerald {
-  box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.12);
 }
 
 .glow-accent {
-  box-shadow: 0 0 40px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 12%, transparent);
 }
 
 /* ========== Mind Map Edge Animation ========== */
@@ -855,15 +747,13 @@ body {
 
 /* ========== Seizn Design System — Component Primitives ========== */
 
-/* App background with cyan radial glow (dark mode) */
+/* App background — clean solid */
 .szn-app-bg {
   background: var(--szn-bg);
 }
 
 .dark .szn-app-bg {
-  background:
-    radial-gradient(1200px 600px at 50% -20%, rgba(34, 211, 238, 0.08), transparent),
-    var(--szn-bg);
+  background: var(--szn-bg);
 }
 
 /* Card */
@@ -876,13 +766,12 @@ body {
 }
 
 .szn-card-hover {
-  transition: all 0.3s var(--szn-ease-quart-out, cubic-bezier(0.165, 0.84, 0.44, 1));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .szn-card-hover:hover {
-  box-shadow: var(--szn-shadow-lg);
-  border-color: color-mix(in srgb, var(--szn-accent) 25%, var(--szn-border));
-  transform: translateY(-2px);
+  box-shadow: var(--szn-shadow-md);
+  border-color: color-mix(in srgb, var(--szn-text-3) 25%, var(--szn-border));
 }
 
 /* Text hierarchy */
@@ -892,14 +781,14 @@ body {
 
 /* Button system */
 .szn-btn {
-  min-height: 42px;
+  min-height: 38px;
   border: 0;
-  border-radius: 999px;
-  padding: 0 18px;
+  border-radius: var(--szn-radius-sm);
+  padding: 0 16px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -907,12 +796,11 @@ body {
 }
 
 .szn-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
 }
 
 .szn-btn-primary {
-  background: linear-gradient(135deg, var(--szn-accent), #3b82f6);
+  background: var(--szn-accent);
   color: #021018;
 }
 
@@ -1060,8 +948,7 @@ body {
 
 /* Button states */
 .szn-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  opacity: 0.8;
 }
 
 .szn-btn:disabled {

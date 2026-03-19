@@ -306,7 +306,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
   }, [note.id, onRefresh]);
 
   return (
-    <div className="h-full bg-szn-card border border-szn-border rounded-2xl overflow-hidden flex flex-col">
+    <div className="h-full bg-szn-card border border-szn-border rounded-lg overflow-hidden flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-szn-border flex items-center justify-between">
         <h2 className="font-semibold text-szn-text-1">Node Inspector</h2>

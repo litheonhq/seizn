@@ -609,7 +609,7 @@ export default function EvalsClient() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center">
@@ -629,7 +629,7 @@ export default function EvalsClient() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Eval Runs List */}
-        <div className="lg:col-span-1 szn-card rounded-2xl overflow-hidden">
+        <div className="lg:col-span-1 szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b border-szn-border">
             <h2 className="font-semibold text-szn-text-1">{t("dashboard.evals.runs") || "Evaluation Runs"}</h2>
           </div>
@@ -679,7 +679,7 @@ export default function EvalsClient() {
           {selectedRun ? (
             <div className="space-y-6">
               {/* Run Info */}
-              <div className="szn-card rounded-2xl p-6">
+              <div className="szn-card rounded-lg p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-bold text-szn-text-1">{selectedRun.name}</h2>
@@ -749,7 +749,7 @@ export default function EvalsClient() {
 
               {/* Tab Navigation */}
               {selectedRun.metrics && (
-                <div className="szn-card rounded-2xl overflow-hidden">
+                <div className="szn-card rounded-lg overflow-hidden">
                   <div className="flex border-b border-szn-border">
                     {(["comparison", "charts", "timeline"] as ViewTab[]).map((tab) => (
                       <button
@@ -972,7 +972,7 @@ export default function EvalsClient() {
 
               {/* Visual Chart (Simple bars - kept for non-metric runs) */}
               {!selectedRun.metrics && (
-                <div className="szn-card rounded-2xl p-6">
+                <div className="szn-card rounded-lg p-6">
                   <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.comparison") || "Visual Comparison"}</h2>
                   <p className="text-szn-text-2 text-center py-8">
                     {t("dashboard.evals.waitingForMetrics") || "Waiting for evaluation to complete..."}
@@ -981,7 +981,7 @@ export default function EvalsClient() {
               )}
             </div>
           ) : (
-            <div className="szn-card rounded-2xl p-12 text-center">
+            <div className="szn-card rounded-lg p-12 text-center">
               <BeakerIcon className="w-16 h-16 text-szn-text-3 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-szn-text-3 mb-2">
                 {t("dashboard.evals.selectRun") || "Select an evaluation run"}

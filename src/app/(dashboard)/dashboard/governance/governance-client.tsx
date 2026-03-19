@@ -303,7 +303,7 @@ function RetentionPoliciesTab({
         </button>
       </div>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
         <table className="w-full">
           <thead className="bg-szn-bg border-b border-szn-border">
             <tr>
@@ -390,7 +390,7 @@ function AddRetentionPolicyModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-szn-card rounded-2xl max-w-md w-full p-6">
+      <div className="bg-szn-card rounded-lg max-w-md w-full p-6">
         <h2 className="text-xl font-bold text-szn-text-1 mb-4">Add Retention Policy</h2>
 
         <div className="space-y-4">
@@ -612,7 +612,7 @@ function PIIDetectionTab({
         </button>
       </div>
 
-      <div className="bg-szn-card rounded-2xl border border-szn-border overflow-hidden">
+      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
         <table className="w-full">
           <thead className="bg-szn-bg border-b border-szn-border">
             <tr>

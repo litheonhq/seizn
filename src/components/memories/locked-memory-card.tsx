@@ -59,7 +59,7 @@ function getTypeColor(type: string) {
 
 export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemoryCardProps) {
   return (
-    <div className="szn-card rounded-2xl p-4 hover:border-szn-accent/50 transition-colors">
+    <div className="szn-card rounded-lg p-4 hover:border-szn-accent/50 transition-colors">
       <div className="flex items-start gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-3">

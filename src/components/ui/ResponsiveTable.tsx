@@ -48,9 +48,9 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
         </div>
         {/* Mobile skeleton */}
         <div className="md:hidden space-y-3">
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-2xl" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
+          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
         </div>
       </div>
     );
@@ -125,7 +125,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
           <div
             key={keyExtractor(item)}
             onClick={() => onRowClick?.(item)}
-            className={`szn-card rounded-2xl p-4 space-y-3 ${
+            className={`szn-card rounded-lg p-4 space-y-3 ${
               onRowClick ? "cursor-pointer active:scale-[0.98] transition-transform" : ""
             } ${mobileCardClassName}`}
           >

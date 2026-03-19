@@ -166,7 +166,7 @@ export function StructureList({
   // Render error state
   if (state.error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
         <svg
           className="w-12 h-12 text-red-400 mx-auto mb-3"
           fill="none"
@@ -198,7 +198,7 @@ export function StructureList({
         {showFilters && (
           <StructureFilters value={filters.structureType} onChange={handleFilterChange} />
         )}
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
           <svg
             className="w-16 h-16 text-gray-300 mx-auto mb-4"
             fill="none"
@@ -236,7 +236,7 @@ export function StructureList({
             <div key={structure.id}>
               {/* Card header (clickable) */}
               <div
-                className={`bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer transition-all hover:shadow-md ${
+                className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden cursor-pointer transition-all hover:shadow-md ${
                   isExpanded ? "rounded-b-none border-b-0" : ""
                 }`}
                 onClick={() => handleStructureClick(structure)}
@@ -384,7 +384,7 @@ function FiltersSkeleton() {
 
 function StructureCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-gray-200 rounded-xl animate-pulse" />
         <div className="flex-1 space-y-2">

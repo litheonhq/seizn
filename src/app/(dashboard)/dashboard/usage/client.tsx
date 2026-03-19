@@ -137,7 +137,7 @@ export function UsageClient() {
         </div>
 
         {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -148,37 +148,37 @@ export function UsageClient() {
           <>
             {/* Summary Cards - 2 rows of 3 */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.totalApiCalls")}</p>
                 <p className="text-2xl font-bold text-szn-text-1">
                   {usage.summary.totalCalls.toLocaleString()}
                 </p>
               </div>
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.totalTokens")}</p>
                 <p className="text-2xl font-bold text-szn-text-1">
                   {usage.summary.totalTokens.toLocaleString()}
                 </p>
               </div>
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.estimatedCost")}</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-szn-accent to-szn-success bg-clip-text text-transparent">
                   ${usage.summary.totalCostDollars}
                 </p>
               </div>
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.avgLatency")}</p>
                 <p className="text-2xl font-bold text-szn-text-1">
                   {usage.summary.avgLatency}ms
                 </p>
               </div>
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.p95Latency")}</p>
                 <p className="text-2xl font-bold text-szn-text-1">
                   {usage.summary.p95Latency}ms
                 </p>
               </div>
-              <div className="szn-card border border-szn-border rounded-2xl p-4">
+              <div className="szn-card border border-szn-border rounded-lg p-4">
                 <p className="text-szn-text-2 text-sm">{t("dashboard.usagePage.errorRateKpi")}</p>
                 <p className={`text-2xl font-bold ${usage.summary.errorRate > 5 ? 'text-red-500' : usage.summary.errorRate > 0 ? 'text-szn-warning' : 'text-szn-success'}`}>
                   {usage.summary.errorRate}%
@@ -187,7 +187,7 @@ export function UsageClient() {
             </div>
 
             {/* Daily Usage Chart with Tabs */}
-            <div className="szn-card border border-szn-border rounded-2xl p-6 mb-8">
+            <div className="szn-card border border-szn-border rounded-lg p-6 mb-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h3 className="text-lg font-semibold text-szn-text-1">
                   {t("dashboard.usagePage.dailyTrends")}
@@ -286,7 +286,7 @@ export function UsageClient() {
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Endpoint Breakdown */}
-              <div className="szn-card border border-szn-border rounded-2xl p-6">
+              <div className="szn-card border border-szn-border rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
                   {t("dashboard.usagePage.endpointUsage")}
                 </h3>
@@ -335,7 +335,7 @@ export function UsageClient() {
               </div>
 
               {/* API Key Breakdown */}
-              <div className="szn-card border border-szn-border rounded-2xl p-6">
+              <div className="szn-card border border-szn-border rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
                   {t("dashboard.usagePage.usageByApiKey")}
                 </h3>
@@ -378,7 +378,7 @@ export function UsageClient() {
 
             {/* Error Rate */}
             {usage.summary.totalErrors > 0 && (
-              <div className="mt-8 bg-red-500/10 border border-red-500/20 rounded-2xl p-6">
+              <div className="mt-8 bg-red-500/10 border border-red-500/20 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-red-500 mb-2">
                   {t("dashboard.usagePage.errorsTitle")}
                 </h3>
@@ -390,7 +390,7 @@ export function UsageClient() {
             )}
           </>
         ) : (
-          <div className="szn-card border border-szn-border rounded-2xl p-12">
+          <div className="szn-card border border-szn-border rounded-lg p-12">
             <div className="max-w-md mx-auto text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-szn-accent/10 to-szn-accent/5 flex items-center justify-center">
                 <ChartIcon className="w-10 h-10 text-szn-accent" />

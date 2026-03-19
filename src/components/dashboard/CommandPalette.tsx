@@ -110,13 +110,13 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
     <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40"
         onClick={closePalette}
       />
 
       {/* Dialog */}
       <div
-        className="relative w-full max-w-lg mx-4 bg-szn-card rounded-2xl shadow-2xl border border-szn-border overflow-hidden animate-scale-in"
+        className="relative w-full max-w-lg mx-4 bg-szn-card rounded-lg border border-szn-border overflow-hidden animate-scale-in" style={{ boxShadow: "var(--szn-shadow-modal)" }}
         role="dialog"
         aria-modal="true"
         aria-label={t("dashboard.commandPalette.title") || "Command palette"}

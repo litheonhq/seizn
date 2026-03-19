@@ -129,28 +129,28 @@ export function ScoreBreakdownChart({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Final Score Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl text-white">
+      <div className="p-4 bg-szn-surface border border-szn-border rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-medium opacity-90">Final Score</h4>
-            <div className="text-3xl font-bold mt-1">
+            <h4 className="text-sm font-medium text-szn-text-2">Final Score</h4>
+            <div className="text-3xl font-bold text-szn-text-1 mt-1">
               {(scoreBreakdown.finalScore * 100).toFixed(1)}%
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm opacity-90">Rank</div>
-            <div className="text-3xl font-bold mt-1">#{scoreBreakdown.rank}</div>
+            <div className="text-sm text-szn-text-2">Rank</div>
+            <div className="text-3xl font-bold text-szn-text-1 mt-1">#{scoreBreakdown.rank}</div>
           </div>
         </div>
 
         {/* Combination Method Badge */}
-        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm">
+        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-szn-surface-1 border border-szn-border rounded-full text-sm text-szn-text-2">
           <span>Method:</span>
           <span className="font-medium capitalize">
             {scoreBreakdown.combinationMethod.replace(/_/g, " ")}
           </span>
           {scoreBreakdown.rrfK && (
-            <span className="text-xs opacity-75">(k={scoreBreakdown.rrfK})</span>
+            <span className="text-xs text-szn-text-3">(k={scoreBreakdown.rrfK})</span>
           )}
         </div>
       </div>
@@ -183,7 +183,7 @@ export function ScoreBreakdownChart({
         </div>
         <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+            className="h-full bg-szn-accent rounded-full"
             style={{ width: `${scoreBreakdown.relativeScore * 100}%` }}
           />
         </div>

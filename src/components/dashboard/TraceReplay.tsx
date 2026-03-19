@@ -66,7 +66,7 @@ export function TraceReplay({
   const hasChanges = JSON.stringify(config) !== JSON.stringify(originalConfig);
 
   return (
-    <div className="bg-white rounded-2xl border shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg border shadow-lg overflow-hidden">
       {/* Header */}
       <div className="p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 border-b">
         <h3 className="font-semibold text-gray-900">Replay Trace</h3>

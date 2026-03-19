@@ -126,7 +126,7 @@ export function RegionSelector({
   return (
     <div className={className}>
       {/* Current Region Display */}
-      <div className="szn-card rounded-2xl p-6">
+      <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-szn-text-1">
             Data Residency
@@ -197,7 +197,7 @@ export function RegionSelector({
             </button>
 
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
                 <GlobeIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-xl font-bold text-szn-text-1">

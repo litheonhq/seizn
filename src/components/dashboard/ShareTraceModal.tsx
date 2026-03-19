@@ -151,14 +151,15 @@ export function ShareTraceModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-szn-card rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="dashboard-share-trace-title" onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}>
+      <div className="bg-szn-card rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-szn-border">
-          <h2 className="text-xl font-semibold text-szn-text-1">Share Trace</h2>
+          <h2 id="dashboard-share-trace-title" className="text-xl font-semibold text-szn-text-1">Share Trace</h2>
           <button
             onClick={onClose}
             className="text-szn-text-3 hover:text-szn-text-2"
+            aria-label="Close"
           >
             <svg
               className="w-6 h-6"

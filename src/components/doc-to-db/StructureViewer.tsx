@@ -62,7 +62,7 @@ export function StructureViewer({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">

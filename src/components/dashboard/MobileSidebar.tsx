@@ -100,7 +100,7 @@ export default function MobileSidebar({
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-200 lg:hidden ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
@@ -110,26 +110,26 @@ export default function MobileSidebar({
       {/* Sidebar Drawer */}
       <aside
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-szn-card/95 backdrop-blur-xl border-r border-szn-border/60 flex flex-col transform transition-transform duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-szn-card border-r border-szn-border flex flex-col transform transition-transform duration-200 ease-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ boxShadow: isOpen ? "var(--szn-shadow-xl)" : "none" }}
+        style={{ boxShadow: isOpen ? "var(--szn-shadow-lg)" : "none" }}
         aria-label="Mobile navigation"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-szn-border/40">
+        <div className="flex items-center justify-between p-4 border-b border-szn-border">
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/seizn-icon.svg"
               alt="Seizn"
-              className="w-10 h-10 rounded-2xl shadow-lg"
+              className="w-8 h-8 rounded-lg"
             />
             <div>
-              <span className="text-xl font-bold text-szn-text-1 block">
-                Seizn<span className="theme-primary">.</span>
+              <span className="text-sm font-semibold text-szn-text-1 block">
+                Seizn
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1">
                 {"Agent OS"} <span>{seasonConfig.icon}</span>
@@ -138,7 +138,7 @@ export default function MobileSidebar({
           </Link>
           <button
             onClick={onClose}
-            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 rounded-xl transition-colors"
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-md transition-colors"
             aria-label="Close menu"
           >
             <CloseIcon className="w-6 h-6" />
@@ -199,18 +199,18 @@ export default function MobileSidebar({
         </nav>
 
         {/* User Profile */}
-        <div className="p-3 border-t border-szn-border/40">
-          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-szn-surface-1/60">
+        <div className="p-3 border-t border-szn-border">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg">
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}
                 alt={session.user.name || ""}
-                className="w-11 h-11 rounded-full ring-2 ring-white dark:ring-gray-700 shadow-md object-cover"
+                className="w-9 h-9 rounded-full object-cover"
               />
             ) : (
-              <div className="w-11 h-11 rounded-full theme-gradient-btn flex items-center justify-center shadow-md">
-                <span className="text-white font-semibold text-base">
+              <div className="w-9 h-9 rounded-full bg-szn-surface flex items-center justify-center">
+                <span className="text-szn-text-2 font-medium text-sm">
                   {session?.user?.name?.[0] || session?.user?.email?.[0] || "U"}
                 </span>
               </div>
@@ -229,7 +229,7 @@ export default function MobileSidebar({
               onClose();
               onSignOut();
             }}
-            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3.5 min-h-[48px] rounded-xl text-sm font-medium text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-2 active:bg-szn-surface-2 transition-colors"
+            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-md text-sm font-medium text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 transition-colors"
           >
             <LogoutIcon className="w-5 h-5" />
             {t("dashboard.signOut")}

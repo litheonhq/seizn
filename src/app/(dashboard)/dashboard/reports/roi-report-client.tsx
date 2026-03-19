@@ -128,7 +128,7 @@ export function ROIReportClient() {
       </div>
 
       {/* Projections Banner */}
-      <div className="bg-gradient-to-r from-szn-accent to-szn-accent/80 rounded-2xl p-6 mb-8 text-white">
+      <div className="bg-gradient-to-r from-szn-accent to-szn-accent/80 rounded-lg p-6 mb-8 text-white">
         <div className="grid grid-cols-3 gap-8">
           <div>
             <p className="text-white/80 text-sm">{t("dashboard.reportsPage.estAnnualCost")}</p>
@@ -154,7 +154,7 @@ export function ROIReportClient() {
       {/* Comparisons Grid */}
       <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Rerank Comparison */}
-        <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+        <div className="bg-szn-card rounded-lg border border-szn-border p-6">
           <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.rerankImpact")}</h3>
 
           <div className="space-y-4">
@@ -191,7 +191,7 @@ export function ROIReportClient() {
         </div>
 
         {/* Autopilot Comparison */}
-        <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+        <div className="bg-szn-card rounded-lg border border-szn-border p-6">
           <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.autopilotSavings")}</h3>
 
           <div className="space-y-4">
@@ -231,7 +231,7 @@ export function ROIReportClient() {
       </div>
 
       {/* Recommendations */}
-      <div className="bg-szn-card rounded-2xl border border-szn-border p-6">
+      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
         <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.recommendations")}</h3>
         <div className="space-y-3">
           {report.recommendations.map((rec, i) => (
