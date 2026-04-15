@@ -6,11 +6,30 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/auth/api-key';
+import { getEntityExternalId } from '@/lib/graph/external-id';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
   params: Promise<{ graphId: string; entityId: string }>;
+}
+
+interface RelationshipEntityRef {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface GraphRelationshipRow {
+  id: string;
+  type: string;
+  label: string | null;
+  properties: Record<string, unknown> | null;
+  weight: number | null;
+  confidence: number | null;
+  source_document: string | null;
+  target_entity?: RelationshipEntityRef | null;
+  source_entity?: RelationshipEntityRef | null;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -84,6 +103,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         id: entity.id,
         type: entity.type,
         name: entity.name,
+        external_id: getEntityExternalId(entity),
         description: entity.description,
         aliases: entity.aliases,
         properties: entity.properties,
@@ -93,7 +113,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         updated_at: entity.updated_at,
       },
       relationships: {
-        outgoing: (outgoing || []).map((r: any) => ({
+        outgoing: ((outgoing as GraphRelationshipRow[] | null) || []).map((r) => ({
           id: r.id,
           type: r.type,
           label: r.label,
@@ -105,7 +125,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             ? { id: r.target_entity.id, name: r.target_entity.name, type: r.target_entity.type }
             : null,
         })),
-        incoming: (incoming || []).map((r: any) => ({
+        incoming: ((incoming as GraphRelationshipRow[] | null) || []).map((r) => ({
           id: r.id,
           type: r.type,
           label: r.label,
