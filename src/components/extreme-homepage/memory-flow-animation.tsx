@@ -327,7 +327,7 @@ export const MemoryFlowAnimation = memo(function MemoryFlowAnimation() {
       <div
         className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-2 relative z-10"
         role="list"
-        aria-label="AI Memory Pipeline Steps"
+        aria-label="NPC Memory Pipeline Steps"
       >
         {PIPELINE_STEPS.map((step, index) => (
           <FlowNode
