@@ -15,7 +15,7 @@
     "badge": "線上示範：smallgod",
     "title": "NPC 記得住",
     "titleHighlight": "跨越世代。",
-    "subtitle": "Seizn 是 AI NPC 的記憶層。接入 Inworld、Convai，或您自己的 LLM — 保留您熟悉的對話引擎，加入跨 session 與跨世代存活的持久性。",
+    "subtitle": "Seizn 是 AI NPC 的記憶層。接入 Inworld、Convai，或您自己的 LLM — 保留您熟悉的對話引擎，加入跨工作階段 與跨世代存活的持久性。",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "預約示範",
     "joining": "預約中...",
@@ -1693,7 +1693,7 @@
   "extremeHome": {
     "heroTitle": "AI NPC 的記憶層。",
     "heroSubtitle": "接入 Inworld、Convai，或您自己的 LLM。Seizn 為 NPC 提供持久記憶、關係，以及跨世代回憶 — 以圖譜計費，而非按席位收費。",
-    "ctaStart": "閱讀文件",
+    "ctaStart": "查看文件",
     "ctaDemo": "試玩 smallgod",
     "socialProof": "為 NPC 規模從 10 到 10,000 的遊戲工作室打造。",
     "liveDemo": "線上示範",

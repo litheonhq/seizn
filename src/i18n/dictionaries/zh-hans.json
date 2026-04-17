@@ -1693,7 +1693,7 @@
   "extremeHome": {
     "heroTitle": "AI NPC 的记忆层。",
     "heroSubtitle": "接入 Inworld、Convai，或您自己的 LLM。Seizn 为 NPC 提供持久记忆、关系，以及跨世代回忆 — 以图谱计费，而非按席位收费。",
-    "ctaStart": "阅读文档",
+    "ctaStart": "查看文档",
     "ctaDemo": "试玩 smallgod",
     "socialProof": "为 NPC 规模从 10 到 10,000 的游戏工作室打造。",
     "liveDemo": "在线演示",
