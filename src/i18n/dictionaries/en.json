@@ -369,7 +369,7 @@
     },
     "keysPage": {
       "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
+      "subtitle": "Manage API keys for your game's Seizn integrations.",
       "createNewKey": "Create New Key",
       "activeKeys": "Active Keys",
       "noKeysTitle": "No API keys yet",
@@ -410,7 +410,7 @@
     },
     "usagePage": {
       "title": "Usage Analytics",
-      "subtitle": "Monitor your API usage and costs.",
+      "subtitle": "Monitor API usage across entities, events, and queries.",
       "period": "Current Period",
       "memoriesUsed": "Memories Used",
       "apiCallsUsed": "API Calls Used",
@@ -454,8 +454,8 @@
       "createApiKey": "Create API Key"
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
+      "title": "Projects",
+      "subtitle": "Manage game-title projects and team collaboration.",
       "newOrganization": "New Organization",
       "noOrgsTitle": "No organizations yet",
       "noOrgsDesc": "Create an organization to collaborate with your team and manage shared resources",
@@ -490,8 +490,8 @@
     "language": "Language",
     "playground": "Playground",
     "playgroundPage": {
-      "title": "Debug Console",
-      "subtitle": "Test queries with full tracing and parameter tuning",
+      "title": "Playground",
+      "subtitle": "Prototype NPC memory — create entities, log events, query context back.",
       "queryBuilder": "Query Builder",
       "queryPlaceholder": "Enter your search query...",
       "namespace": "Namespace",
@@ -742,8 +742,8 @@
       "time": "Time"
     },
     "evals": {
-      "title": "Evaluations",
-      "subtitle": "A/B test and measure retrieval quality",
+      "title": "Scenario tests",
+      "subtitle": "A/B test and measure NPC memory quality across sessions.",
       "newRun": "New Eval Run",
       "runs": "Evaluation Runs",
       "noRuns": "No evaluation runs yet",
@@ -777,7 +777,7 @@
     },
     "autopilot": {
       "title": "Autopilot",
-      "subtitle": "AI-powered retrieval optimization",
+      "subtitle": "NPC context retrieval optimization.",
       "settings": "Settings",
       "decisionLogs": "Decision Logs",
       "operationMode": "Operation Mode",
@@ -786,8 +786,8 @@
       "noLogs": "No decision logs yet"
     },
     "governance": {
-      "title": "Governance",
-      "subtitle": "Manage data policies, retention rules, and compliance settings",
+      "title": "Content policy",
+      "subtitle": "Manage NPC content filters, retention rules, and age-appropriate policy.",
       "tabs": {
         "retention": "Data Retention",
         "access": "Access Control",
@@ -858,7 +858,7 @@
     },
     "privacy": {
       "title": "Privacy & RTBF",
-      "subtitle": "Manage GDPR Right to be Forgotten requests and data subject rights",
+      "subtitle": "Manage GDPR Right to be Forgotten requests, data subject rights, and NPC data retention.",
       "tabs": {
         "requests": "RTBF Requests",
         "subjects": "Data Subjects",
@@ -955,8 +955,8 @@
       }
     },
     "integrations": {
-      "title": "Integrations",
-      "subtitle": "Connect Seizn with your favorite tools and frameworks",
+      "title": "Engine plugins",
+      "subtitle": "Unity/Unreal plugins, dialogue-engine adapters, and framework SDKs.",
       "searchPlaceholder": "Search integrations...",
       "stats": {
         "total": "Total Integrations",
@@ -990,8 +990,8 @@
       "viewDocs": "View Documentation"
     },
     "calculator": {
-      "title": "Usage Calculator",
-      "subtitle": "Estimate your monthly costs based on expected usage",
+      "title": "Cost estimator",
+      "subtitle": "Estimate monthly costs from entity count and event throughput.",
       "stats": {
         "apiCalls": "API Calls",
         "memories": "Memories",
@@ -1035,7 +1035,7 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "Configure HTTP callbacks for real-time event notifications",
+      "subtitle": "Configure HTTP callbacks for entity/event updates in real time.",
       "create": "Create Webhook",
       "stats": {
         "total": "Total Webhooks",
@@ -1134,7 +1134,7 @@
     "analytics": "Analytics",
     "analyticsPage": {
       "title": "Analytics",
-      "subtitle": "Detailed usage analytics and insights",
+      "subtitle": "Usage analytics across entities, events, and queries.",
       "allOrganizations": "All Organizations",
       "days7": "7 Days",
       "days30": "30 Days",
@@ -1162,13 +1162,13 @@
       "noDataDescription": "Start making API calls to see detailed analytics here."
     },
     "memoriesPage": {
-      "title": "Memories",
-      "subtitle": "Browse and search your AI memories",
-      "totalMemories": "Total Memories",
+      "title": "Entities",
+      "subtitle": "NPCs, factions, events, and other graph entities in this project.",
+      "totalMemories": "Total entities",
       "search": "Search",
-      "searchPlaceholder": "Search memories...",
-      "namespace": "Namespace",
-      "memoryTypes": "Memory Types",
+      "searchPlaceholder": "Search entities (NPCs, factions, events)...",
+      "namespace": "Project namespace",
+      "memoryTypes": "Entity types",
       "tags": "Tags",
       "noTags": "No tags available",
       "clearFilters": "Clear Filters",
@@ -1180,8 +1180,8 @@
       "sortRelevance": "Most Relevant",
       "activeFilters": "Active filters",
       "loading": "Loading memories...",
-      "noMemories": "No memories found",
-      "noMatchingMemories": "Try adjusting your filters or search query",
+      "noMemories": "No entities yet",
+      "noMatchingMemories": "No entities match your filters",
       "noMemoriesHint": "Start adding memories via the API to see them here",
       "match": "match",
       "loadMore": "Load More",
@@ -1196,7 +1196,7 @@
     },
     "budgetPage": {
       "title": "Budget & Cost Controls",
-      "subtitle": "Manage spending limits, alerts, and automatic cost optimization",
+      "subtitle": "Manage spending limits and automatic cost optimization per project.",
       "loadError": "Failed to load budget data",
       "todaysSpend": "Today's Spend",
       "ofDailyLimit": "of daily limit",
@@ -1221,8 +1221,8 @@
       "step4": "All degrade events are logged with cost savings for transparency"
     },
     "devtoolsPage": {
-      "title": "Retrieval DevTools",
-      "subtitle": "Debug and analyze your RAG pipelines",
+      "title": "Dev tools",
+      "subtitle": "Debug and analyze NPC memory retrieval.",
       "query": "Query",
       "noQueryText": "No query text",
       "results": "results",
@@ -1243,9 +1243,9 @@
       "emptyDesc": "Choose a trace from the list on the left to view its timeline, candidates, reranking analysis, and run what-if experiments."
     },
     "enterpriseDashboard": {
-      "title": "Enterprise",
+      "title": "For studios",
       "badge": "Enterprise Plan",
-      "subtitle": "Configure SSO, SCIM, and enterprise settings",
+      "subtitle": "Studio-wide SSO, SCIM, and team workspace settings.",
       "tabs": {
         "sso": "Single Sign-On",
         "scim": "User Provisioning",
@@ -1339,7 +1339,7 @@
     },
     "securityPage": {
       "title": "Security",
-      "subtitle": "Manage API keys and view security audit logs",
+      "subtitle": "Manage API keys and view security audit logs.",
       "stats": {
         "activeKeys": "Active API Keys",
         "auditEvents": "Audit Events (24h)",
@@ -1436,7 +1436,7 @@
       }
     },
     "reportsPage": {
-      "title": "ROI Report",
+      "title": "Usage report",
       "generated": "Generated",
       "period7d": "Last 7 days",
       "period30d": "Last 30 days",
