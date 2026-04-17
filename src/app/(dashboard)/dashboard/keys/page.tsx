@@ -5,10 +5,10 @@ import ApiKeysClient from "./client";
 
 export const metadata: Metadata = {
   title: "API Keys - Seizn Dashboard",
-  description: "Create and manage your Seizn API keys. Securely access the AI memory API for your applications.",
+  description: "Create and manage API keys for NPC memory runtimes, game servers, and studio tools.",
   openGraph: {
     title: "API Keys - Seizn Dashboard",
-    description: "Create and manage your Seizn API keys. Securely access the AI memory API for your applications.",
+    description: "Create and manage API keys for NPC memory runtimes, game servers, and studio tools.",
     type: "website",
   },
   robots: {

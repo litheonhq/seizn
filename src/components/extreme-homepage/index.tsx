@@ -71,6 +71,8 @@ interface ExtremeHomepageClientProps {
 type ResultTab = "results" | "trace" | "cost";
 type DemoMode = "mock" | "real";
 
+const SMALLGOD_PLAY_URL = "https://smallgod.app/play?seed=404";
+
 const DEFAULT_CONFIG: RequestConfig = {
   query: "",
   dataset: "tech-docs",
@@ -355,13 +357,6 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
   const [isHeroMotionReady, setIsHeroMotionReady] = useState(false);
   const autoRunAttemptedRef = useRef(false);
-  const liveDemoCtaLabel = "Open Live Playground";
-
-  const scrollToDemo = useCallback((source: "hero_cta" = "hero_cta") => {
-    analytics.featureUsed("extreme_home_scroll_to_demo", { source });
-    document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
   const handleModeChange = useCallback((nextMode: DemoMode) => {
     setMode(nextMode);
     analytics.featureUsed("extreme_home_demo_mode_changed", { mode: nextMode });
@@ -685,16 +680,19 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </Link>
-              <button
-                onClick={() => scrollToDemo("hero_cta")}
+              <a
+                href={SMALLGOD_PLAY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "smallgod" })}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-szn-card/80 backdrop-blur-sm text-szn-text-1 font-medium rounded-xl border border-szn-border/80 hover:border-szn-border hover:bg-szn-card transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {liveDemoCtaLabel}
-              </button>
+                {t.ctaDemo || "Play smallgod"}
+              </a>
             </div>
 
             {/* Social Proof */}
