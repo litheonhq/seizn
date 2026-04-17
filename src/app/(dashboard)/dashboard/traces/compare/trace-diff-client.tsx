@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { TraceDiff } from "@/components/dashboard/TraceDiff";
 import { TraceReplay } from "@/components/dashboard/TraceReplay";
+import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 
 interface Trace {
   id: string;
@@ -19,6 +20,7 @@ interface Trace {
 }
 
 export function TraceDiffClient() {
+  const { t } = useDashboardTranslation();
   const searchParams = useSearchParams();
   const initialTraceA = searchParams.get("a") || "";
   const initialTraceB = searchParams.get("b") || "";
@@ -28,7 +30,6 @@ export function TraceDiffClient() {
   const [showDiff, setShowDiff] = useState(Boolean(initialTraceA && initialTraceB));
   const [selectedTrace, setSelectedTrace] = useState<Trace | null>(null);
 
-  // Load recent traces for selection
   useEffect(() => {
     const loadRecentTraces = async () => {
       try {
@@ -41,28 +42,37 @@ export function TraceDiffClient() {
         console.error("Failed to load traces:", error);
       }
     };
+
     loadRecentTraces();
   }, []);
 
   const handleCompare = () => {
     if (traceA && traceB) {
       setShowDiff(true);
-      // Update URL
       window.history.pushState({}, "", `?a=${traceA}&b=${traceB}`);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Trace Selection */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-szn-text-1">
+          {t("dashboard.traceComparePage.title") || "Compare Traces"}
+        </h1>
+        <p className="text-szn-text-2 mt-1">
+          {t("dashboard.traceComparePage.subtitle") || "Analyze differences between two trace executions"}
+        </p>
+      </div>
+
       <div className="bg-white rounded-lg border shadow-sm p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">Select Traces to Compare</h2>
+        <h2 className="font-semibold text-gray-900 mb-4">
+          {t("dashboard.traceComparePage.selectTitle") || "Select traces to compare"}
+        </h2>
 
         <div className="grid grid-cols-2 gap-6">
-          {/* Trace A */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Trace A (Baseline)
+              {t("dashboard.traceComparePage.traceABaseline") || "Trace A (baseline)"}
             </label>
             <select
               value={traceA}
@@ -72,14 +82,16 @@ export function TraceDiffClient() {
               }}
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select a trace...</option>
+              <option value="">{t("dashboard.traceComparePage.selectTrace") || "Select a trace..."}</option>
               {recentTraces.map((trace) => (
                 <option key={trace.id} value={trace.id}>
                   {trace.query?.slice(0, 40)}... ({new Date(trace.created_at).toLocaleString()})
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Or paste trace ID:</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {t("dashboard.traceComparePage.pasteTraceId") || "Or paste a trace ID:"}
+            </p>
             <input
               type="text"
               value={traceA}
@@ -87,15 +99,14 @@ export function TraceDiffClient() {
                 setTraceA(e.target.value);
                 setShowDiff(false);
               }}
-              placeholder="Trace ID..."
+              placeholder={t("dashboard.traceComparePage.traceIdPlaceholder") || "Trace ID..."}
               className="w-full px-3 py-2 border rounded-lg mt-1 text-sm font-mono"
             />
           </div>
 
-          {/* Trace B */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Trace B (Comparison)
+              {t("dashboard.traceComparePage.traceBComparison") || "Trace B (comparison)"}
             </label>
             <select
               value={traceB}
@@ -105,14 +116,16 @@ export function TraceDiffClient() {
               }}
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
             >
-              <option value="">Select a trace...</option>
+              <option value="">{t("dashboard.traceComparePage.selectTrace") || "Select a trace..."}</option>
               {recentTraces.map((trace) => (
                 <option key={trace.id} value={trace.id}>
                   {trace.query?.slice(0, 40)}... ({new Date(trace.created_at).toLocaleString()})
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Or paste trace ID:</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {t("dashboard.traceComparePage.pasteTraceId") || "Or paste a trace ID:"}
+            </p>
             <input
               type="text"
               value={traceB}
@@ -120,7 +133,7 @@ export function TraceDiffClient() {
                 setTraceB(e.target.value);
                 setShowDiff(false);
               }}
-              placeholder="Trace ID..."
+              placeholder={t("dashboard.traceComparePage.traceIdPlaceholder") || "Trace ID..."}
               className="w-full px-3 py-2 border rounded-lg mt-1 text-sm font-mono"
             />
           </div>
@@ -132,24 +145,25 @@ export function TraceDiffClient() {
             disabled={!traceA || !traceB || traceA === traceB}
             className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Compare Traces
+            {t("dashboard.traceComparePage.compareButton") || "Compare traces"}
           </button>
 
           {traceA && (
             <button
               onClick={() => {
-                const trace = recentTraces.find((t) => t.id === traceA);
-                if (trace) setSelectedTrace(trace);
+                const trace = recentTraces.find((item) => item.id === traceA);
+                if (trace) {
+                  setSelectedTrace(trace);
+                }
               }}
               className="px-6 py-2 bg-orange-100 text-orange-700 font-medium rounded-lg hover:bg-orange-200"
             >
-              Replay Trace A
+              {t("dashboard.traceComparePage.replayTraceA") || "Replay trace A"}
             </button>
           )}
         </div>
       </div>
 
-      {/* Diff View */}
       {showDiff && traceA && traceB && (
         <TraceDiff
           traceIdA={traceA}
@@ -158,7 +172,6 @@ export function TraceDiffClient() {
         />
       )}
 
-      {/* Replay Panel */}
       {selectedTrace && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="max-w-lg w-full">
@@ -175,20 +188,21 @@ export function TraceDiffClient() {
               onClick={() => setSelectedTrace(null)}
               className="mt-4 w-full py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100"
             >
-              Cancel
+              {t("dashboard.traceComparePage.cancel") || "Cancel"}
             </button>
           </div>
         </div>
       )}
 
-      {/* Help Text */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <h3 className="font-medium text-blue-800 mb-2">How to use Trace Diff</h3>
+        <h3 className="font-medium text-blue-800 mb-2">
+          {t("dashboard.traceComparePage.helpTitle") || "How to use trace diff"}
+        </h3>
         <ul className="text-sm text-blue-700 space-y-1">
-          <li>• Select two traces to compare their results, latency, and cost</li>
-          <li>• Use &quot;Replay&quot; to re-run a trace with modified config</li>
-          <li>• Compare original vs replayed to see the impact of config changes</li>
-          <li>• Ranking changes show how results moved between runs</li>
+          <li>{t("dashboard.traceComparePage.helpLine1") || "Select two traces to compare their results, latency, and cost."}</li>
+          <li>{t("dashboard.traceComparePage.helpLine2") || "Use replay to run a trace again with a modified config."}</li>
+          <li>{t("dashboard.traceComparePage.helpLine3") || "Compare the original and replayed runs to see the impact of config changes."}</li>
+          <li>{t("dashboard.traceComparePage.helpLine4") || "Ranking changes show how results moved between runs."}</li>
         </ul>
       </div>
     </div>
