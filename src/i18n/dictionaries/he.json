@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - תשתית זיכרון AI",
-    "description": "תנו ל-AI שלכם זיכרון מתמשך. Seizn שומר ומאחזר הקשר באופן אוטומטי, כך שה-AI שלכם זוכר שיחות קודמות."
+    "title": "Seizn — זיכרון לדמויות NPC בינה מלאכותית",
+    "description": "התחברו ל-Inworld, Convai, או ה-LLM שלכם. Seizn מעניק לדמויות NPC שלכם זיכרון מתמשך, קשרים וזיכרון בין-דורי — תמחור לפי ישות, לא לפי מושב."
   },
   "nav": {
     "features": "תכונות",
     "pricing": "מחירים",
-    "docs": "תיעוד",
+    "docs": "Docs",
     "login": "התחברות",
-    "getStarted": "התחל"
+    "getStarted": "הזמן הדגמה",
+    "demo": "שחק smallgod"
   },
   "hero": {
-    "badge": "זמין Q1 2026",
-    "title": "תשתית זיכרון",
-    "titleHighlight": "ליישומי AI",
-    "subtitle": "תנו ל-AI שלכם זיכרון מתמשך. Seizn שומר ומאחזר הקשר באופן אוטומטי, כך שה-AI שלכם זוכר שיחות קודמות.",
-    "emailPlaceholder": "הזן את המייל שלך",
-    "joinWaitlist": "הצטרף לרשימת ההמתנה",
-    "joining": "מצטרף...",
-    "onTheList": "אתה ברשימה!",
+    "badge": "הדגמה חיה: smallgod",
+    "title": "דמויות NPC שלך זוכרות",
+    "titleHighlight": "בין הדורות.",
+    "subtitle": "Seizn הוא שכבת הזיכרון לדמויות NPC בינה מלאכותית. חברו אותו ל-Inworld, Convai, או ה-LLM שלכם — שמרו על מנוע הדיאלוג שאתם אוהבים, הוסיפו המשכיות שעומדת בפני סשנים ודורות.",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "הזמן הדגמה",
+    "joining": "מזמין...",
+    "onTheList": "ניצור קשר בקרוב.",
     "stats": {
-      "tokenSavings": "חיסכון בטוקנים",
-      "retrievalTime": "זמן אחזור",
-      "uptimeSla": "SLA זמינות"
+      "tokenSavings": "דמויות NPC לפרויקט",
+      "retrievalTime": "אחזור זיכרון",
+      "uptimeSla": "דורות של זיכרון"
     }
   },
   "features": {
-    "title": "נבנה למפתחים",
-    "subtitle": "APIs פשוטים, תשתית עוצמתית. הוסיפו זיכרון מתמשך לכל AI תוך דקות.",
+    "title": "נבנה לסטודיות משחקים",
+    "subtitle": "הוסיפו את Seizn, שמרו על מנוע הדיאלוג שלכם. דמויות NPC מקבלות זיכרון, קשרים והמשכיות שעומדת בפני סשנים ודורות.",
     "smartExtraction": {
-      "title": "חילוץ חכם",
-      "description": "מחלץ באופן אוטומטי עובדות מפתח, העדפות והקשר משיחות באמצעות Claude AI."
+      "title": "גרף NPC / פלגים / אירועים",
+      "description": "מדל דמויות NPC, פלגים, משימות ואירועים כגרף. קשרים (אמון, טינה, קרבה) ואירועים (עד, נפגע, שחקן) הם פרימיטיבים ממדרגה ראשונה, לא סכמות שצריך להמציא."
     },
     "instantRetrieval": {
-      "title": "אחזור מיידי",
-      "description": "חיפוש היברידי וקטור + גרף מחזיר זיכרונות רלוונטיים באלפיות שנייה."
+      "title": "אחזור מודע הקשר",
+      "description": "חיפוש היברידי וקטור + גרף מחזיר רק את הזיכרונות הרלוונטיים לדמות ה-NPC הזה, לסצנה הזו. שאילתות 'הפעם האחרונה שנפגשנו' באלפיות שנייה."
     },
     "enterpriseSecurity": {
-      "title": "אבטחה ארגונית",
-      "description": "הצפנה מקצה לקצה, תואם SOC 2, עם בקרות גישה מדויקות ויומני ביקורת."
+      "title": "קנה מידה של אסרת NPC",
+      "description": "תמחור מדורג לפי ישות. משחקים דמויי Sims, Cities Skylines ו-god-game מריצים אלפי דמויות NPC ללא חסמי עלות לפי מושב. אירוח עצמי או מנוהל."
     }
   },
   "codePreview": {
-    "title": "אינטגרציה פשוטה",
-    "subtitle": "הוסיפו זיכרון ל-AI שלכם בכמה שורות קוד בלבד."
+    "title": "אינטגרציה ב-10 שורות",
+    "subtitle": "שמרו על מנוע הדיאלוג שלכם. הוסיפו Seizn לזיכרון."
   },
   "pricing": {
-    "title": "תמחור פשוט ושקוף",
-    "subtitle": "התחילו בחינם, התרחבו לפי הצורך.",
+    "title": "תמחור לפי ישות",
+    "subtitle": "התחילו בחינם. התרחבו לפי ישויות ואירועים — לא לפי מושב. מתאים לאינדי עם 10 דמויות ולמשחק ממד עם 10,000 דמויות כאחד.",
     "free": {
       "name": "חינם",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "מסמכים",
     "nav": {
       "overview": "סקירה",
-      "memories": "זיכרונות",
-      "mindMap": "מפת חשיבה",
-      "candidates": "מועמדים",
+      "memories": "ישויות",
+      "mindMap": "גרף קשרים",
+      "candidates": "תיבת אירועים",
       "devTools": "כלי פיתוח",
       "playground": "סביבת ניסוי",
-      "evals": "הערכות",
+      "evals": "בדיקות תרחישים",
       "analytics": "אנליטיקס",
-      "governance": "ממשל",
+      "governance": "מדיניות תוכן",
       "privacy": "פרטיות",
       "security": "אבטחה",
-      "enterprise": "ארגוני",
+      "enterprise": "לסטודיות",
       "usage": "שימוש",
       "budget": "תקציב",
       "reports": "דוחות",
-      "calculator": "מחשבון",
+      "calculator": "הערכת עלויות",
       "apiKeys": "מפתחות API",
-      "integrations": "אינטגרציות",
+      "integrations": "תוספי מנוע",
       "webhooks": "Webhooks",
-      "docs": "תיעוד",
-      "organizations": "ארגונים",
+      "docs": "Docs",
+      "organizations": "פרויקטים",
       "settings": "הגדרות",
       "groups": {
-        "memory": "זיכרון",
+        "memory": "זיכרון NPC",
         "observe": "ניטור",
-        "govern": "ממשל",
-        "finops": "ניהול עלויות",
-        "connect": "חיבור",
-        "system": "מערכת"
+        "govern": "מדיניות",
+        "finops": "שימוש ועלות",
+        "connect": "אינטגרציה",
+        "system": "סביבת עבודה"
       }
     },
     "pinSidebar": "הצמד סרגל צד",
@@ -601,25 +602,25 @@
       "evening": "ערב טוב"
     },
     "overviewPage": {
-      "subtitle": "הנה סקירת השימוש שלך בזיכרון AI",
-      "totalMemories": "סה\"כ זיכרונות",
+      "subtitle": "הנה סקירת גרף הזיכרון של דמויות NPC שלך.",
+      "totalMemories": "סה\"כ ישויות",
       "apiCalls": "קריאות API",
       "activeKeys": "מפתחות API פעילים",
       "currentPlan": "תוכנית נוכחית",
       "usage": "שימוש",
       "today": "היום",
       "dailyLimit": "מגבלה יומית",
-      "recentMemories": "זיכרונות אחרונים",
+      "recentMemories": "אירועים אחרונים",
       "viewAll": "הצג הכל",
-      "noMemories": "אין זיכרונות עדיין",
-      "noMemoriesHint": "התחל בהוספת הזיכרון הראשון שלך דרך ה-API",
+      "noMemories": "אין ישויות עדיין",
+      "noMemoriesHint": "צרו דמויות NPC, פלגים או אירועים דרך API או SDK כדי להתחיל.",
       "quickStart": "התחלה מהירה",
       "createApiKey": "צור מפתח API",
-      "getStartedApi": "התחל עם ה-API",
+      "getStartedApi": "אמתו את האינטגרציה הראשונה",
       "viewDocumentation": "צפה בתיעוד",
-      "learnSeizn": "למד כיצד להשתמש ב-Seizn",
-      "createOrganization": "צור ארגון",
-      "collaborateTeam": "שתף פעולה עם הצוות שלך",
+      "learnSeizn": "אינטגרציה ב-10 שורות — Unity, Unreal, או כל runtime",
+      "createOrganization": "צור פרויקט",
+      "collaborateTeam": "הגדר סביבת עבודה לענוין משחק",
       "quickExample": "דוגמה מהירה",
       "manageKeys": "נהל מפתחות",
       "upgradePlan": "שדרג תוכנית",
@@ -732,17 +733,17 @@
         },
         "installSdk": {
           "title": "התקן SDK",
-          "description": "הוסף את Seizn לפרויקט שלך עם npm או pip",
-          "action": "צפה ב-SDK"
+          "description": "הוסף את Seizn לפרויקט שלך: npm, pip, או HTTP ישיר. תוספי Unity/Unreal נמצאים באינטגרציות.",
+          "action": "העתק SDK"
         },
         "createOrg": {
-          "title": "יצירת ארגון",
-          "description": "הגדרת סביבת עבודה צוותית לשיתוף פעולה",
-          "action": "צור ארגון"
+          "title": "צור פרויקט",
+          "description": "פרויקט אחד לכל כותרת משחק. סביבות (dev/prod) נמצאות בפנים.",
+          "action": "צור פרויקט"
         },
         "firstQuery": {
-          "title": "הרץ שאילתה ראשונה",
-          "description": "בדוק את ה-API במגרש המשחקים עם שאילתה לדוגמה",
+          "title": "תעד אירוע ראשון",
+          "description": "נסה את הפלייגראונד — צור NPC, תעד אירוע, שאל הקשר.",
           "action": "נסה שאילתה"
         }
       },
@@ -1690,31 +1691,31 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "מערכת ההפעלה לייצור של סוכני AI.",
-    "heroSubtitle": "העבירו סוכנים מפיילוט לייצור עם זיכרון מנוהל, ניטור מובנה ותאימות ניתנת להוכחה.",
-    "ctaStart": "התחילו בחינם",
-    "ctaDemo": "צפו בהדגמה של 2 דקות",
-    "socialProof": "מהימן על ידי צוותים המפעילים סוכנים בקנה מידה",
+    "heroTitle": "זיכרון לדמויות NPC בינה מלאכותית.",
+    "heroSubtitle": "התחברו ל-Inworld, Convai, או ה-LLM שלכם. Seizn מעניק לדמויות NPC שלכם זיכרון מתמשך, קשרים וזיכרון בין-דורי — תמחור לפי ישות, לא לפי מושב.",
+    "ctaStart": "קראו את התיעוד",
+    "ctaDemo": "שחקו smallgod",
+    "socialProof": "מיועד לסטודיות משחקים המתרחבות מ-10 ל-10,000 דמויות NPC.",
     "liveDemo": "הדגמה חיה",
-    "heroTagline": "נסו את ה-API בזמן אמת — ללא הרשמה",
+    "heroTagline": "שחקו smallgod — משחק ה-god-game המרפרנסי שלנו הבנוי על Seizn. ללא הרשמה או התקנה.",
     "firstRetrievalComplete": "אחזור ראשון הושלם",
     "copySnippetHint": "העתק את קטע הקוד למטה כדי לשחזר",
-    "copySnippetTitle": "העתק קטע קוד זה",
-    "copySnippetSubtitle": "נוצר מההגדרות המדויקות שלך למעלה",
+    "copySnippetTitle": "אינטגרציה ב-Unity, Unreal, או כל runtime",
+    "copySnippetSubtitle": "עטיפת HTTP + תוספי C#/C++ רשמיים. ללא תשתית מותאמת אישית.",
     "whySeizn": {
-      "title": "למה Seizn ולא LangChain + Pinecone?",
-      "subtitle": "הפסיקו לחבר כלים מפוצלים. קבלו הכל במערכת אחת משולבת.",
-      "tracingTitle": "מעקב + הערכה מובנים",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "טייס אוטומטי מודע לתקציב",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "ממשל + יומני ביקורת",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "ברירת מחדל לצוותים",
+      "title": "למה Seizn ולא Inworld / Convai בלבד?",
+      "subtitle": "מנועי דיאלוג מצטיינים בקולות ובאישיות. אף אחד מהם לא פותר זיכרון מתמשך בקנה מידה. Seizn מתחבר כשכבת זיכרון.",
+      "tracingTitle": "לא תלוי במנוע דיאלוג ספציפי",
+      "tracingDesc": "השתמשו ב-Inworld, Convai, NVIDIA ACE, או ב-LLM שלכם לדיאלוג. Seizn מוסיף זיכרון מעל — מבלי להחליף את מה שעובד.",
+      "tracingBadge": "תוסף",
+      "autopilotTitle": "קנה מידה של אסרת NPC",
+      "autopilotDesc": "אחסון גרף, מדורג לפי ישות. משחקים דמויי Sims, Cities Skylines ו-god-game מריצים אלפי דמויות NPC ללא חסמי עלות לפי מושב.",
+      "autopilotBadge": "לפי ישות",
+      "governanceTitle": "זיכרון בין-דורי",
+      "governanceDesc": "טינות שורדות דמויות. היסטוריית פלגים מועברת לצאצאים. קרבה, עדות ופרימיטיבים של קשרים מובנים — ללא סכמות מותאמות.",
+      "governanceBadge": "מובנה",
       "lessGlueTitle": "פחות חלקים נעים",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueDesc": "לא עוד ז'ונגלינג עם LangChain + Pinecone + LangSmith + פילטרי PII. SDK אחד, לוח בקרה אחד, חשבון אחד.",
       "lessGlueBadge": "פחות קוד חיבור"
     },
     "trust": {
@@ -1726,21 +1727,21 @@
       "auditLogsDesc": "מעקב מלא"
     },
     "pricingCta": {
-      "title": "תמחור פשוט ושקוף",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "תמחור לפי ישות",
+      "subtitle": "התחילו בחינם. ללא חסמי מושב — 10 דמויות NPC או 10,000, התרחבו לפי ישויות ואירועים, לא לפי מושבי מפתחים.",
       "viewPricing": "צפה בתמחור",
-      "contactSales": "צור קשר עם המכירות"
+      "contactSales": "דברו עם המייסד"
     },
     "nav": {
-      "docs": "מסמכים",
+      "docs": "Docs",
       "pricing": "תמחור",
-      "enterprise": "Enterprise",
-      "getApiKey": "קבל מפתח API",
-      "tryDemo": "נסה הדגמה",
-      "compare": "השוואה",
-      "limits": "Limits",
+      "compare": "vs Inworld",
+      "enterprise": "לסטודיות",
+      "getApiKey": "הזמן הדגמה",
+      "tryDemo": "שחק smallgod",
+      "limits": "מגבלות",
       "status": "סטטוס",
-      "help": "Help",
+      "help": "עזרה",
       "github": "OSS"
     },
     "requestBuilder": {
@@ -1793,9 +1794,9 @@
       "cost": "עלות"
     },
     "chips": {
-      "trace": "מעקב",
-      "eval": "Eval",
-      "policy": "Policy"
+      "trace": "ישויות",
+      "eval": "קשרים",
+      "policy": "אירועים"
     },
     "playgroundTitle": "Try it now",
     "costPanel": {

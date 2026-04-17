@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - بنية تحتية لذاكرة الذكاء الاصطناعي",
-    "description": "امنح الذكاء الاصطناعي الخاص بك ذاكرة دائمة. يقوم Seizn بتخزين واسترداد السياق تلقائياً، حتى يتذكر الذكاء الاصطناعي المحادثات السابقة."
+    "title": "Seizn — ذاكرة لشخصيات NPC بالذكاء الاصطناعي",
+    "description": "تكامل مع Inworld أو Convai أو LLM الخاص بك. يمنح Seizn شخصيات NPC الخاصة بك ذاكرة دائمة وعلاقات وذاكرة عبر الأجيال — تسعير بحسب الكيان، لا بحسب المقعد."
   },
   "nav": {
     "features": "المميزات",
     "pricing": "الأسعار",
-    "docs": "التوثيق",
+    "docs": "Docs",
     "login": "تسجيل الدخول",
-    "getStarted": "ابدأ الآن"
+    "getStarted": "احجز عرضاً توضيحياً",
+    "demo": "العب smallgod"
   },
   "hero": {
-    "badge": "متاح Q1 2026",
-    "title": "بنية تحتية للذاكرة",
-    "titleHighlight": "لتطبيقات الذكاء الاصطناعي",
-    "subtitle": "امنح الذكاء الاصطناعي الخاص بك ذاكرة دائمة. يقوم Seizn بتخزين واسترداد السياق تلقائياً، حتى يتذكر الذكاء الاصطناعي المحادثات السابقة.",
-    "emailPlaceholder": "أدخل بريدك الإلكتروني",
-    "joinWaitlist": "انضم لقائمة الانتظار",
-    "joining": "جارٍ الانضمام...",
-    "onTheList": "أنت في القائمة!",
+    "badge": "عرض مباشر: smallgod",
+    "title": "شخصيات NPC تتذكر",
+    "titleHighlight": "عبر الأجيال.",
+    "subtitle": "Seizn هو طبقة الذاكرة لشخصيات NPC بالذكاء الاصطناعي. قم بتوصيله بـ Inworld أو Convai أو LLM الخاص بك — احتفظ بمحرك الحوار الذي تحبه، وأضف استمرارية تصمد عبر الجلسات والأجيال.",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "احجز عرضاً توضيحياً",
+    "joining": "جارٍ الحجز...",
+    "onTheList": "سنتواصل معك قريباً.",
     "stats": {
-      "tokenSavings": "توفير الرموز",
-      "retrievalTime": "وقت الاسترداد",
-      "uptimeSla": "اتفاقية مستوى الخدمة"
+      "tokenSavings": "شخصية NPC لكل مشروع",
+      "retrievalTime": "استرداد الذاكرة",
+      "uptimeSla": "أجيال من الذاكرة"
     }
   },
   "features": {
-    "title": "مصمم للمطورين",
-    "subtitle": "واجهات برمجة تطبيقات بسيطة، بنية تحتية قوية. أضف ذاكرة دائمة لأي ذكاء اصطناعي في دقائق.",
+    "title": "مصمم لاستوديوهات الألعاب",
+    "subtitle": "أضف Seizn، وابقِ على محرك الحوار الخاص بك. تحصل شخصيات NPC على ذاكرة وعلاقات واستمرارية تصمد عبر الجلسات والأجيال.",
     "smartExtraction": {
-      "title": "استخراج ذكي",
-      "description": "يستخرج تلقائياً الحقائق الرئيسية والتفضيلات والسياق من المحادثات باستخدام Claude AI."
+      "title": "رسم بياني لـ NPC / الفصائل / الأحداث",
+      "description": "نمذجة شخصيات NPC والفصائل والمهام والحوادث كرسم بياني. العلاقات (الثقة، الضغينة، القرابة) والأحداث (شهد، تأثر، فاعل) عناصر أولية من الدرجة الأولى، لا مخططات عليك ابتكارها."
     },
     "instantRetrieval": {
-      "title": "استرداد فوري",
-      "description": "البحث الهجين المتجه + الرسم البياني يُرجع الذكريات ذات الصلة في أجزاء من الثانية."
+      "title": "استرداد سياقي",
+      "description": "البحث الهجين (متجه + رسم بياني) يُرجع الذكريات ذات الصلة بهذا NPC وهذا المشهد تحديداً. استعلامات 'آخر مرة التقينا' في أجزاء من الثانية."
     },
     "enterpriseSecurity": {
-      "title": "أمان المؤسسات",
-      "description": "تشفير من طرف إلى طرف، متوافق مع SOC 2، مع عناصر تحكم وصول دقيقة وسجلات تدقيق."
+      "title": "مقياس أسراب NPC",
+      "description": "تسعير مقنن بحسب الكيان. ألعاب شبيهة بـ Sims وCities Skylines والألعاب الإلهية تشغّل آلاف شخصيات NPC دون حواجز تكلفة بحسب المقعد. استضافة ذاتية أو مُدارة."
     }
   },
   "codePreview": {
-    "title": "تكامل بسيط",
-    "subtitle": "أضف ذاكرة للذكاء الاصطناعي الخاص بك بسطور قليلة من الكود."
+    "title": "تكامل في 10 أسطر",
+    "subtitle": "احتفظ بمحرك الحوار الخاص بك. أضف Seizn للذاكرة."
   },
   "pricing": {
-    "title": "أسعار بسيطة وشفافة",
-    "subtitle": "ابدأ مجاناً، وتوسع مع نموك.",
+    "title": "تسعير بحسب الكيان",
+    "subtitle": "ابدأ مجاناً. التوسع بحسب الكيانات والأحداث — لا بحسب المقعد. يناسب ألعاب 10 شخصيات و10,000 شخصية على حد سواء.",
     "free": {
       "name": "مجاني",
       "price": "$0",
@@ -243,17 +244,17 @@
         },
         "installSdk": {
           "title": "تثبيت SDK",
-          "description": "أضف Seizn إلى مشروعك باستخدام npm أو pip",
-          "action": "عرض SDKs"
+          "description": "أضف Seizn إلى مشروعك: npm أو pip أو HTTP مباشر. إضافات Unity/Unreal في قسم التكاملات.",
+          "action": "نسخ SDK"
         },
         "createOrg": {
-          "title": "إنشاء مؤسسة",
-          "description": "إعداد مساحة عمل فريقك للتعاون",
-          "action": "إنشاء مؤسسة"
+          "title": "إنشاء مشروع",
+          "description": "مشروع واحد لكل عنوان لعبة. البيئات (dev/prod) موجودة داخله.",
+          "action": "إنشاء مشروع"
         },
         "firstQuery": {
-          "title": "تشغيل أول استعلام",
-          "description": "اختبار API في ساحة التجربة باستعلام تجريبي",
+          "title": "تسجيل أول حدث",
+          "description": "جرّب ساحة التجربة — أنشئ NPC، سجّل حدثاً، استعلم عن السياق.",
           "action": "تجربة استعلام"
         }
       },
@@ -355,34 +356,34 @@
     "docs": "المستندات",
     "nav": {
       "overview": "نظرة عامة",
-      "memories": "الذاكرة",
-      "mindMap": "خريطة ذهنية",
-      "candidates": "المرشحون",
+      "memories": "الكيانات",
+      "mindMap": "رسم بياني للعلاقات",
+      "candidates": "صندوق الأحداث",
       "devTools": "أدوات التطوير",
       "playground": "ساحة التجربة",
-      "evals": "التقييمات",
+      "evals": "اختبارات السيناريو",
       "analytics": "التحليلات",
-      "governance": "الحوكمة",
+      "governance": "سياسة المحتوى",
       "privacy": "الخصوصية",
       "security": "الأمان",
-      "enterprise": "المؤسسات",
+      "enterprise": "للاستوديوهات",
       "usage": "الاستخدام",
       "budget": "الميزانية",
       "reports": "التقارير",
-      "calculator": "الحاسبة",
+      "calculator": "تقدير التكلفة",
       "apiKeys": "مفاتيح API",
-      "integrations": "التكاملات",
+      "integrations": "إضافات المحرك",
       "webhooks": "Webhooks",
-      "docs": "المستندات",
-      "organizations": "المنظمات",
+      "docs": "Docs",
+      "organizations": "المشاريع",
       "settings": "الإعدادات",
       "groups": {
-        "memory": "الذاكرة",
+        "memory": "ذاكرة NPC",
         "observe": "المراقبة",
-        "govern": "الحوكمة",
-        "finops": "إدارة التكاليف",
-        "connect": "الاتصال",
-        "system": "النظام"
+        "govern": "السياسات",
+        "finops": "الاستخدام والتكلفة",
+        "connect": "التكامل",
+        "system": "مساحة العمل"
       }
     },
     "pinSidebar": "تثبيت الشريط الجانبي",
@@ -670,25 +671,25 @@
       "evening": "مساء الخير"
     },
     "overviewPage": {
-      "subtitle": "إليك نظرة عامة على استخدام ذاكرة AI الخاص بك",
-      "totalMemories": "إجمالي الذكريات",
+      "subtitle": "إليك نظرة عامة على رسم بياني ذاكرة NPC الخاص بك.",
+      "totalMemories": "إجمالي الكيانات",
       "apiCalls": "استدعاءات API",
       "activeKeys": "مفاتيح API النشطة",
       "currentPlan": "الخطة الحالية",
       "usage": "الاستخدام",
       "today": "اليوم",
       "dailyLimit": "الحد اليومي",
-      "recentMemories": "الذكريات الأخيرة",
+      "recentMemories": "الأحداث الأخيرة",
       "viewAll": "عرض الكل",
-      "noMemories": "لا توجد ذكريات بعد",
-      "noMemoriesHint": "ابدأ بإضافة ذاكرتك الأولى عبر API",
+      "noMemories": "لا توجد كيانات بعد",
+      "noMemoriesHint": "أنشئ شخصيات NPC أو فصائل أو أحداثاً عبر API أو SDK للبدء.",
       "quickStart": "البدء السريع",
       "createApiKey": "إنشاء مفتاح API",
-      "getStartedApi": "ابدأ مع API",
+      "getStartedApi": "قم بمصادقة أول تكامل",
       "viewDocumentation": "عرض الوثائق",
-      "learnSeizn": "تعلم كيفية استخدام Seizn",
-      "createOrganization": "إنشاء مؤسسة",
-      "collaborateTeam": "تعاون مع فريقك",
+      "learnSeizn": "تكامل في 10 أسطر — Unity أو Unreal أو أي محرك",
+      "createOrganization": "إنشاء مشروع",
+      "collaborateTeam": "إعداد مساحة عمل لعنوان لعبة",
       "quickExample": "مثال سريع",
       "manageKeys": "إدارة المفاتيح",
       "upgradePlan": "ترقية الخطة",
@@ -1690,31 +1691,31 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "نظام التشغيل الإنتاجي لوكلاء الذكاء الاصطناعي.",
-    "heroSubtitle": "انقل الوكلاء من التجربة إلى الإنتاج مع ذاكرة محكومة، وقابلية مراقبة مدمجة، وامتثال قابل للإثبات.",
-    "ctaStart": "ابدأ مجاناً",
-    "ctaDemo": "شاهد العرض التوضيحي",
-    "socialProof": "موثوق من قبل الفرق التي تشغل الوكلاء على نطاق واسع",
+    "heroTitle": "ذاكرة لشخصيات NPC بالذكاء الاصطناعي.",
+    "heroSubtitle": "تكامل مع Inworld أو Convai أو LLM الخاص بك. يمنح Seizn شخصيات NPC الخاصة بك ذاكرة دائمة وعلاقات وذاكرة عبر الأجيال — تسعير بحسب الكيان، لا بحسب المقعد.",
+    "ctaStart": "اقرأ الوثائق",
+    "ctaDemo": "العب smallgod",
+    "socialProof": "مصمم لاستوديوهات الألعاب من 10 إلى 10,000 شخصية NPC.",
     "liveDemo": "عرض مباشر",
-    "heroTagline": "جرّب واجهة API مباشرة — بدون تسجيل",
+    "heroTagline": "العب smallgod — لعبتنا المرجعية المبنية على Seizn. بلا تسجيل أو تثبيت.",
     "firstRetrievalComplete": "اكتمل الاسترجاع الأول",
     "copySnippetHint": "انسخ المقتطف أدناه للتكرار",
-    "copySnippetTitle": "انسخ هذا المقتطف",
-    "copySnippetSubtitle": "تم إنشاؤه من إعداداتك الدقيقة أعلاه",
+    "copySnippetTitle": "تكامل في Unity أو Unreal أو أي محرك",
+    "copySnippetSubtitle": "غلاف HTTP + إضافات C#/C++ رسمية. لا حاجة لبنية تحتية مخصصة.",
     "whySeizn": {
-      "title": "لماذا Seizn بدلاً من LangChain + Pinecone؟",
-      "subtitle": "توقف عن تجميع أدوات متفرقة. احصل على كل ما تحتاجه في منصة واحدة متكاملة.",
-      "tracingTitle": "تتبع + تقييم مدمج",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "طيار آلي واعي بالميزانية",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "حوكمة + سجلات تدقيق",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "افتراضي للفرق",
+      "title": "لماذا Seizn وليس Inworld / Convai وحدهما؟",
+      "subtitle": "محركات الحوار رائعة في الأصوات والشخصية. لكن أياً منها لا يحل مشكلة الذاكرة الدائمة على النطاق الواسع. Seizn يندمج كطبقة ذاكرة.",
+      "tracingTitle": "لا يعتمد على محرك حوار بعينه",
+      "tracingDesc": "استخدم Inworld أو Convai أو NVIDIA ACE أو LLM الخاص بك للحوار. Seizn يضيف الذاكرة فوق ذلك — دون استبدال ما يعمل.",
+      "tracingBadge": "إضافة",
+      "autopilotTitle": "مقياس أسراب NPC",
+      "autopilotDesc": "تخزين الرسم البياني، مقنن بحسب الكيان. ألعاب شبيهة بـ Sims وCities Skylines والألعاب الإلهية تشغّل آلاف شخصيات NPC دون حواجز تكلفة بحسب المقعد.",
+      "autopilotBadge": "بحسب الكيان",
+      "governanceTitle": "ذاكرة عبر الأجيال",
+      "governanceDesc": "الضغائن تعيش أطول من الشخصيات. تاريخ الفصائل ينتقل إلى الأحفاد. القرابة والشهادة وعناصر العلاقات مدمجة — بلا مخططات مخصصة.",
+      "governanceBadge": "مدمج",
       "lessGlueTitle": "أجزاء متحركة أقل",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueDesc": "لا مزيد من الموازنة بين LangChain + Pinecone + LangSmith + فلاتر PII. SDK واحد، لوحة تحكم واحدة، فاتورة واحدة.",
       "lessGlueBadge": "كود ربط أقل"
     },
     "trust": {
@@ -1726,21 +1727,21 @@
       "auditLogsDesc": "تتبع كامل"
     },
     "pricingCta": {
-      "title": "تسعير بسيط وشفاف",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "تسعير بحسب الكيان",
+      "subtitle": "ابدأ مجاناً. بلا حواجز بحسب المقعد — 10 شخصيات NPC أو 10,000: توسّع بحسب الكيانات والأحداث، لا بحسب مقاعد المطورين.",
       "viewPricing": "عرض الأسعار",
-      "contactSales": "اتصل بالمبيعات"
+      "contactSales": "تحدث مع المؤسس"
     },
     "nav": {
-      "docs": "المستندات",
+      "docs": "Docs",
       "pricing": "الأسعار",
-      "enterprise": "Enterprise",
-      "getApiKey": "احصل على مفتاح API",
-      "tryDemo": "جرب العرض التوضيحي",
-      "compare": "مقارنة",
-      "limits": "Limits",
+      "compare": "vs Inworld",
+      "enterprise": "للاستوديوهات",
+      "getApiKey": "احجز عرضاً توضيحياً",
+      "tryDemo": "العب smallgod",
+      "limits": "الحدود",
       "status": "الحالة",
-      "help": "Help",
+      "help": "المساعدة",
       "github": "OSS"
     },
     "requestBuilder": {
@@ -1793,9 +1794,9 @@
       "cost": "التكلفة"
     },
     "chips": {
-      "trace": "تتبع",
-      "eval": "Eval",
-      "policy": "Policy"
+      "trace": "الكيانات",
+      "eval": "العلاقات",
+      "policy": "الأحداث"
     },
     "playgroundTitle": "Try it now",
     "costPanel": {

@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI-minnesinfrastruktur",
-    "description": "Ge din AI bestående minne. Seizn lagrar och hämtar kontext automatiskt, så att din AI kommer ihåg tidigare konversationer."
+    "title": "Seizn — Minne för AI-NPC:er",
+    "description": "Anslut till Inworld, Convai eller din egen LLM. Seizn ger dina NPC:er beständigt minne, relationer och generationsöverskridande återerinring — pris per entitet, inte per plats."
   },
   "nav": {
     "features": "Funktioner",
     "pricing": "Priser",
-    "docs": "Dokumentation",
+    "docs": "Docs",
     "login": "Logga in",
-    "getStarted": "Kom igång"
+    "getStarted": "Boka demo",
+    "demo": "Spela smallgod"
   },
   "hero": {
-    "badge": "Tillgänglig Q1 2026",
-    "title": "Minnesinfrastruktur",
-    "titleHighlight": "för AI-applikationer",
-    "subtitle": "Ge din AI bestående minne. Seizn lagrar och hämtar kontext automatiskt, så att din AI kommer ihåg tidigare konversationer.",
-    "emailPlaceholder": "Ange din e-post",
-    "joinWaitlist": "Gå med i väntelistan",
-    "joining": "Ansluter...",
-    "onTheList": "Du är med på listan!",
+    "badge": "Live-demo: smallgod",
+    "title": "Dina NPC:er minns",
+    "titleHighlight": "över generationer.",
+    "subtitle": "Seizn är minnesskiktet för AI-NPC:er. Anslut det till Inworld, Convai eller din egen LLM — behåll dialogmotorn du gillar och lägg till persistens som överlever sessioner och generationer.",
+    "emailPlaceholder": "du@studio.com",
+    "joinWaitlist": "Boka demo",
+    "joining": "Bokar...",
+    "onTheList": "Vi hör av oss snart.",
     "stats": {
-      "tokenSavings": "Tokenbesparingar",
-      "retrievalTime": "Hämtningstid",
-      "uptimeSla": "Drifttids-SLA"
+      "tokenSavings": "NPC:er per projekt",
+      "retrievalTime": "Minneshämtning",
+      "uptimeSla": "Generationer av minne"
     }
   },
   "features": {
-    "title": "Byggd för utvecklare",
-    "subtitle": "Enkla API:er, kraftfull infrastruktur. Lägg till beständigt minne till vilken AI som helst på minuter.",
+    "title": "Byggt för spelstudior",
+    "subtitle": "Koppla in Seizn, behåll din dialogmotor. NPC:er får minne, relationer och persistens som överlever sessioner och generationer.",
     "smartExtraction": {
-      "title": "Smart extraktion",
-      "description": "Extraherar automatiskt nyckelfakta, preferenser och kontext från konversationer med Claude AI."
+      "title": "NPC / Fraktion / Event-graf",
+      "description": "Modellera NPC:er, fraktioner, uppdrag och händelser som en graf. Relationer (förtroende, agg, släktskap) och events (vittne, drabbad, aktör) är förstaklass-primitiver — inga scheman att uppfinna."
     },
     "instantRetrieval": {
-      "title": "Omedelbar hämtning",
-      "description": "Hybrid vektor + grafsökning returnerar relevanta minnen på millisekunder."
+      "title": "Kontextmedvetet återkallande",
+      "description": "Hybrid vektor + grafhämtning returnerar bara minnen relevanta för denna NPC, denna scen. 'Senast vi träffades'-frågor på millisekunder."
     },
     "enterpriseSecurity": {
-      "title": "Företagssäkerhet",
-      "description": "End-to-end-kryptering, SOC 2-kompatibel, med detaljerade åtkomstkontroller och granskningsloggar."
+      "title": "NPC-svärm-skala",
+      "description": "Mätt pris per entitet. Sims-liknande, Cities Skylines-liknande och gudspelatitlar kör tusentals NPC:er utan platskostnadsbarriärer. Självhostad eller hanterad."
     }
   },
   "codePreview": {
-    "title": "Enkel integration",
-    "subtitle": "Lägg till minne till din AI med bara några rader kod."
+    "title": "Integration på 10 rader",
+    "subtitle": "Behåll din dialogmotor. Lägg till Seizn för minne."
   },
   "pricing": {
-    "title": "Enkla, transparenta priser",
-    "subtitle": "Börja gratis, skala när du växer.",
+    "title": "Pris per entitet",
+    "subtitle": "Börja gratis. Skala på entiteter och events — inte per plats. För indie med 10 NPC:er och svärm-titlar med 10 000 NPC:er.",
     "free": {
       "name": "Gratis",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "Dokumentation",
     "nav": {
       "overview": "Översikt",
-      "memories": "Minnen",
-      "mindMap": "Tankekarta",
-      "candidates": "Kandidater",
+      "memories": "Entiteter",
+      "mindMap": "Relationsgraf",
+      "candidates": "Event-inkorg",
       "devTools": "DevTools",
-      "playground": "Lekplats",
-      "evals": "Utvärderingar",
+      "playground": "Playground",
+      "evals": "Scenariotester",
       "analytics": "Analys",
-      "governance": "Styrning",
+      "governance": "Innehållspolicy",
       "privacy": "Integritet",
       "security": "Säkerhet",
-      "enterprise": "Enterprise",
+      "enterprise": "För studios",
       "usage": "Användning",
       "budget": "Budget",
       "reports": "Rapporter",
-      "calculator": "Kalkylator",
+      "calculator": "Kostnadskalkyl",
       "apiKeys": "API-nycklar",
-      "integrations": "Integrationer",
+      "integrations": "Motorplugins",
       "webhooks": "Webhooks",
-      "docs": "Dokumentation",
-      "organizations": "Organisationer",
+      "docs": "Docs",
+      "organizations": "Projekt",
       "settings": "Inställningar",
       "groups": {
-        "memory": "MINNE",
+        "memory": "NPC-MINNE",
         "observe": "ÖVERVAKA",
-        "govern": "STYRNING",
-        "finops": "FINOPS",
-        "connect": "ANSLUT",
-        "system": "SYSTEM"
+        "govern": "POLICYER",
+        "finops": "ANVÄNDNING & KOSTNAD",
+        "connect": "INTEGRERA",
+        "system": "ARBETSYTA"
       }
     },
     "pinSidebar": "Fäst sidopanelen",
@@ -1690,32 +1691,32 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Produktions-OS för AI-agenter.",
-    "heroSubtitle": "Ta agenter från pilot till produktion med styrd minneshantering, inbyggd observerbarhet och bevisbar efterlevnad.",
-    "ctaStart": "Börja Gratis",
-    "ctaDemo": "Se 2-Min Demo",
-    "socialProof": "Betrodd av team som kör agenter i stor skala",
-    "liveDemo": "Live Demo",
-    "heroTagline": "Testa API:et live — ingen registrering krävs",
-    "firstRetrievalComplete": "Första hämtningen klar",
-    "copySnippetHint": "Kopiera kodavsnittet nedan för att reproducera",
-    "copySnippetTitle": "Kopiera detta kodavsnitt",
-    "copySnippetSubtitle": "Genererat från dina exakta inställningar ovan",
+    "heroTitle": "Minne för AI-NPC:er.",
+    "heroSubtitle": "Anslut till Inworld, Convai eller din egen LLM. Seizn ger dina NPC:er beständigt minne, relationer och generationsöverskridande återerinring — pris per entitet, inte per plats.",
+    "ctaStart": "Läs dokumentationen",
+    "ctaDemo": "Spela smallgod",
+    "socialProof": "Byggt för spelstudior som skalar från 10 till 10 000 NPC:er.",
+    "liveDemo": "Live-demo",
+    "heroTagline": "Spela smallgod — vårt referensgudspel byggt på Seizn. Ingen registrering, ingen installation.",
+    "chips": {
+      "trace": "Entiteter",
+      "eval": "Relationer",
+      "policy": "Events"
+    },
+    "copySnippetTitle": "Integrera i Unity, Unreal eller valfri runtime",
+    "copySnippetSubtitle": "HTTP-omslag + officiella C#/C++-plugins. Ingen egen infrastruktur behövs.",
     "whySeizn": {
-      "title": "Varför Seizn istället för LangChain + Pinecone?",
-      "subtitle": "Sluta klistra ihop fragmenterade verktyg. Få allt du behöver i en integrerad stack.",
-      "tracingTitle": "Inbyggd spårning + utvärdering",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budgetmedveten autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Styrning + granskningsloggar",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Standard för team",
-      "lessGlueTitle": "Färre rörliga delar",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Mindre limkod"
+      "title": "Varför Seizn jämfört med Inworld / Convai ensamma?",
+      "subtitle": "Dialogmotorer hanterar röster och personlighet briljant. Ingen av dem löser beständigt minne i stor skala. Seizn kopplas in som minnesskikt.",
+      "tracingTitle": "Dialogmotoragnostisk",
+      "tracingDesc": "Använd Inworld, Convai, NVIDIA ACE eller din egen LLM för dialog. Seizn lägger minne ovanpå — ersätter aldrig det som redan fungerar.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "NPC-svärm-skala",
+      "autopilotDesc": "Grafbaserad lagring, mätt per entitet. Sims-liknande, Cities Skylines-liknande och gudspelatitlar kör tusentals NPC:er utan platskostnadsbarriärer.",
+      "autopilotBadge": "Per entitet",
+      "governanceTitle": "Generationsöverskridande minne",
+      "governanceDesc": "Agg överlever karaktärer. Fraktionshistoria sprids till ättlingar. Släktskap, vittnes- och relationsprimitiver är inbyggda — inget eget schema behövs.",
+      "governanceBadge": "Inbyggt"
     },
     "trust": {
       "security": "RLS + Key Hashing",
@@ -1726,22 +1727,22 @@
       "auditLogsDesc": "Fullständig spårbarhet"
     },
     "pricingCta": {
-      "title": "Enkel, transparent prissättning",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "Pris per entitet",
+      "subtitle": "Börja gratis. Inga platsbarriärer — 10 NPC:er eller 10 000, skala på entiteter och events, inte på ingenjörsplatser.",
       "viewPricing": "Visa priser",
-      "contactSales": "Kontakta försäljning"
+      "contactSales": "Prata med grundaren"
     },
     "nav": {
-      "docs": "Dokumentation",
+      "docs": "Docs",
       "pricing": "Priser",
-      "enterprise": "Enterprise",
-      "getApiKey": "Hämta API-nyckel",
-      "tryDemo": "Prova demo",
+      "compare": "vs Inworld",
+      "enterprise": "För studios",
+      "getApiKey": "Boka demo",
+      "tryDemo": "Spela smallgod",
       "limits": "Gränser",
       "status": "Status",
       "help": "Hjälp",
-      "github": "OSS",
-      "compare": "Jämför"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Frågebyggare",
