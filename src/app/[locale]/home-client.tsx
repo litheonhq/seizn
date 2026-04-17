@@ -58,7 +58,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
           <div className="hidden md:flex items-center gap-6">
             <a href="#features" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.features}</a>
             <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.pricing}</Link>
-            <a href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.docs}</a>
+            <Link href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.docs}</Link>
             <Link href="/login" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.login}</Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link href="/login" className="text-sm bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors btn-hover-lift">
@@ -91,7 +91,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
             <div className="px-6 py-4 space-y-4">
               <a href="#features" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
               <Link href={`/${locale}/pricing`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
-              <a href={`/${locale}/docs`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
+              <Link href={`/${locale}/docs`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</Link>
               <Link href="/login" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
               <div className="py-2">
                 <LanguageSwitcher currentLocale={locale} />
@@ -156,9 +156,9 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
           </div>
 
           {/* Stats */}
-          <div className="flex items-center justify-center gap-12 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-center">
             <div>
-              <div className="text-3xl font-semibold text-szn-text-1">90%</div>
+              <div className="text-3xl font-semibold text-szn-text-1">10k+</div>
               <div className="text-sm text-szn-text-2">{t.hero.stats.tokenSavings}</div>
             </div>
             <div className="w-px h-12 bg-szn-border" />
@@ -168,7 +168,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
             </div>
             <div className="w-px h-12 bg-szn-border" />
             <div>
-              <div className="text-3xl font-semibold text-szn-text-1">99.9%</div>
+              <div className="text-3xl font-semibold text-szn-text-1">∞</div>
               <div className="text-sm text-szn-text-2">{t.hero.stats.uptimeSla}</div>
             </div>
           </div>
@@ -412,9 +412,9 @@ const memories = await seizn.search({
             </div>
           </div>
           <nav className="flex flex-wrap items-center gap-6" aria-label="Footer navigation">
-            <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
-            <a href={`/${locale}/docs/faq`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</a>
+            <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</Link>
+            <Link href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</Link>
+            <Link href={`/${locale}/docs/faq`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</Link>
           </nav>
         </div>
       </footer>
