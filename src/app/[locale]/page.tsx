@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
-  const title = dict.metadata?.title || "Seizn - AI Memory Infrastructure";
-  const description = dict.metadata?.description || "Integrated retrieval stack with built-in tracing, evaluation, and governance. One request = results + trace + cost.";
+  const title = dict.metadata?.title || "Seizn — Memory for AI NPCs";
+  const description = dict.metadata?.description || "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.";
 
   return {
     title,

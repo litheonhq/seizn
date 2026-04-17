@@ -704,7 +704,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-szn-accent" />
               </span>
               <span className="text-sm text-szn-text-2">
-                {t.socialProof || "Trusted by teams shipping agents at scale"}
+                {t.socialProof || "Built for game studios scaling from 10 to 10,000 NPCs."}
               </span>
             </div>
 
