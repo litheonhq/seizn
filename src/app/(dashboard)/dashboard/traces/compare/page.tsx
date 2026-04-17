@@ -10,13 +10,6 @@ export default function TraceComparePage() {
   return (
     <div className="min-h-screen bg-szn-bg">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-szn-text-1">Compare Traces</h1>
-          <p className="text-szn-text-2 mt-1">
-            Analyze differences between two trace executions
-          </p>
-        </div>
-
         <Suspense
           fallback={
             <div className="p-8 text-center">
