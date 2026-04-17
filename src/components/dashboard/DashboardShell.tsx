@@ -138,7 +138,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 Seizn
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1 whitespace-nowrap">
-                {"Agent OS"} <span>{config.icon}</span>
+                {"NPC Memory"} <span>{config.icon}</span>
               </p>
             </div>
           </Link>

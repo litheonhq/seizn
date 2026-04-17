@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Dashboard - Seizn",
-  description: "Manage your AI memories and API keys.",
+  description: "Manage NPC memory projects, entities, and API keys.",
 };
 
 export default async function DashboardLayout({

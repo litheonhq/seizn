@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI記憶基礎設施",
-    "description": "為您的AI賦予持久記憶。Seizn自動儲存和檢索上下文，讓您的AI記住過去的對話。"
+    "title": "Seizn — AI NPC 記憶層",
+    "description": "接入 Inworld、Convai，或您自己的 LLM。Seizn 為 NPC 提供跨 session 與跨世代的持久記憶、關係與派系圖譜 — 以實體計費，而非按席位收費。"
   },
   "nav": {
     "features": "功能",
     "pricing": "定價",
     "docs": "文件",
     "login": "登入",
-    "getStarted": "開始使用"
+    "getStarted": "預約示範",
+    "demo": "試玩 smallgod"
   },
   "hero": {
-    "badge": "2026年第一季上線",
-    "title": "AI應用的",
-    "titleHighlight": "記憶基礎設施",
-    "subtitle": "為您的AI賦予持久記憶。Seizn自動儲存和檢索上下文，讓您的AI記住過去的對話。",
-    "emailPlaceholder": "輸入您的電子郵件",
-    "joinWaitlist": "加入等候名單",
-    "joining": "正在加入...",
-    "onTheList": "您已加入名單！",
+    "badge": "線上示範：smallgod",
+    "title": "NPC 記得住",
+    "titleHighlight": "跨越世代。",
+    "subtitle": "Seizn 是 AI NPC 的記憶層。接入 Inworld、Convai，或您自己的 LLM — 保留您熟悉的對話引擎，加入跨 session 與跨世代存活的持久性。",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "預約示範",
+    "joining": "預約中...",
+    "onTheList": "我們將盡快與您聯繫。",
     "stats": {
-      "tokenSavings": "Token節省",
-      "retrievalTime": "檢索時間",
-      "uptimeSla": "正常運行時間SLA"
+      "tokenSavings": "每專案 NPC 數",
+      "retrievalTime": "記憶檢索",
+      "uptimeSla": "世代記憶"
     }
   },
   "features": {
-    "title": "為開發者打造",
-    "subtitle": "簡單的API，強大的基礎設施。幾分鐘內為任何AI添加持久記憶。",
+    "title": "專為遊戲工作室打造",
+    "subtitle": "嵌入 Seizn，對話引擎維持原樣。NPC 獲得跨 session 與跨世代存活的記憶、關係與持久性。",
     "smartExtraction": {
-      "title": "智慧提取",
-      "description": "使用Claude AI自動從對話中提取關鍵事實、偏好和上下文。"
+      "title": "NPC / 派系 / 事件圖譜",
+      "description": "將 NPC、派系、任務與事件建模為圖譜。關係（信任、怨恨、血緣）與事件（目擊、受影響、行為者）是第一等基元，無需自行設計結構描述。"
     },
     "instantRetrieval": {
-      "title": "即時檢索",
-      "description": "混合向量+圖搜尋在毫秒內返回相關記憶，每次都如此。"
+      "title": "情境感知回憶",
+      "description": "混合向量＋圖譜檢索，只傳回與此 NPC、此場景相關的記憶。「上次我們見面時」的查詢在毫秒內完成。"
     },
     "enterpriseSecurity": {
-      "title": "企業級安全",
-      "description": "端到端加密，符合SOC 2標準，具有精細的存取控制和稽核日誌。"
+      "title": "大規模 NPC 群集支援",
+      "description": "按實體計量計費。模擬人生類、城市：天際線類、神明遊戲作品可在無席位費用上限的情況下運行數千個 NPC。支援自架或託管部署。"
     }
   },
   "codePreview": {
-    "title": "簡單整合",
-    "subtitle": "只需幾行程式碼即可為您的AI添加記憶。"
+    "title": "10 行程式碼完成整合",
+    "subtitle": "保留您的對話引擎。記憶交給 Seizn 處理。"
   },
   "pricing": {
-    "title": "簡單透明的定價",
-    "subtitle": "免費開始，隨需擴展。",
+    "title": "按實體計費",
+    "subtitle": "免費開始。以實體和事件為擴充基準，而非席位。適用 10 個 NPC 的獨立開發者到 10,000 個 NPC 的群集作品。",
     "free": {
       "name": "免費版",
       "price": "$0",
@@ -1690,32 +1691,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "AI代理的生產作業系統。",
-    "heroSubtitle": "透過治理記憶、內建可觀測性和可驗證的合規性，將代理從試驗推進到生產。",
-    "ctaStart": "免費開始建構",
-    "ctaDemo": "觀看2分鐘演示",
-    "socialProof": "受到大規模運營代理團隊的信賴",
-    "liveDemo": "線上演示",
-    "heroTagline": "直接試用API — 無需註冊",
+    "heroTitle": "AI NPC 的記憶層。",
+    "heroSubtitle": "接入 Inworld、Convai，或您自己的 LLM。Seizn 為 NPC 提供持久記憶、關係，以及跨世代回憶 — 以圖譜計費，而非按席位收費。",
+    "ctaStart": "閱讀文件",
+    "ctaDemo": "試玩 smallgod",
+    "socialProof": "為 NPC 規模從 10 到 10,000 的遊戲工作室打造。",
+    "liveDemo": "線上示範",
+    "heroTagline": "試玩 smallgod — 以 Seizn 建構的參考神明遊戲。無需註冊，無需安裝。",
     "firstRetrievalComplete": "首次檢索完成",
     "copySnippetHint": "複製以下程式碼片段以重現",
-    "copySnippetTitle": "複製此程式碼片段",
-    "copySnippetSubtitle": "根據您上方的精確設定產生",
+    "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何執行環境",
+    "copySnippetSubtitle": "HTTP 包裝器＋官方 C#/C++ 外掛程式。無需自建基礎設施。",
     "whySeizn": {
-      "title": "為什麼選擇Seizn而非LangChain + Pinecone？",
-      "subtitle": "停止拼湊碎片化的工具。在一個整合方案中獲得所需的一切。",
-      "tracingTitle": "內建追蹤+評估",
-      "tracingDesc": "每個請求預設被追蹤。執行評估、偵測回歸、除錯生產問題，無需添加LangSmith或自訂日誌。",
-      "tracingBadge": "預設開啟",
-      "autopilotTitle": "預算感知自動駕駛",
-      "autopilotDesc": "設定延遲或費用預算，自動駕駛會自動選擇最佳檢索策略。無需手動調優。",
-      "autopilotBadge": "可選",
-      "governanceTitle": "治理+稽核日誌",
-      "governanceDesc": "PII偵測、GDPR合規遺忘權和完整的稽核追蹤。為需要合規的團隊而設計，而非事後補充。",
-      "governanceBadge": "團隊預設",
-      "lessGlueTitle": "更少的元件",
-      "lessGlueDesc": "不再需要拼湊LangChain + Pinecone + LangSmith + 自訂PII過濾器。一個SDK、一個儀表板、一張帳單。",
-      "lessGlueBadge": "更少黏合程式碼"
+      "title": "Seizn vs 單獨使用 Inworld / Convai？",
+      "subtitle": "對話引擎在聲音與個性方面表現出色，但都未能解決大規模持久記憶的問題。Seizn 以記憶層的角色接入其中。",
+      "tracingTitle": "對話引擎無關",
+      "tracingDesc": "對話請使用 Inworld、Convai、NVIDIA ACE 或您自己的 LLM。Seizn 在其上疊加記憶層，不取代任何有效的現有元件。",
+      "tracingBadge": "外掛程式",
+      "autopilotTitle": "大規模 NPC 群集",
+      "autopilotDesc": "圖譜儲存，按實體計量計費。模擬人生類、城市：天際線類、神明遊戲作品可在無席位費用上限的情況下運行數千個 NPC。",
+      "autopilotBadge": "按實體計費",
+      "governanceTitle": "跨世代記憶",
+      "governanceDesc": "怨恨比角色更長壽。派系歷史傳遞給後裔。血緣、目擊、關係等基元皆已內建 — 無需自訂結構描述。",
+      "governanceBadge": "內建"
     },
     "trust": {
       "security": "RLS + 金鑰雜湊",
@@ -1726,21 +1724,21 @@
       "auditLogsDesc": "完全可追溯"
     },
     "pricingCta": {
-      "title": "簡單透明的定價",
-      "subtitle": "從12,000條記憶免費開始。升級到入門版獲得E2E加密記憶，然後按需擴展。",
+      "title": "按實體計費",
+      "subtitle": "免費開始。無席位費用上限 — 無論 10 個還是 10,000 個 NPC，以實體和事件為擴充基準，而非工程師席位。",
       "viewPricing": "查看定價",
-      "contactSales": "聯繫銷售"
+      "contactSales": "與創辦人洽談"
     },
     "nav": {
       "docs": "文件",
       "pricing": "定價",
-      "enterprise": "企業版",
-      "getApiKey": "取得API金鑰",
-      "tryDemo": "試用示範",
-      "compare": "比較",
+      "enterprise": "工作室方案",
+      "getApiKey": "預約示範",
+      "tryDemo": "試玩 smallgod",
+      "compare": "vs Inworld",
       "limits": "限額",
       "status": "狀態",
-      "help": "幫助",
+      "help": "說明",
       "github": "開源"
     },
     "requestBuilder": {
@@ -1793,9 +1791,9 @@
       "cost": "費用"
     },
     "chips": {
-      "trace": "追蹤",
-      "eval": "評估",
-      "policy": "策略"
+      "trace": "實體",
+      "eval": "關係",
+      "policy": "事件"
     },
     "playgroundTitle": "立即體驗",
     "costPanel": {

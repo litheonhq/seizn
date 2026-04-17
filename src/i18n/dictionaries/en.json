@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI Memory Infrastructure",
-    "description": "Give your AI lasting memory. Seizn automatically stores and retrieves context, so your AI remembers past conversations."
+    "title": "Seizn — Memory for AI NPCs",
+    "description": "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat."
   },
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
     "docs": "Docs",
     "login": "Login",
-    "getStarted": "Get Started"
+    "getStarted": "Book a demo",
+    "demo": "Play smallgod"
   },
   "hero": {
-    "badge": "Coming Q1 2026",
-    "title": "Memory infrastructure",
-    "titleHighlight": "for AI applications",
-    "subtitle": "Give your AI lasting memory. Seizn automatically stores and retrieves context, so your AI remembers past conversations.",
-    "emailPlaceholder": "Enter your email",
-    "joinWaitlist": "Join Waitlist",
-    "joining": "Joining...",
-    "onTheList": "You're on the list!",
+    "badge": "Live demo: smallgod",
+    "title": "Your NPCs remember",
+    "titleHighlight": "across generations.",
+    "subtitle": "Seizn is the memory layer for AI NPCs. Plug it into Inworld, Convai, or your own LLM — keep the dialogue engine you love, add persistence that survives sessions and generations.",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "Book a demo",
+    "joining": "Booking...",
+    "onTheList": "We'll reach out shortly.",
     "stats": {
-      "tokenSavings": "Token Savings",
-      "retrievalTime": "Retrieval Time",
-      "uptimeSla": "Uptime SLA"
+      "tokenSavings": "NPCs per project",
+      "retrievalTime": "Memory retrieval",
+      "uptimeSla": "Generations of memory"
     }
   },
   "features": {
-    "title": "Built for developers",
-    "subtitle": "Simple APIs, powerful infrastructure. Add persistent memory to any AI in minutes.",
+    "title": "Built for game studios",
+    "subtitle": "Drop Seizn in, keep your dialogue engine. NPCs get memory, relationships, and persistence that survives sessions and generations.",
     "smartExtraction": {
-      "title": "Smart Extraction",
-      "description": "Automatically extracts key facts, preferences, and context from conversations using Claude AI."
+      "title": "NPC / Faction / Event graph",
+      "description": "Model NPCs, factions, quests, and incidents as a graph. Relationships (trust, grudge, kinship) and events (witnessed, affected, actor) are first-class primitives, not schemas you have to invent."
     },
     "instantRetrieval": {
-      "title": "Instant Retrieval",
-      "description": "Hybrid vector + graph search returns relevant memories in milliseconds, every time."
+      "title": "Context-aware recall",
+      "description": "Hybrid vector + graph retrieval returns only the memories relevant to this NPC, this scene. \"Last time we met\" queries in milliseconds."
     },
     "enterpriseSecurity": {
-      "title": "Enterprise Security",
-      "description": "End-to-end encryption, SOC 2 compliant, with granular access controls and audit logs."
+      "title": "Swarm-NPC scale",
+      "description": "Per-entity metered pricing. Sims-like, Cities Skylines-like, and god-game titles run thousands of NPCs without per-seat cost walls. Self-host or managed."
     }
   },
   "codePreview": {
-    "title": "Simple integration",
-    "subtitle": "Add memory to your AI in just a few lines of code."
+    "title": "Integration in 10 lines",
+    "subtitle": "Keep your dialogue engine. Add Seizn for memory."
   },
   "pricing": {
-    "title": "Simple, transparent pricing",
-    "subtitle": "Start free, scale as you grow.",
+    "title": "Per-entity pricing",
+    "subtitle": "Start free. Scale on entities and events — not per seat. Works for 10-NPC indies and 10,000-NPC swarm titles alike.",
     "free": {
       "name": "Free",
       "price": "$0",
@@ -244,34 +245,34 @@
     },
     "nav": {
       "overview": "Overview",
-      "memories": "Memories",
-      "mindMap": "Mind Map",
-      "candidates": "Candidates",
-      "devTools": "DevTools",
+      "memories": "Entities",
+      "mindMap": "Relation graph",
+      "candidates": "Event inbox",
+      "devTools": "Dev tools",
       "playground": "Playground",
-      "evals": "Evals",
+      "evals": "Scenario tests",
       "analytics": "Analytics",
-      "governance": "Governance",
+      "governance": "Content policy",
       "privacy": "Privacy",
       "security": "Security",
-      "enterprise": "Enterprise",
+      "enterprise": "For studios",
       "usage": "Usage",
       "budget": "Budget",
       "reports": "Reports",
-      "calculator": "Calculator",
-      "apiKeys": "API Keys",
-      "integrations": "Integrations",
+      "calculator": "Cost estimator",
+      "apiKeys": "API keys",
+      "integrations": "Engine plugins",
       "webhooks": "Webhooks",
       "docs": "Docs",
-      "organizations": "Organizations",
+      "organizations": "Projects",
       "settings": "Settings",
       "groups": {
-        "memory": "MEMORY",
+        "memory": "NPC MEMORY",
         "observe": "OBSERVE",
-        "govern": "GOVERN",
-        "finops": "FINOPS",
-        "connect": "CONNECT",
-        "system": "SYSTEM"
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
+        "system": "WORKSPACE"
       }
     },
     "pinSidebar": "Pin sidebar",
@@ -283,16 +284,16 @@
       "unlimited": "Unlimited"
     },
     "onboarding": {
-      "title": "Get Started with Seizn",
+      "title": "Get started with Seizn",
       "progress": "{completed}/{total} steps completed",
       "dismiss": "Dismiss",
       "doLater": "I'll do this later",
       "takeTour": "Take a tour",
       "steps": {
         "createOrg": {
-          "title": "Create Organization",
-          "description": "Set up your team workspace for collaboration",
-          "action": "Create Org"
+          "title": "Create a project",
+          "description": "One project per game title. Environments (dev/prod) live inside.",
+          "action": "Create project"
         },
         "apiKey": {
           "title": "Generate API Key",
@@ -300,13 +301,13 @@
           "action": "Create Key"
         },
         "installSdk": {
-          "title": "Copy SDK Install Command",
-          "description": "Add Seizn to your project with npm, pip, or REST",
+          "title": "Install the SDK",
+          "description": "Add Seizn to your project: npm, pip, or direct HTTP. Unity/Unreal plugins in integrations.",
           "action": "Copy SDK"
         },
         "firstQuery": {
-          "title": "Run First Query",
-          "description": "Test the API in the playground with a sample query",
+          "title": "Record first event",
+          "description": "Try the playground — create an NPC, log an event, query context back.",
           "action": "Try Query"
         },
         "viewTrace": {
@@ -368,7 +369,7 @@
     },
     "keysPage": {
       "title": "API Keys",
-      "subtitle": "Manage your API keys for accessing Seizn services",
+      "subtitle": "Manage API keys for your game's Seizn integrations.",
       "createNewKey": "Create New Key",
       "activeKeys": "Active Keys",
       "noKeysTitle": "No API keys yet",
@@ -409,7 +410,7 @@
     },
     "usagePage": {
       "title": "Usage Analytics",
-      "subtitle": "Monitor your API usage and costs.",
+      "subtitle": "Monitor API usage across entities, events, and queries.",
       "period": "Current Period",
       "memoriesUsed": "Memories Used",
       "apiCallsUsed": "API Calls Used",
@@ -453,8 +454,8 @@
       "createApiKey": "Create API Key"
     },
     "organizationsPage": {
-      "title": "Organizations",
-      "subtitle": "Manage your teams and collaborate with others",
+      "title": "Projects",
+      "subtitle": "Manage game-title projects and team collaboration.",
       "newOrganization": "New Organization",
       "noOrgsTitle": "No organizations yet",
       "noOrgsDesc": "Create an organization to collaborate with your team and manage shared resources",
@@ -489,8 +490,8 @@
     "language": "Language",
     "playground": "Playground",
     "playgroundPage": {
-      "title": "Debug Console",
-      "subtitle": "Test queries with full tracing and parameter tuning",
+      "title": "Playground",
+      "subtitle": "Prototype NPC memory — create entities, log events, query context back.",
       "queryBuilder": "Query Builder",
       "queryPlaceholder": "Enter your search query...",
       "namespace": "Namespace",
@@ -699,27 +700,27 @@
       "toggle": "Toggle theme"
     },
     "overviewPage": {
-      "subtitle": "Here's an overview of your AI memory usage",
-      "totalMemories": "Total Memories",
+      "subtitle": "Here's an overview of your NPC memory graph.",
+      "totalMemories": "Total entities",
       "apiCalls": "API Calls",
       "activeKeys": "Active API Keys",
       "currentPlan": "Current Plan",
       "usage": "Usage",
       "today": "Today",
       "dailyLimit": "Daily Limit",
-      "recentMemories": "Recent Memories",
+      "recentMemories": "Recent events",
       "viewAll": "View All",
-      "noMemories": "No memories yet",
-      "noMemoriesHint": "Start by adding your first memory via API",
-      "quickStart": "Quick Start",
-      "createApiKey": "Create API Key",
-      "getStartedApi": "Get started with the API",
-      "viewDocumentation": "View Documentation",
-      "learnSeizn": "Learn how to use Seizn",
-      "createOrganization": "Create Organization",
-      "collaborateTeam": "Collaborate with your team",
-      "quickExample": "Quick Example",
-      "manageKeys": "Manage Keys",
+      "noMemories": "No entities yet",
+      "noMemoriesHint": "Create NPCs, factions, or events via the API or SDK to get started.",
+      "quickStart": "Quick start",
+      "createApiKey": "Create API key",
+      "getStartedApi": "Authenticate your first integration",
+      "viewDocumentation": "View docs",
+      "learnSeizn": "Integrate in 10 lines — Unity, Unreal, or any runtime",
+      "createOrganization": "Create project",
+      "collaborateTeam": "Set up a game-title workspace",
+      "quickExample": "Quick example",
+      "manageKeys": "Manage keys",
       "upgradePlan": "Upgrade Plan",
       "apiUsageChart": "API Usage",
       "last7days": "Last 7 days",
@@ -741,8 +742,8 @@
       "time": "Time"
     },
     "evals": {
-      "title": "Evaluations",
-      "subtitle": "A/B test and measure retrieval quality",
+      "title": "Scenario tests",
+      "subtitle": "A/B test and measure NPC memory quality across sessions.",
       "newRun": "New Eval Run",
       "runs": "Evaluation Runs",
       "noRuns": "No evaluation runs yet",
@@ -776,7 +777,7 @@
     },
     "autopilot": {
       "title": "Autopilot",
-      "subtitle": "AI-powered retrieval optimization",
+      "subtitle": "NPC context retrieval optimization.",
       "settings": "Settings",
       "decisionLogs": "Decision Logs",
       "operationMode": "Operation Mode",
@@ -785,8 +786,8 @@
       "noLogs": "No decision logs yet"
     },
     "governance": {
-      "title": "Governance",
-      "subtitle": "Manage data policies, retention rules, and compliance settings",
+      "title": "Content policy",
+      "subtitle": "Manage NPC content filters, retention rules, and age-appropriate policy.",
       "tabs": {
         "retention": "Data Retention",
         "access": "Access Control",
@@ -857,7 +858,7 @@
     },
     "privacy": {
       "title": "Privacy & RTBF",
-      "subtitle": "Manage GDPR Right to be Forgotten requests and data subject rights",
+      "subtitle": "Manage GDPR Right to be Forgotten requests, data subject rights, and NPC data retention.",
       "tabs": {
         "requests": "RTBF Requests",
         "subjects": "Data Subjects",
@@ -954,8 +955,8 @@
       }
     },
     "integrations": {
-      "title": "Integrations",
-      "subtitle": "Connect Seizn with your favorite tools and frameworks",
+      "title": "Engine plugins",
+      "subtitle": "Unity/Unreal plugins, dialogue-engine adapters, and framework SDKs.",
       "searchPlaceholder": "Search integrations...",
       "stats": {
         "total": "Total Integrations",
@@ -989,8 +990,8 @@
       "viewDocs": "View Documentation"
     },
     "calculator": {
-      "title": "Usage Calculator",
-      "subtitle": "Estimate your monthly costs based on expected usage",
+      "title": "Cost estimator",
+      "subtitle": "Estimate monthly costs from entity count and event throughput.",
       "stats": {
         "apiCalls": "API Calls",
         "memories": "Memories",
@@ -1034,7 +1035,7 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "Configure HTTP callbacks for real-time event notifications",
+      "subtitle": "Configure HTTP callbacks for entity/event updates in real time.",
       "create": "Create Webhook",
       "stats": {
         "total": "Total Webhooks",
@@ -1074,14 +1075,38 @@
         "create": "Create Webhook"
       },
       "events": {
-        "memory_created": { "label": "Memory Created", "desc": "When a new memory is stored" },
-        "memory_updated": { "label": "Memory Updated", "desc": "When a memory is modified" },
-        "memory_deleted": { "label": "Memory Deleted", "desc": "When a memory is removed" },
-        "extraction_completed": { "label": "Extraction Completed", "desc": "When memory extraction finishes" },
-        "query_executed": { "label": "Query Executed", "desc": "When a RAG query is performed" },
-        "key_created": { "label": "API Key Created", "desc": "When a new API key is generated" },
-        "key_revoked": { "label": "API Key Revoked", "desc": "When an API key is revoked" },
-        "usage_threshold": { "label": "Usage Threshold", "desc": "When usage exceeds threshold" }
+        "memory_created": {
+          "label": "Memory Created",
+          "desc": "When a new memory is stored"
+        },
+        "memory_updated": {
+          "label": "Memory Updated",
+          "desc": "When a memory is modified"
+        },
+        "memory_deleted": {
+          "label": "Memory Deleted",
+          "desc": "When a memory is removed"
+        },
+        "extraction_completed": {
+          "label": "Extraction Completed",
+          "desc": "When memory extraction finishes"
+        },
+        "query_executed": {
+          "label": "Query Executed",
+          "desc": "When a RAG query is performed"
+        },
+        "key_created": {
+          "label": "API Key Created",
+          "desc": "When a new API key is generated"
+        },
+        "key_revoked": {
+          "label": "API Key Revoked",
+          "desc": "When an API key is revoked"
+        },
+        "usage_threshold": {
+          "label": "Usage Threshold",
+          "desc": "When usage exceeds threshold"
+        }
       }
     },
     "playgroundTutorial": {
@@ -1109,7 +1134,7 @@
     "analytics": "Analytics",
     "analyticsPage": {
       "title": "Analytics",
-      "subtitle": "Detailed usage analytics and insights",
+      "subtitle": "Usage analytics across entities, events, and queries.",
       "allOrganizations": "All Organizations",
       "days7": "7 Days",
       "days30": "30 Days",
@@ -1137,13 +1162,13 @@
       "noDataDescription": "Start making API calls to see detailed analytics here."
     },
     "memoriesPage": {
-      "title": "Memories",
-      "subtitle": "Browse and search your AI memories",
-      "totalMemories": "Total Memories",
+      "title": "Entities",
+      "subtitle": "NPCs, factions, events, and other graph entities in this project.",
+      "totalMemories": "Total entities",
       "search": "Search",
-      "searchPlaceholder": "Search memories...",
-      "namespace": "Namespace",
-      "memoryTypes": "Memory Types",
+      "searchPlaceholder": "Search entities (NPCs, factions, events)...",
+      "namespace": "Project namespace",
+      "memoryTypes": "Entity types",
       "tags": "Tags",
       "noTags": "No tags available",
       "clearFilters": "Clear Filters",
@@ -1155,8 +1180,8 @@
       "sortRelevance": "Most Relevant",
       "activeFilters": "Active filters",
       "loading": "Loading memories...",
-      "noMemories": "No memories found",
-      "noMatchingMemories": "Try adjusting your filters or search query",
+      "noMemories": "No entities yet",
+      "noMatchingMemories": "No entities match your filters",
       "noMemoriesHint": "Start adding memories via the API to see them here",
       "match": "match",
       "loadMore": "Load More",
@@ -1171,7 +1196,7 @@
     },
     "budgetPage": {
       "title": "Budget & Cost Controls",
-      "subtitle": "Manage spending limits, alerts, and automatic cost optimization",
+      "subtitle": "Manage spending limits and automatic cost optimization per project.",
       "loadError": "Failed to load budget data",
       "todaysSpend": "Today's Spend",
       "ofDailyLimit": "of daily limit",
@@ -1196,8 +1221,8 @@
       "step4": "All degrade events are logged with cost savings for transparency"
     },
     "devtoolsPage": {
-      "title": "Retrieval DevTools",
-      "subtitle": "Debug and analyze your RAG pipelines",
+      "title": "Dev tools",
+      "subtitle": "Debug and analyze NPC memory retrieval.",
       "query": "Query",
       "noQueryText": "No query text",
       "results": "results",
@@ -1218,9 +1243,9 @@
       "emptyDesc": "Choose a trace from the list on the left to view its timeline, candidates, reranking analysis, and run what-if experiments."
     },
     "enterpriseDashboard": {
-      "title": "Enterprise",
+      "title": "For studios",
       "badge": "Enterprise Plan",
-      "subtitle": "Configure SSO, SCIM, and enterprise settings",
+      "subtitle": "Studio-wide SSO, SCIM, and team workspace settings.",
       "tabs": {
         "sso": "Single Sign-On",
         "scim": "User Provisioning",
@@ -1314,7 +1339,7 @@
     },
     "securityPage": {
       "title": "Security",
-      "subtitle": "Manage API keys and view security audit logs",
+      "subtitle": "Manage API keys and view security audit logs.",
       "stats": {
         "activeKeys": "Active API Keys",
         "auditEvents": "Audit Events (24h)",
@@ -1411,7 +1436,7 @@
       }
     },
     "reportsPage": {
-      "title": "ROI Report",
+      "title": "Usage report",
       "generated": "Generated",
       "period7d": "Last 7 days",
       "period30d": "Last 30 days",
@@ -1564,23 +1589,23 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "The production OS for AI agents.",
-    "heroSubtitle": "Ship agents from pilot to production with governed memory, built-in observability, and compliance you can prove.",
-    "ctaStart": "Start Building Free",
-    "ctaDemo": "Watch 2-Min Demo",
-    "socialProof": "Trusted by teams shipping agents at scale",
-    "liveDemo": "Live Demo",
-    "heroTagline": "Try the API live — no signup required",
+    "heroTitle": "Memory for AI NPCs.",
+    "heroSubtitle": "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.",
+    "ctaStart": "Read the docs",
+    "ctaDemo": "Play smallgod",
+    "socialProof": "Built for game studios scaling from 10 to 10,000 NPCs.",
+    "liveDemo": "Live demo",
+    "heroTagline": "Play smallgod — our reference god-game built on Seizn. No signup, no install.",
     "chips": {
-      "trace": "Trace",
-      "eval": "Eval",
-      "policy": "Policy"
+      "trace": "Entities",
+      "eval": "Relations",
+      "policy": "Events"
     },
     "playgroundTitle": "Try it now",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
-    "copySnippetTitle": "Copy this snippet",
-    "copySnippetSubtitle": "Generated from your exact settings above",
+    "copySnippetTitle": "Drop into Unity, Unreal, or any runtime",
+    "copySnippetSubtitle": "HTTP wrapper + official C#/C++ plugins. No custom infrastructure needed.",
     "requestBuilder": {
       "title": "Request Builder",
       "query": "Query",
@@ -1626,20 +1651,17 @@
       "output": "Output"
     },
     "whySeizn": {
-      "title": "Why Seizn vs LangChain + Pinecone?",
-      "subtitle": "Stop gluing together fragmented tools. Get everything you need in one integrated stack.",
-      "tracingTitle": "Built-in Tracing + Eval",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budget-aware Autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit Logs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Default for Teams",
-      "lessGlueTitle": "Fewer Moving Parts",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Less Glue Code"
+      "title": "Why Seizn vs Inworld / Convai alone?",
+      "subtitle": "Dialogue engines do voices and personality brilliantly. None of them solve persistent memory at scale. Seizn plugs in as the memory layer.",
+      "tracingTitle": "Dialogue-engine agnostic",
+      "tracingDesc": "Use Inworld, Convai, NVIDIA ACE, or your own LLM for dialogue. Seizn layers memory on top — never replacing what works.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "Swarm-NPC scale",
+      "autopilotDesc": "Graph storage, per-entity metered. Sims-like, Cities Skylines-like, and god-game titles run thousands of NPCs without per-seat cost walls.",
+      "autopilotBadge": "Per-entity",
+      "governanceTitle": "Cross-generation memory",
+      "governanceDesc": "Grudges outlive characters. Faction history propagates to descendants. Kinship, witness, and relation primitives are built in — no custom schema needed.",
+      "governanceBadge": "Built-in"
     },
     "trust": {
       "security": "RLS + Key Hashing",
@@ -1650,18 +1672,18 @@
       "auditLogsDesc": "Full traceability"
     },
     "pricingCta": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free with 12,000 memories. Upgrade to Starter for E2E encrypted memories and scale from there.",
+      "title": "Per-entity pricing",
+      "subtitle": "Start free. No per-seat walls — 10 NPCs or 10,000, scale on entities and events, not engineer seats.",
       "viewPricing": "View Pricing",
-      "contactSales": "Contact Sales"
+      "contactSales": "Talk to founder"
     },
     "nav": {
       "docs": "Docs",
       "pricing": "Pricing",
-      "compare": "Compare",
-      "enterprise": "Enterprise",
-      "getApiKey": "Get API Key",
-      "tryDemo": "Try Demo",
+      "compare": "vs Inworld",
+      "enterprise": "For Studios",
+      "getApiKey": "Book a demo",
+      "tryDemo": "Play smallgod",
       "limits": "Limits",
       "status": "Status",
       "help": "Help",

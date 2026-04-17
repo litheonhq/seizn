@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - Інфраструктура пам'яті ШІ",
-    "description": "Дайте вашому ШІ тривалу пам'ять. Seizn автоматично зберігає та витягує контекст, щоб ваш ШІ пам'ятав минулі розмови."
+    "title": "Seizn — Пам'ять для NPC зі ШІ",
+    "description": "Підключіться до Inworld, Convai або власного LLM. Seizn дає вашим NPC постійну пам'ять, відносини та міжпоколінне відтворення — ціна за сутність, не за місце."
   },
   "nav": {
     "features": "Функції",
     "pricing": "Ціни",
-    "docs": "Документація",
+    "docs": "Docs",
     "login": "Увійти",
-    "getStarted": "Почати"
+    "getStarted": "Забронювати демо",
+    "demo": "Грати у smallgod"
   },
   "hero": {
-    "badge": "Запуск Q1 2026",
-    "title": "Інфраструктура пам'яті",
-    "titleHighlight": "для ШІ-застосунків",
-    "subtitle": "Дайте вашому ШІ тривалу пам'ять. Seizn автоматично зберігає та витягує контекст, щоб ваш ШІ пам'ятав минулі розмови.",
-    "emailPlaceholder": "Введіть email",
-    "joinWaitlist": "До списку очікування",
-    "joining": "Приєднуємось...",
-    "onTheList": "Ви у списку!",
+    "badge": "Жива демо: smallgod",
+    "title": "Ваші NPC пам'ятають",
+    "titleHighlight": "крізь покоління.",
+    "subtitle": "Seizn — шар пам'яті для NPC зі ШІ. Підключіть до Inworld, Convai або свого LLM — збережіть движок діалогів, який подобається, та додайте постійність, що переживає сесії та покоління.",
+    "emailPlaceholder": "ви@студія.com",
+    "joinWaitlist": "Забронювати демо",
+    "joining": "Бронюємо...",
+    "onTheList": "Ми зв'яжемося з вами найближчим часом.",
     "stats": {
-      "tokenSavings": "Економія токенів",
-      "retrievalTime": "Час витягування",
-      "uptimeSla": "SLA доступності"
+      "tokenSavings": "NPC на проект",
+      "retrievalTime": "Отримання пам'яті",
+      "uptimeSla": "Покоління пам'яті"
     }
   },
   "features": {
-    "title": "Створено для розробників",
-    "subtitle": "Прості API, потужна інфраструктура. Додайте постійну пам'ять будь-якому ШІ за хвилини.",
+    "title": "Створено для ігрових студій",
+    "subtitle": "Підключіть Seizn, збережіть движок діалогів. NPC отримують пам'ять, відносини та постійність через сесії та покоління.",
     "smartExtraction": {
-      "title": "Розумне витягування",
-      "description": "Автоматично витягує ключові факти, вподобання та контекст з розмов за допомогою Claude AI."
+      "title": "Граф NPC / Фракція / Подія",
+      "description": "Моделюйте NPC, фракції, квести та інциденти як граф. Відносини (довіра, образи, спорідненість) та події (свідок, постраждалий, учасник) — примітиви першого класу, без власних схем."
     },
     "instantRetrieval": {
-      "title": "Миттєве витягування",
-      "description": "Гібридний векторно-графовий пошук повертає релевантні спогади за мілісекунди."
+      "title": "Контекстне відтворення",
+      "description": "Гібридне отримання вектор + граф повертає лише спогади, актуальні для цього NPC та цієї сцени. Запити на кшталт «минулого разу, коли ми зустрічались» за мілісекунди."
     },
     "enterpriseSecurity": {
-      "title": "Корпоративна безпека",
-      "description": "Наскрізне шифрування, відповідність SOC 2, гранулярний контроль доступу та журнали аудиту."
+      "title": "Масштаб рою NPC",
+      "description": "Вимірена ціна за сутність. Ігри у стилі Sims, Cities Skylines і god-game запускають тисячі NPC без бар'єрів вартості за місце. Самостійний хостинг або керований."
     }
   },
   "codePreview": {
-    "title": "Проста інтеграція",
-    "subtitle": "Додайте пам'ять вашому ШІ лише в кілька рядків коду."
+    "title": "Інтеграція у 10 рядків",
+    "subtitle": "Збережіть движок діалогів. Додайте Seizn для пам'яті."
   },
   "pricing": {
-    "title": "Прості та прозорі ціни",
-    "subtitle": "Почніть безкоштовно, масштабуйтесь у міру росту.",
+    "title": "Ціна за сутність",
+    "subtitle": "Почніть безкоштовно. Масштабуйтесь за сутностями та подіями, не за місцями. Для інді з 10 NPC і роєвих тайтлів з 10 000 NPC.",
     "free": {
       "name": "Безкоштовно",
       "price": "$0",
@@ -243,17 +244,17 @@
         },
         "installSdk": {
           "title": "Встановити SDK",
-          "description": "Додайте Seizn до свого проекту за допомогою npm або pip",
-          "action": "Переглянути SDK"
+          "description": "Додайте Seizn до свого проекту: npm, pip або прямий HTTP. Плагіни Unity/Unreal в інтеграціях.",
+          "action": "Копіювати SDK"
         },
         "createOrg": {
-          "title": "Створити організацію",
-          "description": "Налаштуйте робочий простір для командної співпраці",
-          "action": "Створити організацію"
+          "title": "Створити проект",
+          "description": "Один проект на ігровий тайтл. Середовища (dev/prod) зберігаються всередині.",
+          "action": "Створити проект"
         },
         "firstQuery": {
-          "title": "Виконати перший запит",
-          "description": "Протестуйте API в пісочниці з прикладом запиту",
+          "title": "Записати першу подію",
+          "description": "Спробуйте пісочницю — створіть NPC, запишіть подію, запитайте контекст.",
           "action": "Спробувати запит"
         }
       },
@@ -355,34 +356,34 @@
     "docs": "Документація",
     "nav": {
       "overview": "Огляд",
-      "memories": "Пам'ять",
-      "mindMap": "Карта зв'язків",
-      "candidates": "Кандидати",
+      "memories": "Сутності",
+      "mindMap": "Граф відносин",
+      "candidates": "Ящик подій",
       "devTools": "DevTools",
       "playground": "Пісочниця",
-      "evals": "Оцінки",
+      "evals": "Сценарні тести",
       "analytics": "Аналітика",
-      "governance": "Управління",
+      "governance": "Політика контенту",
       "privacy": "Конфіденційність",
       "security": "Безпека",
-      "enterprise": "Корпоративний",
+      "enterprise": "Для студій",
       "usage": "Використання",
       "budget": "Бюджет",
       "reports": "Звіти",
-      "calculator": "Калькулятор",
+      "calculator": "Оцінювач вартості",
       "apiKeys": "API-ключі",
-      "integrations": "Інтеграції",
+      "integrations": "Плагіни рушія",
       "webhooks": "Вебхуки",
-      "docs": "Документація",
-      "organizations": "Організації",
+      "docs": "Docs",
+      "organizations": "Проекти",
       "settings": "Налаштування",
       "groups": {
-        "memory": "ПАМ'ЯТЬ",
+        "memory": "ПАМ'ЯТЬ NPC",
         "observe": "МОНІТОРИНГ",
-        "govern": "УПРАВЛІННЯ",
-        "finops": "ФІНАНСИ",
-        "connect": "З'ЄДНАННЯ",
-        "system": "СИСТЕМА"
+        "govern": "ПОЛІТИКИ",
+        "finops": "ВИКОРИСТАННЯ І ВАРТІСТЬ",
+        "connect": "ІНТЕГРАЦІЯ",
+        "system": "РОБОЧИЙ ПРОСТІР"
       }
     },
     "pinSidebar": "Закріпити бічну панель",
@@ -670,25 +671,25 @@
       "evening": "Доброго вечора"
     },
     "overviewPage": {
-      "subtitle": "Ось огляд використання вашої AI-пам'яті",
-      "totalMemories": "Усього спогадів",
+      "subtitle": "Ось огляд графа пам'яті ваших NPC.",
+      "totalMemories": "Усього сутностей",
       "apiCalls": "API-виклики",
       "activeKeys": "Активні API-ключі",
       "currentPlan": "Поточний план",
       "usage": "Використання",
       "today": "Сьогодні",
       "dailyLimit": "Денний ліміт",
-      "recentMemories": "Останні спогади",
+      "recentMemories": "Останні події",
       "viewAll": "Переглянути всі",
-      "noMemories": "Спогадів поки немає",
-      "noMemoriesHint": "Почніть з додавання першого спогаду через API",
+      "noMemories": "Сутностей поки немає",
+      "noMemoriesHint": "Створіть NPC, фракції або події через API або SDK, щоб почати.",
       "quickStart": "Швидкий старт",
       "createApiKey": "Створити API-ключ",
-      "getStartedApi": "Почніть з API",
+      "getStartedApi": "Автентифікуйте першу інтеграцію",
       "viewDocumentation": "Переглянути документацію",
-      "learnSeizn": "Дізнайтеся, як використовувати Seizn",
-      "createOrganization": "Створити організацію",
-      "collaborateTeam": "Співпрацюйте зі своєю командою",
+      "learnSeizn": "Інтеграція в 10 рядків — Unity, Unreal або будь-який рушій",
+      "createOrganization": "Створити проект",
+      "collaborateTeam": "Налаштуйте робочий простір для ігрового тайтлу",
       "quickExample": "Швидкий приклад",
       "manageKeys": "Керувати ключами",
       "upgradePlan": "Оновити план",
@@ -1690,31 +1691,31 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Продакшн-ОС для ШІ-агентів.",
-    "heroSubtitle": "Переведіть агентів з пілоту в продакшн з керованою пам'яттю, вбудованою спостережуваністю та доказовою відповідністю.",
-    "ctaStart": "Почати Безкоштовно",
-    "ctaDemo": "Переглянути 2-Хв Демо",
-    "socialProof": "Довіряють команди, які працюють з агентами у масштабі",
-    "liveDemo": "Живе Демо",
-    "heroTagline": "Спробуйте API наживо — без реєстрації",
+    "heroTitle": "Пам'ять для NPC зі ШІ.",
+    "heroSubtitle": "Підключіться до Inworld, Convai або власного LLM. Seizn надає вашим NPC постійну пам'ять, відносини та міжпоколінне пригадування — оплата за сутність, без поприсидячого цінника.",
+    "ctaStart": "Читати документацію",
+    "ctaDemo": "Грати в smallgod",
+    "socialProof": "Створено для ігрових студій — від 10 до 10 000 NPC.",
+    "liveDemo": "Живе демо",
+    "heroTagline": "Грайте в smallgod — наш еталонний god-game на Seizn. Без реєстрації та встановлення.",
     "firstRetrievalComplete": "Перший пошук завершено",
     "copySnippetHint": "Скопіюйте фрагмент нижче для відтворення",
-    "copySnippetTitle": "Скопіювати цей фрагмент",
-    "copySnippetSubtitle": "Згенеровано з ваших точних налаштувань вище",
+    "copySnippetTitle": "Інтеграція в Unity, Unreal або будь-який рушій",
+    "copySnippetSubtitle": "HTTP-обгортка + офіційні плагіни C#/C++. Без пользовательської інфраструктури.",
     "whySeizn": {
-      "title": "Чому Seizn, а не LangChain + Pinecone?",
-      "subtitle": "Припиніть склеювати розрізнені інструменти. Отримайте все необхідне в одному інтегрованому стеку.",
-      "tracingTitle": "Вбудований трейсинг + оцінка",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Автопілот з урахуванням бюджету",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Управління + журнали аудиту",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "За замовчуванням для команд",
+      "title": "Чому Seizn, а не лише Inworld / Convai?",
+      "subtitle": "Діалогові рушії блискуче справляються з голосом і особистістю. Жоден з них не вирішує задачу постійної пам'яті у масштабі. Seizn вбудовується як шар пам'яті.",
+      "tracingTitle": "Не залежить від діалогового рушія",
+      "tracingDesc": "Використовуйте Inworld, Convai, NVIDIA ACE або власний LLM для діалогу. Seizn додає пам'ять поверх — не замінюючи те, що працює.",
+      "tracingBadge": "Плагін",
+      "autopilotTitle": "Масштаб роєвих NPC",
+      "autopilotDesc": "Сховище-граф, оплата за сутність. Sims-подібні, Cities Skylines-подібні та god-game тайтли запускають тисячі NPC без поприсидячих цінових бар'єрів.",
+      "autopilotBadge": "За сутність",
+      "governanceTitle": "Міжпоколінна пам'ять",
+      "governanceDesc": "Образи переживають персонажів. Історія фракцій передається нащадкам. Спорідненість, свідчення та примітиви відносин вбудовані — без користувацьких схем.",
+      "governanceBadge": "Вбудовано",
       "lessGlueTitle": "Менше рухомих частин",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
+      "lessGlueDesc": "Більше не потрібно жонглювати LangChain + Pinecone + LangSmith + фільтрами PII. Один SDK, один дашборд, один рахунок.",
       "lessGlueBadge": "Менше зв'язувального коду"
     },
     "trust": {
@@ -1726,22 +1727,22 @@
       "auditLogsDesc": "Повна відслідковуваність"
     },
     "pricingCta": {
-      "title": "Просте, прозоре ціноутворення",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "Ціноутворення за сутність",
+      "subtitle": "Починайте безкоштовно. Без поприсидячих бар'єрів — 10 NPC або 10 000: масштабуйтесь за сутностями та подіями, а не за місцями розробників.",
       "viewPricing": "Переглянути ціни",
-      "contactSales": "Зв'язатися з відділом продажів"
+      "contactSales": "Поговорити з засновником"
     },
     "nav": {
-      "docs": "Документація",
+      "docs": "Docs",
       "pricing": "Ціни",
-      "enterprise": "Enterprise",
-      "getApiKey": "Отримати API-ключ",
-      "tryDemo": "Спробувати демо",
+      "compare": "vs Inworld",
+      "enterprise": "Для студій",
+      "getApiKey": "Забронювати демо",
+      "tryDemo": "Грати в smallgod",
       "limits": "Ліміти",
       "status": "Статус",
       "help": "Допомога",
-      "github": "OSS",
-      "compare": "Порівняти"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Конструктор запитів",
@@ -1793,9 +1794,9 @@
       "cost": "Вартість"
     },
     "chips": {
-      "trace": "Трейс",
-      "eval": "Оцінка",
-      "policy": "Політика"
+      "trace": "Сутності",
+      "eval": "Відносини",
+      "policy": "Події"
     },
     "playgroundTitle": "Спробуйте зараз",
     "costPanel": {

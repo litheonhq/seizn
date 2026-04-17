@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: "%s | Seizn",
     },
     description: dict.metadata.description,
-    keywords: ["AI memory", "memory infrastructure", "AI context", "semantic search", "vector database", "AI applications", "persistent memory"],
+    keywords: ["AI NPC memory", "game NPC memory", "NPC AI middleware", "Inworld integration", "Convai integration", "NVIDIA ACE memory", "persistent NPC memory", "game AI infrastructure", "cross-generation memory", "entity graph memory"],
     authors: [{ name: "Seizn" }],
     creator: "Seizn",
     publisher: "Seizn",
