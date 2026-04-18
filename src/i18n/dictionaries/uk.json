@@ -1696,10 +1696,6 @@
     "ctaStart": "Читати документацію",
     "ctaDemo": "Грати в smallgod",
     "socialProof": "Створено для ігрових студій — від 10 до 10 000 NPC.",
-    "liveDemo": "Живе демо",
-    "heroTagline": "Грайте в smallgod — наш еталонний god-game на Seizn. Без реєстрації та встановлення.",
-    "firstRetrievalComplete": "Перший пошук завершено",
-    "copySnippetHint": "Скопіюйте фрагмент нижче для відтворення",
     "copySnippetTitle": "Інтеграція в Unity, Unreal або будь-який рушій",
     "copySnippetSubtitle": "HTTP-обгортка + офіційні плагіни C#/C++. Без пользовательської інфраструктури.",
     "whySeizn": {
@@ -1735,7 +1731,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Ціни",
-      "compare": "vs Inworld",
+      "compare": "Інтеграції",
       "enterprise": "Для студій",
       "getApiKey": "Забронювати демо",
       "tryDemo": "Грати в smallgod",
@@ -1743,89 +1739,6 @@
       "status": "Статус",
       "help": "Допомога",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Конструктор запитів",
-      "query": "Запит",
-      "queryPlaceholder": "Введіть пошуковий запит...",
-      "tryExamples": "Спробувати приклади",
-      "dataset": "Dataset",
-      "latencyBudget": "Бюджет затримки",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "результатів",
-      "features": "Функції",
-      "hybridSearch": "Гібридний пошук",
-      "hybridSearchDesc": "Поєднання вектор + ключові слова",
-      "rerank": "Rerank",
-      "rerankDesc": "Переоцінка за допомогою cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "Перевірити якість відповіді",
-      "running": "Виконання...",
-      "runQuery": "Виконати запит",
-      "datasets": {
-        "techDocs": "Технічна документація",
-        "legalContracts": "Юридичні контракти",
-        "researchPapers": "Дослідницькі статті"
-      },
-      "advanced": "Додатково"
-    },
-    "resultsPanel": {
-      "searching": "Пошук...",
-      "noResults": "Виконайте запит, щоб побачити результати",
-      "score": "Оцінка"
-    },
-    "tracePanel": {
-      "tracing": "Відстеження конвеєра...",
-      "noTrace": "Виконайте запит, щоб побачити трейс",
-      "latency": "Затримка",
-      "cost": "Вартість",
-      "tokens": "Токени",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "Модель",
-      "input": "Вхід",
-      "output": "Вихід"
-    },
-    "tabs": {
-      "results": "Результати",
-      "trace": "Трейс",
-      "cost": "Вартість"
-    },
-    "chips": {
-      "trace": "Сутності",
-      "eval": "Відносини",
-      "policy": "Події"
-    },
-    "playgroundTitle": "Спробуйте зараз",
-    "costPanel": {
-      "calculating": "Розрахунок вартості...",
-      "noCost": "Виконайте запит, щоб побачити розбивку вартості",
-      "costBreakdown": "Розбивка вартості",
-      "component": "Компонент",
-      "cost": "Вартість",
-      "embedding": "Ембединг",
-      "vectorSearch": "Векторний пошук",
-      "rerank": "Переранжування",
-      "answerContract": "Контракт відповіді",
-      "total": "Загальна вартість",
-      "usage": "Використання",
-      "tokensIn": "Токенів на вході",
-      "tokensOut": "Токенів на виході",
-      "queryUnits": "Одиниць запитів",
-      "estimatedMonthly": "Прогноз за місяць",
-      "basedOn": "На основі",
-      "queriesPerDay": "запитів/день"
-    },
-    "errorDisplay": {
-      "error": "Помилка",
-      "errorCode": "Код",
-      "traceId": "Трейс",
-      "hint": "Підказка",
-      "tryAgain": "Повторити",
-      "copyTraceId": "Копіювати trace ID",
-      "copied": "Скопійовано!"
     }
   },
   "docs": {
@@ -2734,42 +2647,6 @@
         "backToIntegrations": "Повернутися до інтеграцій"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Жива демонстрація",
-    "subtitle": "Спробуйте конвеєр пошуку Seizn з повним трасуванням та прозорістю витрат.",
-    "tryItNow": "Спробуйте зараз — без реєстрації",
-    "queryPlaceholder": "Пошуковий запит",
-    "runDemo": "Запустити демо",
-    "running": "Виконується...",
-    "results": "Результати",
-    "trace": "Трасування",
-    "cost": "Вартість",
-    "noResults": "Запустіть демо, щоб побачити результати",
-    "errorTitle": "Помилка",
-    "rateLimitError": "Перевищено ліміт запитів. Будь ласка, зачекайте.",
-    "retryIn": "Повтор через",
-    "seconds": "секунд",
-    "score": "Оцінка",
-    "rerankScore": "Переранжування",
-    "latency": "Затримка",
-    "tokens": "Токени",
-    "cached": "кеш",
-    "model": "Модель",
-    "input": "Вхід",
-    "output": "Вихід",
-    "costBreakdown": "Деталізація",
-    "total": "Разом",
-    "embedding": "Ембедінг",
-    "vectorSearch": "Векторний пошук",
-    "rerank": "Переранжування",
-    "answerContract": "Контракт відповіді",
-    "tokensIn": "Вхідні токени",
-    "tokensOut": "Вихідні токени",
-    "queryUnits": "Одиниці запитів",
-    "prefilledQueries": [
-      "Спробувати приклади"
-    ]
   },
   "publicTrace": {
     "title": "Спільне трасування",

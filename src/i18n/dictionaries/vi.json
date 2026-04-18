@@ -1696,10 +1696,6 @@
     "ctaStart": "Đọc tài liệu",
     "ctaDemo": "Chơi smallgod",
     "socialProof": "Xây dựng cho game studio mở rộng từ 10 đến 10.000 NPC.",
-    "liveDemo": "Demo trực tiếp",
-    "heroTagline": "Chơi smallgod — god-game tham chiếu của chúng tôi xây trên Seizn. Không cần đăng ký, không cần cài đặt.",
-    "firstRetrievalComplete": "Truy xuất đầu tiên hoàn tất",
-    "copySnippetHint": "Sao chép đoạn mã bên dưới để tái tạo",
     "copySnippetTitle": "Thả vào Unity, Unreal hoặc bất kỳ runtime nào",
     "copySnippetSubtitle": "HTTP wrapper + plugin C#/C++ chính thức. Không cần cơ sở hạ tầng riêng.",
     "whySeizn": {
@@ -1732,7 +1728,7 @@
     "nav": {
       "docs": "Tài liệu",
       "pricing": "Giá",
-      "compare": "vs Inworld",
+      "compare": "Tích hợp",
       "enterprise": "Cho Studio",
       "getApiKey": "Đặt lịch demo",
       "tryDemo": "Chơi smallgod",
@@ -1740,89 +1736,6 @@
       "status": "Trạng thái",
       "help": "Trợ giúp",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Trình tạo yêu cầu",
-      "query": "Truy vấn",
-      "queryPlaceholder": "Nhập truy vấn tìm kiếm của bạn...",
-      "tryExamples": "Thử ví dụ",
-      "dataset": "Dataset",
-      "latencyBudget": "Ngân sách độ trễ",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "kết quả",
-      "features": "Tính năng",
-      "hybridSearch": "Tìm kiếm kết hợp",
-      "hybridSearchDesc": "Kết hợp vector + từ khóa",
-      "rerank": "Rerank",
-      "rerankDesc": "Chấm điểm lại với cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "Xác thực chất lượng câu trả lời",
-      "running": "Đang chạy...",
-      "runQuery": "Chạy truy vấn",
-      "datasets": {
-        "techDocs": "Tài liệu kỹ thuật",
-        "legalContracts": "Hợp đồng pháp lý",
-        "researchPapers": "Bài nghiên cứu"
-      },
-      "advanced": "Nâng cao"
-    },
-    "resultsPanel": {
-      "searching": "Đang tìm kiếm...",
-      "noResults": "Chạy truy vấn để xem kết quả",
-      "score": "Điểm"
-    },
-    "tracePanel": {
-      "tracing": "Đang theo dõi pipeline...",
-      "noTrace": "Chạy truy vấn để xem theo dõi",
-      "latency": "Độ trễ",
-      "cost": "Chi phí",
-      "tokens": "Token",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "Mô hình",
-      "input": "Đầu vào",
-      "output": "Đầu ra"
-    },
-    "tabs": {
-      "results": "Kết quả",
-      "trace": "Theo dõi",
-      "cost": "Chi phí"
-    },
-    "chips": {
-      "trace": "Thực thể",
-      "eval": "Quan hệ",
-      "policy": "Sự kiện"
-    },
-    "playgroundTitle": "Thử ngay",
-    "costPanel": {
-      "calculating": "Đang tính chi phí...",
-      "noCost": "Chạy truy vấn để xem chi tiết chi phí",
-      "costBreakdown": "Chi tiết chi phí",
-      "component": "Thành phần",
-      "cost": "Chi phí",
-      "embedding": "Embedding",
-      "vectorSearch": "Tìm kiếm vector",
-      "rerank": "Xếp hạng lại",
-      "answerContract": "Hợp đồng câu trả lời",
-      "total": "Tổng chi phí",
-      "usage": "Sử dụng",
-      "tokensIn": "Token vào",
-      "tokensOut": "Token ra",
-      "queryUnits": "Đơn vị truy vấn",
-      "estimatedMonthly": "Ước tính hàng tháng",
-      "basedOn": "Dựa trên",
-      "queriesPerDay": "truy vấn/ngày"
-    },
-    "errorDisplay": {
-      "error": "Lỗi",
-      "errorCode": "Mã",
-      "traceId": "Theo dõi",
-      "hint": "Gợi ý",
-      "tryAgain": "Thử lại",
-      "copyTraceId": "Sao chép Trace ID",
-      "copied": "Đã sao chép!"
     }
   },
   "docs": {
@@ -2731,42 +2644,6 @@
         "backToIntegrations": "Quay lại tích hợp"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Demo trực tiếp",
-    "subtitle": "Trải nghiệm pipeline truy xuất của Seizn với theo dõi đầy đủ và minh bạch chi phí.",
-    "tryItNow": "Thử ngay - Không cần đăng ký",
-    "queryPlaceholder": "Truy vấn tìm kiếm",
-    "runDemo": "Chạy demo",
-    "running": "Đang chạy...",
-    "results": "Kết quả",
-    "trace": "Dấu vết",
-    "cost": "Chi phí",
-    "noResults": "Chạy demo để xem kết quả",
-    "errorTitle": "Lỗi",
-    "rateLimitError": "Vượt quá giới hạn tốc độ. Vui lòng đợi.",
-    "retryIn": "Thử lại sau",
-    "seconds": "giây",
-    "score": "Điểm",
-    "rerankScore": "Xếp hạng lại",
-    "latency": "Độ trễ",
-    "tokens": "Token",
-    "cached": "bộ đệm",
-    "model": "Mô hình",
-    "input": "Đầu vào",
-    "output": "Đầu ra",
-    "costBreakdown": "Chi tiết",
-    "total": "Tổng chi phí",
-    "embedding": "Embedding",
-    "vectorSearch": "Tìm kiếm vector",
-    "rerank": "Xếp hạng lại",
-    "answerContract": "Hợp đồng câu trả lời",
-    "tokensIn": "Token đầu vào",
-    "tokensOut": "Token đầu ra",
-    "queryUnits": "Đơn vị truy vấn",
-    "prefilledQueries": [
-      "Thử ví dụ"
-    ]
   },
   "publicTrace": {
     "title": "Dấu vết chia sẻ",

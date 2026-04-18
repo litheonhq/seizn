@@ -444,21 +444,6 @@
       ]
     },
     {
-      "id": "demo-query",
-      "title": "Public Demo Query API",
-      "section": "Getting Started",
-      "content": "Try Seizn without an API key. POST /api/demo/query with { query: 'your question' }. Limited to 3 free queries per IP per day.",
-      "url": "/docs#quickstart",
-      "keywords": [
-        "demo",
-        "try",
-        "free",
-        "no api key",
-        "test",
-        "sample"
-      ]
-    },
-    {
       "id": "api-post--api-extract-image",
       "title": "POST /api/extract/image - POST /api/extract/image",
       "section": "API Reference",

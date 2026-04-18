@@ -1696,10 +1696,6 @@
     "ctaStart": "查看文件",
     "ctaDemo": "試玩 smallgod",
     "socialProof": "為 NPC 規模從 10 到 10,000 的遊戲工作室打造。",
-    "liveDemo": "線上示範",
-    "heroTagline": "試玩 smallgod — 以 Seizn 建構的參考神明遊戲。無需註冊，無需安裝。",
-    "firstRetrievalComplete": "首次檢索完成",
-    "copySnippetHint": "複製以下程式碼片段以重現",
     "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何執行環境",
     "copySnippetSubtitle": "HTTP 包裝器＋官方 C#/C++ 外掛程式。無需自建基礎設施。",
     "whySeizn": {
@@ -1735,94 +1731,11 @@
       "enterprise": "工作室方案",
       "getApiKey": "預約示範",
       "tryDemo": "試玩 smallgod",
-      "compare": "vs Inworld",
+      "compare": "整合",
       "limits": "限額",
       "status": "狀態",
       "help": "說明",
       "github": "開源"
-    },
-    "requestBuilder": {
-      "title": "請求建構器",
-      "query": "查詢",
-      "queryPlaceholder": "輸入搜尋查詢...",
-      "tryExamples": "試試範例",
-      "dataset": "資料集",
-      "latencyBudget": "延遲預算",
-      "fast": "快速",
-      "thorough": "詳細",
-      "topK": "前K個",
-      "results": "個結果",
-      "features": "功能",
-      "hybridSearch": "混合搜尋",
-      "hybridSearchDesc": "向量+關鍵字結合",
-      "rerank": "重新排序",
-      "rerankDesc": "交叉編碼器重新評分",
-      "answerContract": "答案契約",
-      "answerContractDesc": "驗證答案品質",
-      "running": "執行中...",
-      "runQuery": "執行查詢",
-      "datasets": {
-        "techDocs": "技術文件",
-        "legalContracts": "法律合約",
-        "researchPapers": "研究論文"
-      },
-      "advanced": "進階選項"
-    },
-    "resultsPanel": {
-      "searching": "搜尋中...",
-      "noResults": "執行查詢以查看結果",
-      "score": "得分"
-    },
-    "tracePanel": {
-      "tracing": "追蹤管道中...",
-      "noTrace": "執行查詢以查看追蹤",
-      "latency": "延遲",
-      "cost": "成本",
-      "tokens": "權杖",
-      "vectorOps": "向量操作",
-      "cached": "已快取",
-      "model": "模型",
-      "input": "輸入",
-      "output": "輸出"
-    },
-    "tabs": {
-      "results": "結果",
-      "trace": "追蹤",
-      "cost": "費用"
-    },
-    "chips": {
-      "trace": "實體",
-      "eval": "關係",
-      "policy": "事件"
-    },
-    "playgroundTitle": "立即體驗",
-    "costPanel": {
-      "calculating": "正在計算費用...",
-      "noCost": "執行查詢以查看費用明細",
-      "costBreakdown": "費用明細",
-      "component": "元件",
-      "cost": "費用",
-      "embedding": "嵌入",
-      "vectorSearch": "向量搜尋",
-      "rerank": "重排序",
-      "answerContract": "回答契約",
-      "total": "總費用",
-      "usage": "使用量",
-      "tokensIn": "輸入Token",
-      "tokensOut": "輸出Token",
-      "queryUnits": "查詢單位",
-      "estimatedMonthly": "預計月費",
-      "basedOn": "基於",
-      "queriesPerDay": "次查詢/天"
-    },
-    "errorDisplay": {
-      "error": "錯誤",
-      "errorCode": "錯誤代碼",
-      "traceId": "追蹤ID",
-      "hint": "提示",
-      "tryAgain": "重試",
-      "copyTraceId": "複製追蹤ID",
-      "copied": "已複製！"
     }
   },
   "docs": {
@@ -2771,42 +2684,6 @@
         "backToIntegrations": "返回整合"
       }
     }
-  },
-  "demoQuery": {
-    "title": "線上示範",
-    "subtitle": "體驗Seizn的檢索管道，包含完整的追蹤和費用透明度。",
-    "tryItNow": "立即體驗 - 無需註冊",
-    "queryPlaceholder": "搜尋查詢",
-    "runDemo": "執行示範",
-    "running": "執行中...",
-    "results": "結果",
-    "trace": "追蹤",
-    "cost": "費用",
-    "noResults": "執行示範以查看結果",
-    "errorTitle": "錯誤",
-    "rateLimitError": "超過速率限制，請稍候。",
-    "retryIn": "重試",
-    "seconds": "秒",
-    "score": "分數",
-    "rerankScore": "重排序",
-    "latency": "延遲",
-    "tokens": "Token",
-    "cached": "快取",
-    "model": "模型",
-    "input": "輸入",
-    "output": "輸出",
-    "costBreakdown": "明細",
-    "total": "總費用",
-    "embedding": "嵌入",
-    "vectorSearch": "向量搜尋",
-    "rerank": "重排序",
-    "answerContract": "回答契約",
-    "tokensIn": "輸入Token",
-    "tokensOut": "輸出Token",
-    "queryUnits": "查詢單位",
-    "prefilledQueries": [
-      "試試這些範例"
-    ]
   },
   "publicTrace": {
     "title": "共享追蹤",
