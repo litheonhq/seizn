@@ -1696,13 +1696,6 @@
     "ctaStart": "Ler a documentação",
     "ctaDemo": "Jogar smallgod",
     "socialProof": "Feito para estúdios que escalam de 10 a 10.000 NPCs.",
-    "liveDemo": "Demo ao vivo",
-    "heroTagline": "Chame o pipeline de recuperação diretamente. Para a demo completa do jogo, experimente smallgod.",
-    "chips": {
-      "trace": "Rastreamento",
-      "eval": "Avaliação",
-      "policy": "Política"
-    },
     "copySnippetTitle": "Integre em Unity, Unreal ou qualquer runtime",
     "copySnippetSubtitle": "Wrapper HTTP + plugins oficiais C#/C++. Sem infraestrutura personalizada.",
     "whySeizn": {
@@ -1743,84 +1736,6 @@
       "status": "Status",
       "help": "Ajuda",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Construtor de requisições",
-      "query": "Consulta",
-      "queryPlaceholder": "Digite sua consulta de pesquisa...",
-      "tryExamples": "Testar exemplos",
-      "dataset": "Dataset",
-      "latencyBudget": "Orçamento de latência",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "resultados",
-      "features": "Recursos",
-      "hybridSearch": "Pesquisa híbrida",
-      "hybridSearchDesc": "Combinar vetor + palavra-chave",
-      "rerank": "Rerank",
-      "rerankDesc": "Repontuar com cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "Validar qualidade da resposta",
-      "running": "Executando...",
-      "runQuery": "Executar consulta",
-      "datasets": {
-        "techDocs": "Documentação técnica",
-        "legalContracts": "Contratos jurídicos",
-        "researchPapers": "Artigos de pesquisa"
-      },
-      "advanced": "Avançado"
-    },
-    "resultsPanel": {
-      "searching": "Pesquisando...",
-      "noResults": "Execute uma consulta para ver resultados",
-      "score": "Pontuação"
-    },
-    "tracePanel": {
-      "tracing": "Rastreando pipeline...",
-      "noTrace": "Execute uma consulta para ver o rastreio",
-      "latency": "Latência",
-      "cost": "Custo",
-      "tokens": "Tokens",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "Modelo",
-      "input": "Entrada",
-      "output": "Saída"
-    },
-    "tabs": {
-      "results": "Resultados",
-      "trace": "Rastreio",
-      "cost": "Custo"
-    },
-    "playgroundTitle": "Playground da API",
-    "costPanel": {
-      "calculating": "Calculando custos...",
-      "noCost": "Execute uma consulta para ver o detalhamento de custos",
-      "costBreakdown": "Detalhamento de Custos",
-      "component": "Componente",
-      "cost": "Custo",
-      "embedding": "Embedding",
-      "vectorSearch": "Busca Vetorial",
-      "rerank": "Reranqueamento",
-      "answerContract": "Contrato de Resposta",
-      "total": "Custo Total",
-      "usage": "Uso",
-      "tokensIn": "Tokens de Entrada",
-      "tokensOut": "Tokens de Saída",
-      "queryUnits": "Unidades de Consulta",
-      "estimatedMonthly": "Estimativa Mensal",
-      "basedOn": "Baseado em",
-      "queriesPerDay": "consultas/dia"
-    },
-    "errorDisplay": {
-      "error": "Erro",
-      "errorCode": "Código",
-      "traceId": "Rastreamento",
-      "hint": "Dica",
-      "tryAgain": "Tentar Novamente",
-      "copyTraceId": "Copiar ID de rastreamento",
-      "copied": "Copiado!"
     }
   },
   "docs": {
@@ -2769,42 +2684,6 @@
         "backToIntegrations": "Voltar para Integrações"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Demo ao vivo",
-    "subtitle": "Experimente o pipeline de recuperação do Seizn com rastreamento completo e transparência de custos.",
-    "tryItNow": "Experimente agora - Sem cadastro",
-    "queryPlaceholder": "Consulta de busca",
-    "runDemo": "Executar demo",
-    "running": "Executando...",
-    "results": "Resultados",
-    "trace": "Rastreamento",
-    "cost": "Custo",
-    "noResults": "Execute a demo para ver resultados",
-    "errorTitle": "Erro",
-    "rateLimitError": "Limite de taxa excedido. Aguarde.",
-    "retryIn": "Tentar novamente em",
-    "seconds": "segundos",
-    "score": "Pontuação",
-    "rerankScore": "Reranking",
-    "latency": "Latência",
-    "tokens": "Tokens",
-    "cached": "em cache",
-    "model": "Modelo",
-    "input": "Entrada",
-    "output": "Saída",
-    "costBreakdown": "Detalhamento",
-    "total": "Custo total",
-    "embedding": "Embedding",
-    "vectorSearch": "Busca vetorial",
-    "rerank": "Reranking",
-    "answerContract": "Contrato de resposta",
-    "tokensIn": "Tokens de entrada",
-    "tokensOut": "Tokens de saída",
-    "queryUnits": "Unidades de consulta",
-    "prefilledQueries": [
-      "Experimentar exemplos"
-    ]
   },
   "publicTrace": {
     "title": "Rastreamento compartilhado",

@@ -1696,9 +1696,6 @@
     "ctaStart": "查看文档",
     "ctaDemo": "试玩 smallgod",
     "socialProof": "为 NPC 规模从 10 到 10,000 的游戏工作室打造。",
-    "liveDemo": "在线演示",
-    "heroTagline": "直接调用检索管道。完整游戏演示请前往 smallgod。",
-    "copySnippetHint": "复制以下代码片段以重现",
     "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何运行时",
     "copySnippetSubtitle": "HTTP 封装器＋官方 C#/C++ 插件。无需自建基础设施。",
     "whySeizn": {
@@ -1739,90 +1736,6 @@
       "status": "状态",
       "help": "帮助",
       "github": "开源"
-    },
-    "requestBuilder": {
-      "title": "请求构建器",
-      "query": "查询",
-      "queryPlaceholder": "输入搜索查询...",
-      "tryExamples": "试试示例",
-      "dataset": "数据集",
-      "latencyBudget": "延迟预算",
-      "fast": "快速",
-      "thorough": "详细",
-      "topK": "前K个",
-      "results": "个结果",
-      "features": "功能",
-      "hybridSearch": "混合搜索",
-      "hybridSearchDesc": "向量+关键词结合",
-      "rerank": "重新排序",
-      "rerankDesc": "交叉编码器重新评分",
-      "answerContract": "答案契约",
-      "answerContractDesc": "验证答案质量",
-      "running": "运行中...",
-      "runQuery": "执行查询",
-      "datasets": {
-        "techDocs": "技术文档",
-        "legalContracts": "法律合同",
-        "researchPapers": "研究论文"
-      },
-      "advanced": "高级选项"
-    },
-    "resultsPanel": {
-      "searching": "搜索中...",
-      "noResults": "运行查询以查看结果",
-      "score": "得分"
-    },
-    "tracePanel": {
-      "tracing": "追踪管道中...",
-      "noTrace": "运行查询以查看追踪",
-      "latency": "延迟",
-      "cost": "成本",
-      "tokens": "令牌",
-      "vectorOps": "向量操作",
-      "cached": "已缓存",
-      "model": "模型",
-      "input": "输入",
-      "output": "输出"
-    },
-    "tabs": {
-      "results": "结果",
-      "trace": "追踪",
-      "cost": "费用"
-    },
-    "chips": {
-      "trace": "实体",
-      "eval": "关系",
-      "policy": "事件"
-    },
-    "playgroundTitle": "API 游乐场",
-    "firstRetrievalComplete": "首次检索完成",
-    "costPanel": {
-      "calculating": "正在计算费用...",
-      "noCost": "运行查询以查看费用明细",
-      "costBreakdown": "费用明细",
-      "component": "组件",
-      "cost": "费用",
-      "embedding": "嵌入",
-      "vectorSearch": "向量搜索",
-      "rerank": "重排序",
-      "answerContract": "回答契约",
-      "total": "总费用",
-      "usage": "使用量",
-      "tokensIn": "输入Token",
-      "tokensOut": "输出Token",
-      "queryUnits": "查询单位",
-      "estimatedMonthly": "预计月费",
-      "basedOn": "基于",
-      "queriesPerDay": "次查询/天"
-    },
-    "errorDisplay": {
-      "error": "错误",
-      "errorCode": "错误代码",
-      "traceId": "追踪ID",
-      "hint": "提示",
-      "tryAgain": "重试",
-      "copyTraceId": "复制追踪ID",
-      "copied": "已复制！"
     }
   },
   "docs": {
@@ -2771,42 +2684,6 @@
         "backToIntegrations": "返回集成"
       }
     }
-  },
-  "demoQuery": {
-    "title": "在线演示",
-    "subtitle": "体验Seizn的检索管道，包含完整的追踪和费用透明度。",
-    "tryItNow": "立即体验 - 无需注册",
-    "queryPlaceholder": "搜索查询",
-    "runDemo": "运行演示",
-    "running": "运行中...",
-    "results": "结果",
-    "trace": "追踪",
-    "cost": "费用",
-    "noResults": "运行演示以查看结果",
-    "errorTitle": "错误",
-    "rateLimitError": "超出速率限制，请稍候。",
-    "retryIn": "重试",
-    "seconds": "秒",
-    "score": "分数",
-    "rerankScore": "重排序",
-    "latency": "延迟",
-    "tokens": "Token",
-    "cached": "缓存",
-    "model": "模型",
-    "input": "输入",
-    "output": "输出",
-    "costBreakdown": "明细",
-    "total": "总费用",
-    "embedding": "嵌入",
-    "vectorSearch": "向量搜索",
-    "rerank": "重排序",
-    "answerContract": "回答契约",
-    "tokensIn": "输入Token",
-    "tokensOut": "输出Token",
-    "queryUnits": "查询单位",
-    "prefilledQueries": [
-      "试试这些示例"
-    ]
   },
   "publicTrace": {
     "title": "共享追踪",

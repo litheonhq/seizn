@@ -1696,10 +1696,6 @@
     "ctaStart": "اقرأ الوثائق",
     "ctaDemo": "العب smallgod",
     "socialProof": "مصمم لاستوديوهات الألعاب من 10 إلى 10,000 شخصية NPC.",
-    "liveDemo": "عرض مباشر",
-    "heroTagline": "استعلم مباشرة من خط الاسترجاع. لتجربة اللعبة الكاملة، العب smallgod.",
-    "firstRetrievalComplete": "اكتمل الاسترجاع الأول",
-    "copySnippetHint": "انسخ المقتطف أدناه للتكرار",
     "copySnippetTitle": "تكامل في Unity أو Unreal أو أي محرك",
     "copySnippetSubtitle": "غلاف HTTP + إضافات C#/C++ رسمية. لا حاجة لبنية تحتية مخصصة.",
     "whySeizn": {
@@ -1743,89 +1739,6 @@
       "status": "الحالة",
       "help": "المساعدة",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "منشئ الطلبات",
-      "query": "استعلام",
-      "queryPlaceholder": "أدخل استعلام البحث الخاص بك...",
-      "tryExamples": "جرب الأمثلة",
-      "dataset": "Dataset",
-      "latencyBudget": "ميزانية زمن الاستجابة",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "نتائج",
-      "features": "الميزات",
-      "hybridSearch": "بحث هجين",
-      "hybridSearchDesc": "دمج البحث المتجهي + الكلمات المفتاحية",
-      "rerank": "Rerank",
-      "rerankDesc": "إعادة التسجيل باستخدام cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "التحقق من جودة الإجابة",
-      "running": "جارٍ التشغيل...",
-      "runQuery": "تنفيذ الاستعلام",
-      "datasets": {
-        "techDocs": "وثائق تقنية",
-        "legalContracts": "عقود قانونية",
-        "researchPapers": "أوراق بحثية"
-      },
-      "advanced": "متقدم"
-    },
-    "resultsPanel": {
-      "searching": "جارٍ البحث...",
-      "noResults": "شغّل استعلامًا لرؤية النتائج",
-      "score": "الدرجة"
-    },
-    "tracePanel": {
-      "tracing": "تتبع خط الأنابيب...",
-      "noTrace": "شغّل استعلامًا لرؤية التتبع",
-      "latency": "زمن الاستجابة",
-      "cost": "التكلفة",
-      "tokens": "الرموز",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "النموذج",
-      "input": "الإدخال",
-      "output": "الإخراج"
-    },
-    "tabs": {
-      "results": "النتائج",
-      "trace": "تتبع",
-      "cost": "التكلفة"
-    },
-    "chips": {
-      "trace": "الكيانات",
-      "eval": "العلاقات",
-      "policy": "الأحداث"
-    },
-    "playgroundTitle": "ساحة تجربة الـ API",
-    "costPanel": {
-      "calculating": "Calculating costs...",
-      "noCost": "Run a query to see cost breakdown",
-      "costBreakdown": "Cost Breakdown",
-      "component": "Component",
-      "cost": "التكلفة",
-      "embedding": "Embedding",
-      "vectorSearch": "Vector Search",
-      "rerank": "Rerank",
-      "answerContract": "Answer Contract",
-      "total": "Total Cost",
-      "usage": "الاستخدام",
-      "tokensIn": "Tokens In",
-      "tokensOut": "Tokens Out",
-      "queryUnits": "Query Units",
-      "estimatedMonthly": "Estimated Monthly",
-      "basedOn": "Based on",
-      "queriesPerDay": "queries/day"
-    },
-    "errorDisplay": {
-      "error": "خطأ",
-      "errorCode": "الرمز",
-      "traceId": "تتبع",
-      "hint": "Hint",
-      "tryAgain": "Try Again",
-      "copyTraceId": "Copy trace ID",
-      "copied": "تم النسخ!"
     }
   },
   "docs": {
@@ -2734,42 +2647,6 @@
         "backToIntegrations": "Back to Integrations"
       }
     }
-  },
-  "demoQuery": {
-    "title": "عرض تجريبي مباشر",
-    "subtitle": "جرّب خط أنابيب الاسترجاع في Seizn مع تتبع كامل وشفافية التكاليف.",
-    "tryItNow": "جرّبه الآن - بدون تسجيل",
-    "queryPlaceholder": "استعلام البحث",
-    "runDemo": "تشغيل العرض",
-    "running": "جارٍ التشغيل...",
-    "results": "النتائج",
-    "trace": "تتبع",
-    "cost": "التكلفة",
-    "noResults": "قم بتشغيل العرض لرؤية النتائج",
-    "errorTitle": "خطأ",
-    "rateLimitError": "تم تجاوز حد المعدل. يرجى الانتظار.",
-    "retryIn": "إعادة المحاولة خلال",
-    "seconds": "ثوانٍ",
-    "score": "النقاط",
-    "rerankScore": "إعادة الترتيب",
-    "latency": "زمن الاستجابة",
-    "tokens": "الرموز",
-    "cached": "مخزّن مؤقتاً",
-    "model": "النموذج",
-    "input": "الإدخال",
-    "output": "الإخراج",
-    "costBreakdown": "التفصيل",
-    "total": "التكلفة الإجمالية",
-    "embedding": "Embedding",
-    "vectorSearch": "بحث متجهي",
-    "rerank": "إعادة الترتيب",
-    "answerContract": "عقد الإجابة",
-    "tokensIn": "رموز الإدخال",
-    "tokensOut": "رموز الإخراج",
-    "queryUnits": "وحدات الاستعلام",
-    "prefilledQueries": [
-      "جرّب الأمثلة"
-    ]
   },
   "publicTrace": {
     "title": "تتبع مشترك",

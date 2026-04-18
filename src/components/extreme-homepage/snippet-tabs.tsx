@@ -7,8 +7,17 @@ import javascript from "react-syntax-highlighter/dist/esm/languages/prism/javasc
 import json from "react-syntax-highlighter/dist/esm/languages/prism/json";
 import python from "react-syntax-highlighter/dist/esm/languages/prism/python";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import type { RequestConfig } from "./request-builder";
 import { copyToClipboard } from "@/lib/clipboard";
+
+export interface RequestConfig {
+  query: string;
+  dataset: string;
+  budgetMs: number;
+  hybridSearch: boolean;
+  rerank: boolean;
+  answerContract: boolean;
+  topK: number;
+}
 
 // PrismLight lets us register only the languages we actually render, which keeps the bundle small.
 SyntaxHighlighter.registerLanguage("bash", bash);

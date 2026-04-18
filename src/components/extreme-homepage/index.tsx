@@ -8,7 +8,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { analytics } from "@/lib/analytics";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
-import type { RequestConfig } from "./request-builder";
+import type { RequestConfig } from "./snippet-tabs";
 import { SnippetSkeleton } from "./loading-skeleton";
 import { MenuIcon, CloseIcon } from "./icons";
 

@@ -1700,13 +1700,6 @@
     "ctaStart": "Docs lesen",
     "ctaDemo": "smallgod spielen",
     "socialProof": "Entwickelt für Game Studios, die von 10 auf 10.000 NPCs skalieren.",
-    "liveDemo": "Live-Demo",
-    "heroTagline": "Rufe die Retrieval-Pipeline direkt auf. Die vollständige Spiel-Demo findest du in smallgod.",
-    "chips": {
-      "trace": "Trace",
-      "eval": "Bewertung",
-      "policy": "Richtlinie"
-    },
     "copySnippetTitle": "In Unity, Unreal oder jede Runtime integrieren",
     "copySnippetSubtitle": "HTTP-Wrapper + offizielle C#/C++-Plugins. Keine eigene Infrastruktur nötig.",
     "whySeizn": {
@@ -1747,84 +1740,6 @@
       "status": "Status",
       "help": "Hilfe",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Anfrage-Builder",
-      "query": "Abfrage",
-      "queryPlaceholder": "Suchanfrage eingeben...",
-      "tryExamples": "Beispiele ausprobieren",
-      "dataset": "Datensatz",
-      "latencyBudget": "Latenz-Budget",
-      "fast": "schnell",
-      "thorough": "gründlich",
-      "topK": "Top K",
-      "results": "Ergebnisse",
-      "features": "Funktionen",
-      "hybridSearch": "Hybrid-Suche",
-      "hybridSearchDesc": "Vektor + Stichwort kombinieren",
-      "rerank": "Neuordnung",
-      "rerankDesc": "Mit Cross-Encoder neu bewerten",
-      "answerContract": "Antwort-Vertrag",
-      "answerContractDesc": "Antwortqualität validieren",
-      "running": "Läuft...",
-      "runQuery": "Abfrage ausführen",
-      "datasets": {
-        "techDocs": "Technische Dokumentation",
-        "legalContracts": "Rechtsverträge",
-        "researchPapers": "Forschungsarbeiten"
-      },
-      "advanced": "Erweitert"
-    },
-    "resultsPanel": {
-      "searching": "Suche...",
-      "noResults": "Führen Sie eine Abfrage aus",
-      "score": "Punktzahl"
-    },
-    "tracePanel": {
-      "tracing": "Pipeline verfolgen...",
-      "noTrace": "Führen Sie eine Abfrage aus um Trace zu sehen",
-      "latency": "Latenz",
-      "cost": "Kosten",
-      "tokens": "Token",
-      "vectorOps": "Vektor-Ops",
-      "cached": "gecacht",
-      "model": "Modell",
-      "input": "Eingabe",
-      "output": "Ausgabe"
-    },
-    "tabs": {
-      "results": "Ergebnisse",
-      "trace": "Trace",
-      "cost": "Kosten"
-    },
-    "playgroundTitle": "API-Playground",
-    "costPanel": {
-      "calculating": "Kosten werden berechnet...",
-      "noCost": "Führen Sie eine Abfrage aus, um die Kosten zu sehen",
-      "costBreakdown": "Kostenaufschlüsselung",
-      "component": "Komponente",
-      "cost": "Kosten",
-      "embedding": "Embedding",
-      "vectorSearch": "Vektorsuche",
-      "rerank": "Reranking",
-      "answerContract": "Antwortvertrag",
-      "total": "Gesamtkosten",
-      "usage": "Nutzung",
-      "tokensIn": "Token Eingabe",
-      "tokensOut": "Token Ausgabe",
-      "queryUnits": "Abfrageeinheiten",
-      "estimatedMonthly": "Geschätzte Monatskosten",
-      "basedOn": "Basierend auf",
-      "queriesPerDay": "Abfragen/Tag"
-    },
-    "errorDisplay": {
-      "error": "Fehler",
-      "errorCode": "Code",
-      "traceId": "Trace-ID",
-      "hint": "Hinweis",
-      "tryAgain": "Erneut versuchen",
-      "copyTraceId": "Trace-ID kopieren",
-      "copied": "Kopiert!"
     }
   },
   "docs": {
@@ -2773,42 +2688,6 @@
         "backToIntegrations": "Zurück zu Integrationen"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Live-Demo",
-    "subtitle": "Erleben Sie Seizns Abruf-Pipeline mit vollständiger Nachverfolgung und Kostentransparenz.",
-    "tryItNow": "Jetzt ausprobieren - Keine Anmeldung nötig",
-    "queryPlaceholder": "Suchanfrage",
-    "runDemo": "Demo starten",
-    "running": "Läuft...",
-    "results": "Ergebnisse",
-    "trace": "Trace",
-    "cost": "Kosten",
-    "noResults": "Starten Sie die Demo, um Ergebnisse zu sehen",
-    "errorTitle": "Fehler",
-    "rateLimitError": "Ratenlimit überschritten. Bitte warten.",
-    "retryIn": "Wiederholen in",
-    "seconds": "Sekunden",
-    "score": "Bewertung",
-    "rerankScore": "Reranking",
-    "latency": "Latenz",
-    "tokens": "Token",
-    "cached": "gecacht",
-    "model": "Modell",
-    "input": "Eingabe",
-    "output": "Ausgabe",
-    "costBreakdown": "Aufschlüsselung",
-    "total": "Gesamtkosten",
-    "embedding": "Embedding",
-    "vectorSearch": "Vektorsuche",
-    "rerank": "Reranking",
-    "answerContract": "Antwortvertrag",
-    "tokensIn": "Token Eingabe",
-    "tokensOut": "Token Ausgabe",
-    "queryUnits": "Abfrageeinheiten",
-    "prefilledQueries": [
-      "Beispiele ausprobieren"
-    ]
   },
   "publicTrace": {
     "title": "Geteilte Trace",

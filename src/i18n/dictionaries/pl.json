@@ -1696,13 +1696,6 @@
     "ctaStart": "Czytaj dokumentację",
     "ctaDemo": "Zagraj w smallgod",
     "socialProof": "Zbudowane dla studiów skalujących od 10 do 10 000 NPC.",
-    "liveDemo": "Demo na żywo",
-    "heroTagline": "Wywołaj pipeline wyszukiwania bezpośrednio. Pełne demo gry znajdziesz w smallgod.",
-    "chips": {
-      "trace": "Ślad",
-      "eval": "Ewaluacja",
-      "policy": "Polityka"
-    },
     "copySnippetTitle": "Integruj w Unity, Unreal lub dowolne środowisko uruchomieniowe",
     "copySnippetSubtitle": "Wrapper HTTP + oficjalne wtyczki C#/C++. Bez własnej infrastruktury.",
     "whySeizn": {
@@ -1743,84 +1736,6 @@
       "status": "Status",
       "help": "Pomoc",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Konstruktor zapytań",
-      "query": "Zapytanie",
-      "queryPlaceholder": "Wprowadź zapytanie wyszukiwania...",
-      "tryExamples": "Wypróbuj przykłady",
-      "dataset": "Dataset",
-      "latencyBudget": "Budżet opóźnienia",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "wyników",
-      "features": "Funkcje",
-      "hybridSearch": "Wyszukiwanie hybrydowe",
-      "hybridSearchDesc": "Połącz wektor + słowa kluczowe",
-      "rerank": "Rerank",
-      "rerankDesc": "Ponowna ocena z cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "Zweryfikuj jakość odpowiedzi",
-      "running": "Uruchamianie...",
-      "runQuery": "Uruchom zapytanie",
-      "datasets": {
-        "techDocs": "Dokumentacja techniczna",
-        "legalContracts": "Umowy prawne",
-        "researchPapers": "Artykuły naukowe"
-      },
-      "advanced": "Zaawansowane"
-    },
-    "resultsPanel": {
-      "searching": "Wyszukiwanie...",
-      "noResults": "Uruchom zapytanie, aby zobaczyć wyniki",
-      "score": "Wynik"
-    },
-    "tracePanel": {
-      "tracing": "Śledzenie potoku...",
-      "noTrace": "Uruchom zapytanie, aby zobaczyć ślad",
-      "latency": "Opóźnienie",
-      "cost": "Koszt",
-      "tokens": "Tokeny",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "Model",
-      "input": "Wejście",
-      "output": "Wyjście"
-    },
-    "tabs": {
-      "results": "Wyniki",
-      "trace": "Ślad",
-      "cost": "Koszt"
-    },
-    "playgroundTitle": "Playground API",
-    "costPanel": {
-      "calculating": "Obliczanie kosztów...",
-      "noCost": "Wykonaj zapytanie, aby zobaczyć zestawienie kosztów",
-      "costBreakdown": "Zestawienie kosztów",
-      "component": "Komponent",
-      "cost": "Koszt",
-      "embedding": "Embedding",
-      "vectorSearch": "Wyszukiwanie wektorowe",
-      "rerank": "Ponowne rankowanie",
-      "answerContract": "Kontrakt odpowiedzi",
-      "total": "Koszt całkowity",
-      "usage": "Użycie",
-      "tokensIn": "Tokeny wejściowe",
-      "tokensOut": "Tokeny wyjściowe",
-      "queryUnits": "Jednostki zapytań",
-      "estimatedMonthly": "Prognoza miesięczna",
-      "basedOn": "Na podstawie",
-      "queriesPerDay": "zapytań/dzień"
-    },
-    "errorDisplay": {
-      "error": "Błąd",
-      "errorCode": "Kod",
-      "traceId": "Ślad",
-      "hint": "Wskazówka",
-      "tryAgain": "Spróbuj ponownie",
-      "copyTraceId": "Kopiuj trace ID",
-      "copied": "Skopiowano!"
     }
   },
   "docs": {
@@ -2729,42 +2644,6 @@
         "backToIntegrations": "Powrót do integracji"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Demo na żywo",
-    "subtitle": "Poznaj pipeline wyszukiwania Seizn z pełnym śledzeniem i przejrzystością kosztów.",
-    "tryItNow": "Wypróbuj teraz - Bez rejestracji",
-    "queryPlaceholder": "Zapytanie wyszukiwania",
-    "runDemo": "Uruchom demo",
-    "running": "Uruchamianie...",
-    "results": "Wyniki",
-    "trace": "Ślad",
-    "cost": "Koszt",
-    "noResults": "Uruchom demo, aby zobaczyć wyniki",
-    "errorTitle": "Błąd",
-    "rateLimitError": "Przekroczono limit zapytań. Proszę czekać.",
-    "retryIn": "Ponów za",
-    "seconds": "sekund",
-    "score": "Wynik",
-    "rerankScore": "Ponowne rankowanie",
-    "latency": "Opóźnienie",
-    "tokens": "Tokeny",
-    "cached": "z pamięci podręcznej",
-    "model": "Model",
-    "input": "Wejście",
-    "output": "Wyjście",
-    "costBreakdown": "Rozbicie",
-    "total": "Łączny koszt",
-    "embedding": "Embedding",
-    "vectorSearch": "Wyszukiwanie wektorowe",
-    "rerank": "Ponowne rankowanie",
-    "answerContract": "Kontrakt odpowiedzi",
-    "tokensIn": "Tokeny wejściowe",
-    "tokensOut": "Tokeny wyjściowe",
-    "queryUnits": "Jednostki zapytań",
-    "prefilledQueries": [
-      "Wypróbuj przykłady"
-    ]
   },
   "publicTrace": {
     "title": "Udostępniony ślad",
