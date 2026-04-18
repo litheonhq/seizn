@@ -310,11 +310,9 @@
       "settings": "Paramètres",
       "groups": {
         "memory": "MÉMOIRE NPC",
-        "observe": "OBSERVER",
-        "govern": "POLITIQUES",
-        "finops": "USAGE & COÛT",
-        "connect": "INTÉGRER",
-        "system": "ESPACE DE TRAVAIL"
+        "system": "ESPACE DE TRAVAIL",
+        "build": "Développer",
+        "integrate": "Intégrer"
       }
     },
     "pinSidebar": "Épingler la barre latérale",

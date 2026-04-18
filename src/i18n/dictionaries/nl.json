@@ -310,11 +310,9 @@
       "settings": "Instellingen",
       "groups": {
         "memory": "NPC-GEHEUGEN",
-        "observe": "MONITOREN",
-        "govern": "BELEID",
-        "finops": "GEBRUIK & KOSTEN",
-        "connect": "INTEGREREN",
-        "system": "WERKRUIMTE"
+        "system": "WERKRUIMTE",
+        "build": "Bouwen",
+        "integrate": "Integreren"
       }
     },
     "pinSidebar": "Zijbalk vastzetten",

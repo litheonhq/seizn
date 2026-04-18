@@ -310,11 +310,9 @@
       "settings": "Inställningar",
       "groups": {
         "memory": "NPC-MINNE",
-        "observe": "ÖVERVAKA",
-        "govern": "POLICYER",
-        "finops": "ANVÄNDNING & KOSTNAD",
-        "connect": "INTEGRERA",
-        "system": "ARBETSYTA"
+        "system": "ARBETSYTA",
+        "build": "Utveckla",
+        "integrate": "Integrera"
       }
     },
     "pinSidebar": "Fäst sidopanelen",

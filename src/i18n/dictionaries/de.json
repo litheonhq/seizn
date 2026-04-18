@@ -379,11 +379,9 @@
       "settings": "Einstellungen",
       "groups": {
         "memory": "NPC-SPEICHER",
-        "observe": "BEOBACHTEN",
-        "govern": "RICHTLINIEN",
-        "finops": "NUTZUNG & KOSTEN",
-        "connect": "INTEGRIEREN",
-        "system": "ARBEITSBEREICH"
+        "system": "ARBEITSBEREICH",
+        "build": "Entwicklung",
+        "integrate": "Integration"
       }
     },
     "pinSidebar": "Seitenleiste anheften",
