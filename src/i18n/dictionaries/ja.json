@@ -1600,10 +1600,6 @@
     "ctaStart": "ドキュメントを読む",
     "ctaDemo": "smallgodをプレイ",
     "socialProof": "10から10,000 NPCにスケールするゲームスタジオのために構築。",
-    "liveDemo": "ライブデモ",
-    "heroTagline": "smallgodをプレイ — Seizn上に構築されたリファレンスゴッドゲーム。サインアップ・インストール不要。",
-    "firstRetrievalComplete": "最初の検索が完了しました",
-    "copySnippetHint": "以下のスニペットをコピーして再現してください",
     "copySnippetTitle": "Unity、Unreal、またはあらゆるランタイムに即適用",
     "copySnippetSubtitle": "HTTPラッパー + 公式C#/C++プラグイン。独自インフラ構築は不要。",
     "whySeizn": {
@@ -1641,92 +1637,9 @@
       "tryDemo": "smallgodをプレイ",
       "github": "OSS",
       "status": "ステータス",
-      "compare": "vs Inworld",
+      "compare": "連携",
       "limits": "制限",
       "help": "ヘルプ"
-    },
-    "requestBuilder": {
-      "title": "リクエストビルダー",
-      "query": "クエリ",
-      "queryPlaceholder": "検索クエリを入力...",
-      "tryExamples": "例を試す",
-      "dataset": "データセット",
-      "latencyBudget": "レイテンシ予算",
-      "fast": "高速",
-      "thorough": "詳細",
-      "topK": "上位K",
-      "results": "件",
-      "features": "機能",
-      "hybridSearch": "ハイブリッド検索",
-      "hybridSearchDesc": "ベクトル+キーワード結合",
-      "rerank": "再ランキング",
-      "rerankDesc": "クロスエンコーダで再スコア",
-      "answerContract": "回答契約",
-      "answerContractDesc": "回答品質の検証",
-      "running": "実行中...",
-      "runQuery": "クエリ実行",
-      "datasets": {
-        "techDocs": "技術ドキュメント",
-        "legalContracts": "法的契約書",
-        "researchPapers": "研究論文"
-      },
-      "advanced": "詳細設定"
-    },
-    "resultsPanel": {
-      "searching": "検索中...",
-      "noResults": "クエリを実行して結果を表示",
-      "score": "スコア"
-    },
-    "tracePanel": {
-      "tracing": "パイプライン追跡中...",
-      "noTrace": "クエリを実行してトレースを表示",
-      "latency": "レイテンシ",
-      "cost": "コスト",
-      "tokens": "トークン",
-      "vectorOps": "ベクター操作",
-      "cached": "キャッシュ",
-      "model": "モデル",
-      "input": "入力",
-      "output": "出力"
-    },
-    "tabs": {
-      "results": "結果",
-      "trace": "トレース",
-      "cost": "コスト"
-    },
-    "chips": {
-      "trace": "エンティティ",
-      "eval": "関係",
-      "policy": "イベント"
-    },
-    "playgroundTitle": "今すぐ試す",
-    "costPanel": {
-      "calculating": "コストを計算中...",
-      "noCost": "クエリを実行してコスト内訳を表示",
-      "costBreakdown": "コスト内訳",
-      "component": "コンポーネント",
-      "cost": "コスト",
-      "embedding": "埋め込み",
-      "vectorSearch": "ベクトル検索",
-      "rerank": "リランク",
-      "answerContract": "回答検証",
-      "total": "合計コスト",
-      "usage": "使用量",
-      "tokensIn": "入力トークン",
-      "tokensOut": "出力トークン",
-      "queryUnits": "クエリ単位",
-      "estimatedMonthly": "月間見積もり",
-      "basedOn": "基準",
-      "queriesPerDay": "クエリ/日"
-    },
-    "errorDisplay": {
-      "error": "エラー",
-      "errorCode": "コード",
-      "traceId": "トレースID",
-      "hint": "ヒント",
-      "tryAgain": "再試行",
-      "copyTraceId": "トレースIDをコピー",
-      "copied": "コピーしました！"
     }
   },
   "docs": {
@@ -2668,42 +2581,6 @@
         "backToIntegrations": "統合に戻る"
       }
     }
-  },
-  "demoQuery": {
-    "title": "ライブデモ",
-    "subtitle": "フルトレーシングとコスト透明性を備えたSeiznの検索パイプラインを体験してください。",
-    "tryItNow": "今すぐお試しください - 登録不要",
-    "queryPlaceholder": "検索クエリ",
-    "runDemo": "デモを実行",
-    "running": "実行中...",
-    "results": "結果",
-    "trace": "トレース",
-    "cost": "コスト",
-    "noResults": "デモを実行して結果を確認してください",
-    "errorTitle": "エラー",
-    "rateLimitError": "レート制限を超過しました。しばらくお待ちください。",
-    "retryIn": "再試行まで",
-    "seconds": "秒",
-    "score": "スコア",
-    "rerankScore": "再ランク",
-    "latency": "レイテンシ",
-    "tokens": "トークン",
-    "cached": "キャッシュ済み",
-    "model": "モデル",
-    "input": "入力",
-    "output": "出力",
-    "costBreakdown": "内訳",
-    "total": "合計コスト",
-    "embedding": "埋め込み",
-    "vectorSearch": "ベクトル検索",
-    "rerank": "再ランク",
-    "answerContract": "回答検証",
-    "tokensIn": "入力トークン",
-    "tokensOut": "出力トークン",
-    "queryUnits": "クエリユニット",
-    "prefilledQueries": [
-      "例を見る"
-    ]
   },
   "publicTrace": {
     "title": "共有トレース",

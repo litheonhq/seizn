@@ -1700,13 +1700,6 @@
     "ctaStart": "Leggi i docs",
     "ctaDemo": "Gioca a smallgod",
     "socialProof": "Pensato per i game studio che scalano da 10 a 10.000 NPC.",
-    "liveDemo": "Demo live",
-    "heroTagline": "Gioca a smallgod — il nostro god-game di riferimento costruito su Seizn. Senza registrazione, senza installazione.",
-    "chips": {
-      "trace": "Entità",
-      "eval": "Relazioni",
-      "policy": "Eventi"
-    },
     "copySnippetTitle": "Integra in Unity, Unreal o qualsiasi runtime",
     "copySnippetSubtitle": "Wrapper HTTP + plugin ufficiali C#/C++. Nessuna infrastruttura personalizzata.",
     "whySeizn": {
@@ -1739,7 +1732,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Prezzi",
-      "compare": "vs Inworld",
+      "compare": "Integrazioni",
       "enterprise": "Per i studio",
       "getApiKey": "Prenota demo",
       "tryDemo": "Gioca a smallgod",
@@ -1747,89 +1740,6 @@
       "status": "Stato",
       "help": "Aiuto",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Costruttore di Richieste",
-      "query": "Query",
-      "queryPlaceholder": "Inserisci la tua query di ricerca...",
-      "tryExamples": "Vedi esempi",
-      "dataset": "Dataset",
-      "latencyBudget": "Budget latenza",
-      "fast": "veloce",
-      "thorough": "approfondito",
-      "topK": "Top K",
-      "results": "risultati",
-      "features": "Funzionalita",
-      "hybridSearch": "Ricerca Ibrida",
-      "hybridSearchDesc": "Combina vettoriale + parola chiave",
-      "rerank": "Riordina",
-      "rerankDesc": "Ri-punteggia con cross-encoder",
-      "answerContract": "Contratto Risposta",
-      "answerContractDesc": "Valida qualita risposta",
-      "running": "In esecuzione...",
-      "runQuery": "Esegui Query",
-      "datasets": {
-        "techDocs": "Documentazione Tecnica",
-        "legalContracts": "Contratti Legali",
-        "researchPapers": "Articoli di Ricerca"
-      },
-      "advanced": "Avanzato"
-    },
-    "resultsPanel": {
-      "searching": "Ricerca in corso...",
-      "noResults": "Esegui una query per vedere i risultati",
-      "score": "Punteggio"
-    },
-    "tracePanel": {
-      "tracing": "Tracciamento pipeline...",
-      "noTrace": "Esegui una query per vedere il tracciamento",
-      "latency": "Latenza",
-      "cost": "Costo",
-      "tokens": "Token",
-      "vectorOps": "Ops Vettoriali",
-      "cached": "in cache",
-      "model": "Modello",
-      "input": "Input",
-      "output": "Output"
-    },
-    "tabs": {
-      "results": "Risultati",
-      "trace": "Traccia",
-      "cost": "Costo"
-    },
-    "chips": {
-      "trace": "Traccia",
-      "eval": "Eval",
-      "policy": "Policy"
-    },
-    "playgroundTitle": "Prova subito",
-    "costPanel": {
-      "calculating": "Calcolo costi in corso...",
-      "noCost": "Esegui una query per vedere la ripartizione costi",
-      "costBreakdown": "Ripartizione Costi",
-      "component": "Componente",
-      "cost": "Costo",
-      "embedding": "Embedding",
-      "vectorSearch": "Ricerca Vettoriale",
-      "rerank": "Rerank",
-      "answerContract": "Contratto di Risposta",
-      "total": "Costo Totale",
-      "usage": "Utilizzo",
-      "tokensIn": "Token in Ingresso",
-      "tokensOut": "Token in Uscita",
-      "queryUnits": "Unità di Query",
-      "estimatedMonthly": "Stima Mensile",
-      "basedOn": "Basato su",
-      "queriesPerDay": "query/giorno"
-    },
-    "errorDisplay": {
-      "error": "Errore",
-      "errorCode": "Codice",
-      "traceId": "Traccia",
-      "hint": "Suggerimento",
-      "tryAgain": "Riprova",
-      "copyTraceId": "Copia ID trace",
-      "copied": "Copiato!"
     }
   },
   "docs": {
@@ -2778,42 +2688,6 @@
         "backToIntegrations": "Torna alle Integrazioni"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Demo dal vivo",
-    "subtitle": "Sperimenta la pipeline di recupero di Seizn con tracciamento completo e trasparenza dei costi.",
-    "tryItNow": "Provalo ora - Senza registrazione",
-    "queryPlaceholder": "Query di ricerca",
-    "runDemo": "Avvia demo",
-    "running": "In esecuzione...",
-    "results": "Risultati",
-    "trace": "Traccia",
-    "cost": "Costo",
-    "noResults": "Avvia la demo per vedere i risultati",
-    "errorTitle": "Errore",
-    "rateLimitError": "Limite di frequenza superato. Attendere.",
-    "retryIn": "Riprova tra",
-    "seconds": "secondi",
-    "score": "Punteggio",
-    "rerankScore": "Riclassificazione",
-    "latency": "Latenza",
-    "tokens": "Token",
-    "cached": "in cache",
-    "model": "Modello",
-    "input": "Input",
-    "output": "Output",
-    "costBreakdown": "Dettaglio",
-    "total": "Costo totale",
-    "embedding": "Embedding",
-    "vectorSearch": "Ricerca vettoriale",
-    "rerank": "Riclassificazione",
-    "answerContract": "Contratto di risposta",
-    "tokensIn": "Token in ingresso",
-    "tokensOut": "Token in uscita",
-    "queryUnits": "Unità di query",
-    "prefilledQueries": [
-      "Prova gli esempi"
-    ]
   },
   "publicTrace": {
     "title": "Traccia condivisa",

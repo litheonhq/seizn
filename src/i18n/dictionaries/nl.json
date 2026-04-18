@@ -1696,13 +1696,6 @@
     "ctaStart": "Docs lezen",
     "ctaDemo": "smallgod spelen",
     "socialProof": "Gebouwd voor game studios die schalen van 10 naar 10.000 NPC's.",
-    "liveDemo": "Live demo",
-    "heroTagline": "Speel smallgod — ons referentie god-game gebouwd op Seizn. Geen registratie, geen installatie.",
-    "chips": {
-      "trace": "Entiteiten",
-      "eval": "Relaties",
-      "policy": "Events"
-    },
     "copySnippetTitle": "Integreer in Unity, Unreal of elke runtime",
     "copySnippetSubtitle": "HTTP-wrapper + officiële C#/C++-plugins. Geen eigen infrastructuur nodig.",
     "whySeizn": {
@@ -1735,7 +1728,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Prijzen",
-      "compare": "vs Inworld",
+      "compare": "Integraties",
       "enterprise": "Voor studios",
       "getApiKey": "Demo boeken",
       "tryDemo": "smallgod spelen",
@@ -1743,89 +1736,6 @@
       "status": "Status",
       "help": "Help",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Verzoekenbouwer",
-      "query": "Query",
-      "queryPlaceholder": "Voer uw zoekopdracht in...",
-      "tryExamples": "Voorbeelden proberen",
-      "dataset": "Dataset",
-      "latencyBudget": "Latentiebudget",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "resultaten",
-      "features": "Functies",
-      "hybridSearch": "Hybride zoekopdracht",
-      "hybridSearchDesc": "Combineer vector + trefwoord",
-      "rerank": "Rerank",
-      "rerankDesc": "Opnieuw scoren met cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "Antwoordkwaliteit valideren",
-      "running": "Uitvoeren...",
-      "runQuery": "Query uitvoeren",
-      "datasets": {
-        "techDocs": "Technische documentatie",
-        "legalContracts": "Juridische contracten",
-        "researchPapers": "Onderzoekspapers"
-      },
-      "advanced": "Geavanceerd"
-    },
-    "resultsPanel": {
-      "searching": "Zoeken...",
-      "noResults": "Voer een query uit om resultaten te zien",
-      "score": "Score"
-    },
-    "tracePanel": {
-      "tracing": "Pipeline traceren...",
-      "noTrace": "Voer een query uit om de trace te zien",
-      "latency": "Latentie",
-      "cost": "Kosten",
-      "tokens": "Tokens",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "Model",
-      "input": "Invoer",
-      "output": "Uitvoer"
-    },
-    "tabs": {
-      "results": "Resultaten",
-      "trace": "Trace",
-      "cost": "Kosten"
-    },
-    "chips": {
-      "trace": "Trace",
-      "eval": "Evaluatie",
-      "policy": "Beleid"
-    },
-    "playgroundTitle": "Probeer het nu",
-    "costPanel": {
-      "calculating": "Kosten berekenen...",
-      "noCost": "Voer een query uit om de kostenspecificatie te zien",
-      "costBreakdown": "Kostenspecificatie",
-      "component": "Component",
-      "cost": "Kosten",
-      "embedding": "Embedding",
-      "vectorSearch": "Vectorzoekopdracht",
-      "rerank": "Herordening",
-      "answerContract": "Antwoordcontract",
-      "total": "Totale Kosten",
-      "usage": "Gebruik",
-      "tokensIn": "Tokens In",
-      "tokensOut": "Tokens Uit",
-      "queryUnits": "Query-eenheden",
-      "estimatedMonthly": "Geschat Maandelijks",
-      "basedOn": "Gebaseerd op",
-      "queriesPerDay": "queries/dag"
-    },
-    "errorDisplay": {
-      "error": "Fout",
-      "errorCode": "Code",
-      "traceId": "Trace",
-      "hint": "Hint",
-      "tryAgain": "Opnieuw Proberen",
-      "copyTraceId": "Trace-ID kopiëren",
-      "copied": "Gekopieerd!"
     }
   },
   "docs": {
@@ -2734,42 +2644,6 @@
         "backToIntegrations": "Terug naar Integraties"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Live demo",
-    "subtitle": "Ervaar Seizns ophaal-pipeline met volledige tracering en kostentransparantie.",
-    "tryItNow": "Probeer het nu - Geen registratie nodig",
-    "queryPlaceholder": "Zoekopdracht",
-    "runDemo": "Demo uitvoeren",
-    "running": "Bezig...",
-    "results": "Resultaten",
-    "trace": "Trace",
-    "cost": "Kosten",
-    "noResults": "Voer de demo uit om resultaten te zien",
-    "errorTitle": "Fout",
-    "rateLimitError": "Snelheidslimiet overschreden. Even geduld.",
-    "retryIn": "Opnieuw proberen over",
-    "seconds": "seconden",
-    "score": "Score",
-    "rerankScore": "Herrangschikking",
-    "latency": "Latentie",
-    "tokens": "Tokens",
-    "cached": "gecacht",
-    "model": "Model",
-    "input": "Invoer",
-    "output": "Uitvoer",
-    "costBreakdown": "Specificatie",
-    "total": "Totale kosten",
-    "embedding": "Embedding",
-    "vectorSearch": "Vectorzoekopdracht",
-    "rerank": "Herrangschikking",
-    "answerContract": "Antwoordcontract",
-    "tokensIn": "Tokens in",
-    "tokensOut": "Tokens uit",
-    "queryUnits": "Query-eenheden",
-    "prefilledQueries": [
-      "Voorbeelden proberen"
-    ]
   },
   "publicTrace": {
     "title": "Gedeelde trace",

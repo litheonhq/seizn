@@ -1696,13 +1696,6 @@
     "ctaStart": "Leer la documentación",
     "ctaDemo": "Jugar smallgod",
     "socialProof": "Construido para estudios que escalan de 10 a 10.000 NPC.",
-    "liveDemo": "Demo en vivo",
-    "heroTagline": "Juega smallgod — nuestro god-game de referencia construido con Seizn. Sin registro, sin instalación.",
-    "chips": {
-      "trace": "Entidades",
-      "eval": "Relaciones",
-      "policy": "Eventos"
-    },
     "copySnippetTitle": "Integra en Unity, Unreal o cualquier runtime",
     "copySnippetSubtitle": "Wrapper HTTP + plugins oficiales C#/C++. Sin infraestructura personalizada.",
     "whySeizn": {
@@ -1735,7 +1728,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Precios",
-      "compare": "vs Inworld",
+      "compare": "Integraciones",
       "enterprise": "Para estudios",
       "getApiKey": "Reservar demo",
       "tryDemo": "Jugar smallgod",
@@ -1743,90 +1736,6 @@
       "status": "Estado",
       "help": "Ayuda",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "Constructor de Solicitudes",
-      "query": "Consulta",
-      "queryPlaceholder": "Ingrese su consulta de búsqueda...",
-      "tryExamples": "Probar ejemplos",
-      "dataset": "Conjunto de datos",
-      "latencyBudget": "Presupuesto de latencia",
-      "fast": "rápido",
-      "thorough": "detallado",
-      "topK": "Top K",
-      "results": "resultados",
-      "features": "Características",
-      "hybridSearch": "Búsqueda Híbrida",
-      "hybridSearchDesc": "Combinar vector + palabra clave",
-      "rerank": "Reordenar",
-      "rerankDesc": "Re-puntuar con cross-encoder",
-      "answerContract": "Contrato de Respuesta",
-      "answerContractDesc": "Validar calidad de respuesta",
-      "running": "Ejecutando...",
-      "runQuery": "Ejecutar Consulta",
-      "datasets": {
-        "techDocs": "Documentación Técnica",
-        "legalContracts": "Contratos Legales",
-        "researchPapers": "Artículos de Investigación"
-      },
-      "advanced": "Avanzado"
-    },
-    "resultsPanel": {
-      "searching": "Buscando...",
-      "noResults": "Ejecute una consulta para ver resultados",
-      "score": "Puntuación"
-    },
-    "tracePanel": {
-      "tracing": "Rastreando pipeline...",
-      "noTrace": "Ejecute una consulta para ver el rastreo",
-      "latency": "Latencia",
-      "cost": "Costo",
-      "tokens": "Tokens",
-      "vectorOps": "Ops Vectoriales",
-      "cached": "en caché",
-      "model": "Modelo",
-      "input": "Entrada",
-      "output": "Salida"
-    },
-    "tabs": {
-      "results": "Resultados",
-      "trace": "Traza",
-      "cost": "Costo"
-    },
-    "chips": {
-      "trace": "Traza",
-      "eval": "Evaluación",
-      "policy": "Política"
-    },
-    "playgroundTitle": "Pruébalo ahora",
-    "firstRetrievalComplete": "Primera recuperación completada",
-    "costPanel": {
-      "calculating": "Calculando costos...",
-      "noCost": "Ejecute una consulta para ver el desglose",
-      "costBreakdown": "Desglose de costos",
-      "component": "Componente",
-      "cost": "Costo",
-      "embedding": "Embedding",
-      "vectorSearch": "Búsqueda vectorial",
-      "rerank": "Reranking",
-      "answerContract": "Contrato de respuesta",
-      "total": "Costo total",
-      "usage": "Uso",
-      "tokensIn": "Tokens entrada",
-      "tokensOut": "Tokens salida",
-      "queryUnits": "Unidades de consulta",
-      "estimatedMonthly": "Estimación mensual",
-      "basedOn": "Basado en",
-      "queriesPerDay": "consultas/día"
-    },
-    "errorDisplay": {
-      "error": "Error",
-      "errorCode": "Código",
-      "traceId": "ID de traza",
-      "hint": "Sugerencia",
-      "tryAgain": "Reintentar",
-      "copyTraceId": "Copiar ID de traza",
-      "copied": "¡Copiado!"
     }
   },
   "docs": {
@@ -2775,42 +2684,6 @@
         "backToIntegrations": "Volver a integraciones"
       }
     }
-  },
-  "demoQuery": {
-    "title": "Demostración en vivo",
-    "subtitle": "Experimente el pipeline de recuperación de Seizn con trazabilidad completa y transparencia de costos.",
-    "tryItNow": "Pruébelo ahora - Sin registro",
-    "queryPlaceholder": "Consulta de búsqueda",
-    "runDemo": "Ejecutar demo",
-    "running": "Ejecutando...",
-    "results": "Resultados",
-    "trace": "Traza",
-    "cost": "Costo",
-    "noResults": "Ejecute la demo para ver resultados",
-    "errorTitle": "Error",
-    "rateLimitError": "Límite de tasa excedido. Por favor espere.",
-    "retryIn": "Reintentar en",
-    "seconds": "segundos",
-    "score": "Puntuación",
-    "rerankScore": "Reranking",
-    "latency": "Latencia",
-    "tokens": "Tokens",
-    "cached": "en caché",
-    "model": "Modelo",
-    "input": "Entrada",
-    "output": "Salida",
-    "costBreakdown": "Desglose",
-    "total": "Costo total",
-    "embedding": "Embedding",
-    "vectorSearch": "Búsqueda vectorial",
-    "rerank": "Reranking",
-    "answerContract": "Contrato de respuesta",
-    "tokensIn": "Tokens de entrada",
-    "tokensOut": "Tokens de salida",
-    "queryUnits": "Unidades de consulta",
-    "prefilledQueries": [
-      "Probar ejemplos"
-    ]
   },
   "publicTrace": {
     "title": "Traza compartida",
