@@ -310,11 +310,9 @@
       "settings": "การตั้งค่า",
       "groups": {
         "memory": "NPC MEMORY",
-        "observe": "การเฝ้าระวัง",
-        "govern": "POLICIES",
-        "finops": "USAGE & COST",
-        "connect": "INTEGRATE",
-        "system": "WORKSPACE"
+        "system": "WORKSPACE",
+        "build": "พัฒนา",
+        "integrate": "เชื่อมต่อ"
       }
     },
     "pinSidebar": "ปักหมุดแถบด้านข้าง",

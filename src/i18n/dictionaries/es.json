@@ -310,11 +310,9 @@
       "settings": "Configuración",
       "groups": {
         "memory": "MEMORIA NPC",
-        "observe": "OBSERVAR",
-        "govern": "POLÍTICAS",
-        "finops": "USO Y COSTE",
-        "connect": "INTEGRAR",
-        "system": "ESPACIO DE TRABAJO"
+        "system": "ESPACIO DE TRABAJO",
+        "build": "Construir",
+        "integrate": "Integrar"
       }
     },
     "pinSidebar": "Fijar barra lateral",

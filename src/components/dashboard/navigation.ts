@@ -7,9 +7,8 @@
 
 import {
   HomeIcon, BrainIcon, MapIcon, InboxIcon, TerminalIcon, PlayIcon,
-  FlaskIcon, AnalyticsIcon, ShieldIcon, LockIcon, ShieldCheckIcon,
-  BuildingIcon, ChartIcon, WalletIcon, FileTextIcon, CalculatorIcon,
   KeyIcon, PlugIcon, WebhookIcon, BookIcon, UsersIcon, SettingsIcon,
+  ChartIcon,
 } from "./dashboard-icons";
 
 // =============================================================================
@@ -81,44 +80,21 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
       ],
     },
     {
-      key: "observe",
-      label: t("dashboard.nav.groups.observe"),
+      key: "build",
+      label: t("dashboard.nav.groups.build"),
       defaultOpen: true,
       items: [
         { label: t("dashboard.nav.devTools"), href: "/dashboard/devtools", icon: TerminalIcon },
         { label: t("dashboard.nav.playground"), href: "/dashboard/playground", icon: PlayIcon },
-        { label: t("dashboard.nav.evals"), href: "/dashboard/evals", icon: FlaskIcon },
-        { label: t("dashboard.nav.analytics"), href: "/dashboard/analytics", icon: AnalyticsIcon },
+        { label: t("dashboard.nav.apiKeys"), href: "/dashboard/keys", icon: KeyIcon },
       ],
     },
     {
-      key: "govern",
-      label: t("dashboard.nav.groups.govern"),
-      defaultOpen: true,
-      items: [
-        { label: t("dashboard.nav.governance"), href: "/dashboard/governance", icon: ShieldIcon },
-        { label: t("dashboard.nav.privacy"), href: "/dashboard/privacy", icon: LockIcon },
-        { label: t("dashboard.nav.security"), href: "/dashboard/security", icon: ShieldCheckIcon },
-        { label: t("dashboard.nav.enterprise"), href: "/dashboard/enterprise", icon: BuildingIcon },
-      ],
-    },
-    {
-      key: "finops",
-      label: t("dashboard.nav.groups.finops"),
+      key: "integrate",
+      label: t("dashboard.nav.groups.integrate"),
       defaultOpen: false,
       items: [
         { label: t("dashboard.nav.usage"), href: "/dashboard/usage", icon: ChartIcon },
-        { label: t("dashboard.nav.budget"), href: "/dashboard/budget", icon: WalletIcon },
-        { label: t("dashboard.nav.reports"), href: "/dashboard/reports", icon: FileTextIcon },
-        { label: t("dashboard.nav.calculator"), href: "/dashboard/calculator", icon: CalculatorIcon },
-      ],
-    },
-    {
-      key: "connect",
-      label: t("dashboard.nav.groups.connect"),
-      defaultOpen: false,
-      items: [
-        { label: t("dashboard.nav.apiKeys"), href: "/dashboard/keys", icon: KeyIcon },
         { label: t("dashboard.nav.integrations"), href: "/dashboard/integrations", icon: PlugIcon },
         { label: t("dashboard.nav.webhooks"), href: "/dashboard/webhooks", icon: WebhookIcon },
         { label: t("dashboard.nav.docs"), href: "/docs", icon: BookIcon },

@@ -379,11 +379,9 @@
       "settings": "設定",
       "groups": {
         "memory": "記憶",
-        "observe": "監控",
-        "govern": "治理",
-        "finops": "費用管理",
-        "connect": "連接",
-        "system": "系統"
+        "system": "系統",
+        "build": "開發",
+        "integrate": "整合"
       }
     },
     "pinSidebar": "固定側邊欄",
