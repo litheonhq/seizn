@@ -228,11 +228,11 @@
     },
     "topBar": {
       "personal": "개인 계정",
-      "manageOrgs": "조직 관리",
+      "manageOrgs": "프로젝트 관리",
       "create": "새로 만들기",
       "createApiKey": "새 API 키",
-      "createOrg": "새 조직",
-      "switchOrg": "조직 전환"
+      "createOrg": "새 프로젝트",
+      "switchOrg": "프로젝트 전환"
     },
     "commandPalette": {
       "title": "명령 팔레트",
@@ -276,7 +276,7 @@
     "pinSidebar": "사이드바 고정",
     "unpinSidebar": "사이드바 접기",
     "stats": {
-      "memories": "메모리",
+      "memories": "엔터티",
       "apiCalls": "오늘 API 호출",
       "plan": "현재 요금제",
       "unlimited": "무제한"
@@ -289,12 +289,12 @@
       "steps": {
         "apiKey": {
           "title": "API 키 생성",
-          "description": "첫 번째 API 키를 생성하여 요청 인증하기",
+          "description": "게임 런타임 요청용 API 키를 만드세요",
           "action": "키 생성"
         },
         "demoQuery": {
-          "title": "첫 쿼리 실행",
-          "description": "데모 쿼리를 시도하거나 API 요청 보내기",
+          "title": "NPC 컨텍스트 쿼리",
+          "description": "데모 NPC 쿼리를 실행하거나 첫 요청을 보내세요",
           "action": "데모 시도"
         },
         "viewTrace": {
@@ -346,7 +346,7 @@
         },
         "stats": {
           "title": "사용량 통계",
-          "description": "메모리 사용량과 API 호출을 실시간으로 모니터링하세요."
+          "description": "API 사용량, 저장된 엔터티, 현재 플랜을 모니터링하세요."
         },
         "quickStart": {
           "title": "빠른 시작 가이드",
@@ -404,7 +404,7 @@
       "errorRate": "오류율",
       "noUsageData": "사용량 데이터가 없습니다",
       "noUsageTitle": "아직 사용량 데이터가 없습니다",
-      "noUsageDescription": "첫 API 요청을 보내면 5초 내로 사용량 분석이 표시됩니다.",
+      "noUsageDescription": "첫 NPC 메모리 요청을 보내 사용량 분석을 확인하세요. 데이터는 5초 안에 표시됩니다.",
       "noUsageExpected": "예상: 호출 수, 토큰, 비용, 지연시간 분석",
       "getApiKey": "API 키 발급",
       "viewDocs": "문서 보기",
@@ -422,7 +422,7 @@
       "title": "디버그 콘솔",
       "subtitle": "전체 추적 및 파라미터 튜닝으로 쿼리 테스트",
       "queryBuilder": "쿼리 빌더",
-      "queryPlaceholder": "검색 쿼리를 입력하세요...",
+      "queryPlaceholder": "NPC가 무엇을 기억해야 하는지 물어보세요...",
       "namespace": "네임스페이스",
       "namespacePlaceholder": "default",
       "topK": "상위 K",
@@ -437,12 +437,12 @@
       "results": "결과",
       "trace": "추적",
       "cost": "비용",
-      "noResults": "쿼리를 실행하여 결과 확인",
+      "noResults": "결과를 보려면 NPC 컨텍스트를 쿼리하세요",
       "similarity": "유사도",
       "memoryType": "유형",
       "rerankScore": "재순위 점수",
       "traceTimeline": "추적 타임라인",
-      "noTrace": "쿼리를 실행하여 추적 확인",
+      "noTrace": "트레이스를 보려면 NPC 컨텍스트를 쿼리하세요",
       "step": "단계",
       "completed": "완료",
       "pending": "대기",
@@ -457,7 +457,7 @@
         "returnResults": "결과 반환"
       },
       "costBreakdown": "비용 분석",
-      "noCost": "쿼리를 실행하여 비용 분석 확인",
+      "noCost": "비용 내역을 보려면 NPC 컨텍스트를 쿼리하세요",
       "component": "구성 요소",
       "embedding": "임베딩",
       "search": "검색",
@@ -507,7 +507,7 @@
     },
     "settingsPage": {
       "title": "설정",
-      "subtitle": "프로필 및 환경설정",
+      "subtitle": "워크스페이스, 프로필, 게임 런타임 환경설정",
       "saving": "저장 중...",
       "saved": "저장됨",
       "saveFailed": "저장 실패",
@@ -528,7 +528,7 @@
       },
       "budget": {
         "title": "예산 설정",
-        "subtitle": "지출 한도 및 알림 설정",
+        "subtitle": "게임 런타임의 요청 예산과 알림을 설정하세요",
         "dailyLimit": "일일 한도",
         "monthlyLimit": "월별 한도",
         "perQueryMax": "쿼리당 최대",
@@ -548,7 +548,7 @@
       },
       "notifications": {
         "title": "알림 설정",
-        "subtitle": "알림 수신 방법 설정",
+        "subtitle": "사용량, 인시던트, 메모리 파이프라인 변경 알림을 설정하세요",
         "emailAlerts": "이메일 알림",
         "emailAlertsDesc": "중요 알림을 이메일로 수신",
         "usageAlerts": "사용량 알림",
@@ -564,7 +564,7 @@
       },
       "security": {
         "title": "보안 설정",
-        "subtitle": "계정 보안 관리",
+        "subtitle": "계정 및 API 접근 보안을 관리하세요",
         "changePassword": "비밀번호 변경",
         "passwordDesc": "비밀번호 보안 관리",
         "save": "변경사항 저장",
@@ -659,7 +659,7 @@
       "last10Requests": "최근 10개 API 요청",
       "viewAllActivity": "전체 보기",
       "noActivityYet": "아직 API 활동이 없습니다",
-      "noActivityDescription": "첫 번째 API 요청을 보내면 여기에 활동이 표시됩니다",
+      "noActivityDescription": "첫 NPC 메모리 요청을 보내 활동을 확인하세요",
       "sendFirstRequest": "첫 요청 보내기"
     },
     "activity": {
@@ -947,7 +947,7 @@
       "createNewKey": "새 키 생성",
       "activeKeys": "활성 키",
       "noKeysTitle": "API 키가 없습니다",
-      "noKeysDesc": "첫 API 키를 생성하여 Seizn 연동을 시작하세요",
+      "noKeysDesc": "게임 클라이언트 또는 서버 통합용 키를 만드세요.",
       "createApiKey": "API 키 생성",
       "name": "이름",
       "keyColumn": "키",
@@ -977,7 +977,7 @@
       "createKeyTitle": "API 키 생성",
       "createKeyDesc": "키에 설명적인 이름을 지정하세요",
       "keyName": "키 이름",
-      "keyNamePlaceholder": "예: 프로덕션, 개발, 테스트",
+      "keyNamePlaceholder": "예: Unity 프로덕션, Unreal 개발, QA 서버",
       "cancel": "취소",
       "creating": "생성 중...",
       "createKey": "키 생성"
@@ -985,17 +985,17 @@
     "organizationsPage": {
       "title": "조직",
       "subtitle": "팀을 관리하고 다른 사람들과 협업하세요",
-      "newOrganization": "새 조직",
-      "noOrgsTitle": "조직이 없습니다",
-      "noOrgsDesc": "첫 조직을 생성하여 팀과 협업을 시작하세요",
-      "createOrganization": "조직 생성",
+      "newOrganization": "새 프로젝트",
+      "noOrgsTitle": "아직 프로젝트가 없습니다",
+      "noOrgsDesc": "게임 타이틀 프로젝트를 만들어 팀과 협업하고 공유 Seizn 리소스를 관리하세요",
+      "createOrganization": "프로젝트 만들기",
       "created": "생성일",
       "plan": "플랜",
       "freePlan": "무료",
-      "createOrgTitle": "조직 생성",
-      "createOrgDesc": "새로운 팀 워크스페이스 설정",
-      "orgName": "조직 이름",
-      "orgNamePlaceholder": "예: 우리회사",
+      "createOrgTitle": "프로젝트 만들기",
+      "createOrgDesc": "하나의 게임 타이틀을 위한 워크스페이스를 설정하세요",
+      "orgName": "프로젝트 이름",
+      "orgNamePlaceholder": "예: Neon Village",
       "urlSlug": "URL 슬러그",
       "urlSlugPlaceholder": "my-company",
       "cancel": "취소",
@@ -1086,10 +1086,10 @@
       "sortOldest": "오래된순",
       "sortRelevance": "관련도순",
       "activeFilters": "활성 필터",
-      "loading": "메모리 로딩 중...",
+      "loading": "엔터티 로딩 중...",
       "noMemories": "메모리를 찾을 수 없습니다",
       "noMatchingMemories": "필터 또는 검색어를 조정해 보세요",
-      "noMemoriesHint": "API로 메모리를 추가하면 여기에 표시됩니다",
+      "noMemoriesHint": "API로 NPC, 팩션, 이벤트를 만들어 여기에 표시하세요",
       "match": "일치",
       "loadMore": "더 보기",
       "export": "내보내기",
@@ -1465,6 +1465,9 @@
         "note3": "감사 로그는 규정 준수를 위해 보존해야 합니다",
         "note4": "삭제 인증서는 암호화된 증명을 제공합니다"
       }
+    },
+    "northStar": {
+      "subtitle": "NPC 메모리 신뢰성 핵심 지표"
     }
   },
   "pricingPage": {

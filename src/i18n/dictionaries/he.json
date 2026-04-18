@@ -216,7 +216,7 @@
     "settings": "הגדרות",
     "signOut": "התנתק",
     "stats": {
-      "memories": "זיכרונות",
+      "memories": "ישויות",
       "apiCalls": "קריאות API היום",
       "plan": "תוכנית נוכחית",
       "unlimited": "ללא הגבלה"
@@ -271,7 +271,7 @@
       "tabLatency": "זמן אחזור",
       "tabErrors": "שגיאות",
       "noUsageTitle": "אין נתוני שימוש עדיין",
-      "noUsageDescription": "שלח את בקשת ה-API הראשונה שלך כדי לראות ניתוח שימוש. הנתונים יופיעו כאן תוך 5 שניות.",
+      "noUsageDescription": "שלחו את בקשת זיכרון ה-NPC הראשונה כדי לראות ניתוח שימוש. הנתונים יופיעו תוך 5 שניות.",
       "noUsageExpected": "צפוי: קריאות, טוקנים, עלות ופירוט זמן אחזור",
       "getApiKey": "קבל מפתח API",
       "viewDocs": "צפה בתיעוד",
@@ -322,7 +322,7 @@
       "title": "קונסולת ניפוי באגים",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "שאלו מה NPC צריך לזכור...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -333,7 +333,7 @@
       "runQuery": "הרץ שאילתה",
       "running": "מריץ...",
       "results": "תוצאות",
-      "noResults": "No results found",
+      "noResults": "בצעו שאילתת הקשר NPC כדי לראות תוצאות",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -402,13 +402,13 @@
       "memoryType": "סוג",
       "rerankScore": "ציון סידור מחדש",
       "traceTimeline": "ציר זמן מעקב",
-      "noTrace": "הרץ שאילתה כדי לראות מעקב",
+      "noTrace": "בצעו שאילתת הקשר NPC כדי לראות trace",
       "step": "שלב",
       "completed": "הושלם",
       "pending": "ממתין",
       "error": "שגיאה",
       "costBreakdown": "פירוט עלויות",
-      "noCost": "הרץ שאילתה כדי לראות פירוט עלויות",
+      "noCost": "בצעו שאילתת הקשר NPC כדי לראות פירוט עלויות",
       "component": "רכיב",
       "search": "חיפוש",
       "total": "סה\"כ",
@@ -433,7 +433,7 @@
     },
     "settingsPage": {
       "title": "הגדרות",
-      "subtitle": "פרופיל והעדפות",
+      "subtitle": "העדפות workspace, פרופיל ו-runtime של המשחק",
       "saving": "שומר...",
       "saved": "נשמר",
       "saveFailed": "השמירה נכשלה",
@@ -469,7 +469,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "הגדר מגבלות הוצאה ותראות",
+        "subtitle": "הגדירו תקציבי בקשות והתראות ל-runtimes של משחקים",
         "perQueryMax": "מקסימום לכל שאילתה",
         "alertThresholdDesc": "קבל התראה כאשר השימוש מגיע לאחוז זה",
         "budgetMode": "מצב תקציב",
@@ -501,7 +501,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "קבע כיצד אתה מקבל התראות",
+        "subtitle": "הגדירו התראות שימוש, אירועים ושינויים בצינור הזיכרון",
         "emailAlerts": "התראות אימייל",
         "emailAlertsDesc": "קבל התראות חשובות באימייל",
         "usageAlerts": "התראות שימוש",
@@ -541,7 +541,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "נהל את אבטחת החשבון שלך",
+        "subtitle": "נהלו אבטחת חשבון וגישה ל-API",
         "save": "שמור שינויים",
         "updatePassword": "עדכן סיסמה",
         "twoFactorDesc": "הוסף שכבת אבטחה נוספת",
@@ -630,7 +630,7 @@
       "last10Requests": "10 בקשות API אחרונות",
       "viewAllActivity": "צפה בהכל",
       "noActivityYet": "אין פעילות API עדיין",
-      "noActivityDescription": "שלח את בקשת ה-API הראשונה שלך כדי לראות פעילות כאן",
+      "noActivityDescription": "שלחו את בקשת זיכרון ה-NPC הראשונה כדי לראות פעילות",
       "sendFirstRequest": "שלח בקשה ראשונה"
     },
     "keysPage": {
@@ -639,7 +639,7 @@
       "createNewKey": "צור מפתח חדש",
       "activeKeys": "מפתחות פעילים",
       "noKeysTitle": "אין עדיין מפתחות API",
-      "noKeysDesc": "צור את מפתח ה-API הראשון שלך כדי להתחיל לעבוד עם Seizn",
+      "noKeysDesc": "צרו מפתח לאינטגרציית לקוח או שרת המשחק.",
       "createApiKey": "צור מפתח API",
       "created": "נוצר",
       "neverUsed": "לא נעשה שימוש",
@@ -658,7 +658,7 @@
       "createKeyTitle": "צור מפתח API",
       "createKeyDesc": "תן למפתח שלך שם תיאורי",
       "keyName": "שם מפתח",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "לדוגמה: Unity production, Unreal dev, QA server",
       "cancel": "ביטול",
       "creating": "יוצר...",
       "createKey": "צור מפתח",
@@ -677,17 +677,17 @@
     "organizationsPage": {
       "title": "ארגונים",
       "subtitle": "נהל את הצוותים שלך ושתף פעולה עם אחרים",
-      "newOrganization": "ארגון חדש",
-      "noOrgsTitle": "אין ארגונים עדיין",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "צור ארגון",
+      "newOrganization": "פרויקט חדש",
+      "noOrgsTitle": "אין עדיין פרויקטים",
+      "noOrgsDesc": "צרו פרויקט לכותר משחק כדי לשתף פעולה עם הצוות ולנהל משאבי Seizn משותפים",
+      "createOrganization": "צור פרויקט",
       "created": "נוצר",
       "plan": "תוכנית",
       "freePlan": "חינם",
-      "createOrgTitle": "צור ארגון",
-      "createOrgDesc": "הגדר סביבת עבודה צוותית חדשה",
-      "orgName": "שם הארגון",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "צור פרויקט",
+      "createOrgDesc": "הגדירו workspace לכותר משחק אחד",
+      "orgName": "שם הפרויקט",
+      "orgNamePlaceholder": "לדוגמה: Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "ביטול",
@@ -716,12 +716,12 @@
       "steps": {
         "apiKey": {
           "title": "צור מפתח API",
-          "description": "צור את מפתח ה-API הראשון שלך לאימות בקשות",
+          "description": "צרו מפתח API לבקשות runtime של המשחק",
           "action": "צור מפתח"
         },
         "demoQuery": {
-          "title": "בצע את השאילתה הראשונה שלך",
-          "description": "נסה את שאילתת ההדגמה או בצע בקשת API",
+          "title": "שאילתת הקשר NPC",
+          "description": "נסו שאילתת NPC לדוגמה או שלחו את הבקשה הראשונה",
           "action": "נסה הדגמה"
         },
         "viewTrace": {
@@ -765,7 +765,7 @@
         },
         "stats": {
           "title": "הסטטיסטיקות שלך",
-          "description": "עקוב אחר שימוש ב-API, זיכרונות מאוחסנים ותוכנית נוכחית."
+          "description": "עקבו אחרי שימוש ב-API, ישויות שמורות והתוכנית הנוכחית."
         },
         "quickStart": {
           "title": "פעולות מהירות",
@@ -999,10 +999,10 @@
       "sortOldest": "ישנים ראשון",
       "sortRelevance": "הרלוונטיים ביותר",
       "activeFilters": "מסננים פעילים",
-      "loading": "טוען זיכרונות...",
+      "loading": "טוען ישויות...",
       "noMemories": "לא נמצאו זיכרונות",
       "noMatchingMemories": "נסה להתאים את המסננים או שאילתת החיפוש",
-      "noMemoriesHint": "התחל להוסיף זיכרונות דרך ה-API כדי לראות אותם כאן",
+      "noMemoriesHint": "צרו NPCs, פלגים או אירועים דרך ה-API כדי לראות אותם כאן",
       "match": "התאמה",
       "loadMore": "טען עוד",
       "export": "ייצוא",
@@ -1283,11 +1283,11 @@
     },
     "topBar": {
       "personal": "חשבון אישי",
-      "manageOrgs": "ניהול ארגונים",
+      "manageOrgs": "ניהול פרויקטים",
       "create": "יצירה",
       "createApiKey": "מפתח API חדש",
-      "createOrg": "ארגון חדש",
-      "switchOrg": "החלף ארגון"
+      "createOrg": "פרויקט חדש",
+      "switchOrg": "החלפת פרויקט"
     },
     "share": {
       "title": "שתף מעקב",
@@ -1560,6 +1560,9 @@
       "open": "פתח",
       "close": "סגור",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "מדדי מפתח לאמינות זיכרון NPC"
     }
   },
   "pricingPage": {

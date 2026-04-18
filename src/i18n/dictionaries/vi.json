@@ -216,7 +216,7 @@
     "settings": "Cài đặt",
     "signOut": "Đăng xuất",
     "stats": {
-      "memories": "Ký ức",
+      "memories": "Thực thể",
       "apiCalls": "Lệnh gọi API hôm nay",
       "plan": "Gói hiện tại",
       "unlimited": "Không giới hạn"
@@ -271,7 +271,7 @@
       "tabLatency": "Độ trễ",
       "tabErrors": "Lỗi",
       "noUsageTitle": "Chưa có dữ liệu sử dụng",
-      "noUsageDescription": "Gửi yêu cầu API đầu tiên của bạn để xem phân tích sử dụng. Dữ liệu sẽ xuất hiện ở đây trong vòng 5 giây.",
+      "noUsageDescription": "Gửi yêu cầu bộ nhớ NPC đầu tiên để xem phân tích sử dụng. Dữ liệu sẽ xuất hiện trong 5 giây.",
       "noUsageExpected": "Dự kiến: Lượt gọi, token, chi phí và phân tích latency",
       "getApiKey": "Lấy API Key",
       "viewDocs": "Xem Tài liệu",
@@ -322,7 +322,7 @@
       "title": "Playground",
       "subtitle": "Thử nghiệm bộ nhớ NPC — tạo thực thể, ghi sự kiện, truy vấn context lại.",
       "queryInput": "Nhap truy van",
-      "queryPlaceholder": "Nhap truy van thu nghiem...",
+      "queryPlaceholder": "Hỏi NPC nên ghi nhớ điều gì...",
       "parameters": "Tham so",
       "topK": "Top K",
       "topKHint": "So luong ket qua tra ve",
@@ -333,7 +333,7 @@
       "runQuery": "Chay truy van",
       "running": "Dang chay...",
       "results": "Ket qua",
-      "noResults": "Khong tim thay ket qua",
+      "noResults": "Truy vấn ngữ cảnh NPC để xem kết quả",
       "noResultsHint": "Dieu chinh tham so hoac thu truy van khac",
       "resultCount": "Tim thay {count} ket qua",
       "score": "Diem",
@@ -402,13 +402,13 @@
       "memoryType": "Loại",
       "rerankScore": "Điểm Rerank",
       "traceTimeline": "Timeline Trace",
-      "noTrace": "Chạy query để xem trace",
+      "noTrace": "Truy vấn ngữ cảnh NPC để xem trace",
       "step": "Bước",
       "completed": "Hoàn thành",
       "pending": "Đang chờ",
       "error": "Lỗi",
       "costBreakdown": "Phân tích Chi phí",
-      "noCost": "Chạy query để xem phân tích chi phí",
+      "noCost": "Truy vấn ngữ cảnh NPC để xem phân tích chi phí",
       "component": "Thành phần",
       "search": "Tìm kiếm",
       "total": "Tổng",
@@ -433,7 +433,7 @@
     },
     "settingsPage": {
       "title": "Cai dat",
-      "subtitle": "Ho so va tuy chon",
+      "subtitle": "Tùy chọn workspace, hồ sơ và runtime game",
       "saving": "Dang luu...",
       "saved": "Da luu",
       "saveFailed": "Luu that bai",
@@ -469,7 +469,7 @@
         "unlimited": "Khong gioi han",
         "setLimit": "Dat gioi han",
         "removeLimit": "Xoa gioi han",
-        "subtitle": "Đặt giới hạn chi tiêu và cảnh báo",
+        "subtitle": "Đặt ngân sách yêu cầu và cảnh báo cho runtime game",
         "perQueryMax": "Tối đa Mỗi Query",
         "alertThresholdDesc": "Nhận cảnh báo khi mức sử dụng đạt đến tỷ lệ phần trăm này",
         "budgetMode": "Chế độ Ngân sách",
@@ -501,7 +501,7 @@
         "allDisabled": "Tat ca thong bao da tat",
         "enableAll": "Bat tat ca",
         "disableAll": "Tat tat ca",
-        "subtitle": "Cấu hình cách bạn nhận cảnh báo",
+        "subtitle": "Cấu hình cảnh báo sử dụng, sự cố và thay đổi pipeline bộ nhớ",
         "emailAlerts": "Cảnh báo Email",
         "emailAlertsDesc": "Nhận cảnh báo quan trọng qua email",
         "usageAlerts": "Cảnh báo Sử dụng",
@@ -541,7 +541,7 @@
         "passwordTooShort": "Mat khau qua ngan",
         "apiKeysSecurity": "Bao mat khoa API",
         "apiKeysSecurityHint": "Giam sat va quan ly khoa API cua ban",
-        "subtitle": "Quản lý bảo mật tài khoản của bạn",
+        "subtitle": "Quản lý bảo mật tài khoản và truy cập API",
         "save": "Lưu Thay đổi",
         "updatePassword": "Cập nhật Mật khẩu",
         "twoFactorDesc": "Thêm lớp bảo mật bổ sung",
@@ -630,7 +630,7 @@
       "last10Requests": "10 yêu cầu API gần nhất",
       "viewAllActivity": "Xem Tất cả",
       "noActivityYet": "Chưa có hoạt động API",
-      "noActivityDescription": "Gửi yêu cầu API đầu tiên của bạn để xem hoạt động ở đây",
+      "noActivityDescription": "Gửi yêu cầu bộ nhớ NPC đầu tiên để xem hoạt động",
       "sendFirstRequest": "Gửi Yêu cầu Đầu tiên"
     },
     "keysPage": {
@@ -639,7 +639,7 @@
       "createNewKey": "Tạo khóa mới",
       "activeKeys": "Khóa đang hoạt động",
       "noKeysTitle": "Chưa có khóa API",
-      "noKeysDesc": "Tạo khóa API đầu tiên để bắt đầu tích hợp với Seizn",
+      "noKeysDesc": "Tạo khóa cho tích hợp client hoặc server game của bạn.",
       "createApiKey": "Tạo khóa API",
       "created": "Đã tạo",
       "neverUsed": "Chưa từng sử dụng",
@@ -658,7 +658,7 @@
       "createKeyTitle": "Tạo khóa API",
       "createKeyDesc": "Đặt tên mô tả cho khóa của bạn",
       "keyName": "Tên khóa",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "vd: Unity production, Unreal dev, QA server",
       "cancel": "Hủy",
       "creating": "Đang tạo...",
       "createKey": "Tạo khóa",
@@ -677,17 +677,17 @@
     "organizationsPage": {
       "title": "Dự án",
       "subtitle": "Quản lý dự án tựa game và cộng tác nhóm.",
-      "newOrganization": "Tổ chức mới",
-      "noOrgsTitle": "Chưa có tổ chức",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Tạo tổ chức",
+      "newOrganization": "Dự án mới",
+      "noOrgsTitle": "Chưa có dự án",
+      "noOrgsDesc": "Tạo dự án cho một tựa game để cộng tác với đội ngũ và quản lý tài nguyên Seizn dùng chung",
+      "createOrganization": "Tạo dự án",
       "created": "Đã tạo",
       "plan": "Gói",
       "freePlan": "Miễn phí",
-      "createOrgTitle": "Tạo tổ chức",
-      "createOrgDesc": "Thiết lập không gian làm việc nhóm mới",
-      "orgName": "Tên tổ chức",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Tạo dự án",
+      "createOrgDesc": "Thiết lập workspace cho một tựa game",
+      "orgName": "Tên dự án",
+      "orgNamePlaceholder": "vd: Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Hủy",
@@ -716,12 +716,12 @@
       "steps": {
         "apiKey": {
           "title": "Tạo khóa API",
-          "description": "Tạo khóa API đầu tiên để xác thực yêu cầu",
+          "description": "Tạo khóa API cho yêu cầu runtime của game",
           "action": "Tạo khóa"
         },
         "demoQuery": {
-          "title": "Thực hiện truy vấn đầu tiên",
-          "description": "Thử truy vấn demo hoặc thực hiện yêu cầu API",
+          "title": "Truy vấn ngữ cảnh NPC",
+          "description": "Thử truy vấn NPC demo hoặc gửi yêu cầu đầu tiên",
           "action": "Thử demo"
         },
         "viewTrace": {
@@ -765,7 +765,7 @@
         },
         "stats": {
           "title": "Thống kê của Bạn",
-          "description": "Theo dõi việc sử dụng API, bộ nhớ đã lưu trữ và gói hiện tại của bạn."
+          "description": "Theo dõi mức dùng API, thực thể đã lưu và gói hiện tại."
         },
         "quickStart": {
           "title": "Thao tác Nhanh",
@@ -901,10 +901,10 @@
       "sortOldest": "Cũ nhất trước",
       "sortRelevance": "Liên quan nhất",
       "activeFilters": "Bộ lọc đang áp dụng",
-      "loading": "Đang tải ký ức...",
+      "loading": "Đang tải thực thể...",
       "noMemories": "Chưa có thực thể",
       "noMatchingMemories": "Không có thực thể nào khớp với bộ lọc của bạn",
-      "noMemoriesHint": "Bắt đầu thêm bộ nhớ qua API để xem chúng ở đây",
+      "noMemoriesHint": "Tạo NPC, phe phái hoặc sự kiện qua API để xem tại đây",
       "match": "khớp",
       "loadMore": "Tải thêm",
       "export": "Xuất",
@@ -1283,11 +1283,11 @@
     },
     "topBar": {
       "personal": "Tài khoản Cá nhân",
-      "manageOrgs": "Quản lý Tổ chức",
+      "manageOrgs": "Quản lý dự án",
       "create": "Tạo",
       "createApiKey": "API Key Mới",
-      "createOrg": "Tổ chức Mới",
-      "switchOrg": "Chuyển tổ chức"
+      "createOrg": "Dự án mới",
+      "switchOrg": "Chuyển dự án"
     },
     "share": {
       "title": "Chia sẻ Trace",
@@ -1560,6 +1560,9 @@
       "open": "Mở",
       "close": "Đóng",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Chỉ báo chính về độ tin cậy bộ nhớ NPC"
     }
   },
   "pricingPage": {

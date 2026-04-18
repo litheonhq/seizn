@@ -216,7 +216,7 @@
     "settings": "การตั้งค่า",
     "signOut": "ออกจากระบบ",
     "stats": {
-      "memories": "ความทรงจำ",
+      "memories": "เอนทิตี",
       "apiCalls": "การเรียก API วันนี้",
       "plan": "แผนปัจจุบัน",
       "unlimited": "ไม่จำกัด"
@@ -271,7 +271,7 @@
       "tabLatency": "เวลาแฝง",
       "tabErrors": "ข้อผิดพลาด",
       "noUsageTitle": "ยังไม่มีข้อมูลการใช้งาน",
-      "noUsageDescription": "ส่งคำขอ API แรกของคุณเพื่อดูการวิเคราะห์การใช้งาน ข้อมูลจะปรากฏที่นี่ภายใน 5 วินาที",
+      "noUsageDescription": "ส่งคำขอหน่วยความจำ NPC ครั้งแรกเพื่อดูการวิเคราะห์การใช้งาน ข้อมูลจะปรากฏภายใน 5 วินาที",
       "noUsageExpected": "คาดหวัง: การเรียก, โทเค็น, ค่าใช้จ่าย และรายละเอียด latency",
       "getApiKey": "รับ API Key",
       "viewDocs": "ดูเอกสาร",
@@ -322,7 +322,7 @@
       "title": "Playground",
       "subtitle": "ทดสอบ NPC memory — สร้างเอนทิตี, บันทึก event, ดึง context กลับ",
       "queryInput": "ป้อนคำค้นหา",
-      "queryPlaceholder": "ป้อนคำค้นหาทดสอบ...",
+      "queryPlaceholder": "ถามว่า NPC ควรจำอะไร...",
       "parameters": "พารามิเตอร์",
       "topK": "Top K",
       "topKHint": "จำนวนผลลัพธ์ที่ส่งคืน",
@@ -333,7 +333,7 @@
       "runQuery": "รันคำค้นหา",
       "running": "กำลังรัน...",
       "results": "ผลลัพธ์",
-      "noResults": "ไม่พบผลลัพธ์",
+      "noResults": "สอบถามบริบท NPC เพื่อดูผลลัพธ์",
       "noResultsHint": "ปรับพารามิเตอร์หรือลองคำค้นหาอื่น",
       "resultCount": "พบ {count} ผลลัพธ์",
       "score": "คะแนน",
@@ -402,13 +402,13 @@
       "memoryType": "ประเภท",
       "rerankScore": "คะแนน Rerank",
       "traceTimeline": "ไทม์ไลน์ Trace",
-      "noTrace": "รันคิวรีเพื่อดู trace",
+      "noTrace": "สอบถามบริบท NPC เพื่อดู trace",
       "step": "ขั้นตอน",
       "completed": "เสร็จสิ้น",
       "pending": "รอดำเนินการ",
       "error": "ข้อผิดพลาด",
       "costBreakdown": "รายละเอียดค่าใช้จ่าย",
-      "noCost": "รันคิวรีเพื่อดูรายละเอียดค่าใช้จ่าย",
+      "noCost": "สอบถามบริบท NPC เพื่อดูรายละเอียดค่าใช้จ่าย",
       "component": "ส่วนประกอบ",
       "search": "ค้นหา",
       "total": "รวม",
@@ -433,7 +433,7 @@
     },
     "settingsPage": {
       "title": "การตั้งค่า",
-      "subtitle": "โปรไฟล์และตัวเลือก",
+      "subtitle": "ค่ากำหนด workspace โปรไฟล์ และรันไทม์เกม",
       "saving": "กำลังบันทึก...",
       "saved": "บันทึกแล้ว",
       "saveFailed": "บันทึกล้มเหลว",
@@ -469,7 +469,7 @@
         "unlimited": "ไม่จำกัด",
         "setLimit": "ตั้งขีดจำกัด",
         "removeLimit": "ลบขีดจำกัด",
-        "subtitle": "ตั้งค่าขอบเขตการใช้จ่ายและการแจ้งเตือน",
+        "subtitle": "ตั้งค่างบประมาณคำขอและการแจ้งเตือนสำหรับรันไทม์เกม",
         "perQueryMax": "สูงสุดต่อคิวรี",
         "alertThresholdDesc": "รับการแจ้งเตือนเมื่อการใช้งานถึงเปอร์เซ็นต์นี้",
         "budgetMode": "โหมดงบประมาณ",
@@ -501,7 +501,7 @@
         "allDisabled": "ปิดการแจ้งเตือนทั้งหมดแล้ว",
         "enableAll": "เปิดทั้งหมด",
         "disableAll": "ปิดทั้งหมด",
-        "subtitle": "กำหนดค่าวิธีรับการแจ้งเตือน",
+        "subtitle": "ตั้งค่าการแจ้งเตือนการใช้งาน เหตุการณ์ และการเปลี่ยนแปลง pipeline หน่วยความจำ",
         "emailAlerts": "การแจ้งเตือนทางอีเมล",
         "emailAlertsDesc": "รับการแจ้งเตือนสำคัญทางอีเมล",
         "usageAlerts": "การแจ้งเตือนการใช้งาน",
@@ -541,7 +541,7 @@
         "passwordTooShort": "รหัสผ่านสั้นเกินไป",
         "apiKeysSecurity": "ความปลอดภัยคีย์ API",
         "apiKeysSecurityHint": "ตรวจสอบและจัดการคีย์ API ของคุณ",
-        "subtitle": "จัดการความปลอดภัยบัญชีของคุณ",
+        "subtitle": "จัดการความปลอดภัยของบัญชีและการเข้าถึง API",
         "save": "บันทึกการเปลี่ยนแปลง",
         "updatePassword": "อัปเดตรหัสผ่าน",
         "twoFactorDesc": "เพิ่มชั้นความปลอดภัยเพิ่มเติม",
@@ -630,7 +630,7 @@
       "last10Requests": "คำขอ API 10 รายการล่าสุด",
       "viewAllActivity": "ดูทั้งหมด",
       "noActivityYet": "ยังไม่มีกิจกรรม API",
-      "noActivityDescription": "ส่งคำขอ API แรกของคุณเพื่อดูกิจกรรมที่นี่",
+      "noActivityDescription": "ส่งคำขอหน่วยความจำ NPC ครั้งแรกเพื่อดูกิจกรรม",
       "sendFirstRequest": "ส่งคำขอแรก"
     },
     "keysPage": {
@@ -639,7 +639,7 @@
       "createNewKey": "สร้างคีย์ใหม่",
       "activeKeys": "คีย์ที่ใช้งานอยู่",
       "noKeysTitle": "ยังไม่มีคีย์ API",
-      "noKeysDesc": "สร้างคีย์ API แรกของคุณเพื่อเริ่มผสานรวมกับ Seizn",
+      "noKeysDesc": "สร้างคีย์สำหรับการผสานรวมไคลเอนต์หรือเซิร์ฟเวอร์เกมของคุณ",
       "createApiKey": "สร้างคีย์ API",
       "created": "สร้างแล้ว",
       "neverUsed": "ไม่เคยใช้",
@@ -658,7 +658,7 @@
       "createKeyTitle": "สร้างคีย์ API",
       "createKeyDesc": "ตั้งชื่อที่สื่อความหมายให้กับคีย์ของคุณ",
       "keyName": "ชื่อคีย์",
-      "keyNamePlaceholder": "เช่น Production, Development, Testing",
+      "keyNamePlaceholder": "เช่น Unity production, Unreal dev, QA server",
       "cancel": "ยกเลิก",
       "creating": "กำลังสร้าง...",
       "createKey": "สร้างคีย์",
@@ -677,17 +677,17 @@
     "organizationsPage": {
       "title": "โปรเจกต์",
       "subtitle": "จัดการโปรเจกต์ชื่อเกมและการทำงานร่วมกับทีม",
-      "newOrganization": "องค์กรใหม่",
-      "noOrgsTitle": "ยังไม่มีองค์กร",
-      "noOrgsDesc": "สร้างองค์กรแรกของคุณเพื่อเริ่มทำงานร่วมกับทีม",
-      "createOrganization": "สร้างองค์กร",
+      "newOrganization": "โปรเจ็กต์ใหม่",
+      "noOrgsTitle": "ยังไม่มีโปรเจ็กต์",
+      "noOrgsDesc": "สร้างโปรเจ็กต์สำหรับชื่อเกมเพื่อร่วมงานกับทีมและจัดการทรัพยากร Seizn ที่ใช้ร่วมกัน",
+      "createOrganization": "สร้างโปรเจ็กต์",
       "created": "สร้างแล้ว",
       "plan": "แผน",
       "freePlan": "ฟรี",
-      "createOrgTitle": "สร้างองค์กร",
-      "createOrgDesc": "ตั้งค่าพื้นที่ทำงานทีมใหม่",
-      "orgName": "ชื่อองค์กร",
-      "orgNamePlaceholder": "บริษัท Acme",
+      "createOrgTitle": "สร้างโปรเจ็กต์",
+      "createOrgDesc": "ตั้งค่า workspace สำหรับชื่อเกมหนึ่งรายการ",
+      "orgName": "ชื่อโปรเจ็กต์",
+      "orgNamePlaceholder": "เช่น Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "ยกเลิก",
@@ -716,12 +716,12 @@
       "steps": {
         "apiKey": {
           "title": "สร้างคีย์ API",
-          "description": "สร้างคีย์ API แรกเพื่อยืนยันคำขอ",
+          "description": "สร้างคีย์ API สำหรับคำขอจากรันไทม์เกม",
           "action": "สร้างคีย์"
         },
         "demoQuery": {
-          "title": "ทำคำค้นหาแรก",
-          "description": "ลองคำค้นหาสาธิตหรือทำคำขอ API",
+          "title": "สอบถามบริบท NPC",
+          "description": "ลองคิวรี NPC ตัวอย่างหรือส่งคำขอแรกของคุณ",
           "action": "ลองสาธิต"
         },
         "viewTrace": {
@@ -765,7 +765,7 @@
         },
         "stats": {
           "title": "สถิติของคุณ",
-          "description": "ติดตามการใช้งาน API, หน่วยความจำที่เก็บไว้ และแผนปัจจุบันของคุณ"
+          "description": "ติดตามการใช้งาน API เอนทิตีที่บันทึกไว้ และแพ็กเกจปัจจุบัน"
         },
         "quickStart": {
           "title": "การดำเนินการด่วน",
@@ -931,10 +931,10 @@
       "sortOldest": "เก่าสุดก่อน",
       "sortRelevance": "เกี่ยวข้องมากที่สุด",
       "activeFilters": "ตัวกรองที่ใช้งานอยู่",
-      "loading": "กำลังโหลดความทรงจำ...",
+      "loading": "กำลังโหลดเอนทิตี...",
       "noMemories": "ยังไม่มีเอนทิตี",
       "noMatchingMemories": "ไม่มีเอนทิตีที่ตรงกับตัวกรองของคุณ",
-      "noMemoriesHint": "เริ่มเพิ่มความทรงจำผ่าน API เพื่อดูที่นี่",
+      "noMemoriesHint": "สร้าง NPC ฝ่าย หรือเหตุการณ์ผ่าน API เพื่อดูที่นี่",
       "match": "ตรงกัน",
       "loadMore": "โหลดเพิ่มเติม",
       "export": "ส่งออก",
@@ -1313,11 +1313,11 @@
     },
     "topBar": {
       "personal": "บัญชีส่วนตัว",
-      "manageOrgs": "จัดการองค์กร",
+      "manageOrgs": "จัดการโปรเจ็กต์",
       "create": "สร้าง",
       "createApiKey": "API Key ใหม่",
-      "createOrg": "องค์กรใหม่",
-      "switchOrg": "เปลี่ยนองค์กร"
+      "createOrg": "โปรเจ็กต์ใหม่",
+      "switchOrg": "สลับโปรเจ็กต์"
     },
     "share": {
       "title": "แชร์ Trace",
@@ -1560,6 +1560,9 @@
       "open": "เปิด",
       "close": "ปิด",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "ตัวชี้วัดหลักด้านความน่าเชื่อถือของหน่วยความจำ NPC"
     }
   },
   "pricingPage": {

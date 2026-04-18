@@ -216,7 +216,7 @@
     "settings": "Impostazioni",
     "signOut": "Esci",
     "stats": {
-      "memories": "Memorie",
+      "memories": "Entità",
       "apiCalls": "Chiamate API Oggi",
       "plan": "Piano Attuale",
       "unlimited": "Illimitato"
@@ -271,7 +271,7 @@
       "tabLatency": "Latenza",
       "tabErrors": "Errori",
       "noUsageTitle": "Nessun dato di utilizzo ancora",
-      "noUsageDescription": "Invia la tua prima richiesta API per vedere le analisi di utilizzo. I dati appariranno qui entro 5 secondi.",
+      "noUsageDescription": "Invia la tua prima richiesta di memoria NPC per vedere le analisi di utilizzo. I dati appariranno entro 5 secondi.",
       "noUsageExpected": "Previsto: Chiamate, token, costo e ripartizione latenza",
       "getApiKey": "Ottieni Chiave API",
       "viewDocs": "Visualizza Documenti",
@@ -322,7 +322,7 @@
       "title": "Console di debug",
       "subtitle": "Testa le tue query con tracciamento e regolazione parametri",
       "queryInput": "Input query",
-      "queryPlaceholder": "Inserisci la tua query di test...",
+      "queryPlaceholder": "Chiedi cosa dovrebbe ricordare un NPC...",
       "parameters": "Parametri",
       "topK": "Top K",
       "topKHint": "Numero di risultati da restituire",
@@ -333,7 +333,7 @@
       "runQuery": "Esegui query",
       "running": "In esecuzione...",
       "results": "Risultati",
-      "noResults": "Nessun risultato trovato",
+      "noResults": "Interroga il contesto NPC per vedere i risultati",
       "noResultsHint": "Regola i parametri o prova una query diversa",
       "resultCount": "{count} risultati trovati",
       "score": "Punteggio",
@@ -402,13 +402,13 @@
       "memoryType": "Tipo",
       "rerankScore": "Punteggio Rerank",
       "traceTimeline": "Timeline Traccia",
-      "noTrace": "Esegui una query per vedere la traccia",
+      "noTrace": "Interroga il contesto NPC per vedere la traccia",
       "step": "Passo",
       "completed": "Completato",
       "pending": "In Attesa",
       "error": "Errore",
       "costBreakdown": "Ripartizione Costi",
-      "noCost": "Esegui una query per vedere la ripartizione costi",
+      "noCost": "Interroga il contesto NPC per vedere il dettaglio dei costi",
       "component": "Componente",
       "search": "Cerca",
       "total": "Totale",
@@ -433,7 +433,7 @@
     },
     "settingsPage": {
       "title": "Impostazioni",
-      "subtitle": "Profilo e preferenze",
+      "subtitle": "Preferenze di workspace, profilo e runtime di gioco",
       "saving": "Salvataggio...",
       "saved": "Salvato",
       "saveFailed": "Salvataggio fallito",
@@ -469,7 +469,7 @@
         "unlimited": "Illimitato",
         "setLimit": "Imposta limite",
         "removeLimit": "Rimuovi limite",
-        "subtitle": "Imposta limiti di spesa e avvisi",
+        "subtitle": "Imposta budget delle richieste e avvisi per i runtime di gioco",
         "perQueryMax": "Massimo per Query",
         "alertThresholdDesc": "Ricevi un avviso quando l'utilizzo raggiunge questa percentuale",
         "budgetMode": "Modalità Budget",
@@ -501,7 +501,7 @@
         "allDisabled": "Tutte le notifiche disattivate",
         "enableAll": "Attiva tutte",
         "disableAll": "Disattiva tutte",
-        "subtitle": "Configura come ricevere gli avvisi",
+        "subtitle": "Configura avvisi su utilizzo, incidenti e cambi alla pipeline di memoria",
         "emailAlerts": "Avvisi Email",
         "emailAlertsDesc": "Ricevi avvisi importanti via email",
         "usageAlerts": "Avvisi di Utilizzo",
@@ -541,7 +541,7 @@
         "passwordTooShort": "Password troppo corta",
         "apiKeysSecurity": "Sicurezza chiavi API",
         "apiKeysSecurityHint": "Monitora e gestisci le tue chiavi API",
-        "subtitle": "Gestisci la sicurezza del tuo account",
+        "subtitle": "Gestisci sicurezza dell’account e dell’accesso API",
         "save": "Salva Modifiche",
         "updatePassword": "Aggiorna Password",
         "twoFactorDesc": "Aggiungi un ulteriore livello di sicurezza",
@@ -630,7 +630,7 @@
       "last10Requests": "Ultime 10 richieste API",
       "viewAllActivity": "Visualizza Tutto",
       "noActivityYet": "Nessuna attività API ancora",
-      "noActivityDescription": "Invia la tua prima richiesta API per vedere l'attività qui",
+      "noActivityDescription": "Invia la tua prima richiesta di memoria NPC per vedere attività",
       "sendFirstRequest": "Invia Prima Richiesta"
     },
     "keysPage": {
@@ -639,7 +639,7 @@
       "createNewKey": "Crea Nuova Chiave",
       "activeKeys": "Chiavi Attive",
       "noKeysTitle": "Nessuna chiave API",
-      "noKeysDesc": "Crea la tua prima chiave API per iniziare a integrare con Seizn",
+      "noKeysDesc": "Crea una chiave per integrare il client o il server del gioco.",
       "createApiKey": "Crea Chiave API",
       "created": "Creata",
       "neverUsed": "Mai utilizzata",
@@ -658,7 +658,7 @@
       "createKeyTitle": "Crea Chiave API",
       "createKeyDesc": "Dai alla tua chiave un nome descrittivo",
       "keyName": "Nome Chiave",
-      "keyNamePlaceholder": "es: Produzione, Sviluppo, Test",
+      "keyNamePlaceholder": "es., produzione Unity, dev Unreal, server QA",
       "cancel": "Annulla",
       "creating": "Creazione...",
       "createKey": "Crea Chiave",
@@ -677,17 +677,17 @@
     "organizationsPage": {
       "title": "Organizzazioni",
       "subtitle": "Gestisci i tuoi team e collabora con altri",
-      "newOrganization": "Nuova Organizzazione",
-      "noOrgsTitle": "Nessuna organizzazione",
-      "noOrgsDesc": "Crea la tua prima organizzazione per iniziare a collaborare",
-      "createOrganization": "Crea Organizzazione",
+      "newOrganization": "Nuovo progetto",
+      "noOrgsTitle": "Nessun progetto ancora",
+      "noOrgsDesc": "Crea un progetto per un titolo di gioco per collaborare con il team e gestire risorse Seizn condivise",
+      "createOrganization": "Crea progetto",
       "created": "Creata",
       "plan": "Piano",
       "freePlan": "Gratuito",
-      "createOrgTitle": "Crea Organizzazione",
-      "createOrgDesc": "Configura un nuovo spazio di lavoro",
-      "orgName": "Nome Organizzazione",
-      "orgNamePlaceholder": "es: La Mia Azienda",
+      "createOrgTitle": "Crea progetto",
+      "createOrgDesc": "Configura uno workspace per un titolo di gioco",
+      "orgName": "Nome progetto",
+      "orgNamePlaceholder": "es., Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "la-mia-azienda",
       "cancel": "Annulla",
@@ -716,12 +716,12 @@
       "steps": {
         "apiKey": {
           "title": "Genera chiave API",
-          "description": "Crea la tua prima chiave API per autenticare le richieste",
+          "description": "Crea una chiave API per le richieste del runtime di gioco",
           "action": "Crea chiave"
         },
         "demoQuery": {
-          "title": "Esegui la prima query",
-          "description": "Prova la query demo o invia una richiesta API",
+          "title": "Interroga il contesto NPC",
+          "description": "Prova una query NPC demo o invia la tua prima richiesta",
           "action": "Prova demo"
         },
         "viewTrace": {
@@ -765,7 +765,7 @@
         },
         "stats": {
           "title": "Le tue Statistiche",
-          "description": "Monitora l'utilizzo dell'API, i ricordi memorizzati e il piano corrente."
+          "description": "Monitora uso API, entità salvate e piano attuale."
         },
         "quickStart": {
           "title": "Azioni Rapide",
@@ -934,10 +934,10 @@
       "sortOldest": "Più Vecchi",
       "sortRelevance": "Più Rilevanti",
       "activeFilters": "Filtri attivi",
-      "loading": "Caricamento memorie...",
+      "loading": "Caricamento entità...",
       "noMemories": "Nessuna memoria trovata",
       "noMatchingMemories": "Prova a modificare i filtri o la query di ricerca",
-      "noMemoriesHint": "Inizia ad aggiungere memorie tramite l'API per vederle qui",
+      "noMemoriesHint": "Crea NPC, fazioni o eventi tramite API per vederli qui",
       "match": "corrispondenza",
       "loadMore": "Carica Altro",
       "export": "Esporta",
@@ -1316,11 +1316,11 @@
     },
     "topBar": {
       "personal": "Account Personale",
-      "manageOrgs": "Gestisci Organizzazioni",
+      "manageOrgs": "Gestisci progetti",
       "create": "Crea",
       "createApiKey": "Nuova Chiave API",
-      "createOrg": "Nuova Organizzazione",
-      "switchOrg": "Cambia organizzazione"
+      "createOrg": "Nuovo progetto",
+      "switchOrg": "Cambia progetto"
     },
     "share": {
       "title": "Condividi Traccia",
@@ -1564,6 +1564,9 @@
       "open": "Apri",
       "close": "Chiudi",
       "enter": "Invio"
+    },
+    "northStar": {
+      "subtitle": "Indicatori chiave di affidabilità della memoria NPC"
     }
   },
   "pricingPage": {

@@ -216,7 +216,7 @@
     "settings": "الإعدادات",
     "signOut": "تسجيل الخروج",
     "stats": {
-      "memories": "الذكريات",
+      "memories": "الكيانات",
       "apiCalls": "استدعاءات API اليوم",
       "plan": "الخطة الحالية",
       "unlimited": "غير محدود"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "إنشاء مفتاح API",
-          "description": "أنشئ مفتاح API الأول الخاص بك للمصادقة على الطلبات",
+          "description": "أنشئ مفتاح API لطلبات وقت تشغيل اللعبة",
           "action": "إنشاء مفتاح"
         },
         "demoQuery": {
-          "title": "قم بأول استعلام",
-          "description": "جرب الاستعلام التجريبي أو أرسل طلب API",
+          "title": "استعلام سياق NPC",
+          "description": "جرّب استعلام NPC تجريبيًا أو أرسل طلبك الأول",
           "action": "جرب العرض التجريبي"
         },
         "viewTrace": {
@@ -278,7 +278,7 @@
         },
         "stats": {
           "title": "إحصائياتك",
-          "description": "راقب استخدام API والذكريات المخزنة والخطة الحالية."
+          "description": "راقب استخدام API والكيانات المخزنة والخطة الحالية."
         },
         "quickStart": {
           "title": "إجراءات سريعة",
@@ -340,7 +340,7 @@
       "tabLatency": "زمن الاستجابة",
       "tabErrors": "الأخطاء",
       "noUsageTitle": "لا توجد بيانات استخدام حتى الآن",
-      "noUsageDescription": "أرسل أول طلب API لرؤية تحليلات الاستخدام. ستظهر البيانات هنا خلال 5 ثوانٍ.",
+      "noUsageDescription": "أرسل أول طلب ذاكرة NPC لرؤية تحليلات الاستخدام. ستظهر البيانات خلال 5 ثوانٍ.",
       "noUsageExpected": "متوقع: الاستدعاءات، الرموز، التكلفة، وتفصيل زمن الاستجابة",
       "getApiKey": "احصل على مفتاح API",
       "viewDocs": "عرض الوثائق",
@@ -391,7 +391,7 @@
       "title": "وحدة تحكم التصحيح",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "اسأل ما الذي يجب أن يتذكره NPC...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -402,7 +402,7 @@
       "runQuery": "تنفيذ الاستعلام",
       "running": "جارٍ التشغيل...",
       "results": "النتائج",
-      "noResults": "No results found",
+      "noResults": "استعلم عن سياق NPC لرؤية النتائج",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -471,13 +471,13 @@
       "memoryType": "النوع",
       "rerankScore": "نقاط إعادة الترتيب",
       "traceTimeline": "الجدول الزمني للتتبع",
-      "noTrace": "قم بتشغيل استعلام لرؤية التتبع",
+      "noTrace": "استعلم عن سياق NPC لرؤية التتبع",
       "step": "الخطوة",
       "completed": "مكتمل",
       "pending": "قيد الانتظار",
       "error": "خطأ",
       "costBreakdown": "تفصيل التكلفة",
-      "noCost": "قم بتشغيل استعلام لرؤية تفصيل التكلفة",
+      "noCost": "استعلم عن سياق NPC لرؤية تفصيل التكلفة",
       "component": "المكون",
       "search": "بحث",
       "total": "الإجمالي",
@@ -502,7 +502,7 @@
     },
     "settingsPage": {
       "title": "الإعدادات",
-      "subtitle": "الملف الشخصي والتفضيلات",
+      "subtitle": "تفضيلات مساحة العمل والملف الشخصي ووقت تشغيل اللعبة",
       "saving": "جارٍ الحفظ...",
       "saved": "تم الحفظ",
       "saveFailed": "فشل الحفظ",
@@ -538,7 +538,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "تعيين حدود الإنفاق والتنبيهات",
+        "subtitle": "اضبط ميزانيات الطلبات والتنبيهات لأوقات تشغيل الألعاب",
         "perQueryMax": "الحد الأقصى لكل استعلام",
         "alertThresholdDesc": "احصل على تنبيه عندما يصل الاستخدام إلى هذه النسبة",
         "budgetMode": "وضع الميزانية",
@@ -570,7 +570,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "تكوين كيفية تلقي التنبيهات",
+        "subtitle": "اضبط تنبيهات الاستخدام والحوادث وتغييرات مسار الذاكرة",
         "emailAlerts": "تنبيهات البريد الإلكتروني",
         "emailAlertsDesc": "تلقي التنبيهات المهمة عبر البريد الإلكتروني",
         "usageAlerts": "تنبيهات الاستخدام",
@@ -610,7 +610,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "إدارة أمان حسابك",
+        "subtitle": "إدارة أمان الحساب والوصول إلى API",
         "save": "حفظ التغييرات",
         "updatePassword": "تحديث كلمة المرور",
         "twoFactorDesc": "إضافة طبقة إضافية من الأمان",
@@ -699,7 +699,7 @@
       "last10Requests": "آخر 10 طلبات API",
       "viewAllActivity": "عرض الكل",
       "noActivityYet": "لا يوجد نشاط API حتى الآن",
-      "noActivityDescription": "أرسل أول طلب API لرؤية النشاط هنا",
+      "noActivityDescription": "أرسل أول طلب ذاكرة NPC لرؤية النشاط",
       "sendFirstRequest": "إرسال أول طلب"
     },
     "keysPage": {
@@ -708,7 +708,7 @@
       "createNewKey": "إنشاء مفتاح جديد",
       "activeKeys": "المفاتيح النشطة",
       "noKeysTitle": "لا توجد مفاتيح API بعد",
-      "noKeysDesc": "أنشئ مفتاح API الأول لبدء التكامل مع Seizn",
+      "noKeysDesc": "أنشئ مفتاحًا لتكامل عميل اللعبة أو الخادم.",
       "createApiKey": "إنشاء مفتاح API",
       "created": "تم الإنشاء",
       "neverUsed": "لم يُستخدم أبدًا",
@@ -727,7 +727,7 @@
       "createKeyTitle": "إنشاء مفتاح API",
       "createKeyDesc": "أعطِ مفتاحك اسمًا وصفيًا",
       "keyName": "اسم المفتاح",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "مثلاً: Unity production، Unreal dev، QA server",
       "cancel": "إلغاء",
       "creating": "جارٍ الإنشاء...",
       "createKey": "إنشاء مفتاح",
@@ -746,17 +746,17 @@
     "organizationsPage": {
       "title": "المؤسسات",
       "subtitle": "أدر فرقك وتعاون مع الآخرين",
-      "newOrganization": "مؤسسة جديدة",
-      "noOrgsTitle": "لا توجد مؤسسات بعد",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "إنشاء مؤسسة",
+      "newOrganization": "مشروع جديد",
+      "noOrgsTitle": "لا توجد مشاريع بعد",
+      "noOrgsDesc": "أنشئ مشروع عنوان لعبة للتعاون مع فريقك وإدارة موارد Seizn المشتركة",
+      "createOrganization": "إنشاء مشروع",
       "created": "تم الإنشاء",
       "plan": "الخطة",
       "freePlan": "مجاني",
-      "createOrgTitle": "إنشاء مؤسسة",
-      "createOrgDesc": "إعداد مساحة عمل جماعية جديدة",
-      "orgName": "اسم المؤسسة",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "إنشاء مشروع",
+      "createOrgDesc": "إعداد مساحة عمل لعنوان لعبة واحد",
+      "orgName": "اسم المشروع",
+      "orgNamePlaceholder": "مثلاً: Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "إلغاء",
@@ -999,10 +999,10 @@
       "sortOldest": "الأقدم أولاً",
       "sortRelevance": "الأكثر صلة",
       "activeFilters": "الفلاتر النشطة",
-      "loading": "جارٍ تحميل الذكريات...",
+      "loading": "جارٍ تحميل الكيانات...",
       "noMemories": "لم يتم العثور على ذكريات",
       "noMatchingMemories": "حاول تعديل الفلاتر أو استعلام البحث",
-      "noMemoriesHint": "ابدأ بإضافة ذكريات عبر API لرؤيتها هنا",
+      "noMemoriesHint": "أنشئ NPCs أو فصائل أو أحداثًا عبر API لرؤيتها هنا",
       "match": "تطابق",
       "loadMore": "تحميل المزيد",
       "export": "تصدير",
@@ -1283,11 +1283,11 @@
     },
     "topBar": {
       "personal": "حساب شخصي",
-      "manageOrgs": "إدارة المؤسسات",
+      "manageOrgs": "إدارة المشاريع",
       "create": "إنشاء",
       "createApiKey": "مفتاح API جديد",
-      "createOrg": "مؤسسة جديدة",
-      "switchOrg": "تبديل المنظمة"
+      "createOrg": "مشروع جديد",
+      "switchOrg": "تبديل المشروع"
     },
     "share": {
       "title": "مشاركة التتبع",
@@ -1560,6 +1560,9 @@
       "open": "فتح",
       "close": "إغلاق",
       "enter": "إدخال"
+    },
+    "northStar": {
+      "subtitle": "مؤشرات رئيسية لموثوقية ذاكرة NPC"
     }
   },
   "pricingPage": {

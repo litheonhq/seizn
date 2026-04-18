@@ -216,7 +216,7 @@
     "settings": "सेटिंग्स",
     "signOut": "साइन आउट",
     "stats": {
-      "memories": "यादें",
+      "memories": "एंटिटी",
       "apiCalls": "आज की API कॉल",
       "plan": "वर्तमान प्लान",
       "unlimited": "असीमित"
@@ -271,7 +271,7 @@
       "tabLatency": "विलंबता",
       "tabErrors": "त्रुटियां",
       "noUsageTitle": "अभी तक कोई उपयोग डेटा नहीं",
-      "noUsageDescription": "उपयोग विश्लेषण देखने के लिए अपना पहला API अनुरोध भेजें। डेटा 5 सेकंड के भीतर यहां दिखाई देगा।",
+      "noUsageDescription": "उपयोग विश्लेषण देखने के लिए अपना पहला NPC मेमोरी अनुरोध भेजें। डेटा 5 सेकंड में दिखाई देगा।",
       "noUsageExpected": "अपेक्षित: कॉल, टोकन, लागत और latency विवरण",
       "getApiKey": "API Key प्राप्त करें",
       "viewDocs": "दस्तावेज़ देखें",
@@ -322,7 +322,7 @@
       "title": "डीबग पैनल",
       "subtitle": "ट्रेसिंग और पैरामीटर समायोजन के साथ क्वेरी का परीक्षण करें",
       "queryInput": "क्वेरी दर्ज करें",
-      "queryPlaceholder": "परीक्षण क्वेरी दर्ज करें...",
+      "queryPlaceholder": "पूछें कि NPC को क्या याद रखना चाहिए...",
       "parameters": "पैरामीटर",
       "topK": "टॉप K",
       "topKHint": "लौटाए जाने वाले परिणामों की संख्या",
@@ -333,7 +333,7 @@
       "runQuery": "क्वेरी चलाएं",
       "running": "चल रहा है...",
       "results": "परिणाम",
-      "noResults": "कोई परिणाम नहीं मिला",
+      "noResults": "परिणाम देखने के लिए NPC संदर्भ क्वेरी करें",
       "noResultsHint": "पैरामीटर समायोजित करें या अलग क्वेरी आज़माएं",
       "resultCount": "{count} परिणाम मिले",
       "score": "स्कोर",
@@ -402,13 +402,13 @@
       "memoryType": "प्रकार",
       "rerankScore": "Rerank स्कोर",
       "traceTimeline": "ट्रेस टाइमलाइन",
-      "noTrace": "trace देखने के लिए क्वेरी चलाएं",
+      "noTrace": "ट्रेस देखने के लिए NPC संदर्भ क्वेरी करें",
       "step": "चरण",
       "completed": "पूर्ण",
       "pending": "लंबित",
       "error": "त्रुटि",
       "costBreakdown": "लागत विवरण",
-      "noCost": "लागत विवरण देखने के लिए क्वेरी चलाएं",
+      "noCost": "लागत विवरण देखने के लिए NPC संदर्भ क्वेरी करें",
       "component": "घटक",
       "search": "खोज",
       "total": "कुल",
@@ -433,7 +433,7 @@
     },
     "settingsPage": {
       "title": "सेटिंग्स",
-      "subtitle": "प्रोफ़ाइल और विकल्प",
+      "subtitle": "Workspace, प्रोफ़ाइल और गेम रनटाइम प्राथमिकताएं",
       "saving": "सहेजा जा रहा है...",
       "saved": "सहेजा गया",
       "saveFailed": "सहेजना विफल",
@@ -469,7 +469,7 @@
         "unlimited": "असीमित",
         "setLimit": "सीमा सेट करें",
         "removeLimit": "सीमा हटाएं",
-        "subtitle": "खर्च सीमा और अलर्ट सेट करें",
+        "subtitle": "गेम रनटाइम के लिए अनुरोध बजट और अलर्ट सेट करें",
         "perQueryMax": "प्रति क्वेरी अधिकतम",
         "alertThresholdDesc": "जब उपयोग इस प्रतिशत तक पहुंच जाए तो अलर्ट प्राप्त करें",
         "budgetMode": "बजट मोड",
@@ -501,7 +501,7 @@
         "allDisabled": "सभी सूचनाएं बंद हैं",
         "enableAll": "सभी चालू करें",
         "disableAll": "सभी बंद करें",
-        "subtitle": "अलर्ट प्राप्त करने का तरीका कॉन्फ़िगर करें",
+        "subtitle": "उपयोग, घटनाओं और मेमोरी पाइपलाइन बदलावों के अलर्ट कॉन्फ़िगर करें",
         "emailAlerts": "ईमेल अलर्ट",
         "emailAlertsDesc": "ईमेल के माध्यम से महत्वपूर्ण अलर्ट प्राप्त करें",
         "usageAlerts": "उपयोग अलर्ट",
@@ -541,7 +541,7 @@
         "passwordTooShort": "पासवर्ड बहुत छोटा है",
         "apiKeysSecurity": "API कुंजी सुरक्षा",
         "apiKeysSecurityHint": "अपनी API कुंजियों की निगरानी और प्रबंधन करें",
-        "subtitle": "अपने खाते की सुरक्षा प्रबंधित करें",
+        "subtitle": "खाते और API एक्सेस सुरक्षा प्रबंधित करें",
         "save": "परिवर्तन सहेजें",
         "updatePassword": "पासवर्ड अपडेट करें",
         "twoFactorDesc": "सुरक्षा की अतिरिक्त परत जोड़ें",
@@ -630,7 +630,7 @@
       "last10Requests": "पिछले 10 API अनुरोध",
       "viewAllActivity": "सभी देखें",
       "noActivityYet": "अभी तक कोई API गतिविधि नहीं",
-      "noActivityDescription": "यहां गतिविधि देखने के लिए अपना पहला API अनुरोध भेजें",
+      "noActivityDescription": "गतिविधि देखने के लिए अपना पहला NPC मेमोरी अनुरोध भेजें",
       "sendFirstRequest": "पहला अनुरोध भेजें"
     },
     "keysPage": {
@@ -639,7 +639,7 @@
       "createNewKey": "नई कुंजी बनाएं",
       "activeKeys": "सक्रिय कुंजियां",
       "noKeysTitle": "अभी तक कोई API कुंजी नहीं",
-      "noKeysDesc": "Seizn के साथ एकीकरण शुरू करने के लिए अपनी पहली API कुंजी बनाएं",
+      "noKeysDesc": "अपने गेम क्लाइंट या सर्वर इंटीग्रेशन के लिए कुंजी बनाएं।",
       "createApiKey": "API कुंजी बनाएं",
       "created": "बनाई गई",
       "neverUsed": "कभी उपयोग नहीं हुई",
@@ -658,7 +658,7 @@
       "createKeyTitle": "API कुंजी बनाएं",
       "createKeyDesc": "अपनी कुंजी को एक वर्णनात्मक नाम दें",
       "keyName": "कुंजी का नाम",
-      "keyNamePlaceholder": "उदाहरण: प्रोडक्शन, डेवलपमेंट, टेस्टिंग",
+      "keyNamePlaceholder": "जैसे, Unity production, Unreal dev, QA server",
       "cancel": "रद्द करें",
       "creating": "बना रहे हैं...",
       "createKey": "कुंजी बनाएं",
@@ -677,17 +677,17 @@
     "organizationsPage": {
       "title": "संगठन",
       "subtitle": "अपनी टीमों का प्रबंधन करें और दूसरों के साथ सहयोग करें",
-      "newOrganization": "नया संगठन",
-      "noOrgsTitle": "अभी तक कोई संगठन नहीं",
-      "noOrgsDesc": "अपनी टीम के साथ सहयोग शुरू करने के लिए अपना पहला संगठन बनाएं",
-      "createOrganization": "संगठन बनाएं",
+      "newOrganization": "नया प्रोजेक्ट",
+      "noOrgsTitle": "अभी कोई प्रोजेक्ट नहीं",
+      "noOrgsDesc": "अपनी टीम के साथ सहयोग करने और साझा Seizn संसाधन प्रबंधित करने के लिए गेम-टाइटल प्रोजेक्ट बनाएं",
+      "createOrganization": "प्रोजेक्ट बनाएं",
       "created": "बनाया गया",
       "plan": "प्लान",
       "freePlan": "मुफ्त",
-      "createOrgTitle": "संगठन बनाएं",
-      "createOrgDesc": "एक नया टीम वर्कस्पेस सेट करें",
-      "orgName": "संगठन का नाम",
-      "orgNamePlaceholder": "एक्मे कॉर्प",
+      "createOrgTitle": "प्रोजेक्ट बनाएं",
+      "createOrgDesc": "एक गेम टाइटल के लिए workspace सेट करें",
+      "orgName": "प्रोजेक्ट नाम",
+      "orgNamePlaceholder": "जैसे, Neon Village",
       "urlSlug": "URL स्लग",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "रद्द करें",
@@ -716,12 +716,12 @@
       "steps": {
         "apiKey": {
           "title": "API कुंजी बनाएं",
-          "description": "अनुरोधों को प्रमाणित करने के लिए अपनी पहली API कुंजी बनाएं",
+          "description": "गेम रनटाइम अनुरोधों के लिए API कुंजी बनाएं",
           "action": "कुंजी बनाएं"
         },
         "demoQuery": {
-          "title": "पहली क्वेरी चलाएं",
-          "description": "डेमो क्वेरी आज़माएं या API अनुरोध करें",
+          "title": "NPC संदर्भ क्वेरी करें",
+          "description": "डेमो NPC क्वेरी आज़माएं या अपना पहला अनुरोध भेजें",
           "action": "डेमो आज़माएं"
         },
         "viewTrace": {
@@ -765,7 +765,7 @@
         },
         "stats": {
           "title": "आपके आंकड़े",
-          "description": "अपने API उपयोग, संग्रहीत मेमोरी और वर्तमान योजना की निगरानी करें।"
+          "description": "API उपयोग, संग्रहीत एंटिटी और वर्तमान प्लान मॉनिटर करें।"
         },
         "quickStart": {
           "title": "त्वरित कार्य",
@@ -931,10 +931,10 @@
       "sortOldest": "सबसे पुराने पहले",
       "sortRelevance": "सबसे प्रासंगिक",
       "activeFilters": "सक्रिय फ़िल्टर",
-      "loading": "यादें लोड हो रही हैं...",
+      "loading": "एंटिटी लोड हो रही हैं...",
       "noMemories": "कोई यादें नहीं मिलीं",
       "noMatchingMemories": "अपने फ़िल्टर या खोज क्वेरी को समायोजित करके देखें",
-      "noMemoriesHint": "यहां देखने के लिए API के माध्यम से यादें जोड़ना शुरू करें",
+      "noMemoriesHint": "NPC, factions या events API से बनाएं ताकि वे यहां दिखें",
       "match": "मैच",
       "loadMore": "और लोड करें",
       "export": "निर्यात",
@@ -1313,11 +1313,11 @@
     },
     "topBar": {
       "personal": "व्यक्तिगत खाता",
-      "manageOrgs": "संगठनों का प्रबंधन करें",
+      "manageOrgs": "प्रोजेक्ट प्रबंधित करें",
       "create": "बनाएं",
       "createApiKey": "नई API Key",
-      "createOrg": "नया संगठन",
-      "switchOrg": "संगठन बदलें"
+      "createOrg": "नया प्रोजेक्ट",
+      "switchOrg": "प्रोजेक्ट बदलें"
     },
     "share": {
       "title": "Trace साझा करें",
@@ -1560,6 +1560,9 @@
       "open": "खोलें",
       "close": "बंद करें",
       "enter": "एंटर"
+    },
+    "northStar": {
+      "subtitle": "NPC मेमोरी विश्वसनीयता के मुख्य संकेतक"
     }
   },
   "pricingPage": {

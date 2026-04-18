@@ -216,7 +216,7 @@
     "settings": "Definições",
     "signOut": "Terminar Sessão",
     "stats": {
-      "memories": "Memórias",
+      "memories": "Entidades",
       "apiCalls": "Chamadas API Hoje",
       "plan": "Plano Atual",
       "unlimited": "Ilimitado"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "Gerar chave API",
-          "description": "Cria a tua primeira chave API para autenticar pedidos",
+          "description": "Crie uma chave de API para pedidos do runtime do jogo",
           "action": "Criar chave"
         },
         "demoQuery": {
-          "title": "Fazer a primeira consulta",
-          "description": "Experimenta a consulta demo ou faz um pedido API",
+          "title": "Consultar contexto de NPC",
+          "description": "Experimente uma consulta NPC de demonstração ou envie o seu primeiro pedido",
           "action": "Experimentar demo"
         },
         "viewTrace": {
@@ -278,7 +278,7 @@
         },
         "stats": {
           "title": "As Suas Estatísticas",
-          "description": "Monitorize o seu uso de API, memórias armazenadas e plano atual."
+          "description": "Monitorize a utilização da API, entidades armazenadas e o plano atual."
         },
         "quickStart": {
           "title": "Ações Rápidas",
@@ -340,7 +340,7 @@
       "tabLatency": "Latência",
       "tabErrors": "Erros",
       "noUsageTitle": "Ainda sem dados de utilização",
-      "noUsageDescription": "Envie o seu primeiro pedido de API para ver análises de utilização. Os dados aparecerão aqui dentro de 5 segundos.",
+      "noUsageDescription": "Envie o seu primeiro pedido de memória de NPC para ver análises de utilização. Os dados aparecem em 5 segundos.",
       "noUsageExpected": "Esperado: Chamadas, tokens, custo e desagregação de latência",
       "getApiKey": "Obter Chave de API",
       "viewDocs": "Ver Documentação",
@@ -391,7 +391,7 @@
       "title": "Consola de depuração",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "Pergunte o que um NPC deve recordar...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -402,7 +402,7 @@
       "runQuery": "Executar consulta",
       "running": "A executar...",
       "results": "Resultados",
-      "noResults": "No results found",
+      "noResults": "Consulte o contexto de NPC para ver resultados",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -471,13 +471,13 @@
       "memoryType": "Tipo",
       "rerankScore": "Pontuação de Rerank",
       "traceTimeline": "Linha Temporal de Rastreio",
-      "noTrace": "Execute uma consulta para ver o rastreio",
+      "noTrace": "Consulte o contexto de NPC para ver o trace",
       "step": "Etapa",
       "completed": "Concluído",
       "pending": "Pendente",
       "error": "Erro",
       "costBreakdown": "Desagregação de Custos",
-      "noCost": "Execute uma consulta para ver a desagregação de custos",
+      "noCost": "Consulte o contexto de NPC para ver o detalhe de custos",
       "component": "Componente",
       "search": "Pesquisar",
       "total": "Total",
@@ -502,7 +502,7 @@
     },
     "settingsPage": {
       "title": "Definições",
-      "subtitle": "Perfil e preferências",
+      "subtitle": "Preferências de workspace, perfil e runtime de jogo",
       "saving": "A guardar...",
       "saved": "Guardado",
       "saveFailed": "Falha ao guardar",
@@ -538,7 +538,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "Defina limites de gastos e alertas",
+        "subtitle": "Defina orçamentos de pedidos e alertas para runtimes de jogo",
         "perQueryMax": "Máximo por Consulta",
         "alertThresholdDesc": "Seja alertado quando a utilização atingir esta percentagem",
         "budgetMode": "Modo de Orçamento",
@@ -570,7 +570,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "Configure como recebe alertas",
+        "subtitle": "Configure alertas de utilização, incidentes e alterações no pipeline de memória",
         "emailAlerts": "Alertas por E-mail",
         "emailAlertsDesc": "Receba alertas importantes por e-mail",
         "usageAlerts": "Alertas de Utilização",
@@ -610,7 +610,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "Gira a segurança da sua conta",
+        "subtitle": "Gerir a segurança da conta e do acesso à API",
         "save": "Guardar Alterações",
         "updatePassword": "Atualizar Palavra-passe",
         "twoFactorDesc": "Adicione uma camada extra de segurança",
@@ -699,7 +699,7 @@
       "last10Requests": "Últimos 10 pedidos de API",
       "viewAllActivity": "Ver Tudo",
       "noActivityYet": "Ainda sem atividade de API",
-      "noActivityDescription": "Envie o seu primeiro pedido de API para ver atividades aqui",
+      "noActivityDescription": "Envie o seu primeiro pedido de memória de NPC para ver atividade",
       "sendFirstRequest": "Enviar Primeiro Pedido"
     },
     "keysPage": {
@@ -708,7 +708,7 @@
       "createNewKey": "Criar nova chave",
       "activeKeys": "Chaves ativas",
       "noKeysTitle": "Ainda sem chaves de API",
-      "noKeysDesc": "Crie a sua primeira chave de API para começar a integrar com o Seizn",
+      "noKeysDesc": "Crie uma chave para integrar o cliente ou servidor do seu jogo.",
       "createApiKey": "Criar chave de API",
       "created": "Criado",
       "neverUsed": "Nunca usado",
@@ -727,7 +727,7 @@
       "createKeyTitle": "Criar chave de API",
       "createKeyDesc": "Dê um nome descritivo à sua chave",
       "keyName": "Nome da chave",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "ex.: produção Unity, dev Unreal, servidor QA",
       "cancel": "Cancelar",
       "creating": "A criar...",
       "createKey": "Criar chave",
@@ -746,17 +746,17 @@
     "organizationsPage": {
       "title": "Organizações",
       "subtitle": "Gerencie as suas equipas e colabore com outros",
-      "newOrganization": "Nova organização",
-      "noOrgsTitle": "Ainda sem organizações",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Criar organização",
+      "newOrganization": "Novo projeto",
+      "noOrgsTitle": "Ainda não há projetos",
+      "noOrgsDesc": "Crie um projeto de título de jogo para colaborar com a sua equipa e gerir recursos Seizn partilhados",
+      "createOrganization": "Criar projeto",
       "created": "Criado",
       "plan": "Plano",
       "freePlan": "Gratuito",
-      "createOrgTitle": "Criar organização",
-      "createOrgDesc": "Configure um novo espaço de trabalho de equipa",
-      "orgName": "Nome da organização",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Criar projeto",
+      "createOrgDesc": "Configure um workspace para um título de jogo",
+      "orgName": "Nome do projeto",
+      "orgNamePlaceholder": "ex.: Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Cancelar",
@@ -901,10 +901,10 @@
       "sortOldest": "Mais Antigas",
       "sortRelevance": "Mais Relevantes",
       "activeFilters": "Filtros ativos",
-      "loading": "A carregar memórias...",
+      "loading": "A carregar entidades...",
       "noMemories": "Nenhuma memória encontrada",
       "noMatchingMemories": "Tente ajustar os seus filtros ou consulta de pesquisa",
-      "noMemoriesHint": "Comece por adicionar memórias pela API para as ver aqui",
+      "noMemoriesHint": "Crie NPCs, fações ou eventos através da API para os ver aqui",
       "match": "correspondência",
       "loadMore": "Carregar Mais",
       "export": "Exportar",
@@ -1283,11 +1283,11 @@
     },
     "topBar": {
       "personal": "Conta Pessoal",
-      "manageOrgs": "Gerir Organizações",
+      "manageOrgs": "Gerir projetos",
       "create": "Criar",
       "createApiKey": "Nova Chave de API",
-      "createOrg": "Nova Organização",
-      "switchOrg": "Mudar organização"
+      "createOrg": "Novo projeto",
+      "switchOrg": "Mudar de projeto"
     },
     "share": {
       "title": "Partilhar Rastreio",
@@ -1560,6 +1560,9 @@
       "open": "Abrir",
       "close": "Fechar",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Indicadores-chave de fiabilidade da memória de NPC"
     }
   },
   "pricingPage": {
