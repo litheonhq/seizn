@@ -1701,7 +1701,7 @@
     "ctaDemo": "Играть в smallgod",
     "socialProof": "Создано для игровых студий — от 10 до 10 000 NPC.",
     "liveDemo": "Живое демо",
-    "heroTagline": "Играйте в smallgod — наш эталонный god-game на Seizn. Без регистрации и установки.",
+    "heroTagline": "Обратитесь к пайплайну извлечения напрямую. Полная демоверсия игры — в smallgod.",
     "firstRetrievalComplete": "Первый поиск завершён",
     "copySnippetHint": "Скопируйте фрагмент ниже для воспроизведения",
     "copySnippetTitle": "Интеграция в Unity, Unreal или любой движок",
@@ -1739,7 +1739,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Цены",
-      "compare": "vs Inworld",
+      "compare": "Интеграции",
       "enterprise": "Для студий",
       "getApiKey": "Забронировать демо",
       "tryDemo": "Играть в smallgod",
@@ -1802,7 +1802,7 @@
       "eval": "Отношения",
       "policy": "События"
     },
-    "playgroundTitle": "Попробуйте сейчас",
+    "playgroundTitle": "Песочница API",
     "costPanel": {
       "calculating": "Расчёт стоимости...",
       "noCost": "Выполните запрос, чтобы увидеть разбивку стоимости",

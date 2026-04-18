@@ -1697,11 +1697,11 @@
     "ctaDemo": "smallgod spelen",
     "socialProof": "Gebouwd voor game studios die schalen van 10 naar 10.000 NPC's.",
     "liveDemo": "Live demo",
-    "heroTagline": "Speel smallgod — ons referentie god-game gebouwd op Seizn. Geen registratie, geen installatie.",
+    "heroTagline": "Roep de retrieval-pipeline direct aan. Voor de volledige game-demo ga je naar smallgod.",
     "chips": {
-      "trace": "Entiteiten",
-      "eval": "Relaties",
-      "policy": "Events"
+      "trace": "Trace",
+      "eval": "Evaluatie",
+      "policy": "Beleid"
     },
     "copySnippetTitle": "Integreer in Unity, Unreal of elke runtime",
     "copySnippetSubtitle": "HTTP-wrapper + officiële C#/C++-plugins. Geen eigen infrastructuur nodig.",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Prijzen",
-      "compare": "vs Inworld",
+      "compare": "Integraties",
       "enterprise": "Voor studios",
       "getApiKey": "Demo boeken",
       "tryDemo": "smallgod spelen",
@@ -1793,12 +1793,7 @@
       "trace": "Trace",
       "cost": "Kosten"
     },
-    "chips": {
-      "trace": "Trace",
-      "eval": "Evaluatie",
-      "policy": "Beleid"
-    },
-    "playgroundTitle": "Probeer het nu",
+    "playgroundTitle": "API-playground",
     "costPanel": {
       "calculating": "Kosten berekenen...",
       "noCost": "Voer een query uit om de kostenspecificatie te zien",

@@ -1658,13 +1658,13 @@
     "ctaDemo": "Play smallgod",
     "socialProof": "Built for game studios scaling from 10 to 10,000 NPCs.",
     "liveDemo": "Live demo",
-    "heroTagline": "Play smallgod — our reference god-game built on Seizn. No signup, no install.",
+    "heroTagline": "Query the retrieval pipeline directly. For the full game demo, play smallgod.",
     "chips": {
       "trace": "Entities",
       "eval": "Relations",
       "policy": "Events"
     },
-    "playgroundTitle": "Try it now",
+    "playgroundTitle": "API playground",
     "firstRetrievalComplete": "First retrieval complete",
     "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Drop into Unity, Unreal, or any runtime",
@@ -1743,7 +1743,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Pricing",
-      "compare": "vs Inworld",
+      "compare": "Integrations",
       "enterprise": "For Studios",
       "getApiKey": "Book a demo",
       "tryDemo": "Play smallgod",

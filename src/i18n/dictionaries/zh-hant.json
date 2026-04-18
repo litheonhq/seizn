@@ -1697,7 +1697,7 @@
     "ctaDemo": "試玩 smallgod",
     "socialProof": "為 NPC 規模從 10 到 10,000 的遊戲工作室打造。",
     "liveDemo": "線上示範",
-    "heroTagline": "試玩 smallgod — 以 Seizn 建構的參考神明遊戲。無需註冊，無需安裝。",
+    "heroTagline": "直接呼叫檢索管線。完整遊戲示範請前往 smallgod。",
     "firstRetrievalComplete": "首次檢索完成",
     "copySnippetHint": "複製以下程式碼片段以重現",
     "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何執行環境",
@@ -1735,7 +1735,7 @@
       "enterprise": "工作室方案",
       "getApiKey": "預約示範",
       "tryDemo": "試玩 smallgod",
-      "compare": "vs Inworld",
+      "compare": "整合",
       "limits": "限額",
       "status": "狀態",
       "help": "說明",
@@ -1795,7 +1795,7 @@
       "eval": "關係",
       "policy": "事件"
     },
-    "playgroundTitle": "立即體驗",
+    "playgroundTitle": "API 遊樂場",
     "costPanel": {
       "calculating": "正在計算費用...",
       "noCost": "執行查詢以查看費用明細",

@@ -1697,7 +1697,7 @@
     "ctaDemo": "เล่น smallgod",
     "socialProof": "สร้างมาเพื่อ game studio ที่ขยายจาก 10 ถึง 10,000 NPC",
     "liveDemo": "Demo สด",
-    "heroTagline": "เล่น smallgod — god-game อ้างอิงของเราที่สร้างบน Seizn ไม่ต้องสมัคร ไม่ต้องติดตั้ง",
+    "heroTagline": "เรียกใช้ pipeline การค้นคืนโดยตรง สำหรับเดโมเกมเต็มรูปแบบ เล่น smallgod ได้เลย",
     "firstRetrievalComplete": "การเรียกค้นแรกเสร็จสิ้น",
     "copySnippetHint": "คัดลอกโค้ดด้านล่างเพื่อทำซ้ำ",
     "copySnippetTitle": "ใส่ใน Unity, Unreal หรือ runtime ใดก็ได้",
@@ -1732,7 +1732,7 @@
     "nav": {
       "docs": "เอกสาร",
       "pricing": "ราคา",
-      "compare": "vs Inworld",
+      "compare": "การผสานรวม",
       "enterprise": "สำหรับ Studio",
       "getApiKey": "จอง demo",
       "tryDemo": "เล่น smallgod",
@@ -1795,7 +1795,7 @@
       "eval": "ความสัมพันธ์",
       "policy": "Event"
     },
-    "playgroundTitle": "ลองใช้เลย",
+    "playgroundTitle": "สนามทดลอง API",
     "costPanel": {
       "calculating": "กำลังคำนวณต้นทุน...",
       "noCost": "เรียกใช้คำค้นหาเพื่อดูรายละเอียดต้นทุน",

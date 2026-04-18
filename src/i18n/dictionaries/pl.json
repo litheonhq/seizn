@@ -1697,11 +1697,11 @@
     "ctaDemo": "Zagraj w smallgod",
     "socialProof": "Zbudowane dla studiów skalujących od 10 do 10 000 NPC.",
     "liveDemo": "Demo na żywo",
-    "heroTagline": "Zagraj w smallgod — naszą referencyjną grę bożą zbudowaną na Seizn. Bez rejestracji, bez instalacji.",
+    "heroTagline": "Wywołaj pipeline wyszukiwania bezpośrednio. Pełne demo gry znajdziesz w smallgod.",
     "chips": {
-      "trace": "Encje",
-      "eval": "Relacje",
-      "policy": "Zdarzenia"
+      "trace": "Ślad",
+      "eval": "Ewaluacja",
+      "policy": "Polityka"
     },
     "copySnippetTitle": "Integruj w Unity, Unreal lub dowolne środowisko uruchomieniowe",
     "copySnippetSubtitle": "Wrapper HTTP + oficjalne wtyczki C#/C++. Bez własnej infrastruktury.",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Ceny",
-      "compare": "vs Inworld",
+      "compare": "Integracje",
       "enterprise": "Dla studiów",
       "getApiKey": "Zarezerwuj demo",
       "tryDemo": "Zagraj w smallgod",
@@ -1793,12 +1793,7 @@
       "trace": "Ślad",
       "cost": "Koszt"
     },
-    "chips": {
-      "trace": "Ślad",
-      "eval": "Ewaluacja",
-      "policy": "Polityka"
-    },
-    "playgroundTitle": "Wypróbuj teraz",
+    "playgroundTitle": "Playground API",
     "costPanel": {
       "calculating": "Obliczanie kosztów...",
       "noCost": "Wykonaj zapytanie, aby zobaczyć zestawienie kosztów",

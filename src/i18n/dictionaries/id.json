@@ -1697,7 +1697,7 @@
     "ctaDemo": "Main smallgod",
     "socialProof": "Dibangun untuk studio game dari 10 hingga 10.000 NPC.",
     "liveDemo": "Demo langsung",
-    "heroTagline": "Main smallgod — god-game referensi kami yang dibangun di atas Seizn. Tanpa pendaftaran atau instalasi.",
+    "heroTagline": "Panggil pipeline retrieval secara langsung. Untuk demo game lengkap, mainkan smallgod.",
     "firstRetrievalComplete": "Pengambilan pertama selesai",
     "copySnippetHint": "Salin snippet di bawah untuk mereproduksi",
     "copySnippetTitle": "Integrasikan ke Unity, Unreal, atau runtime apa pun",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Harga",
-      "compare": "vs Inworld",
+      "compare": "Integrasi",
       "enterprise": "Untuk Studio",
       "getApiKey": "Pesan demo",
       "tryDemo": "Main smallgod",
@@ -1798,7 +1798,7 @@
       "eval": "Relasi",
       "policy": "Event"
     },
-    "playgroundTitle": "Coba sekarang",
+    "playgroundTitle": "Playground API",
     "costPanel": {
       "calculating": "Menghitung biaya...",
       "noCost": "Jalankan kueri untuk melihat rincian biaya",

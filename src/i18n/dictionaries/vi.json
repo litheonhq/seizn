@@ -1697,7 +1697,7 @@
     "ctaDemo": "Chơi smallgod",
     "socialProof": "Xây dựng cho game studio mở rộng từ 10 đến 10.000 NPC.",
     "liveDemo": "Demo trực tiếp",
-    "heroTagline": "Chơi smallgod — god-game tham chiếu của chúng tôi xây trên Seizn. Không cần đăng ký, không cần cài đặt.",
+    "heroTagline": "Gọi pipeline truy xuất trực tiếp. Muốn xem bản demo game đầy đủ, hãy chơi smallgod.",
     "firstRetrievalComplete": "Truy xuất đầu tiên hoàn tất",
     "copySnippetHint": "Sao chép đoạn mã bên dưới để tái tạo",
     "copySnippetTitle": "Thả vào Unity, Unreal hoặc bất kỳ runtime nào",
@@ -1732,7 +1732,7 @@
     "nav": {
       "docs": "Tài liệu",
       "pricing": "Giá",
-      "compare": "vs Inworld",
+      "compare": "Tích hợp",
       "enterprise": "Cho Studio",
       "getApiKey": "Đặt lịch demo",
       "tryDemo": "Chơi smallgod",
@@ -1795,7 +1795,7 @@
       "eval": "Quan hệ",
       "policy": "Sự kiện"
     },
-    "playgroundTitle": "Thử ngay",
+    "playgroundTitle": "Sân chơi API",
     "costPanel": {
       "calculating": "Đang tính chi phí...",
       "noCost": "Chạy truy vấn để xem chi tiết chi phí",
