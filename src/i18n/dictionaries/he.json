@@ -1696,10 +1696,6 @@
     "ctaStart": "קראו את התיעוד",
     "ctaDemo": "שחקו smallgod",
     "socialProof": "מיועד לסטודיות משחקים המתרחבות מ-10 ל-10,000 דמויות NPC.",
-    "liveDemo": "הדגמה חיה",
-    "heroTagline": "קראו ישירות ל-pipeline של האחזור. לחוויית המשחק המלאה, שחקו ב-smallgod.",
-    "firstRetrievalComplete": "אחזור ראשון הושלם",
-    "copySnippetHint": "העתק את קטע הקוד למטה כדי לשחזר",
     "copySnippetTitle": "אינטגרציה ב-Unity, Unreal, או כל runtime",
     "copySnippetSubtitle": "עטיפת HTTP + תוספי C#/C++ רשמיים. ללא תשתית מותאמת אישית.",
     "whySeizn": {
@@ -1743,89 +1739,6 @@
       "status": "סטטוס",
       "help": "עזרה",
       "github": "OSS"
-    },
-    "requestBuilder": {
-      "title": "בונה בקשות",
-      "query": "שאילתה",
-      "queryPlaceholder": "הזן את שאילתת החיפוש שלך...",
-      "tryExamples": "נסה דוגמאות",
-      "dataset": "Dataset",
-      "latencyBudget": "תקציב זמן תגובה",
-      "fast": "fast",
-      "thorough": "thorough",
-      "topK": "Top K",
-      "results": "תוצאות",
-      "features": "תכונות",
-      "hybridSearch": "חיפוש היברידי",
-      "hybridSearchDesc": "שילוב וקטור + מילות מפתח",
-      "rerank": "Rerank",
-      "rerankDesc": "ניקוד מחדש עם cross-encoder",
-      "answerContract": "Answer Contract",
-      "answerContractDesc": "אמת את איכות התשובה",
-      "running": "מריץ...",
-      "runQuery": "הרץ שאילתה",
-      "datasets": {
-        "techDocs": "תיעוד טכני",
-        "legalContracts": "חוזים משפטיים",
-        "researchPapers": "מאמרי מחקר"
-      },
-      "advanced": "מתקדם"
-    },
-    "resultsPanel": {
-      "searching": "מחפש...",
-      "noResults": "הרץ שאילתה כדי לראות תוצאות",
-      "score": "ציון"
-    },
-    "tracePanel": {
-      "tracing": "עוקב אחר צינור...",
-      "noTrace": "הרץ שאילתה כדי לראות את המעקב",
-      "latency": "זמן תגובה",
-      "cost": "עלות",
-      "tokens": "טוקנים",
-      "vectorOps": "Vector Ops",
-      "cached": "cached",
-      "model": "מודל",
-      "input": "קלט",
-      "output": "פלט"
-    },
-    "tabs": {
-      "results": "תוצאות",
-      "trace": "מעקב",
-      "cost": "עלות"
-    },
-    "chips": {
-      "trace": "ישויות",
-      "eval": "קשרים",
-      "policy": "אירועים"
-    },
-    "playgroundTitle": "מגרש משחקים של ה-API",
-    "costPanel": {
-      "calculating": "Calculating costs...",
-      "noCost": "Run a query to see cost breakdown",
-      "costBreakdown": "Cost Breakdown",
-      "component": "Component",
-      "cost": "עלות",
-      "embedding": "Embedding",
-      "vectorSearch": "Vector Search",
-      "rerank": "Rerank",
-      "answerContract": "Answer Contract",
-      "total": "Total Cost",
-      "usage": "שימוש",
-      "tokensIn": "Tokens In",
-      "tokensOut": "Tokens Out",
-      "queryUnits": "Query Units",
-      "estimatedMonthly": "Estimated Monthly",
-      "basedOn": "Based on",
-      "queriesPerDay": "queries/day"
-    },
-    "errorDisplay": {
-      "error": "שגיאה",
-      "errorCode": "קוד",
-      "traceId": "מעקב",
-      "hint": "Hint",
-      "tryAgain": "Try Again",
-      "copyTraceId": "Copy trace ID",
-      "copied": "הועתק!"
     }
   },
   "docs": {
@@ -2734,42 +2647,6 @@
         "backToIntegrations": "Back to Integrations"
       }
     }
-  },
-  "demoQuery": {
-    "title": "הדגמה חיה",
-    "subtitle": "חווה את צינור האחזור של Seizn עם מעקב מלא ושקיפות עלויות.",
-    "tryItNow": "נסה עכשיו - ללא הרשמה",
-    "queryPlaceholder": "שאילתת חיפוש",
-    "runDemo": "הפעל הדגמה",
-    "running": "מריץ...",
-    "results": "תוצאות",
-    "trace": "מעקב",
-    "cost": "עלות",
-    "noResults": "הפעל את ההדגמה כדי לראות תוצאות",
-    "errorTitle": "שגיאה",
-    "rateLimitError": "חריגה ממגבלת קצב. אנא המתן.",
-    "retryIn": "נסה שוב בעוד",
-    "seconds": "שניות",
-    "score": "ציון",
-    "rerankScore": "דירוג מחדש",
-    "latency": "השהיה",
-    "tokens": "טוקנים",
-    "cached": "מטמון",
-    "model": "מודל",
-    "input": "קלט",
-    "output": "פלט",
-    "costBreakdown": "פירוט",
-    "total": "עלות כוללת",
-    "embedding": "Embedding",
-    "vectorSearch": "חיפוש וקטורי",
-    "rerank": "דירוג מחדש",
-    "answerContract": "חוזה תשובה",
-    "tokensIn": "טוקנים נכנסים",
-    "tokensOut": "טוקנים יוצאים",
-    "queryUnits": "יחידות שאילתה",
-    "prefilledQueries": [
-      "נסה דוגמאות"
-    ]
   },
   "publicTrace": {
     "title": "מעקב משותף",
