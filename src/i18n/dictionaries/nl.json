@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI-geheugeninfrastructuur",
-    "description": "Geef je AI blijvend geheugen. Seizn slaat automatisch context op en haalt deze op, zodat je AI eerdere gesprekken onthoudt."
+    "title": "Seizn — Geheugen voor AI-NPC's",
+    "description": "Koppel aan Inworld, Convai of je eigen LLM. Seizn geeft je NPC's persistent geheugen, relaties en generatieoverschrijdende herinnering — prijs per entiteit, niet per seat."
   },
   "nav": {
     "features": "Functies",
     "pricing": "Prijzen",
-    "docs": "Documentatie",
+    "docs": "Docs",
     "login": "Inloggen",
-    "getStarted": "Aan de slag"
+    "getStarted": "Demo boeken",
+    "demo": "smallgod spelen"
   },
   "hero": {
-    "badge": "Beschikbaar Q1 2026",
-    "title": "Geheugeninfrastructuur",
-    "titleHighlight": "voor AI-toepassingen",
-    "subtitle": "Geef je AI blijvend geheugen. Seizn slaat automatisch context op en haalt deze op, zodat je AI eerdere gesprekken onthoudt.",
-    "emailPlaceholder": "Voer je e-mail in",
-    "joinWaitlist": "Schrijf je in voor de wachtlijst",
-    "joining": "Bezig met aanmelden...",
-    "onTheList": "Je staat op de lijst!",
+    "badge": "Live demo: smallgod",
+    "title": "Je NPC's herinneren zich",
+    "titleHighlight": "over generaties heen.",
+    "subtitle": "Seizn is de geheugenlaag voor AI-NPC's. Koppel het aan Inworld, Convai of je eigen LLM — behoud de dialogue-engine die je al gebruikt en voeg persistentie toe die sessies en generaties overleeft.",
+    "emailPlaceholder": "jij@studio.com",
+    "joinWaitlist": "Demo boeken",
+    "joining": "Boeken...",
+    "onTheList": "We nemen snel contact op.",
     "stats": {
-      "tokenSavings": "Tokenbesparing",
-      "retrievalTime": "Ophaaltijd",
-      "uptimeSla": "Uptime SLA"
+      "tokenSavings": "NPC's per project",
+      "retrievalTime": "Geheugenophaling",
+      "uptimeSla": "Generaties geheugen"
     }
   },
   "features": {
-    "title": "Gebouwd voor ontwikkelaars",
-    "subtitle": "Eenvoudige API's, krachtige infrastructuur. Voeg binnen minuten blijvend geheugen toe aan elke AI.",
+    "title": "Gebouwd voor game studios",
+    "subtitle": "Voeg Seizn in, behoud je dialogue-engine. NPC's krijgen geheugen, relaties en persistentie die sessies en generaties overleeft.",
     "smartExtraction": {
-      "title": "Slimme extractie",
-      "description": "Extraheert automatisch belangrijke feiten, voorkeuren en context uit gesprekken met Claude AI."
+      "title": "NPC / Factie / Event-graaf",
+      "description": "Modelleer NPC's, facties, quests en incidenten als graaf. Relaties (vertrouwen, wrok, verwantschap) en events (getuige, getroffen, actor) zijn eersteklas primitieven — geen zelf bedachte schema's."
     },
     "instantRetrieval": {
-      "title": "Directe ophaling",
-      "description": "Hybride vector + graafzoekopdracht retourneert relevante herinneringen in milliseconden."
+      "title": "Contextbewuste herinnering",
+      "description": "Hybride vector + graafophaling retourneert alleen de herinneringen die relevant zijn voor deze NPC, deze scène. 'De laatste keer dat we elkaar zagen'-query's in milliseconden."
     },
     "enterpriseSecurity": {
-      "title": "Enterprise-beveiliging",
-      "description": "End-to-end encryptie, SOC 2-conform, met gedetailleerde toegangscontroles en auditlogboeken."
+      "title": "NPC-zwerm-schaal",
+      "description": "Gemeten prijs per entiteit. Sims-achtige, Cities Skylines-achtige en godgame-titels draaien duizenden NPC's zonder seat-kostenbarrières. Zelf-gehost of beheerd."
     }
   },
   "codePreview": {
-    "title": "Eenvoudige integratie",
-    "subtitle": "Voeg geheugen toe aan je AI met slechts een paar regels code."
+    "title": "Integratie in 10 regels",
+    "subtitle": "Behoud je dialogue-engine. Voeg Seizn toe voor geheugen."
   },
   "pricing": {
-    "title": "Eenvoudige, transparante prijzen",
-    "subtitle": "Begin gratis, schaal naarmate je groeit.",
+    "title": "Prijs per entiteit",
+    "subtitle": "Begin gratis. Schaal op entiteiten en events — niet per seat. Voor indie met 10 NPC's en zwarm-titels met 10.000 NPC's.",
     "free": {
       "name": "Gratis",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "Documentatie",
     "nav": {
       "overview": "Overzicht",
-      "memories": "Herinneringen",
-      "mindMap": "Mindmap",
-      "candidates": "Kandidaten",
+      "memories": "Entiteiten",
+      "mindMap": "Relatiegraph",
+      "candidates": "Event-inbox",
       "devTools": "DevTools",
-      "playground": "Speeltuin",
-      "evals": "Evaluaties",
+      "playground": "Playground",
+      "evals": "Scenariotests",
       "analytics": "Analyse",
-      "governance": "Governance",
+      "governance": "Inhoudsbeleid",
       "privacy": "Privacy",
       "security": "Beveiliging",
-      "enterprise": "Enterprise",
+      "enterprise": "Voor studios",
       "usage": "Gebruik",
       "budget": "Budget",
       "reports": "Rapporten",
-      "calculator": "Calculator",
+      "calculator": "Kostenschatting",
       "apiKeys": "API-sleutels",
-      "integrations": "Integraties",
+      "integrations": "Engine-plugins",
       "webhooks": "Webhooks",
-      "docs": "Documentatie",
-      "organizations": "Organisaties",
+      "docs": "Docs",
+      "organizations": "Projecten",
       "settings": "Instellingen",
       "groups": {
-        "memory": "GEHEUGEN",
+        "memory": "NPC-GEHEUGEN",
         "observe": "MONITOREN",
-        "govern": "GOVERNANCE",
-        "finops": "FINOPS",
-        "connect": "VERBINDEN",
-        "system": "SYSTEEM"
+        "govern": "BELEID",
+        "finops": "GEBRUIK & KOSTEN",
+        "connect": "INTEGREREN",
+        "system": "WERKRUIMTE"
       }
     },
     "pinSidebar": "Zijbalk vastzetten",
@@ -1690,32 +1691,32 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Het productie-OS voor AI-agenten.",
-    "heroSubtitle": "Breng agenten van pilot naar productie met beheerd geheugen, ingebouwde observeerbaarheid en aantoonbare compliance.",
-    "ctaStart": "Gratis Beginnen",
-    "ctaDemo": "Bekijk 2-Min Demo",
-    "socialProof": "Vertrouwd door teams die agenten op schaal draaien",
-    "liveDemo": "Live Demo",
-    "heroTagline": "Probeer de API live — geen registratie nodig",
-    "firstRetrievalComplete": "Eerste opvraging voltooid",
-    "copySnippetHint": "Kopieer het fragment hieronder om te reproduceren",
-    "copySnippetTitle": "Kopieer dit fragment",
-    "copySnippetSubtitle": "Gegenereerd op basis van uw exacte instellingen hierboven",
+    "heroTitle": "Geheugen voor AI-NPC's.",
+    "heroSubtitle": "Koppel aan Inworld, Convai of je eigen LLM. Seizn geeft je NPC's persistent geheugen, relaties en generatieoverschrijdende herinnering — prijs per entiteit, niet per seat.",
+    "ctaStart": "Docs lezen",
+    "ctaDemo": "smallgod spelen",
+    "socialProof": "Gebouwd voor game studios die schalen van 10 naar 10.000 NPC's.",
+    "liveDemo": "Live demo",
+    "heroTagline": "Speel smallgod — ons referentie god-game gebouwd op Seizn. Geen registratie, geen installatie.",
+    "chips": {
+      "trace": "Entiteiten",
+      "eval": "Relaties",
+      "policy": "Events"
+    },
+    "copySnippetTitle": "Integreer in Unity, Unreal of elke runtime",
+    "copySnippetSubtitle": "HTTP-wrapper + officiële C#/C++-plugins. Geen eigen infrastructuur nodig.",
     "whySeizn": {
-      "title": "Waarom Seizn in plaats van LangChain + Pinecone?",
-      "subtitle": "Stop met het aan elkaar plakken van gefragmenteerde tools. Krijg alles wat u nodig heeft in één geïntegreerde stack.",
-      "tracingTitle": "Ingebouwde tracing + evaluatie",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Budgetbewuste autopilot",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + auditlogs",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Standaard voor teams",
-      "lessGlueTitle": "Minder bewegende delen",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Minder verbindingscode"
+      "title": "Waarom Seizn tegenover Inworld / Convai alleen?",
+      "subtitle": "Dialogue-engines doen stemmen en persoonlijkheid schitterend. Geen van hen lost persistent geheugen op schaal op. Seizn koppelt in als geheugenlaag.",
+      "tracingTitle": "Dialogue-engine-agnostisch",
+      "tracingDesc": "Gebruik Inworld, Convai, NVIDIA ACE of je eigen LLM voor dialogen. Seizn legt geheugen bovenop — vervangt nooit wat al werkt.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "NPC-zwerm-schaal",
+      "autopilotDesc": "Graph-opslag, gemeten per entiteit. Sims-achtige, Cities Skylines-achtige en godgame-titels draaien duizenden NPC's zonder seat-kostenbarrières.",
+      "autopilotBadge": "Per entiteit",
+      "governanceTitle": "Generatieoverschrijdend geheugen",
+      "governanceDesc": "Wrok overleeft personages. Fraktiegeschiedenis verspreidt zich naar nakomelingen. Verwantschap, getuige en relatieprimieven zijn ingebouwd — geen eigen schema nodig.",
+      "governanceBadge": "Ingebouwd"
     },
     "trust": {
       "security": "RLS + Key Hashing",
@@ -1726,22 +1727,22 @@
       "auditLogsDesc": "Volledige traceerbaarheid"
     },
     "pricingCta": {
-      "title": "Eenvoudige, transparante prijzen",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "Prijs per entiteit",
+      "subtitle": "Begin gratis. Geen seat-barrières — 10 NPC's of 10.000, schaal op entiteiten en events, niet op engineer-seats.",
       "viewPricing": "Prijzen bekijken",
-      "contactSales": "Contact verkoop"
+      "contactSales": "Gesprek met oprichter"
     },
     "nav": {
-      "docs": "Documentatie",
+      "docs": "Docs",
       "pricing": "Prijzen",
-      "enterprise": "Enterprise",
-      "getApiKey": "API-sleutel ophalen",
-      "tryDemo": "Demo proberen",
+      "compare": "vs Inworld",
+      "enterprise": "Voor studios",
+      "getApiKey": "Demo boeken",
+      "tryDemo": "smallgod spelen",
       "limits": "Limieten",
       "status": "Status",
       "help": "Help",
-      "github": "OSS",
-      "compare": "Vergelijken"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Verzoekenbouwer",

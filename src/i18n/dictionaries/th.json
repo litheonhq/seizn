@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - โครงสร้างพื้นฐานหน่วยความจำ AI",
-    "description": "มอบหน่วยความจำถาวรให้กับ AI ของคุณ Seizn จัดเก็บและเรียกค้นบริบทโดยอัตโนมัติ เพื่อให้ AI ของคุณจดจำการสนทนาก่อนหน้า"
+    "title": "Seizn — หน่วยความจำสำหรับ NPC พลัง AI",
+    "description": "เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ Seizn มอบหน่วยความจำถาวร ความสัมพันธ์ และการจดจำข้ามรุ่นให้กับ NPC ของคุณ — ราคาต่อ entity ไม่ใช่ต่อที่นั่ง"
   },
   "nav": {
     "features": "ฟีเจอร์",
     "pricing": "ราคา",
-    "docs": "เอกสาร",
+    "docs": "Docs",
     "login": "เข้าสู่ระบบ",
-    "getStarted": "เริ่มต้นใช้งาน"
+    "getStarted": "จอง demo",
+    "demo": "เล่น smallgod"
   },
   "hero": {
-    "badge": "เปิดตัว Q1 2026",
-    "title": "โครงสร้างพื้นฐานหน่วยความจำ",
-    "titleHighlight": "สำหรับแอปพลิเคชัน AI",
-    "subtitle": "มอบหน่วยความจำถาวรให้กับ AI ของคุณ Seizn จัดเก็บและเรียกค้นบริบทโดยอัตโนมัติ เพื่อให้ AI ของคุณจดจำการสนทนาก่อนหน้า",
-    "emailPlaceholder": "กรอกอีเมลของคุณ",
-    "joinWaitlist": "เข้าร่วมรายการรอ",
-    "joining": "กำลังเข้าร่วม...",
-    "onTheList": "คุณอยู่ในรายการแล้ว!",
+    "badge": "Demo สด: smallgod",
+    "title": "NPC ของคุณจดจำ",
+    "titleHighlight": "ข้ามรุ่น",
+    "subtitle": "Seizn คือ memory layer สำหรับ NPC พลัง AI เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ — รักษา dialogue engine ที่คุณชอบ เพิ่ม persistence ที่ยืนหยัดข้ามเซสชันและรุ่น",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "จอง demo",
+    "joining": "กำลังจอง...",
+    "onTheList": "เราจะติดต่อกลับเร็ว ๆ นี้",
     "stats": {
-      "tokenSavings": "ประหยัด Token",
-      "retrievalTime": "เวลาเรียกค้น",
-      "uptimeSla": "SLA Uptime"
+      "tokenSavings": "NPC ต่อโปรเจกต์",
+      "retrievalTime": "การเรียกค้นหน่วยความจำ",
+      "uptimeSla": "รุ่นของหน่วยความจำ"
     }
   },
   "features": {
-    "title": "สร้างมาเพื่อนักพัฒนา",
-    "subtitle": "API ที่เรียบง่าย โครงสร้างพื้นฐานที่ทรงพลัง เพิ่มหน่วยความจำถาวรให้กับ AI ใดก็ได้ภายในไม่กี่นาที",
+    "title": "สร้างมาเพื่อ game studio",
+    "subtitle": "ใส่ Seizn รักษา dialogue engine ของคุณ NPC ได้รับหน่วยความจำ ความสัมพันธ์ และ persistence ที่ยืนหยัดข้ามเซสชันและรุ่น",
     "smartExtraction": {
-      "title": "การดึงข้อมูลอัจฉริยะ",
-      "description": "ดึงเหตุการณ์สำคัญ ความชอบ และบริบทจากการสนทนาโดยอัตโนมัติด้วย Claude AI"
+      "title": "กราฟ NPC / กลุ่ม / Event",
+      "description": "จำลอง NPC กลุ่ม เควส และเหตุการณ์เป็นกราฟ ความสัมพันธ์ (ความไว้วางใจ ความแค้น ความเป็นเครือญาติ) และ event (เป็นพยาน ได้รับผลกระทบ ผู้กระทำ) เป็น primitive ชั้นแรก ไม่ใช่ schema ที่ต้องสร้างเอง"
     },
     "instantRetrieval": {
-      "title": "เรียกค้นทันที",
-      "description": "การค้นหาแบบไฮบริด vector + graph ส่งคืนความทรงจำที่เกี่ยวข้องในมิลลิวินาที"
+      "title": "การเรียกค้นตามบริบท",
+      "description": "การค้นหาไฮบริด vector + graph ส่งคืนเฉพาะหน่วยความจำที่เกี่ยวข้องกับ NPC นี้ scene นี้ คำค้นหา 'ครั้งสุดท้ายที่เราพบกัน' ในมิลลิวินาที"
     },
     "enterpriseSecurity": {
-      "title": "ความปลอดภัยระดับองค์กร",
-      "description": "เข้ารหัสแบบ end-to-end รองรับ SOC 2 พร้อมการควบคุมการเข้าถึงแบบละเอียดและบันทึกการตรวจสอบ"
+      "title": "สเกล swarm NPC",
+      "description": "ราคาแบบมิเตอร์ต่อ entity เกมแบบ Sims, Cities Skylines และ god-game รัน NPC หลายพันตัวโดยไม่มีกำแพงค่าใช้จ่ายต่อที่นั่ง Self-host หรือ managed"
     }
   },
   "codePreview": {
-    "title": "การผสานรวมที่เรียบง่าย",
-    "subtitle": "เพิ่มหน่วยความจำให้กับ AI ของคุณด้วยโค้ดเพียงไม่กี่บรรทัด"
+    "title": "ผสานรวมใน 10 บรรทัด",
+    "subtitle": "รักษา dialogue engine ของคุณ เพิ่ม Seizn สำหรับหน่วยความจำ"
   },
   "pricing": {
-    "title": "ราคาที่เรียบง่ายและโปร่งใส",
-    "subtitle": "เริ่มต้นฟรี ขยายได้เมื่อเติบโต",
+    "title": "ราคาต่อ entity",
+    "subtitle": "เริ่มต้นฟรี ขยายตาม entity และ event ไม่ใช่ต่อที่นั่ง เหมาะสำหรับทั้ง indie 10-NPC และเกม swarm 10,000-NPC",
     "free": {
       "name": "ฟรี",
       "price": "$0",
@@ -242,7 +243,7 @@
       "apiCallsUsed": "การเรียก API ที่ใช้",
       "remaining": "คงเหลือ",
       "upgrade": "อัพเกรดแผน",
-      "subtitle": "ตรวจสอบการใช้งาน API และค่าใช้จ่ายของคุณ",
+      "subtitle": "ตรวจสอบการใช้งาน API ในเอนทิตี, event และคิวรี",
       "days7": "7 วัน",
       "days30": "30 วัน",
       "days90": "90 วัน",
@@ -286,42 +287,42 @@
     "docs": "เอกสาร",
     "nav": {
       "overview": "ภาพรวม",
-      "memories": "หน่วยความจำ",
-      "mindMap": "แผนที่ความคิด",
-      "candidates": "ผู้สมัคร",
+      "memories": "เอนทิตี",
+      "mindMap": "กราฟความสัมพันธ์",
+      "candidates": "กล่องรับ Event",
       "devTools": "เครื่องมือพัฒนา",
       "playground": "สนามทดสอบ",
-      "evals": "การประเมิน",
+      "evals": "ทดสอบสถานการณ์",
       "analytics": "การวิเคราะห์",
-      "governance": "ธรรมาภิบาล",
+      "governance": "นโยบายเนื้อหา",
       "privacy": "ความเป็นส่วนตัว",
       "security": "ความปลอดภัย",
-      "enterprise": "องค์กร",
+      "enterprise": "สำหรับ studio",
       "usage": "การใช้งาน",
       "budget": "งบประมาณ",
       "reports": "รายงาน",
-      "calculator": "เครื่องคิดเลข",
+      "calculator": "ประมาณต้นทุน",
       "apiKeys": "คีย์ API",
-      "integrations": "การผสานรวม",
+      "integrations": "ปลั๊กอิน Engine",
       "webhooks": "Webhooks",
       "docs": "เอกสาร",
-      "organizations": "องค์กร",
+      "organizations": "โปรเจกต์",
       "settings": "การตั้งค่า",
       "groups": {
-        "memory": "หน่วยความจำ",
+        "memory": "NPC MEMORY",
         "observe": "การเฝ้าระวัง",
-        "govern": "ธรรมาภิบาล",
-        "finops": "การจัดการต้นทุน",
-        "connect": "การเชื่อมต่อ",
-        "system": "ระบบ"
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
+        "system": "WORKSPACE"
       }
     },
     "pinSidebar": "ปักหมุดแถบด้านข้าง",
     "unpinSidebar": "ยุบแถบด้านข้าง",
     "playground": "พื้นที่ทดสอบ",
     "playgroundPage": {
-      "title": "แดชบอร์ดการดีบัก",
-      "subtitle": "ทดสอบคำค้นหาพร้อมการติดตามและปรับแต่งพารามิเตอร์",
+      "title": "Playground",
+      "subtitle": "ทดสอบ NPC memory — สร้างเอนทิตี, บันทึก event, ดึง context กลับ",
       "queryInput": "ป้อนคำค้นหา",
       "queryPlaceholder": "ป้อนคำค้นหาทดสอบ...",
       "parameters": "พารามิเตอร์",
@@ -601,25 +602,25 @@
       "evening": "สวัสดีตอนเย็น"
     },
     "overviewPage": {
-      "subtitle": "นี่คือภาพรวมการใช้งานหน่วยความจำ AI ของคุณ",
-      "totalMemories": "ความทรงจำทั้งหมด",
+      "subtitle": "นี่คือภาพรวม NPC memory graph ของคุณ",
+      "totalMemories": "เอนทิตีทั้งหมด",
       "apiCalls": "การเรียก API",
       "activeKeys": "คีย์ API ที่ใช้งานอยู่",
       "currentPlan": "แผนปัจจุบัน",
       "usage": "การใช้งาน",
       "today": "วันนี้",
       "dailyLimit": "ขีดจำกัดรายวัน",
-      "recentMemories": "ความทรงจำล่าสุด",
+      "recentMemories": "Event ล่าสุด",
       "viewAll": "ดูทั้งหมด",
-      "noMemories": "ยังไม่มีความทรงจำ",
-      "noMemoriesHint": "เริ่มต้นโดยเพิ่มความทรงจำแรกผ่าน API",
+      "noMemories": "ยังไม่มีเอนทิตี",
+      "noMemoriesHint": "สร้าง NPC, กลุ่ม หรือ event ผ่าน API หรือ SDK เพื่อเริ่มต้น",
       "quickStart": "เริ่มต้นอย่างรวดเร็ว",
       "createApiKey": "สร้างคีย์ API",
-      "getStartedApi": "เริ่มต้นใช้งาน API",
+      "getStartedApi": "ยืนยันตัวตนการผสานรวมแรก",
       "viewDocumentation": "ดูเอกสาร",
-      "learnSeizn": "เรียนรู้วิธีใช้ Seizn",
-      "createOrganization": "สร้างองค์กร",
-      "collaborateTeam": "ทำงานร่วมกับทีมของคุณ",
+      "learnSeizn": "ผสานรวมใน 10 บรรทัด — Unity, Unreal หรือ runtime ใดก็ได้",
+      "createOrganization": "สร้างโปรเจกต์",
+      "collaborateTeam": "ตั้งค่า workspace สำหรับเกม",
       "quickExample": "ตัวอย่างด่วน",
       "manageKeys": "จัดการคีย์",
       "upgradePlan": "อัพเกรดแผน",
@@ -636,7 +637,7 @@
     },
     "keysPage": {
       "title": "คีย์ API",
-      "subtitle": "จัดการคีย์ API สำหรับการเข้าถึงบริการ Seizn",
+      "subtitle": "จัดการคีย์ API สำหรับการผสานรวม Seizn ของเกมของคุณ",
       "createNewKey": "สร้างคีย์ใหม่",
       "activeKeys": "คีย์ที่ใช้งานอยู่",
       "noKeysTitle": "ยังไม่มีคีย์ API",
@@ -676,8 +677,8 @@
       "keyRotatedDesc": "คัดลอก key ใหม่นี้เดี๋ยวนี้ key เก่าไม่สามารถใช้งานได้อีกต่อไป"
     },
     "organizationsPage": {
-      "title": "องค์กร",
-      "subtitle": "จัดการทีมและทำงานร่วมกับผู้อื่น",
+      "title": "โปรเจกต์",
+      "subtitle": "จัดการโปรเจกต์ชื่อเกมและการทำงานร่วมกับทีม",
       "newOrganization": "องค์กรใหม่",
       "noOrgsTitle": "ยังไม่มีองค์กร",
       "noOrgsDesc": "สร้างองค์กรแรกของคุณเพื่อเริ่มทำงานร่วมกับทีม",
@@ -732,17 +733,17 @@
         },
         "installSdk": {
           "title": "ติดตั้ง SDK",
-          "description": "เพิ่ม Seizn ในโปรเจกต์ของคุณด้วย npm หรือ pip",
-          "action": "ดู SDK"
+          "description": "เพิ่ม Seizn ในโปรเจกต์: npm, pip หรือ HTTP โดยตรง ปลั๊กอิน Unity/Unreal อยู่ใน integrations",
+          "action": "คัดลอก SDK"
         },
         "createOrg": {
-          "title": "สร้างองค์กร",
-          "description": "ตั้งค่าพื้นที่ทำงานของทีมเพื่อการทำงานร่วมกัน",
-          "action": "สร้างองค์กร"
+          "title": "สร้างโปรเจกต์",
+          "description": "หนึ่งโปรเจกต์ต่อชื่อเกม สภาพแวดล้อม (dev/prod) อยู่ภายใน",
+          "action": "สร้างโปรเจกต์"
         },
         "firstQuery": {
-          "title": "รันคิวรีแรก",
-          "description": "ทดสอบ API ใน playground ด้วยคิวรีตัวอย่าง",
+          "title": "บันทึก Event แรก",
+          "description": "ลอง playground — สร้าง NPC, บันทึก event, ดึง context กลับ",
           "action": "ลองคิวรี"
         }
       },
@@ -779,8 +780,8 @@
       }
     },
     "governance": {
-      "title": "การกำกับดูแล",
-      "subtitle": "จัดการนโยบายข้อมูล กฎการเก็บรักษา และการตั้งค่าการปฏิบัติตามกฎระเบียบ",
+      "title": "นโยบายเนื้อหา",
+      "subtitle": "จัดการตัวกรองเนื้อหา NPC, กฎการเก็บรักษา และนโยบายความเหมาะสมตามอายุ",
       "tabs": {
         "retention": "การเก็บรักษาข้อมูล",
         "access": "การควบคุมการเข้าถึง",
@@ -850,8 +851,8 @@
       }
     },
     "integrations": {
-      "title": "การผสานรวม",
-      "subtitle": "เชื่อมต่อ Seizn กับเครื่องมือและเฟรมเวิร์กที่คุณชื่นชอบ",
+      "title": "ปลั๊กอิน Engine",
+      "subtitle": "ปลั๊กอิน Unity/Unreal, อะแดปเตอร์ dialogue-engine และ SDK ของ framework",
       "searchPlaceholder": "ค้นหาการผสานรวม...",
       "stats": {
         "total": "การผสานรวมทั้งหมด",
@@ -887,7 +888,7 @@
     "analytics": "การวิเคราะห์",
     "analyticsPage": {
       "title": "การวิเคราะห์",
-      "subtitle": "การวิเคราะห์การใช้งานโดยละเอียดและข้อมูลเชิงลึก",
+      "subtitle": "การวิเคราะห์การใช้งานเอนทิตี, event และคิวรี",
       "allOrganizations": "ทุกองค์กร",
       "days7": "7 วัน",
       "days30": "30 วัน",
@@ -915,13 +916,13 @@
       "noDataDescription": "เริ่มเรียกใช้ API เพื่อดูการวิเคราะห์โดยละเอียดที่นี่"
     },
     "memoriesPage": {
-      "title": "ความทรงจำ",
-      "subtitle": "เรียกดูและค้นหาความทรงจำ AI ของคุณ",
-      "totalMemories": "ความทรงจำทั้งหมด",
+      "title": "เอนทิตี",
+      "subtitle": "NPC, กลุ่ม, event และเอนทิตีกราฟอื่นๆ ในโปรเจกต์นี้",
+      "totalMemories": "เอนทิตีทั้งหมด",
       "search": "ค้นหา",
-      "searchPlaceholder": "ค้นหาความทรงจำ...",
-      "namespace": "Namespace",
-      "memoryTypes": "ประเภทความทรงจำ",
+      "searchPlaceholder": "ค้นหาเอนทิตี (NPC, กลุ่ม, event)...",
+      "namespace": "Namespace โปรเจกต์",
+      "memoryTypes": "ประเภทเอนทิตี",
       "tags": "แท็ก",
       "noTags": "ไม่มีแท็กที่ใช้ได้",
       "clearFilters": "ล้างตัวกรอง",
@@ -933,8 +934,8 @@
       "sortRelevance": "เกี่ยวข้องมากที่สุด",
       "activeFilters": "ตัวกรองที่ใช้งานอยู่",
       "loading": "กำลังโหลดความทรงจำ...",
-      "noMemories": "ไม่พบความทรงจำ",
-      "noMatchingMemories": "ลองปรับตัวกรองหรือคำค้นหาของคุณ",
+      "noMemories": "ยังไม่มีเอนทิตี",
+      "noMatchingMemories": "ไม่มีเอนทิตีที่ตรงกับตัวกรองของคุณ",
       "noMemoriesHint": "เริ่มเพิ่มความทรงจำผ่าน API เพื่อดูที่นี่",
       "match": "ตรงกัน",
       "loadMore": "โหลดเพิ่มเติม",
@@ -974,8 +975,8 @@
       "step4": "เหตุการณ์การลดระดับทั้งหมดถูกบันทึกพร้อมการประหยัดต้นทุนเพื่อความโปร่งใส"
     },
     "devtoolsPage": {
-      "title": "เครื่องมือ DevTools สำหรับการเรียกค้น",
-      "subtitle": "ดีบักและวิเคราะห์ไปป์ไลน์ RAG ของคุณ",
+      "title": "Dev tools",
+      "subtitle": "ดีบักและวิเคราะห์การดึง NPC memory",
       "query": "คำค้นหา",
       "noQueryText": "ไม่มีข้อความคำค้นหา",
       "results": "ผลลัพธ์",
@@ -996,9 +997,9 @@
       "emptyDesc": "เลือกการติดตามจากรายการทางซ้ายเพื่อดูไทม์ไลน์ ผู้สมัคร การวิเคราะห์ reranking และทดลอง what-if"
     },
     "enterpriseDashboard": {
-      "title": "องค์กร",
-      "badge": "แผนองค์กร",
-      "subtitle": "กำหนดค่า SSO, SCIM และการตั้งค่าองค์กร",
+      "title": "สำหรับ studio",
+      "badge": "แผน Enterprise",
+      "subtitle": "SSO, SCIM และการตั้งค่า workspace ระดับ studio",
       "tabs": {
         "sso": "Single Sign-On",
         "scim": "การจัดเตรียมผู้ใช้",
@@ -1359,8 +1360,8 @@
       "time": "เวลา"
     },
     "evals": {
-      "title": "การประเมิน",
-      "subtitle": "ทดสอบ A/B และวัดคุณภาพการเรียกข้อมูล",
+      "title": "ทดสอบสถานการณ์",
+      "subtitle": "A/B test และวัดคุณภาพ NPC memory ข้ามเซสชัน",
       "newRun": "รันการประเมินใหม่",
       "runs": "รันการประเมิน",
       "noRuns": "ยังไม่มีรันการประเมิน",
@@ -1393,8 +1394,8 @@
       "waitingForMetrics": "กำลังรอการประเมินให้เสร็จสิ้น..."
     },
     "autopilot": {
-      "title": "ระบบอัตโนมัติ",
-      "subtitle": "การเพิ่มประสิทธิภาพการเรียกข้อมูลที่ขับเคลื่อนด้วย AI",
+      "title": "Autopilot",
+      "subtitle": "การเพิ่มประสิทธิภาพการดึง context ของ NPC",
       "settings": "การตั้งค่า",
       "decisionLogs": "ล็อกการตัดสินใจ",
       "operationMode": "โหมดการทำงาน",
@@ -1403,8 +1404,8 @@
       "noLogs": "ยังไม่มีล็อกการตัดสินใจ"
     },
     "calculator": {
-      "title": "เครื่องคำนวณการใช้งาน",
-      "subtitle": "ประมาณการค่าใช้จ่ายรายเดือนตามการใช้งานที่คาดหวัง",
+      "title": "ประมาณต้นทุน",
+      "subtitle": "ประมาณต้นทุนรายเดือนจากจำนวนเอนทิตีและปริมาณ event",
       "stats": {
         "apiCalls": "การเรียก API",
         "memories": "หน่วยความจำ",
@@ -1448,7 +1449,7 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "กำหนดค่า HTTP callbacks สำหรับการแจ้งเตือนเหตุการณ์แบบเรียลไทม์",
+      "subtitle": "กำหนดค่า HTTP callbacks สำหรับการอัปเดตเอนทิตี/event แบบเรียลไทม์",
       "create": "สร้าง Webhook",
       "stats": {
         "total": "Webhooks ทั้งหมด",
@@ -1690,32 +1691,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "ระบบปฏิบัติการโปรดักชันสำหรับ AI เอเจนต์",
-    "heroSubtitle": "นำเอเจนต์จากไพลอตสู่โปรดักชันด้วยหน่วยความจำที่ควบคุม การสังเกตการณ์ในตัว และการปฏิบัติตามกฎระเบียบที่พิสูจน์ได้",
-    "ctaStart": "เริ่มต้นฟรี",
-    "ctaDemo": "ดูเดโม 2 นาที",
-    "socialProof": "ได้รับความไว้วางใจจากทีมที่ดำเนินการเอเจนต์ในระดับใหญ่",
-    "liveDemo": "เดโมสด",
-    "heroTagline": "ลองใช้ API สด — ไม่ต้องสมัคร",
+    "heroTitle": "หน่วยความจำสำหรับ NPC พลัง AI.",
+    "heroSubtitle": "เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ Seizn มอบหน่วยความจำถาวร ความสัมพันธ์ และการจดจำข้ามรุ่นให้กับ NPC ของคุณ — ราคาต่อกราฟ ไม่ใช่ต่อที่นั่ง",
+    "ctaStart": "อ่านเอกสาร",
+    "ctaDemo": "เล่น smallgod",
+    "socialProof": "สร้างมาเพื่อ game studio ที่ขยายจาก 10 ถึง 10,000 NPC",
+    "liveDemo": "Demo สด",
+    "heroTagline": "เล่น smallgod — god-game อ้างอิงของเราที่สร้างบน Seizn ไม่ต้องสมัคร ไม่ต้องติดตั้ง",
     "firstRetrievalComplete": "การเรียกค้นแรกเสร็จสิ้น",
     "copySnippetHint": "คัดลอกโค้ดด้านล่างเพื่อทำซ้ำ",
-    "copySnippetTitle": "คัดลอกโค้ดนี้",
-    "copySnippetSubtitle": "สร้างจากการตั้งค่าที่แน่นอนของคุณด้านบน",
+    "copySnippetTitle": "ใส่ใน Unity, Unreal หรือ runtime ใดก็ได้",
+    "copySnippetSubtitle": "HTTP wrapper + ปลั๊กอิน C#/C++ อย่างเป็นทางการ ไม่ต้องสร้าง infrastructure เอง",
     "whySeizn": {
-      "title": "ทำไม Seizn ถึงดีกว่า LangChain + Pinecone?",
-      "subtitle": "หยุดประกอบเครื่องมือที่กระจัดกระจาย รับทุกอย่างที่คุณต้องการในสแต็กเดียว",
-      "tracingTitle": "การติดตาม + การประเมินในตัว",
-      "tracingDesc": "ทุกคำขอถูกติดตามโดยค่าเริ่มต้น รันการประเมิน ตรวจจับการถดถอย และดีบักปัญหาการผลิตโดยไม่ต้องเพิ่ม LangSmith หรือการบันทึกที่กำหนดเอง",
-      "tracingBadge": "เปิดค่าเริ่มต้น",
-      "autopilotTitle": "Autopilot ที่คำนึงถึงงบประมาณ",
-      "autopilotDesc": "ตั้งค่างบประมาณ latency หรือค่าใช้จ่าย และ Autopilot จะเลือกกลยุทธ์การเรียกค้นที่เหมาะสมที่สุดโดยอัตโนมัติ ไม่ต้องปรับแต่งด้วยตนเอง",
-      "autopilotBadge": "ตัวเลือก",
-      "governanceTitle": "การกำกับดูแล + บันทึกการตรวจสอบ",
-      "governanceDesc": "การตรวจจับ PII การลืมที่สอดคล้องกับ GDPR และเส้นทางการตรวจสอบที่สมบูรณ์ สร้างมาสำหรับทีมที่ต้องการการปฏิบัติตาม ไม่ใช่ติดตั้งเพิ่มภายหลัง",
-      "governanceBadge": "ค่าเริ่มต้นสำหรับทีม",
-      "lessGlueTitle": "ส่วนประกอบน้อยลง",
-      "lessGlueDesc": "ไม่ต้องจัดการ LangChain + Pinecone + LangSmith + ตัวกรอง PII ที่กำหนดเองอีกต่อไป SDK เดียว แดชบอร์ดเดียว ใบแจ้งหนี้เดียว",
-      "lessGlueBadge": "โค้ดเชื่อมต่อน้อยลง"
+      "title": "ทำไม Seizn vs Inworld / Convai เพียงอย่างเดียว?",
+      "subtitle": "Dialogue engine ทำ voice และบุคลิกภาพได้ยอดเยี่ยม แต่ไม่มีที่ไหนแก้ปัญหา persistent memory ในระดับใหญ่ได้ Seizn เสียบเป็น memory layer",
+      "tracingTitle": "รองรับ dialogue-engine หลากหลาย",
+      "tracingDesc": "ใช้ Inworld, Convai, NVIDIA ACE หรือ LLM ของคุณสำหรับ dialogue Seizn วาง memory ซ้อนทับ — ไม่แทนที่สิ่งที่ใช้งานได้",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "สเกล swarm NPC",
+      "autopilotDesc": "พื้นที่จัดเก็บแบบกราฟ, มิเตอร์ต่อเอนทิตี เกมแบบ Sims, Cities Skylines และ god-game รัน NPC หลายพันตัวโดยไม่มีกำแพงค่าใช้จ่ายต่อที่นั่ง",
+      "autopilotBadge": "ต่อเอนทิตี",
+      "governanceTitle": "หน่วยความจำข้ามรุ่น",
+      "governanceDesc": "ความแค้นอยู่นานกว่าตัวละคร ประวัติกลุ่มส่งต่อสู่ลูกหลาน Primitive ความเป็นเครือญาติ การเป็นพยาน และความสัมพันธ์มีในตัว — ไม่ต้องสร้าง schema เอง",
+      "governanceBadge": "Built-in"
     },
     "trust": {
       "security": "RLS + Key Hashing",
@@ -1726,22 +1724,22 @@
       "auditLogsDesc": "ความสามารถในการติดตามแบบเต็ม"
     },
     "pricingCta": {
-      "title": "ราคาที่เรียบง่ายและโปร่งใส",
-      "subtitle": "เริ่มต้นฟรี ขยายได้เมื่อเติบโต ไม่มีค่าธรรมเนียมแอบแฝง",
+      "title": "ราคาต่อเอนทิตี",
+      "subtitle": "เริ่มต้นฟรี ไม่มีกำแพงต่อที่นั่ง — 10 NPC หรือ 10,000 ขยายตามเอนทิตีและ event ไม่ใช่ที่นั่งนักพัฒนา",
       "viewPricing": "ดูราคา",
-      "contactSales": "ติดต่อฝ่ายขาย"
+      "contactSales": "คุยกับผู้ก่อตั้ง"
     },
     "nav": {
       "docs": "เอกสาร",
       "pricing": "ราคา",
-      "enterprise": "องค์กร",
-      "getApiKey": "รับคีย์ API",
-      "tryDemo": "ลองสาธิต",
+      "compare": "vs Inworld",
+      "enterprise": "สำหรับ Studio",
+      "getApiKey": "จอง demo",
+      "tryDemo": "เล่น smallgod",
       "limits": "ขีดจำกัด",
       "status": "สถานะ",
       "help": "ช่วยเหลือ",
-      "github": "OSS",
-      "compare": "เปรียบเทียบ"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "ตัวสร้างคำขอ",
@@ -1793,9 +1791,9 @@
       "cost": "ต้นทุน"
     },
     "chips": {
-      "trace": "การติดตาม",
-      "eval": "Eval",
-      "policy": "Policy"
+      "trace": "เอนทิตี",
+      "eval": "ความสัมพันธ์",
+      "policy": "Event"
     },
     "playgroundTitle": "ลองใช้เลย",
     "costPanel": {

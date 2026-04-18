@@ -21,7 +21,7 @@ const integrations: Integration[] = [
   {
     id: "langchain",
     name: "LangChain",
-    description: "Build context-aware AI apps with LangChain's memory integration",
+    description: "Run LangChain NPC agents with durable memory, faction state, and relationship recall.",
     category: "frameworks",
     icon: "🦜",
     status: "available",
@@ -31,7 +31,7 @@ const integrations: Integration[] = [
   {
     id: "llamaindex",
     name: "LlamaIndex",
-    description: "Augment LlamaIndex pipelines with persistent memory",
+    description: "Add long-term NPC memory and event recall to LlamaIndex retrieval flows.",
     category: "frameworks",
     icon: "🦙",
     status: "available",
@@ -41,7 +41,7 @@ const integrations: Integration[] = [
   {
     id: "haystack",
     name: "Haystack",
-    description: "Add memory to your Haystack RAG pipelines",
+    description: "Layer NPC memory retrieval into quest, dialogue, and world-state pipelines.",
     category: "frameworks",
     icon: "🌾",
     status: "beta",
@@ -50,7 +50,7 @@ const integrations: Integration[] = [
   {
     id: "semantic-kernel",
     name: "Semantic Kernel",
-    description: "Microsoft's AI orchestration with Seizn memory",
+    description: "Persist NPC memory and relationship state across Semantic Kernel orchestration.",
     category: "frameworks",
     icon: "🔷",
     status: "coming_soon",
@@ -59,7 +59,7 @@ const integrations: Integration[] = [
   {
     id: "openai",
     name: "OpenAI",
-    description: "Use Seizn memory with GPT-4, GPT-3.5, and other OpenAI models",
+    description: "Power GPT-driven NPC dialogue while Seizn stores long-term memory and recall.",
     category: "llms",
     icon: "🤖",
     status: "available",
@@ -68,7 +68,7 @@ const integrations: Integration[] = [
   {
     id: "anthropic",
     name: "Anthropic Claude",
-    description: "Integrate Seizn with Claude for persistent conversations",
+    description: "Run Claude-based NPCs with durable memory, relationships, and cross-session context.",
     category: "llms",
     icon: "🧠",
     status: "available",
@@ -77,7 +77,7 @@ const integrations: Integration[] = [
   {
     id: "google-gemini",
     name: "Google Gemini",
-    description: "Memory-augmented responses with Gemini Pro and Ultra",
+    description: "Retrieve NPC context and world-state memory inside Gemini-powered game flows.",
     category: "llms",
     icon: "💎",
     status: "available",
@@ -86,7 +86,7 @@ const integrations: Integration[] = [
   {
     id: "mistral",
     name: "Mistral AI",
-    description: "Add context retention to Mistral models",
+    description: "Give Mistral-powered NPCs durable recall between sessions and events.",
     category: "llms",
     icon: "🌊",
     status: "beta",
@@ -94,7 +94,7 @@ const integrations: Integration[] = [
   {
     id: "ollama",
     name: "Ollama",
-    description: "Local LLMs with Seizn memory support",
+    description: "Pair local dialogue models with Seizn for persistent NPC memory.",
     category: "llms",
     icon: "🦙",
     status: "available",
@@ -104,7 +104,7 @@ const integrations: Integration[] = [
   {
     id: "supabase",
     name: "Supabase",
-    description: "Sync memories with Supabase PostgreSQL and auth",
+    description: "Sync NPC memory entities, relationships, and auth-backed project access with Supabase.",
     category: "databases",
     icon: "⚡",
     status: "available",
@@ -113,7 +113,7 @@ const integrations: Integration[] = [
   {
     id: "pinecone",
     name: "Pinecone",
-    description: "Use Pinecone as the vector backend for Seizn",
+    description: "Use Pinecone alongside Seizn's NPC memory graph and relationship layer.",
     category: "databases",
     icon: "🌲",
     status: "coming_soon",
@@ -121,7 +121,7 @@ const integrations: Integration[] = [
   {
     id: "weaviate",
     name: "Weaviate",
-    description: "Self-hosted vector storage with Seizn's memory layer",
+    description: "Self-host vector search while Seizn owns NPC memory, entities, and relations.",
     category: "databases",
     icon: "🔮",
     status: "coming_soon",
@@ -130,7 +130,7 @@ const integrations: Integration[] = [
   {
     id: "vercel-ai",
     name: "Vercel AI SDK",
-    description: "Stream responses with memory using Vercel AI SDK",
+    description: "Stream NPC dialogue with Seizn memory in the loop using Vercel AI SDK.",
     category: "platforms",
     icon: "▲",
     status: "available",
@@ -140,7 +140,7 @@ const integrations: Integration[] = [
   {
     id: "nextjs",
     name: "Next.js",
-    description: "Full-stack AI apps with Next.js App Router",
+    description: "Ship NPC memory-backed game tools, live ops, and dashboards with Next.js.",
     category: "platforms",
     icon: "⬛",
     status: "available",
@@ -149,7 +149,7 @@ const integrations: Integration[] = [
   {
     id: "cloudflare-workers",
     name: "Cloudflare Workers",
-    description: "Edge-deployed memory-augmented AI",
+    description: "Run edge NPC services with Seizn-backed memory retrieval and recall.",
     category: "platforms",
     icon: "☁️",
     status: "beta",
@@ -157,26 +157,34 @@ const integrations: Integration[] = [
   {
     id: "zapier",
     name: "Zapier",
-    description: "No-code memory integration with 5000+ apps",
+    description: "Trigger NPC memory workflows across live-ops and support tools without code.",
     category: "platforms",
     icon: "⚡",
     status: "coming_soon",
   },
 ];
 
-const categories = [
-  { id: "all" as CategoryType, label: "All", count: integrations.length },
-  { id: "frameworks" as CategoryType, label: "Frameworks", count: integrations.filter(i => i.category === "frameworks").length },
-  { id: "llms" as CategoryType, label: "LLMs", count: integrations.filter(i => i.category === "llms").length },
-  { id: "databases" as CategoryType, label: "Databases", count: integrations.filter(i => i.category === "databases").length },
-  { id: "platforms" as CategoryType, label: "Platforms", count: integrations.filter(i => i.category === "platforms").length },
-];
+function getIntegrationStatusLabel(
+  status: Integration["status"],
+  t: ReturnType<typeof useDashboardTranslation>["t"]
+) {
+  if (status === "available") return t("dashboard.integrations.status.available");
+  if (status === "beta") return t("dashboard.integrations.status.beta");
+  return t("dashboard.integrations.status.comingSoon");
+}
 
 export default function IntegrationsClient() {
   const { t } = useDashboardTranslation();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
+  const categories = [
+    { id: "all" as CategoryType, label: t("dashboard.integrations.categories.all"), count: integrations.length },
+    { id: "frameworks" as CategoryType, label: t("dashboard.integrations.categories.frameworks"), count: integrations.filter(i => i.category === "frameworks").length },
+    { id: "llms" as CategoryType, label: t("dashboard.integrations.categories.llms"), count: integrations.filter(i => i.category === "llms").length },
+    { id: "databases" as CategoryType, label: t("dashboard.integrations.categories.databases"), count: integrations.filter(i => i.category === "databases").length },
+    { id: "platforms" as CategoryType, label: t("dashboard.integrations.categories.platforms"), count: integrations.filter(i => i.category === "platforms").length },
+  ];
 
   const filteredIntegrations = integrations.filter((integration) => {
     const matchesCategory = selectedCategory === "all" || integration.category === selectedCategory;
@@ -192,10 +200,10 @@ export default function IntegrationsClient() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-szn-text-1">
-          {t("dashboard.integrations.title") || "Integrations"}
+          {t("dashboard.integrations.title")}
         </h1>
         <p className="text-szn-text-2 mt-1">
-          {t("dashboard.integrations.subtitle") || "Connect Seizn with your favorite tools and frameworks"}
+          {t("dashboard.integrations.subtitle")}
         </p>
       </div>
 
@@ -204,28 +212,28 @@ export default function IntegrationsClient() {
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔌</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.total")}</span>
           </div>
           <p className="text-2xl font-bold text-szn-text-1">{integrations.length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.available") || "Available"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.available")}</span>
           </div>
           <p className="text-2xl font-bold text-szn-success">{integrations.filter(i => i.status === "available").length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🧪</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.beta")}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{integrations.filter(i => i.status === "beta").length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔜</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
+            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.comingSoon")}</span>
           </div>
           <p className="text-2xl font-bold text-szn-text-2">{integrations.filter(i => i.status === "coming_soon").length}</p>
         </div>
@@ -238,7 +246,7 @@ export default function IntegrationsClient() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("dashboard.integrations.searchPlaceholder") || "Search integrations..."}
+            placeholder={t("dashboard.integrations.searchPlaceholder")}
             className="w-full px-4 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
           />
         </div>
@@ -284,11 +292,7 @@ export default function IntegrationsClient() {
                           : "bg-szn-surface text-szn-text-2"
                     }`}
                   >
-                    {integration.status === "available"
-                      ? "Available"
-                      : integration.status === "beta"
-                        ? "Beta"
-                        : "Coming Soon"}
+                    {getIntegrationStatusLabel(integration.status, t)}
                   </span>
                 </div>
               </div>
@@ -303,7 +307,7 @@ export default function IntegrationsClient() {
                     onClick={(e) => e.stopPropagation()}
                     className="text-xs px-3 py-1.5 bg-szn-surface text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
                   >
-                    Docs
+                    {t("dashboard.integrations.docs")}
                   </a>
                 )}
                 {integration.installCommand && (
@@ -314,7 +318,7 @@ export default function IntegrationsClient() {
                     }}
                     className="text-xs px-3 py-1.5 bg-szn-success/10 text-szn-success rounded-lg hover:bg-szn-success/20 transition-colors"
                   >
-                    Copy Install
+                    {t("dashboard.integrations.copyInstall")}
                   </button>
                 )}
               </div>
@@ -325,7 +329,7 @@ export default function IntegrationsClient() {
 
       {filteredIntegrations.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-szn-text-2">No integrations found matching your criteria</p>
+          <p className="text-szn-text-2">{t("dashboard.integrations.noResults")}</p>
         </div>
       )}
 
@@ -347,6 +351,7 @@ function IntegrationModal({
   integration: Integration;
   onClose: () => void;
 }) {
+  const { t } = useDashboardTranslation();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -380,11 +385,7 @@ function IntegrationModal({
                       : "bg-szn-surface text-szn-text-2"
                 }`}
               >
-                {integration.status === "available"
-                  ? "Available"
-                  : integration.status === "beta"
-                    ? "Beta"
-                    : "Coming Soon"}
+                {getIntegrationStatusLabel(integration.status, t)}
               </span>
             </div>
             <p className="text-szn-text-2 mt-1">{integration.description}</p>
@@ -396,7 +397,7 @@ function IntegrationModal({
             {integration.installCommand && (
               <div className="mb-4">
                 <label className="block text-sm font-medium text-szn-text-1 mb-2">
-                  Installation
+                  {t("dashboard.integrations.installation")}
                 </label>
                 <div className="flex items-center gap-2 bg-gray-900 rounded-lg p-3">
                   <code className="flex-1 text-sm text-szn-success font-mono">
@@ -406,7 +407,7 @@ function IntegrationModal({
                     onClick={handleCopy}
                     className="px-3 py-1 text-xs bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
                   >
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("dashboard.integrations.copied") : t("dashboard.integrations.copy")}
                   </button>
                 </div>
               </div>
@@ -414,7 +415,7 @@ function IntegrationModal({
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-szn-text-1 mb-2">
-                Quick Start
+                {t("dashboard.integrations.quickStart")}
               </label>
               <div className="bg-szn-bg rounded-lg p-4">
                 <pre className="text-sm text-szn-text-1 overflow-x-auto">
@@ -428,10 +429,10 @@ function IntegrationModal({
         {integration.status === "coming_soon" && (
           <div className="bg-szn-bg rounded-lg p-4 mb-4">
             <p className="text-sm text-szn-text-2">
-              This integration is currently in development. Sign up to get notified when it&apos;s available.
+              {t("dashboard.integrations.comingSoonMsg")}
             </p>
             <button className="mt-3 px-4 py-2 bg-szn-success text-white text-sm rounded-lg hover:bg-szn-success/90">
-              Notify Me
+              {t("dashboard.integrations.notifyMe")}
             </button>
           </div>
         )}
@@ -439,7 +440,7 @@ function IntegrationModal({
         {integration.status === "beta" && (
           <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 mb-4">
             <p className="text-sm text-blue-700 dark:text-blue-200">
-              This integration is in beta. Some features may change before the final release.
+              {t("dashboard.integrations.betaMsg")}
             </p>
           </div>
         )}
@@ -449,14 +450,14 @@ function IntegrationModal({
             onClick={onClose}
             className="flex-1 px-4 py-2 border border-szn-border text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
           >
-            Close
+            {t("dashboard.integrations.close")}
           </button>
           {integration.docsUrl && (
             <a
               href={integration.docsUrl}
               className="flex-1 px-4 py-2 bg-szn-accent text-white text-center rounded-lg hover:bg-szn-accent/90"
             >
-              View Documentation
+              {t("dashboard.integrations.viewDocs")}
             </a>
           )}
         </div>

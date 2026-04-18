@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - Cơ sở hạ tầng bộ nhớ AI",
-    "description": "Cho AI của bạn bộ nhớ lâu dài. Seizn tự động lưu trữ và truy xuất ngữ cảnh, để AI của bạn nhớ các cuộc trò chuyện trước."
+    "title": "Seizn — Bộ nhớ cho NPC AI",
+    "description": "Tích hợp với Inworld, Convai hoặc LLM của bạn. Seizn cung cấp bộ nhớ liên tục, mối quan hệ và khả năng nhớ xuyên thế hệ cho NPC của bạn — tính phí theo thực thể, không theo chỗ ngồi."
   },
   "nav": {
     "features": "Tính năng",
     "pricing": "Giá",
     "docs": "Tài liệu",
     "login": "Đăng nhập",
-    "getStarted": "Bắt đầu"
+    "getStarted": "Đặt lịch demo",
+    "demo": "Chơi smallgod"
   },
   "hero": {
-    "badge": "Ra mắt Q1 2026",
-    "title": "Cơ sở hạ tầng bộ nhớ",
-    "titleHighlight": "cho ứng dụng AI",
-    "subtitle": "Cho AI của bạn bộ nhớ lâu dài. Seizn tự động lưu trữ và truy xuất ngữ cảnh, để AI của bạn nhớ các cuộc trò chuyện trước.",
-    "emailPlaceholder": "Nhập email của bạn",
-    "joinWaitlist": "Tham gia danh sách chờ",
-    "joining": "Đang tham gia...",
-    "onTheList": "Bạn đã có trong danh sách!",
+    "badge": "Demo trực tiếp: smallgod",
+    "title": "NPC của bạn nhớ",
+    "titleHighlight": "xuyên thế hệ.",
+    "subtitle": "Seizn là lớp bộ nhớ cho NPC AI. Tích hợp với Inworld, Convai hoặc LLM của bạn — giữ nguyên dialogue engine bạn yêu thích, thêm persistence tồn tại qua các session và thế hệ.",
+    "emailPlaceholder": "ban@studio.com",
+    "joinWaitlist": "Đặt lịch demo",
+    "joining": "Đang đặt lịch...",
+    "onTheList": "Chúng tôi sẽ liên hệ sớm.",
     "stats": {
-      "tokenSavings": "Tiết kiệm Token",
-      "retrievalTime": "Thời gian truy xuất",
-      "uptimeSla": "SLA Uptime"
+      "tokenSavings": "NPC mỗi dự án",
+      "retrievalTime": "Truy xuất bộ nhớ",
+      "uptimeSla": "Thế hệ bộ nhớ"
     }
   },
   "features": {
-    "title": "Xây dựng cho nhà phát triển",
-    "subtitle": "API đơn giản, cơ sở hạ tầng mạnh mẽ. Thêm bộ nhớ bền vững cho bất kỳ AI nào trong vài phút.",
+    "title": "Xây dựng cho game studio",
+    "subtitle": "Cắm Seizn vào, giữ nguyên dialogue engine. NPC có bộ nhớ, mối quan hệ và persistence tồn tại qua các session và thế hệ.",
     "smartExtraction": {
-      "title": "Trích xuất thông minh",
-      "description": "Tự động trích xuất các sự kiện quan trọng, sở thích và ngữ cảnh từ cuộc trò chuyện bằng Claude AI."
+      "title": "Đồ thị NPC / Phe phái / Sự kiện",
+      "description": "Mô hình hóa NPC, phe phái, nhiệm vụ và sự cố dưới dạng đồ thị. Mối quan hệ (tin tưởng, thù hận, huyết thống) và sự kiện (chứng kiến, bị ảnh hưởng, thực hiện) là các primitive hạng nhất, không phải schema bạn phải tự tạo."
     },
     "instantRetrieval": {
-      "title": "Truy xuất tức thì",
-      "description": "Tìm kiếm hybrid vector + đồ thị trả về ký ức liên quan trong mili giây."
+      "title": "Truy xuất theo ngữ cảnh",
+      "description": "Tìm kiếm hybrid vector + đồ thị chỉ trả về các bộ nhớ liên quan đến NPC này, cảnh này. Truy vấn 'lần gặp trước' trong mili giây."
     },
     "enterpriseSecurity": {
-      "title": "Bảo mật doanh nghiệp",
-      "description": "Mã hóa end-to-end, tuân thủ SOC 2, với kiểm soát truy cập chi tiết và nhật ký kiểm toán."
+      "title": "Quy mô swarm NPC",
+      "description": "Tính phí theo thực thể. Tựa game kiểu Sims, Cities Skylines và god-game chạy hàng nghìn NPC mà không có rào cản chi phí theo chỗ ngồi. Self-host hoặc managed."
     }
   },
   "codePreview": {
-    "title": "Tích hợp đơn giản",
-    "subtitle": "Thêm bộ nhớ cho AI của bạn chỉ với vài dòng code."
+    "title": "Tích hợp trong 10 dòng",
+    "subtitle": "Giữ nguyên dialogue engine. Thêm Seizn cho bộ nhớ."
   },
   "pricing": {
-    "title": "Giá đơn giản, minh bạch",
-    "subtitle": "Bắt đầu miễn phí, mở rộng khi phát triển.",
+    "title": "Tính phí theo thực thể",
+    "subtitle": "Bắt đầu miễn phí. Mở rộng theo thực thể và sự kiện — không theo chỗ ngồi. Phù hợp cho cả indie 10 NPC và swarm 10.000 NPC.",
     "free": {
       "name": "Miễn phí",
       "price": "$0",
@@ -242,7 +243,7 @@
       "apiCallsUsed": "Lệnh gọi API đã dùng",
       "remaining": "Còn lại",
       "upgrade": "Nâng cấp gói",
-      "subtitle": "Theo dõi mức sử dụng API và chi phí của bạn.",
+      "subtitle": "Theo dõi mức sử dụng API theo thực thể, sự kiện và truy vấn.",
       "days7": "7 Days",
       "days30": "30 Days",
       "days90": "90 Days",
@@ -286,42 +287,42 @@
     "docs": "Tài liệu",
     "nav": {
       "overview": "Tổng quan",
-      "memories": "Bộ nhớ",
-      "mindMap": "Sơ đồ tư duy",
-      "candidates": "Ứng viên",
+      "memories": "Thực thể",
+      "mindMap": "Đồ thị quan hệ",
+      "candidates": "Hộp thư sự kiện",
       "devTools": "Công cụ phát triển",
       "playground": "Sân chơi",
-      "evals": "Đánh giá",
+      "evals": "Kiểm thử kịch bản",
       "analytics": "Phân tích",
-      "governance": "Quản trị",
+      "governance": "Chính sách nội dung",
       "privacy": "Quyền riêng tư",
       "security": "Bảo mật",
-      "enterprise": "Doanh nghiệp",
+      "enterprise": "Cho studio",
       "usage": "Sử dụng",
       "budget": "Ngân sách",
       "reports": "Báo cáo",
-      "calculator": "Máy tính",
+      "calculator": "Ước tính chi phí",
       "apiKeys": "Khóa API",
-      "integrations": "Tích hợp",
+      "integrations": "Plugin Engine",
       "webhooks": "Webhooks",
       "docs": "Tài liệu",
-      "organizations": "Tổ chức",
+      "organizations": "Dự án",
       "settings": "Cài đặt",
       "groups": {
-        "memory": "BỘ NHỚ",
+        "memory": "NPC MEMORY",
         "observe": "GIÁM SÁT",
-        "govern": "QUẢN TRỊ",
-        "finops": "CHI PHÍ",
-        "connect": "KẾT NỐI",
-        "system": "HỆ THỐNG"
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
+        "system": "WORKSPACE"
       }
     },
     "pinSidebar": "Ghim thanh bên",
     "unpinSidebar": "Thu gọn thanh bên",
     "playground": "Sân chơi",
     "playgroundPage": {
-      "title": "Bang dieu khien gỡ loi",
-      "subtitle": "Kiem tra truy van voi theo dõi va dieu chinh tham so",
+      "title": "Playground",
+      "subtitle": "Thử nghiệm bộ nhớ NPC — tạo thực thể, ghi sự kiện, truy vấn context lại.",
       "queryInput": "Nhap truy van",
       "queryPlaceholder": "Nhap truy van thu nghiem...",
       "parameters": "Tham so",
@@ -601,25 +602,25 @@
       "evening": "Chào buổi tối"
     },
     "overviewPage": {
-      "subtitle": "Tổng quan về mức sử dụng bộ nhớ AI của bạn",
-      "totalMemories": "Tổng bộ nhớ",
+      "subtitle": "Đây là tổng quan đồ thị bộ nhớ NPC của bạn.",
+      "totalMemories": "Tổng thực thể",
       "apiCalls": "Lệnh gọi API",
       "activeKeys": "Khóa API đang hoạt động",
       "currentPlan": "Gói hiện tại",
       "usage": "Sử dụng",
       "today": "Hôm nay",
       "dailyLimit": "Giới hạn hàng ngày",
-      "recentMemories": "Bộ nhớ gần đây",
+      "recentMemories": "Sự kiện gần đây",
       "viewAll": "Xem tất cả",
-      "noMemories": "Chưa có bộ nhớ",
-      "noMemoriesHint": "Bắt đầu bằng cách thêm bộ nhớ đầu tiên qua API",
+      "noMemories": "Chưa có thực thể",
+      "noMemoriesHint": "Tạo NPC, phe phái hoặc sự kiện qua API hoặc SDK để bắt đầu.",
       "quickStart": "Bắt đầu nhanh",
       "createApiKey": "Tạo khóa API",
-      "getStartedApi": "Bắt đầu với API",
+      "getStartedApi": "Xác thực tích hợp đầu tiên của bạn",
       "viewDocumentation": "Xem tài liệu",
-      "learnSeizn": "Tìm hiểu cách sử dụng Seizn",
-      "createOrganization": "Tạo tổ chức",
-      "collaborateTeam": "Cộng tác với nhóm của bạn",
+      "learnSeizn": "Tích hợp trong 10 dòng — Unity, Unreal hoặc bất kỳ runtime nào",
+      "createOrganization": "Tạo dự án",
+      "collaborateTeam": "Thiết lập workspace cho tựa game",
       "quickExample": "Ví dụ nhanh",
       "manageKeys": "Quản lý khóa",
       "upgradePlan": "Nâng cấp gói",
@@ -636,7 +637,7 @@
     },
     "keysPage": {
       "title": "Khóa API",
-      "subtitle": "Quản lý khóa API để truy cập dịch vụ Seizn",
+      "subtitle": "Quản lý khóa API cho các tích hợp Seizn của game bạn.",
       "createNewKey": "Tạo khóa mới",
       "activeKeys": "Khóa đang hoạt động",
       "noKeysTitle": "Chưa có khóa API",
@@ -676,8 +677,8 @@
       "keyRotatedDesc": "Sao chép key mới này ngay bây giờ. Key cũ không còn hợp lệ."
     },
     "organizationsPage": {
-      "title": "Tổ chức",
-      "subtitle": "Quản lý nhóm và cộng tác với người khác",
+      "title": "Dự án",
+      "subtitle": "Quản lý dự án tựa game và cộng tác nhóm.",
       "newOrganization": "Tổ chức mới",
       "noOrgsTitle": "Chưa có tổ chức",
       "noOrgsDesc": "Create your first organization to start collaborating with your team",
@@ -732,17 +733,17 @@
         },
         "installSdk": {
           "title": "Cài đặt SDK",
-          "description": "Thêm Seizn vào dự án của bạn với npm hoặc pip",
-          "action": "Xem SDK"
+          "description": "Thêm Seizn vào dự án: npm, pip hoặc HTTP trực tiếp. Plugin Unity/Unreal có trong phần integrations.",
+          "action": "Sao chép SDK"
         },
         "createOrg": {
-          "title": "Tạo Tổ chức",
-          "description": "Thiết lập không gian làm việc cho nhóm của bạn để cộng tác",
-          "action": "Tạo Tổ chức"
+          "title": "Tạo dự án",
+          "description": "Một dự án cho mỗi tựa game. Môi trường (dev/prod) nằm bên trong.",
+          "action": "Tạo dự án"
         },
         "firstQuery": {
-          "title": "Chạy Query Đầu tiên",
-          "description": "Kiểm tra API trong playground với query mẫu",
+          "title": "Ghi sự kiện đầu tiên",
+          "description": "Thử playground — tạo NPC, ghi sự kiện, truy vấn context lại.",
           "action": "Thử Query"
         }
       },
@@ -779,8 +780,8 @@
       }
     },
     "governance": {
-      "title": "Quản trị",
-      "subtitle": "Quản lý chính sách dữ liệu, quy tắc lưu giữ và cài đặt tuân thủ",
+      "title": "Chính sách nội dung",
+      "subtitle": "Quản lý bộ lọc nội dung NPC, quy tắc lưu giữ và chính sách phù hợp theo độ tuổi.",
       "tabs": {
         "retention": "Lưu giữ dữ liệu",
         "access": "Kiểm soát truy cập",
@@ -850,8 +851,8 @@
       }
     },
     "integrations": {
-      "title": "Tích hợp",
-      "subtitle": "Kết nối Seizn với các công cụ và framework yêu thích của bạn",
+      "title": "Plugin Engine",
+      "subtitle": "Plugin Unity/Unreal, adapter dialogue-engine và SDK framework.",
       "searchPlaceholder": "Tìm kiếm tích hợp...",
       "stats": {
         "total": "Tổng số tích hợp",
@@ -885,13 +886,13 @@
       "viewDocs": "Xem tài liệu"
     },
     "memoriesPage": {
-      "title": "Ký ức",
-      "subtitle": "Duyệt và tìm kiếm ký ức AI của bạn",
-      "totalMemories": "Tổng số ký ức",
+      "title": "Thực thể",
+      "subtitle": "NPC, phe phái, sự kiện và các thực thể đồ thị khác trong dự án này.",
+      "totalMemories": "Tổng thực thể",
       "search": "Tìm kiếm",
-      "searchPlaceholder": "Tìm kiếm ký ức...",
-      "namespace": "Namespace",
-      "memoryTypes": "Loại ký ức",
+      "searchPlaceholder": "Tìm kiếm thực thể (NPC, phe phái, sự kiện)...",
+      "namespace": "Namespace dự án",
+      "memoryTypes": "Loại thực thể",
       "tags": "Thẻ",
       "noTags": "Không có thẻ nào",
       "clearFilters": "Xóa bộ lọc",
@@ -903,9 +904,9 @@
       "sortRelevance": "Liên quan nhất",
       "activeFilters": "Bộ lọc đang áp dụng",
       "loading": "Đang tải ký ức...",
-      "noMemories": "Không tìm thấy ký ức",
-      "noMatchingMemories": "Thử điều chỉnh bộ lọc hoặc truy vấn tìm kiếm",
-      "noMemoriesHint": "Bắt đầu thêm ký ức qua API để xem chúng ở đây",
+      "noMemories": "Chưa có thực thể",
+      "noMatchingMemories": "Không có thực thể nào khớp với bộ lọc của bạn",
+      "noMemoriesHint": "Bắt đầu thêm bộ nhớ qua API để xem chúng ở đây",
       "match": "khớp",
       "loadMore": "Tải thêm",
       "export": "Xuất",
@@ -944,8 +945,8 @@
       "step4": "Tất cả sự kiện giảm chất lượng được ghi lại kèm chi phí tiết kiệm để đảm bảo minh bạch"
     },
     "devtoolsPage": {
-      "title": "Công cụ phát triển truy xuất",
-      "subtitle": "Gỡ lỗi và phân tích pipeline RAG của bạn",
+      "title": "Dev tools",
+      "subtitle": "Gỡ lỗi và phân tích truy xuất bộ nhớ NPC.",
       "query": "Truy vấn",
       "noQueryText": "Không có văn bản truy vấn",
       "results": "kết quả",
@@ -966,9 +967,9 @@
       "emptyDesc": "Chọn một theo dõi từ danh sách bên trái để xem dòng thời gian, ứng viên, phân tích xếp hạng lại và chạy thí nghiệm what-if."
     },
     "enterpriseDashboard": {
-      "title": "Doanh nghiệp",
-      "badge": "Gói doanh nghiệp",
-      "subtitle": "Cấu hình SSO, SCIM và cài đặt doanh nghiệp",
+      "title": "Cho studio",
+      "badge": "Gói Enterprise",
+      "subtitle": "SSO, SCIM và cài đặt workspace toàn studio.",
       "tabs": {
         "sso": "Đăng nhập một lần",
         "scim": "Cấp phát người dùng",
@@ -1329,8 +1330,8 @@
       "time": "Thời gian"
     },
     "evals": {
-      "title": "Đánh giá",
-      "subtitle": "Kiểm tra A/B và đo lường chất lượng truy xuất",
+      "title": "Kiểm thử kịch bản",
+      "subtitle": "A/B test và đo lường chất lượng bộ nhớ NPC qua các session.",
       "newRun": "Chạy Đánh giá Mới",
       "runs": "Lần Chạy Đánh giá",
       "noRuns": "Chưa có lần chạy đánh giá",
@@ -1363,8 +1364,8 @@
       "waitingForMetrics": "Đang chờ đánh giá hoàn thành..."
     },
     "autopilot": {
-      "title": "Tự động hóa",
-      "subtitle": "Tối ưu hóa truy xuất được hỗ trợ bởi AI",
+      "title": "Autopilot",
+      "subtitle": "Tối ưu hóa truy xuất context NPC.",
       "settings": "Cài đặt",
       "decisionLogs": "Nhật ký Quyết định",
       "operationMode": "Chế độ Hoạt động",
@@ -1373,8 +1374,8 @@
       "noLogs": "Chưa có nhật ký quyết định"
     },
     "calculator": {
-      "title": "Máy tính Sử dụng",
-      "subtitle": "Ước tính chi phí hàng tháng dựa trên mức sử dụng dự kiến",
+      "title": "Ước tính chi phí",
+      "subtitle": "Ước tính chi phí hàng tháng theo số lượng thực thể và lưu lượng sự kiện.",
       "stats": {
         "apiCalls": "Lượt gọi API",
         "memories": "Bộ nhớ",
@@ -1418,7 +1419,7 @@
     },
     "webhooks": {
       "title": "Webhooks",
-      "subtitle": "Cấu hình HTTP callbacks cho thông báo sự kiện theo thời gian thực",
+      "subtitle": "Cấu hình HTTP callbacks cho cập nhật thực thể/sự kiện theo thời gian thực.",
       "create": "Tạo Webhook",
       "stats": {
         "total": "Tổng Webhooks",
@@ -1517,7 +1518,7 @@
     "analytics": "Phân tích",
     "analyticsPage": {
       "title": "Phân tích",
-      "subtitle": "Phân tích và thông tin chi tiết về việc sử dụng",
+      "subtitle": "Phân tích sử dụng theo thực thể, sự kiện và truy vấn.",
       "allOrganizations": "Tất cả Tổ chức",
       "days7": "7 Ngày",
       "days30": "30 Ngày",
@@ -1690,32 +1691,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Hệ điều hành production cho AI agent.",
-    "heroSubtitle": "Đưa agent từ thử nghiệm sang production với bộ nhớ được quản trị, khả năng quan sát tích hợp và tuân thủ có thể chứng minh.",
-    "ctaStart": "Bắt Đầu Miễn Phí",
-    "ctaDemo": "Xem Demo 2 Phút",
-    "socialProof": "Được tin tưởng bởi các đội vận hành agent quy mô lớn",
-    "liveDemo": "Demo Trực Tiếp",
-    "heroTagline": "Thử API trực tiếp — không cần đăng ký",
+    "heroTitle": "Bộ nhớ cho NPC AI.",
+    "heroSubtitle": "Tích hợp với Inworld, Convai hoặc LLM của bạn. Seizn cung cấp bộ nhớ liên tục, mối quan hệ và khả năng nhớ xuyên thế hệ cho NPC — tính phí theo đồ thị, không theo chỗ ngồi.",
+    "ctaStart": "Đọc tài liệu",
+    "ctaDemo": "Chơi smallgod",
+    "socialProof": "Xây dựng cho game studio mở rộng từ 10 đến 10.000 NPC.",
+    "liveDemo": "Demo trực tiếp",
+    "heroTagline": "Chơi smallgod — god-game tham chiếu của chúng tôi xây trên Seizn. Không cần đăng ký, không cần cài đặt.",
     "firstRetrievalComplete": "Truy xuất đầu tiên hoàn tất",
     "copySnippetHint": "Sao chép đoạn mã bên dưới để tái tạo",
-    "copySnippetTitle": "Sao chép đoạn mã này",
-    "copySnippetSubtitle": "Được tạo từ cài đặt chính xác của bạn ở trên",
+    "copySnippetTitle": "Thả vào Unity, Unreal hoặc bất kỳ runtime nào",
+    "copySnippetSubtitle": "HTTP wrapper + plugin C#/C++ chính thức. Không cần cơ sở hạ tầng riêng.",
     "whySeizn": {
-      "title": "Tại sao chọn Seizn thay vì LangChain + Pinecone?",
-      "subtitle": "Ngừng ghép nối các công cụ rời rạc. Nhận mọi thứ bạn cần trong một nền tảng tích hợp.",
-      "tracingTitle": "Theo dõi + đánh giá tích hợp",
-      "tracingDesc": "Every request is traced by default. Run evals, detect regressions, and debug production issues without adding LangSmith or custom logging.",
-      "tracingBadge": "Default ON",
-      "autopilotTitle": "Tự động điều khiển theo ngân sách",
-      "autopilotDesc": "Set a latency or cost budget, and Autopilot automatically chooses the optimal retrieval strategy. No manual tuning required.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Quản trị + nhật ký kiểm toán",
-      "governanceDesc": "PII detection, GDPR-compliant forget, and complete audit trails. Built for teams who need compliance, not bolted on later.",
-      "governanceBadge": "Mặc định cho nhóm",
-      "lessGlueTitle": "Ít thành phần hơn",
-      "lessGlueDesc": "No more juggling LangChain + Pinecone + LangSmith + custom PII filters. One SDK, one dashboard, one bill.",
-      "lessGlueBadge": "Ít mã kết nối hơn"
+      "title": "Tại sao Seizn so với Inworld / Convai đơn thuần?",
+      "subtitle": "Dialogue engine làm giọng nói và tính cách rất tốt. Nhưng không ai giải quyết được bộ nhớ liên tục ở quy mô lớn. Seizn gắn vào như lớp bộ nhớ.",
+      "tracingTitle": "Không phụ thuộc dialogue-engine",
+      "tracingDesc": "Dùng Inworld, Convai, NVIDIA ACE hoặc LLM của bạn cho dialogue. Seizn thêm lớp bộ nhớ bên trên — không thay thế những gì đang hoạt động.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "Quy mô swarm NPC",
+      "autopilotDesc": "Lưu trữ đồ thị, tính phí theo thực thể. Tựa game kiểu Sims, Cities Skylines và god-game chạy hàng nghìn NPC mà không có rào cản chi phí theo chỗ ngồi.",
+      "autopilotBadge": "Theo thực thể",
+      "governanceTitle": "Bộ nhớ xuyên thế hệ",
+      "governanceDesc": "Mối hận tồn tại lâu hơn cả nhân vật. Lịch sử phe phái truyền cho thế hệ con cháu. Primitive huyết thống, chứng kiến và quan hệ đã có sẵn — không cần schema tùy chỉnh.",
+      "governanceBadge": "Tích hợp sẵn"
     },
     "trust": {
       "security": "RLS + Key Hashing",
@@ -1726,22 +1724,22 @@
       "auditLogsDesc": "Khả năng theo dõi đầy đủ"
     },
     "pricingCta": {
-      "title": "Giá cả đơn giản, minh bạch",
-      "subtitle": "Start free, scale as you grow. No hidden fees.",
+      "title": "Tính phí theo thực thể",
+      "subtitle": "Bắt đầu miễn phí. Không có rào cản theo chỗ ngồi — 10 NPC hay 10.000, mở rộng theo thực thể và sự kiện, không theo chỗ ngồi kỹ sư.",
       "viewPricing": "Xem giá",
-      "contactSales": "Liên hệ bán hàng"
+      "contactSales": "Nói chuyện với nhà sáng lập"
     },
     "nav": {
       "docs": "Tài liệu",
-      "pricing": "Giá cả",
-      "enterprise": "Enterprise",
-      "getApiKey": "Lấy khóa API",
-      "tryDemo": "Thử demo",
+      "pricing": "Giá",
+      "compare": "vs Inworld",
+      "enterprise": "Cho Studio",
+      "getApiKey": "Đặt lịch demo",
+      "tryDemo": "Chơi smallgod",
       "limits": "Giới hạn",
       "status": "Trạng thái",
       "help": "Trợ giúp",
-      "github": "OSS",
-      "compare": "So sánh"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Trình tạo yêu cầu",
@@ -1793,9 +1791,9 @@
       "cost": "Chi phí"
     },
     "chips": {
-      "trace": "Theo dõi",
-      "eval": "Eval",
-      "policy": "Chính sách"
+      "trace": "Thực thể",
+      "eval": "Quan hệ",
+      "policy": "Sự kiện"
     },
     "playgroundTitle": "Thử ngay",
     "costPanel": {

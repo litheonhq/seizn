@@ -14,6 +14,29 @@ interface DashboardLocaleContextType {
 
 const DashboardLocaleContext = createContext<DashboardLocaleContextType | null>(null);
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = { ...target };
+
+  for (const [key, sourceValue] of Object.entries(source)) {
+    const targetValue = target[key];
+
+    if (isRecord(sourceValue) && isRecord(targetValue)) {
+      result[key] = deepMerge(targetValue, sourceValue);
+      continue;
+    }
+
+    if (targetValue === undefined) {
+      result[key] = sourceValue;
+    }
+  }
+
+  return result;
+}
+
 // Get nested value from object using dot notation
 function getNestedValue(obj: unknown, path: string): string | undefined {
   const keys = path.split(".");
@@ -48,13 +71,19 @@ function getLocaleFromCookie(): Locale {
 
 // Dynamic dictionary import
 async function loadDictionary(locale: Locale): Promise<Dictionary> {
+  const englishModule = await import("@/i18n/dictionaries/en.json");
+  const englishDict = (englishModule.default || englishModule) as Record<string, unknown>;
+
+  if (locale === "en") {
+    return englishDict;
+  }
+
   try {
     const dict = await import(`@/i18n/dictionaries/${locale}.json`);
-    return dict.default || dict;
+    const localeDict = (dict.default || dict) as Record<string, unknown>;
+    return deepMerge(localeDict, englishDict);
   } catch {
-    // Fallback to English
-    const dict = await import("@/i18n/dictionaries/en.json");
-    return dict.default || dict;
+    return englishDict;
   }
 }
 

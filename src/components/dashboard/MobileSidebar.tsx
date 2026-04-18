@@ -132,7 +132,7 @@ export default function MobileSidebar({
                 Seizn
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1">
-                {"Agent OS"} <span>{seasonConfig.icon}</span>
+                {"NPC Memory"} <span>{seasonConfig.icon}</span>
               </p>
             </div>
           </Link>

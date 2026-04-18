@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - Infrastruktur Memori AI",
-    "description": "Berikan AI Anda memori jangka panjang. Seizn secara otomatis menyimpan dan mengambil konteks, sehingga AI Anda mengingat percakapan sebelumnya."
+    "title": "Seizn — Memori untuk NPC bertenaga AI",
+    "description": "Hubungkan ke Inworld, Convai, atau LLM Anda sendiri. Seizn memberikan NPC Anda memori persisten, hubungan, dan ingatan lintas generasi — harga per entitas, bukan per kursi."
   },
   "nav": {
     "features": "Fitur",
     "pricing": "Harga",
-    "docs": "Dokumentasi",
+    "docs": "Docs",
     "login": "Masuk",
-    "getStarted": "Mulai"
+    "getStarted": "Pesan demo",
+    "demo": "Main smallgod"
   },
   "hero": {
-    "badge": "Peluncuran Q1 2026",
-    "title": "Infrastruktur memori",
-    "titleHighlight": "untuk aplikasi AI",
-    "subtitle": "Berikan AI Anda memori jangka panjang. Seizn secara otomatis menyimpan dan mengambil konteks, sehingga AI Anda mengingat percakapan sebelumnya.",
-    "emailPlaceholder": "Masukkan email Anda",
-    "joinWaitlist": "Bergabung dengan daftar tunggu",
-    "joining": "Bergabung...",
-    "onTheList": "Anda sudah terdaftar!",
+    "badge": "Demo langsung: smallgod",
+    "title": "NPC Anda mengingat",
+    "titleHighlight": "lintas generasi.",
+    "subtitle": "Seizn adalah lapisan memori untuk NPC bertenaga AI. Hubungkan ke Inworld, Convai, atau LLM Anda — pertahankan dialogue engine yang Anda sukai, tambahkan persistensi yang bertahan lintas sesi dan generasi.",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "Pesan demo",
+    "joining": "Memesan...",
+    "onTheList": "Kami akan segera menghubungi Anda.",
     "stats": {
-      "tokenSavings": "Penghematan Token",
-      "retrievalTime": "Waktu Pengambilan",
-      "uptimeSla": "SLA Uptime"
+      "tokenSavings": "NPC per proyek",
+      "retrievalTime": "Pengambilan memori",
+      "uptimeSla": "Generasi memori"
     }
   },
   "features": {
-    "title": "Dibangun untuk pengembang",
-    "subtitle": "API sederhana, infrastruktur yang kuat. Tambahkan memori persisten ke AI mana pun dalam hitungan menit.",
+    "title": "Dibangun untuk studio game",
+    "subtitle": "Pasang Seizn, pertahankan dialogue engine Anda. NPC mendapatkan memori, hubungan, dan persistensi yang bertahan lintas sesi dan generasi.",
     "smartExtraction": {
-      "title": "Ekstraksi Cerdas",
-      "description": "Secara otomatis mengekstrak fakta penting, preferensi, dan konteks dari percakapan menggunakan Claude AI."
+      "title": "Graf NPC / Faksi / Event",
+      "description": "Model NPC, faksi, quest, dan insiden sebagai graf. Hubungan (kepercayaan, dendam, kekerabatan) dan events (menyaksikan, terdampak, pelaku) adalah primitif kelas satu — bukan skema yang harus Anda ciptakan."
     },
     "instantRetrieval": {
-      "title": "Pengambilan Instan",
-      "description": "Pencarian hybrid vektor + graf mengembalikan memori yang relevan dalam milidetik."
+      "title": "Recall kontekstual",
+      "description": "Pencarian hybrid vektor + graf hanya mengembalikan memori yang relevan untuk NPC ini, scene ini. Query 'terakhir kali kita bertemu' dalam milidetik."
     },
     "enterpriseSecurity": {
-      "title": "Keamanan Enterprise",
-      "description": "Enkripsi end-to-end, kepatuhan SOC 2, dengan kontrol akses granular dan log audit."
+      "title": "Skala swarm NPC",
+      "description": "Harga terukur per entitas. Judul mirip Sims, Cities Skylines, dan god-game menjalankan ribuan NPC tanpa tembok biaya per kursi. Self-host atau managed."
     }
   },
   "codePreview": {
-    "title": "Integrasi Sederhana",
-    "subtitle": "Tambahkan memori ke AI Anda hanya dengan beberapa baris kode."
+    "title": "Integrasi dalam 10 baris",
+    "subtitle": "Pertahankan dialogue engine Anda. Tambahkan Seizn untuk memori."
   },
   "pricing": {
-    "title": "Harga sederhana dan transparan",
-    "subtitle": "Mulai gratis, skalakan seiring pertumbuhan.",
+    "title": "Harga per entitas",
+    "subtitle": "Mulai gratis. Skalakan berdasarkan entitas dan event — bukan per kursi. Cocok untuk indie 10-NPC maupun judul swarm 10.000 NPC.",
     "free": {
       "name": "Gratis",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "Dokumentasi",
     "nav": {
       "overview": "Ikhtisar",
-      "memories": "Memori",
-      "mindMap": "Peta Pikiran",
-      "candidates": "Kandidat",
+      "memories": "Entitas",
+      "mindMap": "Graf relasi",
+      "candidates": "Kotak masuk event",
       "devTools": "DevTools",
       "playground": "Playground",
-      "evals": "Evaluasi",
+      "evals": "Uji skenario",
       "analytics": "Analitik",
-      "governance": "Tata Kelola",
+      "governance": "Kebijakan konten",
       "privacy": "Privasi",
       "security": "Keamanan",
-      "enterprise": "Enterprise",
+      "enterprise": "Untuk studio",
       "usage": "Penggunaan",
       "budget": "Anggaran",
       "reports": "Laporan",
-      "calculator": "Kalkulator",
+      "calculator": "Estimasi biaya",
       "apiKeys": "Kunci API",
-      "integrations": "Integrasi",
+      "integrations": "Plugin mesin",
       "webhooks": "Webhooks",
-      "docs": "Dokumentasi",
-      "organizations": "Organisasi",
+      "docs": "Docs",
+      "organizations": "Proyek",
       "settings": "Pengaturan",
       "groups": {
-        "memory": "MEMORI",
+        "memory": "MEMORI NPC",
         "observe": "PEMANTAUAN",
-        "govern": "TATA KELOLA",
-        "finops": "BIAYA",
-        "connect": "KONEKSI",
-        "system": "SISTEM"
+        "govern": "KEBIJAKAN",
+        "finops": "PENGGUNAAN & BIAYA",
+        "connect": "INTEGRASI",
+        "system": "RUANG KERJA"
       }
     },
     "pinSidebar": "Sematkan sidebar",
@@ -601,25 +602,25 @@
       "evening": "Selamat malam"
     },
     "overviewPage": {
-      "subtitle": "Berikut ringkasan penggunaan memori AI Anda",
-      "totalMemories": "Total Memori",
+      "subtitle": "Berikut ikhtisar graf memori NPC Anda.",
+      "totalMemories": "Total entitas",
       "apiCalls": "Panggilan API",
       "activeKeys": "Kunci API Aktif",
       "currentPlan": "Paket Saat Ini",
       "usage": "Penggunaan",
       "today": "Hari ini",
       "dailyLimit": "Batas Harian",
-      "recentMemories": "Memori Terbaru",
+      "recentMemories": "Event terbaru",
       "viewAll": "Lihat Semua",
-      "noMemories": "Belum ada memori",
-      "noMemoriesHint": "Mulai dengan menambahkan memori pertama Anda melalui API",
+      "noMemories": "Belum ada entitas",
+      "noMemoriesHint": "Buat NPC, faksi, atau event via API atau SDK untuk memulai.",
       "quickStart": "Mulai Cepat",
       "createApiKey": "Buat Kunci API",
-      "getStartedApi": "Mulai dengan API",
-      "viewDocumentation": "Lihat Dokumentasi",
-      "learnSeizn": "Pelajari cara menggunakan Seizn",
-      "createOrganization": "Buat Organisasi",
-      "collaborateTeam": "Berkolaborasi dengan tim Anda",
+      "getStartedApi": "Autentikasi integrasi pertama Anda",
+      "viewDocumentation": "Lihat docs",
+      "learnSeizn": "Integrasikan dalam 10 baris — Unity, Unreal, atau runtime apa pun",
+      "createOrganization": "Buat proyek",
+      "collaborateTeam": "Siapkan ruang kerja untuk judul game",
       "quickExample": "Contoh Cepat",
       "manageKeys": "Kelola Kunci",
       "upgradePlan": "Upgrade Paket",
@@ -732,17 +733,17 @@
         },
         "installSdk": {
           "title": "Instal SDK",
-          "description": "Tambahkan Seizn ke proyek Anda dengan npm atau pip",
-          "action": "Lihat SDK"
+          "description": "Tambahkan Seizn ke proyek Anda: npm, pip, atau HTTP langsung. Plugin Unity/Unreal ada di integrasi.",
+          "action": "Salin SDK"
         },
         "createOrg": {
-          "title": "Buat Organisasi",
-          "description": "Siapkan ruang kerja tim Anda untuk kolaborasi",
-          "action": "Buat Organisasi"
+          "title": "Buat Proyek",
+          "description": "Satu proyek per judul game. Environment (dev/prod) ada di dalamnya.",
+          "action": "Buat Proyek"
         },
         "firstQuery": {
-          "title": "Jalankan Query Pertama",
-          "description": "Uji API di playground dengan query contoh",
+          "title": "Rekam event pertama",
+          "description": "Coba playground — buat NPC, log event, query konteks kembali.",
           "action": "Coba Query"
         }
       },
@@ -1690,29 +1691,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "OS produksi untuk agen AI.",
-    "heroSubtitle": "Bawa agen dari pilot ke produksi dengan memori yang dikelola, observabilitas bawaan, dan kepatuhan yang dapat dibuktikan.",
-    "ctaStart": "Mulai Gratis",
-    "ctaDemo": "Tonton Demo 2 Menit",
-    "socialProof": "Dipercaya oleh tim yang menjalankan agen dalam skala besar",
-    "liveDemo": "Demo Langsung",
-    "heroTagline": "Coba API secara langsung — tanpa pendaftaran",
+    "heroTitle": "Memori untuk NPC bertenaga AI.",
+    "heroSubtitle": "Hubungkan ke Inworld, Convai, atau LLM Anda sendiri. Seizn memberikan NPC Anda memori persisten, hubungan, dan ingatan lintas generasi — harga per entitas, bukan per kursi.",
+    "ctaStart": "Baca dokumentasi",
+    "ctaDemo": "Main smallgod",
+    "socialProof": "Dibangun untuk studio game dari 10 hingga 10.000 NPC.",
+    "liveDemo": "Demo langsung",
+    "heroTagline": "Main smallgod — god-game referensi kami yang dibangun di atas Seizn. Tanpa pendaftaran atau instalasi.",
     "firstRetrievalComplete": "Pengambilan pertama selesai",
     "copySnippetHint": "Salin snippet di bawah untuk mereproduksi",
-    "copySnippetTitle": "Salin snippet ini",
-    "copySnippetSubtitle": "Dihasilkan dari pengaturan Anda di atas",
+    "copySnippetTitle": "Integrasikan ke Unity, Unreal, atau runtime apa pun",
+    "copySnippetSubtitle": "HTTP wrapper + plugin C#/C++ resmi. Tidak perlu infrastruktur kustom.",
     "whySeizn": {
-      "title": "Mengapa Seizn vs LangChain + Pinecone?",
-      "subtitle": "Berhenti menempelkan alat yang terfragmentasi. Dapatkan semua yang Anda butuhkan dalam satu stack terintegrasi.",
-      "tracingTitle": "Tracing + Eval Bawaan",
-      "tracingDesc": "Setiap permintaan dilacak secara default. Jalankan eval, deteksi regresi, dan debug masalah produksi tanpa menambahkan LangSmith atau logging kustom.",
-      "tracingBadge": "Default AKTIF",
-      "autopilotTitle": "Autopilot Sadar Anggaran",
-      "autopilotDesc": "Tetapkan anggaran latensi atau biaya, dan Autopilot secara otomatis memilih strategi pengambilan optimal. Tidak perlu tuning manual.",
-      "autopilotBadge": "Opsional",
-      "governanceTitle": "Tata Kelola + Log Audit",
-      "governanceDesc": "Deteksi PII, forget sesuai GDPR, dan jejak audit lengkap. Dibangun untuk tim yang membutuhkan kepatuhan, bukan ditambahkan belakangan.",
-      "governanceBadge": "Default untuk Tim",
+      "title": "Mengapa Seizn vs Inworld / Convai saja?",
+      "subtitle": "Dialogue engine luar biasa untuk suara dan kepribadian. Tidak ada yang memecahkan memori persisten pada skala besar. Seizn terhubung sebagai lapisan memori.",
+      "tracingTitle": "Agnostik dialogue engine",
+      "tracingDesc": "Gunakan Inworld, Convai, NVIDIA ACE, atau LLM Anda sendiri untuk dialog. Seizn menambahkan memori di atasnya — tidak menggantikan yang sudah berjalan.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "Skala swarm NPC",
+      "autopilotDesc": "Penyimpanan graf, terukur per entitas. Judul mirip Sims, Cities Skylines, dan god-game menjalankan ribuan NPC tanpa tembok biaya per kursi.",
+      "autopilotBadge": "Per entitas",
+      "governanceTitle": "Memori lintas generasi",
+      "governanceDesc": "Dendam melampaui karakter. Sejarah faksi merambat ke keturunan. Kekerabatan, kesaksian, dan primitif relasi sudah bawaan — tanpa skema kustom.",
+      "governanceBadge": "Bawaan",
       "lessGlueTitle": "Lebih Sedikit Bagian Bergerak",
       "lessGlueDesc": "Tidak perlu lagi menyulap LangChain + Pinecone + LangSmith + filter PII kustom. Satu SDK, satu dasbor, satu tagihan.",
       "lessGlueBadge": "Lebih Sedikit Kode Perekat"
@@ -1726,22 +1727,22 @@
       "auditLogsDesc": "Keterlacakan penuh"
     },
     "pricingCta": {
-      "title": "Harga sederhana dan transparan",
-      "subtitle": "Mulai gratis, skalakan seiring pertumbuhan. Tanpa biaya tersembunyi.",
+      "title": "Harga per entitas",
+      "subtitle": "Mulai gratis. Tanpa tembok per kursi — 10 NPC atau 10.000, skalakan berdasarkan entitas dan event, bukan kursi developer.",
       "viewPricing": "Lihat Harga",
-      "contactSales": "Hubungi Penjualan"
+      "contactSales": "Bicara dengan founder"
     },
     "nav": {
-      "docs": "Dokumentasi",
+      "docs": "Docs",
       "pricing": "Harga",
-      "enterprise": "Enterprise",
-      "getApiKey": "Dapatkan Kunci API",
-      "tryDemo": "Coba Demo",
+      "compare": "vs Inworld",
+      "enterprise": "Untuk Studio",
+      "getApiKey": "Pesan demo",
+      "tryDemo": "Main smallgod",
       "limits": "Batas",
       "status": "Status",
       "help": "Bantuan",
-      "github": "OSS",
-      "compare": "Bandingkan"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Pembuat Permintaan",
@@ -1793,9 +1794,9 @@
       "cost": "Biaya"
     },
     "chips": {
-      "trace": "Trace",
-      "eval": "Eval",
-      "policy": "Kebijakan"
+      "trace": "Entitas",
+      "eval": "Relasi",
+      "policy": "Event"
     },
     "playgroundTitle": "Coba sekarang",
     "costPanel": {

@@ -1232,7 +1232,7 @@ export default function MemoriesClient() {
               )}
               {afterDate && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
-                  After {afterDate}
+                  {t("dashboard.memoriesPage.after") || "After"} {afterDate}
                   <button onClick={() => setAfterDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
                   </button>
@@ -1240,7 +1240,7 @@ export default function MemoriesClient() {
               )}
               {beforeDate && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
-                  Before {beforeDate}
+                  {t("dashboard.memoriesPage.before") || "Before"} {beforeDate}
                   <button onClick={() => setBeforeDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
                   </button>

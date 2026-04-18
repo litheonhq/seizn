@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI मेमोरी इंफ्रास्ट्रक्चर",
-    "description": "अपने AI को स्थायी मेमोरी दें। Seizn स्वचालित रूप से संदर्भ को संग्रहीत और पुनर्प्राप्त करता है, ताकि आपका AI पिछली बातचीत को याद रखे।"
+    "title": "Seizn — AI NPC के लिए मेमोरी",
+    "description": "Inworld, Convai, या अपने LLM से जोड़ें। Seizn आपके NPC को स्थायी मेमोरी, रिश्ते और पीढ़ियों में याददाश्त देता है — entity pricing, per-seat नहीं।"
   },
   "nav": {
     "features": "विशेषताएं",
     "pricing": "मूल्य निर्धारण",
-    "docs": "दस्तावेज़",
+    "docs": "Docs",
     "login": "लॉगिन",
-    "getStarted": "शुरू करें"
+    "getStarted": "Demo बुक करें",
+    "demo": "smallgod खेलें"
   },
   "hero": {
-    "badge": "Q1 2026 में लॉन्च",
-    "title": "मेमोरी इंफ्रास्ट्रक्चर",
-    "titleHighlight": "AI एप्लिकेशन के लिए",
-    "subtitle": "अपने AI को स्थायी मेमोरी दें। Seizn स्वचालित रूप से संदर्भ को संग्रहीत और पुनर्प्राप्त करता है, ताकि आपका AI पिछली बातचीत को याद रखे।",
-    "emailPlaceholder": "अपना ईमेल दर्ज करें",
-    "joinWaitlist": "प्रतीक्षा सूची में शामिल हों",
-    "joining": "शामिल हो रहे हैं...",
-    "onTheList": "आप सूची में हैं!",
+    "badge": "लाइव demo: smallgod",
+    "title": "आपके NPC याद करते हैं",
+    "titleHighlight": "पीढ़ियों तक।",
+    "subtitle": "Seizn, AI NPC के लिए मेमोरी लेयर है। इसे Inworld, Convai, या अपने LLM से जोड़ें — पसंदीदा dialogue engine रखें, sessions और generations में persistence जोड़ें।",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "Demo बुक करें",
+    "joining": "बुक हो रहा है...",
+    "onTheList": "हम जल्द संपर्क करेंगे।",
     "stats": {
-      "tokenSavings": "टोकन बचत",
-      "retrievalTime": "पुनर्प्राप्ति समय",
-      "uptimeSla": "अपटाइम SLA"
+      "tokenSavings": "प्रति project NPC",
+      "retrievalTime": "Memory retrieval",
+      "uptimeSla": "Memory की पीढ़ियां"
     }
   },
   "features": {
-    "title": "डेवलपर्स के लिए निर्मित",
-    "subtitle": "सरल API, शक्तिशाली इंफ्रास्ट्रक्चर। मिनटों में किसी भी AI में स्थायी मेमोरी जोड़ें।",
+    "title": "Game studios के लिए बना",
+    "subtitle": "Seizn जोड़ें, dialogue engine रखें। NPC को memory, relationships और sessions व generations में persistence मिलती है।",
     "smartExtraction": {
-      "title": "स्मार्ट निष्कर्षण",
-      "description": "Claude AI का उपयोग करके बातचीत से महत्वपूर्ण घटनाओं, प्राथमिकताओं और संदर्भ को स्वचालित रूप से निकालें।"
+      "title": "NPC / Faction / Event graph",
+      "description": "NPC, factions, quests और incidents को graph में model करें। Relationships (trust, grudge, kinship) और events (witnessed, affected, actor) first-class primitives हैं — खुद schema नहीं बनाना पड़ता।"
     },
     "instantRetrieval": {
-      "title": "त्वरित पुनर्प्राप्ति",
-      "description": "हाइब्रिड वेक्टर + ग्राफ खोज मिलीसेकंड में प्रासंगिक यादें लौटाता है।"
+      "title": "Context-aware recall",
+      "description": "Hybrid vector + graph retrieval सिर्फ उन memories को लौटाता है जो इस NPC और इस scene के लिए relevant हैं। 'Last time we met' queries milliseconds में।"
     },
     "enterpriseSecurity": {
-      "title": "एंटरप्राइज़ सुरक्षा",
-      "description": "एंड-टू-एंड एन्क्रिप्शन, SOC 2 अनुपालन, विस्तृत एक्सेस नियंत्रण और ऑडिट लॉग के साथ।"
+      "title": "Swarm-NPC scale",
+      "description": "Per-entity metered pricing। Sims-like, Cities Skylines-like और god-game titles हजारों NPC बिना per-seat cost wall के चला सकते हैं। Self-host या managed।"
     }
   },
   "codePreview": {
-    "title": "सरल एकीकरण",
-    "subtitle": "कोड की कुछ पंक्तियों के साथ अपने AI में मेमोरी जोड़ें।"
+    "title": "10 lines में integration",
+    "subtitle": "Dialogue engine रखें। Memory के लिए Seizn जोड़ें।"
   },
   "pricing": {
-    "title": "सरल, पारदर्शी मूल्य निर्धारण",
-    "subtitle": "मुफ्त में शुरू करें, विकास के साथ स्केल करें।",
+    "title": "Per-entity pricing",
+    "subtitle": "मुफ्त में शुरू करें। Entities और events पर scale करें — per seat नहीं। 10-NPC indie और 10,000-NPC swarm titles दोनों के लिए।",
     "free": {
       "name": "मुफ्त",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "दस्तावेज़",
     "nav": {
       "overview": "अवलोकन",
-      "memories": "मेमोरी",
-      "mindMap": "माइंड मैप",
-      "candidates": "उम्मीदवार",
-      "devTools": "डेव टूल्स",
-      "playground": "प्लेग्राउंड",
-      "evals": "मूल्यांकन",
-      "analytics": "एनालिटिक्स",
-      "governance": "गवर्नेंस",
+      "memories": "Entities",
+      "mindMap": "Relation graph",
+      "candidates": "Event inbox",
+      "devTools": "Dev tools",
+      "playground": "Playground",
+      "evals": "Scenario tests",
+      "analytics": "Analytics",
+      "governance": "Content policy",
       "privacy": "गोपनीयता",
       "security": "सुरक्षा",
-      "enterprise": "एंटरप्राइज़",
+      "enterprise": "Studios के लिए",
       "usage": "उपयोग",
-      "budget": "बजट",
-      "reports": "रिपोर्ट",
-      "calculator": "कैलकुलेटर",
-      "apiKeys": "API कुंजियाँ",
-      "integrations": "इंटीग्रेशन",
-      "webhooks": "वेबहुक",
-      "docs": "दस्तावेज़",
-      "organizations": "संगठन",
+      "budget": "Budget",
+      "reports": "Reports",
+      "calculator": "Cost estimator",
+      "apiKeys": "API keys",
+      "integrations": "Engine plugins",
+      "webhooks": "Webhooks",
+      "docs": "Docs",
+      "organizations": "Projects",
       "settings": "सेटिंग्स",
       "groups": {
-        "memory": "मेमोरी",
-        "observe": "मॉनिटरिंग",
-        "govern": "गवर्नेंस",
-        "finops": "लागत प्रबंधन",
-        "connect": "कनेक्ट",
-        "system": "सिस्टम"
+        "memory": "NPC MEMORY",
+        "observe": "OBSERVE",
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
+        "system": "WORKSPACE"
       }
     },
     "pinSidebar": "साइडबार पिन करें",
@@ -601,27 +602,27 @@
       "evening": "शुभ संध्या"
     },
     "overviewPage": {
-      "subtitle": "आपके AI मेमोरी उपयोग का अवलोकन",
-      "totalMemories": "कुल यादें",
+      "subtitle": "आपके NPC memory graph का अवलोकन।",
+      "totalMemories": "कुल entities",
       "apiCalls": "API कॉल",
-      "activeKeys": "सक्रिय API कुंजियां",
-      "currentPlan": "वर्तमान प्लान",
+      "activeKeys": "सक्रिय API keys",
+      "currentPlan": "वर्तमान plan",
       "usage": "उपयोग",
       "today": "आज",
       "dailyLimit": "दैनिक सीमा",
-      "recentMemories": "हाल की यादें",
+      "recentMemories": "हाल के events",
       "viewAll": "सभी देखें",
-      "noMemories": "अभी तक कोई यादें नहीं",
-      "noMemoriesHint": "API के माध्यम से अपनी पहली याद जोड़कर शुरू करें",
+      "noMemories": "अभी तक कोई entity नहीं",
+      "noMemoriesHint": "API या SDK से NPC, factions या events बनाएं।",
       "quickStart": "त्वरित शुरुआत",
-      "createApiKey": "API कुंजी बनाएं",
-      "getStartedApi": "API के साथ शुरू करें",
-      "viewDocumentation": "दस्तावेज़ देखें",
-      "learnSeizn": "Seizn का उपयोग कैसे करें सीखें",
-      "createOrganization": "संगठन बनाएं",
-      "collaborateTeam": "अपनी टीम के साथ सहयोग करें",
+      "createApiKey": "API key बनाएं",
+      "getStartedApi": "पहला integration authenticate करें",
+      "viewDocumentation": "Docs देखें",
+      "learnSeizn": "10 lines में integrate करें — Unity, Unreal या कोई भी runtime",
+      "createOrganization": "Project बनाएं",
+      "collaborateTeam": "Game title के लिए workspace सेट करें",
       "quickExample": "त्वरित उदाहरण",
-      "manageKeys": "कुंजियां प्रबंधित करें",
+      "manageKeys": "Keys manage करें",
       "upgradePlan": "प्लान अपग्रेड करें",
       "apiUsageChart": "API उपयोग",
       "last7days": "पिछले 7 दिन",
@@ -731,19 +732,19 @@
           "action": "ट्रेस देखें"
         },
         "installSdk": {
-          "title": "SDK स्थापित करें",
-          "description": "npm या pip के साथ अपने प्रोजेक्ट में Seizn जोड़ें",
-          "action": "SDK देखें"
+          "title": "SDK install करें",
+          "description": "Seizn को project में जोड़ें: npm, pip, या direct HTTP। Unity/Unreal plugins integrations में।",
+          "action": "SDK copy करें"
         },
         "createOrg": {
-          "title": "संगठन बनाएं",
-          "description": "सहयोग के लिए अपनी टीम का कार्यक्षेत्र सेट करें",
-          "action": "संगठन बनाएं"
+          "title": "Project बनाएं",
+          "description": "एक game title के लिए एक project। Environments (dev/prod) अंदर होते हैं।",
+          "action": "Project बनाएं"
         },
         "firstQuery": {
-          "title": "पहली क्वेरी चलाएं",
-          "description": "नमूना क्वेरी के साथ playground में API का परीक्षण करें",
-          "action": "क्वेरी आज़माएं"
+          "title": "पहला event record करें",
+          "description": "Playground आज़माएं — NPC बनाएं, event log करें, context query करें।",
+          "action": "Query आज़माएं"
         }
       },
       "takeTour": "टूर लें",
@@ -1690,58 +1691,58 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "AI एजेंटों के लिए प्रोडक्शन OS।",
-    "heroSubtitle": "गवर्न्ड मेमोरी, बिल्ट-इन ऑब्जर्वेबिलिटी और प्रमाणित कम्प्लायंस के साथ एजेंटों को पायलट से प्रोडक्शन तक ले जाएं।",
-    "ctaStart": "मुफ्त में शुरू करें",
-    "ctaDemo": "2 मिनट का डेमो देखें",
-    "socialProof": "बड़े पैमाने पर एजेंट चलाने वाली टीमों द्वारा विश्वसनीय",
-    "liveDemo": "लाइव डेमो",
-    "heroTagline": "API को लाइव आज़माएं — साइनअप की ज़रूरत नहीं",
-    "firstRetrievalComplete": "पहली पुनर्प्राप्ति पूर्ण",
-    "copySnippetHint": "पुन: उत्पादन के लिए नीचे दिया गया स्निपेट कॉपी करें",
-    "copySnippetTitle": "यह स्निपेट कॉपी करें",
-    "copySnippetSubtitle": "ऊपर आपकी सटीक सेटिंग्स से उत्पन्न",
+    "heroTitle": "AI NPC के लिए Memory।",
+    "heroSubtitle": "Inworld, Convai, या अपने LLM से जोड़ें। Seizn आपके NPC को persistent memory, relationships और cross-generation recall देता है — graph-priced, per-seat नहीं।",
+    "ctaStart": "Docs पढ़ें",
+    "ctaDemo": "smallgod खेलें",
+    "socialProof": "Game studios के लिए बना — 10 से 10,000 NPC तक।",
+    "liveDemo": "Live demo",
+    "heroTagline": "smallgod खेलें — Seizn पर बना हमारा reference god-game। Sign-up और install की ज़रूरत नहीं।",
+    "firstRetrievalComplete": "पहली retrieval पूर्ण",
+    "copySnippetHint": "नीचे दिया snippet copy करें",
+    "copySnippetTitle": "Unity, Unreal या किसी भी runtime में जोड़ें",
+    "copySnippetSubtitle": "HTTP wrapper + official C#/C++ plugins। कोई custom infrastructure नहीं।",
     "whySeizn": {
-      "title": "LangChain + Pinecone की जगह Seizn क्यों?",
-      "subtitle": "खंडित उपकरणों को जोड़ना बंद करें। एक एकीकृत स्टैक में वह सब कुछ प्राप्त करें जो आपको चाहिए।",
-      "tracingTitle": "बिल्ट-इन ट्रेसिंग + मूल्यांकन",
-      "tracingDesc": "हर अनुरोध डिफ़ॉल्ट रूप से ट्रेस होता है। LangSmith या कस्टम लॉगिंग जोड़े बिना मूल्यांकन चलाएं, रिग्रेशन का पता लगाएं और प्रोडक्शन मुद्दों को डीबग करें।",
-      "tracingBadge": "डिफ़ॉल्ट रूप से चालू",
-      "autopilotTitle": "बजट-जागरूक ऑटोपायलट",
-      "autopilotDesc": "विलंबता या लागत बजट सेट करें, और ऑटोपायलट स्वचालित रूप से इष्टतम पुनर्प्राप्ति रणनीति चुनता है। कोई मैन्युअल ट्यूनिंग नहीं।",
-      "autopilotBadge": "वैकल्पिक",
-      "governanceTitle": "शासन + ऑडिट लॉग",
-      "governanceDesc": "PII पहचान, GDPR-अनुपालक भूलना, और पूर्ण ऑडिट ट्रेल। अनुपालन की आवश्यकता वाली टीमों के लिए बनाया गया, बाद में नहीं जोड़ा गया।",
-      "governanceBadge": "टीमों के लिए डिफ़ॉल्ट",
-      "lessGlueTitle": "कम चलने वाले हिस्से",
-      "lessGlueDesc": "LangChain + Pinecone + LangSmith + कस्टम PII फ़िल्टर को संभालना बंद करें। एक SDK, एक डैशबोर्ड, एक बिल।",
-      "lessGlueBadge": "कम ग्लू कोड"
+      "title": "सिर्फ Inworld / Convai की बजाय Seizn क्यों?",
+      "subtitle": "Dialogue engines आवाज़ और personality में बेहतरीन हैं। लेकिन कोई भी scale पर persistent memory नहीं solve करता। Seizn memory layer के रूप में जुड़ता है।",
+      "tracingTitle": "Dialogue engine से independent",
+      "tracingDesc": "Dialogue के लिए Inworld, Convai, NVIDIA ACE, या अपना LLM इस्तेमाल करें। Seizn ऊपर memory layer जोड़ता है — जो काम करता है उसे नहीं बदलता।",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "Swarm-NPC scale",
+      "autopilotDesc": "Graph storage, per-entity metered। Sims-like, Cities Skylines-like और god-game titles हजारों NPC बिना per-seat cost wall के चला सकते हैं।",
+      "autopilotBadge": "Per-entity",
+      "governanceTitle": "Cross-generation memory",
+      "governanceDesc": "Grudges characters से ज़्यादा जीते हैं। Faction history descendants को मिलती है। Kinship, witness और relation primitives built-in हैं — कोई custom schema नहीं।",
+      "governanceBadge": "Built-in",
+      "lessGlueTitle": "कम moving parts",
+      "lessGlueDesc": "LangChain + Pinecone + LangSmith + custom PII filters को juggle करना बंद करें। एक SDK, एक dashboard, एक bill।",
+      "lessGlueBadge": "कम glue code"
     },
     "trust": {
-      "security": "RLS + की हैशिंग",
-      "securityDesc": "डिफ़ॉल्ट रूप से सुरक्षित",
-      "rateLimits": "दर सीमाएं",
-      "rateLimitsDesc": "उपयोग अलर्ट",
-      "auditLogs": "ऑडिट लॉग",
-      "auditLogsDesc": "पूर्ण ट्रेसेबिलिटी"
+      "security": "RLS + Key Hashing",
+      "securityDesc": "Default से secure",
+      "rateLimits": "Rate limits",
+      "rateLimitsDesc": "Usage alerts",
+      "auditLogs": "Audit logs",
+      "auditLogsDesc": "पूर्ण traceability"
     },
     "pricingCta": {
-      "title": "सरल, पारदर्शी मूल्य निर्धारण",
-      "subtitle": "मुफ्त में शुरू करें, विकास के साथ स्केल करें। कोई छिपी हुई फीस नहीं।",
-      "viewPricing": "मूल्य देखें",
-      "contactSales": "बिक्री से संपर्क करें"
+      "title": "Per-entity pricing",
+      "subtitle": "मुफ्त में शुरू करें। Per-seat walls नहीं — 10 NPC या 10,000, entities और events पर scale करें, engineer seats पर नहीं।",
+      "viewPricing": "Pricing देखें",
+      "contactSales": "Founder से बात करें"
     },
     "nav": {
-      "docs": "दस्तावेज़",
-      "pricing": "मूल्य",
-      "enterprise": "एंटरप्राइज़",
-      "getApiKey": "API कुंजी प्राप्त करें",
-      "tryDemo": "डेमो आज़माएं",
-      "limits": "सीमाएं",
-      "status": "स्थिति",
-      "help": "सहायता",
-      "github": "OSS",
-      "compare": "तुलना करें"
+      "docs": "Docs",
+      "pricing": "Pricing",
+      "compare": "vs Inworld",
+      "enterprise": "Studios के लिए",
+      "getApiKey": "Demo बुक करें",
+      "tryDemo": "smallgod खेलें",
+      "limits": "Limits",
+      "status": "Status",
+      "help": "Help",
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "अनुरोध बिल्डर",
@@ -1793,9 +1794,9 @@
       "cost": "लागत"
     },
     "chips": {
-      "trace": "ट्रेस",
-      "eval": "इवैल",
-      "policy": "पॉलिसी"
+      "trace": "Entities",
+      "eval": "Relations",
+      "policy": "Events"
     },
     "playgroundTitle": "अभी आज़माएं",
     "costPanel": {
