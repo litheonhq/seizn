@@ -268,11 +268,9 @@
       "settings": "설정",
       "groups": {
         "memory": "메모리",
-        "observe": "모니터링",
-        "govern": "거버넌스",
-        "finops": "비용관리",
-        "connect": "연동",
-        "system": "시스템"
+        "system": "시스템",
+        "build": "개발",
+        "integrate": "연동"
       }
     },
     "pinSidebar": "사이드바 고정",

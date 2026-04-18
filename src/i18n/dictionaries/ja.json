@@ -383,11 +383,9 @@
       "settings": "設定",
       "groups": {
         "memory": "メモリ",
-        "observe": "モニタリング",
-        "govern": "ガバナンス",
-        "finops": "コスト管理",
-        "connect": "接続",
-        "system": "システム"
+        "system": "システム",
+        "build": "開発",
+        "integrate": "連携"
       }
     },
     "pinSidebar": "サイドバーを固定",

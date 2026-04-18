@@ -268,11 +268,9 @@
       "settings": "Settings",
       "groups": {
         "memory": "NPC MEMORY",
-        "observe": "OBSERVE",
-        "govern": "POLICIES",
-        "finops": "USAGE & COST",
-        "connect": "INTEGRATE",
-        "system": "WORKSPACE"
+        "system": "WORKSPACE",
+        "build": "Build",
+        "integrate": "Integrate"
       }
     },
     "pinSidebar": "Pin sidebar",

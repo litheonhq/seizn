@@ -310,11 +310,9 @@
       "settings": "Pengaturan",
       "groups": {
         "memory": "MEMORI NPC",
-        "observe": "PEMANTAUAN",
-        "govern": "KEBIJAKAN",
-        "finops": "PENGGUNAAN & BIAYA",
-        "connect": "INTEGRASI",
-        "system": "RUANG KERJA"
+        "system": "RUANG KERJA",
+        "build": "Bangun",
+        "integrate": "Integrasi"
       }
     },
     "pinSidebar": "Sematkan sidebar",

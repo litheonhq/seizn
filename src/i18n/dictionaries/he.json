@@ -310,11 +310,9 @@
       "settings": "הגדרות",
       "groups": {
         "memory": "זיכרון NPC",
-        "observe": "ניטור",
-        "govern": "מדיניות",
-        "finops": "שימוש ועלות",
-        "connect": "אינטגרציה",
-        "system": "סביבת עבודה"
+        "system": "סביבת עבודה",
+        "build": "בנייה",
+        "integrate": "שילוב"
       }
     },
     "pinSidebar": "הצמד סרגל צד",

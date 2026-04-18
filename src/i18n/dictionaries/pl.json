@@ -310,11 +310,9 @@
       "settings": "Ustawienia",
       "groups": {
         "memory": "PAMIĘĆ NPC",
-        "observe": "MONITORING",
-        "govern": "POLITYKI",
-        "finops": "UŻYCIE I KOSZTY",
-        "connect": "INTEGRUJ",
-        "system": "OBSZAR ROBOCZY"
+        "system": "OBSZAR ROBOCZY",
+        "build": "Tworzenie",
+        "integrate": "Integracja"
       }
     },
     "pinSidebar": "Przypnij pasek boczny",
