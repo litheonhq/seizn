@@ -1697,7 +1697,7 @@
     "ctaDemo": "试玩 smallgod",
     "socialProof": "为 NPC 规模从 10 到 10,000 的游戏工作室打造。",
     "liveDemo": "在线演示",
-    "heroTagline": "试玩 smallgod — 以 Seizn 构建的参考神明游戏。无需注册，无需安装。",
+    "heroTagline": "直接调用检索管道。完整游戏演示请前往 smallgod。",
     "copySnippetHint": "复制以下代码片段以重现",
     "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何运行时",
     "copySnippetSubtitle": "HTTP 封装器＋官方 C#/C++ 插件。无需自建基础设施。",
@@ -1734,7 +1734,7 @@
       "enterprise": "工作室方案",
       "getApiKey": "预约演示",
       "tryDemo": "试玩 smallgod",
-      "compare": "vs Inworld",
+      "compare": "集成",
       "limits": "限额",
       "status": "状态",
       "help": "帮助",
@@ -1794,7 +1794,7 @@
       "eval": "关系",
       "policy": "事件"
     },
-    "playgroundTitle": "立即体验",
+    "playgroundTitle": "API 游乐场",
     "firstRetrievalComplete": "首次检索完成",
     "costPanel": {
       "calculating": "正在计算费用...",

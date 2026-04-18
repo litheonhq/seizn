@@ -1701,11 +1701,11 @@
     "ctaDemo": "smallgod spielen",
     "socialProof": "Entwickelt für Game Studios, die von 10 auf 10.000 NPCs skalieren.",
     "liveDemo": "Live-Demo",
-    "heroTagline": "Spiele smallgod — unser Referenz-Gottspiel auf Seizn-Basis. Ohne Anmeldung, ohne Installation.",
+    "heroTagline": "Rufe die Retrieval-Pipeline direkt auf. Die vollständige Spiel-Demo findest du in smallgod.",
     "chips": {
-      "trace": "Entitäten",
-      "eval": "Beziehungen",
-      "policy": "Events"
+      "trace": "Trace",
+      "eval": "Bewertung",
+      "policy": "Richtlinie"
     },
     "copySnippetTitle": "In Unity, Unreal oder jede Runtime integrieren",
     "copySnippetSubtitle": "HTTP-Wrapper + offizielle C#/C++-Plugins. Keine eigene Infrastruktur nötig.",
@@ -1739,7 +1739,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Preise",
-      "compare": "vs Inworld",
+      "compare": "Integrationen",
       "enterprise": "Für Studios",
       "getApiKey": "Demo buchen",
       "tryDemo": "smallgod spielen",
@@ -1797,12 +1797,7 @@
       "trace": "Trace",
       "cost": "Kosten"
     },
-    "chips": {
-      "trace": "Trace",
-      "eval": "Bewertung",
-      "policy": "Richtlinie"
-    },
-    "playgroundTitle": "Jetzt ausprobieren",
+    "playgroundTitle": "API-Playground",
     "costPanel": {
       "calculating": "Kosten werden berechnet...",
       "noCost": "Führen Sie eine Abfrage aus, um die Kosten zu sehen",

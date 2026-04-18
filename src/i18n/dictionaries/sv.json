@@ -1697,11 +1697,11 @@
     "ctaDemo": "Spela smallgod",
     "socialProof": "Byggt för spelstudior som skalar från 10 till 10 000 NPC:er.",
     "liveDemo": "Live-demo",
-    "heroTagline": "Spela smallgod — vårt referensgudspel byggt på Seizn. Ingen registrering, ingen installation.",
+    "heroTagline": "Anropa retrieval-pipelinen direkt. För den fullständiga speldemon, spela smallgod.",
     "chips": {
-      "trace": "Entiteter",
-      "eval": "Relationer",
-      "policy": "Events"
+      "trace": "Spårning",
+      "eval": "Eval",
+      "policy": "Policy"
     },
     "copySnippetTitle": "Integrera i Unity, Unreal eller valfri runtime",
     "copySnippetSubtitle": "HTTP-omslag + officiella C#/C++-plugins. Ingen egen infrastruktur behövs.",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Priser",
-      "compare": "vs Inworld",
+      "compare": "Integrationer",
       "enterprise": "För studios",
       "getApiKey": "Boka demo",
       "tryDemo": "Spela smallgod",
@@ -1793,12 +1793,7 @@
       "trace": "Spårning",
       "cost": "Kostnad"
     },
-    "chips": {
-      "trace": "Spårning",
-      "eval": "Eval",
-      "policy": "Policy"
-    },
-    "playgroundTitle": "Prova nu",
+    "playgroundTitle": "API-playground",
     "costPanel": {
       "calculating": "Beräknar kostnader...",
       "noCost": "Kör en fråga för att se kostnadsuppdelning",

@@ -1697,7 +1697,7 @@
     "ctaDemo": "العب smallgod",
     "socialProof": "مصمم لاستوديوهات الألعاب من 10 إلى 10,000 شخصية NPC.",
     "liveDemo": "عرض مباشر",
-    "heroTagline": "العب smallgod — لعبتنا المرجعية المبنية على Seizn. بلا تسجيل أو تثبيت.",
+    "heroTagline": "استعلم مباشرة من خط الاسترجاع. لتجربة اللعبة الكاملة، العب smallgod.",
     "firstRetrievalComplete": "اكتمل الاسترجاع الأول",
     "copySnippetHint": "انسخ المقتطف أدناه للتكرار",
     "copySnippetTitle": "تكامل في Unity أو Unreal أو أي محرك",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "الأسعار",
-      "compare": "vs Inworld",
+      "compare": "التكاملات",
       "enterprise": "للاستوديوهات",
       "getApiKey": "احجز عرضاً توضيحياً",
       "tryDemo": "العب smallgod",
@@ -1798,7 +1798,7 @@
       "eval": "العلاقات",
       "policy": "الأحداث"
     },
-    "playgroundTitle": "Try it now",
+    "playgroundTitle": "ساحة تجربة الـ API",
     "costPanel": {
       "calculating": "Calculating costs...",
       "noCost": "Run a query to see cost breakdown",

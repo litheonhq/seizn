@@ -1697,7 +1697,7 @@
     "ctaDemo": "שחקו smallgod",
     "socialProof": "מיועד לסטודיות משחקים המתרחבות מ-10 ל-10,000 דמויות NPC.",
     "liveDemo": "הדגמה חיה",
-    "heroTagline": "שחקו smallgod — משחק ה-god-game המרפרנסי שלנו הבנוי על Seizn. ללא הרשמה או התקנה.",
+    "heroTagline": "קראו ישירות ל-pipeline של האחזור. לחוויית המשחק המלאה, שחקו ב-smallgod.",
     "firstRetrievalComplete": "אחזור ראשון הושלם",
     "copySnippetHint": "העתק את קטע הקוד למטה כדי לשחזר",
     "copySnippetTitle": "אינטגרציה ב-Unity, Unreal, או כל runtime",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "תמחור",
-      "compare": "vs Inworld",
+      "compare": "שילובים",
       "enterprise": "לסטודיות",
       "getApiKey": "הזמן הדגמה",
       "tryDemo": "שחק smallgod",
@@ -1798,7 +1798,7 @@
       "eval": "קשרים",
       "policy": "אירועים"
     },
-    "playgroundTitle": "Try it now",
+    "playgroundTitle": "מגרש משחקים של ה-API",
     "costPanel": {
       "calculating": "Calculating costs...",
       "noCost": "Run a query to see cost breakdown",

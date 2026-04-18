@@ -1602,7 +1602,7 @@
     "ctaDemo": "smallgod 플레이",
     "socialProof": "NPC 10개에서 10,000개까지 확장하는 게임 스튜디오를 위해 만든",
     "liveDemo": "라이브 데모",
-    "heroTagline": "smallgod 플레이 — Seizn 위에 만든 레퍼런스 갓게임. 가입도 설치도 불필요.",
+    "heroTagline": "검색 파이프라인을 직접 호출해 보세요. 전체 게임 데모는 smallgod에서 확인할 수 있습니다.",
     "firstRetrievalComplete": "첫 번째 검색 완료",
     "copySnippetHint": "아래 코드를 복사해 재현하세요",
     "copySnippetTitle": "Unity, Unreal, 또는 모든 런타임에 바로 적용",
@@ -1637,7 +1637,7 @@
     "nav": {
       "docs": "문서",
       "pricing": "플랜",
-      "compare": "vs Inworld",
+      "compare": "통합",
       "enterprise": "스튜디오용",
       "getApiKey": "데모 예약",
       "tryDemo": "smallgod 플레이",
@@ -1728,7 +1728,7 @@
       "eval": "관계",
       "policy": "이벤트"
     },
-    "playgroundTitle": "지금 체험하기"
+    "playgroundTitle": "API 플레이그라운드"
   },
   "docs": {
     "nav": {

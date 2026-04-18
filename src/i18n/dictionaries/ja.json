@@ -1601,7 +1601,7 @@
     "ctaDemo": "smallgodをプレイ",
     "socialProof": "10から10,000 NPCにスケールするゲームスタジオのために構築。",
     "liveDemo": "ライブデモ",
-    "heroTagline": "smallgodをプレイ — Seizn上に構築されたリファレンスゴッドゲーム。サインアップ・インストール不要。",
+    "heroTagline": "検索パイプラインを直接呼び出してみましょう。ゲームデモ全体は smallgod でお試しください。",
     "firstRetrievalComplete": "最初の検索が完了しました",
     "copySnippetHint": "以下のスニペットをコピーして再現してください",
     "copySnippetTitle": "Unity、Unreal、またはあらゆるランタイムに即適用",
@@ -1641,7 +1641,7 @@
       "tryDemo": "smallgodをプレイ",
       "github": "OSS",
       "status": "ステータス",
-      "compare": "vs Inworld",
+      "compare": "連携",
       "limits": "制限",
       "help": "ヘルプ"
     },
@@ -1699,7 +1699,7 @@
       "eval": "関係",
       "policy": "イベント"
     },
-    "playgroundTitle": "今すぐ試す",
+    "playgroundTitle": "APIプレイグラウンド",
     "costPanel": {
       "calculating": "コストを計算中...",
       "noCost": "クエリを実行してコスト内訳を表示",

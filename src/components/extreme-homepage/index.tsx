@@ -283,10 +283,10 @@ const Navigation = memo(function Navigation({
         <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher currentLocale={locale} />
           <Link
-            href="/dashboard/keys"
+            href={`/${locale}/enterprise`}
             className="text-sm bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
           >
-            {t.nav?.getApiKey || "Get API Key"}
+            {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
 
@@ -331,8 +331,8 @@ const Navigation = memo(function Navigation({
           <div className="pt-2 border-t border-szn-border">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white py-3 rounded-full mt-3">
-            {t.nav?.getApiKey || "Get API Key"}
+          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white py-3 rounded-full mt-3">
+            {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
       </div>
@@ -671,8 +671,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             {/* CTAs - Primary and Secondary */}
             <div className={`flex items-center justify-center gap-4 flex-wrap pt-2 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
               <Link
-                href="/signup"
-                onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "signup" })}
+                href={`/${locale}/docs`}
+                onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "docs" })}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 {t.ctaStart || "Start Building Free"}

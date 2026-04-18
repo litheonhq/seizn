@@ -1697,7 +1697,7 @@
     "ctaDemo": "smallgod खेलें",
     "socialProof": "Game studios के लिए बना — 10 से 10,000 NPC तक।",
     "liveDemo": "Live demo",
-    "heroTagline": "smallgod खेलें — Seizn पर बना हमारा reference god-game। Sign-up और install की ज़रूरत नहीं।",
+    "heroTagline": "रिट्रीवल पाइपलाइन को सीधे क्वेरी करें। पूरे गेम डेमो के लिए smallgod खेलें।",
     "firstRetrievalComplete": "पहली retrieval पूर्ण",
     "copySnippetHint": "नीचे दिया snippet copy करें",
     "copySnippetTitle": "Unity, Unreal या किसी भी runtime में जोड़ें",
@@ -1735,7 +1735,7 @@
     "nav": {
       "docs": "Docs",
       "pricing": "Pricing",
-      "compare": "vs Inworld",
+      "compare": "एकीकरण",
       "enterprise": "Studios के लिए",
       "getApiKey": "Demo बुक करें",
       "tryDemo": "smallgod खेलें",
@@ -1798,7 +1798,7 @@
       "eval": "Relations",
       "policy": "Events"
     },
-    "playgroundTitle": "अभी आज़माएं",
+    "playgroundTitle": "API प्लेग्राउंड",
     "costPanel": {
       "calculating": "लागत की गणना हो रही है...",
       "noCost": "लागत विवरण देखने के लिए क्वेरी चलाएं",

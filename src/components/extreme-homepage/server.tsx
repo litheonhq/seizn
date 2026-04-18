@@ -5,12 +5,8 @@ import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { ExtremeHomepageClient } from "./index";
 import {
-  getFeatureContent,
-  getMCPFeatureContent,
   getTrustContent,
   getSectionContent,
-  type FeatureKey,
-  type MCPFeatureKey,
   type TrustKey,
 } from "./feature-translations";
 
@@ -18,34 +14,10 @@ import {
 // Icons — Existing
 // =============================================================================
 
-function TracingIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    </svg>
-  );
-}
-
-function AutopilotIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
-  );
-}
-
 function GovernanceIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-    </svg>
-  );
-}
-
-function LessGlueIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
     </svg>
   );
 }
@@ -86,38 +58,6 @@ function DatabaseIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function ComplianceIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-    </svg>
-  );
-}
-
-function ShieldCheckIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-    </svg>
-  );
-}
-
-function GlobeIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  );
-}
-
-function ForgetIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>
-  );
-}
-
 function CertificateIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,127 +65,6 @@ function CertificateIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-// =============================================================================
-// Feature Showcase (replaces WhySeizn)
-// =============================================================================
-
-const FEATURES: {
-  key: FeatureKey;
-  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-  badgeColor: string;
-  gradient: string;
-  iconBg: string;
-  iconColor: string;
-}[] = [
-  {
-    key: "semantic-memory",
-    icon: DatabaseIcon,
-    badgeColor: "emerald",
-    gradient: "from-szn-accent to-szn-accent-2",
-    iconBg: "bg-szn-accent/10",
-    iconColor: "text-szn-accent",
-  },
-  {
-    key: "finops",
-    icon: AutopilotIcon,
-    badgeColor: "blue",
-    gradient: "from-blue-400 to-cyan-500",
-    iconBg: "bg-blue-100 dark:bg-blue-900/30",
-    iconColor: "text-blue-600 dark:text-blue-400",
-  },
-  {
-    key: "compliance",
-    icon: ComplianceIcon,
-    badgeColor: "indigo",
-    gradient: "from-indigo-400 to-indigo-600",
-    iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
-    iconColor: "text-indigo-600 dark:text-indigo-400",
-  },
-  {
-    key: "observability",
-    icon: TracingIcon,
-    badgeColor: "purple",
-    gradient: "from-purple-400 to-purple-600",
-    iconBg: "bg-purple-100 dark:bg-purple-900/30",
-    iconColor: "text-purple-600 dark:text-purple-400",
-  },
-  {
-    key: "policy-engine",
-    icon: GovernanceIcon,
-    badgeColor: "rose",
-    gradient: "from-rose-400 to-rose-600",
-    iconBg: "bg-rose-100 dark:bg-rose-900/30",
-    iconColor: "text-rose-600 dark:text-rose-400",
-  },
-  {
-    key: "one-sdk",
-    icon: LessGlueIcon,
-    badgeColor: "amber",
-    gradient: "from-amber-400 to-amber-600",
-    iconBg: "bg-amber-100 dark:bg-amber-900/30",
-    iconColor: "text-amber-600 dark:text-amber-400",
-  },
-];
-
-const BADGE_COLORS: Record<string, string> = {
-  emerald: "bg-szn-accent/10 text-szn-accent",
-  rose: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400",
-  purple: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
-  blue: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
-  indigo: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
-  amber: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
-};
-
-function getSectionCopy(locale: Locale) {
-  return getSectionContent(locale);
-}
-
-function FeatureShowcase({ locale }: { locale: Locale }) {
-  const copy = getSectionCopy(locale);
-  return (
-    <section className="py-20 px-4 sm:px-6 bg-szn-bg/80">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-surface text-xs font-medium text-szn-text-2 mb-4">
-            <AutopilotIcon className="w-3.5 h-3.5" />
-            {copy.platformCapabilities}
-          </div>
-          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
-            {copy.platformTitle}
-          </h2>
-          <p className="text-szn-text-2 max-w-2xl mx-auto">
-            {copy.platformSubtitle}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURES.map((f) => {
-            const Icon = f.icon;
-            const content = getFeatureContent(locale, f.key);
-            return (
-              <div key={f.key} className="szn-card szn-card-hover rounded-2xl p-6 overflow-hidden relative">
-                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${f.gradient}`} />
-                <div className={`w-12 h-12 ${f.iconBg} rounded-xl flex items-center justify-center mb-4`}>
-                  <Icon className={`w-6 h-6 ${f.iconColor}`} />
-                </div>
-                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{content.title}</h3>
-                <p className="text-szn-text-2 text-sm leading-relaxed">{content.desc}</p>
-                <div className="mt-4">
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${BADGE_COLORS[f.badgeColor]}`}>{content.badge}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// =============================================================================
-// MCP & Developer Tools
-// =============================================================================
 
 function PlugIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -255,119 +74,12 @@ function PlugIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function TerminalIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-    </svg>
-  );
-}
-
-function SyncIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-    </svg>
-  );
-}
-
-function KeyIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-    </svg>
-  );
-}
-
-const MCP_FEATURES: {
-  key: MCPFeatureKey;
-  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-  editors: string[];
-}[] = [
-  {
-    key: "mcp-server",
-    icon: TerminalIcon,
-    editors: ["Claude Code", "Cursor", "Windsurf", "Copilot", "Cline", "Aider", "Codex"],
-  },
-  {
-    key: "config-sync",
-    icon: SyncIcon,
-    editors: ["CLAUDE.md", "AGENTS.md", ".cursorrules", ".windsurfrules"],
-  },
-  {
-    key: "oauth-device",
-    icon: KeyIcon,
-    editors: ["RFC 8628", "Zero-copy Auth"],
-  },
-  {
-    key: "auto-context",
-    icon: PlugIcon,
-    editors: ["Auto-detect", "Webhooks", "MCP Resources"],
-  },
-];
-
-function MCPDeveloperTools({ locale }: { locale: Locale }) {
-  const copy = getSectionCopy(locale);
-  return (
-    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-szn-surface to-szn-bg">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-accent/10 text-xs font-medium text-szn-accent mb-4">
-            <TerminalIcon className="w-3.5 h-3.5" />
-            {copy.mcpTools}
-          </div>
-          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
-            {copy.mcpTitle}
-          </h2>
-          <p className="text-szn-text-2 max-w-2xl mx-auto">
-            {copy.mcpSubtitle}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {MCP_FEATURES.map((f) => {
-            const Icon = f.icon;
-            const content = getMCPFeatureContent(locale, f.key);
-            return (
-              <div key={f.key} className="szn-card szn-card-hover rounded-2xl p-6 overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-szn-accent to-szn-accent-2" />
-                <div className="w-12 h-12 bg-szn-accent/10 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-6 h-6 text-szn-accent" />
-                </div>
-                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{content.title}</h3>
-                <p className="text-szn-text-2 text-sm leading-relaxed mb-4">{content.desc}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {f.editors.map((e) => (
-                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-szn-surface text-szn-text-1">{e}</span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTA */}
-        <div className="mt-10 text-center">
-          <Link
-            href={`/${locale}/docs/integrations`}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-szn-accent hover:bg-szn-accent/90 text-white font-medium rounded-full transition-colors"
-          >
-            {copy.setupMcp}
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Link>
-          <p className="mt-3 text-sm text-szn-text-2">
-            {copy.mcpHint}
-          </p>
-        </div>
-      </div>
-    </section>
-  );
+function getSectionCopy(locale: Locale) {
+  return getSectionContent(locale);
 }
 
 // =============================================================================
-// Trust & Compliance (replaces TrustBadges)
+// Trust & Compliance
 // =============================================================================
 
 const TRUST_ITEMS: {
@@ -376,13 +88,9 @@ const TRUST_ITEMS: {
   color: string;
 }[] = [
   { key: "rls", icon: SecurityIcon, color: "emerald" },
-  { key: "owasp", icon: ShieldCheckIcon, color: "rose" },
   { key: "rate-limits", icon: RateLimitIcon, color: "blue" },
   { key: "audit", icon: AuditIcon, color: "purple" },
-  { key: "eu-ai-act", icon: GlobeIcon, color: "indigo" },
-  { key: "gdpr", icon: ForgetIcon, color: "rose" },
   { key: "soc2", icon: CertificateIcon, color: "amber" },
-  { key: "iso42001", icon: GovernanceIcon, color: "emerald" },
 ];
 
 const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
@@ -551,6 +259,80 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
 }
 
 // =============================================================================
+// Why Seizn for NPCs (NPC-memory pivot, reads from dict.extremeHome.whySeizn)
+// =============================================================================
+
+function WhySeiznForNpcs({ dict }: { dict: Dictionary }) {
+  const w = dict.extremeHome?.whySeizn;
+  if (!w) return null;
+  const cards = [
+    {
+      icon: PlugIcon,
+      title: w.tracingTitle,
+      desc: w.tracingDesc,
+      badge: w.tracingBadge,
+      gradient: "from-szn-accent to-szn-accent-2",
+      iconBg: "bg-szn-accent/10",
+      iconColor: "text-szn-accent",
+      badgeClass: "bg-szn-accent/10 text-szn-accent",
+    },
+    {
+      icon: DatabaseIcon,
+      title: w.autopilotTitle,
+      desc: w.autopilotDesc,
+      badge: w.autopilotBadge,
+      gradient: "from-blue-400 to-cyan-500",
+      iconBg: "bg-blue-100 dark:bg-blue-900/30",
+      iconColor: "text-blue-600 dark:text-blue-400",
+      badgeClass: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
+    },
+    {
+      icon: GovernanceIcon,
+      title: w.governanceTitle,
+      desc: w.governanceDesc,
+      badge: w.governanceBadge,
+      gradient: "from-indigo-400 to-indigo-600",
+      iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
+      iconColor: "text-indigo-600 dark:text-indigo-400",
+      badgeClass: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
+    },
+  ];
+  return (
+    <section className="py-20 px-4 sm:px-6 bg-szn-bg/80">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
+            {w.title}
+          </h2>
+          <p className="text-szn-text-2 max-w-2xl mx-auto">
+            {w.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {cards.map((c, i) => {
+            const Icon = c.icon;
+            return (
+              <div key={i} className="szn-card szn-card-hover rounded-2xl p-6 overflow-hidden relative">
+                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${c.gradient}`} />
+                <div className={`w-12 h-12 ${c.iconBg} rounded-xl flex items-center justify-center mb-4`}>
+                  <Icon className={`w-6 h-6 ${c.iconColor}`} />
+                </div>
+                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{c.title}</h3>
+                <p className="text-szn-text-2 text-sm leading-relaxed">{c.desc}</p>
+                <div className="mt-4">
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${c.badgeClass}`}>{c.badge}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============================================================================
 // Page Composition
 // =============================================================================
 
@@ -563,8 +345,7 @@ export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
     <div className="min-h-screen bg-szn-bg">
       <ExtremeHomepageClient messages={dict.extremeHome} locale={locale} />
-      <FeatureShowcase locale={locale} />
-      <MCPDeveloperTools locale={locale} />
+      <WhySeiznForNpcs dict={dict} />
       <TrustAndCompliance locale={locale} />
       <PricingCTA locale={locale} t={dict} />
       <Footer locale={locale} t={dict} />
