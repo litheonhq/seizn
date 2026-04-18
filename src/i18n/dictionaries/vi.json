@@ -310,11 +310,9 @@
       "settings": "Cài đặt",
       "groups": {
         "memory": "NPC MEMORY",
-        "observe": "GIÁM SÁT",
-        "govern": "POLICIES",
-        "finops": "USAGE & COST",
-        "connect": "INTEGRATE",
-        "system": "WORKSPACE"
+        "system": "WORKSPACE",
+        "build": "Xây dựng",
+        "integrate": "Tích hợp"
       }
     },
     "pinSidebar": "Ghim thanh bên",

@@ -379,11 +379,9 @@
       "settings": "Definições",
       "groups": {
         "memory": "MEMÓRIA NPC",
-        "observe": "OBSERVAR",
-        "govern": "POLÍTICAS",
-        "finops": "UTILIZAÇÃO & CUSTO",
-        "connect": "INTEGRAR",
-        "system": "ESPAÇO DE TRABALHO"
+        "system": "ESPAÇO DE TRABALHO",
+        "build": "Desenvolver",
+        "integrate": "Integrar"
       }
     },
     "pinSidebar": "Fixar barra lateral",

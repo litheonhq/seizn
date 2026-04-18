@@ -379,11 +379,9 @@
       "settings": "设置",
       "groups": {
         "memory": "记忆",
-        "observe": "监控",
-        "govern": "治理",
-        "finops": "费用管理",
-        "connect": "连接",
-        "system": "系统"
+        "system": "系统",
+        "build": "开发",
+        "integrate": "集成"
       }
     },
     "pinSidebar": "固定侧边栏",
