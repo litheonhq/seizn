@@ -19,7 +19,7 @@ import type {
 
 const RELIABILITY_CARD_META = [
   {
-    href: "/dashboard/enterprise",
+    href: "/dashboard/organizations",
     tone: "from-violet-500/15 to-indigo-500/15 border-violet-200/60 dark:border-violet-900/60",
   },
   {
