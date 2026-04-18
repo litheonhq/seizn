@@ -5,10 +5,10 @@ import MemoriesClient from "./memories-client";
 
 export const metadata: Metadata = {
   title: "Memories - Seizn Dashboard",
-  description: "Browse and manage your AI memories. View, search, and organize stored context for your applications.",
+  description: "Browse and manage stored NPC memories, entities, and retrieved context across your titles.",
   openGraph: {
     title: "Memories - Seizn Dashboard",
-    description: "Browse and manage your AI memories. View, search, and organize stored context for your applications.",
+    description: "Browse and manage stored NPC memories, entities, and retrieved context across your titles.",
     type: "website",
   },
   robots: {

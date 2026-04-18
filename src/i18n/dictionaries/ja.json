@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AIメモリインフラ",
-    "description": "AIに持続的な記憶を。Seiznがコンテキストを自動で保存・検索し、AIが過去の会話を記憶します。"
+    "title": "Seizn — AI NPCメモリレイヤー",
+    "description": "Inworld、Convai、または独自LLMに接続してください。SeiznはNPCにセッションと世代を超えた永続記憶・関係・派閥グラフを提供します — シートではなくエンティティ単位の課金。"
   },
   "nav": {
     "features": "機能",
     "pricing": "料金",
     "docs": "ドキュメント",
     "login": "ログイン",
-    "getStarted": "始める"
+    "getStarted": "デモを予約",
+    "demo": "smallgodをプレイ"
   },
   "hero": {
-    "badge": "2026年第1四半期リリース予定",
-    "title": "AIアプリケーションのための",
-    "titleHighlight": "メモリインフラ",
-    "subtitle": "AIに持続的な記憶を。Seiznがコンテキストを自動で保存・検索し、AIが過去の会話を記憶します。",
-    "emailPlaceholder": "メールアドレスを入力",
-    "joinWaitlist": "ウェイトリストに登録",
-    "joining": "登録中...",
-    "onTheList": "登録完了しました！",
+    "badge": "ライブデモ: smallgod",
+    "title": "NPCが記憶する",
+    "titleHighlight": "世代を超えて。",
+    "subtitle": "SeiznはAI NPCのためのメモリレイヤーです。Inworld、Convai、または独自LLMに接続してください — 使い慣れた対話エンジンはそのままに、セッションと世代を生き延びる永続性を追加します。",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "デモを予約",
+    "joining": "予約中...",
+    "onTheList": "近日中にご連絡いたします。",
     "stats": {
-      "tokenSavings": "トークン節約",
-      "retrievalTime": "検索時間",
-      "uptimeSla": "稼働率SLA"
+      "tokenSavings": "プロジェクトあたりのNPC数",
+      "retrievalTime": "メモリ検索",
+      "uptimeSla": "世代記憶"
     }
   },
   "features": {
-    "title": "開発者のために設計",
-    "subtitle": "シンプルなAPI、パワフルなインフラ。数分で任意のAIに永続的なメモリを追加できます。",
+    "title": "ゲームスタジオのために構築",
+    "subtitle": "Seiznを接続し、対話エンジンはそのまま使い続けてください。NPCはセッションと世代を超えた記憶・関係・永続性を持ちます。",
     "smartExtraction": {
-      "title": "スマート抽出",
-      "description": "Claude AIを使用して、会話から重要な事実、好み、コンテキストを自動的に抽出します。"
+      "title": "NPC / 派閥 / イベントグラフ",
+      "description": "NPC、派閥、クエスト、事件をグラフとしてモデル化します。関係（信頼・恨み・血縁）とイベント（目撃・影響・行為者）は、独自スキーマを作る必要なく、ファーストクラスのプリミティブとして提供されます。"
     },
     "instantRetrieval": {
-      "title": "即時検索",
-      "description": "ハイブリッドベクター+グラフ検索が、毎回ミリ秒単位で関連するメモリを返します。"
+      "title": "コンテキスト対応の想起",
+      "description": "ハイブリッドベクター+グラフ検索により、このNPC・このシーンに関連する記憶だけを返します。「前回会ったとき」のクエリがミリ秒で完結します。"
     },
     "enterpriseSecurity": {
-      "title": "エンタープライズセキュリティ",
-      "description": "エンドツーエンド暗号化、SOC 2準拠、きめ細かなアクセス制御と監査ログを提供します。"
+      "title": "大規模NPC群のスケール",
+      "description": "エンティティ単位の従量課金。Simsライク・Cities Skylinesライク・ゴッドゲームタイトルが、シートコストの壁なく数千のNPCを運用できます。セルフホストまたはマネージド選択可能。"
     }
   },
   "codePreview": {
-    "title": "シンプルな統合",
-    "subtitle": "数行のコードでAIにメモリを追加できます。"
+    "title": "10行で統合完了",
+    "subtitle": "対話エンジンはそのまま。メモリはSeiznに任せてください。"
   },
   "pricing": {
-    "title": "シンプルで透明な料金",
-    "subtitle": "無料で始めて、成長に合わせて拡張。",
+    "title": "エンティティ単位の課金",
+    "subtitle": "無料で始め、シートではなくエンティティとイベントでスケールアップ。10 NPC規模のインディーから10,000 NPCスウォームタイトルまで対応。",
     "free": {
       "name": "Free",
       "price": "$0",
@@ -1594,32 +1595,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "AIエージェントのためのプロダクションOS。",
-    "heroSubtitle": "ガバナンスメモリ、組み込みオブザーバビリティ、証明可能なコンプライアンスで、エージェントをパイロットからプロダクションへ。",
-    "ctaStart": "無料で始める",
-    "ctaDemo": "2分デモを見る",
-    "socialProof": "大規模にエージェントを運用するチームに信頼されています",
+    "heroTitle": "AI NPCのためのメモリ。",
+    "heroSubtitle": "Inworld、Convai、または独自LLMに接続してください。SeiznはNPCに永続記憶・関係・世代を超えた想起を提供します — シートではなくグラフ単位の課金。",
+    "ctaStart": "ドキュメントを読む",
+    "ctaDemo": "smallgodをプレイ",
+    "socialProof": "10から10,000 NPCにスケールするゲームスタジオのために構築。",
     "liveDemo": "ライブデモ",
-    "heroTagline": "APIをお試しください — サインアップ不要",
+    "heroTagline": "smallgodをプレイ — Seizn上に構築されたリファレンスゴッドゲーム。サインアップ・インストール不要。",
     "firstRetrievalComplete": "最初の検索が完了しました",
     "copySnippetHint": "以下のスニペットをコピーして再現してください",
-    "copySnippetTitle": "このスニペットをコピー",
-    "copySnippetSubtitle": "上記の設定をそのまま反映したコードです",
+    "copySnippetTitle": "Unity、Unreal、またはあらゆるランタイムに即適用",
+    "copySnippetSubtitle": "HTTPラッパー + 公式C#/C++プラグイン。独自インフラ構築は不要。",
     "whySeizn": {
-      "title": "Seizn vs LangChain + Pinecone",
-      "subtitle": "バラバラのツールを組み合わせる必要はありません。必要なすべてが一つの統合スタックに。",
-      "tracingTitle": "組み込みトレーシング + 評価",
-      "tracingDesc": "すべてのリクエストがデフォルトでトレースされます。LangSmithやカスタムログなしで、評価の実行、リグレッション検出、本番問題のデバッグが可能です。",
-      "tracingBadge": "デフォルトON",
-      "autopilotTitle": "予算対応オートパイロット",
-      "autopilotDesc": "レイテンシまたはコスト予算を設定すると、オートパイロットが最適な検索戦略を自動選択します。手動チューニングは不要です。",
-      "autopilotBadge": "オプション",
-      "governanceTitle": "ガバナンス + 監査ログ",
-      "governanceDesc": "PII検出、GDPR準拠の削除、完全な監査証跡。後付けではなく、コンプライアンスを最初から設計。",
-      "governanceBadge": "チームデフォルト",
-      "lessGlueTitle": "より少ない構成要素",
-      "lessGlueDesc": "LangChain + Pinecone + LangSmith + カスタムPIIフィルターの組み合わせは不要。一つのSDK、一つのダッシュボード、一つの請求書。",
-      "lessGlueBadge": "グルーコード削減"
+      "title": "Seizn vs Inworld / Convai単体の違い",
+      "subtitle": "対話エンジンは音声とキャラクター性を見事に処理します。しかし大規模な永続メモリはどのエンジンも解決できていません。Seiznがメモリレイヤーとして接続します。",
+      "tracingTitle": "対話エンジン非依存",
+      "tracingDesc": "対話にはInworld、Convai、NVIDIA ACE、または独自LLMを使用してください。Seiznは既存の構成を置き換えず、その上にメモリレイヤーを追加します。",
+      "tracingBadge": "プラグイン",
+      "autopilotTitle": "大規模NPCスウォーム",
+      "autopilotDesc": "グラフストレージ、エンティティ単位従量制。Simsライク・Cities Skylinesライク・ゴッドゲームタイトルが、シートコストの壁なく数千のNPCを運用します。",
+      "autopilotBadge": "エンティティ単位",
+      "governanceTitle": "世代を超えた記憶",
+      "governanceDesc": "恨みはキャラクターより長く生き続けます。派閥の歴史が後継者に伝播します。血縁・目撃・関係のプリミティブが内蔵 — カスタムスキーマは不要。",
+      "governanceBadge": "内蔵"
     },
     "trust": {
       "security": "RLS + キーハッシング",
@@ -1630,20 +1628,20 @@
       "auditLogsDesc": "完全な追跡性"
     },
     "pricingCta": {
-      "title": "シンプルで透明な料金",
-      "subtitle": "12,000メモリの無料枠から始めましょう。StarterにアップグレードしてE2E暗号化メモリを利用できます。",
+      "title": "エンティティ単位の課金",
+      "subtitle": "無料で始めましょう。シートの壁はありません — NPC 10体でも10,000体でも、エンジニア席ではなくエンティティとイベントでスケール。",
       "viewPricing": "料金を見る",
-      "contactSales": "営業に連絡"
+      "contactSales": "ファウンダーに話す"
     },
     "nav": {
       "docs": "ドキュメント",
       "pricing": "料金",
-      "enterprise": "Enterprise",
-      "getApiKey": "APIキーを取得",
-      "tryDemo": "デモを試す",
+      "enterprise": "スタジオ向け",
+      "getApiKey": "デモを予約",
+      "tryDemo": "smallgodをプレイ",
       "github": "OSS",
       "status": "ステータス",
-      "compare": "比較",
+      "compare": "vs Inworld",
       "limits": "制限",
       "help": "ヘルプ"
     },
@@ -1697,9 +1695,9 @@
       "cost": "コスト"
     },
     "chips": {
-      "trace": "トレース",
-      "eval": "評価",
-      "policy": "ポリシー"
+      "trace": "エンティティ",
+      "eval": "関係",
+      "policy": "イベント"
     },
     "playgroundTitle": "今すぐ試す",
     "costPanel": {

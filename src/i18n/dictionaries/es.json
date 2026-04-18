@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - Infraestructura de Memoria IA",
-    "description": "Dale a tu IA memoria duradera. Seizn almacena y recupera contexto automáticamente, para que tu IA recuerde conversaciones pasadas."
+    "title": "Seizn — Memoria para NPC con IA",
+    "description": "Conéctate a Inworld, Convai o tu propio LLM. Seizn da a tus NPC memoria persistente, relaciones y recuerdo entre generaciones — precio por entidad, no por puesto."
   },
   "nav": {
-    "features": "Funciones",
+    "features": "Características",
     "pricing": "Precios",
-    "docs": "Documentación",
-    "login": "Iniciar Sesión",
-    "getStarted": "Comenzar"
+    "docs": "Docs",
+    "login": "Iniciar sesión",
+    "getStarted": "Reservar demo",
+    "demo": "Jugar smallgod"
   },
   "hero": {
-    "badge": "Disponible Q1 2026",
-    "title": "Infraestructura de memoria",
-    "titleHighlight": "para aplicaciones IA",
-    "subtitle": "Dale a tu IA memoria duradera. Seizn almacena y recupera contexto automáticamente, para que tu IA recuerde conversaciones pasadas.",
-    "emailPlaceholder": "Ingresa tu correo",
-    "joinWaitlist": "Unirse a Lista de Espera",
-    "joining": "Uniéndose...",
-    "onTheList": "¡Estás en la lista!",
+    "badge": "Demo en vivo: smallgod",
+    "title": "Tus NPC recuerdan",
+    "titleHighlight": "entre generaciones.",
+    "subtitle": "Seizn es la capa de memoria para NPC con IA. Conéctalo a Inworld, Convai o tu propio LLM — conserva el motor de diálogo que ya tienes y añade persistencia que sobrevive sesiones y generaciones.",
+    "emailPlaceholder": "tú@estudio.com",
+    "joinWaitlist": "Reservar demo",
+    "joining": "Reservando...",
+    "onTheList": "Te contactaremos pronto.",
     "stats": {
-      "tokenSavings": "Ahorro de Tokens",
-      "retrievalTime": "Tiempo de Recuperación",
-      "uptimeSla": "SLA de Disponibilidad"
+      "tokenSavings": "NPC por proyecto",
+      "retrievalTime": "Recuperación de memoria",
+      "uptimeSla": "Generaciones de memoria"
     }
   },
   "features": {
-    "title": "Creado para desarrolladores",
-    "subtitle": "APIs simples, infraestructura potente. Agrega memoria persistente a cualquier IA en minutos.",
+    "title": "Construido para estudios de videojuegos",
+    "subtitle": "Integra Seizn y conserva tu motor de diálogo. Los NPC obtienen memoria, relaciones y persistencia que sobrevive sesiones y generaciones.",
     "smartExtraction": {
-      "title": "Extracción Inteligente",
-      "description": "Extrae automáticamente hechos clave, preferencias y contexto de conversaciones usando Claude AI."
+      "title": "Grafo NPC / Facción / Evento",
+      "description": "Modela NPC, facciones, misiones e incidentes como grafo. Las relaciones (confianza, rencor, parentesco) y eventos (testigo, afectado, actor) son primitivos de primera clase, no esquemas que tengas que inventar."
     },
     "instantRetrieval": {
-      "title": "Recuperación Instantánea",
-      "description": "Búsqueda híbrida vector + grafos devuelve memorias relevantes en milisegundos, siempre."
+      "title": "Recuperación contextual",
+      "description": "Recuperación híbrida vector + grafo devuelve solo los recuerdos relevantes para este NPC, esta escena. Consultas del tipo 'la última vez que nos vimos' en milisegundos."
     },
     "enterpriseSecurity": {
-      "title": "Seguridad Empresarial",
-      "description": "Cifrado de extremo a extremo, compatible con SOC 2, con controles de acceso granulares y registros de auditoría."
+      "title": "Escala de NPC en enjambre",
+      "description": "Precio por entidad medido. Títulos al estilo Sims, Cities Skylines y god-game ejecutan miles de NPC sin muros de coste por puesto. Autohospedado o gestionado."
     }
   },
   "codePreview": {
-    "title": "Integración simple",
-    "subtitle": "Agrega memoria a tu IA en solo unas líneas de código."
+    "title": "Integración en 10 líneas",
+    "subtitle": "Conserva tu motor de diálogo. Añade Seizn para la memoria."
   },
   "pricing": {
-    "title": "Precios simples y transparentes",
-    "subtitle": "Comienza gratis, escala según crezcas.",
+    "title": "Precio por entidad",
+    "subtitle": "Empieza gratis. Escala en entidades y eventos, no por puesto. Válido para indies con 10 NPC y títulos con 10.000 NPC en enjambre.",
     "free": {
       "name": "Gratis",
       "price": "$0",
@@ -286,34 +287,34 @@
     "docs": "Documentación",
     "nav": {
       "overview": "Resumen",
-      "memories": "Memorias",
-      "mindMap": "Mapa Mental",
-      "candidates": "Candidatos",
+      "memories": "Entidades",
+      "mindMap": "Grafo de relaciones",
+      "candidates": "Bandeja de eventos",
       "devTools": "DevTools",
       "playground": "Playground",
-      "evals": "Evaluaciones",
+      "evals": "Pruebas de escenario",
       "analytics": "Analítica",
-      "governance": "Gobernanza",
+      "governance": "Política de contenido",
       "privacy": "Privacidad",
       "security": "Seguridad",
-      "enterprise": "Empresa",
+      "enterprise": "Para estudios",
       "usage": "Uso",
       "budget": "Presupuesto",
       "reports": "Informes",
       "calculator": "Calculadora",
       "apiKeys": "Claves API",
-      "integrations": "Integraciones",
+      "integrations": "Plugins de motor",
       "webhooks": "Webhooks",
-      "docs": "Documentación",
-      "organizations": "Organizaciones",
+      "docs": "Docs",
+      "organizations": "Proyectos",
       "settings": "Configuración",
       "groups": {
-        "memory": "MEMORIA",
+        "memory": "MEMORIA NPC",
         "observe": "OBSERVAR",
-        "govern": "GOBERNAR",
-        "finops": "FINOPS",
-        "connect": "CONECTAR",
-        "system": "SISTEMA"
+        "govern": "POLÍTICAS",
+        "finops": "USO Y COSTE",
+        "connect": "INTEGRAR",
+        "system": "ESPACIO DE TRABAJO"
       }
     },
     "pinSidebar": "Fijar barra lateral",
@@ -601,25 +602,25 @@
       "evening": "Buenas noches"
     },
     "overviewPage": {
-      "subtitle": "Resumen del uso de su memoria AI",
-      "totalMemories": "Memorias totales",
+      "subtitle": "Resumen de tu grafo de memoria NPC.",
+      "totalMemories": "Total de entidades",
       "apiCalls": "Llamadas API",
       "activeKeys": "Claves API activas",
       "currentPlan": "Plan actual",
       "usage": "Uso",
       "today": "Hoy",
       "dailyLimit": "Límite diario",
-      "recentMemories": "Memorias recientes",
+      "recentMemories": "Eventos recientes",
       "viewAll": "Ver todo",
-      "noMemories": "Sin memorias aún",
-      "noMemoriesHint": "Comience agregando su primera memoria vía API",
+      "noMemories": "Sin entidades aún",
+      "noMemoriesHint": "Crea NPC, facciones o eventos mediante la API o el SDK para comenzar.",
       "quickStart": "Inicio rápido",
       "createApiKey": "Crear clave API",
-      "getStartedApi": "Comience con la API",
-      "viewDocumentation": "Ver documentación",
-      "learnSeizn": "Aprenda a usar Seizn",
-      "createOrganization": "Crear organización",
-      "collaborateTeam": "Colabore con su equipo",
+      "getStartedApi": "Autentica tu primera integración",
+      "viewDocumentation": "Ver docs",
+      "learnSeizn": "Integra en 10 líneas — Unity, Unreal o cualquier runtime",
+      "createOrganization": "Crear proyecto",
+      "collaborateTeam": "Configura un espacio de trabajo para un título de juego",
       "quickExample": "Ejemplo rápido",
       "manageKeys": "Gestionar claves",
       "upgradePlan": "Mejorar plan",
@@ -710,40 +711,40 @@
       "featureAuditDesc": "Historial de actividad"
     },
     "onboarding": {
-      "title": "Comenzar con Seizn",
+      "title": "Empezar con Seizn",
       "progress": "{completed}/{total} pasos completados",
       "dismiss": "Cerrar",
       "doLater": "Lo haré después",
       "steps": {
         "apiKey": {
-          "title": "Crear clave API",
-          "description": "Genera tu primera clave API para autenticar solicitudes",
+          "title": "Generar clave API",
+          "description": "Crea tu primera clave API para autenticar solicitudes",
           "action": "Crear clave"
         },
         "demoQuery": {
-          "title": "Haz tu primera consulta",
-          "description": "Prueba la consulta de demostración o haz una solicitud API",
+          "title": "Hacer tu primera consulta",
+          "description": "Prueba la consulta demo o envía una solicitud API",
           "action": "Probar demo"
         },
         "viewTrace": {
-          "title": "Ver una traza",
-          "description": "Comprende cómo funciona la búsqueda con rastreo completo",
-          "action": "Ver trazas"
+          "title": "Ver resultados de traza",
+          "description": "Consulta la traza completa de la ejecución de tu consulta",
+          "action": "Ver traza"
         },
         "installSdk": {
-          "title": "Instalar SDK",
-          "description": "Agrega Seizn a tu proyecto con npm o pip",
-          "action": "Ver SDKs"
+          "title": "Instalar el SDK",
+          "description": "Añade Seizn a tu proyecto: npm, pip o HTTP directo. Plugins Unity/Unreal en integraciones.",
+          "action": "Copiar SDK"
         },
         "createOrg": {
-          "title": "Crear Organización",
-          "description": "Configure su espacio de trabajo en equipo para la colaboración",
-          "action": "Crear Org"
+          "title": "Crear un proyecto",
+          "description": "Un proyecto por título de juego. Los entornos (dev/prod) viven dentro.",
+          "action": "Crear proyecto"
         },
         "firstQuery": {
-          "title": "Ejecutar Primera Consulta",
-          "description": "Pruebe la API en el entorno de pruebas con una consulta de ejemplo",
-          "action": "Probar Consulta"
+          "title": "Registrar primer evento",
+          "description": "Prueba el playground — crea un NPC, registra un evento, consulta el contexto.",
+          "action": "Probar consulta"
         }
       },
       "takeTour": "Hacer un recorrido",
@@ -1690,31 +1691,32 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "El OS de producción para agentes de IA.",
-    "heroSubtitle": "Lleva agentes del piloto a producción con memoria gobernada, observabilidad integrada y cumplimiento demostrable.",
-    "ctaStart": "Empieza Gratis",
-    "ctaDemo": "Ver Demo de 2 Min",
-    "socialProof": "Confiado por equipos que operan agentes a escala",
-    "liveDemo": "Demo en Vivo",
-    "heroTagline": "Prueba la API en vivo — sin registro",
-    "copySnippetHint": "Copie el fragmento de código",
-    "copySnippetTitle": "Copiar este fragmento",
-    "copySnippetSubtitle": "Generado a partir de su configuración exacta",
+    "heroTitle": "Memoria para NPC con IA.",
+    "heroSubtitle": "Conéctate a Inworld, Convai o tu propio LLM. Seizn da a tus NPC memoria persistente, relaciones y recuerdo entre generaciones — precio por entidad, no por puesto.",
+    "ctaStart": "Leer la documentación",
+    "ctaDemo": "Jugar smallgod",
+    "socialProof": "Construido para estudios que escalan de 10 a 10.000 NPC.",
+    "liveDemo": "Demo en vivo",
+    "heroTagline": "Juega smallgod — nuestro god-game de referencia construido con Seizn. Sin registro, sin instalación.",
+    "chips": {
+      "trace": "Entidades",
+      "eval": "Relaciones",
+      "policy": "Eventos"
+    },
+    "copySnippetTitle": "Integra en Unity, Unreal o cualquier runtime",
+    "copySnippetSubtitle": "Wrapper HTTP + plugins oficiales C#/C++. Sin infraestructura personalizada.",
     "whySeizn": {
-      "title": "¿Por qué Seizn en lugar de LangChain + Pinecone?",
-      "subtitle": "Deje de ensamblar herramientas fragmentadas. Obtenga todo lo que necesita en un stack integrado.",
-      "tracingTitle": "Trazabilidad + Evaluación integrada",
-      "tracingDesc": "Cada solicitud se rastrea por defecto. Ejecute evaluaciones, detecte regresiones y depure problemas de producción sin agregar LangSmith.",
-      "tracingBadge": "Activado por defecto",
-      "autopilotTitle": "Autopilot consciente del presupuesto",
-      "autopilotDesc": "Establezca un presupuesto de latencia o costo, y Autopilot elige automáticamente la estrategia óptima.",
-      "autopilotBadge": "Opcional",
-      "governanceTitle": "Gobernanza + Logs de auditoría",
-      "governanceDesc": "Detección de PII, olvido compatible con GDPR y pistas de auditoría completas. Diseñado para equipos que necesitan cumplimiento.",
-      "governanceBadge": "Por defecto para equipos",
-      "lessGlueTitle": "Menos piezas móviles",
-      "lessGlueDesc": "No más malabares con LangChain + Pinecone + LangSmith + filtros PII personalizados. Un SDK, un panel, una factura.",
-      "lessGlueBadge": "Menos código de unión"
+      "title": "¿Por qué Seizn frente a Inworld / Convai solos?",
+      "subtitle": "Los motores de diálogo hacen voces y personalidad de forma brillante. Ninguno resuelve la memoria persistente a escala. Seizn se conecta como capa de memoria.",
+      "tracingTitle": "Agnóstico al motor de diálogo",
+      "tracingDesc": "Usa Inworld, Convai, NVIDIA ACE o tu propio LLM para el diálogo. Seizn añade memoria encima — sin reemplazar lo que ya funciona.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "Escala de NPC en enjambre",
+      "autopilotDesc": "Almacenamiento en grafo, medido por entidad. Títulos al estilo Sims, Cities Skylines y god-game ejecutan miles de NPC sin muros de coste por puesto.",
+      "autopilotBadge": "Por entidad",
+      "governanceTitle": "Memoria entre generaciones",
+      "governanceDesc": "Los rencores sobreviven a los personajes. La historia de la facción se propaga a los descendientes. Los primitivos de parentesco, testigo y relación están integrados — sin esquema personalizado.",
+      "governanceBadge": "Integrado"
     },
     "trust": {
       "security": "RLS + Hash de claves",
@@ -1725,18 +1727,18 @@
       "auditLogsDesc": "Trazabilidad completa"
     },
     "pricingCta": {
-      "title": "Precios simples y transparentes",
-      "subtitle": "Comience gratis con 12.000 memorias. Actualice a Starter para memorias E2E cifradas.",
+      "title": "Precio por entidad",
+      "subtitle": "Empieza gratis. Sin muros por puesto — 10 NPC o 10.000, escala en entidades y eventos, no en puestos de ingeniero.",
       "viewPricing": "Ver precios",
-      "contactSales": "Contactar ventas"
+      "contactSales": "Hablar con el fundador"
     },
     "nav": {
-      "docs": "Documentación",
+      "docs": "Docs",
       "pricing": "Precios",
-      "enterprise": "Empresa",
-      "getApiKey": "Obtener clave API",
-      "tryDemo": "Probar demo",
-      "compare": "Comparar",
+      "compare": "vs Inworld",
+      "enterprise": "Para estudios",
+      "getApiKey": "Reservar demo",
+      "tryDemo": "Jugar smallgod",
       "limits": "Límites",
       "status": "Estado",
       "help": "Ayuda",

@@ -4,11 +4,11 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import OrganizationsClient from "./client";
 
 export const metadata: Metadata = {
-  title: "Organizations - Seizn Dashboard",
-  description: "Manage your organizations and team members. Collaborate on AI memory projects with your team.",
+  title: "Projects - Seizn Dashboard",
+  description: "Manage game-title projects and studio teammates collaborating on NPC memory.",
   openGraph: {
-    title: "Organizations - Seizn Dashboard",
-    description: "Manage your organizations and team members. Collaborate on AI memory projects with your team.",
+    title: "Projects - Seizn Dashboard",
+    description: "Manage game-title projects and studio teammates collaborating on NPC memory.",
     type: "website",
   },
   robots: {

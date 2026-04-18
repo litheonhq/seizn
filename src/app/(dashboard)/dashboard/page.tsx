@@ -5,10 +5,10 @@ import DashboardOverviewClient from "./overview-client";
 
 export const metadata: Metadata = {
   title: "Dashboard - Seizn",
-  description: "Manage your AI memories, API keys, and usage. Monitor your Seizn account activity and access developer tools.",
+  description: "Manage NPC memory entities, API keys, and usage across your game titles.",
   openGraph: {
     title: "Dashboard - Seizn",
-    description: "Manage your AI memories, API keys, and usage. Monitor your Seizn account activity and access developer tools.",
+    description: "Manage NPC memory entities, API keys, and usage across your game titles.",
     type: "website",
   },
   robots: {

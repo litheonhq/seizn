@@ -14,6 +14,26 @@ interface RouteParams {
   params: Promise<{ graphId: string }>;
 }
 
+interface RelationshipEntityRef {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface GraphRelationshipRow {
+  id: string;
+  type: string;
+  label: string | null;
+  properties: Record<string, unknown> | null;
+  weight: number | null;
+  confidence: number | null;
+  source_document: string | null;
+  source_entity?: RelationshipEntityRef | null;
+  target_entity?: RelationshipEntityRef | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const auth = await validateApiKey(request);
@@ -65,7 +85,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json({
-      relationships: (data || []).map((r: any) => ({
+      relationships: ((data as GraphRelationshipRow[] | null) || []).map((r) => ({
         id: r.id,
         type: r.type,
         label: r.label,

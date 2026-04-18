@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - AI 메모리 인프라",
-    "description": "AI에게 지속적인 기억을 부여하세요. Seizn이 컨텍스트를 자동으로 저장하고 검색해, AI가 과거 대화를 기억합니다."
+    "title": "Seizn — AI NPC 메모리 레이어",
+    "description": "Inworld, Convai, 또는 자체 LLM에 연동하세요. Seizn은 NPC에 세션과 세대를 넘나드는 영속 기억, 관계, 파벌 그래프를 제공합니다 — 시트 단위가 아닌 엔티티 단위 과금."
   },
   "nav": {
     "features": "기능",
     "pricing": "플랜",
     "docs": "문서",
     "login": "로그인",
-    "getStarted": "시작하기"
+    "getStarted": "데모 예약",
+    "demo": "smallgod 플레이"
   },
   "hero": {
-    "badge": "2026년 1분기 출시 예정",
-    "title": "AI 애플리케이션을 위한",
-    "titleHighlight": "메모리 인프라",
-    "subtitle": "AI에게 지속적인 기억을 부여하세요. Seizn이 컨텍스트를 자동으로 저장하고 검색해, AI가 과거 대화를 기억합니다.",
-    "emailPlaceholder": "이메일을 입력하세요",
-    "joinWaitlist": "대기자 명단 등록",
-    "joining": "등록 중...",
-    "onTheList": "등록이 완료되었습니다!",
+    "badge": "라이브 데모: smallgod",
+    "title": "NPC가 기억합니다",
+    "titleHighlight": "세대를 넘어서.",
+    "subtitle": "Seizn은 AI NPC를 위한 메모리 레이어입니다. Inworld, Convai, 또는 자체 LLM에 꽂아 쓰세요 — 좋아하는 대화 엔진은 그대로, 세션과 세대를 살아남는 영속성을 추가합니다.",
+    "emailPlaceholder": "you@studio.com",
+    "joinWaitlist": "데모 예약",
+    "joining": "예약 중...",
+    "onTheList": "곧 연락드리겠습니다.",
     "stats": {
-      "tokenSavings": "토큰 절감",
-      "retrievalTime": "검색 시간",
-      "uptimeSla": "가동률 SLA"
+      "tokenSavings": "프로젝트당 NPC",
+      "retrievalTime": "메모리 검색",
+      "uptimeSla": "세대 기억"
     }
   },
   "features": {
-    "title": "개발자를 위한 설계",
-    "subtitle": "간단한 API, 강력한 인프라. 몇 분 만에 모든 AI에 지속적인 기억력을 더하세요.",
+    "title": "게임 스튜디오를 위해 만든",
+    "subtitle": "Seizn을 꽂아 쓰고, 대화 엔진은 그대로 유지하세요. NPC는 세션과 세대를 넘나드는 기억, 관계, 영속성을 갖게 됩니다.",
     "smartExtraction": {
-      "title": "스마트 추출",
-      "description": "Claude AI를 사용하여 대화에서 핵심 사실, 선호도, 컨텍스트를 자동으로 추출합니다."
+      "title": "NPC / 파벌 / 이벤트 그래프",
+      "description": "NPC, 파벌, 퀘스트, 사건을 그래프로 모델링합니다. 관계(신뢰, 원한, 혈연)와 이벤트(목격, 피해, 행위자)는 직접 스키마를 만들 필요 없이 기본 프리미티브로 제공됩니다."
     },
     "instantRetrieval": {
-      "title": "즉시 검색",
-      "description": "하이브리드 벡터 + 그래프 검색이 매번 밀리초 단위로 관련 메모리를 반환합니다."
+      "title": "문맥 인식 회상",
+      "description": "하이브리드 벡터 + 그래프 검색으로 이 NPC, 이 장면에 관련된 기억만 반환합니다. '마지막으로 만났을 때' 쿼리가 밀리초 내에 처리됩니다."
     },
     "enterpriseSecurity": {
-      "title": "엔터프라이즈 보안",
-      "description": "종단간 암호화, SOC 2 준수, 세분화된 접근 제어 및 감사 로그를 제공합니다."
+      "title": "대규모 NPC 군집 지원",
+      "description": "엔티티 단위 종량제 과금. 심즈류, 시티즈 스카이라인류, 갓게임 타이틀이 시트 비용 벽 없이 수천 NPC를 운영합니다. 셀프호스트 또는 매니지드 선택 가능."
     }
   },
   "codePreview": {
-    "title": "간단한 통합",
-    "subtitle": "단 몇 줄의 코드로 AI에 메모리를 추가하세요."
+    "title": "10줄로 연동 완료",
+    "subtitle": "대화 엔진은 그대로 유지하세요. 메모리는 Seizn이 담당합니다."
   },
   "pricing": {
-    "title": "심플하고 투명한 요금제",
-    "subtitle": "무료로 시작하고, 성장에 따라 확장하세요.",
+    "title": "엔티티 단위 과금",
+    "subtitle": "무료로 시작하고, 시트가 아닌 엔티티와 이벤트 기준으로 확장하세요. NPC 10개짜리 인디 팀부터 10,000개짜리 군집 타이틀까지.",
     "free": {
       "name": "Free",
       "price": "$0",
@@ -1595,32 +1596,29 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "AI 에이전트를 위한 프로덕션 OS.",
-    "heroSubtitle": "관리된 메모리, 내장 옵저버빌리티, 입증 가능한 컴플라이언스로 에이전트를 파일럿에서 프로덕션까지.",
-    "ctaStart": "무료로 시작하기",
-    "ctaDemo": "2분 데모 보기",
-    "socialProof": "규모 있는 에이전트를 운영하는 팀들이 신뢰합니다",
+    "heroTitle": "AI NPC를 위한 메모리.",
+    "heroSubtitle": "Inworld, Convai, 또는 자체 LLM에 연동하세요. Seizn은 NPC에 영속 기억, 관계, 세대를 넘나드는 회상을 제공합니다 — 시트 단위가 아닌 그래프 단위 과금.",
+    "ctaStart": "문서 읽기",
+    "ctaDemo": "smallgod 플레이",
+    "socialProof": "NPC 10개에서 10,000개까지 확장하는 게임 스튜디오를 위해 만든",
     "liveDemo": "라이브 데모",
-    "heroTagline": "API를 직접 사용해보세요 — 가입 불필요",
+    "heroTagline": "smallgod 플레이 — Seizn 위에 만든 레퍼런스 갓게임. 가입도 설치도 불필요.",
     "firstRetrievalComplete": "첫 번째 검색 완료",
     "copySnippetHint": "아래 코드를 복사해 재현하세요",
-    "copySnippetTitle": "코드 복사",
-    "copySnippetSubtitle": "위 설정을 그대로 반영한 코드입니다",
+    "copySnippetTitle": "Unity, Unreal, 또는 모든 런타임에 바로 적용",
+    "copySnippetSubtitle": "HTTP 래퍼 + 공식 C#/C++ 플러그인. 별도 인프라 구축 불필요.",
     "whySeizn": {
-      "title": "Seizn vs LangChain + Pinecone?",
-      "subtitle": "파편화된 도구들을 붙여 쓰지 마세요. 필요한 모든 것이 하나의 통합 스택에.",
-      "tracingTitle": "내장 트레이싱 + 평가",
-      "tracingDesc": "모든 요청이 기본으로 트레이싱됩니다. LangSmith나 커스텀 로깅 없이 평가를 실행하고, 회귀를 감지하고, 프로덕션 이슈를 디버깅하세요.",
-      "tracingBadge": "기본 ON",
-      "autopilotTitle": "예산 인식 오토파일럿",
-      "autopilotDesc": "지연 시간 또는 비용 예산을 설정하면 오토파일럿이 자동으로 최적의 검색 전략을 선택합니다. 수동 튜닝 불필요.",
-      "autopilotBadge": "선택",
-      "governanceTitle": "거버넌스 + 감사 로그",
-      "governanceDesc": "PII 탐지, GDPR 호환 삭제, 완전한 감사 추적. 나중에 덧붙이는 게 아니라 처음부터 컴플라이언스를 위해 설계.",
-      "governanceBadge": "팀 기본",
-      "lessGlueTitle": "더 적은 구성 요소",
-      "lessGlueDesc": "LangChain + Pinecone + LangSmith + 커스텀 PII 필터를 조합할 필요 없습니다. 하나의 SDK, 하나의 대시보드, 하나의 청구서.",
-      "lessGlueBadge": "코드 감소"
+      "title": "Seizn vs Inworld / Convai 단독 사용?",
+      "subtitle": "대화 엔진은 목소리와 성격을 훌륭하게 처리합니다. 하지만 대규모 영속 메모리는 어느 엔진도 해결하지 못합니다. Seizn이 메모리 레이어로 연결됩니다.",
+      "tracingTitle": "대화 엔진 무관",
+      "tracingDesc": "대화에는 Inworld, Convai, NVIDIA ACE, 또는 자체 LLM을 사용하세요. Seizn은 기존 구성을 대체하지 않고 그 위에 메모리 레이어를 얹습니다.",
+      "tracingBadge": "플러그인",
+      "autopilotTitle": "대규모 NPC 군집",
+      "autopilotDesc": "그래프 스토리지, 엔티티 단위 종량제. 심즈류, 시티즈 스카이라인류, 갓게임 타이틀이 시트 비용 벽 없이 수천 NPC를 운영합니다.",
+      "autopilotBadge": "엔티티 단위",
+      "governanceTitle": "세대를 넘는 기억",
+      "governanceDesc": "캐릭터는 죽어도 원한은 남습니다. 파벌의 역사가 후손에게 이어지고, 혈연·목격·관계 프리미티브가 기본으로 내장돼 있어 커스텀 스키마는 필요 없습니다.",
+      "governanceBadge": "내장"
     },
     "trust": {
       "security": "RLS + 키 해싱",
@@ -1631,22 +1629,22 @@
       "auditLogsDesc": "완전한 추적성"
     },
     "pricingCta": {
-      "title": "심플하고 투명한 가격",
-      "subtitle": "무료 12,000 메모리로 시작하고, Starter부터 E2E 기밀 메모리를 사용할 수 있습니다.",
-      "viewPricing": "가격 보기",
-      "contactSales": "영업 문의"
+      "title": "엔티티 단위 과금",
+      "subtitle": "무료로 시작하세요. 시트 벽 없음 — NPC 10개든 10,000개든, 엔지니어 시트가 아닌 엔티티와 이벤트 기준으로 확장.",
+      "viewPricing": "요금 보기",
+      "contactSales": "창업자에게 문의"
     },
     "nav": {
       "docs": "문서",
       "pricing": "플랜",
-      "compare": "비교",
-      "enterprise": "기업",
-      "getApiKey": "API Key 받기",
-      "tryDemo": "데모 체험",
+      "compare": "vs Inworld",
+      "enterprise": "스튜디오용",
+      "getApiKey": "데모 예약",
+      "tryDemo": "smallgod 플레이",
       "limits": "한도",
       "status": "상태",
       "help": "도움말",
-      "github": "오픈소스"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "요청 빌더",
@@ -1726,9 +1724,9 @@
       "copied": "복사됨!"
     },
     "chips": {
-      "trace": "트레이스",
-      "eval": "평가",
-      "policy": "정책"
+      "trace": "엔티티",
+      "eval": "관계",
+      "policy": "이벤트"
     },
     "playgroundTitle": "지금 체험하기"
   },

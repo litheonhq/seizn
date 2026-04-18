@@ -1,53 +1,54 @@
 {
   "metadata": {
-    "title": "Seizn - KI-Speicherinfrastruktur",
-    "description": "Geben Sie Ihrer KI dauerhaften Speicher. Seizn speichert und ruft Kontext automatisch ab, damit Ihre KI vergangene Gespräche erinnert."
+    "title": "Seizn — Speicher für KI-NPCs",
+    "description": "Verbinde dich mit Inworld, Convai oder deinem eigenen LLM. Seizn gibt deinen NPCs persistente Erinnerungen, Beziehungen und generationenübergreifende Wiedererkennung — entitätsbasierte Preise, kein Seat-Pricing."
   },
   "nav": {
     "features": "Funktionen",
     "pricing": "Preise",
-    "docs": "Dokumentation",
+    "docs": "Docs",
     "login": "Anmelden",
-    "getStarted": "Starten"
+    "getStarted": "Demo buchen",
+    "demo": "smallgod spielen"
   },
   "hero": {
-    "badge": "Verfügbar Q1 2026",
-    "title": "Speicherinfrastruktur",
-    "titleHighlight": "für KI-Anwendungen",
-    "subtitle": "Geben Sie Ihrer KI dauerhaften Speicher. Seizn speichert und ruft Kontext automatisch ab, damit Ihre KI vergangene Gespräche erinnert.",
-    "emailPlaceholder": "E-Mail eingeben",
-    "joinWaitlist": "Warteliste beitreten",
-    "joining": "Beitritt...",
-    "onTheList": "Sie sind auf der Liste!",
+    "badge": "Live-Demo: smallgod",
+    "title": "Deine NPCs erinnern sich",
+    "titleHighlight": "über Generationen hinweg.",
+    "subtitle": "Seizn ist die Speicherschicht für KI-NPCs. Verbinde es mit Inworld, Convai oder deinem eigenen LLM — behalte die Dialogue-Engine, die du liebst, und füge Persistenz hinzu, die Sessions und Generationen überlebt.",
+    "emailPlaceholder": "du@studio.com",
+    "joinWaitlist": "Demo buchen",
+    "joining": "Buche...",
+    "onTheList": "Wir melden uns in Kürze.",
     "stats": {
-      "tokenSavings": "Token-Einsparung",
-      "retrievalTime": "Abrufzeit",
-      "uptimeSla": "Verfügbarkeits-SLA"
+      "tokenSavings": "NPCs pro Projekt",
+      "retrievalTime": "Speicherabruf",
+      "uptimeSla": "Generationen Speicher"
     }
   },
   "features": {
-    "title": "Für Entwickler gebaut",
-    "subtitle": "Einfache APIs, leistungsstarke Infrastruktur. Fügen Sie jeder KI in Minuten dauerhaften Speicher hinzu.",
+    "title": "Gebaut für Game Studios",
+    "subtitle": "Seizn einbinden, Dialogue-Engine behalten. NPCs bekommen Speicher, Beziehungen und Persistenz über Sessions und Generationen hinweg.",
     "smartExtraction": {
-      "title": "Intelligente Extraktion",
-      "description": "Extrahiert automatisch wichtige Fakten, Präferenzen und Kontext aus Gesprächen mit Claude AI."
+      "title": "NPC / Fraktion / Event-Graph",
+      "description": "Modelliere NPCs, Fraktionen, Quests und Vorfälle als Graph. Beziehungen (Vertrauen, Groll, Verwandtschaft) und Events (Zeuge, Betroffener, Akteur) sind erstklassige Primitive — keine selbst erfundenen Schemas."
     },
     "instantRetrieval": {
-      "title": "Sofortiger Abruf",
-      "description": "Hybride Vektor- + Graphsuche liefert relevante Erinnerungen in Millisekunden."
+      "title": "Kontextsensitives Erinnern",
+      "description": "Hybride Vektor- + Graph-Abfrage liefert nur die Erinnerungen, die für diesen NPC und diese Szene relevant sind. 'Beim letzten Treffen'-Abfragen in Millisekunden."
     },
     "enterpriseSecurity": {
-      "title": "Enterprise-Sicherheit",
-      "description": "Ende-zu-Ende-Verschlüsselung, SOC 2-konform, mit granularer Zugriffskontrolle und Audit-Logs."
+      "title": "NPC-Schwarm-Skalierung",
+      "description": "Entitätsbasierte Nutzungsabrechnung. Sims-ähnliche, Cities-Skylines-ähnliche und Gottspiel-Titel laufen mit tausenden NPCs ohne Seat-Kostenbarrieren. Self-hosted oder managed."
     }
   },
   "codePreview": {
-    "title": "Einfache Integration",
-    "subtitle": "Fügen Sie Ihrer KI mit nur wenigen Zeilen Code Speicher hinzu."
+    "title": "Integration in 10 Zeilen",
+    "subtitle": "Dialogue-Engine behalten. Seizn für den Speicher hinzufügen."
   },
   "pricing": {
-    "title": "Einfache, transparente Preise",
-    "subtitle": "Kostenlos starten, bei Wachstum skalieren.",
+    "title": "Entitätsbasierte Preise",
+    "subtitle": "Kostenlos starten. Skalierung nach Entitäten und Events — kein Seat-Pricing. Für Indies mit 10 NPCs und Schwarm-Titel mit 10.000 NPCs.",
     "free": {
       "name": "Kostenlos",
       "price": "$0",
@@ -221,39 +222,39 @@
       "unlimited": "Unbegrenzt"
     },
     "onboarding": {
-      "title": "Erste Schritte mit Seizn",
+      "title": "Mit Seizn starten",
       "progress": "{completed}/{total} Schritte abgeschlossen",
       "dismiss": "Schließen",
       "doLater": "Später erledigen",
       "steps": {
         "apiKey": {
-          "title": "API-Schlüssel erstellen",
-          "description": "Generieren Sie Ihren ersten API-Schlüssel zur Authentifizierung von Anfragen",
+          "title": "API-Schlüssel generieren",
+          "description": "Ersten API-Schlüssel für die Authentifizierung erstellen",
           "action": "Schlüssel erstellen"
         },
         "demoQuery": {
-          "title": "Erste Abfrage durchführen",
-          "description": "Probieren Sie die Demo-Abfrage aus oder stellen Sie eine API-Anfrage",
+          "title": "Erste Abfrage ausführen",
+          "description": "Demo-Abfrage ausprobieren oder eine API-Anfrage senden",
           "action": "Demo testen"
         },
         "viewTrace": {
-          "title": "Trace anzeigen",
-          "description": "Verstehen Sie mit vollständigem Tracing, wie die Suche funktioniert",
-          "action": "Traces anzeigen"
+          "title": "Trace-Ergebnisse ansehen",
+          "description": "Vollständigen Trace der Abfrageausführung einsehen",
+          "action": "Trace anzeigen"
         },
         "installSdk": {
           "title": "SDK installieren",
-          "description": "Fügen Sie Seizn mit npm oder pip zu Ihrem Projekt hinzu",
-          "action": "SDKs anzeigen"
+          "description": "Seizn ins Projekt einbinden: npm, pip oder direktes HTTP. Unity/Unreal-Plugins unter Integrationen.",
+          "action": "SDK kopieren"
         },
         "createOrg": {
-          "title": "Organisation erstellen",
-          "description": "Richten Sie Ihren Team-Arbeitsbereich für die Zusammenarbeit ein",
-          "action": "Organisation erstellen"
+          "title": "Projekt erstellen",
+          "description": "Ein Projekt pro Spieltitel. Umgebungen (dev/prod) leben darin.",
+          "action": "Projekt erstellen"
         },
         "firstQuery": {
-          "title": "Erste Abfrage ausführen",
-          "description": "Testen Sie die API im Playground mit einer Beispielabfrage",
+          "title": "Erstes Event erfassen",
+          "description": "Playground ausprobieren — NPC anlegen, Event loggen, Kontext abfragen.",
           "action": "Abfrage testen"
         }
       },
@@ -355,34 +356,34 @@
     "docs": "Dokumentation",
     "nav": {
       "overview": "Übersicht",
-      "memories": "Erinnerungen",
-      "mindMap": "Mindmap",
-      "candidates": "Kandidaten",
+      "memories": "Entitäten",
+      "mindMap": "Beziehungsgraph",
+      "candidates": "Event-Posteingang",
       "devTools": "DevTools",
       "playground": "Playground",
-      "evals": "Evaluierungen",
+      "evals": "Szenario-Tests",
       "analytics": "Analytik",
-      "governance": "Governance",
+      "governance": "Inhaltsrichtlinie",
       "privacy": "Datenschutz",
       "security": "Sicherheit",
-      "enterprise": "Enterprise",
+      "enterprise": "Für Studios",
       "usage": "Nutzung",
       "budget": "Budget",
       "reports": "Berichte",
-      "calculator": "Rechner",
+      "calculator": "Kostenschätzung",
       "apiKeys": "API-Schlüssel",
-      "integrations": "Integrationen",
+      "integrations": "Engine-Plugins",
       "webhooks": "Webhooks",
-      "docs": "Dokumentation",
-      "organizations": "Organisationen",
+      "docs": "Docs",
+      "organizations": "Projekte",
       "settings": "Einstellungen",
       "groups": {
-        "memory": "SPEICHER",
+        "memory": "NPC-SPEICHER",
         "observe": "BEOBACHTEN",
-        "govern": "GOVERNANCE",
-        "finops": "FINOPS",
-        "connect": "VERBINDEN",
-        "system": "SYSTEM"
+        "govern": "RICHTLINIEN",
+        "finops": "NUTZUNG & KOSTEN",
+        "connect": "INTEGRIEREN",
+        "system": "ARBEITSBEREICH"
       }
     },
     "pinSidebar": "Seitenleiste anheften",
@@ -670,25 +671,25 @@
       "evening": "Guten Abend"
     },
     "overviewPage": {
-      "subtitle": "Übersicht Ihrer AI-Speichernutzung",
-      "totalMemories": "Gesamt-Erinnerungen",
+      "subtitle": "Übersicht deines NPC-Speichergraphen.",
+      "totalMemories": "Entitäten gesamt",
       "apiCalls": "API-Aufrufe",
       "activeKeys": "Aktive API-Schlüssel",
       "currentPlan": "Aktueller Plan",
       "usage": "Nutzung",
       "today": "Heute",
       "dailyLimit": "Tageslimit",
-      "recentMemories": "Aktuelle Erinnerungen",
+      "recentMemories": "Aktuelle Events",
       "viewAll": "Alle anzeigen",
-      "noMemories": "Noch keine Erinnerungen",
-      "noMemoriesHint": "Fügen Sie Ihre erste Erinnerung über die API hinzu",
+      "noMemories": "Noch keine Entitäten",
+      "noMemoriesHint": "Erstelle NPCs, Fraktionen oder Events über die API oder das SDK.",
       "quickStart": "Schnellstart",
       "createApiKey": "API-Schlüssel erstellen",
-      "getStartedApi": "Mit der API loslegen",
-      "viewDocumentation": "Dokumentation anzeigen",
-      "learnSeizn": "Erfahren Sie, wie Sie Seizn nutzen",
-      "createOrganization": "Organisation erstellen",
-      "collaborateTeam": "Arbeiten Sie mit Ihrem Team zusammen",
+      "getStartedApi": "Erste Integration authentifizieren",
+      "viewDocumentation": "Docs anzeigen",
+      "learnSeizn": "In 10 Zeilen integrieren — Unity, Unreal oder jede Runtime",
+      "createOrganization": "Projekt erstellen",
+      "collaborateTeam": "Workspace für einen Spieltitel einrichten",
       "quickExample": "Schnellbeispiel",
       "manageKeys": "Schlüssel verwalten",
       "upgradePlan": "Plan upgraden",
@@ -1694,32 +1695,32 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "Das Produktions-OS für KI-Agenten.",
-    "heroSubtitle": "Bringen Sie Agenten mit verwalteter Erinnerung, integrierter Observability und nachweisbarer Compliance vom Piloten in die Produktion.",
-    "ctaStart": "Kostenlos Starten",
-    "ctaDemo": "2-Min-Demo Ansehen",
-    "socialProof": "Vertraut von Teams, die Agenten im großen Maßstab betreiben",
+    "heroTitle": "Speicher für KI-NPCs.",
+    "heroSubtitle": "Verbinde dich mit Inworld, Convai oder deinem eigenen LLM. Seizn gibt deinen NPCs persistente Erinnerungen, Beziehungen und generationenübergreifende Wiedererkennung — entitätsbasierte Preise, kein Seat-Pricing.",
+    "ctaStart": "Docs lesen",
+    "ctaDemo": "smallgod spielen",
+    "socialProof": "Entwickelt für Game Studios, die von 10 auf 10.000 NPCs skalieren.",
     "liveDemo": "Live-Demo",
-    "heroTagline": "Testen Sie die API live — ohne Anmeldung",
-    "firstRetrievalComplete": "Erster Abruf abgeschlossen",
-    "copySnippetHint": "Kopieren Sie das Snippet unten",
-    "copySnippetTitle": "Dieses Snippet kopieren",
-    "copySnippetSubtitle": "Generiert aus Ihren Einstellungen",
+    "heroTagline": "Spiele smallgod — unser Referenz-Gottspiel auf Seizn-Basis. Ohne Anmeldung, ohne Installation.",
+    "chips": {
+      "trace": "Entitäten",
+      "eval": "Beziehungen",
+      "policy": "Events"
+    },
+    "copySnippetTitle": "In Unity, Unreal oder jede Runtime integrieren",
+    "copySnippetSubtitle": "HTTP-Wrapper + offizielle C#/C++-Plugins. Keine eigene Infrastruktur nötig.",
     "whySeizn": {
-      "title": "Warum Seizn statt LangChain + Pinecone?",
-      "subtitle": "Hören Sie auf, fragmentierte Tools zusammenzusetzen. Bekommen Sie alles in einem integrierten Stack.",
-      "tracingTitle": "Integriertes Tracing + Evaluation",
-      "tracingDesc": "Jede Anfrage wird standardmäßig getracet. Führen Sie Evaluierungen durch ohne LangSmith.",
-      "tracingBadge": "Standard AN",
-      "autopilotTitle": "Budgetbewusster Autopilot",
-      "autopilotDesc": "Setzen Sie ein Latenz- oder Kostenbudget, und Autopilot wählt automatisch die optimale Strategie.",
-      "autopilotBadge": "Optional",
-      "governanceTitle": "Governance + Audit-Logs",
-      "governanceDesc": "PII-Erkennung, DSGVO-konformes Vergessen und vollständige Audit-Trails. Für Teams mit Compliance-Anforderungen.",
-      "governanceBadge": "Standard für Teams",
-      "lessGlueTitle": "Weniger bewegliche Teile",
-      "lessGlueDesc": "Kein Jonglieren mehr mit LangChain + Pinecone + LangSmith + PII-Filter. Ein SDK, ein Dashboard, eine Rechnung.",
-      "lessGlueBadge": "Weniger Glue-Code"
+      "title": "Warum Seizn statt Inworld / Convai allein?",
+      "subtitle": "Dialogue-Engines leisten bei Stimmen und Persönlichkeit Großartiges. Persistenten Speicher in der Breite löst keine davon. Seizn wird als Speicherschicht eingesteckt.",
+      "tracingTitle": "Dialogue-Engine-agnostisch",
+      "tracingDesc": "Nutze Inworld, Convai, NVIDIA ACE oder dein eigenes LLM für Dialoge. Seizn legt Speicher obendrauf — ersetzt nie, was bereits funktioniert.",
+      "tracingBadge": "Plugin",
+      "autopilotTitle": "NPC-Schwarm-Skalierung",
+      "autopilotDesc": "Graph-basierter Speicher, entitätsbasiert abgerechnet. Sims-ähnliche, Cities-Skylines-ähnliche und Gottspiel-Titel laufen mit tausenden NPCs ohne Seat-Kostenbarrieren.",
+      "autopilotBadge": "Pro Entität",
+      "governanceTitle": "Generationenübergreifende Erinnerung",
+      "governanceDesc": "Groll überlebt Charaktere. Fraktionsgeschichte vererbt sich an Nachkommen. Verwandtschaft, Zeugenschaft und Beziehungsprimitive sind eingebaut — kein eigenes Schema nötig.",
+      "governanceBadge": "Eingebaut"
     },
     "trust": {
       "security": "RLS + Schlüssel-Hashing",
@@ -1730,22 +1731,22 @@
       "auditLogsDesc": "Volle Nachverfolgbarkeit"
     },
     "pricingCta": {
-      "title": "Einfache, transparente Preise",
-      "subtitle": "Starten Sie kostenlos mit 12.000 Erinnerungen. Upgrade zu Starter für E2E-Verschlüsselung.",
-      "viewPricing": "Preise anzeigen",
-      "contactSales": "Vertrieb kontaktieren"
+      "title": "Entitätsbasierte Preise",
+      "subtitle": "Kostenlos starten. Keine Seat-Barrieren — 10 NPCs oder 10.000, skaliere nach Entitäten und Events, nicht nach Entwickler-Seats.",
+      "viewPricing": "Preise ansehen",
+      "contactSales": "Mit Gründer sprechen"
     },
     "nav": {
-      "docs": "Dokumentation",
+      "docs": "Docs",
       "pricing": "Preise",
-      "enterprise": "Enterprise",
-      "getApiKey": "API-Schlüssel erhalten",
-      "tryDemo": "Demo testen",
+      "compare": "vs Inworld",
+      "enterprise": "Für Studios",
+      "getApiKey": "Demo buchen",
+      "tryDemo": "smallgod spielen",
       "limits": "Limits",
       "status": "Status",
       "help": "Hilfe",
-      "github": "OSS",
-      "compare": "Vergleichen"
+      "github": "OSS"
     },
     "requestBuilder": {
       "title": "Anfrage-Builder",
