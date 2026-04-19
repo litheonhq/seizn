@@ -30,7 +30,7 @@ jobs:
         run: node scripts/market/update-competitive-research.mjs
 
       - name: Create PR if report changed
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "docs: refresh competitive positioning research"
           branch: "chore/competitive-research-refresh"
