@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: Props) {
   return {
     title:
       locale === "ko"
-        ? "Unity, Unreal, Godot 연동 예제 | Seizn"
-        : "Unity, Unreal, Godot, HTTP, Python, and JS Examples | Seizn",
+        ? "Unity, Unreal, Godot 연동 예제"
+        : "Unity, Unreal, Godot, HTTP, Python, and JS Examples",
     description:
       locale === "ko"
         ? "하나의 NPC 메모리 시나리오를 Unity, Unreal, Godot, raw HTTP, Python, JavaScript 경로로 보여주는 Seizn 통합 허브입니다."
