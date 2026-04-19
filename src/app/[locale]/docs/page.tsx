@@ -13,11 +13,17 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
-  const dict = await getDictionary(locale);
+  await getDictionary(locale);
 
   return {
-    title: dict.docs?.hero?.title || "Documentation",
-    description: dict.docs?.hero?.subtitle || "Seizn API Documentation",
+    title:
+      locale === "ko"
+        ? "AI NPC 메모리 문서 허브 | Seizn"
+        : "AI NPC Memory Docs Hub | Seizn",
+    description:
+      locale === "ko"
+        ? "NPC 엔티티, 이벤트, witness, retrieval budget, 엔진 플러그인까지 Seizn 문서를 NPC 중심 흐름으로 정리한 허브입니다."
+        : "A docs hub for AI NPC memory: entities, events, witness chains, retrieval budgets, and engine plugin flows.",
     alternates: {
       canonical: `/${locale}/docs`,
     },
