@@ -19,10 +19,12 @@ export async function generateMetadata({ params }: Props) {
   const docs = dict.docs as Record<string, unknown> | undefined;
   const apiReferencePage = docs?.apiReferencePage as Record<string, unknown> | undefined;
   const meta = apiReferencePage?.meta as Record<string, string> | undefined;
+  const title = (meta?.title || "API Reference").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: meta?.title || "API Reference | Seizn",
-    description: meta?.description || "Complete API documentation for Seizn CI, Autopilot, Cache, Contracts, Healing, Graph, Versions, Explain, and RetOps APIs",
+    title,
+    description:
+      meta?.description || "Complete API documentation for Seizn graph entities, extraction, context retrieval, relationships, and integration endpoints.",
     alternates: {
       canonical: `/${locale}/docs/api-reference`,
     },

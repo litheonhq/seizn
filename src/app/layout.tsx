@@ -9,8 +9,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Seizn - AI Memory Infrastructure",
-  description: "Give your AI persistent memory. Seizn extracts, stores, and retrieves context automatically.",
+  title: "Seizn · Memory for AI NPCs",
+  description:
+    "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.",
   metadataBase: new URL("https://www.seizn.com"),
 };
 

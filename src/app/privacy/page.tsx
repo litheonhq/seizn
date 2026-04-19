@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Seizn",
+  title: "Privacy Policy · Seizn",
   description:
     "Learn how Seizn collects, uses, and protects your personal information. Our commitment to your privacy and data security.",
   openGraph: {
-    title: "Privacy Policy | Seizn",
+    title: "Privacy Policy · Seizn",
     description:
       "Learn how Seizn collects, uses, and protects your personal information.",
     url: "https://www.seizn.com/privacy",

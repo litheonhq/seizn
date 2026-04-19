@@ -18,9 +18,10 @@ export async function generateMetadata({ params }: Props) {
   const docs = dict.docs as Record<string, unknown> | undefined;
   const langchainPage = docs?.langchainPage as Record<string, unknown> | undefined;
   const meta = langchainPage?.meta as Record<string, string> | undefined;
+  const title = (meta?.title || "LangChain Integration").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: meta?.title || "LangChain Integration | Seizn",
+    title,
     description: meta?.description || "Drop-in retriever for LangChain RAG pipelines",
     alternates: {
       canonical: `/${locale}/docs/integrations/langchain`,

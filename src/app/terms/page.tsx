@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - Seizn",
+  title: "Terms of Service · Seizn",
   description:
-    "Terms of Service for Seizn AI-powered search infrastructure API. Read our service agreement, API usage terms, and legal policies.",
+    "Terms of Service for Seizn NPC memory infrastructure and API services. Read our service agreement, API usage terms, and legal policies.",
   openGraph: {
-    title: "Terms of Service - Seizn",
+    title: "Terms of Service · Seizn",
     description:
-      "Terms of Service for Seizn AI-powered search infrastructure API.",
+      "Terms of Service for Seizn NPC memory infrastructure and API services.",
     type: "website",
   },
 };
