@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/get-dictionary";
 import { HelpClient } from "./help-client";
 
 export async function generateStaticParams() {
@@ -14,21 +13,24 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
-  const dict = await getDictionary(locale);
-
-  const helpDict = (dict as Record<string, unknown>).help as Record<string, unknown> | undefined;
-  const title = (helpDict?.title as string) || "Help Hub";
-  const subtitle = (helpDict?.subtitle as string) || "Find answers, get support, and access resources.";
+  const title =
+    locale === "ko"
+      ? "게임 팀용 NPC 메모리 도움말 | Seizn"
+      : "Help for Teams Shipping NPC Memory | Seizn";
+  const description =
+    locale === "ko"
+      ? "persistent character, faction continuity, context budget, rollout cost 같은 게임 스튜디오 질문에 답하는 Seizn 도움말 허브입니다."
+      : "Seizn help hub for game-studio questions about persistent characters, faction continuity, context budgets, and rollout cost.";
 
   return {
-    title: `${title} - Seizn`,
-    description: subtitle,
+    title,
+    description,
     alternates: {
       canonical: `/${locale}/help`,
     },
     openGraph: {
-      title: `${title} - Seizn`,
-      description: subtitle,
+      title,
+      description,
       type: "website",
     },
   };
@@ -37,7 +39,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HelpPage({ params }: Props) {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
-  const dictionary = await getDictionary(locale);
 
-  return <HelpClient locale={locale} dictionary={dictionary} />;
+  return <HelpClient locale={locale} />;
 }
