@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title:
       locale === "ko"
-        ? "Inworld, Convai, ACE 통합 매트릭스 | Seizn"
-        : "Inworld, Convai, and ACE Integration Matrix | Seizn",
+        ? "Inworld, Convai, ACE 통합 매트릭스"
+        : "Inworld, Convai, and ACE Integration Matrix",
     description:
       locale === "ko"
         ? "Seizn은 대화 엔진을 대체하지 않고 AI NPC 메모리 그래프를 맡습니다. Inworld, Convai, ACE와 함께 쓰는 통합 매트릭스를 확인하세요."
