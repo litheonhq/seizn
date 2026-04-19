@@ -1,342 +1,587 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { PaddleInit } from "@/components/paddle-init";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
-
-declare global {
-  interface Window {
-    createLemonSqueezy?: () => void;
-  }
-}
 
 interface PricingClientProps {
   dict: Dictionary;
   locale: Locale;
 }
 
+type Plan = {
+  name: string;
+  price: string;
+  cadence: string;
+  scope: string;
+  summary: string;
+  details: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  featured?: boolean;
+};
+
+type MatrixRow = {
+  label: string;
+  free: string;
+  studio: string;
+  enterprise: string;
+};
+
+type FAQItem = {
+  q: string;
+  a: string;
+};
+
+type Copy = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  helper: string;
+  primaryCta: string;
+  secondaryCta: string;
+  statChips: string[];
+  plansTitle: string;
+  plansSubtitle: string;
+  plans: Plan[];
+  matrixTitle: string;
+  matrixSubtitle: string;
+  matrixRows: MatrixRow[];
+  faqTitle: string;
+  faqSubtitle: string;
+  faq: FAQItem[];
+  finalCtaTitle: string;
+  finalCtaSubtitle: string;
+  finalCtaPrimary: string;
+  finalCtaSecondary: string;
+};
+
+const COPY_EN: Copy = {
+  eyebrow: "NPC pricing",
+  title: "Price memory by world scale, not by seat count.",
+  subtitle:
+    "Seizn meters the persistent graph behind your NPCs: entities, relations, and event throughput. Keep Inworld, Convai, ACE, or your own dialogue stack.",
+  helper:
+    "Studio starts at $499/month for one live title. Enterprise covers multi-title rollout, self-hosting, private networking, and procurement-heavy launches.",
+  primaryCta: "Book a demo",
+  secondaryCta: "View integrations",
+  statChips: [
+    "No seat tax for writers, quest designers, or QA.",
+    "Works beside Inworld, Convai, ACE, or your own runtime.",
+    "Built for teams moving from 10 NPC prototypes to 10,000 NPC worlds.",
+  ],
+  plansTitle: "Plans for prototype, launch, and live ops",
+  plansSubtitle:
+    "Use Free to prove the retrieval loop. Move to Studio when one title needs persistent memory in production.",
+  plans: [
+    {
+      name: "Free",
+      price: "$0",
+      cadence: "Dev tier",
+      scope: "Up to 250 NPC entities",
+      summary:
+        "Prototype memory recall, faction relations, and event logging in a vertical slice without paying for seats.",
+      details: [
+        "Raw HTTP plus JavaScript and Python setup",
+        "One prototype world with manual tuning",
+        "Docs-led onboarding",
+      ],
+      ctaLabel: "Read the docs",
+      ctaHref: "/docs/quickstart",
+    },
+    {
+      name: "Studio",
+      price: "From $499",
+      cadence: "per month / per title",
+      scope: "For one live project",
+      summary:
+        "Ship persistent memory into a production game with room for thousands of NPC entities and always-on event streams.",
+      details: [
+        "Sizing around entity graph and monthly event writes",
+        "Unity, Unreal, or Godot integration guidance",
+        "Launch planning before content spikes and seasonal events",
+      ],
+      ctaLabel: "Book a sizing call",
+      ctaHref: "/enterprise",
+      featured: true,
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      cadence: "multi-title / self-hosted",
+      scope: "Publisher and platform scope",
+      summary:
+        "For shared memory infrastructure, regional deployment, SSO, or private networking requirements across studios or titles.",
+      details: [
+        "Self-hosted or controlled deployment options",
+        "SSO / SAML and procurement support",
+        "Priority support plus architecture review",
+      ],
+      ctaLabel: "Talk to Seizn",
+      ctaHref: "/enterprise",
+    },
+  ],
+  matrixTitle: "How teams usually size the jump",
+  matrixSubtitle: "The meter is the graph and event flow, not the number of people touching the tool.",
+  matrixRows: [
+    {
+      label: "Typical NPC footprint",
+      free: "Up to 250 entities in a prototype",
+      studio: "Thousands per live title",
+      enterprise: "10,000+ across titles or shards",
+    },
+    {
+      label: "Event write pattern",
+      free: "Quest-state and dialogue test data",
+      studio: "Always-on world events and witness logs",
+      enterprise: "Cross-region live ops and backfills",
+    },
+    {
+      label: "Dialogue stack",
+      free: "Raw HTTP or thin wrapper",
+      studio: "Keep Inworld, Convai, ACE, or your own stack",
+      enterprise: "Custom adapters and platform review",
+    },
+    {
+      label: "Support model",
+      free: "Docs and async support",
+      studio: "Launch planning and direct response",
+      enterprise: "Dedicated channel and success plan",
+    },
+    {
+      label: "Deployment shape",
+      free: "Managed cloud",
+      studio: "Managed cloud for one shipped title",
+      enterprise: "Private networking or self-hosted",
+    },
+    {
+      label: "Best fit",
+      free: "Prototype and vertical slice",
+      studio: "Shipping one memory-heavy game",
+      enterprise: "Publisher, platform, or regulated live ops",
+    },
+  ],
+  faqTitle: "FAQ for game teams",
+  faqSubtitle: "The questions studios ask before memory goes into production.",
+  faq: [
+    {
+      q: "How does pricing work when we reach 10,000 NPCs?",
+      a: "We scope on active entity graph size, relation fan-out, and monthly event writes. Studio covers one live title. Enterprise is the path when you need multi-title rollout, private networking, or custom capacity planning.",
+    },
+    {
+      q: "What counts as an entity?",
+      a: "Anything you want retrievable across turns: NPCs, factions, households, guilds, locations, quest objects, or named items. Seats for writers, designers, QA, or narrative tools are not billed.",
+    },
+    {
+      q: "Do we need to replace Inworld, Convai, or NVIDIA ACE?",
+      a: "No. Seizn sits beside your dialogue engine. Keep voices and behavior where they already live; Seizn handles persistent memory, relation graph updates, and retrieval.",
+    },
+    {
+      q: "What happens during launch spikes or seasonal events?",
+      a: "We size plans around expected event throughput and pre-warm headroom before launches. If world-state writes ramp faster than forecast, capacity is raised without forcing you into seat-based upgrades.",
+    },
+    {
+      q: "When do we need Enterprise?",
+      a: "Choose Enterprise when security review, SSO / SAML, data residency, self-hosting, or multi-title memory infrastructure enters the conversation.",
+    },
+  ],
+  finalCtaTitle: "Need a world-size estimate?",
+  finalCtaSubtitle:
+    "Bring your NPC count, event rate, and dialogue stack. We will map the right tier and integration path.",
+  finalCtaPrimary: "Book a demo",
+  finalCtaSecondary: "Read the docs",
+};
+
+const COPY_KO: Copy = {
+  eyebrow: "NPC 가격",
+  title: "좌석 수가 아니라 세계 규모에 맞춰 메모리를 과금합니다.",
+  subtitle:
+    "Seizn은 NPC 뒤의 지속 메모리 그래프를 기준으로 요금이 정해집니다. 엔티티, 관계, 이벤트 처리량을 보고 산정하며 Inworld, Convai, ACE, 자체 대화 스택은 그대로 유지할 수 있습니다.",
+  helper:
+    "Studio는 타이틀당 월 $499부터 시작합니다. 멀티 타이틀, 셀프호스트, 프라이빗 네트워킹, 조달 심사가 들어가는 경우는 Enterprise에서 다룹니다.",
+  primaryCta: "데모 예약",
+  secondaryCta: "통합 보기",
+  statChips: [
+    "작가, 퀘스트 디자이너, QA 좌석에는 과금하지 않습니다.",
+    "Inworld, Convai, ACE, 자체 런타임과 나란히 붙습니다.",
+    "NPC 10개 프로토타입부터 10,000개 월드까지 맞춰 설계합니다.",
+  ],
+  plansTitle: "프로토타입, 출시, 라이브옵스를 위한 세 단계",
+  plansSubtitle:
+    "Free로 회수 루프를 검증하고, 실제 타이틀에 지속 메모리를 넣는 시점에 Studio로 올라갑니다.",
+  plans: [
+    {
+      name: "Free",
+      price: "$0",
+      cadence: "개발용 티어",
+      scope: "최대 250개 NPC 엔티티",
+      summary:
+        "좌석 과금 없이 버티컬 슬라이스에서 메모리 회수, 관계 그래프, 이벤트 기록을 먼저 검증합니다.",
+      details: [
+        "Raw HTTP와 JavaScript, Python 시작 경로",
+        "프로토타입 월드 1개 기준 수동 튜닝",
+        "문서 중심 온보딩",
+      ],
+      ctaLabel: "문서 보기",
+      ctaHref: "/docs/quickstart",
+    },
+    {
+      name: "Studio",
+      price: "월 $499부터",
+      cadence: "타이틀 기준",
+      scope: "라이브 프로젝트 1개",
+      summary:
+        "수천 개 NPC 엔티티와 상시 이벤트 스트림을 다루는 실제 게임에 지속 메모리를 넣기 위한 구간입니다.",
+      details: [
+        "엔티티 그래프와 월간 이벤트 쓰기량 기준 산정",
+        "Unity, Unreal, Godot 연동 가이드",
+        "시즌 이벤트와 런칭 스파이크 전 사전 용량 계획",
+      ],
+      ctaLabel: "사이징 상담 예약",
+      ctaHref: "/enterprise",
+      featured: true,
+    },
+    {
+      name: "Enterprise",
+      price: "별도 협의",
+      cadence: "멀티 타이틀 / 셀프호스트",
+      scope: "퍼블리셔 및 플랫폼 범위",
+      summary:
+        "스튜디오나 타이틀을 넘나드는 공용 메모리 인프라, 지역 배포, SSO, 프라이빗 네트워킹이 필요한 경우입니다.",
+      details: [
+        "셀프호스트 및 통제 배포 옵션",
+        "SSO / SAML과 조달 대응",
+        "우선 지원과 아키텍처 리뷰",
+      ],
+      ctaLabel: "Seizn과 상담",
+      ctaHref: "/enterprise",
+    },
+  ],
+  matrixTitle: "어느 시점에 다음 티어로 가는가",
+  matrixSubtitle: "사람 수가 아니라 그래프 규모와 이벤트 흐름을 기준으로 봅니다.",
+  matrixRows: [
+    {
+      label: "일반적인 NPC 규모",
+      free: "프로토타입 기준 최대 250개 엔티티",
+      studio: "타이틀당 수천 개 규모",
+      enterprise: "타이틀 또는 샤드 합산 10,000개 이상",
+    },
+    {
+      label: "이벤트 쓰기 패턴",
+      free: "퀘스트 상태와 대화 테스트 데이터",
+      studio: "상시 월드 이벤트와 witness 로그",
+      enterprise: "지역 단위 라이브옵스와 대량 백필",
+    },
+    {
+      label: "대화 스택",
+      free: "Raw HTTP 또는 얇은 래퍼",
+      studio: "Inworld, Convai, ACE, 자체 스택 유지",
+      enterprise: "커스텀 어댑터와 플랫폼 리뷰",
+    },
+    {
+      label: "지원 방식",
+      free: "문서와 비동기 지원",
+      studio: "런칭 계획과 직접 응답",
+      enterprise: "전용 채널과 성공 계획",
+    },
+    {
+      label: "배포 형태",
+      free: "관리형 클라우드",
+      studio: "단일 타이틀용 관리형 클라우드",
+      enterprise: "프라이빗 네트워킹 또는 셀프호스트",
+    },
+    {
+      label: "적합한 팀",
+      free: "프로토타입과 버티컬 슬라이스",
+      studio: "메모리 비중이 높은 게임 1종 출시",
+      enterprise: "퍼블리셔, 플랫폼, 규제 환경 라이브옵스",
+    },
+  ],
+  faqTitle: "게임 팀이 가장 먼저 묻는 질문",
+  faqSubtitle: "메모리를 실제 서비스에 넣기 전에 확인하는 항목들입니다.",
+  faq: [
+    {
+      q: "NPC가 10,000개까지 가면 요금은 어떻게 잡히나요?",
+      a: "활성 엔티티 그래프 크기, 관계 fan-out, 월간 이벤트 쓰기량을 기준으로 범위를 잡습니다. Studio는 라이브 타이틀 1개 기준이고, 멀티 타이틀 확장이나 프라이빗 네트워킹, 맞춤 용량 계획이 필요하면 Enterprise로 넘어갑니다.",
+    },
+    {
+      q: "엔티티에는 무엇이 포함되나요?",
+      a: "대화 중 다시 꺼내 써야 하는 모든 노드가 대상입니다. NPC, 팩션, 가문, 길드, 장소, 퀘스트 오브젝트, 이름이 붙은 아이템까지 포함할 수 있습니다. 작가나 디자이너 좌석은 과금 대상이 아닙니다.",
+    },
+    {
+      q: "Inworld, Convai, NVIDIA ACE를 바꿔야 하나요?",
+      a: "아닙니다. Seizn은 대화 엔진 옆에 붙습니다. 음성, 퍼스널리티, 행동은 기존 엔진에 두고, Seizn이 지속 메모리, 관계 그래프 업데이트, 회수를 맡습니다.",
+    },
+    {
+      q: "런칭 스파이크나 시즌 이벤트가 오면 어떻게 되나요?",
+      a: "예상 이벤트 처리량을 기준으로 사전에 용량을 잡고, 런칭 전에 헤드룸을 확보합니다. 월드 상태 쓰기가 예상보다 빨라져도 좌석 기반 업셀 없이 용량부터 조정합니다.",
+    },
+    {
+      q: "어떤 경우에 Enterprise가 필요한가요?",
+      a: "보안 심사, SSO / SAML, 데이터 레지던시, 셀프호스트, 멀티 타이틀 메모리 인프라가 논의되기 시작하면 Enterprise가 맞습니다.",
+    },
+  ],
+  finalCtaTitle: "세계 규모 산정이 필요하신가요?",
+  finalCtaSubtitle:
+    "NPC 수, 이벤트 발생률, 대화 스택을 알려주시면 맞는 티어와 연동 경로를 바로 잡아드립니다.",
+  finalCtaPrimary: "데모 예약",
+  finalCtaSecondary: "문서 보기",
+};
+
+function getCopy(locale: Locale): Copy {
+  if (locale === "ko") return COPY_KO;
+  return COPY_EN;
+}
+
+function planCardStyle(featured?: boolean): string {
+  if (featured) {
+    return "border-cyan-400/40 bg-cyan-400/10";
+  }
+
+  return "border-white/10 bg-white/5";
+}
+
 export function PricingClient({ dict, locale }: PricingClientProps) {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.createLemonSqueezy) {
-      window.createLemonSqueezy();
-    }
-  }, []);
-
-  const t = dict;
-  const faq = t.pricingPage.faq;
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const copy = getCopy(locale);
+  const compareLabel = dict.extremeHome?.nav?.compare || "Integrations";
+  const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
 
   return (
-    <div className="min-h-screen gradient-hero relative overflow-hidden">
-      <PaddleInit />
-      {/* Decorative Floating Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
-        <div
-          className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute bottom-20 left-1/3 w-80 h-80 bg-purple-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "4s" }}
-        />
-        <div
-          className="absolute top-1/2 right-10 w-64 h-64 bg-emerald-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "3s" }}
-        />
-      </div>
-
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border" aria-label="Pricing navigation">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-              <span className="text-white font-bold text-sm">S</span>
+    <div className="min-h-screen bg-[#08111f] text-white">
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur" aria-label="Pricing navigation">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <Link href={`/${locale}`} className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
+              S
             </div>
-            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-szn-text-1 to-szn-text-2 bg-clip-text text-transparent">
-              Seizn
-            </span>
+            <span className="text-lg font-semibold text-white">Seizn</span>
           </Link>
 
-          <div className="flex items-center gap-6">
-            <a href={`/${locale}#features`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">{t.nav.features}</a>
-            <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-1 font-medium hidden md:block">{t.nav.pricing}</Link>
-            <Link href={`/${locale}/comparison`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">{t.extremeHome?.nav?.compare || "Compare"}</Link>
-            <Link href="/docs" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">{t.nav.docs}</Link>
+          <div className="flex items-center gap-5">
+            <Link href={`/${locale}/pricing`} className="hidden text-sm font-medium text-white md:block">
+              {dict.nav.pricing}
+            </Link>
+            <Link href={`/${locale}/comparison`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+              {compareLabel}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+              {enterpriseLabel}
+            </Link>
+            <Link href={`/${locale}/docs`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+              {dict.nav.docs}
+            </Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link
-              href="/login"
-              className="text-sm btn-premium bg-gradient-to-r from-gray-900 to-gray-700 text-white px-5 py-2.5 rounded-full hover:shadow-lg transition-all duration-300"
+              href={`/${locale}/enterprise`}
+              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
             >
-              {t.nav.getStarted}
+              {dict.nav.getStarted}
             </Link>
           </div>
         </div>
       </nav>
 
       <main>
-        {/* Hero */}
-        <section className="pt-36 pb-12 px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Animated Badge */}
-            <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-8 animate-fade-in">
-              <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-pulse" />
-              <span className="text-sm text-szn-text-2 font-medium">Flexible Plans</span>
-            </div>
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
+            <div className="max-w-4xl">
+              <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{copy.eyebrow}</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{copy.title}</h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{copy.subtitle}</p>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">{copy.helper}</p>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-szn-text-1 mb-6 animate-fade-in">
-              {t.pricingPage.title}
-            </h1>
-            <p className="text-lg md:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              {t.pricingPage.subtitle}
-            </p>
-          </div>
-        </section>
-
-        {/* Pricing Cards */}
-        <section className="py-12 px-6 relative z-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-              {/* Free */}
-              <PricingCard plan={t.pricing.free} locale={locale} type="free" />
-              {/* Starter */}
-              <PricingCard plan={t.pricing.starter} locale={locale} type="starter" />
-              {/* Plus */}
-              <PricingCard plan={t.pricing.plus} locale={locale} type="plus" />
-              {/* Pro */}
-              <PricingCard plan={t.pricing.pro} locale={locale} type="pro" />
-              {/* Enterprise */}
-              <PricingCard plan={t.pricing.enterprise} locale={locale} type="enterprise" />
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="py-20 px-6 relative z-10">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">{faq.title}</h2>
-              <p className="text-szn-text-2 text-lg">{faq.subtitle}</p>
-            </div>
-
-            <div className="space-y-4">
-              {faq.questions.map((item, index) => (
-                <FaqItem key={index} item={item} index={index} openFaq={openFaq} setOpenFaq={setOpenFaq} />
-              ))}
-            </div>
-
-            <div className="mt-12 text-center">
-              <div className="szn-card rounded-2xl p-6 inline-block">
-                <p className="text-szn-text-2">
-                  {faq.stillQuestions}{" "}
-                  <a href="mailto:sales@seizn.com" className="text-purple-600 font-medium hover:text-purple-500 transition-colors">
-                    {faq.contactUs} sales@seizn.com
-                  </a>
-                </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href={`/${locale}/enterprise`}
+                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                >
+                  {copy.primaryCta}
+                </Link>
+                <Link
+                  href={`/${locale}/comparison`}
+                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                >
+                  {copy.secondaryCta}
+                </Link>
               </div>
             </div>
+
+            <div className="mt-12 grid gap-4 md:grid-cols-3">
+              {copy.statChips.map((chip) => (
+                <div key={chip} className="border border-white/10 bg-white/5 px-4 py-4 text-sm leading-6 text-slate-200">
+                  {chip}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Trust Badges */}
-        <section className="py-16 px-6 relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="szn-card rounded-2xl p-8">
-              <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-                <div className="flex items-center gap-3 text-szn-text-2">
-                  <div className="w-10 h-10 rounded-full bg-szn-accent/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.plansTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.plansSubtitle}</p>
+            </div>
+
+            <div className="mt-10 grid gap-4 lg:grid-cols-3">
+              {copy.plans.map((plan) => (
+                <div key={plan.name} className={`flex h-full flex-col border px-6 py-6 ${planCardStyle(plan.featured)}`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-medium uppercase tracking-[0.08em] text-slate-300">{plan.name}</p>
+                      <h3 className="mt-3 text-3xl font-semibold text-white">{plan.price}</h3>
+                      <p className="mt-2 text-sm text-slate-400">{plan.cadence}</p>
+                    </div>
+                    <span className="rounded-md border border-white/10 px-3 py-1 text-xs font-medium text-slate-200">
+                      {plan.scope}
+                    </span>
                   </div>
-                  <div>
-                    <div className="font-medium text-szn-text-1">Money-Back Guarantee</div>
-                    <div className="text-xs text-szn-text-2">14-day refund policy</div>
-                  </div>
+
+                  <p className="mt-6 text-sm leading-7 text-slate-300">{plan.summary}</p>
+
+                  <ul className="mt-6 flex-1 space-y-3">
+                    {plan.details.map((detail) => (
+                      <li key={detail} className="flex items-start gap-3 text-sm leading-6 text-slate-200">
+                        <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={`/${locale}${plan.ctaHref}`}
+                    className={`mt-8 rounded-md px-4 py-3 text-center text-sm font-medium transition-colors ${
+                      plan.featured
+                        ? "bg-cyan-400 text-[#08111f] hover:bg-cyan-300"
+                        : "border border-white/15 text-white hover:border-white/25 hover:bg-white/5"
+                    }`}
+                  >
+                    {plan.ctaLabel}
+                  </Link>
                 </div>
-                <div className="flex items-center gap-3 text-szn-text-2">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.matrixTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.matrixSubtitle}</p>
+            </div>
+
+            <div className="mt-10 overflow-x-auto border border-white/10">
+              <table className="min-w-full border-collapse">
+                <thead className="bg-white/5">
+                  <tr>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Scope</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Free</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Studio</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Enterprise</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {copy.matrixRows.map((row) => (
+                    <tr key={row.label} className="border-t border-white/10">
+                      <th className="px-4 py-4 text-left text-sm font-medium text-white">{row.label}</th>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.free}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.studio}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.enterprise}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-4xl px-6 py-20">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.faqTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.faqSubtitle}</p>
+            </div>
+
+            <div className="mt-10 space-y-3">
+              {copy.faq.map((item, index) => {
+                const isOpen = openFaq === index;
+
+                return (
+                  <div key={item.q} className="border border-white/10 bg-white/5">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                    >
+                      <span className="text-base font-medium text-white">{item.q}</span>
+                      <span className="text-sm text-slate-400">{isOpen ? "-" : "+"}</span>
+                    </button>
+                    {isOpen ? (
+                      <div className="border-t border-white/10 px-5 py-4 text-sm leading-7 text-slate-300">{item.a}</div>
+                    ) : null}
                   </div>
-                  <div>
-                    <div className="font-medium text-szn-text-1">Cancel Anytime</div>
-                    <div className="text-xs text-szn-text-2">No lock-in contracts</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-szn-text-2">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-medium text-szn-text-1">Priority Support</div>
-                    <div className="text-xs text-szn-text-2">24/7 assistance</div>
-                  </div>
-                </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.finalCtaTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalCtaSubtitle}</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={`/${locale}/enterprise`}
+                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                >
+                  {copy.finalCtaPrimary}
+                </Link>
+                <Link
+                  href={`/${locale}/docs/quickstart`}
+                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                >
+                  {copy.finalCtaSecondary}
+                </Link>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 glass border-t border-szn-border relative z-10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-6 h-6 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-              <span className="text-white font-bold text-xs">S</span>
+      <footer className="border-t border-white/10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-10 md:flex-row md:items-center md:justify-between">
+          <Link href={`/${locale}`} className="flex items-center gap-3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
+              S
             </div>
-            <span className="font-medium text-szn-text-1">Seizn</span>
+            <span className="text-sm font-medium text-white">Seizn</span>
           </Link>
-          <div className="text-sm text-szn-text-2">
-            {t.footer.copyright.replace("{year}", new Date().getFullYear().toString())}
+
+          <div className="text-sm text-slate-400">
+            {dict.footer.copyright.replace("{year}", new Date().getFullYear().toString())}
           </div>
-          <nav className="flex items-center gap-6">
-            <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
-            <a href="mailto:sales@seizn.com" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</a>
+
+          <nav className="flex flex-wrap items-center gap-5">
+            <Link href={`/${locale}/privacy`} className="text-sm text-slate-400 transition-colors hover:text-white">
+              {dict.footer.privacy}
+            </Link>
+            <Link href={`/${locale}/terms`} className="text-sm text-slate-400 transition-colors hover:text-white">
+              {dict.footer.terms}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="text-sm text-slate-400 transition-colors hover:text-white">
+              {dict.footer.contact}
+            </Link>
           </nav>
         </div>
       </footer>
-    </div>
-  );
-}
-
-interface PlanType {
-  name: string;
-  price: string;
-  period: string;
-  features: string[];
-  cta: string;
-  badge?: string;
-}
-
-function PricingCard({ plan, locale, type }: { plan: PlanType; locale: Locale; type: string }) {
-  const isPro = type === "pro";
-
-  return (
-    <div
-      className={`relative szn-card rounded-3xl p-6 szn-card-hover overflow-hidden h-full flex flex-col ${
-        isPro ? "ring-2 ring-purple-500/50 shadow-xl" : ""
-      }`}
-    >
-      {/* Background gradient for Pro */}
-      {isPro && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-violet-500/5 to-cyan-500/10" />
-      )}
-
-      {/* Badge */}
-      {isPro && plan.badge && (
-        <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-violet-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
-          {plan.badge}
-        </div>
-      )}
-
-      <div className="relative flex flex-col flex-grow">
-        <div className="text-sm font-medium text-szn-text-2 mb-2">{plan.name}</div>
-        <div className="text-3xl font-semibold text-szn-text-1 mb-1">{plan.price}</div>
-        <div className="text-sm text-szn-text-2 mb-6">{plan.period}</div>
-
-        <ul className="space-y-3 flex-grow">
-          {plan.features.map((feature: string, i: number) => (
-            <li key={i} className="flex items-center gap-2 text-sm text-szn-text-2">
-              <div className={`w-5 h-5 rounded-full ${isPro ? "bg-purple-100" : "bg-szn-accent/10"} flex items-center justify-center flex-shrink-0`}>
-                <svg className={`w-3 h-3 ${isPro ? "text-purple-600" : "text-szn-accent"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              {feature}
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-8">
-        {type === "free" && (
-          <Link
-            href="/login"
-            className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-white/50 hover:border-szn-border transition-all text-center"
-          >
-            {plan.cta}
-          </Link>
-        )}
-        {type === "starter" && (
-          <CheckoutButton
-            priceId={PLAN_VARIANTS.starter}
-            className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-white/50 hover:border-szn-border transition-all text-center"
-          >
-            {plan.cta}
-          </CheckoutButton>
-        )}
-        {type === "plus" && (
-          <CheckoutButton
-            priceId={PLAN_VARIANTS.plus}
-            className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-white/50 hover:border-szn-border transition-all text-center"
-          >
-            {plan.cta}
-          </CheckoutButton>
-        )}
-        {type === "pro" && (
-          <CheckoutButton
-            priceId={PLAN_VARIANTS.pro}
-            className="block w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-violet-500 text-white font-medium hover:shadow-lg transition-all text-center"
-          >
-            {plan.cta}
-          </CheckoutButton>
-        )}
-        {type === "enterprise" && (
-          <Link
-            href={`/${locale}/enterprise`}
-            className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-white/50 hover:border-szn-border transition-all text-center"
-          >
-            {plan.cta}
-          </Link>
-        )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FaqItem({ item, index, openFaq, setOpenFaq }: { item: { q: string; a: string }; index: number; openFaq: number | null; setOpenFaq: (n: number | null) => void }) {
-  const isOpen = openFaq === index;
-  const previewText = item.a.length > 80 ? item.a.slice(0, 80) + "..." : item.a;
-
-  return (
-    <div className="szn-card rounded-2xl overflow-hidden">
-      <button
-        onClick={() => setOpenFaq(isOpen ? null : index)}
-        className="w-full px-6 py-5 text-left hover:bg-white/30 transition-colors"
-      >
-        <div className="flex items-center justify-between">
-          <span className="font-medium text-szn-text-1 pr-4">{item.q}</span>
-          <div className={`w-8 h-8 rounded-full bg-szn-surface flex items-center justify-center flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}>
-            <svg
-              className="w-4 h-4 text-szn-text-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-        {!isOpen && (
-          <p className="mt-2 text-sm text-szn-text-2 line-clamp-2">{previewText}</p>
-        )}
-      </button>
-      {isOpen && (
-        <div className="px-6 pb-5 text-szn-text-2 leading-relaxed">
-          {item.a}
-        </div>
-      )}
     </div>
   );
 }
