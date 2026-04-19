@@ -1559,7 +1559,13 @@
       "navigate": "导航",
       "open": "打开",
       "close": "关闭",
-      "enter": "回车"
+      "enter": "回车",
+      "workflowGroup": "NPC 工作流",
+      "commands": {
+        "createEntity": "创建实体",
+        "viewRelationGraph": "查看关系图",
+        "openEventInbox": "打开事件收件箱"
+      }
     }
   },
   "pricingPage": {

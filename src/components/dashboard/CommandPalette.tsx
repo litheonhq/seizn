@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { SearchIcon } from "./dashboard-icons";
+import { InboxIcon, MapIcon, PlusIcon, SearchIcon } from "./dashboard-icons";
 import type { NavGroup } from "./navigation";
 
 interface CommandPaletteProps {
@@ -12,6 +12,24 @@ interface CommandPaletteProps {
   t: (key: string) => string;
 }
 
+type CommandPaletteItem = NavGroup["items"][number] & { group: string };
+
+const EXCLUDED_COMMAND_ROUTES = new Set([
+  "/dashboard/analytics",
+  "/dashboard/autopilot",
+  "/dashboard/budget",
+  "/dashboard/calculator",
+  "/dashboard/enterprise",
+  "/dashboard/evals",
+  "/dashboard/federated",
+  "/dashboard/governance",
+  "/dashboard/policy-marketplace",
+  "/dashboard/privacy",
+  "/dashboard/reports",
+  "/dashboard/reranker",
+  "/dashboard/security",
+]);
+
 export default function CommandPalette({ isOpen, onClose, navigationGroups, t }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -20,9 +38,31 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const allItems = navigationGroups.flatMap((g) =>
+  const workflowGroup = t("dashboard.commandPalette.workflowGroup") || "NPC workflows";
+  const workflowItems: CommandPaletteItem[] = [
+    {
+      label: t("dashboard.commandPalette.commands.createEntity") || "Create entity",
+      href: "/dashboard/memories",
+      icon: PlusIcon,
+      group: workflowGroup,
+    },
+    {
+      label: t("dashboard.commandPalette.commands.viewRelationGraph") || "View relation graph",
+      href: "/dashboard/memories/mindmap",
+      icon: MapIcon,
+      group: workflowGroup,
+    },
+    {
+      label: t("dashboard.commandPalette.commands.openEventInbox") || "Open event inbox",
+      href: "/dashboard/memories/candidates",
+      icon: InboxIcon,
+      group: workflowGroup,
+    },
+  ];
+  const navigationItems = navigationGroups.flatMap((g) =>
     g.items.map((item) => ({ ...item, group: g.label }))
-  );
+  ).filter((item) => !EXCLUDED_COMMAND_ROUTES.has(item.href));
+  const allItems = [...workflowItems, ...navigationItems];
 
   const filtered = query.trim()
     ? allItems.filter((item) =>
@@ -153,7 +193,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
                   const showHeader = item.group !== currentGroup && item.group;
                   currentGroup = item.group;
                   return (
-                    <div key={item.href}>
+                    <div key={`${item.group}:${item.href}:${item.label}`}>
                       {showHeader && (
                         <div className="px-4 pt-3 pb-1 text-[10px] font-semibold tracking-widest text-szn-text-3 uppercase">
                           {item.group}

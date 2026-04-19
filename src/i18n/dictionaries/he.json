@@ -1559,7 +1559,13 @@
       "navigate": "ניווט",
       "open": "פתח",
       "close": "סגור",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "זרימות עבודה של NPC",
+      "commands": {
+        "createEntity": "יצירת ישות",
+        "viewRelationGraph": "הצגת גרף קשרים",
+        "openEventInbox": "פתיחת תיבת אירועים"
+      }
     }
   },
   "pricingPage": {

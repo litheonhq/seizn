@@ -1563,7 +1563,13 @@
       "navigate": "Navigieren",
       "open": "Öffnen",
       "close": "Schließen",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "NPC-Workflows",
+      "commands": {
+        "createEntity": "Entität erstellen",
+        "viewRelationGraph": "Beziehungsgraph anzeigen",
+        "openEventInbox": "Ereignis-Eingang öffnen"
+      }
     }
   },
   "pricingPage": {
