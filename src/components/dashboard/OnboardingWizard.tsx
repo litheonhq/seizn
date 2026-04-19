@@ -485,7 +485,7 @@ function SdkModal({
       command: `curl -X POST https://seizn.com/api/memories \\
   -H "x-api-key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
-  -d '{"content": "test memory"}'`,
+  -d '{"content": "Mira promised to meet the player at the old gate."}'`,
     },
   ];
 

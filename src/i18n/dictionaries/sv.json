@@ -708,25 +708,25 @@
       "featureAuditDesc": "Aktivitetshistorik"
     },
     "onboarding": {
-      "title": "Kom igång med Seizn",
+      "title": "Ställ in NPC-minne",
       "progress": "{completed}/{total} steg slutförda",
       "dismiss": "Stäng",
       "doLater": "Jag gör det senare",
       "steps": {
         "apiKey": {
           "title": "Skapa API-nyckel",
-          "description": "Skapa en API-nyckel för förfrågningar från spelruntime",
+          "description": "Autentisera requests från spelserver och verktyg.",
           "action": "Skapa nyckel"
         },
         "demoQuery": {
-          "title": "Fråga NPC-kontext",
-          "description": "Prova en demo-NPC-fråga eller skicka din första förfrågan",
-          "action": "Testa demo"
+          "title": "Kör NPC-minnesfråga",
+          "description": "Prova en NPC-exempelfråga eller gör ett API-anrop.",
+          "action": "Prova exempel"
         },
         "viewTrace": {
-          "title": "Visa en spårning",
-          "description": "Förstå hur sökning fungerar med fullständig spårning",
-          "action": "Visa spårningar"
+          "title": "Granska retrieval-trace",
+          "description": "Se hur NPC-kontexten hämtades för händelsefrågan.",
+          "action": "Visa trace"
         },
         "installSdk": {
           "title": "Installera SDK",
@@ -739,15 +739,15 @@
           "action": "Skapa Org"
         },
         "firstQuery": {
-          "title": "Kör Första Förfrågan",
-          "description": "Testa API:et i playground med en exempelfråga",
-          "action": "Prova Fråga"
+          "title": "Logga första NPC-händelsen",
+          "description": "Använd playgrounden för att skapa en NPC, logga en händelse och hämta tillbaka kontext.",
+          "action": "Öppna playground"
         }
       },
       "takeTour": "Ta en rundtur",
       "sdkModal": {
         "title": "Installera Seizn SDK",
-        "description": "Välj din föredragna installationsmetod och kopiera kommandot.",
+        "description": "Kopiera SDK-kommandot för din spelstack.",
         "copy": "Kopiera",
         "copied": "Kopierat!",
         "viewDocs": "Visa fullständig dokumentation",
@@ -755,20 +755,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Välkommen till Seizn!",
-          "description": "Låt oss ta en snabb rundtur för att hjälpa dig komma igång."
+          "title": "Bygg NPC-minnesflöden",
+          "description": "Skapa ett projekt, lägg till en API-nyckel, logga en händelse och granska kontexttracen."
         },
         "sidebar": {
-          "title": "Navigering",
-          "description": "Använd sidofältet för att navigera mellan dashboardsektioner."
+          "title": "NPC-flödesnavigering",
+          "description": "Använd Entiteter, Relationsgraf och Händelseinkorg för att hantera NPC-kontext."
         },
         "stats": {
-          "title": "Din Statistik",
-          "description": "Övervaka API-användning, lagrade entiteter och aktuell plan."
+          "title": "Projektstatus",
+          "description": "Övervaka API-användning, sparade entiteter, händelseaktivitet och planbegränsningar."
         },
         "quickStart": {
           "title": "Snabbåtgärder",
-          "description": "Använd dessa kort för vanliga uppgifter som att skapa API-nycklar."
+          "description": "Använd korten för att skapa API-nycklar och köra det första NPC-minnesflödet."
         },
         "next": "Nästa",
         "skip": "Hoppa över rundtur",
@@ -1477,24 +1477,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Första Sökningen Handledning",
-      "subtitle": "Lär dig hur du använder playground",
+      "title": "NPC-frågeguide",
+      "subtitle": "Testa NPC-minneshämtning",
       "dismiss": "Stäng",
-      "tryExamples": "Prova en exempelfråga:",
-      "hint": "Klicka på något exempel för att autofylla frågeingången",
+      "tryExamples": "Prova en NPC-fråga:",
+      "hint": "Klicka på ett exempel för att fylla i frågan",
       "gotIt": "Jag förstår!",
       "tips": {
         "welcome": {
-          "title": "Välkommen till Felsökningskonsolen",
-          "description": "Testa dina frågor här med fullständig spårning för att förstå exakt hur sökningen fungerar."
+          "title": "Välkommen till NPC-debuggkonsolen",
+          "description": "Testa händelsefrågor med full tracing och se hur NPC-minnet hämtas."
         },
         "query": {
-          "title": "Frågor på Naturligt Språk",
-          "description": "Ange vilken fråga som helst på naturligt språk. Vår AI kommer att hitta semantiskt liknande minnen från din lagrade data."
+          "title": "NPC-kontextfrågor",
+          "description": "Fråga om en karaktär, ett möte eller en fraktion. Seizn söker relevant kontext i den sparade grafen."
         },
         "trace": {
-          "title": "Fullständig Exekveringsspårning",
-          "description": "Se varje steg i pipeline - från skapande av inbäddning till resultatrankning - med tids- och kostnadsuppdelningar."
+          "title": "Retrieval-trace",
+          "description": "Se varje steg från entitetsmatchning till resultatranking, med tider och kostnader."
         }
       }
     },
