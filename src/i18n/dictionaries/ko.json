@@ -241,7 +241,13 @@
       "navigate": "이동",
       "open": "열기",
       "close": "닫기",
-      "enter": "선택"
+      "enter": "선택",
+      "workflowGroup": "NPC 워크플로",
+      "commands": {
+        "createEntity": "엔터티 만들기",
+        "viewRelationGraph": "관계 그래프 보기",
+        "openEventInbox": "이벤트 인박스 열기"
+      }
     },
     "nav": {
       "overview": "개요",

@@ -1514,7 +1514,13 @@
       "navigate": "Điều hướng",
       "open": "Mở",
       "close": "Đóng",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Luồng NPC",
+      "commands": {
+        "createEntity": "Tạo thực thể",
+        "viewRelationGraph": "Xem đồ thị quan hệ",
+        "openEventInbox": "Mở hộp sự kiện"
+      }
     },
     "northStar": {
       "subtitle": "Chỉ báo chính về độ tin cậy bộ nhớ NPC"

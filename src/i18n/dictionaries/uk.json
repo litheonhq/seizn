@@ -1514,7 +1514,13 @@
       "navigate": "Навігація",
       "open": "Відкрити",
       "close": "Закрити",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Сценарії NPC",
+      "commands": {
+        "createEntity": "Створити сутність",
+        "viewRelationGraph": "Переглянути граф зв'язків",
+        "openEventInbox": "Відкрити вхідні подій"
+      }
     },
     "northStar": {
       "subtitle": "Ключові індикатори надійності пам’яті NPC"

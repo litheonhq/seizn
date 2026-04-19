@@ -1514,7 +1514,13 @@
       "navigate": "नेविगेट",
       "open": "खोलें",
       "close": "बंद करें",
-      "enter": "एंटर"
+      "enter": "एंटर",
+      "workflowGroup": "NPC वर्कफ़्लो",
+      "commands": {
+        "createEntity": "एंटिटी बनाएं",
+        "viewRelationGraph": "संबंध ग्राफ़ देखें",
+        "openEventInbox": "इवेंट इनबॉक्स खोलें"
+      }
     },
     "northStar": {
       "subtitle": "NPC मेमोरी विश्वसनीयता के मुख्य संकेतक"

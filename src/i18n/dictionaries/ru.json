@@ -1518,7 +1518,13 @@
       "navigate": "Навигация",
       "open": "Открыть",
       "close": "Закрыть",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Сценарии NPC",
+      "commands": {
+        "createEntity": "Создать сущность",
+        "viewRelationGraph": "Открыть граф связей",
+        "openEventInbox": "Открыть входящие событий"
+      }
     },
     "northStar": {
       "subtitle": "Ключевые индикаторы надежности памяти NPC"

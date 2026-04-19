@@ -1514,7 +1514,13 @@
       "navigate": "Nawiguj",
       "open": "Otwórz",
       "close": "Zamknij",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Workflowy NPC",
+      "commands": {
+        "createEntity": "Utwórz encję",
+        "viewRelationGraph": "Zobacz graf relacji",
+        "openEventInbox": "Otwórz skrzynkę zdarzeń"
+      }
     },
     "northStar": {
       "subtitle": "Kluczowe wskaźniki niezawodności pamięci NPC"

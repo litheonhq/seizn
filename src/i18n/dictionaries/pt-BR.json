@@ -1514,7 +1514,13 @@
       "navigate": "Navegar",
       "open": "Abrir",
       "close": "Fechar",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Fluxos de NPC",
+      "commands": {
+        "createEntity": "Criar entidade",
+        "viewRelationGraph": "Ver grafo de relações",
+        "openEventInbox": "Abrir caixa de eventos"
+      }
     },
     "northStar": {
       "subtitle": "Indicadores-chave de confiabilidade da memória de NPC"

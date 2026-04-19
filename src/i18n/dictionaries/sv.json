@@ -1514,7 +1514,13 @@
       "navigate": "Navigera",
       "open": "Öppna",
       "close": "Stäng",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "NPC-flöden",
+      "commands": {
+        "createEntity": "Skapa entitet",
+        "viewRelationGraph": "Visa relationsgraf",
+        "openEventInbox": "Öppna händelseinkorg"
+      }
     },
     "northStar": {
       "subtitle": "Nyckelindikatorer för NPC-minnets tillförlitlighet"
