@@ -11,10 +11,10 @@ export async function generateMetadata({
   const { token } = await params;
 
   return {
-    title: "Shared Trace | Seizn",
+    title: "Shared Trace · Seizn",
     description: "View shared RAG pipeline trace",
     openGraph: {
-      title: "Shared Trace | Seizn",
+      title: "Shared Trace · Seizn",
       description: "View a shared RAG pipeline trace with detailed timing and results",
       url: `https://seizn.com/t/${token}`,
       type: "website",

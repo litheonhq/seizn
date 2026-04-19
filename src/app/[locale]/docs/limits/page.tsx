@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const subtitle = (limitsDict?.subtitle as string) || "Understand your plan limits, quotas, and billing information.";
 
   return {
-    title: `${title} - Seizn`,
+    title,
     description: subtitle,
     alternates: {
       canonical: `/${locale}/docs/limits`,
     },
     openGraph: {
-      title: `${title} - Seizn`,
+      title,
       description: subtitle,
       type: "website",
     },

@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: {
       default: dict.metadata.title,
-      template: "%s | Seizn",
+      template: "%s · Seizn",
     },
     description: dict.metadata.description,
     keywords: ["AI NPC memory", "game NPC memory", "NPC AI middleware", "Inworld integration", "Convai integration", "NVIDIA ACE memory", "persistent NPC memory", "game AI infrastructure", "cross-generation memory", "entity graph memory"],
