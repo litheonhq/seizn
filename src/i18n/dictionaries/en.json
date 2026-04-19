@@ -228,11 +228,11 @@
     },
     "topBar": {
       "personal": "Personal Account",
-      "manageOrgs": "Manage Organizations",
+      "manageOrgs": "Manage Projects",
       "create": "Create",
       "createApiKey": "New API Key",
-      "createOrg": "New Organization",
-      "switchOrg": "Switch organization"
+      "createOrg": "New Project",
+      "switchOrg": "Switch project"
     },
     "commandPalette": {
       "title": "Command palette",
@@ -275,7 +275,7 @@
     "pinSidebar": "Pin sidebar",
     "unpinSidebar": "Collapse sidebar",
     "stats": {
-      "memories": "Memories",
+      "memories": "Entities",
       "apiCalls": "API Calls Today",
       "plan": "Current Plan",
       "unlimited": "Unlimited"
@@ -294,7 +294,7 @@
         },
         "apiKey": {
           "title": "Generate API Key",
-          "description": "Create your first API key to authenticate requests",
+          "description": "Create an API key for game runtime requests",
           "action": "Create Key"
         },
         "installSdk": {
@@ -313,8 +313,8 @@
           "action": "View Trace"
         },
         "demoQuery": {
-          "title": "Make Your First Query",
-          "description": "Try the demo query or make an API request",
+          "title": "Query NPC context",
+          "description": "Try a demo NPC query or send your first request",
           "action": "Try Demo"
         }
       },
@@ -337,7 +337,7 @@
         },
         "stats": {
           "title": "Your Stats",
-          "description": "Monitor your API usage, memories stored, and current plan."
+          "description": "Monitor API usage, entities stored, and current plan."
         },
         "quickStart": {
           "title": "Quick Actions",
@@ -370,7 +370,7 @@
       "createNewKey": "Create New Key",
       "activeKeys": "Active Keys",
       "noKeysTitle": "No API keys yet",
-      "noKeysDesc": "Create your first API key to start integrating with Seizn",
+      "noKeysDesc": "Create a key for your game client or server integration.",
       "createApiKey": "Create API Key",
       "name": "Name",
       "keyColumn": "Key",
@@ -400,7 +400,7 @@
       "createKeyTitle": "Create API Key",
       "createKeyDesc": "Give your key a descriptive name",
       "keyName": "Key Name",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "e.g., Unity production, Unreal dev, QA server",
       "cancel": "Cancel",
       "creating": "Creating...",
       "createKey": "Create Key"
@@ -439,7 +439,7 @@
       "errorRate": "error rate",
       "noUsageData": "No usage data available",
       "noUsageTitle": "No usage data yet",
-      "noUsageDescription": "Send your first API request to see usage analytics. Data will appear here within 5 seconds.",
+      "noUsageDescription": "Send your first NPC memory request to see usage analytics. Data will appear here within 5 seconds.",
       "noUsageExpected": "Expected: Calls, tokens, cost, and latency breakdown",
       "getApiKey": "Get API Key",
       "viewDocs": "View Docs",
@@ -453,18 +453,18 @@
     "organizationsPage": {
       "title": "Projects",
       "subtitle": "Manage game-title projects and team collaboration.",
-      "newOrganization": "New Organization",
-      "noOrgsTitle": "No organizations yet",
-      "noOrgsDesc": "Create an organization to collaborate with your team and manage shared resources",
+      "newOrganization": "New Project",
+      "noOrgsTitle": "No projects yet",
+      "noOrgsDesc": "Create a game-title project to collaborate with your team and manage shared Seizn resources",
       "noOrgsExpected": "Takes less than 30 seconds to set up",
-      "createOrganization": "Create Organization",
+      "createOrganization": "Create Project",
       "created": "Created",
       "plan": "Plan",
       "freePlan": "Free",
-      "createOrgTitle": "Create Organization",
-      "createOrgDesc": "Set up a new team workspace",
-      "orgName": "Organization Name",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Create Project",
+      "createOrgDesc": "Set up a workspace for one game title",
+      "orgName": "Project Name",
+      "orgNamePlaceholder": "e.g., Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Cancel",
@@ -490,7 +490,7 @@
       "title": "Playground",
       "subtitle": "Prototype NPC memory — create entities, log events, query context back.",
       "queryBuilder": "Query Builder",
-      "queryPlaceholder": "Enter your search query...",
+      "queryPlaceholder": "Ask what an NPC should remember...",
       "namespace": "Namespace",
       "namespacePlaceholder": "default",
       "topK": "Top K",
@@ -505,12 +505,12 @@
       "results": "Results",
       "trace": "Trace",
       "cost": "Cost",
-      "noResults": "Run a query to see results",
+      "noResults": "Query NPC context to see results",
       "similarity": "Similarity",
       "memoryType": "Type",
       "rerankScore": "Rerank Score",
       "traceTimeline": "Trace Timeline",
-      "noTrace": "Run a query to see trace",
+      "noTrace": "Query NPC context to see trace",
       "step": "Step",
       "completed": "Completed",
       "pending": "Pending",
@@ -525,7 +525,7 @@
         "returnResults": "Return Results"
       },
       "costBreakdown": "Cost Breakdown",
-      "noCost": "Run a query to see cost breakdown",
+      "noCost": "Query NPC context to see cost breakdown",
       "component": "Component",
       "embedding": "Embedding",
       "search": "Search",
@@ -575,7 +575,7 @@
     },
     "settingsPage": {
       "title": "Settings",
-      "subtitle": "Profile & Preferences",
+      "subtitle": "Workspace, profile, and game-runtime preferences",
       "saving": "Saving...",
       "saved": "Saved",
       "saveFailed": "Save failed",
@@ -596,7 +596,7 @@
       },
       "budget": {
         "title": "Budget Settings",
-        "subtitle": "Set spending limits and alerts",
+        "subtitle": "Set request budgets and alerts for game runtimes",
         "dailyLimit": "Daily Limit",
         "monthlyLimit": "Monthly Limit",
         "perQueryMax": "Per Query Max",
@@ -617,7 +617,7 @@
       },
       "notifications": {
         "title": "Notification Settings",
-        "subtitle": "Configure how you receive alerts",
+        "subtitle": "Configure alerts for usage, incidents, and memory pipeline changes",
         "emailAlerts": "Email Alerts",
         "emailAlertsDesc": "Receive important alerts via email",
         "usageAlerts": "Usage Alerts",
@@ -633,7 +633,7 @@
       },
       "security": {
         "title": "Security Settings",
-        "subtitle": "Manage your account security",
+        "subtitle": "Manage account and API access security",
         "changePassword": "Change Password",
         "passwordDesc": "Manage your password security",
         "changePasswordDesc": "Password changes are managed by your sign-in provider.",
@@ -730,7 +730,7 @@
       "last10Requests": "Last 10 API requests",
       "viewAllActivity": "View All",
       "noActivityYet": "No API activity yet",
-      "noActivityDescription": "Send your first API request to see activity here",
+      "noActivityDescription": "Send your first NPC memory request to see activity here",
       "sendFirstRequest": "Send First Request"
     },
     "activity": {
@@ -1140,11 +1140,11 @@
       "sortOldest": "Oldest First",
       "sortRelevance": "Most Relevant",
       "activeFilters": "Active filters",
-      "loading": "Loading memories...",
+      "loading": "Loading entities...",
       "fetchError": "Failed to load entities",
       "noMemories": "No entities yet",
       "noMatchingMemories": "No entities match your filters",
-      "noMemoriesHint": "Start adding memories via the API to see them here",
+      "noMemoriesHint": "Create NPCs, factions, or events via the API to see them here",
       "match": "match",
       "loadMore": "Load More",
       "retry": "Retry",
@@ -1159,7 +1159,7 @@
     },
     "northStar": {
       "title": "North Star Metrics",
-      "subtitle": "Key performance indicators",
+      "subtitle": "Key indicators for NPC memory reliability",
       "refresh": "Refresh",
       "improving": "Improving",
       "declining": "Declining",

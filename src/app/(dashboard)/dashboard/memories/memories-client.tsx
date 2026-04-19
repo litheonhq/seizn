@@ -424,7 +424,7 @@ export default function MemoriesClient() {
         const errorMessage =
           typeof data.error === "string"
             ? data.error
-            : data.error?.message || "Failed to fetch memories";
+            : data.error?.message || "Failed to fetch entities";
         throw new Error(errorMessage);
       }
 
@@ -465,7 +465,7 @@ export default function MemoriesClient() {
       if (requestId !== activeRequestIdRef.current) return;
       const message = getErrorMessage(error, "An unexpected error occurred");
       setFetchError(message);
-      setScreenReaderStatus(`Memory search failed: ${message}`);
+      setScreenReaderStatus(`Entity search failed: ${message}`);
     } finally {
       if (requestId === activeRequestIdRef.current) {
         setIsLoading(false);
@@ -884,8 +884,8 @@ export default function MemoriesClient() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search memories..."}
-              aria-label={t("dashboard.memoriesPage.search") || "Search memories"}
+              placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search entities..."}
+              aria-label={t("dashboard.memoriesPage.search") || "Search entities"}
               className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-surface-1 text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
             />
           </div>
@@ -1040,7 +1040,7 @@ export default function MemoriesClient() {
               <div className="flex items-center gap-2 mb-3">
                 <FilterIcon className="w-4 h-4 text-szn-text-2" />
                 <span className="text-sm font-medium text-szn-text-2">
-                  {t("dashboard.memoriesPage.memoryTypes") || "Memory Types"}
+                  {t("dashboard.memoriesPage.memoryTypes") || "Entity Types"}
                 </span>
               </div>
               <div className="space-y-2">
@@ -1118,7 +1118,7 @@ export default function MemoriesClient() {
                 onClick={() => setShowSortDropdown(!showSortDropdown)}
                 aria-expanded={showSortDropdown}
                 aria-haspopup="listbox"
-                aria-label={t("dashboard.memoriesPage.sortBy") || "Sort memories"}
+                aria-label={t("dashboard.memoriesPage.sortBy") || "Sort entities"}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-szn-text-1 bg-szn-card border border-szn-border rounded-xl hover:bg-szn-surface-1 transition-colors"
               >
                 <SortIcon className="w-4 h-4 text-szn-text-2" />
@@ -1257,7 +1257,7 @@ export default function MemoriesClient() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-red-800 dark:text-red-200">{t("dashboard.memoriesPage.fetchError") || "Failed to load memories"}</p>
+                  <p className="text-sm font-medium text-red-800 dark:text-red-200">{t("dashboard.memoriesPage.fetchError") || "Failed to load entities"}</p>
                   <p className="text-xs text-red-600 dark:text-red-400">{fetchError}</p>
                 </div>
               </div>
@@ -1274,18 +1274,18 @@ export default function MemoriesClient() {
           {isLoading && memories.length === 0 ? (
             <div className="szn-card rounded-lg p-12 text-center">
               <LoadingSpinner className="w-8 h-8 text-szn-accent mx-auto" />
-              <p className="mt-4 text-szn-text-2">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
+              <p className="mt-4 text-szn-text-2">{t("dashboard.memoriesPage.loading") || "Loading entities..."}</p>
             </div>
           ) : memories.length === 0 ? (
             <div className="szn-card rounded-lg p-12 text-center">
               <InboxIcon className="w-16 h-16 text-szn-text-3 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-szn-text-3 mb-2">
-                {t("dashboard.memoriesPage.noMemories") || "No memories found"}
+                {t("dashboard.memoriesPage.noMemories") || "No entities found"}
               </h3>
               <p className="text-szn-text-3">
                 {hasActiveFilters
                   ? (t("dashboard.memoriesPage.noMatchingMemories") || "Try adjusting your filters or search query")
-                  : (t("dashboard.memoriesPage.noMemoriesHint") || "Start adding memories via the API to see them here")
+                  : (t("dashboard.memoriesPage.noMemoriesHint") || "Create NPCs, factions, or events via the API to see them here")
                 }
               </p>
             </div>

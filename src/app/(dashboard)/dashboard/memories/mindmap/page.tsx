@@ -7,11 +7,11 @@ import MindMapCanvas from "./MindMapCanvas";
 export const metadata: Metadata = {
   title: "Memory Mind Map - Seizn Dashboard",
   description:
-    "Visualize and explore your AI memories as an interactive knowledge graph. Navigate relationships between facts, preferences, and experiences.",
+    "Visualize NPC memory as an interactive knowledge graph. Navigate relationships between NPCs, factions, events, and facts.",
   openGraph: {
     title: "Memory Mind Map - Seizn Dashboard",
     description:
-      "Visualize and explore your AI memories as an interactive knowledge graph. Navigate relationships between facts, preferences, and experiences.",
+      "Visualize NPC memory as an interactive knowledge graph. Navigate relationships between NPCs, factions, events, and facts.",
     type: "website",
   },
   robots: {
@@ -26,7 +26,7 @@ function MindMapSkeleton() {
     <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
       <div className="text-center space-y-4">
         <div className="w-12 h-12 border-4 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-szn-text-2">Loading mind map...</p>
+        <p className="text-szn-text-2">Loading NPC memory graph...</p>
       </div>
     </div>
   );

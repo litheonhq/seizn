@@ -216,7 +216,7 @@
     "settings": "Inställningar",
     "signOut": "Logga ut",
     "stats": {
-      "memories": "Minnen",
+      "memories": "Entiteter",
       "apiCalls": "API-anrop idag",
       "plan": "Nuvarande plan",
       "unlimited": "Obegränsad"
@@ -271,7 +271,7 @@
       "tabLatency": "Latens",
       "tabErrors": "Fel",
       "noUsageTitle": "Ingen användningsdata ännu",
-      "noUsageDescription": "Skicka din första API-begäran för att se användningsanalys. Data visas här inom 5 sekunder.",
+      "noUsageDescription": "Skicka din första NPC-minnesförfrågan för att se användningsanalys. Data visas inom 5 sekunder.",
       "noUsageExpected": "Förväntat: Anrop, tokens, kostnad och latensuppdelning",
       "getApiKey": "Hämta API-nyckel",
       "viewDocs": "Visa Dokumentation",
@@ -321,7 +321,7 @@
       "title": "Felsökningskonsol",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "Fråga vad en NPC ska minnas...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -332,7 +332,7 @@
       "runQuery": "Kör fråga",
       "running": "Kör...",
       "results": "Resultat",
-      "noResults": "No results found",
+      "noResults": "Fråga NPC-kontext för att se resultat",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -401,13 +401,13 @@
       "memoryType": "Typ",
       "rerankScore": "Rerank-poäng",
       "traceTimeline": "Spårningstidslinje",
-      "noTrace": "Kör en fråga för att se spårning",
+      "noTrace": "Fråga NPC-kontext för att se trace",
       "step": "Steg",
       "completed": "Slutförd",
       "pending": "Väntande",
       "error": "Fel",
       "costBreakdown": "Kostnadsuppdelning",
-      "noCost": "Kör en fråga för att se kostnadsuppdelning",
+      "noCost": "Fråga NPC-kontext för att se kostnadsfördelning",
       "component": "Komponent",
       "search": "Sök",
       "total": "Totalt",
@@ -432,7 +432,7 @@
     },
     "settingsPage": {
       "title": "Inställningar",
-      "subtitle": "Profil och inställningar",
+      "subtitle": "Workspace-, profil- och spelruntime-inställningar",
       "saving": "Sparar...",
       "saved": "Sparat",
       "saveFailed": "Sparande misslyckades",
@@ -468,7 +468,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "Ställ in utgiftsgränser och varningar",
+        "subtitle": "Ställ in förfrågningsbudgetar och varningar för spelruntimes",
         "perQueryMax": "Max per Fråga",
         "alertThresholdDesc": "Få varning när användningen når denna procentsats",
         "budgetMode": "Budgetläge",
@@ -500,7 +500,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "Konfigurera hur du tar emot varningar",
+        "subtitle": "Konfigurera varningar för användning, incidenter och ändringar i minnespipelines",
         "emailAlerts": "E-postaviseringar",
         "emailAlertsDesc": "Ta emot viktiga varningar via e-post",
         "usageAlerts": "Användningsvarningar",
@@ -540,7 +540,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "Hantera din kontosäkerhet",
+        "subtitle": "Hantera konto- och API-åtkomstsäkerhet",
         "save": "Spara Ändringar",
         "updatePassword": "Uppdatera Lösenord",
         "twoFactorDesc": "Lägg till ett extra säkerhetslager",
@@ -629,7 +629,7 @@
       "last10Requests": "Senaste 10 API-begäranden",
       "viewAllActivity": "Visa Alla",
       "noActivityYet": "Ingen API-aktivitet ännu",
-      "noActivityDescription": "Skicka din första API-begäran för att se aktivitet här",
+      "noActivityDescription": "Skicka din första NPC-minnesförfrågan för att se aktivitet",
       "sendFirstRequest": "Skicka Första Begäran"
     },
     "keysPage": {
@@ -638,7 +638,7 @@
       "createNewKey": "Skapa ny nyckel",
       "activeKeys": "Aktiva nycklar",
       "noKeysTitle": "Inga API-nycklar ännu",
-      "noKeysDesc": "Skapa din första API-nyckel för att börja integrera med Seizn",
+      "noKeysDesc": "Skapa en nyckel för din spelklient- eller serverintegration.",
       "createApiKey": "Skapa API-nyckel",
       "created": "Skapad",
       "neverUsed": "Aldrig använd",
@@ -657,7 +657,7 @@
       "createKeyTitle": "Skapa API-nyckel",
       "createKeyDesc": "Ge din nyckel ett beskrivande namn",
       "keyName": "Nyckelnamn",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "t.ex. Unity produktion, Unreal dev, QA-server",
       "cancel": "Avbryt",
       "creating": "Skapar...",
       "createKey": "Skapa nyckel",
@@ -676,17 +676,17 @@
     "organizationsPage": {
       "title": "Organisationer",
       "subtitle": "Hantera dina team och samarbeta med andra",
-      "newOrganization": "Ny organisation",
-      "noOrgsTitle": "Inga organisationer ännu",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Skapa organisation",
+      "newOrganization": "Nytt projekt",
+      "noOrgsTitle": "Inga projekt ännu",
+      "noOrgsDesc": "Skapa ett speltitelprojekt för att samarbeta med teamet och hantera delade Seizn-resurser",
+      "createOrganization": "Skapa projekt",
       "created": "Skapad",
       "plan": "Plan",
       "freePlan": "Gratis",
-      "createOrgTitle": "Skapa organisation",
-      "createOrgDesc": "Skapa en ny teamarbetsyta",
-      "orgName": "Organisationsnamn",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Skapa projekt",
+      "createOrgDesc": "Konfigurera en workspace för en speltitel",
+      "orgName": "Projektnamn",
+      "orgNamePlaceholder": "t.ex. Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Avbryt",
@@ -715,12 +715,12 @@
       "steps": {
         "apiKey": {
           "title": "Skapa API-nyckel",
-          "description": "Generera din första API-nyckel för att autentisera förfrågningar",
+          "description": "Skapa en API-nyckel för förfrågningar från spelruntime",
           "action": "Skapa nyckel"
         },
         "demoQuery": {
-          "title": "Gör din första fråga",
-          "description": "Prova demofrågan eller gör en API-förfrågan",
+          "title": "Fråga NPC-kontext",
+          "description": "Prova en demo-NPC-fråga eller skicka din första förfrågan",
           "action": "Testa demo"
         },
         "viewTrace": {
@@ -764,7 +764,7 @@
         },
         "stats": {
           "title": "Din Statistik",
-          "description": "Övervaka din API-användning, lagrade minnen och nuvarande plan."
+          "description": "Övervaka API-användning, lagrade entiteter och aktuell plan."
         },
         "quickStart": {
           "title": "Snabbåtgärder",
@@ -930,10 +930,10 @@
       "sortOldest": "Äldsta först",
       "sortRelevance": "Mest relevanta",
       "activeFilters": "Aktiva filter",
-      "loading": "Laddar minnen...",
+      "loading": "Laddar entiteter...",
       "noMemories": "Inga minnen hittades",
       "noMatchingMemories": "Försök justera dina filter eller sökfråga",
-      "noMemoriesHint": "Börja lägga till minnen via API:et för att se dem här",
+      "noMemoriesHint": "Skapa NPC:er, fraktioner eller händelser via API:t för att se dem här",
       "match": "matchning",
       "loadMore": "Ladda fler",
       "export": "Exportera",
@@ -1312,11 +1312,11 @@
     },
     "topBar": {
       "personal": "Personligt Konto",
-      "manageOrgs": "Hantera Organisationer",
+      "manageOrgs": "Hantera projekt",
       "create": "Skapa",
       "createApiKey": "Ny API-nyckel",
-      "createOrg": "Ny Organisation",
-      "switchOrg": "Byt organisation"
+      "createOrg": "Nytt projekt",
+      "switchOrg": "Byt projekt"
     },
     "share": {
       "title": "Dela Spårning",
@@ -1515,6 +1515,9 @@
       "open": "Öppna",
       "close": "Stäng",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Nyckelindikatorer för NPC-minnets tillförlitlighet"
     }
   },
   "pricingPage": {

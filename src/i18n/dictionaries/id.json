@@ -216,7 +216,7 @@
     "settings": "Pengaturan",
     "signOut": "Keluar",
     "stats": {
-      "memories": "Memori",
+      "memories": "Entitas",
       "apiCalls": "Panggilan API hari ini",
       "plan": "Paket saat ini",
       "unlimited": "Tidak terbatas"
@@ -271,7 +271,7 @@
       "tabLatency": "Latensi",
       "tabErrors": "Error",
       "noUsageTitle": "Belum ada data penggunaan",
-      "noUsageDescription": "Kirim permintaan API pertama Anda untuk melihat analitik penggunaan. Data akan muncul di sini dalam 5 detik.",
+      "noUsageDescription": "Kirim permintaan memori NPC pertama untuk melihat analitik penggunaan. Data akan muncul dalam 5 detik.",
       "noUsageExpected": "Yang diharapkan: Panggilan, token, biaya, dan rincian latency",
       "getApiKey": "Dapatkan API Key",
       "viewDocs": "Lihat Dokumentasi",
@@ -321,7 +321,7 @@
       "title": "Panel Debug",
       "subtitle": "Uji query dengan pelacakan dan penyesuaian parameter",
       "queryInput": "Masukkan query",
-      "queryPlaceholder": "Masukkan query pengujian...",
+      "queryPlaceholder": "Tanyakan apa yang harus diingat NPC...",
       "parameters": "Parameter",
       "topK": "Top K",
       "topKHint": "Jumlah hasil yang dikembalikan",
@@ -332,7 +332,7 @@
       "runQuery": "Jalankan Query",
       "running": "Menjalankan...",
       "results": "Hasil",
-      "noResults": "Tidak ada hasil ditemukan",
+      "noResults": "Kueri konteks NPC untuk melihat hasil",
       "noResultsHint": "Sesuaikan parameter atau coba query lain",
       "resultCount": "Ditemukan {count} hasil",
       "score": "Skor",
@@ -401,13 +401,13 @@
       "memoryType": "Tipe",
       "rerankScore": "Skor Rerank",
       "traceTimeline": "Timeline Trace",
-      "noTrace": "Jalankan query untuk melihat trace",
+      "noTrace": "Kueri konteks NPC untuk melihat trace",
       "step": "Langkah",
       "completed": "Selesai",
       "pending": "Tertunda",
       "error": "Error",
       "costBreakdown": "Rincian Biaya",
-      "noCost": "Jalankan query untuk melihat rincian biaya",
+      "noCost": "Kueri konteks NPC untuk melihat rincian biaya",
       "component": "Komponen",
       "search": "Pencarian",
       "total": "Total",
@@ -432,7 +432,7 @@
     },
     "settingsPage": {
       "title": "Pengaturan",
-      "subtitle": "Profil dan preferensi",
+      "subtitle": "Preferensi workspace, profil, dan runtime game",
       "saving": "Menyimpan...",
       "saved": "Tersimpan",
       "saveFailed": "Gagal menyimpan",
@@ -468,7 +468,7 @@
         "unlimited": "Tidak terbatas",
         "setLimit": "Atur batas",
         "removeLimit": "Hapus batas",
-        "subtitle": "Tetapkan batas pengeluaran dan peringatan",
+        "subtitle": "Atur anggaran permintaan dan peringatan untuk runtime game",
         "perQueryMax": "Maksimal Per Query",
         "alertThresholdDesc": "Dapatkan peringatan saat penggunaan mencapai persentase ini",
         "budgetMode": "Mode Anggaran",
@@ -500,7 +500,7 @@
         "allDisabled": "Semua notifikasi dinonaktifkan",
         "enableAll": "Aktifkan semua",
         "disableAll": "Nonaktifkan semua",
-        "subtitle": "Konfigurasi cara Anda menerima peringatan",
+        "subtitle": "Konfigurasi peringatan penggunaan, insiden, dan perubahan pipeline memori",
         "emailAlerts": "Peringatan Email",
         "emailAlertsDesc": "Terima peringatan penting melalui email",
         "usageAlerts": "Peringatan Penggunaan",
@@ -540,7 +540,7 @@
         "passwordTooShort": "Kata sandi terlalu pendek",
         "apiKeysSecurity": "Keamanan kunci API",
         "apiKeysSecurityHint": "Pantau dan kelola kunci API Anda",
-        "subtitle": "Kelola keamanan akun Anda",
+        "subtitle": "Kelola keamanan akun dan akses API",
         "save": "Simpan Perubahan",
         "updatePassword": "Perbarui Kata Sandi",
         "twoFactorDesc": "Tambahkan lapisan keamanan ekstra",
@@ -629,7 +629,7 @@
       "last10Requests": "10 permintaan API terakhir",
       "viewAllActivity": "Lihat Semua",
       "noActivityYet": "Belum ada aktivitas API",
-      "noActivityDescription": "Kirim permintaan API pertama Anda untuk melihat aktivitas di sini",
+      "noActivityDescription": "Kirim permintaan memori NPC pertama untuk melihat aktivitas",
       "sendFirstRequest": "Kirim Permintaan Pertama"
     },
     "keysPage": {
@@ -638,7 +638,7 @@
       "createNewKey": "Buat Kunci Baru",
       "activeKeys": "Kunci Aktif",
       "noKeysTitle": "Belum ada kunci API",
-      "noKeysDesc": "Buat kunci API pertama Anda untuk mulai mengintegrasikan dengan Seizn",
+      "noKeysDesc": "Buat kunci untuk integrasi klien atau server game Anda.",
       "createApiKey": "Buat Kunci API",
       "created": "Dibuat",
       "neverUsed": "Belum pernah digunakan",
@@ -657,7 +657,7 @@
       "createKeyTitle": "Buat Kunci API",
       "createKeyDesc": "Berikan nama deskriptif untuk kunci Anda",
       "keyName": "Nama Kunci",
-      "keyNamePlaceholder": "mis., Produksi, Pengembangan, Pengujian",
+      "keyNamePlaceholder": "mis., produksi Unity, dev Unreal, server QA",
       "cancel": "Batal",
       "creating": "Membuat...",
       "createKey": "Buat Kunci",
@@ -676,17 +676,17 @@
     "organizationsPage": {
       "title": "Organisasi",
       "subtitle": "Kelola tim Anda dan berkolaborasi dengan yang lain",
-      "newOrganization": "Organisasi Baru",
-      "noOrgsTitle": "Belum ada organisasi",
-      "noOrgsDesc": "Buat organisasi pertama Anda untuk mulai berkolaborasi dengan tim",
-      "createOrganization": "Buat Organisasi",
+      "newOrganization": "Proyek baru",
+      "noOrgsTitle": "Belum ada proyek",
+      "noOrgsDesc": "Buat proyek judul game untuk berkolaborasi dengan tim dan mengelola resource Seizn bersama",
+      "createOrganization": "Buat proyek",
       "created": "Dibuat",
       "plan": "Paket",
       "freePlan": "Gratis",
-      "createOrgTitle": "Buat Organisasi",
-      "createOrgDesc": "Siapkan ruang kerja tim baru",
-      "orgName": "Nama Organisasi",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Buat proyek",
+      "createOrgDesc": "Siapkan workspace untuk satu judul game",
+      "orgName": "Nama proyek",
+      "orgNamePlaceholder": "mis., Neon Village",
       "urlSlug": "Slug URL",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Batal",
@@ -715,12 +715,12 @@
       "steps": {
         "apiKey": {
           "title": "Buat kunci API",
-          "description": "Buat kunci API pertama Anda untuk mengautentikasi permintaan",
+          "description": "Buat kunci API untuk permintaan runtime game",
           "action": "Buat kunci"
         },
         "demoQuery": {
-          "title": "Jalankan query pertama",
-          "description": "Coba query demo atau buat permintaan API",
+          "title": "Kueri konteks NPC",
+          "description": "Coba kueri NPC demo atau kirim permintaan pertama Anda",
           "action": "Coba demo"
         },
         "viewTrace": {
@@ -764,7 +764,7 @@
         },
         "stats": {
           "title": "Statistik Anda",
-          "description": "Pantau penggunaan API, memori yang tersimpan, dan paket Anda saat ini."
+          "description": "Pantau penggunaan API, entitas tersimpan, dan paket saat ini."
         },
         "quickStart": {
           "title": "Tindakan Cepat",
@@ -930,10 +930,10 @@
       "sortOldest": "Terlama Dulu",
       "sortRelevance": "Paling Relevan",
       "activeFilters": "Filter aktif",
-      "loading": "Memuat memori...",
+      "loading": "Memuat entitas...",
       "noMemories": "Tidak ada memori ditemukan",
       "noMatchingMemories": "Coba sesuaikan filter atau kata pencarian Anda",
-      "noMemoriesHint": "Mulai tambahkan memori melalui API untuk melihatnya di sini",
+      "noMemoriesHint": "Buat NPC, faksi, atau event lewat API untuk melihatnya di sini",
       "match": "cocok",
       "loadMore": "Muat Lebih Banyak",
       "export": "Ekspor",
@@ -1312,11 +1312,11 @@
     },
     "topBar": {
       "personal": "Akun Pribadi",
-      "manageOrgs": "Kelola Organisasi",
+      "manageOrgs": "Kelola proyek",
       "create": "Buat",
       "createApiKey": "API Key Baru",
-      "createOrg": "Organisasi Baru",
-      "switchOrg": "Ganti organisasi"
+      "createOrg": "Proyek baru",
+      "switchOrg": "Ganti proyek"
     },
     "share": {
       "title": "Bagikan Trace",
@@ -1515,6 +1515,9 @@
       "open": "Buka",
       "close": "Tutup",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Indikator utama keandalan memori NPC"
     }
   },
   "pricingPage": {

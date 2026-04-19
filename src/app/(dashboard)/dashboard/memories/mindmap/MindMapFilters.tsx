@@ -215,7 +215,7 @@ export function MindMapFilters({
               type="text"
               value={filters.searchQuery}
               onChange={(e) => updateSearch(e.target.value)}
-              placeholder="Search memories..."
+              placeholder="Search entities..."
               className="w-full pl-10 pr-4 py-2 text-sm bg-szn-bg border border-szn-border rounded-lg focus:outline-none focus:ring-2 focus:ring-szn-accent text-szn-text-1 placeholder-szn-text-3"
             />
           </div>
