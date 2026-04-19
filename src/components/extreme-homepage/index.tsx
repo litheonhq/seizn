@@ -24,12 +24,6 @@ const HeroGraphAnimation = dynamic(
   { ssr: false }
 );
 
-// Memory pipeline flow animation for hero section
-const MemoryFlowAnimation = dynamic(
-  () => import("./memory-flow-animation").then((mod) => ({ default: mod.MemoryFlowAnimation })),
-  { loading: () => <div className="h-24" />, ssr: false }
-);
-
 type ExtremeHomeMessages = NonNullable<Dictionary["extremeHome"]>;
 
 interface ExtremeHomepageClientProps {
@@ -136,7 +130,7 @@ const Navigation = memo(function Navigation({
           <LanguageSwitcher currentLocale={locale} />
           <Link
             href={`/${locale}/enterprise`}
-            className="text-sm bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+            className="text-sm bg-szn-text-1 text-szn-bg font-medium px-4 py-2 rounded-lg hover:bg-szn-text-1/90 transition-colors"
           >
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
@@ -183,7 +177,7 @@ const Navigation = memo(function Navigation({
           <div className="pt-2 border-t border-szn-border">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white py-3 rounded-full mt-3">
+          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-szn-text-1 text-szn-bg font-medium py-3 rounded-lg mt-3">
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
@@ -299,7 +293,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
-            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-szn-text-1 leading-[1.08]">
+            <h1 className="text-[clamp(44px,6vw,84px)] font-semibold tracking-[-0.03em] text-szn-text-1 leading-[1.02]">
               {t.heroTitle || "The standard backend for agent runtime persistence."}
             </h1>
 
@@ -309,11 +303,11 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             </p>
 
             {/* CTAs - Primary and Secondary */}
-            <div className={`flex items-center justify-center gap-4 flex-wrap pt-2 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
+            <div className={`flex items-center justify-center gap-3 flex-wrap pt-2 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
               <Link
                 href={`/${locale}/docs`}
                 onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "docs" })}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-szn-text-1 text-szn-bg font-medium rounded-lg hover:bg-szn-text-1/90 transition-colors"
               >
                 {t.ctaStart || "Start Building Free"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,13 +319,12 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "smallgod" })}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-szn-card/80 backdrop-blur-sm text-szn-text-1 font-medium rounded-xl border border-szn-border/80 hover:border-szn-border hover:bg-szn-card transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 text-szn-text-1 font-medium rounded-lg border border-szn-border hover:border-szn-text-3 hover:bg-szn-surface-1 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
                 {t.ctaDemo || "Play smallgod"}
+                <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
               </a>
             </div>
 
@@ -346,10 +339,6 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               </span>
             </div>
 
-            {/* Memory Flow Pipeline Animation */}
-            <div className={`pt-8 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-500" : ""}`}>
-              {isHeroMotionReady ? <MemoryFlowAnimation /> : <div className="h-24" aria-hidden="true" />}
-            </div>
           </div>
         </div>
 
@@ -359,16 +348,12 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
 
       {/* Drop-in code sample */}
-      <section className="py-12 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto szn-card rounded-2xl p-8">
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-szn-surface mb-3">
-              <svg className="w-5 h-5 text-szn-text-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-szn-text-1 mb-2">{t.copySnippetTitle || "Drop into Unity, Unreal, or any runtime"}</h2>
-            <p className="text-sm text-szn-text-2">
+      <section className="py-16 px-4 sm:px-6 border-t border-szn-border-subtle">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <div className="text-xs font-mono uppercase tracking-wider text-szn-text-3 mb-3">INTEGRATION</div>
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-szn-text-1 mb-2">{t.copySnippetTitle || "Drop into Unity, Unreal, or any runtime"}</h2>
+            <p className="text-szn-text-2 max-w-xl">
               {t.copySnippetSubtitle || "HTTP wrapper + official C#/C++ plugins. No custom infrastructure needed."}
             </p>
           </div>

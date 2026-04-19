@@ -85,49 +85,40 @@ function getSectionCopy(locale: Locale) {
 const TRUST_ITEMS: {
   key: TrustKey;
   icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-  color: string;
 }[] = [
-  { key: "rls", icon: SecurityIcon, color: "emerald" },
-  { key: "rate-limits", icon: RateLimitIcon, color: "blue" },
-  { key: "audit", icon: AuditIcon, color: "purple" },
-  { key: "soc2", icon: CertificateIcon, color: "amber" },
+  { key: "rls", icon: SecurityIcon },
+  { key: "rate-limits", icon: RateLimitIcon },
+  { key: "audit", icon: AuditIcon },
+  { key: "soc2", icon: CertificateIcon },
 ];
-
-const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
-  emerald: { bg: "bg-szn-accent/10", text: "text-szn-accent" },
-  rose: { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-600 dark:text-rose-400" },
-  blue: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600 dark:text-blue-400" },
-  purple: { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-600 dark:text-purple-400" },
-  indigo: { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-600 dark:text-indigo-400" },
-  amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600 dark:text-amber-400" },
-};
 
 function TrustAndCompliance({ locale }: { locale: Locale }) {
   const copy = getSectionCopy(locale);
   return (
-    <section className="py-16 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-semibold text-szn-text-1 mb-2">
-            {copy.trustTitle}
-          </h2>
-          <p className="text-sm text-szn-text-2">
-            {copy.trustSubtitle}
-          </p>
+    <section className="py-16 px-4 sm:px-6 border-t border-szn-border-subtle">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+          <div>
+            <h2 className="text-xl font-semibold text-szn-text-1 mb-1">
+              {copy.trustTitle}
+            </h2>
+            <p className="text-sm text-szn-text-2">
+              {copy.trustSubtitle}
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8">
           {TRUST_ITEMS.map((item) => {
             const Icon = item.icon;
-            const style = TRUST_ICON_STYLES[item.color];
             const content = getTrustContent(locale, item.key);
             return (
-              <div key={item.key} className="szn-card rounded-xl p-5 text-center">
-                <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center mx-auto mb-3`}>
-                  <Icon className={`w-5 h-5 ${style.text}`} />
+              <div key={item.key} className="flex items-start gap-3">
+                <Icon className="w-4 h-4 text-szn-text-1 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="font-medium text-sm text-szn-text-1">{content.title}</div>
+                  <div className="text-xs text-szn-text-2 mt-0.5 leading-relaxed">{content.desc}</div>
                 </div>
-                <div className="font-medium text-sm text-szn-text-1">{content.title}</div>
-                <div className="text-xs text-szn-text-2 mt-1">{content.desc}</div>
               </div>
             );
           })}
@@ -144,26 +135,24 @@ function TrustAndCompliance({ locale }: { locale: Locale }) {
 function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
   const copy = getSectionCopy(locale);
   return (
-    <section className="py-20 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF] relative overflow-hidden">
-      {/* Radial glow accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-szn-accent/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="max-w-4xl mx-auto text-center relative">
-        <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
+    <section className="py-24 px-4 sm:px-6">
+      <div className="max-w-3xl mx-auto text-center">
+        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-szn-text-1 mb-4">
           {t.extremeHome?.pricingCta?.title || copy.pricingTitle}
         </h2>
-        <p className="text-[#EAF0FF]/60 mb-10 max-w-lg mx-auto">
+        <p className="text-szn-text-2 mb-10 max-w-xl mx-auto leading-relaxed">
           {t.extremeHome?.pricingCta?.subtitle || copy.pricingSubtitle}
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href={`/${locale}/pricing`}
-            className="px-8 py-3.5 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-medium rounded-full hover:-translate-y-0.5 transition-all shadow-lg shadow-szn-accent/25 hover:shadow-xl hover:shadow-szn-accent/30"
+            className="inline-flex items-center justify-center px-6 py-3 bg-szn-text-1 text-szn-bg font-medium rounded-lg hover:bg-szn-text-1/90 transition-colors"
           >
             {t.extremeHome?.pricingCta?.viewPricing || "See Plans & Pricing"}
           </Link>
           <Link
             href={`/${locale}/enterprise`}
-            className="px-8 py-3.5 border border-[#EAF0FF]/20 bg-white/5 backdrop-blur-sm text-[#EAF0FF] font-medium rounded-full hover:bg-[#EAF0FF]/10 hover:border-[#EAF0FF]/40 hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center justify-center px-6 py-3 border border-szn-border text-szn-text-1 font-medium rounded-lg hover:border-szn-text-3 hover:bg-szn-surface-1 transition-colors"
           >
             {t.extremeHome?.pricingCta?.contactSales || "Talk to Sales"}
           </Link>
@@ -271,58 +260,41 @@ function WhySeiznForNpcs({ dict }: { dict: Dictionary }) {
       title: w.tracingTitle,
       desc: w.tracingDesc,
       badge: w.tracingBadge,
-      gradient: "from-szn-accent to-szn-accent-2",
-      iconBg: "bg-szn-accent/10",
-      iconColor: "text-szn-accent",
-      badgeClass: "bg-szn-accent/10 text-szn-accent",
     },
     {
       icon: DatabaseIcon,
       title: w.autopilotTitle,
       desc: w.autopilotDesc,
       badge: w.autopilotBadge,
-      gradient: "from-blue-400 to-cyan-500",
-      iconBg: "bg-blue-100 dark:bg-blue-900/30",
-      iconColor: "text-blue-600 dark:text-blue-400",
-      badgeClass: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
     },
     {
       icon: GovernanceIcon,
       title: w.governanceTitle,
       desc: w.governanceDesc,
       badge: w.governanceBadge,
-      gradient: "from-indigo-400 to-indigo-600",
-      iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
-      iconColor: "text-indigo-600 dark:text-indigo-400",
-      badgeClass: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
     },
   ];
   return (
-    <section className="py-20 px-4 sm:px-6 bg-szn-bg/80">
+    <section className="py-24 px-4 sm:px-6 border-t border-szn-border-subtle">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
+        <div className="max-w-2xl mb-16">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-szn-text-1 mb-4">
             {w.title}
           </h2>
-          <p className="text-szn-text-2 max-w-2xl mx-auto">
+          <p className="text-szn-text-2 leading-relaxed">
             {w.subtitle}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-szn-border-subtle border border-szn-border-subtle rounded-xl overflow-hidden">
           {cards.map((c, i) => {
             const Icon = c.icon;
             return (
-              <div key={i} className="szn-card szn-card-hover rounded-2xl p-6 overflow-hidden relative">
-                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${c.gradient}`} />
-                <div className={`w-12 h-12 ${c.iconBg} rounded-xl flex items-center justify-center mb-4`}>
-                  <Icon className={`w-6 h-6 ${c.iconColor}`} />
-                </div>
-                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{c.title}</h3>
-                <p className="text-szn-text-2 text-sm leading-relaxed">{c.desc}</p>
-                <div className="mt-4">
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${c.badgeClass}`}>{c.badge}</span>
-                </div>
+              <div key={i} className="bg-szn-bg p-8">
+                <Icon className="w-5 h-5 text-szn-text-1 mb-6" />
+                <h3 className="text-base font-semibold text-szn-text-1 mb-2">{c.title}</h3>
+                <p className="text-szn-text-2 text-sm leading-relaxed mb-4">{c.desc}</p>
+                <div className="text-xs font-mono uppercase tracking-wider text-szn-text-3">{c.badge}</div>
               </div>
             );
           })}
