@@ -709,25 +709,25 @@
       "featureAuditDesc": "Historia aktywności"
     },
     "onboarding": {
-      "title": "Zacznij z Seizn",
+      "title": "Skonfiguruj pamięć NPC",
       "progress": "{completed}/{total} kroków ukończonych",
       "dismiss": "Zamknij",
       "doLater": "Zrobię to później",
       "steps": {
         "apiKey": {
           "title": "Utwórz klucz API",
-          "description": "Wygeneruj swój pierwszy klucz API do uwierzytelniania żądań",
+          "description": "Uwierzytelniaj żądania serwera gry i narzędzi.",
           "action": "Utwórz klucz"
         },
         "demoQuery": {
-          "title": "Wykonaj pierwsze zapytanie",
-          "description": "Wypróbuj zapytanie demo lub wykonaj żądanie API",
-          "action": "Wypróbuj demo"
+          "title": "Uruchom zapytanie pamięci NPC",
+          "description": "Wypróbuj przykładowe zapytanie NPC albo wykonaj żądanie API.",
+          "action": "Wypróbuj przykład"
         },
         "viewTrace": {
-          "title": "Zobacz ślad",
-          "description": "Zrozum jak działa wyszukiwanie z pełnym śledzeniem",
-          "action": "Zobacz ślady"
+          "title": "Przejrzyj ślad pobierania",
+          "description": "Zobacz, jak pobrano kontekst NPC dla zapytania zdarzenia.",
+          "action": "Zobacz ślad"
         },
         "installSdk": {
           "title": "Zainstaluj SDK",
@@ -740,15 +740,15 @@
           "action": "Utwórz organizację"
         },
         "firstQuery": {
-          "title": "Wykonaj pierwsze zapytanie",
-          "description": "Przetestuj API w piaskownicy z przykładowym zapytaniem",
-          "action": "Wypróbuj zapytanie"
+          "title": "Zapisz pierwsze zdarzenie NPC",
+          "description": "Użyj playgroundu, aby utworzyć NPC, zapisać zdarzenie i odpytać kontekst.",
+          "action": "Otwórz playground"
         }
       },
       "takeTour": "Odbądź wycieczkę",
       "sdkModal": {
         "title": "Zainstaluj Seizn SDK",
-        "description": "Wybierz preferowaną metodę instalacji i skopiuj polecenie.",
+        "description": "Skopiuj polecenie SDK dla swojego stosu gry.",
         "copy": "Kopiuj",
         "copied": "Skopiowano!",
         "viewDocs": "Zobacz pełną dokumentację",
@@ -756,20 +756,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Witamy w Seizn!",
-          "description": "Odbądźmy krótką wycieczkę, aby pomóc Ci rozpocząć."
+          "title": "Buduj przepływy pamięci NPC",
+          "description": "Utwórz projekt, dodaj klucz API, zapisz zdarzenie i sprawdź ślad kontekstu."
         },
         "sidebar": {
-          "title": "Nawigacja",
-          "description": "Użyj paska bocznego do nawigacji między sekcjami panelu."
+          "title": "Nawigacja przepływów NPC",
+          "description": "Używaj Encji, Grafu relacji i Skrzynki zdarzeń do zarządzania kontekstem NPC."
         },
         "stats": {
-          "title": "Twoje statystyki",
-          "description": "Monitoruj użycie API, zapisane wspomnienia i aktualny plan."
+          "title": "Kondycja projektu",
+          "description": "Monitoruj użycie API, zapisane encje, aktywność zdarzeń i limity planu."
         },
         "quickStart": {
           "title": "Szybkie akcje",
-          "description": "Użyj tych kart do typowych zadań, takich jak tworzenie kluczy API."
+          "description": "Użyj tych kart, aby utworzyć klucze API i uruchomić pierwszy przepływ pamięci NPC."
         },
         "next": "Dalej",
         "skip": "Pomiń wycieczkę",
@@ -1522,24 +1522,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Tutorial pierwszego wyszukiwania",
-      "subtitle": "Naucz się korzystać z piaskownicy",
+      "title": "Samouczek zapytań NPC",
+      "subtitle": "Testuj pobieranie pamięci NPC",
       "dismiss": "Zamknij",
-      "tryExamples": "Wypróbuj przykładowe zapytanie:",
-      "hint": "Kliknij dowolny przykład, aby automatycznie wypełnić pole zapytania",
+      "tryExamples": "Wypróbuj zapytanie NPC:",
+      "hint": "Kliknij przykład, aby wypełnić pole zapytania",
       "gotIt": "Rozumiem!",
       "tips": {
         "welcome": {
-          "title": "Witamy w konsoli debugowania",
-          "description": "Testuj swoje zapytania tutaj z pełnym śledzeniem, aby dokładnie zrozumieć, jak działa wyszukiwanie pod maską."
+          "title": "Witaj w konsoli debugowania NPC",
+          "description": "Testuj zapytania zdarzeń z pełnym śladem, aby zobaczyć, jak pobierana jest pamięć NPC."
         },
         "query": {
-          "title": "Zapytania w języku naturalnym",
-          "description": "Wprowadź dowolne zapytanie w języku naturalnym. Nasza AI znajdzie semantycznie podobne wspomnienia z Twoich zapisanych danych."
+          "title": "Zapytania kontekstu NPC",
+          "description": "Zapytaj o postać, spotkanie lub frakcję. Seizn przeszukuje zapisany graf pod kątem właściwego kontekstu."
         },
         "trace": {
-          "title": "Pełne śledzenie wykonania",
-          "description": "Zobacz każdy krok potoku - od tworzenia embeddings do rankingu wyników - z podziałem na czas i koszt."
+          "title": "Ślad pobierania",
+          "description": "Zobacz każdy krok od dopasowania encji po ranking wyników, z czasem i kosztami."
         }
       }
     },

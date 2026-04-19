@@ -709,25 +709,25 @@
       "featureAuditDesc": "गतिविधि इतिहास"
     },
     "onboarding": {
-      "title": "Seizn के साथ शुरू करें",
+      "title": "NPC मेमोरी सेट करें",
       "progress": "{completed}/{total} चरण पूर्ण",
       "dismiss": "बंद करें",
       "doLater": "मैं बाद में करूंगा",
       "steps": {
         "apiKey": {
           "title": "API कुंजी बनाएं",
-          "description": "अनुरोधों को प्रमाणित करने के लिए अपनी पहली API कुंजी बनाएं",
+          "description": "गेम सर्वर और टूलिंग अनुरोधों को प्रमाणित करें।",
           "action": "कुंजी बनाएं"
         },
         "demoQuery": {
-          "title": "पहली क्वेरी चलाएं",
-          "description": "डेमो क्वेरी आज़माएं या API अनुरोध करें",
-          "action": "डेमो आज़माएं"
+          "title": "NPC मेमोरी क्वेरी चलाएं",
+          "description": "एक नमूना NPC क्वेरी आज़माएं या API अनुरोध करें।",
+          "action": "नमूना आज़माएं"
         },
         "viewTrace": {
-          "title": "ट्रेस देखें",
-          "description": "पूर्ण ट्रेसिंग के साथ समझें कि खोज कैसे काम करती है",
-          "action": "ट्रेस देखें"
+          "title": "retrieval trace देखें",
+          "description": "देखें कि इवेंट क्वेरी के लिए NPC संदर्भ कैसे निकाला गया।",
+          "action": "trace देखें"
         },
         "installSdk": {
           "title": "SDK install करें",
@@ -740,15 +740,15 @@
           "action": "Project बनाएं"
         },
         "firstQuery": {
-          "title": "पहला event record करें",
-          "description": "Playground आज़माएं — NPC बनाएं, event log करें, context query करें।",
-          "action": "Query आज़माएं"
+          "title": "पहला NPC इवेंट लॉग करें",
+          "description": "playground में NPC बनाएं, इवेंट लॉग करें, और संदर्भ वापस क्वेरी करें।",
+          "action": "playground खोलें"
         }
       },
       "takeTour": "टूर लें",
       "sdkModal": {
         "title": "Seizn SDK इंस्टॉल करें",
-        "description": "अपनी पसंदीदा इंस्टॉलेशन विधि चुनें और कमांड कॉपी करें।",
+        "description": "अपने गेम स्टैक के लिए SDK कमांड कॉपी करें।",
         "copy": "कॉपी करें",
         "copied": "कॉपी हो गया!",
         "viewDocs": "पूर्ण दस्तावेज़ देखें",
@@ -756,20 +756,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Seizn में आपका स्वागत है!",
-          "description": "आइए शुरुआत करने में मदद के लिए एक त्वरित टूर लें।"
+          "title": "NPC मेमोरी वर्कफ़्लो बनाएं",
+          "description": "प्रोजेक्ट बनाएं, API कुंजी जोड़ें, इवेंट लॉग करें, और संदर्भ trace देखें।"
         },
         "sidebar": {
-          "title": "नेविगेशन",
-          "description": "डैशबोर्ड अनुभागों के बीच नेविगेट करने के लिए साइडबार का उपयोग करें।"
+          "title": "NPC वर्कफ़्लो नेविगेशन",
+          "description": "NPC संदर्भ प्रबंधित करने के लिए Entities, Relation graph, और Event inbox का उपयोग करें।"
         },
         "stats": {
-          "title": "आपके आंकड़े",
-          "description": "अपने API उपयोग, संग्रहीत मेमोरी और वर्तमान योजना की निगरानी करें।"
+          "title": "प्रोजेक्ट स्वास्थ्य",
+          "description": "API उपयोग, संग्रहीत entities, इवेंट गतिविधि, और plan limits मॉनिटर करें।"
         },
         "quickStart": {
           "title": "त्वरित कार्य",
-          "description": "API keys बनाने जैसे सामान्य कार्यों के लिए इन कार्ड का उपयोग करें।"
+          "description": "API कुंजी बनाने और पहला NPC मेमोरी flow चलाने के लिए इन कार्डों का उपयोग करें।"
         },
         "next": "अगला",
         "skip": "टूर छोड़ें",
@@ -1522,24 +1522,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "पहली खोज ट्यूटोरियल",
-      "subtitle": "Playground का उपयोग करना सीखें",
+      "title": "NPC क्वेरी ट्यूटोरियल",
+      "subtitle": "NPC मेमोरी retrieval टेस्ट करें",
       "dismiss": "खारिज करें",
-      "tryExamples": "एक उदाहरण क्वेरी आज़माएं:",
-      "hint": "क्वेरी इनपुट को ऑटो-फ़िल करने के लिए किसी भी उदाहरण पर क्लिक करें",
+      "tryExamples": "NPC क्वेरी आज़माएं:",
+      "hint": "क्वेरी इनपुट भरने के लिए कोई उदाहरण क्लिक करें",
       "gotIt": "समझ गया!",
       "tips": {
         "welcome": {
-          "title": "Debug Console में आपका स्वागत है",
-          "description": "यह समझने के लिए कि खोज वास्तव में कैसे काम करती है, पूर्ण tracing के साथ यहां अपनी क्वेरी का परीक्षण करें।"
+          "title": "NPC debug console में आपका स्वागत है",
+          "description": "पूर्ण tracing के साथ इवेंट क्वेरी टेस्ट करें और देखें कि NPC मेमोरी कैसे निकाली जाती है।"
         },
         "query": {
-          "title": "प्राकृतिक भाषा क्वेरी",
-          "description": "कोई भी प्राकृतिक भाषा क्वेरी दर्ज करें। हमारी AI आपके संग्रहीत डेटा से शब्दार्थिक रूप से समान मेमोरी ढूंढेगी।"
+          "title": "NPC संदर्भ क्वेरी",
+          "description": "किसी character, encounter, या faction के बारे में पूछें। Seizn संबंधित संदर्भ के लिए संग्रहीत graph खोजता है।"
         },
         "trace": {
-          "title": "पूर्ण निष्पादन Trace",
-          "description": "पाइपलाइन के हर चरण को देखें - embedding निर्माण से लेकर परिणाम रैंकिंग तक - समय और लागत विवरण के साथ।"
+          "title": "Retrieval trace",
+          "description": "entity match से result ranking तक हर चरण देखें, timing और cost breakdown के साथ।"
         }
       }
     },

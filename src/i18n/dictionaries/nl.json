@@ -709,25 +709,25 @@
       "featureAuditDesc": "Activiteitengeschiedenis"
     },
     "onboarding": {
-      "title": "Aan de slag met Seizn",
+      "title": "NPC-geheugen instellen",
       "progress": "{completed}/{total} stappen voltooid",
       "dismiss": "Sluiten",
       "doLater": "Ik doe dit later",
       "steps": {
         "apiKey": {
-          "title": "API-sleutel aanmaken",
-          "description": "Genereer je eerste API-sleutel om verzoeken te authenticeren",
-          "action": "Sleutel aanmaken"
+          "title": "API-sleutel maken",
+          "description": "Authenticeer requests van gameservers en tooling.",
+          "action": "Sleutel maken"
         },
         "demoQuery": {
-          "title": "Doe je eerste zoekopdracht",
-          "description": "Probeer de demo-zoekopdracht of doe een API-verzoek",
-          "action": "Demo proberen"
+          "title": "NPC-geheugenquery uitvoeren",
+          "description": "Probeer een voorbeeldquery voor NPC's of doe een API-request.",
+          "action": "Voorbeeld proberen"
         },
         "viewTrace": {
-          "title": "Bekijk een trace",
-          "description": "Begrijp hoe zoeken werkt met volledige tracing",
-          "action": "Traces bekijken"
+          "title": "Retrieval-trace bekijken",
+          "description": "Bekijk hoe NPC-context voor de eventquery is opgehaald.",
+          "action": "Trace bekijken"
         },
         "installSdk": {
           "title": "SDK installeren",
@@ -740,15 +740,15 @@
           "action": "Organisatie Aanmaken"
         },
         "firstQuery": {
-          "title": "Eerste Query Uitvoeren",
-          "description": "Test de API in de playground met een voorbeeldquery",
-          "action": "Query Proberen"
+          "title": "Eerste NPC-event vastleggen",
+          "description": "Gebruik de playground om een NPC te maken, een event vast te leggen en context terug te vragen.",
+          "action": "Playground openen"
         }
       },
       "takeTour": "Rondleiding volgen",
       "sdkModal": {
         "title": "Seizn SDK Installeren",
-        "description": "Kies uw voorkeursmethode voor installatie en kopieer de opdracht.",
+        "description": "Kopieer de SDK-opdracht voor je gamestack.",
         "copy": "Kopiëren",
         "copied": "Gekopieerd!",
         "viewDocs": "Volledige documentatie bekijken",
@@ -756,20 +756,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Welkom bij Seizn!",
-          "description": "Laten we een korte rondleiding doen om u op weg te helpen."
+          "title": "NPC-geheugenflows bouwen",
+          "description": "Maak een project, voeg een API-sleutel toe, leg een event vast en bekijk de contexttrace."
         },
         "sidebar": {
-          "title": "Navigatie",
-          "description": "Gebruik de zijbalk om tussen dashboardsecties te navigeren."
+          "title": "NPC-workflownavigatie",
+          "description": "Gebruik Entiteiten, Relatiegrafiek en Event-inbox om NPC-context te beheren."
         },
         "stats": {
-          "title": "Uw Statistieken",
-          "description": "Monitor uw API-gebruik, opgeslagen herinneringen en huidig abonnement."
+          "title": "Projectstatus",
+          "description": "Monitor API-gebruik, opgeslagen entiteiten, eventactiviteit en planlimieten."
         },
         "quickStart": {
           "title": "Snelle Acties",
-          "description": "Gebruik deze kaarten voor veelvoorkomende taken zoals het aanmaken van API-sleutels."
+          "description": "Gebruik deze kaarten om API-sleutels te maken en de eerste NPC-geheugenflow uit te voeren."
         },
         "next": "Volgende",
         "skip": "Rondleiding overslaan",
@@ -1522,24 +1522,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Tutorial Eerste Zoekopdracht",
-      "subtitle": "Leer hoe u de playground gebruikt",
+      "title": "NPC-querytutorial",
+      "subtitle": "Test NPC-geheugenretrieval",
       "dismiss": "Negeren",
-      "tryExamples": "Probeer een voorbeeldquery:",
-      "hint": "Klik op een voorbeeld om de query-invoer automatisch in te vullen",
+      "tryExamples": "Probeer een NPC-query:",
+      "hint": "Klik op een voorbeeld om de query in te vullen",
       "gotIt": "Begrepen!",
       "tips": {
         "welcome": {
-          "title": "Welkom bij de Debugconsole",
-          "description": "Test uw queries hier met volledige tracering om precies te begrijpen hoe zoeken onder de motorkap werkt."
+          "title": "Welkom in de NPC-debugconsole",
+          "description": "Test eventqueries met volledige tracing en zie hoe NPC-geheugen wordt opgehaald."
         },
         "query": {
-          "title": "Queries in Natuurlijke Taal",
-          "description": "Voer elke query in natuurlijke taal in. Onze AI zal semantisch vergelijkbare herinneringen vinden uit uw opgeslagen gegevens."
+          "title": "NPC-contextqueries",
+          "description": "Vraag naar een personage, ontmoeting of factie. Seizn zoekt relevante context in de opgeslagen grafiek."
         },
         "trace": {
-          "title": "Volledige Uitvoeringstracering",
-          "description": "Zie elke stap van de pipeline - van embedding-creatie tot resultaatrangschikking - met timing- en kostenuitsplitsingen."
+          "title": "Retrieval-trace",
+          "description": "Bekijk elke stap van entitymatch tot resultranking, met timing en kosten."
         }
       }
     },

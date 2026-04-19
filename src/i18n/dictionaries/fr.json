@@ -709,24 +709,24 @@
       "featureAuditDesc": "Historique d'activité"
     },
     "onboarding": {
-      "title": "Démarrer avec Seizn",
+      "title": "Configurer la mémoire PNJ",
       "progress": "{completed}/{total} étapes terminées",
       "dismiss": "Fermer",
       "doLater": "Plus tard",
       "steps": {
         "apiKey": {
-          "title": "Générer une clé API",
-          "description": "Créez votre première clé API pour authentifier les requêtes",
+          "title": "Créer une clé API",
+          "description": "Authentifie les requêtes du serveur de jeu et des outils.",
           "action": "Créer une clé"
         },
         "demoQuery": {
-          "title": "Faire votre première requête",
-          "description": "Essayez la requête démo ou envoyez une requête API",
-          "action": "Essayer la démo"
+          "title": "Lancer une requête de mémoire PNJ",
+          "description": "Essayez une requête PNJ d’exemple ou envoyez une requête API.",
+          "action": "Essayer l’exemple"
         },
         "viewTrace": {
-          "title": "Voir les résultats de trace",
-          "description": "Consultez la trace complète de l'exécution de votre requête",
+          "title": "Examiner la trace de récupération",
+          "description": "Voyez comment le contexte PNJ a été récupéré pour la requête d’événement.",
           "action": "Voir la trace"
         },
         "installSdk": {
@@ -740,15 +740,15 @@
           "action": "Créer un projet"
         },
         "firstQuery": {
-          "title": "Enregistrer le premier événement",
-          "description": "Essayez le playground — créez un NPC, enregistrez un événement, interrogez le contexte.",
-          "action": "Essayer la requête"
+          "title": "Journaliser le premier événement PNJ",
+          "description": "Utilisez le playground pour créer un PNJ, journaliser un événement et récupérer le contexte.",
+          "action": "Ouvrir le playground"
         }
       },
       "takeTour": "Faire une visite",
       "sdkModal": {
         "title": "Installer Seizn SDK",
-        "description": "Choisissez votre méthode d'installation préférée et copiez la commande.",
+        "description": "Copiez la commande SDK adaptée à votre stack de jeu.",
         "copy": "Copier",
         "copied": "Copié !",
         "viewDocs": "Voir la documentation complète",
@@ -756,20 +756,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Bienvenue sur Seizn !",
-          "description": "Faisons une visite rapide pour vous aider à démarrer."
+          "title": "Créer des workflows de mémoire PNJ",
+          "description": "Créez un projet, ajoutez une clé API, journalisez un événement et inspectez la trace de contexte."
         },
         "sidebar": {
-          "title": "Navigation",
-          "description": "Utilisez la barre latérale pour naviguer entre les sections du tableau de bord."
+          "title": "Navigation des workflows PNJ",
+          "description": "Utilisez Entités, Graphe de relations et Boîte d’événements pour gérer le contexte PNJ."
         },
         "stats": {
-          "title": "Vos Statistiques",
-          "description": "Surveillez votre utilisation de l'API, les mémoires stockées et votre plan actuel."
+          "title": "Santé du projet",
+          "description": "Surveillez l’usage API, les entités stockées, l’activité d’événements et les limites du plan."
         },
         "quickStart": {
           "title": "Actions Rapides",
-          "description": "Utilisez ces cartes pour les tâches courantes comme la création de clés API."
+          "description": "Utilisez ces cartes pour créer des clés API et lancer le premier flux de mémoire PNJ."
         },
         "next": "Suivant",
         "skip": "Passer la visite",
@@ -1521,24 +1521,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Tutoriel de Première Recherche",
-      "subtitle": "Apprenez à utiliser l'environnement de test",
+      "title": "Tutoriel de requête PNJ",
+      "subtitle": "Tester la récupération de mémoire PNJ",
       "dismiss": "Ignorer",
-      "tryExamples": "Essayez une requête d'exemple :",
-      "hint": "Cliquez sur n'importe quel exemple pour remplir automatiquement l'entrée de requête",
+      "tryExamples": "Essayez une requête PNJ :",
+      "hint": "Cliquez sur un exemple pour remplir le champ de requête",
       "gotIt": "Compris !",
       "tips": {
         "welcome": {
-          "title": "Bienvenue dans la Console de Débogage",
-          "description": "Testez vos requêtes ici avec un traçage complet pour comprendre exactement comment fonctionne la recherche en interne."
+          "title": "Bienvenue dans la console de débogage PNJ",
+          "description": "Testez les requêtes d’événements avec une trace complète pour voir comment la mémoire PNJ est récupérée."
         },
         "query": {
-          "title": "Requêtes en Langage Naturel",
-          "description": "Entrez n'importe quelle requête en langage naturel. Notre IA trouvera des mémoires sémantiquement similaires dans vos données stockées."
+          "title": "Requêtes de contexte PNJ",
+          "description": "Interrogez un personnage, une rencontre ou une faction. Seizn cherche le contexte pertinent dans le graphe stocké."
         },
         "trace": {
-          "title": "Trace d'Exécution Complète",
-          "description": "Voyez chaque étape du pipeline - de la création d'embeddings au classement des résultats - avec des répartitions de temps et de coût."
+          "title": "Trace de récupération",
+          "description": "Voyez chaque étape, de la correspondance d’entité au classement, avec les détails de temps et de coût."
         }
       }
     },

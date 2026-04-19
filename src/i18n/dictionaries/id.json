@@ -709,25 +709,25 @@
       "featureAuditDesc": "Riwayat aktivitas"
     },
     "onboarding": {
-      "title": "Mulai dengan Seizn",
+      "title": "Siapkan memori NPC",
       "progress": "{completed}/{total} langkah selesai",
       "dismiss": "Tutup",
       "doLater": "Nanti saja",
       "steps": {
         "apiKey": {
           "title": "Buat kunci API",
-          "description": "Buat kunci API pertama Anda untuk mengautentikasi permintaan",
+          "description": "Autentikasi permintaan server game dan alat kerja.",
           "action": "Buat kunci"
         },
         "demoQuery": {
-          "title": "Jalankan query pertama",
-          "description": "Coba query demo atau buat permintaan API",
-          "action": "Coba demo"
+          "title": "Jalankan query memori NPC",
+          "description": "Coba query NPC contoh atau buat permintaan API.",
+          "action": "Coba contoh"
         },
         "viewTrace": {
-          "title": "Lihat pelacakan",
-          "description": "Pahami cara kerja pencarian dengan pelacakan lengkap",
-          "action": "Lihat pelacakan"
+          "title": "Tinjau trace retrieval",
+          "description": "Lihat bagaimana konteks NPC diambil untuk query event.",
+          "action": "Lihat trace"
         },
         "installSdk": {
           "title": "Instal SDK",
@@ -740,15 +740,15 @@
           "action": "Buat Proyek"
         },
         "firstQuery": {
-          "title": "Rekam event pertama",
-          "description": "Coba playground — buat NPC, log event, query konteks kembali.",
-          "action": "Coba Query"
+          "title": "Catat event NPC pertama",
+          "description": "Gunakan playground untuk membuat NPC, mencatat event, dan mengambil konteks kembali.",
+          "action": "Buka playground"
         }
       },
       "takeTour": "Ikuti tur",
       "sdkModal": {
         "title": "Instal Seizn SDK",
-        "description": "Pilih metode instalasi yang Anda inginkan dan salin perintahnya.",
+        "description": "Salin perintah SDK untuk stack game Anda.",
         "copy": "Salin",
         "copied": "Tersalin!",
         "viewDocs": "Lihat dokumentasi lengkap",
@@ -756,20 +756,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Selamat datang di Seizn!",
-          "description": "Mari ikuti tur singkat untuk membantu Anda memulai."
+          "title": "Bangun alur memori NPC",
+          "description": "Buat proyek, tambahkan kunci API, catat event, dan periksa trace konteks."
         },
         "sidebar": {
-          "title": "Navigasi",
-          "description": "Gunakan sidebar untuk bernavigasi antar bagian dashboard."
+          "title": "Navigasi alur NPC",
+          "description": "Gunakan Entitas, Graf relasi, dan Kotak masuk event untuk mengelola konteks NPC."
         },
         "stats": {
-          "title": "Statistik Anda",
-          "description": "Pantau penggunaan API, memori yang tersimpan, dan paket Anda saat ini."
+          "title": "Kesehatan proyek",
+          "description": "Pantau penggunaan API, entitas tersimpan, aktivitas event, dan batas paket."
         },
         "quickStart": {
           "title": "Tindakan Cepat",
-          "description": "Gunakan kartu-kartu ini untuk tugas umum seperti membuat API keys."
+          "description": "Gunakan kartu ini untuk membuat kunci API dan menjalankan alur memori NPC pertama."
         },
         "next": "Selanjutnya",
         "skip": "Lewati tur",
@@ -1522,24 +1522,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Tutorial Pencarian Pertama",
-      "subtitle": "Pelajari cara menggunakan playground",
+      "title": "Tutorial query NPC",
+      "subtitle": "Uji retrieval memori NPC",
       "dismiss": "Tutup",
-      "tryExamples": "Coba query contoh:",
-      "hint": "Klik contoh mana pun untuk mengisi input query secara otomatis",
+      "tryExamples": "Coba query NPC:",
+      "hint": "Klik contoh untuk mengisi input query",
       "gotIt": "Mengerti!",
       "tips": {
         "welcome": {
-          "title": "Selamat datang di Debug Console",
-          "description": "Uji query Anda di sini dengan pelacakan lengkap untuk memahami persis bagaimana pencarian bekerja."
+          "title": "Selamat datang di konsol debug NPC",
+          "description": "Uji query event dengan tracing penuh untuk melihat bagaimana memori NPC diambil."
         },
         "query": {
-          "title": "Query Bahasa Natural",
-          "description": "Masukkan query bahasa natural apa pun. AI kami akan menemukan memori yang mirip secara semantik dari data yang Anda simpan."
+          "title": "Query konteks NPC",
+          "description": "Tanyakan karakter, pertemuan, atau faksi. Seizn mencari konteks relevan di graf tersimpan."
         },
         "trace": {
-          "title": "Pelacakan Eksekusi Lengkap",
-          "description": "Lihat setiap langkah pipeline - dari pembuatan embedding hingga peringkat hasil - dengan rincian waktu dan biaya."
+          "title": "Trace retrieval",
+          "description": "Lihat setiap langkah dari pencocokan entitas sampai ranking hasil, lengkap dengan waktu dan biaya."
         }
       }
     },

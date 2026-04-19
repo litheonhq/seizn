@@ -222,24 +222,24 @@
       "unlimited": "無制限"
     },
     "onboarding": {
-      "title": "Seiznを始めよう",
+      "title": "NPC メモリを設定",
       "progress": "{completed}/{total} ステップ完了",
       "dismiss": "閉じる",
       "doLater": "後でやる",
       "steps": {
         "apiKey": {
-          "title": "APIキーを作成",
-          "description": "最初のAPIキーを生成してリクエストを認証する",
+          "title": "API キーを作成",
+          "description": "ゲームサーバーとツールのリクエストを認証します。",
           "action": "キーを作成"
         },
         "demoQuery": {
-          "title": "最初のクエリを実行",
-          "description": "デモクエリを試すかAPIリクエストを送信する",
-          "action": "デモを試す"
+          "title": "NPC メモリクエリを実行",
+          "description": "サンプル NPC クエリを試すか API リクエストを送信します。",
+          "action": "サンプルを試す"
         },
         "viewTrace": {
-          "title": "トレースを表示",
-          "description": "完全なトレースで検索の仕組みを理解する",
+          "title": "取得トレースを確認",
+          "description": "イベントクエリで NPC コンテキストがどう取得されたかを確認します。",
           "action": "トレースを見る"
         },
         "installSdk": {
@@ -253,9 +253,9 @@
           "action": "組織を作成"
         },
         "firstQuery": {
-          "title": "最初のクエリを実行",
-          "description": "サンプルクエリで検索機能を試してみましょう",
-          "action": "クエリを実行"
+          "title": "最初の NPC イベントを記録",
+          "description": "プレイグラウンドで NPC を作成し、イベントを記録してコンテキストを取得します。",
+          "action": "プレイグラウンドを開く"
         }
       },
       "sdkModal": {
@@ -267,7 +267,7 @@
         "copy": "コピー",
         "copied": "コピーしました！",
         "close": "閉じる",
-        "description": "お好みのインストール方法を選択して、コマンドをコピーしてください。",
+        "description": "ゲームスタック向けの SDK コマンドをコピーします。",
         "viewDocs": "完全なドキュメントを表示",
         "done": "完了"
       },
@@ -277,20 +277,20 @@
         "next": "次へ",
         "finish": "完了",
         "welcome": {
-          "title": "Seiznへようこそ！",
-          "description": "AIメモリインフラの使い方をご案内します。"
+          "title": "NPC メモリワークフローを作成",
+          "description": "プロジェクトを作成し、API キーを追加し、イベントを記録してコンテキストトレースを確認します。"
         },
         "sidebar": {
-          "title": "サイドバーナビゲーション",
-          "description": "ここからダッシュボードのすべてのセクションにアクセスできます。"
+          "title": "NPC ワークフローのナビゲーション",
+          "description": "エンティティ、関係グラフ、イベント受信箱で NPC コンテキストを管理します。"
         },
         "stats": {
-          "title": "使用統計",
-          "description": "メモリ使用量とAPI呼び出しをリアルタイムで監視できます。"
+          "title": "プロジェクトの状態",
+          "description": "API 使用量、保存済みエンティティ、イベント活動、プラン上限を監視します。"
         },
         "quickStart": {
           "title": "クイックスタートガイド",
-          "description": "これらのカードに従ってSeiznをすばやく設定しましょう。"
+          "description": "これらのカードで API キーを作成し、最初の NPC メモリフローを実行します。"
         }
       },
       "takeTour": "ツアーを開始"
@@ -705,24 +705,24 @@
       "featureAuditDesc": "アクティビティ履歴"
     },
     "playgroundTutorial": {
-      "title": "プレイグラウンドを始めよう",
-      "subtitle": "メモリ検索のテスト方法",
+      "title": "NPC クエリチュートリアル",
+      "subtitle": "NPC メモリ取得をテスト",
       "dismiss": "閉じる",
       "gotIt": "了解しました",
-      "hint": "いつでもヘルプから再度確認できます",
-      "tryExamples": "サンプルクエリを試す：",
+      "hint": "例をクリックするとクエリ入力に入ります",
+      "tryExamples": "NPC クエリを試す:",
       "tips": {
         "welcome": {
-          "title": "プレイグラウンドへようこそ！",
-          "description": "ここでメモリ検索をリアルタイムでテストし、結果を確認できます。"
+          "title": "NPC デバッグコンソールへようこそ",
+          "description": "フルトレース付きでイベントクエリをテストし、NPC メモリの取得方法を確認します。"
         },
         "query": {
-          "title": "クエリを入力",
-          "description": "自然言語で検索クエリを入力してください。例：「ユーザー設定」を検索します。"
+          "title": "NPC コンテキストクエリ",
+          "description": "キャラクター、遭遇、派閥について尋ねます。Seizn は保存済みグラフから関連コンテキストを検索します。"
         },
         "trace": {
-          "title": "トレースを確認",
-          "description": "トレースタブで検索パイプラインの各ステップとレイテンシを確認できます。"
+          "title": "取得トレース",
+          "description": "エンティティ照合から結果ランキングまでの各ステップを時間とコスト付きで確認します。"
         }
       }
     },
