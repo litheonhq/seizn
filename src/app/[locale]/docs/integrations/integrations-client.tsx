@@ -11,6 +11,25 @@ interface Props {
   dictionary: Dictionary;
 }
 
+type Example = {
+  title: string;
+  subtitle: string;
+  code: string;
+};
+
+type Copy = {
+  title: string;
+  subtitle: string;
+  helper: string;
+  scenarioTitle: string;
+  scenarioBody: string;
+  examples: Example[];
+  finalTitle: string;
+  finalBody: string;
+  finalPrimary: string;
+  finalSecondary: string;
+};
+
 function getNestedValue(obj: unknown, path: string): string | undefined {
   const keys = path.split(".");
   let current: unknown = obj;
@@ -22,82 +41,173 @@ function getNestedValue(obj: unknown, path: string): string | undefined {
     current = (current as Record<string, unknown>)[key];
   }
 
-  if (typeof current === "string") return current;
-  return undefined;
+  return typeof current === "string" ? current : undefined;
 }
 
-const integrations = [
-  {
-    id: 'mcp-server',
-    icon: '🔌',
-    href: null,
-    badgeKey: 'docs.integrationsPage.cards.mcpServer.badge',
-    titleKey: 'docs.integrationsPage.cards.mcpServer.title',
-    descKey: 'docs.integrationsPage.cards.mcpServer.description',
-    tags: ['Claude Code', 'Cursor', 'Windsurf', 'Copilot', 'Cline', 'Aider', 'Codex'],
-  },
-  {
-    id: 'langchain',
-    icon: '🦜',
-    href: '/docs/integrations/langchain',
-    badgeKey: 'docs.integrationsPage.cards.langchain.badge',
-    titleKey: 'docs.integrationsPage.cards.langchain.title',
-    descKey: 'docs.integrationsPage.cards.langchain.description',
-    tags: ['RAG', 'Python', 'TypeScript'],
-  },
-  {
-    id: 'llamaindex',
-    icon: '🦙',
-    href: '/docs/integrations/llamaindex',
-    badgeKey: 'docs.integrationsPage.cards.llamaindex.badge',
-    titleKey: 'docs.integrationsPage.cards.llamaindex.title',
-    descKey: 'docs.integrationsPage.cards.llamaindex.description',
-    tags: ['RAG', 'Python', 'TypeScript'],
-  },
-  {
-    id: 'opentelemetry',
-    icon: '📊',
-    href: '/docs/integrations/opentelemetry',
-    badgeKey: 'docs.integrationsPage.cards.opentelemetry.badge',
-    titleKey: 'docs.integrationsPage.cards.opentelemetry.title',
-    descKey: 'docs.integrationsPage.cards.opentelemetry.description',
-    tags: ['Observability', 'Datadog', 'Grafana', 'Jaeger'],
-  },
-];
+const COPY_EN: Copy = {
+  title: "One NPC memory flow, six integration paths",
+  subtitle:
+    "Every example uses the same scenario: create an NPC entity, log a witnessed event, then retrieve context before the next dialogue turn.",
+  helper:
+    "Use raw HTTP if you are proving the loop. Move into JavaScript, Python, Unity, Unreal, or Godot once the recall step belongs inside the runtime.",
+  scenarioTitle: "Scenario",
+  scenarioBody:
+    "Mira the innkeeper sees the player leave the old gate at dusk. On the next turn, the game asks Seizn what Mira knows right now.",
+  examples: [
+    {
+      title: "Raw HTTP",
+      subtitle: "Direct API calls for the shortest possible integration path.",
+      code: `curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/entities \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"type":"character","name":"Mira","external_id":"npc_mira"}'
+
+curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/extract \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"text":"Mira saw the player leave the old gate at dusk."}'
+
+curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/context \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"query":"What does Mira know about the player?","max_entities":8}'`,
+    },
+    {
+      title: "JavaScript",
+      subtitle: "Thin server wrapper before you enter the dialogue turn.",
+      code: `const headers = {\n  Authorization: \`Bearer \${process.env.SEIZN_API_KEY}\`,\n  "Content-Type": "application/json",\n};\n\nawait fetch(\`https://seizn.com/api/v1/graph/\${graphId}/entities\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ type: "character", name: "Mira", external_id: "npc_mira" }),\n});\nawait fetch(\`https://seizn.com/api/v1/graph/\${graphId}/extract\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ text: "Mira saw the player leave the old gate at dusk." }),\n});\nconst context = await fetch(\`https://seizn.com/api/v1/graph/\${graphId}/context\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ query: "What does Mira know about the player?", max_entities: 8 }),\n}).then((r) => r.json());`,
+    },
+    {
+      title: "Python",
+      subtitle: "Server-authoritative loop for tools, simulation backends, or quest services.",
+      code: `import requests\n\nheaders = {\n    "Authorization": f"Bearer {SEIZN_API_KEY}",\n    "Content-Type": "application/json",\n}\nrequests.post(f"{BASE}/api/v1/graph/{graph_id}/entities", headers=headers, json={\n    "type": "character", "name": "Mira", "external_id": "npc_mira"\n})\nrequests.post(f"{BASE}/api/v1/graph/{graph_id}/extract", headers=headers, json={\n    "text": "Mira saw the player leave the old gate at dusk."\n})\ncontext = requests.post(f"{BASE}/api/v1/graph/{graph_id}/context", headers=headers, json={\n    "query": "What does Mira know about the player?", "max_entities": 8\n}).json()`,
+    },
+    {
+      title: "Unity C#",
+      subtitle: "Thin client wrapper called before the next NPC bark or dialogue node.",
+      code: `var client = new SeiznClient(baseUrl, apiKey, graphId);\nawait client.UpsertEntity(new SeiznEntity {\n    Type = "character",\n    Name = "Mira",\n    ExternalId = "npc_mira"\n});\nawait client.ExtractAsync("Mira saw the player leave the old gate at dusk.");\nvar context = await client.BuildContextAsync(\n    "What does Mira know about the player?",\n    maxEntities: 8,\n    maxDepth: 2\n);\ndialogueRunner.SetMemoryContext(context.SubgraphDescription);`,
+    },
+    {
+      title: "Godot GDScript",
+      subtitle: "Call Seizn from your dialogue turn or behavior tree script.",
+      code: `var client := SeiznClient.new(base_url, api_key, graph_id)\nawait client.upsert_entity({\n    "type": "character",\n    "name": "Mira",\n    "external_id": "npc_mira"\n})\nawait client.extract("Mira saw the player leave the old gate at dusk.")\nvar context = await client.build_context(\n    "What does Mira know about the player?",\n    8,\n    2\n)\ndialogue_state.memory_context = context.subgraph_description`,
+    },
+    {
+      title: "Unreal C++",
+      subtitle: "Same three calls wrapped behind a gameplay-facing client.",
+      code: `FSeiznClient Client(BaseUrl, ApiKey, GraphId);\nco_await Client.UpsertEntity({\n    TEXT("character"),\n    TEXT("Mira"),\n    TEXT("npc_mira")\n});\nco_await Client.Extract(TEXT("Mira saw the player leave the old gate at dusk."));\nconst FSeiznContext Context = co_await Client.BuildContext(\n    TEXT("What does Mira know about the player?"),\n    8,\n    2\n);\nDialogueSubsystem->SetMemoryContext(Context.SubgraphDescription);`,
+    },
+  ],
+  finalTitle: "Need the reference shape too?",
+  finalBody: "Use the API reference for exact request schemas, then price the rollout once the loop feels right.",
+  finalPrimary: "Open API reference",
+  finalSecondary: "View pricing",
+};
+
+const COPY_KO: Copy = {
+  title: "하나의 NPC 메모리 흐름, 여섯 가지 연동 경로",
+  subtitle:
+    "모든 예제는 같은 시나리오를 사용합니다. NPC 엔티티를 만들고, witness 이벤트를 기록하고, 다음 대화 턴 전에 컨텍스트를 회수합니다.",
+  helper:
+    "루프를 검증하는 단계라면 raw HTTP부터 시작하고, recall 단계가 런타임 안에 들어가면 JavaScript, Python, Unity, Unreal, Godot 쪽으로 올리면 됩니다.",
+  scenarioTitle: "시나리오",
+  scenarioBody:
+    "여관 주인 Mira가 해질녘 old gate에서 플레이어가 떠나는 장면을 봅니다. 다음 턴에서 게임은 지금 Mira가 무엇을 알고 있는지 Seizn에 묻습니다.",
+  examples: [
+    {
+      title: "Raw HTTP",
+      subtitle: "가장 짧은 통합 경로를 위한 직접 API 호출입니다.",
+      code: `curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/entities \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"type":"character","name":"Mira","external_id":"npc_mira"}'
+
+curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/extract \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"text":"Mira saw the player leave the old gate at dusk."}'
+
+curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/context \\
+  -H "Authorization: Bearer $SEIZN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"query":"What does Mira know about the player?","max_entities":8}'`,
+    },
+    {
+      title: "JavaScript",
+      subtitle: "다음 대화 턴 직전에 넣는 얇은 서버 래퍼 예제입니다.",
+      code: `const headers = {\n  Authorization: \`Bearer \${process.env.SEIZN_API_KEY}\`,\n  "Content-Type": "application/json",\n};\n\nawait fetch(\`https://seizn.com/api/v1/graph/\${graphId}/entities\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ type: "character", name: "Mira", external_id: "npc_mira" }),\n});\nawait fetch(\`https://seizn.com/api/v1/graph/\${graphId}/extract\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ text: "Mira saw the player leave the old gate at dusk." }),\n});\nconst context = await fetch(\`https://seizn.com/api/v1/graph/\${graphId}/context\`, {\n  method: "POST", headers,\n  body: JSON.stringify({ query: "What does Mira know about the player?", max_entities: 8 }),\n}).then((r) => r.json());`,
+    },
+    {
+      title: "Python",
+      subtitle: "툴링, 시뮬레이션 백엔드, 퀘스트 서비스에 맞는 서버 권한 루프입니다.",
+      code: `import requests\n\nheaders = {\n    "Authorization": f"Bearer {SEIZN_API_KEY}",\n    "Content-Type": "application/json",\n}\nrequests.post(f"{BASE}/api/v1/graph/{graph_id}/entities", headers=headers, json={\n    "type": "character", "name": "Mira", "external_id": "npc_mira"\n})\nrequests.post(f"{BASE}/api/v1/graph/{graph_id}/extract", headers=headers, json={\n    "text": "Mira saw the player leave the old gate at dusk."\n})\ncontext = requests.post(f"{BASE}/api/v1/graph/{graph_id}/context", headers=headers, json={\n    "query": "What does Mira know about the player?", "max_entities": 8\n}).json()`,
+    },
+    {
+      title: "Unity C#",
+      subtitle: "다음 bark나 dialogue node 직전에 부르는 얇은 클라이언트 래퍼 예제입니다.",
+      code: `var client = new SeiznClient(baseUrl, apiKey, graphId);\nawait client.UpsertEntity(new SeiznEntity {\n    Type = "character",\n    Name = "Mira",\n    ExternalId = "npc_mira"\n});\nawait client.ExtractAsync("Mira saw the player leave the old gate at dusk.");\nvar context = await client.BuildContextAsync(\n    "What does Mira know about the player?",\n    maxEntities: 8,\n    maxDepth: 2\n);\ndialogueRunner.SetMemoryContext(context.SubgraphDescription);`,
+    },
+    {
+      title: "Godot GDScript",
+      subtitle: "대화 턴이나 behavior tree 스크립트에서 Seizn을 호출합니다.",
+      code: `var client := SeiznClient.new(base_url, api_key, graph_id)\nawait client.upsert_entity({\n    "type": "character",\n    "name": "Mira",\n    "external_id": "npc_mira"\n})\nawait client.extract("Mira saw the player leave the old gate at dusk.")\nvar context = await client.build_context(\n    "What does Mira know about the player?",\n    8,\n    2\n)\ndialogue_state.memory_context = context.subgraph_description`,
+    },
+    {
+      title: "Unreal C++",
+      subtitle: "같은 세 호출을 게임플레이 클라이언트 뒤에 감싼 예제입니다.",
+      code: `FSeiznClient Client(BaseUrl, ApiKey, GraphId);\nco_await Client.UpsertEntity({\n    TEXT("character"),\n    TEXT("Mira"),\n    TEXT("npc_mira")\n});\nco_await Client.Extract(TEXT("Mira saw the player leave the old gate at dusk."));\nconst FSeiznContext Context = co_await Client.BuildContext(\n    TEXT("What does Mira know about the player?"),\n    8,\n    2\n);\nDialogueSubsystem->SetMemoryContext(Context.SubgraphDescription);`,
+    },
+  ],
+  finalTitle: "정확한 레퍼런스도 같이 필요하신가요?",
+  finalBody: "정확한 request schema는 API reference에서 보고, 루프가 맞으면 그다음 pricing으로 넘어가면 됩니다.",
+  finalPrimary: "API reference 열기",
+  finalSecondary: "가격 보기",
+};
+
+function getCopy(locale: Locale): Copy {
+  if (locale === "ko") return COPY_KO;
+  return COPY_EN;
+}
+
+function CodeBlock({ code }: { code: string }) {
+  return (
+    <pre className="overflow-x-auto border border-white/10 bg-[#08111f] p-4 text-sm leading-7 text-slate-200">
+      <code>{code}</code>
+    </pre>
+  );
+}
 
 export function IntegrationsClient({ locale, dictionary }: Props) {
+  const copy = getCopy(locale);
+
   const t = (key: string): string => {
     const value = getNestedValue(dictionary, key);
     return value ?? key;
   };
 
   return (
-    <div className="min-h-screen bg-szn-bg">
-      {/* Header */}
-      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#08111f] text-white">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-4">
-            <Link href={`/${locale}`} className="text-xl font-bold text-szn-text-1">
-              Seizn<span className="text-szn-accent">.</span>
+            <Link href={`/${locale}`} className="text-xl font-semibold text-white">
+              Seizn
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
+            <span className="text-slate-500">/</span>
+            <Link href={`/${locale}/docs`} className="text-slate-300 transition-colors hover:text-white">
               {t("nav.docs")}
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <span className="text-szn-text-1">{t("docs.integrationsPage.breadcrumb")}</span>
+            <span className="text-slate-500">/</span>
+            <span className="text-white">{t("docs.integrationsPage.breadcrumb")}</span>
           </div>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
-            <Link
-              href={`/${locale}/dashboard`}
-              className="text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+            <Link href={`/${locale}/dashboard`} className="hidden text-slate-300 transition-colors hover:text-white md:block">
               Dashboard
             </Link>
             <Link
               href={`/${locale}/login`}
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
             >
               {t("nav.getStarted")}
             </Link>
@@ -105,122 +215,58 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* Hero */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">
-            {t("docs.integrationsPage.title")}
-          </h1>
-          <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
-            {t("docs.integrationsPage.subtitle")}
-          </p>
-        </div>
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <section className="border-b border-white/10 pb-12">
+          <h1 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">{copy.title}</h1>
+          <p className="mt-5 max-w-4xl text-xl leading-8 text-slate-300">{copy.subtitle}</p>
+          <p className="mt-4 max-w-4xl text-base leading-8 text-slate-400">{copy.helper}</p>
+        </section>
 
-        {/* Integration Cards */}
-        <div className="grid gap-6">
-          {integrations.map((integration) => {
-            const cardContent = (
-              <div className="flex items-start gap-4">
-                <div className="text-4xl">{integration.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-xl font-semibold text-szn-text-1 group-hover:text-szn-accent transition-colors">
-                      {t(integration.titleKey)}
-                    </h2>
-                    <span className="px-2 py-0.5 text-xs font-medium bg-szn-accent/10 text-szn-accent rounded">
-                      {t(integration.badgeKey)}
-                    </span>
-                  </div>
-                  <p className="text-szn-text-2 mb-3">
-                    {t(integration.descKey)}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {integration.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 text-xs bg-szn-surface-1 text-szn-text-2 rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  {integration.id === 'mcp-server' && (
-                    <div className="mt-4 p-3 bg-szn-surface rounded-lg">
-                      <code className="text-xs text-szn-accent font-mono">npx seizn-mcp@latest</code>
-                      <span className="text-xs text-szn-text-3 ml-2">— works in 30 seconds</span>
-                    </div>
-                  )}
+        <section className="border-b border-white/10 py-12">
+          <h2 className="text-3xl font-semibold text-white">{copy.scenarioTitle}</h2>
+          <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-300">{copy.scenarioBody}</p>
+        </section>
+
+        <section className="py-12">
+          <div className="grid gap-6">
+            {copy.examples.map((example) => (
+              <div key={example.title} className="border border-white/10 bg-white/5 px-5 py-5">
+                <h2 className="text-2xl font-semibold text-white">{example.title}</h2>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">{example.subtitle}</p>
+                <div className="mt-6">
+                  <CodeBlock code={example.code} />
                 </div>
-                {integration.href && (
-                  <svg
-                    className="w-5 h-5 text-szn-text-3 group-hover:text-szn-accent transition-colors flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                )}
               </div>
-            );
-
-            if (integration.href) {
-              return (
-                <Link
-                  key={integration.id}
-                  href={`/${locale}${integration.href}`}
-                  className="group block bg-szn-surface border border-szn-border rounded-xl p-6 hover:border-szn-accent transition-colors"
-                >
-                  {cardContent}
-                </Link>
-              );
-            }
-
-            return (
-              <div
-                key={integration.id}
-                className="group block bg-szn-surface border border-szn-accent/50 rounded-xl p-6"
-              >
-                {cardContent}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Coming Soon Section */}
-        <div className="mt-12 p-6 bg-szn-surface border border-szn-border rounded-xl">
-          <h3 className="text-lg font-semibold text-szn-text-1 mb-3">
-            {t("docs.integrationsPage.comingSoon.title")}
-          </h3>
-          <p className="text-szn-text-2 mb-4">
-            {t("docs.integrationsPage.comingSoon.description")}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {['Vercel AI SDK', 'Haystack', 'Semantic Kernel', 'AutoGen'].map((name) => (
-              <span
-                key={name}
-                className="px-3 py-1.5 text-sm bg-szn-surface-1 text-szn-text-3 rounded-lg"
-              >
-                {name}
-              </span>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Back to Docs */}
-        <div className="mt-8 text-center">
-          <Link
-            href={`/${locale}/docs`}
-            className="text-szn-accent hover:underline"
-          >
-            {t("docs.integrationsPage.backToDocs")}
-          </Link>
-        </div>
-      </div>
+        <section className="border-t border-white/10 py-12">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white">{copy.finalTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalBody}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/${locale}/docs/api-reference`}
+                className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+              >
+                {copy.finalPrimary}
+              </Link>
+              <Link
+                href={`/${locale}/pricing`}
+                className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+              >
+                {copy.finalSecondary}
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-szn-border py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center text-szn-text-3 text-sm">
+      <footer className="border-t border-white/10 py-8">
+        <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-400">
           {t("docs.footer.copyright").replace("{year}", new Date().getFullYear().toString())}
         </div>
       </footer>
