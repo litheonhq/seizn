@@ -216,7 +216,7 @@
     "settings": "Instellingen",
     "signOut": "Uitloggen",
     "stats": {
-      "memories": "Herinneringen",
+      "memories": "Entiteiten",
       "apiCalls": "API-aanroepen vandaag",
       "plan": "Huidig plan",
       "unlimited": "Onbeperkt"
@@ -271,7 +271,7 @@
       "tabLatency": "Latentie",
       "tabErrors": "Fouten",
       "noUsageTitle": "Nog geen gebruiksgegevens",
-      "noUsageDescription": "Verstuur uw eerste API-verzoek om gebruiksanalyses te zien. Gegevens verschijnen binnen 5 seconden.",
+      "noUsageDescription": "Stuur je eerste NPC-geheugenverzoek om gebruiksanalyses te zien. Gegevens verschijnen binnen 5 seconden.",
       "noUsageExpected": "Verwacht: Aanroepen, tokens, kosten en latentie-uitsplitsing",
       "getApiKey": "API-sleutel Verkrijgen",
       "viewDocs": "Documentatie Bekijken",
@@ -321,7 +321,7 @@
       "title": "Debugconsole",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "Vraag wat een NPC moet onthouden...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -332,7 +332,7 @@
       "runQuery": "Query uitvoeren",
       "running": "Uitvoeren...",
       "results": "Resultaten",
-      "noResults": "No results found",
+      "noResults": "Vraag NPC-context op om resultaten te zien",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -401,13 +401,13 @@
       "memoryType": "Type",
       "rerankScore": "Rerank-score",
       "traceTimeline": "Traceringstijdlijn",
-      "noTrace": "Voer een query uit om tracering te zien",
+      "noTrace": "Vraag NPC-context op om de trace te zien",
       "step": "Stap",
       "completed": "Voltooid",
       "pending": "In afwachting",
       "error": "Fout",
       "costBreakdown": "Kostenuitsplitsing",
-      "noCost": "Voer een query uit om kostenuitsplitsing te zien",
+      "noCost": "Vraag NPC-context op om de kostenopbouw te zien",
       "component": "Component",
       "search": "Zoeken",
       "total": "Totaal",
@@ -432,7 +432,7 @@
     },
     "settingsPage": {
       "title": "Instellingen",
-      "subtitle": "Profiel & voorkeuren",
+      "subtitle": "Workspace-, profiel- en game-runtimevoorkeuren",
       "saving": "Opslaan...",
       "saved": "Opgeslagen",
       "saveFailed": "Opslaan mislukt",
@@ -468,7 +468,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "Bestedingslimieten en waarschuwingen instellen",
+        "subtitle": "Stel verzoekbudgetten en waarschuwingen in voor game-runtimes",
         "perQueryMax": "Maximum per Query",
         "alertThresholdDesc": "Ontvang een waarschuwing wanneer gebruik dit percentage bereikt",
         "budgetMode": "Budgetmodus",
@@ -500,7 +500,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "Configureer hoe u waarschuwingen ontvangt",
+        "subtitle": "Configureer waarschuwingen voor gebruik, incidenten en wijzigingen in de geheugenpipeline",
         "emailAlerts": "E-mailwaarschuwingen",
         "emailAlertsDesc": "Ontvang belangrijke waarschuwingen via e-mail",
         "usageAlerts": "Gebruikswaarschuwingen",
@@ -540,7 +540,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "Beheer de beveiliging van uw account",
+        "subtitle": "Beheer account- en API-toegangsbeveiliging",
         "save": "Wijzigingen Opslaan",
         "updatePassword": "Wachtwoord Bijwerken",
         "twoFactorDesc": "Voeg een extra beveiligingslaag toe",
@@ -629,7 +629,7 @@
       "last10Requests": "Laatste 10 API-verzoeken",
       "viewAllActivity": "Alles Bekijken",
       "noActivityYet": "Nog geen API-activiteit",
-      "noActivityDescription": "Verstuur uw eerste API-verzoek om activiteit hier te zien",
+      "noActivityDescription": "Stuur je eerste NPC-geheugenverzoek om activiteit te zien",
       "sendFirstRequest": "Eerste Verzoek Versturen"
     },
     "keysPage": {
@@ -638,7 +638,7 @@
       "createNewKey": "Nieuwe sleutel aanmaken",
       "activeKeys": "Actieve sleutels",
       "noKeysTitle": "Nog geen API-sleutels",
-      "noKeysDesc": "Maak uw eerste API-sleutel aan om te beginnen met Seizn",
+      "noKeysDesc": "Maak een sleutel voor je gameclient- of serverintegratie.",
       "createApiKey": "API-sleutel aanmaken",
       "created": "Aangemaakt",
       "neverUsed": "Nooit gebruikt",
@@ -657,7 +657,7 @@
       "createKeyTitle": "API-sleutel aanmaken",
       "createKeyDesc": "Geef uw sleutel een beschrijvende naam",
       "keyName": "Sleutelnaam",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "bijv. Unity-productie, Unreal-dev, QA-server",
       "cancel": "Annuleren",
       "creating": "Aanmaken...",
       "createKey": "Sleutel aanmaken",
@@ -676,17 +676,17 @@
     "organizationsPage": {
       "title": "Organisaties",
       "subtitle": "Beheer uw teams en werk samen met anderen",
-      "newOrganization": "Nieuwe organisatie",
-      "noOrgsTitle": "Nog geen organisaties",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Organisatie aanmaken",
+      "newOrganization": "Nieuw project",
+      "noOrgsTitle": "Nog geen projecten",
+      "noOrgsDesc": "Maak een gameproject om met je team samen te werken en gedeelde Seizn-resources te beheren",
+      "createOrganization": "Project maken",
       "created": "Aangemaakt",
       "plan": "Plan",
       "freePlan": "Gratis",
-      "createOrgTitle": "Organisatie aanmaken",
-      "createOrgDesc": "Stel een nieuwe teamwerkruimte in",
-      "orgName": "Organisatienaam",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Project maken",
+      "createOrgDesc": "Stel een workspace in voor één gametitel",
+      "orgName": "Projectnaam",
+      "orgNamePlaceholder": "bijv. Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Annuleren",
@@ -715,12 +715,12 @@
       "steps": {
         "apiKey": {
           "title": "API-sleutel aanmaken",
-          "description": "Genereer je eerste API-sleutel om verzoeken te authenticeren",
+          "description": "Maak een API-sleutel voor game-runtimeverzoeken",
           "action": "Sleutel aanmaken"
         },
         "demoQuery": {
-          "title": "Doe je eerste zoekopdracht",
-          "description": "Probeer de demo-zoekopdracht of doe een API-verzoek",
+          "title": "NPC-context opvragen",
+          "description": "Probeer een demo-NPC-query of stuur je eerste verzoek",
           "action": "Demo proberen"
         },
         "viewTrace": {
@@ -764,7 +764,7 @@
         },
         "stats": {
           "title": "Uw Statistieken",
-          "description": "Monitor uw API-gebruik, opgeslagen herinneringen en huidig abonnement."
+          "description": "Bewaak API-gebruik, opgeslagen entiteiten en het huidige plan."
         },
         "quickStart": {
           "title": "Snelle Acties",
@@ -930,10 +930,10 @@
       "sortOldest": "Oudste eerst",
       "sortRelevance": "Meest relevant",
       "activeFilters": "Actieve filters",
-      "loading": "Herinneringen laden...",
+      "loading": "Entiteiten laden...",
       "noMemories": "Geen herinneringen gevonden",
       "noMatchingMemories": "Probeer uw filters of zoekopdracht aan te passen",
-      "noMemoriesHint": "Begin met het toevoegen van herinneringen via de API om ze hier te zien",
+      "noMemoriesHint": "Maak NPC’s, facties of events via de API om ze hier te zien",
       "match": "overeenkomst",
       "loadMore": "Meer laden",
       "export": "Exporteren",
@@ -1312,11 +1312,11 @@
     },
     "topBar": {
       "personal": "Persoonlijk Account",
-      "manageOrgs": "Organisaties Beheren",
+      "manageOrgs": "Projecten beheren",
       "create": "Aanmaken",
       "createApiKey": "Nieuwe API-sleutel",
-      "createOrg": "Nieuwe Organisatie",
-      "switchOrg": "Organisatie wisselen"
+      "createOrg": "Nieuw project",
+      "switchOrg": "Project wisselen"
     },
     "share": {
       "title": "Tracering Delen",
@@ -1515,6 +1515,9 @@
       "open": "Openen",
       "close": "Sluiten",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Kernindicatoren voor NPC-geheugenbetrouwbaarheid"
     }
   },
   "pricingPage": {

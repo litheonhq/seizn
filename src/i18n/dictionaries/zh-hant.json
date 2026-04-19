@@ -216,7 +216,7 @@
     "settings": "設定",
     "signOut": "登出",
     "stats": {
-      "memories": "記憶",
+      "memories": "實體",
       "apiCalls": "今日API呼叫",
       "plan": "目前方案",
       "unlimited": "無限"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "建立 API 金鑰",
-          "description": "產生您的第一個 API 金鑰以驗證請求",
+          "description": "為遊戲執行階段請求建立 API 金鑰",
           "action": "建立金鑰"
         },
         "demoQuery": {
-          "title": "進行首次查詢",
-          "description": "嘗試示範查詢或發起 API 請求",
+          "title": "查詢 NPC 上下文",
+          "description": "試用示範 NPC 查詢或送出你的第一個請求",
           "action": "試用示範"
         },
         "viewTrace": {
@@ -278,7 +278,7 @@
         },
         "stats": {
           "title": "您的統計資料",
-          "description": "監控您的 API 使用量、儲存的記憶和目前方案。"
+          "description": "監控 API 使用量、已儲存實體和目前方案。"
         },
         "quickStart": {
           "title": "快速操作",
@@ -340,7 +340,7 @@
       "tabLatency": "延遲",
       "tabErrors": "錯誤",
       "noUsageTitle": "尚無使用資料",
-      "noUsageDescription": "傳送您的第一個 API 請求以查看使用分析。資料將在 5 秒內顯示。",
+      "noUsageDescription": "送出你的第一個 NPC 記憶請求以查看使用分析。資料會在 5 秒內顯示。",
       "noUsageExpected": "預期內容：呼叫、權杖、費用和延遲明細",
       "getApiKey": "取得 API 金鑰",
       "viewDocs": "查看文件",
@@ -390,7 +390,7 @@
       "title": "偵錯控制台",
       "subtitle": "透過追蹤和參數調整測試您的查詢",
       "queryInput": "查詢輸入",
-      "queryPlaceholder": "輸入您的測試查詢...",
+      "queryPlaceholder": "詢問 NPC 應該記住什麼...",
       "parameters": "參數",
       "topK": "Top K",
       "topKHint": "返回結果數量",
@@ -401,7 +401,7 @@
       "runQuery": "執行查詢",
       "running": "執行中...",
       "results": "結果",
-      "noResults": "未找到結果",
+      "noResults": "查詢 NPC 上下文以查看結果",
       "noResultsHint": "調整參數或嘗試不同查詢",
       "resultCount": "找到 {count} 條結果",
       "score": "分數",
@@ -470,13 +470,13 @@
       "memoryType": "類型",
       "rerankScore": "重新排序分數",
       "traceTimeline": "追蹤時間軸",
-      "noTrace": "執行查詢以查看追蹤",
+      "noTrace": "查詢 NPC 上下文以查看追蹤",
       "step": "步驟",
       "completed": "已完成",
       "pending": "待處理",
       "error": "錯誤",
       "costBreakdown": "費用明細",
-      "noCost": "執行查詢以查看費用明細",
+      "noCost": "查詢 NPC 上下文以查看成本明細",
       "component": "元件",
       "search": "搜尋",
       "total": "總計",
@@ -501,7 +501,7 @@
     },
     "settingsPage": {
       "title": "設定",
-      "subtitle": "個人資料和偏好設定",
+      "subtitle": "工作區、個人資料與遊戲執行階段偏好設定",
       "saving": "儲存中...",
       "saved": "已儲存",
       "saveFailed": "儲存失敗",
@@ -537,7 +537,7 @@
         "unlimited": "無限制",
         "setLimit": "設定限額",
         "removeLimit": "移除限額",
-        "subtitle": "設定支出限制和提醒",
+        "subtitle": "為遊戲執行階段設定請求預算和提醒",
         "perQueryMax": "單次查詢上限",
         "alertThresholdDesc": "當使用量達到此百分比時發出提醒",
         "budgetMode": "預算模式",
@@ -569,7 +569,7 @@
         "allDisabled": "所有通知已停用",
         "enableAll": "啟用全部",
         "disableAll": "停用全部",
-        "subtitle": "設定接收提醒的方式",
+        "subtitle": "設定使用量、事件和記憶管線變更提醒",
         "emailAlerts": "電子郵件提醒",
         "emailAlertsDesc": "透過電子郵件接收重要提醒",
         "usageAlerts": "使用量提醒",
@@ -609,7 +609,7 @@
         "passwordTooShort": "密碼太短",
         "apiKeysSecurity": "API金鑰安全",
         "apiKeysSecurityHint": "監控和管理您的API金鑰",
-        "subtitle": "管理您的帳戶安全",
+        "subtitle": "管理帳戶和 API 存取安全",
         "save": "儲存變更",
         "updatePassword": "更新密碼",
         "twoFactorDesc": "新增額外的安全保護層",
@@ -698,7 +698,7 @@
       "last10Requests": "最近10個API請求",
       "viewAllActivity": "查看全部",
       "noActivityYet": "暫無API活動",
-      "noActivityDescription": "發送您的第一個API請求以查看活動",
+      "noActivityDescription": "送出你的第一個 NPC 記憶請求以查看活動",
       "sendFirstRequest": "發送第一個請求"
     },
     "keysPage": {
@@ -707,7 +707,7 @@
       "createNewKey": "建立新金鑰",
       "activeKeys": "使用中金鑰",
       "noKeysTitle": "尚無API金鑰",
-      "noKeysDesc": "建立您的第一個API金鑰以開始與Seizn整合",
+      "noKeysDesc": "為你的遊戲用戶端或伺服器整合建立金鑰。",
       "createApiKey": "建立API金鑰",
       "created": "建立於",
       "neverUsed": "從未使用",
@@ -726,7 +726,7 @@
       "createKeyTitle": "建立API金鑰",
       "createKeyDesc": "為您的金鑰取一個描述性名稱",
       "keyName": "金鑰名稱",
-      "keyNamePlaceholder": "例如：正式、開發、測試",
+      "keyNamePlaceholder": "例如：Unity 正式環境、Unreal 開發、QA 伺服器",
       "cancel": "取消",
       "creating": "建立中...",
       "createKey": "建立金鑰",
@@ -745,17 +745,17 @@
     "organizationsPage": {
       "title": "組織",
       "subtitle": "管理您的團隊並與他人協作",
-      "newOrganization": "新建組織",
-      "noOrgsTitle": "尚無組織",
-      "noOrgsDesc": "建立您的第一個組織以開始團隊協作",
-      "createOrganization": "建立組織",
+      "newOrganization": "新增專案",
+      "noOrgsTitle": "尚無專案",
+      "noOrgsDesc": "建立遊戲標題專案，與團隊協作並管理共享的 Seizn 資源",
+      "createOrganization": "建立專案",
       "created": "建立於",
       "plan": "方案",
       "freePlan": "免費",
-      "createOrgTitle": "建立組織",
-      "createOrgDesc": "設定新的團隊工作區",
-      "orgName": "組織名稱",
-      "orgNamePlaceholder": "例如：某某公司",
+      "createOrgTitle": "建立專案",
+      "createOrgDesc": "為一個遊戲標題設定工作區",
+      "orgName": "專案名稱",
+      "orgNamePlaceholder": "例如：Neon Village",
       "urlSlug": "URL別名",
       "urlSlugPlaceholder": "my-company",
       "cancel": "取消",
@@ -929,10 +929,10 @@
       "sortOldest": "最舊優先",
       "sortRelevance": "最相關",
       "activeFilters": "啟用的篩選器",
-      "loading": "載入記憶中...",
+      "loading": "正在載入實體...",
       "noMemories": "未找到記憶",
       "noMatchingMemories": "請嘗試調整篩選器或搜尋條件",
-      "noMemoriesHint": "透過API開始新增記憶即可在此查看",
+      "noMemoriesHint": "透過 API 建立 NPC、陣營或事件後會顯示在這裡",
       "match": "匹配",
       "loadMore": "載入更多",
       "export": "匯出",
@@ -1311,11 +1311,11 @@
     },
     "topBar": {
       "personal": "個人帳戶",
-      "manageOrgs": "管理組織",
+      "manageOrgs": "管理專案",
       "create": "建立",
       "createApiKey": "新增 API 金鑰",
-      "createOrg": "新增組織",
-      "switchOrg": "切換組織"
+      "createOrg": "新增專案",
+      "switchOrg": "切換專案"
     },
     "share": {
       "title": "分享追蹤",
@@ -1515,6 +1515,9 @@
       "open": "開啟",
       "close": "關閉",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "NPC 記憶可靠性的關鍵指標"
     }
   },
   "pricingPage": {

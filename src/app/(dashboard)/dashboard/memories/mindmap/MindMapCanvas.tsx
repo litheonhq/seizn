@@ -389,10 +389,10 @@ export default function MindMapCanvas() {
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-szn-text-1">
-            No memories yet
+            No entities yet
           </h3>
           <p className="text-szn-text-2">
-            Start adding memories via the API to see them visualized here as a knowledge graph.
+            Create NPCs, factions, or events via the API to see them visualized as a graph.
           </p>
         </div>
       </div>

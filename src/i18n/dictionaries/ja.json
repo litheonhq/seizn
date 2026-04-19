@@ -216,7 +216,7 @@
     "settings": "設定",
     "signOut": "ログアウト",
     "stats": {
-      "memories": "メモリ",
+      "memories": "エンティティ",
       "apiCalls": "本日のAPI呼び出し",
       "plan": "現在のプラン",
       "unlimited": "無制限"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "APIキーを作成",
-          "description": "最初のAPIキーを生成してリクエストを認証する",
+          "description": "ゲームランタイムのリクエスト用 API キーを作成します",
           "action": "キーを作成"
         },
         "demoQuery": {
-          "title": "最初のクエリを実行",
-          "description": "デモクエリを試すかAPIリクエストを送信する",
+          "title": "NPC コンテキストをクエリ",
+          "description": "デモ NPC クエリを試すか、最初のリクエストを送信します",
           "action": "デモを試す"
         },
         "viewTrace": {
@@ -286,7 +286,7 @@
         },
         "stats": {
           "title": "使用統計",
-          "description": "メモリ使用量とAPI呼び出しをリアルタイムで監視できます。"
+          "description": "API 使用量、保存済みエンティティ、現在のプランを監視します。"
         },
         "quickStart": {
           "title": "クイックスタートガイド",
@@ -344,7 +344,7 @@
       "tabLatency": "レイテンシ",
       "tabErrors": "エラー",
       "noUsageTitle": "まだ使用データがありません",
-      "noUsageDescription": "最初のAPIリクエストを送信すると、使用状況の分析が表示されます。データは5秒以内に表示されます。",
+      "noUsageDescription": "最初の NPC メモリリクエストを送信すると使用状況分析を確認できます。データは 5 秒以内に表示されます。",
       "noUsageExpected": "表示内容：呼び出し、トークン、コスト、レイテンシの内訳",
       "getApiKey": "APIキーを取得",
       "viewDocs": "ドキュメントを表示",
@@ -394,7 +394,7 @@
       "title": "デバッグコンソール",
       "subtitle": "トレーシングとパラメータチューニングでクエリをテスト",
       "queryBuilder": "クエリビルダー",
-      "queryPlaceholder": "検索クエリを入力...",
+      "queryPlaceholder": "NPC が覚えるべき内容を質問...",
       "namespace": "ネームスペース",
       "namespacePlaceholder": "default",
       "topK": "上位K",
@@ -409,12 +409,12 @@
       "results": "結果",
       "trace": "トレース",
       "cost": "コスト",
-      "noResults": "クエリを実行して結果を表示",
+      "noResults": "NPC コンテキストをクエリすると結果が表示されます",
       "similarity": "類似度",
       "memoryType": "タイプ",
       "rerankScore": "リランクスコア",
       "traceTimeline": "トレースタイムライン",
-      "noTrace": "クエリを実行してトレースを表示",
+      "noTrace": "NPC コンテキストをクエリするとトレースが表示されます",
       "step": "ステップ",
       "completed": "完了",
       "pending": "保留",
@@ -429,7 +429,7 @@
         "returnResults": "結果返却"
       },
       "costBreakdown": "コスト内訳",
-      "noCost": "クエリを実行してコスト内訳を表示",
+      "noCost": "NPC コンテキストをクエリするとコスト内訳が表示されます",
       "component": "コンポーネント",
       "embedding": "埋め込み",
       "search": "検索",
@@ -479,7 +479,7 @@
     },
     "settingsPage": {
       "title": "設定",
-      "subtitle": "プロフィールと環境設定",
+      "subtitle": "ワークスペース、プロフィール、ゲームランタイムの設定",
       "saving": "保存中...",
       "saved": "保存済み",
       "saveFailed": "保存失敗",
@@ -500,7 +500,7 @@
       },
       "budget": {
         "title": "予算設定",
-        "subtitle": "支出制限とアラートを設定",
+        "subtitle": "ゲームランタイムのリクエスト予算とアラートを設定します",
         "dailyLimit": "日次制限",
         "monthlyLimit": "月次制限",
         "perQueryMax": "クエリ毎の上限",
@@ -520,7 +520,7 @@
       },
       "notifications": {
         "title": "通知設定",
-        "subtitle": "アラートの受信方法を設定",
+        "subtitle": "使用状況、インシデント、メモリパイプライン変更のアラートを設定します",
         "emailAlerts": "メールアラート",
         "emailAlertsDesc": "重要なアラートをメールで受信",
         "usageAlerts": "使用量アラート",
@@ -536,7 +536,7 @@
       },
       "security": {
         "title": "セキュリティ設定",
-        "subtitle": "アカウントのセキュリティを管理",
+        "subtitle": "アカウントと API アクセスのセキュリティを管理します",
         "changePassword": "パスワード変更",
         "passwordDesc": "パスワードのセキュリティを管理",
         "currentPassword": "現在のパスワード",
@@ -625,7 +625,7 @@
       "last10Requests": "最新の10件のAPIリクエスト",
       "viewAllActivity": "すべて表示",
       "noActivityYet": "まだAPIアクティビティがありません",
-      "noActivityDescription": "最初のAPIリクエストを送信すると、ここにアクティビティが表示されます",
+      "noActivityDescription": "最初の NPC メモリリクエストを送信するとアクティビティが表示されます",
       "sendFirstRequest": "最初のリクエストを送信"
     },
     "keysPage": {
@@ -634,7 +634,7 @@
       "createNewKey": "新規キー作成",
       "activeKeys": "有効なキー",
       "noKeysTitle": "APIキーがありません",
-      "noKeysDesc": "最初のAPIキーを作成してSeiznとの連携を開始",
+      "noKeysDesc": "ゲームクライアントまたはサーバー連携用のキーを作成します。",
       "createApiKey": "APIキー作成",
       "created": "作成日",
       "neverUsed": "未使用",
@@ -653,7 +653,7 @@
       "createKeyTitle": "APIキー作成",
       "createKeyDesc": "キーにわかりやすい名前を付けてください",
       "keyName": "キー名",
-      "keyNamePlaceholder": "例：本番、開発、テスト",
+      "keyNamePlaceholder": "例: Unity 本番、Unreal 開発、QA サーバー",
       "cancel": "キャンセル",
       "creating": "作成中...",
       "createKey": "キー作成",
@@ -672,17 +672,17 @@
     "organizationsPage": {
       "title": "組織",
       "subtitle": "チームを管理し、メンバーと協力",
-      "newOrganization": "新規組織",
-      "noOrgsTitle": "組織がありません",
-      "noOrgsDesc": "最初の組織を作成してチームとのコラボレーションを開始",
-      "createOrganization": "組織を作成",
+      "newOrganization": "新規プロジェクト",
+      "noOrgsTitle": "プロジェクトはまだありません",
+      "noOrgsDesc": "ゲームタイトル用プロジェクトを作成して、チームで共同作業し共有 Seizn リソースを管理します",
+      "createOrganization": "プロジェクトを作成",
       "created": "作成日",
       "plan": "プラン",
       "freePlan": "無料",
-      "createOrgTitle": "組織を作成",
-      "createOrgDesc": "新しいチームワークスペースを設定",
-      "orgName": "組織名",
-      "orgNamePlaceholder": "例：株式会社サンプル",
+      "createOrgTitle": "プロジェクトを作成",
+      "createOrgDesc": "1 つのゲームタイトル用ワークスペースを設定します",
+      "orgName": "プロジェクト名",
+      "orgNamePlaceholder": "例: Neon Village",
       "urlSlug": "URLスラッグ",
       "urlSlugPlaceholder": "sample-corp",
       "cancel": "キャンセル",
@@ -880,10 +880,10 @@
       "sortOldest": "古い順",
       "sortRelevance": "関連度順",
       "activeFilters": "適用中のフィルター",
-      "loading": "メモリを読み込み中...",
+      "loading": "エンティティを読み込み中...",
       "noMemories": "メモリが見つかりません",
       "noMatchingMemories": "フィルターや検索クエリを調整してみてください",
-      "noMemoriesHint": "APIからメモリを追加すると、ここに表示されます",
+      "noMemoriesHint": "API で NPC、派閥、イベントを作成するとここに表示されます",
       "match": "一致",
       "loadMore": "さらに読み込む",
       "export": "エクスポート",
@@ -1262,11 +1262,11 @@
     },
     "topBar": {
       "personal": "個人アカウント",
-      "manageOrgs": "組織を管理",
+      "manageOrgs": "プロジェクト管理",
       "create": "作成",
       "createApiKey": "新しいAPIキー",
-      "createOrg": "新しい組織",
-      "switchOrg": "組織を切り替え"
+      "createOrg": "新規プロジェクト",
+      "switchOrg": "プロジェクトを切り替え"
     },
     "theme": {
       "light": "ライト",
@@ -1419,6 +1419,9 @@
       "open": "開く",
       "close": "閉じる",
       "enter": "決定"
+    },
+    "northStar": {
+      "subtitle": "NPC メモリ信頼性の主要指標"
     }
   },
   "pricingPage": {

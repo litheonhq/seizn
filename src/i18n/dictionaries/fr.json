@@ -216,7 +216,7 @@
     "settings": "Paramètres",
     "signOut": "Déconnexion",
     "stats": {
-      "memories": "Souvenirs",
+      "memories": "Entités",
       "apiCalls": "Appels API aujourd'hui",
       "plan": "Plan actuel",
       "unlimited": "Illimité"
@@ -271,7 +271,7 @@
       "tabLatency": "Latence",
       "tabErrors": "Erreurs",
       "noUsageTitle": "Aucune donnée d'utilisation pour le moment",
-      "noUsageDescription": "Envoyez votre première requête API pour voir les analyses d'utilisation. Les données apparaîtront ici dans les 5 secondes.",
+      "noUsageDescription": "Envoyez votre première requête de mémoire PNJ pour voir les analyses d’utilisation. Les données apparaîtront sous 5 secondes.",
       "noUsageExpected": "Attendu : Appels, tokens, coût et répartition de la latence",
       "getApiKey": "Obtenir une Clé API",
       "viewDocs": "Voir la Documentation",
@@ -321,7 +321,7 @@
       "title": "Console de debogage",
       "subtitle": "Testez vos requetes avec tracage et ajustement des parametres",
       "queryInput": "Entree de requete",
-      "queryPlaceholder": "Entrez votre requete de test...",
+      "queryPlaceholder": "Demandez ce qu’un PNJ doit retenir...",
       "parameters": "Parametres",
       "topK": "Top K",
       "topKHint": "Nombre de resultats a retourner",
@@ -332,7 +332,7 @@
       "runQuery": "Executer la requete",
       "running": "En cours...",
       "results": "Resultats",
-      "noResults": "Aucun resultat trouve",
+      "noResults": "Interrogez le contexte PNJ pour voir les résultats",
       "noResultsHint": "Ajustez les parametres ou essayez une autre requete",
       "resultCount": "{count} resultats trouves",
       "score": "Score",
@@ -401,13 +401,13 @@
       "memoryType": "Type",
       "rerankScore": "Score Rerank",
       "traceTimeline": "Chronologie de la Trace",
-      "noTrace": "Exécutez une requête pour voir la trace",
+      "noTrace": "Interrogez le contexte PNJ pour voir la trace",
       "step": "Étape",
       "completed": "Terminé",
       "pending": "En Attente",
       "error": "Erreur",
       "costBreakdown": "Répartition des Coûts",
-      "noCost": "Exécutez une requête pour voir la répartition des coûts",
+      "noCost": "Interrogez le contexte PNJ pour voir le détail des coûts",
       "component": "Composant",
       "search": "Recherche",
       "total": "Total",
@@ -432,7 +432,7 @@
     },
     "settingsPage": {
       "title": "Parametres",
-      "subtitle": "Profil et preferences",
+      "subtitle": "Préférences de workspace, de profil et de runtime de jeu",
       "saving": "Enregistrement...",
       "saved": "Enregistre",
       "saveFailed": "Echec de l'enregistrement",
@@ -468,7 +468,7 @@
         "unlimited": "Illimite",
         "setLimit": "Definir la limite",
         "removeLimit": "Supprimer la limite",
-        "subtitle": "Définir les limites de dépenses et les alertes",
+        "subtitle": "Définissez les budgets de requêtes et les alertes pour les runtimes de jeu",
         "perQueryMax": "Maximum par Requête",
         "alertThresholdDesc": "Être alerté lorsque l'utilisation atteint ce pourcentage",
         "budgetMode": "Mode Budget",
@@ -500,7 +500,7 @@
         "allDisabled": "Toutes les notifications desactivees",
         "enableAll": "Tout activer",
         "disableAll": "Tout desactiver",
-        "subtitle": "Configurer comment vous recevez les alertes",
+        "subtitle": "Configurez les alertes d’utilisation, d’incidents et de changements du pipeline de mémoire",
         "emailAlerts": "Alertes par Email",
         "emailAlertsDesc": "Recevoir les alertes importantes par email",
         "usageAlerts": "Alertes d'Utilisation",
@@ -540,7 +540,7 @@
         "passwordTooShort": "Mot de passe trop court",
         "apiKeysSecurity": "Securite des cles API",
         "apiKeysSecurityHint": "Surveillez et gerez vos cles API",
-        "subtitle": "Gérer la sécurité de votre compte",
+        "subtitle": "Gérez la sécurité du compte et de l’accès API",
         "save": "Enregistrer les Modifications",
         "updatePassword": "Mettre à Jour le Mot de Passe",
         "twoFactorDesc": "Ajouter une couche de sécurité supplémentaire",
@@ -629,7 +629,7 @@
       "last10Requests": "10 dernières requêtes API",
       "viewAllActivity": "Tout voir",
       "noActivityYet": "Pas d'activité API",
-      "noActivityDescription": "Envoyez votre première requête API",
+      "noActivityDescription": "Envoyez votre première requête de mémoire PNJ pour voir l’activité",
       "sendFirstRequest": "Envoyer la première requête"
     },
     "keysPage": {
@@ -638,7 +638,7 @@
       "createNewKey": "Créer Nouvelle Clé",
       "activeKeys": "Clés Actives",
       "noKeysTitle": "Aucune clé API",
-      "noKeysDesc": "Créez votre première clé API pour commencer l'intégration avec Seizn",
+      "noKeysDesc": "Créez une clé pour l’intégration de votre client ou serveur de jeu.",
       "createApiKey": "Créer Clé API",
       "created": "Créée",
       "neverUsed": "Jamais utilisée",
@@ -657,7 +657,7 @@
       "createKeyTitle": "Créer Clé API",
       "createKeyDesc": "Donnez un nom descriptif à votre clé",
       "keyName": "Nom de la Clé",
-      "keyNamePlaceholder": "ex: Production, Développement, Test",
+      "keyNamePlaceholder": "ex. : production Unity, dev Unreal, serveur QA",
       "cancel": "Annuler",
       "creating": "Création...",
       "createKey": "Créer Clé",
@@ -676,17 +676,17 @@
     "organizationsPage": {
       "title": "Organisations",
       "subtitle": "Gérez vos équipes et collaborez avec d'autres",
-      "newOrganization": "Nouvelle Organisation",
-      "noOrgsTitle": "Aucune organisation",
-      "noOrgsDesc": "Créez votre première organisation pour commencer à collaborer",
-      "createOrganization": "Créer Organisation",
+      "newOrganization": "Nouveau projet",
+      "noOrgsTitle": "Aucun projet pour l’instant",
+      "noOrgsDesc": "Créez un projet de titre de jeu pour collaborer avec votre équipe et gérer les ressources Seizn partagées",
+      "createOrganization": "Créer un projet",
       "created": "Créée",
       "plan": "Forfait",
       "freePlan": "Gratuit",
-      "createOrgTitle": "Créer Organisation",
-      "createOrgDesc": "Configurez un nouvel espace de travail",
-      "orgName": "Nom de l'Organisation",
-      "orgNamePlaceholder": "ex: Mon Entreprise",
+      "createOrgTitle": "Créer un projet",
+      "createOrgDesc": "Configurez un espace de travail pour un titre de jeu",
+      "orgName": "Nom du projet",
+      "orgNamePlaceholder": "ex. : Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "mon-entreprise",
       "cancel": "Annuler",
@@ -715,12 +715,12 @@
       "steps": {
         "apiKey": {
           "title": "Générer une clé API",
-          "description": "Créez votre première clé API pour authentifier les requêtes",
+          "description": "Créez une clé API pour les requêtes du runtime de jeu",
           "action": "Créer une clé"
         },
         "demoQuery": {
-          "title": "Faire votre première requête",
-          "description": "Essayez la requête démo ou envoyez une requête API",
+          "title": "Interroger le contexte PNJ",
+          "description": "Essayez une requête PNJ de démonstration ou envoyez votre première requête",
           "action": "Essayer la démo"
         },
         "viewTrace": {
@@ -764,7 +764,7 @@
         },
         "stats": {
           "title": "Vos Statistiques",
-          "description": "Surveillez votre utilisation de l'API, les mémoires stockées et votre plan actuel."
+          "description": "Suivez l’utilisation de l’API, les entités stockées et le forfait actuel."
         },
         "quickStart": {
           "title": "Actions Rapides",
@@ -929,10 +929,10 @@
       "sortOldest": "Plus Anciens",
       "sortRelevance": "Plus Pertinents",
       "activeFilters": "Filtres actifs",
-      "loading": "Chargement des mémoires...",
+      "loading": "Chargement des entités...",
       "noMemories": "Aucune mémoire trouvée",
       "noMatchingMemories": "Essayez d'ajuster vos filtres ou votre requête de recherche",
-      "noMemoriesHint": "Commencez à ajouter des mémoires via l'API pour les voir ici",
+      "noMemoriesHint": "Créez des PNJ, factions ou événements via l’API pour les voir ici",
       "match": "correspondance",
       "loadMore": "Charger Plus",
       "export": "Exporter",
@@ -1311,11 +1311,11 @@
     },
     "topBar": {
       "personal": "Compte Personnel",
-      "manageOrgs": "Gérer les Organisations",
+      "manageOrgs": "Gérer les projets",
       "create": "Créer",
       "createApiKey": "Nouvelle Clé API",
-      "createOrg": "Nouvelle Organisation",
-      "switchOrg": "Changer d'organisation"
+      "createOrg": "Nouveau projet",
+      "switchOrg": "Changer de projet"
     },
     "share": {
       "title": "Partager la Trace",
@@ -1515,6 +1515,9 @@
       "open": "Ouvrir",
       "close": "Fermer",
       "enter": "Entrée"
+    },
+    "northStar": {
+      "subtitle": "Indicateurs clés de fiabilité de la mémoire PNJ"
     }
   },
   "pricingPage": {

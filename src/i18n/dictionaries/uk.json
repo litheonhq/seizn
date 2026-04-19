@@ -216,7 +216,7 @@
     "settings": "Налаштування",
     "signOut": "Вийти",
     "stats": {
-      "memories": "Спогади",
+      "memories": "Сутності",
       "apiCalls": "API-викликів сьогодні",
       "plan": "Поточний план",
       "unlimited": "Безліміт"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "Створити API-ключ",
-          "description": "Згенеруйте свій перший API-ключ для автентифікації запитів",
+          "description": "Створіть API-ключ для запитів ігрового рантайму",
           "action": "Створити ключ"
         },
         "demoQuery": {
-          "title": "Зробіть перший запит",
-          "description": "Спробуйте демо-запит або надішліть API-запит",
+          "title": "Запитати контекст NPC",
+          "description": "Спробуйте демо-запит NPC або надішліть перший запит",
           "action": "Спробувати демо"
         },
         "viewTrace": {
@@ -278,7 +278,7 @@
         },
         "stats": {
           "title": "Ваша статистика",
-          "description": "Відстежуйте використання API, збережені спогади та поточний план."
+          "description": "Відстежуйте використання API, збережені сутності та поточний план."
         },
         "quickStart": {
           "title": "Швидкі дії",
@@ -340,7 +340,7 @@
       "tabLatency": "Затримка",
       "tabErrors": "Помилки",
       "noUsageTitle": "Немає даних про використання",
-      "noUsageDescription": "Надішліть перший API запит, щоб побачити аналітику використання. Дані з'являться тут протягом 5 секунд.",
+      "noUsageDescription": "Надішліть перший запит пам’яті NPC, щоб побачити аналітику використання. Дані з’являться протягом 5 секунд.",
       "noUsageExpected": "Очікується: виклики, токени, вартість та розбивка затримки",
       "getApiKey": "Отримати API ключ",
       "viewDocs": "Переглянути документацію",
@@ -390,7 +390,7 @@
       "title": "Консоль відладки",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "Запитайте, що NPC має пам’ятати...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -401,7 +401,7 @@
       "runQuery": "Виконати запит",
       "running": "Виконання...",
       "results": "Результати",
-      "noResults": "No results found",
+      "noResults": "Запитайте контекст NPC, щоб побачити результати",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -470,13 +470,13 @@
       "memoryType": "Тип",
       "rerankScore": "Оцінка переранжування",
       "traceTimeline": "Часова шкала трасування",
-      "noTrace": "Виконайте запит, щоб побачити трасування",
+      "noTrace": "Запитайте контекст NPC, щоб побачити трасування",
       "step": "Крок",
       "completed": "Завершено",
       "pending": "В очікуванні",
       "error": "Помилка",
       "costBreakdown": "Розбивка вартості",
-      "noCost": "Виконайте запит, щоб побачити розбивку вартості",
+      "noCost": "Запитайте контекст NPC, щоб побачити розподіл вартості",
       "component": "Компонент",
       "search": "Пошук",
       "total": "Загалом",
@@ -501,7 +501,7 @@
     },
     "settingsPage": {
       "title": "Налаштування",
-      "subtitle": "Профіль і налаштування",
+      "subtitle": "Налаштування workspace, профілю та ігрового рантайму",
       "saving": "Збереження...",
       "saved": "Збережено",
       "saveFailed": "Помилка збереження",
@@ -537,7 +537,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "Встановіть ліміти витрат та сповіщення",
+        "subtitle": "Налаштуйте бюджети запитів і сповіщення для ігрових рантаймів",
         "perQueryMax": "Максимум на запит",
         "alertThresholdDesc": "Отримувати сповіщення при досягненні цього відсотка використання",
         "budgetMode": "Режим бюджету",
@@ -569,7 +569,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "Налаштуйте спосіб отримання сповіщень",
+        "subtitle": "Налаштуйте сповіщення про використання, інциденти та зміни memory-пайплайну",
         "emailAlerts": "Email сповіщення",
         "emailAlertsDesc": "Отримувати важливі сповіщення по email",
         "usageAlerts": "Сповіщення про використання",
@@ -609,7 +609,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "Управління безпекою вашого акаунту",
+        "subtitle": "Керуйте безпекою облікового запису та API-доступу",
         "save": "Зберегти зміни",
         "updatePassword": "Оновити пароль",
         "twoFactorDesc": "Додати додатковий рівень безпеки",
@@ -698,7 +698,7 @@
       "last10Requests": "Останні 10 API запитів",
       "viewAllActivity": "Показати всі",
       "noActivityYet": "Немає активності API",
-      "noActivityDescription": "Надішліть перший API запит, щоб побачити активність тут",
+      "noActivityDescription": "Надішліть перший запит пам’яті NPC, щоб побачити активність",
       "sendFirstRequest": "Надіслати перший запит"
     },
     "keysPage": {
@@ -707,7 +707,7 @@
       "createNewKey": "Створити новий ключ",
       "activeKeys": "Активні ключі",
       "noKeysTitle": "API-ключів поки немає",
-      "noKeysDesc": "Створіть перший API-ключ для початку інтеграції з Seizn",
+      "noKeysDesc": "Створіть ключ для інтеграції ігрового клієнта або сервера.",
       "createApiKey": "Створити API-ключ",
       "created": "Створено",
       "neverUsed": "Не використовувався",
@@ -726,7 +726,7 @@
       "createKeyTitle": "Створити API-ключ",
       "createKeyDesc": "Дайте ключу описову назву",
       "keyName": "Назва ключа",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "напр.: Unity production, Unreal dev, QA server",
       "cancel": "Скасувати",
       "creating": "Створення...",
       "createKey": "Створити ключ",
@@ -745,17 +745,17 @@
     "organizationsPage": {
       "title": "Організації",
       "subtitle": "Керуйте командами та співпрацюйте з іншими",
-      "newOrganization": "Нова організація",
-      "noOrgsTitle": "Організацій поки немає",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Створити організацію",
+      "newOrganization": "Новий проєкт",
+      "noOrgsTitle": "Проєктів ще немає",
+      "noOrgsDesc": "Створіть проєкт ігрового тайтлу, щоб співпрацювати з командою та керувати спільними ресурсами Seizn",
+      "createOrganization": "Створити проєкт",
       "created": "Створено",
       "plan": "План",
       "freePlan": "Безкоштовний",
-      "createOrgTitle": "Створити організацію",
-      "createOrgDesc": "Створіть новий командний простір",
-      "orgName": "Назва організації",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Створити проєкт",
+      "createOrgDesc": "Налаштуйте workspace для одного ігрового тайтлу",
+      "orgName": "Назва проєкту",
+      "orgNamePlaceholder": "напр.: Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Скасувати",
@@ -998,10 +998,10 @@
       "sortOldest": "Спочатку старі",
       "sortRelevance": "Найрелевантніші",
       "activeFilters": "Активні фільтри",
-      "loading": "Завантаження спогадів...",
+      "loading": "Завантаження сутностей...",
       "noMemories": "Спогадів не знайдено",
       "noMatchingMemories": "Спробуйте змінити фільтри або пошуковий запит",
-      "noMemoriesHint": "Почніть додавати спогади через API, щоб побачити їх тут",
+      "noMemoriesHint": "Створіть NPC, фракції або події через API, щоб побачити їх тут",
       "match": "збіг",
       "loadMore": "Завантажити ще",
       "export": "Експорт",
@@ -1282,11 +1282,11 @@
     },
     "topBar": {
       "personal": "Особистий акаунт",
-      "manageOrgs": "Управління організаціями",
+      "manageOrgs": "Керувати проєктами",
       "create": "Створити",
       "createApiKey": "Новий API ключ",
-      "createOrg": "Нова організація",
-      "switchOrg": "Змінити організацію"
+      "createOrg": "Новий проєкт",
+      "switchOrg": "Перемкнути проєкт"
     },
     "share": {
       "title": "Поділитися трасуванням",
@@ -1515,6 +1515,9 @@
       "open": "Відкрити",
       "close": "Закрити",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Ключові індикатори надійності пам’яті NPC"
     }
   },
   "pricingPage": {

@@ -609,7 +609,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 <code>{`curl -X POST \\
   https://seizn.com/api/memories \\
   -H "x-api-key: YOUR_KEY" \\
-  -d '{"content": "Hello"}'`}</code>
+  -d '{"content": "Mira remembers the flood at the river shrine"}'`}</code>
               </pre>
             </div>
           </div>

@@ -216,7 +216,7 @@
     "settings": "Ustawienia",
     "signOut": "Wyloguj",
     "stats": {
-      "memories": "Wspomnienia",
+      "memories": "Encje",
       "apiCalls": "Wywołania API dziś",
       "plan": "Obecny plan",
       "unlimited": "Bez limitu"
@@ -271,7 +271,7 @@
       "tabLatency": "Opóźnienie",
       "tabErrors": "Błędy",
       "noUsageTitle": "Brak danych użycia",
-      "noUsageDescription": "Wyślij pierwsze żądanie API, aby zobaczyć analitykę użycia. Dane pojawią się tutaj w ciągu 5 sekund.",
+      "noUsageDescription": "Wyślij pierwsze żądanie pamięci NPC, aby zobaczyć analitykę użycia. Dane pojawią się w ciągu 5 sekund.",
       "noUsageExpected": "Oczekiwane: wywołania, tokeny, koszt i podział opóźnienia",
       "getApiKey": "Pobierz klucz API",
       "viewDocs": "Zobacz dokumentację",
@@ -321,7 +321,7 @@
       "title": "Konsola debugowania",
       "subtitle": "Test your queries with tracing and parameter tuning",
       "queryInput": "Query Input",
-      "queryPlaceholder": "Enter your test query...",
+      "queryPlaceholder": "Zapytaj, co NPC powinien pamiętać...",
       "parameters": "Parameters",
       "topK": "Top K",
       "topKHint": "Number of results to return",
@@ -332,7 +332,7 @@
       "runQuery": "Uruchom zapytanie",
       "running": "Uruchamianie...",
       "results": "Wyniki",
-      "noResults": "No results found",
+      "noResults": "Zapytaj o kontekst NPC, aby zobaczyć wyniki",
       "noResultsHint": "Adjust parameters or try a different query",
       "resultCount": "{count} results found",
       "score": "Score",
@@ -401,13 +401,13 @@
       "memoryType": "Typ",
       "rerankScore": "Wynik ponownego rankowania",
       "traceTimeline": "Oś czasu śledzenia",
-      "noTrace": "Wykonaj zapytanie, aby zobaczyć śledzenie",
+      "noTrace": "Zapytaj o kontekst NPC, aby zobaczyć ślad",
       "step": "Krok",
       "completed": "Zakończono",
       "pending": "Oczekujące",
       "error": "Błąd",
       "costBreakdown": "Podział kosztów",
-      "noCost": "Wykonaj zapytanie, aby zobaczyć podział kosztów",
+      "noCost": "Zapytaj o kontekst NPC, aby zobaczyć podział kosztów",
       "component": "Komponent",
       "search": "Wyszukiwanie",
       "total": "Razem",
@@ -432,7 +432,7 @@
     },
     "settingsPage": {
       "title": "Ustawienia",
-      "subtitle": "Profil i preferencje",
+      "subtitle": "Preferencje workspace, profilu i runtime gry",
       "saving": "Zapisywanie...",
       "saved": "Zapisano",
       "saveFailed": "Zapisywanie nie powiodło się",
@@ -468,7 +468,7 @@
         "unlimited": "Unlimited",
         "setLimit": "Set Limit",
         "removeLimit": "Remove Limit",
-        "subtitle": "Ustaw limity wydatków i powiadomienia",
+        "subtitle": "Ustaw budżety żądań i alerty dla runtime gier",
         "perQueryMax": "Maksimum na zapytanie",
         "alertThresholdDesc": "Otrzymuj powiadomienia po osiągnięciu tego procentu użycia",
         "budgetMode": "Tryb budżetu",
@@ -500,7 +500,7 @@
         "allDisabled": "All notifications disabled",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
-        "subtitle": "Skonfiguruj sposób otrzymywania powiadomień",
+        "subtitle": "Skonfiguruj alerty użycia, incydentów i zmian w pipeline pamięci",
         "emailAlerts": "Powiadomienia email",
         "emailAlertsDesc": "Otrzymuj ważne powiadomienia przez email",
         "usageAlerts": "Powiadomienia o użyciu",
@@ -540,7 +540,7 @@
         "passwordTooShort": "Password too short",
         "apiKeysSecurity": "API Keys Security",
         "apiKeysSecurityHint": "Monitor and manage your API keys",
-        "subtitle": "Zarządzaj bezpieczeństwem konta",
+        "subtitle": "Zarządzaj bezpieczeństwem konta i dostępu API",
         "save": "Zapisz zmiany",
         "updatePassword": "Zaktualizuj hasło",
         "twoFactorDesc": "Dodaj dodatkową warstwę bezpieczeństwa",
@@ -629,7 +629,7 @@
       "last10Requests": "Ostatnie 10 żądań API",
       "viewAllActivity": "Zobacz wszystkie",
       "noActivityYet": "Brak aktywności API",
-      "noActivityDescription": "Wyślij pierwsze żądanie API, aby zobaczyć aktywność tutaj",
+      "noActivityDescription": "Wyślij pierwsze żądanie pamięci NPC, aby zobaczyć aktywność",
       "sendFirstRequest": "Wyślij pierwsze żądanie"
     },
     "keysPage": {
@@ -638,7 +638,7 @@
       "createNewKey": "Utwórz nowy klucz",
       "activeKeys": "Aktywne klucze",
       "noKeysTitle": "Brak kluczy API",
-      "noKeysDesc": "Utwórz pierwszy klucz API, aby zacząć integrację z Seizn",
+      "noKeysDesc": "Utwórz klucz dla integracji klienta lub serwera gry.",
       "createApiKey": "Utwórz klucz API",
       "created": "Utworzono",
       "neverUsed": "Nigdy nie użyto",
@@ -657,7 +657,7 @@
       "createKeyTitle": "Utwórz klucz API",
       "createKeyDesc": "Nadaj kluczowi opisową nazwę",
       "keyName": "Nazwa klucza",
-      "keyNamePlaceholder": "e.g., Production, Development, Testing",
+      "keyNamePlaceholder": "np. produkcja Unity, dev Unreal, serwer QA",
       "cancel": "Anuluj",
       "creating": "Tworzenie...",
       "createKey": "Utwórz klucz",
@@ -676,17 +676,17 @@
     "organizationsPage": {
       "title": "Organizacje",
       "subtitle": "Zarządzaj zespołami i współpracuj z innymi",
-      "newOrganization": "Nowa organizacja",
-      "noOrgsTitle": "Brak organizacji",
-      "noOrgsDesc": "Create your first organization to start collaborating with your team",
-      "createOrganization": "Utwórz organizację",
+      "newOrganization": "Nowy projekt",
+      "noOrgsTitle": "Brak projektów",
+      "noOrgsDesc": "Utwórz projekt tytułu gry, aby współpracować z zespołem i zarządzać współdzielonymi zasobami Seizn",
+      "createOrganization": "Utwórz projekt",
       "created": "Utworzono",
       "plan": "Plan",
       "freePlan": "Darmowy",
-      "createOrgTitle": "Utwórz organizację",
-      "createOrgDesc": "Skonfiguruj nowy obszar roboczy zespołu",
-      "orgName": "Nazwa organizacji",
-      "orgNamePlaceholder": "Acme Corp",
+      "createOrgTitle": "Utwórz projekt",
+      "createOrgDesc": "Skonfiguruj workspace dla jednego tytułu gry",
+      "orgName": "Nazwa projektu",
+      "orgNamePlaceholder": "np. Neon Village",
       "urlSlug": "URL Slug",
       "urlSlugPlaceholder": "acme-corp",
       "cancel": "Anuluj",
@@ -715,12 +715,12 @@
       "steps": {
         "apiKey": {
           "title": "Utwórz klucz API",
-          "description": "Wygeneruj swój pierwszy klucz API do uwierzytelniania żądań",
+          "description": "Utwórz klucz API dla żądań runtime gry",
           "action": "Utwórz klucz"
         },
         "demoQuery": {
-          "title": "Wykonaj pierwsze zapytanie",
-          "description": "Wypróbuj zapytanie demo lub wykonaj żądanie API",
+          "title": "Zapytaj o kontekst NPC",
+          "description": "Wypróbuj demonstracyjne zapytanie NPC albo wyślij pierwsze żądanie",
           "action": "Wypróbuj demo"
         },
         "viewTrace": {
@@ -764,7 +764,7 @@
         },
         "stats": {
           "title": "Twoje statystyki",
-          "description": "Monitoruj użycie API, zapisane wspomnienia i aktualny plan."
+          "description": "Monitoruj użycie API, zapisane encje i bieżący plan."
         },
         "quickStart": {
           "title": "Szybkie akcje",
@@ -930,10 +930,10 @@
       "sortOldest": "Od najstarszych",
       "sortRelevance": "Najbardziej trafne",
       "activeFilters": "Aktywne filtry",
-      "loading": "Ładowanie wspomnień...",
+      "loading": "Ładowanie encji...",
       "noMemories": "Nie znaleziono wspomnień",
       "noMatchingMemories": "Spróbuj dostosować filtry lub zapytanie wyszukiwania",
-      "noMemoriesHint": "Zacznij dodawać wspomnienia przez API, aby zobaczyć je tutaj",
+      "noMemoriesHint": "Utwórz NPC, frakcje lub zdarzenia przez API, aby zobaczyć je tutaj",
       "match": "dopasowanie",
       "loadMore": "Załaduj więcej",
       "export": "Eksportuj",
@@ -1312,11 +1312,11 @@
     },
     "topBar": {
       "personal": "Konto osobiste",
-      "manageOrgs": "Zarządzaj organizacjami",
+      "manageOrgs": "Zarządzaj projektami",
       "create": "Utwórz",
       "createApiKey": "Nowy klucz API",
-      "createOrg": "Nowa organizacja",
-      "switchOrg": "Zmień organizację"
+      "createOrg": "Nowy projekt",
+      "switchOrg": "Przełącz projekt"
     },
     "share": {
       "title": "Udostępnij śledzenie",
@@ -1515,6 +1515,9 @@
       "open": "Otwórz",
       "close": "Zamknij",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Kluczowe wskaźniki niezawodności pamięci NPC"
     }
   },
   "pricingPage": {

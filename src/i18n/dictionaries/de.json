@@ -216,7 +216,7 @@
     "settings": "Einstellungen",
     "signOut": "Abmelden",
     "stats": {
-      "memories": "Erinnerungen",
+      "memories": "Entitäten",
       "apiCalls": "API-Aufrufe heute",
       "plan": "Aktueller Plan",
       "unlimited": "Unbegrenzt"
@@ -229,12 +229,12 @@
       "steps": {
         "apiKey": {
           "title": "API-Schlüssel generieren",
-          "description": "Ersten API-Schlüssel für die Authentifizierung erstellen",
+          "description": "Erstelle einen API-Schlüssel für Game-Runtime-Anfragen",
           "action": "Schlüssel erstellen"
         },
         "demoQuery": {
-          "title": "Erste Abfrage ausführen",
-          "description": "Demo-Abfrage ausprobieren oder eine API-Anfrage senden",
+          "title": "NPC-Kontext abfragen",
+          "description": "Starte eine Demo-NPC-Abfrage oder sende deine erste Anfrage",
           "action": "Demo testen"
         },
         "viewTrace": {
@@ -278,7 +278,7 @@
         },
         "stats": {
           "title": "Ihre Statistiken",
-          "description": "Überwachen Sie Ihre API-Nutzung, gespeicherte Erinnerungen und den aktuellen Plan."
+          "description": "Überwache API-Nutzung, gespeicherte Entitäten und den aktuellen Plan."
         },
         "quickStart": {
           "title": "Schnellaktionen",
@@ -340,7 +340,7 @@
       "tabLatency": "Latenz",
       "tabErrors": "Fehler",
       "noUsageTitle": "Noch keine Nutzungsdaten",
-      "noUsageDescription": "Senden Sie Ihre erste API-Anfrage, um Nutzungsanalysen zu sehen. Daten werden innerhalb von 5 Sekunden hier angezeigt.",
+      "noUsageDescription": "Sende deine erste NPC-Memory-Anfrage, um Nutzungsanalysen zu sehen. Daten erscheinen innerhalb von 5 Sekunden.",
       "noUsageExpected": "Erwartet: Aufrufe, Token, Kosten und Latenzaufschlüsselung",
       "getApiKey": "API-Schlüssel abrufen",
       "viewDocs": "Dokumentation anzeigen",
@@ -390,7 +390,7 @@
       "title": "Debug-Konsole",
       "subtitle": "Testen Sie Ihre Abfragen mit Tracing und Parameteranpassung",
       "queryInput": "Abfrage-Eingabe",
-      "queryPlaceholder": "Geben Sie Ihre Testabfrage ein...",
+      "queryPlaceholder": "Frage, woran sich ein NPC erinnern soll...",
       "parameters": "Parameter",
       "topK": "Top K",
       "topKHint": "Anzahl der zurückgegebenen Ergebnisse",
@@ -401,7 +401,7 @@
       "runQuery": "Abfrage ausführen",
       "running": "Läuft...",
       "results": "Ergebnisse",
-      "noResults": "Keine Ergebnisse gefunden",
+      "noResults": "Frage NPC-Kontext ab, um Ergebnisse zu sehen",
       "noResultsHint": "Passen Sie die Parameter an oder versuchen Sie eine andere Abfrage",
       "resultCount": "{count} Ergebnisse gefunden",
       "score": "Bewertung",
@@ -470,13 +470,13 @@
       "memoryType": "Typ",
       "rerankScore": "Rerank-Bewertung",
       "traceTimeline": "Ablaufverfolgung Timeline",
-      "noTrace": "Führen Sie eine Abfrage aus, um die Ablaufverfolgung zu sehen",
+      "noTrace": "Frage NPC-Kontext ab, um den Trace zu sehen",
       "step": "Schritt",
       "completed": "Abgeschlossen",
       "pending": "Ausstehend",
       "error": "Fehler",
       "costBreakdown": "Kostenaufschlüsselung",
-      "noCost": "Führen Sie eine Abfrage aus, um die Kostenaufschlüsselung zu sehen",
+      "noCost": "Frage NPC-Kontext ab, um die Kostenaufschlüsselung zu sehen",
       "component": "Komponente",
       "search": "Suchen",
       "total": "Gesamt",
@@ -501,7 +501,7 @@
     },
     "settingsPage": {
       "title": "Einstellungen",
-      "subtitle": "Profil & Einstellungen",
+      "subtitle": "Workspace-, Profil- und Game-Runtime-Einstellungen",
       "saving": "Speichern...",
       "saved": "Gespeichert",
       "saveFailed": "Speichern fehlgeschlagen",
@@ -537,7 +537,7 @@
         "unlimited": "Unbegrenzt",
         "setLimit": "Limit festlegen",
         "removeLimit": "Limit entfernen",
-        "subtitle": "Ausgabenlimits und Warnungen festlegen",
+        "subtitle": "Lege Anfragebudgets und Warnungen für Game-Runtimes fest",
         "perQueryMax": "Maximum pro Abfrage",
         "alertThresholdDesc": "Benachrichtigung erhalten, wenn die Nutzung diesen Prozentsatz erreicht",
         "budgetMode": "Budgetmodus",
@@ -569,7 +569,7 @@
         "allDisabled": "Alle Benachrichtigungen deaktiviert",
         "enableAll": "Alle aktivieren",
         "disableAll": "Alle deaktivieren",
-        "subtitle": "Konfigurieren Sie, wie Sie Benachrichtigungen erhalten",
+        "subtitle": "Konfiguriere Warnungen für Nutzung, Vorfälle und Änderungen der Memory-Pipeline",
         "emailAlerts": "E-Mail-Benachrichtigungen",
         "emailAlertsDesc": "Wichtige Benachrichtigungen per E-Mail erhalten",
         "usageAlerts": "Nutzungsbenachrichtigungen",
@@ -609,7 +609,7 @@
         "passwordTooShort": "Passwort zu kurz",
         "apiKeysSecurity": "API-Schlüssel-Sicherheit",
         "apiKeysSecurityHint": "Überwachen und verwalten Sie Ihre API-Schlüssel",
-        "subtitle": "Verwalten Sie Ihre Kontosicherheit",
+        "subtitle": "Verwalte Konto- und API-Zugriffssicherheit",
         "save": "Änderungen speichern",
         "updatePassword": "Passwort aktualisieren",
         "twoFactorDesc": "Zusätzliche Sicherheitsebene hinzufügen",
@@ -698,7 +698,7 @@
       "last10Requests": "Letzte 10 API-Anfragen",
       "viewAllActivity": "Alle anzeigen",
       "noActivityYet": "Noch keine API-Aktivität",
-      "noActivityDescription": "Senden Sie Ihre erste API-Anfrage",
+      "noActivityDescription": "Sende deine erste NPC-Memory-Anfrage, um Aktivität zu sehen",
       "sendFirstRequest": "Erste Anfrage senden"
     },
     "keysPage": {
@@ -707,7 +707,7 @@
       "createNewKey": "Neuen Schlüssel Erstellen",
       "activeKeys": "Aktive Schlüssel",
       "noKeysTitle": "Keine API-Schlüssel",
-      "noKeysDesc": "Erstellen Sie Ihren ersten API-Schlüssel für die Seizn-Integration",
+      "noKeysDesc": "Erstelle einen Schlüssel für deine Spielclient- oder Serverintegration.",
       "createApiKey": "API-Schlüssel Erstellen",
       "created": "Erstellt",
       "neverUsed": "Nie verwendet",
@@ -726,7 +726,7 @@
       "createKeyTitle": "API-Schlüssel Erstellen",
       "createKeyDesc": "Geben Sie Ihrem Schlüssel einen beschreibenden Namen",
       "keyName": "Schlüsselname",
-      "keyNamePlaceholder": "z.B.: Produktion, Entwicklung, Test",
+      "keyNamePlaceholder": "z. B. Unity-Produktion, Unreal-Dev, QA-Server",
       "cancel": "Abbrechen",
       "creating": "Erstellen...",
       "createKey": "Schlüssel Erstellen",
@@ -745,17 +745,17 @@
     "organizationsPage": {
       "title": "Organisationen",
       "subtitle": "Verwalten Sie Ihre Teams und arbeiten Sie zusammen",
-      "newOrganization": "Neue Organisation",
-      "noOrgsTitle": "Keine Organisationen",
-      "noOrgsDesc": "Erstellen Sie Ihre erste Organisation für die Zusammenarbeit",
-      "createOrganization": "Organisation Erstellen",
+      "newOrganization": "Neues Projekt",
+      "noOrgsTitle": "Noch keine Projekte",
+      "noOrgsDesc": "Erstelle ein Spieltitel-Projekt, um mit deinem Team zusammenzuarbeiten und gemeinsame Seizn-Ressourcen zu verwalten",
+      "createOrganization": "Projekt erstellen",
       "created": "Erstellt",
       "plan": "Plan",
       "freePlan": "Kostenlos",
-      "createOrgTitle": "Organisation Erstellen",
-      "createOrgDesc": "Richten Sie einen neuen Team-Arbeitsbereich ein",
-      "orgName": "Organisationsname",
-      "orgNamePlaceholder": "z.B.: Meine Firma",
+      "createOrgTitle": "Projekt erstellen",
+      "createOrgDesc": "Richte einen Workspace für einen Spieltitel ein",
+      "orgName": "Projektname",
+      "orgNamePlaceholder": "z. B. Neon Village",
       "urlSlug": "URL-Slug",
       "urlSlugPlaceholder": "meine-firma",
       "cancel": "Abbrechen",
@@ -933,10 +933,10 @@
       "sortOldest": "Älteste zuerst",
       "sortRelevance": "Relevanteste",
       "activeFilters": "Aktive Filter",
-      "loading": "Erinnerungen werden geladen...",
+      "loading": "Entitäten werden geladen...",
       "noMemories": "Keine Erinnerungen gefunden",
       "noMatchingMemories": "Versuchen Sie, Ihre Filter oder Suchanfrage anzupassen",
-      "noMemoriesHint": "Beginnen Sie, über die API Erinnerungen hinzuzufügen, um sie hier zu sehen",
+      "noMemoriesHint": "Erstelle NPCs, Fraktionen oder Events über die API, um sie hier zu sehen",
       "match": "Übereinstimmung",
       "loadMore": "Mehr laden",
       "export": "Exportieren",
@@ -1315,11 +1315,11 @@
     },
     "topBar": {
       "personal": "Persönliches Konto",
-      "manageOrgs": "Organisationen verwalten",
+      "manageOrgs": "Projekte verwalten",
       "create": "Erstellen",
       "createApiKey": "Neuer API-Schlüssel",
-      "createOrg": "Neue Organisation",
-      "switchOrg": "Organisation wechseln"
+      "createOrg": "Neues Projekt",
+      "switchOrg": "Projekt wechseln"
     },
     "share": {
       "title": "Ablaufverfolgung teilen",
@@ -1519,6 +1519,9 @@
       "open": "Öffnen",
       "close": "Schließen",
       "enter": "Enter"
+    },
+    "northStar": {
+      "subtitle": "Schlüsselindikatoren für NPC-Memory-Zuverlässigkeit"
     }
   },
   "pricingPage": {
