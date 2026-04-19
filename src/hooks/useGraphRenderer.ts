@@ -41,7 +41,7 @@ export interface UseGraphRendererOptions {
 
 export interface UseGraphRendererReturn {
   /** Ref to attach to container element */
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
   /** Whether the graph is loading */
   isLoading: boolean;
   /** Whether layout is running */

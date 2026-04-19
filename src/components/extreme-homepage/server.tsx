@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { SVGProps } from "react";
+import type { JSX, SVGProps } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { ExtremeHomepageClient } from "./index";
