@@ -4,407 +4,478 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 
-interface HelpClientProps {
-  locale: Locale;
-  dictionary: Record<string, unknown>;
-}
-
-// Default help translations
-const defaultHelp = {
-  title: "Help Hub",
-  subtitle: "Find answers, get support, and access resources.",
-  search: { placeholder: "Search help...", noResults: "No results found" },
-  sections: {
-    support: {
-      title: "Support Channels",
-      description: "Get help from our team",
-      email: { title: "Email Support", description: "Get help via email within 24 hours", action: "support@seizn.com" },
-      discord: { title: "Discord Community", description: "Join our community for real-time help", action: "Join Discord" },
-      github: { title: "GitHub Issues", description: "Report bugs and request features", action: "Open Issue" },
-    },
-    faq: { title: "Frequently Asked Questions", description: "Quick answers to common questions", viewAll: "View All FAQs" },
-    status: {
-      title: "System Status",
-      description: "Check current system status and incidents",
-      viewStatus: "View Status Page",
-      operational: "All Systems Operational",
-      degraded: "Degraded Performance",
-      outage: "Service Outage",
-    },
-    billing: {
-      title: "Billing & Plans",
-      description: "Manage your subscription and payments",
-      items: { plans: "View Plans", usage: "Check Usage", invoices: "Download Invoices", upgrade: "Upgrade Plan" },
-    },
-    docs: {
-      title: "Documentation",
-      description: "Popular documentation links",
-      links: { quickstart: "Quickstart Guide", apiReference: "API Reference", sdks: "SDKs & Libraries", limits: "Limits & Billing", security: "Security" },
-    },
-  },
-  contact: { title: "Still need help?", description: "Our support team is here to help you succeed.", cta: "Contact Support" },
+type SupportChannel = {
+  title: string;
+  body: string;
+  href: string;
+  action: string;
+  external?: boolean;
 };
 
-// Sample FAQ data
-const faqData = [
-  {
-    id: "api-key",
-    question: "How do I get an API key?",
-    answer: "You can get an API key by signing up for an account and navigating to the Dashboard > API Keys section. Click 'Create New Key' to generate a new API key.",
-  },
-  {
-    id: "rate-limits",
-    question: "What are the rate limits?",
-    answer: "Rate limits vary by plan: Free (10 RPS), Plus (50 RPS), Pro (200 RPS), Enterprise (custom). See the Limits & Billing page for more details.",
-  },
-  {
-    id: "billing-cycle",
-    question: "When does billing occur?",
-    answer: "Billing occurs on a monthly basis, starting from your subscription date. You can view your billing history and next payment date in the Dashboard.",
-  },
-  {
-    id: "data-security",
-    question: "How is my data secured?",
-    answer: "All data is encrypted at rest and in transit using industry-standard encryption. We are SOC 2 Type II compliant and follow security best practices.",
-  },
-  {
-    id: "cancel-subscription",
-    question: "How do I cancel my subscription?",
-    answer: "You can cancel your subscription anytime from Dashboard > Settings > Subscription. Your access will continue until the end of the current billing period.",
-  },
-];
+type ResourceLink = {
+  title: string;
+  body: string;
+  href: string;
+};
 
-export function HelpClient({ locale, dictionary }: HelpClientProps) {
+type Faq = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
+type Copy = {
+  title: string;
+  subtitle: string;
+  searchPlaceholder: string;
+  noResults: string;
+  supportTitle: string;
+  supportBody: string;
+  supportChannels: SupportChannel[];
+  resourceTitle: string;
+  resourceBody: string;
+  resources: ResourceLink[];
+  faqTitle: string;
+  faqBody: string;
+  faqs: Faq[];
+  contactTitle: string;
+  contactBody: string;
+  contactCta: string;
+};
+
+const COPY_EN: Copy = {
+  title: "Answers for teams shipping NPC memory",
+  subtitle:
+    "Use this hub when design, narrative, and engineering need the same answer about persistent characters, faction continuity, context budgets, and rollout cost.",
+  searchPlaceholder: "Search studio help",
+  noResults: "No matching answer yet.",
+  supportTitle: "Support for live evaluations",
+  supportBody:
+    "Send your NPC count, dialogue stack, and launch window. We can usually route the right docs or answer the architecture question in one pass.",
+  supportChannels: [
+    {
+      title: "Studio support",
+      body: "Use this when you need rollout advice, pricing guidance, or help mapping Seizn onto your existing dialogue runtime.",
+      href: "mailto:support@seizn.com",
+      action: "support@seizn.com",
+    },
+    {
+      title: "Status page",
+      body: "Check incident history before a playtest, milestone review, or production cutover.",
+      href: "/status",
+      action: "Open status",
+    },
+    {
+      title: "GitHub issues",
+      body: "Report SDK or API bugs with a repro and the endpoint or engine wrapper involved.",
+      href: "https://github.com/litheonhq/seizn/issues",
+      action: "Open issues",
+      external: true,
+    },
+  ],
+  resourceTitle: "Common starting points",
+  resourceBody:
+    "These links cover the questions that usually unblock a first playable or an internal dialogue prototype.",
+  resources: [
+    {
+      title: "Quickstart",
+      body: "Create an entity, extract a witnessed event, and retrieve the next-turn context.",
+      href: "/docs/quickstart",
+    },
+    {
+      title: "Integrations",
+      body: "Unity, Unreal, Godot, raw HTTP, Python, and JavaScript examples for the same NPC memory loop.",
+      href: "/docs/integrations",
+    },
+    {
+      title: "API reference",
+      body: "Exact request shapes for entities, extraction, context retrieval, and graph traversal.",
+      href: "/docs/api-reference",
+    },
+    {
+      title: "Pricing",
+      body: "Per-entity pricing for Free, Studio, and Enterprise planning.",
+      href: "/pricing",
+    },
+    {
+      title: "Limits",
+      body: "Context budget, retrieval knobs, and guardrails you will want before load testing.",
+      href: "/docs/limits",
+    },
+    {
+      title: "Security",
+      body: "Hosting posture, key handling, and the questions security review tends to ask first.",
+      href: "/docs/security",
+    },
+  ],
+  faqTitle: "Game-studio FAQ",
+  faqBody:
+    "These are the questions that usually come up once teams move past demos and start wiring persistent memory into quests, factions, and live content.",
+  faqs: [
+    {
+      id: "faction",
+      question: "How do I model a faction that outlives its founding members?",
+      answer:
+        "Create the faction as its own entity and attach founders, officers, territories, and alliances as relations around it. When characters die, transfer, or disappear, update those member relations instead of recreating the faction. The faction node becomes the stable anchor that survives roster churn.",
+    },
+    {
+      id: "observation-vs-relation",
+      question: "What's the difference between an observation and a relation?",
+      answer:
+        "Use an observation for a witnessed or time-bound fact, such as Mira seeing the player leave the old gate at dusk. Use a relation for durable structure, such as Mira working for the Gate Watch or distrusting smugglers. Observations can update relations later, but they should not replace them.",
+    },
+    {
+      id: "reset-memory",
+      question: "How do I reset an NPC's memory without losing their relations?",
+      answer:
+        "Keep the NPC entity and stable relations, then prune or expire the observation and event layer you no longer want to surface. That lets you clear what the character remembers right now without breaking quest references, faction links, or other graph pointers that still need to survive.",
+    },
+    {
+      id: "pricing-10k",
+      question: "What does Seizn cost at 10k NPCs?",
+      answer:
+        "Model it from active entities, extraction volume, and how often you retrieve context during play. At 10k NPCs, teams usually need to compare prototype pacing against live-ops pacing, then choose between Studio and Enterprise based on retention, support, and batching needs. The pricing page gives the baseline; support can help map the real workload.",
+    },
+    {
+      id: "context-budget",
+      question: "How do I stop retrieval from flooding the prompt with too much lore?",
+      answer:
+        "Treat retrieval like a budget, not a dump. Start with a small `max_entities`, keep graph depth tight, and ask the query from the NPC's point of view. That keeps the returned context grounded in what the speaker should know instead of every related fact in the world graph.",
+    },
+    {
+      id: "server-authority",
+      question: "Should Unity or Unreal call Seizn directly?",
+      answer:
+        "For prototypes, direct calls can be enough. For production, most teams keep writes and privileged reads on a server-authoritative layer, then pass only the filtered dialogue context back into the client runtime. That gives you safer key handling, better rate control, and cleaner logging.",
+    },
+  ],
+  contactTitle: "Need an answer tied to your stack?",
+  contactBody:
+    "Send the engine, expected NPC count, and what a single dialogue turn needs to remember. That is usually enough to turn a vague question into an actionable rollout answer.",
+  contactCta: "Contact support",
+};
+
+const COPY_KO: Copy = {
+  title: "NPC 메모리를 출시하는 팀을 위한 답변",
+  subtitle:
+    "디자인, 내러티브, 엔지니어링이 persistent character, faction continuity, context budget, rollout cost 같은 질문에 같은 답을 가져가야 할 때 이 허브를 쓰면 됩니다.",
+  searchPlaceholder: "게임 스튜디오 도움말 검색",
+  noResults: "일치하는 답변이 아직 없습니다.",
+  supportTitle: "실서비스 검토를 위한 지원 채널",
+  supportBody:
+    "NPC 수, 대화 스택, 목표 출시 시점을 함께 보내면 문서를 바로 연결하거나 아키텍처 질문에 맞는 답을 한 번에 정리할 수 있습니다.",
+  supportChannels: [
+    {
+      title: "Studio support",
+      body: "도입 구조, 가격 검토, 기존 대화 런타임에 Seizn을 붙이는 방식이 필요할 때 여기로 보내면 됩니다.",
+      href: "mailto:support@seizn.com",
+      action: "support@seizn.com",
+    },
+    {
+      title: "Status page",
+      body: "플레이테스트, 마일스톤 리뷰, 프로덕션 전환 전에 상태 이력을 확인할 수 있습니다.",
+      href: "/status",
+      action: "상태 보기",
+    },
+    {
+      title: "GitHub issues",
+      body: "SDK 또는 API 버그는 repro와 함께, 어떤 엔드포인트나 엔진 래퍼가 관련됐는지 적어서 남기면 됩니다.",
+      href: "https://github.com/litheonhq/seizn/issues",
+      action: "이슈 열기",
+      external: true,
+    },
+  ],
+  resourceTitle: "가장 많이 여는 시작점",
+  resourceBody:
+    "첫 플레이어블이나 내부 대화 프로토타입을 막는 질문은 대체로 아래 링크에서 바로 풀립니다.",
+  resources: [
+    {
+      title: "Quickstart",
+      body: "엔티티를 만들고, witness 이벤트를 추출하고, 다음 턴 컨텍스트를 회수하는 기본 흐름입니다.",
+      href: "/docs/quickstart",
+    },
+    {
+      title: "Integrations",
+      body: "Unity, Unreal, Godot, raw HTTP, Python, JavaScript에서 같은 NPC 메모리 루프를 보여줍니다.",
+      href: "/docs/integrations",
+    },
+    {
+      title: "API reference",
+      body: "entity, extraction, context retrieval, graph traversal에 필요한 정확한 request shape를 확인할 수 있습니다.",
+      href: "/docs/api-reference",
+    },
+    {
+      title: "Pricing",
+      body: "Free, Studio, Enterprise 기준의 per-entity 가격 구조입니다.",
+      href: "/pricing",
+    },
+    {
+      title: "Limits",
+      body: "로드 테스트 전에 확인해야 할 context budget, retrieval knob, guardrail을 정리합니다.",
+      href: "/docs/limits",
+    },
+    {
+      title: "Security",
+      body: "호스팅 posture, 키 처리, 보안 리뷰가 먼저 묻는 질문을 다룹니다.",
+      href: "/docs/security",
+    },
+  ],
+  faqTitle: "게임 스튜디오 FAQ",
+  faqBody:
+    "데모 단계를 지나 퀘스트, faction, live content에 persistent memory를 붙이기 시작하면 보통 여기 있는 질문들이 먼저 나옵니다.",
+  faqs: [
+    {
+      id: "faction",
+      question: "창립 멤버가 바뀌어도 계속 남는 faction은 어떻게 모델링하나요?",
+      answer:
+        "faction 자체를 하나의 독립 엔티티로 만들고, 창립자, 간부, 영토, 동맹을 그 주변 relation으로 붙이면 됩니다. 캐릭터가 죽거나 이동하거나 사라져도 faction을 다시 만들지 말고 멤버 relation만 갱신하세요. faction 노드가 roster churn을 견디는 안정 축이 됩니다.",
+    },
+    {
+      id: "observation-vs-relation",
+      question: "observation과 relation의 차이는 무엇인가요?",
+      answer:
+        "observation은 Mira가 해질녘 old gate에서 플레이어를 봤다는 식의 목격 사실이나 시간성 있는 정보를 담는 데 쓰고, relation은 Mira가 Gate Watch 소속이라거나 밀수업자를 불신한다는 식의 지속 구조를 담는 데 씁니다. observation이 나중에 relation을 바꿀 수는 있어도 둘을 같은 객체로 취급하면 안 됩니다.",
+    },
+    {
+      id: "reset-memory",
+      question: "relation은 유지한 채 NPC 기억만 초기화하려면 어떻게 하나요?",
+      answer:
+        "NPC 엔티티와 안정적인 relation은 그대로 두고, 지금 드러나지 않게 만들고 싶은 observation 및 event 레이어만 prune하거나 expire하면 됩니다. 이렇게 하면 퀘스트 참조나 faction 연결은 유지하면서도 캐릭터가 현재 무엇을 기억하는지는 새로 쌓을 수 있습니다.",
+    },
+    {
+      id: "pricing-10k",
+      question: "NPC 1만 명 규모에서는 비용을 어떻게 봐야 하나요?",
+      answer:
+        "활성 엔티티 수, extraction 볼륨, 플레이 중 context retrieval 빈도로 계산해야 합니다. NPC 1만 명 규모에서는 프로토타입 페이스와 live-ops 페이스가 얼마나 다른지 먼저 보고, retention, 지원 범위, batching 요구에 따라 Studio와 Enterprise를 가르는 경우가 많습니다. 기준선은 pricing 페이지에서 보고, 실제 워크로드는 support와 같이 맞추면 됩니다.",
+    },
+    {
+      id: "context-budget",
+      question: "retrieval이 lore를 너무 많이 끌어와 프롬프트가 넘치는 문제는 어떻게 막나요?",
+      answer:
+        "retrieval을 dump가 아니라 budget으로 다루면 됩니다. `max_entities`를 작게 시작하고, graph depth를 낮게 묶고, query를 NPC 시점으로 쓰세요. 그러면 세계 그래프의 모든 관련 정보를 긁는 대신 화자가 실제로 알아야 할 범위만 돌아옵니다.",
+    },
+    {
+      id: "server-authority",
+      question: "Unity나 Unreal에서 Seizn을 직접 호출해도 되나요?",
+      answer:
+        "프로토타입 단계라면 직접 호출로도 충분할 수 있습니다. 프로덕션에서는 대부분 write와 privileged read를 서버 권한 레이어에 두고, 필터된 dialogue context만 클라이언트 런타임으로 넘깁니다. 키 처리, rate 제어, 로그 추적이 훨씬 깔끔해집니다.",
+    },
+  ],
+  contactTitle: "지금 쓰는 스택 기준으로 답이 필요하신가요?",
+  contactBody:
+    "엔진, 예상 NPC 수, 그리고 대화 한 턴이 무엇을 기억해야 하는지만 보내면 보통 바로 실행 가능한 도입 답으로 바꿀 수 있습니다.",
+  contactCta: "지원팀에 연락",
+};
+
+function getCopy(locale: Locale): Copy {
+  return locale === "ko" ? COPY_KO : COPY_EN;
+}
+
+function ArrowIcon() {
+  return (
+    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+export function HelpClient({ locale }: { locale: Locale }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
+  const copy = getCopy(locale);
 
-  // Get help translations with fallback
-  const help = (dictionary.help as typeof defaultHelp) || defaultHelp;
+  const filteredFaqs = copy.faqs.filter((faq) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
 
-  // Filter FAQs based on search
-  const filteredFaqs = faqData.filter(
-    (faq) =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    return (
+      faq.question.toLowerCase().includes(query) ||
+      faq.answer.toLowerCase().includes(query)
+    );
+  });
 
   return (
-    <div className="min-h-screen bg-szn-bg">
-      {/* Header */}
-      <header className="bg-szn-card border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href={`/${locale}`} className="text-xl font-bold text-szn-text-1">
-            Seizn
-          </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-szn-text-1">
+    <div className="min-h-screen bg-[#08111f] text-white">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+          <div className="flex items-center gap-4">
+            <Link href={`/${locale}`} className="text-xl font-semibold text-white">
+              Seizn
+            </Link>
+            <span className="text-slate-500">/</span>
+            <Link href={`/${locale}/docs`} className="text-slate-300 transition-colors hover:text-white">
               Docs
             </Link>
-            <Link href={`/${locale}/pricing`} className="text-szn-text-2 hover:text-szn-text-1">
+            <span className="text-slate-500">/</span>
+            <span className="text-white">Help</span>
+          </div>
+          <nav className="flex items-center gap-4">
+            <Link href={`/${locale}/pricing`} className="hidden text-slate-300 transition-colors hover:text-white md:block">
               Pricing
             </Link>
-            <Link href="/status" className="text-szn-text-2 hover:text-szn-text-1">
-              Status
+            <Link
+              href={`/${locale}/docs/integrations`}
+              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+            >
+              Integrations
             </Link>
           </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-szn-accent/5 to-szn-card py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">{help.title}</h1>
-          <p className="text-lg text-szn-text-2 mb-8">{help.subtitle}</p>
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <section className="border-b border-white/10 pb-12">
+          <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
+            {copy.title}
+          </h1>
+          <p className="mt-5 max-w-4xl text-xl leading-8 text-slate-300">{copy.subtitle}</p>
 
-          {/* Search */}
-          <div className="relative max-w-xl mx-auto">
+          <div className="mt-8 max-w-3xl">
+            <label className="sr-only" htmlFor="help-search">
+              Search help
+            </label>
             <input
+              id="help-search"
               type="text"
-              placeholder={help.search.placeholder}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-12 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent focus:border-transparent"
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder={copy.searchPlaceholder}
+              className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-base text-white outline-none transition-colors placeholder:text-slate-500 focus:border-cyan-400"
             />
-            <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-szn-text-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        {/* Quick Links Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {/* Support Channels */}
-          <div className="bg-szn-card rounded-2xl border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="font-semibold text-szn-text-1">{help.sections.support.title}</h2>
-                <p className="text-sm text-szn-text-2">{help.sections.support.description}</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <a
-                href="mailto:support@seizn.com"
-                className="flex items-center justify-between p-3 rounded-lg bg-szn-bg hover:bg-szn-surface transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-szn-text-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-sm font-medium text-szn-text-1">{help.sections.support.email.title}</span>
-                </div>
-                <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-              <a
-                href="https://discord.gg/seizn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 rounded-lg bg-szn-bg hover:bg-szn-surface transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-szn-text-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
-                  </svg>
-                  <span className="text-sm font-medium text-szn-text-1">{help.sections.support.discord.title}</span>
-                </div>
-                <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-              <a
-                href="https://github.com/iruhana/seizn/issues"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 rounded-lg bg-szn-bg hover:bg-szn-surface transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-szn-text-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                  <span className="text-sm font-medium text-szn-text-1">{help.sections.support.github.title}</span>
-                </div>
-                <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
+        <section className="border-b border-white/10 py-12">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-semibold text-white">{copy.supportTitle}</h2>
+            <p className="mt-4 text-lg leading-8 text-slate-300">{copy.supportBody}</p>
           </div>
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            {copy.supportChannels.map((channel) => {
+              const href = channel.external ? channel.href : `${channel.href}`;
+              const content = (
+                <div className="flex h-full flex-col justify-between border border-white/10 bg-white/5 px-5 py-5">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">{channel.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-slate-300">{channel.body}</p>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-cyan-300">
+                    <span>{channel.action}</span>
+                    <ArrowIcon />
+                  </div>
+                </div>
+              );
 
-          {/* System Status */}
-          <div className="bg-szn-card rounded-2xl border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="font-semibold text-szn-text-1">{help.sections.status.title}</h2>
-                <p className="text-sm text-szn-text-2">{help.sections.status.description}</p>
-              </div>
-            </div>
-            <div className="p-4 rounded-xl bg-szn-accent/5 border border-szn-accent/30 mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 bg-szn-accent/50 rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-szn-accent">{help.sections.status.operational}</span>
-              </div>
-            </div>
-            <Link
-              href="/status"
-              className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-medium text-szn-accent bg-szn-accent/5 rounded-lg hover:bg-szn-accent/10 transition-colors"
-            >
-              {help.sections.status.viewStatus}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+              if (channel.external || channel.href.startsWith("mailto:")) {
+                return (
+                  <a
+                    key={channel.title}
+                    href={href}
+                    target={channel.external ? "_blank" : undefined}
+                    rel={channel.external ? "noreferrer" : undefined}
+                    className="block"
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              return (
+                <Link key={channel.title} href={channel.href} className="block">
+                  {content}
+                </Link>
+              );
+            })}
           </div>
+        </section>
 
-          {/* Billing & Plans */}
-          <div className="bg-szn-card rounded-2xl border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="font-semibold text-szn-text-1">{help.sections.billing.title}</h2>
-                <p className="text-sm text-szn-text-2">{help.sections.billing.description}</p>
-              </div>
-            </div>
-            <div className="space-y-2">
+        <section className="border-b border-white/10 py-12">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-semibold text-white">{copy.resourceTitle}</h2>
+            <p className="mt-4 text-lg leading-8 text-slate-300">{copy.resourceBody}</p>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {copy.resources.map((resource) => (
               <Link
-                href={`/${locale}/pricing`}
-                className="flex items-center justify-between p-3 rounded-lg bg-szn-bg hover:bg-szn-surface transition-colors"
+                key={resource.title}
+                href={`/${locale}${resource.href}`}
+                className="block border border-white/10 bg-white/5 px-5 py-5 transition-colors hover:border-white/20 hover:bg-white/[0.07]"
               >
-                <span className="text-sm font-medium text-szn-text-1">{help.sections.billing.items.plans}</span>
-                <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <h3 className="text-xl font-semibold text-white">{resource.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{resource.body}</p>
+                <div className="mt-6 flex items-center gap-2 text-sm font-medium text-cyan-300">
+                  <span>Open</span>
+                  <ArrowIcon />
+                </div>
               </Link>
-              <Link
-                href={`/${locale}/docs/limits`}
-                className="flex items-center justify-between p-3 rounded-lg bg-szn-bg hover:bg-szn-surface transition-colors"
-              >
-                <span className="text-sm font-medium text-szn-text-1">{help.sections.billing.items.usage}</span>
-                <svg className="w-4 h-4 text-szn-text-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
+            ))}
           </div>
-        </div>
+        </section>
 
-        {/* Documentation Links */}
-        <div className="bg-szn-card rounded-2xl border p-6 mb-12">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <div>
-              <h2 className="font-semibold text-szn-text-1">{help.sections.docs.title}</h2>
-              <p className="text-sm text-szn-text-2">{help.sections.docs.description}</p>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-5 gap-4">
-            <Link
-              href={`/${locale}/docs/quickstart`}
-              className="flex flex-col items-center p-4 rounded-xl bg-szn-bg hover:bg-szn-accent/10 hover:border-szn-accent/30 border border-transparent transition-colors"
-            >
-              <svg className="w-6 h-6 text-szn-accent mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              <span className="text-sm font-medium text-szn-text-1">{help.sections.docs.links.quickstart}</span>
-            </Link>
-            <Link
-              href={`/${locale}/docs/api`}
-              className="flex flex-col items-center p-4 rounded-xl bg-szn-bg hover:bg-szn-accent/10 hover:border-szn-accent/30 border border-transparent transition-colors"
-            >
-              <svg className="w-6 h-6 text-szn-accent mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-              <span className="text-sm font-medium text-szn-text-1">{help.sections.docs.links.apiReference}</span>
-            </Link>
-            <Link
-              href={`/${locale}/docs/sdks`}
-              className="flex flex-col items-center p-4 rounded-xl bg-szn-bg hover:bg-szn-accent/10 hover:border-szn-accent/30 border border-transparent transition-colors"
-            >
-              <svg className="w-6 h-6 text-szn-accent mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span className="text-sm font-medium text-szn-text-1">{help.sections.docs.links.sdks}</span>
-            </Link>
-            <Link
-              href={`/${locale}/docs/limits`}
-              className="flex flex-col items-center p-4 rounded-xl bg-szn-bg hover:bg-szn-accent/10 hover:border-szn-accent/30 border border-transparent transition-colors"
-            >
-              <svg className="w-6 h-6 text-szn-accent mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <span className="text-sm font-medium text-szn-text-1">{help.sections.docs.links.limits}</span>
-            </Link>
-            <Link
-              href={`/${locale}/docs/security`}
-              className="flex flex-col items-center p-4 rounded-xl bg-szn-bg hover:bg-szn-accent/10 hover:border-szn-accent/30 border border-transparent transition-colors"
-            >
-              <svg className="w-6 h-6 text-szn-accent mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span className="text-sm font-medium text-szn-text-1">{help.sections.docs.links.security}</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="bg-szn-card rounded-2xl border p-6 mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="font-semibold text-szn-text-1">{help.sections.faq.title}</h2>
-                <p className="text-sm text-szn-text-2">{help.sections.faq.description}</p>
-              </div>
-            </div>
+        <section className="py-12">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-semibold text-white">{copy.faqTitle}</h2>
+            <p className="mt-4 text-lg leading-8 text-slate-300">{copy.faqBody}</p>
           </div>
 
           {filteredFaqs.length === 0 ? (
-            <div className="text-center py-8 text-szn-text-2">
-              <p>{help.search.noResults}</p>
+            <div className="mt-8 border border-dashed border-white/15 px-5 py-8 text-slate-300">
+              {copy.noResults}
             </div>
           ) : (
-            <div className="divide-y">
-              {filteredFaqs.map((faq) => (
-                <div key={faq.id} className="py-4">
-                  <button
-                    onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
-                    className="flex items-center justify-between w-full text-left"
-                  >
-                    <span className="font-medium text-szn-text-1">{faq.question}</span>
-                    <svg
-                      className={`w-5 h-5 text-szn-text-3 transition-transform ${
-                        expandedFaq === faq.id ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+            <div className="mt-8 divide-y divide-white/10 border border-white/10">
+              {filteredFaqs.map((faq) => {
+                const isOpen = expandedFaq === faq.id;
+
+                return (
+                  <div key={faq.id} className="bg-white/5">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedFaq(isOpen ? null : faq.id)}
+                      className="flex w-full items-center justify-between gap-6 px-5 py-5 text-left"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {expandedFaq === faq.id && (
-                    <p className="mt-3 text-szn-text-2 text-sm leading-relaxed">{faq.answer}</p>
-                  )}
-                </div>
-              ))}
+                      <span className="text-lg font-medium leading-8 text-white">{faq.question}</span>
+                      <svg
+                        className={`h-5 w-5 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {isOpen ? (
+                      <div className="border-t border-white/10 px-5 py-5 text-base leading-8 text-slate-300">
+                        {faq.answer}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* Contact CTA */}
-        <div className="bg-gradient-to-r from-szn-accent to-szn-accent-2 rounded-2xl p-8 text-center text-white">
-          <h2 className="text-2xl font-bold mb-2">{help.contact.title}</h2>
-          <p className="text-szn-accent/20 mb-6">{help.contact.description}</p>
-          <a
-            href="mailto:support@seizn.com"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-szn-card text-szn-accent font-semibold rounded-lg hover:bg-szn-accent/10 transition-colors"
-          >
-            {help.contact.cta}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
-        </div>
+        <section className="border-t border-white/10 py-12">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white">{copy.contactTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.contactBody}</p>
+            </div>
+            <a
+              href="mailto:support@seizn.com"
+              className="inline-flex items-center gap-2 rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+            >
+              <span>{copy.contactCta}</span>
+              <ArrowIcon />
+            </a>
+          </div>
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-szn-card border-t mt-16">
-        <div className="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-szn-text-2">
-          <p>&copy; {new Date().getFullYear()} Seizn. All rights reserved.</p>
+      <footer className="border-t border-white/10 py-8">
+        <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-400">
+          {new Date().getFullYear()} Seizn
         </div>
       </footer>
     </div>
