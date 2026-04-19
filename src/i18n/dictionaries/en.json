@@ -241,7 +241,13 @@
       "navigate": "Navigate",
       "open": "Open",
       "close": "Close",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "NPC workflows",
+      "commands": {
+        "createEntity": "Create entity",
+        "viewRelationGraph": "View relation graph",
+        "openEventInbox": "Open event inbox"
+      }
     },
     "nav": {
       "overview": "Overview",

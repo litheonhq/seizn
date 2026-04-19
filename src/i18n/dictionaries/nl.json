@@ -1559,7 +1559,13 @@
       "navigate": "Navigeren",
       "open": "Openen",
       "close": "Sluiten",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "NPC-workflows",
+      "commands": {
+        "createEntity": "Entiteit maken",
+        "viewRelationGraph": "Relatiegrafiek bekijken",
+        "openEventInbox": "Event-inbox openen"
+      }
     }
   },
   "pricingPage": {

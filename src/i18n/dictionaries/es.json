@@ -1559,7 +1559,13 @@
       "navigate": "Navegar",
       "open": "Abrir",
       "close": "Cerrar",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Flujos de NPC",
+      "commands": {
+        "createEntity": "Crear entidad",
+        "viewRelationGraph": "Ver grafo de relaciones",
+        "openEventInbox": "Abrir bandeja de eventos"
+      }
     }
   },
   "pricingPage": {

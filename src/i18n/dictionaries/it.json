@@ -1563,7 +1563,13 @@
       "navigate": "Naviga",
       "open": "Apri",
       "close": "Chiudi",
-      "enter": "Invio"
+      "enter": "Invio",
+      "workflowGroup": "Workflow NPC",
+      "commands": {
+        "createEntity": "Crea entità",
+        "viewRelationGraph": "Visualizza grafo relazioni",
+        "openEventInbox": "Apri inbox eventi"
+      }
     }
   },
   "pricingPage": {

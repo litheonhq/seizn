@@ -1559,7 +1559,13 @@
       "navigate": "Naviguer",
       "open": "Ouvrir",
       "close": "Fermer",
-      "enter": "Entrée"
+      "enter": "Entrée",
+      "workflowGroup": "Workflows PNJ",
+      "commands": {
+        "createEntity": "Créer une entité",
+        "viewRelationGraph": "Voir le graphe de relations",
+        "openEventInbox": "Ouvrir la boîte d’événements"
+      }
     }
   },
   "pricingPage": {
