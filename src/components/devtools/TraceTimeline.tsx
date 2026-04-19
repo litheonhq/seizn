@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type JSX } from "react";
 
 // ============================================
 // Types
