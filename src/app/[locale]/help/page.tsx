@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
   const title =
     locale === "ko"
-      ? "게임 팀용 NPC 메모리 도움말 | Seizn"
-      : "Help for Teams Shipping NPC Memory | Seizn";
+      ? "게임 팀용 NPC 메모리 도움말"
+      : "Help for Teams Shipping NPC Memory";
   const description =
     locale === "ko"
       ? "persistent character, faction continuity, context budget, rollout cost 같은 게임 스튜디오 질문에 답하는 Seizn 도움말 허브입니다."

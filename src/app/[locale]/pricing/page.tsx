@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title =
     locale === 'ko'
-      ? 'NPC 엔티티 기준 가격 | Seizn'
-      : 'Per-Entity NPC Pricing | Seizn';
+      ? 'NPC 엔티티 기준 가격'
+      : 'Per-Entity NPC Pricing';
   const description =
     locale === 'ko'
       ? 'Seizn은 NPC 메모리를 좌석 수가 아니라 엔티티 그래프와 이벤트 처리량 기준으로 과금합니다. Inworld, Convai, ACE와 함께 쓰고 Studio는 월 $499부터 시작합니다.'
