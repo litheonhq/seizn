@@ -122,7 +122,7 @@ export function LocaleFAQClient({ locale, dictionary }: Props) {
               {faqPage?.title || "Frequently Asked Questions"}
             </h1>
             <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
-              {faqPage?.subtitle || "Common questions about Seizn Memory API, from getting started to advanced operations."}
+              {faqPage?.subtitle || "Common questions about Seizn NPC memory, from getting started to advanced operations."}
             </p>
           </div>
 

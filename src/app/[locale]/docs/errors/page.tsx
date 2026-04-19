@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
   const dict = await getDictionary(locale);
 
   return {
-    title: dict.docs?.errors?.title || "Error Reference | Seizn Docs",
+    title: dict.docs?.errors?.title || "Error Reference",
     description: dict.docs?.errors?.description || "Complete reference for Seizn API error codes, causes, and resolution guides",
     alternates: {
       canonical: `/${locale}/docs/errors`,

@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { shareId } = await params;
 
   return {
-    title: `Trace ${shareId} - Seizn`,
+    title: `Trace ${shareId} · Seizn`,
     description: 'View shared retrieval trace with full debugging information',
     robots: 'noindex, nofollow', // Don't index shared traces
   };

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
 
   return {
-    title: "Authentication | Seizn API Documentation",
+    title: "Authentication",
     description: "Learn how to authenticate with the Seizn API using Bearer tokens. Includes migration guide from x-api-key header.",
     alternates: {
       canonical: `/${locale}/docs/auth`,
