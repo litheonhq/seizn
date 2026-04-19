@@ -301,7 +301,6 @@
       "usage": "การใช้งาน",
       "budget": "งบประมาณ",
       "reports": "รายงาน",
-      "calculator": "ประมาณต้นทุน",
       "apiKeys": "คีย์ API",
       "integrations": "ปลั๊กอิน Engine",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "พารามิเตอร์",
       "recentDecisions": "การตัดสินใจล่าสุด",
       "noLogs": "ยังไม่มีล็อกการตัดสินใจ"
-    },
-    "calculator": {
-      "title": "ประมาณต้นทุน",
-      "subtitle": "ประมาณต้นทุนรายเดือนจากจำนวนเอนทิตีและปริมาณ event",
-      "stats": {
-        "apiCalls": "การเรียก API",
-        "memories": "หน่วยความจำ",
-        "extractions": "การดึงข้อมูล",
-        "estimated": "ค่าใช้จ่ายประมาณการ"
-      },
-      "presets": {
-        "title": "ค่าที่ตั้งไว้ล่วงหน้า",
-        "startup": "สตาร์ทอัพ",
-        "growing": "กำลังเติบโต",
-        "scale": "ขยายขนาด",
-        "enterprise": "องค์กรขนาดใหญ่"
-      },
-      "customize": {
-        "title": "ปรับแต่งการใช้งาน"
-      },
-      "labels": {
-        "apiCalls": "การเรียก API รายเดือน",
-        "memories": "หน่วยความจำที่เก็บไว้",
-        "extractions": "การดึงข้อมูล"
-      },
-      "recommended": {
-        "title": "แผนที่แนะนำ",
-        "base": "ราคาพื้นฐาน",
-        "overage": "ค่าเกิน",
-        "cta": "เริ่มต้นใช้งาน"
-      },
-      "comparison": {
-        "title": "แผนทั้งหมด",
-        "best": "คุ้มค่าที่สุด"
-      },
-      "details": {
-        "title": "รายละเอียดการกำหนดราคา",
-        "plan": "แผน",
-        "base": "ราคาพื้นฐาน",
-        "includedCalls": "การเรียกที่รวมอยู่",
-        "overageRate": "อัตราค่าเกิน",
-        "yourOverage": "ค่าเกินของคุณ",
-        "total": "รวม"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

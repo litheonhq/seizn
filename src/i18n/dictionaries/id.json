@@ -301,7 +301,6 @@
       "usage": "Penggunaan",
       "budget": "Anggaran",
       "reports": "Laporan",
-      "calculator": "Estimasi biaya",
       "apiKeys": "Kunci API",
       "integrations": "Plugin mesin",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "Parameter",
       "recentDecisions": "Keputusan Terkini",
       "noLogs": "Belum ada log keputusan"
-    },
-    "calculator": {
-      "title": "Kalkulator Penggunaan",
-      "subtitle": "Estimasikan biaya bulanan Anda berdasarkan penggunaan yang diharapkan",
-      "stats": {
-        "apiCalls": "Panggilan API",
-        "memories": "Memori",
-        "extractions": "Ekstraksi",
-        "estimated": "Estimasi Biaya"
-      },
-      "presets": {
-        "title": "Preset Cepat",
-        "startup": "Startup",
-        "growing": "Berkembang",
-        "scale": "Skala",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Kustomisasi Penggunaan"
-      },
-      "labels": {
-        "apiCalls": "Panggilan API Bulanan",
-        "memories": "Memori Tersimpan",
-        "extractions": "Ekstraksi"
-      },
-      "recommended": {
-        "title": "Paket Direkomendasikan",
-        "base": "Harga Dasar",
-        "overage": "Kelebihan",
-        "cta": "Mulai Sekarang"
-      },
-      "comparison": {
-        "title": "Semua Paket",
-        "best": "Nilai Terbaik"
-      },
-      "details": {
-        "title": "Rincian Harga Detail",
-        "plan": "Paket",
-        "base": "Harga Dasar",
-        "includedCalls": "Panggilan Termasuk",
-        "overageRate": "Tarif Kelebihan",
-        "yourOverage": "Kelebihan Anda",
-        "total": "Total"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

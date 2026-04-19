@@ -301,7 +301,6 @@
       "usage": "Gebruik",
       "budget": "Budget",
       "reports": "Rapporten",
-      "calculator": "Kostenschatting",
       "apiKeys": "API-sleutels",
       "integrations": "Engine-plugins",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "Parameters",
       "recentDecisions": "Recente Beslissingen",
       "noLogs": "Nog geen beslissingslogboeken"
-    },
-    "calculator": {
-      "title": "Gebruikscalculator",
-      "subtitle": "Schat uw maandelijkse kosten op basis van verwacht gebruik",
-      "stats": {
-        "apiCalls": "API-aanroepen",
-        "memories": "Herinneringen",
-        "extractions": "Extracties",
-        "estimated": "Geschatte Kosten"
-      },
-      "presets": {
-        "title": "Snelle Voorinstellingen",
-        "startup": "Startup",
-        "growing": "Groeiend",
-        "scale": "Schaal",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Gebruik Aanpassen"
-      },
-      "labels": {
-        "apiCalls": "Maandelijkse API-aanroepen",
-        "memories": "Opgeslagen Herinneringen",
-        "extractions": "Extracties"
-      },
-      "recommended": {
-        "title": "Aanbevolen Abonnement",
-        "base": "Basisprijs",
-        "overage": "Overschrijding",
-        "cta": "Aan de Slag"
-      },
-      "comparison": {
-        "title": "Alle Abonnementen",
-        "best": "Beste Waarde"
-      },
-      "details": {
-        "title": "Gedetailleerde Prijsuitsplitsing",
-        "plan": "Abonnement",
-        "base": "Basisprijs",
-        "includedCalls": "Inbegrepen Aanroepen",
-        "overageRate": "Overschrijdingstarief",
-        "yourOverage": "Uw Overschrijding",
-        "total": "Totaal"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

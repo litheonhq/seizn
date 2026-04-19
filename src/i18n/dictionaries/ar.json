@@ -370,7 +370,6 @@
       "usage": "الاستخدام",
       "budget": "الميزانية",
       "reports": "التقارير",
-      "calculator": "تقدير التكلفة",
       "apiKeys": "مفاتيح API",
       "integrations": "إضافات المحرك",
       "webhooks": "Webhooks",
@@ -1370,50 +1369,6 @@
       "parameters": "المعاملات",
       "recentDecisions": "القرارات الأخيرة",
       "noLogs": "لا توجد سجلات قرارات حتى الآن"
-    },
-    "calculator": {
-      "title": "حاسبة الاستخدام",
-      "subtitle": "تقدير تكاليفك الشهرية بناءً على الاستخدام المتوقع",
-      "stats": {
-        "apiCalls": "استدعاءات API",
-        "memories": "الذكريات",
-        "extractions": "الاستخراجات",
-        "estimated": "التكلفة المقدرة"
-      },
-      "presets": {
-        "title": "إعدادات سريعة",
-        "startup": "شركة ناشئة",
-        "growing": "نامية",
-        "scale": "توسع",
-        "enterprise": "مؤسسية"
-      },
-      "customize": {
-        "title": "تخصيص الاستخدام"
-      },
-      "labels": {
-        "apiCalls": "استدعاءات API الشهرية",
-        "memories": "الذكريات المخزنة",
-        "extractions": "الاستخراجات"
-      },
-      "recommended": {
-        "title": "الخطة الموصى بها",
-        "base": "السعر الأساسي",
-        "overage": "التجاوز",
-        "cta": "البدء"
-      },
-      "comparison": {
-        "title": "جميع الخطط",
-        "best": "أفضل قيمة"
-      },
-      "details": {
-        "title": "تفصيل الأسعار التفصيلي",
-        "plan": "الخطة",
-        "base": "السعر الأساسي",
-        "includedCalls": "الاستدعاءات المضمنة",
-        "overageRate": "معدل التجاوز",
-        "yourOverage": "تجاوزك",
-        "total": "الإجمالي"
-      }
     },
     "webhooks": {
       "title": "Webhooks",
