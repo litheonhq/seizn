@@ -222,24 +222,24 @@
       "unlimited": "無限"
     },
     "onboarding": {
-      "title": "開始使用 Seizn",
+      "title": "設定 NPC 記憶",
       "progress": "已完成 {completed}/{total} 步",
       "dismiss": "關閉",
       "doLater": "稍後再說",
       "steps": {
         "apiKey": {
           "title": "建立 API 金鑰",
-          "description": "為遊戲執行階段請求建立 API 金鑰",
+          "description": "驗證遊戲伺服器與工具請求。",
           "action": "建立金鑰"
         },
         "demoQuery": {
-          "title": "查詢 NPC 上下文",
-          "description": "試用示範 NPC 查詢或送出你的第一個請求",
-          "action": "試用示範"
+          "title": "執行 NPC 記憶查詢",
+          "description": "試用範例 NPC 查詢或送出 API 請求。",
+          "action": "試用範例"
         },
         "viewTrace": {
-          "title": "檢視追蹤",
-          "description": "透過完整追蹤了解搜尋的運作方式",
+          "title": "檢視檢索追蹤",
+          "description": "查看事件查詢如何取回 NPC 上下文。",
           "action": "檢視追蹤"
         },
         "installSdk": {
@@ -253,15 +253,15 @@
           "action": "建立組織"
         },
         "firstQuery": {
-          "title": "執行首次查詢",
-          "description": "在演練場使用範例查詢測試 API",
-          "action": "嘗試查詢"
+          "title": "記錄第一個 NPC 事件",
+          "description": "在 Playground 建立 NPC、記錄事件，並查回上下文。",
+          "action": "開啟 Playground"
         }
       },
       "takeTour": "開始導覽",
       "sdkModal": {
         "title": "安裝 Seizn SDK",
-        "description": "選擇您偏好的安裝方式並複製指令。",
+        "description": "複製適合遊戲技術棧的 SDK 指令。",
         "copy": "複製",
         "copied": "已複製！",
         "viewDocs": "查看完整文件",
@@ -269,20 +269,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "歡迎使用 Seizn！",
-          "description": "讓我們快速導覽協助您入門。"
+          "title": "建立 NPC 記憶流程",
+          "description": "建立專案、加入 API 金鑰、記錄事件，並檢查上下文追蹤。"
         },
         "sidebar": {
-          "title": "導覽",
-          "description": "使用側邊欄在控制台各部分之間瀏覽。"
+          "title": "NPC 工作流程導覽",
+          "description": "使用實體、關係圖與事件收件匣管理 NPC 上下文。"
         },
         "stats": {
-          "title": "您的統計資料",
-          "description": "監控 API 使用量、已儲存實體和目前方案。"
+          "title": "專案健康度",
+          "description": "監控 API 用量、已存實體、事件活動與方案限制。"
         },
         "quickStart": {
           "title": "快速操作",
-          "description": "使用這些卡片完成常見任務，例如建立 API 金鑰。"
+          "description": "使用這些卡片建立 API 金鑰並執行第一個 NPC 記憶流程。"
         },
         "next": "下一步",
         "skip": "略過導覽",
@@ -1476,24 +1476,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "首次搜尋教學",
-      "subtitle": "了解如何使用演練場",
+      "title": "NPC 查詢教學",
+      "subtitle": "測試 NPC 記憶檢索",
       "dismiss": "關閉",
-      "tryExamples": "嘗試範例查詢：",
-      "hint": "點擊任一範例以自動填入查詢輸入",
+      "tryExamples": "試試 NPC 查詢：",
+      "hint": "點擊任一範例即可填入查詢欄位",
       "gotIt": "知道了！",
       "tips": {
         "welcome": {
-          "title": "歡迎使用偵錯主控台",
-          "description": "在此測試您的查詢，並透過完整追蹤了解搜尋的底層運作原理。"
+          "title": "歡迎使用 NPC 除錯主控台",
+          "description": "透過完整追蹤測試事件查詢，查看 NPC 記憶如何被取回。"
         },
         "query": {
-          "title": "自然語言查詢",
-          "description": "輸入任何自然語言查詢。我們的 AI 將從您儲存的資料中尋找語意相似的記憶。"
+          "title": "NPC 上下文查詢",
+          "description": "詢問角色、遭遇或陣營。Seizn 會在已存圖譜中尋找相關上下文。"
         },
         "trace": {
-          "title": "完整執行追蹤",
-          "description": "查看從嵌入建立到結果排名的每個步驟，包含時間和費用明細。"
+          "title": "檢索追蹤",
+          "description": "查看從實體比對到結果排序的每一步，包含時間與成本明細。"
         }
       }
     },

@@ -39,9 +39,9 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
   ];
 
   const exampleQueries = [
-    "What are the key features of this product?",
-    "How do I set up the SDK?",
-    "Show me examples of memory extraction",
+    "How does the innkeeper remember our last quest?",
+    "Which faction does Mira distrust?",
+    "Summarize the last event involving the blacksmith",
   ];
 
   const handleDismiss = () => {
