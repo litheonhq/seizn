@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
 
   return {
-    title: "Security & Governance | Seizn API Documentation",
+    title: "Security & Governance",
     description: "Seizn security practices, data protection, API key management, compliance, and governance features.",
     alternates: {
       canonical: `/${locale}/docs/security`,

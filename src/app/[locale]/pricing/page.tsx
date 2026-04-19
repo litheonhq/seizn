@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const dict = await getDictionary(locale);
   
   return {
-    title: `${dict.pricingPage.title} | Seizn`,
+    title: dict.pricingPage.title,
     description: dict.pricingPage.subtitle,
   };
 }

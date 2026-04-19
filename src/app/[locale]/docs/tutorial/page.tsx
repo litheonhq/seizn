@@ -14,10 +14,12 @@ export async function generateMetadata({ params }: Props) {
   const { locale: localeParam } = await params;
   const locale = (locales.includes(localeParam as Locale) ? localeParam : "en") as Locale;
   const dict = await getDictionary(locale);
+  const title = (dict.docs?.tutorialPage?.meta?.title || "5-Minute Tutorial").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: dict.docs?.tutorialPage?.meta?.title || "5-Minute Tutorial | Seizn",
-    description: dict.docs?.tutorialPage?.meta?.description || "Add AI memory in 5 minutes with step-by-step guide",
+    title,
+    description:
+      dict.docs?.tutorialPage?.meta?.description || "Ship your first NPC memory flow in 5 minutes with a step-by-step guide.",
     alternates: {
       canonical: `/${locale}/docs/tutorial`,
     },
