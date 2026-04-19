@@ -9,15 +9,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const isKorean = locale === "ko";
+  await getDictionary(locale);
 
   return {
-    title: isKorean
-      ? "경쟁 포지셔닝 비교 | Seizn"
-      : "Competitive Positioning | Seizn",
-    description: isKorean
-      ? "Seizn과 주요 대안들을 범주형 기준으로 비교한 포지셔닝 페이지"
-      : "Category-based positioning comparison between Seizn and common alternatives for AI memory infrastructure.",
+    title:
+      locale === "ko"
+        ? "Inworld, Convai, ACE 통합 매트릭스 | Seizn"
+        : "Inworld, Convai, and ACE Integration Matrix | Seizn",
+    description:
+      locale === "ko"
+        ? "Seizn은 대화 엔진을 대체하지 않고 AI NPC 메모리 그래프를 맡습니다. Inworld, Convai, ACE와 함께 쓰는 통합 매트릭스를 확인하세요."
+        : "See how Seizn fits beside Inworld, Convai, and NVIDIA ACE as the memory graph layer for AI NPCs.",
   };
 }
 

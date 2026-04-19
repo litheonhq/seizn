@@ -10,341 +10,340 @@ interface ComparisonClientProps {
   locale: Locale;
 }
 
-type Capability = "native" | "integrated" | "partial" | "custom";
-
-type Row = {
-  category: string;
-  seizn: Capability;
-  memoryApis: Capability;
-  vectorStack: Capability;
-  observabilityTools: Capability;
+type MatrixRow = {
+  feature: string;
+  seizn: string;
+  inworld: string;
+  convai: string;
+  ace: string;
 };
 
-const TABLE_ROWS_EN: Row[] = [
-  {
-    category: "Persistent memory + profile graph",
-    seizn: "native",
-    memoryApis: "integrated",
-    vectorStack: "custom",
-    observabilityTools: "custom",
-  },
-  {
-    category: "Policy engine + tenant governance",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "Trace + eval + replay in one flow",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "integrated",
-  },
-  {
-    category: "Autopilot webhook + regression actions",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "E2E encrypted confidential memories",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "custom",
-  },
-  {
-    category: "Enterprise SSO (SAML/OIDC)",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "On-prem / controlled deployment options",
-    seizn: "integrated",
-    memoryApis: "partial",
-    vectorStack: "integrated",
-    observabilityTools: "partial",
-  },
-  {
-    category: "Audit evidence + SLA alignment",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-];
-
-const TABLE_ROWS_KO: Row[] = [
-  {
-    category: "지속 메모리 + 프로필 그래프",
-    seizn: "native",
-    memoryApis: "integrated",
-    vectorStack: "custom",
-    observabilityTools: "custom",
-  },
-  {
-    category: "정책 엔진 + 테넌트 거버넌스",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "Trace + Eval + Replay 통합",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "integrated",
-  },
-  {
-    category: "Autopilot webhook + 회귀 대응",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "E2E 기밀 메모리 암호화",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "custom",
-  },
-  {
-    category: "엔터프라이즈 SSO (SAML/OIDC)",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-  {
-    category: "온프레미스/통제 배포 옵션",
-    seizn: "integrated",
-    memoryApis: "partial",
-    vectorStack: "integrated",
-    observabilityTools: "partial",
-  },
-  {
-    category: "감사 증적 + SLA 정렬",
-    seizn: "native",
-    memoryApis: "partial",
-    vectorStack: "custom",
-    observabilityTools: "partial",
-  },
-];
+type Principle = {
+  title: string;
+  body: string;
+};
 
 type Copy = {
+  eyebrow: string;
   title: string;
   subtitle: string;
-  description: string;
-  snapshotLabel: string;
-  refreshLabel: string;
-  sourceLabel: string;
-  disclaimer: string;
-  legend: Record<Capability, string>;
-  columns: {
-    category: string;
-    seizn: string;
-    memoryApis: string;
-    vectorStack: string;
-    observabilityTools: string;
-  };
-  cta: {
-    pricing: string;
-    enterprise: string;
-  };
+  helper: string;
+  primaryCta: string;
+  secondaryCta: string;
+  tableTitle: string;
+  tableSubtitle: string;
+  rows: MatrixRow[];
+  principlesTitle: string;
+  principlesSubtitle: string;
+  principles: Principle[];
+  finalCtaTitle: string;
+  finalCtaSubtitle: string;
+  finalPrimary: string;
+  finalSecondary: string;
 };
 
 const COPY_EN: Copy = {
-  title: "Competitive Positioning",
-  subtitle: "Category-first comparison for AI memory infrastructure",
-  description:
-    "This page is intentionally category-based. It compares capability packaging and operating model, not list prices.",
-  snapshotLabel: "Positioning Snapshot",
-  refreshLabel: "Last refreshed: February 16, 2026",
-  sourceLabel: "Reference scope: public product docs, pricing pages, and security pages.",
-  disclaimer:
-    "Use this as a qualification matrix for technical evaluation. Validate final fit with your own workload and compliance requirements.",
-  legend: {
-    native: "Native",
-    integrated: "Integrated",
-    partial: "Partial",
-    custom: "Custom Build",
-  },
-  columns: {
-    category: "Capability Category",
-    seizn: "Seizn",
-    memoryApis: "Memory APIs",
-    vectorStack: "Vector DB + Custom Stack",
-    observabilityTools: "Observability Tools",
-  },
-  cta: {
-    pricing: "View Pricing",
-    enterprise: "Talk to Enterprise",
-  },
+  eyebrow: "Integration matrix",
+  title: "You keep your dialogue engine. Seizn handles the memory graph.",
+  subtitle:
+    "This page is not a head-to-head takedown. It shows where Seizn fits when a studio already uses Inworld, Convai, NVIDIA ACE, or its own runtime.",
+  helper:
+    "Use Seizn alone when you own dialogue orchestration. Add Seizn beside Inworld, Convai, or ACE when the missing layer is persistent memory, relations, and world-state recall.",
+  primaryCta: "Read integration docs",
+  secondaryCta: "Talk to Seizn",
+  tableTitle: "How the stack changes by setup",
+  tableSubtitle: "The combination changes the dialogue layer. The memory graph remains in Seizn.",
+  rows: [
+    {
+      feature: "Primary dialogue layer",
+      seizn: "Bring your own LLM or custom runtime",
+      inworld: "Inworld handles character dialogue",
+      convai: "Convai handles voice and interaction loop",
+      ace: "ACE stack handles runtime orchestration",
+    },
+    {
+      feature: "Persistent memory + relations",
+      seizn: "Seizn owns the graph",
+      inworld: "Seizn owns the graph",
+      convai: "Seizn owns the graph",
+      ace: "Seizn owns the graph",
+    },
+    {
+      feature: "Factions, witness chains, world state",
+      seizn: "Native in Seizn",
+      inworld: "Tracked in Seizn and surfaced back to characters",
+      convai: "Tracked in Seizn and injected into agent context",
+      ace: "Tracked in Seizn and fed into orchestration layer",
+    },
+    {
+      feature: "Next-turn retrieval path",
+      seizn: "Direct Seizn API call before response",
+      inworld: "Inject Seizn recall into Inworld session context",
+      convai: "Inject Seizn recall into Convai agent context",
+      ace: "Inject Seizn recall into ACE middleware or tools",
+    },
+    {
+      feature: "Best fit",
+      seizn: "Studios building a custom NPC stack",
+      inworld: "Teams already committed to Inworld characters",
+      convai: "Teams built around Convai interactions",
+      ace: "Teams using ACE with graphics-heavy runtime pipelines",
+    },
+    {
+      feature: "Why teams add Seizn",
+      seizn: "To avoid rebuilding memory and relation storage",
+      inworld: "To persist memory across sessions and generations",
+      convai: "To retain world-state and relationship history",
+      ace: "To add long-lived graph memory behind real-time runtime systems",
+    },
+  ],
+  principlesTitle: "Three integration rules",
+  principlesSubtitle: "The stack works when responsibilities stay clear.",
+  principles: [
+    {
+      title: "1. Keep the dialogue layer where it already works",
+      body: "Inworld, Convai, ACE, or your own runtime can keep voices, animation hooks, and turn-level behavior.",
+    },
+    {
+      title: "2. Put long-lived memory in Seizn",
+      body: "Entities, relations, witness logs, faction memory, and world-state recall stay in one graph instead of being reimplemented per engine.",
+    },
+    {
+      title: "3. Retrieve before every important turn",
+      body: "The only integration requirement is a deterministic place to ask Seizn for recall before the next NPC response is generated.",
+    },
+  ],
+  finalCtaTitle: "Need help choosing the stack?",
+  finalCtaSubtitle: "Bring the engine you already ship, the memory problems you have, and the world scale you expect.",
+  finalPrimary: "View pricing",
+  finalSecondary: "Book a demo",
 };
 
 const COPY_KO: Copy = {
-  title: "경쟁 포지셔닝 비교",
-  subtitle: "AI 메모리 인프라를 범주 중심으로 비교",
-  description:
-    "이 페이지는 의도적으로 범주형 비교를 사용합니다. 가격 숫자보다 기능 패키징과 운영 모델을 비교합니다.",
-  snapshotLabel: "포지셔닝 스냅샷",
-  refreshLabel: "최근 갱신: 2026년 2월 16일",
-  sourceLabel: "참고 범위: 공개 제품 문서, 가격 페이지, 보안 페이지",
-  disclaimer:
-    "기술 검토용 매트릭스로 활용하고, 최종 도입 판단은 실제 워크로드/컴플라이언스 기준으로 검증하세요.",
-  legend: {
-    native: "기본 내장",
-    integrated: "연동 제공",
-    partial: "부분 제공",
-    custom: "직접 구현",
-  },
-  columns: {
-    category: "기능 범주",
-    seizn: "Seizn",
-    memoryApis: "Memory API 계열",
-    vectorStack: "Vector DB + 커스텀 스택",
-    observabilityTools: "관측 도구 계열",
-  },
-  cta: {
-    pricing: "가격 보기",
-    enterprise: "엔터프라이즈 문의",
-  },
+  eyebrow: "통합 매트릭스",
+  title: "대화 엔진은 그대로 두고, 메모리 그래프는 Seizn이 맡습니다.",
+  subtitle:
+    "이 페이지는 정면 경쟁 비교가 아닙니다. 스튜디오가 이미 Inworld, Convai, NVIDIA ACE, 혹은 자체 런타임을 쓰고 있을 때 Seizn이 어디에 들어가는지 보여줍니다.",
+  helper:
+    "대화 오케스트레이션을 직접 소유하면 Seizn 단독으로 가고, 부족한 것이 지속 메모리와 관계 그래프라면 Inworld, Convai, ACE 옆에 Seizn을 붙입니다.",
+  primaryCta: "통합 문서 보기",
+  secondaryCta: "Seizn과 상담",
+  tableTitle: "구성별로 스택이 어떻게 달라지는가",
+  tableSubtitle: "달라지는 것은 대화 레이어이고, 메모리 그래프는 계속 Seizn에 둡니다.",
+  rows: [
+    {
+      feature: "주 대화 레이어",
+      seizn: "직접 고른 LLM 또는 커스텀 런타임",
+      inworld: "Inworld가 캐릭터 대화를 담당",
+      convai: "Convai가 음성과 상호작용 루프 담당",
+      ace: "ACE 스택이 런타임 오케스트레이션 담당",
+    },
+    {
+      feature: "지속 메모리 + 관계 그래프",
+      seizn: "Seizn이 그래프를 소유",
+      inworld: "Seizn이 그래프를 소유",
+      convai: "Seizn이 그래프를 소유",
+      ace: "Seizn이 그래프를 소유",
+    },
+    {
+      feature: "팩션, witness chain, 월드 상태",
+      seizn: "Seizn 기본 기능",
+      inworld: "Seizn에서 추적하고 캐릭터 쪽에 다시 전달",
+      convai: "Seizn에서 추적하고 agent context에 주입",
+      ace: "Seizn에서 추적하고 orchestration layer로 전달",
+    },
+    {
+      feature: "다음 턴 회수 경로",
+      seizn: "응답 직전 Seizn API 직접 호출",
+      inworld: "Inworld 세션 컨텍스트에 Seizn 회수 결과 주입",
+      convai: "Convai agent context에 Seizn 회수 결과 주입",
+      ace: "ACE 미들웨어나 툴 레이어에 Seizn 회수 결과 주입",
+    },
+    {
+      feature: "잘 맞는 팀",
+      seizn: "커스텀 NPC 스택을 직접 만드는 팀",
+      inworld: "이미 Inworld 캐릭터에 투자한 팀",
+      convai: "Convai 상호작용 중심으로 설계된 팀",
+      ace: "그래픽스 비중 높은 ACE 파이프라인 팀",
+    },
+    {
+      feature: "Seizn을 추가하는 이유",
+      seizn: "메모리와 관계 저장을 다시 만들지 않기 위해",
+      inworld: "세션과 세대를 넘어 메모리를 지속하기 위해",
+      convai: "월드 상태와 관계 히스토리를 보존하기 위해",
+      ace: "실시간 런타임 뒤에 장기 그래프 메모리를 두기 위해",
+    },
+  ],
+  principlesTitle: "통합 원칙 세 가지",
+  principlesSubtitle: "역할 분리가 선명해야 스택이 흔들리지 않습니다.",
+  principles: [
+    {
+      title: "1. 잘 되는 대화 레이어는 그대로 둡니다",
+      body: "Inworld, Convai, ACE, 혹은 자체 런타임이 음성, 애니메이션 훅, 턴 단위 행동을 계속 맡습니다.",
+    },
+    {
+      title: "2. 장기 메모리는 Seizn에 둡니다",
+      body: "엔티티, 관계, witness 로그, 팩션 메모리, 월드 상태 회수를 엔진마다 따로 구현하지 않고 하나의 그래프에 둡니다.",
+    },
+    {
+      title: "3. 중요한 턴 전에 반드시 회수합니다",
+      body: "통합의 핵심은 다음 NPC 응답 전에 Seizn에서 recall을 가져오는 결정적 지점을 두는 것입니다.",
+    },
+  ],
+  finalCtaTitle: "어떤 조합이 맞는지 고민되나요?",
+  finalCtaSubtitle: "이미 운영 중인 엔진, 풀고 싶은 메모리 문제, 예상 월드 규모를 기준으로 경로를 잡아드립니다.",
+  finalPrimary: "가격 보기",
+  finalSecondary: "데모 예약",
 };
 
-function capabilityStyle(value: Capability): string {
-  if (value === "native") return "bg-emerald-100 text-emerald-700";
-  if (value === "integrated") return "bg-blue-100 text-blue-700";
-  if (value === "partial") return "bg-amber-100 text-amber-700";
-  return "bg-szn-surface text-szn-text-2";
-}
-
-function getCopy(locale: Locale): { copy: Copy; rows: Row[] } {
-  if (locale === "ko") {
-    return { copy: COPY_KO, rows: TABLE_ROWS_KO };
-  }
-  return { copy: COPY_EN, rows: TABLE_ROWS_EN };
+function getCopy(locale: Locale): Copy {
+  if (locale === "ko") return COPY_KO;
+  return COPY_EN;
 }
 
 export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
-  const { copy, rows } = getCopy(locale);
+  const copy = getCopy(locale);
+  const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
 
   return (
-    <div className="min-h-screen gradient-hero relative overflow-hidden">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
-        <div
-          className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "2s" }}
-        />
-      </div>
-
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-szn-border">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href={`/${locale}`} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-              <span className="text-white font-bold text-sm">S</span>
+    <div className="min-h-screen bg-[#08111f] text-white">
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <Link href={`/${locale}`} className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
+              S
             </div>
-            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-szn-text-1 to-szn-text-2 bg-clip-text text-transparent">
-              Seizn
-            </span>
+            <span className="text-lg font-semibold text-white">Seizn</span>
           </Link>
-          <div className="flex items-center gap-6">
-            <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">
+
+          <div className="flex items-center gap-5">
+            <Link href={`/${locale}/pricing`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
               {dict.nav.pricing}
             </Link>
-            <Link href={`/${locale}/enterprise`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors hidden md:block">
-              {dict.extremeHome?.nav?.enterprise || "Enterprise"}
+            <Link href={`/${locale}/comparison`} className="hidden text-sm font-medium text-white md:block">
+              {dict.extremeHome?.nav?.compare || "Integrations"}
+            </Link>
+            <Link href={`/${locale}/enterprise`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+              {enterpriseLabel}
+            </Link>
+            <Link href={`/${locale}/docs`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+              {dict.nav.docs}
             </Link>
             <LanguageSwitcher currentLocale={locale} />
+            <Link
+              href={`/${locale}/enterprise`}
+              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+            >
+              {dict.nav.getStarted}
+            </Link>
           </div>
         </div>
       </nav>
 
-      <section className="pt-32 pb-10 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-pulse" />
-            <span className="text-sm text-szn-text-2 font-medium">{copy.snapshotLabel}</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-szn-text-1 mb-4">{copy.title}</h1>
-          <p className="text-lg text-szn-text-2 max-w-3xl mx-auto mb-3">{copy.subtitle}</p>
-          <p className="text-sm text-szn-text-2 max-w-3xl mx-auto">{copy.description}</p>
-          <p className="text-xs text-szn-text-3 mt-5">{copy.refreshLabel}</p>
-          <p className="text-xs text-szn-text-3 mt-1">{copy.sourceLabel}</p>
-        </div>
-      </section>
+      <main>
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
+            <div className="max-w-4xl">
+              <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{copy.eyebrow}</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{copy.title}</h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{copy.subtitle}</p>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">{copy.helper}</p>
 
-      <section className="pb-10 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto szn-card rounded-3xl p-6 md:p-8">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px]">
-              <thead>
-                <tr className="border-b border-szn-border">
-                  <th className="text-left py-3 pr-4 text-sm font-semibold text-szn-text-1">{copy.columns.category}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.seizn}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.memoryApis}</th>
-                  <th className="text-left py-3 px-2 text-sm font-semibold text-szn-text-1">{copy.columns.vectorStack}</th>
-                  <th className="text-left py-3 pl-2 text-sm font-semibold text-szn-text-1">{copy.columns.observabilityTools}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.category} className="border-b border-szn-border/50">
-                    <td className="py-3 pr-4 text-sm text-szn-text-1">{row.category}</td>
-                    <td className="py-3 px-2">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${capabilityStyle(row.seizn)}`}>
-                        {copy.legend[row.seizn]}
-                      </span>
-                    </td>
-                    <td className="py-3 px-2">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${capabilityStyle(row.memoryApis)}`}>
-                        {copy.legend[row.memoryApis]}
-                      </span>
-                    </td>
-                    <td className="py-3 px-2">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${capabilityStyle(row.vectorStack)}`}>
-                        {copy.legend[row.vectorStack]}
-                      </span>
-                    </td>
-                    <td className="py-3 pl-2">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${capabilityStyle(row.observabilityTools)}`}>
-                        {copy.legend[row.observabilityTools]}
-                      </span>
-                    </td>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href={`/${locale}/docs/integrations`}
+                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                >
+                  {copy.primaryCta}
+                </Link>
+                <Link
+                  href={`/${locale}/enterprise`}
+                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                >
+                  {copy.secondaryCta}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.tableTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.tableSubtitle}</p>
+            </div>
+
+            <div className="mt-10 overflow-x-auto border border-white/10">
+              <table className="min-w-full border-collapse">
+                <thead className="bg-white/5">
+                  <tr>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Feature</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn alone</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + Inworld</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + Convai</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + ACE</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {copy.rows.map((row) => (
+                    <tr key={row.feature} className="border-t border-white/10">
+                      <th className="px-4 py-4 text-left text-sm font-medium text-white">{row.feature}</th>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.seizn}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.inworld}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.convai}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.ace}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="pb-16 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-szn-text-2 mb-6">{copy.disclaimer}</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href={`/${locale}/pricing`}
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 text-white text-sm font-medium hover:opacity-95 transition-opacity"
-            >
-              {copy.cta.pricing}
-            </Link>
-            <Link
-              href={`/${locale}/enterprise`}
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-szn-border bg-white/60 text-szn-text-1 text-sm font-medium hover:bg-white transition-colors"
-            >
-              {copy.cta.enterprise}
-            </Link>
+        <section className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.principlesTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.principlesSubtitle}</p>
+            </div>
+
+            <div className="mt-10 grid gap-4 lg:grid-cols-3">
+              {copy.principles.map((item) => (
+                <div key={item.title} className="border border-white/10 bg-white/5 px-5 py-5">
+                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-300">{item.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section>
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.finalCtaTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalCtaSubtitle}</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={`/${locale}/pricing`}
+                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                >
+                  {copy.finalPrimary}
+                </Link>
+                <Link
+                  href={`/${locale}/enterprise`}
+                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                >
+                  {copy.finalSecondary}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
