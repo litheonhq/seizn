@@ -374,7 +374,6 @@
       "usage": "使用量",
       "budget": "予算",
       "reports": "レポート",
-      "calculator": "計算機",
       "apiKeys": "APIキー",
       "integrations": "統合",
       "webhooks": "Webhook",
@@ -1326,50 +1325,6 @@
       "parameters": "パラメータ",
       "recentDecisions": "最近の決定",
       "noLogs": "まだ決定ログがありません"
-    },
-    "calculator": {
-      "title": "使用量計算ツール",
-      "subtitle": "予想される使用量に基づいて月額コストを見積もる",
-      "stats": {
-        "apiCalls": "API呼び出し",
-        "memories": "メモリ",
-        "extractions": "抽出",
-        "estimated": "推定コスト"
-      },
-      "presets": {
-        "title": "クイックプリセット",
-        "startup": "スタートアップ",
-        "growing": "成長中",
-        "scale": "スケール",
-        "enterprise": "エンタープライズ"
-      },
-      "customize": {
-        "title": "使用量をカスタマイズ"
-      },
-      "labels": {
-        "apiCalls": "月間API呼び出し数",
-        "memories": "保存されたメモリ",
-        "extractions": "抽出"
-      },
-      "recommended": {
-        "title": "推奨プラン",
-        "base": "基本料金",
-        "overage": "超過料金",
-        "cta": "始める"
-      },
-      "comparison": {
-        "title": "すべてのプラン",
-        "best": "最もお得"
-      },
-      "details": {
-        "title": "詳細な料金内訳",
-        "plan": "プラン",
-        "base": "基本料金",
-        "includedCalls": "含まれる呼び出し",
-        "overageRate": "超過料金率",
-        "yourOverage": "超過分",
-        "total": "合計"
-      }
     },
     "webhooks": {
       "title": "Webhook",

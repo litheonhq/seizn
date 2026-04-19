@@ -370,7 +370,6 @@
       "usage": "Nutzung",
       "budget": "Budget",
       "reports": "Berichte",
-      "calculator": "Kostenschätzung",
       "apiKeys": "API-Schlüssel",
       "integrations": "Engine-Plugins",
       "webhooks": "Webhooks",
@@ -1403,50 +1402,6 @@
       "parameters": "Parameter",
       "recentDecisions": "Letzte Entscheidungen",
       "noLogs": "Noch keine Entscheidungsprotokolle"
-    },
-    "calculator": {
-      "title": "Nutzungsrechner",
-      "subtitle": "Schätzen Sie Ihre monatlichen Kosten basierend auf der erwarteten Nutzung",
-      "stats": {
-        "apiCalls": "API-Aufrufe",
-        "memories": "Erinnerungen",
-        "extractions": "Extraktionen",
-        "estimated": "Geschätzte Kosten"
-      },
-      "presets": {
-        "title": "Schnellvorlagen",
-        "startup": "Startup",
-        "growing": "Wachsend",
-        "scale": "Skalierung",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Nutzung anpassen"
-      },
-      "labels": {
-        "apiCalls": "Monatliche API-Aufrufe",
-        "memories": "Gespeicherte Erinnerungen",
-        "extractions": "Extraktionen"
-      },
-      "recommended": {
-        "title": "Empfohlener Plan",
-        "base": "Grundpreis",
-        "overage": "Mehrverbrauch",
-        "cta": "Loslegen"
-      },
-      "comparison": {
-        "title": "Alle Pläne",
-        "best": "Bester Wert"
-      },
-      "details": {
-        "title": "Detaillierte Preisaufschlüsselung",
-        "plan": "Plan",
-        "base": "Grundpreis",
-        "includedCalls": "Enthaltene Aufrufe",
-        "overageRate": "Mehrverbrauchsrate",
-        "yourOverage": "Ihr Mehrverbrauch",
-        "total": "Gesamt"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

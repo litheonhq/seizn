@@ -370,7 +370,6 @@
       "usage": "用量",
       "budget": "預算",
       "reports": "報告",
-      "calculator": "計算機",
       "apiKeys": "API金鑰",
       "integrations": "整合",
       "webhooks": "Webhook",
@@ -1399,50 +1398,6 @@
       "parameters": "參數",
       "recentDecisions": "最近決策",
       "noLogs": "尚無決策日誌"
-    },
-    "calculator": {
-      "title": "使用量計算器",
-      "subtitle": "根據預期使用量估算您的月度費用",
-      "stats": {
-        "apiCalls": "API 呼叫",
-        "memories": "記憶",
-        "extractions": "提取",
-        "estimated": "預估費用"
-      },
-      "presets": {
-        "title": "快速預設",
-        "startup": "新創",
-        "growing": "成長",
-        "scale": "規模化",
-        "enterprise": "企業"
-      },
-      "customize": {
-        "title": "自訂使用量"
-      },
-      "labels": {
-        "apiCalls": "月度 API 呼叫",
-        "memories": "儲存的記憶",
-        "extractions": "提取"
-      },
-      "recommended": {
-        "title": "推薦方案",
-        "base": "基礎價格",
-        "overage": "超額",
-        "cta": "開始使用"
-      },
-      "comparison": {
-        "title": "所有方案",
-        "best": "最佳性價比"
-      },
-      "details": {
-        "title": "詳細價格明細",
-        "plan": "方案",
-        "base": "基礎價格",
-        "includedCalls": "包含呼叫",
-        "overageRate": "超額費率",
-        "yourOverage": "您的超額",
-        "total": "總計"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

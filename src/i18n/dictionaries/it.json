@@ -301,7 +301,6 @@
       "usage": "Utilizzo",
       "budget": "Budget",
       "reports": "Report",
-      "calculator": "Stima costi",
       "apiKeys": "Chiavi API",
       "integrations": "Plugin motore",
       "webhooks": "Webhooks",
@@ -1403,50 +1402,6 @@
       "parameters": "Parametri",
       "recentDecisions": "Decisioni Recenti",
       "noLogs": "Nessun log decisioni ancora"
-    },
-    "calculator": {
-      "title": "Calcolatore di Utilizzo",
-      "subtitle": "Stima i tuoi costi mensili in base all'utilizzo previsto",
-      "stats": {
-        "apiCalls": "Chiamate API",
-        "memories": "Ricordi",
-        "extractions": "Estrazioni",
-        "estimated": "Costo Stimato"
-      },
-      "presets": {
-        "title": "Preset Rapidi",
-        "startup": "Startup",
-        "growing": "In Crescita",
-        "scale": "Scala",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Personalizza Utilizzo"
-      },
-      "labels": {
-        "apiCalls": "Chiamate API Mensili",
-        "memories": "Ricordi Memorizzati",
-        "extractions": "Estrazioni"
-      },
-      "recommended": {
-        "title": "Piano Consigliato",
-        "base": "Prezzo Base",
-        "overage": "Eccedenza",
-        "cta": "Inizia"
-      },
-      "comparison": {
-        "title": "Tutti i Piani",
-        "best": "Miglior Valore"
-      },
-      "details": {
-        "title": "Ripartizione Dettagliata Prezzi",
-        "plan": "Piano",
-        "base": "Prezzo Base",
-        "includedCalls": "Chiamate Incluse",
-        "overageRate": "Tariffa Eccedenza",
-        "yourOverage": "Tua Eccedenza",
-        "total": "Totale"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

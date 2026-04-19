@@ -301,7 +301,6 @@
       "usage": "שימוש",
       "budget": "תקציב",
       "reports": "דוחות",
-      "calculator": "הערכת עלויות",
       "apiKeys": "מפתחות API",
       "integrations": "תוספי מנוע",
       "webhooks": "Webhooks",
@@ -1370,50 +1369,6 @@
       "parameters": "פרמטרים",
       "recentDecisions": "החלטות אחרונות",
       "noLogs": "אין יומני החלטות עדיין"
-    },
-    "calculator": {
-      "title": "מחשבון שימוש",
-      "subtitle": "הערך את העלויות החודשיות שלך על בסיס שימוש צפוי",
-      "stats": {
-        "apiCalls": "קריאות API",
-        "memories": "זיכרונות",
-        "extractions": "חילוצים",
-        "estimated": "עלות משוערת"
-      },
-      "presets": {
-        "title": "הגדרות מוכנות",
-        "startup": "סטארטאפ",
-        "growing": "צומח",
-        "scale": "קנה מידה",
-        "enterprise": "ארגוני"
-      },
-      "customize": {
-        "title": "התאם שימוש"
-      },
-      "labels": {
-        "apiCalls": "קריאות API חודשיות",
-        "memories": "זיכרונות מאוחסנים",
-        "extractions": "חילוצים"
-      },
-      "recommended": {
-        "title": "תוכנית מומלצת",
-        "base": "מחיר בסיס",
-        "overage": "חריגה",
-        "cta": "התחל"
-      },
-      "comparison": {
-        "title": "כל התוכניות",
-        "best": "הערך הטוב ביותר"
-      },
-      "details": {
-        "title": "פירוט מחירים מפורט",
-        "plan": "תוכנית",
-        "base": "מחיר בסיס",
-        "includedCalls": "קריאות כלולות",
-        "overageRate": "שיעור חריגה",
-        "yourOverage": "החריגה שלך",
-        "total": "סה\"כ"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

@@ -301,7 +301,6 @@
       "usage": "Utilisation",
       "budget": "Budget",
       "reports": "Rapports",
-      "calculator": "Estimateur de coûts",
       "apiKeys": "Clés API",
       "integrations": "Plugins moteur",
       "webhooks": "Webhooks",
@@ -1399,50 +1398,6 @@
       "parameters": "Paramètres",
       "recentDecisions": "Décisions Récentes",
       "noLogs": "Aucun journal de décisions pour le moment"
-    },
-    "calculator": {
-      "title": "Calculateur d'Utilisation",
-      "subtitle": "Estimez vos coûts mensuels en fonction de l'utilisation prévue",
-      "stats": {
-        "apiCalls": "Appels API",
-        "memories": "Mémoires",
-        "extractions": "Extractions",
-        "estimated": "Coût Estimé"
-      },
-      "presets": {
-        "title": "Préréglages Rapides",
-        "startup": "Startup",
-        "growing": "En Croissance",
-        "scale": "Échelle",
-        "enterprise": "Entreprise"
-      },
-      "customize": {
-        "title": "Personnaliser l'Utilisation"
-      },
-      "labels": {
-        "apiCalls": "Appels API Mensuels",
-        "memories": "Mémoires Stockées",
-        "extractions": "Extractions"
-      },
-      "recommended": {
-        "title": "Plan Recommandé",
-        "base": "Prix de Base",
-        "overage": "Dépassement",
-        "cta": "Commencer"
-      },
-      "comparison": {
-        "title": "Tous les Plans",
-        "best": "Meilleur Rapport Qualité-Prix"
-      },
-      "details": {
-        "title": "Répartition Détaillée des Prix",
-        "plan": "Forfait",
-        "base": "Prix de Base",
-        "includedCalls": "Appels Inclus",
-        "overageRate": "Tarif de Dépassement",
-        "yourOverage": "Votre Dépassement",
-        "total": "Total"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

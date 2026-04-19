@@ -301,7 +301,6 @@
       "usage": "Användning",
       "budget": "Budget",
       "reports": "Rapporter",
-      "calculator": "Kostnadskalkyl",
       "apiKeys": "API-nycklar",
       "integrations": "Motorplugins",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "Parametrar",
       "recentDecisions": "Senaste Beslut",
       "noLogs": "Inga beslutsloggar ännu"
-    },
-    "calculator": {
-      "title": "Användningskalkylator",
-      "subtitle": "Uppskatta dina månadskostnader baserat på förväntad användning",
-      "stats": {
-        "apiCalls": "API-anrop",
-        "memories": "Minnen",
-        "extractions": "Extraheringar",
-        "estimated": "Uppskattad Kostnad"
-      },
-      "presets": {
-        "title": "Snabbmallar",
-        "startup": "Startup",
-        "growing": "Växande",
-        "scale": "Skala",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Anpassa Användning"
-      },
-      "labels": {
-        "apiCalls": "Månatliga API-anrop",
-        "memories": "Lagrade Minnen",
-        "extractions": "Extraheringar"
-      },
-      "recommended": {
-        "title": "Rekommenderad Plan",
-        "base": "Baspris",
-        "overage": "Överskridande",
-        "cta": "Kom Igång"
-      },
-      "comparison": {
-        "title": "Alla Planer",
-        "best": "Bästa Värde"
-      },
-      "details": {
-        "title": "Detaljerad Prisuppdelning",
-        "plan": "Plan",
-        "base": "Baspris",
-        "includedCalls": "Inkluderade Anrop",
-        "overageRate": "Överskridandefrekvens",
-        "yourOverage": "Ditt Överskridande",
-        "total": "Totalt"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

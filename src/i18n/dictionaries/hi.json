@@ -301,7 +301,6 @@
       "usage": "उपयोग",
       "budget": "Budget",
       "reports": "Reports",
-      "calculator": "Cost estimator",
       "apiKeys": "API keys",
       "integrations": "Engine plugins",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "पैरामीटर",
       "recentDecisions": "हाल के निर्णय",
       "noLogs": "अभी तक कोई निर्णय लॉग नहीं"
-    },
-    "calculator": {
-      "title": "उपयोग कैलकुलेटर",
-      "subtitle": "अपेक्षित उपयोग के आधार पर अपनी मासिक लागत का अनुमान लगाएं",
-      "stats": {
-        "apiCalls": "API कॉल",
-        "memories": "मेमोरी",
-        "extractions": "निष्कर्षण",
-        "estimated": "अनुमानित लागत"
-      },
-      "presets": {
-        "title": "त्वरित प्रीसेट",
-        "startup": "स्टार्टअप",
-        "growing": "बढ़ता हुआ",
-        "scale": "स्केल",
-        "enterprise": "एंटरप्राइज़"
-      },
-      "customize": {
-        "title": "उपयोग अनुकूलित करें"
-      },
-      "labels": {
-        "apiCalls": "मासिक API कॉल",
-        "memories": "संग्रहीत मेमोरी",
-        "extractions": "निष्कर्षण"
-      },
-      "recommended": {
-        "title": "अनुशंसित योजना",
-        "base": "मूल मूल्य",
-        "overage": "अधिक उपयोग",
-        "cta": "शुरू करें"
-      },
-      "comparison": {
-        "title": "सभी योजनाएं",
-        "best": "सर्वोत्तम मूल्य"
-      },
-      "details": {
-        "title": "विस्तृत मूल्य निर्धारण विवरण",
-        "plan": "योजना",
-        "base": "मूल मूल्य",
-        "includedCalls": "शामिल कॉल",
-        "overageRate": "अधिक उपयोग दर",
-        "yourOverage": "आपका अधिक उपयोग",
-        "total": "कुल"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

@@ -301,7 +301,6 @@
       "usage": "Uso",
       "budget": "Presupuesto",
       "reports": "Informes",
-      "calculator": "Calculadora",
       "apiKeys": "Claves API",
       "integrations": "Plugins de motor",
       "webhooks": "Webhooks",
@@ -1399,50 +1398,6 @@
       "parameters": "Parámetros",
       "recentDecisions": "Decisiones Recientes",
       "noLogs": "Aún no hay registros de decisiones"
-    },
-    "calculator": {
-      "title": "Calculadora de Uso",
-      "subtitle": "Estima tus costos mensuales basados en el uso esperado",
-      "stats": {
-        "apiCalls": "Llamadas API",
-        "memories": "Memorias",
-        "extractions": "Extracciones",
-        "estimated": "Costo Estimado"
-      },
-      "presets": {
-        "title": "Preajustes Rápidos",
-        "startup": "Startup",
-        "growing": "En Crecimiento",
-        "scale": "Escala",
-        "enterprise": "Empresa"
-      },
-      "customize": {
-        "title": "Personalizar Uso"
-      },
-      "labels": {
-        "apiCalls": "Llamadas API Mensuales",
-        "memories": "Memorias Almacenadas",
-        "extractions": "Extracciones"
-      },
-      "recommended": {
-        "title": "Plan Recomendado",
-        "base": "Precio Base",
-        "overage": "Exceso",
-        "cta": "Comenzar"
-      },
-      "comparison": {
-        "title": "Todos los Planes",
-        "best": "Mejor Valor"
-      },
-      "details": {
-        "title": "Desglose Detallado de Precios",
-        "plan": "Plan",
-        "base": "Precio Base",
-        "includedCalls": "Llamadas Incluidas",
-        "overageRate": "Tarifa de Exceso",
-        "yourOverage": "Tu Exceso",
-        "total": "Total"
-      }
     },
     "webhooks": {
       "title": "Webhooks",
