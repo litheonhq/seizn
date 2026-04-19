@@ -708,24 +708,24 @@
       "featureAuditDesc": "Cronologia attività"
     },
     "onboarding": {
-      "title": "Inizia con Seizn",
+      "title": "Configura la memoria NPC",
       "progress": "{completed}/{total} passaggi completati",
       "dismiss": "Chiudi",
       "doLater": "Lo farò dopo",
       "steps": {
         "apiKey": {
-          "title": "Genera chiave API",
-          "description": "Crea una chiave API per le richieste del runtime di gioco",
+          "title": "Crea chiave API",
+          "description": "Autentica richieste da server di gioco e strumenti.",
           "action": "Crea chiave"
         },
         "demoQuery": {
-          "title": "Interroga il contesto NPC",
-          "description": "Prova una query NPC demo o invia la tua prima richiesta",
-          "action": "Prova demo"
+          "title": "Esegui query memoria NPC",
+          "description": "Prova una query NPC di esempio o invia una richiesta API.",
+          "action": "Prova esempio"
         },
         "viewTrace": {
-          "title": "Visualizza risultati trace",
-          "description": "Consulta la trace completa dell'esecuzione della tua query",
+          "title": "Rivedi trace di recupero",
+          "description": "Vedi come è stato recuperato il contesto NPC per la query evento.",
           "action": "Visualizza trace"
         },
         "installSdk": {
@@ -739,15 +739,15 @@
           "action": "Crea progetto"
         },
         "firstQuery": {
-          "title": "Registra il primo evento",
-          "description": "Prova il playground — crea un NPC, registra un evento, interroga il contesto.",
-          "action": "Prova query"
+          "title": "Registra il primo evento NPC",
+          "description": "Usa il playground per creare un NPC, registrare un evento e recuperare il contesto.",
+          "action": "Apri playground"
         }
       },
       "takeTour": "Fai un tour",
       "sdkModal": {
         "title": "Installa Seizn SDK",
-        "description": "Scegli il tuo metodo di installazione preferito e copia il comando.",
+        "description": "Copia il comando SDK per il tuo stack di gioco.",
         "copy": "Copia",
         "copied": "Copiato!",
         "viewDocs": "Visualizza documentazione completa",
@@ -755,20 +755,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Benvenuto su Seizn!",
-          "description": "Facciamo un breve tour per aiutarti a iniziare."
+          "title": "Crea workflow di memoria NPC",
+          "description": "Crea un progetto, aggiungi una chiave API, registra un evento e ispeziona la trace del contesto."
         },
         "sidebar": {
-          "title": "Navigazione",
-          "description": "Usa la barra laterale per navigare tra le sezioni della dashboard."
+          "title": "Navigazione workflow NPC",
+          "description": "Usa Entità, Grafo relazioni e Inbox eventi per gestire il contesto NPC."
         },
         "stats": {
-          "title": "Le tue Statistiche",
-          "description": "Monitora uso API, entità salvate e piano attuale."
+          "title": "Stato progetto",
+          "description": "Monitora uso API, entità salvate, attività eventi e limiti del piano."
         },
         "quickStart": {
           "title": "Azioni Rapide",
-          "description": "Usa queste schede per attività comuni come creare chiavi API."
+          "description": "Usa queste schede per creare chiavi API ed eseguire il primo flusso di memoria NPC."
         },
         "next": "Avanti",
         "skip": "Salta tour",
@@ -1480,24 +1480,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Tutorial Prima Ricerca",
-      "subtitle": "Impara come usare il playground",
+      "title": "Tutorial query NPC",
+      "subtitle": "Testa il recupero memoria NPC",
       "dismiss": "Chiudi",
-      "tryExamples": "Prova una query di esempio:",
-      "hint": "Clicca qualsiasi esempio per compilare automaticamente l'input query",
+      "tryExamples": "Prova una query NPC:",
+      "hint": "Fai clic su un esempio per compilare la query",
       "gotIt": "Capito!",
       "tips": {
         "welcome": {
-          "title": "Benvenuto nella Console di Debug",
-          "description": "Testa le tue query qui con tracciamento completo per capire esattamente come funziona la ricerca."
+          "title": "Benvenuto nella console debug NPC",
+          "description": "Testa query evento con tracing completo per vedere come viene recuperata la memoria NPC."
         },
         "query": {
-          "title": "Query in Linguaggio Naturale",
-          "description": "Inserisci qualsiasi query in linguaggio naturale. La nostra AI troverà ricordi semanticamente simili dai tuoi dati memorizzati."
+          "title": "Query contesto NPC",
+          "description": "Chiedi di un personaggio, incontro o fazione. Seizn cerca il contesto rilevante nel grafo salvato."
         },
         "trace": {
-          "title": "Traccia di Esecuzione Completa",
-          "description": "Visualizza ogni passo della pipeline - dalla creazione dell'embedding alla classificazione dei risultati - con ripartizione di tempi e costi."
+          "title": "Trace di recupero",
+          "description": "Vedi ogni passo dal match dell’entità al ranking, con tempi e costi."
         }
       }
     },

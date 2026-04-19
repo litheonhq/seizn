@@ -287,7 +287,7 @@
       "unlimited": "Unlimited"
     },
     "onboarding": {
-      "title": "Get started with Seizn",
+      "title": "Set up NPC memory",
       "progress": "{completed}/{total} steps completed",
       "dismiss": "Dismiss",
       "doLater": "I'll do this later",
@@ -299,9 +299,9 @@
           "action": "Create project"
         },
         "apiKey": {
-          "title": "Generate API Key",
-          "description": "Create an API key for game runtime requests",
-          "action": "Create Key"
+          "title": "Create API key",
+          "description": "Authenticate game-server and tooling requests.",
+          "action": "Create key"
         },
         "installSdk": {
           "title": "Install the SDK",
@@ -309,24 +309,24 @@
           "action": "Copy SDK"
         },
         "firstQuery": {
-          "title": "Record first event",
-          "description": "Try the playground — create an NPC, log an event, query context back.",
-          "action": "Try Query"
+          "title": "Log first NPC event",
+          "description": "Use the playground to create an NPC, log an event, and query context back.",
+          "action": "Open playground"
         },
         "viewTrace": {
-          "title": "View Trace Results",
-          "description": "See the full trace of your query execution",
-          "action": "View Trace"
+          "title": "Review retrieval trace",
+          "description": "See how NPC context was retrieved for the event query.",
+          "action": "View trace"
         },
         "demoQuery": {
-          "title": "Query NPC context",
-          "description": "Try a demo NPC query or send your first request",
-          "action": "Try Demo"
+          "title": "Run NPC memory query",
+          "description": "Try a sample NPC query or make an API request.",
+          "action": "Try sample"
         }
       },
       "sdkModal": {
         "title": "Install Seizn SDK",
-        "description": "Choose your preferred installation method and copy the command.",
+        "description": "Copy the SDK command for your game stack.",
         "copy": "Copy",
         "copied": "Copied!",
         "viewDocs": "View full documentation",
@@ -334,20 +334,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Welcome to Seizn!",
-          "description": "Let's take a quick tour to help you get started."
+          "title": "Build NPC memory workflows",
+          "description": "Create a project, add an API key, log an event, and inspect the context trace."
         },
         "sidebar": {
-          "title": "Navigation",
-          "description": "Use the sidebar to navigate between dashboard sections."
+          "title": "NPC workflow navigation",
+          "description": "Use Entities, Relation graph, and Event inbox to manage NPC context."
         },
         "stats": {
-          "title": "Your Stats",
-          "description": "Monitor API usage, entities stored, and current plan."
+          "title": "Project health",
+          "description": "Monitor API usage, stored entities, event activity, and plan limits."
         },
         "quickStart": {
           "title": "Quick Actions",
-          "description": "Use these cards for common tasks like creating API keys."
+          "description": "Use these cards to create API keys and run the first NPC memory flow."
         },
         "next": "Next",
         "skip": "Skip tour",
@@ -1072,24 +1072,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "First Search Tutorial",
-      "subtitle": "Learn how to use the playground",
+      "title": "NPC Query Tutorial",
+      "subtitle": "Test NPC memory retrieval",
       "dismiss": "Dismiss",
-      "tryExamples": "Try an example query:",
-      "hint": "Click any example to auto-fill the query input",
+      "tryExamples": "Try an NPC query:",
+      "hint": "Click any example to fill the query input",
       "gotIt": "Got it!",
       "tips": {
         "welcome": {
-          "title": "Welcome to the Debug Console",
-          "description": "Test your queries here with full tracing to understand exactly how search works under the hood."
+          "title": "Welcome to the NPC debug console",
+          "description": "Test event queries with full tracing so you can see how NPC memory is retrieved."
         },
         "query": {
-          "title": "Natural Language Queries",
-          "description": "Enter any natural language query. Our AI will find semantically similar memories from your stored data."
+          "title": "NPC context queries",
+          "description": "Ask about a character, encounter, or faction. Seizn searches the stored graph for relevant context."
         },
         "trace": {
-          "title": "Full Execution Trace",
-          "description": "See every step of the pipeline - from embedding creation to result ranking - with timing and cost breakdowns."
+          "title": "Retrieval trace",
+          "description": "See each step from entity match to result ranking with timing and cost breakdowns."
         }
       }
     },

@@ -708,25 +708,25 @@
       "featureAuditDesc": "Lịch sử hoạt động"
     },
     "onboarding": {
-      "title": "Bắt đầu với Seizn",
+      "title": "Thiết lập bộ nhớ NPC",
       "progress": "{completed}/{total} bước đã hoàn thành",
       "dismiss": "Đóng",
       "doLater": "Tôi sẽ làm sau",
       "steps": {
         "apiKey": {
           "title": "Tạo khóa API",
-          "description": "Tạo khóa API cho yêu cầu runtime của game",
+          "description": "Xác thực yêu cầu từ máy chủ game và công cụ.",
           "action": "Tạo khóa"
         },
         "demoQuery": {
-          "title": "Truy vấn ngữ cảnh NPC",
-          "description": "Thử truy vấn NPC demo hoặc gửi yêu cầu đầu tiên",
-          "action": "Thử demo"
+          "title": "Chạy truy vấn bộ nhớ NPC",
+          "description": "Thử truy vấn NPC mẫu hoặc gửi yêu cầu API.",
+          "action": "Thử mẫu"
         },
         "viewTrace": {
-          "title": "Xem theo dõi",
-          "description": "Hiểu cách tìm kiếm hoạt động với theo dõi đầy đủ",
-          "action": "Xem theo dõi"
+          "title": "Xem trace truy xuất",
+          "description": "Xem cách ngữ cảnh NPC được truy xuất cho truy vấn sự kiện.",
+          "action": "Xem trace"
         },
         "installSdk": {
           "title": "Cài đặt SDK",
@@ -739,15 +739,15 @@
           "action": "Tạo dự án"
         },
         "firstQuery": {
-          "title": "Ghi sự kiện đầu tiên",
-          "description": "Thử playground — tạo NPC, ghi sự kiện, truy vấn context lại.",
-          "action": "Thử Query"
+          "title": "Ghi sự kiện NPC đầu tiên",
+          "description": "Dùng playground để tạo NPC, ghi sự kiện và truy vấn lại ngữ cảnh.",
+          "action": "Mở playground"
         }
       },
       "takeTour": "Tham quan",
       "sdkModal": {
         "title": "Cài đặt Seizn SDK",
-        "description": "Chọn phương thức cài đặt ưa thích của bạn và sao chép lệnh.",
+        "description": "Sao chép lệnh SDK cho stack game của bạn.",
         "copy": "Sao chép",
         "copied": "Đã sao chép!",
         "viewDocs": "Xem tài liệu đầy đủ",
@@ -755,20 +755,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Chào mừng đến với Seizn!",
-          "description": "Hãy tham quan nhanh để giúp bạn bắt đầu."
+          "title": "Xây luồng bộ nhớ NPC",
+          "description": "Tạo dự án, thêm khóa API, ghi sự kiện và kiểm tra trace ngữ cảnh."
         },
         "sidebar": {
-          "title": "Điều hướng",
-          "description": "Sử dụng thanh bên để điều hướng giữa các phần của dashboard."
+          "title": "Điều hướng luồng NPC",
+          "description": "Dùng Thực thể, Đồ thị quan hệ và Hộp sự kiện để quản lý ngữ cảnh NPC."
         },
         "stats": {
-          "title": "Thống kê của Bạn",
-          "description": "Theo dõi mức dùng API, thực thể đã lưu và gói hiện tại."
+          "title": "Sức khỏe dự án",
+          "description": "Theo dõi mức dùng API, thực thể đã lưu, hoạt động sự kiện và giới hạn gói."
         },
         "quickStart": {
           "title": "Thao tác Nhanh",
-          "description": "Sử dụng các thẻ này cho các tác vụ phổ biến như tạo API keys."
+          "description": "Dùng các thẻ này để tạo khóa API và chạy luồng bộ nhớ NPC đầu tiên."
         },
         "next": "Tiếp theo",
         "skip": "Bỏ qua tour",
@@ -1447,24 +1447,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Hướng dẫn Tìm kiếm Đầu tiên",
-      "subtitle": "Tìm hiểu cách sử dụng playground",
+      "title": "Hướng dẫn truy vấn NPC",
+      "subtitle": "Kiểm thử truy xuất bộ nhớ NPC",
       "dismiss": "Đóng",
-      "tryExamples": "Thử query mẫu:",
-      "hint": "Nhấp vào bất kỳ mẫu nào để tự động điền vào ô nhập query",
+      "tryExamples": "Thử truy vấn NPC:",
+      "hint": "Nhấp vào ví dụ để điền ô truy vấn",
       "gotIt": "Hiểu rồi!",
       "tips": {
         "welcome": {
-          "title": "Chào mừng đến với Debug Console",
-          "description": "Kiểm tra các query của bạn ở đây với tính năng theo dõi đầy đủ để hiểu chính xác cách tìm kiếm hoạt động."
+          "title": "Chào mừng đến console debug NPC",
+          "description": "Kiểm thử truy vấn sự kiện với trace đầy đủ để xem cách bộ nhớ NPC được truy xuất."
         },
         "query": {
-          "title": "Query Ngôn ngữ Tự nhiên",
-          "description": "Nhập bất kỳ query ngôn ngữ tự nhiên nào. AI của chúng tôi sẽ tìm các bộ nhớ tương tự về mặt ngữ nghĩa từ dữ liệu đã lưu của bạn."
+          "title": "Truy vấn ngữ cảnh NPC",
+          "description": "Hỏi về nhân vật, cuộc gặp hoặc phe phái. Seizn tìm ngữ cảnh liên quan trong đồ thị đã lưu."
         },
         "trace": {
-          "title": "Theo dõi Thực thi Đầy đủ",
-          "description": "Xem từng bước của pipeline - từ tạo embedding đến xếp hạng kết quả - với phân tích thời gian và chi phí."
+          "title": "Trace truy xuất",
+          "description": "Xem từng bước từ khớp thực thể đến xếp hạng kết quả, kèm thời gian và chi phí."
         }
       }
     },

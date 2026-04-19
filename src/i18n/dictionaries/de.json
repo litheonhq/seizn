@@ -222,24 +222,24 @@
       "unlimited": "Unbegrenzt"
     },
     "onboarding": {
-      "title": "Mit Seizn starten",
+      "title": "NPC-Gedächtnis einrichten",
       "progress": "{completed}/{total} Schritte abgeschlossen",
       "dismiss": "Schließen",
       "doLater": "Später erledigen",
       "steps": {
         "apiKey": {
-          "title": "API-Schlüssel generieren",
-          "description": "Erstelle einen API-Schlüssel für Game-Runtime-Anfragen",
+          "title": "API-Schlüssel erstellen",
+          "description": "Authentifiziert Anfragen von Spielservern und Tools.",
           "action": "Schlüssel erstellen"
         },
         "demoQuery": {
-          "title": "NPC-Kontext abfragen",
-          "description": "Starte eine Demo-NPC-Abfrage oder sende deine erste Anfrage",
-          "action": "Demo testen"
+          "title": "NPC-Gedächtnisabfrage ausführen",
+          "description": "Teste eine Beispielabfrage für NPCs oder sende eine API-Anfrage.",
+          "action": "Beispiel testen"
         },
         "viewTrace": {
-          "title": "Trace-Ergebnisse ansehen",
-          "description": "Vollständigen Trace der Abfrageausführung einsehen",
+          "title": "Retrieval-Trace prüfen",
+          "description": "Sieh, wie der NPC-Kontext für die Ereignisabfrage geladen wurde.",
           "action": "Trace anzeigen"
         },
         "installSdk": {
@@ -253,15 +253,15 @@
           "action": "Projekt erstellen"
         },
         "firstQuery": {
-          "title": "Erstes Event erfassen",
-          "description": "Playground ausprobieren — NPC anlegen, Event loggen, Kontext abfragen.",
-          "action": "Abfrage testen"
+          "title": "Erstes NPC-Ereignis protokollieren",
+          "description": "Erstelle im Playground einen NPC, protokolliere ein Ereignis und frage den Kontext ab.",
+          "action": "Playground öffnen"
         }
       },
       "takeTour": "Tour starten",
       "sdkModal": {
         "title": "Seizn SDK installieren",
-        "description": "Wählen Sie Ihre bevorzugte Installationsmethode und kopieren Sie den Befehl.",
+        "description": "Kopiere den SDK-Befehl für deinen Game-Stack.",
         "copy": "Kopieren",
         "copied": "Kopiert!",
         "viewDocs": "Vollständige Dokumentation anzeigen",
@@ -269,20 +269,20 @@
       },
       "tour": {
         "welcome": {
-          "title": "Willkommen bei Seizn!",
-          "description": "Lassen Sie uns eine kurze Tour machen, um Ihnen den Einstieg zu erleichtern."
+          "title": "NPC-Gedächtnis-Workflows aufbauen",
+          "description": "Erstelle ein Projekt, füge einen API-Schlüssel hinzu, protokolliere ein Ereignis und prüfe den Kontext-Trace."
         },
         "sidebar": {
-          "title": "Navigation",
-          "description": "Verwenden Sie die Seitenleiste, um zwischen den Dashboard-Bereichen zu navigieren."
+          "title": "NPC-Workflow-Navigation",
+          "description": "Verwalte NPC-Kontext über Entitäten, Beziehungsgraph und Ereignis-Eingang."
         },
         "stats": {
-          "title": "Ihre Statistiken",
-          "description": "Überwache API-Nutzung, gespeicherte Entitäten und den aktuellen Plan."
+          "title": "Projektzustand",
+          "description": "Überwache API-Nutzung, gespeicherte Entitäten, Ereignisaktivität und Planlimits."
         },
         "quickStart": {
           "title": "Schnellaktionen",
-          "description": "Verwenden Sie diese Karten für häufige Aufgaben wie das Erstellen von API-Schlüsseln."
+          "description": "Nutze diese Karten, um API-Schlüssel zu erstellen und den ersten NPC-Gedächtnisfluss auszuführen."
         },
         "next": "Weiter",
         "skip": "Tour überspringen",
@@ -1480,24 +1480,24 @@
       }
     },
     "playgroundTutorial": {
-      "title": "Erste Suche Tutorial",
-      "subtitle": "Lernen Sie, wie Sie den Playground verwenden",
+      "title": "NPC-Abfrage-Tutorial",
+      "subtitle": "NPC-Gedächtnis-Retrieval testen",
       "dismiss": "Schließen",
-      "tryExamples": "Probieren Sie eine Beispielabfrage:",
-      "hint": "Klicken Sie auf ein Beispiel, um die Abfrage automatisch auszufüllen",
+      "tryExamples": "NPC-Abfrage testen:",
+      "hint": "Klicke ein Beispiel, um das Abfragefeld zu füllen",
       "gotIt": "Verstanden!",
       "tips": {
         "welcome": {
-          "title": "Willkommen in der Debug-Konsole",
-          "description": "Testen Sie Ihre Abfragen hier mit vollständiger Ablaufverfolgung, um genau zu verstehen, wie die Suche funktioniert."
+          "title": "Willkommen in der NPC-Debug-Konsole",
+          "description": "Teste Ereignisabfragen mit vollständigem Tracing und sieh, wie NPC-Gedächtnis geladen wird."
         },
         "query": {
-          "title": "Abfragen in natürlicher Sprache",
-          "description": "Geben Sie eine beliebige Abfrage in natürlicher Sprache ein. Unsere KI findet semantisch ähnliche Erinnerungen aus Ihren gespeicherten Daten."
+          "title": "NPC-Kontextabfragen",
+          "description": "Frage nach einem Charakter, einer Begegnung oder Fraktion. Seizn durchsucht den gespeicherten Graphen nach relevantem Kontext."
         },
         "trace": {
-          "title": "Vollständige Ausführungsablaufverfolgung",
-          "description": "Sehen Sie jeden Schritt der Pipeline - von der Embedding-Erstellung bis zum Ergebnis-Ranking - mit Zeit- und Kostenaufschlüsselung."
+          "title": "Retrieval-Trace",
+          "description": "Sieh jeden Schritt vom Entitätsabgleich bis zum Ranking mit Zeit- und Kostenangaben."
         }
       }
     },
