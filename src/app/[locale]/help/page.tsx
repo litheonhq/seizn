@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const subtitle = (helpDict?.subtitle as string) || "Find answers, get support, and access resources.";
 
   return {
-    title: `${title} - Seizn`,
+    title,
     description: subtitle,
     alternates: {
       canonical: `/${locale}/help`,
     },
     openGraph: {
-      title: `${title} - Seizn`,
+      title,
       description: subtitle,
       type: "website",
     },

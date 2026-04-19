@@ -18,9 +18,10 @@ export async function generateMetadata({ params }: Props) {
   const docs = dict.docs as Record<string, unknown> | undefined;
   const opentelemetryPage = docs?.opentelemetryPage as Record<string, unknown> | undefined;
   const meta = opentelemetryPage?.meta as Record<string, string> | undefined;
+  const title = (meta?.title || "OpenTelemetry Integration").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: meta?.title || "OpenTelemetry Integration | Seizn",
+    title,
     description: meta?.description || "Export traces to Datadog, Grafana, Jaeger via OTLP",
     alternates: {
       canonical: `/${locale}/docs/integrations/opentelemetry`,

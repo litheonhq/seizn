@@ -18,9 +18,10 @@ export async function generateMetadata({ params }: Props) {
   const docs = dict.docs as Record<string, unknown> | undefined;
   const llamaindexPage = docs?.llamaindexPage as Record<string, unknown> | undefined;
   const meta = llamaindexPage?.meta as Record<string, string> | undefined;
+  const title = (meta?.title || "LlamaIndex Integration").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: meta?.title || "LlamaIndex Integration | Seizn",
+    title,
     description: meta?.description || "Native retriever for LlamaIndex RAG pipelines",
     alternates: {
       canonical: `/${locale}/docs/integrations/llamaindex`,

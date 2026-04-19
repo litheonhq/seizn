@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props) {
 
   return {
     title: dict.docs?.hero?.title || "Documentation",
-    description: dict.docs?.hero?.subtitle || "Seizn API Documentation",
+    description: dict.docs?.hero?.subtitle || "Docs for Seizn NPC memory APIs, engine integrations, and graph retrieval workflows.",
     alternates: {
       canonical: `/${locale}/docs`,
     },

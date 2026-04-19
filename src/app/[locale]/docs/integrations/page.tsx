@@ -18,10 +18,12 @@ export async function generateMetadata({ params }: Props) {
   const docs = dict.docs as Record<string, unknown> | undefined;
   const integrationsPage = docs?.integrationsPage as Record<string, unknown> | undefined;
   const meta = integrationsPage?.meta as Record<string, string> | undefined;
+  const title = (meta?.title || "Integrations").replace(/\s+[|·-]\s+Seizn$/u, "");
 
   return {
-    title: meta?.title || "Integrations | Seizn",
-    description: meta?.description || "Integrate Seizn with LangChain, LlamaIndex, OpenTelemetry, and more",
+    title,
+    description:
+      meta?.description || "Integrate Seizn with Unity, Unreal, Godot, raw HTTP, Python, and JavaScript.",
     alternates: {
       canonical: `/${locale}/docs/integrations`,
     },

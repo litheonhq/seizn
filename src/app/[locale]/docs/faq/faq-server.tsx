@@ -120,7 +120,7 @@ export function FAQServer({ locale, dictionary }: Props) {
             </h1>
             <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
               {faqPage?.subtitle ||
-                "Common questions about Seizn Memory API, from getting started to advanced operations."}
+                "Common questions about Seizn NPC memory, from getting started to advanced operations."}
             </p>
           </div>
 

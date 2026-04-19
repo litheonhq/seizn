@@ -1,4 +1,13 @@
 import { MetadataRoute } from 'next';
+import { locales } from '@/i18n/config';
+
+const blockedPaths = [
+  '/api',
+  '/api/',
+  '/dashboard',
+  '/dashboard/',
+  ...locales.flatMap((locale) => [`/${locale}/dashboard`, `/${locale}/dashboard/`]),
+];
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,48 +15,48 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/dashboard/', '/(dashboard)/'],
+        disallow: blockedPaths,
       },
       // AI Crawlers - explicitly allow
       {
         userAgent: 'GPTBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'ChatGPT-User',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'ClaudeBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'Claude-Web',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'PerplexityBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'Google-Extended',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
       {
         userAgent: 'Bingbot',
         allow: '/',
-        disallow: ['/api/', '/dashboard/'],
+        disallow: blockedPaths,
       },
     ],
     sitemap: 'https://www.seizn.com/sitemap.xml',

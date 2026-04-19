@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Refund Policy | Seizn",
+  title: "Refund Policy · Seizn",
   description:
     "Seizn refund policy. Learn about our 14-day money-back guarantee, eligibility conditions, and how to request a refund.",
   openGraph: {
-    title: "Refund Policy | Seizn",
+    title: "Refund Policy · Seizn",
     description:
       "Seizn refund policy. Learn about our 14-day money-back guarantee, eligibility conditions, and how to request a refund.",
     type: "website",

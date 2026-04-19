@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { StatusClient } from './status-client';
 
 export const metadata = {
-  title: 'System Status | Seizn',
+  title: 'System Status · Seizn',
   description: 'Real-time system status and uptime information for Seizn API services',
 };
 

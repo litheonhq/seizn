@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dict = await getDictionary(locale);
 
   return {
-    title: `Summer - ${dict.hero.title} | Seizn`,
+    title: `Summer - ${dict.hero.title}`,
     description: dict.hero.subtitle,
   };
 }

@@ -17,16 +17,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dict = await getDictionary(locale);
 
   const title = dict.docs?.faqPage?.title || "FAQ";
-  const subtitle = dict.docs?.faqPage?.subtitle || "Frequently asked questions about Seizn Memory API.";
+  const subtitle =
+    dict.docs?.faqPage?.subtitle || "Frequently asked questions about Seizn's NPC memory graph and integration flow.";
 
   return {
-    title: `${title} - Seizn Memory API`,
+    title,
     description: subtitle,
     alternates: {
       canonical: `/${locale}/docs/faq`,
     },
     openGraph: {
-      title: `${title} - Seizn Memory API`,
+      title,
       description: subtitle,
       type: "website",
     },
