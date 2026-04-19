@@ -1514,7 +1514,13 @@
       "navigate": "นำทาง",
       "open": "เปิด",
       "close": "ปิด",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "เวิร์กโฟลว์ NPC",
+      "commands": {
+        "createEntity": "สร้างเอนทิตี",
+        "viewRelationGraph": "ดูกราฟความสัมพันธ์",
+        "openEventInbox": "เปิดกล่องเหตุการณ์"
+      }
     },
     "northStar": {
       "subtitle": "ตัวชี้วัดหลักด้านความน่าเชื่อถือของหน่วยความจำ NPC"

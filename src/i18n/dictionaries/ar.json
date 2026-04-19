@@ -1514,7 +1514,13 @@
       "navigate": "تنقل",
       "open": "فتح",
       "close": "إغلاق",
-      "enter": "إدخال"
+      "enter": "إدخال",
+      "workflowGroup": "سير عمل NPC",
+      "commands": {
+        "createEntity": "إنشاء كيان",
+        "viewRelationGraph": "عرض رسم العلاقات",
+        "openEventInbox": "فتح صندوق الأحداث"
+      }
     },
     "northStar": {
       "subtitle": "مؤشرات رئيسية لموثوقية ذاكرة NPC"
