@@ -1418,7 +1418,13 @@
       "navigate": "移動",
       "open": "開く",
       "close": "閉じる",
-      "enter": "決定"
+      "enter": "決定",
+      "workflowGroup": "NPC ワークフロー",
+      "commands": {
+        "createEntity": "エンティティを作成",
+        "viewRelationGraph": "関係グラフを表示",
+        "openEventInbox": "イベント受信箱を開く"
+      }
     },
     "northStar": {
       "subtitle": "NPC メモリ信頼性の主要指標"

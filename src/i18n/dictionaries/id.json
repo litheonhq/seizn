@@ -1514,7 +1514,13 @@
       "navigate": "Navigasi",
       "open": "Buka",
       "close": "Tutup",
-      "enter": "Enter"
+      "enter": "Enter",
+      "workflowGroup": "Alur kerja NPC",
+      "commands": {
+        "createEntity": "Buat entitas",
+        "viewRelationGraph": "Lihat graf relasi",
+        "openEventInbox": "Buka kotak masuk event"
+      }
     },
     "northStar": {
       "subtitle": "Indikator utama keandalan memori NPC"
