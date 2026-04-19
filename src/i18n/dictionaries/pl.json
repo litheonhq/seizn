@@ -301,7 +301,6 @@
       "usage": "Zużycie",
       "budget": "Budżet",
       "reports": "Raporty",
-      "calculator": "Szacowanie kosztów",
       "apiKeys": "Klucze API",
       "integrations": "Wtyczki silnika",
       "webhooks": "Webhooks",
@@ -1400,50 +1399,6 @@
       "parameters": "Parametry",
       "recentDecisions": "Ostatnie decyzje",
       "noLogs": "Brak dzienników decyzji"
-    },
-    "calculator": {
-      "title": "Kalkulator użycia",
-      "subtitle": "Oszacuj miesięczne koszty na podstawie oczekiwanego użycia",
-      "stats": {
-        "apiCalls": "Wywołania API",
-        "memories": "Wspomnienia",
-        "extractions": "Ekstrakcje",
-        "estimated": "Szacunkowy koszt"
-      },
-      "presets": {
-        "title": "Szybkie presety",
-        "startup": "Startup",
-        "growing": "Rozwijający się",
-        "scale": "Skala",
-        "enterprise": "Korporacyjny"
-      },
-      "customize": {
-        "title": "Dostosuj użycie"
-      },
-      "labels": {
-        "apiCalls": "Miesięczne wywołania API",
-        "memories": "Zapisane wspomnienia",
-        "extractions": "Ekstrakcje"
-      },
-      "recommended": {
-        "title": "Zalecany plan",
-        "base": "Cena podstawowa",
-        "overage": "Przekroczenie",
-        "cta": "Rozpocznij"
-      },
-      "comparison": {
-        "title": "Wszystkie plany",
-        "best": "Najlepsza wartość"
-      },
-      "details": {
-        "title": "Szczegółowy podział cen",
-        "plan": "Plan",
-        "base": "Cena podstawowa",
-        "includedCalls": "Zawarte wywołania",
-        "overageRate": "Stawka za przekroczenie",
-        "yourOverage": "Twoje przekroczenie",
-        "total": "Razem"
-      }
     },
     "webhooks": {
       "title": "Webhooki",

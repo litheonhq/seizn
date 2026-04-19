@@ -259,7 +259,6 @@
       "usage": "Usage",
       "budget": "Budget",
       "reports": "Reports",
-      "calculator": "Cost estimator",
       "apiKeys": "API keys",
       "integrations": "Engine plugins",
       "webhooks": "Webhooks",
@@ -989,50 +988,6 @@
       "betaMsg": "This integration is in beta. Some features may change before the final release.",
       "close": "Close",
       "viewDocs": "View Documentation"
-    },
-    "calculator": {
-      "title": "Cost estimator",
-      "subtitle": "Estimate monthly costs from entity count and event throughput.",
-      "stats": {
-        "apiCalls": "API Calls",
-        "memories": "Memories",
-        "extractions": "Extractions",
-        "estimated": "Estimated Cost"
-      },
-      "presets": {
-        "title": "Quick Presets",
-        "startup": "Startup",
-        "growing": "Growing",
-        "scale": "Scale",
-        "enterprise": "Enterprise"
-      },
-      "customize": {
-        "title": "Customize Usage"
-      },
-      "labels": {
-        "apiCalls": "Monthly API Calls",
-        "memories": "Memories Stored",
-        "extractions": "Extractions"
-      },
-      "recommended": {
-        "title": "Recommended Plan",
-        "base": "Base Price",
-        "overage": "Overage",
-        "cta": "Get Started"
-      },
-      "comparison": {
-        "title": "All Plans",
-        "best": "Best Value"
-      },
-      "details": {
-        "title": "Detailed Pricing Breakdown",
-        "plan": "Plan",
-        "base": "Base Price",
-        "includedCalls": "Included Calls",
-        "overageRate": "Overage Rate",
-        "yourOverage": "Your Overage",
-        "total": "Total"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

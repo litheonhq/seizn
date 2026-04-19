@@ -370,7 +370,6 @@
       "usage": "用量",
       "budget": "预算",
       "reports": "报告",
-      "calculator": "计算器",
       "apiKeys": "API密钥",
       "integrations": "集成",
       "webhooks": "Webhook",
@@ -1400,50 +1399,6 @@
       "parameters": "参数",
       "recentDecisions": "最近决策",
       "noLogs": "暂无决策日志"
-    },
-    "calculator": {
-      "title": "使用量计算器",
-      "subtitle": "根据预期使用量估算您的月度费用",
-      "stats": {
-        "apiCalls": "API 调用",
-        "memories": "记忆",
-        "extractions": "提取",
-        "estimated": "预估费用"
-      },
-      "presets": {
-        "title": "快速预设",
-        "startup": "初创",
-        "growing": "成长",
-        "scale": "规模化",
-        "enterprise": "企业"
-      },
-      "customize": {
-        "title": "自定义使用量"
-      },
-      "labels": {
-        "apiCalls": "月度 API 调用",
-        "memories": "存储的记忆",
-        "extractions": "提取"
-      },
-      "recommended": {
-        "title": "推荐计划",
-        "base": "基础价格",
-        "overage": "超额",
-        "cta": "开始使用"
-      },
-      "comparison": {
-        "title": "所有计划",
-        "best": "最佳性价比"
-      },
-      "details": {
-        "title": "详细价格明细",
-        "plan": "计划",
-        "base": "基础价格",
-        "includedCalls": "包含调用",
-        "overageRate": "超额费率",
-        "yourOverage": "您的超额",
-        "total": "总计"
-      }
     },
     "webhooks": {
       "title": "Webhooks",

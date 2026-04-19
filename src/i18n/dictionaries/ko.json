@@ -259,7 +259,6 @@
       "usage": "사용량",
       "budget": "예산",
       "reports": "리포트",
-      "calculator": "계산기",
       "apiKeys": "API 키",
       "integrations": "통합",
       "webhooks": "웹훅",
@@ -820,50 +819,6 @@
       "betaMsg": "이 연동은 베타 상태입니다. 정식 출시 전 일부 기능이 변경될 수 있습니다.",
       "close": "닫기",
       "viewDocs": "문서 보기"
-    },
-    "calculator": {
-      "title": "사용량 계산기",
-      "subtitle": "예상 사용량을 기반으로 월 비용을 계산합니다",
-      "stats": {
-        "apiCalls": "API 호출",
-        "memories": "메모리",
-        "extractions": "추출",
-        "estimated": "예상 비용"
-      },
-      "presets": {
-        "title": "빠른 프리셋",
-        "startup": "스타트업",
-        "growing": "성장",
-        "scale": "스케일",
-        "enterprise": "엔터프라이즈"
-      },
-      "customize": {
-        "title": "사용량 설정"
-      },
-      "labels": {
-        "apiCalls": "월간 API 호출",
-        "memories": "저장된 메모리",
-        "extractions": "추출 횟수"
-      },
-      "recommended": {
-        "title": "추천 플랜",
-        "base": "기본 가격",
-        "overage": "초과 요금",
-        "cta": "시작하기"
-      },
-      "comparison": {
-        "title": "전체 플랜",
-        "best": "최적 가치"
-      },
-      "details": {
-        "title": "상세 가격 내역",
-        "plan": "플랜",
-        "base": "기본 가격",
-        "includedCalls": "포함 호출",
-        "overageRate": "초과 요율",
-        "yourOverage": "초과 요금",
-        "total": "합계"
-      }
     },
     "webhooks": {
       "title": "웹훅",

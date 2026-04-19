@@ -301,7 +301,6 @@
       "usage": "Sử dụng",
       "budget": "Ngân sách",
       "reports": "Báo cáo",
-      "calculator": "Ước tính chi phí",
       "apiKeys": "Khóa API",
       "integrations": "Plugin Engine",
       "webhooks": "Webhooks",
@@ -1370,50 +1369,6 @@
       "parameters": "Tham số",
       "recentDecisions": "Quyết định Gần đây",
       "noLogs": "Chưa có nhật ký quyết định"
-    },
-    "calculator": {
-      "title": "Ước tính chi phí",
-      "subtitle": "Ước tính chi phí hàng tháng theo số lượng thực thể và lưu lượng sự kiện.",
-      "stats": {
-        "apiCalls": "Lượt gọi API",
-        "memories": "Bộ nhớ",
-        "extractions": "Trích xuất",
-        "estimated": "Chi phí Ước tính"
-      },
-      "presets": {
-        "title": "Mẫu Nhanh",
-        "startup": "Khởi nghiệp",
-        "growing": "Đang phát triển",
-        "scale": "Mở rộng",
-        "enterprise": "Doanh nghiệp"
-      },
-      "customize": {
-        "title": "Tùy chỉnh Sử dụng"
-      },
-      "labels": {
-        "apiCalls": "Lượt gọi API Hàng tháng",
-        "memories": "Bộ nhớ Đã lưu",
-        "extractions": "Trích xuất"
-      },
-      "recommended": {
-        "title": "Gói Đề xuất",
-        "base": "Giá Cơ bản",
-        "overage": "Vượt mức",
-        "cta": "Bắt đầu"
-      },
-      "comparison": {
-        "title": "Tất cả Gói",
-        "best": "Giá trị Tốt nhất"
-      },
-      "details": {
-        "title": "Phân tích Giá Chi tiết",
-        "plan": "Gói",
-        "base": "Giá Cơ bản",
-        "includedCalls": "Lượt gọi Bao gồm",
-        "overageRate": "Tỷ lệ Vượt mức",
-        "yourOverage": "Vượt mức của Bạn",
-        "total": "Tổng"
-      }
     },
     "webhooks": {
       "title": "Webhooks",
