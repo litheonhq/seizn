@@ -86,6 +86,12 @@ import {
   type MemoryImageAttachmentRecord,
 } from '@/lib/memory/image-attachments';
 import {
+  assertRetentionAllowed,
+  ComplianceError,
+  normalizeAgeBracket,
+} from '@/lib/compliance/age-gate';
+import { resolveComplianceOrganizationId } from '@/lib/compliance/organization';
+import {
   runDegradedKeywordSearch,
   shouldUseDegradedKeywordSearchFallback,
 } from '@/lib/memory/degraded-keyword-search';
@@ -135,6 +141,37 @@ function isMissingContentHashColumnError(
   if (!error) return false;
   if (error.code === '42703') return true;
   return (error.message || '').toLowerCase().includes('content_hash');
+}
+
+function isMissingMemoryComplianceColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error) return false;
+  const message = (error.message || '').toLowerCase();
+  return error.code === '42703' && (
+    message.includes('subject_id') ||
+    message.includes('organization_id')
+  );
+}
+
+function normalizeOptionalText(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function complianceErrorResponse(error: ComplianceError, startTime: number): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      error: {
+        code: error.code,
+        message: error.message,
+      },
+      meta: { ...META, latencyMs: Date.now() - startTime },
+    },
+    { status: error.status }
+  );
 }
 
 function getImageAttachmentClientErrorMessage(error: unknown): string | null {
@@ -243,6 +280,9 @@ export async function POST(request: NextRequest) {
 
     const { userId, keyId } = result;
     const body: AddMemoryRequest = await safeJsonParse<AddMemoryRequest>(request);
+    const rawBody = body as unknown as Record<string, unknown>;
+    const subjectId = normalizeOptionalText(rawBody.subject_id) ?? normalizeOptionalText(rawBody.external_id);
+    const ageBracket = normalizeAgeBracket(rawBody.age_bracket);
     const isEncrypted = (body as unknown as Record<string, unknown>).is_encrypted === true;
     const encryptedContent = body.encrypted_content;
     const hasImageAttachment = hasMemoryImagePayload(body);
@@ -328,6 +368,26 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
     const namespace = body.namespace || 'default';
+    const organizationId = await resolveComplianceOrganizationId(supabase, { userId, keyId });
+
+    try {
+      await assertRetentionAllowed(supabase, {
+        organizationId,
+        subjectId,
+        bracket: ageBracket,
+      });
+    } catch (error) {
+      if (error instanceof ComplianceError) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+            error.status
+          );
+        }
+        return complianceErrorResponse(error, startTime);
+      }
+      throw error;
+    }
 
     if (isEncrypted) {
       let effectivePlan = result.plan;
@@ -391,7 +451,7 @@ export async function POST(request: NextRequest) {
       embedding = await createEmbedding(sanitizedContent);
 
       const dedupEnabled =
-        (body as unknown as Record<string, unknown>).dedup !== false && !hasImageAttachment;
+        (body as unknown as Record<string, unknown>).dedup !== false && !hasImageAttachment && !subjectId;
       if (dedupEnabled) {
         const duplicate = await findDuplicate(userId, embedding, namespace);
         if (duplicate) {
@@ -428,6 +488,8 @@ export async function POST(request: NextRequest) {
 
     const insertPayload = {
       user_id: userId,
+      organization_id: organizationId,
+      subject_id: subjectId,
       content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
       encrypted_content: isEncrypted ? encryptedContent : null,
       is_encrypted: isEncrypted,
@@ -468,9 +530,20 @@ export async function POST(request: NextRequest) {
       insertError = result.error;
     }
 
-    // Backward compatibility: if migration isn't applied yet, retry without content_hash.
-    if (insertError && isMissingContentHashColumnError(insertError)) {
-      const { content_hash: _ignored, ...legacyPayload } = insertPayload;
+    // Backward compatibility: if a recent additive migration is not applied yet, retry
+    // without optional columns while preserving the legacy memory contract.
+    if (
+      insertError &&
+      (isMissingContentHashColumnError(insertError) || isMissingMemoryComplianceColumnError(insertError))
+    ) {
+      const legacyPayload: Record<string, unknown> = { ...insertPayload };
+      if (isMissingContentHashColumnError(insertError)) {
+        delete legacyPayload.content_hash;
+      }
+      if (isMissingMemoryComplianceColumnError(insertError)) {
+        delete legacyPayload.subject_id;
+        delete legacyPayload.organization_id;
+      }
       const retry = await supabase
         .from('memories')
         .insert(legacyPayload)
@@ -648,6 +721,9 @@ export async function POST(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
+    if (error instanceof ComplianceError) {
+      return complianceErrorResponse(error, startTime);
+    }
     logServerError('[v1/memories] POST error', error);
     return ServerErrors.internal('add_memory');
   }
