@@ -6,6 +6,7 @@ export type MemoryScope = 'user' | 'session' | 'agent';
 export type ModerationCategory = 'sexual' | 'violence' | 'pii' | 'hate' | 'self_harm' | 'csam';
 export type ModerationAction = 'block' | 'redact' | 'flag';
 export type ModerationStatus = 'clean' | 'flagged' | 'redacted' | 'blocked';
+export type DistortionModel = 'none' | 'word_swap' | 'entity_swap' | 'word_and_entity_swap' | 'custom';
 export type SupportedLocale = 'en' | 'ko' | 'ja';
 export type CompanionMeta = Record<string, unknown>;
 
@@ -302,6 +303,24 @@ export interface Scene {
   updated_at: string;
 }
 
+export interface GossipEvent {
+  id: string;
+  user_id: string;
+  organization_id: string | null;
+  namespace: string;
+  source_belief_id: string | null;
+  fact_original: string;
+  fact_transmitted: string;
+  from_entity_id: string;
+  to_entity_id: string;
+  channel: string;
+  distortion_model: DistortionModel;
+  distortion_config: Record<string, unknown>;
+  confidence: number;
+  propagated_at: string;
+  created_at: string;
+}
+
 // Supabase Database type for client
 export interface Database {
   public: {
@@ -354,6 +373,15 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Scene>;
+      };
+      gossip_events: {
+        Row: GossipEvent;
+        Insert: Omit<GossipEvent, 'id' | 'created_at' | 'propagated_at'> & {
+          id?: string;
+          created_at?: string;
+          propagated_at?: string;
+        };
+        Update: Partial<GossipEvent>;
       };
       usage_logs: {
         Row: UsageLog;

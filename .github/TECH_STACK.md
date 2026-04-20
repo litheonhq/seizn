@@ -62,6 +62,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Scene Context | Supabase + v1 scene API | -- | `scenes` stores bounded NPC/faction/location context; `/api/v1/memories` can apply scene-aware recall boosts via `scene_id` or `entity_ids`. |
+| Gossip Propagation | Supabase + deterministic distortion | -- | `gossip_events` records fact drift between entities; `/api/v1/gossip/propagate` supports word, entity, combined, and custom distortion metadata. |
 | Embeddings | Voyage AI (voyage-3) | -- | 1024-dim embeddings with Redis caching |
 | AI Providers | Anthropic Claude | ^0.71.2 (SDK) | Memory extraction, summarization, vision/multimodal |
 | AI Providers | OpenAI | ^6.16.0 | AI Gateway, embeddings |
