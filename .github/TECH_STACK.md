@@ -49,6 +49,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Compliance DSR | COPPA/GDPR-K subject rights | -- | `subject_id` on memories, `consent_records`, `dsr_jobs`, `/api/v1/dsr/export`, `/api/v1/dsr/delete`, `/api/v1/dsr/jobs/[id]`, `/api/v1/audit`, and `/api/v1/audit/export` provide subject export, certified deletion, and audit evidence. |
 | DB Contract Verification | Migration guardrails (`run-migration-file.mjs` + `verify:e2e-encryption-db`) | -- | Every migration run triggers E2E/search-RPC compatibility checks by default; fails fast on overload/RPC regressions unless explicitly bypassed with `SKIP_E2E_VERIFY=1`. |
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
+| Memory Budgeting | Hot/warm/cold tier budgets | -- | Legacy v1 memories now support `entity_id`, `tier`, `pinned`, recall counters, byte sizing, `/api/v1/memory-budget` telemetry, and `/dashboard/memories/budget` monitoring. |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |

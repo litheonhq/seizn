@@ -61,6 +61,8 @@ export interface ApiKey {
 export interface Memory {
   id: string;
   user_id: string;
+  organization_id?: string | null;
+  entity_id?: string | null;
 
   content: string;
   // For encrypted memories, content is the placeholder "[encrypted]"
@@ -80,6 +82,11 @@ export interface Memory {
   confidence: number;
   importance: number;
   companion_meta?: CompanionMeta | null;
+  tier?: 'hot' | 'warm' | 'cold';
+  pinned?: boolean;
+  last_recalled_at?: string | null;
+  recall_count?: number;
+  size_bytes?: number;
 
   // Preferences
   language: SupportedLocale;
@@ -226,6 +233,8 @@ export interface AddMemoryRequest {
   scope?: MemoryScope;
   session_id?: string;
   agent_id?: string;
+  entity_id?: string;
+  pinned?: boolean;
   source?: string;
   companion_meta?: CompanionMeta | null;
   // Optional image attachment payload (object storage + asset link)
