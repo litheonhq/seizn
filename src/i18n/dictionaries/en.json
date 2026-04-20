@@ -1154,6 +1154,8 @@
       "match": "match",
       "loadMore": "Load More",
       "retry": "Retry",
+      "memoriesTab": "Memories",
+      "beliefTab": "Belief graph",
       "export": "Export",
       "import": "Import",
       "imported": "imported",

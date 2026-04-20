@@ -48,6 +48,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Encryption | E2E confidential memory encryption | -- | Opt-in client-side WebCrypto (PBKDF2-SHA256 600k + AES-256-GCM). Contract: `content="[encrypted]"`, `encrypted_content=<base64 ciphertext>`, `is_encrypted=true`. Setup material stored in `profiles.e2e_*` via `/api/profile/e2e`. Encrypted memories excluded from search/embedding/optimizer. |
 | DB Contract Verification | Migration guardrails (`run-migration-file.mjs` + `verify:e2e-encryption-db`) | -- | Every migration run triggers E2E/search-RPC compatibility checks by default; fails fast on overload/RPC regressions unless explicitly bypassed with `SKIP_E2E_VERIFY=1`. |
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
+| Theory-of-Mind Memory | Belief shards | -- | Perspective-aware recall via `belief_shards`, `/api/v1/beliefs`, `/api/v1/memories.recall`, and `/dashboard/memories/beliefs` so NPCs only retrieve facts they know. |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
