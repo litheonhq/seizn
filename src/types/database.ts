@@ -257,6 +257,21 @@ export interface MemorySearchResult {
   similarity: number;
 }
 
+export interface Scene {
+  id: string;
+  user_id: string;
+  organization_id: string | null;
+  namespace: string;
+  entity_ids: string[];
+  started_at: string;
+  ended_at: string | null;
+  summary: string | null;
+  outcomes: Record<string, unknown>;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
 // Supabase Database type for client
 export interface Database {
   public: {
@@ -292,6 +307,15 @@ export interface Database {
           companion_meta?: CompanionMeta | null;
         };
         Update: Partial<Memory>;
+      };
+      scenes: {
+        Row: Scene;
+        Insert: Omit<Scene, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Scene>;
       };
       usage_logs: {
         Row: UsageLog;

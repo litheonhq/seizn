@@ -28,6 +28,9 @@ export interface SearchResult {
   similarity: number;
   keyword_rank?: number;
   combined_score?: number;
+  scene_boost?: boolean;
+  scene_id?: string;
+  scene_score?: number;
 }
 
 export interface ExtractedMemory {
@@ -102,6 +105,8 @@ export interface SearchOptions {
   limit?: number;
   threshold?: number;
   namespace?: string;
+  scene_id?: string;
+  entity_ids?: string[];
 }
 
 export interface ExtractOptions {
@@ -126,6 +131,34 @@ export interface SummarizeOptions {
 export interface CreateWebhookOptions {
   events?: WebhookEvent[];
   namespace?: string;
+}
+
+export interface Scene {
+  id: string;
+  namespace: string;
+  entity_ids: string[];
+  started_at: string;
+  ended_at: string | null;
+  summary: string | null;
+  outcomes: Record<string, unknown>;
+  metadata: Record<string, unknown>;
+}
+
+export interface StartSceneOptions {
+  namespace?: string;
+  summary?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface EndSceneOptions {
+  summary?: string;
+  outcomes?: Record<string, unknown>;
+}
+
+export interface ListScenesOptions {
+  namespace?: string;
+  active?: boolean;
+  limit?: number;
 }
 
 export interface SeiznConfig {
