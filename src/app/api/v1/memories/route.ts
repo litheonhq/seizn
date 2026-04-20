@@ -121,6 +121,11 @@ import {
   resolveModerationOrganizationId,
   type ModerationResult,
 } from '@/lib/moderation/guard';
+import {
+  applySceneBoost,
+  resolveSceneContext,
+  type SceneContext,
+} from '@/lib/memory/scenes';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -365,6 +370,17 @@ function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
     return null;
   }
   return raw as SearchMode;
+}
+
+function parseSceneEntityIds(searchParams: URLSearchParams, agentId: string | null): string[] {
+  const raw =
+    searchParams.get('entity_ids') ||
+    searchParams.get('entity_id') ||
+    searchParams.get('scene_entity_ids') ||
+    '';
+  const ids = raw.split(',').map((id) => id.trim()).filter(Boolean);
+  if (agentId) ids.push(agentId);
+  return [...new Set(ids)];
 }
 
 /**
@@ -1124,6 +1140,19 @@ async function handleGet(request: NextRequest) {
       if (!organizationId || items.length === 0) return items;
       return moderateRecallResults(organizationId, items, supabase);
     };
+    const sceneId = searchParams.get('scene_id');
+    const sceneEntityIds = parseSceneEntityIds(searchParams, agentId);
+    let sceneContextPromise: Promise<SceneContext | null> | null = null;
+    const getSceneContext = async () => {
+      if (searchParams.get('scene') === 'false') return null;
+      sceneContextPromise ||= resolveSceneContext(supabase, {
+        userId,
+        namespace,
+        sceneId,
+        entityIds: sceneEntityIds,
+      });
+      return sceneContextPromise;
+    };
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
@@ -1447,11 +1476,14 @@ async function handleGet(request: NextRequest) {
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
       const moderatedResults = await applyRecallModeration(personalizedResults);
-      const decayedResults = applyDecayRerank(moderatedResults as unknown as MemoryWithDecay[]);
+      const sceneContext = await getSceneContext();
+      const sceneResults = applySceneBoost(moderatedResults, sceneContext);
+      const decayedResults = applyDecayRerank(sceneResults as unknown as MemoryWithDecay[]);
       const perspectiveResult = await filterByPerspective(decayedResults);
       const finalResults = perspectiveResult.memories;
       const finalTopScore = Number(
-        (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+        (finalResults[0] as { similarity?: number; rrf_score?: number; scene_score?: number } | undefined)?.scene_score
+          ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
           ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
           ?? 0
       );
@@ -1562,6 +1594,11 @@ async function handleGet(request: NextRequest) {
             perspective: perspectiveEntityId ? {
               entityId: perspectiveEntityId,
               excluded: perspectiveResult.excluded,
+            } : null,
+            scene: sceneContext ? {
+              id: sceneContext.id,
+              entityIds: sceneContext.entityIds,
+              boostedCount: finalResults.filter((row) => row.scene_boost).length,
             } : null,
           },
           meta: {
@@ -1765,7 +1802,9 @@ async function handleGet(request: NextRequest) {
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
     const moderatedResults = await applyRecallModeration(personalizedResults);
-    const decayedResults = applyDecayRerank(moderatedResults as MemoryWithDecay[]);
+    const sceneContext = await getSceneContext();
+    const sceneResults = applySceneBoost(moderatedResults, sceneContext);
+    const decayedResults = applyDecayRerank(sceneResults as MemoryWithDecay[]);
     const perspectiveResult = await filterByPerspective(decayedResults);
     const finalResults = perspectiveResult.memories;
 
@@ -1797,7 +1836,8 @@ async function handleGet(request: NextRequest) {
     });
 
     const topSimilarity = clamp(
-      Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+      Number((finalResults[0] as { similarity?: number; rrf_score?: number; scene_score?: number } | undefined)?.scene_score
+        ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
         ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
         ?? 0),
       0,
@@ -1891,6 +1931,11 @@ async function handleGet(request: NextRequest) {
           perspective: perspectiveEntityId ? {
             entityId: perspectiveEntityId,
             excluded: perspectiveResult.excluded,
+          } : null,
+          scene: sceneContext ? {
+            id: sceneContext.id,
+            entityIds: sceneContext.entityIds,
+            boostedCount: finalResults.filter((row) => row.scene_boost).length,
           } : null,
         },
         meta: {
