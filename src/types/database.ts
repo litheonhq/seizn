@@ -226,6 +226,8 @@ export interface AddMemoryRequest {
   scope?: MemoryScope;
   session_id?: string;
   agent_id?: string;
+  memory_class?: string;
+  half_life_hours?: number | null;
   source?: string;
   companion_meta?: CompanionMeta | null;
   // Optional image attachment payload (object storage + asset link)

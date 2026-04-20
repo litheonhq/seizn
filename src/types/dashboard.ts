@@ -76,6 +76,12 @@ export interface Memory {
   source?: string;
   scope?: string;
   agent_id?: string;
+  memory_class?: string;
+  half_life_hours?: number | null;
+  base_strength?: number;
+  last_reinforced_at?: string | null;
+  decay_strength?: number;
+  decay_score?: number;
 }
 
 export interface RecentMemory {
