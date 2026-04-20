@@ -1,8 +1,13 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import type {
+  ModerationCategory,
+  ModerationDecision,
+  ModerationStatus,
+} from "@/lib/moderation/guard";
 
-type Category = "sexual" | "violence" | "pii" | "hate" | "self_harm" | "csam";
+type Category = ModerationCategory;
 type Action = "block" | "redact" | "flag";
 
 interface ModerationPolicy {
@@ -44,6 +49,11 @@ const DEMO_POLICIES: ModerationPolicy[] = [
   },
 ];
 
+interface ModerationClientProps {
+  initialDecisions?: ModerationDecision[];
+  decisionLoadError?: string | null;
+}
+
 function formatCategory(category: Category) {
   return category.replace("_", " ");
 }
@@ -54,7 +64,109 @@ function actionClass(action: Action) {
   return "border-sky-500/30 bg-sky-500/10 text-sky-200";
 }
 
-export function ModerationClient() {
+function statusClass(status: ModerationStatus) {
+  if (status === "blocked") return "border-red-500/30 bg-red-500/10 text-red-300";
+  if (status === "redacted") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
+  if (status === "flagged") return "border-sky-500/30 bg-sky-500/10 text-sky-200";
+  return "border-szn-border-subtle bg-szn-surface-1 text-szn-text-2";
+}
+
+function topCategory(scores: ModerationDecision["scores"]): { category: Category; score: number } {
+  return CATEGORIES.reduce(
+    (best, category) => {
+      const score = scores[category] || 0;
+      return score > best.score ? { category, score } : best;
+    },
+    { category: "pii" as Category, score: 0 }
+  );
+}
+
+function formatWhen(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+function shortId(value: string) {
+  return value.length > 12 ? `${value.slice(0, 8)}...${value.slice(-4)}` : value;
+}
+
+function DecisionTable({
+  decisions,
+  loadError,
+}: {
+  decisions: ModerationDecision[];
+  loadError?: string | null;
+}) {
+  if (loadError) {
+    return (
+      <div className="rounded-lg border border-amber-300/30 bg-amber-500/10 p-5">
+        <div className="szn-eyebrow mb-2 text-amber-200">Migration pending</div>
+        <p className="text-sm text-amber-100">
+          Moderation decision columns are not readable from this environment yet.
+        </p>
+        <p className="mt-3 font-mono text-xs text-amber-200/80">{loadError}</p>
+      </div>
+    );
+  }
+
+  if (decisions.length === 0) {
+    return (
+      <div className="rounded-lg border border-dashed border-szn-border-subtle p-5 text-sm text-szn-text-2">
+        No moderated memories yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-lg border border-szn-border-subtle">
+      <table className="min-w-full divide-y divide-szn-border-subtle">
+        <thead className="bg-szn-bg">
+          <tr>
+            <th className="px-5 py-3 text-left text-[11px] font-medium uppercase text-szn-text-3">Memory</th>
+            <th className="px-5 py-3 text-left text-[11px] font-medium uppercase text-szn-text-3">Decision</th>
+            <th className="px-5 py-3 text-left text-[11px] font-medium uppercase text-szn-text-3">Top score</th>
+            <th className="px-5 py-3 text-left text-[11px] font-medium uppercase text-szn-text-3">Class</th>
+            <th className="px-5 py-3 text-left text-[11px] font-medium uppercase text-szn-text-3">Created</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-szn-border-subtle">
+          {decisions.map((decision) => {
+            const top = topCategory(decision.scores);
+            return (
+              <tr key={decision.id} className="align-top">
+                <td className="px-5 py-4">
+                  <div className="max-w-lg truncate text-sm text-szn-text-1">
+                    {decision.content || "[redacted or blocked]"}
+                  </div>
+                  <div className="mt-2 font-mono text-xs text-szn-text-3">{shortId(decision.id)}</div>
+                </td>
+                <td className="px-5 py-4">
+                  <span className={`inline-flex rounded-md border px-2 py-1 text-xs font-medium ${statusClass(decision.status)}`}>
+                    {decision.status}
+                  </span>
+                </td>
+                <td className="px-5 py-4">
+                  <div className="font-mono text-sm text-szn-text-1">{Math.round(top.score * 100)}%</div>
+                  <div className="mt-1 text-xs text-szn-text-2">{formatCategory(top.category)}</div>
+                </td>
+                <td className="px-5 py-4 text-sm text-szn-text-2">
+                  {decision.memoryClass || decision.memoryType || "default"}
+                </td>
+                <td className="px-5 py-4 text-sm text-szn-text-2">{formatWhen(decision.createdAt)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function ModerationClient({ initialDecisions = [], decisionLoadError = null }: ModerationClientProps) {
   const [policies, setPolicies] = useState<ModerationPolicy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
@@ -74,6 +186,16 @@ export function ModerationClient() {
       return acc;
     }, {});
   }, [policies]);
+
+  const decisionStats = useMemo(() => {
+    return initialDecisions.reduce<Record<ModerationStatus, number>>(
+      (acc, decision) => {
+        acc[decision.status] += 1;
+        return acc;
+      },
+      { clean: 0, flagged: 0, redacted: 0, blocked: 0 }
+    );
+  }, [initialDecisions]);
 
   useEffect(() => {
     let alive = true;
@@ -181,7 +303,7 @@ export function ModerationClient() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="rounded-lg border border-szn-border-subtle bg-szn-surface-1">
-          <div className="border-b border-szn-border-subtlepx-5 py-4">
+          <div className="border-b border-szn-border-subtle px-5 py-4">
             <h2 className="text-lg font-semibold text-szn-text-1">Active rules</h2>
             <p className="mt-1 text-sm text-szn-text-2">
               Class-specific rules override the global class for the same policy name.
@@ -199,7 +321,7 @@ export function ModerationClient() {
                   <div key={key} className="p-5">
                     <div className="mb-4 flex flex-wrap items-center gap-3">
                       <h3 className="text-base font-semibold text-szn-text-1">{name}</h3>
-                      <span className="rounded-md border border-szn-border-subtlepx-2 py-1 text-xs text-szn-text-2">
+                      <span className="rounded-md border border-szn-border-subtle px-2 py-1 text-xs text-szn-text-2">
                         {klass === "all" ? "all memory classes" : klass}
                       </span>
                     </div>
@@ -303,6 +425,26 @@ export function ModerationClient() {
           </button>
         </form>
       </div>
+
+      <section className="mt-6 rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-5">
+        <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-szn-text-1">Recent decisions</h2>
+            <p className="mt-1 text-sm text-szn-text-2">
+              Memories that triggered block, redact, or flag actions.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-px border border-szn-border-subtle bg-szn-border-subtle">
+            {(["blocked", "redacted", "flagged"] as ModerationStatus[]).map((status) => (
+              <div key={status} className="bg-szn-bg px-4 py-3">
+                <div className="szn-eyebrow mb-2">{status}</div>
+                <div className="font-mono text-[20px] text-szn-text-1">{decisionStats[status]}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <DecisionTable decisions={initialDecisions} loadError={decisionLoadError} />
+      </section>
     </div>
   );
 }
