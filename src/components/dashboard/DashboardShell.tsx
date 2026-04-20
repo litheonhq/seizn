@@ -101,11 +101,15 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className={`theme-${season} min-h-screen bg-szn-bg`}>
+    // Force dark on the dashboard surface — the Living Memory palette is the
+    // primary mode here. Theme-{season} is kept for legacy --theme-* variables
+    // used by older widgets (charts, gradients), which now resolve underneath
+    // the dark cascade.
+    <div className={`dark theme-${season} min-h-screen bg-szn-bg text-szn-text-1`}>
       {/* Skip to content */}
       <a
         href="#dashboard-main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-szn-accent focus:text-white focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-szn-signal focus:text-szn-signal-fg focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
       >
         {t("dashboard.skipToContent") || "Skip to content"}
       </a>
@@ -122,24 +126,22 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <aside
         role="navigation"
         aria-label="Main navigation"
-        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col bg-szn-card border-r border-szn-border transition-[width] duration-200 ease-out ${
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex lg:flex-col bg-szn-bg border-r border-szn-border-subtle transition-[width] duration-200 ease-out ${
           isSidebarExpanded ? "w-72" : "w-[68px]"
         }`}
       >
         {/* Logo */}
-        <div className="p-4 border-b border-szn-border">
+        <div className="p-4 border-b border-szn-border-subtle">
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg flex-shrink-0" />
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-md flex-shrink-0" />
             <div className={`flex-1 min-w-0 transition-all duration-200 ease-out ${
               isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 w-0"
             }`}>
-              <span className="text-sm font-semibold text-szn-text-1 block truncate whitespace-nowrap">
+              <span className="text-[15px] font-medium tracking-[-0.01em] text-szn-text-1 block truncate whitespace-nowrap">
                 Seizn
               </span>
-              <p className="text-[10px] text-szn-text-3 flex items-center gap-1 whitespace-nowrap">
-                {"NPC Memory"} <span>{config.icon}</span>
-              </p>
+              <p className="szn-eyebrow whitespace-nowrap mt-0.5">NPC MEMORY · LIVE</p>
             </div>
           </Link>
         </div>
@@ -169,7 +171,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </div>
 
         {/* User Profile */}
-        <div className="p-3 border-t border-szn-border">
+        <div className="p-3 border-t border-szn-border-subtle">
           <div className={`flex items-center gap-2.5 p-2 rounded-lg ${isSidebarExpanded ? "hover:bg-szn-surface-1" : "justify-center"} transition-colors duration-150`}>
             {session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -222,12 +224,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       />
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-card border-b border-szn-border">
+      <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-bg/95 backdrop-blur-xl border-b border-szn-border-subtle">
         <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg" />
-            <span className="text-sm sm:text-base font-semibold text-szn-text-1">Seizn</span>
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-md" />
+            <span className="text-sm sm:text-base font-medium tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-base sm:text-lg">{config.icon}</span>
@@ -293,7 +295,7 @@ function ExpandedNav({
             {group.key && (
               <button
                 onClick={() => toggleGroup(group.key)}
-                className="flex items-center justify-between w-full px-3 pt-4 pb-1 text-[10px] font-semibold tracking-[0.08em] text-szn-text-3/70 uppercase hover:text-szn-text-2 transition-colors duration-150"
+                className="flex items-center justify-between w-full px-3 pt-5 pb-2 szn-eyebrow hover:text-szn-text-2 transition-colors duration-150"
               >
                 <span>{group.label}</span>
                 <ChevronDownIcon className={`w-3 h-3 transition-transform duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${isOpen ? "rotate-180" : ""}`} />
@@ -308,19 +310,19 @@ function ExpandedNav({
                       key={item.href}
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={`group relative flex items-center gap-2.5 px-2.5 py-[7px] text-[13px] font-medium rounded-lg transition-all duration-150 overflow-hidden ${
+                      className={`group relative flex items-center gap-3 px-2.5 py-[7px] text-[13px] rounded-md transition-all duration-150 overflow-hidden ${
                         active
-                          ? "bg-szn-accent/10 text-szn-text-1"
-                          : "text-szn-text-2 hover:bg-szn-surface-1/80 hover:text-szn-text-1"
+                          ? "bg-szn-signal-soft text-szn-text-1 font-medium"
+                          : "text-szn-text-2 hover:bg-szn-surface-1 hover:text-szn-text-1"
                       }`}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full bg-szn-accent" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[2px] rounded-r-full bg-szn-signal" />
                       )}
                       <item.icon
                         className={`w-[16px] h-[16px] flex-shrink-0 transition-colors duration-150 ${
                           active
-                            ? "text-szn-accent"
+                            ? "text-szn-signal"
                             : "text-szn-text-3 group-hover:text-szn-text-2"
                         }`}
                       />
@@ -361,19 +363,19 @@ function CollapsedNav({
             title={item.label}
             onClick={handleClick}
             aria-current={active ? "page" : undefined}
-            className={`group relative flex items-center justify-center w-full h-9 rounded-lg transition-all duration-150 ${
+            className={`group relative flex items-center justify-center w-full h-9 rounded-md transition-all duration-150 ${
               active
-                ? "bg-szn-accent/10"
-                : "text-szn-text-2 hover:bg-szn-surface-1/80"
+                ? "bg-szn-signal-soft"
+                : "text-szn-text-2 hover:bg-szn-surface-1"
             }`}
           >
             {active && (
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full bg-szn-accent" />
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[2px] rounded-r-full bg-szn-signal" />
             )}
             <item.icon
               className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-150 ${
                 active
-                  ? "text-szn-accent"
+                  ? "text-szn-signal"
                   : "text-szn-text-3 group-hover:text-szn-text-2"
               }`}
             />
