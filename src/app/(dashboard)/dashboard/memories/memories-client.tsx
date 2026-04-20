@@ -838,6 +838,12 @@ export default function MemoriesClient() {
             >
               {t("dashboard.memoriesPage.decayTab") || "Decay"}
             </Link>
+            <Link
+              href="/dashboard/memories/branches"
+              className="px-3 py-2 text-xs font-medium text-szn-text-2 hover:text-szn-signal hover:bg-szn-surface-1 transition-colors"
+            >
+              {t("dashboard.memoriesPage.branchTab") || "Branches"}
+            </Link>
           </div>
 
           {/* Export Dropdown */}
