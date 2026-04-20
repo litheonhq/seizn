@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense, memo } from "react";
+import { useState, useEffect, Suspense, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -183,13 +183,33 @@ const Navigation = memo(function Navigation({
 // Hero — Editorial serif H1 + italic accent + living graph ambient
 // =============================================================================
 
-/** Split a title like "Memory, for the {accent} you ship." so {accent} renders italic serif. */
-function splitAccent(title: string): { head: string; accent: string; tail: string } {
-  const match = title.match(/^(.*?)\{accent\}(.*)$/);
-  if (match) {
-    return { head: match[1], accent: "", tail: match[2] };
+// Sorted longest-first so "NPCs" matches before "NPC". Module-level so the
+// React Compiler can preserve referential stability across renders.
+const ITALIC_CANDIDATES = [
+  "characters",
+  "character",
+  "NPCs",
+  "NPC",
+  "npcs",
+  "npc",
+  "agents",
+  "agent",
+  "캐릭터",
+  "에이전트",
+] as const;
+
+function pickItalicWord(heroTitle: string): { before: string; word: string; after: string } {
+  for (const c of ITALIC_CANDIDATES) {
+    const idx = heroTitle.indexOf(c);
+    if (idx !== -1) {
+      return {
+        before: heroTitle.slice(0, idx),
+        word: heroTitle.slice(idx, idx + c.length),
+        after: heroTitle.slice(idx + c.length),
+      };
+    }
   }
-  return { head: title, accent: "", tail: "" };
+  return { before: heroTitle, word: "", after: "" };
 }
 
 export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClientProps) {
@@ -224,35 +244,10 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
   const t = (messages ?? {}) as ExtremeHomeMessages;
 
-  // Hero title — the "characters" word renders in italic serif.
-  // We fallback-construct so i18n copy stays editable without template tags.
+  // Hero title — the accent word renders in italic serif. Kept as a plain call
+  // so React Compiler can auto-memoize; no manual useMemo needed.
   const heroTitle = t.heroTitle || "Memory for the characters you ship.";
-  const italicPick = useMemo(() => {
-    // Sorted longest-first so "NPCs" wins over "NPC".
-    const candidates = [
-      "characters",
-      "character",
-      "NPCs",
-      "NPC",
-      "npcs",
-      "npc",
-      "agents",
-      "agent",
-      "캐릭터",
-      "에이전트",
-    ];
-    for (const c of candidates) {
-      const idx = heroTitle.indexOf(c);
-      if (idx !== -1) {
-        return {
-          before: heroTitle.slice(0, idx),
-          word: heroTitle.slice(idx, idx + c.length),
-          after: heroTitle.slice(idx + c.length),
-        };
-      }
-    }
-    return { before: heroTitle, word: "", after: "" };
-  }, [heroTitle]);
+  const italicPick = pickItalicWord(heroTitle);
 
   return (
     // Force dark on the whole marketing page. Tokens resolve against the dark palette.
