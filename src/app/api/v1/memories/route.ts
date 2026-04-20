@@ -89,6 +89,11 @@ import {
   runDegradedKeywordSearch,
   shouldUseDegradedKeywordSearchFallback,
 } from '@/lib/memory/degraded-keyword-search';
+import {
+  applySceneBoost,
+  resolveSceneContext,
+  type SceneContext,
+} from '@/lib/memory/scenes';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -192,6 +197,17 @@ function parseRequestedMode(searchParams: URLSearchParams): SearchMode | null {
     return null;
   }
   return raw as SearchMode;
+}
+
+function parseSceneEntityIds(searchParams: URLSearchParams, agentId: string | null): string[] {
+  const raw =
+    searchParams.get('entity_ids') ||
+    searchParams.get('entity_id') ||
+    searchParams.get('scene_entity_ids') ||
+    '';
+  const ids = raw.split(',').map((id) => id.trim()).filter(Boolean);
+  if (agentId) ids.push(agentId);
+  return [...new Set(ids)];
 }
 
 /**
@@ -688,6 +704,19 @@ export async function GET(request: NextRequest) {
       : 'created_at';
     const order = searchParams.get('order') === 'asc' ? true : false; // ascending?
     const supabase = createServerClient();
+    const sceneId = searchParams.get('scene_id');
+    const sceneEntityIds = parseSceneEntityIds(searchParams, agentId);
+    let sceneContextPromise: Promise<SceneContext | null> | null = null;
+    const getSceneContext = async () => {
+      if (searchParams.get('scene') === 'false') return null;
+      sceneContextPromise ||= resolveSceneContext(supabase, {
+        userId,
+        namespace,
+        sceneId,
+        entityIds: sceneEntityIds,
+      });
+      return sceneContextPromise;
+    };
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
@@ -993,6 +1022,14 @@ export async function GET(request: NextRequest) {
         personalizationState.available && personalizationState.profile.personalizationEnabled
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
+      const sceneContext = await getSceneContext();
+      const sceneResults = applySceneBoost(personalizedResults, sceneContext);
+      const sceneTopScore = Number(
+        (sceneResults[0] as { similarity?: number; rrf_score?: number; scene_score?: number } | undefined)?.scene_score
+          ?? (sceneResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+          ?? (sceneResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+          ?? 0
+      );
 
       if (keyId) {
         await logRequest(
@@ -1008,7 +1045,7 @@ export async function GET(request: NextRequest) {
         });
       });
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-        memoryCount: cacheResult.results.length,
+        memoryCount: sceneResults.length,
         query: effectiveQuery,
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit audit log failed', error, {
@@ -1023,10 +1060,8 @@ export async function GET(request: NextRequest) {
         query: effectiveQuery,
         strategy: actualMode,
         latencyMs: Date.now() - startTime,
-        resultCount: personalizedResults.length,
-        topScore: Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-          ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
-          ?? 0),
+        resultCount: sceneResults.length,
+        topScore: sceneTopScore,
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit router outcome failed', error, {
           userId,
@@ -1042,13 +1077,7 @@ export async function GET(request: NextRequest) {
             version: canaryAssignment.assignedVersion,
             success: true,
             latencyMs: Date.now() - startTime,
-            qualityScore: clamp(
-              Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-                ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
-                ?? 0),
-              0,
-              1
-            ),
+            qualityScore: clamp(sceneTopScore, 0, 1),
           });
         } catch (canaryMetricError) {
           logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
@@ -1063,7 +1092,7 @@ export async function GET(request: NextRequest) {
       recordSemanticCacheOutcome({
         resolvedMode: actualMode,
         cacheHit: true,
-        resultCount: personalizedResults.length,
+        resultCount: sceneResults.length,
         latencyMs: Date.now() - startTime,
       });
 
@@ -1073,9 +1102,9 @@ export async function GET(request: NextRequest) {
           data: {
             mode: actualMode,
             requestedMode,
-            results: personalizedResults,
-            count: personalizedResults.length,
-            total: personalizedResults.length,
+            results: sceneResults,
+            count: sceneResults.length,
+            total: sceneResults.length,
             offset: 0,
             limit,
             routerDecision: routerDecision ? {
@@ -1104,6 +1133,11 @@ export async function GET(request: NextRequest) {
                 personalizationState.available && personalizationState.profile.personalizationEnabled,
               available: personalizationState.available,
             },
+            scene: sceneContext ? {
+              id: sceneContext.id,
+              entityIds: sceneContext.entityIds,
+              boostedCount: sceneResults.filter((row) => row.scene_boost).length,
+            } : null,
           },
           meta: {
             ...META,
@@ -1305,6 +1339,8 @@ export async function GET(request: NextRequest) {
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
+    const sceneContext = await getSceneContext();
+    const sceneResults = applySceneBoost(personalizedResults, sceneContext);
 
     if (keyId) {
       await logRequest(
@@ -1325,7 +1361,7 @@ export async function GET(request: NextRequest) {
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-      memoryCount: personalizedResults.length,
+      memoryCount: sceneResults.length,
       query: effectiveQuery,
     }).catch((error) => {
       logServerError('[v1/memories] Search audit log failed', error, {
@@ -1336,8 +1372,9 @@ export async function GET(request: NextRequest) {
     });
 
     const topSimilarity = clamp(
-      Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-        ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+      Number((sceneResults[0] as { similarity?: number; rrf_score?: number; scene_score?: number } | undefined)?.scene_score
+        ?? (sceneResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+        ?? (sceneResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
         ?? 0),
       0,
       1
@@ -1349,7 +1386,7 @@ export async function GET(request: NextRequest) {
       query: effectiveQuery,
       strategy: resolvedMode,
       latencyMs: Date.now() - startTime,
-      resultCount: personalizedResults.length,
+      resultCount: sceneResults.length,
       topScore: topSimilarity,
     }).catch((error) => {
       logServerError('[v1/memories] Router outcome failed', error, {
@@ -1380,7 +1417,7 @@ export async function GET(request: NextRequest) {
     recordSemanticCacheOutcome({
       resolvedMode,
       cacheHit: false,
-      resultCount: personalizedResults.length,
+      resultCount: sceneResults.length,
       latencyMs: Date.now() - startTime,
       fallbackReason: fallback?.reason || backendFallbackReason || null,
     });
@@ -1391,9 +1428,9 @@ export async function GET(request: NextRequest) {
         data: {
           mode: resolvedMode,
           requestedMode,
-          results: personalizedResults,
-          count: personalizedResults.length,
-          total: personalizedResults.length,
+          results: sceneResults,
+          count: sceneResults.length,
+          total: sceneResults.length,
           offset: 0,
           limit,
           routerDecision: routerDecision ? {
@@ -1425,6 +1462,11 @@ export async function GET(request: NextRequest) {
               personalizationState.available && personalizationState.profile.personalizationEnabled,
             available: personalizationState.available,
           },
+          scene: sceneContext ? {
+            id: sceneContext.id,
+            entityIds: sceneContext.entityIds,
+            boostedCount: sceneResults.filter((row) => row.scene_boost).length,
+          } : null,
         },
         meta: {
           ...META,

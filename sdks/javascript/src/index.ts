@@ -41,5 +41,9 @@ export type {
   QueryOptions,
   SummarizeOptions,
   CreateWebhookOptions,
+  Scene,
+  StartSceneOptions,
+  EndSceneOptions,
+  ListScenesOptions,
   SeiznConfig,
 } from './types';
