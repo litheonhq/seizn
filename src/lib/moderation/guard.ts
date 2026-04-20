@@ -14,6 +14,17 @@ export interface ModerationPolicy {
   threshold: number;
 }
 
+export interface ModerationDecision {
+  id: string;
+  content: string;
+  memoryType: string | null;
+  memoryClass: string | null;
+  status: ModerationStatus;
+  scores: Record<ModerationCategory, number>;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
 export interface ModerationResult {
   status: ModerationStatus;
   scores: Record<ModerationCategory, number>;
@@ -125,6 +136,36 @@ function normalizePolicy(row: Record<string, unknown>): ModerationPolicy {
         ? row.action
         : 'flag',
     threshold: clamp(Number(row.threshold) || 0),
+  };
+}
+
+function normalizeStatus(value: unknown): ModerationStatus {
+  if (value === 'flagged' || value === 'redacted' || value === 'blocked') return value;
+  return 'clean';
+}
+
+function normalizeScores(value: unknown): Record<ModerationCategory, number> {
+  const raw = typeof value === 'object' && value !== null ? value as Record<string, unknown> : {};
+  return {
+    sexual: clamp(Number(raw.sexual) || 0),
+    violence: clamp(Number(raw.violence) || 0),
+    pii: clamp(Number(raw.pii) || 0),
+    hate: clamp(Number(raw.hate) || 0),
+    self_harm: clamp(Number(raw.self_harm) || 0),
+    csam: clamp(Number(raw.csam) || 0),
+  };
+}
+
+function normalizeDecision(row: Record<string, unknown>): ModerationDecision {
+  return {
+    id: String(row.id),
+    content: typeof row.content === 'string' ? row.content : '',
+    memoryType: typeof row.memory_type === 'string' ? row.memory_type : null,
+    memoryClass: typeof row.memory_class === 'string' ? row.memory_class : null,
+    status: normalizeStatus(row.moderation_status),
+    scores: normalizeScores(row.moderation_scores),
+    createdAt: String(row.created_at),
+    updatedAt: typeof row.updated_at === 'string' ? row.updated_at : null,
   };
 }
 
@@ -271,6 +312,26 @@ export async function listModerationPolicies(
   supabase: SupabaseLike = createServerClient()
 ): Promise<ModerationPolicy[]> {
   return loadPolicies(supabase, organizationId);
+}
+
+export async function listModerationDecisions(
+  organizationId: string,
+  supabase: SupabaseLike = createServerClient(),
+  options: { limit?: number } = {}
+): Promise<ModerationDecision[]> {
+  const { data, error } = await supabase
+    .from('memories')
+    .select('id, content, memory_type, memory_class, moderation_status, moderation_scores, created_at, updated_at')
+    .eq('organization_id', organizationId)
+    .in('moderation_status', ['flagged', 'redacted', 'blocked'])
+    .order('created_at', { ascending: false })
+    .limit(options.limit || 50);
+
+  if (error) {
+    throw new Error(`moderation_decision_list_failed: ${error.message}`);
+  }
+
+  return ((data || []) as Record<string, unknown>[]).map(normalizeDecision);
 }
 
 export async function upsertModerationPolicy(
