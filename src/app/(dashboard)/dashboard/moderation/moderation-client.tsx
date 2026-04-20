@@ -1,0 +1,306 @@
+"use client";
+
+import { FormEvent, useEffect, useMemo, useState } from "react";
+
+type Category = "sexual" | "violence" | "pii" | "hate" | "self_harm" | "csam";
+type Action = "block" | "redact" | "flag";
+
+interface ModerationPolicy {
+  organizationId: string;
+  policyName: string;
+  memoryClass: string | null;
+  category: Category;
+  action: Action;
+  threshold: number;
+}
+
+const CATEGORIES: Category[] = ["sexual", "violence", "pii", "hate", "self_harm", "csam"];
+const ACTIONS: Action[] = ["block", "redact", "flag"];
+
+const DEMO_POLICIES: ModerationPolicy[] = [
+  {
+    organizationId: "review",
+    policyName: "default",
+    memoryClass: null,
+    category: "csam",
+    action: "block",
+    threshold: 0.01,
+  },
+  {
+    organizationId: "review",
+    policyName: "default",
+    memoryClass: null,
+    category: "pii",
+    action: "redact",
+    threshold: 0.5,
+  },
+  {
+    organizationId: "review",
+    policyName: "default",
+    memoryClass: null,
+    category: "sexual",
+    action: "flag",
+    threshold: 0.8,
+  },
+];
+
+function formatCategory(category: Category) {
+  return category.replace("_", " ");
+}
+
+function actionClass(action: Action) {
+  if (action === "block") return "border-red-500/30 bg-red-500/10 text-red-300";
+  if (action === "redact") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
+  return "border-sky-500/30 bg-sky-500/10 text-sky-200";
+}
+
+export function ModerationClient() {
+  const [policies, setPolicies] = useState<ModerationPolicy[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState<string | null>(null);
+  const [featureEnabled, setFeatureEnabled] = useState(false);
+  const [provider, setProvider] = useState("openai");
+  const [policyName, setPolicyName] = useState("default");
+  const [memoryClass, setMemoryClass] = useState("");
+  const [category, setCategory] = useState<Category>("pii");
+  const [action, setAction] = useState<Action>("redact");
+  const [threshold, setThreshold] = useState("0.5");
+
+  const grouped = useMemo(() => {
+    return policies.reduce<Record<string, ModerationPolicy[]>>((acc, policy) => {
+      const key = `${policy.policyName}:${policy.memoryClass || "all"}`;
+      acc[key] ||= [];
+      acc[key].push(policy);
+      return acc;
+    }, {});
+  }, [policies]);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadPolicies() {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/v1/moderation-policies", { cache: "no-store" });
+        if (!response.ok) throw new Error("moderation policies unavailable");
+        const payload = await response.json();
+        if (!alive) return;
+        setPolicies(payload.data?.policies || []);
+        setFeatureEnabled(Boolean(payload.data?.featureEnabled));
+        setProvider(payload.data?.provider || "openai");
+      } catch {
+        if (!alive) return;
+        setPolicies(DEMO_POLICIES);
+        setFeatureEnabled(false);
+        setProvider("openai");
+        setMessage("Live policies unavailable. Showing the default moderation policy shape.");
+      } finally {
+        if (alive) setIsLoading(false);
+      }
+    }
+
+    loadPolicies();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  async function savePolicy(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage(null);
+
+    const parsedThreshold = Number(threshold);
+    if (!Number.isFinite(parsedThreshold) || parsedThreshold < 0 || parsedThreshold > 1) {
+      setMessage("Threshold must be between 0 and 1.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/v1/moderation-policies/${encodeURIComponent(policyName)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          memoryClass: memoryClass.trim() || null,
+          category,
+          action,
+          threshold: parsedThreshold,
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error?.message || "Failed to save policy");
+      }
+      const saved = payload.data?.policies || [];
+      setPolicies((current) => {
+        const next = current.filter((policy) => {
+          return !saved.some((item: ModerationPolicy) => (
+            item.policyName === policy.policyName &&
+            item.category === policy.category &&
+            (item.memoryClass || null) === (policy.memoryClass || null)
+          ));
+        });
+        return [...next, ...saved].sort((a, b) => a.policyName.localeCompare(b.policyName));
+      });
+      setMessage("Policy saved.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Failed to save policy");
+    }
+  }
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="mb-2 text-sm font-medium uppercase text-szn-text-2">Memory safety</p>
+          <h1 className="text-3xl font-semibold text-szn-text-1">Moderation policies</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-szn-text-2">
+            Control which memories are blocked, redacted, or flagged before storage and before recall.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-lg border border-szn-border bg-szn-card p-4">
+            <p className="text-xs uppercase text-szn-text-2">Feature flag</p>
+            <p className="mt-1 text-lg font-semibold text-szn-text-1">
+              {featureEnabled ? "Enabled" : "Disabled"}
+            </p>
+          </div>
+          <div className="rounded-lg border border-szn-border bg-szn-card p-4">
+            <p className="text-xs uppercase text-szn-text-2">Provider</p>
+            <p className="mt-1 text-lg font-semibold text-szn-text-1">{provider}</p>
+          </div>
+        </div>
+      </div>
+
+      {message && (
+        <div className="mb-6 rounded-lg border border-szn-border bg-szn-surface-1 px-4 py-3 text-sm text-szn-text-2">
+          {message}
+        </div>
+      )}
+
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+        <section className="rounded-lg border border-szn-border bg-szn-card">
+          <div className="border-b border-szn-border px-5 py-4">
+            <h2 className="text-lg font-semibold text-szn-text-1">Active rules</h2>
+            <p className="mt-1 text-sm text-szn-text-2">
+              Class-specific rules override the global class for the same policy name.
+            </p>
+          </div>
+          <div className="divide-y divide-szn-border">
+            {isLoading ? (
+              <div className="p-5 text-sm text-szn-text-2">Loading moderation policies...</div>
+            ) : Object.entries(grouped).length === 0 ? (
+              <div className="p-5 text-sm text-szn-text-2">No policies configured.</div>
+            ) : (
+              Object.entries(grouped).map(([key, rows]) => {
+                const [name, klass] = key.split(":");
+                return (
+                  <div key={key} className="p-5">
+                    <div className="mb-4 flex flex-wrap items-center gap-3">
+                      <h3 className="text-base font-semibold text-szn-text-1">{name}</h3>
+                      <span className="rounded-md border border-szn-border px-2 py-1 text-xs text-szn-text-2">
+                        {klass === "all" ? "all memory classes" : klass}
+                      </span>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                      {rows.map((policy) => (
+                        <div
+                          key={`${policy.policyName}-${policy.memoryClass || "all"}-${policy.category}`}
+                          className="rounded-lg border border-szn-border bg-szn-surface-1 p-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-medium capitalize text-szn-text-1">
+                                {formatCategory(policy.category)}
+                              </p>
+                              <p className="mt-1 text-xs text-szn-text-2">
+                                Threshold {policy.threshold.toFixed(2)}
+                              </p>
+                            </div>
+                            <span className={`rounded-md border px-2 py-1 text-xs font-medium ${actionClass(policy.action)}`}>
+                              {policy.action}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </section>
+
+        <form onSubmit={savePolicy} className="rounded-lg border border-szn-border bg-szn-card p-5">
+          <h2 className="text-lg font-semibold text-szn-text-1">Edit a rule</h2>
+          <p className="mt-1 text-sm text-szn-text-2">
+            Use one category per rule. Leave memory class empty to apply it globally.
+          </p>
+
+          <label className="mt-5 block text-sm font-medium text-szn-text-1">
+            Policy name
+            <input
+              value={policyName}
+              onChange={(event) => setPolicyName(event.target.value)}
+              className="mt-2 w-full rounded-lg border border-szn-border bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-accent"
+              required
+            />
+          </label>
+
+          <label className="mt-4 block text-sm font-medium text-szn-text-1">
+            Memory class
+            <input
+              value={memoryClass}
+              onChange={(event) => setMemoryClass(event.target.value)}
+              placeholder="fact, preference, quest, npc"
+              className="mt-2 w-full rounded-lg border border-szn-border bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-accent"
+            />
+          </label>
+
+          <label className="mt-4 block text-sm font-medium text-szn-text-1">
+            Category
+            <select
+              value={category}
+              onChange={(event) => setCategory(event.target.value as Category)}
+              className="mt-2 w-full rounded-lg border border-szn-border bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-accent"
+            >
+              {CATEGORIES.map((item) => (
+                <option key={item} value={item}>{formatCategory(item)}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className="mt-4 block text-sm font-medium text-szn-text-1">
+            Action
+            <select
+              value={action}
+              onChange={(event) => setAction(event.target.value as Action)}
+              className="mt-2 w-full rounded-lg border border-szn-border bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-accent"
+            >
+              {ACTIONS.map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className="mt-4 block text-sm font-medium text-szn-text-1">
+            Threshold
+            <input
+              value={threshold}
+              onChange={(event) => setThreshold(event.target.value)}
+              inputMode="decimal"
+              className="mt-2 w-full rounded-lg border border-szn-border bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-accent"
+              required
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="mt-6 w-full rounded-lg bg-szn-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-szn-accent/90"
+          >
+            Save rule
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -68,6 +68,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | AI SDK | Vercel AI SDK | ^6.0.69 | Integration package in `packages/vercel-ai/` |
 | Document Parsing | mammoth | ^1.11.0 | DOCX ingestion (`src/lib/summer/ingest/parsers/docx.ts`) |
 | PII Detection | Custom + Presidio (optional) | -- | `src/lib/pii/` with scanner, pipeline, config |
+| Memory Moderation | OpenAI Moderation + local fallback | -- | `SEIZN_FEATURE_MODERATION=true` enables write-time and recall-time policy checks via `src/lib/moderation/guard.ts`; policies live in `moderation_policies` and dashboard controls are under `/dashboard/moderation`. |
 | Provenance | KMS Signing | -- | AWS KMS, Azure Key Vault, Google Cloud KMS for content signing |
 | Observability | OpenTelemetry | ^2.5.0 | OTLP HTTP/Proto export, custom GenAI semantic conventions |
 | Error Tracking | Sentry | ^10.32.1 | Instrumentation client + server, PII pipeline integration |
