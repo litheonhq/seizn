@@ -235,6 +235,8 @@ export interface AddMemoryRequest {
   agent_id?: string;
   entity_id?: string;
   pinned?: boolean;
+  memory_class?: string;
+  half_life_hours?: number | null;
   source?: string;
   companion_meta?: CompanionMeta | null;
   // Optional image attachment payload (object storage + asset link)

@@ -69,6 +69,11 @@ import {
   filterResultsByPerspective,
   resolveBeliefOrganizationId,
 } from '@/lib/memory/belief';
+import {
+  applyDecayRerank,
+  reinforceOnRecall,
+  type MemoryWithDecay,
+} from '@/lib/memory/decay';
 import { scoreImportance } from '@/lib/memory/auto-score';
 import {
   applyPersonalizedRanking,
@@ -223,6 +228,28 @@ function stripBudgetColumns<T extends Record<string, unknown>>(payload: T): Reco
   return legacyPayload;
 }
 
+function isMissingDecayColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error || error.code !== '42703') return false;
+  const message = (error.message || '').toLowerCase();
+  return [
+    'memory_class',
+    'half_life_hours',
+    'base_strength',
+    'last_reinforced_at',
+  ].some((column) => message.includes(column));
+}
+
+function stripDecayColumns<T extends Record<string, unknown>>(payload: T): Record<string, unknown> {
+  const legacyPayload: Record<string, unknown> = { ...payload };
+  delete legacyPayload.memory_class;
+  delete legacyPayload.half_life_hours;
+  delete legacyPayload.base_strength;
+  delete legacyPayload.last_reinforced_at;
+  return legacyPayload;
+}
+
 function getImageAttachmentClientErrorMessage(error: unknown): string | null {
   if (!(error instanceof Error) || !error.message) return null;
   const lowered = error.message.toLowerCase();
@@ -269,6 +296,7 @@ function trackRetrievedMemoryIds(
       Promise.allSettled([
         trackMemoryAccess(id),
         recordRecall(id, supabase),
+        reinforceOnRecall(id, supabase),
       ])
     )
   ).catch((error) => {
@@ -630,6 +658,16 @@ async function handlePost(request: NextRequest) {
       source: body.source || 'api',
       confidence: 1.0,
       importance,
+      memory_class:
+        typeof (body as unknown as Record<string, unknown>).memory_class === 'string'
+          ? (body as unknown as Record<string, string>).memory_class
+          : 'default',
+      half_life_hours:
+        typeof (body as unknown as Record<string, unknown>).half_life_hours === 'number'
+          ? (body as unknown as Record<string, number>).half_life_hours
+          : null,
+      base_strength: 1.0,
+      last_reinforced_at: new Date().toISOString(),
       content_hash: contentHash,
       tier: 'hot',
       pinned: rawBody.pinned === true,
@@ -683,6 +721,13 @@ async function handlePost(request: NextRequest) {
       }
       if (isMissingBudgetColumnError(insertError)) {
         const strippedPayload = stripBudgetColumns(legacyInsertPayload);
+        changedPayload =
+          changedPayload ||
+          Object.keys(strippedPayload).length !== Object.keys(legacyInsertPayload).length;
+        legacyInsertPayload = strippedPayload;
+      }
+      if (isMissingDecayColumnError(insertError)) {
+        const strippedPayload = stripDecayColumns(legacyInsertPayload);
         changedPayload =
           changedPayload ||
           Object.keys(strippedPayload).length !== Object.keys(legacyInsertPayload).length;
@@ -911,7 +956,7 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, entity_id, tier, pinned, recall_count, last_recalled_at, size_bytes, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, entity_id, tier, pinned, recall_count, last_recalled_at, size_bytes, memory_class, half_life_hours, base_strength, last_reinforced_at, created_at, updated_at';
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
@@ -1283,7 +1328,8 @@ async function handleGet(request: NextRequest) {
         personalizationState.available && personalizationState.profile.personalizationEnabled
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
-      const perspectiveResult = await filterByPerspective(personalizedResults);
+      const decayedResults = applyDecayRerank(personalizedResults as unknown as MemoryWithDecay[]);
+      const perspectiveResult = await filterByPerspective(decayedResults);
       const finalResults = perspectiveResult.memories;
 
       if (keyId) {
@@ -1602,7 +1648,8 @@ async function handleGet(request: NextRequest) {
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
-    const perspectiveResult = await filterByPerspective(personalizedResults);
+    const decayedResults = applyDecayRerank(personalizedResults as MemoryWithDecay[]);
+    const perspectiveResult = await filterByPerspective(decayedResults);
     const finalResults = perspectiveResult.memories;
 
     if (keyId) {
