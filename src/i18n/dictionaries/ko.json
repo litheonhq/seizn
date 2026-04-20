@@ -256,6 +256,7 @@
       "candidates": "후보",
       "replay": "Replay",
       "branches": "브랜치",
+      "provenance": "출처",
       "devTools": "개발자 도구",
       "playground": "플레이그라운드",
       "evals": "평가",
@@ -1066,6 +1067,7 @@
       "beliefTab": "믿음 그래프",
       "decayTab": "감쇠",
       "branchTab": "브랜치",
+      "provenanceTab": "출처",
       "afterDate": "이후",
       "beforeDate": "이전",
       "sortImportance": "중요도순"
