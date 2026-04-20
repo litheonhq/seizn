@@ -65,6 +65,10 @@ import {
   resolveBudgetEntityId,
   resolveMemoryBudgetOrganizationId,
 } from '@/lib/memory/budget';
+import {
+  filterResultsByPerspective,
+  resolveBeliefOrganizationId,
+} from '@/lib/memory/belief';
 import { scoreImportance } from '@/lib/memory/auto-score';
 import {
   applyPersonalizedRanking,
@@ -941,12 +945,26 @@ async function handleGet(request: NextRequest) {
     const tagsParam = searchParams.get('tags');
     const after = searchParams.get('after');
     const before = searchParams.get('before');
+    const perspectiveEntityId = searchParams.get('perspective_entity_id')?.trim() || null;
+    const asOfParam = searchParams.get('as_of');
     const sortRaw = searchParams.get('sort') || 'created_at';
     const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
       ? (sortRaw as BrowseSortColumn)
       : 'created_at';
     const order = searchParams.get('order') === 'asc' ? true : false; // ascending?
     const supabase = createServerClient();
+    const beliefOrganizationId = perspectiveEntityId
+      ? await resolveBeliefOrganizationId(supabase, { userId, keyId })
+      : null;
+    const filterByPerspective = async <T extends { id: string }>(input: T[]) => {
+      if (!perspectiveEntityId) return { memories: input, excluded: [] as Array<{ id: string; reason: string }> };
+      return filterResultsByPerspective(supabase, {
+        organizationId: beliefOrganizationId,
+        perspectiveEntityId,
+        asOf: asOfParam || undefined,
+        memories: input,
+      });
+    };
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
@@ -1006,24 +1024,30 @@ async function handleGet(request: NextRequest) {
           namespace,
         });
       });
+      const perspectiveResult = await filterByPerspective((memories || []) as SearchResultRow[]);
+      const browseResults = perspectiveResult.memories;
       trackRetrievedMemoryIds(
-        (memories || []).map((memory: { id: string }) => memory.id),
+        browseResults.map((memory: { id: string }) => memory.id),
         supabase,
         { userId, namespace, mode: 'browse' }
       );
 
-      recordMemoryReads(memories || [], userId);
+      recordMemoryReads(browseResults, userId);
 
       return withHeaders(
         NextResponse.json({
           success: true,
           data: {
             mode: 'browse',
-            results: memories || [],
-            count: memories?.length || 0,
+            results: browseResults,
+            count: browseResults.length,
             total: count ?? 0,
             offset,
             limit,
+            perspective: perspectiveEntityId ? {
+              entityId: perspectiveEntityId,
+              excluded: perspectiveResult.excluded,
+            } : null,
           },
           meta: { ...META, cached: false, latencyMs: Date.now() - startTime },
         }),
@@ -1259,6 +1283,8 @@ async function handleGet(request: NextRequest) {
         personalizationState.available && personalizationState.profile.personalizationEnabled
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
+      const perspectiveResult = await filterByPerspective(personalizedResults);
+      const finalResults = perspectiveResult.memories;
 
       if (keyId) {
         await logRequest(
@@ -1268,12 +1294,12 @@ async function handleGet(request: NextRequest) {
         );
       }
       trackRetrievedMemoryIds(
-        cacheResult.results.map((m) => m.id),
+        finalResults.map((m) => m.id),
         supabase,
         { userId, namespace, mode: 'cache-hit' }
       );
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-        memoryCount: cacheResult.results.length,
+        memoryCount: finalResults.length,
         query: effectiveQuery,
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit audit log failed', error, {
@@ -1288,9 +1314,9 @@ async function handleGet(request: NextRequest) {
         query: effectiveQuery,
         strategy: actualMode,
         latencyMs: Date.now() - startTime,
-        resultCount: personalizedResults.length,
-        topScore: Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-          ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+        resultCount: finalResults.length,
+        topScore: Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+          ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
           ?? 0),
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit router outcome failed', error, {
@@ -1308,8 +1334,8 @@ async function handleGet(request: NextRequest) {
             success: true,
             latencyMs: Date.now() - startTime,
             qualityScore: clamp(
-              Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-                ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+              Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+                ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
                 ?? 0),
               0,
               1
@@ -1328,11 +1354,11 @@ async function handleGet(request: NextRequest) {
       recordSemanticCacheOutcome({
         resolvedMode: actualMode,
         cacheHit: true,
-        resultCount: personalizedResults.length,
+        resultCount: finalResults.length,
         latencyMs: Date.now() - startTime,
       });
 
-      recordMemoryReads(personalizedResults, userId);
+      recordMemoryReads(finalResults, userId);
 
       return withHeaders(
         NextResponse.json({
@@ -1340,9 +1366,9 @@ async function handleGet(request: NextRequest) {
           data: {
             mode: actualMode,
             requestedMode,
-            results: personalizedResults,
-            count: personalizedResults.length,
-            total: personalizedResults.length,
+            results: finalResults,
+            count: finalResults.length,
+            total: finalResults.length,
             offset: 0,
             limit,
             routerDecision: routerDecision ? {
@@ -1371,6 +1397,10 @@ async function handleGet(request: NextRequest) {
                 personalizationState.available && personalizationState.profile.personalizationEnabled,
               available: personalizationState.available,
             },
+            perspective: perspectiveEntityId ? {
+              entityId: perspectiveEntityId,
+              excluded: perspectiveResult.excluded,
+            } : null,
           },
           meta: {
             ...META,
@@ -1572,6 +1602,8 @@ async function handleGet(request: NextRequest) {
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
+    const perspectiveResult = await filterByPerspective(personalizedResults);
+    const finalResults = perspectiveResult.memories;
 
     if (keyId) {
       await logRequest(
@@ -1583,14 +1615,14 @@ async function handleGet(request: NextRequest) {
 
     if (results && results.length > 0) {
       trackRetrievedMemoryIds(
-        results.map((m: { id: string }) => m.id),
+        finalResults.map((m: { id: string }) => m.id),
         supabase,
         { userId, namespace, resolvedMode }
       );
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-      memoryCount: personalizedResults.length,
+      memoryCount: finalResults.length,
       query: effectiveQuery,
     }).catch((error) => {
       logServerError('[v1/memories] Search audit log failed', error, {
@@ -1601,8 +1633,8 @@ async function handleGet(request: NextRequest) {
     });
 
     const topSimilarity = clamp(
-      Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-        ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+      Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+        ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
         ?? 0),
       0,
       1
@@ -1614,7 +1646,7 @@ async function handleGet(request: NextRequest) {
       query: effectiveQuery,
       strategy: resolvedMode,
       latencyMs: Date.now() - startTime,
-      resultCount: personalizedResults.length,
+      resultCount: finalResults.length,
       topScore: topSimilarity,
     }).catch((error) => {
       logServerError('[v1/memories] Router outcome failed', error, {
@@ -1645,12 +1677,12 @@ async function handleGet(request: NextRequest) {
     recordSemanticCacheOutcome({
       resolvedMode,
       cacheHit: false,
-      resultCount: personalizedResults.length,
+      resultCount: finalResults.length,
       latencyMs: Date.now() - startTime,
       fallbackReason: fallback?.reason || backendFallbackReason || null,
     });
 
-    recordMemoryReads(personalizedResults, userId);
+    recordMemoryReads(finalResults, userId);
 
     return withHeaders(
       NextResponse.json({
@@ -1658,9 +1690,9 @@ async function handleGet(request: NextRequest) {
         data: {
           mode: resolvedMode,
           requestedMode,
-          results: personalizedResults,
-          count: personalizedResults.length,
-          total: personalizedResults.length,
+          results: finalResults,
+          count: finalResults.length,
+          total: finalResults.length,
           offset: 0,
           limit,
           routerDecision: routerDecision ? {
@@ -1692,6 +1724,10 @@ async function handleGet(request: NextRequest) {
               personalizationState.available && personalizationState.profile.personalizationEnabled,
             available: personalizationState.available,
           },
+          perspective: perspectiveEntityId ? {
+            entityId: perspectiveEntityId,
+            excluded: perspectiveResult.excluded,
+          } : null,
         },
         meta: {
           ...META,
