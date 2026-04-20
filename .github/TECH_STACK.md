@@ -53,6 +53,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
+| Deterministic Replay | AsyncLocalStorage + PostgreSQL snapshots | -- | `/api/v1/replay` captures and replays memory reads/writes, tool calls, and LLM metadata for reproducible NPC-memory debugging. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
 | Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |

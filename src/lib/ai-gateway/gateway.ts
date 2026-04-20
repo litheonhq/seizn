@@ -50,6 +50,7 @@ import {
   extractAnthropicCacheUsage,
   isAnthropicPromptCachingEnabled,
 } from '../anthropic/prompt-caching';
+import { recordLLMCall } from '../replay/capture';
 
 // Provider clients (singletons)
 let openaiClient: OpenAI | null = null;
@@ -349,6 +350,7 @@ export class AIGateway {
 
     const latencyMs = Date.now() - startTime;
     const usage = response.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+    recordLLMCall({ model: response.model, provider: 'openai' });
 
     return {
       id: response.id,
@@ -402,6 +404,7 @@ export class AIGateway {
     const completionTokens = usage?.output_tokens ?? 0;
     const promptTokens = baseInputTokens + cacheUsage.cacheCreationInputTokens + cacheUsage.cacheReadInputTokens;
     const totalTokens = promptTokens + completionTokens;
+    recordLLMCall({ model: response.model, provider: 'anthropic' });
 
     return {
       id: response.id,
@@ -458,6 +461,7 @@ export class AIGateway {
 
     const latencyMs = Date.now() - startTime;
     const text = response.text();
+    recordLLMCall({ model: request.model, provider: 'google' });
 
     // Google doesn't provide token counts directly in all cases
     const estimatedTokens = Math.ceil((text.length + lastMessage.content.length) / 4);

@@ -96,6 +96,17 @@ export interface FederatedSearchResult {
   memoryType: string;
 }
 
+export interface ReplayListOptions {
+  limit?: number;
+  after?: string;
+  endpoint?: string;
+}
+
+export interface ReplayInvocationOptions {
+  mockLLM?: boolean;
+  mockTools?: boolean;
+}
+
 // ============================================
 // Constants
 // ============================================
@@ -367,6 +378,28 @@ export class FederatedMemory {
     return result;
   }
 
+  replay = {
+    list: async (options: ReplayListOptions = {}) => {
+      const params = new URLSearchParams();
+      if (options.limit) params.set('limit', String(options.limit));
+      if (options.after) params.set('after', options.after);
+      if (options.endpoint) params.set('endpoint', options.endpoint);
+      return this.requestReplay(`/v1/replay?${params.toString()}`, 'GET');
+    },
+
+    get: async (traceId: string) => {
+      return this.requestReplay(`/v1/replay/${encodeURIComponent(traceId)}`, 'GET');
+    },
+
+    replay: async (traceId: string, options: ReplayInvocationOptions = {}) => {
+      return this.requestReplay('/v1/replay', 'POST', { traceId, ...options });
+    },
+
+    diff: async (traceIdA: string, traceIdB: string) => {
+      return this.requestReplay('/v1/replay/diff', 'POST', { traceIdA, traceIdB });
+    },
+  };
+
   /**
    * Get local storage statistics.
    */
@@ -470,6 +503,28 @@ export class FederatedMemory {
 
     const data = await response.json();
     return { id: data.data?.memory?.id };
+  }
+
+  private async requestReplay(path: string, method: 'GET' | 'POST', body?: unknown): Promise<unknown> {
+    const baseUrl = this.config.baseUrl || 'https://www.seizn.com/api';
+    const response = await fetch(`${baseUrl}${path}`, {
+      method,
+      headers: {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        Authorization: `Bearer ${this.config.apiKey}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new Error(
+        typeof payload?.error?.message === 'string'
+          ? payload.error.message
+          : `Replay request failed with ${response.status}`
+      );
+    }
+    return payload;
   }
 
   private startAutoSync(): void {
