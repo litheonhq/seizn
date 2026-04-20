@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
@@ -17,10 +17,18 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070a12",
+  themeColor: "#0a0a12",
 };
 
 export async function generateStaticParams() {
@@ -145,7 +153,7 @@ export default async function LocaleLayout({
         <link rel="dns-prefetch" href="https://api.seizn.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
         <GoogleAnalytics />
         {children}
