@@ -254,6 +254,7 @@
       "memories": "Entities",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
+      "replay": "Replay",
       "devTools": "Dev tools",
       "playground": "Playground",
       "evals": "Scenario tests",
