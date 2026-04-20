@@ -112,6 +112,15 @@ import {
   runDegradedKeywordSearch,
   shouldUseDegradedKeywordSearchFallback,
 } from '@/lib/memory/degraded-keyword-search';
+import {
+  DEFAULT_MODERATION_ORGANIZATION_ID,
+  isModerationEnabled,
+  moderate,
+  ModerationError,
+  moderateRecallResults,
+  resolveModerationOrganizationId,
+  type ModerationResult,
+} from '@/lib/moderation/guard';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
@@ -161,6 +170,23 @@ const IMAGE_ATTACHMENT_CLIENT_ERROR_PATTERNS = [
   'private or internal ip',
   'hostname',
 ] as const;
+
+function getRequestMemoryClass(body: AddMemoryRequest): string | null {
+  const raw = (body as unknown as Record<string, unknown>).memory_class;
+  if (typeof raw === 'string' && raw.trim().length > 0) return raw.trim();
+  return body.memory_type || null;
+}
+
+function getModerationMeta(result: ModerationResult | null): {
+  status?: string;
+  scores?: Record<string, number>;
+} {
+  if (!result) return {};
+  return {
+    status: result.status,
+    scores: result.scores,
+  };
+}
 
 function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
@@ -247,6 +273,21 @@ function stripDecayColumns<T extends Record<string, unknown>>(payload: T): Recor
   delete legacyPayload.half_life_hours;
   delete legacyPayload.base_strength;
   delete legacyPayload.last_reinforced_at;
+  return legacyPayload;
+}
+
+function isMissingModerationColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error || error.code !== '42703') return false;
+  const message = (error.message || '').toLowerCase();
+  return ['moderation_status', 'moderation_scores'].some((column) => message.includes(column));
+}
+
+function stripModerationColumns<T extends Record<string, unknown>>(payload: T): Record<string, unknown> {
+  const legacyPayload: Record<string, unknown> = { ...payload };
+  delete legacyPayload.moderation_status;
+  delete legacyPayload.moderation_scores;
   return legacyPayload;
 }
 
@@ -599,6 +640,46 @@ async function handlePost(request: NextRequest) {
       );
     }
 
+    let moderationResult: ModerationResult | null = null;
+    let moderationOrganizationId: string | null = null;
+    if (!isEncrypted && isModerationEnabled()) {
+      moderationOrganizationId = await resolveModerationOrganizationId(supabase, { userId, keyId });
+      try {
+        moderationResult = await moderate({
+          organizationId: moderationOrganizationId || DEFAULT_MODERATION_ORGANIZATION_ID,
+          memoryClass: getRequestMemoryClass(body),
+          content: sanitizedContent,
+          supabase,
+        });
+      } catch (error) {
+        if (error instanceof ModerationError) {
+          if (keyId) {
+            await logRequest(
+              { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+              400
+            );
+          }
+          return NextResponse.json(
+            {
+              success: false,
+              error: {
+                code: 'memory_moderation_blocked',
+                message: 'Content blocked by moderation policy',
+                moderation: error.result,
+              },
+              meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
+            },
+            { status: 400 }
+          );
+        }
+        throw error;
+      }
+
+      if (moderationResult.status === 'redacted' && moderationResult.redactedContent) {
+        sanitizedContent = moderationResult.redactedContent;
+      }
+    }
+
     // Dedup check (opt-out with dedup=false)
     let embedding: number[] | null = null;
     if (!isEncrypted) {
@@ -674,6 +755,12 @@ async function handlePost(request: NextRequest) {
       last_recalled_at: null,
       recall_count: 0,
       size_bytes: sizeBytes,
+      ...(moderationResult
+        ? {
+            moderation_status: moderationResult.status,
+            moderation_scores: moderationResult.scores,
+          }
+        : {}),
     };
 
     let memory: {
@@ -685,6 +772,8 @@ async function handlePost(request: NextRequest) {
       tags: string[];
       namespace: string;
       importance: number;
+      moderation_status?: string;
+      moderation_scores?: Record<string, number> | null;
       created_at: string;
     } | null = null;
 
@@ -728,6 +817,13 @@ async function handlePost(request: NextRequest) {
       }
       if (isMissingDecayColumnError(insertError)) {
         const strippedPayload = stripDecayColumns(legacyInsertPayload);
+        changedPayload =
+          changedPayload ||
+          Object.keys(strippedPayload).length !== Object.keys(legacyInsertPayload).length;
+        legacyInsertPayload = strippedPayload;
+      }
+      if (isMissingModerationColumnError(insertError)) {
+        const strippedPayload = stripModerationColumns(legacyInsertPayload);
         changedPayload =
           changedPayload ||
           Object.keys(strippedPayload).length !== Object.keys(legacyInsertPayload).length;
@@ -938,7 +1034,12 @@ async function handlePost(request: NextRequest) {
             springV4: springMirror,
           },
         },
-        meta: { ...META, latencyMs: Date.now() - startTime, integrityWarnings },
+        meta: {
+          ...META,
+          latencyMs: Date.now() - startTime,
+          integrityWarnings,
+          moderation: getModerationMeta(moderationResult),
+        },
       }),
       result.rateLimitHeaders
     );
@@ -956,7 +1057,7 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, entity_id, tier, pinned, recall_count, last_recalled_at, size_bytes, memory_class, half_life_hours, base_strength, last_reinforced_at, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, entity_id, tier, pinned, recall_count, last_recalled_at, size_bytes, memory_class, half_life_hours, base_strength, last_reinforced_at, moderation_status, moderation_scores, created_at, updated_at';
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
@@ -1010,6 +1111,19 @@ async function handleGet(request: NextRequest) {
         memories: input,
       });
     };
+    let recallModerationOrgPromise: Promise<string | null> | null = null;
+    const getRecallModerationOrgId = async () => {
+      if (!isModerationEnabled()) return null;
+      recallModerationOrgPromise ||= resolveModerationOrganizationId(supabase, { userId, keyId });
+      return (await recallModerationOrgPromise) || DEFAULT_MODERATION_ORGANIZATION_ID;
+    };
+    const applyRecallModeration = async <
+      T extends { content?: unknown; memory_class?: unknown; memory_type?: unknown }
+    >(items: T[]) => {
+      const organizationId = await getRecallModerationOrgId();
+      if (!organizationId || items.length === 0) return items;
+      return moderateRecallResults(organizationId, items, supabase);
+    };
 
     // ----------------------------------------------
     // BROWSE MODE - no query, return paginated list
@@ -1053,6 +1167,10 @@ async function handleGet(request: NextRequest) {
         return ServerErrors.database('browse_memories');
       }
 
+      const moderatedBrowseResults = await applyRecallModeration(memories || []);
+      const perspectiveResult = await filterByPerspective(moderatedBrowseResults as SearchResultRow[]);
+      const browseResults = perspectiveResult.memories;
+
       if (keyId) {
         await logRequest(
           { userId, keyId, endpoint: '/api/v1/memories', method: 'GET', startTime },
@@ -1062,15 +1180,13 @@ async function handleGet(request: NextRequest) {
       }
 
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-        memoryCount: memories?.length || 0,
+        memoryCount: browseResults.length,
       }).catch((error) => {
         logServerError('[v1/memories] Browse audit log failed', error, {
           userId,
           namespace,
         });
       });
-      const perspectiveResult = await filterByPerspective((memories || []) as SearchResultRow[]);
-      const browseResults = perspectiveResult.memories;
       trackRetrievedMemoryIds(
         browseResults.map((memory: { id: string }) => memory.id),
         supabase,
@@ -1217,14 +1333,22 @@ async function handleGet(request: NextRequest) {
         });
 
         if (slotValue) {
+          const slotResults = await applyRecallModeration([{
+            id: `slot:${slotKey}`,
+            content: slotValue,
+            memory_type: 'fact',
+            slot_key: slotKey,
+            similarity: 1.0,
+          }]);
+
           recordRouterOutcome(supabase, {
             userId,
             namespace,
             query: effectiveQuery,
             strategy: 'slot',
             latencyMs: Date.now() - startTime,
-            resultCount: 1,
-            topScore: 1,
+            resultCount: slotResults.length,
+            topScore: slotResults.length > 0 ? 1 : 0,
           }).catch((error) => {
             logServerError('[v1/memories] Slot router outcome failed', error, {
               userId,
@@ -1240,7 +1364,7 @@ async function handleGet(request: NextRequest) {
                 version: canaryAssignment.assignedVersion,
                 success: true,
                 latencyMs: Date.now() - startTime,
-                qualityScore: 1,
+                qualityScore: slotResults.length > 0 ? 1 : 0,
               });
             } catch (canaryMetricError) {
               logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
@@ -1256,7 +1380,7 @@ async function handleGet(request: NextRequest) {
           recordSemanticCacheOutcome({
             resolvedMode: 'slot',
             cacheHit: false,
-            resultCount: 1,
+            resultCount: slotResults.length,
             latencyMs: slotLatencyMs,
           });
 
@@ -1266,15 +1390,9 @@ async function handleGet(request: NextRequest) {
               data: {
                 mode: 'slot',
                 requestedMode,
-                results: [{
-                  id: `slot:${slotKey}`,
-                  content: slotValue,
-                  memory_type: 'fact',
-                  slot_key: slotKey,
-                  similarity: 1.0,
-                }],
-                count: 1,
-                total: 1,
+                results: slotResults,
+                count: slotResults.length,
+                total: slotResults.length,
                 offset: 0,
                 limit,
                 routerDecision: routerDecision ? {
@@ -1328,9 +1446,15 @@ async function handleGet(request: NextRequest) {
         personalizationState.available && personalizationState.profile.personalizationEnabled
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
-      const decayedResults = applyDecayRerank(personalizedResults as unknown as MemoryWithDecay[]);
+      const moderatedResults = await applyRecallModeration(personalizedResults);
+      const decayedResults = applyDecayRerank(moderatedResults as unknown as MemoryWithDecay[]);
       const perspectiveResult = await filterByPerspective(decayedResults);
       const finalResults = perspectiveResult.memories;
+      const finalTopScore = Number(
+        (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+          ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+          ?? 0
+      );
 
       if (keyId) {
         await logRequest(
@@ -1361,9 +1485,7 @@ async function handleGet(request: NextRequest) {
         strategy: actualMode,
         latencyMs: Date.now() - startTime,
         resultCount: finalResults.length,
-        topScore: Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-          ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
-          ?? 0),
+        topScore: finalTopScore,
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit router outcome failed', error, {
           userId,
@@ -1379,13 +1501,7 @@ async function handleGet(request: NextRequest) {
             version: canaryAssignment.assignedVersion,
             success: true,
             latencyMs: Date.now() - startTime,
-            qualityScore: clamp(
-              Number((finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-                ?? (finalResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
-                ?? 0),
-              0,
-              1
-            ),
+            qualityScore: clamp(finalTopScore, 0, 1),
           });
         } catch (canaryMetricError) {
           logServerError('[v1/memories] Canary metric record failed', canaryMetricError, {
@@ -1648,7 +1764,8 @@ async function handleGet(request: NextRequest) {
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
-    const decayedResults = applyDecayRerank(personalizedResults as MemoryWithDecay[]);
+    const moderatedResults = await applyRecallModeration(personalizedResults);
+    const decayedResults = applyDecayRerank(moderatedResults as MemoryWithDecay[]);
     const perspectiveResult = await filterByPerspective(decayedResults);
     const finalResults = perspectiveResult.memories;
 
