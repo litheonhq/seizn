@@ -82,6 +82,12 @@ export interface Memory {
   recall_count?: number;
   last_recalled_at?: string | null;
   size_bytes?: number;
+  memory_class?: string;
+  half_life_hours?: number | null;
+  base_strength?: number;
+  last_reinforced_at?: string | null;
+  decay_strength?: number;
+  decay_score?: number;
 }
 
 export interface RecentMemory {

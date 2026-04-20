@@ -1159,6 +1159,7 @@
       "memoriesTab": "Memories",
       "budgetTab": "Budget",
       "beliefTab": "Belief graph",
+      "decayTab": "Decay",
       "export": "Export",
       "import": "Import",
       "imported": "imported",

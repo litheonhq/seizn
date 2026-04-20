@@ -832,6 +832,12 @@ export default function MemoriesClient() {
             >
               {t("dashboard.memoriesPage.beliefTab") || "Belief graph"}
             </Link>
+            <Link
+              href="/dashboard/memories/decay"
+              className="px-3 py-2 text-xs font-medium text-szn-text-2 hover:text-szn-signal hover:bg-szn-surface-1 transition-colors"
+            >
+              {t("dashboard.memoriesPage.decayTab") || "Decay"}
+            </Link>
           </div>
 
           {/* Export Dropdown */}
