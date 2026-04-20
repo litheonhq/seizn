@@ -3,6 +3,7 @@
 export type Plan = 'free' | 'plus' | 'pro' | 'enterprise';
 export type MemoryType = 'fact' | 'preference' | 'experience' | 'relationship' | 'instruction';
 export type MemoryScope = 'user' | 'session' | 'agent';
+export type BranchOperation = 'added' | 'updated' | 'deleted';
 export type SupportedLocale = 'en' | 'ko' | 'ja';
 export type CompanionMeta = Record<string, unknown>;
 
@@ -257,6 +258,29 @@ export interface MemorySearchResult {
   similarity: number;
 }
 
+export interface MemoryBranch {
+  id: string;
+  user_id: string;
+  organization_id: string | null;
+  namespace: string;
+  name: string;
+  parent_branch_id: string | null;
+  base_snapshot_id: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MemoryBranchEntry {
+  id: string;
+  branch_id: string;
+  memory_id: string;
+  operation: BranchOperation;
+  content: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
 // Supabase Database type for client
 export interface Database {
   public: {
@@ -292,6 +316,23 @@ export interface Database {
           companion_meta?: CompanionMeta | null;
         };
         Update: Partial<Memory>;
+      };
+      memory_branches: {
+        Row: MemoryBranch;
+        Insert: Omit<MemoryBranch, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<MemoryBranch>;
+      };
+      memory_branch_entries: {
+        Row: MemoryBranchEntry;
+        Insert: Omit<MemoryBranchEntry, 'id' | 'created_at'> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<MemoryBranchEntry>;
       };
       usage_logs: {
         Row: UsageLog;
