@@ -98,6 +98,16 @@ import {
   recordRequestResult,
   type TrafficAssignment,
 } from '@/lib/fall/canary';
+import {
+  captureNextRoute,
+  resolveReplayOrganizationId,
+} from '@/lib/replay/snapshot';
+import {
+  isReplayCaptureActive,
+  recordMemoryReads,
+  recordMemoryWrite,
+  setReplayActor,
+} from '@/lib/replay/capture';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
@@ -210,6 +220,13 @@ async function resolveAuth(
 > {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (!isAuthError(authResult)) {
+    if (isReplayCaptureActive()) {
+      setReplayActor({
+        userId: authResult.userId,
+        apiKeyId: authResult.keyId,
+        organizationId: await resolveReplayOrganizationId(authResult.userId, authResult.keyId),
+      });
+    }
     return {
       userId: authResult.userId,
       keyId: authResult.keyId,
@@ -227,6 +244,12 @@ async function resolveAuth(
       .select('plan')
       .eq('id', session.user.id)
       .maybeSingle();
+    if (isReplayCaptureActive()) {
+      setReplayActor({
+        userId: session.user.id,
+        organizationId: await resolveReplayOrganizationId(session.user.id, null),
+      });
+    }
     return { userId: session.user.id, keyId: null, plan: profile?.plan || 'free' };
   }
 
@@ -235,6 +258,11 @@ async function resolveAuth(
 
 // POST /api/v1/memories
 export async function POST(request: NextRequest) {
+  const requestBody = await request.clone().json().catch(() => null);
+  return captureNextRoute(request, '/api/v1/memories', requestBody, () => handlePost(request));
+}
+
+async function handlePost(request: NextRequest) {
   const startTime = Date.now();
 
   try {
@@ -531,6 +559,20 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('insert_memory');
     }
 
+    recordMemoryWrite({
+      entityId: body.agent_id || body.session_id || userId,
+      memoryId: memory.id,
+      op: 'create',
+      payload: {
+        content: memory.content,
+        memory_type: memory.memory_type,
+        namespace: memory.namespace,
+        tags: memory.tags,
+        importance: memory.importance,
+        encrypted: memory.is_encrypted,
+      },
+    });
+
     let attachments: MemoryImageAttachmentRecord[] = [];
     if (hasImageAttachment) {
       try {
@@ -662,6 +704,16 @@ const MEMORY_SELECT_FIELDS =
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  return captureNextRoute(
+    request,
+    '/api/v1/memories',
+    { query: Object.fromEntries(url.searchParams.entries()) },
+    () => handleGet(request)
+  );
+}
+
+async function handleGet(request: NextRequest) {
   const startTime = Date.now();
 
   try {
@@ -747,6 +799,8 @@ export async function GET(request: NextRequest) {
           namespace,
         });
       });
+
+      recordMemoryReads(memories || [], userId);
 
       return withHeaders(
         NextResponse.json({
@@ -1067,6 +1121,8 @@ export async function GET(request: NextRequest) {
         latencyMs: Date.now() - startTime,
       });
 
+      recordMemoryReads(personalizedResults, userId);
+
       return withHeaders(
         NextResponse.json({
           success: true,
@@ -1384,6 +1440,8 @@ export async function GET(request: NextRequest) {
       latencyMs: Date.now() - startTime,
       fallbackReason: fallback?.reason || backendFallbackReason || null,
     });
+
+    recordMemoryReads(personalizedResults, userId);
 
     return withHeaders(
       NextResponse.json({
