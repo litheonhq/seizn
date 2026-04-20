@@ -270,6 +270,7 @@
       "webhooks": "Webhooks",
       "docs": "Docs",
       "organizations": "Projects",
+      "moderation": "Moderation",
       "settings": "Settings",
       "groups": {
         "memory": "NPC MEMORY",

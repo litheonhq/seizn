@@ -3,6 +3,9 @@
 export type Plan = 'free' | 'plus' | 'pro' | 'enterprise';
 export type MemoryType = 'fact' | 'preference' | 'experience' | 'relationship' | 'instruction';
 export type MemoryScope = 'user' | 'session' | 'agent';
+export type ModerationCategory = 'sexual' | 'violence' | 'pii' | 'hate' | 'self_harm' | 'csam';
+export type ModerationAction = 'block' | 'redact' | 'flag';
+export type ModerationStatus = 'clean' | 'flagged' | 'redacted' | 'blocked';
 export type SupportedLocale = 'en' | 'ko' | 'ja';
 export type CompanionMeta = Record<string, unknown>;
 
@@ -61,6 +64,7 @@ export interface ApiKey {
 export interface Memory {
   id: string;
   user_id: string;
+  organization_id?: string | null;
 
   content: string;
   // For encrypted memories, content is the placeholder "[encrypted]"
@@ -80,6 +84,8 @@ export interface Memory {
   confidence: number;
   importance: number;
   companion_meta?: CompanionMeta | null;
+  moderation_status?: ModerationStatus;
+  moderation_scores?: Partial<Record<ModerationCategory, number>> | null;
 
   // Preferences
   language: SupportedLocale;
@@ -90,6 +96,16 @@ export interface Memory {
 
   is_deleted: boolean;
   deleted_at: string | null;
+}
+
+export interface ModerationPolicy {
+  organization_id: string;
+  policy_name: string;
+  memory_class: string;
+  category: ModerationCategory;
+  action: ModerationAction;
+  threshold: number;
+  updated_at: string;
 }
 
 export interface UsageLog {
@@ -228,6 +244,7 @@ export interface AddMemoryRequest {
   agent_id?: string;
   source?: string;
   companion_meta?: CompanionMeta | null;
+  memory_class?: string;
   // Optional image attachment payload (object storage + asset link)
   image_url?: string;
   image_base64?: string;
@@ -278,6 +295,7 @@ export interface Database {
         Row: Memory;
         Insert: {
           user_id: string;
+          organization_id?: string | null;
           content: string;
           embedding?: number[] | null;
           memory_type?: MemoryType;
@@ -290,8 +308,15 @@ export interface Database {
           confidence?: number;
           importance?: number;
           companion_meta?: CompanionMeta | null;
+          moderation_status?: ModerationStatus;
+          moderation_scores?: Partial<Record<ModerationCategory, number>> | null;
         };
         Update: Partial<Memory>;
+      };
+      moderation_policies: {
+        Row: ModerationPolicy;
+        Insert: Omit<ModerationPolicy, 'updated_at'> & { updated_at?: string };
+        Update: Partial<ModerationPolicy>;
       };
       usage_logs: {
         Row: UsageLog;
