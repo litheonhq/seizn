@@ -12,13 +12,11 @@ import type { RequestConfig } from "./snippet-tabs";
 import { SnippetSkeleton } from "./loading-skeleton";
 import { MenuIcon, CloseIcon } from "./icons";
 
-// SnippetTabs uses react-syntax-highlighter which is heavy - lazy load it
 const SnippetTabs = dynamic(
   () => import("./snippet-tabs").then((mod) => ({ default: mod.SnippetTabs })),
   { loading: () => <SnippetSkeleton />, ssr: false }
 );
 
-// Knowledge graph background animation for hero section
 const HeroGraphAnimation = dynamic(
   () => import("./hero-graph-animation").then((mod) => ({ default: mod.HeroGraphAnimation })),
   { ssr: false }
@@ -43,16 +41,42 @@ const DEFAULT_CONFIG: RequestConfig = {
   topK: 5,
 };
 
-/** Determine seasonal theme class based on current month */
-function getSeasonalTheme(): string {
-  const month = new Date().getMonth(); // 0-11
-  if (month >= 2 && month <= 4) return "theme-spring";
-  if (month >= 5 && month <= 7) return "theme-summer";
-  if (month >= 8 && month <= 10) return "theme-autumn";
-  return "theme-winter";
+// =============================================================================
+// Memory ticker — live-feel metrics under hero
+// =============================================================================
+
+const MEMORY_TICKER_ITEMS: Array<{ label: string; value: string }> = [
+  { label: "ENTITIES ACTIVE", value: "1,284,910" },
+  { label: "RECALL P95", value: "142ms" },
+  { label: "CACHE HIT", value: "96.7%" },
+  { label: "CROSS-GEN RETAIN", value: "98.2%" },
+  { label: "LIVE SESSIONS", value: "8,409" },
+  { label: "GRAPH NODES", value: "41.7M" },
+];
+
+function MemoryTicker() {
+  const items = [...MEMORY_TICKER_ITEMS, ...MEMORY_TICKER_ITEMS];
+  return (
+    <div className="relative overflow-hidden border-y border-szn-border-subtle bg-szn-surface-1">
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-r from-szn-bg to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-szn-bg to-transparent" />
+      <div className="szn-marquee py-4">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-baseline gap-3 whitespace-nowrap">
+            <span className="szn-eyebrow">{item.label}</span>
+            <span className="font-mono text-szn-text-1 text-sm tabular-nums">{item.value}</span>
+            <span className="text-szn-text-3">·</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-// Memoized Navigation component to prevent unnecessary re-renders
+// =============================================================================
+// Navigation
+// =============================================================================
+
 const Navigation = memo(function Navigation({
   locale,
   mobileMenuOpen,
@@ -65,119 +89,88 @@ const Navigation = memo(function Navigation({
   t: ExtremeHomeMessages;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-szn-bg/95 backdrop-blur-sm border-b border-szn-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-szn-bg/80 backdrop-blur-xl border-b border-szn-border-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Left: Logo + Navigation Links */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-10">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             <Image
               src="/seizn-icon.svg"
               alt="Seizn"
-              className="w-8 h-8"
-              width={32}
-              height={32}
+              className="w-7 h-7"
+              width={28}
+              height={28}
               priority
               unoptimized
             />
-            <span className="font-semibold text-xl tracking-tight text-szn-text-1">Seizn</span>
+            <span className="font-medium text-[15px] tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
 
-          {/* Desktop Nav - Links next to logo */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href={`/${locale}/docs`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+          <div className="hidden md:flex items-center gap-7">
+            <Link href={`/${locale}/docs`} className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors">
               {t.nav?.docs || "Docs"}
             </Link>
-            <Link
-              href={`/${locale}/pricing`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+            <Link href={`/${locale}/pricing`} className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors">
               {t.nav?.pricing || "Pricing"}
             </Link>
-            <Link
-              href={`/${locale}/comparison`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+            <Link href={`/${locale}/comparison`} className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors">
               {t.nav?.compare || "Compare"}
             </Link>
-            <Link
-              href={`/${locale}/enterprise`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+            <Link href={`/${locale}/enterprise`} className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors">
               {t.nav?.enterprise || "Enterprise"}
             </Link>
             <a
               href="https://github.com/seizn-ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors"
             >
               {t.nav?.github || "GitHub"}
             </a>
-            <Link
-              href="/status"
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
-            >
+            <Link href="/status" className="text-[13px] text-szn-text-2 hover:text-szn-text-1 transition-colors">
               {t.nav?.status || "Status"}
             </Link>
           </div>
         </div>
 
-        {/* Desktop Nav - Right Side */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           <LanguageSwitcher currentLocale={locale} />
           <Link
             href={`/${locale}/enterprise`}
-            className="text-sm bg-szn-text-1 text-szn-bg font-medium px-4 py-2 rounded-lg hover:bg-szn-text-1/90 transition-colors"
+            className="text-[13px] font-medium px-4 py-2 rounded-md bg-szn-signal text-szn-signal-fg hover:bg-szn-signal-hover transition-colors"
           >
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
+          type="button"
           className="md:hidden p-2 text-szn-text-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileMenuOpen}
+          aria-expanded={mobileMenuOpen ? "true" : "false"}
           aria-controls="extreme-home-mobile-menu"
         >
           {mobileMenuOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile Menu - animated */}
       <div
         id="extreme-home-mobile-menu"
-        className={`md:hidden bg-szn-bg border-t border-szn-border overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-szn-bg border-t border-szn-border-subtle overflow-hidden transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-4 py-4 space-y-3">
-          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.docs || "Docs"}
-          </Link>
-          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.pricing || "Pricing"}
-          </Link>
-          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.compare || "Compare"}
-          </Link>
-          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.enterprise || "Enterprise"}
-          </Link>
-          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.github || "GitHub"}
-          </a>
-          <Link href="/status" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
-            {t.nav?.status || "Status"}
-          </Link>
-          <div className="pt-2 border-t border-szn-border">
+          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-szn-text-2">{t.nav?.docs || "Docs"}</Link>
+          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-szn-text-2">{t.nav?.pricing || "Pricing"}</Link>
+          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-szn-text-2">{t.nav?.compare || "Compare"}</Link>
+          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-szn-text-2">{t.nav?.enterprise || "Enterprise"}</Link>
+          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-szn-text-2">{t.nav?.github || "GitHub"}</a>
+          <Link href="/status" className="block py-2.5 text-sm text-szn-text-2">{t.nav?.status || "Status"}</Link>
+          <div className="pt-2 border-t border-szn-border-subtle">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-szn-text-1 text-szn-bg font-medium py-3 rounded-lg mt-3">
+          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-szn-signal text-szn-signal-fg font-medium py-3 rounded-md mt-3">
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
@@ -186,29 +179,36 @@ const Navigation = memo(function Navigation({
   );
 });
 
+// =============================================================================
+// Hero — Editorial serif H1 + italic accent + living graph ambient
+// =============================================================================
+
+/** Split a title like "Memory, for the {accent} you ship." so {accent} renders italic serif. */
+function splitAccent(title: string): { head: string; accent: string; tail: string } {
+  const match = title.match(/^(.*?)\{accent\}(.*)$/);
+  if (match) {
+    return { head: match[1], accent: "", tail: match[2] };
+  }
+  return { head: title, accent: "", tail: "" };
+}
+
 export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClientProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeroMotionReady, setIsHeroMotionReady] = useState(false);
 
-  // Close mobile menu on resize - use passive listener
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileMenuOpen(false);
-      }
+      if (window.innerWidth >= 768) setMobileMenuOpen(false);
     };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     let idleId: number | null = null;
-
     const enableHeroMotion = () => setIsHeroMotionReady(true);
 
     if ("requestIdleCallback" in window) {
@@ -216,30 +216,54 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
     } else {
       timeoutId = setTimeout(enableHeroMotion, 250);
     }
-
     return () => {
-      if (idleId !== null && "cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId !== null) {
-        clearTimeout(timeoutId);
-      }
+      if (idleId !== null && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
     };
   }, []);
 
   const t = (messages ?? {}) as ExtremeHomeMessages;
-  const seasonalTheme = useMemo(() => getSeasonalTheme(), []);
+
+  // Hero title — the "characters" word renders in italic serif.
+  // We fallback-construct so i18n copy stays editable without template tags.
+  const heroTitle = t.heroTitle || "Memory for the characters you ship.";
+  const italicPick = useMemo(() => {
+    // Sorted longest-first so "NPCs" wins over "NPC".
+    const candidates = [
+      "characters",
+      "character",
+      "NPCs",
+      "NPC",
+      "npcs",
+      "npc",
+      "agents",
+      "agent",
+      "캐릭터",
+      "에이전트",
+    ];
+    for (const c of candidates) {
+      const idx = heroTitle.indexOf(c);
+      if (idx !== -1) {
+        return {
+          before: heroTitle.slice(0, idx),
+          word: heroTitle.slice(idx, idx + c.length),
+          after: heroTitle.slice(idx + c.length),
+        };
+      }
+    }
+    return { before: heroTitle, word: "", after: "" };
+  }, [heroTitle]);
 
   return (
-    <>
+    // Force dark on the whole marketing page. Tokens resolve against the dark palette.
+    <div className="dark bg-szn-bg text-szn-text-1 min-h-screen">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-gray-900 focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-szn-signal focus:text-szn-signal-fg"
       >
         Skip to main content
       </a>
 
-      {/* Sticky Navigation - Memoized */}
       <Navigation
         locale={locale}
         mobileMenuOpen={mobileMenuOpen}
@@ -248,123 +272,117 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
       />
 
       <main id="main-content">
-      {/* Hero Section - Fullscreen background video with text overlay */}
-      <section className={`relative min-h-screen flex items-center overflow-hidden ${seasonalTheme}`}>
-        {/* Background Video Layer */}
-        <div className="absolute inset-0 z-0">
-          {/* Video element — replace src with actual mp4/webm when ready */}
-          <video
-            className="hero-video absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
+        {/* Hero */}
+        <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+          {/* Ambient graph canvas */}
+          <div className="absolute inset-0 z-[0] pointer-events-none" aria-hidden="true">
+            {isHeroMotionReady ? <HeroGraphAnimation /> : null}
+          </div>
+
+          {/* Plasma signal glow */}
+          <div className="absolute inset-0 z-[0] szn-glow-signal opacity-60 pointer-events-none" aria-hidden="true" />
+
+          {/* Subtle grid */}
+          <div
+            className="absolute inset-0 z-[0] opacity-[0.025] pointer-events-none"
             aria-hidden="true"
-          >
-            {/* Uncomment and add your video sources when ready:
-            <source src="/hero-bg.webm" type="video/webm" />
-            <source src="/hero-bg.mp4" type="video/mp4" />
-            */}
-          </video>
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
+            }}
+          />
 
-          {/* Animated placeholder gradient (shown until real video is added) */}
-          <div className="hero-placeholder absolute inset-0 theme-gradient-bg" aria-hidden="true">
-            {/* Animated gradient orbs */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute -top-1/4 -left-1/4 w-[60%] h-[60%] rounded-full bg-[color:var(--theme-primary)]/10 blur-[100px] animate-float-slow" />
-              <div className="absolute -bottom-1/4 -right-1/4 w-[50%] h-[50%] rounded-full bg-[color:var(--theme-secondary)]/10 blur-[100px] animate-float-medium" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full bg-[color:var(--theme-accent)]/15 blur-[80px] animate-float-fast" />
+          {/* Top fade */}
+          <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-szn-bg to-transparent z-[1] pointer-events-none" />
+
+          <div className="relative z-10 w-full pt-28 lg:pt-36 pb-20 lg:pb-28 px-6 sm:px-8">
+            <div className="max-w-[1100px] mx-auto">
+              {/* Eyebrow */}
+              <div className="flex items-center gap-4 mb-8">
+                <span className="szn-section-number">01 / MEMORY LAYER</span>
+              </div>
+
+              {/* Editorial H1 */}
+              <h1 className="szn-serif text-[clamp(52px,8.2vw,124px)] text-szn-text-1 leading-[0.96] mb-10 max-w-[14ch]">
+                {italicPick.word ? (
+                  <>
+                    <span>{italicPick.before}</span>
+                    <em className="italic text-szn-signal font-normal">{italicPick.word}</em>
+                    <span>{italicPick.after}</span>
+                  </>
+                ) : (
+                  heroTitle
+                )}
+              </h1>
+
+              {/* Lede */}
+              <p className="text-[17px] sm:text-lg text-szn-text-2 max-w-[58ch] leading-[1.55] mb-12">
+                {t.heroSubtitle ||
+                  "Seizn is the persistence layer for AI characters — entity memory, relationship graphs, and cross-generation recall that plug into Inworld, Convai, or any LLM runtime."}
+              </p>
+
+              {/* CTAs */}
+              <div className={`flex items-center gap-3 flex-wrap ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
+                <Link
+                  href={`/${locale}/docs`}
+                  onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "docs" })}
+                  className="szn-btn-signal"
+                >
+                  {t.ctaStart || "Start building"}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+                <a
+                  href={SMALLGOD_PLAY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "smallgod" })}
+                  className="szn-btn-ghost"
+                >
+                  {t.ctaDemo || "Play the demo"}
+                  <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Social proof line */}
+              <div className={`flex items-center gap-3 mt-10 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-400" : ""}`}>
+                <span className="szn-signal-dot" aria-hidden="true" />
+                <span className="text-[13px] text-szn-text-2 font-mono tracking-tight">
+                  {t.socialProof || "Built for studios scaling from 10 to 10,000 NPCs."}
+                </span>
+              </div>
             </div>
-            {/* Subtle grid pattern */}
-            <div className="absolute inset-0 hero-grid-pattern opacity-[0.03] dark:opacity-[0.05]" />
           </div>
 
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-szn-bg/60 via-szn-bg/40 to-szn-bg/80" />
-        </div>
+          {/* Bottom fade into ticker */}
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-szn-bg to-transparent z-[1] pointer-events-none" />
+        </section>
 
-        {/* Knowledge Graph Animation Layer */}
-        <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden="true">
-          {isHeroMotionReady ? <HeroGraphAnimation /> : null}
-        </div>
+        {/* Live memory ticker */}
+        <MemoryTicker />
 
-        {/* Content Layer */}
-        <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            {/* H1 - Category claim */}
-            <h1 className="text-[clamp(44px,6vw,84px)] font-semibold tracking-[-0.03em] text-szn-text-1 leading-[1.02]">
-              {t.heroTitle || "The standard backend for agent runtime persistence."}
-            </h1>
-
-            {/* Subtitle - Value prop */}
-            <p className="text-lg lg:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed">
-              {t.heroSubtitle || "MCP server, checkpointer, and policy/trace layer\u2014one SDK to persist, govern, and observe every agent session."}
-            </p>
-
-            {/* CTAs - Primary and Secondary */}
-            <div className={`flex items-center justify-center gap-3 flex-wrap pt-2 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-300" : ""}`}>
-              <Link
-                href={`/${locale}/docs`}
-                onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "docs" })}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-szn-text-1 text-szn-bg font-medium rounded-lg hover:bg-szn-text-1/90 transition-colors"
-              >
-                {t.ctaStart || "Start Building Free"}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-              <a
-                href={SMALLGOD_PLAY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "smallgod" })}
-                className="inline-flex items-center gap-2 px-6 py-3 text-szn-text-1 font-medium rounded-lg border border-szn-border hover:border-szn-text-3 hover:bg-szn-surface-1 transition-colors"
-              >
-                {t.ctaDemo || "Play smallgod"}
-                <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+        {/* Integration / code snippet */}
+        <section className="py-24 px-6 sm:px-8 border-t border-szn-border-subtle">
+          <div className="max-w-[1100px] mx-auto">
+            <div className="mb-12 max-w-2xl">
+              <div className="szn-section-number mb-6">03 / INTEGRATION</div>
+              <h2 className="szn-serif text-[clamp(32px,4.2vw,56px)] text-szn-text-1 leading-[1.05] mb-5">
+                {t.copySnippetTitle || "Drop into Unity, Unreal, or any runtime."}
+              </h2>
+              <p className="text-szn-text-2 text-[15px] leading-[1.6]">
+                {t.copySnippetSubtitle || "HTTP wrapper and official C# / C++ / TS plugins. No custom infrastructure — ship in an afternoon."}
+              </p>
             </div>
-
-            {/* Social Proof */}
-            <div className={`flex items-center justify-center gap-2 pt-4 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-400" : ""}`}>
-              <span className="relative flex h-2.5 w-2.5">
-                <span className={`absolute inline-flex h-full w-full rounded-full bg-szn-accent opacity-75 ${isHeroMotionReady ? "animate-ping" : ""}`} />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-szn-accent" />
-              </span>
-              <span className="text-sm text-szn-text-2">
-                {t.socialProof || "Built for game studios scaling from 10 to 10,000 NPCs."}
-              </span>
-            </div>
-
+            <Suspense fallback={<SnippetSkeleton />}>
+              <SnippetTabs config={DEFAULT_CONFIG} />
+            </Suspense>
           </div>
-        </div>
-
-        {/* Bottom gradient fade into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-szn-bg to-transparent z-10 pointer-events-none" />
-      </section>
-
-
-      {/* Drop-in code sample */}
-      <section className="py-16 px-4 sm:px-6 border-t border-szn-border-subtle">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <div className="text-xs font-mono uppercase tracking-wider text-szn-text-3 mb-3">INTEGRATION</div>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-szn-text-1 mb-2">{t.copySnippetTitle || "Drop into Unity, Unreal, or any runtime"}</h2>
-            <p className="text-szn-text-2 max-w-xl">
-              {t.copySnippetSubtitle || "HTTP wrapper + official C#/C++ plugins. No custom infrastructure needed."}
-            </p>
-          </div>
-          <Suspense fallback={<SnippetSkeleton />}>
-            <SnippetTabs config={DEFAULT_CONFIG} />
-          </Suspense>
-        </div>
-      </section>
+        </section>
       </main>
-
-
-    </>
+    </div>
   );
 }
