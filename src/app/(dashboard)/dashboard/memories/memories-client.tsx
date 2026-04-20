@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
@@ -815,6 +816,18 @@ export default function MemoriesClient() {
 
         {/* Export / Import Actions */}
         <div className="flex items-center gap-2 mt-4 pt-4 border-t border-szn-border">
+          <div className="flex items-center rounded-lg border border-szn-border overflow-hidden bg-szn-card">
+            <span className="px-3 py-2 text-xs font-medium bg-szn-signal-soft text-szn-signal">
+              {t("dashboard.memoriesPage.memoriesTab") || "Memories"}
+            </span>
+            <Link
+              href="/dashboard/memories/decay"
+              className="px-3 py-2 text-xs font-medium text-szn-text-2 hover:text-szn-signal hover:bg-szn-surface-1 transition-colors"
+            >
+              {t("dashboard.memoriesPage.decayTab") || "Decay"}
+            </Link>
+          </div>
+
           {/* Export Dropdown */}
           <div className="relative">
             <button

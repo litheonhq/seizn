@@ -57,6 +57,11 @@ import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import { parsePagination } from '@/lib/parse-params';
 import { findDuplicate } from '@/lib/memory/dedup';
+import {
+  applyDecayRerank,
+  reinforceOnRecall,
+  type MemoryWithDecay,
+} from '@/lib/memory/decay';
 import { scoreImportance } from '@/lib/memory/auto-score';
 import {
   applyPersonalizedRanking,
@@ -441,6 +446,16 @@ export async function POST(request: NextRequest) {
       source: body.source || 'api',
       confidence: 1.0,
       importance,
+      memory_class:
+        typeof (body as unknown as Record<string, unknown>).memory_class === 'string'
+          ? (body as unknown as Record<string, string>).memory_class
+          : 'default',
+      half_life_hours:
+        typeof (body as unknown as Record<string, unknown>).half_life_hours === 'number'
+          ? (body as unknown as Record<string, number>).half_life_hours
+          : null,
+      base_strength: 1.0,
+      last_reinforced_at: new Date().toISOString(),
       content_hash: contentHash,
     };
 
@@ -658,7 +673,7 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, memory_class, half_life_hours, base_strength, last_reinforced_at, created_at, updated_at';
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
@@ -993,6 +1008,7 @@ export async function GET(request: NextRequest) {
         personalizationState.available && personalizationState.profile.personalizationEnabled
           ? applyPersonalizedRanking(cacheResult.results, personalizationState.profile, effectiveQuery)
           : cacheResult.results;
+      const decayedResults = applyDecayRerank(personalizedResults as unknown as MemoryWithDecay[]);
 
       if (keyId) {
         await logRequest(
@@ -1001,7 +1017,10 @@ export async function GET(request: NextRequest) {
           { embedding: 0 }
         );
       }
-      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch((error) => {
+      Promise.all(cacheResult.results.map((m) => Promise.allSettled([
+        trackMemoryAccess(m.id),
+        reinforceOnRecall(m.id, supabase),
+      ]))).catch((error) => {
         logServerError('[v1/memories] Cache-hit access tracking failed', error, {
           userId,
           namespace,
@@ -1023,9 +1042,9 @@ export async function GET(request: NextRequest) {
         query: effectiveQuery,
         strategy: actualMode,
         latencyMs: Date.now() - startTime,
-        resultCount: personalizedResults.length,
-        topScore: Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-          ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+        resultCount: decayedResults.length,
+        topScore: Number((decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+          ?? (decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
           ?? 0),
       }).catch((error) => {
         logServerError('[v1/memories] Cache-hit router outcome failed', error, {
@@ -1039,12 +1058,12 @@ export async function GET(request: NextRequest) {
         try {
           recordRequestResult({
             deploymentId: canaryAssignment.deploymentId,
-            version: canaryAssignment.assignedVersion,
-            success: true,
-            latencyMs: Date.now() - startTime,
-            qualityScore: clamp(
-              Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-                ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+              version: canaryAssignment.assignedVersion,
+              success: true,
+              latencyMs: Date.now() - startTime,
+              qualityScore: clamp(
+              Number((decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+                ?? (decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
                 ?? 0),
               0,
               1
@@ -1063,7 +1082,7 @@ export async function GET(request: NextRequest) {
       recordSemanticCacheOutcome({
         resolvedMode: actualMode,
         cacheHit: true,
-        resultCount: personalizedResults.length,
+        resultCount: decayedResults.length,
         latencyMs: Date.now() - startTime,
       });
 
@@ -1073,9 +1092,9 @@ export async function GET(request: NextRequest) {
           data: {
             mode: actualMode,
             requestedMode,
-            results: personalizedResults,
-            count: personalizedResults.length,
-            total: personalizedResults.length,
+            results: decayedResults,
+            count: decayedResults.length,
+            total: decayedResults.length,
             offset: 0,
             limit,
             routerDecision: routerDecision ? {
@@ -1305,6 +1324,7 @@ export async function GET(request: NextRequest) {
       results && personalizationState.available && personalizationState.profile.personalizationEnabled
         ? applyPersonalizedRanking(results, personalizationState.profile, effectiveQuery)
         : (results || []);
+    const decayedResults = applyDecayRerank(personalizedResults as MemoryWithDecay[]);
 
     if (keyId) {
       await logRequest(
@@ -1315,7 +1335,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (results && results.length > 0) {
-      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch((error) => {
+      Promise.all(results.map((m: { id: string }) => Promise.allSettled([
+        trackMemoryAccess(m.id),
+        reinforceOnRecall(m.id, supabase),
+      ]))).catch((error) => {
         logServerError('[v1/memories] Access tracking failed', error, {
           userId,
           namespace,
@@ -1325,7 +1348,7 @@ export async function GET(request: NextRequest) {
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
-      memoryCount: personalizedResults.length,
+      memoryCount: decayedResults.length,
       query: effectiveQuery,
     }).catch((error) => {
       logServerError('[v1/memories] Search audit log failed', error, {
@@ -1336,8 +1359,8 @@ export async function GET(request: NextRequest) {
     });
 
     const topSimilarity = clamp(
-      Number((personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
-        ?? (personalizedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
+      Number((decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.similarity
+        ?? (decayedResults[0] as { similarity?: number; rrf_score?: number } | undefined)?.rrf_score
         ?? 0),
       0,
       1
@@ -1349,7 +1372,7 @@ export async function GET(request: NextRequest) {
       query: effectiveQuery,
       strategy: resolvedMode,
       latencyMs: Date.now() - startTime,
-      resultCount: personalizedResults.length,
+      resultCount: decayedResults.length,
       topScore: topSimilarity,
     }).catch((error) => {
       logServerError('[v1/memories] Router outcome failed', error, {
@@ -1380,7 +1403,7 @@ export async function GET(request: NextRequest) {
     recordSemanticCacheOutcome({
       resolvedMode,
       cacheHit: false,
-      resultCount: personalizedResults.length,
+      resultCount: decayedResults.length,
       latencyMs: Date.now() - startTime,
       fallbackReason: fallback?.reason || backendFallbackReason || null,
     });
@@ -1391,9 +1414,9 @@ export async function GET(request: NextRequest) {
         data: {
           mode: resolvedMode,
           requestedMode,
-          results: personalizedResults,
-          count: personalizedResults.length,
-          total: personalizedResults.length,
+          results: decayedResults,
+          count: decayedResults.length,
+          total: decayedResults.length,
           offset: 0,
           limit,
           routerDecision: routerDecision ? {
