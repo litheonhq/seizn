@@ -57,6 +57,14 @@ import { routeQuery, type SearchMode } from '@/lib/memory/auto-router';
 import { detectSlotQuery, getSlots } from '@/lib/memory/slot';
 import { parsePagination } from '@/lib/parse-params';
 import { findDuplicate } from '@/lib/memory/dedup';
+import {
+  estimateMemorySizeBytes,
+  recordBudgetWrite,
+  recordRecall,
+  reserveHotSpace,
+  resolveBudgetEntityId,
+  resolveMemoryBudgetOrganizationId,
+} from '@/lib/memory/budget';
 import { scoreImportance } from '@/lib/memory/auto-score';
 import {
   applyPersonalizedRanking,
@@ -133,8 +141,35 @@ function isMissingContentHashColumnError(
   error: { code?: string | null; message?: string | null } | null | undefined
 ): boolean {
   if (!error) return false;
-  if (error.code === '42703') return true;
   return (error.message || '').toLowerCase().includes('content_hash');
+}
+
+function isMissingBudgetColumnError(
+  error: { code?: string | null; message?: string | null } | null | undefined
+): boolean {
+  if (!error || error.code !== '42703') return false;
+  const message = (error.message || '').toLowerCase();
+  return [
+    'organization_id',
+    'entity_id',
+    'tier',
+    'pinned',
+    'last_recalled_at',
+    'recall_count',
+    'size_bytes',
+  ].some((column) => message.includes(column));
+}
+
+function stripBudgetColumns<T extends Record<string, unknown>>(payload: T): Record<string, unknown> {
+  const legacyPayload: Record<string, unknown> = { ...payload };
+  delete legacyPayload.organization_id;
+  delete legacyPayload.entity_id;
+  delete legacyPayload.tier;
+  delete legacyPayload.pinned;
+  delete legacyPayload.last_recalled_at;
+  delete legacyPayload.recall_count;
+  delete legacyPayload.size_bytes;
+  return legacyPayload;
 }
 
 function getImageAttachmentClientErrorMessage(error: unknown): string | null {
@@ -170,6 +205,24 @@ function parseCanaryForcedMode(
   }
 
   return null;
+}
+
+function trackRetrievedMemoryIds(
+  ids: string[],
+  supabase: ReturnType<typeof createServerClient>,
+  context: Record<string, unknown>
+) {
+  if (ids.length === 0) return;
+  Promise.all(
+    ids.map((id) =>
+      Promise.allSettled([
+        trackMemoryAccess(id),
+        recordRecall(id, supabase),
+      ])
+    )
+  ).catch((error) => {
+    logServerError('[v1/memories] Access tracking failed', error, context);
+  });
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -328,6 +381,17 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
     const namespace = body.namespace || 'default';
+    const rawBody = body as AddMemoryRequest & {
+      entity_id?: string;
+      pinned?: boolean;
+    };
+    const organizationId = await resolveMemoryBudgetOrganizationId(supabase, { userId, keyId });
+    const entityId = resolveBudgetEntityId({
+      entityId: rawBody.entity_id,
+      agentId: body.agent_id,
+      sessionId: body.session_id,
+      userId,
+    });
 
     if (isEncrypted) {
       let effectivePlan = result.plan;
@@ -384,6 +448,39 @@ export async function POST(request: NextRequest) {
     const integrityWarnings = !isEncrypted
       ? analyzeContentIntegrity(sanitizedContent).warnings
       : [];
+    const sizeBytes = estimateMemorySizeBytes(
+      isEncrypted ? encryptedContent || '' : sanitizedContent
+    );
+
+    const budgetReservation = await reserveHotSpace(
+      { organizationId, entityId, sizeBytes },
+      supabase
+    );
+    if (!budgetReservation.ok) {
+      if (keyId) {
+        await logRequest(
+          { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+          429
+        );
+      }
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'memory_budget_exceeded',
+            message: 'Hot memory budget exceeded and no demotable memory remains.',
+            demoted_ids: budgetReservation.demotedIds,
+          },
+          meta: {
+            ...META,
+            latencyMs: Date.now() - startTime,
+            hotUsedBytes: budgetReservation.hotUsedBytes,
+            hotBudgetBytes: budgetReservation.hotBudgetBytes,
+          },
+        },
+        { status: 429 }
+      );
+    }
 
     // Dedup check (opt-out with dedup=false)
     let embedding: number[] | null = null;
@@ -428,6 +525,8 @@ export async function POST(request: NextRequest) {
 
     const insertPayload = {
       user_id: userId,
+      organization_id: organizationId,
+      entity_id: entityId,
       content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
       encrypted_content: isEncrypted ? encryptedContent : null,
       is_encrypted: isEncrypted,
@@ -442,6 +541,11 @@ export async function POST(request: NextRequest) {
       confidence: 1.0,
       importance,
       content_hash: contentHash,
+      tier: 'hot',
+      pinned: rawBody.pinned === true,
+      last_recalled_at: null,
+      recall_count: 0,
+      size_bytes: sizeBytes,
     };
 
     let memory: {
@@ -457,6 +561,7 @@ export async function POST(request: NextRequest) {
     } | null = null;
 
     let insertError: { code?: string | null; message?: string | null } | null = null;
+    let legacyInsertPayload: Record<string, unknown> = { ...insertPayload };
 
     {
       const result = await supabase
@@ -468,12 +573,23 @@ export async function POST(request: NextRequest) {
       insertError = result.error;
     }
 
-    // Backward compatibility: if migration isn't applied yet, retry without content_hash.
+    // Backward compatibility: if migrations are not applied yet, retry without optional columns.
     if (insertError && isMissingContentHashColumnError(insertError)) {
-      const { content_hash: _ignored, ...legacyPayload } = insertPayload;
+      delete legacyInsertPayload.content_hash;
       const retry = await supabase
         .from('memories')
-        .insert(legacyPayload)
+        .insert(legacyInsertPayload)
+        .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
+        .single();
+      memory = retry.data;
+      insertError = retry.error;
+    }
+
+    if (insertError && isMissingBudgetColumnError(insertError)) {
+      legacyInsertPayload = stripBudgetColumns(legacyInsertPayload);
+      const retry = await supabase
+        .from('memories')
+        .insert(legacyInsertPayload)
         .select('id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, created_at')
         .single();
       memory = retry.data;
@@ -530,6 +646,17 @@ export async function POST(request: NextRequest) {
       }
       return ServerErrors.database('insert_memory');
     }
+
+    recordBudgetWrite(
+      { organizationId, entityId, memoryId: memory.id, sizeBytes },
+      supabase
+    ).catch((error) => {
+      logServerError('[v1/memories] Budget write telemetry failed', error, {
+        userId,
+        namespace,
+        memoryId: memory.id,
+      });
+    });
 
     let attachments: MemoryImageAttachmentRecord[] = [];
     if (hasImageAttachment) {
@@ -639,6 +766,13 @@ export async function POST(request: NextRequest) {
         data: {
           memory,
           attachments,
+          budget: {
+            entity_id: entityId,
+            size_bytes: sizeBytes,
+            demoted_ids: budgetReservation.demotedIds,
+            hot_budget_bytes: budgetReservation.hotBudgetBytes,
+            hot_used_bytes: budgetReservation.hotUsedBytes,
+          },
           bridge: {
             springV4: springMirror,
           },
@@ -658,7 +792,7 @@ const BROWSE_SORT_COLUMNS = ['created_at', 'updated_at', 'importance'] as const;
 type BrowseSortColumn = (typeof BROWSE_SORT_COLUMNS)[number];
 
 const MEMORY_SELECT_FIELDS =
-  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, created_at, updated_at';
+  'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, importance, source, scope, agent_id, entity_id, tier, pinned, recall_count, last_recalled_at, size_bytes, created_at, updated_at';
 
 // GET /api/v1/memories - Search (with query) or Browse (without query)
 export async function GET(request: NextRequest) {
@@ -747,6 +881,11 @@ export async function GET(request: NextRequest) {
           namespace,
         });
       });
+      trackRetrievedMemoryIds(
+        (memories || []).map((memory: { id: string }) => memory.id),
+        supabase,
+        { userId, namespace, mode: 'browse' }
+      );
 
       return withHeaders(
         NextResponse.json({
@@ -1001,12 +1140,11 @@ export async function GET(request: NextRequest) {
           { embedding: 0 }
         );
       }
-      Promise.all(cacheResult.results.map((m) => trackMemoryAccess(m.id))).catch((error) => {
-        logServerError('[v1/memories] Cache-hit access tracking failed', error, {
-          userId,
-          namespace,
-        });
-      });
+      trackRetrievedMemoryIds(
+        cacheResult.results.map((m) => m.id),
+        supabase,
+        { userId, namespace, mode: 'cache-hit' }
+      );
       logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
         memoryCount: cacheResult.results.length,
         query: effectiveQuery,
@@ -1315,13 +1453,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (results && results.length > 0) {
-      Promise.all(results.map((m: { id: string }) => trackMemoryAccess(m.id))).catch((error) => {
-        logServerError('[v1/memories] Access tracking failed', error, {
-          userId,
-          namespace,
-          resolvedMode,
-        });
-      });
+      trackRetrievedMemoryIds(
+        results.map((m: { id: string }) => m.id),
+        supabase,
+        { userId, namespace, resolvedMode }
+      );
     }
 
     logMemoryAccess(request, userId, keyId ?? undefined, 'search', {
