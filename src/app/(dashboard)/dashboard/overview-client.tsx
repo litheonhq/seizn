@@ -20,19 +20,19 @@ import type {
 const RELIABILITY_CARD_META = [
   {
     href: "/dashboard/organizations",
-    tone: "from-violet-500/15 to-indigo-500/15 border-violet-200/60 dark:border-violet-900/60",
+    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
   {
     href: "/dashboard/webhooks",
-    tone: "from-blue-500/15 to-cyan-500/15 border-blue-200/60 dark:border-blue-900/60",
+    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
   {
     href: (locale: string) => `/${locale}/docs/security`,
-    tone: "from-emerald-500/15 to-teal-500/15 border-emerald-200/60 dark:border-emerald-900/60",
+    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
   {
     href: (locale: string) => `/${locale}/docs/security`,
-    tone: "from-amber-500/15 to-orange-500/15 border-amber-200/60 dark:border-amber-900/60",
+    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
 ] as const;
 
@@ -165,24 +165,29 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {/* Onboarding Wizard - Shows until all steps are complete */}
       <OnboardingWizard userId={user.id} />
 
       {error && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-md border border-amber-300/40 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-200">
           {error}
         </div>
       )}
 
-      {/* Welcome Section */}
-      <div className="szn-card rounded-3xl p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-40" style={{ background: "linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))" }} />
+      {/* Welcome — editorial header with plasma signal glow */}
+      <div className="relative overflow-hidden py-10 sm:py-12">
+        <div className="absolute inset-0 szn-glow-signal opacity-50 pointer-events-none" aria-hidden="true" />
         <div className="relative">
-          <h1 className="text-3xl font-bold text-szn-text-1 mb-2">
-            {greeting}, {user.name || user.email?.split("@")[0]}
+          <div className="szn-section-number mb-5">CONTROL TOWER · {new Date().toISOString().slice(0,10)}</div>
+          <h1 className="szn-serif text-[clamp(36px,4.4vw,64px)] text-szn-text-1 leading-[1.02] tracking-[-0.025em] mb-3">
+            {greeting},{" "}
+            <em className="italic text-szn-signal font-normal">
+              {user.name || user.email?.split("@")[0]}
+            </em>
+            .
           </h1>
-          <p className="text-szn-text-2">
+          <p className="text-szn-text-2 text-[15px] max-w-xl leading-[1.6]">
             {t("dashboard.overviewPage.subtitle")}
           </p>
         </div>
@@ -195,155 +200,73 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         locale={locale}
       />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Memories Card */}
-        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <BrainIcon className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-szn-text-2 bg-szn-surface px-2 py-1 rounded-full">
-              {stats?.planDisplay || "Free"}
-            </span>
-          </div>
-          <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.overviewPage.totalMemories")}</p>
-          <p className="text-3xl font-bold text-szn-text-1">
-            {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-szn-surface rounded animate-pulse" />
-            ) : (
-              stats?.memories.count.toLocaleString() || "0"
-            )}
-          </p>
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-szn-text-2 mb-1">
-              <span>{t("dashboard.overviewPage.usage")}</span>
-              <span>
-                {stats?.memories.limit === -1
-                  ? t("dashboard.stats.unlimited")
-                  : `${stats?.memories.percentage || 0}%`}
-              </span>
-            </div>
-            <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500 theme-gradient-btn"
-                style={{
-                  width: `${Math.min(stats?.memories.percentage || 0, 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* API Calls Card */}
-        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.85 }}>
-              <ApiIcon className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-szn-text-2 bg-szn-surface px-2 py-1 rounded-full">
-              {t("dashboard.overviewPage.today")}
-            </span>
-          </div>
-          <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.overviewPage.apiCalls")}</p>
-          <p className="text-3xl font-bold text-szn-text-1">
-            {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-szn-surface rounded animate-pulse" />
-            ) : (
-              stats?.apiCalls.today.toLocaleString() || "0"
-            )}
-          </p>
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-szn-text-2 mb-1">
-              <span>{t("dashboard.overviewPage.dailyLimit")}</span>
-              <span>
-                {stats?.apiCalls.limit === -1
-                  ? t("dashboard.stats.unlimited")
-                  : stats?.apiCalls.limit.toLocaleString()}
-              </span>
-            </div>
-            <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500 theme-gradient-btn"
-                style={{
-                  width: `${Math.min(stats?.apiCalls.percentage || 0, 100)}%`,
-                  opacity: 0.85,
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* API Keys Card */}
-        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>
-              <KeyIcon className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.overviewPage.activeKeys")}</p>
-          <p className="text-3xl font-bold text-szn-text-1">
-            {isLoading ? (
-              <span className="inline-block w-8 h-8 bg-szn-surface rounded animate-pulse" />
-            ) : (
-              stats?.keys || 0
-            )}
-          </p>
-          <Link
-            href="/dashboard/keys"
-            className="mt-3 inline-flex items-center text-sm theme-primary hover:underline"
-          >
-            {t("dashboard.overviewPage.manageKeys")}
-            <ArrowIcon className="w-4 h-4 ml-1" />
-          </Link>
-        </div>
-
-        {/* Plan Card */}
-        <div className="szn-card rounded-lg p-6 group hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-xl theme-gradient-btn flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ opacity: 0.55 }}>
-              <SparkleIcon className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.overviewPage.currentPlan")}</p>
-          <p className="text-3xl font-bold theme-gradient-text">
-            {isLoading ? (
-              <span className="inline-block w-16 h-8 bg-szn-surface rounded animate-pulse" />
-            ) : (
-              stats?.planDisplay || "Free"
-            )}
-          </p>
-          <Link
-            href="/pricing"
-            className="mt-3 inline-flex items-center text-sm theme-primary hover:underline"
-          >
-            {t("dashboard.overviewPage.upgradePlan")}
-            <ArrowIcon className="w-4 h-4 ml-1" />
-          </Link>
-        </div>
+      {/* Stats — connected hairline grid, mono numerics, editorial */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-szn-border-subtle border-y border-szn-border-subtle">
+        {/* Memories */}
+        <StatCell
+          eyebrow={t("dashboard.overviewPage.totalMemories")}
+          icon={BrainIcon}
+          tag={stats?.planDisplay || "Free"}
+          isLoading={isLoading}
+          value={stats?.memories.count.toLocaleString() || "0"}
+          footerLabel={t("dashboard.overviewPage.usage")}
+          footerValue={stats?.memories.limit === -1 ? t("dashboard.stats.unlimited") : `${stats?.memories.percentage || 0}%`}
+          progress={stats?.memories.percentage || 0}
+        />
+        {/* API Calls */}
+        <StatCell
+          eyebrow={t("dashboard.overviewPage.apiCalls")}
+          icon={ApiIcon}
+          tag={t("dashboard.overviewPage.today")}
+          isLoading={isLoading}
+          value={stats?.apiCalls.today.toLocaleString() || "0"}
+          footerLabel={t("dashboard.overviewPage.dailyLimit")}
+          footerValue={stats?.apiCalls.limit === -1 ? t("dashboard.stats.unlimited") : stats?.apiCalls.limit.toLocaleString() || "0"}
+          progress={stats?.apiCalls.percentage || 0}
+        />
+        {/* Active Keys */}
+        <StatCell
+          eyebrow={t("dashboard.overviewPage.activeKeys")}
+          icon={KeyIcon}
+          tag={null}
+          isLoading={isLoading}
+          value={String(stats?.keys || 0)}
+          footerLabel={null}
+          footerValue={null}
+          actionHref="/dashboard/keys"
+          actionLabel={t("dashboard.overviewPage.manageKeys")}
+        />
+        {/* Plan */}
+        <StatCell
+          eyebrow={t("dashboard.overviewPage.currentPlan")}
+          icon={SparkleIcon}
+          tag={null}
+          isLoading={isLoading}
+          value={stats?.planDisplay || "Free"}
+          valueAccent
+          footerLabel={null}
+          footerValue={null}
+          actionHref="/pricing"
+          actionLabel={t("dashboard.overviewPage.upgradePlan")}
+        />
       </div>
 
 
       {/* North Star Metrics */}
       <NorthStarMetrics />
 
-      {/* 7-Day API Usage Chart */}
-      <div className="szn-card rounded-lg overflow-hidden">
-        <div className="p-4 border-b theme-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.8 }}>
-              <ChartIcon className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-szn-text-1">{t("dashboard.overviewPage.apiUsageChart")}</h2>
-              <p className="text-xs text-szn-text-2">{t("dashboard.overviewPage.last7days")}</p>
-            </div>
+      {/* 7-Day API Usage Chart — editorial framing */}
+      <div className="border-y border-szn-border-subtle">
+        <div className="py-5 flex items-center justify-between">
+          <div>
+            <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last7days")}</div>
+            <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.apiUsageChart")}</h2>
           </div>
-          <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
-            {t("dashboard.overviewPage.viewDetails")}
+          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
+            {t("dashboard.overviewPage.viewDetails")} →
           </Link>
         </div>
-        <div className="p-6">
+        <div className="pb-6">
           {isLoading ? (
             <div className="h-48 flex items-center justify-center">
               <div className="animate-pulse w-full h-32 bg-szn-surface rounded-lg" />
@@ -359,20 +282,15 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="szn-card rounded-lg overflow-hidden">
-        <div className="p-4 border-b theme-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.65 }}>
-              <ActivityIcon className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-szn-text-1">{t("dashboard.overviewPage.recentActivity")}</h2>
-              <p className="text-xs text-szn-text-2">{t("dashboard.overviewPage.last10Requests")}</p>
-            </div>
+      {/* Recent Activity — editorial framing */}
+      <div className="border-y border-szn-border-subtle">
+        <div className="py-5 flex items-center justify-between">
+          <div>
+            <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last10Requests")}</div>
+            <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.recentActivity")}</h2>
           </div>
-          <Link href="/dashboard/usage" className="text-sm theme-primary hover:underline">
-            {t("dashboard.overviewPage.viewAllActivity")}
+          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
+            {t("dashboard.overviewPage.viewAllActivity")} →
           </Link>
         </div>
         <div className="overflow-x-auto">
@@ -738,33 +656,29 @@ function ReliabilitySection({
   };
 
   return (
-    <div className="szn-card rounded-lg overflow-hidden">
+    <div className="border-y border-szn-border-subtle">
       <button
         onClick={toggle}
-        className="w-full p-4 border-b theme-border flex items-center justify-between text-left hover:bg-white/30 dark:hover:bg-gray-800/30 transition-colors"
+        className="w-full py-4 flex items-center justify-between text-left hover:bg-szn-surface-1 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg theme-gradient-btn flex items-center justify-center" style={{ opacity: 0.7 }}>
-            <ShieldSmallIcon className="w-4 h-4 text-white" />
-          </div>
+          <ShieldSmallIcon className="w-4 h-4 text-szn-signal" />
           <div>
-            <h2 className="font-semibold text-szn-text-1 text-sm">
+            <div className="szn-eyebrow mb-1">{reliabilityCopy.subtitle}</div>
+            <h2 className="text-[15px] font-medium text-szn-text-1 tracking-[-0.005em]">
               {reliabilityCopy.heading}
             </h2>
-            <p className="text-xs text-szn-text-2 mt-0.5">
-              {reliabilityCopy.subtitle}
-            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href={`/${locale}/docs/security`}
-            className="text-xs theme-primary hover:underline hidden sm:inline"
+            className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-signal hover:text-szn-signal-hover hidden sm:inline transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             {reliabilityCopy.docsCta}
           </Link>
-          <ChevronIcon className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+          <ChevronIcon className={`w-4 h-4 text-szn-text-3 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
         </div>
       </button>
       <div
@@ -774,20 +688,20 @@ function ReliabilitySection({
           opacity: isOpen ? 1 : 0,
         }}
       >
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-szn-border-subtle border-t border-szn-border-subtle">
           {reliabilityUpdates.map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className={`rounded-xl border p-4 bg-gradient-to-br ${item.tone} hover:shadow-md transition-all`}
+              className="block bg-szn-bg p-5 transition-colors hover:bg-szn-signal-soft group"
             >
-              <p className="text-sm font-semibold text-szn-text-1">{item.title}</p>
-              <p className="mt-1 text-xs text-szn-text-2 leading-relaxed">
+              <p className="text-[14px] font-medium text-szn-text-1 mb-2 tracking-[-0.005em]">{item.title}</p>
+              <p className="text-[12px] text-szn-text-2 leading-[1.55] mb-4">
                 {item.description}
               </p>
-              <span className="mt-3 inline-flex items-center text-xs font-medium theme-primary">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-signal group-hover:text-szn-signal-hover inline-flex items-center transition-colors">
                 {item.cta}
-                <ArrowIcon className="w-3.5 h-3.5 ml-1" />
+                <ArrowIcon className="w-3 h-3 ml-1" />
               </span>
             </Link>
           ))}
@@ -928,6 +842,90 @@ function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
           />
         </svg>
       </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// StatCell — editorial stat with mono numerics + optional progress / action
+// =============================================================================
+
+function StatCell({
+  eyebrow,
+  icon: Icon,
+  tag,
+  isLoading,
+  value,
+  valueAccent = false,
+  footerLabel,
+  footerValue,
+  progress,
+  actionHref,
+  actionLabel,
+}: {
+  eyebrow: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tag: string | null;
+  isLoading: boolean;
+  value: string;
+  valueAccent?: boolean;
+  footerLabel: string | null;
+  footerValue: string | null;
+  progress?: number;
+  actionHref?: string;
+  actionLabel?: string;
+}) {
+  return (
+    <div className="bg-szn-bg p-6 flex flex-col">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2.5">
+          <Icon className="w-4 h-4 text-szn-text-2" />
+          <span className="szn-eyebrow">{eyebrow}</span>
+        </div>
+        {tag && (
+          <span className="font-mono text-[10px] tracking-[0.2em] text-szn-text-3 uppercase">{tag}</span>
+        )}
+      </div>
+      <p
+        className={`font-mono text-[36px] leading-[1.05] tabular-nums tracking-[-0.02em] ${valueAccent ? "text-szn-signal" : "text-szn-text-1"}`}
+      >
+        {isLoading ? (
+          <span className="inline-block w-20 h-8 bg-szn-surface-1 rounded animate-pulse" />
+        ) : (
+          value
+        )}
+      </p>
+
+      {(footerLabel || progress !== undefined) && (
+        <div className="mt-5">
+          {footerLabel && (
+            <div className="flex items-center justify-between text-[11px] text-szn-text-3 mb-2 font-mono uppercase tracking-[0.12em]">
+              <span>{footerLabel}</span>
+              <span className="text-szn-text-2">{footerValue}</span>
+            </div>
+          )}
+          {progress !== undefined && (
+            <div className="h-[3px] bg-szn-surface-1 overflow-hidden">
+              <div
+                className="h-full bg-szn-signal transition-[width] duration-500"
+                style={{ width: `${Math.min(progress, 100)}%` }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {actionHref && actionLabel && (
+        <Link
+          href={actionHref}
+          className="mt-5 inline-flex items-center gap-1 text-[12px] text-szn-signal hover:text-szn-signal-hover transition-colors font-mono uppercase tracking-[0.12em]"
+        >
+          {actionLabel}
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </Link>
+      )}
     </div>
   );
 }
