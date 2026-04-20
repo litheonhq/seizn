@@ -187,10 +187,14 @@ function generateEdges(nodes: GraphNode[]): GraphEdge[] {
 
 function readThemeColors(container: HTMLElement): ThemeColors {
   const style = getComputedStyle(container);
+  // Prefer the Seizn brand signal; fall back to seasonal theme, then hardcoded plasma violet.
+  const signal = style.getPropertyValue("--szn-signal").trim();
+  const primary = signal || style.getPropertyValue("--theme-primary").trim() || "#A78BFA";
+  const secondary = style.getPropertyValue("--theme-secondary").trim() || "#C4B5FD";
   return {
-    primary: style.getPropertyValue("--theme-primary").trim() || "#8B5CF6",
-    secondary: style.getPropertyValue("--theme-secondary").trim() || "#6366F1",
-    particle: style.getPropertyValue("--theme-particle-color").trim() || "rgba(139, 92, 246, 0.3)",
+    primary,
+    secondary,
+    particle: style.getPropertyValue("--theme-particle-color").trim() || "rgba(167, 139, 250, 0.3)",
   };
 }
 
