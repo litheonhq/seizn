@@ -277,7 +277,8 @@
         "system": "시스템",
         "build": "개발",
         "integrate": "연동"
-      }
+      },
+      "compliance": "Compliance"
     },
     "pinSidebar": "사이드바 고정",
     "unpinSidebar": "사이드바 접기",
