@@ -76,6 +76,12 @@ export interface Memory {
   source?: string;
   scope?: string;
   agent_id?: string;
+  entity_id?: string;
+  tier?: 'hot' | 'warm' | 'cold';
+  pinned?: boolean;
+  recall_count?: number;
+  last_recalled_at?: string | null;
+  size_bytes?: number;
 }
 
 export interface RecentMemory {
