@@ -33,6 +33,10 @@ import type {
   SummarizeOptions,
   CreateWebhookOptions,
   SeiznConfig,
+  Scene,
+  StartSceneOptions,
+  EndSceneOptions,
+  ListScenesOptions,
 } from './types';
 
 export class SeiznError extends Error {
@@ -57,6 +61,13 @@ export class Seizn {
     this.baseUrl = (config.baseUrl || Seizn.DEFAULT_BASE_URL).replace(/\/$/, '');
     this.timeout = config.timeout || 30000;
   }
+
+  readonly scenes = {
+    start: (params: { entities: string[] } & StartSceneOptions) =>
+      this.startScene(params.entities, params),
+    end: (sceneId: string, options?: EndSceneOptions) => this.endScene(sceneId, options),
+    list: (options?: ListScenesOptions) => this.listScenes(options),
+  };
 
   private async request<T>(
     method: string,
@@ -196,9 +207,67 @@ export class Seizn {
         limit: options?.limit || 10,
         threshold: options?.threshold || 0.7,
         ...(options?.namespace && { namespace: options.namespace }),
+        ...(options?.scene_id && { scene_id: options.scene_id }),
+        ...(options?.entity_ids?.length && { entity_ids: options.entity_ids.join(',') }),
       },
     });
     return result.results;
+  }
+
+  // ==================== Scene Operations ====================
+
+  /**
+   * Start a bounded scene context for recall boosts.
+   */
+  async startScene(entityIds: string[], options?: StartSceneOptions): Promise<Scene> {
+    const result = await this.request<{ success: boolean; data: { scene: Scene } }>(
+      'POST',
+      '/api/v1/scenes',
+      {
+        body: {
+          entity_ids: entityIds,
+          namespace: options?.namespace || 'default',
+          summary: options?.summary,
+          metadata: options?.metadata,
+        },
+      }
+    );
+    return result.data.scene;
+  }
+
+  /**
+   * End a bounded scene context and record outcomes.
+   */
+  async endScene(sceneId: string, options?: EndSceneOptions): Promise<Scene> {
+    const result = await this.request<{ success: boolean; data: { scene: Scene } }>(
+      'POST',
+      `/api/v1/scenes/${sceneId}/end`,
+      {
+        body: {
+          summary: options?.summary,
+          outcomes: options?.outcomes,
+        },
+      }
+    );
+    return result.data.scene;
+  }
+
+  /**
+   * List active or recent scenes.
+   */
+  async listScenes(options?: ListScenesOptions): Promise<Scene[]> {
+    const result = await this.request<{ success: boolean; data: { scenes: Scene[]; count: number } }>(
+      'GET',
+      '/api/v1/scenes',
+      {
+        params: {
+          namespace: options?.namespace || 'default',
+          active: options?.active ?? true,
+          limit: options?.limit || 20,
+        },
+      }
+    );
+    return result.data.scenes;
   }
 
   // ==================== AI Operations ====================
