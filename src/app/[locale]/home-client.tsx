@@ -414,6 +414,8 @@ const memories = await seizn.search({
           <nav className="flex flex-wrap items-center gap-6" aria-label="Footer navigation">
             <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</Link>
             <Link href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</Link>
+            <Link href={`/${locale}/sla`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.sla}</Link>
+            <Link href={`/${locale}/status`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.status}</Link>
             <Link href={`/${locale}/docs/faq`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</Link>
           </nav>
         </div>
