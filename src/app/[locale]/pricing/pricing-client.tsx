@@ -14,6 +14,7 @@ interface PricingClientProps {
 type Plan = {
   name: string;
   price: string;
+  priceSub: string;
   cadence: string;
   scope: string;
   summary: string;
@@ -26,7 +27,9 @@ type Plan = {
 type MatrixRow = {
   label: string;
   free: string;
+  indie: string;
   studio: string;
+  pro: string;
   enterprise: string;
 };
 
@@ -38,6 +41,7 @@ type FAQItem = {
 type Copy = {
   eyebrow: string;
   title: string;
+  titleItalic: string;
   subtitle: string;
   helper: string;
   primaryCta: string;
@@ -59,65 +63,105 @@ type Copy = {
 };
 
 const COPY_EN: Copy = {
-  eyebrow: "NPC pricing",
-  title: "Price memory by world scale, not by seat count.",
+  eyebrow: "01 / PRICING",
+  title: "Memory priced by the",
+  titleItalic: "world",
   subtitle:
-    "Seizn meters the persistent graph behind your NPCs: entities, relations, and event throughput. Keep Inworld, Convai, ACE, or your own dialogue stack.",
+    "Seizn meters the persistent graph behind your NPCs — entities, relations, and event throughput — not the number of seats on your team. Keep Inworld, Convai, ACE, or your own dialogue stack.",
   helper:
-    "Studio starts at $499/month for one live title. Enterprise covers multi-title rollout, self-hosting, private networking, and procurement-heavy launches.",
-  primaryCta: "Book a demo",
-  secondaryCta: "View integrations",
+    "Start free, ship an Indie prototype at $39, scale to Studio and Pro as worlds grow. Enterprise for self-hosting, SSO, and multi-title infrastructure.",
+  primaryCta: "Start building",
+  secondaryCta: "Talk to sales",
   statChips: [
     "No seat tax for writers, quest designers, or QA.",
     "Works beside Inworld, Convai, ACE, or your own runtime.",
-    "Built for teams moving from 10 NPC prototypes to 10,000 NPC worlds.",
+    "From 10-NPC prototypes to 10,000-NPC live worlds.",
   ],
-  plansTitle: "Plans for prototype, launch, and live ops",
+  plansTitle: "Five tiers, one graph-based meter",
   plansSubtitle:
-    "Use Free to prove the retrieval loop. Move to Studio when one title needs persistent memory in production.",
+    "Free for prototypes. Indie for jam-scale. Studio when a game ships. Pro for live ops at scale. Enterprise for publisher-wide infrastructure.",
   plans: [
     {
       name: "Free",
       price: "$0",
+      priceSub: "",
       cadence: "Dev tier",
-      scope: "Up to 250 NPC entities",
+      scope: "Up to 10K memories",
       summary:
-        "Prototype memory recall, faction relations, and event logging in a vertical slice without paying for seats.",
+        "Prototype memory recall, faction relations, and event logging in a vertical slice. No credit card, no seat tax.",
       details: [
-        "Raw HTTP plus JavaScript and Python setup",
-        "One prototype world with manual tuning",
+        "10K memories · 10K ops/month",
+        "1 project · 1 environment",
         "Docs-led onboarding",
       ],
-      ctaLabel: "Read the docs",
+      ctaLabel: "Start free",
       ctaHref: "/docs/quickstart",
     },
     {
-      name: "Studio",
-      price: "From $499",
-      cadence: "per month / per title",
-      scope: "For one live project",
+      name: "Indie",
+      price: "$39",
+      priceSub: "/mo",
+      cadence: "Solo or small team",
+      scope: "Up to 100K memories",
       summary:
-        "Ship persistent memory into a production game with room for thousands of NPC entities and always-on event streams.",
+        "For jam games, indie launches, and small teams testing persistent NPCs in production before committing to Studio scale.",
       details: [
-        "Sizing around entity graph and monthly event writes",
-        "Unity, Unreal, or Godot integration guidance",
-        "Launch planning before content spikes and seasonal events",
+        "100K memories · 100K ops/month",
+        "3 projects · dev + prod",
+        "Async email support",
+        "All 2026 memory primitives included",
+      ],
+      ctaLabel: "Start Indie",
+      ctaHref: "/enterprise",
+    },
+    {
+      name: "Studio",
+      price: "$299",
+      priceSub: "/mo",
+      cadence: "For one live title",
+      scope: "Up to 500K memories",
+      summary:
+        "Ship persistent memory into a production game. Thousands of NPCs, always-on event streams, with room to ramp through a seasonal launch.",
+      details: [
+        "500K memories · 500K ops/month",
+        "10 projects · unlimited environments",
+        "Direct response support",
+        "Deterministic replay + audit log export",
       ],
       ctaLabel: "Book a sizing call",
       ctaHref: "/enterprise",
       featured: true,
     },
     {
-      name: "Enterprise",
-      price: "Custom",
-      cadence: "multi-title / self-hosted",
-      scope: "Publisher and platform scope",
+      name: "Pro",
+      price: "$999",
+      priceSub: "/mo",
+      cadence: "Live ops at scale",
+      scope: "Up to 5M memories",
       summary:
-        "For shared memory infrastructure, regional deployment, SSO, or private networking requirements across studios or titles.",
+        "Multi-title live ops with SLA. Full moderation pipeline, Theory-of-Mind belief shards, and scene primitives enabled by default.",
       details: [
-        "Self-hosted or controlled deployment options",
-        "SSO / SAML and procurement support",
-        "Priority support plus architecture review",
+        "5M memories · unlimited ops",
+        "Unlimited projects and environments",
+        "99.9% SLA · priority support channel",
+        "Moderation, ToM, and scene features on by default",
+      ],
+      ctaLabel: "Upgrade to Pro",
+      ctaHref: "/enterprise",
+    },
+    {
+      name: "Enterprise",
+      price: "From $2,500",
+      priceSub: "/mo + usage",
+      cadence: "Publisher scope",
+      scope: "Self-hosted or private cloud",
+      summary:
+        "Shared memory infrastructure across studios and titles. Regional deployment, SSO, private networking, and procurement-ready contracts.",
+      details: [
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML · DPA · SOC 2 path",
+        "Dedicated success channel",
       ],
       ctaLabel: "Talk to Seizn",
       ctaHref: "/enterprise",
@@ -127,135 +171,191 @@ const COPY_EN: Copy = {
   matrixSubtitle: "The meter is the graph and event flow, not the number of people touching the tool.",
   matrixRows: [
     {
-      label: "Typical NPC footprint",
-      free: "Up to 250 entities in a prototype",
-      studio: "Thousands per live title",
-      enterprise: "10,000+ across titles or shards",
+      label: "Memories",
+      free: "10K",
+      indie: "100K",
+      studio: "500K",
+      pro: "5M",
+      enterprise: "Custom",
     },
     {
-      label: "Event write pattern",
-      free: "Quest-state and dialogue test data",
-      studio: "Always-on world events and witness logs",
-      enterprise: "Cross-region live ops and backfills",
+      label: "Ops / month",
+      free: "10K",
+      indie: "100K",
+      studio: "500K",
+      pro: "Unlimited",
+      enterprise: "Custom",
     },
     {
-      label: "Dialogue stack",
-      free: "Raw HTTP or thin wrapper",
-      studio: "Keep Inworld, Convai, ACE, or your own stack",
-      enterprise: "Custom adapters and platform review",
+      label: "Projects",
+      free: "1",
+      indie: "3",
+      studio: "10",
+      pro: "Unlimited",
+      enterprise: "Unlimited",
     },
     {
-      label: "Support model",
-      free: "Docs and async support",
-      studio: "Launch planning and direct response",
-      enterprise: "Dedicated channel and success plan",
+      label: "Support",
+      free: "Docs only",
+      indie: "Async email",
+      studio: "Direct response",
+      pro: "Priority channel + SLA",
+      enterprise: "Dedicated success",
     },
     {
-      label: "Deployment shape",
+      label: "Deployment",
       free: "Managed cloud",
-      studio: "Managed cloud for one shipped title",
-      enterprise: "Private networking or self-hosted",
+      indie: "Managed cloud",
+      studio: "Managed cloud",
+      pro: "Managed cloud",
+      enterprise: "Self-host or private",
     },
     {
       label: "Best fit",
-      free: "Prototype and vertical slice",
-      studio: "Shipping one memory-heavy game",
-      enterprise: "Publisher, platform, or regulated live ops",
+      free: "Prototype",
+      indie: "Jam games · indie launches",
+      studio: "One shipped title",
+      pro: "Multi-title live ops",
+      enterprise: "Publisher / regulated",
     },
   ],
   faqTitle: "FAQ for game teams",
-  faqSubtitle: "The questions studios ask before memory goes into production.",
+  faqSubtitle: "What studios ask before memory goes into production.",
   faq: [
     {
-      q: "How does pricing work when we reach 10,000 NPCs?",
-      a: "We scope on active entity graph size, relation fan-out, and monthly event writes. Studio covers one live title. Enterprise is the path when you need multi-title rollout, private networking, or custom capacity planning.",
+      q: "What counts as a memory?",
+      a: "Any persisted fact, event, relation, or observation that your runtime can recall later. NPCs, factions, items, quests, witness events — anything retrievable across turns. Seats for writers, designers, and QA are never billed.",
     },
     {
-      q: "What counts as an entity?",
-      a: "Anything you want retrievable across turns: NPCs, factions, households, guilds, locations, quest objects, or named items. Seats for writers, designers, QA, or narrative tools are not billed.",
+      q: "What happens when we exceed the memory cap?",
+      a: "On Free and Indie, writes pause until the next billing cycle or you upgrade. On Studio and Pro, we raise capacity first and reconcile on the next invoice — no hard stops during a launch.",
     },
     {
       q: "Do we need to replace Inworld, Convai, or NVIDIA ACE?",
       a: "No. Seizn sits beside your dialogue engine. Keep voices and behavior where they already live; Seizn handles persistent memory, relation graph updates, and retrieval.",
     },
     {
-      q: "What happens during launch spikes or seasonal events?",
-      a: "We size plans around expected event throughput and pre-warm headroom before launches. If world-state writes ramp faster than forecast, capacity is raised without forcing you into seat-based upgrades.",
+      q: "Why is Indie so cheap compared to Studio?",
+      a: "Indie is discovery-priced to let small teams and jam builders ship in production before committing. Studio pricing reflects launch-scale capacity, direct support, and production features like deterministic replay.",
     },
     {
       q: "When do we need Enterprise?",
-      a: "Choose Enterprise when security review, SSO / SAML, data residency, self-hosting, or multi-title memory infrastructure enters the conversation.",
+      a: "Choose Enterprise when security review, SSO / SAML, data residency, self-hosting, or multi-title memory infrastructure enters the conversation. Starting price is $2,500/month plus usage; most contracts include custom SLA and dedicated success.",
+    },
+    {
+      q: "Annual billing or yearly discount?",
+      a: "Yearly plans ship with a 15% discount across Indie, Studio, and Pro. Enterprise contracts are always annual and negotiated case by case.",
     },
   ],
-  finalCtaTitle: "Need a world-size estimate?",
+  finalCtaTitle: "Ready to price your world?",
   finalCtaSubtitle:
-    "Bring your NPC count, event rate, and dialogue stack. We will map the right tier and integration path.",
+    "Bring your NPC count, event rate, and dialogue stack. We will map the right tier and integration path in one call.",
   finalCtaPrimary: "Book a demo",
   finalCtaSecondary: "Read the docs",
 };
 
 const COPY_KO: Copy = {
-  eyebrow: "NPC 가격",
-  title: "좌석 수가 아니라 세계 규모에 맞춰 메모리를 과금합니다.",
+  eyebrow: "01 / PRICING",
+  title: "세계 규모로 과금되는",
+  titleItalic: "메모리",
   subtitle:
-    "Seizn은 NPC 뒤의 지속 메모리 그래프를 기준으로 요금이 정해집니다. 엔티티, 관계, 이벤트 처리량을 보고 산정하며 Inworld, Convai, ACE, 자체 대화 스택은 그대로 유지할 수 있습니다.",
+    "Seizn은 NPC 뒤의 지속 메모리 그래프 — 엔티티, 관계, 이벤트 처리량 — 을 기준으로 과금합니다. 팀 좌석 수와 무관하며 Inworld, Convai, ACE, 자체 대화 스택을 그대로 유지합니다.",
   helper:
-    "Studio는 타이틀당 월 $499부터 시작합니다. 멀티 타이틀, 셀프호스트, 프라이빗 네트워킹, 조달 심사가 들어가는 경우는 Enterprise에서 다룹니다.",
-  primaryCta: "데모 예약",
-  secondaryCta: "통합 보기",
+    "Free로 시작하고 $39 Indie에서 첫 출시, 규모가 커지면 Studio와 Pro로 이동합니다. Enterprise는 셀프호스트, SSO, 멀티 타이틀 인프라를 커버합니다.",
+  primaryCta: "무료로 시작",
+  secondaryCta: "영업팀 상담",
   statChips: [
-    "작가, 퀘스트 디자이너, QA 좌석에는 과금하지 않습니다.",
-    "Inworld, Convai, ACE, 자체 런타임과 나란히 붙습니다.",
-    "NPC 10개 프로토타입부터 10,000개 월드까지 맞춰 설계합니다.",
+    "작가·퀘스트 디자이너·QA 좌석에는 과금 없음.",
+    "Inworld·Convai·ACE 또는 자체 런타임과 나란히.",
+    "NPC 10개 프로토타입부터 10,000개 라이브 월드까지.",
   ],
-  plansTitle: "프로토타입, 출시, 라이브옵스를 위한 세 단계",
+  plansTitle: "5개 티어, 하나의 그래프 기반 미터",
   plansSubtitle:
-    "Free로 회수 루프를 검증하고, 실제 타이틀에 지속 메모리를 넣는 시점에 Studio로 올라갑니다.",
+    "Free로 프로토타입, Indie로 잼 스케일, Studio로 출시, Pro로 라이브 옵스 스케일, Enterprise로 퍼블리셔 전체 인프라.",
   plans: [
     {
       name: "Free",
       price: "$0",
+      priceSub: "",
       cadence: "개발용 티어",
-      scope: "최대 250개 NPC 엔티티",
+      scope: "메모리 최대 10K",
       summary:
-        "좌석 과금 없이 버티컬 슬라이스에서 메모리 회수, 관계 그래프, 이벤트 기록을 먼저 검증합니다.",
+        "카드 없이, 좌석 과금 없이 버티컬 슬라이스에서 메모리 회수·관계 그래프·이벤트 기록을 먼저 검증합니다.",
       details: [
-        "Raw HTTP와 JavaScript, Python 시작 경로",
-        "프로토타입 월드 1개 기준 수동 튜닝",
+        "메모리 10K · 월 10K ops",
+        "프로젝트 1개 · 환경 1개",
         "문서 중심 온보딩",
       ],
-      ctaLabel: "문서 보기",
+      ctaLabel: "무료 시작",
       ctaHref: "/docs/quickstart",
     },
     {
-      name: "Studio",
-      price: "월 $499부터",
-      cadence: "타이틀 기준",
-      scope: "라이브 프로젝트 1개",
+      name: "Indie",
+      price: "$39",
+      priceSub: "/월",
+      cadence: "솔로·소규모 팀",
+      scope: "메모리 최대 100K",
       summary:
-        "수천 개 NPC 엔티티와 상시 이벤트 스트림을 다루는 실제 게임에 지속 메모리를 넣기 위한 구간입니다.",
+        "잼 게임, 인디 런칭, Studio 규모로 가기 전 프로덕션에서 지속 NPC를 실험하는 소규모 팀용.",
       details: [
-        "엔티티 그래프와 월간 이벤트 쓰기량 기준 산정",
-        "Unity, Unreal, Godot 연동 가이드",
-        "시즌 이벤트와 런칭 스파이크 전 사전 용량 계획",
+        "메모리 100K · 월 100K ops",
+        "프로젝트 3개 · 개발+운영 환경",
+        "비동기 이메일 지원",
+        "2026 메모리 프리미티브 전부 포함",
       ],
-      ctaLabel: "사이징 상담 예약",
+      ctaLabel: "Indie 시작",
+      ctaHref: "/enterprise",
+    },
+    {
+      name: "Studio",
+      price: "$299",
+      priceSub: "/월",
+      cadence: "라이브 타이틀 1개",
+      scope: "메모리 최대 500K",
+      summary:
+        "실제 게임에 지속 메모리를 투입. 수천 개 NPC, 상시 이벤트 스트림, 시즌 런칭을 버티는 헤드룸.",
+      details: [
+        "메모리 500K · 월 500K ops",
+        "프로젝트 10개 · 무제한 환경",
+        "직접 응답 지원",
+        "Deterministic replay + 감사 로그 export",
+      ],
+      ctaLabel: "사이징 상담",
       ctaHref: "/enterprise",
       featured: true,
     },
     {
-      name: "Enterprise",
-      price: "별도 협의",
-      cadence: "멀티 타이틀 / 셀프호스트",
-      scope: "퍼블리셔 및 플랫폼 범위",
+      name: "Pro",
+      price: "$999",
+      priceSub: "/월",
+      cadence: "스케일 라이브옵스",
+      scope: "메모리 최대 5M",
       summary:
-        "스튜디오나 타이틀을 넘나드는 공용 메모리 인프라, 지역 배포, SSO, 프라이빗 네트워킹이 필요한 경우입니다.",
+        "SLA 동반 멀티 타이틀 라이브옵스. 전체 모더레이션 파이프라인, Theory-of-Mind belief shards, 씬 프리미티브가 기본 활성.",
       details: [
-        "셀프호스트 및 통제 배포 옵션",
-        "SSO / SAML과 조달 대응",
-        "우선 지원과 아키텍처 리뷰",
+        "메모리 5M · 무제한 ops",
+        "무제한 프로젝트·환경",
+        "99.9% SLA · 우선 지원 채널",
+        "모더레이션·ToM·씬 기능 기본 on",
       ],
-      ctaLabel: "Seizn과 상담",
+      ctaLabel: "Pro 업그레이드",
+      ctaHref: "/enterprise",
+    },
+    {
+      name: "Enterprise",
+      price: "월 $2,500부터",
+      priceSub: " + 사용량",
+      cadence: "퍼블리셔 범위",
+      scope: "셀프호스트 또는 프라이빗 클라우드",
+      summary:
+        "스튜디오·타이틀 전반의 공용 메모리 인프라. 지역 배포, SSO, 프라이빗 네트워킹, 조달 대응 계약.",
+      details: [
+        "커스텀 메모리·ops 캡",
+        "셀프호스트 또는 전용 프라이빗 클라우드",
+        "SSO / SAML · DPA · SOC 2 경로",
+        "전용 성공 채널",
+      ],
+      ctaLabel: "Seizn 상담",
       ctaHref: "/enterprise",
     },
   ],
@@ -263,69 +363,85 @@ const COPY_KO: Copy = {
   matrixSubtitle: "사람 수가 아니라 그래프 규모와 이벤트 흐름을 기준으로 봅니다.",
   matrixRows: [
     {
-      label: "일반적인 NPC 규모",
-      free: "프로토타입 기준 최대 250개 엔티티",
-      studio: "타이틀당 수천 개 규모",
-      enterprise: "타이틀 또는 샤드 합산 10,000개 이상",
+      label: "메모리",
+      free: "10K",
+      indie: "100K",
+      studio: "500K",
+      pro: "5M",
+      enterprise: "커스텀",
     },
     {
-      label: "이벤트 쓰기 패턴",
-      free: "퀘스트 상태와 대화 테스트 데이터",
-      studio: "상시 월드 이벤트와 witness 로그",
-      enterprise: "지역 단위 라이브옵스와 대량 백필",
+      label: "월 ops",
+      free: "10K",
+      indie: "100K",
+      studio: "500K",
+      pro: "무제한",
+      enterprise: "커스텀",
     },
     {
-      label: "대화 스택",
-      free: "Raw HTTP 또는 얇은 래퍼",
-      studio: "Inworld, Convai, ACE, 자체 스택 유지",
-      enterprise: "커스텀 어댑터와 플랫폼 리뷰",
+      label: "프로젝트",
+      free: "1",
+      indie: "3",
+      studio: "10",
+      pro: "무제한",
+      enterprise: "무제한",
     },
     {
-      label: "지원 방식",
-      free: "문서와 비동기 지원",
-      studio: "런칭 계획과 직접 응답",
-      enterprise: "전용 채널과 성공 계획",
+      label: "지원",
+      free: "문서만",
+      indie: "비동기 이메일",
+      studio: "직접 응답",
+      pro: "우선 채널 + SLA",
+      enterprise: "전용 성공",
     },
     {
       label: "배포 형태",
       free: "관리형 클라우드",
-      studio: "단일 타이틀용 관리형 클라우드",
-      enterprise: "프라이빗 네트워킹 또는 셀프호스트",
+      indie: "관리형 클라우드",
+      studio: "관리형 클라우드",
+      pro: "관리형 클라우드",
+      enterprise: "셀프호스트 또는 프라이빗",
     },
     {
       label: "적합한 팀",
-      free: "프로토타입과 버티컬 슬라이스",
-      studio: "메모리 비중이 높은 게임 1종 출시",
-      enterprise: "퍼블리셔, 플랫폼, 규제 환경 라이브옵스",
+      free: "프로토타입",
+      indie: "잼 게임·인디 런칭",
+      studio: "출시 타이틀 1종",
+      pro: "멀티 타이틀 라이브옵스",
+      enterprise: "퍼블리셔·규제 환경",
     },
   ],
   faqTitle: "게임 팀이 가장 먼저 묻는 질문",
-  faqSubtitle: "메모리를 실제 서비스에 넣기 전에 확인하는 항목들입니다.",
+  faqSubtitle: "메모리를 실제 서비스에 넣기 전에 확인하는 항목들.",
   faq: [
     {
-      q: "NPC가 10,000개까지 가면 요금은 어떻게 잡히나요?",
-      a: "활성 엔티티 그래프 크기, 관계 fan-out, 월간 이벤트 쓰기량을 기준으로 범위를 잡습니다. Studio는 라이브 타이틀 1개 기준이고, 멀티 타이틀 확장이나 프라이빗 네트워킹, 맞춤 용량 계획이 필요하면 Enterprise로 넘어갑니다.",
+      q: "메모리 단위는 어떻게 세나요?",
+      a: "런타임이 나중에 회수할 수 있도록 저장된 사실·이벤트·관계·관찰 모두 해당합니다. NPC, 팩션, 아이템, 퀘스트, witness 이벤트 등 다음 턴에서 다시 꺼내 쓰는 모든 노드입니다. 작가·디자이너·QA 좌석은 과금 대상이 아닙니다.",
     },
     {
-      q: "엔티티에는 무엇이 포함되나요?",
-      a: "대화 중 다시 꺼내 써야 하는 모든 노드가 대상입니다. NPC, 팩션, 가문, 길드, 장소, 퀘스트 오브젝트, 이름이 붙은 아이템까지 포함할 수 있습니다. 작가나 디자이너 좌석은 과금 대상이 아닙니다.",
+      q: "메모리 상한을 넘기면 어떻게 되나요?",
+      a: "Free와 Indie에서는 다음 결제 주기 또는 업그레이드 시까지 쓰기가 일시 중단됩니다. Studio와 Pro에서는 용량을 먼저 확장하고 다음 청구서에서 정산합니다 — 런칭 중 hard stop 없음.",
     },
     {
-      q: "Inworld, Convai, NVIDIA ACE를 바꿔야 하나요?",
-      a: "아닙니다. Seizn은 대화 엔진 옆에 붙습니다. 음성, 퍼스널리티, 행동은 기존 엔진에 두고, Seizn이 지속 메모리, 관계 그래프 업데이트, 회수를 맡습니다.",
+      q: "Inworld·Convai·NVIDIA ACE를 바꿔야 하나요?",
+      a: "아닙니다. Seizn은 대화 엔진 옆에 붙습니다. 음성·퍼스널리티·행동은 기존 엔진에 두고, Seizn이 지속 메모리·관계 그래프 업데이트·회수를 맡습니다.",
     },
     {
-      q: "런칭 스파이크나 시즌 이벤트가 오면 어떻게 되나요?",
-      a: "예상 이벤트 처리량을 기준으로 사전에 용량을 잡고, 런칭 전에 헤드룸을 확보합니다. 월드 상태 쓰기가 예상보다 빨라져도 좌석 기반 업셀 없이 용량부터 조정합니다.",
+      q: "Indie가 왜 Studio보다 훨씬 저렴한가요?",
+      a: "Indie는 소규모 팀·잼 빌더가 Studio로 가기 전 프로덕션에서 먼저 출시할 수 있도록 discovery 가격으로 책정됐습니다. Studio 가격은 런칭 규모 용량, 직접 응답 지원, deterministic replay 같은 프로덕션 기능을 반영합니다.",
     },
     {
       q: "어떤 경우에 Enterprise가 필요한가요?",
-      a: "보안 심사, SSO / SAML, 데이터 레지던시, 셀프호스트, 멀티 타이틀 메모리 인프라가 논의되기 시작하면 Enterprise가 맞습니다.",
+      a: "보안 심사·SSO/SAML·데이터 레지던시·셀프호스트·멀티 타이틀 메모리 인프라가 논의되면 Enterprise가 맞습니다. 시작 가격은 월 $2,500 + 사용량이며, 대부분 커스텀 SLA와 전용 성공 채널이 포함됩니다.",
+    },
+    {
+      q: "연간 결제 할인이 있나요?",
+      a: "연간 플랜은 Indie·Studio·Pro에 15% 할인이 적용됩니다. Enterprise 계약은 항상 연간이며 케이스별 협상입니다.",
     },
   ],
   finalCtaTitle: "세계 규모 산정이 필요하신가요?",
   finalCtaSubtitle:
-    "NPC 수, 이벤트 발생률, 대화 스택을 알려주시면 맞는 티어와 연동 경로를 바로 잡아드립니다.",
+    "NPC 수, 이벤트 발생률, 대화 스택을 알려주시면 한 번의 미팅에서 맞는 티어와 연동 경로를 바로 잡아드립니다.",
   finalCtaPrimary: "데모 예약",
   finalCtaSecondary: "문서 보기",
 };
@@ -335,14 +451,6 @@ function getCopy(locale: Locale): Copy {
   return COPY_EN;
 }
 
-function planCardStyle(featured?: boolean): string {
-  if (featured) {
-    return "border-cyan-400/40 bg-cyan-400/10";
-  }
-
-  return "border-white/10 bg-white/5";
-}
-
 export function PricingClient({ dict, locale }: PricingClientProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const copy = getCopy(locale);
@@ -350,33 +458,32 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
   const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
 
   return (
-    <div className="min-h-screen bg-[#08111f] text-white">
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur" aria-label="Pricing navigation">
+    <div className="dark bg-szn-bg text-szn-text-1 min-h-screen">
+      <nav className="sticky top-0 z-50 border-b border-szn-border-subtle bg-szn-bg/80 backdrop-blur-xl" aria-label="Pricing navigation">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
-              S
-            </div>
-            <span className="text-lg font-semibold text-white">Seizn</span>
+          <Link href={`/${locale}`} className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-7 h-7" />
+            <span className="font-medium text-[15px] tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
 
           <div className="flex items-center gap-5">
-            <Link href={`/${locale}/pricing`} className="hidden text-sm font-medium text-white md:block">
+            <Link href={`/${locale}/pricing`} className="hidden text-[13px] font-medium text-szn-text-1 md:block">
               {dict.nav.pricing}
             </Link>
-            <Link href={`/${locale}/comparison`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+            <Link href={`/${locale}/comparison`} className="hidden text-[13px] text-szn-text-2 transition-colors hover:text-szn-text-1 md:block">
               {compareLabel}
             </Link>
-            <Link href={`/${locale}/enterprise`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+            <Link href={`/${locale}/enterprise`} className="hidden text-[13px] text-szn-text-2 transition-colors hover:text-szn-text-1 md:block">
               {enterpriseLabel}
             </Link>
-            <Link href={`/${locale}/docs`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
+            <Link href={`/${locale}/docs`} className="hidden text-[13px] text-szn-text-2 transition-colors hover:text-szn-text-1 md:block">
               {dict.nav.docs}
             </Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/enterprise`}
-              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+              className="rounded-md bg-szn-signal px-4 py-2 text-[13px] font-medium text-szn-signal-fg transition-colors hover:bg-szn-signal-hover"
             >
               {dict.nav.getStarted}
             </Link>
@@ -385,33 +492,32 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
       </nav>
 
       <main>
-        <section className="border-b border-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
+        {/* Hero */}
+        <section className="relative overflow-hidden border-b border-szn-border-subtle">
+          <div className="absolute inset-0 szn-glow-signal opacity-50 pointer-events-none" aria-hidden="true" />
+          <div className="relative mx-auto max-w-6xl px-6 py-24 lg:py-32">
             <div className="max-w-4xl">
-              <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{copy.eyebrow}</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{copy.title}</h1>
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{copy.subtitle}</p>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">{copy.helper}</p>
+              <div className="szn-section-number mb-6">{copy.eyebrow}</div>
+              <h1 className="szn-serif text-[clamp(44px,7vw,96px)] leading-[1.0] text-szn-text-1 tracking-[-0.03em]">
+                {copy.title}{" "}
+                <em className="italic text-szn-signal font-normal">{copy.titleItalic}</em>.
+              </h1>
+              <p className="mt-8 max-w-3xl text-[17px] leading-[1.55] text-szn-text-2">{copy.subtitle}</p>
+              <p className="mt-4 max-w-3xl text-[14px] leading-[1.6] text-szn-text-3">{copy.helper}</p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href={`/${locale}/enterprise`}
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-                >
+              <div className="mt-10 flex flex-wrap gap-3">
+                <Link href={`/${locale}/docs/quickstart`} className="szn-btn-signal">
                   {copy.primaryCta}
                 </Link>
-                <Link
-                  href={`/${locale}/comparison`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
-                >
+                <Link href={`/${locale}/enterprise`} className="szn-btn-ghost">
                   {copy.secondaryCta}
                 </Link>
               </div>
             </div>
 
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
+            <div className="mt-16 grid gap-px bg-szn-border-subtle border-y border-szn-border-subtle md:grid-cols-3">
               {copy.statChips.map((chip) => (
-                <div key={chip} className="border border-white/10 bg-white/5 px-4 py-4 text-sm leading-6 text-slate-200">
+                <div key={chip} className="bg-szn-bg px-5 py-5 text-[13px] leading-[1.6] text-szn-text-2">
                   {chip}
                 </div>
               ))}
@@ -419,33 +525,55 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.plansTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.plansSubtitle}</p>
+        {/* Plans */}
+        <section className="border-b border-szn-border-subtle">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <div className="mb-16 max-w-2xl">
+              <div className="szn-section-number mb-6">02 / PLANS</div>
+              <h2 className="szn-serif text-[clamp(32px,4.2vw,56px)] leading-[1.05] text-szn-text-1">
+                {copy.plansTitle}
+              </h2>
+              <p className="mt-5 text-[15px] leading-[1.6] text-szn-text-2">{copy.plansSubtitle}</p>
             </div>
 
-            <div className="mt-10 grid gap-4 lg:grid-cols-3">
-              {copy.plans.map((plan) => (
-                <div key={plan.name} className={`flex h-full flex-col border px-6 py-6 ${planCardStyle(plan.featured)}`}>
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-medium uppercase tracking-[0.08em] text-slate-300">{plan.name}</p>
-                      <h3 className="mt-3 text-3xl font-semibold text-white">{plan.price}</h3>
-                      <p className="mt-2 text-sm text-slate-400">{plan.cadence}</p>
+            <div className="grid gap-px bg-szn-border-subtle border-y border-szn-border-subtle lg:grid-cols-5">
+              {copy.plans.map((plan, i) => (
+                <div
+                  key={plan.name}
+                  className={`relative flex h-full flex-col bg-szn-bg p-6 transition-colors ${
+                    plan.featured ? "bg-szn-signal-soft" : ""
+                  }`}
+                >
+                  {plan.featured && (
+                    <span
+                      className="absolute left-0 top-6 bottom-6 w-px bg-szn-signal"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <div className="mb-5">
+                    <div className="szn-eyebrow mb-3">{`0${i + 1} / ${plan.name.toUpperCase()}`}</div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-mono text-[30px] tabular-nums tracking-[-0.02em] text-szn-text-1">
+                        {plan.price}
+                      </span>
+                      {plan.priceSub && (
+                        <span className="font-mono text-[13px] text-szn-text-3">{plan.priceSub}</span>
+                      )}
                     </div>
-                    <span className="rounded-md border border-white/10 px-3 py-1 text-xs font-medium text-slate-200">
-                      {plan.scope}
-                    </span>
+                    <p className="mt-2 text-[12px] text-szn-text-3 font-mono uppercase tracking-[0.12em]">
+                      {plan.cadence}
+                    </p>
                   </div>
 
-                  <p className="mt-6 text-sm leading-7 text-slate-300">{plan.summary}</p>
+                  <p className="text-[13px] leading-[1.6] text-szn-text-2 mb-6">{plan.summary}</p>
 
-                  <ul className="mt-6 flex-1 space-y-3">
+                  <ul className="mb-8 flex-1 space-y-2.5">
                     {plan.details.map((detail) => (
-                      <li key={detail} className="flex items-start gap-3 text-sm leading-6 text-slate-200">
-                        <span className="mt-1 h-2 w-2 rounded-full bg-cyan-300" />
+                      <li
+                        key={detail}
+                        className="flex items-start gap-2 text-[12px] leading-[1.55] text-szn-text-2"
+                      >
+                        <span className="mt-1.5 h-1 w-1 rounded-full bg-szn-signal shrink-0" />
                         <span>{detail}</span>
                       </li>
                     ))}
@@ -453,11 +581,11 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
 
                   <Link
                     href={`/${locale}${plan.ctaHref}`}
-                    className={`mt-8 rounded-md px-4 py-3 text-center text-sm font-medium transition-colors ${
+                    className={
                       plan.featured
-                        ? "bg-cyan-400 text-[#08111f] hover:bg-cyan-300"
-                        : "border border-white/15 text-white hover:border-white/25 hover:bg-white/5"
-                    }`}
+                        ? "szn-btn-signal justify-center"
+                        : "szn-btn-ghost justify-center"
+                    }
                   >
                     {plan.ctaLabel}
                   </Link>
@@ -467,30 +595,50 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.matrixTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.matrixSubtitle}</p>
+        {/* Matrix */}
+        <section className="border-b border-szn-border-subtle">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <div className="mb-12 max-w-2xl">
+              <div className="szn-section-number mb-6">03 / SIZING</div>
+              <h2 className="szn-serif text-[clamp(28px,3.6vw,44px)] leading-[1.1] text-szn-text-1">
+                {copy.matrixTitle}
+              </h2>
+              <p className="mt-4 text-[14px] leading-[1.6] text-szn-text-2">{copy.matrixSubtitle}</p>
             </div>
 
-            <div className="mt-10 overflow-x-auto border border-white/10">
+            <div className="overflow-x-auto border-y border-szn-border-subtle">
               <table className="min-w-full border-collapse">
-                <thead className="bg-white/5">
-                  <tr>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Scope</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Free</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Studio</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Enterprise</th>
+                <thead>
+                  <tr className="border-b border-szn-border-subtle">
+                    <th className="px-4 py-4 text-left szn-eyebrow">Scope</th>
+                    <th className="px-4 py-4 text-left szn-eyebrow">Free</th>
+                    <th className="px-4 py-4 text-left szn-eyebrow">Indie</th>
+                    <th className="px-4 py-4 text-left szn-eyebrow text-szn-signal">Studio</th>
+                    <th className="px-4 py-4 text-left szn-eyebrow">Pro</th>
+                    <th className="px-4 py-4 text-left szn-eyebrow">Enterprise</th>
                   </tr>
                 </thead>
                 <tbody>
                   {copy.matrixRows.map((row) => (
-                    <tr key={row.label} className="border-t border-white/10">
-                      <th className="px-4 py-4 text-left text-sm font-medium text-white">{row.label}</th>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.free}</td>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.studio}</td>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.enterprise}</td>
+                    <tr key={row.label} className="border-b border-szn-border-subtle last:border-b-0">
+                      <th className="px-4 py-4 text-left text-[13px] font-medium text-szn-text-1">
+                        {row.label}
+                      </th>
+                      <td className="px-4 py-4 font-mono text-[12px] leading-[1.6] text-szn-text-2 tabular-nums">
+                        {row.free}
+                      </td>
+                      <td className="px-4 py-4 font-mono text-[12px] leading-[1.6] text-szn-text-2 tabular-nums">
+                        {row.indie}
+                      </td>
+                      <td className="px-4 py-4 font-mono text-[12px] leading-[1.6] text-szn-text-1 tabular-nums">
+                        {row.studio}
+                      </td>
+                      <td className="px-4 py-4 font-mono text-[12px] leading-[1.6] text-szn-text-2 tabular-nums">
+                        {row.pro}
+                      </td>
+                      <td className="px-4 py-4 font-mono text-[12px] leading-[1.6] text-szn-text-2 tabular-nums">
+                        {row.enterprise}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -499,30 +647,36 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
-          <div className="mx-auto max-w-4xl px-6 py-20">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.faqTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.faqSubtitle}</p>
+        {/* FAQ */}
+        <section className="border-b border-szn-border-subtle">
+          <div className="mx-auto max-w-4xl px-6 py-24">
+            <div className="mb-12 max-w-2xl">
+              <div className="szn-section-number mb-6">04 / FAQ</div>
+              <h2 className="szn-serif text-[clamp(28px,3.6vw,44px)] leading-[1.1] text-szn-text-1">
+                {copy.faqTitle}
+              </h2>
+              <p className="mt-4 text-[14px] leading-[1.6] text-szn-text-2">{copy.faqSubtitle}</p>
             </div>
 
-            <div className="mt-10 space-y-3">
+            <div className="border-y border-szn-border-subtle">
               {copy.faq.map((item, index) => {
                 const isOpen = openFaq === index;
-
                 return (
-                  <div key={item.q} className="border border-white/10 bg-white/5">
+                  <div key={item.q} className="border-b border-szn-border-subtle last:border-b-0">
                     <button
                       type="button"
                       onClick={() => setOpenFaq(isOpen ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left hover:bg-szn-surface-1 transition-colors"
+                      aria-expanded={isOpen ? "true" : "false"}
                     >
-                      <span className="text-base font-medium text-white">{item.q}</span>
-                      <span className="text-sm text-slate-400">{isOpen ? "-" : "+"}</span>
+                      <span className="text-[15px] font-medium text-szn-text-1">{item.q}</span>
+                      <span className="font-mono text-[16px] text-szn-signal">
+                        {isOpen ? "−" : "+"}
+                      </span>
                     </button>
-                    {isOpen ? (
-                      <div className="border-t border-white/10 px-5 py-4 text-sm leading-7 text-slate-300">{item.a}</div>
-                    ) : null}
+                    {isOpen && (
+                      <div className="px-5 pb-6 text-[13px] leading-[1.7] text-szn-text-2">{item.a}</div>
+                    )}
                   </div>
                 );
               })}
@@ -530,24 +684,23 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           </div>
         </section>
 
-        <section>
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.finalCtaTitle}</h2>
-                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalCtaSubtitle}</p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href={`/${locale}/enterprise`}
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-                >
+        {/* Final CTA */}
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 szn-glow-signal opacity-40 pointer-events-none" aria-hidden="true" />
+          <div className="relative mx-auto max-w-6xl px-6 py-28">
+            <div className="max-w-3xl">
+              <div className="szn-section-number mb-6">05 / SHIP IT</div>
+              <h2 className="szn-serif text-[clamp(36px,5vw,68px)] leading-[1.02] text-szn-text-1 tracking-[-0.025em]">
+                {copy.finalCtaTitle}
+              </h2>
+              <p className="mt-5 max-w-2xl text-[15px] leading-[1.6] text-szn-text-2">
+                {copy.finalCtaSubtitle}
+              </p>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <Link href={`/${locale}/enterprise`} className="szn-btn-signal">
                   {copy.finalCtaPrimary}
                 </Link>
-                <Link
-                  href={`/${locale}/docs/quickstart`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
-                >
+                <Link href={`/${locale}/docs/quickstart`} className="szn-btn-ghost">
                   {copy.finalCtaSecondary}
                 </Link>
               </div>
@@ -556,27 +709,26 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
         </section>
       </main>
 
-      <footer className="border-t border-white/10">
+      <footer className="border-t border-szn-border-subtle">
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-10 md:flex-row md:items-center md:justify-between">
-          <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
-              S
-            </div>
-            <span className="text-sm font-medium text-white">Seizn</span>
+          <Link href={`/${locale}`} className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/seizn-icon.svg" alt="Seizn" className="w-6 h-6" />
+            <span className="text-[13px] font-medium text-szn-text-1">Seizn</span>
           </Link>
 
-          <div className="text-sm text-slate-400">
+          <div className="font-mono text-[12px] tracking-tight text-szn-text-3">
             {dict.footer.copyright.replace("{year}", new Date().getFullYear().toString())}
           </div>
 
           <nav className="flex flex-wrap items-center gap-5">
-            <Link href={`/${locale}/privacy`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/privacy`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.privacy}
             </Link>
-            <Link href={`/${locale}/terms`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/terms`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.terms}
             </Link>
-            <Link href={`/${locale}/enterprise`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/enterprise`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.contact}
             </Link>
           </nav>
