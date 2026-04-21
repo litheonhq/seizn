@@ -19,14 +19,31 @@ export interface ReplayToolCall {
   name: string;
   args: unknown;
   result: unknown;
+  input?: unknown;
+  output?: unknown;
+  latencyMs?: number;
+  inputHash?: string;
+  stubHash?: string;
   timestamp: string;
 }
+
+export type ReplayCaptureMode = 'record' | 'replay';
+
+export interface ReplayToolStubValue {
+  output: unknown;
+  latencyMs: number;
+  stubHash?: string;
+}
+
+export type ReplayToolStubMap = Map<string, ReplayToolStubValue>;
 
 export interface ReplayCapture {
   traceId: string;
   organizationId?: string;
   apiKeyId?: string;
   userId?: string;
+  mode: ReplayCaptureMode;
+  stubs?: ReplayToolStubMap;
   endpoint: string;
   requestBody: unknown;
   memoryReads: ReplayMemoryRead[];
@@ -44,6 +61,8 @@ export interface ReplayCaptureContext {
   endpoint: string;
   requestBody: unknown;
   traceId?: string | null;
+  mode?: ReplayCaptureMode;
+  stubs?: ReplayToolStubMap;
 }
 
 const captureStorage = new AsyncLocalStorage<ReplayCapture>();
@@ -76,6 +95,8 @@ export async function withReplayCapture<T>(
     organizationId: ctx.organizationId,
     apiKeyId: ctx.apiKeyId,
     userId: ctx.userId,
+    mode: ctx.mode ?? 'record',
+    stubs: ctx.stubs,
     endpoint: ctx.endpoint,
     requestBody: ctx.requestBody,
     memoryReads: [],
@@ -157,6 +178,11 @@ export function recordToolCall(params: {
   name: string;
   args: unknown;
   result: unknown;
+  input?: unknown;
+  output?: unknown;
+  latencyMs?: number;
+  inputHash?: string;
+  stubHash?: string;
   timestamp?: Date | string;
 }): void {
   const capture = getReplayCapture();
@@ -166,6 +192,11 @@ export function recordToolCall(params: {
     name: params.name,
     args: params.args,
     result: params.result,
+    input: params.input,
+    output: params.output,
+    latencyMs: params.latencyMs,
+    inputHash: params.inputHash,
+    stubHash: params.stubHash,
     timestamp: normalizeTimestamp(params.timestamp),
   });
 }

@@ -21,6 +21,7 @@ export interface ReplaySnapshotRecord {
   llm_seed: number | null;
   llm_model: string | null;
   llm_provider: string | null;
+  stub_hash: string | null;
   content_hash: string;
   duration_ms: number;
   created_at: string;
@@ -58,6 +59,7 @@ export async function persistSnapshot(
     llmProvider: capture.llmProvider ?? null,
   };
   const contentHash = buildSnapshotContentHash(snapshotPayload);
+  const stubHash = buildSnapshotStubHash(capture.toolCalls);
 
   const supabase = createServerClient();
   const { error } = await supabase
@@ -75,6 +77,7 @@ export async function persistSnapshot(
       llm_seed: capture.llmSeed ?? null,
       llm_model: capture.llmModel ?? null,
       llm_provider: capture.llmProvider ?? null,
+      stub_hash: stubHash,
       content_hash: contentHash,
       duration_ms: Math.max(0, Math.round(meta.durationMs)),
     }, { onConflict: 'trace_id' });
@@ -212,6 +215,29 @@ export async function captureNextRoute(
 
 export function getActiveReplayTraceId(): string | null {
   return getReplayCapture()?.traceId ?? null;
+}
+
+export function buildSnapshotStubHash(toolCalls: unknown[]): string | null {
+  if (!Array.isArray(toolCalls) || toolCalls.length === 0) return null;
+  return buildSnapshotContentHash(
+    toolCalls.map((call) => {
+      if (!call || typeof call !== 'object') return call;
+      const record = call as Record<string, unknown>;
+      const input = 'input' in record ? record.input : record.args;
+      const name = record.name;
+      const inputHash =
+        typeof record.inputHash === 'string' ? record.inputHash : buildSnapshotContentHash(input);
+      const stubHash =
+        typeof record.stubHash === 'string'
+          ? record.stubHash
+          : buildSnapshotContentHash({ name, input });
+      return {
+        name,
+        inputHash,
+        stubHash,
+      };
+    })
+  );
 }
 
 async function readResponseBody(response: NextResponse): Promise<unknown> {
