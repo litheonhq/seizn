@@ -21,3 +21,4 @@ export type AddMemoryRequest = {
     source?: string;
     companion_meta?: any | null;
 };
+

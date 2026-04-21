@@ -6,3 +6,4 @@ export type DeleteMemoriesRequest = {
     ids: Array<string>;
     namespace?: string;
 };
+
