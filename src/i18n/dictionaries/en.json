@@ -253,6 +253,7 @@
       "overview": "Overview",
       "memories": "Entities",
       "memoryEditor": "Memory Editor",
+      "import": "Import",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
       "replay": "Replay",
