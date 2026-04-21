@@ -728,6 +728,12 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
             <Link href={`/${locale}/terms`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.terms}
             </Link>
+            <Link href={`/${locale}/sla`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
+              {dict.footer.sla}
+            </Link>
+            <Link href={`/${locale}/status`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
+              {dict.footer.status}
+            </Link>
             <Link href={`/${locale}/enterprise`} className="text-[13px] text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.contact}
             </Link>

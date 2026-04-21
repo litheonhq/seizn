@@ -651,6 +651,12 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
             <Link href={`/${locale}/terms`} className="text-sm text-gray-400 hover:text-white">
               {dict.footer?.terms || "Terms"}
             </Link>
+            <Link href={`/${locale}/sla`} className="text-sm text-gray-400 hover:text-white">
+              {dict.footer?.sla || "SLA"}
+            </Link>
+            <Link href={`/${locale}/status`} className="text-sm text-gray-400 hover:text-white">
+              {dict.footer?.status || "Status"}
+            </Link>
             <Link href={`/${locale}/enterprise`} className="text-sm text-gray-400 hover:text-white">
               Enterprise
             </Link>

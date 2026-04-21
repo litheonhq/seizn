@@ -568,6 +568,12 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             <Link href={`/${locale}/terms`} className="text-sm text-slate-400 transition-colors hover:text-white">
               {t("footer.terms")}
             </Link>
+            <Link href={`/${locale}/sla`} className="text-sm text-slate-400 transition-colors hover:text-white">
+              {t("footer.sla")}
+            </Link>
+            <Link href={`/${locale}/status`} className="text-sm text-slate-400 transition-colors hover:text-white">
+              {t("footer.status")}
+            </Link>
           </nav>
         </div>
       </footer>
