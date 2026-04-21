@@ -1,0 +1,65 @@
+name: SDK Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - openapi/**
+      - packages/seizn-sdk-js/**
+      - src/app/api/openapi.json/**
+      - src/lib/openapi/**
+      - .github/workflows/sdk-release.yml
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  generate-and-publish:
+    name: Generate TypeScript SDK
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install root dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Regenerate SDK from OpenAPI
+        run: npx --yes openapi-typescript-codegen@0.29.0 --input openapi/seizn-openapi.json --output packages/seizn-sdk-js/src/generated --client fetch --useOptions
+
+      - name: Build SDK
+        run: npx tsc -p packages/seizn-sdk-js/tsconfig.json
+
+      - name: Commit generated changes
+        run: |
+          if git diff --quiet -- packages/seizn-sdk-js/src/generated; then
+            echo "Generated SDK is current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/seizn-sdk-js/src/generated
+          git commit -m "chore(sdk): regenerate from OpenAPI"
+          git push
+
+      - name: Publish SDK
+        if: ${{ env.NODE_AUTH_TOKEN != '' }}
+        run: |
+          VERSION=$(node -p "require('./packages/seizn-sdk-js/package.json').version")
+          if npm view "@seizn/sdk@$VERSION" version >/dev/null 2>&1; then
+            echo "@seizn/sdk@$VERSION already exists; skipping publish."
+            exit 0
+          fi
+          npm publish ./packages/seizn-sdk-js --access public --provenance
