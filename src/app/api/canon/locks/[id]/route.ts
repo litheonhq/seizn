@@ -79,6 +79,9 @@ function buildPatch(body: Record<string, unknown>) {
   if ('active' in body) {
     patch.active = body.active !== false;
   }
+  if ('requiresTeamReview' in body || 'requires_team_review' in body) {
+    patch.requiresTeamReview = body.requiresTeamReview === true || body.requires_team_review === true;
+  }
 
   return patch;
 }
@@ -131,6 +134,7 @@ export async function PATCH(
     }
 
     const { id } = await params;
+    patch.updatedBy = context.userId;
     const lock = await updateCanonLock(context.organizationId, id, patch);
     return NextResponse.json({ success: true, data: { lock } });
   } catch (error) {

@@ -150,40 +150,58 @@ export async function resolveMemoryBudgetOrganizationId(
   ctx: { userId: string; keyId?: string | null }
 ): Promise<string | null> {
   if (ctx.keyId) {
-    const { data: keyRowRaw, error: keyError } = await supabase
-      .from('api_keys')
-      .select('organization_id')
-      .eq('id', ctx.keyId)
-      .maybeSingle();
-    const keyRow = keyRowRaw as { organization_id?: unknown } | null;
+    try {
+      const { data: keyRowRaw, error: keyError } = await supabase
+        .from('api_keys')
+        .select('organization_id')
+        .eq('id', ctx.keyId)
+        .maybeSingle();
+      const keyRow = keyRowRaw as { organization_id?: unknown } | null;
 
-    if (!keyError && keyRow?.organization_id) {
-      return String(keyRow.organization_id);
+      if (!keyError && keyRow?.organization_id) {
+        return String(keyRow.organization_id);
+      }
+    } catch (error) {
+      logServerWarn('[memory/budget] API key organization lookup skipped', error, {
+        keyId: ctx.keyId,
+      });
     }
   }
 
-  const { data: profileRaw, error: profileError } = await supabase
-    .from('profiles')
-    .select('organization_id')
-    .eq('id', ctx.userId)
-    .maybeSingle();
-  const profile = profileRaw as { organization_id?: unknown } | null;
+  try {
+    const { data: profileRaw, error: profileError } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', ctx.userId)
+      .maybeSingle();
+    const profile = profileRaw as { organization_id?: unknown } | null;
 
-  if (!profileError && profile?.organization_id) {
-    return String(profile.organization_id);
+    if (!profileError && profile?.organization_id) {
+      return String(profile.organization_id);
+    }
+  } catch (error) {
+    logServerWarn('[memory/budget] Profile organization lookup skipped', error, {
+      userId: ctx.userId,
+    });
   }
 
-  const { data: memberRaw, error: memberError } = await supabase
-    .from('organization_members')
-    .select('organization_id')
-    .eq('user_id', ctx.userId)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  const member = memberRaw as { organization_id?: unknown } | null;
+  try {
+    const { data: memberRaw, error: memberError } = await supabase
+      .from('organization_members')
+      .select('organization_id')
+      .eq('user_id', ctx.userId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    const member = memberRaw as { organization_id?: unknown } | null;
 
-  if (!memberError && member?.organization_id) {
-    return String(member.organization_id);
+    if (!memberError && member?.organization_id) {
+      return String(member.organization_id);
+    }
+  } catch (error) {
+    logServerWarn('[memory/budget] Membership organization lookup skipped', error, {
+      userId: ctx.userId,
+    });
   }
 
   return null;

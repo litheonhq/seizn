@@ -55,12 +55,12 @@ export const PLAN_MONTHLY_USD_CENTS: Record<PlanName, number> = {
   enterprise: 250000, // "from $2,500"
 };
 
-// Yearly lists at 15% discount on Indie/Studio/Pro.
+// Yearly lists at 15% discount on Indie/Studio and 25% discount on Pro.
 export const PLAN_YEARLY_USD_CENTS: Record<PlanName, number> = {
   free: 0,
   indie: Math.round(3900 * 12 * 0.85),    // $39 * 12 * 0.85 = $397.80
   studio: Math.round(29900 * 12 * 0.85),   // $299 * 12 * 0.85 = $3,049.80
-  pro: Math.round(99900 * 12 * 0.85),      // $999 * 12 * 0.85 = $10,189.80
+  pro: Math.round(99900 * 12 * 0.75),      // $999 * 12 * 0.75 = $8,991.00
   enterprise: 0, // Enterprise is always annual + custom; billing handled via contract
 };
 

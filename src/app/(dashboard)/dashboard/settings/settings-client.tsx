@@ -41,10 +41,12 @@ interface QuotaData {
 
 // Plan limits for UI display. Keep in sync with src/lib/plan-limits.ts (canonical source).
 const PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number; price: string }> = {
-  free: { memories: 100, apiCalls: 1_000, apiKeys: 2, price: "$0" },
-  starter: { memories: 5_000, apiCalls: 50_000, apiKeys: 3, price: "$9" },
-  plus: { memories: 50_000, apiCalls: 500_000, apiKeys: 5, price: "$29" },
-  pro: { memories: -1, apiCalls: 2_000_000, apiKeys: 10, price: "$99" },
+  free: { memories: 10_000, apiCalls: 10_000, apiKeys: 2, price: "$0" },
+  starter: { memories: 100_000, apiCalls: 100_000, apiKeys: 3, price: "$39" },
+  indie: { memories: 100_000, apiCalls: 100_000, apiKeys: 3, price: "$39" },
+  plus: { memories: 1_000_000, apiCalls: 1_000_000, apiKeys: 10, price: "$299" },
+  studio: { memories: 1_000_000, apiCalls: 1_000_000, apiKeys: 10, price: "$299" },
+  pro: { memories: 5_000_000, apiCalls: -1, apiKeys: 25, price: "$999" },
   enterprise: { memories: -1, apiCalls: -1, apiKeys: 100, price: "Custom" },
 };
 
@@ -458,6 +460,25 @@ export function SettingsClient() {
                   </div>
                 </div>
 
+                {(quotaData.plan === "pro" || quotaData.plan === "enterprise") && (
+                  <div className="rounded-xl border border-szn-border bg-szn-card p-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h4 className="text-sm font-semibold text-szn-text-1">Dedicated Slack</h4>
+                        <p className="mt-1 text-sm text-szn-text-2">
+                          Open a private engineering channel for live ops, SSO, and incident coordination.
+                        </p>
+                      </div>
+                      <a
+                        href="mailto:pro@seizn.com?subject=Dedicated%20Slack%20channel%20setup"
+                        className="inline-flex items-center justify-center rounded-lg border border-szn-border px-4 py-2 text-sm font-medium text-szn-text-1 transition-colors hover:bg-szn-bg"
+                      >
+                        Request Slack
+                      </a>
+                    </div>
+                  </div>
+                )}
+
                 {/* Usage Stats */}
                 <div className="grid gap-4 md:grid-cols-3">
                   <UsageCard
@@ -494,7 +515,8 @@ export function SettingsClient() {
                         <tr className="text-left text-szn-text-2 border-b border-szn-border">
                           <th className="pb-3 font-medium">{t("dashboard.settingsPage.billing.feature") || "Feature"}</th>
                           <th className="pb-3 font-medium">Free</th>
-                          <th className="pb-3 font-medium">Plus</th>
+                          <th className="pb-3 font-medium">Indie</th>
+                          <th className="pb-3 font-medium">Studio</th>
                           <th className="pb-3 font-medium">Pro</th>
                           <th className="pb-3 font-medium">Enterprise</th>
                         </tr>
@@ -505,27 +527,31 @@ export function SettingsClient() {
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
                           <td className="py-3">1,000,000</td>
+                          <td className="py-3">5,000,000</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
                         <tr className="border-b border-szn-border">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiCallsLabel") || "API Calls/mo"}</td>
-                          <td className="py-3">1,000</td>
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
+                          <td className="py-3">1,000,000</td>
+                          <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
                         <tr className="border-b border-szn-border">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiKeysLabel") || "API Keys"}</td>
+                          <td className="py-3">2</td>
                           <td className="py-3">3</td>
                           <td className="py-3">10</td>
-                          <td className="py-3">50</td>
-                          <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
+                          <td className="py-3">25</td>
+                          <td className="py-3">100</td>
                         </tr>
                         <tr>
                           <td className="py-3">{t("dashboard.settingsPage.billing.priceLabel") || "Price"}</td>
                           <td className="py-3">$0</td>
-                          <td className="py-3">$29/mo</td>
-                          <td className="py-3">$99/mo</td>
+                          <td className="py-3">$39/mo</td>
+                          <td className="py-3">$299/mo</td>
+                          <td className="py-3">$999/mo</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.contactUs") || "Contact Us"}</td>
                         </tr>
                       </tbody>

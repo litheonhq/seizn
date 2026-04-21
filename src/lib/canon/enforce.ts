@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase';
+import { hasFeature } from '@/lib/plan-limits';
 import { logServerWarn } from '@/lib/server/logger';
 import { getActiveReplayTraceId } from '@/lib/replay/snapshot';
 import {
@@ -55,6 +56,7 @@ function normalizeLock(row: Record<string, unknown>): CanonLock {
     regexFastpath: normalizeOptionalString(row.regex_fastpath),
     severity,
     active: row.active !== false,
+    requiresTeamReview: row.requires_team_review === true,
     createdBy: normalizeOptionalString(row.created_by),
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
@@ -72,6 +74,7 @@ function normalizeViolation(row: Record<string, unknown>): CanonViolationRecord 
           studio_id: row.studio_id,
           npc_id: row.npc_id,
           active: true,
+          requires_team_review: false,
           created_at: row.created_at,
           updated_at: row.created_at,
           ...(lockRow as Record<string, unknown>),
@@ -131,13 +134,59 @@ export function resolveCanonNpcId(input: {
   );
 }
 
+async function resolveStudioPlan(studioId: string, supabase: SupabaseLike) {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('plan')
+    .eq('id', studioId)
+    .maybeSingle();
+
+  if (error) {
+    logServerWarn('[canon/enforce] Studio plan lookup failed', error, { studioId });
+  }
+
+  return typeof data?.plan === 'string' && data.plan.trim() ? data.plan : 'free';
+}
+
+async function shouldRequireTeamReview(params: {
+  studioId: string;
+  requested: boolean;
+  supabase: SupabaseLike;
+}) {
+  if (!params.requested) return false;
+  const plan = await resolveStudioPlan(params.studioId, params.supabase);
+  return hasFeature(plan, 'canonLockTeamReview');
+}
+
+async function createCanonLockReview(params: {
+  supabase: SupabaseLike;
+  studioId: string;
+  lockId: string;
+  proposedBy?: string | null;
+}) {
+  const { error } = await params.supabase
+    .from('canon_lock_reviews')
+    .insert({
+      canon_lock_id: params.lockId,
+      studio_id: params.studioId,
+      proposed_by: params.proposedBy || 'system',
+    });
+
+  if (error) {
+    logServerWarn('[canon/enforce] Team review row creation failed', error, {
+      studioId: params.studioId,
+      lockId: params.lockId,
+    });
+  }
+}
+
 export async function listCanonLocks(
   studioId: string,
   supabase: SupabaseLike = createServerClient()
 ): Promise<CanonLock[]> {
   const { data, error } = await supabase
     .from('canon_locks')
-    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, created_by, created_at, updated_at')
+    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, requires_team_review, created_by, created_at, updated_at')
     .eq('studio_id', studioId)
     .order('active', { ascending: false })
     .order('created_at', { ascending: false });
@@ -153,7 +202,7 @@ export async function listCanonViolations(
 ): Promise<CanonViolationRecord[]> {
   const { data, error } = await supabase
     .from('canon_violations')
-    .select('id, studio_id, lock_id, memory_id, session_id, npc_id, attempted_content, verdict, severity, created_at, canon_locks(statement, scope, severity)')
+    .select('id, studio_id, lock_id, memory_id, session_id, npc_id, attempted_content, verdict, severity, created_at, canon_locks(statement, scope, severity, requires_team_review)')
     .eq('studio_id', studioId)
     .order('created_at', { ascending: false })
     .limit(Math.min(Math.max(options.limit || 50, 1), 200));
@@ -171,10 +220,16 @@ export async function createCanonLock(
     regexFastpath?: string | null;
     severity: CanonSeverity;
     active?: boolean;
+    requiresTeamReview?: boolean;
     createdBy?: string | null;
   },
   supabase: SupabaseLike = createServerClient()
 ): Promise<CanonLock> {
+  const requiresTeamReview = await shouldRequireTeamReview({
+    studioId,
+    requested: input.requiresTeamReview === true,
+    supabase,
+  });
   const { data, error } = await supabase
     .from('canon_locks')
     .insert({
@@ -185,15 +240,25 @@ export async function createCanonLock(
       regex_fastpath: input.regexFastpath || null,
       severity: input.severity,
       active: input.active !== false,
+      requires_team_review: requiresTeamReview,
       created_by: input.createdBy || null,
     })
-    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, created_by, created_at, updated_at')
+    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, requires_team_review, created_by, created_at, updated_at')
     .single();
 
   if (error || !data) {
     throw new Error(`canon_lock_create_failed: ${error?.message || 'unknown'}`);
   }
-  return normalizeLock(data as Record<string, unknown>);
+  const lock = normalizeLock(data as Record<string, unknown>);
+  if (lock.requiresTeamReview) {
+    await createCanonLockReview({
+      supabase,
+      studioId,
+      lockId: lock.id,
+      proposedBy: input.createdBy || null,
+    });
+  }
+  return lock;
 }
 
 export async function updateCanonLock(
@@ -206,6 +271,8 @@ export async function updateCanonLock(
     regexFastpath: string | null;
     severity: CanonSeverity;
     active: boolean;
+    requiresTeamReview: boolean;
+    updatedBy: string | null;
   }>,
   supabase: SupabaseLike = createServerClient()
 ): Promise<CanonLock> {
@@ -216,19 +283,35 @@ export async function updateCanonLock(
   if ('regexFastpath' in input) patch.regex_fastpath = input.regexFastpath || null;
   if (input.severity) patch.severity = input.severity;
   if (input.active !== undefined) patch.active = input.active;
+  if (input.requiresTeamReview !== undefined) {
+    patch.requires_team_review = await shouldRequireTeamReview({
+      studioId,
+      requested: input.requiresTeamReview,
+      supabase,
+    });
+  }
 
   const { data, error } = await supabase
     .from('canon_locks')
     .update(patch)
     .eq('id', lockId)
     .eq('studio_id', studioId)
-    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, created_by, created_at, updated_at')
+    .select('id, studio_id, npc_id, scope, statement, regex_fastpath, severity, active, requires_team_review, created_by, created_at, updated_at')
     .maybeSingle();
 
   if (error || !data) {
     throw new Error(`canon_lock_update_failed: ${error?.message || 'not_found'}`);
   }
-  return normalizeLock(data as Record<string, unknown>);
+  const lock = normalizeLock(data as Record<string, unknown>);
+  if (input.requiresTeamReview === true && lock.requiresTeamReview) {
+    await createCanonLockReview({
+      supabase,
+      studioId,
+      lockId: lock.id,
+      proposedBy: input.updatedBy || lock.createdBy,
+    });
+  }
+  return lock;
 }
 
 export async function deactivateCanonLock(

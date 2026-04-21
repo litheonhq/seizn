@@ -21,7 +21,7 @@ import {
 } from "@/lib/tenant-policy";
 import { logServerError } from "@/lib/server/logger";
 
-function verifyInternalKey(request: NextRequest): boolean {
+export function verifyInternalKey(request: NextRequest): boolean {
   const configured = process.env.INTERNAL_API_KEY;
   if (!configured) {
     // Fail-closed in all environments; this endpoint is internal-only.
