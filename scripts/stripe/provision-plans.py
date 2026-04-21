@@ -161,7 +161,7 @@ def main() -> int:
         print()
 
     print("=" * 60)
-    print("Add these to .env.litheon AND Vercel env (prod + preview):")
+    print("Add these to .env.litheon AND Vercel Production env:")
     print("=" * 60)
     for key, value in env_block:
         print(f"{key}={value}")

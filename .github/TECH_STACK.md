@@ -59,7 +59,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
 | Deterministic Replay | AsyncLocalStorage + PostgreSQL snapshots | -- | `/api/v1/replay` captures and replays memory reads/writes, tool calls, and LLM metadata for reproducible NPC-memory debugging. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
-| Payments | Stripe Billing | -- | 5-tier subscriptions plus Stage 01 metered overage. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`, which reports `seizn_memories_overage` and `seizn_ops_overage` meter events for Studio/Pro overages. |
+| Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Scene Context | Supabase + v1 scene API | -- | `scenes` stores bounded NPC/faction/location context; `/api/v1/memories` can apply scene-aware recall boosts via `scene_id` or `entity_ids`. |
 | Gossip Propagation | Supabase + deterministic distortion | -- | `gossip_events` records fact drift between entities; `/api/v1/gossip/propagate` supports word, entity, combined, and custom distortion metadata. |
@@ -357,7 +357,7 @@ User Request
 | OpenAI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts`, `src/app/api/gateway/embed/` | Gateway multi-provider |
 | Google AI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts` | Gateway multi-provider |
 | Vercel AI SDK | Fully Implemented | `src/lib/integrations/vercel-ai/` (3 files) | Memory provider + middleware |
-| Stripe Payments | Partially Implemented | `src/lib/stripe-config.ts`, `src/lib/stripe-metered.ts`, `src/app/api/webhooks/stripe/route.ts`, `src/app/api/internal/usage/flush/route.ts`, `scripts/stripe/` | Active subscription mapping plus metered overage reporting for Studio/Pro. |
+| Stripe Payments | Partially Implemented | `src/lib/stripe-config.ts`, `src/lib/stripe-metered.ts`, `src/lib/stripe-checkout.ts`, `src/app/api/webhooks/stripe/route.ts`, `src/app/api/internal/usage/flush/route.ts`, `src/app/api/billing/checkout/route.ts`, `scripts/stripe/` | Active subscription mapping, metered overage reporting for Studio/Pro, and approved Design Partner coupon application for Studio monthly checkout. |
 | Resend Email | Fully Implemented | `src/lib/email/index.ts` | Single email service module |
 | Document Ingestion (DOCX) | Fully Implemented | `src/lib/summer/ingest/parsers/docx.ts` | Via mammoth |
 | Octokit GitHub Integration | Fully Implemented | `src/lib/auto-pr/github-client.ts`, `src/lib/autopilot/code-fixer.ts` | Auto-PR and autopilot |
