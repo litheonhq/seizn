@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro版",
-      "price": "$99",
-      "period": "每月",
+      "price": "$999",
+      "period": "per month",
       "badge": "熱門",
       "features": [
-        "1,000,000條記憶",
-        "每月100,000次API調用",
-        "優先支援",
-        "進階分析",
-        "Webhooks",
-        "聯合搜索"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "訂閱"
+      "cta": "訂閱",
+      "annual": "$8,991/年",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "99.9% 正常運行 SLA",
+      "sso": "包含 SSO",
+      "postMortemCredits": "每季 2 份 post-mortem 報告",
+      "chaosMonkeyPriority": "Chaos Monkey 優先佇列",
+      "canonLockReview": "Canon Lock 團隊審核",
+      "dedicatedSlack": "專屬 Slack 頻道"
     },
     "enterprise": {
       "name": "企業版",
       "price": "客製",
       "period": "聯絡我們",
       "features": [
-        "無限記憶",
-        "無限API調用",
-        "專屬支援",
-        "SSO / SAML",
-        "客製SLA",
-        "本地部署選項"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "聯絡銷售"
+      "cta": "聯絡銷售",
+      "sso": "包含 SSO",
+      "customSla": "自訂 SLA > 99.9%",
+      "dedicatedEngineer": "專屬支援工程師",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "自訂 BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M 記憶",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/月"
     }
   },
   "enterprisePage": {

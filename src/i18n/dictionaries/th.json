@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "ต่อเดือน",
+      "price": "$999",
+      "period": "per month",
       "badge": "ยอดนิยม",
       "features": [
-        "1,000,000 ความทรงจำ",
-        "100,000 การเรียก API/เดือน",
-        "การสนับสนุนลำดับความสำคัญ",
-        "การวิเคราะห์ขั้นสูง",
-        "Webhooks",
-        "การค้นหาแบบรวม"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "สมัครสมาชิก"
+      "cta": "สมัครสมาชิก",
+      "annual": "$8,991/ปี",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA uptime 99.9%",
+      "sso": "รวม SSO",
+      "postMortemCredits": "รายงาน post-mortem 2 ฉบับ/ไตรมาส",
+      "chaosMonkeyPriority": "คิว Chaos Monkey แบบ priority",
+      "canonLockReview": "รีวิวทีมสำหรับ Canon Lock",
+      "dedicatedSlack": "ช่อง Slack เฉพาะ"
     },
     "enterprise": {
       "name": "องค์กร",
       "price": "กำหนดเอง",
       "period": "ติดต่อเรา",
       "features": [
-        "ความทรงจำไม่จำกัด",
-        "การเรียก API ไม่จำกัด",
-        "การสนับสนุนเฉพาะ",
-        "SSO / SAML",
-        "SLA แบบกำหนดเอง",
-        "ตัวเลือก On-premise"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "ติดต่อฝ่ายขาย"
+      "cta": "ติดต่อฝ่ายขาย",
+      "sso": "รวม SSO",
+      "customSla": "Custom SLA > 99.9%",
+      "dedicatedEngineer": "วิศวกรซัพพอร์ตเฉพาะ",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "Custom BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M memories",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/เดือน"
     }
   },
   "enterprisePage": {
