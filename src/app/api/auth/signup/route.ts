@@ -73,12 +73,19 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const { email, password, name, turnstileToken } = body as {
+    const { email, password, name, turnstileToken, signupTemplate, signupSource } = body as {
       email?: string;
       password?: string;
       name?: string;
       turnstileToken?: string;
+      signupTemplate?: string | null;
+      signupSource?: string | null;
     };
+    const normalizedSignupTemplate = signupTemplate === 'archivist-vale' ? signupTemplate : null;
+    const normalizedSignupSource =
+      typeof signupSource === 'string' && /^[a-zA-Z0-9_-]{1,40}$/.test(signupSource)
+        ? signupSource
+        : 'signup';
 
     // Validate input
     if (!email || !password) {
@@ -136,6 +143,12 @@ export async function POST(request: NextRequest) {
       email_confirm: true, // Auto-confirm email
       user_metadata: {
         full_name: name,
+        ...(normalizedSignupTemplate
+          ? {
+              signup_template: normalizedSignupTemplate,
+              npc_id: 'archivist_vale',
+            }
+          : {}),
       },
     });
 
@@ -180,6 +193,15 @@ export async function POST(request: NextRequest) {
     // Generate instant API key (mem0-style UX)
     const { key, hash, prefix } = generateApiKey();
 
+    const apiKeyMetadata: Record<string, unknown> = {
+      source: normalizedSignupSource,
+    };
+    if (normalizedSignupTemplate) {
+      apiKeyMetadata.signup_template = normalizedSignupTemplate;
+      apiKeyMetadata.npc_id = 'archivist_vale';
+      apiKeyMetadata.namespace = 'playground-archivist-vale';
+    }
+
     const { error: apiKeyInsertError } = await supabase.from('api_keys').insert(
       buildBasicApiKeyInsertPayload({
         userId: authData.user.id,
@@ -187,9 +209,7 @@ export async function POST(request: NextRequest) {
         hash,
         prefix,
         scopes: ['memory:read', 'memory:write'],
-        metadata: {
-          source: 'signup',
-        },
+        metadata: apiKeyMetadata,
       })
     );
     if (apiKeyInsertError) {

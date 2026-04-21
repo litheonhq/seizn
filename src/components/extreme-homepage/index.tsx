@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { Brain, GitFork, Send } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { analytics } from "@/lib/analytics";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -28,8 +29,6 @@ interface ExtremeHomepageClientProps {
   messages: Dictionary["extremeHome"];
   locale: Locale;
 }
-
-const SMALLGOD_PLAY_URL = "https://smallgod.app/play?seed=404";
 
 const DEFAULT_CONFIG: RequestConfig = {
   query: "How does the NPC remember our past encounter?",
@@ -70,6 +69,88 @@ function MemoryTicker() {
         ))}
       </div>
     </div>
+  );
+}
+
+function CompactPlaygroundPreview({ locale }: { locale: Locale }) {
+  return (
+    <section className="border-t border-szn-border-subtle bg-szn-surface-1 px-6 py-20 sm:px-8">
+      <div className="mx-auto grid max-w-[1100px] gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+        <div>
+          <div className="szn-section-number mb-6">03 / LIVE PLAYGROUND</div>
+          <h2 className="szn-serif text-[clamp(32px,4vw,54px)] leading-[1.05] text-szn-text-1">
+            Watch an NPC form memory in one turn.
+          </h2>
+          <p className="mt-5 max-w-[48ch] text-[15px] leading-[1.6] text-szn-text-2">
+            Archivist Vale runs through the same public memory route, rate limits, canon locks, and usage ledger your own NPCs use.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href={`/${locale}/playground`}
+              onClick={() => analytics.featureUsed("extreme_home_playground_preview_clicked", { target: "playground" })}
+              className="szn-btn-signal"
+            >
+              Open playground
+              <Send className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/signup?plan=free&template=archivist-vale&npc=archivist_vale&source=homepage"
+              onClick={() => analytics.featureUsed("extreme_home_playground_fork_clicked", { target: "signup" })}
+              className="szn-btn-ghost"
+            >
+              Fork Vale
+              <GitFork className="h-4 w-4 opacity-70" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid gap-3 rounded-lg border border-szn-border-subtle bg-szn-bg p-4 shadow-2xl shadow-black/20 sm:grid-cols-[1fr_0.82fr]">
+          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-signal">
+                  Archivist Vale
+                </p>
+                <p className="mt-1 text-sm text-szn-text-2">Drowned archive scene</p>
+              </div>
+              <span className="rounded-sm bg-szn-signal/10 px-2 py-1 font-mono text-[11px] text-szn-signal">
+                live
+              </span>
+            </div>
+            <div className="space-y-3">
+              <div className="ml-auto max-w-[82%] rounded-md bg-szn-signal px-3 py-2 text-sm text-szn-signal-fg">
+                Last time you promised to hide a brass key for me.
+              </div>
+              <div className="max-w-[88%] rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm leading-6 text-szn-text-1">
+                I will index that promise and check it against the locks before I hand you a door.
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-szn-text-1">
+              <Brain className="h-4 w-4 text-szn-signal" aria-hidden="true" />
+              Memory formed
+            </div>
+            <div className="rounded-md border border-white/10 bg-black/20 p-3">
+              <span className="rounded-sm bg-szn-signal/10 px-2 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-szn-signal">
+                experience
+              </span>
+              <p className="mt-3 text-sm leading-6 text-szn-text-1">
+                Visitor scene memory: Last time Vale promised to hide a brass key.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {["playground", "keys", "promise"].map((tag) => (
+                  <span key={tag} className="rounded-sm border border-white/10 px-2 py-1 text-[11px] text-szn-text-3">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -329,18 +410,14 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
-                <a
-                  href={SMALLGOD_PLAY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "smallgod" })}
+                <Link
+                  href={`/${locale}/playground`}
+                  onClick={() => analytics.featureUsed("extreme_home_demo_cta_clicked", { target: "playground" })}
                   className="szn-btn-ghost"
                 >
                   {t.ctaDemo || "Play the demo"}
-                  <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
+                  <Send className="h-4 w-4 opacity-70" aria-hidden="true" />
+                </Link>
               </div>
 
               {/* Social proof line */}
@@ -360,11 +437,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         {/* Live memory ticker */}
         <MemoryTicker />
 
+        <CompactPlaygroundPreview locale={locale} />
+
         {/* Integration / code snippet */}
         <section className="py-24 px-6 sm:px-8 border-t border-szn-border-subtle">
           <div className="max-w-[1100px] mx-auto">
             <div className="mb-12 max-w-2xl">
-              <div className="szn-section-number mb-6">03 / INTEGRATION</div>
+              <div className="szn-section-number mb-6">04 / INTEGRATION</div>
               <h2 className="szn-serif text-[clamp(32px,4.2vw,56px)] text-szn-text-1 leading-[1.05] mb-5">
                 {t.copySnippetTitle || "Drop into Unity, Unreal, or any runtime."}
               </h2>
