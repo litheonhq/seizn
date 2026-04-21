@@ -363,8 +363,8 @@ const COPY_KO: Copy = {
     },
     {
       name: "Enterprise",
-      price: "월 $2,500부터",
-      priceSub: " + 사용량",
+      price: "$2,500+",
+      priceSub: "/월부터",
       cadence: "퍼블리셔 범위",
       scope: "셀프호스트 또는 프라이빗 클라우드",
       summary:

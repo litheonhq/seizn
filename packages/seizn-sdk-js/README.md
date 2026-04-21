@@ -1,9 +1,13 @@
-# @seizn/sdk
+# @seizn/sdk-js
 
 Generated TypeScript SDK for the Seizn OpenAPI contract.
 
+```bash
+npm install @seizn/sdk-js
+```
+
 ```ts
-import { SeiznClient } from "@seizn/sdk";
+import { SeiznClient } from "@seizn/sdk-js";
 
 const seizn = new SeiznClient({ apiKey: process.env.SEIZN_API_KEY! });
 
