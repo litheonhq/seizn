@@ -73,6 +73,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Live Playground | Next.js public page + Redis/Supabase-backed chat route | -- | `/[locale]/playground` exposes Archivist Vale, `/api/playground/chat` enforces `PLAYGROUND_ENABLED=1`, 10-turn/15-minute session limits, a 10K/day public cap, optional Anthropic generation, demo memory persistence, and Stage 01 metered usage events for the demo studio. |
 | Public Benchmark Leaderboard | Python runner + Supabase REST publication | -- | `/[locale]/bench` compares Seizn, Mem0, Zep, and LangChain Memory across six NPC-memory tasks; `scripts/bench/run.py` emits JSON/CSV artifacts, publishes completed runs to `bench_runs`/`bench_results`, and `.github/workflows/weekly-bench.yml` refreshes the leaderboard weekly. |
 | Competitor Import Tool | Next.js dashboard wizard + Supabase job ledger | -- | `/dashboard/import` previews and commits Inworld, Convai, and Rivet exports; `/api/import/preview` normalizes uploads into `import_jobs`, `/api/import/commit` writes memories/canon locks/belief shards, and rollback soft-reverses inserted rows. |
+| Unity SDK | Unity 2022.3 LTS + UnityWebRequest | 0.1.0 | `packages/seizn-unity` ships the `com.seizn.unity` UPM package with memory, canon, and replay APIs, editor settings stored at `ProjectSettings/Seizn.asset`, coroutine alternatives, and a Basic NPC sample. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
@@ -229,7 +230,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Monorepo Structure
 - `sdks/javascript/` -- JavaScript SDK
-- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-mcp, seizn-python, spring-sdk, summer-sdk, vercel-ai)
+- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-mcp, seizn-python, seizn-unity, spring-sdk, summer-sdk, vercel-ai)
 - `mcp-server/` -- Model Context Protocol server
 - `relay-agent/` -- Agent relay service (separate Dockerfile)
 - `cli/` -- CLI tooling
@@ -401,6 +402,7 @@ User Request
 | Live Playground | Fully Implemented | `src/lib/playground/demo-npc.ts`, `src/app/[locale]/playground/`, `src/app/api/playground/chat/route.ts`, `src/components/extreme-homepage/index.tsx` | Public Archivist Vale demo with example prompts, live memory stream, friendly 429 countdowns, demo account persistence, root homepage embed, and free-tier signup template handoff. |
 | Public Benchmark Leaderboard | Fully Implemented | `scripts/bench/run.py`, `src/lib/bench/leaderboard.ts`, `src/app/[locale]/bench/`, `.github/workflows/weekly-bench.yml`, `supabase/migrations/20260421019_bench.sql` | Weekly public comparison of Seizn, Mem0, Zep, and LangChain Memory across six standard NPC-memory tasks, with CSV download, methodology page, Supabase publication tables, and deterministic fallback data. |
 | Competitor Import Tool | Fully Implemented | `src/lib/import/`, `src/app/(dashboard)/dashboard/import/`, `src/app/api/import/preview/route.ts`, `src/app/api/import/commit/route.ts`, `supabase/migrations/20260421020_import_jobs.sql`, `docs/import-mapping.md`, `fixtures/import/inworld-200-knowledge.json` | Inworld knowledge/goals map to memories/canon locks, Convai backstory/tagline maps to memories/always_say canon, Rivet graph nodes map to belief shards via backing memories, and each committed job can be rolled back. |
+| Unity SDK | Source Implemented | `packages/seizn-unity/`, `docs/unity-quickstart.md`, `src/app/[locale]/docs/unity-quickstart/page.tsx` | Source package for Unity 2022.3 LTS with `SeiznClient`, memory create/search, canon checks, replay fetches, coroutine alternatives, editor settings, and Basic NPC sample assets. `.unitypackage` export and Asset Store submission remain manual. |
 | Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
