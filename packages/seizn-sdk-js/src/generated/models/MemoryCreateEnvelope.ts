@@ -13,3 +13,4 @@ export type MemoryCreateEnvelope = {
     };
     meta?: ResponseMeta;
 };
+

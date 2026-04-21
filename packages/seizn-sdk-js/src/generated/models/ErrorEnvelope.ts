@@ -11,3 +11,4 @@ export type ErrorEnvelope = {
     };
     meta?: ResponseMeta;
 };
+

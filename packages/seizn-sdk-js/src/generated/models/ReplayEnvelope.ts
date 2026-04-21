@@ -8,3 +8,4 @@ export type ReplayEnvelope = {
         snapshot: Record<string, any>;
     };
 };
+

@@ -9,3 +9,4 @@ export type CanonCheckRequest = {
     proposedContent?: string;
     content?: string;
 };
+

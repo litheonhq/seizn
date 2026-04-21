@@ -12,3 +12,4 @@ export type MemoryListEnvelope = {
     };
     meta?: ResponseMeta;
 };
+

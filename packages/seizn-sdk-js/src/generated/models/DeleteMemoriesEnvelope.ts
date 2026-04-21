@@ -11,3 +11,4 @@ export type DeleteMemoriesEnvelope = {
     };
     meta?: ResponseMeta;
 };
+
