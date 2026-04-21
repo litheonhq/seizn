@@ -66,6 +66,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Canon Lock | PostgreSQL RLS + Claude Haiku validator | -- | `canon_locks` define hard/soft NPC/world facts; memory writes call `src/lib/canon/enforce.ts` before storage and log `canon_violations`. |
 | Seizn CLI | @seizn/cli + commander | 0.1.0 | Workspace package in `cli/seizn` provides `init`, `login`, `replay`, `export`, `audit`, `bench`, and `canon list/pull/push`; credentials are stored at `~/.config/seizn/credentials.json` with `0600` permissions. |
 | MCP Server | @modelcontextprotocol/sdk | ^1.25.2 | `packages/seizn-mcp` publishes `@seizn/mcp` stdio tooling for Claude Desktop, Claude Code, Cursor, and Codex; tools cover memory search/create, canon list/check, replay fetch, chaos run, and Story Health current snapshots. |
+| OpenAPI + TypeScript SDK | OpenAPI 3.1 + openapi-typescript-codegen | 0.1.0 | `/api/openapi.json` serves `openapi/seizn-openapi.json`; `packages/seizn-sdk-js` publishes `@seizn/sdk` with generated fetch clients plus ergonomic memory, canon, and replay helpers, and `.github/workflows/sdk-release.yml` regenerates/builds/publishes on main API schema changes. |
 | Save-File Portability | SZN1 + Ed25519 + AES-256-GCM | -- | `/api/save-file/export/[npcId]` and `/api/save-file/import` move signed `.szs` bundles containing memories, belief shards, and canon locks; per-studio private signing keys are encrypted in `studio_signing_keys` with `SEIZN_SIGNING_MASTER_KEY`, and CLI round-trip is available via `seizn save export/import`. |
 | NPC Chaos Monkey | Claude Sonnet + worker queue | -- | `chaos_runs` and `chaos_findings` store adversarial NPC simulations; `/api/chaos/runs` queues runs, `/api/internal/chaos/worker` processes queued prompts, records ops usage, and surfaces grouped failures in `/dashboard/chaos`. |
 | Story Health | Recharts + Claude Haiku evaluator | -- | `story_health_snapshots` stores daily per-act narrative metrics from replay, canon, chaos, and bug-report signals; `/api/internal/story-health/evaluate` runs at 06:00 UTC and `/dashboard/story-health` drills metrics into filtered Replay sessions. |
@@ -125,6 +126,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Claude Auto-fix | `auto-fix.yml` | -- |
 | Issue to Code | `issue-to-code.yml` | -- |
 | Seizn Autopilot | `seizn-autopilot.yml` | -- |
+| SDK Release | `sdk-release.yml` | Pushes to `main` that change OpenAPI or `packages/seizn-sdk-js`; regenerates the JS SDK, builds it, commits generated drift, and publishes when `NPM_TOKEN` is configured |
 | SDK Codegen | `sdk-codegen.yml` | -- |
 | SDK Test | `sdk-test.yml` | -- |
 | Publish JS SDK | `publish-js-sdk.yml` | -- |
@@ -198,6 +200,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `resend` | ^6.7.0 | Transactional email delivery |
 | `lucide-react` | ^0.563.0 | Icon library |
 | `commander` | ^12.1.0 | `@seizn/cli` command parser |
+| `openapi-typescript-codegen` | ^0.29.0 | `@seizn/sdk` generated fetch client source |
 | `yaml` | ^2.8.3 | Canon Lock YAML pull/push format |
 | `tailwind-merge` | ^3.4.0 | Tailwind CSS class conflict resolution |
 | `swr` | ^2.4.0 | Client-side data fetching with caching |
@@ -230,7 +233,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Monorepo Structure
 - `sdks/javascript/` -- JavaScript SDK
-- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-mcp, seizn-python, seizn-unity, spring-sdk, summer-sdk, vercel-ai)
+- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-mcp, seizn-python, seizn-sdk-js, seizn-unity, spring-sdk, summer-sdk, vercel-ai)
 - `mcp-server/` -- Model Context Protocol server
 - `relay-agent/` -- Agent relay service (separate Dockerfile)
 - `cli/` -- CLI tooling
@@ -403,6 +406,7 @@ User Request
 | Public Benchmark Leaderboard | Fully Implemented | `scripts/bench/run.py`, `src/lib/bench/leaderboard.ts`, `src/app/[locale]/bench/`, `.github/workflows/weekly-bench.yml`, `supabase/migrations/20260421019_bench.sql` | Weekly public comparison of Seizn, Mem0, Zep, and LangChain Memory across six standard NPC-memory tasks, with CSV download, methodology page, Supabase publication tables, and deterministic fallback data. |
 | Competitor Import Tool | Fully Implemented | `src/lib/import/`, `src/app/(dashboard)/dashboard/import/`, `src/app/api/import/preview/route.ts`, `src/app/api/import/commit/route.ts`, `supabase/migrations/20260421020_import_jobs.sql`, `docs/import-mapping.md`, `fixtures/import/inworld-200-knowledge.json` | Inworld knowledge/goals map to memories/canon locks, Convai backstory/tagline maps to memories/always_say canon, Rivet graph nodes map to belief shards via backing memories, and each committed job can be rolled back. |
 | Unity SDK | Source Implemented | `packages/seizn-unity/`, `docs/unity-quickstart.md`, `src/app/[locale]/docs/unity-quickstart/page.tsx` | Source package for Unity 2022.3 LTS with `SeiznClient`, memory create/search, canon checks, replay fetches, coroutine alternatives, editor settings, and Basic NPC sample assets. `.unitypackage` export and Asset Store submission remain manual. |
+| OpenAPI + TypeScript SDK | Fully Implemented | `openapi/seizn-openapi.json`, `src/app/api/openapi.json/route.ts`, `src/lib/openapi/spec.ts`, `packages/seizn-sdk-js/`, `.github/workflows/sdk-release.yml` | Serves a valid OpenAPI 3.1 document, generates the `@seizn/sdk` fetch client from the schema, exposes typed helper wrappers for memory/canon/replay APIs, and automates regeneration/build/publish on main schema changes. |
 | Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
 | Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
