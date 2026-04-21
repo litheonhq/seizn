@@ -2,17 +2,19 @@
 
 Seizn MCP server for Claude Code, Claude Desktop, Cursor, and Codex. It exposes NPC memory, Canon Lock, replay, chaos, and Story Health tools over stdio.
 
+Current beta: `0.9.0-beta.1`
+
 ## Install
 
 ```bash
-npx -y @seizn/mcp
+npx -y @seizn/mcp@beta
 ```
 
 Set `SEIZN_API_KEY` in the process environment before starting the server. The server reads `SEIZN_API_KEY` and optional `SEIZN_API_URL` from environment variables only; it never accepts API keys through command arguments or tool arguments.
 
 ```bash
 export SEIZN_API_KEY=szn_live_xxx
-npx -y @seizn/mcp
+npx -y @seizn/mcp@beta
 ```
 
 ## Tools
@@ -32,7 +34,7 @@ npx -y @seizn/mcp
   "mcpServers": {
     "seizn": {
       "command": "npx",
-      "args": ["-y", "@seizn/mcp"],
+      "args": ["-y", "@seizn/mcp@beta"],
       "env": {
         "SEIZN_API_KEY": "szn_live_xxx"
       }
@@ -45,7 +47,7 @@ npx -y @seizn/mcp
 
 ```bash
 export SEIZN_API_KEY=szn_live_xxx
-claude mcp add seizn -- npx -y @seizn/mcp
+claude mcp add seizn -- npx -y @seizn/mcp@beta
 ```
 
 ## Cursor
@@ -55,7 +57,7 @@ claude mcp add seizn -- npx -y @seizn/mcp
   "mcpServers": {
     "seizn": {
       "command": "npx",
-      "args": ["-y", "@seizn/mcp"],
+      "args": ["-y", "@seizn/mcp@beta"],
       "env": {
         "SEIZN_API_KEY": "szn_live_xxx"
       }
@@ -69,7 +71,7 @@ claude mcp add seizn -- npx -y @seizn/mcp
 ```toml
 [mcp_servers.seizn]
 command = "npx"
-args = ["-y", "@seizn/mcp"]
+args = ["-y", "@seizn/mcp@beta"]
 
 [mcp_servers.seizn.env]
 SEIZN_API_KEY = "szn_live_xxx"

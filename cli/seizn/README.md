@@ -2,16 +2,18 @@
 
 Command-line tools for Seizn replay, export, audit, benchmark, and Canon Lock workflows.
 
+Current beta: `0.9.0-beta.1`
+
 ## Install
 
 ```bash
-npm install -g @seizn/cli
+npm install -g @seizn/cli@beta
 ```
 
 Run without installing:
 
 ```bash
-npx @seizn/cli --version
+npx @seizn/cli@beta --version
 ```
 
 ## Login
