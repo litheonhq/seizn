@@ -2,8 +2,10 @@
 
 Generated TypeScript SDK for the Seizn OpenAPI contract.
 
+Current beta: `0.9.0-beta.1`
+
 ```bash
-npm install @seizn/sdk-js
+npm install @seizn/sdk-js@beta
 ```
 
 ```ts

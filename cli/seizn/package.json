@@ -1,6 +1,6 @@
 {
   "name": "@seizn/cli",
-  "version": "0.1.0",
+  "version": "0.9.0-beta.1",
   "description": "Seizn Memory Platform CLI",
   "type": "module",
   "bin": {
