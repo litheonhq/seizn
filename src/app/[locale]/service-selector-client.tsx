@@ -220,6 +220,8 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
           <nav className="flex items-center gap-6">
             <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.privacy}</a>
             <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.terms}</a>
+            <a href={`/${locale}/sla`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.sla}</a>
+            <a href={`/${locale}/status`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.status}</a>
             <a href="mailto:support@seizn.com" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.contact}</a>
           </nav>
         </div>
