@@ -1,0 +1,27 @@
+{
+  "name": "com.seizn.unity",
+  "version": "0.1.0",
+  "displayName": "Seizn Unity SDK",
+  "description": "Unity 2022.3 LTS client for Seizn NPC memory, canon checks, and replay fetches.",
+  "unity": "2022.3",
+  "documentationUrl": "https://www.seizn.com/docs/unity-quickstart",
+  "changelogUrl": "https://github.com/litheonhq/seizn/releases",
+  "licensesUrl": "https://github.com/litheonhq/seizn/blob/main/LICENSE",
+  "keywords": [
+    "ai",
+    "memory",
+    "npc",
+    "seizn"
+  ],
+  "author": {
+    "name": "Litheon",
+    "url": "https://www.seizn.com"
+  },
+  "samples": [
+    {
+      "displayName": "Basic NPC Memory",
+      "description": "Minimal scene and MonoBehaviour showing memory create/search, canon check, and replay fetch calls.",
+      "path": "Samples~/BasicNpc"
+    }
+  ]
+}
