@@ -65,6 +65,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Replay Bug Reports | Supabase Storage + bug tracker APIs | -- | Signed replay bundles upload to private `replays` storage and can append a Seizn Replay block to Linear, GitHub, or Jira tickets via `/api/webhooks/bug-tracker/[provider]`. |
 | Canon Lock | PostgreSQL RLS + Claude Haiku validator | -- | `canon_locks` define hard/soft NPC/world facts; memory writes call `src/lib/canon/enforce.ts` before storage and log `canon_violations`. |
 | Seizn CLI | @seizn/cli + commander | 0.1.0 | Workspace package in `cli/seizn` provides `init`, `login`, `replay`, `export`, `audit`, `bench`, and `canon list/pull/push`; credentials are stored at `~/.config/seizn/credentials.json` with `0600` permissions. |
+| MCP Server | @modelcontextprotocol/sdk | ^1.25.2 | `packages/seizn-mcp` publishes `@seizn/mcp` stdio tooling for Claude Desktop, Claude Code, Cursor, and Codex; tools cover memory search/create, canon list/check, replay fetch, chaos run, and Story Health current snapshots. |
 | Save-File Portability | SZN1 + Ed25519 + AES-256-GCM | -- | `/api/save-file/export/[npcId]` and `/api/save-file/import` move signed `.szs` bundles containing memories, belief shards, and canon locks; per-studio private signing keys are encrypted in `studio_signing_keys` with `SEIZN_SIGNING_MASTER_KEY`, and CLI round-trip is available via `seizn save export/import`. |
 | NPC Chaos Monkey | Claude Sonnet + worker queue | -- | `chaos_runs` and `chaos_findings` store adversarial NPC simulations; `/api/chaos/runs` queues runs, `/api/internal/chaos/worker` processes queued prompts, records ops usage, and surfaces grouped failures in `/dashboard/chaos`. |
 | Story Health | Recharts + Claude Haiku evaluator | -- | `story_health_snapshots` stores daily per-act narrative metrics from replay, canon, chaos, and bug-report signals; `/api/internal/story-health/evaluate` runs at 06:00 UTC and `/dashboard/story-health` drills metrics into filtered Replay sessions. |
@@ -225,7 +226,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Monorepo Structure
 - `sdks/javascript/` -- JavaScript SDK
-- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-python, spring-sdk, summer-sdk, vercel-ai)
+- `packages/` -- Shared packages (create-seizn-app, langchain, sdk-core, seizn-mcp, seizn-python, spring-sdk, summer-sdk, vercel-ai)
 - `mcp-server/` -- Model Context Protocol server
 - `relay-agent/` -- Agent relay service (separate Dockerfile)
 - `cli/` -- CLI tooling
