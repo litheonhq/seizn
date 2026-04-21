@@ -357,6 +357,7 @@
     "nav": {
       "overview": "Visão Geral",
       "memories": "Entidades",
+      "memoryEditor": "Editor de memórias",
       "mindMap": "Grafo de relações",
       "candidates": "Caixa de entrada de eventos",
       "devTools": "DevTools",

@@ -288,6 +288,7 @@
     "nav": {
       "overview": "अवलोकन",
       "memories": "Entities",
+      "memoryEditor": "मेमोरी एडिटर",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
       "devTools": "Dev tools",
