@@ -205,7 +205,9 @@
     "copyright": "© {year} Litheon LLC. सर्वाधिकार सुरक्षित।",
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
-    "contact": "संपर्क"
+    "contact": "संपर्क",
+    "sla": "SLA",
+    "status": "Status"
   },
   "dashboard": {
     "title": "डैशबोर्ड",
@@ -3026,8 +3028,25 @@
     }
   },
   "status": {
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
     "title": "सिस्टम स्थिति",
     "subtitle": "रीयल-टाइम सिस्टम स्थिति और घटना इतिहास",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
+    },
     "lastUpdated": "अंतिम अपडेट",
     "overall": {
       "operational": "सभी सिस्टम सक्रिय",
@@ -3076,5 +3095,44 @@
       "rss": "RSS फ़ीड",
       "email": "ईमेल सूचनाएं"
     }
+  },
+  "sla": {
+    "metadataTitle": "Seizn Service Level Agreement",
+    "metadataDescription": "Public SLA for Seizn Pro and Enterprise customers.",
+    "eyebrow": "SLA",
+    "title": "Seizn Service Level Agreement",
+    "subtitle": "The public availability commitment for teams running Seizn Pro or Enterprise in production.",
+    "scopeTitle": "Scope",
+    "scopeBody": "This SLA applies to Pro ($999/mo) and Enterprise plans only. Free, Indie, and Studio plans are not covered by service credits.",
+    "uptimeTitle": "Uptime commitment",
+    "uptimeBody": "Seizn commits to 99.9% monthly availability, excluding scheduled maintenance announced at least 72 hours in advance.",
+    "measurementTitle": "Measurement",
+    "measurementBody": "Availability is measured on api.seizn.com/v1/* endpoints by an external ping every 60 seconds.",
+    "creditsTitle": "Service credits",
+    "credits": [
+      {
+        "threshold": "< 99.9%",
+        "description": "10% of the monthly fee credited."
+      },
+      {
+        "threshold": "< 99.0%",
+        "description": "25% of the monthly fee credited."
+      },
+      {
+        "threshold": "< 95.0%",
+        "description": "50% of the monthly fee credited."
+      }
+    ],
+    "exclusionsTitle": "Exclusions",
+    "exclusions": [
+      "Customer misconfiguration or client-side integration errors.",
+      "Third-party dependency outages, including Stripe and upstream Supabase incidents.",
+      "Scheduled maintenance announced at least 72 hours in advance."
+    ],
+    "claimTitle": "How to claim",
+    "claimBody": "Email within 30 days of the incident with the affected workspace, time window, and impact summary:",
+    "incidentsTitle": "Incident reporting",
+    "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
+    "statusLink": "View status"
   }
 }

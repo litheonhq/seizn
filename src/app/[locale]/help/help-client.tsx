@@ -474,8 +474,16 @@ export function HelpClient({ locale }: { locale: Locale }) {
       </main>
 
       <footer className="border-t border-white/10 py-8">
-        <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-400">
-          {new Date().getFullYear()} Seizn
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-slate-400 md:flex-row">
+          <div>{new Date().getFullYear()} Seizn</div>
+          <nav className="flex flex-wrap items-center justify-center gap-5" aria-label="Footer navigation">
+            <Link href={`/${locale}/sla`} className="transition-colors hover:text-white">
+              SLA
+            </Link>
+            <Link href={`/${locale}/status`} className="transition-colors hover:text-white">
+              Status
+            </Link>
+          </nav>
         </div>
       </footer>
     </div>
