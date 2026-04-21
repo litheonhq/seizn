@@ -1,0 +1,40 @@
+{
+  "name": "@seizn/sdk",
+  "version": "0.1.0",
+  "description": "Generated TypeScript SDK for the Seizn OpenAPI contract",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc --noEmit -p tsconfig.json",
+    "generate": "openapi-typescript-codegen --input ../../openapi/seizn-openapi.json --output src/generated --client fetch --useOptions"
+  },
+  "keywords": [
+    "seizn",
+    "memory",
+    "openapi",
+    "sdk"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "openapi-typescript-codegen": "^0.29.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

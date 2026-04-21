@@ -1,0 +1,438 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Seizn API",
+    "version": "2026-04-21",
+    "summary": "NPC memory, canon, and replay APIs",
+    "description": "OpenAPI 3.1 contract for the public Seizn API surface used by the generated TypeScript SDK."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "https://www.seizn.com",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/memories": {
+      "get": {
+        "operationId": "searchMemories",
+        "summary": "Search or browse memories",
+        "tags": ["Memories"],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Optional search query. Omit to browse chronologically."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          {
+            "name": "namespace",
+            "in": "query",
+            "schema": { "type": "string", "default": "default" }
+          },
+          {
+            "name": "memory_type",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/MemoryType" }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Comma-separated tag filters."
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/MemoryScope" }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/SearchMode" }
+          },
+          {
+            "name": "threshold",
+            "in": "query",
+            "schema": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Memory search response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MemoryListEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "post": {
+        "operationId": "createMemory",
+        "summary": "Create a memory",
+        "tags": ["Memories"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AddMemoryRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created memory",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MemoryCreateEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMemories",
+        "summary": "Delete memories by id",
+        "tags": ["Memories"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeleteMemoriesRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteMemoriesEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/canon/check": {
+      "post": {
+        "operationId": "checkCanon",
+        "summary": "Check proposed NPC content against Canon Locks",
+        "tags": ["Canon"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CanonCheckRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Canon verdict",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CanonCheckEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/v1/replay/{traceId}": {
+      "get": {
+        "operationId": "fetchReplay",
+        "summary": "Fetch a deterministic replay snapshot",
+        "tags": ["Replay"],
+        "parameters": [
+          {
+            "name": "traceId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Replay snapshot",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReplayEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/openapi.json": {
+      "get": {
+        "operationId": "getOpenApiSpec",
+        "summary": "Fetch the OpenAPI 3.1 document",
+        "tags": ["Meta"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OpenAPI document",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Seizn API key in the Authorization header."
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Missing or invalid credentials",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorEnvelope" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorEnvelope" }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Request validation failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorEnvelope" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "MemoryType": {
+        "type": "string",
+        "enum": ["fact", "preference", "experience", "relationship", "instruction", "belief"]
+      },
+      "MemoryScope": {
+        "type": "string",
+        "enum": ["user", "session", "agent", "organization"]
+      },
+      "SearchMode": {
+        "type": "string",
+        "enum": ["auto", "vector", "keyword", "hybrid", "slot"]
+      },
+      "MemoryRecord": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": { "type": "string" },
+          "content": { "type": "string" },
+          "memory_type": { "$ref": "#/components/schemas/MemoryType" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "namespace": { "type": "string" },
+          "scope": { "$ref": "#/components/schemas/MemoryScope" },
+          "agent_id": { "type": ["string", "null"] },
+          "importance": { "type": "integer" },
+          "source": { "type": ["string", "null"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "content"]
+      },
+      "AddMemoryRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": { "type": "string" },
+          "encrypted_content": { "type": "string" },
+          "is_encrypted": { "type": "boolean", "default": false },
+          "memory_type": { "$ref": "#/components/schemas/MemoryType" },
+          "tags": { "type": "array", "items": { "type": "string" }, "maxItems": 50 },
+          "namespace": { "type": "string", "default": "default" },
+          "scope": { "$ref": "#/components/schemas/MemoryScope" },
+          "session_id": { "type": "string" },
+          "agent_id": { "type": "string" },
+          "entity_id": { "type": "string" },
+          "pinned": { "type": "boolean" },
+          "memory_class": { "type": "string" },
+          "half_life_hours": { "type": ["number", "null"] },
+          "source": { "type": "string" },
+          "companion_meta": { "type": ["object", "null"], "additionalProperties": true }
+        },
+        "anyOf": [
+          { "required": ["content"] },
+          { "required": ["encrypted_content", "is_encrypted"] }
+        ]
+      },
+      "MemoryCreateEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "memory": { "$ref": "#/components/schemas/MemoryRecord" },
+              "budget": { "type": "object", "additionalProperties": true },
+              "bridge": { "type": "object", "additionalProperties": true }
+            }
+          },
+          "meta": { "$ref": "#/components/schemas/ResponseMeta" }
+        },
+        "required": ["success", "data"]
+      },
+      "MemoryListEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "memories": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/MemoryRecord" }
+              },
+              "results": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/MemoryRecord" }
+              }
+            }
+          },
+          "meta": { "$ref": "#/components/schemas/ResponseMeta" }
+        },
+        "required": ["success", "data"]
+      },
+      "DeleteMemoriesRequest": {
+        "type": "object",
+        "properties": {
+          "ids": { "type": "array", "items": { "type": "string" } },
+          "namespace": { "type": "string" }
+        },
+        "required": ["ids"]
+      },
+      "DeleteMemoriesEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "deleted": { "type": "integer" },
+              "ids": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "meta": { "$ref": "#/components/schemas/ResponseMeta" }
+        },
+        "required": ["success"]
+      },
+      "CanonCheckRequest": {
+        "type": "object",
+        "properties": {
+          "npc_id": { "type": "string" },
+          "npcId": { "type": "string" },
+          "proposed_content": { "type": "string" },
+          "proposedContent": { "type": "string" },
+          "content": { "type": "string" }
+        },
+        "anyOf": [
+          { "required": ["proposed_content"] },
+          { "required": ["proposedContent"] },
+          { "required": ["content"] }
+        ]
+      },
+      "CanonCheckEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "ok": { "type": "boolean" },
+              "npcId": { "type": ["string", "null"] },
+              "locksChecked": { "type": "integer" },
+              "verdict": { "type": "object", "additionalProperties": true },
+              "violation": { "type": ["object", "null"], "additionalProperties": true }
+            },
+            "required": ["ok", "locksChecked"]
+          }
+        },
+        "required": ["success", "data"]
+      },
+      "ReplayEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "snapshot": { "type": "object", "additionalProperties": true }
+            },
+            "required": ["snapshot"]
+          }
+        },
+        "required": ["success", "data"]
+      },
+      "ResponseMeta": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "version": { "type": "string" },
+          "latencyMs": { "type": "number" }
+        }
+      },
+      "ErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "const": false },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" }
+            },
+            "required": ["code", "message"]
+          },
+          "meta": { "$ref": "#/components/schemas/ResponseMeta" }
+        },
+        "required": ["success", "error"]
+      }
+    }
+  }
+}
