@@ -31,7 +31,7 @@ WealthWise integrated Seizn's AI Memory system to create persistent client profi
 
 ```typescript
 // WealthWise AI Advisor with Seizn Memory
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({
   apiKey: process.env.SEIZN_API_KEY,
@@ -271,11 +271,11 @@ const complianceReport = await seizn.audit.generateReport({
 Ready to add memory to your wealth management AI?
 
 ```bash
-npm install @seizn/sdk
+npm install @seizn/sdk-js
 ```
 
 ```typescript
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({
   apiKey: 'your-api-key',

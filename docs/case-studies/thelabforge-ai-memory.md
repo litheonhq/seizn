@@ -31,7 +31,7 @@ TheLabForge integrated Seizn's AI Memory SDK into their platform, enabling persi
 
 ```typescript
 // TheLabForge's AI Assistant with Seizn Memory
-import { SeizLangChainMemory, createLangChainCallbackHandler } from '@seizn/sdk';
+import { SeizLangChainMemory, createLangChainCallbackHandler } from '@seizn/sdk-js';
 
 const memory = new SeizLangChainMemory({
   apiKey: process.env.SEIZN_API_KEY,
@@ -191,11 +191,11 @@ const teamContext = await seizn.memories.search({
 Ready to add memory to your AI applications?
 
 ```bash
-npm install @seizn/sdk
+npm install @seizn/sdk-js
 ```
 
 ```typescript
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({ apiKey: 'your-api-key' });
 
