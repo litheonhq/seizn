@@ -357,6 +357,7 @@
     "nav": {
       "overview": "概览",
       "memories": "记忆",
+      "memoryEditor": "记忆编辑器",
       "mindMap": "思维导图",
       "candidates": "候选",
       "devTools": "开发工具",

@@ -288,6 +288,7 @@
     "nav": {
       "overview": "Tổng quan",
       "memories": "Thực thể",
+      "memoryEditor": "Trình chỉnh sửa bộ nhớ",
       "mindMap": "Đồ thị quan hệ",
       "candidates": "Hộp thư sự kiện",
       "devTools": "Công cụ phát triển",

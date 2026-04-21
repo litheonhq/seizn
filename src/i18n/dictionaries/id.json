@@ -288,6 +288,7 @@
     "nav": {
       "overview": "Ikhtisar",
       "memories": "Entitas",
+      "memoryEditor": "Editor Memori",
       "mindMap": "Graf relasi",
       "candidates": "Kotak masuk event",
       "devTools": "DevTools",

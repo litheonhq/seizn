@@ -361,6 +361,7 @@
     "nav": {
       "overview": "概要",
       "memories": "メモリ",
+      "memoryEditor": "メモリーエディター",
       "mindMap": "マインドマップ",
       "candidates": "候補",
       "devTools": "開発ツール",

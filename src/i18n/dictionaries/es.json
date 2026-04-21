@@ -288,6 +288,7 @@
     "nav": {
       "overview": "Resumen",
       "memories": "Entidades",
+      "memoryEditor": "Editor de memoria",
       "mindMap": "Grafo de relaciones",
       "candidates": "Bandeja de eventos",
       "devTools": "DevTools",
