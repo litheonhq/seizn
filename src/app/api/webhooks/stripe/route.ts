@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as crypto from "crypto";
 import { createServerClient } from "@/lib/supabase";
 import { getPlanFromStripePriceId } from "@/lib/stripe-config";
+import { ensureMeteredPriceAttached } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
 // Stripe webhook event types we handle
@@ -209,6 +210,21 @@ async function logBillingEvent(
   }
 }
 
+async function attachMeteredOverageItems(subscriptionId: string, plan: string): Promise<void> {
+  try {
+    const result = await ensureMeteredPriceAttached(subscriptionId, plan);
+    if (result.attached.length > 0) {
+      console.log("Attached metered overage subscription items", {
+        subscription_id: subscriptionId,
+        plan,
+        attached_count: result.attached.length,
+      });
+    }
+  } catch (error) {
+    console.error("Failed to attach metered overage subscription items:", error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -368,6 +384,7 @@ export async function POST(request: NextRequest) {
             }, "failed", error.message);
           } else {
             console.log(`Subscription created for user ${user.id}: ${plan} plan`);
+            await attachMeteredOverageItems(subscriptionId, plan);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               plan,
@@ -445,6 +462,9 @@ export async function POST(request: NextRequest) {
           }, "failed", error.message);
         } else {
           console.log(`Subscription updated for user ${user.id}`);
+          if (typeof updates.plan === "string") {
+            await attachMeteredOverageItems(subscriptionId, updates.plan);
+          }
           await logBillingEvent(supabase, user.id, "subscription_updated", {
             subscription_id: subscriptionId,
             cancel_at_period_end: eventData.cancel_at_period_end,

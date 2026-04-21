@@ -2,6 +2,7 @@ import { getAuthOrReview } from "@/lib/auth-or-review";
 import type { Metadata } from "next";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import { UsageClient } from "./client";
+import { OveragePanel } from "../billing/overage-panel";
 
 export const metadata: Metadata = {
   title: "Usage - Seizn Dashboard",
@@ -22,6 +23,7 @@ export default async function UsagePage() {
 
   return (
     <DashboardShell>
+      <OveragePanel />
       <UsageClient />
     </DashboardShell>
   );
