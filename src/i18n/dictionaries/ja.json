@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "月額",
+      "price": "$999",
+      "period": "per month",
       "badge": "人気",
       "features": [
-        "1,000,000メモリ",
-        "月100,000 API呼び出し",
-        "優先サポート",
-        "高度な分析",
-        "ウェブフック",
-        "フェデレーテッド検索"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "購読"
+      "cta": "購読",
+      "annual": "年額$8,991",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "99.9%稼働率SLA",
+      "sso": "SSO込み",
+      "postMortemCredits": "四半期ごとに2件のポストモーテムレポート",
+      "chaosMonkeyPriority": "Chaos Monkey優先キュー",
+      "canonLockReview": "Canon Lockチームレビュー",
+      "dedicatedSlack": "専用Slackチャンネル"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Custom",
       "period": "お問い合わせ",
       "features": [
-        "無制限メモリ",
-        "無制限API呼び出し",
-        "専任サポート",
-        "SSO / SAML",
-        "カスタムSLA",
-        "オンプレミスオプション"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "営業に連絡"
+      "cta": "営業に連絡",
+      "sso": "SSO込み",
+      "customSla": "99.9%超のカスタムSLA",
+      "dedicatedEngineer": "専任サポートエンジニア",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "カスタムBAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1Mメモリ",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "月1M ops"
     }
   },
   "enterprisePage": {

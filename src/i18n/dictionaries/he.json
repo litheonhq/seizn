@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "פרו",
-      "price": "$99",
-      "period": "לחודש",
+      "price": "$999",
+      "period": "per month",
       "badge": "פופולרי",
       "features": [
-        "1,000,000 זיכרונות",
-        "100,000 קריאות API/חודש",
-        "תמיכה עדיפה",
-        "אנליטיקס מתקדם",
-        "Webhooks",
-        "חיפוש מאוחד"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "הירשם"
+      "cta": "הירשם",
+      "annual": "$8,991/שנה",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA זמינות 99.9%",
+      "sso": "SSO כלול",
+      "postMortemCredits": "2 דוחות post-mortem ברבעון",
+      "chaosMonkeyPriority": "תור עדיפות Chaos Monkey",
+      "canonLockReview": "סקירת צוות Canon Lock",
+      "dedicatedSlack": "ערוץ Slack ייעודי"
     },
     "enterprise": {
       "name": "ארגוני",
       "price": "מותאם אישית",
       "period": "צור קשר",
       "features": [
-        "זיכרונות ללא הגבלה",
-        "קריאות API ללא הגבלה",
-        "תמיכה ייעודית",
-        "SSO / SAML",
-        "SLA מותאם אישית",
-        "אפשרות On-premise"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "צור קשר עם מכירות"
+      "cta": "צור קשר עם מכירות",
+      "sso": "SSO כלול",
+      "customSla": "SLA מותאם > 99.9%",
+      "dedicatedEngineer": "מהנדס תמיכה ייעודי",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "BAA / DPA מותאם"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M זיכרונות",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M פעולות/חודש"
     }
   },
   "enterprisePage": {

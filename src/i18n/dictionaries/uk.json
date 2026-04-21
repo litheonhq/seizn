@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "на місяць",
+      "price": "$999",
+      "period": "per month",
       "badge": "Популярний",
       "features": [
-        "1,000,000 спогадів",
-        "100,000 API-викликів/місяць",
-        "Пріоритетна підтримка",
-        "Розширена аналітика",
-        "Вебхуки",
-        "Федеративний пошук"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "Підписатись"
+      "cta": "Підписатись",
+      "annual": "$8 991/рік",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA доступності 99,9%",
+      "sso": "SSO включено",
+      "postMortemCredits": "2 post-mortem звіти/квартал",
+      "chaosMonkeyPriority": "Пріоритетна черга Chaos Monkey",
+      "canonLockReview": "Командний перегляд Canon Lock",
+      "dedicatedSlack": "Виділений Slack-канал"
     },
     "enterprise": {
       "name": "Корпоративний",
       "price": "За запитом",
       "period": "Зв'яжіться з нами",
       "features": [
-        "Безлімітні спогади",
-        "Безлімітні API-виклики",
-        "Виділена підтримка",
-        "SSO / SAML",
-        "Індивідуальний SLA",
-        "On-premise опція"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "Зв'язатися з відділом продажів"
+      "cta": "Зв'язатися з відділом продажів",
+      "sso": "SSO включено",
+      "customSla": "Індивідуальний SLA > 99,9%",
+      "dedicatedEngineer": "Виділений інженер підтримки",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "Індивідуальний BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1 млн memories",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1 млн ops/місяць"
     }
   },
   "enterprisePage": {

@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "per bulan",
+      "price": "$999",
+      "period": "per month",
       "badge": "Populer",
       "features": [
-        "1.000.000 memori",
-        "100.000 panggilan API/bulan",
-        "Dukungan prioritas",
-        "Analitik lanjutan",
-        "Webhooks",
-        "Pencarian terfederasi"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "Daftar"
+      "cta": "Daftar",
+      "annual": "US$8.991/tahun",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA uptime 99,9%",
+      "sso": "SSO termasuk",
+      "postMortemCredits": "2 laporan post-mortem/kuartal",
+      "chaosMonkeyPriority": "Antrean prioritas Chaos Monkey",
+      "canonLockReview": "Review tim Canon Lock",
+      "dedicatedSlack": "Kanal Slack khusus"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Kustom",
       "period": "Hubungi kami",
       "features": [
-        "Memori tidak terbatas",
-        "Panggilan API tidak terbatas",
-        "Dukungan khusus",
-        "SSO / SAML",
-        "SLA kustom",
-        "Opsi On-premise"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "Hubungi penjualan"
+      "cta": "Hubungi penjualan",
+      "sso": "SSO termasuk",
+      "customSla": "SLA khusus > 99,9%",
+      "dedicatedEngineer": "Engineer dukungan khusus",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "BAA / DPA khusus"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M memori",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/bulan"
     }
   },
   "enterprisePage": {
