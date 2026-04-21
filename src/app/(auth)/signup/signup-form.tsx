@@ -13,7 +13,12 @@ import { getErrorMessage } from "@/lib/ui-error";
 export default function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = sanitizeRelativeRedirect(searchParams.get("callbackUrl"));
+  const signupTemplate = searchParams.get("template") === "archivist-vale" ? "archivist-vale" : null;
+  const signupSource = searchParams.get("source") || "signup";
+  const templateCallbackUrl = signupTemplate
+    ? "/dashboard?template=archivist-vale&npc=archivist_vale"
+    : "/dashboard";
+  const callbackUrl = sanitizeRelativeRedirect(searchParams.get("callbackUrl"), templateCallbackUrl);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,12 +33,18 @@ export default function SignupForm() {
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const buildExampleRequest = useCallback(
-    (key: string) => `curl -X POST \\
+    (key: string) => signupTemplate
+      ? `curl -X POST \\
+  https://seizn.com/api/v1/memories \\
+  -H "Authorization: Bearer ${key}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"content":"Mira remembers Vale hid the brass key.","memory_type":"experience","agent_id":"archivist_vale","scope":"agent","namespace":"playground-archivist-vale"}'`
+      : `curl -X POST \\
   https://seizn.com/api/memories \\
   -H "x-api-key: ${key}" \\
   -H "Content-Type: application/json" \\
   -d '{"content":"Remember that I prefer concise onboarding flows.","memory_type":"preference"}'`,
-    []
+    [signupTemplate]
   );
 
   const handleTurnstileVerify = useCallback((token: string) => {
@@ -65,7 +76,14 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, turnstileToken }),
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          turnstileToken,
+          signupTemplate,
+          signupSource,
+        }),
       });
 
       const data = await res.json();
@@ -252,6 +270,15 @@ export default function SignupForm() {
           {/* Hide form when API key is displayed */}
           {!apiKey && (
             <>
+              {signupTemplate && (
+                <div className="mb-5 rounded-xl border border-szn-accent/25 bg-szn-accent/10 p-4">
+                  <p className="text-sm font-semibold text-szn-text-1">Archivist Vale template selected</p>
+                  <p className="mt-1 text-xs leading-5 text-szn-text-2">
+                    Your first key will carry NPC template metadata for the free tier workspace.
+                  </p>
+                </div>
+              )}
+
               {/* OAuth Buttons */}
               <div className="space-y-3">
                 <button
