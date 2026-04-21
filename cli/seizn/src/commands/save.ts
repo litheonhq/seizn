@@ -11,11 +11,14 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import { readFile, writeFile } from 'node:fs/promises';
+import { SeiznApiClient } from '../api.js';
 import { createCLIClient } from '../client.js';
+import type { GlobalOptions } from '../types.js';
 
 export function createSaveCommand(): Command {
   const save = new Command('save')
-    .description('Quick-save a memory (shorthand for `seizn memory add`)')
+    .description('Quick-save a memory or move portable .szs save files')
     .argument('<content>', 'Memory content (use "-" to read from stdin)')
     .option('-t, --type <type>', 'Memory type (fact, preference, experience, relationship, instruction)', 'fact')
     .option('--tags <tags>', 'Comma-separated tags')
@@ -66,6 +69,50 @@ export function createSaveCommand(): Command {
           process.exit(1);
         }
         spinner?.fail(`Failed: ${(error as Error).message}`);
+        process.exit(1);
+      }
+    });
+
+  save
+    .command('export')
+    .description('Export one NPC state as a signed .szs save file')
+    .argument('<npc-id>', 'NPC/entity id to export')
+    .argument('<out.szs>', 'Output save-file path')
+    .action(async (npcId: string, outFile: string, _options: unknown, command: Command) => {
+      const globals = command.optsWithGlobals() as GlobalOptions;
+      const spinner = ora(`Exporting ${npcId}...`).start();
+
+      try {
+        const client = await SeiznApiClient.create(globals);
+        const file = await client.exportSaveFile(npcId);
+        await writeFile(outFile, file);
+        spinner.succeed(`Exported signed save file to ${chalk.green(outFile)}`);
+        console.log(chalk.dim(`  NPC: ${npcId}`));
+        console.log(chalk.dim(`  Bytes: ${file.length}`));
+      } catch (error) {
+        spinner.fail(`Failed: ${(error as Error).message}`);
+        process.exit(1);
+      }
+    });
+
+  save
+    .command('import')
+    .description('Import memories, beliefs, and canon locks from a signed .szs save file')
+    .argument('<in.szs>', 'Input save-file path')
+    .action(async (inFile: string, _options: unknown, command: Command) => {
+      const globals = command.optsWithGlobals() as GlobalOptions;
+      const spinner = ora(`Importing ${inFile}...`).start();
+
+      try {
+        const client = await SeiznApiClient.create(globals);
+        const file = await readFile(inFile);
+        const result = await client.importSaveFile(file);
+        spinner.succeed(`Imported save file for ${chalk.green(result.npcId)}`);
+        console.log(chalk.dim(`  Memories: ${result.imported.memories}`));
+        console.log(chalk.dim(`  Beliefs: ${result.imported.beliefs}`));
+        console.log(chalk.dim(`  Canon locks: ${result.imported.canonLocks}`));
+      } catch (error) {
+        spinner.fail(`Failed: ${(error as Error).message}`);
         process.exit(1);
       }
     });
