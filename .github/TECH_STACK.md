@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 177 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 178 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -64,6 +64,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Save-File Portability | SZN1 + Ed25519 + AES-256-GCM | -- | `/api/save-file/export/[npcId]` and `/api/save-file/import` move signed `.szs` bundles containing memories, belief shards, and canon locks; per-studio private signing keys are encrypted in `studio_signing_keys` with `SEIZN_SIGNING_MASTER_KEY`, and CLI round-trip is available via `seizn save export/import`. |
 | NPC Chaos Monkey | Claude Sonnet + worker queue | -- | `chaos_runs` and `chaos_findings` store adversarial NPC simulations; `/api/chaos/runs` queues runs, `/api/internal/chaos/worker` processes queued prompts, records ops usage, and surfaces grouped failures in `/dashboard/chaos`. |
 | Story Health | Recharts + Claude Haiku evaluator | -- | `story_health_snapshots` stores daily per-act narrative metrics from replay, canon, chaos, and bug-report signals; `/api/internal/story-health/evaluate` runs at 06:00 UTC and `/dashboard/story-health` drills metrics into filtered Replay sessions. |
+| Post-Mortem Reports | @react-pdf/renderer + private Supabase Storage | -- | `post_mortem_reports` stores token-gated shipped-title reports; `/api/post-mortem/generate` builds LLM summaries, replay/canon/chaos/Story Health/billing sections, uploads PDFs to the private `post-mortems` bucket, and exposes `/dashboard/post-mortem/[id]?token=...` for shareable read access. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
@@ -181,6 +182,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `posthog-js` | ^1.316.0 | Product analytics, TTFS tracking, conversion funnels |
 | `@xyflow/react` | ^12.10.0 | Interactive graph/flow visualization (mind maps, knowledge graphs) |
 | `recharts` | ^3.6.0 | Data visualization charts (analytics, evals, traces) |
+| `@react-pdf/renderer` | ^4.5.1 | Server-side post-mortem PDF generation |
 | `@opentelemetry/sdk-node` | ^0.211.0 | Distributed tracing with OTLP export |
 | `resend` | ^6.7.0 | Transactional email delivery |
 | `lucide-react` | ^0.563.0 | Icon library |
