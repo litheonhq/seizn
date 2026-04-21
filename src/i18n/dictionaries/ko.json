@@ -252,6 +252,7 @@
     "nav": {
       "overview": "개요",
       "memories": "메모리",
+      "memoryEditor": "메모리 에디터",
       "mindMap": "마인드맵",
       "candidates": "후보",
       "replay": "Replay",

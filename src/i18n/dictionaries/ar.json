@@ -357,6 +357,7 @@
     "nav": {
       "overview": "نظرة عامة",
       "memories": "الكيانات",
+      "memoryEditor": "محرر الذاكرة",
       "mindMap": "رسم بياني للعلاقات",
       "candidates": "صندوق الأحداث",
       "devTools": "أدوات التطوير",

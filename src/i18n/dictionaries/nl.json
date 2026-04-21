@@ -288,6 +288,7 @@
     "nav": {
       "overview": "Overzicht",
       "memories": "Entiteiten",
+      "memoryEditor": "Geheugeneditor",
       "mindMap": "Relatiegraph",
       "candidates": "Event-inbox",
       "devTools": "DevTools",

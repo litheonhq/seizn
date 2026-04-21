@@ -357,6 +357,7 @@
     "nav": {
       "overview": "概覽",
       "memories": "記憶",
+      "memoryEditor": "記憶編輯器",
       "mindMap": "心智圖",
       "candidates": "候選",
       "devTools": "開發工具",

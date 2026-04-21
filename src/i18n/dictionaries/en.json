@@ -252,6 +252,7 @@
     "nav": {
       "overview": "Overview",
       "memories": "Entities",
+      "memoryEditor": "Memory Editor",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
       "replay": "Replay",

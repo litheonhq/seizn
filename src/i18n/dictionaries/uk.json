@@ -357,6 +357,7 @@
     "nav": {
       "overview": "Огляд",
       "memories": "Сутності",
+      "memoryEditor": "Редактор пам’яті",
       "mindMap": "Граф відносин",
       "candidates": "Ящик подій",
       "devTools": "DevTools",

@@ -288,6 +288,7 @@
     "nav": {
       "overview": "Översikt",
       "memories": "Entiteter",
+      "memoryEditor": "Minnesredigerare",
       "mindMap": "Relationsgraf",
       "candidates": "Event-inkorg",
       "devTools": "DevTools",

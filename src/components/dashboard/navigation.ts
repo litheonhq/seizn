@@ -75,6 +75,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
       defaultOpen: true,
       items: [
         { label: t("dashboard.nav.memories"), href: "/dashboard/memories", icon: BrainIcon },
+        { label: t("dashboard.nav.memoryEditor"), href: "/dashboard/memory-editor", icon: FileTextIcon },
         { label: t("dashboard.nav.mindMap"), href: "/dashboard/memories/mindmap", icon: MapIcon },
         { label: t("dashboard.nav.candidates"), href: "/dashboard/memories/candidates", icon: InboxIcon },
         { label: t("dashboard.nav.replay"), href: "/dashboard/replay", icon: TerminalIcon },
