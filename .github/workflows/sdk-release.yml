@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,4 +62,4 @@ jobs:
             echo "@seizn/sdk-js@$VERSION already exists; skipping publish."
             exit 0
           fi
-          npm publish ./packages/seizn-sdk-js --access public --provenance
+          npm publish ./packages/seizn-sdk-js --access public --tag beta --provenance

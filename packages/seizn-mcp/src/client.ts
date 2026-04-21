@@ -65,7 +65,7 @@ export class SeiznApiClient {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
-        "User-Agent": "@seizn/mcp/0.1.0",
+        "User-Agent": "@seizn/mcp/0.9.0-beta.1",
       },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
     });
