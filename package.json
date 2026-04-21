@@ -47,6 +47,7 @@
     "@opentelemetry/sdk-node": "^0.211.0",
     "@opentelemetry/sdk-trace-base": "^2.5.0",
     "@opentelemetry/semantic-conventions": "^1.39.0",
+    "@react-pdf/renderer": "^4.5.1",
     "@sentry/nextjs": "^10.49.0",
     "@supabase/supabase-js": "^2.90.0",
     "@upstash/redis": "^1.36.1",
@@ -92,6 +93,7 @@
     "postgres": "^3.4.9",
     "tailwindcss": "^4",
     "typescript": "^5",
+    "vite": "^7.3.2",
     "vitest": "^4.1.2",
     "wait-on": "^9.0.4"
   },

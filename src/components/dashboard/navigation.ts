@@ -8,7 +8,7 @@
 import {
   HomeIcon, BrainIcon, MapIcon, InboxIcon, TerminalIcon, PlayIcon,
   KeyIcon, PlugIcon, WebhookIcon, BookIcon, UsersIcon, SettingsIcon,
-  ChartIcon, ShieldIcon,
+  ChartIcon, ShieldIcon, FileTextIcon,
 } from "./dashboard-icons";
 
 // =============================================================================
@@ -81,6 +81,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
         { label: t("dashboard.nav.canon"), href: "/dashboard/canon", icon: ShieldIcon },
         { label: t("dashboard.nav.chaos"), href: "/dashboard/chaos", icon: PlayIcon },
         { label: t("dashboard.nav.storyHealth"), href: "/dashboard/story-health", icon: ChartIcon },
+        { label: t("dashboard.nav.postMortem"), href: "/dashboard/post-mortem", icon: FileTextIcon },
         { label: t("dashboard.nav.branches"), href: "/dashboard/memories/branches", icon: TerminalIcon },
         { label: t("dashboard.nav.provenance"), href: "/dashboard/memories/provenance", icon: MapIcon },
       ],

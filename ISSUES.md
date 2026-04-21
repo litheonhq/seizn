@@ -75,3 +75,8 @@
 **Cause:** The public status route was executing in Vercel `iad1` while Supabase was hosted in `ap-northeast-1`, so the DB health probe paid inter-region latency and occasional cold-start spikes. The status endpoint then cached that degraded result.
 **Fix:** Switched the status probe to `profiles`, raised degraded/down thresholds, disabled caching for non-operational states, and set `vercel.json` `regions` to `["hnd1"]` so Node functions execute near the Supabase region. A route-level `preferredRegion` hint on the Node status handler did not change the actual runtime region and was removed.
 
+### Post-Mortem Runtime Verification Needed CJS Bundle
+**Date:** 2026-04-21
+**Symptom:** One-off STAGE-09 runtime verification could not run with `npx tsx` on Windows, and an esbuild ESM bundle failed on dynamic `require("crypto")` from PDF dependencies.
+**Cause:** The local workspace did not expose a `tsx` shim, and the PDF dependency chain still uses CommonJS dynamic requires that are not valid inside an ESM verification bundle.
+**Fix:** Bundle the temporary verification entry with esbuild as CommonJS (`--format=cjs --platform=node`) and run the generated `.cjs` file. Keep the generated file under `%TEMP%` and delete it after the run.

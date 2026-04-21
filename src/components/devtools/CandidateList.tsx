@@ -186,8 +186,8 @@ export function CandidateList({
                     borderRadius: "8px",
                   }}
                   labelStyle={{ color: "#fff" }}
-                  formatter={(value: number | undefined) => [
-                    value !== undefined ? value.toFixed(4) : "N/A",
+                  formatter={(value) => [
+                    typeof value === "number" ? value.toFixed(4) : "N/A",
                     "Score",
                   ]}
                 />
