@@ -106,7 +106,7 @@ export const DEFAULT_FEATURE_FLAGS: Record<FeatureName, FeatureFlag> = {
     name: 'sso',
     enabled: true,
     description: 'Single Sign-On (SAML/OIDC)',
-    planRequired: 'enterprise',
+    planRequired: 'pro',
     envKey: 'FEATURE_SSO',
   },
   priority_support: {
@@ -256,7 +256,7 @@ export function isFeatureEnabled(
 
   // Check plan requirement
   if (flag.planRequired) {
-    const planOrder = ['free', 'starter', 'plus', 'pro', 'enterprise'];
+    const planOrder = ['free', 'starter', 'indie', 'plus', 'studio', 'pro', 'enterprise'];
     const requiredIndex = planOrder.indexOf(flag.planRequired);
     const userIndex = planOrder.indexOf(userPlan);
 
@@ -276,7 +276,7 @@ export function isFeatureEnabledByPlan(
   userPlan: string = 'free'
 ): boolean {
   const plan = getPlan(userPlan);
-  return plan.features[featureName] ?? false;
+  return Boolean(plan.features[featureName]);
 }
 
 /**
@@ -310,7 +310,7 @@ export function getUpgradeRequiredFeatures(
   userPlan: string
 ): { name: FeatureName; flag: FeatureFlag; upgradeTo: string }[] {
   const flags = getFeatureFlags();
-  const planOrder = ['free', 'starter', 'plus', 'pro', 'enterprise'];
+  const planOrder = ['free', 'starter', 'indie', 'plus', 'studio', 'pro', 'enterprise'];
   const userIndex = planOrder.indexOf(userPlan);
 
   const upgradeRequired: { name: FeatureName; flag: FeatureFlag; upgradeTo: string }[] = [];

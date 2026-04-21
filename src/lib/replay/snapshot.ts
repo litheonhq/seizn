@@ -129,30 +129,42 @@ export async function resolveReplayOrganizationId(
   const supabase = createServerClient();
 
   if (apiKeyId) {
-    const { data: apiKey } = await supabase
-      .from('api_keys')
-      .select('organization_id')
-      .eq('id', apiKeyId)
-      .maybeSingle();
-    if (typeof apiKey?.organization_id === 'string') return apiKey.organization_id;
+    try {
+      const { data: apiKey } = await supabase
+        .from('api_keys')
+        .select('organization_id')
+        .eq('id', apiKeyId)
+        .maybeSingle();
+      if (typeof apiKey?.organization_id === 'string') return apiKey.organization_id;
+    } catch {
+      // Optional replay organization path. Continue to user/org membership lookup.
+    }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('organization_id')
-    .eq('id', userId)
-    .maybeSingle();
-  if (typeof profile?.organization_id === 'string') return profile.organization_id;
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', userId)
+      .maybeSingle();
+    if (typeof profile?.organization_id === 'string') return profile.organization_id;
+  } catch {
+    // Optional replay organization path. Continue to membership lookup.
+  }
 
-  const { data: membership } = await supabase
-    .from('organization_members')
-    .select('organization_id')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  try {
+    const { data: membership } = await supabase
+      .from('organization_members')
+      .select('organization_id')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
 
-  return typeof membership?.organization_id === 'string' ? membership.organization_id : null;
+    return typeof membership?.organization_id === 'string' ? membership.organization_id : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function captureNextRoute(
