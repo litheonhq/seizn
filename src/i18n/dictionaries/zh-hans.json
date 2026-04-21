@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro版",
-      "price": "$99",
-      "period": "每月",
+      "price": "$999",
+      "period": "per month",
       "badge": "热门",
       "features": [
-        "1,000,000条记忆",
-        "每月100,000次API调用",
-        "优先支持",
-        "高级分析",
-        "Webhooks",
-        "联合搜索"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "订阅"
+      "cta": "订阅",
+      "annual": "$8,991/年",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "99.9% 正常运行 SLA",
+      "sso": "包含 SSO",
+      "postMortemCredits": "每季度 2 份 post-mortem 报告",
+      "chaosMonkeyPriority": "Chaos Monkey 优先队列",
+      "canonLockReview": "Canon Lock 团队审核",
+      "dedicatedSlack": "专属 Slack 频道"
     },
     "enterprise": {
       "name": "企业版",
       "price": "定制",
       "period": "联系我们",
       "features": [
-        "无限记忆",
-        "无限API调用",
-        "专属支持",
-        "SSO / SAML",
-        "定制SLA",
-        "本地部署选项"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "联系销售"
+      "cta": "联系销售",
+      "sso": "包含 SSO",
+      "customSla": "自定义 SLA > 99.9%",
+      "dedicatedEngineer": "专属支持工程师",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "自定义 BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M 记忆",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/月"
     }
   },
   "enterprisePage": {

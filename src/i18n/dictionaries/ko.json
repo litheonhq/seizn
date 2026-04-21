@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "월",
+      "price": "$999",
+      "period": "per month",
       "badge": "인기",
       "features": [
-        "1,000,000 메모리",
-        "월 100,000 API 호출",
-        "우선 지원",
-        "고급 분석",
-        "웹훅",
-        "페더레이티드 검색"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "구독하기"
+      "cta": "구독하기",
+      "annual": "연 $8,991",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "99.9% 가동률 SLA",
+      "sso": "SSO 포함",
+      "postMortemCredits": "분기당 포스트모템 리포트 2건",
+      "chaosMonkeyPriority": "Chaos Monkey 우선 큐",
+      "canonLockReview": "Canon Lock 팀 리뷰",
+      "dedicatedSlack": "전용 Slack 채널"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Custom",
       "period": "문의",
       "features": [
-        "무제한 메모리",
-        "무제한 API 호출",
-        "전담 지원",
-        "SSO / SAML",
-        "맞춤 SLA",
-        "온프레미스 옵션"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "영업팀 문의"
+      "cta": "영업팀 문의",
+      "sso": "SSO 포함",
+      "customSla": "99.9% 초과 커스텀 SLA",
+      "dedicatedEngineer": "전담 지원 엔지니어",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "커스텀 BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "메모리 1M",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "월 1M ops"
     }
   },
   "enterprisePage": {

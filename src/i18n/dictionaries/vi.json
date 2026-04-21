@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "mỗi tháng",
+      "price": "$999",
+      "period": "per month",
       "badge": "Phổ biến",
       "features": [
-        "1.000.000 ký ức",
-        "100.000 lượt gọi API/tháng",
-        "Hỗ trợ ưu tiên",
-        "Phân tích nâng cao",
-        "Webhooks",
-        "Tìm kiếm liên kết"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "Đăng ký"
+      "cta": "Đăng ký",
+      "annual": "8.991 USD/năm",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA uptime 99,9%",
+      "sso": "Bao gồm SSO",
+      "postMortemCredits": "2 báo cáo post-mortem/quý",
+      "chaosMonkeyPriority": "Hàng đợi Chaos Monkey ưu tiên",
+      "canonLockReview": "Quy trình duyệt nhóm Canon Lock",
+      "dedicatedSlack": "Kênh Slack riêng"
     },
     "enterprise": {
       "name": "Doanh nghiệp",
       "price": "Tùy chỉnh",
       "period": "Liên hệ",
       "features": [
-        "Ký ức không giới hạn",
-        "Lượt gọi API không giới hạn",
-        "Hỗ trợ chuyên dụng",
-        "SSO / SAML",
-        "SLA tùy chỉnh",
-        "Tùy chọn On-premise"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "Liên hệ bán hàng"
+      "cta": "Liên hệ bán hàng",
+      "sso": "Bao gồm SSO",
+      "customSla": "SLA tuỳ chỉnh > 99,9%",
+      "dedicatedEngineer": "Kỹ sư hỗ trợ riêng",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "BAA / DPA tuỳ chỉnh"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M bộ nhớ",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/tháng"
     }
   },
   "enterprisePage": {
