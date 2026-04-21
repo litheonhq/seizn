@@ -140,6 +140,7 @@ curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/context \\
       links: [
         { label: "Unity / Unreal / Godot", href: "#engine-plugins" },
         { label: "Integrations hub", href: "/docs/integrations" },
+        { label: "MCP server", href: "/docs/mcp" },
       ],
     },
     {
@@ -301,6 +302,7 @@ curl -X POST https://seizn.com/api/v1/graph/$GRAPH_ID/context \\
       links: [
         { label: "Unity / Unreal / Godot", href: "#engine-plugins" },
         { label: "통합 허브", href: "/docs/integrations" },
+        { label: "MCP 서버", href: "/docs/mcp" },
       ],
     },
     {
