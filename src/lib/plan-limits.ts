@@ -44,6 +44,11 @@ export interface PlanConfig {
     analytics: boolean;
     webhooks: boolean;
     sso: boolean;
+    sla: boolean;
+    postMortemCredits: number;
+    chaosMonkeyPriorityQueue: boolean;
+    dedicatedSlack: boolean;
+    canonLockTeamReview: boolean;
     prioritySupport: boolean;
   };
 
@@ -73,6 +78,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: false,
       webhooks: false,
       sso: false,
+      sla: false,
+      postMortemCredits: 0,
+      chaosMonkeyPriorityQueue: false,
+      dedicatedSlack: false,
+      canonLockTeamReview: false,
       prioritySupport: false,
     },
     maxInputTokens: 4_000,
@@ -98,6 +108,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: false,
       webhooks: false,
       sso: false,
+      sla: false,
+      postMortemCredits: 0,
+      chaosMonkeyPriorityQueue: false,
+      dedicatedSlack: false,
+      canonLockTeamReview: false,
       prioritySupport: false,
     },
     maxInputTokens: 8_000,
@@ -109,8 +124,8 @@ export const PLANS: Record<string, PlanConfig> = {
   // Studio — $299/mo (renamed from legacy "plus"). One shipped title.
   studio: {
     name: 'Studio',
-    memories: 500_000,
-    apiCallsMonthly: 500_000,
+    memories: 1_000_000,
+    apiCallsMonthly: 1_000_000,
     apiKeys: 10,
     rateLimit: 300,
     throttle: { rps: 10, burst: 30 },
@@ -123,6 +138,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: true,
       webhooks: true,
       sso: false,
+      sla: false,
+      postMortemCredits: 0,
+      chaosMonkeyPriorityQueue: false,
+      dedicatedSlack: false,
+      canonLockTeamReview: false,
       prioritySupport: false,
     },
     maxInputTokens: 16_000,
@@ -147,13 +167,18 @@ export const PLANS: Record<string, PlanConfig> = {
       bulkOperations: true,
       analytics: true,
       webhooks: true,
-      sso: false,
+      sso: true,
+      sla: true,
+      postMortemCredits: 2,
+      chaosMonkeyPriorityQueue: true,
+      dedicatedSlack: true,
+      canonLockTeamReview: true,
       prioritySupport: true,
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
     priceMonthly: 999,
-    priceYearly: 10190,  // 15% off
+    priceYearly: Math.round(99900 * 12 * 0.75) / 100,  // 25% off
   },
 
   // Enterprise — starts $2,500/mo, custom above.
@@ -173,6 +198,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: true,
       webhooks: true,
       sso: true,
+      sla: true,
+      postMortemCredits: -1,
+      chaosMonkeyPriorityQueue: true,
+      dedicatedSlack: true,
+      canonLockTeamReview: true,
       prioritySupport: true,
     },
     maxInputTokens: 128_000,
@@ -199,6 +229,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: false,
       webhooks: false,
       sso: false,
+      sla: false,
+      postMortemCredits: 0,
+      chaosMonkeyPriorityQueue: false,
+      dedicatedSlack: false,
+      canonLockTeamReview: false,
       prioritySupport: false,
     },
     maxInputTokens: 8_000,
@@ -208,8 +243,8 @@ export const PLANS: Record<string, PlanConfig> = {
   },
   plus: {
     name: 'Studio (legacy)',
-    memories: 500_000,
-    apiCallsMonthly: 500_000,
+    memories: 1_000_000,
+    apiCallsMonthly: 1_000_000,
     apiKeys: 10,
     rateLimit: 300,
     throttle: { rps: 10, burst: 30 },
@@ -222,6 +257,11 @@ export const PLANS: Record<string, PlanConfig> = {
       analytics: true,
       webhooks: true,
       sso: false,
+      sla: false,
+      postMortemCredits: 0,
+      chaosMonkeyPriorityQueue: false,
+      dedicatedSlack: false,
+      canonLockTeamReview: false,
       prioritySupport: false,
     },
     maxInputTokens: 16_000,
@@ -250,7 +290,7 @@ export function hasFeature(
   feature: keyof PlanConfig['features']
 ): boolean {
   const plan = getPlan(planName);
-  return plan.features[feature];
+  return Boolean(plan.features[feature]);
 }
 
 /**

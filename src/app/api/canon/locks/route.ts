@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
     const severity = parseCanonSeverity(body.severity || 'hard');
     const statement = normalizeOptionalString(body.statement);
     const regexFastpath = normalizeOptionalString(body.regexFastpath ?? body.regex_fastpath);
+    const requiresTeamReview = body.requiresTeamReview === true || body.requires_team_review === true;
 
     if (!scope) {
       return NextResponse.json(
@@ -122,6 +123,7 @@ export async function POST(request: NextRequest) {
       regexFastpath,
       severity,
       active: body.active !== false,
+      requiresTeamReview,
       createdBy: context.userId,
     });
 

@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { buildAnthropicHeaders } from '@/lib/anthropic/prompt-caching';
 import { sendEmail } from '@/lib/email';
+import { getPlan } from '@/lib/plan-limits';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 import { calculateOverageForecast, type UsageDimension } from '@/lib/stripe-metered';
 import { createServerClient } from '@/lib/supabase';
@@ -9,6 +10,7 @@ import { buildPostMortemPdf } from './pdf';
 import type {
   PostMortemCanonViolation,
   PostMortemChaosFinding,
+  PostMortemCreditUsage,
   PostMortemReportPayload,
   PostMortemReportRecord,
   PostMortemReplaySummary,
@@ -73,6 +75,13 @@ function defaultPayload(): PostMortemReportPayload {
     chaosFindings: [],
     storyHealth: [],
     usage: [],
+    creditUsage: {
+      plan: 'free',
+      quarter: '',
+      creditsGranted: 0,
+      creditsUsed: 0,
+      status: 'paid_after_credits',
+    },
     replaySamples: [],
   };
 }
@@ -97,9 +106,26 @@ function normalizePayload(value: unknown): PostMortemReportPayload {
     usage: Array.isArray(row.usage)
       ? (row.usage as PostMortemUsageSummary[])
       : [],
+    creditUsage:
+      row.creditUsage && typeof row.creditUsage === 'object' && !Array.isArray(row.creditUsage)
+        ? normalizeCreditUsage(row.creditUsage as Row, payload.creditUsage)
+        : payload.creditUsage,
     replaySamples: Array.isArray(row.replaySamples)
       ? (row.replaySamples as PostMortemReplaySummary[])
       : [],
+  };
+}
+
+function normalizeCreditUsage(row: Row, fallback: PostMortemCreditUsage): PostMortemCreditUsage {
+  const status = row.status === 'included' || row.status === 'unlimited' || row.status === 'paid_after_credits'
+    ? row.status
+    : fallback.status;
+  return {
+    plan: asString(row.plan, fallback.plan),
+    quarter: asString(row.quarter, fallback.quarter),
+    creditsGranted: asNumber(row.creditsGranted, fallback.creditsGranted),
+    creditsUsed: asNumber(row.creditsUsed, fallback.creditsUsed),
+    status,
   };
 }
 
@@ -140,6 +166,101 @@ function reportTitle(title: string | null | undefined, end: Date) {
 
 function publicToken() {
   return randomBytes(24).toString('base64url');
+}
+
+function quarterStartDate(date: Date) {
+  const quarterMonth = Math.floor(date.getUTCMonth() / 3) * 3;
+  return new Date(Date.UTC(date.getUTCFullYear(), quarterMonth, 1)).toISOString().slice(0, 10);
+}
+
+async function resolveStudioPlan(studioId: string, supabase: SupabaseLike) {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('plan')
+    .eq('id', studioId)
+    .maybeSingle();
+
+  if (error) {
+    logServerWarn('[post-mortem/report] Studio plan lookup failed', error, { studioId });
+  }
+
+  return typeof data?.plan === 'string' && data.plan.trim() ? data.plan : 'free';
+}
+
+async function claimPostMortemCredit(params: {
+  studioId: string;
+  plan: string;
+  generatedAt: Date;
+  supabase: SupabaseLike;
+}): Promise<PostMortemCreditUsage> {
+  const quarter = quarterStartDate(params.generatedAt);
+  const creditsGranted = getPlan(params.plan).features.postMortemCredits;
+
+  if (creditsGranted === -1) {
+    return {
+      plan: params.plan,
+      quarter,
+      creditsGranted,
+      creditsUsed: -1,
+      status: 'unlimited',
+    };
+  }
+
+  const { data: ledger, error: ledgerError } = await params.supabase
+    .from('post_mortem_credits')
+    .upsert(
+      {
+        studio_id: params.studioId,
+        quarter,
+        credits_granted: Math.max(creditsGranted, 0),
+        plan: params.plan,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'studio_id,quarter' }
+    )
+    .select('credits_granted, credits_used, plan')
+    .single();
+
+  if (ledgerError || !ledger) {
+    throw new Error(`post_mortem_credit_ledger_failed: ${ledgerError?.message || 'unknown'}`);
+  }
+
+  const granted = asNumber(ledger.credits_granted, Math.max(creditsGranted, 0));
+  const used = asNumber(ledger.credits_used, 0);
+
+  if (granted > 0 && used < granted) {
+    const nextUsed = used + 1;
+    const { error: updateError } = await params.supabase
+      .from('post_mortem_credits')
+      .update({
+        credits_used: nextUsed,
+        plan: params.plan,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('studio_id', params.studioId)
+      .eq('quarter', quarter)
+      .eq('credits_used', used);
+
+    if (updateError) {
+      throw new Error(`post_mortem_credit_claim_failed: ${updateError.message}`);
+    }
+
+    return {
+      plan: params.plan,
+      quarter,
+      creditsGranted: granted,
+      creditsUsed: nextUsed,
+      status: 'included',
+    };
+  }
+
+  return {
+    plan: params.plan,
+    quarter,
+    creditsGranted: granted,
+    creditsUsed: used,
+    status: 'paid_after_credits',
+  };
 }
 
 function baseUrl() {
@@ -384,6 +505,7 @@ async function collectPayload(
     chaosFindings,
     storyHealth,
     usage: usageRows,
+    creditUsage: defaultPayload().creditUsage,
     replaySamples: replayRows.slice(0, 25).map((row): PostMortemReplaySummary => ({
       traceId: asString(row.trace_id),
       endpoint: asString(row.endpoint),
@@ -507,12 +629,23 @@ export async function generatePostMortemReport(input: GeneratePostMortemInput) {
 
   try {
     const payload = await collectPayload(input.studioId, start, end, supabase);
-    const narrative = await generateNarrative(payload);
-    const chartPng = createStoryHealthChartPng(payload.storyHealth);
+    const plan = await resolveStudioPlan(input.studioId, supabase);
+    const creditUsage = await claimPostMortemCredit({
+      studioId: input.studioId,
+      plan,
+      generatedAt: new Date(),
+      supabase,
+    });
+    const payloadWithCredits: PostMortemReportPayload = {
+      ...payload,
+      creditUsage,
+    };
+    const narrative = await generateNarrative(payloadWithCredits);
+    const chartPng = createStoryHealthChartPng(payloadWithCredits.storyHealth);
     const reportForPdf: PostMortemReportRecord = {
       ...initialReport,
       status: 'completed',
-      reportPayload: payload,
+      reportPayload: payloadWithCredits,
       executiveSummary: narrative.executiveSummary,
       recommendations: narrative.recommendations,
       storyChartPngBase64: chartPng.toString('base64'),
@@ -525,7 +658,7 @@ export async function generatePostMortemReport(input: GeneratePostMortemInput) {
       .from('post_mortem_reports')
       .update({
         status: 'completed',
-        report_payload: payload,
+        report_payload: payloadWithCredits,
         executive_summary: narrative.executiveSummary,
         recommendations: narrative.recommendations,
         story_chart_png_base64: reportForPdf.storyChartPngBase64,

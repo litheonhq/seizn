@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase';
 import { listCanonLocks } from '@/lib/canon/enforce';
+import { hasFeature } from '@/lib/plan-limits';
 import { validateCanonContent, type CanonLock } from '@/lib/canon/validator';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 import { recordUsageEvent } from '@/lib/stripe-metered';
@@ -99,6 +100,7 @@ function normalizeRun(row: Record<string, unknown>): ChaosRun {
     npcId: asString(row.npc_id),
     suite: asString(row.suite, 'basic'),
     status: normalizeStatus(row.status),
+    queuePriority: asNumber(row.queue_priority, 0),
     promptCount: asNumber(row.prompt_count, 100),
     targetEndpoint: asNullableString(row.target_endpoint),
     targetMode: row.target_mode === 'external' ? 'external' : 'seizn-hosted',
@@ -112,6 +114,20 @@ function normalizeRun(row: Record<string, unknown>): ChaosRun {
     createdAt: asString(row.created_at),
     updatedAt: asString(row.updated_at),
   };
+}
+
+async function resolveStudioPlan(studioId: string, supabase: SupabaseLike) {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('plan')
+    .eq('id', studioId)
+    .maybeSingle();
+
+  if (error) {
+    logServerWarn('[chaos/runner] Studio plan lookup failed', error, { studioId });
+  }
+
+  return typeof data?.plan === 'string' && data.plan.trim() ? data.plan : 'free';
 }
 
 function normalizeFinding(row: Record<string, unknown>): ChaosFinding {
@@ -417,6 +433,8 @@ export async function createChaosRun(
   supabase: SupabaseLike = createServerClient()
 ): Promise<ChaosRun> {
   const targetEndpoint = normalizeTargetEndpoint(input.targetEndpoint);
+  const studioPlan = await resolveStudioPlan(input.studioId, supabase);
+  const queuePriority = hasFeature(studioPlan, 'chaosMonkeyPriorityQueue') ? 100 : 0;
   const { data, error } = await supabase
     .from('chaos_runs')
     .insert({
@@ -427,6 +445,7 @@ export async function createChaosRun(
       prompt_count: clampPromptCount(input.promptCount),
       target_endpoint: targetEndpoint,
       target_mode: targetEndpoint ? 'external' : 'seizn-hosted',
+      queue_priority: queuePriority,
       status: 'queued',
     })
     .select('*')
@@ -646,6 +665,7 @@ export async function processQueuedChaosRuns(
     .from('chaos_runs')
     .select('id')
     .eq('status', 'queued')
+    .order('queue_priority', { ascending: false })
     .order('created_at', { ascending: true })
     .limit(Math.min(Math.max(limit, 1), 5));
 

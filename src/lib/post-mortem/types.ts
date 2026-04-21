@@ -46,6 +46,14 @@ export interface PostMortemUsageSummary {
   forecastCents: number;
 }
 
+export interface PostMortemCreditUsage {
+  plan: string;
+  quarter: string;
+  creditsGranted: number;
+  creditsUsed: number;
+  status: 'included' | 'unlimited' | 'paid_after_credits';
+}
+
 export interface PostMortemReportPayload {
   generatedAt: string;
   windowStart: string;
@@ -55,6 +63,7 @@ export interface PostMortemReportPayload {
   chaosFindings: PostMortemChaosFinding[];
   storyHealth: PostMortemStoryPoint[];
   usage: PostMortemUsageSummary[];
+  creditUsage: PostMortemCreditUsage;
   replaySamples: PostMortemReplaySummary[];
 }
 
