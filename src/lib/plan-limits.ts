@@ -59,8 +59,8 @@ export interface PlanConfig {
 export const PLANS: Record<string, PlanConfig> = {
   free: {
     name: 'Free',
-    memories: 12_000,           // 12K memories
-    apiCallsMonthly: 1_000,     // 1K/month
+    memories: 10_000,           // 10K memories
+    apiCallsMonthly: 10_000,    // 10K/month
     apiKeys: 2,
     rateLimit: 60,              // 60 RPM (1 req/sec)
     throttle: { rps: 3, burst: 10 },
@@ -81,12 +81,13 @@ export const PLANS: Record<string, PlanConfig> = {
     priceYearly: 0,
   },
 
-  starter: {
-    name: 'Starter',
-    memories: 50_000,           // 50K memories
-    apiCallsMonthly: 5_000,     // 5K/month
+  // Indie — $39/mo (renamed from legacy "starter"). Jam games and solo builds.
+  indie: {
+    name: 'Indie',
+    memories: 100_000,
+    apiCallsMonthly: 100_000,
     apiKeys: 3,
-    rateLimit: 120,             // 120 RPM (2 req/sec)
+    rateLimit: 120,
     throttle: { rps: 5, burst: 15 },
     features: {
       hybridSearch: true,
@@ -101,16 +102,17 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
-    priceMonthly: 9,
-    priceYearly: 90,
+    priceMonthly: 39,
+    priceYearly: 398,  // 15% off annual
   },
 
-  plus: {
-    name: 'Plus',
-    memories: 100_000,          // 100K memories
-    apiCallsMonthly: 10_000,    // 10K/month
-    apiKeys: 5,
-    rateLimit: 300,             // 300 RPM (5 req/sec)
+  // Studio — $299/mo (renamed from legacy "plus"). One shipped title.
+  studio: {
+    name: 'Studio',
+    memories: 500_000,
+    apiCallsMonthly: 500_000,
+    apiKeys: 10,
+    rateLimit: 300,
     throttle: { rps: 10, burst: 30 },
     features: {
       hybridSearch: true,
@@ -125,16 +127,17 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
-    priceMonthly: 29,
-    priceYearly: 290,
+    priceMonthly: 299,
+    priceYearly: 3050,  // 15% off
   },
 
+  // Pro — $999/mo. Multi-title live ops.
   pro: {
     name: 'Pro',
-    memories: 1_000_000,        // 1M memories
-    apiCallsMonthly: 100_000,   // 100K/month
-    apiKeys: 10,
-    rateLimit: 600,             // 600 RPM (10 req/sec)
+    memories: 5_000_000,
+    apiCallsMonthly: -1,         // unlimited ops
+    apiKeys: 25,
+    rateLimit: 600,
     throttle: { rps: 30, burst: 100 },
     features: {
       hybridSearch: true,
@@ -149,16 +152,17 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
-    priceMonthly: 99,
-    priceYearly: 990,
+    priceMonthly: 999,
+    priceYearly: 10190,  // 15% off
   },
 
+  // Enterprise — starts $2,500/mo, custom above.
   enterprise: {
     name: 'Enterprise',
-    memories: -1,               // Unlimited
-    apiCallsMonthly: -1,        // Unlimited
+    memories: -1,
+    apiCallsMonthly: -1,
     apiKeys: 100,
-    rateLimit: 3000,            // 3000 RPM (50 req/sec)
+    rateLimit: 3000,
     throttle: { rps: 200, burst: 500 },
     features: {
       hybridSearch: true,
@@ -173,8 +177,57 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
-    priceMonthly: 499,
-    priceYearly: 4990,
+    priceMonthly: 2500,
+    priceYearly: 30000,  // base floor, actual negotiated
+  },
+
+  // Legacy aliases — ensure old subscription records resolve to the new tier
+  // with matching limits, via plan-name read-time migration.
+  starter: {
+    name: 'Indie (legacy)',
+    memories: 100_000,
+    apiCallsMonthly: 100_000,
+    apiKeys: 3,
+    rateLimit: 120,
+    throttle: { rps: 5, burst: 15 },
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: false,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: false,
+      webhooks: false,
+      sso: false,
+      prioritySupport: false,
+    },
+    maxInputTokens: 8_000,
+    maxOutputTokens: 2_000,
+    priceMonthly: 39,
+    priceYearly: 398,
+  },
+  plus: {
+    name: 'Studio (legacy)',
+    memories: 500_000,
+    apiCallsMonthly: 500_000,
+    apiKeys: 10,
+    rateLimit: 300,
+    throttle: { rps: 10, burst: 30 },
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: true,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: true,
+      webhooks: true,
+      sso: false,
+      prioritySupport: false,
+    },
+    maxInputTokens: 16_000,
+    maxOutputTokens: 4_000,
+    priceMonthly: 299,
+    priceYearly: 3050,
   },
 };
 
