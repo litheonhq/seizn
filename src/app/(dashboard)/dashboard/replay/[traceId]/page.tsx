@@ -4,6 +4,7 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { resolveReplayOrganizationId, loadSnapshot } from "@/lib/replay/snapshot";
 import { ReplayActions } from "./ReplayActions";
+import { ExportPanel } from "./export-panel";
 
 export const metadata: Metadata = {
   title: "Replay Detail - Seizn Dashboard",
@@ -52,6 +53,7 @@ export default async function ReplayDetailPage({ params }: ReplayDetailParams) {
             </div>
 
             <ReplayActions traceId={traceId} />
+            <ExportPanel traceId={traceId} />
 
             <div className="grid gap-6 lg:grid-cols-2">
               <JsonPanel title="Request" value={snapshot.request_body} />
