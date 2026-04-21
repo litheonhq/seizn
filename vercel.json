@@ -32,6 +32,10 @@
       "schedule": "* * * * *"
     },
     {
+      "path": "/api/internal/story-health/evaluate",
+      "schedule": "0 6 * * *"
+    },
+    {
       "path": "/api/cron/usage-alerts",
       "schedule": "0 9 * * *"
     },

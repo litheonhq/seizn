@@ -14,12 +14,33 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ReplayPage() {
+interface ReplayPageProps {
+  searchParams?: Promise<{ traceIds?: string; source?: string; metric?: string }>;
+}
+
+function parseTraceIds(value?: string) {
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((item) => {
+      try {
+        return decodeURIComponent(item).trim();
+      } catch {
+        return item.trim();
+      }
+    })
+    .filter((item) => /^[0-9a-f-]{16,}$/i.test(item))
+    .slice(0, 50);
+}
+
+export default async function ReplayPage({ searchParams }: ReplayPageProps) {
+  const query = searchParams ? await searchParams : {};
+  const traceIds = parseTraceIds(query.traceIds);
   const { user, isAuthenticated } = await getAuthOrReview();
   const organizationId = isAuthenticated
     ? await resolveReplayOrganizationId(user.id, null)
     : null;
-  const snapshots = organizationId ? await loadReplayRows(organizationId) : [];
+  const snapshots = organizationId ? await loadReplayRows(organizationId, traceIds) : [];
 
   return (
     <DashboardShell>
@@ -32,6 +53,11 @@ export default async function ReplayPage() {
           <p className="mt-4 max-w-2xl text-[15px] leading-7 text-szn-text-2">
             Reproduce memory reads, writes, tool calls, and provider metadata from past NPC turns.
           </p>
+          {traceIds.length > 0 && (
+            <p className="mt-3 font-mono text-xs text-szn-signal">
+              FILTERED / {traceIds.length} story-health trace{traceIds.length === 1 ? "" : "s"}
+            </p>
+          )}
         </header>
 
         <section className="border-y border-szn-border-subtle">
@@ -81,14 +107,18 @@ interface ReplayRowData {
   created_at: string;
 }
 
-async function loadReplayRows(organizationId: string): Promise<ReplayRowData[]> {
+async function loadReplayRows(organizationId: string, traceIds: string[] = []): Promise<ReplayRowData[]> {
   const supabase = createServerClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("replay_snapshots")
     .select("trace_id, endpoint, duration_ms, created_at")
     .eq("organization_id", organizationId)
     .order("created_at", { ascending: false })
     .limit(50);
+
+  if (traceIds.length > 0) query = query.in("trace_id", traceIds);
+
+  const { data, error } = await query;
 
   if (error || !data) return [];
   return data as ReplayRowData[];

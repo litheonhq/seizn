@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 142 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 177 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -63,6 +63,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Seizn CLI | @seizn/cli + commander | 0.1.0 | Workspace package in `cli/seizn` provides `init`, `login`, `replay`, `export`, `audit`, `bench`, and `canon list/pull/push`; credentials are stored at `~/.config/seizn/credentials.json` with `0600` permissions. |
 | Save-File Portability | SZN1 + Ed25519 + AES-256-GCM | -- | `/api/save-file/export/[npcId]` and `/api/save-file/import` move signed `.szs` bundles containing memories, belief shards, and canon locks; per-studio private signing keys are encrypted in `studio_signing_keys` with `SEIZN_SIGNING_MASTER_KEY`, and CLI round-trip is available via `seizn save export/import`. |
 | NPC Chaos Monkey | Claude Sonnet + worker queue | -- | `chaos_runs` and `chaos_findings` store adversarial NPC simulations; `/api/chaos/runs` queues runs, `/api/internal/chaos/worker` processes queued prompts, records ops usage, and surfaces grouped failures in `/dashboard/chaos`. |
+| Story Health | Recharts + Claude Haiku evaluator | -- | `story_health_snapshots` stores daily per-act narrative metrics from replay, canon, chaos, and bug-report signals; `/api/internal/story-health/evaluate` runs at 06:00 UTC and `/dashboard/story-health` drills metrics into filtered Replay sessions. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
@@ -348,7 +349,7 @@ User Request
 | Enterprise SSO (SAML + OIDC) | Partially Implemented | `src/lib/sso/`, `src/app/api/sso/`, `src/app/api/auth/oidc/` | Org-scoped SSO connections, SAML ACS + OIDC callback; validate with each IdP before GA |
 | Tenant Policy (Budget & Cost Controls) | Fully Implemented | `src/lib/tenant-policy/`, `src/app/api/tenant-policy/` | Policy persisted in `organizations.settings.budget_quota_policy`; internal enforcement endpoint |
 | Autopilot PR Bot (GitHub Webhooks) | Fully Implemented | `src/app/api/webhooks/github/`, `src/app/api/autopilot/`, `src/lib/autopilot/` | Idempotent webhook ingestion; persists deliveries in `autopilot_webhooks` |
-| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (140 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
+| Supabase Database | Fully Implemented | `src/lib/supabase.ts`, `supabase/migrations/` (177 files) | Browser + server clients, pgvector; includes compatibility view for trace cost (`cost_usd`) + budget degrade events |
 | E2E Confidential Memory Encryption | Fully Implemented | `src/lib/memory/encryption.ts`, `src/lib/memory/secure-memory-client.ts`, `src/app/api/profile/e2e/`, `src/app/api/v1/memories/`, `scripts/verify-ai-os-memory.mjs` | Opt-in: `content` placeholder + ciphertext storage. Encrypted memories excluded from search/embedding/optimizer. Key never persisted; PIN loss is irreversible. Runtime guard verifies `search_memories` uses normalized params (`match_user_id`, etc.) and blocks legacy `p_*` regressions. |
 | API Key Authentication | Fully Implemented | `src/lib/api-auth.ts`, `src/lib/api-key.ts` | Hash-based, expiration, deprecation headers |
 | Rate Limiting (Redis) | Fully Implemented | `src/lib/rate-limit.ts` | Sliding window, plan-based, in-memory fallback |

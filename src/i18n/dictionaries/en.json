@@ -257,6 +257,7 @@
       "replay": "Replay",
       "canon": "Canon Lock",
       "chaos": "Chaos Monkey",
+      "storyHealth": "Story Health",
       "branches": "Branches",
       "provenance": "Provenance",
       "devTools": "Dev tools",
