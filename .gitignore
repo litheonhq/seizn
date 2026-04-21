@@ -57,6 +57,7 @@ packages/*/node_modules/
 packages/*/dist/
 cli/*/node_modules/
 cli/*/dist/
+mcp-server/node_modules/
 
 # CI artifacts
 .seizn-traces/
