@@ -78,3 +78,36 @@ Add the printed `STRIPE_METER_ID_*` and `STRIPE_METERED_PRICE_ID_*` values to
 `.env.litheon` and Vercel Production env. The subscription webhook attaches
 the metered prices to Studio/Pro subscriptions after successful checkout or
 subscription creation.
+
+## create-dp-coupon.py - 2026-04-21 Stage 02 Design Partner coupon
+
+Creates or reuses the `SEIZN_DP_2026` coupon:
+
+| Field | Value |
+|---|---|
+| Discount | 66% off |
+| Duration | Repeating, 12 months |
+| Max redemptions | 10 |
+| Intended plan | Studio monthly |
+
+The app only applies this coupon when the checkout request includes
+`promoCode=SEIZN_DP_2026` and the `studio_id` is approved in
+`design_partner_applications` or `design_partner_relationships`.
+
+**PowerShell:**
+```powershell
+$envPath = "C:\Users\admin\.env.litheon"
+$lines = [System.IO.File]::ReadAllLines($envPath, [System.Text.Encoding]::UTF8)
+$sk = ($lines | Where-Object { $_ -match '^STRIPE_SECRET_KEY=' })[0]
+if (-not $sk) { Write-Host "STRIPE_SECRET_KEY not in env" -ForegroundColor Red; exit 1 }
+$env:STRIPE_SECRET_KEY = $sk.Substring('STRIPE_SECRET_KEY='.Length).Trim('"').Trim("'").Trim()
+
+cd C:\Users\admin\Projects\seizn-codex-clean
+python scripts/stripe/create-dp-coupon.py
+
+$env:STRIPE_SECRET_KEY = $null
+```
+
+Add `SEIZN_DESIGN_PARTNER_COUPON=SEIZN_DP_2026` to `.env.litheon` and Vercel
+Production env. The app falls back to the built-in coupon id constant if the env
+var is absent, but keeping the env var documented makes operations explicit.
