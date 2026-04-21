@@ -59,7 +59,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
 | Deterministic Replay | AsyncLocalStorage + PostgreSQL snapshots | -- | `/api/v1/replay` captures and replays memory reads/writes, tool calls, and LLM metadata for reproducible NPC-memory debugging. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
-| Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
+| Payments | Stripe Billing | -- | 5-tier subscriptions plus Stage 01 metered overage. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`, which reports `seizn_memories_overage` and `seizn_ops_overage` meter events for Studio/Pro overages. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Scene Context | Supabase + v1 scene API | -- | `scenes` stores bounded NPC/faction/location context; `/api/v1/memories` can apply scene-aware recall boosts via `scene_id` or `entity_ids`. |
 | Gossip Propagation | Supabase + deterministic distortion | -- | `gossip_events` records fact drift between entities; `/api/v1/gossip/propagate` supports word, entity, combined, and custom distortion metadata. |
@@ -279,7 +279,7 @@ Two auth systems coexist: NextAuth manages session/JWT while Supabase Auth handl
 Next.js 16 supports React 19, but this project pins React 18.3.1. This works but prevents access to React 19 features (use, Actions, Server Actions improvements). The `params: Promise<>` pattern in layouts suggests Next.js 16 compatibility is intentional.
 
 **Paddle + Stripe Both Referenced**
-`.env.example` has both `PADDLE_*` and `STRIPE_WEBHOOK_SECRET` variables. The codebase has `paddle-config.ts` but also `stripe-config.ts`, suggesting a payment provider transition. Active billing appears to be Paddle.
+Stripe Billing is active for the 5-tier catalog and metered overage. Paddle files remain for compatibility and should be retired after legacy webhook traffic is confirmed inactive.
 
 ---
 
@@ -357,7 +357,7 @@ User Request
 | OpenAI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts`, `src/app/api/gateway/embed/` | Gateway multi-provider |
 | Google AI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts` | Gateway multi-provider |
 | Vercel AI SDK | Fully Implemented | `src/lib/integrations/vercel-ai/` (3 files) | Memory provider + middleware |
-| Paddle Payments | Partially Implemented | `src/lib/paddle-config.ts`, `src/components/checkout-button.tsx` | Price IDs are placeholders |
+| Stripe Payments | Partially Implemented | `src/lib/stripe-config.ts`, `src/lib/stripe-metered.ts`, `src/app/api/webhooks/stripe/route.ts`, `src/app/api/internal/usage/flush/route.ts`, `scripts/stripe/` | Active subscription mapping plus metered overage reporting for Studio/Pro. |
 | Resend Email | Fully Implemented | `src/lib/email/index.ts` | Single email service module |
 | Document Ingestion (DOCX) | Fully Implemented | `src/lib/summer/ingest/parsers/docx.ts` | Via mammoth |
 | Octokit GitHub Integration | Fully Implemented | `src/lib/auto-pr/github-client.ts`, `src/lib/autopilot/code-fixer.ts` | Auto-PR and autopilot |
@@ -381,7 +381,7 @@ User Request
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
 | next-intl | Partially Implemented | 1 file (`src/app/[locale]/docs/components/page.tsx`) | Mostly unused, custom system preferred |
 | pdf-parse | Fully Implemented | `src/lib/connectors/external/google-drive.ts`, `src/lib/summer/ingestion/layout-parser.ts` | Used for PDF text extraction in connector sync and Summer layout-aware parsing |
-| Stripe Payments | Configured but Unused | `src/lib/stripe-config.ts`, `.env.example` | Paddle is the active provider |
+| Paddle Payments | Legacy | `src/lib/paddle-config.ts`, `src/app/api/webhooks/paddle/route.ts` | Kept for compatibility while Stripe Billing is the active provider. |
 | react-markdown | Partially Implemented | 1 file (`src/components/extreme-homepage/snippet-tabs.tsx`) | Homepage only |
 | SWR | Partially Implemented | 3 files | Limited client-side use |
 
@@ -406,6 +406,6 @@ User Request
 ### Dependency Overlap
 | Overlap | Details |
 |---------|---------|
-| Paddle + Stripe | Both payment providers configured. Stripe appears dormant; Paddle is active. Consider removing Stripe if not planned. |
+| Paddle + Stripe | Stripe is active for subscriptions and metered overage; Paddle remains in legacy webhook/config paths. |
 | Custom i18n + next-intl | Dual i18n systems. The custom dictionary approach is dominant. Consider removing next-intl if not expanding its use. |
 | `pg` + `postgres` (devDeps) | Both PostgreSQL drivers in devDependencies. Likely used in scripts only. |

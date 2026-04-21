@@ -7,6 +7,7 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
+import { recordUsageEvent } from '@/lib/stripe-metered';
 import crypto from 'crypto';
 
 interface ImportMemory {
@@ -232,6 +233,24 @@ export async function POST(request: NextRequest) {
       200,
       { embedding: body.memories.reduce((sum, m) => sum + (m.content?.length || 0), 0) }
     );
+
+    if (results.imported > 0) {
+      recordUsageEvent({
+        userId,
+        keyId,
+        dimension: 'memories',
+        quantity: results.imported,
+        idempotencyKey: `memory-import:${keyId || userId}:${startTime}`,
+        source: '/api/memories/import',
+        metadata: {
+          imported: results.imported,
+          skipped: results.skipped,
+          failed: results.failed,
+        },
+      }).catch((error) => {
+        console.error('Failed to record memory import usage:', error);
+      });
+    }
 
     return NextResponse.json({
       success: true,

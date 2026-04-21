@@ -59,6 +59,7 @@ import {
   runDegradedKeywordSearch,
   shouldUseDegradedKeywordSearchFallback,
 } from '@/lib/memory/degraded-keyword-search';
+import { recordUsageEvent } from '@/lib/stripe-metered';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -523,6 +524,26 @@ export async function POST(request: NextRequest) {
     step = 'post_insert';
     // Invalidate cache for this namespace
     await incrementMemoryVersion(userId, namespace);
+
+    recordUsageEvent({
+      userId,
+      keyId,
+      dimension: 'memories',
+      quantity: 1,
+      idempotencyKey: `memory:${memory.id}`,
+      source: '/api/memories',
+      metadata: {
+        namespace,
+        memory_type: memory.memory_type,
+        encrypted: memory.is_encrypted,
+      },
+    }).catch((error) => {
+      logServerError('[memory:POST] Usage event record failed', error, {
+        userId,
+        namespace,
+        memoryId: memory.id,
+      });
+    });
 
     if (keyId) {
       await logRequest(

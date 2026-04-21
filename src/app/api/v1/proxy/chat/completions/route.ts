@@ -43,6 +43,7 @@ import { computeEmbedding } from '@/lib/embeddings';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
 import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import { validateOutboundUrl } from '@/lib/security/outbound-url';
+import { recordUsageEvent } from '@/lib/stripe-metered';
 
 // ============================================
 // Types
@@ -336,7 +337,7 @@ async function extractAndStoreMemories(
 
       if (existing && existing.length > 0) continue; // Already exists
 
-      await supabase.from('memories').insert({
+      const { data: insertedMemory } = await supabase.from('memories').insert({
         user_id: userId,
         content: scan.content,
         embedding,
@@ -344,7 +345,21 @@ async function extractAndStoreMemories(
         source: 'proxy_extraction',
         importance: 5,
         tags: ['auto-extracted', 'proxy'],
-      });
+      }).select('id').single();
+
+      if (insertedMemory?.id) {
+        recordUsageEvent({
+          userId,
+          dimension: 'memories',
+          quantity: 1,
+          idempotencyKey: `memory:${insertedMemory.id}`,
+          source: '/api/v1/proxy/chat/completions',
+          metadata: {
+            memory_type: item.type || 'fact',
+            extracted: true,
+          },
+        }).catch(console.error);
+      }
     }
   } catch {
     // Never let extraction failure affect the proxy
