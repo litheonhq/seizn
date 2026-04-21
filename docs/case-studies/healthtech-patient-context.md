@@ -31,7 +31,7 @@ MediConnect integrated Seizn's HIPAA-compliant AI Memory system to maintain pati
 
 ```typescript
 // MediConnect's Patient Context System
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({
   apiKey: process.env.SEIZN_API_KEY,
@@ -238,11 +238,11 @@ await seizn.memories.deleteUser(patientId, {
 Ready to add compliant memory to your healthcare AI?
 
 ```bash
-npm install @seizn/sdk
+npm install @seizn/sdk-js
 ```
 
 ```typescript
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 // HIPAA-compliant configuration
 const seizn = createSeizClient({

@@ -58,8 +58,8 @@ jobs:
         if: ${{ env.NODE_AUTH_TOKEN != '' }}
         run: |
           VERSION=$(node -p "require('./packages/seizn-sdk-js/package.json').version")
-          if npm view "@seizn/sdk@$VERSION" version >/dev/null 2>&1; then
-            echo "@seizn/sdk@$VERSION already exists; skipping publish."
+          if npm view "@seizn/sdk-js@$VERSION" version >/dev/null 2>&1; then
+            echo "@seizn/sdk-js@$VERSION already exists; skipping publish."
             exit 0
           fi
           npm publish ./packages/seizn-sdk-js --access public --provenance
