@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./banner.png" alt="Seizn" width="480" />
+</p>
+
 # @seizn/mcp
 
 Seizn MCP server for Claude Code, Claude Desktop, Cursor, and Codex. It exposes NPC memory, Canon Lock, replay, chaos, and Story Health tools over stdio.

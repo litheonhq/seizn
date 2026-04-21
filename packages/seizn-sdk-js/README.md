@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./banner.png" alt="Seizn" width="480" />
+</p>
+
 # @seizn/sdk-js
 
 Generated TypeScript SDK for the Seizn OpenAPI contract.

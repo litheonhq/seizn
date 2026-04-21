@@ -25,6 +25,10 @@
   --szn-text-3: #64748b;
   --szn-accent: #22d3ee;
   --szn-accent-2: #6366f1;
+  --seizn-spring: #6FA676;
+  --seizn-summer: #D97E6A;
+  --seizn-autumn: #D4A85A;
+  --seizn-winter: #6FA5B3;
   /* Brand signal — single accent, swappable as brand evolves. */
   --szn-signal: #8b5cf6;
   --szn-signal-hover: #7c3aed;
@@ -105,6 +109,10 @@
   --color-szn-text-3: var(--szn-text-3);
   --color-szn-accent: var(--szn-accent);
   --color-szn-accent-2: var(--szn-accent-2);
+  --color-seizn-spring: var(--seizn-spring);
+  --color-seizn-summer: var(--seizn-summer);
+  --color-seizn-autumn: var(--seizn-autumn);
+  --color-seizn-winter: var(--seizn-winter);
   --color-szn-signal: var(--szn-signal);
   --color-szn-signal-hover: var(--szn-signal-hover);
   --color-szn-signal-soft: var(--szn-signal-soft);
@@ -1187,4 +1195,3 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .szn-marquee { animation: none; }
 }
-
