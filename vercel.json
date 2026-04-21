@@ -28,6 +28,10 @@
       "schedule": "0 * * * *"
     },
     {
+      "path": "/api/internal/chaos/worker",
+      "schedule": "* * * * *"
+    },
+    {
       "path": "/api/cron/usage-alerts",
       "schedule": "0 9 * * *"
     },

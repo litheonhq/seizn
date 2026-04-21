@@ -256,6 +256,7 @@
       "candidates": "Event inbox",
       "replay": "Replay",
       "canon": "Canon Lock",
+      "chaos": "Chaos Monkey",
       "branches": "Branches",
       "provenance": "Provenance",
       "devTools": "Dev tools",
