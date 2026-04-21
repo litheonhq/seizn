@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "miesięcznie",
+      "price": "$999",
+      "period": "per month",
       "badge": "Popularne",
       "features": [
-        "1 000 000 wspomnień",
-        "100 000 wywołań API/miesiąc",
-        "Priorytetowe wsparcie",
-        "Zaawansowane analizy",
-        "Webhooki",
-        "Wyszukiwanie sfederowane"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "Subskrybuj"
+      "cta": "Subskrybuj",
+      "annual": "8 991 USD/rok",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "SLA dostępności 99,9%",
+      "sso": "SSO w cenie",
+      "postMortemCredits": "2 raporty post-mortem/kwartał",
+      "chaosMonkeyPriority": "Priorytetowa kolejka Chaos Monkey",
+      "canonLockReview": "Przegląd zespołowy Canon Lock",
+      "dedicatedSlack": "Dedykowany kanał Slack"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Indywidualnie",
       "period": "Skontaktuj się",
       "features": [
-        "Nieograniczone wspomnienia",
-        "Nieograniczone wywołania API",
-        "Dedykowane wsparcie",
-        "SSO / SAML",
-        "Indywidualne SLA",
-        "Opcja on-premise"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "Kontakt ze sprzedażą"
+      "cta": "Kontakt ze sprzedażą",
+      "sso": "SSO w cenie",
+      "customSla": "Niestandardowe SLA > 99,9%",
+      "dedicatedEngineer": "Dedykowany inżynier wsparcia",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "Niestandardowe BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M pamięci",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/miesiąc"
     }
   },
   "enterprisePage": {

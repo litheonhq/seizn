@@ -11,14 +11,22 @@ interface PricingClientProps {
   locale: Locale;
 }
 
+type PlanDetail =
+  | string
+  | {
+      text: string;
+      href: string;
+    };
+
 type Plan = {
   name: string;
   price: string;
   priceSub: string;
+  annual?: string;
   cadence: string;
   scope: string;
   summary: string;
-  details: string[];
+  details: PlanDetail[];
   ctaLabel: string;
   ctaHref: string;
   featured?: boolean;
@@ -69,7 +77,7 @@ const COPY_EN: Copy = {
   subtitle:
     "Seizn meters the persistent graph behind your NPCs — entities, relations, and event throughput — not the number of seats on your team. Keep Inworld, Convai, ACE, or your own dialogue stack.",
   helper:
-    "Start free, ship an Indie prototype at $39, scale to Studio and Pro as worlds grow. Enterprise for self-hosting, SSO, and multi-title infrastructure.",
+    "Start free, ship an Indie prototype at $39, scale to Studio and Pro as worlds grow. Enterprise for self-hosting, custom SLA, and multi-title infrastructure.",
   primaryCta: "Start building",
   secondaryCta: "Talk to sales",
   statChips: [
@@ -119,11 +127,11 @@ const COPY_EN: Copy = {
       price: "$299",
       priceSub: "/mo",
       cadence: "For one live title",
-      scope: "Up to 500K memories",
+      scope: "Up to 1M memories",
       summary:
         "Ship persistent memory into a production game. Thousands of NPCs, always-on event streams, with room to ramp through a seasonal launch.",
       details: [
-        "500K memories · 500K ops/month",
+        "1M memories · 1M ops/month",
         "10 projects · unlimited environments",
         "Direct response support",
         "Deterministic replay + audit log export",
@@ -136,15 +144,20 @@ const COPY_EN: Copy = {
       name: "Pro",
       price: "$999",
       priceSub: "/mo",
+      annual: "$8,991/yr (25% off)",
       cadence: "Live ops at scale",
       scope: "Up to 5M memories",
       summary:
-        "Multi-title live ops with SLA. Full moderation pipeline, Theory-of-Mind belief shards, and scene primitives enabled by default.",
+        "Multi-title live ops with a public SLA and production escalation path. Built for teams that need guarantees, review workflows, and incident support.",
       details: [
         "5M memories · unlimited ops",
         "Unlimited projects and environments",
-        "99.9% SLA · priority support channel",
-        "Moderation, ToM, and scene features on by default",
+        { text: "99.9% uptime SLA", href: "/sla" },
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review workflow",
+        "Dedicated Slack with engineering",
       ],
       ctaLabel: "Upgrade to Pro",
       ctaHref: "/enterprise",
@@ -156,12 +169,14 @@ const COPY_EN: Copy = {
       cadence: "Publisher scope",
       scope: "Self-hosted or private cloud",
       summary:
-        "Shared memory infrastructure across studios and titles. Regional deployment, SSO, private networking, and procurement-ready contracts.",
+        "Shared memory infrastructure across studios and titles. Regional deployment, private networking, and procurement-ready contracts.",
       details: [
         "Custom memory and ops caps",
         "Self-hosted or dedicated private cloud",
-        "SSO / SAML · DPA · SOC 2 path",
-        "Dedicated success channel",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA",
       ],
       ctaLabel: "Talk to Seizn",
       ctaHref: "/enterprise",
@@ -174,7 +189,7 @@ const COPY_EN: Copy = {
       label: "Memories",
       free: "10K",
       indie: "100K",
-      studio: "500K",
+      studio: "1M",
       pro: "5M",
       enterprise: "Custom",
     },
@@ -182,7 +197,7 @@ const COPY_EN: Copy = {
       label: "Ops / month",
       free: "10K",
       indie: "100K",
-      studio: "500K",
+      studio: "1M",
       pro: "Unlimited",
       enterprise: "Custom",
     },
@@ -199,8 +214,8 @@ const COPY_EN: Copy = {
       free: "Docs only",
       indie: "Async email",
       studio: "Direct response",
-      pro: "Priority channel + SLA",
-      enterprise: "Dedicated success",
+      pro: "SLA + dedicated Slack",
+      enterprise: "Dedicated engineer",
     },
     {
       label: "Deployment",
@@ -240,11 +255,11 @@ const COPY_EN: Copy = {
     },
     {
       q: "When do we need Enterprise?",
-      a: "Choose Enterprise when security review, SSO / SAML, data residency, self-hosting, or multi-title memory infrastructure enters the conversation. Starting price is $2,500/month plus usage; most contracts include custom SLA and dedicated success.",
+      a: "Choose Enterprise when custom SLA above 99.9%, a dedicated support engineer, custom BAA / DPA, data residency, self-hosting, or publisher-wide memory infrastructure enters the conversation.",
     },
     {
       q: "Annual billing or yearly discount?",
-      a: "Yearly plans ship with a 15% discount across Indie, Studio, and Pro. Enterprise contracts are always annual and negotiated case by case.",
+      a: "Pro annual is $8,991/year, a 25% discount from monthly billing. Enterprise contracts are annual and negotiated case by case.",
     },
   ],
   finalCtaTitle: "Ready to price your world?",
@@ -261,7 +276,7 @@ const COPY_KO: Copy = {
   subtitle:
     "Seizn은 NPC 뒤의 지속 메모리 그래프 — 엔티티, 관계, 이벤트 처리량 — 을 기준으로 과금합니다. 팀 좌석 수와 무관하며 Inworld, Convai, ACE, 자체 대화 스택을 그대로 유지합니다.",
   helper:
-    "Free로 시작하고 $39 Indie에서 첫 출시, 규모가 커지면 Studio와 Pro로 이동합니다. Enterprise는 셀프호스트, SSO, 멀티 타이틀 인프라를 커버합니다.",
+    "Free로 시작하고 $39 Indie에서 첫 출시, 규모가 커지면 Studio와 Pro로 이동합니다. Enterprise는 셀프호스트, 커스텀 SLA, 멀티 타이틀 인프라를 커버합니다.",
   primaryCta: "무료로 시작",
   secondaryCta: "영업팀 상담",
   statChips: [
@@ -311,11 +326,11 @@ const COPY_KO: Copy = {
       price: "$299",
       priceSub: "/월",
       cadence: "라이브 타이틀 1개",
-      scope: "메모리 최대 500K",
+      scope: "메모리 최대 1M",
       summary:
         "실제 게임에 지속 메모리를 투입. 수천 개 NPC, 상시 이벤트 스트림, 시즌 런칭을 버티는 헤드룸.",
       details: [
-        "메모리 500K · 월 500K ops",
+        "메모리 1M · 월 1M ops",
         "프로젝트 10개 · 무제한 환경",
         "직접 응답 지원",
         "Deterministic replay + 감사 로그 export",
@@ -328,15 +343,20 @@ const COPY_KO: Copy = {
       name: "Pro",
       price: "$999",
       priceSub: "/월",
+      annual: "연 $8,991 (25% 할인)",
       cadence: "스케일 라이브옵스",
       scope: "메모리 최대 5M",
       summary:
-        "SLA 동반 멀티 타이틀 라이브옵스. 전체 모더레이션 파이프라인, Theory-of-Mind belief shards, 씬 프리미티브가 기본 활성.",
+        "공개 SLA와 프로덕션 에스컬레이션 경로가 필요한 멀티 타이틀 라이브옵스용 플랜입니다.",
       details: [
         "메모리 5M · 무제한 ops",
         "무제한 프로젝트·환경",
-        "99.9% SLA · 우선 지원 채널",
-        "모더레이션·ToM·씬 기능 기본 on",
+        { text: "99.9% 가동률 SLA", href: "/sla" },
+        "SSO 포함",
+        "분기당 포스트모템 리포트 2건",
+        "Chaos Monkey 우선 큐",
+        "Canon Lock 팀 리뷰 워크플로",
+        "엔지니어링 전용 Slack",
       ],
       ctaLabel: "Pro 업그레이드",
       ctaHref: "/enterprise",
@@ -348,12 +368,14 @@ const COPY_KO: Copy = {
       cadence: "퍼블리셔 범위",
       scope: "셀프호스트 또는 프라이빗 클라우드",
       summary:
-        "스튜디오·타이틀 전반의 공용 메모리 인프라. 지역 배포, SSO, 프라이빗 네트워킹, 조달 대응 계약.",
+        "스튜디오·타이틀 전반의 공용 메모리 인프라. 지역 배포, 프라이빗 네트워킹, 조달 대응 계약.",
       details: [
         "커스텀 메모리·ops 캡",
         "셀프호스트 또는 전용 프라이빗 클라우드",
-        "SSO / SAML · DPA · SOC 2 경로",
-        "전용 성공 채널",
+        "SSO / SAML 포함",
+        "99.9% 초과 커스텀 SLA",
+        "전담 지원 엔지니어",
+        "커스텀 BAA / DPA",
       ],
       ctaLabel: "Seizn 상담",
       ctaHref: "/enterprise",
@@ -366,7 +388,7 @@ const COPY_KO: Copy = {
       label: "메모리",
       free: "10K",
       indie: "100K",
-      studio: "500K",
+      studio: "1M",
       pro: "5M",
       enterprise: "커스텀",
     },
@@ -374,7 +396,7 @@ const COPY_KO: Copy = {
       label: "월 ops",
       free: "10K",
       indie: "100K",
-      studio: "500K",
+      studio: "1M",
       pro: "무제한",
       enterprise: "커스텀",
     },
@@ -391,8 +413,8 @@ const COPY_KO: Copy = {
       free: "문서만",
       indie: "비동기 이메일",
       studio: "직접 응답",
-      pro: "우선 채널 + SLA",
-      enterprise: "전용 성공",
+      pro: "SLA + 전용 Slack",
+      enterprise: "전담 엔지니어",
     },
     {
       label: "배포 형태",
@@ -432,11 +454,11 @@ const COPY_KO: Copy = {
     },
     {
       q: "어떤 경우에 Enterprise가 필요한가요?",
-      a: "보안 심사·SSO/SAML·데이터 레지던시·셀프호스트·멀티 타이틀 메모리 인프라가 논의되면 Enterprise가 맞습니다. 시작 가격은 월 $2,500 + 사용량이며, 대부분 커스텀 SLA와 전용 성공 채널이 포함됩니다.",
+      a: "99.9%를 초과하는 커스텀 SLA, 전담 지원 엔지니어, 커스텀 BAA / DPA, 데이터 레지던시, 셀프호스트, 퍼블리셔 전반의 메모리 인프라가 필요할 때 Enterprise가 맞습니다.",
     },
     {
       q: "연간 결제 할인이 있나요?",
-      a: "연간 플랜은 Indie·Studio·Pro에 15% 할인이 적용됩니다. Enterprise 계약은 항상 연간이며 케이스별 협상입니다.",
+      a: "Pro 연간 결제는 월 결제 대비 25% 할인된 $8,991/년입니다. Enterprise 계약은 항상 연간이며 케이스별 협상입니다.",
     },
   ],
   finalCtaTitle: "세계 규모 산정이 필요하신가요?",
@@ -563,6 +585,9 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
                     <p className="mt-2 text-[12px] text-szn-text-3 font-mono uppercase tracking-[0.12em]">
                       {plan.cadence}
                     </p>
+                    {plan.annual && (
+                      <p className="mt-2 font-mono text-[13px] text-szn-signal">{plan.annual}</p>
+                    )}
                   </div>
 
                   <p className="text-[13px] leading-[1.6] text-szn-text-2 mb-6">{plan.summary}</p>
@@ -570,11 +595,17 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
                   <ul className="mb-8 flex-1 space-y-2.5">
                     {plan.details.map((detail) => (
                       <li
-                        key={detail}
+                        key={typeof detail === "string" ? detail : detail.text}
                         className="flex items-start gap-2 text-[12px] leading-[1.55] text-szn-text-2"
                       >
                         <span className="mt-1.5 h-1 w-1 rounded-full bg-szn-signal shrink-0" />
-                        <span>{detail}</span>
+                        {typeof detail === "string" ? (
+                          <span>{detail}</span>
+                        ) : (
+                          <Link href={`/${locale}${detail.href}`} className="text-szn-signal hover:text-szn-text-1">
+                            {detail.text}
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>

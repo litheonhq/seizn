@@ -1,7 +1,7 @@
-import { Metadata } from 'next';
-import { getDictionary } from '@/i18n/get-dictionary';
-import { Locale } from '@/i18n/config';
-import { PricingClient } from './pricing-client';
+import type { Metadata } from "next";
+import { getDictionary } from "@/i18n/get-dictionary";
+import type { Locale } from "@/i18n/config";
+import { PricingClient } from "./pricing-client";
 
 interface PageProps {
   params: Promise<{ locale: Locale }>;
@@ -11,14 +11,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   await getDictionary(locale);
 
-  const title =
-    locale === 'ko'
-      ? 'NPC 엔티티 기준 가격'
-      : 'Per-Entity NPC Pricing';
+  const title = locale === "ko" ? "NPC 엔티티 기준 가격" : "Per-Entity NPC Pricing";
   const description =
-    locale === 'ko'
-      ? 'Seizn은 NPC 메모리를 좌석 수가 아니라 엔티티 그래프와 이벤트 처리량 기준으로 과금합니다. Inworld, Convai, ACE와 함께 쓰고 Studio는 월 $499부터 시작합니다.'
-      : 'Seizn prices AI NPC memory by entity graph size and event throughput, not by seat count. Keep Inworld, Convai, or ACE. Studio starts at $499 per month.';
+    locale === "ko"
+      ? "Seizn은 NPC 메모리를 좌석 수가 아니라 엔티티 그래프와 이벤트 처리량 기준으로 과금합니다. Pro는 99.9% SLA, SSO, post-mortem credits, 우선 Chaos Monkey queue, Canon Lock review, dedicated Slack을 포함합니다."
+      : "Seizn prices AI NPC memory by entity graph size and event throughput, not by seat count. Pro includes 99.9% SLA, SSO, post-mortem credits, priority Chaos Monkey queue, Canon Lock review, and dedicated Slack.";
 
   return {
     title,
@@ -29,6 +26,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
-  
+
   return <PricingClient dict={dict} locale={locale} />;
 }

@@ -90,32 +90,62 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$99",
-      "period": "per månad",
+      "price": "$999",
+      "period": "per month",
       "badge": "Populär",
       "features": [
-        "1 000 000 minnen",
-        "100 000 API-anrop/månad",
-        "Prioriterad support",
-        "Avancerad analys",
-        "Webhooks",
-        "Federerad sökning"
+        "5M memories",
+        "Unlimited ops",
+        "99.9% uptime SLA",
+        "SSO included",
+        "2 post-mortem reports/quarter",
+        "Priority Chaos Monkey queue",
+        "Canon Lock team review",
+        "Dedicated Slack channel"
       ],
-      "cta": "Prenumerera"
+      "cta": "Prenumerera",
+      "annual": "$8 991/år",
+      "memories": "5M memories",
+      "ops": "Unlimited ops",
+      "sla": "99,9% upptids-SLA",
+      "sso": "SSO ingår",
+      "postMortemCredits": "2 post-mortem-rapporter/kvartal",
+      "chaosMonkeyPriority": "Prioriterad Chaos Monkey-kö",
+      "canonLockReview": "Canon Lock-teamgranskning",
+      "dedicatedSlack": "Dedikerad Slack-kanal"
     },
     "enterprise": {
       "name": "Enterprise",
       "price": "Anpassad",
       "period": "Kontakta oss",
       "features": [
-        "Obegränsade minnen",
-        "Obegränsade API-anrop",
-        "Dedikerad support",
-        "SSO / SAML",
-        "Anpassad SLA",
-        "On-premise-alternativ"
+        "Custom memory and ops caps",
+        "Self-hosted or dedicated private cloud",
+        "SSO / SAML included",
+        "Custom SLA > 99.9%",
+        "Dedicated support engineer",
+        "Custom BAA / DPA"
       ],
-      "cta": "Kontakta försäljning"
+      "cta": "Kontakta försäljning",
+      "sso": "SSO ingår",
+      "customSla": "Anpassad SLA > 99,9%",
+      "dedicatedEngineer": "Dedikerad supportingenjör",
+      "customBaaDpa": "Custom BAA / DPA",
+      "baaDpa": "Anpassad BAA / DPA"
+    },
+    "studio": {
+      "name": "Studio",
+      "price": "$299",
+      "period": "per month",
+      "memories": "1M minnen",
+      "apiCalls": "1M ops/month",
+      "features": [
+        "1M memories",
+        "1M ops/month",
+        "10 projects",
+        "Deterministic replay + audit log export"
+      ],
+      "apiCallsMonthly": "1M ops/månad"
     }
   },
   "enterprisePage": {
