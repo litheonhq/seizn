@@ -12,7 +12,7 @@ import { dispatchTool, tools } from "./tools/index.js";
 const server = new Server(
   {
     name: "@seizn/mcp",
-    version: "0.1.0",
+    version: "0.9.0-beta.1",
   },
   {
     capabilities: {

@@ -36,7 +36,7 @@ const program = new Command();
 program
   .name('seizn')
   .description('Seizn AI Memory Platform CLI')
-  .version('0.1.0')
+  .version('0.9.0-beta.1')
   .option('-b, --base-url <url>', 'Seizn API base URL')
   .option('-t, --token <key>', 'Seizn API key')
   .option('--json', 'print JSON output where supported');

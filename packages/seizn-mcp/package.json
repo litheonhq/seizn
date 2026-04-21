@@ -1,6 +1,6 @@
 {
   "name": "@seizn/mcp",
-  "version": "0.1.0",
+  "version": "0.9.0-beta.1",
   "description": "Model Context Protocol server for Seizn NPC memory, canon, replay, chaos, and Story Health tools.",
   "type": "module",
   "main": "dist/index.js",
