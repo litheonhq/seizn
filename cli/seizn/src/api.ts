@@ -90,6 +90,27 @@ export class SeiznApiClient {
     return payload as T;
   }
 
+  async requestBinary(apiPath: string, init: RequestInit = {}) {
+    const url = new URL(apiPath, this.baseUrl);
+    const headers = new Headers(init.headers);
+    headers.set("Authorization", `Bearer ${this.token}`);
+
+    const response = await fetch(url, { ...init, headers });
+    if (!response.ok) {
+      const payload = (await parseResponse(response)) as ApiEnvelope<unknown> | string | null;
+      if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+        throw new SeiznApiError(
+          payload.error?.message || payload.message || `Seizn API failed with ${response.status}`,
+          response.status,
+          payload.error?.code
+        );
+      }
+      throw new SeiznApiError(`Seizn API failed with ${response.status}`, response.status);
+    }
+
+    return Buffer.from(await response.arrayBuffer());
+  }
+
   async listMemories(options: {
     limit?: number;
     namespace?: string;
@@ -146,6 +167,27 @@ export class SeiznApiClient {
         severity: lock.severity,
         active: lock.active,
       }),
+    });
+  }
+
+  async exportSaveFile(npcId: string) {
+    return this.requestBinary(`/api/save-file/export/${encodeURIComponent(npcId)}`);
+  }
+
+  async importSaveFile(file: Buffer) {
+    return this.request<{
+      npcId: string;
+      imported: {
+        memories: number;
+        beliefs: number;
+        canonLocks: number;
+      };
+    }>("/api/save-file/import", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/vnd.seizn.savefile",
+      },
+      body: file as unknown as BodyInit,
     });
   }
 }
