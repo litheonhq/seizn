@@ -1,0 +1,55 @@
+{
+  "name": "@seizn/mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for Seizn NPC memory, canon, replay, chaos, and Story Health tools.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "seizn-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "mcp",
+    "model-context-protocol",
+    "npc-memory",
+    "canon-lock",
+    "claude",
+    "cursor",
+    "codex"
+  ],
+  "author": "Seizn <support@seizn.com>",
+  "license": "MIT",
+  "homepage": "https://www.seizn.com/docs/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/litheonhq/seizn.git",
+    "directory": "packages/seizn-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/litheonhq/seizn/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "seizn": "file:../.."
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
