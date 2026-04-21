@@ -60,6 +60,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Deterministic Replay | AsyncLocalStorage + PostgreSQL snapshots | -- | `/api/v1/replay` captures and replays memory reads/writes, tool calls, and LLM metadata for reproducible NPC-memory debugging. |
 | Replay Bug Reports | Supabase Storage + bug tracker APIs | -- | Signed replay bundles upload to private `replays` storage and can append a Seizn Replay block to Linear, GitHub, or Jira tickets via `/api/webhooks/bug-tracker/[provider]`. |
 | Canon Lock | PostgreSQL RLS + Claude Haiku validator | -- | `canon_locks` define hard/soft NPC/world facts; memory writes call `src/lib/canon/enforce.ts` before storage and log `canon_violations`. |
+| Seizn CLI | @seizn/cli + commander | 0.1.0 | Workspace package in `cli/seizn` provides `init`, `login`, `replay`, `export`, `audit`, `bench`, and `canon list/pull/push`; credentials are stored at `~/.config/seizn/credentials.json` with `0600` permissions. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
@@ -116,6 +117,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Publish JS SDK | `publish-js-sdk.yml` | -- |
 | Publish Python SDK | `publish-python-sdk.yml` | -- |
 | Publish SDK | `publish-sdk.yml` | -- |
+| Seizn CLI Release | `seizn-cli-release.yml` | Push tags matching `cli-v*`; builds and publishes `@seizn/cli` to npm |
 | Release SLSA | `release-slsa.yml` | -- |
 
 ### Testing
@@ -179,6 +181,8 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `@opentelemetry/sdk-node` | ^0.211.0 | Distributed tracing with OTLP export |
 | `resend` | ^6.7.0 | Transactional email delivery |
 | `lucide-react` | ^0.563.0 | Icon library |
+| `commander` | ^12.1.0 | `@seizn/cli` command parser |
+| `yaml` | ^2.8.3 | Canon Lock YAML pull/push format |
 | `tailwind-merge` | ^3.4.0 | Tailwind CSS class conflict resolution |
 | `swr` | ^2.4.0 | Client-side data fetching with caching |
 | `mammoth` | ^1.11.0 | DOCX document parsing for Summer ingestion |

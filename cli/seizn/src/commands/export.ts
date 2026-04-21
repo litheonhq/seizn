@@ -10,9 +10,49 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { writeFile, readFile } from 'node:fs/promises';
 import { createCLIClient } from '../client.js';
+import { SeiznApiClient } from '../api.js';
+import { lockRows, memoryRows, printJson, toCsv } from '../format.js';
+import type { GlobalOptions } from '../types.js';
+
+interface DirectExportOptions {
+  entity?: 'memories' | 'canon';
+  format?: 'json' | 'csv';
+  limit?: string;
+  namespace?: string;
+}
+
+function parseLimit(value?: string) {
+  const parsed = Number.parseInt(value || '100', 10);
+  if (!Number.isFinite(parsed) || parsed < 1) return 100;
+  return Math.min(parsed, 100);
+}
 
 export function createExportCommand(): Command {
-  const cmd = new Command('export').description('Export/import memories');
+  const cmd = new Command('export')
+    .description('Export memories or canon locks')
+    .option('-e, --entity <entity>', 'memories or canon', 'memories')
+    .option('-f, --format <format>', 'json or csv', 'json')
+    .option('-l, --limit <number>', 'maximum memory rows', '100')
+    .option('-n, --namespace <name>', 'memory namespace')
+    .action(async (opts: DirectExportOptions, command: Command) => {
+      const globals = command.optsWithGlobals() as GlobalOptions;
+      const client = await SeiznApiClient.create(globals);
+      const format = opts.format === 'csv' ? 'csv' : 'json';
+
+      if (opts.entity === 'canon') {
+        const { locks } = await client.listCanon();
+        if (format === 'csv') process.stdout.write(toCsv(lockRows(locks)));
+        else printJson({ locks });
+        return;
+      }
+
+      const memories = await client.listMemories({
+        limit: parseLimit(opts.limit),
+        namespace: opts.namespace,
+      });
+      if (format === 'csv') process.stdout.write(toCsv(memoryRows(memories.results || [])));
+      else printJson(memories);
+    });
 
   cmd
     .command('save')
