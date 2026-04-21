@@ -21,10 +21,22 @@ interface DirectExportOptions {
   namespace?: string;
 }
 
+interface NpcSvgExportOptions {
+  view?: 'timeline' | 'graph';
+  output?: string;
+  limit?: string;
+}
+
 function parseLimit(value?: string) {
   const parsed = Number.parseInt(value || '100', 10);
   if (!Number.isFinite(parsed) || parsed < 1) return 100;
   return Math.min(parsed, 100);
+}
+
+function parseVisualizationLimit(value?: string) {
+  const parsed = Number.parseInt(value || '500', 10);
+  if (!Number.isFinite(parsed) || parsed < 1) return 500;
+  return Math.min(parsed, 1500);
 }
 
 export function createExportCommand(): Command {
@@ -52,6 +64,24 @@ export function createExportCommand(): Command {
       });
       if (format === 'csv') process.stdout.write(toCsv(memoryRows(memories.results || [])));
       else printJson(memories);
+    });
+
+  cmd
+    .command('npc-svg <npcId>')
+    .description('Export an NPC timeline or relationship graph as SVG')
+    .option('-v, --view <view>', 'timeline or graph', 'timeline')
+    .option('-o, --output <path>', 'Output SVG path')
+    .option('-l, --limit <number>', 'Maximum events/edges', '500')
+    .action(async (npcId: string, opts: NpcSvgExportOptions, command: Command) => {
+      const globals = command.optsWithGlobals() as GlobalOptions;
+      const view = opts.view === 'graph' ? 'graph' : 'timeline';
+      const output = opts.output || `${npcId}-${view}.svg`;
+      const client = await SeiznApiClient.create(globals);
+      const svg = await client.exportNpcVisualizationSvg(npcId, view, {
+        limit: parseVisualizationLimit(opts.limit),
+      });
+      await writeFile(output, svg);
+      console.log(`Exported ${chalk.green(output)}`);
     });
 
   cmd
