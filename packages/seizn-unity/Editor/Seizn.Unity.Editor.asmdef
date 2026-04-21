@@ -1,0 +1,18 @@
+{
+  "name": "Seizn.Unity.Editor",
+  "rootNamespace": "Seizn.Editor",
+  "references": [
+    "Seizn.Unity"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
