@@ -1,10 +1,18 @@
 import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import { checkProductionEnv } from './src/lib/env-guard';
 
 // Disable standalone on Windows due to Turbopack file naming issue with node: prefix
 // See: https://github.com/vercel/next.js/issues - colons in filenames not supported on Windows
 const isWindows = process.platform === 'win32';
+
+if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+  const result = checkProductionEnv();
+  if (!result.ok) {
+    console.warn('[env-guard] Missing production env vars:', result.missing.join(', '));
+  }
+}
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker (disabled on Windows due to Turbopack compatibility)
