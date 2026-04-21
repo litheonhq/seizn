@@ -29,6 +29,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Data Grids | @tanstack/react-table | ^8.21.3 | Designer Memory UI spreadsheet grid with sorting/filtering |
 | Charts | Recharts | ^3.6.0 | Analytics, evals, traces, RetOps dashboards (7 files) |
 | Graph Visualization | @xyflow/react | ^12.10.0 | Memory mind map, knowledge graph canvas (8 files) |
+| Force Graphs | react-force-graph-2d | ^1.29.1 | NPC relationship graph canvas with 100+ interactive entity nodes |
 | Markdown | react-markdown | ^10.1.0 | Homepage snippet tabs |
 | Code Highlighting | react-syntax-highlighter | ^16.1.0 | Homepage code snippets |
 | Error Boundaries | react-error-boundary | ^6.1.0 | AsyncBoundary component for streaming |
@@ -52,6 +53,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
 | Memory Budgeting | Hot/warm/cold tier budgets | -- | Legacy v1 memories now support `entity_id`, `tier`, `pinned`, recall counters, byte sizing, `/api/v1/memory-budget` telemetry, and `/dashboard/memories/budget` monitoring. |
 | Designer Memory UI | @tanstack/react-table + CSV/JSON round-trip | -- | `/dashboard/memory-editor` and `/dashboard/memory-editor/[npc_id]` provide spreadsheet editing; `/api/memory-editor/import` previews/applies diffs, runs Canon Lock validation, and relies on memory history/version triggers. |
+| NPC Timeline / Graph UI | SVG timeline + react-force-graph-2d | -- | `/dashboard/npcs/[id]/timeline`, `/dashboard/npcs/[id]/graph`, `/api/npcs/[id]/timeline`, and `/api/npcs/[id]/graph` visualize memory, canon, gossip, and belief relationships with SVG export support. |
 | Theory-of-Mind Memory | Belief shards | -- | Perspective-aware recall via `belief_shards`, `/api/v1/beliefs`, `/api/v1/memories.recall`, and `/dashboard/memories/beliefs` so NPCs only retrieve facts they know. |
 | Memory Decay | Forgetting curves | -- | `decay_policies`, per-memory strength metadata, recall reinforcement, decay-aware reranking, `/api/v1/decay-policies`, and `/dashboard/memories/decay`. |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
@@ -184,6 +186,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `posthog-js` | ^1.316.0 | Product analytics, TTFS tracking, conversion funnels |
 | `@xyflow/react` | ^12.10.0 | Interactive graph/flow visualization (mind maps, knowledge graphs) |
 | `@tanstack/react-table` | ^8.21.3 | Spreadsheet-like dashboard data grids |
+| `react-force-graph-2d` | ^1.29.1 | Force-directed NPC relationship graphs |
 | `recharts` | ^3.6.0 | Data visualization charts (analytics, evals, traces) |
 | `@react-pdf/renderer` | ^4.5.1 | Server-side post-mortem PDF generation |
 | `@opentelemetry/sdk-node` | ^0.211.0 | Distributed tracing with OTLP export |

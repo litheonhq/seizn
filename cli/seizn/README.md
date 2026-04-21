@@ -54,6 +54,8 @@ Creates `seizn.config.json`:
 seizn replay <trace-id>
 seizn export --entity memories --format json
 seizn export --entity canon --format csv
+seizn export npc-svg kaelan --view timeline -o kaelan-timeline.svg
+seizn export npc-svg kaelan --view graph -o kaelan-graph.svg
 seizn audit --limit 50
 seizn bench --requests 20
 seizn canon list

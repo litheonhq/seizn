@@ -190,4 +190,14 @@ export class SeiznApiClient {
       body: file as unknown as BodyInit,
     });
   }
+
+  async exportNpcVisualizationSvg(
+    npcId: string,
+    view: 'timeline' | 'graph',
+    options: { limit?: number } = {}
+  ) {
+    const search = new URLSearchParams({ format: 'svg' });
+    if (options.limit) search.set('limit', String(options.limit));
+    return this.requestBinary(`/api/npcs/${encodeURIComponent(npcId)}/${view}?${search.toString()}`);
+  }
 }
