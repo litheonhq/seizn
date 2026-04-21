@@ -31,7 +31,7 @@ Morrison & Associates deployed Seizn's AI Memory system integrated with their le
 
 ```typescript
 // Morrison & Associates Legal AI Memory
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({
   apiKey: process.env.SEIZN_API_KEY,
@@ -260,11 +260,11 @@ const clientPrefs = await seizn.memories.search({
 Ready to add memory to your legal AI systems?
 
 ```bash
-npm install @seizn/sdk
+npm install @seizn/sdk-js
 ```
 
 ```typescript
-import { createSeizClient } from '@seizn/sdk';
+import { createSeizClient } from '@seizn/sdk-js';
 
 const seizn = createSeizClient({
   apiKey: 'your-api-key',

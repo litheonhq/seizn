@@ -32,7 +32,7 @@ TheLabForge deployed Seizn's observability platform with OpenTelemetry-native in
 
 ```typescript
 // Automatic instrumentation with Seizn
-import { SeizLangChainCallbackHandler } from '@seizn/sdk';
+import { SeizLangChainCallbackHandler } from '@seizn/sdk-js';
 
 const callbackHandler = new SeizLangChainCallbackHandler({
   apiKey: process.env.SEIZN_API_KEY,
@@ -255,7 +255,7 @@ const evidence = await seizn.compliance.generateEvidencePack({
 ## Integration Example
 
 ```typescript
-import { createVercelAIAdapter } from '@seizn/sdk';
+import { createVercelAIAdapter } from '@seizn/sdk-js';
 
 // Vercel AI SDK integration
 const seizn = createVercelAIAdapter({

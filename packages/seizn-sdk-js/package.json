@@ -1,5 +1,5 @@
 {
-  "name": "@seizn/sdk",
+  "name": "@seizn/sdk-js",
   "version": "0.1.0",
   "description": "Generated TypeScript SDK for the Seizn OpenAPI contract",
   "type": "module",
