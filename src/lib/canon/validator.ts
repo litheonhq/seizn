@@ -13,6 +13,7 @@ export interface CanonLock {
   regexFastpath: string | null;
   severity: CanonSeverity;
   active: boolean;
+  requiresTeamReview: boolean;
   createdBy: string | null;
   createdAt: string;
   updatedAt: string;

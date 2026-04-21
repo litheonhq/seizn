@@ -32,6 +32,7 @@ export interface ChaosRun {
   npcId: string;
   suite: string;
   status: ChaosRunStatus;
+  queuePriority: number;
   promptCount: number;
   targetEndpoint: string | null;
   targetMode: 'seizn-hosted' | 'external';

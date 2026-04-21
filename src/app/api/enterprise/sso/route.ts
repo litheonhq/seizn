@@ -6,6 +6,7 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { verifyCsrf } from '@/lib/csrf';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
+import { hasFeature } from '@/lib/plan-limits';
 import {
   getSSOConnections,
   createSSOConnection,
@@ -42,6 +43,17 @@ async function resolveAdminOrgId(userId: string, requestedOrgId?: string | null)
 
   const membership = Array.isArray(data) ? data[0] : null;
   return membership?.organization_id || null;
+}
+
+async function getOrganizationPlan(organizationId: string): Promise<string> {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from('organizations')
+    .select('plan')
+    .eq('id', organizationId)
+    .maybeSingle();
+
+  return typeof data?.plan === 'string' && data.plan.trim() ? data.plan : 'free';
 }
 
 interface EnterpriseSSORequestBody {
@@ -219,6 +231,14 @@ export async function POST(_request: NextRequest) {
     if (!orgId) {
       return NextResponse.json(
         { error: 'Organization not found or insufficient permissions' },
+        { status: 403 }
+      );
+    }
+
+    const orgPlan = await getOrganizationPlan(orgId);
+    if (!hasFeature(orgPlan, 'sso')) {
+      return NextResponse.json(
+        { error: 'SSO requires Pro or Enterprise plan' },
         { status: 403 }
       );
     }

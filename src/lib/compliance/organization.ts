@@ -11,32 +11,44 @@ export async function resolveComplianceOrganizationId(
   params: { userId: string; keyId?: string | null }
 ): Promise<string | null> {
   if (params.keyId) {
-    const { data } = await supabase
-      .from('api_keys')
-      .select('organization_id')
-      .eq('id', params.keyId)
-      .maybeSingle();
-    const orgId = asId((data as { organization_id?: unknown } | null)?.organization_id);
-    if (orgId) return orgId;
+    try {
+      const { data } = await supabase
+        .from('api_keys')
+        .select('organization_id')
+        .eq('id', params.keyId)
+        .maybeSingle();
+      const orgId = asId((data as { organization_id?: unknown } | null)?.organization_id);
+      if (orgId) return orgId;
+    } catch {
+      // Optional compatibility path. Continue to profile/org membership lookup.
+    }
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('organization_id')
-    .eq('id', params.userId)
-    .maybeSingle();
-  const profileOrgId = asId((profile as { organization_id?: unknown } | null)?.organization_id);
-  if (profileOrgId) return profileOrgId;
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', params.userId)
+      .maybeSingle();
+    const profileOrgId = asId((profile as { organization_id?: unknown } | null)?.organization_id);
+    if (profileOrgId) return profileOrgId;
+  } catch {
+    // Optional compatibility path. Continue to membership lookup.
+  }
 
-  const { data: membership } = await supabase
-    .from('organization_members')
-    .select('organization_id')
-    .eq('user_id', params.userId)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  try {
+    const { data: membership } = await supabase
+      .from('organization_members')
+      .select('organization_id')
+      .eq('user_id', params.userId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
 
-  return asId((membership as { organization_id?: unknown } | null)?.organization_id);
+    return asId((membership as { organization_id?: unknown } | null)?.organization_id);
+  } catch {
+    return null;
+  }
 }
 
 export async function listOrganizationUserIds(

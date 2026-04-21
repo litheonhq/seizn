@@ -80,3 +80,15 @@
 **Symptom:** One-off STAGE-09 runtime verification could not run with `npx tsx` on Windows, and an esbuild ESM bundle failed on dynamic `require("crypto")` from PDF dependencies.
 **Cause:** The local workspace did not expose a `tsx` shim, and the PDF dependency chain still uses CommonJS dynamic requires that are not valid inside an ESM verification bundle.
 **Fix:** Bundle the temporary verification entry with esbuild as CommonJS (`--format=cjs --platform=node`) and run the generated `.cjs` file. Keep the generated file under `%TEMP%` and delete it after the run.
+
+### Seizn Pooler Env Drift Blocked Migration Verification
+**Date:** 2026-04-21
+**Symptom:** `node scripts/run-migration-file.mjs supabase/migrations/20260421021_pro_features.sql` failed against `.env.local` with either `password authentication failed for user "postgres"` or `Tenant or user not found`.
+**Cause:** The workspace `.env.local` and original project `.env.local` had stale Supabase pooler credentials/hosts, while `C:\Users\admin\.env.litheon` still had the valid Seizn pooler URL under `POSTGRES_URL_SEIZN`.
+**Resolution:** Added `SEIZN_ENV_FILE` support to `scripts/load-local-env.mjs` and ran the migration with `POSTGRES_URL_NON_POOLING` populated from `POSTGRES_URL_SEIZN` without printing secret values.
+
+### Runtime DB Verifier Guardrails Drifted On Active Seizn DB
+**Date:** 2026-04-21
+**Symptom:** Post-migration `verify:e2e-encryption-db` exited non-zero even after the BA-01 SQL applied successfully.
+**Cause:** The active DB target was missing `hybrid_search_memories` and `search_memories`, `keyword_search_memories` still cast text user ids to UUID, and `flight_recorder_traces` still allowed anon/authenticated SELECT.
+**Resolution:** Added and applied `supabase/migrations/20260421022_runtime_verification_guardrails.sql`, restoring the three search RPCs for the text `memories.user_id` schema and revoking public view access while preserving `service_role` access.
