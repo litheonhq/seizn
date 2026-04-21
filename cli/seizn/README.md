@@ -59,9 +59,13 @@ seizn bench --requests 20
 seizn canon list
 seizn canon pull > canon.yml
 seizn canon push canon.yml
+seizn save export kaelan ./kaelan.szs
+seizn save import ./kaelan.szs
 ```
 
 `canon pull` emits a stable YAML file. `canon push` skips unchanged locks, so a pull followed by push does not mutate `updatedAt` timestamps.
+
+`save export` downloads a signed SZN1 `.szs` bundle for one NPC. `save import` verifies the signature and restores memories, belief shards, and canon locks into the authenticated project.
 
 ## Environment
 
