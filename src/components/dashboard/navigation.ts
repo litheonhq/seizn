@@ -79,6 +79,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
         { label: t("dashboard.nav.candidates"), href: "/dashboard/memories/candidates", icon: InboxIcon },
         { label: t("dashboard.nav.replay"), href: "/dashboard/replay", icon: TerminalIcon },
         { label: t("dashboard.nav.canon"), href: "/dashboard/canon", icon: ShieldIcon },
+        { label: t("dashboard.nav.chaos"), href: "/dashboard/chaos", icon: PlayIcon },
         { label: t("dashboard.nav.branches"), href: "/dashboard/memories/branches", icon: TerminalIcon },
         { label: t("dashboard.nav.provenance"), href: "/dashboard/memories/provenance", icon: MapIcon },
       ],
