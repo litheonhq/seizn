@@ -374,6 +374,15 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
           <div className="relative z-10 w-full pt-28 lg:pt-36 pb-20 lg:pb-28 px-6 sm:px-8">
             <div className="max-w-[1100px] mx-auto">
+              <Image
+                src="/brand/seizn-stacked-1024.png"
+                alt="Seizn"
+                width={480}
+                height={640}
+                priority
+                className="mb-10 h-auto w-[min(68vw,300px)] sm:w-[360px]"
+              />
+
               {/* Eyebrow */}
               <div className="flex items-center gap-4 mb-8">
                 <span className="szn-section-number">01 / MEMORY LAYER</span>

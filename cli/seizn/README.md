@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./banner.png" alt="Seizn" width="480" />
+</p>
+
 # @seizn/cli
 
 Command-line tools for Seizn replay, export, audit, benchmark, and Canon Lock workflows.
