@@ -60,6 +60,8 @@ import {
   shouldUseDegradedKeywordSearchFallback,
 } from '@/lib/memory/degraded-keyword-search';
 import { recordUsageEvent } from '@/lib/stripe-metered';
+import { resolveMemoryBudgetOrganizationId } from '@/lib/memory/budget';
+import { enforceCanon, resolveCanonNpcId, type CanonEnforcementResult } from '@/lib/canon/enforce';
 import type { AddMemoryRequest } from '@/types/database';
 import crypto from 'crypto';
 
@@ -115,6 +117,29 @@ function getImageAttachmentClientErrorMessage(error: unknown): string | null {
   const lowered = error.message.toLowerCase();
   const matched = IMAGE_ATTACHMENT_CLIENT_ERROR_PATTERNS.some((token) => lowered.includes(token));
   return matched ? error.message : null;
+}
+
+function canonViolationResponse(
+  result: Extract<CanonEnforcementResult, { ok: false }>
+): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      error: {
+        code: 'canon_violation',
+        message: 'Memory violates a hard canon lock.',
+        lock: {
+          id: result.violation.id,
+          npcId: result.violation.npcId,
+          scope: result.violation.scope,
+          statement: result.violation.statement,
+          severity: result.violation.severity,
+        },
+        verdict: result.verdict,
+      },
+    },
+    { status: 422 }
+  );
 }
 
 type ResolvedAuth =
@@ -379,6 +404,31 @@ export async function POST(request: NextRequest) {
 
     step = 'supabase_client';
     const supabase = createServerClient();
+
+    step = 'canon';
+    if (!isEncrypted) {
+      const organizationId = await resolveMemoryBudgetOrganizationId(supabase, { userId, keyId });
+      const canonResult = await enforceCanon({
+        supabase,
+        studioId: organizationId,
+        content: sanitizedContent,
+        npcId: resolveCanonNpcId({
+          entityId: (body as unknown as Record<string, unknown>).entity_id,
+          agentId: body.agent_id,
+          companionMeta: body.companion_meta,
+        }),
+        sessionId: body.session_id || null,
+      });
+      if (!canonResult.ok) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/memories', method: 'POST', startTime },
+            422
+          );
+        }
+        return canonViolationResponse(canonResult);
+      }
+    }
 
     step = 'embedding';
     let embedding: number[] | null = null;

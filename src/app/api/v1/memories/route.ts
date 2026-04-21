@@ -139,6 +139,7 @@ import {
   captureNextRoute,
   resolveReplayOrganizationId,
 } from '@/lib/replay/snapshot';
+import { enforceCanon, resolveCanonNpcId, type CanonEnforcementResult } from '@/lib/canon/enforce';
 import {
   isReplayCaptureActive,
   recordMemoryReads,
@@ -229,6 +230,31 @@ function complianceErrorResponse(error: ComplianceError, startTime: number): Nex
       meta: { ...META, latencyMs: Date.now() - startTime },
     },
     { status: error.status }
+  );
+}
+
+function canonViolationResponse(
+  result: Extract<CanonEnforcementResult, { ok: false }>,
+  startTime: number
+): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      error: {
+        code: 'canon_violation',
+        message: 'Memory violates a hard canon lock.',
+        lock: {
+          id: result.violation.id,
+          npcId: result.violation.npcId,
+          scope: result.violation.scope,
+          statement: result.violation.statement,
+          severity: result.violation.severity,
+        },
+        verdict: result.verdict,
+      },
+      meta: { ...META, latencyMs: Date.now() - startTime },
+    },
+    { status: 422 }
   );
 }
 
@@ -697,6 +723,41 @@ async function handlePost(request: NextRequest) {
       }
     }
 
+    let canonWarning: {
+      lockId: string;
+      severity: string;
+      verdict?: Record<string, unknown>;
+    } | null = null;
+    if (!isEncrypted) {
+      const canonResult = await enforceCanon({
+        supabase,
+        studioId: organizationId,
+        content: sanitizedContent,
+        npcId: resolveCanonNpcId({
+          entityId: rawBody.entity_id,
+          agentId: body.agent_id,
+          companionMeta: body.companion_meta,
+        }),
+        sessionId: body.session_id || null,
+      });
+      if (!canonResult.ok) {
+        if (keyId) {
+          await logRequest(
+            { userId, keyId, endpoint: '/api/v1/memories', method: 'POST', startTime },
+            422
+          );
+        }
+        return canonViolationResponse(canonResult, startTime);
+      }
+      if (canonResult.violation) {
+        canonWarning = {
+          lockId: canonResult.violation.id,
+          severity: canonResult.violation.severity,
+          verdict: canonResult.verdict as Record<string, unknown> | undefined,
+        };
+      }
+    }
+
     // Dedup check (opt-out with dedup=false)
     let embedding: number[] | null = null;
     if (!isEncrypted) {
@@ -1076,6 +1137,7 @@ async function handlePost(request: NextRequest) {
           latencyMs: Date.now() - startTime,
           integrityWarnings,
           moderation: getModerationMeta(moderationResult),
+          canon: canonWarning,
         },
       }),
       result.rateLimitHeaders
