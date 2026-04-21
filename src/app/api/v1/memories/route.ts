@@ -145,6 +145,7 @@ import {
   recordMemoryWrite,
   setReplayActor,
 } from '@/lib/replay/capture';
+import { recordUsageEvent } from '@/lib/stripe-metered';
 import type { AddMemoryRequest } from '@/types/database';
 
 const META = { version: 'v1' as const };
@@ -925,6 +926,26 @@ async function handlePost(request: NextRequest) {
       supabase
     ).catch((error) => {
       logServerError('[v1/memories] Budget write telemetry failed', error, {
+        userId,
+        namespace,
+        memoryId: memory.id,
+      });
+    });
+
+    recordUsageEvent({
+      userId,
+      keyId,
+      dimension: 'memories',
+      quantity: 1,
+      idempotencyKey: `memory:${memory.id}`,
+      source: '/api/v1/memories',
+      metadata: {
+        namespace,
+        memory_type: memory.memory_type,
+        encrypted: memory.is_encrypted,
+      },
+    }).catch((error) => {
+      logServerError('[v1/memories] Usage event record failed', error, {
         userId,
         namespace,
         memoryId: memory.id,

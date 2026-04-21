@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from './supabase';
 import { hashApiKey } from './api-key';
 import { checkUsageLimits, logApiUsage, updateApiKeyLastUsed } from './usage';
+import { recordUsageEvent } from './stripe-metered';
 import {
   checkRateLimitAsync,
   getRateLimitHeaders,
@@ -338,6 +339,25 @@ export async function logRequest(
     }),
     updateApiKeyLastUsed(ctx.keyId),
   ]);
+
+  recordUsageEvent({
+    userId: ctx.userId,
+    keyId: ctx.keyId,
+    dimension: 'ops',
+    quantity: 1,
+    idempotencyKey: `ops:${ctx.keyId}:${ctx.method}:${ctx.endpoint}:${ctx.startTime}`,
+    source: ctx.endpoint,
+    metadata: {
+      method: ctx.method,
+      status_code: statusCode,
+      latency_ms: latencyMs,
+    },
+  }).catch((error) => {
+    logServerWarn('Failed to record metered ops usage', error, {
+      userId: ctx.userId,
+      endpoint: ctx.endpoint,
+    });
+  });
 }
 
 export interface ValidateApiKeyResult {

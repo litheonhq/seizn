@@ -5,6 +5,7 @@ import {
   isUnlimited,
   formatLimit,
 } from './plan-limits';
+import { isMeteredOveragePlan } from './stripe-metered';
 
 // Re-export canonical plan functions (single source of truth: plan-limits.ts)
 export { getPlan, formatLimit } from './plan-limits';
@@ -67,8 +68,11 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
   const memoryCount = profile?.memory_count || 0;
   const callsThisMonth = apiCallsThisMonth || 0;
 
-  // Check memory limit (only if not unlimited)
-  if (!isUnlimited(limits.memories) && memoryCount >= limits.memories) {
+  const allowsMeteredOverage = isMeteredOveragePlan(effectivePlan);
+
+  // Check memory limit (only if not unlimited). Studio/Pro continue past
+  // the cap and are billed via Stripe metered overage.
+  if (!isUnlimited(limits.memories) && memoryCount >= limits.memories && !allowsMeteredOverage) {
     return {
       allowed: false,
       reason: `Memory limit reached (${formatLimit(limits.memories)} for ${effectivePlan} plan). Upgrade your plan for more storage.`,
@@ -78,8 +82,9 @@ export async function checkUsageLimits(userId: string): Promise<UsageCheck> {
     };
   }
 
-  // Check API call limit (only if not unlimited)
-  if (!isUnlimited(limits.apiCallsMonthly) && callsThisMonth >= limits.apiCallsMonthly) {
+  // Check API call limit (only if not unlimited). Studio/Pro continue past
+  // the cap and are billed via Stripe metered overage.
+  if (!isUnlimited(limits.apiCallsMonthly) && callsThisMonth >= limits.apiCallsMonthly && !allowsMeteredOverage) {
     return {
       allowed: false,
       reason: `Monthly API call limit reached (${formatLimit(limits.apiCallsMonthly)} for ${effectivePlan} plan). Upgrade your plan for higher limits.`,

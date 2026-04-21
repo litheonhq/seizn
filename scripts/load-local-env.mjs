@@ -6,6 +6,6 @@ export function loadLocalEnv(metaUrl) {
   const currentDir = dirname(fileURLToPath(metaUrl));
   config({
     path: resolve(currentDir, '../.env.local'),
-    override: true,
+    override: false,
   });
 }
