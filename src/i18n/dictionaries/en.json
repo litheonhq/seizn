@@ -1509,6 +1509,54 @@
         "addCustom": "Add Custom Policy"
       }
     },
+    "personas": {
+      "_draftReview": "DRAFT - KR copy reviewed against ai-writing-patterns-guide-ko.md",
+      "title": "Korean NPC persona seeding",
+      "subtitle": "Preview Nemotron-Personas-Korea rows, accept the people that fit your scene, and seed them as synthetic graph entities.",
+      "planBadge": "Current plan - up to {limit} per batch",
+      "planBadgeUnlimited": "Current plan - unlimited batch",
+      "filters": {
+        "region": "Region",
+        "occupation": "Occupation",
+        "occupationPlaceholder": "Designer, shop owner, teacher",
+        "lifeStage": "Life stage",
+        "ageRange": "Age range",
+        "count": "Batch size",
+        "preview": "Preview personas"
+      },
+      "lifeStages": {
+        "all": "All",
+        "young_adult": "Young adult",
+        "adult": "Adult",
+        "middle": "Middle age",
+        "senior": "Senior"
+      },
+      "modes": {
+        "hybrid": "Hybrid",
+        "auto": "Auto",
+        "manual": "Manual"
+      },
+      "actions": {
+        "autoAcceptAll": "Auto-accept all",
+        "manualReviewEach": "Manual review each",
+        "seedSelected": "Seed {count} selected",
+        "previewOnly": "Preview only",
+        "loading": "Working..."
+      },
+      "list": {
+        "title": "Preview list",
+        "empty": "No personas loaded.",
+        "accepted": "Accept",
+        "skipped": "Skip"
+      },
+      "status": {
+        "inserted": "Seeded {count} graph entities.",
+        "previewLoaded": "Loaded {count} personas.",
+        "failed": "Persona seeding failed."
+      },
+      "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
+      "attributionUrlLabel": "Dataset card"
+    },
     "reportsPage": {
       "title": "Usage report",
       "generated": "Generated",
