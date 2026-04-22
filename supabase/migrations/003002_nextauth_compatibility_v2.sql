@@ -40,6 +40,11 @@ ALTER TABLE usage_logs ADD CONSTRAINT usage_logs_user_id_fkey
     FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
 -- 6. Create new service role policies (API server handles auth via service role key)
+DROP POLICY IF EXISTS "Service role full access profiles" ON profiles;
+DROP POLICY IF EXISTS "Service role full access api_keys" ON api_keys;
+DROP POLICY IF EXISTS "Service role full access memories" ON memories;
+DROP POLICY IF EXISTS "Service role full access usage_logs" ON usage_logs;
+
 CREATE POLICY "Service role full access profiles" ON profiles
     FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Service role full access api_keys" ON api_keys

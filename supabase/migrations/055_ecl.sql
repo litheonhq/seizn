@@ -11,7 +11,7 @@
 -- ============================================
 CREATE TABLE IF NOT EXISTS ecl_translation_models (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   description TEXT,
 
@@ -99,7 +99,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_ecl_pairs_unique_text
 -- ============================================
 CREATE TABLE IF NOT EXISTS ecl_translation_jobs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   model_id UUID NOT NULL REFERENCES ecl_translation_models(id) ON DELETE CASCADE,
 
   -- Job type and scope
@@ -138,16 +138,16 @@ CREATE INDEX IF NOT EXISTS idx_ecl_jobs_status ON ecl_translation_jobs(status);
 ALTER TABLE ecl_translation_models ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own ECL models" ON ecl_translation_models
-  FOR SELECT USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR SELECT USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can create their own ECL models" ON ecl_translation_models
-  FOR INSERT WITH CHECK (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can update their own ECL models" ON ecl_translation_models
-  FOR UPDATE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR UPDATE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can delete their own ECL models" ON ecl_translation_models
-  FOR DELETE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR DELETE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 -- ECL Training Pairs
 ALTER TABLE ecl_training_pairs ENABLE ROW LEVEL SECURITY;
@@ -156,7 +156,7 @@ CREATE POLICY "Users can view training pairs for their models" ON ecl_training_p
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM ecl_translation_models
-      WHERE id = model_id AND user_id = auth.uid()
+      WHERE id = model_id AND user_id = auth.uid()::text
     )
     OR auth.jwt() ->> 'role' = 'service_role'
   );
@@ -165,7 +165,7 @@ CREATE POLICY "Users can create training pairs for their models" ON ecl_training
   FOR INSERT WITH CHECK (
     EXISTS (
       SELECT 1 FROM ecl_translation_models
-      WHERE id = model_id AND user_id = auth.uid()
+      WHERE id = model_id AND user_id = auth.uid()::text
     )
     OR auth.jwt() ->> 'role' = 'service_role'
   );
@@ -174,7 +174,7 @@ CREATE POLICY "Users can delete training pairs for their models" ON ecl_training
   FOR DELETE USING (
     EXISTS (
       SELECT 1 FROM ecl_translation_models
-      WHERE id = model_id AND user_id = auth.uid()
+      WHERE id = model_id AND user_id = auth.uid()::text
     )
     OR auth.jwt() ->> 'role' = 'service_role'
   );
@@ -183,13 +183,13 @@ CREATE POLICY "Users can delete training pairs for their models" ON ecl_training
 ALTER TABLE ecl_translation_jobs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own translation jobs" ON ecl_translation_jobs
-  FOR SELECT USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR SELECT USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can create their own translation jobs" ON ecl_translation_jobs
-  FOR INSERT WITH CHECK (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can update their own translation jobs" ON ecl_translation_jobs
-  FOR UPDATE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR UPDATE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 -- ============================================
 -- Helper Functions
@@ -219,7 +219,7 @@ $$ LANGUAGE plpgsql STABLE;
 
 -- Function to check if a user has an ECL model for a specific model pair
 CREATE OR REPLACE FUNCTION has_ecl_model(
-  p_user_id UUID,
+  p_user_id TEXT,
   p_source_model TEXT,
   p_target_model TEXT
 )
@@ -237,7 +237,7 @@ $$ LANGUAGE plpgsql STABLE;
 
 -- Function to get the best ECL model for a model pair
 CREATE OR REPLACE FUNCTION get_best_ecl_model(
-  p_user_id UUID,
+  p_user_id TEXT,
   p_source_model TEXT,
   p_target_model TEXT
 )

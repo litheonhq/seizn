@@ -128,7 +128,7 @@ CREATE POLICY "Users can view their extracted tables"
   ON summer_extracted_tables FOR SELECT
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -136,7 +136,7 @@ CREATE POLICY "Users can manage their extracted tables"
   ON summer_extracted_tables FOR ALL
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -145,7 +145,7 @@ CREATE POLICY "Users can view their extracted equations"
   ON summer_extracted_equations FOR SELECT
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -153,7 +153,7 @@ CREATE POLICY "Users can manage their extracted equations"
   ON summer_extracted_equations FOR ALL
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -162,7 +162,7 @@ CREATE POLICY "Users can view their document layouts"
   ON summer_document_layouts FOR SELECT
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -170,7 +170,7 @@ CREATE POLICY "Users can manage their document layouts"
   ON summer_document_layouts FOR ALL
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -179,7 +179,7 @@ CREATE POLICY "Users can view their chunk history"
   ON summer_chunk_history FOR SELECT
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 
@@ -187,7 +187,7 @@ CREATE POLICY "Users can manage their chunk history"
   ON summer_chunk_history FOR ALL
   USING (
     collection_id IN (
-      SELECT id FROM summer_collections WHERE user_id = auth.uid()
+      SELECT id FROM summer_collections WHERE user_id = auth.uid()::text
     )
   );
 

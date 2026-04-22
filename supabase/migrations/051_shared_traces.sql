@@ -52,7 +52,8 @@ END $$;
 
 -- Policy for anonymous access to shared traces (via API routes with service_role)
 -- Already exists in 032, but let's ensure public read policy exists
-CREATE POLICY IF NOT EXISTS "Anon can read shared traces by token"
+DROP POLICY IF EXISTS "Anon can read shared traces by token" ON shared_traces;
+CREATE POLICY "Anon can read shared traces by token"
   ON shared_traces FOR SELECT
   TO anon
   USING (true);

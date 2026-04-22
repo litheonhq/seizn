@@ -502,7 +502,7 @@ CREATE POLICY drift_snapshots_select ON drift_snapshots
   USING (
     user_id = auth.uid()::TEXT
     OR org_id IN (
-      SELECT org_id FROM org_members WHERE user_id = auth.uid()::TEXT
+      SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::TEXT
     )
   );
 
@@ -524,7 +524,7 @@ CREATE POLICY drift_alerts_select ON drift_alerts
   USING (
     user_id = auth.uid()::TEXT
     OR org_id IN (
-      SELECT org_id FROM org_members WHERE user_id = auth.uid()::TEXT
+      SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::TEXT
     )
   );
 
@@ -553,6 +553,14 @@ CREATE POLICY drift_thresholds_all ON drift_thresholds
 -- ===========================================
 -- 6) Triggers
 -- ===========================================
+
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Auto-update updated_at
 CREATE TRIGGER drift_snapshots_updated_at

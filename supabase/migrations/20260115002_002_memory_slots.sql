@@ -5,7 +5,7 @@
 -- Create memory_slots table
 CREATE TABLE IF NOT EXISTS memory_slots (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     namespace TEXT NOT NULL DEFAULT 'default',
 
     -- Slot key: hierarchical structure (e.g., "user.name", "preference.theme")
@@ -50,7 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_memory_slots_expires
 
 -- Function to upsert a slot value
 CREATE OR REPLACE FUNCTION upsert_memory_slot(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_slot_key TEXT,
     p_slot_value TEXT,
     p_namespace TEXT DEFAULT 'default',
@@ -92,7 +92,7 @@ $$ LANGUAGE plpgsql;
 
 -- Function to get slots by keys (batch lookup)
 CREATE OR REPLACE FUNCTION get_memory_slots(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_slot_keys TEXT[],
     p_namespace TEXT DEFAULT 'default'
 )
@@ -110,7 +110,7 @@ $$ LANGUAGE plpgsql;
 
 -- Function to get all slots for a user (with optional prefix filter)
 CREATE OR REPLACE FUNCTION get_all_memory_slots(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT DEFAULT 'default',
     p_key_prefix TEXT DEFAULT NULL
 )
@@ -147,7 +147,7 @@ ALTER TABLE memory_slots ENABLE ROW LEVEL SECURITY;
 -- Policy: Users can only access their own slots
 CREATE POLICY memory_slots_user_policy ON memory_slots
     FOR ALL
-    USING (auth.uid() = user_id);
+    USING (auth.uid()::text = user_id);
 
 -- Policy: Service role can access all
 CREATE POLICY memory_slots_service_policy ON memory_slots

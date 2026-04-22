@@ -6,6 +6,11 @@ import {
   buildCachedSystemPrompt,
 } from './anthropic/prompt-caching';
 import { getSanitizedEnv } from './env';
+import { getReplayCapture } from './replay/capture';
+import {
+  recordToolCall as recordReplayToolCall,
+  resolveReplayToolStub,
+} from './replay/tool-stub';
 
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
@@ -13,20 +18,28 @@ const VOYAGE_MODEL = 'voyage-3'; // 1024 dimensions
 
 // Internal function to call Voyage API
 async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Promise<number[]> {
+  const toolName = `embedding.voyage.${VOYAGE_MODEL}`;
+  const toolInput = {
+    model: VOYAGE_MODEL,
+    input: text,
+    input_type: inputType,
+  };
+  const replayOutput = resolveReplayToolStub<number[]>(toolName, toolInput);
+  if (replayOutput !== undefined) {
+    return replayOutput;
+  }
+
   const apiKey = getSanitizedEnv('VOYAGE_API_KEY');
   if (!apiKey) throw new Error('VOYAGE_API_KEY not set');
 
+  const startedAt = Date.now();
   const response = await fetch(VOYAGE_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model: VOYAGE_MODEL,
-      input: text,
-      input_type: inputType,
-    }),
+    body: JSON.stringify(toolInput),
   });
 
   if (!response.ok) {
@@ -35,7 +48,14 @@ async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Pro
   }
 
   const data = await response.json();
-  return data.data[0].embedding;
+  const embedding = data.data[0].embedding;
+  recordReplayToolCall(getReplayCapture()?.traceId, {
+    name: toolName,
+    input: toolInput,
+    output: embedding,
+    latencyMs: Date.now() - startedAt,
+  });
+  return embedding;
 }
 
 export async function createEmbedding(text: string): Promise<number[]> {
@@ -72,6 +92,51 @@ export async function createQueryEmbedding(query: string): Promise<number[]> {
 
 // Anthropic Claude for Memory Extraction
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+
+type AnthropicMessagesPayload = {
+  model: string;
+  max_tokens: number;
+  system?: unknown;
+  messages: unknown[];
+};
+
+type AnthropicMessagesResponse = {
+  content: Array<{ text: string }>;
+};
+
+async function callAnthropicMessages(
+  payload: AnthropicMessagesPayload
+): Promise<AnthropicMessagesResponse> {
+  const toolName = `llm.anthropic.${payload.model}`;
+  const replayOutput = resolveReplayToolStub<AnthropicMessagesResponse>(toolName, payload);
+  if (replayOutput !== undefined) {
+    return replayOutput;
+  }
+
+  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  const startedAt = Date.now();
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: buildAnthropicHeaders(apiKey),
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Anthropic API error: ${error}`);
+  }
+
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  recordReplayToolCall(getReplayCapture()?.traceId, {
+    name: toolName,
+    input: payload,
+    output: data,
+    latencyMs: Date.now() - startedAt,
+  });
+  return data;
+}
 
 export interface ExtractedMemory {
   content: string;
@@ -118,9 +183,6 @@ export async function extractMemories(
 ): Promise<ExtractedMemory[]> {
   const { model = 'haiku', existingMemories = [] } = options;
 
-  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
     : 'claude-3-5-sonnet-20241022';
@@ -132,28 +194,17 @@ export async function extractMemories(
     userMessage += `\n\n---\nExisting memories (DO NOT duplicate these):\n${existingMemories.slice(0, 10).map(m => `- ${m}`).join('\n')}`;
   }
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: buildAnthropicHeaders(apiKey),
-    body: JSON.stringify({
-      model: modelId,
-      max_tokens: 2048,
-      system: buildCachedSystemPrompt(EXTRACTION_PROMPT),
-      messages: [
-        {
-          role: 'user',
-          content: userMessage,
-        },
-      ],
-    }),
+  const data = await callAnthropicMessages({
+    model: modelId,
+    max_tokens: 2048,
+    system: buildCachedSystemPrompt(EXTRACTION_PROMPT),
+    messages: [
+      {
+        role: 'user',
+        content: userMessage,
+      },
+    ],
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Anthropic API error: ${error}`);
-  }
-
-  const data = await response.json();
   const text = data.content[0].text;
 
   try {
@@ -178,9 +229,6 @@ export async function generateWithMemories(
   memories: string[],
   model: 'haiku' | 'sonnet' = 'haiku'
 ): Promise<string> {
-  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
     : 'claude-3-5-sonnet-20241022';
@@ -192,25 +240,14 @@ ${memories.map(m => `- ${m}`).join('\n')}
 
 Use these memories naturally in your response when relevant. Don't explicitly mention that you're using stored memories.`;
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: buildAnthropicHeaders(apiKey),
-    body: JSON.stringify({
-      model: modelId,
-      max_tokens: 1024,
-      system: buildCachedSystemPrompt(systemPrompt),
-      messages: [
-        { role: 'user', content: query },
-      ],
-    }),
+  const data = await callAnthropicMessages({
+    model: modelId,
+    max_tokens: 1024,
+    system: buildCachedSystemPrompt(systemPrompt),
+    messages: [
+      { role: 'user', content: query },
+    ],
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Anthropic API error: ${error}`);
-  }
-
-  const data = await response.json();
   return data.content[0].text;
 }
 
@@ -274,9 +311,6 @@ export async function extractMemoriesFromImage(
 ): Promise<ExtractedMemory[]> {
   const { model = 'sonnet', context, existingMemories = [] } = options;
 
-  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
   // Use Sonnet for vision tasks (better quality)
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
@@ -306,28 +340,17 @@ export async function extractMemoriesFromImage(
 
   content.push({ type: 'text', text: textContent });
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: buildAnthropicHeaders(apiKey),
-    body: JSON.stringify({
-      model: modelId,
-      max_tokens: 2048,
-      system: buildCachedSystemPrompt(IMAGE_EXTRACTION_PROMPT),
-      messages: [
-        {
-          role: 'user',
-          content,
-        },
-      ],
-    }),
+  const data = await callAnthropicMessages({
+    model: modelId,
+    max_tokens: 2048,
+    system: buildCachedSystemPrompt(IMAGE_EXTRACTION_PROMPT),
+    messages: [
+      {
+        role: 'user',
+        content,
+      },
+    ],
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Anthropic API error: ${error}`);
-  }
-
-  const data = await response.json();
   const text = data.content[0].text;
 
   try {
@@ -351,41 +374,27 @@ export async function describeImageForEmbedding(
   imageData: string,
   mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
 ): Promise<string> {
-  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: buildAnthropicHeaders(apiKey),
-    body: JSON.stringify({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 500,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: imageData.startsWith('http')
-                ? { type: 'url', url: imageData }
-                : { type: 'base64', media_type: mediaType, data: imageData },
-            },
-            {
-              type: 'text',
-              text: 'Describe this image in 2-3 sentences for indexing purposes. Focus on the main content, any text visible, and key visual elements.',
-            },
-          ],
-        },
-      ],
-    }),
+  const data = await callAnthropicMessages({
+    model: 'claude-3-5-haiku-20241022',
+    max_tokens: 500,
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'image',
+            source: imageData.startsWith('http')
+              ? { type: 'url', url: imageData }
+              : { type: 'base64', media_type: mediaType, data: imageData },
+          },
+          {
+            type: 'text',
+            text: 'Describe this image in 2-3 sentences for indexing purposes. Focus on the main content, any text visible, and key visual elements.',
+          },
+        ],
+      },
+    ],
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Anthropic API error: ${error}`);
-  }
-
-  const data = await response.json();
   return data.content[0].text;
 }
 
@@ -438,9 +447,6 @@ export async function summarizeConversation(
 ): Promise<ConversationSummary> {
   const { model = 'haiku', existingMemories = [] } = options;
 
-  const apiKey = getSanitizedEnv('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
   const modelId = model === 'haiku'
     ? 'claude-3-5-haiku-20241022'
     : 'claude-3-5-sonnet-20241022';
@@ -457,25 +463,14 @@ export async function summarizeConversation(
     userMessage += `\n\n---\nExisting memories (avoid duplicating):\n${existingMemories.slice(0, 10).map(m => `- ${m}`).join('\n')}`;
   }
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: buildAnthropicHeaders(apiKey),
-    body: JSON.stringify({
-      model: modelId,
-      max_tokens: 2048,
-      system: buildCachedSystemPrompt(SUMMARIZATION_PROMPT),
-      messages: [
-        { role: 'user', content: userMessage },
-      ],
-    }),
+  const data = await callAnthropicMessages({
+    model: modelId,
+    max_tokens: 2048,
+    system: buildCachedSystemPrompt(SUMMARIZATION_PROMPT),
+    messages: [
+      { role: 'user', content: userMessage },
+    ],
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Anthropic API error: ${error}`);
-  }
-
-  const data = await response.json();
   const text = data.content[0].text;
 
   try {

@@ -60,7 +60,7 @@ DROP INDEX IF EXISTS idx_spring_notes_embedding;
 -- m = 24: connections per node (higher than default 16 for better recall)
 -- ef_construction = 100: build-time quality (higher = better graph, slower build)
 -- Partial index: only active notes with embeddings
-CREATE INDEX idx_spring_notes_embedding_hnsw
+CREATE INDEX IF NOT EXISTS idx_spring_notes_embedding_hnsw
   ON spring_memory_notes
   USING hnsw (embedding vector_cosine_ops)
   WITH (m = 24, ef_construction = 100)
@@ -69,7 +69,7 @@ CREATE INDEX idx_spring_notes_embedding_hnsw
 -- Also create index for entities if not already HNSW
 DROP INDEX IF EXISTS idx_spring_entities_embedding;
 
-CREATE INDEX idx_spring_entities_embedding_hnsw
+CREATE INDEX IF NOT EXISTS idx_spring_entities_embedding_hnsw
   ON spring_entities
   USING hnsw (embedding vector_cosine_ops)
   WITH (m = 16, ef_construction = 64)
@@ -522,10 +522,12 @@ CREATE INDEX IF NOT EXISTS idx_vector_search_stats_type
 -- RLS
 ALTER TABLE spring_vector_search_stats ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view own search stats" ON spring_vector_search_stats;
 CREATE POLICY "Users can view own search stats"
   ON spring_vector_search_stats FOR SELECT
   USING (auth.uid()::text = user_id);
 
+DROP POLICY IF EXISTS "Service role has full access to search stats" ON spring_vector_search_stats;
 CREATE POLICY "Service role has full access to search stats"
   ON spring_vector_search_stats FOR ALL
   USING (
@@ -589,6 +591,7 @@ $$;
 -- ===========================================
 
 -- Extend hnsw_index_health view for spring tables
+DROP VIEW IF EXISTS spring_hnsw_index_health;
 CREATE OR REPLACE VIEW spring_hnsw_index_health AS
 SELECT
   i.indexrelname AS index_name,

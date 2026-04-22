@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS public.sso_connections (
   email_domains TEXT[] DEFAULT '{}'::TEXT[],
   attribute_mapping JSONB NOT NULL DEFAULT '{"email":"email","firstName":"first_name","lastName":"last_name","displayName":"display_name","groups":"groups"}'::JSONB,
   settings JSONB NOT NULL DEFAULT '{"allowIdpInitiated":true,"forceAuthn":false,"signRequest":true,"wantAssertionsSigned":true,"nameIdFormat":"urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress","authnContextClassRef":"urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport","defaultRole":"member","autoProvision":true,"jitProvisioning":true}'::JSONB,
-  created_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  created_by TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_tested_at TIMESTAMPTZ,
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS public.sso_domain_verifications (
 
 CREATE TABLE IF NOT EXISTS public.sso_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE,
   connection_id UUID REFERENCES public.sso_connections(id) ON DELETE CASCADE,
   provider TEXT NOT NULL DEFAULT 'unknown',
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS public.sso_login_attempts (
   response_status VARCHAR(50),
   error_code VARCHAR(100),
   error_message TEXT,
-  user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  user_id TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
   email VARCHAR(255),
   ip_address TEXT,
   user_agent TEXT,
@@ -219,7 +219,7 @@ CREATE POLICY sso_sessions_owner_select
   ON public.sso_sessions
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE OR REPLACE FUNCTION public.find_sso_connection_by_email(p_email VARCHAR(255))
 RETURNS TABLE (

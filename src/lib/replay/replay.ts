@@ -42,6 +42,7 @@ export function replaySnapshotRecord(
     traceId: snapshot.trace_id,
     organizationId: snapshot.organization_id,
     apiKeyId: snapshot.api_key_id ?? undefined,
+    mode: 'replay',
     endpoint: snapshot.endpoint,
     requestBody: snapshot.request_body,
     memoryReads: normalizeArray(snapshot.memory_reads),

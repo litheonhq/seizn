@@ -63,6 +63,7 @@ function makeSnapshot(overrides: Partial<ReplaySnapshotRecord>): ReplaySnapshotR
     llm_seed: null,
     llm_model: null,
     llm_provider: null,
+    stub_hash: null,
     content_hash: '',
     duration_ms: 12,
     created_at: '2026-04-21T00:00:00.000Z',

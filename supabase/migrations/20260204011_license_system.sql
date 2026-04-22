@@ -81,9 +81,9 @@ CREATE TABLE IF NOT EXISTS license_keys (
 );
 
 -- Indexes
-CREATE INDEX idx_license_keys_customer ON license_keys(customer_id);
-CREATE INDEX idx_license_keys_status ON license_keys(status, valid_until);
-CREATE INDEX idx_license_keys_hash ON license_keys(license_key_hash);
+CREATE INDEX IF NOT EXISTS idx_license_keys_customer ON license_keys(customer_id);
+CREATE INDEX IF NOT EXISTS idx_license_keys_status ON license_keys(status, valid_until);
+CREATE INDEX IF NOT EXISTS idx_license_keys_hash ON license_keys(license_key_hash);
 
 -- =====================================================
 -- License Activations Table
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS license_activations (
 );
 
 -- Indexes
-CREATE INDEX idx_license_activations_license ON license_activations(license_id, is_active);
-CREATE INDEX idx_license_activations_heartbeat ON license_activations(last_heartbeat_at) WHERE is_active = true;
+CREATE INDEX IF NOT EXISTS idx_license_activations_license ON license_activations(license_id, is_active);
+CREATE INDEX IF NOT EXISTS idx_license_activations_heartbeat ON license_activations(last_heartbeat_at) WHERE is_active = true;
 
 -- =====================================================
 -- Feature Flags Table
@@ -176,9 +176,18 @@ CREATE TABLE IF NOT EXISTS feature_flags (
     )
 );
 
+ALTER TABLE feature_flags
+    ADD COLUMN IF NOT EXISTS category TEXT,
+    ADD COLUMN IF NOT EXISTS flag_type TEXT NOT NULL DEFAULT 'boolean',
+    ADD COLUMN IF NOT EXISTS default_value JSONB NOT NULL DEFAULT 'false',
+    ADD COLUMN IF NOT EXISTS rules JSONB DEFAULT '[]',
+    ADD COLUMN IF NOT EXISTS is_enabled BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT ARRAY[]::TEXT[],
+    ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
+
 -- Index for flag lookups
-CREATE INDEX idx_feature_flags_enabled ON feature_flags(is_enabled) WHERE is_enabled = true;
-CREATE INDEX idx_feature_flags_category ON feature_flags(category);
+CREATE INDEX IF NOT EXISTS idx_feature_flags_enabled ON feature_flags(is_enabled) WHERE is_enabled = true;
+CREATE INDEX IF NOT EXISTS idx_feature_flags_category ON feature_flags(category);
 
 -- =====================================================
 -- Feature Flag Overrides Table
@@ -213,8 +222,8 @@ CREATE TABLE IF NOT EXISTS feature_flag_overrides (
 );
 
 -- Indexes
-CREATE INDEX idx_flag_overrides_org ON feature_flag_overrides(org_id) WHERE org_id IS NOT NULL;
-CREATE INDEX idx_flag_overrides_user ON feature_flag_overrides(user_id) WHERE user_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_flag_overrides_org ON feature_flag_overrides(org_id) WHERE org_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_flag_overrides_user ON feature_flag_overrides(user_id) WHERE user_id IS NOT NULL;
 
 -- =====================================================
 -- License Usage Tracking Table
@@ -249,7 +258,7 @@ CREATE TABLE IF NOT EXISTS license_usage (
 );
 
 -- Index for usage lookups
-CREATE INDEX idx_license_usage_license ON license_usage(license_id, period_start DESC);
+CREATE INDEX IF NOT EXISTS idx_license_usage_license ON license_usage(license_id, period_start DESC);
 
 -- =====================================================
 -- Helper Functions
@@ -413,19 +422,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =====================================================
 -- Seed Default Feature Flags
 -- =====================================================
-INSERT INTO feature_flags (name, description, category, flag_type, default_value, rules) VALUES
-    ('sso_enabled', 'Enable SSO authentication', 'auth', 'boolean', 'false', '[]'),
-    ('scim_enabled', 'Enable SCIM provisioning', 'auth', 'boolean', 'false', '[]'),
-    ('custom_roles', 'Enable custom RBAC roles', 'auth', 'boolean', 'false', '[]'),
-    ('audit_export', 'Enable audit log export', 'compliance', 'boolean', 'false', '[]'),
-    ('data_residency', 'Enable data residency controls', 'compliance', 'boolean', 'false', '[]'),
-    ('advanced_analytics', 'Enable advanced analytics dashboard', 'analytics', 'boolean', 'false', '[]'),
-    ('ai_gateway', 'Enable AI Gateway features', 'gateway', 'boolean', 'true', '[]'),
-    ('semantic_cache', 'Enable semantic caching', 'gateway', 'boolean', 'true', '[]'),
-    ('tool_review', 'Enable tool call review workflow', 'safety', 'boolean', 'true', '[]'),
-    ('annotation_queues', 'Enable annotation queue system', 'feedback', 'boolean', 'true', '[]'),
-    ('evidence_packs', 'Enable evidence pack generation', 'provenance', 'boolean', 'true', '[]')
-ON CONFLICT (name) DO NOTHING;
+INSERT INTO feature_flags (key, name, description, category, flag_type, default_value, rules) VALUES
+    ('sso_enabled', 'sso_enabled', 'Enable SSO authentication', 'auth', 'boolean', 'false', '[]'),
+    ('scim_enabled', 'scim_enabled', 'Enable SCIM provisioning', 'auth', 'boolean', 'false', '[]'),
+    ('custom_roles', 'custom_roles', 'Enable custom RBAC roles', 'auth', 'boolean', 'false', '[]'),
+    ('audit_export', 'audit_export', 'Enable audit log export', 'compliance', 'boolean', 'false', '[]'),
+    ('data_residency', 'data_residency', 'Enable data residency controls', 'compliance', 'boolean', 'false', '[]'),
+    ('advanced_analytics', 'advanced_analytics', 'Enable advanced analytics dashboard', 'analytics', 'boolean', 'false', '[]'),
+    ('ai_gateway', 'ai_gateway', 'Enable AI Gateway features', 'gateway', 'boolean', 'true', '[]'),
+    ('semantic_cache', 'semantic_cache', 'Enable semantic caching', 'gateway', 'boolean', 'true', '[]'),
+    ('tool_review', 'tool_review', 'Enable tool call review workflow', 'safety', 'boolean', 'true', '[]'),
+    ('annotation_queues', 'annotation_queues', 'Enable annotation queue system', 'feedback', 'boolean', 'true', '[]'),
+    ('evidence_packs', 'evidence_packs', 'Enable evidence pack generation', 'provenance', 'boolean', 'true', '[]')
+ON CONFLICT DO NOTHING;
 
 -- =====================================================
 -- Row Level Security
@@ -437,27 +446,32 @@ ALTER TABLE feature_flag_overrides ENABLE ROW LEVEL SECURITY;
 ALTER TABLE license_usage ENABLE ROW LEVEL SECURITY;
 
 -- License keys: service role only (these are sensitive)
+DROP POLICY IF EXISTS license_keys_service_only ON license_keys;
 CREATE POLICY license_keys_service_only ON license_keys FOR ALL
     USING (
         EXISTS (SELECT 1 FROM auth.users WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'service_role')
     );
 
 -- License activations: service role only
+DROP POLICY IF EXISTS license_activations_service_only ON license_activations;
 CREATE POLICY license_activations_service_only ON license_activations FOR ALL
     USING (
         EXISTS (SELECT 1 FROM auth.users WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'service_role')
     );
 
 -- Feature flags: everyone can read, admins can modify
+DROP POLICY IF EXISTS feature_flags_select ON feature_flags;
 CREATE POLICY feature_flags_select ON feature_flags FOR SELECT
     USING (true);  -- Public read
 
+DROP POLICY IF EXISTS feature_flags_modify ON feature_flags;
 CREATE POLICY feature_flags_modify ON feature_flags FOR ALL
     USING (
         EXISTS (SELECT 1 FROM auth.users WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'service_role')
     );
 
 -- Feature flag overrides: org admins for org overrides, service for user overrides
+DROP POLICY IF EXISTS feature_flag_overrides_select ON feature_flag_overrides;
 CREATE POLICY feature_flag_overrides_select ON feature_flag_overrides FOR SELECT
     USING (
         user_id = auth.uid()
@@ -465,6 +479,7 @@ CREATE POLICY feature_flag_overrides_select ON feature_flag_overrides FOR SELECT
         OR EXISTS (SELECT 1 FROM auth.users WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'service_role')
     );
 
+DROP POLICY IF EXISTS feature_flag_overrides_modify ON feature_flag_overrides;
 CREATE POLICY feature_flag_overrides_modify ON feature_flag_overrides FOR ALL
     USING (
         org_id IN (SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text AND role IN ('owner', 'admin'))
@@ -472,6 +487,7 @@ CREATE POLICY feature_flag_overrides_modify ON feature_flag_overrides FOR ALL
     );
 
 -- License usage: service role only
+DROP POLICY IF EXISTS license_usage_service_only ON license_usage;
 CREATE POLICY license_usage_service_only ON license_usage FOR ALL
     USING (
         EXISTS (SELECT 1 FROM auth.users WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'service_role')
@@ -480,22 +496,27 @@ CREATE POLICY license_usage_service_only ON license_usage FOR ALL
 -- =====================================================
 -- Triggers
 -- =====================================================
+DROP TRIGGER IF EXISTS trigger_license_keys_updated_at ON license_keys;
 CREATE TRIGGER trigger_license_keys_updated_at
     BEFORE UPDATE ON license_keys
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();
 
+DROP TRIGGER IF EXISTS trigger_license_activations_updated_at ON license_activations;
 CREATE TRIGGER trigger_license_activations_updated_at
     BEFORE UPDATE ON license_activations
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();
 
+DROP TRIGGER IF EXISTS trigger_feature_flags_updated_at ON feature_flags;
 CREATE TRIGGER trigger_feature_flags_updated_at
     BEFORE UPDATE ON feature_flags
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();
 
+DROP TRIGGER IF EXISTS trigger_feature_flag_overrides_updated_at ON feature_flag_overrides;
 CREATE TRIGGER trigger_feature_flag_overrides_updated_at
     BEFORE UPDATE ON feature_flag_overrides
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();
 
+DROP TRIGGER IF EXISTS trigger_license_usage_updated_at ON license_usage;
 CREATE TRIGGER trigger_license_usage_updated_at
     BEFORE UPDATE ON license_usage
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();

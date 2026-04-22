@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS memory_namespaces (
   name TEXT NOT NULL,
   scope TEXT NOT NULL DEFAULT 'private'
     CHECK (scope IN ('private', 'shared', 'public')),
-  owner_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  owner_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,
   channels TEXT[] DEFAULT ARRAY['episodic', 'semantic'],
   retention_policy JSONB DEFAULT '{
@@ -61,29 +61,34 @@ WHERE organization_id IS NOT NULL;
 -- RLS for memory_namespaces
 ALTER TABLE memory_namespaces ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view own namespaces" ON memory_namespaces;
 CREATE POLICY "Users can view own namespaces"
 ON memory_namespaces FOR SELECT
 USING (
-  owner_id = auth.uid()
+  owner_id = auth.uid()::text
   OR scope = 'public'
   OR (scope = 'shared' AND organization_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text
   ))
 );
 
+DROP POLICY IF EXISTS "Users can create own namespaces" ON memory_namespaces;
 CREATE POLICY "Users can create own namespaces"
 ON memory_namespaces FOR INSERT
-WITH CHECK (owner_id = auth.uid());
+WITH CHECK (owner_id = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Owners can update namespaces" ON memory_namespaces;
 CREATE POLICY "Owners can update namespaces"
 ON memory_namespaces FOR UPDATE
-USING (owner_id = auth.uid());
+USING (owner_id = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Owners can delete namespaces" ON memory_namespaces;
 CREATE POLICY "Owners can delete namespaces"
 ON memory_namespaces FOR DELETE
-USING (owner_id = auth.uid());
+USING (owner_id = auth.uid()::text);
 
 -- Service role bypass
+DROP POLICY IF EXISTS "Service role full access to namespaces" ON memory_namespaces;
 CREATE POLICY "Service role full access to namespaces"
 ON memory_namespaces FOR ALL
 USING (auth.role() = 'service_role');
@@ -99,7 +104,7 @@ CREATE TABLE IF NOT EXISTS memory_operations_log (
   channel TEXT,
   operation_type TEXT NOT NULL
     CHECK (operation_type IN ('store', 'search', 'update', 'delete', 'consolidate')),
-  operator_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  operator_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   memory_id UUID REFERENCES memories(id) ON DELETE SET NULL,
   success BOOLEAN DEFAULT false,
   latency_ms INTEGER DEFAULT 0,
@@ -119,14 +124,17 @@ ON memory_operations_log(operation_type, created_at DESC);
 -- RLS for memory_operations_log
 ALTER TABLE memory_operations_log ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view own operations" ON memory_operations_log;
 CREATE POLICY "Users can view own operations"
 ON memory_operations_log FOR SELECT
-USING (operator_id = auth.uid());
+USING (operator_id = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Users can insert own operations" ON memory_operations_log;
 CREATE POLICY "Users can insert own operations"
 ON memory_operations_log FOR INSERT
-WITH CHECK (operator_id = auth.uid());
+WITH CHECK (operator_id = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Service role full access to operations" ON memory_operations_log;
 CREATE POLICY "Service role full access to operations"
 ON memory_operations_log FOR ALL
 USING (auth.role() = 'service_role');

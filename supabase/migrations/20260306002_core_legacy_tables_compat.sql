@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE IF NOT EXISTS public.api_keys (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE,
   org_id UUID,
   name TEXT NOT NULL,
@@ -26,6 +26,15 @@ CREATE TABLE IF NOT EXISTS public.api_keys (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS org_id UUID;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS scope_config JSONB NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS ip_restriction TEXT[];
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS rate_limit_override INTEGER;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE public.api_keys ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
 CREATE INDEX IF NOT EXISTS idx_api_keys_user ON public.api_keys(user_id);
 CREATE INDEX IF NOT EXISTS idx_api_keys_prefix ON public.api_keys(key_prefix);
 CREATE INDEX IF NOT EXISTS idx_api_keys_org ON public.api_keys(organization_id) WHERE organization_id IS NOT NULL;
@@ -33,7 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_api_keys_org_id ON public.api_keys(org_id) WHERE 
 
 CREATE TABLE IF NOT EXISTS public.memories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   encrypted_content TEXT,
@@ -60,6 +69,16 @@ CREATE TABLE IF NOT EXISTS public.memories (
   deleted_at TIMESTAMPTZ
 );
 
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS namespace TEXT NOT NULL DEFAULT 'default';
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS companion_meta JSONB NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS access_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS last_accessed_at TIMESTAMPTZ;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS content_hash TEXT;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS note_type TEXT;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS salience DOUBLE PRECISION;
+ALTER TABLE public.memories ADD COLUMN IF NOT EXISTS merged_into UUID;
+
 CREATE INDEX IF NOT EXISTS idx_memories_user ON public.memories(user_id) WHERE NOT is_deleted;
 CREATE INDEX IF NOT EXISTS idx_memories_org ON public.memories(organization_id) WHERE organization_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_memories_scope ON public.memories(user_id, scope) WHERE NOT is_deleted;
@@ -83,7 +102,7 @@ END $$;
 
 CREATE TABLE IF NOT EXISTS public.usage_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   api_key_id UUID REFERENCES public.api_keys(id) ON DELETE SET NULL,
   organization_id UUID REFERENCES public.organizations(id) ON DELETE SET NULL,
   endpoint TEXT NOT NULL,
@@ -102,13 +121,23 @@ CREATE TABLE IF NOT EXISTS public.usage_logs (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id) ON DELETE SET NULL;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS status_code INTEGER;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS status TEXT;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS error_type TEXT;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS tokens_used INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS cost_cents INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS latency_ms INTEGER;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS request_body JSONB;
+ALTER TABLE public.usage_logs ADD COLUMN IF NOT EXISTS response_body JSONB;
+
 CREATE INDEX IF NOT EXISTS idx_usage_logs_user ON public.usage_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_usage_logs_org ON public.usage_logs(organization_id) WHERE organization_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_usage_logs_date ON public.usage_logs(user_id, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS public.webhooks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   url TEXT NOT NULL,
@@ -119,6 +148,9 @@ CREATE TABLE IF NOT EXISTS public.webhooks (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE public.webhooks ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE;
+ALTER TABLE public.webhooks ADD COLUMN IF NOT EXISTS namespace TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_webhooks_user ON public.webhooks(user_id);
 CREATE INDEX IF NOT EXISTS idx_webhooks_org ON public.webhooks(organization_id) WHERE organization_id IS NOT NULL;

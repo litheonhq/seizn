@@ -55,11 +55,11 @@ CREATE TABLE IF NOT EXISTS index_health (
 );
 
 -- Index for efficient queries
-CREATE INDEX idx_health_collection ON index_health(collection_id);
-CREATE INDEX idx_health_user ON index_health(user_id);
-CREATE INDEX idx_health_status ON index_health(status);
-CREATE INDEX idx_health_score ON index_health(health_score);
-CREATE INDEX idx_health_last_checked ON index_health(last_checked_at);
+CREATE INDEX IF NOT EXISTS idx_health_collection ON index_health(collection_id);
+CREATE INDEX IF NOT EXISTS idx_health_user ON index_health(user_id);
+CREATE INDEX IF NOT EXISTS idx_health_status ON index_health(status);
+CREATE INDEX IF NOT EXISTS idx_health_score ON index_health(health_score);
+CREATE INDEX IF NOT EXISTS idx_health_last_checked ON index_health(last_checked_at);
 
 -- ============================================
 -- 2. Healing Jobs Table
@@ -111,13 +111,13 @@ CREATE TABLE IF NOT EXISTS healing_jobs (
 );
 
 -- Indexes for job queries
-CREATE INDEX idx_jobs_collection ON healing_jobs(collection_id);
-CREATE INDEX idx_jobs_user ON healing_jobs(user_id);
-CREATE INDEX idx_jobs_status ON healing_jobs(status);
-CREATE INDEX idx_jobs_type ON healing_jobs(job_type);
-CREATE INDEX idx_jobs_created ON healing_jobs(created_at DESC);
-CREATE INDEX idx_jobs_scheduled ON healing_jobs(scheduled_at) WHERE status = 'pending';
-CREATE INDEX idx_jobs_running ON healing_jobs(started_at) WHERE status = 'running';
+CREATE INDEX IF NOT EXISTS idx_jobs_collection ON healing_jobs(collection_id);
+CREATE INDEX IF NOT EXISTS idx_jobs_user ON healing_jobs(user_id);
+CREATE INDEX IF NOT EXISTS idx_jobs_status ON healing_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_jobs_type ON healing_jobs(job_type);
+CREATE INDEX IF NOT EXISTS idx_jobs_created ON healing_jobs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_jobs_scheduled ON healing_jobs(scheduled_at) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_jobs_running ON healing_jobs(started_at) WHERE status = 'running';
 
 -- ============================================
 -- 3. Healing Rules Table
@@ -168,10 +168,10 @@ CREATE TABLE IF NOT EXISTS healing_rules (
 );
 
 -- Indexes for rule queries
-CREATE INDEX idx_rules_user ON healing_rules(user_id);
-CREATE INDEX idx_rules_collection ON healing_rules(collection_id);
-CREATE INDEX idx_rules_active ON healing_rules(is_active) WHERE is_active = TRUE;
-CREATE INDEX idx_rules_next_exec ON healing_rules(next_execution_at) WHERE auto_execute = TRUE;
+CREATE INDEX IF NOT EXISTS idx_rules_user ON healing_rules(user_id);
+CREATE INDEX IF NOT EXISTS idx_rules_collection ON healing_rules(collection_id);
+CREATE INDEX IF NOT EXISTS idx_rules_active ON healing_rules(is_active) WHERE is_active = TRUE;
+CREATE INDEX IF NOT EXISTS idx_rules_next_exec ON healing_rules(next_execution_at) WHERE auto_execute = TRUE;
 
 -- ============================================
 -- 4. Healing Actions Log Table
@@ -216,12 +216,12 @@ CREATE TABLE IF NOT EXISTS healing_actions (
 );
 
 -- Indexes for action queries
-CREATE INDEX idx_actions_job ON healing_actions(job_id);
-CREATE INDEX idx_actions_user ON healing_actions(user_id);
-CREATE INDEX idx_actions_collection ON healing_actions(collection_id);
-CREATE INDEX idx_actions_type ON healing_actions(action_type);
-CREATE INDEX idx_actions_status ON healing_actions(status);
-CREATE INDEX idx_actions_created ON healing_actions(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_job ON healing_actions(job_id);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_user ON healing_actions(user_id);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_collection ON healing_actions(collection_id);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_type ON healing_actions(action_type);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_status ON healing_actions(status);
+CREATE INDEX IF NOT EXISTS idx_healing_actions_created ON healing_actions(created_at DESC);
 
 -- ============================================
 -- 5. Issue Detection Queue
@@ -255,11 +255,11 @@ CREATE TABLE IF NOT EXISTS healing_issue_queue (
 );
 
 -- Indexes for issue queue
-CREATE INDEX idx_issue_queue_collection ON healing_issue_queue(collection_id);
-CREATE INDEX idx_issue_queue_status ON healing_issue_queue(status);
-CREATE INDEX idx_issue_queue_type ON healing_issue_queue(issue_type);
-CREATE INDEX idx_issue_queue_severity ON healing_issue_queue(issue_severity);
-CREATE INDEX idx_issue_queue_pending ON healing_issue_queue(detected_at) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_issue_queue_collection ON healing_issue_queue(collection_id);
+CREATE INDEX IF NOT EXISTS idx_issue_queue_status ON healing_issue_queue(status);
+CREATE INDEX IF NOT EXISTS idx_issue_queue_type ON healing_issue_queue(issue_type);
+CREATE INDEX IF NOT EXISTS idx_issue_queue_severity ON healing_issue_queue(issue_severity);
+CREATE INDEX IF NOT EXISTS idx_issue_queue_pending ON healing_issue_queue(detected_at) WHERE status = 'pending';
 
 -- ============================================
 -- 6. Healing Configuration Table
