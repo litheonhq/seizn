@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { LandingNav } from "@/components/shared/site-nav";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -203,62 +203,41 @@ function getCopy(locale: Locale): Copy {
 
 export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
   const copy = getCopy(locale);
+  const compareLabel = dict.extremeHome?.nav?.compare || "Integrations";
   const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
+  const navLabels = {
+    docs: dict.nav.docs,
+    pricing: dict.nav.pricing,
+    compare: compareLabel,
+    enterprise: enterpriseLabel,
+    status: dict.footer.status,
+    cta: dict.nav.getStarted,
+  };
 
   return (
-    <div className="min-h-screen bg-[#08111f] text-white">
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
-              S
-            </div>
-            <span className="text-lg font-semibold text-white">Seizn</span>
-          </Link>
-
-          <div className="flex items-center gap-5">
-            <Link href={`/${locale}/pricing`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {dict.nav.pricing}
-            </Link>
-            <Link href={`/${locale}/comparison`} className="hidden text-sm font-medium text-white md:block">
-              {dict.extremeHome?.nav?.compare || "Integrations"}
-            </Link>
-            <Link href={`/${locale}/enterprise`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {enterpriseLabel}
-            </Link>
-            <Link href={`/${locale}/docs`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {dict.nav.docs}
-            </Link>
-            <LanguageSwitcher currentLocale={locale} />
-            <Link
-              href={`/${locale}/enterprise`}
-              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-            >
-              {dict.nav.getStarted}
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} labels={navLabels} ctaHref={`/${locale}/enterprise`} ctaLabel={dict.nav.getStarted} />
 
       <main>
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
             <div className="max-w-4xl">
-              <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{copy.eyebrow}</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{copy.title}</h1>
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{copy.subtitle}</p>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">{copy.helper}</p>
+              <div className="szn-section-number">COMPARISON / INTEGRATIONS</div>
+              <p className="mt-6 text-sm font-medium text-szn-signal">{copy.eyebrow}</p>
+              <h1 className="szn-serif mt-5 text-4xl font-semibold tracking-normal text-szn-text-1 md:text-6xl">{copy.title}</h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.subtitle}</p>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-szn-text-3">{copy.helper}</p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={`/${locale}/docs/integrations`}
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                  className="szn-btn-glass px-5 py-3 text-sm"
                 >
                   {copy.primaryCta}
                 </Link>
                 <Link
                   href={`/${locale}/enterprise`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                  className="szn-btn-ghost px-5 py-3 text-sm"
                 >
                   {copy.secondaryCta}
                 </Link>
@@ -267,32 +246,32 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.tableTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.tableSubtitle}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.tableTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.tableSubtitle}</p>
             </div>
 
-            <div className="mt-10 overflow-x-auto border border-white/10">
+            <div className="mt-10 overflow-x-auto rounded-xl border border-szn-border-subtle">
               <table className="min-w-full border-collapse">
-                <thead className="bg-white/5">
+                <thead className="bg-szn-surface-1">
                   <tr>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Feature</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn alone</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + Inworld</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + Convai</th>
-                    <th className="px-4 py-4 text-left text-sm font-medium text-slate-300">Seizn + ACE</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-szn-text-2">Feature</th>
+                    <th className="bg-szn-signal-soft px-4 py-4 text-left text-sm font-medium text-szn-text-1">Seizn alone</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-szn-text-2">Seizn + Inworld</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-szn-text-2">Seizn + Convai</th>
+                    <th className="px-4 py-4 text-left text-sm font-medium text-szn-text-2">Seizn + ACE</th>
                   </tr>
                 </thead>
                 <tbody>
                   {copy.rows.map((row) => (
-                    <tr key={row.feature} className="border-t border-white/10">
-                      <th className="px-4 py-4 text-left text-sm font-medium text-white">{row.feature}</th>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.seizn}</td>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.inworld}</td>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.convai}</td>
-                      <td className="px-4 py-4 text-sm leading-6 text-slate-300">{row.ace}</td>
+                    <tr key={row.feature} className="border-t border-szn-border-subtle">
+                      <th className="px-4 py-4 text-left text-sm font-medium text-szn-text-1">{row.feature}</th>
+                      <td className="bg-szn-signal-soft px-4 py-4 text-sm leading-6 text-szn-text-1">{row.seizn}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-szn-text-2">{row.inworld}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-szn-text-2">{row.convai}</td>
+                      <td className="px-4 py-4 text-sm leading-6 text-szn-text-2">{row.ace}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -301,18 +280,18 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.principlesTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.principlesSubtitle}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.principlesTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.principlesSubtitle}</p>
             </div>
 
             <div className="mt-10 grid gap-4 lg:grid-cols-3">
               {copy.principles.map((item) => (
-                <div key={item.title} className="border border-white/10 bg-white/5 px-5 py-5">
-                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">{item.body}</p>
+                <div key={item.title} className="rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-5 py-5">
+                  <h3 className="text-lg font-semibold text-szn-text-1">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-szn-text-2">{item.body}</p>
                 </div>
               ))}
             </div>
@@ -323,19 +302,19 @@ export function ComparisonClient({ dict, locale }: ComparisonClientProps) {
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.finalCtaTitle}</h2>
-                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalCtaSubtitle}</p>
+                <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.finalCtaTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.finalCtaSubtitle}</p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={`/${locale}/pricing`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                  className="szn-btn-ghost px-5 py-3 text-sm"
                 >
                   {copy.finalPrimary}
                 </Link>
                 <Link
                   href={`/${locale}/enterprise`}
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                  className="szn-btn-glass px-5 py-3 text-sm"
                 >
                   {copy.finalSecondary}
                 </Link>
