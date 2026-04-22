@@ -50,6 +50,7 @@ export interface PlanConfig {
     dedicatedSlack: boolean;
     canonLockTeamReview: boolean;
     prioritySupport: boolean;
+    replayRerun: boolean;
   };
 
   // Token limits (per request)
@@ -84,6 +85,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: false,
       canonLockTeamReview: false,
       prioritySupport: false,
+      replayRerun: false,
     },
     maxInputTokens: 4_000,
     maxOutputTokens: 1_000,
@@ -114,6 +116,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: false,
       canonLockTeamReview: false,
       prioritySupport: false,
+      replayRerun: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -144,6 +147,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: false,
       canonLockTeamReview: false,
       prioritySupport: false,
+      replayRerun: false,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
@@ -174,6 +178,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: true,
       canonLockTeamReview: true,
       prioritySupport: true,
+      replayRerun: true,
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
@@ -204,6 +209,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: true,
       canonLockTeamReview: true,
       prioritySupport: true,
+      replayRerun: true,
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
@@ -235,6 +241,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: false,
       canonLockTeamReview: false,
       prioritySupport: false,
+      replayRerun: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -263,6 +270,7 @@ export const PLANS: Record<string, PlanConfig> = {
       dedicatedSlack: false,
       canonLockTeamReview: false,
       prioritySupport: false,
+      replayRerun: false,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
