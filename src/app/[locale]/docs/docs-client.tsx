@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { DocsSearch } from "@/components/docs/DocsSearch";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { LandingNav } from "@/components/shared/site-nav";
 
 type Dictionary = Record<string, unknown>;
 
@@ -414,7 +414,7 @@ function getCopy(locale: Locale): Copy {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre className="overflow-x-auto border border-white/10 bg-[#08111f] p-4 text-sm leading-7 text-slate-200">
+    <pre className="overflow-x-auto rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4 text-sm leading-7 text-szn-text-2">
       <code>{code}</code>
     </pre>
   );
@@ -424,12 +424,12 @@ function SectionCards({ locale, cards }: { locale: Locale; cards: Card[] }) {
   return (
     <div className="mt-8 grid gap-4 md:grid-cols-2">
       {cards.map((card) => (
-        <div key={card.title} className="border border-white/10 bg-white/5 px-5 py-5">
-          <h3 className="text-lg font-semibold text-white">{card.title}</h3>
-          <p className="mt-3 text-sm leading-7 text-slate-300">{card.body}</p>
+        <div key={card.title} className="rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-5 py-5">
+          <h3 className="text-lg font-semibold text-szn-text-1">{card.title}</h3>
+          <p className="mt-3 text-sm leading-7 text-szn-text-2">{card.body}</p>
           <Link
             href={`/${locale}${card.href}`}
-            className="mt-5 inline-flex rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+            className="szn-btn-ghost mt-5 inline-flex px-4 py-2 text-sm"
           >
             {card.cta}
           </Link>
@@ -450,13 +450,35 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#08111f] text-white">
-      <header className="sticky top-0 z-10 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-          <Link href={`/${locale}`} className="text-xl font-semibold text-white">
-            Seizn
-          </Link>
-          <div className="flex flex-1 justify-center px-4">
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} ctaHref="/login" ctaLabel={t("docs.nav.getStarted")} />
+
+      <main className="mx-auto flex max-w-7xl gap-12 px-6 py-12">
+        <nav className="hidden w-64 shrink-0 lg:block">
+          <div className="sticky top-24 space-y-6">
+            {copy.groups.map((group) => (
+              <div key={group.title}>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-szn-text-3">{group.title}</p>
+                <div className="space-y-2">
+                  {group.links.map((link) =>
+                    link.href.startsWith("#") ? (
+                      <a key={link.label} href={link.href} className="block text-sm text-szn-text-2 transition-colors hover:text-szn-text-1">
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link key={link.label} href={`/${locale}${link.href}`} className="block text-sm text-szn-text-2 transition-colors hover:text-szn-text-1">
+                        {link.label}
+                      </Link>
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </nav>
+
+        <div className="min-w-0 flex-1">
+          <div className="mb-10 max-w-3xl">
             <DocsSearch
               locale={locale}
               translations={{
@@ -469,109 +491,71 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
               }}
             />
           </div>
-          <nav className="flex items-center gap-4">
-            <LanguageSwitcher currentLocale={locale} />
-            <Link href="/dashboard" className="hidden text-slate-300 transition-colors hover:text-white md:block">
-              {t("docs.nav.dashboard")}
-            </Link>
-            <Link
-              href="/login"
-              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-            >
-              {t("docs.nav.getStarted")}
-            </Link>
-          </nav>
-        </div>
-      </header>
 
-      <main className="mx-auto flex max-w-7xl gap-12 px-6 py-12">
-        <nav className="hidden w-64 shrink-0 lg:block">
-          <div className="sticky top-24 space-y-6">
-            {copy.groups.map((group) => (
-              <div key={group.title}>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">{group.title}</p>
-                <div className="space-y-2">
-                  {group.links.map((link) =>
-                    link.href.startsWith("#") ? (
-                      <a key={link.label} href={link.href} className="block text-sm text-slate-300 transition-colors hover:text-white">
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link key={link.label} href={`/${locale}${link.href}`} className="block text-sm text-slate-300 transition-colors hover:text-white">
-                        {link.label}
-                      </Link>
-                    )
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </nav>
-
-        <div className="min-w-0 flex-1">
-          <section className="border-b border-white/10 pb-12">
-            <h1 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">{copy.heroTitle}</h1>
-            <p className="mt-5 max-w-3xl text-xl leading-8 text-slate-300">{copy.heroSubtitle}</p>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-slate-400">{copy.heroBody}</p>
+          <section className="border-b border-szn-border-subtle pb-12">
+            <div className="szn-section-number mb-6">DOCS / INDEX</div>
+            <h1 className="szn-serif text-4xl font-semibold tracking-normal text-szn-text-1 md:text-5xl">{copy.heroTitle}</h1>
+            <p className="mt-5 max-w-3xl text-xl leading-8 text-szn-text-2">{copy.heroSubtitle}</p>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-szn-text-3">{copy.heroBody}</p>
           </section>
 
-          <section id="getting-started" className="border-b border-white/10 py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.quickstartTitle}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.quickstartSubtitle}</p>
+          <section id="getting-started" className="border-b border-szn-border-subtle py-12">
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.quickstartTitle}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.quickstartSubtitle}</p>
             <div className="mt-8">
               <CodeBlock code={copy.quickstartCode} />
             </div>
           </section>
 
-          <section id="entities-relations" className="border-b border-white/10 py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.sections.entities.title}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.sections.entities.body}</p>
+          <section id="entities-relations" className="border-b border-szn-border-subtle py-12">
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.sections.entities.title}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.sections.entities.body}</p>
             <SectionCards locale={locale} cards={copy.sections.entities.cards} />
           </section>
 
-          <section id="events-witnesses" className="border-b border-white/10 py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.sections.events.title}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.sections.events.body}</p>
+          <section id="events-witnesses" className="border-b border-szn-border-subtle py-12">
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.sections.events.title}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.sections.events.body}</p>
             <SectionCards locale={locale} cards={copy.sections.events.cards} />
           </section>
 
-          <section id="retrieval-budgets" className="border-b border-white/10 py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.sections.retrieval.title}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.sections.retrieval.body}</p>
+          <section id="retrieval-budgets" className="border-b border-szn-border-subtle py-12">
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.sections.retrieval.title}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.sections.retrieval.body}</p>
             <SectionCards locale={locale} cards={copy.sections.retrieval.cards} />
           </section>
 
-          <section id="engine-plugins" className="border-b border-white/10 py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.sections.plugins.title}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.sections.plugins.body}</p>
+          <section id="engine-plugins" className="border-b border-szn-border-subtle py-12">
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.sections.plugins.title}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.sections.plugins.body}</p>
             <SectionCards locale={locale} cards={copy.sections.plugins.cards} />
           </section>
 
           <section id="api-reference" className="py-12">
-            <h2 className="text-3xl font-semibold text-white">{copy.sections.api.title}</h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{copy.sections.api.body}</p>
+            <h2 className="text-3xl font-semibold text-szn-text-1">{copy.sections.api.title}</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.sections.api.body}</p>
             <SectionCards locale={locale} cards={copy.sections.api.cards} />
           </section>
         </div>
       </main>
 
-      <footer className="border-t border-white/10">
+      <footer className="border-t border-szn-border-subtle">
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-10 md:flex-row md:items-center md:justify-between">
-          <Link href={`/${locale}`} className="text-sm font-medium text-white">
+          <Link href={`/${locale}`} className="text-sm font-medium text-szn-text-1">
             Seizn
           </Link>
-          <div className="text-sm text-slate-400">{t("footer.copyright", { year: currentYear })}</div>
+          <div className="text-sm text-szn-text-3">{t("footer.copyright", { year: currentYear })}</div>
           <nav className="flex flex-wrap items-center gap-5">
-            <Link href={`/${locale}/privacy`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {t("footer.privacy")}
             </Link>
-            <Link href={`/${locale}/terms`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/terms`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {t("footer.terms")}
             </Link>
-            <Link href={`/${locale}/sla`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/sla`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {t("footer.sla")}
             </Link>
-            <Link href={`/${locale}/status`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/status`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {t("footer.status")}
             </Link>
           </nav>

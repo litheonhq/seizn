@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { LandingNav } from "@/components/shared/site-nav";
 
 type Step = {
   number: string;
@@ -172,7 +172,7 @@ function getCopy(locale: Locale): Copy {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre className="overflow-x-auto border border-white/10 bg-[#08111f] p-4 text-sm leading-7 text-slate-200">
+    <pre className="overflow-x-auto rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4 text-sm leading-7 text-szn-text-2">
       <code>{code}</code>
     </pre>
   );
@@ -182,48 +182,29 @@ export function QuickstartClient({ locale }: { locale: Locale }) {
   const copy = getCopy(locale);
 
   return (
-    <div className="min-h-screen bg-[#08111f] text-white">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Link href={`/${locale}`} className="text-xl font-semibold text-white">
-              Seizn
-            </Link>
-            <span className="text-slate-500">/</span>
-            <Link href={`/${locale}/docs`} className="text-slate-300 transition-colors hover:text-white">
-              Docs
-            </Link>
-            <span className="text-slate-500">/</span>
-            <span className="text-white">{copy.title}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher currentLocale={locale} />
-            <Link
-              href={`/${locale}/docs/api-reference`}
-              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-            >
-              API
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} />
 
       <main className="mx-auto max-w-6xl px-6 py-12">
-        <section className="border-b border-white/10 pb-12">
-          <h1 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">{copy.title}</h1>
-          <p className="mt-5 max-w-4xl text-xl leading-8 text-slate-300">{copy.subtitle}</p>
-          <p className="mt-4 max-w-4xl text-base leading-8 text-slate-400">{copy.helper}</p>
+        <section className="border-b border-szn-border-subtle pb-12">
+          <Link href={`/${locale}/docs`} className="text-sm text-szn-text-2 transition-colors hover:text-szn-text-1">
+            Docs
+          </Link>
+          <div className="szn-section-number mt-10">DOCS / QUICKSTART</div>
+          <h1 className="szn-serif mt-5 text-4xl font-semibold tracking-normal text-szn-text-1 md:text-5xl">{copy.title}</h1>
+          <p className="mt-5 max-w-4xl text-xl leading-8 text-szn-text-2">{copy.subtitle}</p>
+          <p className="mt-4 max-w-4xl text-base leading-8 text-szn-text-3">{copy.helper}</p>
         </section>
 
         <section className="py-12">
           <div className="grid gap-6">
             {copy.steps.map((step) => (
-              <div key={step.number} className="border border-white/10 bg-white/5 px-5 py-5">
+              <div key={step.number} className="rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-5 py-5">
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <div className="text-sm font-medium text-cyan-300">{step.number}</div>
-                    <h2 className="mt-2 text-2xl font-semibold text-white">{step.title}</h2>
-                    <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">{step.body}</p>
+                    <div className="text-sm font-medium text-szn-signal">{step.number}</div>
+                    <h2 className="mt-2 text-2xl font-semibold text-szn-text-1">{step.title}</h2>
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-szn-text-2">{step.body}</p>
                   </div>
                 </div>
                 <div className="mt-6">
@@ -234,22 +215,22 @@ export function QuickstartClient({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section className="border-t border-white/10 py-12">
+        <section className="border-t border-szn-border-subtle py-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white">{copy.nextTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.nextBody}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1">{copy.nextTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.nextBody}</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Link
                 href={`/${locale}/docs/api-reference`}
-                className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                className="szn-btn-ghost px-5 py-3 text-sm"
               >
                 {copy.apiLabel}
               </Link>
               <Link
                 href={`/${locale}/docs/integrations`}
-                className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                className="szn-btn-glass px-5 py-3 text-sm"
               >
                 {copy.integrationsLabel}
               </Link>
@@ -258,8 +239,8 @@ export function QuickstartClient({ locale }: { locale: Locale }) {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 py-8">
-        <div className="mx-auto max-w-6xl px-6 text-center text-sm text-slate-400">
+      <footer className="border-t border-szn-border-subtle py-8">
+        <div className="mx-auto max-w-6xl px-6 text-center text-sm text-szn-text-3">
           {new Date().getFullYear()} Seizn
         </div>
       </footer>

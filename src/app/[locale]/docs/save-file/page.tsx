@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
+import { LandingNav } from "@/components/shared/site-nav";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -89,24 +90,27 @@ export default async function SaveFileDocsPage({ params }: Props) {
   const text = getCopy(locale);
 
   return (
-    <main className="min-h-screen bg-[#0a0a12] text-white">
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} />
+    <main>
       <section className="mx-auto max-w-5xl px-6 py-20 sm:px-8 lg:px-10">
         <p className="szn-eyebrow">{text.eyebrow}</p>
+        <div className="szn-section-number mt-8">DOCS / SAVE-FILE</div>
         <h1 className="szn-serif mt-5 max-w-3xl text-4xl font-semibold tracking-normal sm:text-5xl">
           {text.heading}
         </h1>
-        <p className="mt-6 max-w-3xl text-base leading-7 text-white/70 sm:text-lg">
+        <p className="mt-6 max-w-3xl text-base leading-7 text-szn-text-2 sm:text-lg">
           {text.intro}
         </p>
       </section>
 
-      <section className="border-y border-white/10 bg-white/[0.03]">
+      <section className="border-y border-szn-border-subtle bg-szn-surface-1">
         <div className="mx-auto grid max-w-5xl gap-8 px-6 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
           <div>
             <p className="szn-section-number">SZN1</p>
             <h2 className="mt-4 text-2xl font-semibold tracking-normal">{text.layoutTitle}</h2>
           </div>
-          <pre className="overflow-x-auto rounded-lg border border-white/10 bg-black/40 p-4 text-sm leading-6 text-violet-100">
+          <pre className="overflow-x-auto rounded-lg border border-szn-border-subtle bg-szn-bg p-4 text-sm leading-6 text-szn-text-2">
             <code>{'[4 bytes magic "SZN1"][8 bytes length][gzip(json body)][64 bytes ed25519 sig][32 bytes pubkey]'}</code>
           </pre>
         </div>
@@ -115,7 +119,7 @@ export default async function SaveFileDocsPage({ params }: Props) {
       <section className="mx-auto grid max-w-5xl gap-8 px-6 py-12 sm:px-8 lg:grid-cols-2 lg:px-10">
         <article className="szn-surface-1 rounded-lg p-6">
           <h2 className="text-xl font-semibold tracking-normal">{text.bodyTitle}</h2>
-          <pre className="mt-5 overflow-x-auto rounded-md border border-white/10 bg-black/35 p-4 text-sm leading-6 text-white/80">
+          <pre className="mt-5 overflow-x-auto rounded-md border border-szn-border-subtle bg-szn-bg p-4 text-sm leading-6 text-szn-text-2">
             <code>{`{
   "version": "SZN1",
   "exportedAt": "2026-04-21T00:00:00.000Z",
@@ -136,9 +140,9 @@ export default async function SaveFileDocsPage({ params }: Props) {
 
         <article className="szn-surface-1 rounded-lg p-6">
           <h2 className="text-xl font-semibold tracking-normal">{text.signingTitle}</h2>
-          <p className="mt-5 text-sm leading-7 text-white/70">{text.signing}</p>
+          <p className="mt-5 text-sm leading-7 text-szn-text-2">{text.signing}</p>
           <h3 className="mt-8 text-base font-semibold tracking-normal">{text.cliTitle}</h3>
-          <pre className="mt-4 overflow-x-auto rounded-md border border-white/10 bg-black/35 p-4 text-sm leading-6 text-white/80">
+          <pre className="mt-4 overflow-x-auto rounded-md border border-szn-border-subtle bg-szn-bg p-4 text-sm leading-6 text-szn-text-2">
             <code>{`seizn save export <npc_id> <out.szs>
 seizn save import <in.szs>`}</code>
           </pre>
@@ -146,11 +150,11 @@ seizn save import <in.szs>`}</code>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-20 sm:px-8 lg:px-10">
-        <article className="rounded-lg border border-white/10 bg-white/[0.03] p-6">
+        <article className="rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-6">
           <h2 className="text-xl font-semibold tracking-normal">{text.rejectionTitle}</h2>
-          <ul className="mt-5 grid gap-3 text-sm leading-6 text-white/70 sm:grid-cols-2">
+          <ul className="mt-5 grid gap-3 text-sm leading-6 text-szn-text-2 sm:grid-cols-2">
             {text.rejection.map((item) => (
-              <li key={item} className="rounded-md border border-white/10 bg-black/25 px-4 py-3">
+              <li key={item} className="rounded-md border border-szn-border-subtle bg-szn-bg px-4 py-3">
                 {item}
               </li>
             ))}
@@ -158,5 +162,6 @@ seizn save import <in.szs>`}</code>
         </article>
       </section>
     </main>
+    </div>
   );
 }
