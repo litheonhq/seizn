@@ -39,6 +39,13 @@ interface QuotaData {
   apiKeys: { used: number; limit: number };
 }
 
+type PreferredRegion = "auto" | "seoul" | "us-east-1" | "eu-west-1";
+
+interface RegionPreferenceData {
+  preferredRegion: PreferredRegion;
+  regionPinAvailable: boolean;
+}
+
 // Plan limits for UI display. Keep in sync with src/lib/plan-limits.ts (canonical source).
 const PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number; price: string }> = {
   free: { memories: 10_000, apiCalls: 10_000, apiKeys: 2, price: "$0" },
@@ -49,6 +56,17 @@ const PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys:
   pro: { memories: 5_000_000, apiCalls: -1, apiKeys: 25, price: "$999" },
   enterprise: { memories: -1, apiCalls: -1, apiKeys: 100, price: "Custom" },
 };
+
+const REGION_OPTIONS: Array<{ value: PreferredRegion; label: string }> = [
+  { value: "auto", label: "Auto" },
+  { value: "seoul", label: "Seoul" },
+  { value: "us-east-1", label: "US East" },
+  { value: "eu-west-1", label: "EU West" },
+];
+
+function normalizePreferredRegion(value: unknown): PreferredRegion {
+  return REGION_OPTIONS.some((option) => option.value === value) ? (value as PreferredRegion) : "auto";
+}
 
 function getUsagePercent(used: number, limit: number): number {
   if (limit === -1) return 0;
@@ -105,6 +123,11 @@ export function SettingsClient() {
     apiKeys: { used: 0, limit: PLAN_LIMITS.free.apiKeys },
   });
   const [quotaLoading, setQuotaLoading] = useState(true);
+  const [regionPreference, setRegionPreference] = useState<RegionPreferenceData>({
+    preferredRegion: "auto",
+    regionPinAvailable: false,
+  });
+  const [regionLoading, setRegionLoading] = useState(true);
 
   // Modal state for RTBF actions
   const [showExportModal, setShowExportModal] = useState(false);
@@ -116,9 +139,10 @@ export function SettingsClient() {
     setLoadError(null);
     setBudgetLoading(true);
     setQuotaLoading(true);
+    setRegionLoading(true);
 
     try {
-      const [profileResult, budgetResult, quotaResult] = await Promise.allSettled([
+      const [profileResult, budgetResult, quotaResult, regionResult] = await Promise.allSettled([
         fetch("/api/me", { credentials: "include", signal: request.signal }).then(async (res) => ({
           status: res.status,
           data: res.status === 401 ? null : await res.json(),
@@ -128,6 +152,10 @@ export function SettingsClient() {
           data: res.ok ? await res.json() : null,
         })),
         fetch("/api/quota", { credentials: "include", signal: request.signal }).then(async (res) => ({
+          ok: res.ok,
+          data: res.ok ? await res.json() : null,
+        })),
+        fetch("/api/personas/region-preference", { credentials: "include", signal: request.signal }).then(async (res) => ({
           ok: res.ok,
           data: res.ok ? await res.json() : null,
         })),
@@ -184,6 +212,18 @@ export function SettingsClient() {
         failedCount += 1;
       }
 
+      if (regionResult.status === "fulfilled" && regionResult.value.ok && regionResult.value.data) {
+        setRegionPreference({
+          preferredRegion: normalizePreferredRegion(regionResult.value.data.preferredRegion),
+          regionPinAvailable: Boolean(regionResult.value.data.regionPinAvailable),
+        });
+      } else if (
+        (regionResult.status === "fulfilled" && !regionResult.value.ok) ||
+        (regionResult.status === "rejected" && !isAbortError(regionResult.reason))
+      ) {
+        failedCount += 1;
+      }
+
       setLoadError(failedCount > 0 ? "Some settings data could not be loaded." : null);
     } catch (err) {
       if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
@@ -193,6 +233,7 @@ export function SettingsClient() {
       if (requestGuardRef.current.isCurrent(request.id)) {
         setBudgetLoading(false);
         setQuotaLoading(false);
+        setRegionLoading(false);
         requestGuardRef.current.finish(request.id);
       }
     }
@@ -246,6 +287,32 @@ export function SettingsClient() {
       setSaveStatus("error");
     }
   }, [budgetSettings]);
+
+  const saveRegionPreference = useCallback(async (preferredRegion: PreferredRegion) => {
+    setSaveStatus("saving");
+    try {
+      const res = await fetch("/api/personas/region-preference", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ preferredRegion }),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error?.message || "Failed to save data residency preference");
+      }
+      const data = await res.json();
+      setRegionPreference({
+        preferredRegion: normalizePreferredRegion(data.preferredRegion),
+        regionPinAvailable: Boolean(data.regionPinAvailable),
+      });
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
+    } catch (err) {
+      setLoadError(getErrorMessage(err, "Failed to save data residency preference."));
+      setSaveStatus("error");
+    }
+  }, []);
 
   const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
     { id: "profile", label: t("dashboard.settingsPage.tabs.profile"), icon: <UserIcon className="w-4 h-4" /> },
@@ -478,6 +545,14 @@ export function SettingsClient() {
                     </div>
                   </div>
                 )}
+
+                <DataResidencyPreference
+                  value={regionPreference.preferredRegion}
+                  regionPinAvailable={regionPreference.regionPinAvailable}
+                  loading={regionLoading}
+                  saving={saveStatus === "saving"}
+                  onChange={saveRegionPreference}
+                />
 
                 {/* Usage Stats */}
                 <div className="grid gap-4 md:grid-cols-3">
@@ -978,6 +1053,60 @@ export function SettingsClient() {
         onClose={() => setShowDeleteAccountModal(false)}
       />
     </div>
+  );
+}
+
+export function DataResidencyPreference({
+  value,
+  regionPinAvailable,
+  loading = false,
+  saving = false,
+  onChange,
+}: {
+  value: PreferredRegion;
+  regionPinAvailable: boolean;
+  loading?: boolean;
+  saving?: boolean;
+  onChange: (value: PreferredRegion) => void;
+}) {
+  const disabled = loading || saving || !regionPinAvailable;
+
+  return (
+    <section className="rounded-xl border border-szn-border bg-szn-card p-4" data-region-preference="seoul">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <h4 className="text-sm font-semibold text-szn-text-1">Data residency preference</h4>
+          <p className="mt-1 text-sm text-szn-text-2">
+            Choose the compliance posture shown to Korean persona seeding workflows.
+          </p>
+          {!regionPinAvailable && (
+            <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
+              Seoul residency preference requires Pro or Enterprise.
+              {" "}
+              <Link href="/pricing" className="font-medium underline underline-offset-2">
+                Upgrade
+              </Link>
+            </p>
+          )}
+        </div>
+        <label className="flex w-full flex-col gap-1 text-sm text-szn-text-2 md:w-64">
+          <span>Preferred region</span>
+          <select
+            aria-label="Data residency preference"
+            value={value}
+            disabled={disabled}
+            onChange={(event) => onChange(normalizePreferredRegion(event.target.value))}
+            className="w-full rounded-xl border border-szn-border bg-szn-bg px-3 py-2 text-sm text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {REGION_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </section>
   );
 }
 
