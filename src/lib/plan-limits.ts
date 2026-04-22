@@ -54,6 +54,7 @@ export interface PlanConfig {
     memoryTiering: boolean;
     personaSeeding: 'bundled' | 'live' | false;
     personaSeedingMaxBatch: number;
+    regionPin: boolean;
   };
 
   // Token limits (per request)
@@ -92,6 +93,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: false,
       personaSeeding: 'bundled',
       personaSeedingMaxBatch: 25,
+      regionPin: false,
     },
     maxInputTokens: 4_000,
     maxOutputTokens: 1_000,
@@ -126,6 +128,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: false,
       personaSeeding: 'bundled',
       personaSeedingMaxBatch: 100,
+      regionPin: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -160,6 +163,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: true,
       personaSeeding: 'live',
       personaSeedingMaxBatch: 500,
+      regionPin: false,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
@@ -194,6 +198,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: true,
       personaSeeding: 'live',
       personaSeedingMaxBatch: 2000,
+      regionPin: true,
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
@@ -228,6 +233,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: true,
       personaSeeding: 'live',
       personaSeedingMaxBatch: -1,
+      regionPin: true,
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
@@ -263,6 +269,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: false,
       personaSeeding: 'bundled',
       personaSeedingMaxBatch: 100,
+      regionPin: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -295,6 +302,7 @@ export const PLANS: Record<string, PlanConfig> = {
       memoryTiering: true,
       personaSeeding: 'live',
       personaSeedingMaxBatch: 500,
+      regionPin: false,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
