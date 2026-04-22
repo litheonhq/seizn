@@ -66,6 +66,10 @@
     {
       "path": "/api/cron/audit-batch",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/dsr-worker",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

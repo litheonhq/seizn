@@ -7,7 +7,7 @@ import { listOrganizationUserIds } from './organization';
 type Supabase = ReturnType<typeof createServerClient>;
 
 export type DsrJobType = 'export' | 'delete';
-export type DsrJobStatus = 'pending' | 'running' | 'completed' | 'failed';
+export type DsrJobStatus = 'queued' | 'processing' | 'pending' | 'running' | 'completed' | 'failed';
 
 export interface ComplianceActor {
   userId: string;
@@ -718,7 +718,12 @@ export async function buildOrganizationComplianceStatus(
 
   const jobRows = Array.isArray(jobs.data) ? (jobs.data as Array<{ status?: string }>) : [];
   return {
-    pendingJobs: jobRows.filter((job) => job.status === 'pending' || job.status === 'running').length,
+    pendingJobs: jobRows.filter((job) =>
+      job.status === 'queued' ||
+      job.status === 'processing' ||
+      job.status === 'pending' ||
+      job.status === 'running'
+    ).length,
     completedJobs: jobRows.filter((job) => job.status === 'completed').length,
     consentRecords: consents.count ?? 0,
     subjectMemories: memories.count ?? 0,
