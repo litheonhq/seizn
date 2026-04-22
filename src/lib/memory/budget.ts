@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
+import { hasFeature } from '@/lib/plan-limits';
 
 export type MemoryTier = 'hot' | 'warm' | 'cold';
 export type DemotionPolicy = 'lru' | 'lfu' | 'lru-then-lfu';
@@ -31,12 +32,46 @@ export interface BudgetReservationResult {
 
 type SupabaseLike = ReturnType<typeof createServerClient>;
 
+export const PROMOTE_ON_RECALL = true;
+const TIER_DEMOTION_BATCH_SIZE = 1000;
+const TIER_DEMOTION_MAX_RUNTIME_MS = 50_000;
+const HOT_STALE_DAYS = 30;
+const WARM_STALE_DAYS = 90;
+
 const DEFAULT_BUDGET_CONFIG: BudgetConfig = {
   hotBudgetBytes: 64 * 1024,
   warmBudgetBytes: 512 * 1024,
   coldBudgetBytes: null,
   demotionPolicy: 'lru-then-lfu',
 };
+
+interface StaleMemoryRow {
+  id: string;
+  organizationId: string;
+  entityId: string;
+  tier: 'hot' | 'warm';
+  sizeBytes: number;
+  lastRecalledAt: string | null;
+}
+
+export interface TierDemotionRunResult {
+  processed: number;
+  demoted: number;
+  hotToWarm: number;
+  warmToCold: number;
+  skippedPlanGate: number;
+  stoppedReason: 'completed' | 'runtime_limit';
+  demotedIds: string[];
+}
+
+export interface TierStats {
+  hot: number;
+  warm: number;
+  cold: number;
+  pinned: number;
+  lastDemotionAt: string | null;
+  lastDemotionCount: number;
+}
 
 function toNumber(value: unknown, fallback = 0): number {
   const parsed = typeof value === 'number' ? value : Number(value);
@@ -66,6 +101,26 @@ function normalizeMemoryRow(row: Record<string, unknown>): BudgetMemoryRow {
         : typeof row.createdAt === 'string'
           ? row.createdAt
           : null,
+  };
+}
+
+function normalizePlanCandidate(value: unknown): string | null {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim().toLowerCase() : null;
+}
+
+function normalizeStaleMemoryRow(row: Record<string, unknown>): StaleMemoryRow | null {
+  const organizationId = typeof row.organization_id === 'string' ? row.organization_id : null;
+  const entityId = typeof row.entity_id === 'string' ? row.entity_id : null;
+  const tier = row.tier === 'warm' ? 'warm' : row.tier === 'hot' ? 'hot' : null;
+  if (!row.id || !organizationId || !entityId || !tier) return null;
+
+  return {
+    id: String(row.id),
+    organizationId,
+    entityId,
+    tier,
+    sizeBytes: Math.max(0, toNumber(row.size_bytes)),
+    lastRecalledAt: typeof row.last_recalled_at === 'string' ? row.last_recalled_at : null,
   };
 }
 
@@ -207,6 +262,35 @@ export async function resolveMemoryBudgetOrganizationId(
   return null;
 }
 
+async function resolveOrganizationPlan(
+  supabase: SupabaseLike,
+  organizationId: string
+): Promise<string> {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('plan, subscription_tier')
+    .eq('id', organizationId)
+    .maybeSingle();
+
+  if (error) {
+    logServerWarn('[memory/budget] Organization plan unavailable, using free plan', error, {
+      organizationId,
+    });
+    return 'free';
+  }
+
+  const row = data as { plan?: unknown; subscription_tier?: unknown } | null;
+  return normalizePlanCandidate(row?.subscription_tier) || normalizePlanCandidate(row?.plan) || 'free';
+}
+
+export async function isMemoryTieringEnabledForOrganization(
+  supabase: SupabaseLike,
+  organizationId: string
+): Promise<boolean> {
+  const plan = await resolveOrganizationPlan(supabase, organizationId);
+  return hasFeature(plan, 'memoryTiering');
+}
+
 async function getBudgetConfig(
   supabase: SupabaseLike,
   organizationId: string,
@@ -333,11 +417,54 @@ async function insertBudgetEvent(
   }
 }
 
+async function recordTierTransitionUsage(
+  supabase: SupabaseLike,
+  input: {
+    organizationId: string;
+    entityId: string;
+    memoryId: string;
+    fromTier: MemoryTier;
+    toTier: MemoryTier;
+    plan: string;
+    occurredAt: string;
+  }
+): Promise<void> {
+  const { error } = await supabase.rpc('record_usage_event', {
+    p_studio_id: input.organizationId,
+    p_dimension: 'ops',
+    p_quantity: 1,
+    p_idempotency_key: `tier_transition:${input.memoryId}:${input.toTier}:${input.occurredAt}`,
+    p_user_id: null,
+    p_organization_id: input.organizationId,
+    p_plan: input.plan,
+    p_source: 'tier-demotion',
+    p_metadata: {
+      usage_dimension: 'tier_transition',
+      entity_id: input.entityId,
+      memory_id: input.memoryId,
+      from_tier: input.fromTier,
+      to_tier: input.toTier,
+    },
+  });
+
+  if (error) {
+    logServerWarn('[memory/budget] Tier transition usage event skipped', error, {
+      organizationId: input.organizationId,
+      memoryId: input.memoryId,
+    });
+  }
+}
+
 export async function demoteLeastUsed(
   ctx: { organizationId: string; entityId: string; bytesToFree: number; fromTier: 'hot' | 'warm' },
   supabase: SupabaseLike = createServerClient()
 ): Promise<{ demotedIds: string[]; freedBytes: number }> {
   if (ctx.bytesToFree <= 0) {
+    return { demotedIds: [], freedBytes: 0 };
+  }
+
+  const plan = await resolveOrganizationPlan(supabase, ctx.organizationId);
+  if (!hasFeature(plan, 'memoryTiering')) {
     return { demotedIds: [], freedBytes: 0 };
   }
 
@@ -396,6 +523,10 @@ export async function reserveHotSpace(
   }
 
   try {
+    if (!(await isMemoryTieringEnabledForOrganization(supabase, ctx.organizationId))) {
+      return { ok: true, demotedIds: [] };
+    }
+
     const config = await getBudgetConfig(supabase, ctx.organizationId, ctx.entityId);
     const memories = await listEntityMemories(supabase, ctx.organizationId, ctx.entityId);
     const hotUsedBytes = memories
@@ -498,6 +629,8 @@ export async function recordRecall(
   const organizationId = typeof memory.organization_id === 'string' ? memory.organization_id : null;
   const entityId = typeof memory.entity_id === 'string' ? memory.entity_id : null;
   const recallCount = Math.max(0, toNumber(memory.recall_count));
+  const currentTier = normalizeTier(memory.tier);
+  const nextRecallTier = PROMOTE_ON_RECALL && currentTier !== 'hot' ? 'hot' : currentTier;
   const now = new Date().toISOString();
 
   const { error: updateError } = await supabase
@@ -506,6 +639,7 @@ export async function recordRecall(
       recall_count: recallCount + 1,
       last_recalled_at: now,
       last_accessed_at: now,
+      tier: nextRecallTier,
     })
     .eq('id', memoryId);
 
@@ -520,10 +654,231 @@ export async function recordRecall(
       entityId,
       memoryId,
       eventType: 'recall',
-      toTier: normalizeTier(memory.tier),
+      toTier: nextRecallTier,
       sizeBytes: toNumber(memory.size_bytes),
     });
+    if (currentTier !== nextRecallTier) {
+      await insertBudgetEvent(supabase, {
+        organizationId,
+        entityId,
+        memoryId,
+        eventType: 'promote',
+        fromTier: currentTier,
+        toTier: nextRecallTier,
+        sizeBytes: toNumber(memory.size_bytes),
+        reason: 'recall_refresh',
+      });
+      await refreshEntityBudgetUsage({ organizationId, entityId }, supabase);
+    }
   }
+}
+
+async function listStaleMemories(
+  supabase: SupabaseLike,
+  params: { tier: 'hot' | 'warm'; cutoffIso: string; limit: number }
+): Promise<StaleMemoryRow[]> {
+  if (params.limit <= 0) return [];
+
+  const { data, error } = await supabase
+    .from('memories')
+    .select('id, organization_id, entity_id, tier, size_bytes, last_recalled_at')
+    .eq('tier', params.tier)
+    .eq('pinned', false)
+    .eq('is_deleted', false)
+    .lt('last_recalled_at', params.cutoffIso)
+    .order('last_recalled_at', { ascending: true })
+    .limit(params.limit);
+
+  if (error) {
+    throw new Error(`tier_demotion_fetch_failed: ${error.message || 'unknown'}`);
+  }
+
+  return ((data || []) as Record<string, unknown>[])
+    .map(normalizeStaleMemoryRow)
+    .filter((row): row is StaleMemoryRow => row !== null);
+}
+
+async function demoteScheduledMemory(
+  supabase: SupabaseLike,
+  row: StaleMemoryRow,
+  toTier: MemoryTier,
+  nowIso: string,
+  plan: string
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('memories')
+    .update({ tier: toTier, updated_at: nowIso })
+    .eq('id', row.id)
+    .eq('organization_id', row.organizationId)
+    .eq('entity_id', row.entityId)
+    .eq('tier', row.tier)
+    .eq('pinned', false);
+
+  if (error) {
+    throw new Error(`tier_demotion_update_failed: ${error.message || 'unknown'}`);
+  }
+
+  await insertBudgetEvent(supabase, {
+    organizationId: row.organizationId,
+    entityId: row.entityId,
+    memoryId: row.id,
+    eventType: 'demote',
+    fromTier: row.tier,
+    toTier,
+    sizeBytes: row.sizeBytes,
+    reason: row.tier === 'hot' ? 'scheduled_stale_hot_30d' : 'scheduled_stale_warm_90d',
+  });
+  await recordTierTransitionUsage(supabase, {
+    organizationId: row.organizationId,
+    entityId: row.entityId,
+    memoryId: row.id,
+    fromTier: row.tier,
+    toTier,
+    plan,
+    occurredAt: nowIso,
+  });
+  await refreshEntityBudgetUsage(
+    { organizationId: row.organizationId, entityId: row.entityId },
+    supabase
+  );
+  return true;
+}
+
+export async function runTierDemotionBatch(
+  params: { batchSize?: number; maxRuntimeMs?: number; now?: Date } = {},
+  supabase: SupabaseLike = createServerClient()
+): Promise<TierDemotionRunResult> {
+  const batchSize = Math.min(
+    TIER_DEMOTION_BATCH_SIZE,
+    Math.max(1, Math.floor(params.batchSize || TIER_DEMOTION_BATCH_SIZE))
+  );
+  const maxRuntimeMs = Math.min(
+    TIER_DEMOTION_MAX_RUNTIME_MS,
+    Math.max(1_000, Math.floor(params.maxRuntimeMs || TIER_DEMOTION_MAX_RUNTIME_MS))
+  );
+  const startedAt = Date.now();
+  const now = params.now || new Date();
+  const nowIso = now.toISOString();
+  const rules: Array<{ fromTier: 'hot' | 'warm'; toTier: MemoryTier; cutoffIso: string }> = [
+    {
+      fromTier: 'hot',
+      toTier: 'warm',
+      cutoffIso: new Date(now.getTime() - HOT_STALE_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      fromTier: 'warm',
+      toTier: 'cold',
+      cutoffIso: new Date(now.getTime() - WARM_STALE_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+    },
+  ];
+
+  const result: TierDemotionRunResult = {
+    processed: 0,
+    demoted: 0,
+    hotToWarm: 0,
+    warmToCold: 0,
+    skippedPlanGate: 0,
+    stoppedReason: 'completed',
+    demotedIds: [],
+  };
+  const planCache = new Map<string, string>();
+
+  for (const rule of rules) {
+    const remaining = batchSize - result.processed;
+    if (remaining <= 0) break;
+
+    const candidates = await listStaleMemories(supabase, {
+      tier: rule.fromTier,
+      cutoffIso: rule.cutoffIso,
+      limit: remaining,
+    });
+
+    for (const candidate of candidates) {
+      if (Date.now() - startedAt > maxRuntimeMs) {
+        result.stoppedReason = 'runtime_limit';
+        return result;
+      }
+
+      result.processed += 1;
+      let plan = planCache.get(candidate.organizationId);
+      if (!plan) {
+        plan = await resolveOrganizationPlan(supabase, candidate.organizationId);
+        planCache.set(candidate.organizationId, plan);
+      }
+
+      if (!hasFeature(plan, 'memoryTiering')) {
+        result.skippedPlanGate += 1;
+        continue;
+      }
+
+      await demoteScheduledMemory(supabase, candidate, rule.toTier, nowIso, plan);
+      result.demoted += 1;
+      result.demotedIds.push(candidate.id);
+      if (rule.fromTier === 'hot') {
+        result.hotToWarm += 1;
+      } else {
+        result.warmToCold += 1;
+      }
+    }
+  }
+
+  return result;
+}
+
+export async function getTierStats(
+  organizationId: string,
+  supabase: SupabaseLike = createServerClient()
+): Promise<TierStats> {
+  const { data, error } = await supabase
+    .from('memories')
+    .select('tier, pinned')
+    .eq('organization_id', organizationId)
+    .eq('is_deleted', false);
+
+  if (error) {
+    throw new Error(`tier_stats_fetch_failed: ${error.message || 'unknown'}`);
+  }
+
+  const stats: TierStats = {
+    hot: 0,
+    warm: 0,
+    cold: 0,
+    pinned: 0,
+    lastDemotionAt: null,
+    lastDemotionCount: 0,
+  };
+
+  for (const row of (data || []) as Array<{ tier?: unknown; pinned?: unknown }>) {
+    const tier = normalizeTier(row.tier);
+    stats[tier] += 1;
+    if (row.pinned === true) stats.pinned += 1;
+  }
+
+  const { data: demotions, error: demotionError } = await supabase
+    .from('memory_budget_events')
+    .select('created_at')
+    .eq('organization_id', organizationId)
+    .eq('event_type', 'demote')
+    .order('created_at', { ascending: false })
+    .limit(TIER_DEMOTION_BATCH_SIZE);
+
+  if (demotionError) {
+    logServerWarn('[memory/budget] Tier demotion stats degraded', demotionError, {
+      organizationId,
+    });
+    return stats;
+  }
+
+  const demotionRows = (demotions || []) as Array<{ created_at?: string }>;
+  stats.lastDemotionAt = demotionRows[0]?.created_at || null;
+  if (stats.lastDemotionAt) {
+    const lastDemotionDate = stats.lastDemotionAt.slice(0, 10);
+    stats.lastDemotionCount = demotionRows.filter((row) =>
+      typeof row.created_at === 'string' && row.created_at.startsWith(lastDemotionDate)
+    ).length;
+  }
+
+  return stats;
 }
 
 export interface SimulatedBudgetMemory extends BudgetMemoryRow {
