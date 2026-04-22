@@ -1,6 +1,10 @@
 ## Unreleased
 
 ### Added
+- Deterministic Replay capture, tool stubs, rerun API, and replay diff persistence.
+- Compliance DSR queue with export/delete worker, object-store artifacts, deletion tombstones, and scoped consent APIs.
+- COPPA/GDPR-K age-gated memory writes, draft consent page, and scoped consent revocation.
+- Automated hot/warm/cold memory tier demotion cron, recall promotion, and tier stats API.
 - `graph_entities.external_id` column migration file with unique-per-graph index for SDK slug support.
 - `POST /api/v1/graph/{graphId}/entities` to create or idempotently update entities with `external_id`.
 - `GET /api/v1/graph/{graphId}/entities/by-external-id/{externalId}` for slug lookup.

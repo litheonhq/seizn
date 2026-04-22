@@ -112,7 +112,10 @@
       "postMortemCredits": "2 דוחות post-mortem ברבעון",
       "chaosMonkeyPriority": "תור עדיפות Chaos Monkey",
       "canonLockReview": "סקירת צוות Canon Lock",
-      "dedicatedSlack": "ערוץ Slack ייעודי"
+      "dedicatedSlack": "ערוץ Slack ייעודי",
+      "replayRerun": "הרצה חוזרת דטרמיניסטית + diff",
+      "dsrAutomation": "ייצוא/מחיקת DSR אוטומטיים",
+      "memoryTiering": "שכבות זיכרון hot/warm/cold"
     },
     "enterprise": {
       "name": "ארגוני",

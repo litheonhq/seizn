@@ -112,7 +112,10 @@
       "postMortemCredits": "รายงาน post-mortem 2 ฉบับ/ไตรมาส",
       "chaosMonkeyPriority": "คิว Chaos Monkey แบบ priority",
       "canonLockReview": "รีวิวทีมสำหรับ Canon Lock",
-      "dedicatedSlack": "ช่อง Slack เฉพาะ"
+      "dedicatedSlack": "ช่อง Slack เฉพาะ",
+      "replayRerun": "รีเพลย์แบบกำหนดผลได้ + diff",
+      "dsrAutomation": "ส่งออก/ลบ DSR อัตโนมัติ",
+      "memoryTiering": "การจัดชั้นหน่วยความจำ hot/warm/cold"
     },
     "enterprise": {
       "name": "องค์กร",

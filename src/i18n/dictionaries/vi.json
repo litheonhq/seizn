@@ -112,7 +112,10 @@
       "postMortemCredits": "2 báo cáo post-mortem/quý",
       "chaosMonkeyPriority": "Hàng đợi Chaos Monkey ưu tiên",
       "canonLockReview": "Quy trình duyệt nhóm Canon Lock",
-      "dedicatedSlack": "Kênh Slack riêng"
+      "dedicatedSlack": "Kênh Slack riêng",
+      "replayRerun": "Replay xác định + diff",
+      "dsrAutomation": "Tự động xuất/xóa DSR",
+      "memoryTiering": "Phân tầng bộ nhớ hot/warm/cold"
     },
     "enterprise": {
       "name": "Doanh nghiệp",

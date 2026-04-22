@@ -478,6 +478,11 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
   const copy = getCopy(locale);
   const compareLabel = dict.extremeHome?.nav?.compare || "Integrations";
   const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
+  const batchBProDetails = [
+    dict.pricing.pro.replayRerun,
+    dict.pricing.pro.dsrAutomation,
+    dict.pricing.pro.memoryTiering,
+  ].filter((detail): detail is string => Boolean(detail));
 
   return (
     <div className="dark bg-szn-bg text-szn-text-1 min-h-screen">
@@ -593,7 +598,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
                   <p className="text-[13px] leading-[1.6] text-szn-text-2 mb-6">{plan.summary}</p>
 
                   <ul className="mb-8 flex-1 space-y-2.5">
-                    {plan.details.map((detail) => (
+                    {(plan.name === "Pro" ? [...plan.details, ...batchBProDetails] : plan.details).map((detail) => (
                       <li
                         key={typeof detail === "string" ? detail : detail.text}
                         className="flex items-start gap-2 text-[12px] leading-[1.55] text-szn-text-2"
