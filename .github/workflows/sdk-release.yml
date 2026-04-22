@@ -62,4 +62,8 @@ jobs:
             echo "@seizn/sdk-js@$VERSION already exists; skipping publish."
             exit 0
           fi
-          npm publish ./packages/seizn-sdk-js --access public --tag beta --provenance
+          # --provenance omitted until Trusted Publisher is configured for @seizn/sdk-js on npmjs.com.
+          # First-time publish of a new scoped package with --provenance currently returns 404 on the
+          # registry PUT even though the sigstore statement succeeds. Restore the flag once the
+          # package has at least one published version.
+          npm publish ./packages/seizn-sdk-js --access public --tag beta

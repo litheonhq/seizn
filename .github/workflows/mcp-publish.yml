@@ -1,9 +1,9 @@
-name: Seizn CLI Release
+name: MCP Server Release
 
 on:
   push:
     tags:
-      - 'cli-v*'
+      - 'mcp-v*'
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish:
-    name: Publish @seizn/cli
+    name: Publish @seizn/mcp
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,15 +24,15 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: npm ci --prefix cli/seizn
+        run: npm ci --prefix packages/seizn-mcp
 
-      - name: Build CLI
-        run: npm run build --prefix cli/seizn
+      - name: Build MCP server
+        run: npm run build --prefix packages/seizn-mcp
 
-      - name: Publish CLI
-        # --provenance omitted until Trusted Publisher is configured for @seizn/cli on npmjs.com.
+      - name: Publish MCP
+        # --provenance omitted until Trusted Publisher is configured for @seizn/mcp on npmjs.com.
         # First-time publish of a new scoped package with --provenance returns 404 on registry PUT.
         # Restore once the package has at least one published version.
-        run: npm publish cli/seizn --access public
+        run: npm publish packages/seizn-mcp --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISH }}
