@@ -175,13 +175,12 @@ const Navigation = memo(function Navigation({
         <div className="flex items-center gap-10">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             <Image
-              src="/seizn-icon.svg"
+              src="/brand/seizn-mark-256.png"
               alt="Seizn"
               className="w-7 h-7"
               width={28}
               height={28}
               priority
-              unoptimized
             />
             <span className="font-medium text-[15px] tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
@@ -375,12 +374,12 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           <div className="relative z-10 w-full pt-28 lg:pt-36 pb-20 lg:pb-28 px-6 sm:px-8">
             <div className="max-w-[1100px] mx-auto">
               <Image
-                src="/brand/seizn-stacked-1024.png"
+                src="/brand/seizn-mark-512.png"
                 alt="Seizn"
-                width={480}
-                height={640}
+                width={120}
+                height={120}
                 priority
-                className="mb-10 h-auto w-[min(68vw,300px)] sm:w-[360px]"
+                className="mb-8 h-auto w-[88px] sm:w-[112px]"
               />
 
               {/* Eyebrow */}
