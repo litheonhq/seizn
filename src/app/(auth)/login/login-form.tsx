@@ -159,7 +159,7 @@ export default function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="input-elegant w-full"
+                className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                 placeholder="you@example.com"
               />
             </div>
@@ -174,7 +174,7 @@ export default function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="input-elegant w-full"
+                className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                 placeholder="Enter your password"
               />
             </div>

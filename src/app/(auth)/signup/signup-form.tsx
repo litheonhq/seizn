@@ -309,7 +309,7 @@ export default function SignupForm() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="input-elegant w-full"
+                    className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                     placeholder="John Doe"
                   />
                 </div>
@@ -322,7 +322,7 @@ export default function SignupForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="input-elegant w-full"
+                    className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -336,7 +336,7 @@ export default function SignupForm() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={8}
-                    className="input-elegant w-full"
+                    className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                     placeholder="At least 8 characters"
                   />
                 </div>
@@ -350,7 +350,7 @@ export default function SignupForm() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     minLength={8}
-                    className="input-elegant w-full"
+                    className="h-12 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-[14px] text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                     placeholder="Confirm your password"
                   />
                 </div>
