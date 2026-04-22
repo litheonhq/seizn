@@ -21,6 +21,7 @@ export default async function ConsentPage({ params }: PageProps) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
   const copy = dict.consent;
+  const personaDisclosure = locale === 'ko' ? copy.personaDisclosure.kr : copy.personaDisclosure.en;
 
   return (
     <main className="min-h-screen bg-szn-bg text-szn-text-1">
@@ -73,6 +74,24 @@ export default async function ConsentPage({ params }: PageProps) {
                 </span>
               </label>
             ))}
+          </div>
+
+          <h2 className="text-xl font-semibold text-szn-text-1">{copy.personaDisclosure.title}</h2>
+          {/* DRAFT - legal review pending 2026-04-22 */}
+          <div
+            data-persona-disclosure={locale === 'ko' ? 'pipa' : 'processor'}
+            className="border border-szn-border-subtle bg-szn-surface-1 px-4 py-4"
+          >
+            <h3 className="text-sm font-semibold text-szn-text-1">{personaDisclosure.heading}</h3>
+            <dl className="mt-3 grid gap-3 text-sm leading-6 text-szn-text-2 sm:grid-cols-2">
+              {personaDisclosure.items.map((item) => (
+                <div key={item.label}>
+                  <dt className="font-medium text-szn-text-1">{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-sm leading-6 text-szn-text-2">{personaDisclosure.note}</p>
           </div>
 
           <div />

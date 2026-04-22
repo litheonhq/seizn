@@ -29,6 +29,14 @@ vi.mock('@/lib/compliance/organization', () => ({
   resolveComplianceOrganizationId: vi.fn(),
 }));
 
+vi.mock('@/lib/compliance/consent', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/compliance/consent')>('@/lib/compliance/consent');
+  return {
+    ...actual,
+    assertConsent: vi.fn(async () => undefined),
+  };
+});
+
 vi.mock('@/lib/personas/source', () => ({
   getPersonaSource: vi.fn((plan: string) =>
     plan === 'studio' || plan === 'plus' || plan === 'pro' || plan === 'enterprise' ? 'live' : 'bundled',
