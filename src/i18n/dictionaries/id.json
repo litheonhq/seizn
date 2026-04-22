@@ -112,7 +112,10 @@
       "postMortemCredits": "2 laporan post-mortem/kuartal",
       "chaosMonkeyPriority": "Antrean prioritas Chaos Monkey",
       "canonLockReview": "Review tim Canon Lock",
-      "dedicatedSlack": "Kanal Slack khusus"
+      "dedicatedSlack": "Kanal Slack khusus",
+      "replayRerun": "Replay deterministik + diff",
+      "dsrAutomation": "Ekspor/hapus DSR otomatis",
+      "memoryTiering": "Tiering memori hot/warm/cold"
     },
     "enterprise": {
       "name": "Enterprise",

@@ -112,7 +112,10 @@
       "postMortemCredits": "2 post-mortem रिपोर्ट/तिमाही",
       "chaosMonkeyPriority": "Priority Chaos Monkey queue",
       "canonLockReview": "Canon Lock team review",
-      "dedicatedSlack": "Dedicated Slack channel"
+      "dedicatedSlack": "Dedicated Slack channel",
+      "replayRerun": "निर्धारित रीप्ले + diff",
+      "dsrAutomation": "स्वचालित DSR export/delete",
+      "memoryTiering": "Hot/warm/cold memory tiering"
     },
     "enterprise": {
       "name": "एंटरप्राइज़",

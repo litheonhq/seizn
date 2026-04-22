@@ -112,7 +112,10 @@
       "postMortemCredits": "2 post-mortemrapporten/kwartaal",
       "chaosMonkeyPriority": "Prioriteitswachtrij voor Chaos Monkey",
       "canonLockReview": "Canon Lock-teamreview",
-      "dedicatedSlack": "Dedicated Slack-kanaal"
+      "dedicatedSlack": "Dedicated Slack-kanaal",
+      "replayRerun": "Deterministische replay + diff",
+      "dsrAutomation": "Geautomatiseerde DSR-export/verwijdering",
+      "memoryTiering": "Hot/warm/cold geheugentiering"
     },
     "enterprise": {
       "name": "Enterprise",
