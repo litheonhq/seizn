@@ -1165,9 +1165,9 @@ body {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 0.625rem;
-  background: color-mix(in srgb, var(--szn-signal) 14%, transparent);
+  background: color-mix(in srgb, var(--szn-signal) 7%, transparent);
   color: var(--szn-signal);
-  border: 1px solid color-mix(in srgb, var(--szn-signal) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--szn-signal) 20%, transparent);
   backdrop-filter: blur(12px) saturate(140%);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
   font-weight: 500;
@@ -1178,8 +1178,8 @@ body {
               transform 160ms var(--szn-ease-expo-out);
 }
 .szn-btn-glass:hover {
-  background: color-mix(in srgb, var(--szn-signal) 22%, transparent);
-  border-color: color-mix(in srgb, var(--szn-signal) 46%, transparent);
+  background: color-mix(in srgb, var(--szn-signal) 14%, transparent);
+  border-color: color-mix(in srgb, var(--szn-signal) 34%, transparent);
   transform: translateY(-1px);
 }
 
@@ -1191,16 +1191,16 @@ body {
   gap: 0.5rem;
   padding: 0.375rem 0.75rem;
   border-radius: 9999px;
-  background: color-mix(in srgb, var(--szn-surface-1) 40%, transparent);
-  border: 1px solid color-mix(in srgb, var(--szn-border) 60%, transparent);
+  background: color-mix(in srgb, var(--szn-surface-1) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--szn-border) 42%, transparent);
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
   transition: background 160ms var(--szn-ease-expo-out),
               border-color 160ms var(--szn-ease-expo-out);
 }
 .szn-pill-glass:hover {
-  background: color-mix(in srgb, var(--szn-surface-1) 65%, transparent);
-  border-color: var(--szn-border);
+  background: color-mix(in srgb, var(--szn-surface-1) 42%, transparent);
+  border-color: color-mix(in srgb, var(--szn-border) 72%, transparent);
 }
 
 /* Subtle signal glow used behind hero. */
