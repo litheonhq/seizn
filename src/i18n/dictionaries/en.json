@@ -3191,8 +3191,60 @@
         "value": "analytics",
         "label": "Analytics",
         "description": "Use subject events in aggregate product and quality metrics."
+      },
+      {
+        "value": "persona_seeding",
+        "label": "Persona seeding (Korean studios)",
+        "description": "Seed synthetic NPC people from Nemotron-Personas-Korea into this studio workspace."
       }
     ],
+    "personaDisclosure": {
+      "title": "Persona seeding disclosure",
+      "en": {
+        "heading": "Processor disclosure",
+        "items": [
+          {
+            "label": "Controller",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "Purpose",
+            "value": "NPC persona seed generation for studio workspaces"
+          },
+          {
+            "label": "Retention",
+            "value": "Until the studio deletes the seeded entity or revokes consent"
+          },
+          {
+            "label": "Processing region",
+            "value": "United States by default; Seoul intent is tracked when enabled"
+          }
+        ],
+        "note": "Synthetic dataset provenance remains attached to every seeded graph entity."
+      },
+      "kr": {
+        "heading": "PIPA data-processing delegation",
+        "items": [
+          {
+            "label": "Controller",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "Purpose",
+            "value": "NPC persona seed generation for studio workspaces"
+          },
+          {
+            "label": "Retention",
+            "value": "Until the studio deletes the seeded entity or revokes consent"
+          },
+          {
+            "label": "Recipient region",
+            "value": "United States by default; Seoul intent is tracked when enabled"
+          }
+        ],
+        "note": "Synthetic dataset provenance remains attached to every seeded graph entity."
+      }
+    },
     "submit": "Record consent"
   },
   "status": {

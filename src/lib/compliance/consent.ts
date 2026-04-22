@@ -3,7 +3,9 @@ import { ComplianceError, normalizeAgeBracket, type AgeBracket } from './age-gat
 
 type Supabase = ReturnType<typeof createServerClient>;
 
-export type ConsentScope = 'memory_storage' | 'ai_training' | 'analytics' | string;
+export type ConsentScope = 'memory_storage' | 'ai_training' | 'analytics' | 'persona_seeding' | string;
+
+export const PERSONA_SEEDING: ConsentScope = 'persona_seeding';
 
 export interface ScopedConsentRecord {
   id: string;
@@ -65,6 +67,7 @@ function mapConsentRecord(row: Record<string, unknown>): ScopedConsentRecord {
 }
 
 export function requiresConsent(scope: ConsentScope, ageBracket: AgeBracket): boolean {
+  if (scope === PERSONA_SEEDING) return true;
   if (scope === 'ai_training') return true;
   if (scope === 'memory_storage') return ageBracket === 'minor_under_13';
   if (scope === 'analytics') return ageBracket === 'minor_under_13';

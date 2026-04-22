@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuditContext, logAuditEvent } from '@/lib/audit';
 import {
+  assertConsent,
+  ConsentRequiredError,
+  PERSONA_SEEDING,
+} from '@/lib/compliance/consent';
+import {
   loadPersonaPreviewRows,
   normalizeSeedMode,
   personasToGraphEntityRows,
@@ -12,6 +17,7 @@ import {
 import {
   parsePersonaCount,
   resolvePersonaRouteAuth,
+  type PersonaRouteAuth,
   validatePersonaBatchLimit,
 } from '@/lib/personas/route-auth';
 import { logServerError } from '@/lib/server/logger';
@@ -53,6 +59,33 @@ async function insertGraphEntities(rows: ReturnType<typeof personasToGraphEntity
     : [];
 }
 
+async function requirePersonaSeedingConsent(auth: PersonaRouteAuth): Promise<NextResponse | null> {
+  try {
+    await assertConsent(createServerClient(), {
+      organizationId: auth.organizationId,
+      subjectId: auth.organizationId,
+      scope: PERSONA_SEEDING,
+      ageBracket: 'adult',
+    });
+    return null;
+  } catch (error) {
+    if (error instanceof ConsentRequiredError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'consent_required',
+            scope: PERSONA_SEEDING,
+            message: 'Consent is required before persona seeding.',
+          },
+        },
+        { status: 412 },
+      );
+    }
+    throw error;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const resolved = await resolvePersonaRouteAuth(request);
@@ -70,6 +103,9 @@ export async function POST(request: NextRequest) {
 
     const limitError = validatePersonaBatchLimit(count, resolved.auth);
     if (limitError) return limitError;
+
+    const consentError = await requirePersonaSeedingConsent(resolved.auth);
+    if (consentError) return consentError;
 
     const personas = await loadPersonaPreviewRows({
       plan: resolved.auth.plan,

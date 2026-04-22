@@ -3039,6 +3039,106 @@
       "cta": "지원 문의"
     }
   },
+  "consent": {
+    "_draft": "DRAFT - legal review pending 2026-04-22",
+    "metadataTitle": "Seizn 동의 관리",
+    "metadataDescription": "주체별 메모리 저장, AI 학습, 페르소나 시드 동의 범위를 관리합니다.",
+    "eyebrow": "동의",
+    "title": "주체 동의",
+    "subtitle": "규제 대상 메모리를 저장하거나 한국 NPC 페르소나를 시드하기 전에 필요한 동의를 기록합니다.",
+    "subjectLabel": "주체 ID",
+    "subjectPlaceholder": "player-123",
+    "ageTitle": "연령 구간",
+    "ageOptions": [
+      {
+        "value": "unknown",
+        "label": "알 수 없음"
+      },
+      {
+        "value": "minor_under_13",
+        "label": "만 13세 미만"
+      },
+      {
+        "value": "minor_13_17",
+        "label": "만 13세 이상 17세 이하"
+      },
+      {
+        "value": "adult",
+        "label": "성인"
+      }
+    ],
+    "scopesTitle": "동의 범위",
+    "scopes": [
+      {
+        "value": "memory_storage",
+        "label": "메모리 저장",
+        "description": "게임 개인화에 쓰는 주체별 메모리를 저장합니다."
+      },
+      {
+        "value": "ai_training",
+        "label": "AI 학습",
+        "description": "모델, 평가기, 검색 품질 개선에 주체 데이터를 사용합니다."
+      },
+      {
+        "value": "analytics",
+        "label": "분석",
+        "description": "제품 품질 지표와 집계 분석에 주체 이벤트를 사용합니다."
+      },
+      {
+        "value": "persona_seeding",
+        "label": "페르소나 시드(한국 스튜디오)",
+        "description": "Nemotron-Personas-Korea 기반 합성 NPC 인물을 스튜디오 워크스페이스에 넣습니다."
+      }
+    ],
+    "personaDisclosure": {
+      "title": "페르소나 시드 고지",
+      "en": {
+        "heading": "Processor disclosure",
+        "items": [
+          {
+            "label": "Controller",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "Purpose",
+            "value": "NPC persona seed generation for studio workspaces"
+          },
+          {
+            "label": "Retention",
+            "value": "Until the studio deletes the seeded entity or revokes consent"
+          },
+          {
+            "label": "Processing region",
+            "value": "United States by default; Seoul intent is tracked when enabled"
+          }
+        ],
+        "note": "Synthetic dataset provenance remains attached to every seeded graph entity."
+      },
+      "kr": {
+        "heading": "PIPA 위탁처리 고지",
+        "items": [
+          {
+            "label": "개인정보 처리자",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "목적",
+            "value": "스튜디오 워크스페이스용 NPC 페르소나 시드 생성"
+          },
+          {
+            "label": "보유 기간",
+            "value": "스튜디오가 시드된 entity를 삭제하거나 동의를 철회할 때까지"
+          },
+          {
+            "label": "수탁자 지역",
+            "value": "기본값은 미국이며, 서울 리전 의사는 별도로 기록됩니다."
+          }
+        ],
+        "note": "시드된 모든 graph entity에는 합성 데이터셋 출처와 라이선스가 함께 저장됩니다."
+      }
+    },
+    "submit": "동의 기록"
+  },
   "status": {
     "metadataTitle": "Seizn Status",
     "metadataDescription": "Current Seizn API availability and public incident history.",
