@@ -9,6 +9,7 @@
 - `POST /api/v1/graph/{graphId}/entities` to create or idempotently update entities with `external_id`.
 - `GET /api/v1/graph/{graphId}/entities/by-external-id/{externalId}` for slug lookup.
 - Test organization and SDK E2E key provisioning workflow support (internal).
+- Batch C Korean persona seeding: bundled 1K sample package, graph entity transformer with provenance, seeding API/dashboard, PIPA consent gate, Seoul region preference, docs, and smoke coverage.
 
 ## [0.9.0-beta.1] - 2026-04-21
 
