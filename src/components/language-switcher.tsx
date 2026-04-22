@@ -104,7 +104,7 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-szn-border hover:border-szn-border bg-szn-card transition-colors"
+        className="szn-pill-glass"
         aria-label={`Current language: ${localeNames[currentLocale]}. Click to change.`}
         aria-expanded={isOpen}
       >
