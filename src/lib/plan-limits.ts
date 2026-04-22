@@ -52,6 +52,8 @@ export interface PlanConfig {
     prioritySupport: boolean;
     replayRerun: boolean;
     memoryTiering: boolean;
+    personaSeeding: 'bundled' | 'live' | false;
+    personaSeedingMaxBatch: number;
   };
 
   // Token limits (per request)
@@ -88,6 +90,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: false,
       replayRerun: false,
       memoryTiering: false,
+      personaSeeding: 'bundled',
+      personaSeedingMaxBatch: 25,
     },
     maxInputTokens: 4_000,
     maxOutputTokens: 1_000,
@@ -120,6 +124,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: false,
       replayRerun: false,
       memoryTiering: false,
+      personaSeeding: 'bundled',
+      personaSeedingMaxBatch: 100,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -152,6 +158,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: false,
       replayRerun: false,
       memoryTiering: true,
+      personaSeeding: 'live',
+      personaSeedingMaxBatch: 500,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
@@ -184,6 +192,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: true,
       replayRerun: true,
       memoryTiering: true,
+      personaSeeding: 'live',
+      personaSeedingMaxBatch: 2000,
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
@@ -216,6 +226,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: true,
       replayRerun: true,
       memoryTiering: true,
+      personaSeeding: 'live',
+      personaSeedingMaxBatch: -1,
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
@@ -249,6 +261,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: false,
       replayRerun: false,
       memoryTiering: false,
+      personaSeeding: 'bundled',
+      personaSeedingMaxBatch: 100,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -279,6 +293,8 @@ export const PLANS: Record<string, PlanConfig> = {
       prioritySupport: false,
       replayRerun: false,
       memoryTiering: true,
+      personaSeeding: 'live',
+      personaSeedingMaxBatch: 500,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,

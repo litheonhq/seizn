@@ -26,6 +26,12 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@seizn/personas-kr": [
+        "./packages/seizn-personas-kr/src/index.ts"
+      ],
+      "@seizn/personas-kr/*": [
+        "./packages/seizn-personas-kr/src/*"
       ]
     }
   },

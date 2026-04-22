@@ -17,6 +17,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@seizn/personas-kr': path.resolve(__dirname, './packages/seizn-personas-kr/src/index.ts'),
       'server-only': path.resolve(__dirname, './src/test/mocks/server-only.ts'),
     },
   },
