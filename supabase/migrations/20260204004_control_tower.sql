@@ -156,7 +156,7 @@ ALTER TABLE control_tower_dashboards ENABLE ROW LEVEL SECURITY;
 -- Alert Rules Policies
 CREATE POLICY alert_rules_select ON alert_rules FOR SELECT
   USING (auth.uid() = user_id OR org_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text
   ));
 
 CREATE POLICY alert_rules_insert ON alert_rules FOR INSERT
@@ -171,7 +171,7 @@ CREATE POLICY alert_rules_delete ON alert_rules FOR DELETE
 -- Alerts Policies
 CREATE POLICY alerts_select ON alerts FOR SELECT
   USING (auth.uid() = user_id OR org_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text
   ));
 
 CREATE POLICY alerts_insert ON alerts FOR INSERT
@@ -179,13 +179,13 @@ CREATE POLICY alerts_insert ON alerts FOR INSERT
 
 CREATE POLICY alerts_update ON alerts FOR UPDATE
   USING (auth.uid() = user_id OR org_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'owner')
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text AND role IN ('admin', 'owner')
   ));
 
 -- Notification Channels Policies
 CREATE POLICY notification_channels_select ON notification_channels FOR SELECT
   USING (auth.uid() = user_id OR org_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text
   ));
 
 CREATE POLICY notification_channels_insert ON notification_channels FOR INSERT
@@ -216,7 +216,7 @@ CREATE POLICY service_health_history_select ON service_health_history FOR SELECT
 -- Control Tower Dashboards Policies
 CREATE POLICY control_tower_dashboards_select ON control_tower_dashboards FOR SELECT
   USING (auth.uid() = user_id OR org_id IN (
-    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()
+    SELECT organization_id FROM organization_members WHERE user_id = auth.uid()::text
   ));
 
 CREATE POLICY control_tower_dashboards_insert ON control_tower_dashboards FOR INSERT

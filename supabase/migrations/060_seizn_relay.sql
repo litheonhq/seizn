@@ -140,9 +140,10 @@ CREATE POLICY "Org admins view org relays" ON relay_agents
   FOR SELECT USING (
     org_id IS NOT NULL AND
     EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid()
+      SELECT 1 FROM organization_members
+      WHERE user_id = auth.uid()::text
       AND organization_id = relay_agents.org_id
+      AND role IN ('owner', 'admin')
     )
   );
 

@@ -8,7 +8,7 @@
 -- ============================================
 CREATE TABLE IF NOT EXISTS retrieval_test_suites (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   collection_id UUID,  -- Optional: specific collection to test
   name VARCHAR(255) NOT NULL,
   description TEXT,
@@ -89,7 +89,7 @@ CREATE INDEX IF NOT EXISTS idx_test_cases_last_result ON retrieval_test_cases(la
 CREATE TABLE IF NOT EXISTS retrieval_test_runs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   suite_id UUID NOT NULL REFERENCES retrieval_test_suites(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
 
   -- Run summary
   status VARCHAR(20) NOT NULL DEFAULT 'running',  -- running, completed, failed, cancelled
@@ -170,7 +170,7 @@ CREATE INDEX IF NOT EXISTS idx_case_runs_result ON retrieval_test_case_runs(resu
 -- ============================================
 CREATE TABLE IF NOT EXISTS retrieval_test_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  user_id TEXT REFERENCES profiles(id) ON DELETE SET NULL,
 
   name VARCHAR(255) NOT NULL,
   description TEXT,
@@ -203,41 +203,41 @@ CREATE INDEX IF NOT EXISTS idx_test_templates_is_builtin ON retrieval_test_templ
 ALTER TABLE retrieval_test_suites ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own test suites" ON retrieval_test_suites
-  FOR SELECT USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR SELECT USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can create their own test suites" ON retrieval_test_suites
-  FOR INSERT WITH CHECK (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can update their own test suites" ON retrieval_test_suites
-  FOR UPDATE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR UPDATE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can delete their own test suites" ON retrieval_test_suites
-  FOR DELETE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR DELETE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 -- Test Cases
 ALTER TABLE retrieval_test_cases ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view test cases in their suites" ON retrieval_test_cases
   FOR SELECT USING (
-    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
 CREATE POLICY "Users can create test cases in their suites" ON retrieval_test_cases
   FOR INSERT WITH CHECK (
-    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
 CREATE POLICY "Users can update test cases in their suites" ON retrieval_test_cases
   FOR UPDATE USING (
-    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
 CREATE POLICY "Users can delete test cases in their suites" ON retrieval_test_cases
   FOR DELETE USING (
-    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_suites WHERE id = suite_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
@@ -245,26 +245,26 @@ CREATE POLICY "Users can delete test cases in their suites" ON retrieval_test_ca
 ALTER TABLE retrieval_test_runs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own test runs" ON retrieval_test_runs
-  FOR SELECT USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR SELECT USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can create their own test runs" ON retrieval_test_runs
-  FOR INSERT WITH CHECK (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can update their own test runs" ON retrieval_test_runs
-  FOR UPDATE USING (user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR UPDATE USING (user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 -- Test Case Runs
 ALTER TABLE retrieval_test_case_runs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view case runs for their test runs" ON retrieval_test_case_runs
   FOR SELECT USING (
-    EXISTS (SELECT 1 FROM retrieval_test_runs WHERE id = run_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_runs WHERE id = run_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
 CREATE POLICY "Users can create case runs for their test runs" ON retrieval_test_case_runs
   FOR INSERT WITH CHECK (
-    EXISTS (SELECT 1 FROM retrieval_test_runs WHERE id = run_id AND user_id = auth.uid())
+    EXISTS (SELECT 1 FROM retrieval_test_runs WHERE id = run_id AND user_id = auth.uid()::text)
     OR auth.jwt() ->> 'role' = 'service_role'
   );
 
@@ -272,16 +272,16 @@ CREATE POLICY "Users can create case runs for their test runs" ON retrieval_test
 ALTER TABLE retrieval_test_templates ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view builtin templates and their own" ON retrieval_test_templates
-  FOR SELECT USING (is_builtin = true OR user_id = auth.uid() OR auth.jwt() ->> 'role' = 'service_role');
+  FOR SELECT USING (is_builtin = true OR user_id = auth.uid()::text OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can create their own templates" ON retrieval_test_templates
-  FOR INSERT WITH CHECK ((user_id = auth.uid() AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
+  FOR INSERT WITH CHECK ((user_id = auth.uid()::text AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can update their own templates" ON retrieval_test_templates
-  FOR UPDATE USING ((user_id = auth.uid() AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
+  FOR UPDATE USING ((user_id = auth.uid()::text AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Users can delete their own templates" ON retrieval_test_templates
-  FOR DELETE USING ((user_id = auth.uid() AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
+  FOR DELETE USING ((user_id = auth.uid()::text AND is_builtin = false) OR auth.jwt() ->> 'role' = 'service_role');
 
 -- ============================================
 -- Helper Functions

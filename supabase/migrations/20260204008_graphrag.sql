@@ -64,6 +64,11 @@ CREATE TABLE IF NOT EXISTS graph_entities (
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
+ALTER TABLE graph_entities
+    ADD COLUMN IF NOT EXISTS graph_id UUID REFERENCES knowledge_graphs(id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS properties JSONB DEFAULT '{}',
+    ADD COLUMN IF NOT EXISTS source_documents TEXT[] DEFAULT '{}';
+
 -- Indexes for graph_entities
 CREATE INDEX IF NOT EXISTS idx_graph_entities_graph
     ON graph_entities(graph_id);
@@ -398,11 +403,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS knowledge_graphs_updated_at ON knowledge_graphs;
 CREATE TRIGGER knowledge_graphs_updated_at
     BEFORE UPDATE ON knowledge_graphs
     FOR EACH ROW
     EXECUTE FUNCTION update_knowledge_graph_timestamp();
 
+DROP TRIGGER IF EXISTS graph_entities_updated_at ON graph_entities;
 CREATE TRIGGER graph_entities_updated_at
     BEFORE UPDATE ON graph_entities
     FOR EACH ROW

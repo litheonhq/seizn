@@ -5,7 +5,7 @@
 -- Create memory_versions table to track per-user/namespace versions
 CREATE TABLE IF NOT EXISTS memory_versions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     namespace TEXT NOT NULL DEFAULT 'default',
     version INTEGER NOT NULL DEFAULT 1,
     last_modified_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -20,7 +20,7 @@ CREATE INDEX IF NOT EXISTS idx_memory_versions_user_namespace
 CREATE OR REPLACE FUNCTION increment_memory_version()
 RETURNS TRIGGER AS $$
 DECLARE
-    target_user_id UUID;
+    target_user_id TEXT;
     target_namespace TEXT;
 BEGIN
     -- Determine user_id and namespace based on operation
@@ -75,7 +75,7 @@ CREATE TRIGGER trg_memory_delete_version
 
 -- Function to get current version for a user/namespace
 CREATE OR REPLACE FUNCTION get_memory_version(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT DEFAULT 'default'
 )
 RETURNS INTEGER AS $$
@@ -96,7 +96,7 @@ ALTER TABLE memory_versions ENABLE ROW LEVEL SECURITY;
 -- Policy: Users can only see their own versions
 CREATE POLICY memory_versions_user_policy ON memory_versions
     FOR ALL
-    USING (auth.uid() = user_id);
+    USING (auth.uid()::text = user_id);
 
 -- Policy: Service role can access all
 CREATE POLICY memory_versions_service_policy ON memory_versions
@@ -108,4 +108,4 @@ CREATE POLICY memory_versions_service_policy ON memory_versions
 -- Add comment for documentation
 COMMENT ON TABLE memory_versions IS 'Tracks memory modification versions for cache invalidation';
 COMMENT ON FUNCTION increment_memory_version() IS 'Auto-increments version on memory table changes';
-COMMENT ON FUNCTION get_memory_version(UUID, TEXT) IS 'Gets current version for cache key generation';
+COMMENT ON FUNCTION get_memory_version(TEXT, TEXT) IS 'Gets current version for cache key generation';

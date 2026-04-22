@@ -9,7 +9,7 @@
 CREATE TABLE IF NOT EXISTS memory_policy_decisions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   memory_id UUID REFERENCES memories(id) ON DELETE SET NULL, -- Nullable: may not exist if rejected
-  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
 
   -- Decision information
   decision TEXT NOT NULL CHECK (decision IN (
@@ -82,12 +82,12 @@ ALTER TABLE memory_policy_decisions ENABLE ROW LEVEL SECURITY;
 -- Users can view their own policy decisions
 CREATE POLICY "Users can view own policy decisions"
   ON memory_policy_decisions FOR SELECT
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid()::text);
 
 -- Users can insert their own policy decisions (typically via API)
 CREATE POLICY "Users can insert own policy decisions"
   ON memory_policy_decisions FOR INSERT
-  WITH CHECK (user_id = auth.uid());
+  WITH CHECK (user_id = auth.uid()::text);
 
 -- Service role bypass for system operations
 CREATE POLICY "Service role has full access to policy decisions"
@@ -103,7 +103,7 @@ CREATE POLICY "Service role has full access to policy decisions"
 -- Function to log a policy decision
 CREATE OR REPLACE FUNCTION log_policy_decision(
   p_memory_id UUID,
-  p_user_id UUID,
+  p_user_id TEXT,
   p_decision TEXT,
   p_reason TEXT,
   p_policy_rule TEXT DEFAULT NULL,
@@ -142,7 +142,7 @@ $$;
 
 -- Function to get policy decision statistics for a user
 CREATE OR REPLACE FUNCTION get_policy_decision_stats(
-  p_user_id UUID,
+  p_user_id TEXT,
   p_days INTEGER DEFAULT 30
 )
 RETURNS TABLE (
@@ -169,7 +169,7 @@ $$;
 
 -- Function to check for duplicate input
 CREATE OR REPLACE FUNCTION check_duplicate_input(
-  p_user_id UUID,
+  p_user_id TEXT,
   p_input_hash TEXT
 )
 RETURNS BOOLEAN

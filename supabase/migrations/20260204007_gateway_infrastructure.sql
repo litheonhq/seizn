@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS gateway_routes (
 );
 
 -- Index for route matching
-CREATE INDEX idx_gateway_routes_org_active ON gateway_routes(org_id, is_active) WHERE is_active = true;
-CREATE INDEX idx_gateway_routes_path ON gateway_routes(path_pattern);
-CREATE INDEX idx_gateway_routes_priority ON gateway_routes(org_id, priority DESC);
+CREATE INDEX IF NOT EXISTS idx_gateway_routes_org_active ON gateway_routes(org_id, is_active) WHERE is_active = true;
+CREATE INDEX IF NOT EXISTS idx_gateway_routes_path ON gateway_routes(path_pattern);
+CREATE INDEX IF NOT EXISTS idx_gateway_routes_priority ON gateway_routes(org_id, priority DESC);
 
 -- =====================================================
 -- Gateway Policies Table
@@ -122,8 +122,8 @@ CREATE TABLE IF NOT EXISTS gateway_policies (
 );
 
 -- Index for policy evaluation
-CREATE INDEX idx_gateway_policies_route ON gateway_policies(route_id, is_active) WHERE is_active = true;
-CREATE INDEX idx_gateway_policies_org_active ON gateway_policies(org_id, is_active, priority DESC);
+CREATE INDEX IF NOT EXISTS idx_gateway_policies_route ON gateway_policies(route_id, is_active) WHERE is_active = true;
+CREATE INDEX IF NOT EXISTS idx_gateway_policies_org_active ON gateway_policies(org_id, is_active, priority DESC);
 
 -- =====================================================
 -- Gateway Cost Ledgers Table
@@ -179,11 +179,11 @@ CREATE TABLE IF NOT EXISTS gateway_cost_ledgers (
 );
 
 -- Indexes for cost analysis queries
-CREATE INDEX idx_cost_ledgers_org_period ON gateway_cost_ledgers(org_id, billing_period);
-CREATE INDEX idx_cost_ledgers_user_period ON gateway_cost_ledgers(user_id, billing_period) WHERE user_id IS NOT NULL;
-CREATE INDEX idx_cost_ledgers_model ON gateway_cost_ledgers(org_id, model, billing_period);
-CREATE INDEX idx_cost_ledgers_project ON gateway_cost_ledgers(org_id, project_id, billing_period) WHERE project_id IS NOT NULL;
-CREATE INDEX idx_cost_ledgers_created ON gateway_cost_ledgers(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cost_ledgers_org_period ON gateway_cost_ledgers(org_id, billing_period);
+CREATE INDEX IF NOT EXISTS idx_cost_ledgers_user_period ON gateway_cost_ledgers(user_id, billing_period) WHERE user_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_cost_ledgers_model ON gateway_cost_ledgers(org_id, model, billing_period);
+CREATE INDEX IF NOT EXISTS idx_cost_ledgers_project ON gateway_cost_ledgers(org_id, project_id, billing_period) WHERE project_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_cost_ledgers_created ON gateway_cost_ledgers(created_at DESC);
 
 -- =====================================================
 -- Gateway Rate Limit Counters (for distributed rate limiting)
@@ -203,10 +203,10 @@ CREATE TABLE IF NOT EXISTS gateway_rate_limit_counters (
 );
 
 -- Index for rate limit lookups
-CREATE INDEX idx_rate_limit_key_window ON gateway_rate_limit_counters(key, window_start DESC);
+CREATE INDEX IF NOT EXISTS idx_rate_limit_key_window ON gateway_rate_limit_counters(key, window_start DESC);
 
 -- Auto-expire old rate limit counters
-CREATE INDEX idx_rate_limit_window_end ON gateway_rate_limit_counters(window_end);
+CREATE INDEX IF NOT EXISTS idx_rate_limit_window_end ON gateway_rate_limit_counters(window_end);
 
 -- =====================================================
 -- Gateway Circuit Breaker State
@@ -270,8 +270,8 @@ CREATE TABLE IF NOT EXISTS gateway_semantic_cache (
 );
 
 -- Index for cache lookups
-CREATE INDEX idx_semantic_cache_lookup ON gateway_semantic_cache(org_id, model, cache_key_hash);
-CREATE INDEX idx_semantic_cache_expires ON gateway_semantic_cache(expires_at);
+CREATE INDEX IF NOT EXISTS idx_gateway_semantic_cache_lookup ON gateway_semantic_cache(org_id, model, cache_key_hash);
+CREATE INDEX IF NOT EXISTS idx_gateway_semantic_cache_expires ON gateway_semantic_cache(expires_at);
 
 -- Vector index for semantic similarity (if pgvector is available)
 -- CREATE INDEX idx_semantic_cache_embedding ON gateway_semantic_cache

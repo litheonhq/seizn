@@ -31,7 +31,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Function to find similar memories using vector similarity
 CREATE OR REPLACE FUNCTION find_similar_memories(
-  target_user_id UUID,
+  target_user_id TEXT,
   similarity_threshold FLOAT DEFAULT 0.85,
   max_results INTEGER DEFAULT 50
 )
@@ -65,7 +65,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Function to apply memory decay (reduce importance of stale memories)
 CREATE OR REPLACE FUNCTION apply_memory_decay(
-  target_user_id UUID,
+  target_user_id TEXT,
   days_threshold INTEGER DEFAULT 60,
   decay_amount INTEGER DEFAULT 1
 )
@@ -86,9 +86,12 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Update search_memories to also track access
+DROP FUNCTION IF EXISTS search_memories(vector, uuid, integer, double precision, text);
+DROP FUNCTION IF EXISTS search_memories(vector, text, integer, double precision, text);
+
 CREATE OR REPLACE FUNCTION search_memories(
   query_embedding vector(1024),
-  match_user_id UUID,
+  match_user_id TEXT,
   match_count INT DEFAULT 10,
   match_threshold FLOAT DEFAULT 0.7,
   match_namespace TEXT DEFAULT NULL

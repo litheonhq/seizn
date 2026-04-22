@@ -52,7 +52,7 @@ CREATE POLICY "Users can view provenance for own memories"
   ON memory_provenance FOR SELECT
   USING (
     memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -61,7 +61,7 @@ CREATE POLICY "Users can insert provenance for own memories"
   ON memory_provenance FOR INSERT
   WITH CHECK (
     memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -70,7 +70,7 @@ CREATE POLICY "Users can update provenance for own memories"
   ON memory_provenance FOR UPDATE
   USING (
     memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -79,7 +79,7 @@ CREATE POLICY "Users can delete provenance for own memories"
   ON memory_provenance FOR DELETE
   USING (
     memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 

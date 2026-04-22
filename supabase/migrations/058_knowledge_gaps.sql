@@ -263,15 +263,20 @@ BEGIN
       COUNT(*) AS total,
       COUNT(*) FILTER (WHERE status = 'open') AS open_count,
       COUNT(*) FILTER (WHERE status = 'resolved') AS resolved_count,
-      jsonb_object_agg(gap_type, type_count) AS type_counts
+      COALESCE(
+        (
+          SELECT jsonb_object_agg(type_counts.gap_type, type_counts.type_count)
+          FROM (
+            SELECT kg2.gap_type, COUNT(*) AS type_count
+            FROM knowledge_gaps kg2
+            WHERE kg2.user_id = p_user_id
+            GROUP BY kg2.gap_type
+          ) type_counts
+        ),
+        '{}'::jsonb
+      ) AS type_counts
     FROM knowledge_gaps
     WHERE user_id = p_user_id
-    CROSS JOIN LATERAL (
-      SELECT gap_type AS gt, COUNT(*) AS type_count
-      FROM knowledge_gaps kg2
-      WHERE kg2.user_id = p_user_id
-      GROUP BY kg2.gap_type
-    ) type_agg
   ),
   resolution_times AS (
     SELECT AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) AS avg_hours

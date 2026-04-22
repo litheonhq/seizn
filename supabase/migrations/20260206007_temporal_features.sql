@@ -256,6 +256,7 @@ $$;
 ALTER TABLE spring_fact_invalidations ENABLE ROW LEVEL SECURITY;
 
 -- Users can view invalidations of their memories
+DROP POLICY IF EXISTS "Users can view their fact invalidations" ON spring_fact_invalidations;
 CREATE POLICY "Users can view their fact invalidations"
   ON spring_fact_invalidations FOR SELECT
   USING (
@@ -266,6 +267,7 @@ CREATE POLICY "Users can view their fact invalidations"
   );
 
 -- Service role bypass
+DROP POLICY IF EXISTS "Service role has full access to fact invalidations" ON spring_fact_invalidations;
 CREATE POLICY "Service role has full access to fact invalidations"
   ON spring_fact_invalidations FOR ALL
   USING (
@@ -281,7 +283,7 @@ COMMENT ON COLUMN spring_memory_notes.superseded_by_id IS 'Reference to the memo
 COMMENT ON COLUMN spring_memory_notes.event_time IS 'When the event actually occurred (for episodes)';
 COMMENT ON COLUMN spring_memory_notes.valid_from IS 'Start of validity period';
 COMMENT ON COLUMN spring_memory_notes.valid_to IS 'End of validity period (auto-expires after)';
-COMMENT ON FUNCTION process_expired_facts IS 'Process and expire facts past their valid_to date';
-COMMENT ON FUNCTION get_facts_valid_at IS 'Get facts that were valid at a specific point in time';
-COMMENT ON FUNCTION get_temporal_stats IS 'Get count of memories by status';
-COMMENT ON FUNCTION get_expiring_soon_facts IS 'Get facts expiring within N days';
+COMMENT ON FUNCTION process_expired_facts(TEXT) IS 'Process and expire facts past their valid_to date';
+COMMENT ON FUNCTION get_facts_valid_at(TEXT, TIMESTAMPTZ, INTEGER) IS 'Get facts that were valid at a specific point in time';
+COMMENT ON FUNCTION get_temporal_stats(TEXT) IS 'Get count of memories by status';
+COMMENT ON FUNCTION get_expiring_soon_facts(TEXT, INTEGER) IS 'Get facts expiring within N days';

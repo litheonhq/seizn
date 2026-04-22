@@ -59,7 +59,8 @@ CREATE TRIGGER on_plan_set
     EXECUTE FUNCTION update_plan_limits();
 
 -- Allow service role to update profiles (for webhook)
-CREATE POLICY IF NOT EXISTS "Service role can update profiles" ON profiles
+DROP POLICY IF EXISTS "Service role can update profiles" ON profiles;
+CREATE POLICY "Service role can update profiles" ON profiles
     FOR UPDATE
     USING (true)
     WITH CHECK (true);

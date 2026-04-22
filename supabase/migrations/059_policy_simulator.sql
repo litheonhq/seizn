@@ -288,6 +288,6 @@ COMMENT ON TABLE simulation_results IS 'Per-query detailed results of policy sim
 COMMENT ON COLUMN policy_definitions.policy_yaml IS 'Human-readable YAML policy definition';
 COMMENT ON COLUMN policy_definitions.policy_json IS 'Parsed JSON rules for execution';
 COMMENT ON COLUMN policy_definitions.policy_type IS 'Type: pii_masking, access_control, ttl, scope, content_filter';
-COMMENT ON COLUMN policy_simulations.impact_score IS 'Aggregate score 0-1 indicating overall policy impact';
+COMMENT ON COLUMN simulation_results.impact_score IS 'Aggregate score 0-1 indicating overall policy impact';
 COMMENT ON COLUMN simulation_results.newly_blocked IS 'Chunks that would be blocked by test policy but not base';
 COMMENT ON COLUMN simulation_results.newly_allowed IS 'Chunks that would be allowed by test policy but blocked by base';

@@ -24,7 +24,7 @@ CREATE POLICY "Users can view their own rollout history"
     EXISTS (
       SELECT 1 FROM fall_experiments e
       WHERE e.id = fall_rollout_history.experiment_id
-      AND e.user_id = auth.uid()
+      AND e.user_id = auth.uid()::text
     )
   );
 
@@ -34,7 +34,7 @@ CREATE POLICY "Users can insert rollout history for their experiments"
     EXISTS (
       SELECT 1 FROM fall_experiments e
       WHERE e.id = fall_rollout_history.experiment_id
-      AND e.user_id = auth.uid()
+      AND e.user_id = auth.uid()::text
     )
   );
 
