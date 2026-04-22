@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
+import { LandingNav } from "@/components/shared/site-nav";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -131,7 +132,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre className="overflow-x-auto rounded-lg border border-white/10 bg-[#06111f] p-4 text-sm leading-6 text-slate-100">
+    <pre className="overflow-x-auto rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4 text-sm leading-6 text-szn-text-2">
       <code>{code}</code>
     </pre>
   );
@@ -143,23 +144,26 @@ export default async function McpDocsPage({ params }: Props) {
   const text = getCopy(locale);
 
   return (
-    <main className="min-h-screen bg-[#08111f] text-white">
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} />
+    <main>
       <section className="mx-auto max-w-6xl px-6 py-20 sm:px-8 lg:px-10">
         <p className="szn-eyebrow">{text.eyebrow}</p>
-        <h1 className="szn-serif mt-5 max-w-4xl text-4xl font-semibold tracking-normal sm:text-5xl">
+        <div className="szn-section-number mt-8">DOCS / MCP</div>
+        <h1 className="szn-serif mt-5 max-w-4xl text-4xl font-semibold tracking-normal text-szn-text-1 sm:text-5xl">
           {text.heading}
         </h1>
-        <p className="mt-6 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
+        <p className="mt-6 max-w-3xl text-base leading-7 text-szn-text-2 sm:text-lg">
           {text.intro}
         </p>
       </section>
 
-      <section className="border-y border-white/10 bg-white/[0.03]">
+      <section className="border-y border-szn-border-subtle bg-szn-surface-1">
         <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
           <div>
             <p className="szn-section-number">01</p>
             <h2 className="mt-4 text-2xl font-semibold tracking-normal">{text.installTitle}</h2>
-            <p className="mt-4 text-sm leading-6 text-slate-300">{text.authBody}</p>
+            <p className="mt-4 text-sm leading-6 text-szn-text-2">{text.authBody}</p>
           </div>
           <CodeBlock code={`export SEIZN_API_KEY=szn_live_xxx\nnpx -y @seizn/mcp`} />
         </div>
@@ -172,20 +176,20 @@ export default async function McpDocsPage({ params }: Props) {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {tools.map((tool) => (
-            <code key={tool} className="rounded-md border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-100">
+            <code key={tool} className="rounded-md border border-szn-border-subtle bg-szn-surface-1 px-4 py-3 text-sm text-szn-text-1">
               {tool}
             </code>
           ))}
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-white/[0.03]">
+      <section className="border-y border-szn-border-subtle bg-szn-surface-1">
         <div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-10">
           <p className="szn-section-number">03</p>
           <h2 className="mt-4 text-2xl font-semibold tracking-normal">{text.snippetsTitle}</h2>
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
             {snippets.map((snippet) => (
-              <article key={snippet.label} className="rounded-lg border border-white/10 bg-black/20 p-5">
+              <article key={snippet.label} className="rounded-lg border border-szn-border-subtle bg-szn-bg p-5">
                 <h3 className="mb-4 text-base font-semibold tracking-normal">{snippet.label}</h3>
                 <CodeBlock code={snippet.code} />
               </article>
@@ -212,5 +216,6 @@ export default async function McpDocsPage({ params }: Props) {
         </div>
       </section>
     </main>
+    </div>
   );
 }
