@@ -51,6 +51,7 @@ export interface PlanConfig {
     canonLockTeamReview: boolean;
     prioritySupport: boolean;
     replayRerun: boolean;
+    memoryTiering: boolean;
   };
 
   // Token limits (per request)
@@ -86,6 +87,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: false,
       prioritySupport: false,
       replayRerun: false,
+      memoryTiering: false,
     },
     maxInputTokens: 4_000,
     maxOutputTokens: 1_000,
@@ -117,6 +119,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: false,
       prioritySupport: false,
       replayRerun: false,
+      memoryTiering: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -148,6 +151,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: false,
       prioritySupport: false,
       replayRerun: false,
+      memoryTiering: true,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
@@ -179,6 +183,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: true,
       prioritySupport: true,
       replayRerun: true,
+      memoryTiering: true,
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
@@ -210,6 +215,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: true,
       prioritySupport: true,
       replayRerun: true,
+      memoryTiering: true,
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
@@ -242,6 +248,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: false,
       prioritySupport: false,
       replayRerun: false,
+      memoryTiering: false,
     },
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
@@ -271,6 +278,7 @@ export const PLANS: Record<string, PlanConfig> = {
       canonLockTeamReview: false,
       prioritySupport: false,
       replayRerun: false,
+      memoryTiering: true,
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
