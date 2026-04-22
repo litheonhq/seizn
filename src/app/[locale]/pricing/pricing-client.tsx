@@ -496,7 +496,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-7 h-7" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-7 w-7" />
             <span className="font-medium text-[15px] tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
 
@@ -755,7 +755,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-10 md:flex-row md:items-center md:justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-6 h-6" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-6 w-6" />
             <span className="text-[13px] font-medium text-szn-text-1">Seizn</span>
           </Link>
 
