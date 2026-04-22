@@ -1,19 +1,17 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import {
-  ArrowLeft,
   Brain,
-  GitFork,
   Loader2,
   Send,
   ShieldCheck,
   Sparkles,
   Zap,
 } from "lucide-react";
+import { LandingNav } from "@/components/shared/site-nav";
 import { DEMO_NPC, getDemoSignupPath } from "@/lib/playground/demo-npc";
+import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
 type ChatRole = "user" | "assistant";
@@ -63,6 +61,7 @@ interface RateLimitState {
 }
 
 interface PlaygroundClientProps {
+  dict: Dictionary;
   locale: Locale;
 }
 
@@ -110,7 +109,7 @@ function formatCountdown(seconds: number): string {
   return `${minutes}m ${remainder.toString().padStart(2, "0")}s`;
 }
 
-export function PlaygroundClient({ locale }: PlaygroundClientProps) {
+export function PlaygroundClient({ dict, locale }: PlaygroundClientProps) {
   const [sessionId, setSessionId] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [memories, setMemories] = useState<MemoryEntry[]>(() => getInitialMemories());
@@ -121,8 +120,17 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
   const [sessionRemaining, setSessionRemaining] = useState<number | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const signupPath = useMemo(() => getDemoSignupPath(), []);
+  const compareLabel = dict.extremeHome?.nav?.compare || "Integrations";
+  const enterpriseLabel = dict.extremeHome?.nav?.enterprise || "For Studios";
+  const navLabels = {
+    docs: dict.nav.docs,
+    pricing: dict.nav.pricing,
+    compare: compareLabel,
+    enterprise: enterpriseLabel,
+    status: dict.footer.status,
+    cta: "Fork this NPC",
+  };
   const userMessageCount = messages.filter((message) => message.role === "user").length;
-  const homePath = `/${locale}`;
 
   function ensureSessionId(): string {
     if (sessionId) return sessionId;
@@ -245,41 +253,29 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#07111e] text-white">
-      <header className="border-b border-white/10 bg-[#07111e]/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href={homePath} className="flex items-center gap-2 text-sm text-slate-300 transition-colors hover:text-white">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <Image src="/seizn-icon.svg" alt="Seizn" width={26} height={26} className="h-6 w-6" unoptimized />
-            <span className="font-medium">Seizn</span>
-          </Link>
-          <Link
-            href={signupPath}
-            className="inline-flex items-center gap-2 rounded-md bg-[#63f2b5] px-3 py-2 text-sm font-semibold text-[#04110b] transition-colors hover:bg-[#82f6c5]"
-          >
-            <GitFork className="h-4 w-4" aria-hidden="true" />
-            Fork this NPC
-          </Link>
-        </div>
-      </header>
+    <main className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} labels={navLabels} ctaHref={signupPath} ctaLabel="Fork this NPC" />
 
       <section className="mx-auto grid max-w-7xl gap-0 px-4 py-5 sm:px-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(340px,0.92fr)] lg:px-8">
-        <div className="min-h-[calc(100vh-7.5rem)] border border-white/10 bg-[#0b1625] lg:border-r-0">
-          <div className="border-b border-white/10 px-5 py-5 sm:px-6">
+        <div className="min-h-[calc(100vh-7.5rem)] overflow-hidden rounded-xl border border-szn-border-subtle bg-szn-surface-1 lg:rounded-r-none lg:border-r-0">
+          <div className="border-b border-szn-border-subtle px-5 py-5 sm:px-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#63f2b5]">
+                <div className="szn-section-number">
+                  Playground / Live NPC
+                </div>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-szn-signal">
                   Live NPC Playground
                 </p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-normal text-white sm:text-4xl">
+                <h1 className="szn-serif mt-2 text-3xl font-semibold tracking-normal text-szn-text-1 sm:text-4xl">
                   {DEMO_NPC.name}
                 </h1>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-szn-text-2">
                   {DEMO_NPC.title}. Real turns flow through the public chat route, rate limits, and demo memory ledger.
                 </p>
               </div>
-              <div className="flex items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
-                <Zap className="h-4 w-4 text-[#63f2b5]" aria-hidden="true" />
+              <div className="flex items-center gap-2 rounded-md border border-szn-border-subtle bg-szn-surface-2 px-3 py-2 text-xs text-szn-text-2">
+                <Zap className="h-4 w-4 text-szn-signal" aria-hidden="true" />
                 {sessionRemaining == null ? "10 turns per session" : `${sessionRemaining} turns left`}
               </div>
             </div>
@@ -296,8 +292,8 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
                     <div
                       className={`max-w-[86%] rounded-lg px-4 py-3 text-sm leading-6 shadow-sm ${
                         message.role === "user"
-                          ? "bg-[#63f2b5] text-[#06120d]"
-                          : "border border-white/10 bg-white/[0.05] text-slate-100"
+                          ? "bg-szn-signal-soft text-szn-text-1"
+                          : "border border-szn-border-subtle bg-szn-surface-1 text-szn-text-1"
                       }`}
                     >
                       <p className="break-words">{message.content}</p>
@@ -306,7 +302,7 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
                 ))}
                 {isSending && (
                   <div className="flex justify-start">
-                    <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-slate-300">
+                    <div className="inline-flex items-center gap-2 rounded-lg border border-szn-border-subtle bg-szn-surface-1 px-4 py-3 text-sm text-szn-text-2">
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       Vale is indexing the turn
                     </div>
@@ -316,7 +312,7 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
               </div>
             </div>
 
-            <div className="border-t border-white/10 bg-[#07111e] p-4 sm:p-5">
+            <div className="border-t border-szn-border-subtle bg-szn-bg p-4 sm:p-5">
               {userMessageCount === 0 && (
                 <div className="mb-4 grid gap-2 sm:grid-cols-3">
                   {DEMO_NPC.examplePrompts.map((prompt) => (
@@ -325,7 +321,7 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
                       type="button"
                       onClick={() => void sendMessage(prompt)}
                       disabled={isSending || Boolean(rateLimit)}
-                      className="min-h-20 rounded-md border border-white/10 bg-white/[0.04] p-3 text-left text-xs leading-5 text-slate-200 transition-colors hover:border-[#63f2b5]/70 hover:bg-[#63f2b5]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="min-h-20 rounded-md border border-szn-border-subtle bg-szn-surface-1 p-3 text-left text-xs leading-5 text-szn-text-2 transition-colors hover:border-szn-signal-line hover:bg-szn-signal-soft disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {prompt}
                     </button>
@@ -334,10 +330,10 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
               )}
 
               {notice && (
-                <div className="mb-3 rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">
+                <div className="mb-3 rounded-md border border-szn-border-subtle bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1">
                   {notice}
                   {rateLimit && (
-                    <span className="ml-1 font-mono text-xs text-amber-200">
+                    <span className="ml-1 font-mono text-xs text-szn-signal">
                       {formatCountdown(rateLimit.retryAfterSeconds)}
                     </span>
                   )}
@@ -352,12 +348,12 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
                   rows={2}
                   maxLength={1000}
                   disabled={isSending || Boolean(rateLimit)}
-                  className="min-h-12 flex-1 resize-none rounded-md border border-white/10 bg-white/[0.06] px-3 py-3 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-[#63f2b5]/70 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-h-12 flex-1 resize-none rounded-md border border-szn-border-subtle bg-szn-surface-1 px-3 py-3 text-sm text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal-line disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isSending || Boolean(rateLimit)}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#63f2b5] text-[#04110b] transition-colors hover:bg-[#82f6c5] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="szn-btn-glass h-12 w-12 shrink-0 !p-0 disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label="Send message"
                 >
                   {isSending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
@@ -367,47 +363,47 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
           </div>
         </div>
 
-        <aside className="min-h-[calc(100vh-7.5rem)] border border-white/10 bg-[#0a1422]">
-          <div className="border-b border-white/10 px-5 py-5 sm:px-6">
+        <aside className="min-h-[calc(100vh-7.5rem)] overflow-hidden rounded-xl border border-szn-border-subtle bg-szn-surface-1 lg:rounded-l-none">
+          <div className="border-b border-szn-border-subtle px-5 py-5 sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#63f2b5]/12 text-[#63f2b5]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-szn-signal-soft text-szn-signal">
                 <Brain className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold tracking-normal">Memory stream</h2>
-                <p className="text-xs text-slate-400">Live entries appear at the top.</p>
+                <p className="text-xs text-szn-text-3">Live entries appear at the top.</p>
               </div>
             </div>
           </div>
 
           <div className="space-y-5 px-5 py-5 sm:px-6">
-            <section className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
-              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
-                <Sparkles className="h-4 w-4 text-[#63f2b5]" aria-hidden="true" />
+            <section className="rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-szn-text-1">
+                <Sparkles className="h-4 w-4 text-szn-signal" aria-hidden="true" />
                 Scene state
               </div>
               <dl className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <dt className="text-slate-500">NPC</dt>
-                  <dd className="mt-1 font-medium text-slate-200">{DEMO_NPC.id}</dd>
+                  <dt className="text-szn-text-3">NPC</dt>
+                  <dd className="mt-1 font-medium text-szn-text-2">{DEMO_NPC.id}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Namespace</dt>
-                  <dd className="mt-1 font-medium text-slate-200">{DEMO_NPC.namespace}</dd>
+                  <dt className="text-szn-text-3">Namespace</dt>
+                  <dd className="mt-1 font-medium text-szn-text-2">{DEMO_NPC.namespace}</dd>
                 </div>
               </dl>
             </section>
 
-            <section className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
-              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
-                <ShieldCheck className="h-4 w-4 text-[#63f2b5]" aria-hidden="true" />
+            <section className="rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-szn-text-1">
+                <ShieldCheck className="h-4 w-4 text-szn-signal" aria-hidden="true" />
                 Canon locks
               </div>
               <div className="space-y-3">
                 {DEMO_NPC.canonLocks.map((lock) => (
-                  <div key={lock.id} className="rounded-md border border-white/10 bg-black/20 p-3">
-                    <p className="text-xs font-mono uppercase tracking-[0.14em] text-[#63f2b5]">{lock.id}</p>
-                    <p className="mt-2 text-xs leading-5 text-slate-300">{lock.statement}</p>
+                  <div key={lock.id} className="rounded-md border border-szn-border-subtle bg-szn-surface-2 p-3">
+                    <p className="text-xs font-mono uppercase tracking-[0.14em] text-szn-signal">{lock.id}</p>
+                    <p className="mt-2 text-xs leading-5 text-szn-text-2">{lock.statement}</p>
                   </div>
                 ))}
               </div>
@@ -416,19 +412,19 @@ export function PlaygroundClient({ locale }: PlaygroundClientProps) {
             <section>
               <div className="space-y-3">
                 {memories.map((memory) => (
-                  <article key={memory.id} className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
+                  <article key={memory.id} className="rounded-lg border border-szn-border-subtle bg-szn-surface-1 p-4">
                     <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded-sm bg-[#63f2b5]/12 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#63f2b5]">
+                      <span className="rounded-sm bg-szn-signal-soft px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-szn-signal">
                         {memory.memoryType}
                       </span>
-                      <span className="text-[11px] text-slate-500">
+                      <span className="text-[11px] text-szn-text-3">
                         {memory.persisted ? "stored" : "live buffer"}
                       </span>
                     </div>
-                    <p className="break-words text-sm leading-6 text-slate-100">{memory.content}</p>
+                    <p className="break-words text-sm leading-6 text-szn-text-1">{memory.content}</p>
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {memory.tags.map((tag) => (
-                        <span key={`${memory.id}-${tag}`} className="rounded-sm border border-white/10 px-2 py-1 text-[11px] text-slate-400">
+                        <span key={`${memory.id}-${tag}`} className="rounded-sm border border-szn-border-subtle px-2 py-1 text-[11px] text-szn-text-3">
                           {tag}
                         </span>
                       ))}

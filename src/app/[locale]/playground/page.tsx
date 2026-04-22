@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
 import { DEMO_NPC } from "@/lib/playground/demo-npc";
 import { PlaygroundClient } from "./playground-client";
 
@@ -38,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PlaygroundPage({ params }: Props) {
   const { locale: localeParam } = await params;
   const locale = getLocale(localeParam);
+  const dict = await getDictionary(locale);
 
-  return <PlaygroundClient locale={locale} />;
+  return <PlaygroundClient dict={dict} locale={locale} />;
 }
