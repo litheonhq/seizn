@@ -321,13 +321,12 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
           <div className="col-span-2 md:col-span-1">
             <Link href={`/${locale}`} className="flex items-center gap-2 mb-4">
               <Image
-                src="/seizn-icon.svg"
+                src="/brand/seizn-mark-256.png"
                 alt="Seizn"
                 className="w-6 h-6"
                 width={24}
                 height={24}
                 priority={false}
-                unoptimized
               />
               <span className="font-medium text-szn-text-1">Seizn</span>
             </Link>
