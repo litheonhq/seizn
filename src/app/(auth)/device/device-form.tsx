@@ -126,26 +126,18 @@ export default function DeviceForm() {
   }, []);
 
   return (
-    <div className="min-h-screen gradient-hero relative overflow-hidden flex items-center justify-center p-4">
-      {/* Decorative */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-szn-accent/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-96 h-96 bg-szn-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
-        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-szn-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s" }} />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen bg-szn-bg flex items-center justify-center p-4">
+      <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+          <Link href="/" className="inline-flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8" />
+            <span className="text-[20px] font-medium tracking-[-0.01em] text-szn-text-1">
               Seizn
             </span>
           </Link>
-          <p className="text-szn-text-2 mt-3">Authorize Device</p>
+          <p className="text-szn-text-2 mt-3 text-sm">Authorize Device</p>
         </div>
 
         {/* Card */}
@@ -182,7 +174,7 @@ export default function DeviceForm() {
                     onChange={(e) => handleCodeChange(e.target.value)}
                     placeholder="ABCD-1234"
                     maxLength={9}
-                    className="input-elegant w-full text-center text-2xl tracking-[0.3em] font-mono uppercase"
+                    className="h-14 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-center text-2xl tracking-[0.3em] font-mono uppercase text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
                     autoFocus
                     autoComplete="off"
                     spellCheck={false}
@@ -191,7 +183,7 @@ export default function DeviceForm() {
                 <button
                   type="submit"
                   disabled={isLoading || userCode.length < 9}
-                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
+                  className="w-full py-3.5 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -246,7 +238,7 @@ export default function DeviceForm() {
                 <button
                   onClick={handleApprove}
                   disabled={isLoading}
-                  className="flex-1 py-3 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+                  className="flex-1 py-3 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors disabled:opacity-50"
                 >
                   {isLoading ? "Approving..." : "Approve"}
                 </button>
