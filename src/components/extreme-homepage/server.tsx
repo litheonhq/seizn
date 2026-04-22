@@ -296,7 +296,7 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
           {t.extremeHome?.pricingCta?.subtitle || copy.pricingSubtitle}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href={`/${locale}/pricing`} className="szn-btn-signal">
+          <Link href={`/${locale}/pricing`} className="szn-btn-glass">
             {t.extremeHome?.pricingCta?.viewPricing || "See plans & pricing"}
           </Link>
           <Link href={`/${locale}/enterprise`} className="szn-btn-ghost">

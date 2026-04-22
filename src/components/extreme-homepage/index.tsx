@@ -88,7 +88,7 @@ function CompactPlaygroundPreview({ locale }: { locale: Locale }) {
             <Link
               href={`/${locale}/playground`}
               onClick={() => analytics.featureUsed("extreme_home_playground_preview_clicked", { target: "playground" })}
-              className="szn-btn-signal"
+              className="szn-btn-glass"
             >
               Open playground
               <Send className="h-4 w-4" aria-hidden="true" />
