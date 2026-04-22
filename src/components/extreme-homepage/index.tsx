@@ -216,7 +216,7 @@ const Navigation = memo(function Navigation({
           <LanguageSwitcher currentLocale={locale} />
           <Link
             href={`/${locale}/enterprise`}
-            className="text-[13px] font-medium px-4 py-2 rounded-md bg-szn-signal text-szn-signal-fg hover:bg-szn-signal-hover transition-colors"
+            className="szn-btn-glass text-[13px] px-4 py-2"
           >
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
@@ -250,7 +250,7 @@ const Navigation = memo(function Navigation({
           <div className="pt-2 border-t border-szn-border-subtle">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href={`/${locale}/enterprise`} className="block w-full text-center bg-szn-signal text-szn-signal-fg font-medium py-3 rounded-md mt-3">
+          <Link href={`/${locale}/enterprise`} className="szn-btn-glass w-full mt-3">
             {t.nav?.getApiKey || "Book a demo"}
           </Link>
         </div>
@@ -411,7 +411,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 <Link
                   href={`/${locale}/docs`}
                   onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "docs" })}
-                  className="szn-btn-signal"
+                  className="szn-btn-glass"
                 >
                   {t.ctaStart || "Start building"}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
