@@ -107,6 +107,7 @@ import {
   ComplianceError,
   normalizeAgeBracket,
 } from '@/lib/compliance/age-gate';
+import { assertConsent } from '@/lib/compliance/consent';
 import { resolveComplianceOrganizationId } from '@/lib/compliance/organization';
 import {
   runDegradedKeywordSearch,
@@ -581,6 +582,20 @@ async function handlePost(request: NextRequest) {
         subjectId,
         bracket: ageBracket,
       });
+      await assertConsent(supabase, {
+        organizationId,
+        subjectId,
+        scope: 'memory_storage',
+        ageBracket,
+      });
+      if (rawBody.ai_training === true) {
+        await assertConsent(supabase, {
+          organizationId,
+          subjectId,
+          scope: 'ai_training',
+          ageBracket,
+        });
+      }
     } catch (error) {
       if (error instanceof ComplianceError) {
         if (keyId) {
