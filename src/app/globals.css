@@ -1155,6 +1155,54 @@ body {
   background: var(--szn-signal-soft);
 }
 
+/* Glass variant of the signal button — used on the landing hero and nav
+   where a fully opaque CTA competes visually with the brand mark. Keeps
+   the signal hue as a frosted tint while remaining clearly actionable. */
+.szn-btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.625rem;
+  background: color-mix(in srgb, var(--szn-signal) 14%, transparent);
+  color: var(--szn-signal);
+  border: 1px solid color-mix(in srgb, var(--szn-signal) 30%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: -0.005em;
+  transition: background 160ms var(--szn-ease-expo-out),
+              border-color 160ms var(--szn-ease-expo-out),
+              transform 160ms var(--szn-ease-expo-out);
+}
+.szn-btn-glass:hover {
+  background: color-mix(in srgb, var(--szn-signal) 22%, transparent);
+  border-color: color-mix(in srgb, var(--szn-signal) 46%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Compact glass pill — used on the language switcher trigger where the
+   button must blend into the nav rather than assert itself. */
+.szn-pill-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--szn-surface-1) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--szn-border) 60%, transparent);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  transition: background 160ms var(--szn-ease-expo-out),
+              border-color 160ms var(--szn-ease-expo-out);
+}
+.szn-pill-glass:hover {
+  background: color-mix(in srgb, var(--szn-surface-1) 65%, transparent);
+  border-color: var(--szn-border);
+}
+
 /* Subtle signal glow used behind hero. */
 .szn-glow-signal {
   background:
