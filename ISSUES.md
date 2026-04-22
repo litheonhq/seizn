@@ -92,3 +92,9 @@
 **Symptom:** Post-migration `verify:e2e-encryption-db` exited non-zero even after the BA-01 SQL applied successfully.
 **Cause:** The active DB target was missing `hybrid_search_memories` and `search_memories`, `keyword_search_memories` still cast text user ids to UUID, and `flight_recorder_traces` still allowed anon/authenticated SELECT.
 **Resolution:** Added and applied `supabase/migrations/20260421022_runtime_verification_guardrails.sql`, restoring the three search RPCs for the text `memories.user_id` schema and revoking public view access while preserving `service_role` access.
+
+### Local Supabase Reset Blocked By Legacy Migration Replay Drift
+**Date:** 2026-04-22
+**Symptom:** `pnpm exec supabase start` and `pnpm exec supabase db reset` failed repeatedly while replaying legacy migrations.
+**Cause:** Historical migrations were not clean-replay safe after `profiles.id` moved to `text`; overlapping migrations reused table, index, policy, trigger, and view names, and some DDL assumed optional extensions or compatibility columns.
+**Resolution:** Made legacy migrations replay-safe with idempotent policy, trigger, and index creation, text casts for profile-scoped IDs, conditional PGroonga DDL, additive compatibility columns, and function/view signature fixes. Verified with `pnpm exec supabase db reset`.

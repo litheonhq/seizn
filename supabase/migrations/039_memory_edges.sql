@@ -71,10 +71,10 @@ CREATE POLICY "Users can view edges for own memories"
   ON memory_edges FOR SELECT
   USING (
     source_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
     OR target_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -83,10 +83,10 @@ CREATE POLICY "Users can insert edges between own memories"
   ON memory_edges FOR INSERT
   WITH CHECK (
     source_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
     AND target_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -95,7 +95,7 @@ CREATE POLICY "Users can update edges for own memories"
   ON memory_edges FOR UPDATE
   USING (
     source_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 
@@ -104,7 +104,7 @@ CREATE POLICY "Users can delete edges for own memories"
   ON memory_edges FOR DELETE
   USING (
     source_memory_id IN (
-      SELECT id FROM memories WHERE user_id = auth.uid()
+      SELECT id FROM memories WHERE user_id = auth.uid()::text
     )
   );
 

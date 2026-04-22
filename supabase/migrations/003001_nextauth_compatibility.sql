@@ -10,6 +10,20 @@ ALTER TABLE api_keys DROP CONSTRAINT IF EXISTS api_keys_user_id_fkey;
 ALTER TABLE memories DROP CONSTRAINT IF EXISTS memories_user_id_fkey;
 ALTER TABLE usage_logs DROP CONSTRAINT IF EXISTS usage_logs_user_id_fkey;
 
+-- Drop policies before changing column types. PostgreSQL blocks ALTER TYPE while
+-- policy expressions still depend on those columns.
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can view own API keys" ON api_keys;
+DROP POLICY IF EXISTS "Users can insert own API keys" ON api_keys;
+DROP POLICY IF EXISTS "Users can update own API keys" ON api_keys;
+DROP POLICY IF EXISTS "Users can delete own API keys" ON api_keys;
+DROP POLICY IF EXISTS "Users can view own memories" ON memories;
+DROP POLICY IF EXISTS "Users can insert own memories" ON memories;
+DROP POLICY IF EXISTS "Users can update own memories" ON memories;
+DROP POLICY IF EXISTS "Users can delete own memories" ON memories;
+DROP POLICY IF EXISTS "Users can view own usage logs" ON usage_logs;
+
 -- Change column types
 ALTER TABLE profiles ALTER COLUMN id TYPE TEXT USING id::TEXT;
 ALTER TABLE api_keys ALTER COLUMN user_id TYPE TEXT USING user_id::TEXT;

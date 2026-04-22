@@ -20,7 +20,11 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS memory_decay_days INTEGER;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS organization_id UUID;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS full_name TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS display_name TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS preferred_name TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS handle TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS language TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS locale TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS e2e_salt TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS e2e_verification_block TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS e2e_setup_at TIMESTAMPTZ;
@@ -74,11 +78,11 @@ CREATE TABLE IF NOT EXISTS public.organizations (
 CREATE TABLE IF NOT EXISTS public.organization_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   role VARCHAR(20) NOT NULL DEFAULT 'member',
   status VARCHAR(20) NOT NULL DEFAULT 'active',
   permissions JSONB NOT NULL DEFAULT '{}'::jsonb,
-  invited_by UUID REFERENCES public.profiles(id),
+  invited_by TEXT REFERENCES public.profiles(id),
   invited_at TIMESTAMPTZ,
   accepted_at TIMESTAMPTZ DEFAULT NOW(),
   last_active_at TIMESTAMPTZ,
@@ -91,15 +95,23 @@ CREATE TABLE IF NOT EXISTS public.organization_invites (
   organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
   email VARCHAR(255) NOT NULL,
   role VARCHAR(20) NOT NULL DEFAULT 'member',
-  invited_by UUID REFERENCES public.profiles(id),
+  invited_by TEXT REFERENCES public.profiles(id),
   token VARCHAR(64) NOT NULL UNIQUE,
   expires_at TIMESTAMPTZ NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'pending',
-  accepted_by UUID REFERENCES public.profiles(id),
+  accepted_by TEXT REFERENCES public.profiles(id),
   accepted_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (organization_id, email)
 );
+
+ALTER TABLE public.organization_members ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'active';
+ALTER TABLE public.organization_members ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMPTZ;
+ALTER TABLE public.organization_members ALTER COLUMN permissions SET DEFAULT '{}'::jsonb;
+
+ALTER TABLE public.organization_invites ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'pending';
+ALTER TABLE public.organization_invites ADD COLUMN IF NOT EXISTS accepted_by TEXT REFERENCES public.profiles(id);
+ALTER TABLE public.organization_invites ADD COLUMN IF NOT EXISTS accepted_at TIMESTAMPTZ;
 
 CREATE INDEX IF NOT EXISTS idx_org_members_org ON public.organization_members(organization_id);
 CREATE INDEX IF NOT EXISTS idx_org_members_user ON public.organization_members(user_id);
@@ -163,16 +175,13 @@ SET search_path = public
 AS $$
 DECLARE
   v_org_id UUID;
-  v_owner_id UUID;
 BEGIN
-  v_owner_id := p_owner_id::uuid;
-
   INSERT INTO public.organizations (name, slug)
   VALUES (p_name, p_slug)
   RETURNING id INTO v_org_id;
 
   INSERT INTO public.organization_members (organization_id, user_id, role, status)
-  VALUES (v_org_id, v_owner_id, 'owner', 'active')
+  VALUES (v_org_id, p_owner_id, 'owner', 'active')
   ON CONFLICT (organization_id, user_id) DO UPDATE
   SET role = EXCLUDED.role,
       status = EXCLUDED.status;
@@ -197,7 +206,7 @@ BEGIN
     SELECT role
     FROM public.organization_members
     WHERE organization_id = p_org_id
-      AND user_id = p_user_id::uuid
+      AND user_id = p_user_id
     LIMIT 1
   );
 END;

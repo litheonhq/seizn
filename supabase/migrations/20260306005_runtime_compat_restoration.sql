@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS public.retrieval_budgets (
-  user_id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   daily_budget_usd DOUBLE PRECISION NOT NULL DEFAULT 10.0,
   monthly_budget_usd DOUBLE PRECISION NOT NULL DEFAULT 100.0,
   per_query_max_usd DOUBLE PRECISION NOT NULL DEFAULT 0.05,
@@ -48,7 +48,7 @@ GRANT ALL ON public.retrieval_budgets TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.budget_degrade_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   reason TEXT NOT NULL,
   original_config JSONB NOT NULL DEFAULT '{}'::JSONB,
   degraded_config JSONB NOT NULL DEFAULT '{}'::JSONB,
@@ -64,12 +64,12 @@ ALTER TABLE public.budget_degrade_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own budget_degrade_events" ON public.budget_degrade_events;
 CREATE POLICY "Users can view own budget_degrade_events"
   ON public.budget_degrade_events FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own budget_degrade_events" ON public.budget_degrade_events;
 CREATE POLICY "Users can insert own budget_degrade_events"
   ON public.budget_degrade_events FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT ON public.budget_degrade_events TO authenticated;
 GRANT ALL ON public.budget_degrade_events TO service_role;
@@ -81,7 +81,7 @@ GRANT ALL ON public.budget_degrade_events TO service_role;
 CREATE TABLE IF NOT EXISTS public.fall_retrieval_traces (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   request_id TEXT NOT NULL,
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   api_key_id UUID REFERENCES public.api_keys(id) ON DELETE SET NULL,
   plan TEXT NOT NULL DEFAULT 'free',
   collection_id UUID,
@@ -120,23 +120,23 @@ ALTER TABLE public.fall_retrieval_traces ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own fall_retrieval_traces" ON public.fall_retrieval_traces;
 CREATE POLICY "Users can view own fall_retrieval_traces"
   ON public.fall_retrieval_traces FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own fall_retrieval_traces" ON public.fall_retrieval_traces;
 CREATE POLICY "Users can insert own fall_retrieval_traces"
   ON public.fall_retrieval_traces FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own fall_retrieval_traces" ON public.fall_retrieval_traces;
 CREATE POLICY "Users can update own fall_retrieval_traces"
   ON public.fall_retrieval_traces FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can delete own fall_retrieval_traces" ON public.fall_retrieval_traces;
 CREATE POLICY "Users can delete own fall_retrieval_traces"
   ON public.fall_retrieval_traces FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.fall_retrieval_traces TO authenticated;
 GRANT ALL ON public.fall_retrieval_traces TO service_role;
@@ -199,7 +199,7 @@ AS $$
     ) AS rank,
     m.created_at
   FROM public.memories m
-  WHERE m.user_id = match_user_id::UUID
+  WHERE m.user_id = match_user_id
     AND COALESCE(m.is_deleted, FALSE) = FALSE
     AND COALESCE(m.is_encrypted, FALSE) = FALSE
     AND (match_namespace IS NULL OR m.namespace = match_namespace)
@@ -238,17 +238,17 @@ AS $$
     m.tags,
     m.namespace,
     m.importance,
-    1 - (m.embedding OPERATOR(extensions.<=>) query_embedding) AS similarity,
+    1 - (m.embedding <=> query_embedding) AS similarity,
     m.created_at
   FROM public.memories m
-  WHERE m.user_id = match_user_id::UUID
+  WHERE m.user_id = match_user_id
     AND COALESCE(m.is_deleted, FALSE) = FALSE
     AND COALESCE(m.is_encrypted, FALSE) = FALSE
     AND m.embedding IS NOT NULL
     AND query_embedding IS NOT NULL
     AND (match_namespace IS NULL OR m.namespace = match_namespace)
-    AND 1 - (m.embedding OPERATOR(extensions.<=>) query_embedding) > COALESCE(match_threshold, 0)
-  ORDER BY m.embedding OPERATOR(extensions.<=>) query_embedding, m.created_at DESC
+    AND 1 - (m.embedding <=> query_embedding) > COALESCE(match_threshold, 0)
+  ORDER BY m.embedding <=> query_embedding, m.created_at DESC
   LIMIT GREATEST(match_count, 0);
 $$;
 
@@ -287,16 +287,16 @@ AS $$
       m.tags,
       m.namespace,
       m.importance,
-      1 - (m.embedding OPERATOR(extensions.<=>) query_embedding) AS similarity
+      1 - (m.embedding <=> query_embedding) AS similarity
     FROM public.memories m
-    WHERE m.user_id = match_user_id::UUID
+    WHERE m.user_id = match_user_id
       AND COALESCE(m.is_deleted, FALSE) = FALSE
       AND COALESCE(m.is_encrypted, FALSE) = FALSE
       AND m.embedding IS NOT NULL
       AND query_embedding IS NOT NULL
       AND (match_namespace IS NULL OR m.namespace = match_namespace)
-      AND 1 - (m.embedding OPERATOR(extensions.<=>) query_embedding) > COALESCE(match_threshold, 0)
-    ORDER BY m.embedding OPERATOR(extensions.<=>) query_embedding, m.created_at DESC
+      AND 1 - (m.embedding <=> query_embedding) > COALESCE(match_threshold, 0)
+    ORDER BY m.embedding <=> query_embedding, m.created_at DESC
     LIMIT GREATEST(match_count, 1) * 2
   ),
   keyword_results AS (
@@ -314,7 +314,7 @@ AS $$
         ELSE 0::DOUBLE PRECISION
       END AS keyword_rank
     FROM public.memories m
-    WHERE m.user_id = match_user_id::UUID
+    WHERE m.user_id = match_user_id
       AND COALESCE(m.is_deleted, FALSE) = FALSE
       AND COALESCE(m.is_encrypted, FALSE) = FALSE
       AND (match_namespace IS NULL OR m.namespace = match_namespace)
@@ -485,7 +485,7 @@ $$;
 
 CREATE TABLE IF NOT EXISTS public.auto_pr_analyses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   trace_id UUID REFERENCES public.fall_retrieval_traces(id) ON DELETE SET NULL,
   collection_id UUID,
   status TEXT NOT NULL DEFAULT 'pending'
@@ -517,30 +517,30 @@ ALTER TABLE public.auto_pr_analyses ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own auto_pr_analyses" ON public.auto_pr_analyses;
 CREATE POLICY "Users can view own auto_pr_analyses"
   ON public.auto_pr_analyses FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own auto_pr_analyses" ON public.auto_pr_analyses;
 CREATE POLICY "Users can insert own auto_pr_analyses"
   ON public.auto_pr_analyses FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own auto_pr_analyses" ON public.auto_pr_analyses;
 CREATE POLICY "Users can update own auto_pr_analyses"
   ON public.auto_pr_analyses FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can delete own auto_pr_analyses" ON public.auto_pr_analyses;
 CREATE POLICY "Users can delete own auto_pr_analyses"
   ON public.auto_pr_analyses FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.auto_pr_analyses TO authenticated;
 GRANT ALL ON public.auto_pr_analyses TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.auto_pr_records (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   analysis_id UUID REFERENCES public.auto_pr_analyses(id) ON DELETE SET NULL,
   pr_number INTEGER,
   pr_url TEXT,
@@ -557,7 +557,7 @@ CREATE TABLE IF NOT EXISTS public.auto_pr_records (
   suggestions_applied JSONB NOT NULL DEFAULT '[]'::JSONB,
   metadata JSONB NOT NULL DEFAULT '{}'::JSONB,
   review_status TEXT,
-  reviewed_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  reviewed_by TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
   reviewed_at TIMESTAMPTZ,
   merged_at TIMESTAMPTZ,
   merged_by TEXT,
@@ -578,23 +578,23 @@ ALTER TABLE public.auto_pr_records ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own auto_pr_records" ON public.auto_pr_records;
 CREATE POLICY "Users can view own auto_pr_records"
   ON public.auto_pr_records FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own auto_pr_records" ON public.auto_pr_records;
 CREATE POLICY "Users can insert own auto_pr_records"
   ON public.auto_pr_records FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own auto_pr_records" ON public.auto_pr_records;
 CREATE POLICY "Users can update own auto_pr_records"
   ON public.auto_pr_records FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can delete own auto_pr_records" ON public.auto_pr_records;
 CREATE POLICY "Users can delete own auto_pr_records"
   ON public.auto_pr_records FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.auto_pr_records TO authenticated;
 GRANT ALL ON public.auto_pr_records TO service_role;
@@ -604,7 +604,7 @@ GRANT ALL ON public.auto_pr_records TO service_role;
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS public.autopilot_configs (
-  user_id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
   config JSONB NOT NULL DEFAULT '{}'::JSONB,
   github_token TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -616,13 +616,13 @@ ALTER TABLE public.autopilot_configs ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own autopilot_configs" ON public.autopilot_configs;
 CREATE POLICY "Users can view own autopilot_configs"
   ON public.autopilot_configs FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can upsert own autopilot_configs" ON public.autopilot_configs;
 CREATE POLICY "Users can upsert own autopilot_configs"
   ON public.autopilot_configs FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.autopilot_configs TO authenticated;
 GRANT ALL ON public.autopilot_configs TO service_role;
@@ -647,7 +647,7 @@ GRANT ALL ON public.autopilot_webhooks TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.autopilot_analyses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   collection_id UUID,
   trace_id UUID REFERENCES public.fall_retrieval_traces(id) ON DELETE SET NULL,
   analysis_type TEXT NOT NULL DEFAULT 'retrieval_quality',
@@ -677,25 +677,25 @@ ALTER TABLE public.autopilot_analyses ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own autopilot_analyses" ON public.autopilot_analyses;
 CREATE POLICY "Users can view own autopilot_analyses"
   ON public.autopilot_analyses FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own autopilot_analyses" ON public.autopilot_analyses;
 CREATE POLICY "Users can insert own autopilot_analyses"
   ON public.autopilot_analyses FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own autopilot_analyses" ON public.autopilot_analyses;
 CREATE POLICY "Users can update own autopilot_analyses"
   ON public.autopilot_analyses FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE ON public.autopilot_analyses TO authenticated;
 GRANT ALL ON public.autopilot_analyses TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.autopilot_fixes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   analysis_id UUID NOT NULL REFERENCES public.autopilot_analyses(id) ON DELETE CASCADE,
   trace_id UUID REFERENCES public.fall_retrieval_traces(id) ON DELETE SET NULL,
   pr_id UUID,
@@ -711,7 +711,7 @@ CREATE TABLE IF NOT EXISTS public.autopilot_fixes (
   pr_context JSONB,
   applied_suggestions JSONB NOT NULL DEFAULT '[]'::JSONB,
   auto_approved BOOLEAN NOT NULL DEFAULT FALSE,
-  approved_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  approved_by TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
   approved_at TIMESTAMPTZ,
   applied_at TIMESTAMPTZ,
   applied_by TEXT,
@@ -734,25 +734,25 @@ ALTER TABLE public.autopilot_fixes ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own autopilot_fixes" ON public.autopilot_fixes;
 CREATE POLICY "Users can view own autopilot_fixes"
   ON public.autopilot_fixes FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own autopilot_fixes" ON public.autopilot_fixes;
 CREATE POLICY "Users can insert own autopilot_fixes"
   ON public.autopilot_fixes FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own autopilot_fixes" ON public.autopilot_fixes;
 CREATE POLICY "Users can update own autopilot_fixes"
   ON public.autopilot_fixes FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE ON public.autopilot_fixes TO authenticated;
 GRANT ALL ON public.autopilot_fixes TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.autopilot_prs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   analysis_id UUID REFERENCES public.autopilot_analyses(id) ON DELETE SET NULL,
   fix_id UUID REFERENCES public.autopilot_fixes(id) ON DELETE SET NULL,
   trace_id UUID REFERENCES public.fall_retrieval_traces(id) ON DELETE SET NULL,
@@ -771,7 +771,7 @@ CREATE TABLE IF NOT EXISTS public.autopilot_prs (
   github_response JSONB,
   error TEXT,
   review_status TEXT,
-  reviewed_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  reviewed_by TEXT REFERENCES public.profiles(id) ON DELETE SET NULL,
   reviewed_at TIMESTAMPTZ,
   merged_at TIMESTAMPTZ,
   merged_by TEXT,
@@ -791,18 +791,18 @@ ALTER TABLE public.autopilot_prs ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own autopilot_prs" ON public.autopilot_prs;
 CREATE POLICY "Users can view own autopilot_prs"
   ON public.autopilot_prs FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can insert own autopilot_prs" ON public.autopilot_prs;
 CREATE POLICY "Users can insert own autopilot_prs"
   ON public.autopilot_prs FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 DROP POLICY IF EXISTS "Users can update own autopilot_prs" ON public.autopilot_prs;
 CREATE POLICY "Users can update own autopilot_prs"
   ON public.autopilot_prs FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 GRANT SELECT, INSERT, UPDATE ON public.autopilot_prs TO authenticated;
 GRANT ALL ON public.autopilot_prs TO service_role;

@@ -48,9 +48,18 @@ CREATE TABLE IF NOT EXISTS winter_org_custom_roles (
     )
 );
 
+ALTER TABLE winter_org_custom_roles
+    ADD COLUMN IF NOT EXISTS color TEXT,
+    ADD COLUMN IF NOT EXISTS icon TEXT,
+    ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN IF NOT EXISTS is_system BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN IF NOT EXISTS member_count INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}',
+    ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
+
 -- Indexes
-CREATE INDEX idx_custom_roles_org ON winter_org_custom_roles(organization_id, is_active) WHERE is_active = true;
-CREATE INDEX idx_custom_roles_base ON winter_org_custom_roles(base_role);
+CREATE INDEX IF NOT EXISTS idx_custom_roles_org ON winter_org_custom_roles(organization_id, is_active) WHERE is_active = true;
+CREATE INDEX IF NOT EXISTS idx_custom_roles_base ON winter_org_custom_roles(base_role);
 
 -- =====================================================
 -- Role Assignments Table
@@ -81,10 +90,10 @@ CREATE TABLE IF NOT EXISTS winter_org_role_assignments (
 );
 
 -- Indexes
-CREATE INDEX idx_role_assignments_user ON winter_org_role_assignments(user_id, organization_id);
-CREATE INDEX idx_role_assignments_role ON winter_org_role_assignments(custom_role_id);
-CREATE INDEX idx_role_assignments_context ON winter_org_role_assignments(context_type, context_id) WHERE context_type IS NOT NULL;
-CREATE INDEX idx_role_assignments_expires ON winter_org_role_assignments(expires_at) WHERE expires_at IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_role_assignments_user ON winter_org_role_assignments(user_id, organization_id);
+CREATE INDEX IF NOT EXISTS idx_role_assignments_role ON winter_org_role_assignments(custom_role_id);
+CREATE INDEX IF NOT EXISTS idx_role_assignments_context ON winter_org_role_assignments(context_type, context_id) WHERE context_type IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_role_assignments_expires ON winter_org_role_assignments(expires_at) WHERE expires_at IS NOT NULL;
 
 -- =====================================================
 -- Permission Templates Table
@@ -350,6 +359,14 @@ CREATE POLICY permission_templates_select ON winter_permission_templates FOR SEL
 -- =====================================================
 -- Triggers for updated_at
 -- =====================================================
+CREATE OR REPLACE FUNCTION update_gateway_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TRIGGER trigger_custom_roles_updated_at
     BEFORE UPDATE ON winter_org_custom_roles
     FOR EACH ROW EXECUTE FUNCTION update_gateway_updated_at();

@@ -77,7 +77,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_semantic_cache_cache_key
 -- Index for hash-based lookup
 CREATE INDEX IF NOT EXISTS idx_semantic_cache_query_hash
   ON semantic_cache_entries(user_id, collection_id, query_hash)
-  WHERE invalidated_at IS NULL AND expires_at > NOW();
+  WHERE invalidated_at IS NULL;
 
 -- Index for semantic similarity search
 CREATE INDEX IF NOT EXISTS idx_semantic_cache_embedding

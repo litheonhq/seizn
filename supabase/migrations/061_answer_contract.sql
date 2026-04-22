@@ -7,9 +7,9 @@
 -- ============================================================================
 
 -- Answer contract evaluations
-CREATE TABLE answer_contracts (
+CREATE TABLE IF NOT EXISTS answer_contracts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   trace_id UUID,
 
   -- Contract evaluation
@@ -41,7 +41,7 @@ CREATE TABLE answer_contracts (
 );
 
 -- Contract policies (configurable thresholds)
-CREATE TABLE contract_policies (
+CREATE TABLE IF NOT EXISTS contract_policies (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   collection_id UUID,  -- Optional: apply to specific collection
@@ -73,7 +73,7 @@ CREATE TABLE contract_policies (
 );
 
 -- Contract policy versions (audit trail)
-CREATE TABLE contract_policy_versions (
+CREATE TABLE IF NOT EXISTS contract_policy_versions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   policy_id UUID NOT NULL REFERENCES contract_policies(id) ON DELETE CASCADE,
   version_number INTEGER NOT NULL,
@@ -86,28 +86,46 @@ CREATE TABLE contract_policy_versions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+ALTER TABLE answer_contracts
+  ADD COLUMN IF NOT EXISTS trace_id UUID,
+  ADD COLUMN IF NOT EXISTS query_text TEXT,
+  ADD COLUMN IF NOT EXISTS answer_text TEXT,
+  ADD COLUMN IF NOT EXISTS evidence_chunks JSONB,
+  ADD COLUMN IF NOT EXISTS is_grounded BOOLEAN,
+  ADD COLUMN IF NOT EXISTS grounding_score FLOAT,
+  ADD COLUMN IF NOT EXISTS faithfulness_score FLOAT,
+  ADD COLUMN IF NOT EXISTS coverage_score FLOAT,
+  ADD COLUMN IF NOT EXISTS claims JSONB,
+  ADD COLUMN IF NOT EXISTS unsupported_claims JSONB,
+  ADD COLUMN IF NOT EXISTS contradictions JSONB,
+  ADD COLUMN IF NOT EXISTS verdict TEXT,
+  ADD COLUMN IF NOT EXISTS abstain_reason TEXT,
+  ADD COLUMN IF NOT EXISTS policy_id UUID REFERENCES contract_policies(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS processing_time_ms INTEGER,
+  ADD COLUMN IF NOT EXISTS model_used TEXT;
+
 -- ============================================================================
 -- Indexes for performance
 -- ============================================================================
 
 -- Answer contracts indexes
-CREATE INDEX idx_answer_contracts_user_id ON answer_contracts(user_id);
-CREATE INDEX idx_answer_contracts_trace_id ON answer_contracts(trace_id);
-CREATE INDEX idx_answer_contracts_verdict ON answer_contracts(verdict);
-CREATE INDEX idx_answer_contracts_created_at ON answer_contracts(created_at DESC);
-CREATE INDEX idx_answer_contracts_grounding_score ON answer_contracts(grounding_score);
-CREATE INDEX idx_answer_contracts_policy_id ON answer_contracts(policy_id);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_user_id ON answer_contracts(user_id);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_trace_id ON answer_contracts(trace_id);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_verdict ON answer_contracts(verdict);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_created_at ON answer_contracts(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_grounding_score ON answer_contracts(grounding_score);
+CREATE INDEX IF NOT EXISTS idx_answer_contracts_policy_id ON answer_contracts(policy_id);
 
 -- Contract policies indexes
-CREATE INDEX idx_contract_policies_user_id ON contract_policies(user_id);
-CREATE INDEX idx_contract_policies_collection_id ON contract_policies(collection_id);
-CREATE INDEX idx_contract_policies_is_active ON contract_policies(is_active);
-CREATE INDEX idx_contract_policies_is_default ON contract_policies(is_default);
-CREATE INDEX idx_contract_policies_priority ON contract_policies(priority DESC);
+CREATE INDEX IF NOT EXISTS idx_contract_policies_user_id ON contract_policies(user_id);
+CREATE INDEX IF NOT EXISTS idx_contract_policies_collection_id ON contract_policies(collection_id);
+CREATE INDEX IF NOT EXISTS idx_contract_policies_is_active ON contract_policies(is_active);
+CREATE INDEX IF NOT EXISTS idx_contract_policies_is_default ON contract_policies(is_default);
+CREATE INDEX IF NOT EXISTS idx_contract_policies_priority ON contract_policies(priority DESC);
 
 -- Policy versions indexes
-CREATE INDEX idx_policy_versions_policy_id ON contract_policy_versions(policy_id);
-CREATE INDEX idx_policy_versions_version ON contract_policy_versions(policy_id, version_number DESC);
+CREATE INDEX IF NOT EXISTS idx_policy_versions_policy_id ON contract_policy_versions(policy_id);
+CREATE INDEX IF NOT EXISTS idx_policy_versions_version ON contract_policy_versions(policy_id, version_number DESC);
 
 -- ============================================================================
 -- Row Level Security
@@ -120,15 +138,15 @@ ALTER TABLE contract_policy_versions ENABLE ROW LEVEL SECURITY;
 -- Answer contracts policies
 CREATE POLICY "Users can view their own answer contracts"
   ON answer_contracts FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Users can insert their own answer contracts"
   ON answer_contracts FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Users can delete their own answer contracts"
   ON answer_contracts FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- Service role bypass
 CREATE POLICY "Service role full access to answer_contracts"

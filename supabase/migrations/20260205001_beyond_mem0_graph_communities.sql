@@ -336,49 +336,69 @@ ALTER TABLE graph_community_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE graph_community_runs ENABLE ROW LEVEL SECURITY;
 
 -- Communities inherit graph permissions (simplified)
+DROP POLICY IF EXISTS communities_select ON graph_communities;
 CREATE POLICY communities_select ON graph_communities
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM knowledge_graphs g
       WHERE g.id = graph_communities.graph_id
-        AND (g.is_public = TRUE OR g.user_id = auth.uid()::text)
+        AND g.organization_id IN (
+          SELECT organization_id FROM organization_members
+          WHERE user_id = auth.uid()::text
+        )
     )
   );
 
+DROP POLICY IF EXISTS communities_all ON graph_communities;
 CREATE POLICY communities_all ON graph_communities
   FOR ALL USING (
     EXISTS (
       SELECT 1 FROM knowledge_graphs g
       WHERE g.id = graph_communities.graph_id
-        AND g.user_id = auth.uid()::text
+        AND g.organization_id IN (
+          SELECT organization_id FROM organization_members
+          WHERE user_id = auth.uid()::text
+            AND role IN ('owner', 'admin', 'developer')
+        )
     )
   );
 
 -- Members follow community permissions
+DROP POLICY IF EXISTS community_members_select ON graph_community_members;
 CREATE POLICY community_members_select ON graph_community_members
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM graph_communities c
       JOIN knowledge_graphs g ON g.id = c.graph_id
       WHERE c.id = graph_community_members.community_id
-        AND (g.is_public = TRUE OR g.user_id = auth.uid()::text)
+        AND g.organization_id IN (
+          SELECT organization_id FROM organization_members
+          WHERE user_id = auth.uid()::text
+        )
     )
   );
 
+DROP POLICY IF EXISTS community_members_all ON graph_community_members;
 CREATE POLICY community_members_all ON graph_community_members
   FOR ALL USING (
     EXISTS (
       SELECT 1 FROM graph_communities c
       JOIN knowledge_graphs g ON g.id = c.graph_id
       WHERE c.id = graph_community_members.community_id
-        AND g.user_id = auth.uid()::text
+        AND g.organization_id IN (
+          SELECT organization_id FROM organization_members
+          WHERE user_id = auth.uid()::text
+            AND role IN ('owner', 'admin', 'developer')
+        )
     )
   );
 
 -- Runs are user-scoped
+DROP POLICY IF EXISTS community_runs_select ON graph_community_runs;
 CREATE POLICY community_runs_select ON graph_community_runs
   FOR SELECT USING (auth.uid()::text = user_id);
 
+DROP POLICY IF EXISTS community_runs_all ON graph_community_runs;
 CREATE POLICY community_runs_all ON graph_community_runs
   FOR ALL USING (auth.uid()::text = user_id);
 

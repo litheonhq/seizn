@@ -8,7 +8,7 @@
 
 CREATE TABLE IF NOT EXISTS memory_profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     namespace TEXT NOT NULL DEFAULT 'default',
 
     -- Profile card content (compressed summary, max 2KB)
@@ -45,7 +45,7 @@ CREATE INDEX IF NOT EXISTS idx_memory_profiles_user_namespace
 
 CREATE TABLE IF NOT EXISTS memory_clusters (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     namespace TEXT NOT NULL DEFAULT 'default',
 
     -- Cluster metadata
@@ -88,7 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_memory_clusters_not_archived
 
 CREATE TABLE IF NOT EXISTS memory_archive (
     id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     namespace TEXT NOT NULL DEFAULT 'default',
 
     -- Original memory data
@@ -119,7 +119,7 @@ CREATE INDEX IF NOT EXISTS idx_memory_archive_cluster
 
 -- Get or create profile for a user/namespace
 CREATE OR REPLACE FUNCTION get_or_create_profile(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT DEFAULT 'default'
 )
 RETURNS memory_profiles AS $$
@@ -144,7 +144,7 @@ $$ LANGUAGE plpgsql;
 
 -- Update profile card
 CREATE OR REPLACE FUNCTION update_profile_card(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT,
     p_profile_card TEXT,
     p_profile_card_embedding vector(1024) DEFAULT NULL,
@@ -185,7 +185,7 @@ $$ LANGUAGE plpgsql;
 
 -- Get memories for clustering (candidates for compaction)
 CREATE OR REPLACE FUNCTION get_compaction_candidates(
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT DEFAULT 'default',
     p_min_age_days INTEGER DEFAULT 30,
     p_max_importance INTEGER DEFAULT 3,
@@ -240,7 +240,7 @@ $$ LANGUAGE plpgsql;
 -- Search clusters (for hybrid retrieval)
 CREATE OR REPLACE FUNCTION search_clusters(
     p_query_embedding vector(1024),
-    p_user_id UUID,
+    p_user_id TEXT,
     p_namespace TEXT DEFAULT 'default',
     p_match_count INTEGER DEFAULT 5,
     p_match_threshold DECIMAL DEFAULT 0.6
@@ -280,7 +280,7 @@ $$ LANGUAGE plpgsql;
 ALTER TABLE memory_profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY memory_profiles_user_policy ON memory_profiles
-    FOR ALL USING (auth.uid() = user_id);
+    FOR ALL USING (auth.uid()::text = user_id);
 
 CREATE POLICY memory_profiles_service_policy ON memory_profiles
     FOR ALL TO service_role
@@ -290,7 +290,7 @@ CREATE POLICY memory_profiles_service_policy ON memory_profiles
 ALTER TABLE memory_clusters ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY memory_clusters_user_policy ON memory_clusters
-    FOR ALL USING (auth.uid() = user_id);
+    FOR ALL USING (auth.uid()::text = user_id);
 
 CREATE POLICY memory_clusters_service_policy ON memory_clusters
     FOR ALL TO service_role
@@ -300,7 +300,7 @@ CREATE POLICY memory_clusters_service_policy ON memory_clusters
 ALTER TABLE memory_archive ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY memory_archive_user_policy ON memory_archive
-    FOR ALL USING (auth.uid() = user_id);
+    FOR ALL USING (auth.uid()::text = user_id);
 
 CREATE POLICY memory_archive_service_policy ON memory_archive
     FOR ALL TO service_role

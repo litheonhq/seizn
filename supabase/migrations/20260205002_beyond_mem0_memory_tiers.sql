@@ -11,7 +11,12 @@ ALTER TABLE spring_memory_notes
     CHECK (memory_tier IN ('hot', 'warm', 'cold', 'frozen')),
   ADD COLUMN IF NOT EXISTS tier_assigned_at TIMESTAMPTZ DEFAULT NOW(),
   ADD COLUMN IF NOT EXISTS tier_reason TEXT,
-  ADD COLUMN IF NOT EXISTS tier_score FLOAT;
+  ADD COLUMN IF NOT EXISTS tier_score FLOAT,
+  ADD COLUMN IF NOT EXISTS salience FLOAT DEFAULT 0.5;
+
+UPDATE spring_memory_notes
+SET salience = LEAST(1.0, GREATEST(0.0, importance::FLOAT / 10.0))
+WHERE salience IS NULL;
 
 -- ============================================================
 -- Tier-related indexes
@@ -201,11 +206,8 @@ BEGIN
   -- Get note details (using v3 column names)
   SELECT
     n.*,
-    COALESCE(
-      (SELECT COUNT(*) FROM spring_memory_usage_events WHERE memory_id = n.id),
-      0
-    ) as access_count,
-    (SELECT MAX(used_at) FROM spring_memory_usage_events WHERE memory_id = n.id) as last_accessed
+    COALESCE(n.used_count, 0) as access_count,
+    n.last_used_at as last_accessed
   INTO v_note
   FROM spring_memory_notes n
   WHERE n.id = p_memory_id AND n.user_id = p_user_id;
@@ -417,10 +419,12 @@ ALTER TABLE spring_memory_tier_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE spring_tier_config ENABLE ROW LEVEL SECURITY;
 
 -- Tier history: users can view their own
+DROP POLICY IF EXISTS tier_history_select ON spring_memory_tier_history;
 CREATE POLICY tier_history_select ON spring_memory_tier_history
   FOR SELECT USING (auth.uid()::text = user_id);
 
 -- Tier config: users can manage their own
+DROP POLICY IF EXISTS tier_config_all ON spring_tier_config;
 CREATE POLICY tier_config_all ON spring_tier_config
   FOR ALL USING (auth.uid()::text = user_id);
 
