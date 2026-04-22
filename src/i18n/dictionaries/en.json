@@ -3096,6 +3096,54 @@
       "cta": "Contact Support"
     }
   },
+  "consent": {
+    "_draft": "DRAFT - legal review pending 2026-04-22",
+    "metadataTitle": "Seizn Consent",
+    "metadataDescription": "Draft consent management form for subject-scoped memory storage and AI training scopes.",
+    "eyebrow": "CONSENT",
+    "title": "Subject consent",
+    "subtitle": "Manage the subject-level permissions Seizn checks before retaining regulated memory.",
+    "subjectLabel": "Subject ID",
+    "subjectPlaceholder": "player-123",
+    "ageTitle": "Age bracket",
+    "ageOptions": [
+      {
+        "value": "unknown",
+        "label": "Unknown"
+      },
+      {
+        "value": "minor_under_13",
+        "label": "Under 13"
+      },
+      {
+        "value": "minor_13_17",
+        "label": "13 to 17"
+      },
+      {
+        "value": "adult",
+        "label": "Adult"
+      }
+    ],
+    "scopesTitle": "Consent scopes",
+    "scopes": [
+      {
+        "value": "memory_storage",
+        "label": "Memory storage",
+        "description": "Store subject-keyed memory for in-game personalization."
+      },
+      {
+        "value": "ai_training",
+        "label": "AI training",
+        "description": "Use subject data to improve models, evaluators, or retrieval behavior."
+      },
+      {
+        "value": "analytics",
+        "label": "Analytics",
+        "description": "Use subject events in aggregate product and quality metrics."
+      }
+    ],
+    "submit": "Record consent"
+  },
   "status": {
     "metadataTitle": "Seizn Status",
     "metadataDescription": "Current Seizn API availability and public incident history.",
