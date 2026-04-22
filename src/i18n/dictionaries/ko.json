@@ -1349,6 +1349,54 @@
         "addCustom": "사용자 정의 정책 추가"
       }
     },
+    "personas": {
+      "_draftReview": "DRAFT - KR copy reviewed against ai-writing-patterns-guide-ko.md",
+      "title": "한국 NPC 페르소나 시드",
+      "subtitle": "Nemotron-Personas-Korea 행을 미리 보고, 장면에 맞는 인물만 골라 합성 graph entity로 넣습니다.",
+      "planBadge": "현재 플랜 - 배치당 최대 {limit}명",
+      "planBadgeUnlimited": "현재 플랜 - 배치 제한 없음",
+      "filters": {
+        "region": "지역",
+        "occupation": "직업",
+        "occupationPlaceholder": "디자이너, 상점 주인, 교사",
+        "lifeStage": "생애 단계",
+        "ageRange": "나이 범위",
+        "count": "배치 크기",
+        "preview": "페르소나 미리보기"
+      },
+      "lifeStages": {
+        "all": "전체",
+        "young_adult": "청년",
+        "adult": "성인",
+        "middle": "중년",
+        "senior": "노년"
+      },
+      "modes": {
+        "hybrid": "선택 검토",
+        "auto": "자동",
+        "manual": "수동"
+      },
+      "actions": {
+        "autoAcceptAll": "모두 자동 승인",
+        "manualReviewEach": "하나씩 검토",
+        "seedSelected": "{count}명 시드",
+        "previewOnly": "미리보기만",
+        "loading": "처리 중..."
+      },
+      "list": {
+        "title": "미리보기 목록",
+        "empty": "불러온 페르소나가 없습니다.",
+        "accepted": "승인",
+        "skipped": "건너뜀"
+      },
+      "status": {
+        "inserted": "graph entity {count}개를 시드했습니다.",
+        "previewLoaded": "페르소나 {count}명을 불러왔습니다.",
+        "failed": "페르소나 시드에 실패했습니다."
+      },
+      "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
+      "attributionUrlLabel": "데이터셋 카드"
+    },
     "reportsPage": {
       "title": "ROI 리포트",
       "generated": "생성일",
