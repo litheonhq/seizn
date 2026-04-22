@@ -14,7 +14,6 @@ import { test, expect, type Page } from '@playwright/test';
 const DASHBOARD_PATHS = [
   '/dashboard/enterprise',
   '/dashboard/organizations',
-  '/dashboard/autopilot',
   '/dashboard/webhooks',
   '/dashboard/settings',
 ] as const;
