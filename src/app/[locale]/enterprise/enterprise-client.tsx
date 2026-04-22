@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { LanguageSwitcher } from '@/components/language-switcher';
+import { LandingNav } from '@/components/shared/site-nav';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import type { Locale } from '@/i18n/config';
 
@@ -286,6 +286,11 @@ function getCopy(locale: Locale): Copy {
   return COPY_EN;
 }
 
+const fieldClass =
+  'w-full rounded-md border border-szn-border-subtle bg-szn-bg px-4 py-3 text-szn-text-1 outline-none transition-colors focus:border-szn-signal-line';
+const labelClass = 'block text-sm text-szn-text-2';
+const cardClass = 'rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-5 py-5';
+
 export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
   const [formData, setFormData] = useState<FormData>({
     company_name: '',
@@ -308,6 +313,14 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
   const copy = getCopy(locale);
   const compareLabel = dict.extremeHome?.nav?.compare || 'Integrations';
   const enterpriseLabel = dict.extremeHome?.nav?.enterprise || 'For Studios';
+  const navLabels = {
+    docs: dict.nav.docs,
+    pricing: dict.nav.pricing,
+    compare: compareLabel,
+    enterprise: enterpriseLabel,
+    status: dict.footer.status,
+    cta: dict.nav.getStarted,
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -344,16 +357,16 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
 
   if (submitted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#08111f] px-6 text-white">
+      <div className="dark flex min-h-screen items-center justify-center bg-szn-bg px-6 text-szn-text-1">
         <div className="max-w-xl text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-cyan-400 text-lg font-semibold text-[#08111f]">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-szn-signal text-lg font-semibold text-szn-signal-fg">
             S
           </div>
           <h1 className="mt-6 text-3xl font-semibold">{copy.successTitle}</h1>
-          <p className="mt-4 text-base leading-7 text-slate-300">{copy.successBody}</p>
+          <p className="mt-4 text-base leading-7 text-szn-text-2">{copy.successBody}</p>
           <Link
             href={`/${locale}`}
-            className="mt-8 inline-flex rounded-md border border-white/15 px-4 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+            className="szn-btn-ghost mt-8 inline-flex px-4 py-3 text-sm"
           >
             {copy.successBack}
           </Link>
@@ -363,59 +376,29 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#08111f] text-white">
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
-              S
-            </div>
-            <span className="text-lg font-semibold text-white">Seizn</span>
-          </Link>
-
-          <div className="flex items-center gap-5">
-            <Link href={`/${locale}/pricing`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {dict.nav.pricing}
-            </Link>
-            <Link href={`/${locale}/comparison`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {compareLabel}
-            </Link>
-            <Link href={`/${locale}/enterprise`} className="hidden text-sm font-medium text-white md:block">
-              {enterpriseLabel}
-            </Link>
-            <Link href={`/${locale}/docs`} className="hidden text-sm text-slate-300 transition-colors hover:text-white md:block">
-              {dict.nav.docs}
-            </Link>
-            <LanguageSwitcher currentLocale={locale} />
-            <a
-              href="#contact-form"
-              className="rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
-            >
-              {dict.nav.getStarted}
-            </a>
-          </div>
-        </div>
-      </nav>
+    <div className="dark min-h-screen bg-szn-bg text-szn-text-1">
+      <LandingNav locale={locale} labels={navLabels} ctaHref="#contact-form" ctaLabel={dict.nav.getStarted} />
 
       <main>
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
             <div className="max-w-4xl">
-              <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{copy.eyebrow}</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{copy.title}</h1>
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{copy.subtitle}</p>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">{copy.helper}</p>
+              <div className="szn-section-number">ENTERPRISE / COMMITMENTS</div>
+              <p className="mt-6 text-sm font-medium text-szn-signal">{copy.eyebrow}</p>
+              <h1 className="szn-serif mt-5 text-4xl font-semibold tracking-normal text-szn-text-1 md:text-6xl">{copy.title}</h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-szn-text-2">{copy.subtitle}</p>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-szn-text-3">{copy.helper}</p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href="#contact-form"
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                  className="szn-btn-glass px-5 py-3 text-sm"
                 >
                   {copy.primaryCta}
                 </a>
                 <Link
                   href={`/${locale}/comparison`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                  className="szn-btn-ghost px-5 py-3 text-sm"
                 >
                   {copy.secondaryCta}
                 </Link>
@@ -424,7 +407,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
 
             <div className="mt-12 grid gap-4 md:grid-cols-3">
               {copy.proofChips.map((chip) => (
-                <div key={chip} className="border border-white/10 bg-white/5 px-4 py-4 text-sm leading-6 text-slate-200">
+                <div key={chip} className="rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-4 py-4 text-sm leading-6 text-szn-text-2">
                   {chip}
                 </div>
               ))}
@@ -432,75 +415,75 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.packagesTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.packagesSubtitle}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.packagesTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.packagesSubtitle}</p>
             </div>
 
             <div className="mt-10 grid gap-4 md:grid-cols-2">
               {copy.packages.map((item) => (
-                <div key={item.title} className="border border-white/10 bg-white/5 px-5 py-5">
-                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">{item.body}</p>
+                <div key={item.title} className={cardClass}>
+                  <h3 className="text-lg font-semibold text-szn-text-1">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-szn-text-2">{item.body}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.processTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.processSubtitle}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.processTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.processSubtitle}</p>
             </div>
 
             <div className="mt-10 grid gap-4 lg:grid-cols-3">
               {copy.steps.map((step) => (
-                <div key={step.title} className="border border-white/10 bg-white/5 px-5 py-5">
-                  <h3 className="text-lg font-semibold text-white">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">{step.body}</p>
+                <div key={step.title} className={cardClass}>
+                  <h3 className="text-lg font-semibold text-szn-text-1">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-szn-text-2">{step.body}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section className="border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.trustTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-300">{copy.trustSubtitle}</p>
+              <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.trustTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.trustSubtitle}</p>
             </div>
 
             <div className="mt-10 grid gap-4 md:grid-cols-3">
               {copy.trustItems.map((item) => (
-                <div key={item.label} className="border border-white/10 bg-white/5 px-5 py-5">
-                  <p className="text-sm font-medium uppercase tracking-[0.08em] text-cyan-300">{item.label}</p>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">{item.detail}</p>
+                <div key={item.label} className={cardClass}>
+                  <p className="text-sm font-medium uppercase tracking-[0.08em] text-szn-signal">{item.label}</p>
+                  <p className="mt-3 text-sm leading-7 text-szn-text-2">{item.detail}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="contact-form" className="border-b border-white/10 scroll-mt-24">
+        <section id="contact-form" className="scroll-mt-24 border-b border-szn-border-subtle">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="grid gap-10 lg:grid-cols-[1.2fr,1fr]">
               <div className="max-w-2xl">
-                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.formTitle}</h2>
-                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.formSubtitle}</p>
+                <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.formTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.formSubtitle}</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5 border border-white/10 bg-white/5 px-5 py-5">
+              <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-szn-border-subtle bg-szn-surface-1 px-5 py-5">
                 {error ? (
                   <div className="border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</div>
                 ) : null}
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.companyName} *</span>
                     <input
                       type="text"
@@ -508,10 +491,10 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                       value={formData.company_name}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     />
                   </label>
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.yourName} *</span>
                     <input
                       type="text"
@@ -519,13 +502,13 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                       value={formData.contact_name}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     />
                   </label>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.workEmail} *</span>
                     <input
                       type="email"
@@ -533,39 +516,39 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     />
                   </label>
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.phone}</span>
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     />
                   </label>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.jobTitle}</span>
                     <input
                       type="text"
                       name="job_title"
                       value={formData.job_title}
                       onChange={handleChange}
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     />
                   </label>
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.companySize}</span>
                     <select
                       name="company_size"
                       value={formData.company_size}
                       onChange={handleChange}
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     >
                       <option value="">{dict.enterprisePage.companySizes.select}</option>
                       <option value="1-10">{dict.enterprisePage.companySizes['1-10']}</option>
@@ -577,7 +560,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                   </label>
                 </div>
 
-                <label className="block text-sm text-slate-200">
+                <label className={labelClass}>
                   <span className="mb-2 block font-medium">{copy.labels.useCase} *</span>
                   <textarea
                     name="use_case"
@@ -586,18 +569,18 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                     required
                     rows={5}
                     placeholder={copy.labels.useCasePlaceholder}
-                    className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                    className={fieldClass}
                   />
                 </label>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.expectedVolume}</span>
                     <select
                       name="expected_volume"
                       value={formData.expected_volume}
                       onChange={handleChange}
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     >
                       <option value="">{dict.enterprisePage.volumes.select}</option>
                       <option value="< 100K">{dict.enterprisePage.volumes.lt100k}</option>
@@ -607,13 +590,13 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                       <option value="5M+">{dict.enterprisePage.volumes['5m+']}</option>
                     </select>
                   </label>
-                  <label className="block text-sm text-slate-200">
+                  <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.timeline}</span>
                     <select
                       name="timeline"
                       value={formData.timeline}
                       onChange={handleChange}
-                      className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                      className={fieldClass}
                     >
                       <option value="">{dict.enterprisePage.timelines.select}</option>
                       <option value="immediate">{dict.enterprisePage.timelines.immediate}</option>
@@ -624,7 +607,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                   </label>
                 </div>
 
-                <label className="block text-sm text-slate-200">
+                <label className={labelClass}>
                   <span className="mb-2 block font-medium">{copy.labels.requirements}</span>
                   <textarea
                     name="requirements"
@@ -632,21 +615,21 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                     onChange={handleChange}
                     rows={4}
                     placeholder={copy.labels.requirementsPlaceholder}
-                    className="w-full rounded-md border border-white/10 bg-[#08111f] px-4 py-3 text-white outline-none transition-colors focus:border-cyan-400"
+                    className={fieldClass}
                   />
                 </label>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-md bg-cyan-400 px-4 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/60"
+                  className="szn-btn-signal w-full px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting ? copy.labels.submitting : copy.labels.submit}
                 </button>
 
-                <p className="text-sm leading-6 text-slate-400">
+                <p className="text-sm leading-6 text-szn-text-3">
                   {copy.labels.privacyNote}{' '}
-                  <Link href={`/${locale}/privacy`} className="text-cyan-300 transition-colors hover:text-cyan-200">
+                  <Link href={`/${locale}/privacy`} className="text-szn-signal transition-colors hover:text-szn-signal-hover">
                     {dict.footer.privacy}
                   </Link>
                   .
@@ -660,19 +643,19 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <h2 className="text-3xl font-semibold text-white md:text-4xl">{copy.finalCtaTitle}</h2>
-                <p className="mt-4 text-lg leading-8 text-slate-300">{copy.finalCtaSubtitle}</p>
+                <h2 className="text-3xl font-semibold text-szn-text-1 md:text-4xl">{copy.finalCtaTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-szn-text-2">{copy.finalCtaSubtitle}</p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={`/${locale}/pricing`}
-                  className="rounded-md border border-white/15 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/5"
+                  className="szn-btn-ghost px-5 py-3 text-sm"
                 >
                   {copy.finalPrimary}
                 </Link>
                 <Link
                   href={`/${locale}/comparison`}
-                  className="rounded-md bg-cyan-400 px-5 py-3 text-sm font-medium text-[#08111f] transition-colors hover:bg-cyan-300"
+                  className="szn-btn-glass px-5 py-3 text-sm"
                 >
                   {copy.finalSecondary}
                 </Link>
@@ -682,33 +665,33 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
         </section>
       </main>
 
-      <footer className="border-t border-white/10">
+      <footer className="border-t border-szn-border-subtle">
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-10 md:flex-row md:items-center md:justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-cyan-400 text-sm font-semibold text-[#08111f]">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-szn-signal text-sm font-semibold text-szn-signal-fg">
               S
             </div>
-            <span className="text-sm font-medium text-white">Seizn</span>
+            <span className="text-sm font-medium text-szn-text-1">Seizn</span>
           </Link>
 
-          <div className="text-sm text-slate-400">
+          <div className="text-sm text-szn-text-3">
             {dict.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
 
           <nav className="flex flex-wrap items-center gap-5">
-            <Link href={`/${locale}/privacy`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.privacy}
             </Link>
-            <Link href={`/${locale}/terms`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/terms`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.terms}
             </Link>
-            <Link href={`/${locale}/sla`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/sla`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.sla}
             </Link>
-            <Link href={`/${locale}/status`} className="text-sm text-slate-400 transition-colors hover:text-white">
+            <Link href={`/${locale}/status`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.status}
             </Link>
-            <a href="#contact-form" className="text-sm text-slate-400 transition-colors hover:text-white">
+            <a href="#contact-form" className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {dict.footer.contact}
             </a>
           </nav>
