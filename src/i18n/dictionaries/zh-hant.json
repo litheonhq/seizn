@@ -112,7 +112,10 @@
       "postMortemCredits": "每季 2 份 post-mortem 報告",
       "chaosMonkeyPriority": "Chaos Monkey 優先佇列",
       "canonLockReview": "Canon Lock 團隊審核",
-      "dedicatedSlack": "專屬 Slack 頻道"
+      "dedicatedSlack": "專屬 Slack 頻道",
+      "replayRerun": "確定性回放 + diff",
+      "dsrAutomation": "自動化 DSR 匯出/刪除",
+      "memoryTiering": "Hot/warm/cold 記憶分層"
     },
     "enterprise": {
       "name": "企業版",

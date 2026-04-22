@@ -112,7 +112,10 @@
       "postMortemCredits": "분기당 포스트모템 리포트 2건",
       "chaosMonkeyPriority": "Chaos Monkey 우선 큐",
       "canonLockReview": "Canon Lock 팀 리뷰",
-      "dedicatedSlack": "전용 Slack 채널"
+      "dedicatedSlack": "전용 Slack 채널",
+      "replayRerun": "결정적 리플레이 + diff",
+      "dsrAutomation": "자동 DSR export/delete",
+      "memoryTiering": "Hot/warm/cold 메모리 티어링"
     },
     "enterprise": {
       "name": "Enterprise",

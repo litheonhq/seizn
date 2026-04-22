@@ -112,7 +112,10 @@
       "postMortemCredits": "2 post-mortem-rapporter/kvartal",
       "chaosMonkeyPriority": "Prioriterad Chaos Monkey-kö",
       "canonLockReview": "Canon Lock-teamgranskning",
-      "dedicatedSlack": "Dedikerad Slack-kanal"
+      "dedicatedSlack": "Dedikerad Slack-kanal",
+      "replayRerun": "Deterministisk replay + diff",
+      "dsrAutomation": "Automatiserad DSR-export/radering",
+      "memoryTiering": "Hot/warm/cold-minnestiering"
     },
     "enterprise": {
       "name": "Enterprise",

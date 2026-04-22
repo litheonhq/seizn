@@ -112,7 +112,10 @@
       "postMortemCredits": "2 post-mortem звіти/квартал",
       "chaosMonkeyPriority": "Пріоритетна черга Chaos Monkey",
       "canonLockReview": "Командний перегляд Canon Lock",
-      "dedicatedSlack": "Виділений Slack-канал"
+      "dedicatedSlack": "Виділений Slack-канал",
+      "replayRerun": "Детерміноване відтворення + diff",
+      "dsrAutomation": "Автоматизований експорт/видалення DSR",
+      "memoryTiering": "Рівні пам'яті hot/warm/cold"
     },
     "enterprise": {
       "name": "Корпоративний",

@@ -112,7 +112,10 @@
       "postMortemCredits": "تقريران post-mortem كل ربع سنة",
       "chaosMonkeyPriority": "طابور أولوية Chaos Monkey",
       "canonLockReview": "مراجعة فريق Canon Lock",
-      "dedicatedSlack": "قناة Slack مخصصة"
+      "dedicatedSlack": "قناة Slack مخصصة",
+      "replayRerun": "إعادة تشغيل حتمية + diff",
+      "dsrAutomation": "تصدير/حذف DSR مؤتمت",
+      "memoryTiering": "تصنيف الذاكرة hot/warm/cold"
     },
     "enterprise": {
       "name": "المؤسسات",

@@ -112,7 +112,10 @@
       "postMortemCredits": "2 Post-Mortem-Berichte/Quartal",
       "chaosMonkeyPriority": "Priorisierte Chaos-Monkey-Warteschlange",
       "canonLockReview": "Canon-Lock-Teamreview",
-      "dedicatedSlack": "Dedizierter Slack-Kanal"
+      "dedicatedSlack": "Dedizierter Slack-Kanal",
+      "replayRerun": "Deterministisches Replay + Diff",
+      "dsrAutomation": "Automatisierter DSR-Export/-Löschung",
+      "memoryTiering": "Hot/Warm/Cold-Speicher-Tiering"
     },
     "enterprise": {
       "name": "Enterprise",

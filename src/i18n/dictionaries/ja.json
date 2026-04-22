@@ -112,7 +112,10 @@
       "postMortemCredits": "四半期ごとに2件のポストモーテムレポート",
       "chaosMonkeyPriority": "Chaos Monkey優先キュー",
       "canonLockReview": "Canon Lockチームレビュー",
-      "dedicatedSlack": "専用Slackチャンネル"
+      "dedicatedSlack": "専用Slackチャンネル",
+      "replayRerun": "決定論的リプレイ + diff",
+      "dsrAutomation": "DSRエクスポート/削除の自動化",
+      "memoryTiering": "Hot/Warm/Coldメモリ階層化"
     },
     "enterprise": {
       "name": "Enterprise",
