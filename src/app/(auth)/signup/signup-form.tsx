@@ -160,32 +160,18 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="min-h-screen gradient-hero relative overflow-hidden flex items-center justify-center p-4">
-      {/* Decorative Floating Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-200/30 rounded-full blur-3xl animate-float" />
-        <div
-          className="absolute top-40 right-20 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute bottom-20 left-1/3 w-80 h-80 bg-purple-200/20 rounded-full blur-3xl animate-float"
-          style={{ animationDelay: "4s" }}
-        />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen bg-szn-bg flex items-center justify-center p-4">
+      <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-szn-text-1 to-szn-text-3 bg-clip-text text-transparent">
+          <Link href="/" className="inline-flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8" />
+            <span className="text-[20px] font-medium tracking-[-0.01em] text-szn-text-1">
               Seizn
             </span>
           </Link>
-          <p className="text-szn-text-2 mt-3">Create your account</p>
+          <p className="text-szn-text-2 mt-3 text-sm">Create your account</p>
         </div>
 
         {/* Card */}
@@ -240,7 +226,7 @@ export default function SignupForm() {
               </div>
               <button
                 onClick={proceedToLogin}
-                className="w-full py-3.5 btn-premium bg-gradient-to-r from-violet-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full py-3.5 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors duration-200"
               >
                 Continue to Dashboard
               </button>
@@ -384,7 +370,7 @@ export default function SignupForm() {
                 <button
                   type="submit"
                   disabled={isLoading || (turnstileRequired && !turnstileToken)}
-                  className="w-full py-3.5 btn-premium bg-gradient-to-r from-violet-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
+                  className="w-full py-3.5 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
