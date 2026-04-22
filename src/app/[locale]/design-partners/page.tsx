@@ -261,7 +261,7 @@ export default async function DesignPartnersPage({ params }: PageProps) {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="h-7 w-7" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-7 w-7" />
             <span className="text-[15px] font-medium text-szn-text-1">Seizn</span>
           </Link>
           <div className="flex items-center gap-5">

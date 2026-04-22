@@ -123,9 +123,9 @@ export default function MobileSidebar({
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/seizn-icon.svg"
+              src="/brand/seizn-mark-256.png"
               alt="Seizn"
-              className="w-8 h-8 rounded-lg"
+              className="h-8 w-8"
             />
             <div>
               <span className="text-sm font-semibold text-szn-text-1 block">

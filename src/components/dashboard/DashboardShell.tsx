@@ -134,7 +134,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <div className="p-4 border-b border-szn-border-subtle">
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-md flex-shrink-0" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8 flex-shrink-0" />
             <div className={`flex-1 min-w-0 transition-all duration-200 ease-out ${
               isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 w-0"
             }`}>
@@ -228,7 +228,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-md" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8" />
             <span className="text-sm sm:text-base font-medium tracking-[-0.01em] text-szn-text-1">Seizn</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
