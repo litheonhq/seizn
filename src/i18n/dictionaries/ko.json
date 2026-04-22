@@ -1604,8 +1604,8 @@
     }
   },
   "extremeHome": {
-    "heroTitle": "AI NPC를 위한 메모리.",
-    "heroSubtitle": "Inworld, Convai, 또는 자체 LLM에 연동하세요. Seizn은 NPC에 영속 기억, 관계, 세대를 넘나드는 회상을 제공합니다 — 시트 단위가 아닌 그래프 단위 과금.",
+    "heroTitle": "AI NPC의 기억.",
+    "heroSubtitle": "Inworld, Convai, 자체 LLM 어디에든 붙습니다. NPC가 기억과 관계, 캐릭터를 넘는 맥락을 잃지 않습니다. 사용자 수가 아니라 그래프 크기로 청구합니다.",
     "ctaStart": "문서 읽기",
     "ctaDemo": "smallgod 플레이",
     "socialProof": "NPC 10개에서 10,000개까지 확장하는 게임 스튜디오를 위해 만든",
@@ -1641,11 +1641,11 @@
     "nav": {
       "docs": "문서",
       "pricing": "플랜",
-      "compare": "통합",
+      "compare": "연동",
       "enterprise": "스튜디오용",
       "getApiKey": "데모 예약",
       "tryDemo": "smallgod 플레이",
-      "limits": "한도",
+      "limits": "사용량",
       "status": "상태",
       "help": "도움말",
       "github": "OSS"
