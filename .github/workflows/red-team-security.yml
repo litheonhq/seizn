@@ -177,7 +177,7 @@ jobs:
 
       - name: Send Slack Notification (Critical)
         if: failure() && steps.results.outputs.critical > 0
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v3
         with:
           payload: |
             {
