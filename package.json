@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
-    "@auth/supabase-adapter": "^1.11.1",
+    "@auth/supabase-adapter": "^1.11.2",
     "@aws-sdk/client-kms": "^3.1032.0",
     "@aws-sdk/client-sts": "^3.1032.0",
     "@azure/identity": "^4.13.1",
