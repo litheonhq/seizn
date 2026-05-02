@@ -233,8 +233,9 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 | `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json)"` | Pass |
 | `git diff --check` | Pass |
 | Added-line and Author Memory v3 secret scans | Pass; no matches |
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked; available `POSTGRES_URL_NON_POOLING` fails password authentication for `postgres` |
 
 ### Residual Risk
 
 - The dashboard audit viewer is intentionally a Phase 5 list view; timeline/graph audit visualization remains a later UI cycle.
-- Live Supabase migration apply is not executed in this local phase until the user chooses to apply DB migrations; SQL is committed and covered by local schema review/tests.
+- Live Supabase migration apply is blocked until the Litheon Supabase non-pooling Postgres credential is corrected or rotated. SQL is committed and covered by local schema review/tests.

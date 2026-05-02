@@ -53,9 +53,10 @@ Scope: Persistent audit log and replay chain for Author Memory v3.
 | Author UI contract/binding JSON parse via Node `JSON.parse` | Pass |
 | `git diff --check` | Pass |
 | Added-line and Author Memory v3 secret scans | Pass, no matches |
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked; current `POSTGRES_URL_NON_POOLING` credential fails PostgreSQL password authentication for `postgres` |
 
 ## Known Limits
 
-- Supabase migration was added but not applied locally in this phase.
+- Supabase migration was added but not applied to the live/local Supabase target. The available Litheon env does not contain a working `POSTGRES_URL_NON_POOLING` value for this database (`password authentication failed for user "postgres"`).
 - Audit dashboard is a list/replay view only; graph/timeline visualization remains a later UI cycle.
 - Phase 6 Litheon R2/account migration remains blocked on user-side account/card readiness.

@@ -37,6 +37,7 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | AMV3-P5-02 | Mutation and simulation decisions could not be replayed by decision ID | No audit logger or replay chain utility existed | Added `src/lib/author/audit/` logger, sanitizer, search, and replay chain hashing | Closed |
 | AMV3-P5-03 | Author dashboard had no audit log surface | Author UI nav stopped at simulation and conflict views | Added `/api/projects/{id}/audit`, SWR hooks, and an Audit screen with deterministic replay preview | Closed |
 | AMV3-P5-04 | Raw provider keys could leak into trace payloads | Mutation logs had no centralized redaction step | Added audit JSON sanitizer and regression tests covering secret-field redaction | Closed |
+| AMV3-P5-05 | Live `author_audit_log` table is not applied yet | Available Litheon `POSTGRES_URL_NON_POOLING` fails password authentication for `postgres` | Correct or rotate the Supabase non-pooling Postgres credential, then rerun `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked |
 
 ## Files Changed
 
@@ -71,4 +72,4 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
-3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; Litheon R2/account migration remains next-phase work.
+3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; live SQL apply is blocked on the Supabase Postgres credential, and Litheon R2/account migration remains next-phase work.
