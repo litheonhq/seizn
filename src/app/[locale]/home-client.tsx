@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-client";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -41,6 +42,7 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
   };
 
   const t = dict;
+  const checkoutLegalCopy = getPricingPageCopy(locale).checkout;
 
   return (
     <div className="min-h-screen bg-white">
@@ -321,6 +323,7 @@ const memories = await seizn.search({
                 priceId={PLAN_VARIANTS.starter}
                 privacyHref={`/${locale}/legal/privacy`}
                 termsHref={`/${locale}/legal/terms`}
+                legalCopy={checkoutLegalCopy}
                 className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.starter.cta}
@@ -346,6 +349,7 @@ const memories = await seizn.search({
                 priceId={PLAN_VARIANTS.plus}
                 privacyHref={`/${locale}/legal/privacy`}
                 termsHref={`/${locale}/legal/terms`}
+                legalCopy={checkoutLegalCopy}
                 className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.plus.cta}
@@ -374,6 +378,7 @@ const memories = await seizn.search({
                 priceId={PLAN_VARIANTS.pro}
                 privacyHref={`/${locale}/legal/privacy`}
                 termsHref={`/${locale}/legal/terms`}
+                legalCopy={checkoutLegalCopy}
                 className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center"
               >
                 {t.pricing.pro.cta}

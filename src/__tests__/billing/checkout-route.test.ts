@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '@/app/api/billing/checkout/route';
+import { AUTHOR_TRIAL_DAYS } from '@/lib/stripe-config';
 
 const mocks = vi.hoisted(() => ({
   session: { user: { id: 'user-1', email: 'author@example.com' } } as { user?: { id?: string; email?: string | null } } | null,
@@ -170,6 +171,27 @@ describe('Author checkout route', () => {
     expect(mocks.profileUpdates).toContainEqual({ stripe_customer_id: 'cus_created_123' });
     expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
       customer: 'cus_created_123',
+    }));
+  });
+
+  it('creates checkout as a no-card 30-day trial session', async () => {
+    const response = await POST(makeCheckoutRequest());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      payment_method_collection: 'if_required',
+      subscription_data: expect.objectContaining({
+        trial_period_days: AUTHOR_TRIAL_DAYS,
+        trial_settings: {
+          end_behavior: {
+            missing_payment_method: 'cancel',
+          },
+        },
+      }),
     }));
   });
 });

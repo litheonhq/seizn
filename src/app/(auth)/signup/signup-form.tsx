@@ -10,10 +10,24 @@ import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
 import { getErrorMessage } from "@/lib/ui-error";
 
+function buildAuthHref(path: string, callbackUrl: string, extraParams?: Record<string, string>): string {
+  const params = new URLSearchParams(extraParams);
+  if (callbackUrl !== "/dashboard") {
+    params.set("callbackUrl", callbackUrl);
+  }
+  const query = params.toString();
+  return query ? `${path}?${query}` : path;
+}
+
 export default function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = sanitizeRelativeRedirect(searchParams.get("callbackUrl"));
+  const loginHref = buildAuthHref("/login", callbackUrl);
+  const loginAfterSignupHref = buildAuthHref("/login", callbackUrl, {
+    message: "Account created. Please sign in.",
+  });
+  const continueLabel = callbackUrl === "/dashboard" ? "Continue to Dashboard" : "Continue";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -95,7 +109,7 @@ export default function SignupForm() {
       });
 
       if (result?.error) {
-        router.push("/login?message=Account created. Please sign in.");
+        router.push(loginAfterSignupHref);
       } else {
         router.push(callbackUrl);
       }
@@ -114,7 +128,7 @@ export default function SignupForm() {
     });
 
     if (result?.error) {
-      router.push("/login?message=Account created. Please sign in.");
+      router.push(loginAfterSignupHref);
     } else {
       router.push(callbackUrl);
     }
@@ -224,7 +238,7 @@ export default function SignupForm() {
                 onClick={proceedToLogin}
                 className="w-full py-3.5 btn-premium bg-gradient-to-r from-violet-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                Continue to Dashboard
+                {continueLabel}
               </button>
             </div>
           )}
@@ -384,7 +398,7 @@ export default function SignupForm() {
               {/* Sign In Link */}
               <p className="mt-6 text-center text-szn-text-2 text-sm">
                 Already have an account?{" "}
-                <Link href="/login" className="text-szn-accent hover:text-szn-accent/80 font-medium transition-colors">
+                <Link href={loginHref} className="text-szn-accent hover:text-szn-accent/80 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>

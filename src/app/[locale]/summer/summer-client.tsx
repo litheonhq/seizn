@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-client";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -50,6 +51,7 @@ export function SummerClient({ dict, locale }: SummerClientProps) {
   };
 
   const t = dict;
+  const checkoutLegalCopy = getPricingPageCopy(locale).checkout;
 
   return (
     <div className="min-h-screen gradient-summer relative overflow-hidden">
@@ -364,6 +366,7 @@ const memories = await seizn.search({
                 priceId={PLAN_VARIANTS.plus}
                 privacyHref={`/${locale}/legal/privacy`}
                 termsHref={`/${locale}/legal/terms`}
+                legalCopy={checkoutLegalCopy}
                 className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8"
               >
                 {t.pricing.plus.cta}
@@ -396,6 +399,7 @@ const memories = await seizn.search({
                   priceId={PLAN_VARIANTS.pro}
                   privacyHref={`/${locale}/legal/privacy`}
                   termsHref={`/${locale}/legal/terms`}
+                  legalCopy={checkoutLegalCopy}
                   className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg mt-8"
                 >
                   {t.pricing.pro.cta}
