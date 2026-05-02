@@ -85,9 +85,13 @@ export async function getRequestUser(request: NextRequest): Promise<RequestUser 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (user.user_metadata as any)?.name ||
     null;
+  const profileUserId = await normalizeProfileUserId({ userId: user.id, email: user.email });
+  if (!profileUserId) {
+    return null;
+  }
 
   return {
-    id: user.id,
+    id: profileUserId,
     email: user.email,
     name,
     lastSignInAt: user.last_sign_in_at,

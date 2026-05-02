@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRequestUser, type RequestUser } from '@/lib/api/request-user';
+import { verifyCsrf } from '@/lib/csrf';
 import {
   AuthorUiNotFoundError,
   AuthorUiValidationError,
@@ -24,11 +25,18 @@ export async function withAuthorUiService(
   if (!isAuthorUiAccessAllowed(user)) {
     return NextResponse.json({ error: 'Author UI is not enabled for this account' }, { status: 403 });
   }
+  const csrfError = verifyCsrf(request);
+  if (csrfError) {
+    return csrfError;
+  }
 
+  const service = getAuthorUiService(user.id);
   try {
-    const body = await handler(getAuthorUiService(user.id), user.id);
+    const body = await handler(service, user.id);
+    await service.flushAuditWrites();
     return NextResponse.json(body);
   } catch (error) {
+    await service.flushAuditWrites();
     if (error instanceof AuthorUiValidationError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

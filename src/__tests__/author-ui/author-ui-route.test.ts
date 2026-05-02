@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { getRequestUser } from '@/lib/api/request-user';
 import { isAuthorUiAccessAllowed, withAuthorUiService } from '@/lib/author/ui/route';
-import { getAuthorUiService } from '@/lib/author/ui/service';
+import { AUTHOR_IMPORT_MAX_BYTES, getAuthorUiService } from '@/lib/author/ui/service';
 import { POST as postProjectImport } from '@/app/api/projects/[projectId]/imports/route';
 import { POST as postCharacterBacklog } from '@/app/api/projects/[projectId]/characters/[characterId]/backlog/route';
 import { GET as getProjectAudit } from '@/app/api/projects/[projectId]/audit/route';
@@ -80,6 +80,30 @@ describe('Author UI route guard', () => {
     await expect(response.json()).resolves.toEqual({ error: 'Author UI is not enabled for this account' });
   });
 
+  it('rejects cross-origin Author UI mutations before invoking handlers', async () => {
+    process.env.NODE_ENV = 'test';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'csrf-user',
+      email: 'csrf@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+    const handler = vi.fn(() => ({ ok: true }));
+
+    const response = await withAuthorUiService(
+      new NextRequest('https://example.com/api/projects', {
+        method: 'POST',
+        headers: { origin: 'https://attacker.example' },
+      }),
+      handler
+    );
+
+    expect(response.status).toBe(403);
+    expect(handler).not.toHaveBeenCalled();
+  });
+
   it('passes multipart file bytes into the Author import parser pipeline', async () => {
     process.env.NODE_ENV = 'test';
     process.env.AUTHOR_IMPORT_DISABLE_R2 = '1';
@@ -97,6 +121,8 @@ describe('Author UI route guard', () => {
       'utf8'
     );
     const request = {
+      method: 'POST',
+      headers: new Headers({ origin: 'http://localhost:3000' }),
       formData: async () => ({
         get: (name: string) => {
           if (name === 'file') {
@@ -142,6 +168,59 @@ describe('Author UI route guard', () => {
     expect(uploaded?.parsed_text_preview).toContain('Parsed through route.');
   });
 
+  it('rejects oversized Author imports before buffering file bytes', async () => {
+    process.env.NODE_ENV = 'test';
+    process.env.AUTHOR_IMPORT_DISABLE_R2 = '1';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'route-oversize-user',
+      email: 'route-oversize@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+    const arrayBuffer = vi.fn(async () => new ArrayBuffer(0));
+    const request = {
+      method: 'POST',
+      headers: new Headers({ origin: 'http://localhost:3000' }),
+      formData: async () => ({
+        get: (name: string) => {
+          if (name === 'file') {
+            return {
+              name: 'too-large.md',
+              size: AUTHOR_IMPORT_MAX_BYTES + 1,
+              type: 'text/markdown',
+              arrayBuffer,
+            };
+          }
+          if (name === 'source_role') return 'canon';
+          if (name === 'a_or_d_mode') return 'extract';
+          return null;
+        },
+      }),
+    } as unknown as NextRequest;
+
+    const response = await postProjectImport(
+      request,
+      { params: Promise.resolve({ projectId: 'knot' }) }
+    );
+
+    expect(response.status).toBe(200);
+    expect(arrayBuffer).not.toHaveBeenCalled();
+    const body = await response.json() as { import_id: string };
+    const uploaded = getAuthorUiService('route-oversize-user')
+      .listImports('knot')
+      .imports
+      .find((item) => item.id === body.import_id);
+
+    expect(uploaded).toMatchObject({
+      file_name: 'too-large.md',
+      parse_status: 'failed',
+      extract_status: 'failed',
+      error_message: 'file_too_large',
+    });
+  });
+
   it('generates backlog candidates through the character route', async () => {
     process.env.NODE_ENV = 'test';
     vi.mocked(getRequestUser).mockResolvedValue({
@@ -156,7 +235,7 @@ describe('Author UI route guard', () => {
     const request = new NextRequest('https://example.com/api/projects/knot/characters/knot.short1.char.sori/backlog', {
       method: 'POST',
       body: JSON.stringify({ items_per_category: 5 }),
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
     });
     const response = await postCharacterBacklog(request, {
       params: Promise.resolve({
