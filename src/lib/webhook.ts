@@ -19,6 +19,17 @@ interface WebhookConfig {
   id: string;
   url: string;
   secret: string | null;
+  is_active?: boolean;
+}
+
+interface Ipv4Cidr {
+  base: number;
+  prefix: number;
+}
+
+interface Ipv6Cidr {
+  base: number[];
+  prefix: number;
 }
 
 // Generate HMAC signature for webhook payload
@@ -26,33 +37,218 @@ export function generateSignature(payload: string, secret: string): string {
   return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
 
+function ipv4ToUint32(ip: string): number | null {
+  if (isIP(ip) !== 4) return null;
+
+  const parts = ip.split('.').map((part) => Number.parseInt(part, 10));
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) {
+    return null;
+  }
+
+  return (
+    parts[0] * 2 ** 24 +
+    parts[1] * 2 ** 16 +
+    parts[2] * 2 ** 8 +
+    parts[3]
+  ) >>> 0;
+}
+
+function ipv4Cidr(base: string, prefix: number): Ipv4Cidr {
+  const parsedBase = ipv4ToUint32(base);
+  if (parsedBase === null) {
+    throw new Error(`Invalid IPv4 CIDR base: ${base}`);
+  }
+
+  return { base: parsedBase, prefix };
+}
+
+const BLOCKED_IPV4_RANGES: readonly Ipv4Cidr[] = [
+  ipv4Cidr('0.0.0.0', 8),
+  ipv4Cidr('10.0.0.0', 8),
+  ipv4Cidr('100.64.0.0', 10),
+  ipv4Cidr('127.0.0.0', 8),
+  ipv4Cidr('169.254.0.0', 16),
+  ipv4Cidr('172.16.0.0', 12),
+  ipv4Cidr('192.0.0.0', 24),
+  ipv4Cidr('192.0.2.0', 24),
+  ipv4Cidr('192.88.99.0', 24),
+  ipv4Cidr('192.168.0.0', 16),
+  ipv4Cidr('198.18.0.0', 15),
+  ipv4Cidr('198.51.100.0', 24),
+  ipv4Cidr('203.0.113.0', 24),
+  ipv4Cidr('224.0.0.0', 4),
+  ipv4Cidr('240.0.0.0', 4),
+];
+
+function ipv4MatchesCidr(ip: number, range: Ipv4Cidr): boolean {
+  const mask = range.prefix === 0 ? 0 : (0xffffffff << (32 - range.prefix)) >>> 0;
+  return (ip & mask) === (range.base & mask);
+}
+
+function parseIpv6Groups(ip: string): number[] | null {
+  let normalized = ip.toLowerCase().replace(/^\[|\]$/g, '');
+  if (isIP(normalized) !== 6 || normalized.includes('%')) return null;
+
+  if (normalized.includes('.')) {
+    const lastColonIndex = normalized.lastIndexOf(':');
+    const mappedIpv4 = normalized.slice(lastColonIndex + 1);
+    const mappedInt = ipv4ToUint32(mappedIpv4);
+    if (mappedInt === null) return null;
+
+    normalized = `${normalized.slice(0, lastColonIndex)}:${((mappedInt >>> 16) & 0xffff).toString(
+      16
+    )}:${(mappedInt & 0xffff).toString(16)}`;
+  }
+
+  const doubleColonParts = normalized.split('::');
+  if (doubleColonParts.length > 2) return null;
+
+  const parsePart = (part: string): number[] => {
+    if (!part) return [];
+    return part.split(':').map((group) => {
+      if (!/^[0-9a-f]{1,4}$/.test(group)) return Number.NaN;
+      return Number.parseInt(group, 16);
+    });
+  };
+
+  const head = parsePart(doubleColonParts[0]);
+  const tail = doubleColonParts.length === 2 ? parsePart(doubleColonParts[1]) : [];
+  if (
+    head.some((group) => !Number.isInteger(group) || group < 0 || group > 0xffff) ||
+    tail.some((group) => !Number.isInteger(group) || group < 0 || group > 0xffff)
+  ) {
+    return null;
+  }
+
+  if (doubleColonParts.length === 1) {
+    return head.length === 8 ? head : null;
+  }
+
+  const missingGroups = 8 - head.length - tail.length;
+  if (missingGroups < 1) return null;
+
+  return [...head, ...Array.from({ length: missingGroups }, () => 0), ...tail];
+}
+
+function ipv6Cidr(base: string, prefix: number): Ipv6Cidr {
+  const parsedBase = parseIpv6Groups(base);
+  if (!parsedBase) {
+    throw new Error(`Invalid IPv6 CIDR base: ${base}`);
+  }
+
+  return { base: parsedBase, prefix };
+}
+
+const BLOCKED_IPV6_RANGES: readonly Ipv6Cidr[] = [
+  ipv6Cidr('::', 128),
+  ipv6Cidr('::1', 128),
+  ipv6Cidr('::', 96),
+  ipv6Cidr('::ffff:0:0', 96),
+  ipv6Cidr('64:ff9b::', 96),
+  ipv6Cidr('64:ff9b:1::', 48),
+  ipv6Cidr('100::', 64),
+  ipv6Cidr('100:0:0:1::', 64),
+  ipv6Cidr('2001::', 23),
+  ipv6Cidr('2001:db8::', 32),
+  ipv6Cidr('2002::', 16),
+  ipv6Cidr('3fff::', 20),
+  ipv6Cidr('5f00::', 16),
+  ipv6Cidr('fc00::', 7),
+  ipv6Cidr('fe80::', 10),
+  ipv6Cidr('fec0::', 10),
+  ipv6Cidr('ff00::', 8),
+];
+
+function ipv6MatchesCidr(groups: number[], range: Ipv6Cidr): boolean {
+  let remainingBits = range.prefix;
+
+  for (let i = 0; i < 8; i++) {
+    if (remainingBits <= 0) return true;
+
+    if (remainingBits >= 16) {
+      if (groups[i] !== range.base[i]) return false;
+      remainingBits -= 16;
+      continue;
+    }
+
+    const mask = (0xffff << (16 - remainingBits)) & 0xffff;
+    return (groups[i] & mask) === (range.base[i] & mask);
+  }
+
+  return true;
+}
+
+function normalizeHostname(hostname: string): string {
+  return hostname.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.$/, '');
+}
+
+function isBlockedLocalHostname(hostname: string): boolean {
+  return (
+    hostname === 'localhost' ||
+    hostname === 'localhost.localdomain' ||
+    hostname.endsWith('.localhost')
+  );
+}
+
+function isBlockedIp(ip: string): boolean {
+  const normalized = normalizeHostname(ip);
+  const ipKind = isIP(normalized);
+
+  if (ipKind === 4) {
+    const parsedIp = ipv4ToUint32(normalized);
+    if (parsedIp === null) return true;
+    return BLOCKED_IPV4_RANGES.some((range) => ipv4MatchesCidr(parsedIp, range));
+  }
+
+  if (ipKind === 6) {
+    const groups = parseIpv6Groups(normalized);
+    if (!groups) return true;
+    return BLOCKED_IPV6_RANGES.some((range) => ipv6MatchesCidr(groups, range));
+  }
+
+  return true;
+}
+
+async function resolveWebhookHostname(hostname: string): Promise<string[]> {
+  const addresses4 = await dns.resolve4(hostname).catch(() => [] as string[]);
+  const addresses6 = await dns.resolve6(hostname).catch(() => [] as string[]);
+  return [...addresses4, ...addresses6];
+}
+
 /** Validate webhook URL and block private/internal IPs (SSRF prevention). */
 export function isValidWebhookUrl(urlString: string): boolean {
   try {
     const url = new URL(urlString);
-    if (!['http:', 'https:'].includes(url.protocol)) return false;
-    // Strip brackets from IPv6 hostname (e.g. [::ffff:127.0.0.1] -> ::ffff:127.0.0.1)
-    const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, '');
-    // Block well-known private/internal addresses
-    if (['localhost', '127.0.0.1', '::1', '0.0.0.0', '169.254.169.254'].includes(host)) return false;
-    // Block IPv4 private ranges
-    if (/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)) return false;
-    // Block IPv6-mapped IPv4 private addresses (::ffff:10.x.x.x, ::ffff:127.x.x.x, etc.)
-    const v4Mapped = host.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-    if (v4Mapped) {
-      const ipv4 = v4Mapped[1];
-      if (ipv4.startsWith('10.') || ipv4.startsWith('127.') || ipv4.startsWith('192.168.') ||
-          /^172\.(1[6-9]|2\d|3[01])\./.test(ipv4) || ipv4 === '0.0.0.0' || ipv4 === '169.254.169.254') {
-        return false;
-      }
-    }
-    // Block IPv6 link-local (fe80::), unique local (fc00::/fd::), loopback, multicast (ff00::)
-    if (/^(fe80|fc|fd|ff)[0-9a-f]*:/.test(host) || host === '::' || host === '::1') return false;
+    const protocol = url.protocol.toLowerCase();
+    if (protocol !== 'http:' && protocol !== 'https:') return false;
     if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') return false;
+    if (url.username || url.password) return false;
+
+    const host = normalizeHostname(url.hostname);
+    if (!host || isBlockedLocalHostname(host)) return false;
+
+    if (isIP(host) !== 0 && isBlockedIp(host)) return false;
+
     return true;
   } catch {
     return false;
   }
+}
+
+async function validateWebhookEndpoint(urlString: string): Promise<boolean> {
+  if (!isValidWebhookUrl(urlString)) return false;
+
+  const url = new URL(urlString);
+  const hostname = normalizeHostname(url.hostname);
+
+  if (isIP(hostname) !== 0) {
+    return !isBlockedIp(hostname);
+  }
+
+  const resolvedIps = await resolveWebhookHostname(hostname);
+  if (resolvedIps.length === 0) return false;
+
+  return resolvedIps.every((ip) => !isBlockedIp(ip));
 }
 
 // Deliver a single webhook
@@ -74,30 +270,9 @@ export async function deliverWebhook(
     headers['X-Seizn-Signature'] = `sha256=${generateSignature(payloadString, webhook.secret)}`;
   }
 
-  // SSRF check before delivery (URL-level)
-  if (!isValidWebhookUrl(webhook.url)) {
+  // SSRF check before delivery. DNS is still resolved again by fetch, so redirects are blocked below.
+  if (!(await validateWebhookEndpoint(webhook.url))) {
     return { success: false, error: 'Webhook URL blocked by SSRF policy' };
-  }
-
-  // DNS rebinding defense: resolve hostname and verify resolved IPs are not private.
-  const url = new URL(webhook.url);
-  const hostname = url.hostname.replace(/^\[|\]$/g, '');
-  // Only resolve DNS for hostnames (not IPv4/IPv6 literals).
-  if (isIP(hostname) === 0) {
-    const addresses = await dns.resolve4(hostname).catch(() => [] as string[]);
-    const addresses6 = await dns.resolve6(hostname).catch(() => [] as string[]);
-    const resolvedIps = [...addresses, ...addresses6];
-
-    // Fail closed when hostname cannot be resolved.
-    if (resolvedIps.length === 0) {
-      return { success: false, error: 'Webhook hostname resolution failed' };
-    }
-
-    for (const ip of resolvedIps) {
-      if (!isValidWebhookUrl(`https://${ip.includes(':') ? `[${ip}]` : ip}/`)) {
-        return { success: false, error: 'Webhook URL resolved to blocked IP address' };
-      }
-    }
   }
 
   try {
@@ -109,6 +284,7 @@ export async function deliverWebhook(
       headers,
       body: payloadString,
       signal: controller.signal,
+      redirect: 'manual',
     });
 
     clearTimeout(timeout);
@@ -166,8 +342,7 @@ export async function processPendingWebhooks(limit: number = 50): Promise<{
   let failed = 0;
 
   for (const delivery of deliveries) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const webhook = (delivery as any).webhooks;
+    const webhook = (delivery as unknown as { webhooks: WebhookConfig }).webhooks;
 
     // Skip if webhook is inactive
     if (!webhook?.is_active) {

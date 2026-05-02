@@ -6,6 +6,7 @@ import {
   getAccessibleSources,
   logFederatedOperation,
 } from '@/lib/summer/admin';
+import { hasOrgAccess } from '@/lib/winter/org/organization';
 import { encrypt } from '@/lib/winter/crypto';
 import { logServerError } from '@/lib/server/logger';
 
@@ -27,8 +28,16 @@ export async function GET(request: NextRequest) {
 
     const { userId } = authResult;
     const url = new URL(request.url);
-    const organizationId = url.searchParams.get('organization_id') ?? undefined;
+    const requestedOrganizationId = url.searchParams.get('organization_id')?.trim();
+    const organizationId = requestedOrganizationId || undefined;
     const includeInactive = url.searchParams.get('include_inactive') === 'true';
+
+    if (organizationId && !(await hasOrgAccess(organizationId, userId))) {
+      return NextResponse.json(
+        { error: 'Access denied to this organization' },
+        { status: 403 }
+      );
+    }
 
     const sources = await getAccessibleSources(userId, organizationId);
 
@@ -138,7 +147,7 @@ export async function POST(request: NextRequest) {
         },
         context
       );
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: 'Failed to create federated source' }, { status: 400 });
     }
 
     // Log success
