@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { AuthorBillingTier, BillingCadence } from "@/lib/stripe-config";
 
 interface CheckoutButtonProps {
@@ -13,6 +13,9 @@ interface CheckoutButtonProps {
   successUrl?: string;
   cancelUrl?: string;
   disabled?: boolean;
+  requireLegalAgreement?: boolean;
+  privacyHref?: string;
+  termsHref?: string;
 }
 
 function getCsrfToken(): string | null {
@@ -34,12 +37,18 @@ export function CheckoutButton({
   successUrl,
   cancelUrl,
   disabled = false,
+  requireLegalAgreement = true,
+  privacyHref = "/en/legal/privacy",
+  termsHref = "/en/legal/terms",
 }: CheckoutButtonProps) {
+  const agreementId = useId();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [legalAgreementAccepted, setLegalAgreementAccepted] = useState(false);
+  const canCheckout = !disabled && !isLoading && (!requireLegalAgreement || legalAgreementAccepted);
 
   const handleCheckout = async () => {
-    if (disabled || isLoading) return;
+    if (!canCheckout) return;
     setError(null);
     setIsLoading(true);
 
@@ -74,10 +83,42 @@ export function CheckoutButton({
 
   return (
     <div className="space-y-2">
+      {requireLegalAgreement ? (
+        <label htmlFor={agreementId} className="flex items-start gap-2 text-left text-xs leading-5 text-szn-text-2">
+          <input
+            id={agreementId}
+            type="checkbox"
+            checked={legalAgreementAccepted}
+            onChange={(event) => setLegalAgreementAccepted(event.currentTarget.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+          />
+          <span>
+            I agree to the{" "}
+            <a
+              href={termsHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-szn-accent underline-offset-2 hover:underline"
+            >
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a
+              href={privacyHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-szn-accent underline-offset-2 hover:underline"
+            >
+              Privacy Policy
+            </a>
+            .
+          </span>
+        </label>
+      ) : null}
       <button
         type="button"
         onClick={handleCheckout}
-        disabled={disabled || isLoading}
+        disabled={!canCheckout}
         className={className}
         aria-busy={isLoading}
       >

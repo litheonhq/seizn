@@ -129,6 +129,7 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
                 features={PLAN_FEATURES[plan.id]}
                 recommended={plan.recommended}
                 byokRequired={plan.byokRequired}
+                locale={locale}
               />
             ))}
           </div>
@@ -162,8 +163,9 @@ export function PricingClient({ dict, locale }: PricingClientProps) {
           <Link href={`/${locale}`} className="font-medium text-szn-text-1">Seizn</Link>
           <span>{t.footer.copyright.replace("{year}", new Date().getFullYear().toString())}</span>
           <nav className="flex gap-5">
-            <a href={`/${locale}/privacy`} className="hover:text-szn-text-1">{t.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="hover:text-szn-text-1">{t.footer.terms}</a>
+            <a href={`/${locale}/legal/privacy`} className="hover:text-szn-text-1">{t.footer.privacy}</a>
+            <a href={`/${locale}/legal/terms`} className="hover:text-szn-text-1">{t.footer.terms}</a>
+            <a href={`/${locale}/legal/beta-disclosure`} className="hover:text-szn-text-1">Beta Disclosure</a>
             <a href="mailto:sales@seizn.com" className="hover:text-szn-text-1">{t.footer.contact}</a>
           </nav>
         </div>
@@ -181,6 +183,7 @@ function PricingCard({
   features,
   recommended,
   byokRequired,
+  locale,
 }: {
   tier: AuthorBillingTier;
   cadence: BillingCadence;
@@ -190,6 +193,7 @@ function PricingCard({
   features: string[];
   recommended?: boolean;
   byokRequired?: boolean;
+  locale: Locale;
 }) {
   return (
     <article className={`flex h-full flex-col rounded-lg border bg-szn-card p-5 ${
@@ -234,6 +238,8 @@ function PricingCard({
         cadence={cadence}
         successUrl="/dashboard/billing?success=true"
         cancelUrl="/pricing"
+        privacyHref={`/${locale}/legal/privacy`}
+        termsHref={`/${locale}/legal/terms`}
         className={`mt-6 w-full rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
           recommended
             ? "bg-szn-accent text-white hover:bg-szn-accent/90"

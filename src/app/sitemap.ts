@@ -65,6 +65,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  const localizedLegalRoutes = [
+    { path: '/legal/privacy', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/terms', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/beta-disclosure', priority: 0.5, changeFreq: 'monthly' as const },
+  ];
+
+  for (const route of localizedLegalRoutes) {
+    for (const locale of ['en', 'ko', 'ja', 'zh-hans'] as const) {
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}${route.path}`,
+        lastModified: new Date(),
+        changeFrequency: route.changeFreq,
+        priority: route.priority,
+      });
+    }
+  }
+
   // Add auth routes
   const authRoutes = ['/login', '/signup'];
   for (const route of authRoutes) {

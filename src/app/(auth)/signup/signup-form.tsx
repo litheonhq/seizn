@@ -376,9 +376,9 @@ export default function SignupForm() {
               {/* Terms */}
               <p className="mt-4 text-xs text-szn-text-2 text-center">
                 By signing up, you agree to our{" "}
-                <Link href="/terms" className="text-szn-accent hover:underline">Terms of Service</Link>{" "}
+                <Link href="/en/legal/terms" className="text-szn-accent hover:underline">Terms of Service</Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-szn-accent hover:underline">Privacy Policy</Link>
+                <Link href="/en/legal/privacy" className="text-szn-accent hover:underline">Privacy Policy</Link>
               </p>
 
               {/* Sign In Link */}
