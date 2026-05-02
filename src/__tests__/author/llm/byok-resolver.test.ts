@@ -55,7 +55,22 @@ describe('Author BYOK resolver', () => {
     });
   });
 
-  it('fails closed in production when BYOK is missing', async () => {
+  it('uses the managed Anthropic key in production when BYOK is missing', async () => {
+    await expect(resolveAuthorAnthropicKey(
+      { userId: 'user-1', projectId: 'knot' },
+      {
+        lookupProviderKey: async () => null,
+        nodeEnv: 'production',
+        env: { ANTHROPIC_API_KEY: 'anthropic-managed-key' },
+      }
+    )).resolves.toEqual({
+      apiKey: 'anthropic-managed-key',
+      source: 'managed',
+      byok: false,
+    });
+  });
+
+  it('fails when neither BYOK nor managed Anthropic key is configured', async () => {
     await expect(resolveAuthorAnthropicKey(
       { userId: 'user-1', projectId: 'knot' },
       {
@@ -64,7 +79,7 @@ describe('Author BYOK resolver', () => {
         env: {},
       }
     )).rejects.toMatchObject<Partial<AuthorLlmError>>({
-      code: 'BYOK_REQUIRED',
+      code: 'LLM_NOT_CONFIGURED',
     });
   });
 

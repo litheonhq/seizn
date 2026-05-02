@@ -70,7 +70,7 @@ export async function GET() {
   }
 
   const byokStatus = await getAuthorByokStatus(session.user.id);
-  const usage = await getAuthorModelUsageSummary(session.user.id);
+  const usage = await getAuthorModelUsageSummary(session.user.id, undefined, byokStatus.enabled);
   const tier = isAuthorBillingTier(profile.plan) ? profile.plan : null;
   const tierConfig = tier ? getAuthorTierConfig(tier) : null;
   const trialDaysRemaining = getDaysRemaining(profile.subscription_trial_ends_at);

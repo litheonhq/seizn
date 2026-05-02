@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AuthorLlmError } from '@/lib/author/llm';
-import { enforceAuthorTokenBudget } from '@/lib/author/billing/token-budget';
+import {
+  enforceAuthorTokenBudget,
+  meterAuthorTokenOverage,
+} from '@/lib/author/billing/token-budget';
 
 const mocks = vi.hoisted(() => ({
   profile: {
@@ -77,7 +80,7 @@ describe('Author token budget enforcement', () => {
     });
   });
 
-  it('emits a Stripe meter event when managed usage crosses the cap', async () => {
+  it('allows over-cap managed requests without emitting the meter event pre-call', async () => {
     process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
     process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
 
@@ -88,6 +91,33 @@ describe('Author token budget enforcement', () => {
       usageSummary: { tokens_in: 990_000, tokens_out: 0, total_tokens: 990_000, request_count: 40, byok_active: false },
     })).resolves.toMatchObject({
       cap: 1_000_000,
+      overageTokens: 10_000,
+      metered: false,
+      stripeCustomerId: 'cus_author_123',
+    });
+
+    expect(mocks.meterEventsCreate).not.toHaveBeenCalled();
+  });
+
+  it('emits a Stripe meter event after success using actual output overage only', async () => {
+    process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
+    process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
+
+    await expect(meterAuthorTokenOverage({
+      userId: 'user-1',
+      byokActive: false,
+      actualOutputTokens: 20_000,
+      budget: {
+        allowed: true,
+        cap: 1_000_000,
+        used: 990_000,
+        projected: 1_010_000,
+        overageTokens: 10_000,
+        metered: false,
+        stripeCustomerId: 'cus_author_123',
+      },
+    })).resolves.toMatchObject({
+      actualProjected: 1_010_000,
       overageTokens: 10_000,
       metered: true,
     });
@@ -100,6 +130,57 @@ describe('Author token budget enforcement', () => {
         user_id: 'user-1',
       }),
     }));
+  });
+
+  it('does not emit a post-call meter event when actual output stays under the cap', async () => {
+    process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
+    process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
+
+    await expect(meterAuthorTokenOverage({
+      userId: 'user-1',
+      byokActive: false,
+      actualOutputTokens: 5_000,
+      budget: {
+        allowed: true,
+        cap: 1_000_000,
+        used: 990_000,
+        projected: 1_010_000,
+        overageTokens: 10_000,
+        metered: false,
+        stripeCustomerId: 'cus_author_123',
+      },
+    })).resolves.toMatchObject({
+      actualProjected: 995_000,
+      overageTokens: 0,
+      metered: false,
+    });
+
+    expect(mocks.meterEventsCreate).not.toHaveBeenCalled();
+  });
+
+  it('does not treat historic BYOK usage as current BYOK for cap bypass', async () => {
+    process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
+    process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
+
+    await expect(enforceAuthorTokenBudget({
+      userId: 'user-1',
+      byokActive: false,
+      requestedTokens: 20_000,
+      usageSummary: {
+        tokens_in: 900_000,
+        tokens_out: 90_000,
+        total_tokens: 990_000,
+        request_count: 40,
+        byok_had_this_month: true,
+        byok_currently_active: false,
+        byok_active: false,
+      },
+    })).resolves.toMatchObject({
+      cap: 1_000_000,
+      overageTokens: 10_000,
+      metered: false,
+      stripeCustomerId: 'cus_author_123',
+    });
   });
 
   it('fails closed over cap when there is no meter path', async () => {

@@ -37,11 +37,19 @@ export interface AuthorTokenBudgetResult {
   projected: number;
   overageTokens: number;
   metered: boolean;
+  stripeCustomerId: string | null;
+}
+
+export interface AuthorTokenMeterResult {
+  metered: boolean;
+  overageTokens: number;
+  actualProjected: number;
 }
 
 export async function getAuthorBillingUsageState(
   userId: string,
-  usageSummary?: AuthorModelUsageSummary | null
+  usageSummary?: AuthorModelUsageSummary | null,
+  currentByokActive = false
 ): Promise<AuthorBillingUsageState> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return {
@@ -50,7 +58,7 @@ export async function getAuthorBillingUsageState(
       tokenCapMonth: null,
       tokensUsedMonth: usageSummary?.total_tokens ?? 0,
       stripeCustomerId: null,
-      byokActive: usageSummary?.byok_active === true,
+      byokActive: currentByokActive,
     };
   }
 
@@ -61,7 +69,9 @@ export async function getAuthorBillingUsageState(
       .select("plan,stripe_customer_id")
       .eq("id", userId)
       .single<BillingProfileRow>(),
-    usageSummary === undefined ? getAuthorModelUsageSummary(userId) : Promise.resolve(usageSummary),
+    usageSummary === undefined
+      ? getAuthorModelUsageSummary(userId, undefined, currentByokActive)
+      : Promise.resolve(usageSummary),
   ]);
 
   const plan = profile?.plan ?? "free";
@@ -74,7 +84,7 @@ export async function getAuthorBillingUsageState(
     tokenCapMonth,
     tokensUsedMonth: usage?.total_tokens ?? 0,
     stripeCustomerId: profile?.stripe_customer_id ?? null,
-    byokActive: usage?.byok_active === true,
+    byokActive: currentByokActive,
   };
 }
 
@@ -90,10 +100,11 @@ export async function enforceAuthorTokenBudget(
       projected: used + Math.max(0, input.requestedTokens),
       overageTokens: 0,
       metered: false,
+      stripeCustomerId: null,
     };
   }
 
-  const state = await getAuthorBillingUsageState(input.userId, input.usageSummary);
+  const state = await getAuthorBillingUsageState(input.userId, input.usageSummary, input.byokActive);
   const used = state.tokensUsedMonth;
   const projected = used + Math.max(0, input.requestedTokens);
 
@@ -105,6 +116,7 @@ export async function enforceAuthorTokenBudget(
       projected,
       overageTokens: 0,
       metered: false,
+      stripeCustomerId: state.stripeCustomerId,
     };
   }
 
@@ -117,17 +129,12 @@ export async function enforceAuthorTokenBudget(
       projected,
       overageTokens: 0,
       metered: false,
+      stripeCustomerId: state.stripeCustomerId,
     };
   }
 
   const overageTokens = projected - cap;
-  const metered = await emitAuthorTokenOverage({
-    userId: input.userId,
-    stripeCustomerId: state.stripeCustomerId,
-    overageTokens,
-  });
-
-  if (!metered) {
+  if (!hasAuthorTokenMeterPath(state.stripeCustomerId)) {
     throw new AuthorLlmError(
       "TOKEN_LIMIT_EXCEEDED",
       "Monthly author token limit exceeded",
@@ -141,7 +148,56 @@ export async function enforceAuthorTokenBudget(
     used,
     projected,
     overageTokens,
+    metered: false,
+    stripeCustomerId: state.stripeCustomerId,
+  };
+}
+
+export async function meterAuthorTokenOverage(input: {
+  userId: string;
+  byokActive: boolean;
+  actualOutputTokens: number;
+  budget: AuthorTokenBudgetResult;
+}): Promise<AuthorTokenMeterResult> {
+  const actualTokens = Math.max(0, Math.floor(input.actualOutputTokens));
+  const cap = input.budget.cap;
+  const actualProjected = input.budget.used + actualTokens;
+
+  if (input.byokActive || cap === null) {
+    return {
+      metered: false,
+      overageTokens: 0,
+      actualProjected,
+    };
+  }
+
+  const overageTokens = Math.max(0, actualProjected - cap);
+  if (overageTokens <= 0) {
+    return {
+      metered: false,
+      overageTokens: 0,
+      actualProjected,
+    };
+  }
+
+  const metered = await emitAuthorTokenOverage({
+    userId: input.userId,
+    stripeCustomerId: input.budget.stripeCustomerId,
+    overageTokens,
+  });
+
+  if (!metered) {
+    throw new AuthorLlmError(
+      "TOKEN_LIMIT_EXCEEDED",
+      "Monthly author token overage could not be metered",
+      402
+    );
+  }
+
+  return {
     metered: true,
+    overageTokens,
+    actualProjected,
   };
 }
 
@@ -154,9 +210,7 @@ export async function emitAuthorTokenOverage(input: {
     return false;
   }
 
-  const eventName =
-    process.env.STRIPE_METER_ID_MEMORIES?.trim() ||
-    process.env.STRIPE_METER_ID_OPS?.trim();
+  const eventName = readAuthorTokenMeterEventName();
   if (!eventName || !process.env.STRIPE_SECRET_KEY) {
     return false;
   }
@@ -172,4 +226,16 @@ export async function emitAuthorTokenOverage(input: {
     },
   });
   return true;
+}
+
+function hasAuthorTokenMeterPath(stripeCustomerId: string | null): boolean {
+  return Boolean(stripeCustomerId && readAuthorTokenMeterEventName() && process.env.STRIPE_SECRET_KEY);
+}
+
+function readAuthorTokenMeterEventName(): string | null {
+  return (
+    process.env.STRIPE_METER_ID_MEMORIES?.trim() ||
+    process.env.STRIPE_METER_ID_OPS?.trim() ||
+    null
+  );
 }

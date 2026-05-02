@@ -101,25 +101,17 @@ export async function resolveAuthorAnthropicKey(
     };
   }
 
-  const nodeEnv = deps.nodeEnv ?? process.env.NODE_ENV;
-  if (nodeEnv === 'production') {
-    throw new AuthorLlmError(
-      'BYOK_REQUIRED',
-      'Author Memory v3 requires an Anthropic BYOK key in production'
-    );
-  }
-
   const env = deps.env ?? process.env;
-  const devKey = readDevAnthropicKey(env);
-  if (!devKey) {
+  const managedKey = readManagedAnthropicKey(env);
+  if (!managedKey) {
     throw new AuthorLlmError(
       'LLM_NOT_CONFIGURED',
-      'Anthropic dev key is not configured for Author Memory v3'
+      'Managed Anthropic key is not configured for Author Memory v3'
     );
   }
 
   return {
-    apiKey: devKey,
+    apiKey: managedKey,
     source: 'managed',
     byok: false,
   };
@@ -219,7 +211,7 @@ export async function saveAuthorByokKey(
   return { valid: true, key_last_4: input.apiKey.slice(-4) };
 }
 
-function readDevAnthropicKey(env: NodeJS.ProcessEnv): string | null {
+function readManagedAnthropicKey(env: NodeJS.ProcessEnv): string | null {
   return (
     env.AUTHOR_ANTHROPIC_DEV_API_KEY ||
     env.AUTHOR_LLM_ANTHROPIC_API_KEY ||

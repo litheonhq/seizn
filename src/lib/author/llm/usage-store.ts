@@ -9,6 +9,8 @@ export interface AuthorModelUsageSummary {
   tokens_out: number;
   total_tokens: number;
   request_count: number;
+  byok_had_this_month?: boolean;
+  byok_currently_active?: boolean;
   byok_active: boolean;
 }
 
@@ -72,7 +74,8 @@ export async function recordAuthorModelUsage(
 
 export async function getAuthorModelUsageSummary(
   userId: string,
-  client?: UsageStoreClient
+  client?: UsageStoreClient,
+  currentByokActive = false
 ): Promise<AuthorModelUsageSummary | null> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return null;
@@ -101,13 +104,15 @@ export async function getAuthorModelUsageSummary(
     summary.tokens_out += tokensOut;
     summary.total_tokens += tokensIn + tokensOut;
     summary.request_count += 1;
-    summary.byok_active = summary.byok_active || row.byok === true;
+    summary.byok_had_this_month = summary.byok_had_this_month || row.byok === true;
     return summary;
   }, {
     tokens_in: 0,
     tokens_out: 0,
     total_tokens: 0,
     request_count: 0,
-    byok_active: false,
+    byok_had_this_month: false,
+    byok_currently_active: currentByokActive,
+    byok_active: currentByokActive,
   });
 }

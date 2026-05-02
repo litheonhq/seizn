@@ -30,6 +30,19 @@ interface CheckoutSelection {
   cadence: BillingCadence;
 }
 
+interface CheckoutBillingProfile {
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
+  stripe_subscription_status?: string | null;
+  subscription_status?: string | null;
+}
+
+interface CheckoutCustomerState {
+  customerId: string;
+  subscriptionId: string | null;
+  subscriptionStatus: string | null;
+}
+
 function resolveSameOriginUrl(
   value: unknown,
   origin: string,
@@ -64,20 +77,24 @@ function resolveCheckoutSelection(body: CheckoutRequestBody): CheckoutSelection 
   return null;
 }
 
-async function getOrCreateStripeCustomer(input: {
+async function getOrCreateCheckoutCustomer(input: {
   userId: string;
   email?: string | null;
   stripe: ReturnType<typeof getStripeClient>;
-}): Promise<string> {
+}): Promise<CheckoutCustomerState> {
   const supabase = createServerClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("stripe_customer_id")
+    .select("stripe_customer_id,stripe_subscription_id,stripe_subscription_status,subscription_status")
     .eq("id", input.userId)
-    .single();
+    .single<CheckoutBillingProfile>();
 
   if (profile?.stripe_customer_id) {
-    return profile.stripe_customer_id;
+    return {
+      customerId: profile.stripe_customer_id,
+      subscriptionId: profile.stripe_subscription_id ?? null,
+      subscriptionStatus: profile.stripe_subscription_status ?? profile.subscription_status ?? null,
+    };
   }
 
   const customer = await input.stripe.customers.create({
@@ -93,7 +110,11 @@ async function getOrCreateStripeCustomer(input: {
     .update({ stripe_customer_id: customer.id })
     .eq("id", input.userId);
 
-  return customer.id;
+  return {
+    customerId: customer.id,
+    subscriptionId: null,
+    subscriptionStatus: null,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -125,11 +146,26 @@ export async function POST(request: NextRequest) {
 
     const origin = request.nextUrl.origin;
     const stripe = getStripeClient();
-    const customerId = await getOrCreateStripeCustomer({
+    const customerState = await getOrCreateCheckoutCustomer({
       userId: session.user.id,
       email: session.user.email,
       stripe,
     });
+    if (shouldRedirectExistingSubscriberToPortal(
+      customerState.subscriptionId,
+      customerState.subscriptionStatus
+    )) {
+      const portalSession = await stripe.billingPortal.sessions.create({
+        customer: customerState.customerId,
+        return_url: `${origin}/dashboard/billing`,
+      });
+      return NextResponse.json({
+        url: portalSession.url,
+        destination: "billing_portal",
+        reason: "active_subscription",
+      });
+    }
+
     const byokStatus = await getAuthorByokStatus(session.user.id);
     const discounts = byokStatus.enabled
       ? [{ coupon: process.env.STRIPE_BYOK_COUPON_ID?.trim() || BYOK_COUPON_ID }]
@@ -139,7 +175,7 @@ export async function POST(request: NextRequest) {
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [{ price: resolvedPriceId, quantity: 1 }],
-      customer: customerId,
+      customer: customerState.customerId,
       allow_promotion_codes: !discounts,
       ...(discounts ? { discounts } : {}),
       subscription_data: {
@@ -175,4 +211,20 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+function shouldRedirectExistingSubscriberToPortal(
+  subscriptionId: string | null,
+  status: string | null
+): boolean {
+  if (!subscriptionId) {
+    return false;
+  }
+
+  const normalized = status?.toLowerCase() ?? "";
+  if (["canceled", "cancelled", "incomplete", "incomplete_expired"].includes(normalized)) {
+    return false;
+  }
+
+  return true;
 }
