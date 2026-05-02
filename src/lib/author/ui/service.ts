@@ -3,6 +3,7 @@ import characterRegistry from '../../../../docs/knot-input/character_registry.js
 import worldRuleRegistry from '../../../../docs/knot-input/world_rule_registry.json';
 import relationshipMatrix from '../../../../docs/knot-input/relationship_matrix.json';
 import timelineEventLedger from '../../../../docs/knot-input/timeline_event_ledger.json';
+import { randomUUID } from 'node:crypto';
 import { canonicalJson } from '@/lib/author/memory-v3/canonical';
 import { createAuthorMemorySnapshot } from '@/lib/author/memory-v3/snapshot';
 import {
@@ -230,6 +231,7 @@ export interface AuthorUiSimulation {
 
 interface AuthorUiState {
   userId: string;
+  lastAccessedAt: number;
   projects: Map<string, AuthorUiProject>;
   importsByProject: Map<string, AuthorUiImport[]>;
   candidatesByProject: Map<string, AuthorUiCandidate[]>;
@@ -251,6 +253,8 @@ interface AuthorUiState {
 const DEFAULT_PROJECT_ID = 'knot';
 export const AUTHOR_IMPORT_MAX_BYTES = 50 * 1024 * 1024;
 const FORBIDDEN_FIELD_PATH_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor']);
+const AUTHOR_UI_STATE_TTL_MS = 30 * 60 * 1000;
+const AUTHOR_UI_MAX_STATES = 100;
 const statesByUser = new Map<string, AuthorUiState>();
 
 const seedBundle: KnotInputBundle = {
@@ -261,19 +265,45 @@ const seedBundle: KnotInputBundle = {
 };
 
 export function getAuthorUiService(userId: string): AuthorUiService {
+  pruneAuthorUiStates();
   let state = statesByUser.get(userId);
   if (!state) {
     state = createSeedState(userId);
     statesByUser.set(userId, state);
   }
+  state.lastAccessedAt = Date.now();
 
   return new AuthorUiService(state);
 }
 
 export function resetAuthorUiServiceForTests(userId = 'test-user'): AuthorUiService {
   const state = createSeedState(userId);
+  state.lastAccessedAt = Date.now();
   statesByUser.set(userId, state);
   return new AuthorUiService(state);
+}
+
+function pruneAuthorUiStates(): void {
+  const now = Date.now();
+  for (const [userId, state] of statesByUser.entries()) {
+    if (now - state.lastAccessedAt > AUTHOR_UI_STATE_TTL_MS) {
+      statesByUser.delete(userId);
+    }
+  }
+
+  if (statesByUser.size <= AUTHOR_UI_MAX_STATES) {
+    return;
+  }
+
+  const staleFirst = [...statesByUser.entries()]
+    .sort(([, left], [, right]) => left.lastAccessedAt - right.lastAccessedAt);
+  for (const [userId] of staleFirst.slice(0, statesByUser.size - AUTHOR_UI_MAX_STATES)) {
+    statesByUser.delete(userId);
+  }
+}
+
+function newAuthorUiId(prefix: string): string {
+  return `${prefix}-${randomUUID()}`;
 }
 
 export class AuthorUiService {
@@ -351,7 +381,7 @@ export class AuthorUiService {
     }
 
     const imports = this.state.importsByProject.get(projectId) ?? [];
-    const id = `import-${imports.length + 1}-${Date.now().toString(36)}`;
+    const id = newAuthorUiId('import');
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
     const fileSize = declaredFileSize;
@@ -609,7 +639,7 @@ export class AuthorUiService {
       throw new AuthorUiValidationError('content is required');
     }
 
-    const id = `candidate-${Date.now().toString(36)}-${candidates.length + 1}`;
+    const id = newAuthorUiId('candidate');
     const candidate: AuthorUiCandidate = {
       id,
       content,
@@ -954,7 +984,7 @@ export class AuthorUiService {
 
   runSimulation(projectId: string, input: JsonRecord) {
     this.ensureProject(projectId);
-    const simulationId = `sim-${Date.now().toString(36)}`;
+    const simulationId = newAuthorUiId('sim');
     const simulation = this.buildSimulation(projectId, simulationId, input);
     const projectSimulations = this.state.simulationsByProject.get(projectId) ?? new Map();
     projectSimulations.set(simulationId, simulation);
@@ -1447,6 +1477,7 @@ function createSeedState(userId: string): AuthorUiState {
 
   return {
     userId,
+    lastAccessedAt: Date.now(),
     projects: new Map([[DEFAULT_PROJECT_ID, project]]),
     importsByProject: new Map([[DEFAULT_PROJECT_ID, imports]]),
     candidatesByProject: new Map([[DEFAULT_PROJECT_ID, candidates]]),
@@ -1736,7 +1767,7 @@ function authorUiCandidateFromBacklog(
 ): AuthorUiCandidate {
   const content = `${candidate.category} - ${candidate.content}`;
   return {
-    id: `candidate.backlog.${slugId(character.id)}.${Date.now().toString(36)}.${index + 1}`,
+    id: `candidate.backlog.${slugId(character.id)}.${randomUUID()}.${index + 1}`,
     content,
     type: 'fact',
     status: 'candidate',

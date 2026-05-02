@@ -20,6 +20,17 @@ export async function POST(
   { params }: AuthorUiRouteParams<{ projectId: string }>
 ) {
   const { projectId } = await params;
+  const declaredContentLength = parseContentLength(request.headers.get('content-length'));
+  if (declaredContentLength && declaredContentLength > AUTHOR_IMPORT_MAX_BYTES) {
+    return withAuthorUiService(request, (service) =>
+      service.uploadImport(projectId, {
+        fileName: 'oversized-upload',
+        fileSize: declaredContentLength,
+        fileType: request.headers.get('content-type') ?? undefined,
+      })
+    );
+  }
+
   return withAuthorUiService(request, async (service) => {
     const form = await request.formData();
     const file = form.get('file');
@@ -47,4 +58,10 @@ export async function POST(
       aOrDMode: typeof aOrDMode === 'string' ? aOrDMode : undefined,
     });
   });
+}
+
+function parseContentLength(value: string | null): number | null {
+  if (!value) return null;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 }

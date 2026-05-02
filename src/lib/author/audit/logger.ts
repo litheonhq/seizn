@@ -17,7 +17,7 @@ import type {
   AuthorAuditSearchFilter,
 } from './types';
 
-type SupabaseClientLike = Pick<ReturnType<typeof createServerClient>, 'from'>;
+type SupabaseClientLike = Pick<ReturnType<typeof createServerClient>, 'from' | 'rpc'>;
 
 interface AuthorAuditLogRow {
   id: string;
@@ -88,6 +88,11 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
   }
 
   async search(filter: AuthorAuditSearchFilter = {}): Promise<AuthorAuditLogEntry[]> {
+    const rpcRows = await this.searchViaRpc(filter);
+    if (rpcRows) {
+      return rpcRows;
+    }
+
     let query = this.client
       .from('author_audit_log')
       .select('id, project_id, user_id, event_type, payload, llm_meta, source_span, decision_id, parent_decision_id, created_at')
@@ -108,6 +113,33 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
     }
 
     return searchAuthorAuditEntries(((data ?? []) as AuthorAuditLogRow[]).map(rowToEntry), filter);
+  }
+
+  private async searchViaRpc(filter: AuthorAuditSearchFilter): Promise<AuthorAuditLogEntry[] | null> {
+    if (typeof this.client.rpc !== 'function') {
+      return null;
+    }
+
+    const { data, error } = await this.client.rpc('search_author_audit_log', {
+      p_user_id: filter.userId ?? this.userId,
+      p_project_id: filter.projectId ?? null,
+      p_event_types: filter.eventTypes?.length ? filter.eventTypes : null,
+      p_decision_id: filter.decisionId ?? null,
+      p_q: filter.q ?? null,
+      p_since: filter.since ?? null,
+      p_until: filter.until ?? null,
+      p_limit: Math.max(1, Math.min(500, filter.limit ?? 100)),
+    });
+
+    if (!error) {
+      return ((data ?? []) as AuthorAuditLogRow[]).map(rowToEntry);
+    }
+
+    if (isMissingAuditSearchRpc(error)) {
+      return null;
+    }
+
+    throw new Error(`Failed to search author audit log: ${error.message}`);
   }
 
   async getByDecisionId(decisionId: string): Promise<AuthorAuditLogEntry | undefined> {
@@ -249,4 +281,9 @@ function rowToEntry(row: AuthorAuditLogRow): AuthorAuditLogEntry {
 
 function sortAuditEntriesDesc(a: AuthorAuditLogEntry, b: AuthorAuditLogEntry): number {
   return b.createdAt.localeCompare(a.createdAt) || b.id.localeCompare(a.id);
+}
+
+function isMissingAuditSearchRpc(error: { code?: string; message?: string }): boolean {
+  const text = `${error.code ?? ''} ${error.message ?? ''}`;
+  return /PGRST202|PGRST204|Could not find the function|function .* does not exist|404/i.test(text);
 }

@@ -66,6 +66,7 @@ async function run() {
       const verifyCommands = [
         ['verify:e2e-encryption-db', 'npm run verify:e2e-encryption-db'],
         ['verify:runtime-primitives', 'npm run verify:runtime-primitives'],
+        ['verify:supabase-lints', 'npm run verify:supabase-lints'],
       ];
 
       for (const [scriptName, label] of verifyCommands) {

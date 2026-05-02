@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRequestUser, type RequestUser } from '@/lib/api/request-user';
-import { verifyCsrf } from '@/lib/csrf';
+import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import {
   AuthorUiNotFoundError,
   AuthorUiValidationError,
@@ -25,7 +25,7 @@ export async function withAuthorUiService(
   if (!isAuthorUiAccessAllowed(user)) {
     return NextResponse.json({ error: 'Author UI is not enabled for this account' }, { status: 403 });
   }
-  const csrfError = verifyCsrf(request);
+  const csrfError = verifyCsrfToken(request);
   if (csrfError) {
     return csrfError;
   }
@@ -34,14 +34,14 @@ export async function withAuthorUiService(
   try {
     const body = await handler(service, user.id);
     await service.flushAuditWrites();
-    return NextResponse.json(body);
+    return ensureCsrfCookie(request, NextResponse.json(body));
   } catch (error) {
     await service.flushAuditWrites();
     if (error instanceof AuthorUiValidationError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 400 }));
     }
     if (error instanceof AuthorUiNotFoundError) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
+      return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 404 }));
     }
     throw error;
   }
