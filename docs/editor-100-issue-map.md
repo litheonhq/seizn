@@ -38,6 +38,7 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | AMV3-P5-03 | Author dashboard had no audit log surface | Author UI nav stopped at simulation and conflict views | Added `/api/projects/{id}/audit`, SWR hooks, and an Audit screen with deterministic replay preview | Closed |
 | AMV3-P5-04 | Raw provider keys could leak into trace payloads | Mutation logs had no centralized redaction step | Added audit JSON sanitizer and regression tests covering secret-field redaction | Closed |
 | AMV3-P5-05 | Live `author_audit_log` table is not applied yet | Available Litheon `POSTGRES_URL_NON_POOLING` fails password authentication for `postgres` | Correct or rotate the Supabase non-pooling Postgres credential, then rerun `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked |
+| AMV3-P6-01 | Litheon R2 migration had no executable preflight tooling | Phase 6 was documented as an SOP only | Added dry-run-first rclone migration wrapper, SHA256 integrity verifier, target env template, and migration runbook | Closed |
 
 ## Files Changed
 
@@ -67,9 +68,14 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 - `src/lib/author/audit/`
 - `src/__tests__/author/audit/replay.test.ts`
 - `supabase/migrations/20260502006_author_audit_log.sql`
+- `scripts/migrate-r2-to-litheon.sh`
+- `scripts/verify-r2-integrity.ts`
+- `docs/migrations/20260502-r2-litheon-migration.md`
+- `.gitignore`
 
 ## Follow-up Notes
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
-3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; live SQL apply is blocked on the Supabase Postgres credential, and Litheon R2/account migration remains next-phase work.
+3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; live SQL apply is blocked on the Supabase Postgres credential.
+4. Phase 6 R2 migration copy/verify tooling is ready, but execution remains blocked on Litheon-owned bucket and target credentials.
