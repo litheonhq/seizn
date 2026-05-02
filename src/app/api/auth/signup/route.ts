@@ -9,25 +9,25 @@ import { logServerError, logServerWarn } from '@/lib/server/logger';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const SHOULD_VERIFY_TURNSTILE = IS_PRODUCTION || Boolean(TURNSTILE_SECRET_KEY);
 const ALLOW_E2E_AUTO_PROVISION = process.env.E2E_ALLOW_AUTO_PROVISION === '1' && !IS_PRODUCTION;
 const DISABLE_WELCOME_EMAIL =
   process.env.SEIZN_DISABLE_WELCOME_EMAIL === '1' || ALLOW_E2E_AUTO_PROVISION;
 
 async function rollbackFailedSignup(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: any,
+  supabase: ReturnType<typeof createServerClient>,
   userId: string
 ) {
   try {
     await supabase.from('profiles').delete().eq('id', userId);
-  } catch {
-    // Best-effort rollback only.
+  } catch (e) {
+    logServerError('Signup rollback: failed to delete profile', e);
   }
 
   try {
     await supabase.auth.admin.deleteUser(userId);
-  } catch {
-    // Best-effort rollback only.
+  } catch (e) {
+    logServerError('Signup rollback: failed to delete auth user', e);
   }
 }
 
@@ -36,8 +36,15 @@ async function rollbackFailedSignup(
  */
 async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean> {
   if (!TURNSTILE_SECRET_KEY) {
-    // Skip verification if not configured (development)
-    logServerWarn('TURNSTILE_SECRET_KEY not configured, skipping CAPTCHA verification');
+    if (IS_PRODUCTION) {
+      logServerError(
+        'TURNSTILE_SECRET_KEY not configured in production; CAPTCHA verification unavailable',
+        new Error('Missing TURNSTILE_SECRET_KEY')
+      );
+      return false;
+    } else {
+      logServerWarn('TURNSTILE_SECRET_KEY not configured, skipping CAPTCHA verification');
+    }
     return true;
   }
 
@@ -64,6 +71,16 @@ async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean
 // POST /api/auth/signup - Create a new user account
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const { checkIpRateLimitAsync, getRateLimitHeaders } = await import('@/lib/rate-limit');
+    const rateLimitResult = await checkIpRateLimitAsync(ip);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: getRateLimitHeaders(rateLimitResult) }
+      );
+    }
+
     let body: Record<string, unknown>;
     try {
       body = await request.json();
@@ -103,8 +120,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify Turnstile CAPTCHA (if configured)
-    if (TURNSTILE_SECRET_KEY && !ALLOW_E2E_AUTO_PROVISION) {
+    // Verify Turnstile CAPTCHA when configured, and always in production.
+    if (SHOULD_VERIFY_TURNSTILE && !ALLOW_E2E_AUTO_PROVISION) {
       if (!turnstileToken) {
         return NextResponse.json(
           { error: 'CAPTCHA verification required. Please try again.' },

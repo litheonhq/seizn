@@ -9,10 +9,18 @@ import { logServerError } from '@/lib/server/logger';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const SHOULD_VERIFY_TURNSTILE = IS_PRODUCTION || Boolean(TURNSTILE_SECRET_KEY);
 
 async function verifyTurnstileToken(token: string): Promise<boolean> {
   if (!TURNSTILE_SECRET_KEY) {
-    // Skip verification if not configured (development)
+    if (IS_PRODUCTION) {
+      logServerError(
+        'TURNSTILE_SECRET_KEY not configured in production; CAPTCHA verification unavailable',
+        new Error('Missing TURNSTILE_SECRET_KEY')
+      );
+      return false;
+    }
     return true;
   }
 
@@ -90,8 +98,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        // Verify Turnstile CAPTCHA if configured.
-        if (TURNSTILE_SECRET_KEY) {
+        // Verify Turnstile CAPTCHA when configured, and always in production.
+        if (SHOULD_VERIFY_TURNSTILE) {
           const token = typeof credentials.turnstileToken === 'string' ? credentials.turnstileToken : '';
           if (!token) {
             throw new Error('CAPTCHA verification required');
