@@ -129,10 +129,11 @@ Implemented now:
 - project-scoped in-memory store contract
 - sequential Author eval job runner
 - runtime payload parser and deterministic payload runner
+- API response envelope handler for route/worker reuse
 
 Next implementation:
 
-- API route handlers for eval job execution
+- Next.js route handler for eval job execution
 - Supabase-backed store adapter
 - persisted side-effect store
 - Fall dataset import helper
