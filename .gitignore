@@ -62,6 +62,7 @@ cli/*/dist/
 # CI artifacts
 .seizn-traces/
 .seizn-generated-tests/
+docs/migrations/r2-integrity-report*.json
 
 # Supabase local runtime and generated SQL artifacts
 /supabase/.temp/

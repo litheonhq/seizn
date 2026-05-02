@@ -239,3 +239,28 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 
 - The dashboard audit viewer is intentionally a Phase 5 list view; timeline/graph audit visualization remains a later UI cycle.
 - Live Supabase migration apply is blocked until the Litheon Supabase non-pooling Postgres credential is corrected or rotated. SQL is committed and covered by local schema review/tests.
+
+## 12) Author Memory v3 Litheon R2 Migration Preflight (2026-05-02)
+
+### Scope
+
+- Added `scripts/migrate-r2-to-litheon.sh`, a dry-run-first rclone wrapper for copying Author Memory v3 R2 objects from the temporary bucket to the Litheon-owned target bucket.
+- Added `scripts/verify-r2-integrity.ts`, a SHA256 source/target object verifier with optional JSON report output and no credential reporting.
+- Added Phase 6 target env placeholders to `.env.example`.
+- Added `docs/migrations/20260502-r2-litheon-migration.md` as the execution, rollback, and accounting runbook.
+- Ignored generated `docs/migrations/r2-integrity-report*.json` reports so object-key evidence is not accidentally committed.
+- Updated `.github/TECH_STACK.md` and the issue map with the Phase 6 preflight status.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `bash -n scripts/migrate-r2-to-litheon.sh` | Pass |
+| `npx tsc --noEmit --target ES2022 --module commonjs --moduleResolution node --esModuleInterop --strict --skipLibCheck --types node scripts/verify-r2-integrity.ts` | Pass |
+| `npx ts-node --project tsconfig.node.json scripts/verify-r2-integrity.ts --help` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- The script has not copied production objects. Execution remains blocked until the Litheon-owned R2 bucket and target credentials are available.
+- Runtime R2 env/code still points at the temporary bucket by design until a verified copy and smoke test pass.
