@@ -1,119 +1,226 @@
 /**
- * Stripe Configuration
+ * Stripe billing configuration for the Author launch v7 price lock.
  *
- * Maps Stripe price IDs to plan names and provides utility functions
- * for plan management.
+ * Public UI should use AUTHOR_BILLING_TIERS for display only. Checkout routes
+ * resolve Stripe price IDs server-side from env so clients never choose raw
+ * price IDs directly.
  */
 
-// Plan types available in Seizn
-export type PlanName = "free" | "starter" | "plus" | "pro" | "enterprise";
+export type LegacyPlanName = 'free' | 'starter' | 'plus';
+export type AuthorBillingTier = 'indie' | 'pro' | 'studio' | 'enterprise';
+export type PlanName = LegacyPlanName | AuthorBillingTier;
+export type BillingCadence = 'monthly' | 'yearly';
 
-// Stripe price ID to plan name mapping
-// Update these IDs from your Stripe dashboard
-export const STRIPE_PLAN_PRICES: Record<string, PlanName> = {
-  // Monthly plans
-  "price_1TJdcl8XSoMws9Uf0hNjQdar": "starter",
-  "price_1TJdcm8XSoMws9UfAYJ7xu7G": "plus",
-  "price_1TJdcn8XSoMws9Uf2iQnKLYx": "pro",
-  "price_1TJdco8XSoMws9UfbdjjdUzo": "enterprise",
+export interface AuthorBillingTierConfig {
+  id: AuthorBillingTier;
+  label: string;
+  productId: string;
+  monthlyUsd: number;
+  yearlyUsd: number;
+  tokenCapMonth: number | null;
+  envPrefix: string;
+  recommended?: boolean;
+  byokRequired?: boolean;
+}
 
-  // Yearly plans
-  "price_1TJdcl8XSoMws9UfcVXAWAcd": "starter",
-  "price_1TJdcm8XSoMws9Ufwe5uDBU1": "plus",
-  "price_1TJdcn8XSoMws9UfIOiIxnlX": "pro",
-  "price_1TJdco8XSoMws9UfTDmV7rh1": "enterprise",
+export const AUTHOR_PRICE_LOCK_VERSION = 'v7';
+export const BYOK_COUPON_ID = 'SEIZN_BYOK_50';
+export const AUTHOR_TRIAL_DAYS = 30;
+
+export const AUTHOR_BILLING_TIERS: Record<AuthorBillingTier, AuthorBillingTierConfig> = {
+  indie: {
+    id: 'indie',
+    label: 'Indie',
+    productId: 'prod_UNGacXMozktNgE',
+    monthlyUsd: 39,
+    yearlyUsd: 397.8,
+    tokenCapMonth: 1_000_000,
+    envPrefix: 'STRIPE_PRICE_ID_INDIE',
+  },
+  pro: {
+    id: 'pro',
+    label: 'Pro',
+    productId: 'prod_UNGajiXXpdiSYR',
+    monthlyUsd: 149,
+    yearlyUsd: 1519.8,
+    tokenCapMonth: 5_000_000,
+    envPrefix: 'STRIPE_PRICE_ID_PRO',
+    recommended: true,
+  },
+  studio: {
+    id: 'studio',
+    label: 'Studio',
+    productId: 'prod_UNGa1KL7DhxWGw',
+    monthlyUsd: 499,
+    yearlyUsd: 5089.8,
+    tokenCapMonth: 20_000_000,
+    envPrefix: 'STRIPE_PRICE_ID_STUDIO',
+  },
+  enterprise: {
+    id: 'enterprise',
+    label: 'Enterprise',
+    productId: 'prod_UNGaW9bFkuycVQ',
+    monthlyUsd: 2500,
+    yearlyUsd: 30000,
+    tokenCapMonth: null,
+    envPrefix: 'STRIPE_PRICE_ID_ENTERPRISE',
+    byokRequired: true,
+  },
 };
 
-// Reverse mapping: plan name to default price ID (monthly)
-export const PLAN_TO_STRIPE_PRICE: Record<PlanName, string | null> = {
-  free: null,
-  starter: "price_1TJdcl8XSoMws9Uf0hNjQdar",
-  plus: "price_1TJdcm8XSoMws9UfAYJ7xu7G",
-  pro: "price_1TJdcn8XSoMws9Uf2iQnKLYx",
-  enterprise: "price_1TJdco8XSoMws9UfbdjjdUzo",
-};
+const AUTHOR_TIER_ORDER: PlanName[] = [
+  'free',
+  'starter',
+  'plus',
+  'indie',
+  'pro',
+  'studio',
+  'enterprise',
+];
 
-/**
- * Get plan name from Stripe price ID
- */
-export function getPlanFromStripePriceId(priceId: string): PlanName | null {
-  return STRIPE_PLAN_PRICES[priceId] || null;
+export function isAuthorBillingTier(value: unknown): value is AuthorBillingTier {
+  return (
+    value === 'indie' ||
+    value === 'pro' ||
+    value === 'studio' ||
+    value === 'enterprise'
+  );
 }
 
-/**
- * Get default price ID for a plan
- */
-export function getStripePriceIdFromPlan(plan: PlanName): string | null {
-  return PLAN_TO_STRIPE_PRICE[plan];
+export function isBillingCadence(value: unknown): value is BillingCadence {
+  return value === 'monthly' || value === 'yearly';
 }
 
-/**
- * Check if a price ID is valid
- */
-export function isValidStripePriceId(priceId: string): boolean {
-  return priceId in STRIPE_PLAN_PRICES;
+export function getAuthorTierConfig(tier: AuthorBillingTier): AuthorBillingTierConfig {
+  return AUTHOR_BILLING_TIERS[tier];
 }
 
-/**
- * Get all price IDs for a specific plan
- */
-export function getStripePriceIdsForPlan(plan: PlanName): string[] {
-  return Object.entries(STRIPE_PLAN_PRICES)
-    .filter(([, planName]) => planName === plan)
-    .map(([priceId]) => priceId);
+export function getAuthorTokenCap(plan: string | null | undefined): number | null {
+  if (!isAuthorBillingTier(plan)) {
+    return null;
+  }
+  return AUTHOR_BILLING_TIERS[plan].tokenCapMonth;
 }
 
-/**
- * Determine if a plan change is an upgrade or downgrade
- */
+export function getAuthorStripePriceId(
+  tier: AuthorBillingTier,
+  cadence: BillingCadence,
+  env: NodeJS.ProcessEnv = process.env
+): string | null {
+  const prefix = AUTHOR_BILLING_TIERS[tier].envPrefix;
+  const suffix = cadence === 'monthly' ? 'MONTHLY' : 'YEARLY';
+  return readEnv(env, [
+    `${prefix}_${suffix}`,
+    `${prefix}_${cadence.toUpperCase()}`,
+    `${prefix}_${suffix === 'MONTHLY' ? 'MO' : 'YR'}`,
+  ]);
+}
+
+export function getAuthorTierFromStripePriceId(
+  priceId: string,
+  env: NodeJS.ProcessEnv = process.env
+): AuthorBillingTier | null {
+  for (const tier of Object.keys(AUTHOR_BILLING_TIERS) as AuthorBillingTier[]) {
+    for (const cadence of ['monthly', 'yearly'] as const) {
+      if (getAuthorStripePriceId(tier, cadence, env) === priceId) {
+        return tier;
+      }
+    }
+  }
+  return null;
+}
+
+export function getBillingCadenceFromStripePriceId(
+  priceId: string,
+  env: NodeJS.ProcessEnv = process.env
+): BillingCadence | null {
+  for (const tier of Object.keys(AUTHOR_BILLING_TIERS) as AuthorBillingTier[]) {
+    for (const cadence of ['monthly', 'yearly'] as const) {
+      if (getAuthorStripePriceId(tier, cadence, env) === priceId) {
+        return cadence;
+      }
+    }
+  }
+  return null;
+}
+
+export function getPlanFromStripePriceId(
+  priceId: string,
+  env: NodeJS.ProcessEnv = process.env
+): PlanName | null {
+  return getAuthorTierFromStripePriceId(priceId, env);
+}
+
+export function getStripePriceIdFromPlan(
+  plan: PlanName,
+  cadence: BillingCadence = 'monthly',
+  env: NodeJS.ProcessEnv = process.env
+): string | null {
+  return isAuthorBillingTier(plan)
+    ? getAuthorStripePriceId(plan, cadence, env)
+    : null;
+}
+
+export function isValidStripePriceId(
+  priceId: string,
+  env: NodeJS.ProcessEnv = process.env
+): boolean {
+  return getAuthorTierFromStripePriceId(priceId, env) !== null;
+}
+
+export function getStripePriceIdsForPlan(
+  plan: PlanName,
+  env: NodeJS.ProcessEnv = process.env
+): string[] {
+  if (!isAuthorBillingTier(plan)) return [];
+  return (['monthly', 'yearly'] as const)
+    .map((cadence) => getAuthorStripePriceId(plan, cadence, env))
+    .filter((priceId): priceId is string => Boolean(priceId));
+}
+
 export function isStripePlanUpgrade(
   currentPlan: PlanName,
   newPlan: PlanName
 ): boolean {
-  const planOrder: PlanName[] = [
-    "free",
-    "starter",
-    "plus",
-    "pro",
-    "enterprise",
-  ];
-  return planOrder.indexOf(newPlan) > planOrder.indexOf(currentPlan);
+  return AUTHOR_TIER_ORDER.indexOf(newPlan) > AUTHOR_TIER_ORDER.indexOf(currentPlan);
 }
 
-/**
- * Stripe subscription status types
- */
 export type StripeSubscriptionStatus =
-  | "active"
-  | "trialing"
-  | "past_due"
-  | "incomplete"
-  | "incomplete_expired"
-  | "canceled"
-  | "unpaid"
-  | "paused";
+  | 'active'
+  | 'trialing'
+  | 'past_due'
+  | 'incomplete'
+  | 'incomplete_expired'
+  | 'canceled'
+  | 'unpaid'
+  | 'paused';
 
-/**
- * Map Stripe subscription status to internal status
- */
 export function mapStripeSubscriptionStatus(
-  stripeStatus: StripeSubscriptionStatus
-): "active" | "cancelled" | "paused" | "past_due" | "incomplete" {
+  stripeStatus: StripeSubscriptionStatus | string | undefined
+): 'active' | 'cancelled' | 'paused' | 'past_due' | 'incomplete' {
   switch (stripeStatus) {
-    case "active":
-    case "trialing":
-      return "active";
-    case "past_due":
-    case "unpaid":
-      return "past_due";
-    case "paused":
-      return "paused";
-    case "canceled":
-      return "cancelled";
-    case "incomplete":
-    case "incomplete_expired":
-      return "incomplete";
+    case 'active':
+    case 'trialing':
+      return 'active';
+    case 'past_due':
+    case 'unpaid':
+      return 'past_due';
+    case 'paused':
+      return 'paused';
+    case 'canceled':
+      return 'cancelled';
+    case 'incomplete':
+    case 'incomplete_expired':
+      return 'incomplete';
     default:
-      return "active";
+      return 'active';
   }
+}
+
+function readEnv(env: NodeJS.ProcessEnv, names: string[]): string | null {
+  for (const name of names) {
+    const value = env[name]?.trim();
+    if (value) return value;
+  }
+  return null;
 }

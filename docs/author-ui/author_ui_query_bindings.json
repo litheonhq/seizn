@@ -35,6 +35,7 @@
       "['settings', projectId]",
       "['account', 'byok']",
       "['account', 'usage']",
+      "['account', 'subscription']",
       "['sync', 'status']"
     ],
     "notes": [
@@ -850,6 +851,18 @@
           "endpoint": "GET /api/account/usage",
           "stale_time_ms": 60000,
           "consumed_by": ["<UsageMeter>", "<TopNav.UsageIndicator>"]
+        },
+        {
+          "name": "useCurrentSubscription",
+          "key": "['account', 'subscription']",
+          "endpoint": "GET /api/account/subscription",
+          "stale_time_ms": 60000,
+          "consumed_by": ["<BillingDashboard>", "<UsageMeter>", "<TrialBanner>"],
+          "select_transformations": [
+            "billing dashboard: plan, tier_label, status, renewal/cancel dates, price_lock_version",
+            "trial banner: trial_days_remaining <= 3",
+            "usage meter: usage.tokens_used_month + usage.tokens_cap_month"
+          ]
         }
       ],
       "mutations": [
@@ -866,6 +879,37 @@
           "on_error": {
             "toast_variant": "error",
             "toast_message": "키 검증 실패: {error.message}"
+          }
+        },
+        {
+          "name": "useManageSubscription",
+          "endpoint": "POST /api/account/subscription",
+          "trigger_components": ["<BillingDashboard.ManageButton>", "<BillingDashboard.CancelButton>", "<BillingDashboard.ResumeButton>"],
+          "request": {
+            "action": "portal | cancel | resume"
+          },
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['account', 'subscription']", "['account', 'usage']"],
+            "toast": "Billing state updated"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "Billing action failed: {error.message}"
+          }
+        },
+        {
+          "name": "useDisableByok",
+          "endpoint": "DELETE /api/account/byok",
+          "trigger_components": ["<BYOKKeyManager.DisableButton>"],
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['account', 'byok']", "['account', 'usage']", "['account', 'subscription']"],
+            "toast": "BYOK disabled and discount removed"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "BYOK disable failed: {error.message}"
           }
         }
       ]

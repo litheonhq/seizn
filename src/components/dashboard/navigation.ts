@@ -107,6 +107,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
       label: t("dashboard.nav.groups.finops"),
       defaultOpen: false,
       items: [
+        { label: "Billing", href: "/dashboard/billing", icon: WalletIcon },
         { label: t("dashboard.nav.usage"), href: "/dashboard/usage", icon: ChartIcon },
         { label: t("dashboard.nav.budget"), href: "/dashboard/budget", icon: WalletIcon },
         { label: t("dashboard.nav.reports"), href: "/dashboard/reports", icon: FileTextIcon },

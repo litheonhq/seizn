@@ -2,7 +2,7 @@
  * Seizn Plan Limits Configuration
  *
  * Centralized configuration for all plan limits and quotas.
- * Connected to billing (Paddle) via profiles.plan field.
+ * Connected to billing via profiles.plan field.
  *
  * IMPORTANT: All quotas are MONTHLY (reset at UTC midnight on 1st of month)
  * Rate limits are per-minute (RPM) for burst protection
@@ -105,6 +105,30 @@ export const PLANS: Record<string, PlanConfig> = {
     priceYearly: 90,
   },
 
+  indie: {
+    name: 'Indie',
+    memories: 50_000,
+    apiCallsMonthly: 5_000,
+    apiKeys: 3,
+    rateLimit: 120,
+    throttle: { rps: 5, burst: 15 },
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: false,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: false,
+      webhooks: false,
+      sso: false,
+      prioritySupport: false,
+    },
+    maxInputTokens: 8_000,
+    maxOutputTokens: 2_000,
+    priceMonthly: 39,
+    priceYearly: 397.8,
+  },
+
   plus: {
     name: 'Plus',
     memories: 100_000,          // 100K memories
@@ -149,8 +173,32 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
-    priceMonthly: 99,
-    priceYearly: 990,
+    priceMonthly: 149,
+    priceYearly: 1519.8,
+  },
+
+  studio: {
+    name: 'Studio',
+    memories: -1,
+    apiCallsMonthly: 500_000,
+    apiKeys: 25,
+    rateLimit: 1200,
+    throttle: { rps: 75, burst: 200 },
+    features: {
+      hybridSearch: true,
+      reranking: true,
+      federatedSearch: true,
+      ragQuery: true,
+      bulkOperations: true,
+      analytics: true,
+      webhooks: true,
+      sso: false,
+      prioritySupport: true,
+    },
+    maxInputTokens: 64_000,
+    maxOutputTokens: 16_000,
+    priceMonthly: 499,
+    priceYearly: 5089.8,
   },
 
   enterprise: {
@@ -173,8 +221,8 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 128_000,
     maxOutputTokens: 32_000,
-    priceMonthly: 499,
-    priceYearly: 4990,
+    priceMonthly: 2500,
+    priceYearly: 30000,
   },
 };
 
