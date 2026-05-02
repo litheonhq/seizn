@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
@@ -19,6 +19,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const auth = await validateApiKey(request);
     if (!auth.valid) {
       return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
+    }
+    if (!hasApiScope(auth.scopes, 'fall:read')) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: 'Requires fall:read scope' },
+        { status: 403 }
+      );
     }
 
     const { runId } = await params;
@@ -73,6 +79,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const auth = await validateApiKey(request);
     if (!auth.valid) {
       return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
+    }
+    if (!hasApiScope(auth.scopes, 'fall:write')) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: 'Requires fall:write scope' },
+        { status: 403 }
+      );
     }
 
     const { runId } = await params;
@@ -132,15 +144,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
     }
 
-    // Check admin permission
-    const hasPermission =
-      auth.scopes?.includes('admin') ||
-      auth.scopes?.includes('fall:delete') ||
-      auth.scopes?.includes('*');
-
-    if (!hasPermission) {
+    if (!hasApiScope(auth.scopes, 'fall:delete')) {
       return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires admin or fall:delete scope' },
+        { error: 'Forbidden', message: 'Requires fall:delete scope' },
         { status: 403 }
       );
     }

@@ -9,7 +9,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Framework | Next.js | ^16.1.6 | App Router, Turbopack (dev), standalone output for Docker |
+| Framework | Next.js | ^16.3.0-canary.8 | App Router, Turbopack, standalone output for Docker |
 | Language | TypeScript | ^5 | Strict mode, bundler module resolution |
 | Runtime | Node.js | 20 | Alpine-based Docker image |
 | Package Manager | npm | (lockfile) | `npm ci` in CI/CD pipelines |
@@ -53,7 +53,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
-| Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
+| Email | Resend | ^6.12.2 | Transactional emails (`src/lib/email/`) |
 | Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Embeddings | Voyage AI (voyage-3) | -- | 1024-dim embeddings with Redis caching |
@@ -65,7 +65,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | PII Detection | Custom + Presidio (optional) | -- | `src/lib/pii/` with scanner, pipeline, config |
 | Provenance | KMS Signing | -- | AWS KMS, Azure Key Vault, Google Cloud KMS for content signing |
 | Observability | OpenTelemetry | ^2.5.0 | OTLP HTTP/Proto export, custom GenAI semantic conventions |
-| Error Tracking | Sentry | ^10.32.1 | Instrumentation client + server, PII pipeline integration |
+| Error Tracking | Sentry | ^10.51.0 | Instrumentation client + server, PII pipeline integration |
 | Analytics | PostHog | ^1.316.0 | TTFS tracking, conversion funnels, feature usage |
 | RUM | web-vitals | ^4.2.4 | WebVitalsReporter component in root layout |
 
@@ -152,7 +152,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 | Library | Version | Purpose |
 |---------|---------|---------|
-| `next` | ^16.1.6 | Full-stack React framework (App Router) |
+| `next` | ^16.3.0-canary.8 | Full-stack React framework (App Router) |
 | `@supabase/supabase-js` | ^2.90.0 | PostgreSQL database client with RLS |
 | `next-auth` | ^5.0.0-beta.30 | Authentication (JWT, OAuth, Credentials) |
 | `@node-saml/node-saml` | ^5.1.0 | SAML 2.0 processing for Enterprise SSO (ACS, metadata, assertions) |
@@ -161,12 +161,12 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `@google/generative-ai` | ^0.24.1 | Google AI for gateway multi-provider support |
 | `ai` (Vercel AI SDK) | ^6.0.69 | Streaming AI integration, memory middleware |
 | `@upstash/redis` | ^1.36.1 | Distributed caching and rate limiting |
-| `@sentry/nextjs` | ^10.32.1 | Error tracking, performance monitoring, source maps |
+| `@sentry/nextjs` | ^10.51.0 | Error tracking, performance monitoring, source maps |
 | `posthog-js` | ^1.316.0 | Product analytics, TTFS tracking, conversion funnels |
 | `@xyflow/react` | ^12.10.0 | Interactive graph/flow visualization (mind maps, knowledge graphs) |
 | `recharts` | ^3.6.0 | Data visualization charts (analytics, evals, traces) |
-| `@opentelemetry/sdk-node` | ^0.211.0 | Distributed tracing with OTLP export |
-| `resend` | ^6.7.0 | Transactional email delivery |
+| `@opentelemetry/sdk-node` | ^0.216.0 | Distributed tracing with OTLP export |
+| `resend` | ^6.12.2 | Transactional email delivery |
 | `lucide-react` | ^0.563.0 | Icon library |
 | `tailwind-merge` | ^3.4.0 | Tailwind CSS class conflict resolution |
 | `swr` | ^2.4.0 | Client-side data fetching with caching |
@@ -261,7 +261,7 @@ Clear domain separation: Spring handles memory CRUD, Summer handles RAG/ingestio
 Two auth systems coexist: NextAuth manages session/JWT while Supabase Auth handles password verification. This creates complexity in user creation (OAuth users need manual profile inserts). The `@auth/supabase-adapter` is in `package.json` but not imported anywhere -- suggesting an incomplete migration.
 
 **next-intl in package.json but barely used**
-`next-intl` (^4.7.0) is installed but only imported in 1 file (`docs/components/page.tsx`). The project primarily uses a custom dictionary system. This creates an unnecessary dependency.
+`next-intl` (^4.11.0) is installed but only imported in 1 file (`docs/components/page.tsx`). The project primarily uses a custom dictionary system. This creates an unnecessary dependency.
 
 **pdf-parse usage is limited to PDF extraction paths**
 `pdf-parse` (^2.4.5) is imported in `src/lib/connectors/external/google-drive.ts` and `src/lib/summer/ingestion/layout-parser.ts`. PDF parsing is implemented, but primarily scoped to ingestion/connectors.
@@ -385,7 +385,7 @@ User Request
 | Package | Evidence |
 |---------|----------|
 | `@auth/supabase-adapter` (^1.11.1) | Not imported anywhere in `src/`. Auth uses custom Supabase + NextAuth integration. |
-| `next-intl` (^4.7.0) | Only 1 import in docs components page. The project uses a custom dictionary system for i18n. |
+| `next-intl` (^4.11.0) | Only 1 import in docs components page. The project uses a custom dictionary system for i18n. |
 
 ### Noteworthy Version Choices
 | Observation | Details |
