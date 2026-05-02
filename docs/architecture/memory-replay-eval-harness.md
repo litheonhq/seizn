@@ -128,6 +128,7 @@ Implemented now:
 - single-case Author eval runner
 - project-scoped in-memory store contract
 - sequential Author eval job runner
+- runtime payload parser and deterministic payload runner
 
 Next implementation:
 

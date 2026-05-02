@@ -1,4 +1,5 @@
 export * from './canonical';
+export * from './contract';
 export * from './eval';
 export * from './fall-adapter';
 export * from './job';

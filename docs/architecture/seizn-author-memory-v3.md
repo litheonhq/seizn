@@ -168,12 +168,15 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/runner.ts`
 - `src/lib/author/memory-v3/store.ts`
 - `src/lib/author/memory-v3/job.ts`
+- `src/lib/author/memory-v3/contract.ts`
 
 The storage contract is deliberately adapter-shaped:
 
 - `AuthorMemoryV3Store` owns project-scoped records, snapshots, side effects, and eval results.
 - `InMemoryAuthorMemoryV3Store` is the local/test implementation and also implements the replay side-effect store.
 - `runAuthorEvalJob` executes eval cases sequentially, persists records, snapshots, side effects, and per-case eval results, then returns a run summary.
+- `parseAuthorEvalJobPayload` validates external JSON before it reaches the runner.
+- `runAuthorEvalJobPayload` supports deterministic fixture execution through per-case `liveOutput`.
 
 Next implementation work should add:
 
