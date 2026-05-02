@@ -27,18 +27,22 @@ dispatch_rule: Sequential only (per feedback_codex_sequential_execution.md). Eac
 
 사용자가 직접 처리 (Codex 권한 외):
 
-1. **Cloudflare R2 셋업** (Litheon 계정):
-   - Cloudflare Dashboard → R2 → `seizn-author-uploads` bucket 신규 생성
-   - region 선택 (`wnam` 또는 `apac` 권장)
-   - API token 발급: Object Read·Write 권한·해당 bucket scope
-   - 토큰을 `~/.codex/private/consolidated/litheon.env`에 등록 ([feedback_no_secrets_in_memory.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_secrets_in_memory.md)·메모리 raw value X):
+1. **Cloudflare R2 셋업** (개인 iruhana25 임시·W6 이전 Litheon 마이그레이션 강제·자세히 design spec §11):
+   - Cloudflare Dashboard → 개인 계정 → R2 → `seizn-author-uploads-temp` bucket 신규 생성
+   - region 선택 (`apac` 또는 `wnam` 권장)
+   - API token 발급: Object Read·Write 권한·해당 bucket scope·TTL 1년
+   - 토큰을 `~/.codex/private/consolidated/litheon.env`에 등록 (Litheon 운영 자원으로 분류·개인 명의 단계 메모 명시·[feedback_no_secrets_in_memory.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_secrets_in_memory.md)·메모리 raw value X):
      ```
      R2_ACCOUNT_ID=...
      R2_ACCESS_KEY_ID=...
      R2_SECRET_ACCESS_KEY=...
-     R2_BUCKET=seizn-author-uploads
+     R2_BUCKET=seizn-author-uploads-temp
      R2_REGION=auto
+     R2_OWNER=personal_temp
+     R2_MIGRATE_BY=W6
+     R2_ENDPOINT=https://<account_id>.r2.cloudflarestorage.com
      ```
+   - Mercury·Wise Business·Brex 등 Litheon 카드 발급 시도는 W3~W5 동안 별 트랙으로 진행
 
 2. **Anthropic BYOK 키 (Celovin 명의)**:
    - Celovin Anthropic 계정 생성 (이미 있으면 OK)
@@ -385,6 +389,75 @@ CREATE POLICY "service role insert" ON author_audit_log
 - [ ] RLS 검증 — 다른 작가 cross-tenant 누설 0
 - [ ] payload·llm_meta·source_span에 secret 키 raw value 노출 0
 
+## Phase 6 — Litheon Migration (W3~W5 시점·외부 launch 전 강제)
+
+**전제**: Phase 1~5 완료된 R2 bucket이 *개인 명의 (iruhana25)*. W6 외부 launch 전 *Litheon 명의*로 이전 — design spec §11.
+
+**자금 조달 트리거 (W3~W5 안에 발생해야 함)**:
+
+다음 중 하나 충족 시 즉시 Phase 6 시작:
+
+- Mercury·Wise Business·Brex 등 Litheon 명의 디지털 뱅킹 카드 발급 성공
+- Anthropic Claude for Startups·Cloudflare for Startups 크레딧 프로그램 통과
+- 개인 → Litheon 자본금 출자 (~$100~500·문서화)
+- Litheon 첫 매출 (외부 베타 작가 1인 결제) → 카드 발급 자격
+
+**디스패치 prompt** (자금 조달 후):
+
+```text
+작업 디렉토리: C:/Users/admin/Projects/seizn
+실행 대상:
+  1. Litheon Cloudflare 계정에 R2 활성화·신규 bucket `seizn-author-uploads` 생성 (사용자 작업)
+  2. Codex: rclone 또는 wrangler r2 object cp 스크립트 작성 (`scripts/migrate-r2-to-litheon.sh`)
+  3. integrity 검증 스크립트 (SHA256 비교)
+  4. .env·src/lib/author/storage/r2-store.ts·관련 환경 변수 갱신
+  5. 검증 — 신규 업로드·기존 객체 GET 정상 + RLS 정합
+  6. 임시 bucket (seizn-author-uploads-temp) 객체 삭제·bucket 폐기 (사용자 작업·Codex가 SQL/script로 검증)
+지침 분리 문서: docs/architecture/seizn-author-memory-v3-llm-integration.md §11 +
+                docs/architecture/seizn-author-memory-v3-llm-integration-tasks.md §Phase 6
+```
+
+**구체 변경 파일**:
+
+```
+NEW   scripts/migrate-r2-to-litheon.sh    (rclone or wrangler-based bulk copy)
+NEW   scripts/verify-r2-integrity.ts      (SHA256 check)
+EDIT  src/lib/author/storage/r2-store.ts  (R2_OWNER·R2_MIGRATE_BY 변수 정리·R2_BUCKET 갱신)
+EDIT  .env.example                        (정식 R2_BUCKET=seizn-author-uploads)
+EDIT  docs/architecture/seizn-author-memory-v3-llm-integration.md §11 (Litheon 이전 완료 표기)
+NEW   docs/migrations/2026MMDD-r2-litheon-migration.md (회계·사유·timestamp 문서)
+```
+
+**SOP 단계 (사용자 + Codex 분담)**:
+
+| Step | 담당 | 작업 |
+|---|---|---|
+| 1 | 사용자 | Mercury 등 Litheon 카드 발급·Cloudflare R2 활성화·신규 bucket `seizn-author-uploads` 생성 |
+| 2 | Codex | migration script (`migrate-r2-to-litheon.sh`) 작성·rclone 또는 wrangler 기반 |
+| 3 | 사용자 | 신규 bucket API 토큰 발급·`R2_*_NEW` 환경 변수 등록 |
+| 4 | Codex | script 실행 — 객체 일괄 복사·SHA256 verify |
+| 5 | Codex | 코드 갱신 — `R2_BUCKET=seizn-author-uploads` (NO `-temp`)·`R2_OWNER=litheon`·`R2_MIGRATE_BY` 제거 |
+| 6 | Codex | 재배포 (Vercel·Supabase Edge functions)·smoke test (업로드·GET) |
+| 7 | 사용자 | 임시 bucket (`seizn-author-uploads-temp`) 객체 삭제·bucket 폐기 |
+| 8 | 사용자 | 회계 — 개인 → Litheon 정산·자본금 출자 또는 무이자 대여 문서화 (transfer pricing 정합·entity 분리 룰) |
+| 9 | Codex | design spec §11 갱신·migration 완료 표기·migration 회계 문서 (`docs/migrations/...`) 작성 |
+| 10 | 사용자 | Anthropic·Stripe·Supabase 결제 카드 Litheon 명의 갱신 (별 작업) |
+
+**Acceptance criteria**:
+
+- [ ] 신규 bucket `seizn-author-uploads` (Litheon 명의) 작동·이전된 객체 GET·새 업로드 OK
+- [ ] SHA256 integrity 100% 일치
+- [ ] 코드·env에 `temp`·`personal_temp`·`MIGRATE_BY` 흔적 0
+- [ ] 임시 bucket 객체 0·bucket 폐기 완료
+- [ ] 회계 문서 `docs/migrations/2026MMDD-r2-litheon-migration.md` 작성 (transfer 시점·금액·사유·entity 정합)
+- [ ] design spec §11 "Migration 완료 (YYYY-MM-DD)" 표기
+- [ ] 외부 launch (W6) 약관·privacy policy에 Litheon LLC 명시·실 인프라 정합
+
+**실패 시 대응**:
+
+- W5까지 자금 조달 트리거 미충족 → **W6 외부 launch 연기**·외부 작가 가입 X 유지
+- launch 연기 결정은 사용자가 수동·Codex가 강제 X·하지만 design spec §11 룰 정합
+
 ## 통합 검증 (5 phase 완료 후)
 
 내가 진행:
@@ -410,7 +483,8 @@ CREATE POLICY "service role insert" ON author_audit_log
 | Phase 3 (extraction·validator) | 1~1.5 day |
 | Phase 4 (backlog generation) | 0.5~1 day |
 | Phase 5 (audit·replay) | 0.5~1 day |
-| **합계** | **3~5.5 working days** |
+| Phase 6 (Litheon migration) | 0.5 day (자금 조달 후·script + 이전) |
+| **합계** | **3.5~6 working days** |
 
 순차 실행이라 calendar 시간 ~1주~10일. 사용자 검증·결정 시간 추가 가능.
 

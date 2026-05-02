@@ -52,7 +52,7 @@ depends_on:
 |---|---|
 | LLM provider | Anthropic Opus 4.7 (`claude-opus-4-7`) — 단일 |
 | BYOK 키 위치 | Celovin (KNOT 처리·entity 분리 정합·Litheon dev key는 테스트 한정) |
-| 파일 저장소 | **Cloudflare R2** (`seizn-author-uploads` bucket·Litheon 명의 신규·zero egress·S3-compatible) |
+| 파일 저장소 | **Cloudflare R2** (`seizn-author-uploads-temp` bucket·*개인 명의 (iruhana25) 임시·migrate_by=W6 launch 전 Litheon 이전 강제*·zero egress·S3-compatible) |
 | Audit log 영속 저장소 | Supabase Postgres (`author_audit_log` 테이블 신규·JSONB 쿼리 효율) |
 | `.hwp` 파서 | **제외** — 한국 사용자도 `.docx` 사용 보편 |
 | 5명 backlog 작업 순서 | Phase 4 빌드 전 사용자가 manual minimum lock 후 Phase 4 완성 시 audit·확장 |
@@ -123,12 +123,13 @@ src/app/api/projects/[projectId]/imports/route.ts  (refactor — file bytes pass
 supabase/migrations/2026MMDD_author_imports_text.sql  (NEW — parsed_text 저장 테이블)
 ```
 
-**Cloudflare R2 셋업 (Litheon 명의·entity 분리 정합)**:
-- bucket: `seizn-author-uploads` (신규·기존 `knot-creative-backup`·`milkypix-assets`와 분리)
-- region: `wnam` 또는 `apac` (작가 분포 따라)
+**Cloudflare R2 셋업 (개인 명의 임시·W6 이전 Litheon 마이그레이션 강제)**:
+- bucket: `seizn-author-uploads-temp` (신규·*개인 iruhana25 명의 임시*·기존 `knot-creative-backup`·`milkypix-assets`와 분리)
+- 사유: Litheon 카드 발급 불가 (2026-05-02 lock)·자금 조달 후 W6 외부 launch 전 이전 강제 — 자세히 §11
+- region: `apac` (한국·일본 1차)·또는 `wnam` (영어권 GTM 정합)
 - access: S3-compatible API·private bucket·signed URL only
-- credential: Litheon Cloudflare account access key·env `R2_ACCESS_KEY_ID`·`R2_SECRET_ACCESS_KEY`·`R2_ACCOUNT_ID`·`R2_BUCKET=seizn-author-uploads`
-- key 등록 후: [feedback_no_secrets_in_memory.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_secrets_in_memory.md) 정합·메모리에 raw value 저장 X·`~/.codex/private/consolidated/litheon.env`에 통합
+- credential: 개인 Cloudflare account access key·env `R2_ACCESS_KEY_ID`·`R2_SECRET_ACCESS_KEY`·`R2_ACCOUNT_ID`·`R2_BUCKET=seizn-author-uploads-temp`·`R2_OWNER=personal_temp`·`R2_MIGRATE_BY=W6`
+- key 등록 후: [feedback_no_secrets_in_memory.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_secrets_in_memory.md) 정합·메모리에 raw value 저장 X·`~/.codex/private/consolidated/litheon.env`에 통합 (Litheon 운영 영역으로 분류·개인 명의 단계 메모 명시)
 
 **핵심 동작**:
 1. POST `/api/projects/{id}/imports` 라우트가 file 바이트를 service.uploadImport로 전달
@@ -360,10 +361,47 @@ Celovin BYOK으로 직접 결제·entity 분리 정합.
 
 Codex 작업 중 또는 후 결정 필요:
 
-- R2 bucket region (`wnam`·`apac`·`weur` 중)·신규 `seizn-author-uploads` bucket 생성 (Litheon Cloudflare 계정)
+- R2 bucket region (`wnam`·`apac`·`weur` 중)·신규 `seizn-author-uploads-temp` bucket 생성 (개인 iruhana25 임시·자세히 §11)
 - Phase 4 generate-backlog prompt 테스트 케이스 — KNOT 외 합성 sample IP 5인 추가 (외부 공개용)
 - Replay UI — 단순 list view·또는 timeline·또는 graph
 - 작가 backlog 자동 sync to detail-guide.md 옵션 — 기본 OFF (수동 export)·또는 ON
 - conflict 검출 시 작가에게 알림 방식 — toast·sidebar 뱃지·email·둘 다
 
 이 문서와 짝 task pack [seizn-author-memory-v3-llm-integration-tasks.md](seizn-author-memory-v3-llm-integration-tasks.md) 참조.
+
+## 11. ⚠️ Litheon Migration Gate (W6 launch 전 강제)
+
+**현 상태 (2026-05-02)**:
+- Litheon LLC 카드 발급 불가 — 시작 단계 인프라(R2·Anthropic BYOK·Stripe·Supabase 결제)를 *개인 명의 (iruhana25)*로 임시 운영
+- 베타·내부 dogfood 단계 (W0~W5)·외부 작가 가입 X·약관 노출 X
+- entity 분리 회계상 *개인 → Litheon 무이자 대여* 또는 *개인 자본 출자* 형식 ([feedback_entity_separation_ip.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_entity_separation_ip.md))
+
+**강제 룰**:
+- 외부 launch (W6 시점) 시 데이터 controller·privacy policy에 *Litheon LLC, Wyoming, USA* 표기 = 실 인프라도 Litheon 명의여야 정합
+- 만약 W6까지 이전 못 하면 → **launch 연기**·외부 작가 가입 X·약관·표시광고법 위반 회피
+- Celovin 명의 임시 운영 절대 X (KNOT·Seizn entity 분리 위반)
+
+**이전 트리거 (W3~W5)**:
+
+자금 조달 옵션 — 다음 중 하나라도 가능 시 즉시 시작:
+- Mercury·Wise Business·Brex·기타 Wyoming LLC 친화 디지털 뱅킹 가입 시도 (EIN 있으면 ~30분)
+- Anthropic Claude for Startups·기타 크레딧 프로그램 신청
+- 개인 → Litheon 자본금 출자 (~$100~500·문서화)
+- 외부 베타 작가 1인 결제 받음 (수익 $39+)·이를 Litheon 첫 매출로 카드 발급 자격 획득
+
+**이전 SOP** (Phase 6·task pack §Phase 6 참조):
+
+```text
+1. Litheon Cloudflare 계정 신규 또는 기존 계정에 R2 활성화
+2. 신규 bucket: seizn-author-uploads (정식·Litheon 명의)
+3. 객체 일괄 복사 (rclone 또는 wrangler r2 object cp)·integrity 검증 (SHA256)
+4. R2 endpoint·access key·env 갱신 (.env·Vercel·Supabase Edge)
+5. 코드: R2_BUCKET 변수 갱신·재배포
+6. 검증 — 신규 업로드·기존 객체 GET 정상
+7. 임시 bucket (seizn-author-uploads-temp) 객체 삭제·bucket 폐기
+8. Anthropic BYOK 키 — Celovin은 KNOT 처리만·Seizn 인프라 결제는 Litheon 카드 직접 (BYOK 작가 측은 그대로)
+9. Supabase 결제 카드·Stripe Atlas 등 Litheon 명의 갱신
+10. 회계 — 개인 → Litheon 정산·또는 자본금 처리·문서화
+```
+
+**점검**: W3 시점에 carry-over 상태 확인·W5까지 못 하면 W6 launch 연기 결정.
