@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { createKnowledgeGraphStore } from '@/lib/graph/graphrag';
 import { boundedInt } from '@/lib/parse-params';
 import { logServerError } from '@/lib/server/logger';
@@ -14,16 +14,9 @@ import { createServerClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'graph:write')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires graph:write scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'graph:write');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const body = await request.json();
     const { name, description } = body;
@@ -54,16 +47,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'graph:read')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires graph:read scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'graph:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { searchParams } = new URL(request.url);
     const limit = boundedInt(searchParams.get('limit'), 20, 1, 100);

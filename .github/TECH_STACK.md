@@ -50,7 +50,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
-| API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
+| API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01), namespace scope enforcement via `src/lib/auth/api-scope.ts` for Graph/Fall APIs |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
 | Email | Resend | ^6.12.2 | Transactional emails (`src/lib/email/`) |

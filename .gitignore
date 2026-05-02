@@ -61,3 +61,8 @@ cli/*/dist/
 # CI artifacts
 .seizn-traces/
 .seizn-generated-tests/
+
+# Supabase local runtime and generated SQL artifacts
+/supabase/.temp/
+/supabase/all_migrations.sql
+/supabase/batches/
