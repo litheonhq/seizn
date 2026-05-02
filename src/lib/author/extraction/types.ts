@@ -70,3 +70,58 @@ export interface AuthorExtractionPromptTask {
   promptFile: string;
   schemaName: string;
 }
+
+export type AuthorBacklogCategory =
+  | '좋아하는 것'
+  | '싫어하는 것'
+  | '작은 보상'
+  | '작은 짜증';
+
+export interface AuthorBacklogCharacterInput {
+  id: string;
+  name: string;
+  summary?: string;
+  archetype?: string;
+  voice?: unknown;
+  persona?: unknown;
+  appearance?: unknown;
+  background?: unknown;
+  currentArcPhase?: string;
+}
+
+export interface AuthorBacklogInput {
+  userId: string;
+  projectId: string;
+  character: AuthorBacklogCharacterInput;
+  categories?: AuthorBacklogCategory[];
+  itemsPerCategory?: number;
+  existingEntries?: string[];
+  existingCandidates?: Array<{ id: string; content: string; type?: string }>;
+  principles?: string;
+}
+
+export interface AuthorBacklogCandidate {
+  category: AuthorBacklogCategory;
+  content: string;
+  rationale: string;
+  tier: 1 | 2;
+  scope: 'short1';
+}
+
+export interface AuthorBacklogResult {
+  characterId: string;
+  characterName: string;
+  candidates: AuthorBacklogCandidate[];
+  rejected: Array<{
+    candidate: AuthorBacklogCandidate;
+    reasons: string[];
+  }>;
+  exportMarkdown: string;
+  metrics: {
+    mode: 'llm' | 'heuristic';
+    categories: AuthorBacklogCategory[];
+    requested_per_category: number;
+    accepted_count: number;
+    rejected_count: number;
+  };
+}

@@ -158,6 +158,29 @@ describe('Author UI service', () => {
     expect(promoted.candidate_id).toMatch(/^candidate-/);
   });
 
+  it('generates character backlog candidates into the review queue', async () => {
+    const service = resetAuthorUiServiceForTests('backlog-user');
+    const projectId = service.listProjects().projects[0].id;
+    const character = service.listCharacters(projectId).characters
+      .find((item) => item.id === 'knot.short1.char.sori');
+
+    const result = await service.generateCharacterBacklog(projectId, character?.id ?? '', {
+      items_per_category: 5,
+    });
+
+    expect(result.character_id).toBe('knot.short1.char.sori');
+    expect(result.candidate_ids).toHaveLength(20);
+    expect(result.conflicts_detected).toBe(0);
+    expect(result.export_markdown).toContain('§X.6 backlog candidates');
+
+    const backlogCandidates = service
+      .listCandidates(projectId, new URLSearchParams('source_id=backlog.knot.short1.char.sori&page_size=25'))
+      .candidates;
+    expect(backlogCandidates).toHaveLength(20);
+    expect(backlogCandidates.every((candidate) => candidate.tags.includes('backlog'))).toBe(true);
+    expect(backlogCandidates.every((candidate) => candidate.target_entity_id === 'knot.short1.char.sori')).toBe(true);
+  });
+
   it('validates and masks BYOK keys without returning raw secret material', () => {
     const service = resetAuthorUiServiceForTests('byok-user');
 

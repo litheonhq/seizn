@@ -234,6 +234,29 @@
             "rollback": true,
             "toast_variant": "error"
           }
+        },
+        {
+          "name": "useGenerateBacklog",
+          "endpoint": "POST /api/projects/{id}/characters/{character_id}/backlog",
+          "trigger_components": ["<CharacterBacklogButton>", "<CharacterCard>"],
+          "optimistic": false,
+          "request": {
+            "categories": ["좋아하는 것", "싫어하는 것", "작은 보상", "작은 짜증"],
+            "items_per_category": 5
+          },
+          "on_success": {
+            "invalidate": [
+              "['character', projectId, characterId]",
+              "['characters', projectId]",
+              "['candidates', projectId]",
+              "['conflicts', projectId]"
+            ],
+            "patch_preview": "inline backlog candidates preview from response.candidates",
+            "toast": "Backlog generated"
+          },
+          "on_error": {
+            "toast_variant": "error"
+          }
         }
       ],
       "websocket_handlers": [

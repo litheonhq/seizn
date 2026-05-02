@@ -219,6 +219,23 @@ export function useUpdateAuthorCharacter(projectId?: string, characterId?: strin
   );
 }
 
+export function useGenerateAuthorBacklog(projectId?: string, characterId?: string) {
+  return useSWRMutation<JsonRecord, Error, string | null, JsonRecord>(
+    projectId && characterId ? `/api/projects/${projectId}/characters/${characterId}/backlog` : null,
+    postJson,
+    {
+      onSuccess: () => {
+        if (projectId && characterId) {
+          void globalMutate(`/api/projects/${projectId}/characters/${characterId}`);
+          void globalMutate(`/api/projects/${projectId}/characters`);
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/candidates`));
+          void globalMutate(`/api/projects/${projectId}/conflicts`);
+        }
+      },
+    }
+  );
+}
+
 export function useAuthorGraph(projectId?: string, filters?: JsonRecord) {
   const key = useMemo(
     () => projectId ? `/api/projects/${projectId}/graph${queryString(filters)}` : null,

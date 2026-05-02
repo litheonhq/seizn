@@ -1,4 +1,8 @@
-import type { AuthorExtractionPromptTask } from './types';
+import type {
+  AuthorBacklogCategory,
+  AuthorBacklogCharacterInput,
+  AuthorExtractionPromptTask,
+} from './types';
 
 export const AUTHOR_EXTRACTION_TASKS: AuthorExtractionPromptTask[] = [
   { type: 'character', promptFile: 'extract-character.md', schemaName: 'candidate-character' },
@@ -55,5 +59,45 @@ export function buildExtractionPrompt(input: {
     '',
     'Source text:',
     input.text,
+  ].join('\n');
+}
+
+export function buildBacklogPrompt(input: {
+  character: AuthorBacklogCharacterInput;
+  categories: AuthorBacklogCategory[];
+  itemsPerCategory: number;
+  existingEntries: string[];
+  principles?: string;
+  forbiddenTerms: string[];
+}): string {
+  return [
+    'You are Seizn Author Memory v3 backlog generation runtime.',
+    'Prompt file: generate-backlog.md',
+    '',
+    'Generate behavior-cue candidates for the author review queue.',
+    `Categories: ${input.categories.join(', ')}`,
+    `Items per category: ${input.itemsPerCategory}`,
+    '',
+    'Strict rules:',
+    '- Each candidate must be a behavior cue, not a static fact list.',
+    '- Do not reveal Tier 2 or author-only facts.',
+    '- Do not introduce mascot/animal traits beyond the supplied character bible.',
+    '- Do not duplicate existing entries.',
+    '- Keep scope as short1.',
+    '',
+    'Character bible:',
+    JSON.stringify(input.character, null, 2),
+    '',
+    'Existing entries to avoid:',
+    input.existingEntries.length > 0 ? input.existingEntries.map((entry) => `- ${entry}`).join('\n') : '- none',
+    '',
+    'Operating principles:',
+    input.principles?.trim() || '- Preferences must imply repeatable behavior and scene reaction cues.',
+    '',
+    'Forbidden terms:',
+    input.forbiddenTerms.length > 0 ? input.forbiddenTerms.map((term) => `- ${term}`).join('\n') : '- none',
+    '',
+    'Return JSON only with this shape:',
+    '{"candidates":[{"category":"좋아하는 것","content":"string","rationale":"string","tier":1,"scope":"short1"}]}',
   ].join('\n');
 }

@@ -8,6 +8,7 @@ import {
   GitBranch,
   Play,
   RefreshCw,
+  Sparkles,
   UploadCloud,
   UserRound,
 } from 'lucide-react';
@@ -20,6 +21,7 @@ import {
   useAuthorProjects,
   useAuthorSettings,
   useAuthorTimeline,
+  useGenerateAuthorBacklog,
   useRunAuthorSimulation,
   useAuthorSimulation,
   useUploadAuthorImport,
@@ -40,6 +42,8 @@ const screens = [
 export function AuthorMemoryV3Client() {
   const [screen, setScreen] = useState<(typeof screens)[number]['id']>('review');
   const [simulationId, setSimulationId] = useState<string | undefined>();
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>();
+  const [backlogResult, setBacklogResult] = useState<JsonRecord | null>(null);
   const projects = useAuthorProjects();
   const projectId = String(projects.data?.projects?.[0]?.id ?? 'knot');
   const imports = useAuthorImports(projectId);
@@ -52,6 +56,8 @@ export function AuthorMemoryV3Client() {
   const runSimulation = useRunAuthorSimulation(projectId);
   const simulation = useAuthorSimulation(projectId, simulationId);
   const uploadImport = useUploadAuthorImport(projectId);
+  const activeCharacterId = selectedCharacterId ?? String(characters.data?.characters?.[0]?.id ?? '');
+  const generateBacklog = useGenerateAuthorBacklog(projectId, activeCharacterId || undefined);
   const currentProject = projects.data?.projects?.[0];
   const [uploadRole, setUploadRole] = useState('canon');
   const [uploadMode, setUploadMode] = useState('extract');
@@ -106,6 +112,16 @@ export function AuthorMemoryV3Client() {
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : 'Upload failed');
     }
+  }
+
+  async function handleGenerateBacklog() {
+    if (!activeCharacterId) return;
+    const result = await generateBacklog.trigger({
+      categories: ['좋아하는 것', '싫어하는 것', '작은 보상', '작은 짜증'],
+      items_per_category: 5,
+    });
+    setBacklogResult(result);
+    setScreen('characters');
   }
 
   return (
@@ -226,6 +242,48 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'characters' ? (
             <Panel title="Characters">
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <select
+                  value={activeCharacterId}
+                  onChange={(event) => {
+                    setSelectedCharacterId(event.target.value);
+                    setBacklogResult(null);
+                  }}
+                  className="min-h-10 min-w-56 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800"
+                >
+                  {(characters.data?.characters ?? []).map((character) => (
+                    <option key={String(character.id)} value={String(character.id)}>
+                      {String(character.name)}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={handleGenerateBacklog}
+                  disabled={!activeCharacterId || generateBacklog.isMutating}
+                  className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  Generate backlog
+                </button>
+                {generateBacklog.error ? (
+                  <span className="text-sm text-red-700">{generateBacklog.error.message}</span>
+                ) : null}
+              </div>
+              {backlogResult ? (
+                <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950">
+                  <div className="font-medium">
+                    {String(backlogResult.character_name)} backlog generated · {Number((backlogResult.candidates as unknown[] | undefined)?.length ?? 0)} candidates
+                  </div>
+                  <div className="mt-1 text-emerald-900">Review Queue updated.</div>
+                  <div className="mt-3">
+                    <Rows
+                      rows={((backlogResult.candidates as JsonRecord[] | undefined) ?? []).slice(0, 8)}
+                      columns={['category', 'content', 'rationale']}
+                    />
+                  </div>
+                </div>
+              ) : null}
               <Rows rows={characters.data?.characters ?? []} columns={['name', 'summary']} />
             </Panel>
           ) : null}
