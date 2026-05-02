@@ -131,10 +131,10 @@ Implemented now:
 - runtime payload parser and deterministic payload runner
 - API response envelope handler for route/worker reuse
 - KNOT input adapter for character, world rule, relationship, timeline, and eval seed registries
+- Next.js `POST /api/author/memory-v3/eval` route with API-key auth, rate-limit headers, request logging, and invalid-JSON handling
 
 Next implementation:
 
-- Next.js route handler for eval job execution
 - Supabase-backed store adapter
 - persisted side-effect store
 - Fall dataset import helper
