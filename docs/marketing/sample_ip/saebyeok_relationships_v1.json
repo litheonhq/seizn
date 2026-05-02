@@ -1,0 +1,266 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "ip_label": "Sample IP — Synthetic Demo Data",
+  "ip_title": "Saebyeok Academy / 새벽 학원",
+  "scope": "short_demo_30day",
+  "schema_notes": [
+    "각 관계 = graph_edges 매핑",
+    "차원: trust·suspicion·attachment·hostility·debt·information_asymmetry",
+    "각 차원 강도 enum: none·weak·moderate·strong·very_strong",
+    "관계 변화 = events 배열 (timeline_event_ledger 참조)",
+    "valid_at·source 필수"
+  ],
+  "dimensions": {
+    "trust": "신뢰 (-1.0 적대 ~ 1.0 신뢰)",
+    "suspicion": "의심 (0.0 ~ 1.0)",
+    "attachment": "애착 (0.0 ~ 1.0)",
+    "hostility": "적대 (0.0 ~ 1.0)",
+    "debt": "부채감 (0.0 ~ 1.0)",
+    "information_asymmetry": "정보 비대칭 — A가 B 모르는 것 / B가 A 모르는 것"
+  },
+  "intensity_enum": ["none", "weak", "moderate", "strong", "very_strong"],
+  "relationships": [
+    {
+      "id": "saebyeok.rel.iseul-serin",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.serin",
+      "scope": "short_demo_30day",
+      "relationship_type": "best_friend·co_lead",
+      "valid_at": "D1 (2026-04-02 목)",
+      "current_state_d30": {
+        "trust": "very_strong",
+        "suspicion": "none",
+        "attachment": "very_strong",
+        "hostility": "none",
+        "debt": "weak (이슬 기록·세린 정리·등가 호혜)",
+        "information_asymmetry": "낮음·D11 이후 거의 동기화·다만 이슬 D27까지 도윤 결손 추정 비공개"
+      },
+      "addressing": {
+        "iseul_to_serin": "세린·세린아",
+        "serin_to_iseul": "이슬·이슬아"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d1-firstday", "delta": "관계 시작·짝꿍·반장-학생", "at": "D1"},
+        {"event_id": "saebyeok.event.d11-first-measurement", "delta": "trust + 첫 측정 동행", "at": "D11"},
+        {"event_id": "saebyeok.event.d17-bell-hill", "delta": "trust + 종탑 진입 동행", "at": "D17"},
+        {"event_id": "saebyeok.event.d29-notebook-page", "delta": "attachment + 핵심 페이지 함께", "at": "D29"}
+      ],
+      "narrative_function": "단편 1 핵심 듀오·결정 분기 합의 축",
+      "tags": ["scope:short_demo_30day", "tier:1", "core_pair"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-hana",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.hana",
+      "scope": "short_demo_30day",
+      "relationship_type": "junior_senior_collaborators·photo",
+      "valid_at": "D5 (2026-04-06 월)",
+      "current_state_d30": {
+        "trust": "strong",
+        "suspicion": "weak",
+        "attachment": "moderate",
+        "hostility": "none",
+        "debt": "moderate (이슬 → 하나 아카이브 자료 빚)",
+        "information_asymmetry": "하나 = 28년 아카이브 컨텍스트 우위·이슬 = D17 1978 자료·임선재 컨텍스트 우위"
+      },
+      "addressing": {
+        "iseul_to_hana": "선배·하나 선배",
+        "hana_to_iseul": "이슬"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d5-photo", "delta": "관계 시작·아카이브 공개", "at": "D5"},
+        {"event_id": "saebyeok.event.d12-aftermath", "delta": "trust + 좌표 매핑 협업", "at": "D12"},
+        {"event_id": "saebyeok.event.d22-foundation-trace", "delta": "강변 측정 동행 + 여명재단 흔적", "at": "D22"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-jio",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.jio",
+      "scope": "short_demo_30day",
+      "relationship_type": "data_collaborator·casual_acquaintance",
+      "valid_at": "D6 (2026-04-07 화)",
+      "current_state_d30": {
+        "trust": "moderate-strong",
+        "suspicion": "none",
+        "attachment": "weak",
+        "hostility": "none",
+        "debt": "weak",
+        "information_asymmetry": "지오 = 기상 데이터 우위·이슬 = 도서관·노트 우위"
+      },
+      "addressing": {
+        "iseul_to_jio": "지오",
+        "jio_to_iseul": "이슬"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d6-rooftop", "delta": "관계 시작·옥상 마주침", "at": "D6"},
+        {"event_id": "saebyeok.event.d11-first-measurement", "delta": "trust + 첫 측정 동행", "at": "D11"},
+        {"event_id": "saebyeok.event.d22-foundation-trace", "delta": "강변 측정 동행", "at": "D22"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-yerin",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.yerin",
+      "scope": "short_demo_30day",
+      "relationship_type": "ally_with_secret",
+      "valid_at": "D8 (2026-04-09 목)",
+      "current_state_d30": {
+        "trust": "moderate (D14 합류 후 strong)",
+        "suspicion": "weak (예린 신분 미확증)",
+        "attachment": "weak (D29 강해짐)",
+        "hostility": "none",
+        "debt": "moderate (예린 → 이슬 노트 공유 빚)",
+        "information_asymmetry": "예린 = 노트·이전 학교 컨텍스트 우위·이슬 = 학교·도서관 컨텍스트 우위"
+      },
+      "addressing": {
+        "iseul_to_yerin": "예린·예린아 (D14+)",
+        "yerin_to_iseul": "이슬 씨 (D14까지)·이슬 (D14+)"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d8-transfer", "delta": "관계 시작·전학·노트 표지 한 박자", "at": "D8"},
+        {"event_id": "saebyeok.event.d14-club-formed", "delta": "trust + 노트 일부 공개", "at": "D14"},
+        {"event_id": "saebyeok.event.d17-bell-hill", "delta": "예린 결손 인지 능력 노출·trust +", "at": "D17"},
+        {"event_id": "saebyeok.event.d29-notebook-page", "delta": "핵심 페이지 공개·attachment +", "at": "D29"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1", "core_dyad"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-doyun",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.doyun",
+      "scope": "short_demo_30day",
+      "relationship_type": "classmate·growing_concern",
+      "valid_at": "D2 (2026-04-03 금)",
+      "current_state_d30": {
+        "trust": "moderate (D27 strong)",
+        "suspicion": "weak (D15 결손 의심)",
+        "attachment": "weak-moderate (D27 강해짐)",
+        "hostility": "none",
+        "debt": "weak (도윤 → 이슬 비밀 보호 빚)",
+        "information_asymmetry": "도윤 = D-2 결손 직접 경험 우위·이슬 = 1978 자료·여명재단 컨텍스트 우위"
+      },
+      "addressing": {
+        "iseul_to_doyun": "도윤",
+        "doyun_to_iseul": "이슬"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d2-music", "delta": "관계 시작·음악실", "at": "D2"},
+        {"event_id": "saebyeok.event.d15-doyun-suspicion", "delta": "suspicion + 결손 의심", "at": "D15"},
+        {"event_id": "saebyeok.event.d27-doyun-reveal", "delta": "trust ++ 도윤 공개", "at": "D27"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-minchae",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.minchae",
+      "scope": "short_demo_30day",
+      "relationship_type": "info_negotiator",
+      "valid_at": "D3 (2026-04-04 토)",
+      "current_state_d30": {
+        "trust": "moderate (D26 합류 후 strong)",
+        "suspicion": "moderate (D24까지 정보 거래 톤)",
+        "attachment": "weak",
+        "hostility": "none",
+        "debt": "balanced (양방향 정보 교환)",
+        "information_asymmetry": "민채 = 학생회·후원금 명단 우위·이슬 = 측정·노트 컨텍스트 우위"
+      },
+      "addressing": {
+        "iseul_to_minchae": "민채",
+        "minchae_to_iseul": "이슬"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d3-corridor", "delta": "관계 시작·정보 거래 톤", "at": "D3"},
+        {"event_id": "saebyeok.event.d16-minchae-trade", "delta": "거래 제안·이슬 거절", "at": "D16"},
+        {"event_id": "saebyeok.event.d24-minchae-trade-2", "delta": "거래 수락·후원금 명단", "at": "D24"},
+        {"event_id": "saebyeok.event.d26-decision", "delta": "민채 합류·trust +", "at": "D26"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.iseul-seonjae",
+      "from": "saebyeok.short.char.iseul",
+      "to": "saebyeok.short.char.seonjae",
+      "scope": "short_demo_30day",
+      "relationship_type": "student_mentor",
+      "valid_at": "D9 (2026-04-10 금)",
+      "current_state_d30": {
+        "trust": "strong",
+        "suspicion": "none",
+        "attachment": "moderate",
+        "hostility": "none",
+        "debt": "strong (이슬 → 임선재 자료 빚)",
+        "information_asymmetry": "임선재 = 1958/1978/1991/2003/2014 자료 압도 우위·이슬 = 동기 학생 그룹 우위"
+      },
+      "addressing": {
+        "iseul_to_seonjae": "선재 선생님·선생님",
+        "seonjae_to_iseul": "이슬 학생·이슬"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d9-photo-share", "delta": "관계 시작·1차 자료 공개", "at": "D9"},
+        {"event_id": "saebyeok.event.d17-bell-hill", "delta": "1978 자료 공개·trust ++", "at": "D17"},
+        {"event_id": "saebyeok.event.d21-bell-history", "delta": "1958 종탑 기록 공개", "at": "D21"},
+        {"event_id": "saebyeok.event.d29-notebook-page", "delta": "핵심 페이지 협의·attachment +", "at": "D29"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.serin-doyun",
+      "from": "saebyeok.short.char.serin",
+      "to": "saebyeok.short.char.doyun",
+      "scope": "short_demo_30day",
+      "relationship_type": "classmates·warm",
+      "valid_at": "D1",
+      "current_state_d30": {
+        "trust": "moderate-strong",
+        "attachment": "moderate",
+        "hostility": "none"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d2-music", "delta": "음악실 첫 만남 동행", "at": "D2"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.hana-jio",
+      "from": "saebyeok.short.char.hana",
+      "to": "saebyeok.short.char.jio",
+      "scope": "short_demo_30day",
+      "relationship_type": "data_pair",
+      "valid_at": "D11",
+      "current_state_d30": {
+        "trust": "moderate-strong (데이터 신뢰)",
+        "attachment": "weak",
+        "information_asymmetry": "사진 vs 기상 = 보완 관계"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d12-aftermath", "delta": "데이터 매핑 협업 (간접)", "at": "D12"},
+        {"event_id": "saebyeok.event.d22-foundation-trace", "delta": "강변 동행 측정", "at": "D22"}
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1"]
+    },
+    {
+      "id": "saebyeok.rel.yerin-seonjae",
+      "from": "saebyeok.short.char.yerin",
+      "to": "saebyeok.short.char.seonjae",
+      "scope": "short_demo_30day",
+      "relationship_type": "notebook_chain",
+      "valid_at": "D17",
+      "current_state_d30": {
+        "trust": "strong (노트 vs 1978 자료 = 같은 시드)",
+        "attachment": "moderate"
+      },
+      "events_progression": [
+        {"event_id": "saebyeok.event.d17-bell-hill", "delta": "도서관 비공개실 첫 동석", "at": "D17"},
+        {"event_id": "saebyeok.event.d21-bell-history", "delta": "1958 기록 공개·노트 좌표 일치 확증", "at": "D21"},
+        {"event_id": "saebyeok.event.d29-notebook-page", "delta": "핵심 페이지 협의·차기 인계 합의", "at": "D29"}
+      ],
+      "tier_2_link": "임선재 = 1978 자료 작성자 (시정 비공개)·예린 노트 = 그 자료 시드·D29 시점에 작가 only",
+      "tags": ["scope:short_demo_30day", "tier:1", "tier_2_link"]
+    }
+  ]
+}
