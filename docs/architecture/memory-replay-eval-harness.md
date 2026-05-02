@@ -130,6 +130,7 @@ Implemented now:
 - sequential Author eval job runner
 - runtime payload parser and deterministic payload runner
 - API response envelope handler for route/worker reuse
+- KNOT input adapter for character, world rule, relationship, timeline, and eval seed registries
 
 Next implementation:
 

@@ -170,6 +170,7 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/job.ts`
 - `src/lib/author/memory-v3/contract.ts`
 - `src/lib/author/memory-v3/api.ts`
+- `src/lib/author/memory-v3/knot-input.ts`
 
 The storage contract is deliberately adapter-shaped:
 
@@ -179,10 +180,12 @@ The storage contract is deliberately adapter-shaped:
 - `parseAuthorEvalJobPayload` validates external JSON before it reaches the runner.
 - `runAuthorEvalJobPayload` supports deterministic fixture execution through per-case `liveOutput`.
 - `handleAuthorEvalJobRequest` maps contract, replay, and execution failures to stable API response envelopes.
+- `knotInputBundleToAuthorRecords` maps Claude-prepared KNOT registries into Author memory records without committing to the raw artifact files.
+- `knotInputBundleToAuthorEvalJobPayload` builds a replay-ready Author eval payload from the KNOT seed set.
 
 Next implementation work should add:
 
 - Next.js route handlers around the API contract
 - Supabase persistence adapter after JSON contracts stabilize
-- KNOT eval fixture expansion
+- KNOT eval fixture expansion from Claude's completed seed set
 - UI data contract binding after Claude provides Author UI requirements
