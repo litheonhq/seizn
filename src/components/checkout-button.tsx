@@ -121,7 +121,7 @@ export function CheckoutButton({
               href={termsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-cyan-700 underline-offset-2 hover:underline"
+              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline-offset-2 hover:underline"
             >
               {legalCopy.terms}
             </a>{" "}
@@ -132,7 +132,7 @@ export function CheckoutButton({
               href={privacyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-cyan-700 underline-offset-2 hover:underline"
+              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline-offset-2 hover:underline"
             >
               {legalCopy.privacy}
             </a>
