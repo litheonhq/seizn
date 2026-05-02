@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
@@ -15,16 +15,9 @@ interface RouteParams {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'graph:delete')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires graph:delete scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'graph:delete');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { graphId } = await params;
     const supabase = createServerClient();

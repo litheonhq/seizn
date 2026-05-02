@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
@@ -794,6 +795,7 @@ function OrgSettingsTab({
   canManage: boolean;
   onUpdate: (updates: Partial<Organization>) => void;
 }) {
+  const router = useRouter();
   const [name, setName] = useState(organization.name);
   const [slug, setSlug] = useState(organization.slug);
   const [isSaving, setIsSaving] = useState(false);
@@ -844,7 +846,7 @@ function OrgSettingsTab({
       const data = await res.json();
 
       if (data.success) {
-        window.location.href = "/dashboard/organizations";
+        router.push("/dashboard/organizations");
       } else {
         setSaveMessage({
           type: "error",

@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
@@ -17,16 +17,9 @@ interface RouteParams {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'fall:write')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires fall:write scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'fall:write');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { runId } = await params;
     const body = await request.json();

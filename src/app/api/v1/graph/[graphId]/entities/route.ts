@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import {
   getEntityExternalId,
   isMissingExternalIdColumnError,
@@ -30,16 +30,9 @@ async function hasExternalIdColumn(
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'graph:write')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires graph:write scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'graph:write');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { graphId } = await params;
     const body = (await request.json()) as {
@@ -183,16 +176,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
-    if (!hasApiScope(auth.scopes, 'graph:read')) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'Requires graph:read scope' },
-        { status: 403 }
-      );
-    }
+    const authResult = await requireApiScope(request, 'graph:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { graphId } = await params;
     const supabase = createServerClient();
