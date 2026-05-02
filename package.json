@@ -11,6 +11,7 @@
     "lint": "eslint . --ignore-pattern test-results --ignore-pattern playwright-report",
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
     "predeploy": "bash scripts/pre-deploy.sh",
+    "verify:knot-separation": "node scripts/verify-knot-separation.ts",
     "deploy": "vercel --prod",
     "smoke:production": "node scripts/production-smoke.mjs",
     "check:routes": "node scripts/check-route-conflicts.js",
