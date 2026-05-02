@@ -1,19 +1,23 @@
 ---
 doc_type: marketing-landing-brief
-version: v2
+version: v3
 generated_at: 2026-05-02
-applies_to: seizn.com (Author flagship landing) — ko·en·ja·zh
+applies_to: seizn.com (Author flagship landing) — en·ja·zh·ko
 depends_on:
   - dual_surface_positioning.md
   - ../author-ui/author_ui_information_architecture.md
   - ../author-ui/author_ui_screen_specs.md
 status: design-handoff-ready
-revision: v2 — Seizn↔KNOT 분리 룰 적용 (2026-05-02). 합성 sample IP `Saebyeok` 기반 재구성
+revision: v3 — Litheon LLC 미국 법인 정합·EN-first 재배치 (2026-05-02). H1 master = English, 입력 모드 P0~P3 재배치 (.docx·gdocs·.txt P0·.hwp P2 격하), 콘텐츠 마케팅 영어권 first. v2 = Seizn↔KNOT 분리 룰 (그대로 유지)
 ---
 
 # Seizn Author — Landing Brief
 
 > Claude Designer 핸드오프용 풀 사양. 카피·섹션·합성 sample IP live demo·i18n·visual direction.
+
+## ⚠️ EN-first GTM (v3 lock)
+
+Seizn = Litheon LLC (Wyoming) 미국 법인·시장 절대 크기 영어권 ≫ 한국. H1 master = English, 콘텐츠 마케팅 1순위 = 영어권 (Reddit r/writing·Wattpad·KDP·Twitter·HN). 한국·일본·중국은 secondary tracks.
 
 ## ⚠️ Seizn ↔ KNOT 분리 룰
 
@@ -21,48 +25,52 @@ revision: v2 — Seizn↔KNOT 분리 룰 적용 (2026-05-02). 합성 sample IP `
 
 ## 0. 단일 메시지 lock
 
-**H1 (ko)**: `작품의 기억을, 흩어지지 않게.`
-**H1 (en)**: `Your story, remembered exactly as you wrote it.`
+**H1 master (en)**: `Your story, remembered exactly as you wrote it.`
 **H1 (ja)**: `物語の記憶を、ひとつの真実に。`
 **H1 (zh-hans)**: `让你笔下的世界，记得每一个细节。`
+**H1 (ko)**: `작품의 기억을, 흩어지지 않게.`
+
+**Sub master (en)**: `Bring your worldbuilding, characters, and scenes together. Seizn catches canon conflicts automatically. Your review becomes the source of truth.`
 
 **Sub (ko)**: `세계관·캐릭·씬을 한 곳에 모으고, AI가 캐논 충돌을 자동으로 잡아냅니다. 작가의 검수가 곧 작품의 정전이 됩니다.`
 
 **카테고리**: AI Memory for Authors — 카테고리 정의자 톤. 경쟁 비교 hero에서 X.
 
-**기각된 H1 후보**:
-- `AI 메모리 작가 도구` — 도구 톤·카테고리 정의 약함
-- `당신의 IP를 위한 AI 메모리` — IP는 비즈 용어·작가에 거리감
-- `Seizn Author로 캐논을 검수하세요` — 명령형·자기 자랑
+**기각된 H1 후보 (en)**:
+- `AI memory tool for writers` — utility tone, category-defining 약함
+- `AI memory for your IP` — IP는 비즈 용어·작가에 거리감
+- `Review your canon with Seizn Author` — 명령형·self-praise
 
-## 1. Hero 섹션 사양
+## 1. Hero 섹션 사양 (en master)
 
 ```text
 ┌──────────────────────────────────────────────────┐
-│  [Seizn Author]              [docs] [pricing] [signin]
+│  [Seizn Author]              [docs] [pricing] [sign in]
 │
 │
 │         01 / AUTHOR MEMORY
 │
-│         작품의 기억을, 흩어지지 않게.
+│         Your story, remembered exactly
+│         as you wrote it.
 │
-│         세계관·캐릭·씬을 한 곳에 모으고, AI가
-│         캐논 충돌을 자동으로 잡아냅니다.
-│         작가의 검수가 곧 작품의 정전이 됩니다.
+│         Bring your worldbuilding, characters, and
+│         scenes together. Seizn catches canon conflicts
+│         automatically. Your review becomes the source
+│         of truth.
 │
-│         [30일 무료로 시작]   [데모 보기 →]
+│         [Start 30-day free trial]   [See it work →]
 │
 │         ─────────────────────────────────────
-│         [합성 sample IP canon graph live preview]
+│         [synthetic sample IP canon graph live preview]
 │         ─────────────────────────────────────
 └──────────────────────────────────────────────────┘
 ```
 
 **가드레일**:
 - nav 좌상단 로고 외 hero 본문 로고 X (현 페이지 #11 결함 회피)
-- CTA 2개 max — primary `30일 무료로 시작` + secondary `데모 보기`
+- CTA 2개 max — primary `Start 30-day free trial` + secondary `See it work`
 - stats bar X — landing fold 안에 sample IP live demo가 stats 자리 흡수
-- 큰따옴표 0건 — [feedback_no_double_quotes.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_double_quotes.md) 정합
+- 큰따옴표 0건 (en 카피에도 적용) — [feedback_no_double_quotes.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_double_quotes.md) 정합
 
 ## 2. Sample IP live demo 위젯 사양 (hero 직하)
 
@@ -195,14 +203,42 @@ revision: v2 — Seizn↔KNOT 분리 룰 적용 (2026-05-02). 합성 sample IP `
 * 본 데모는 Seizn 기능 시연용 합성 자료입니다. 실제 작가 작품과 무관합니다.
 ```
 
-### 3.3 §04 4 가지 입력 모드
+### 3.3 §04 입력 모드 (P0~P3·EN-first 시장 정합)
 
-| 모드 | 설명 | 적합한 작가 |
+**P0 (default·landing 강조)**:
+
+| 모드 | 설명 | 적합 시장 |
 |---|---|---|
-| **A. AI 자동 추출** | md·docx·pdf 업로드 → LLM이 캐릭·룰·사건 자동 추출 | 기존 자료 많은 작가·이미 옵시디언/노션에 작성 중 |
-| **B. Native UI 입력** | Seizn Author UI에서 캐릭·룰·사건 직접 입력 | 처음부터 시작·구조화된 입력 선호 |
-| **C. Obsidian / Notion sync** | 기존 vault·workspace 양방향 sync | 옵시디언·노션에서 본문 작성 계속하고 싶은 작가 |
-| **D. 그대로 저장** | 원본 파일 보존·분석 X | 캐논화 거부·아카이브만 |
+| **Direct input (Native UI)** | Author UI에서 캐릭·룰·사건 1개씩 직접 입력 | 컴맹 default·전 시장 |
+| **`.docx` (Word) upload** | 본문·세계관 문서 업로드 → LLM 자동 추출 | 영어권·한국·일본 default (~60%+ 작가) |
+| **Plain text·copy-paste** | 텍스트 직접 붙여넣기·`.txt` 업로드 | Wattpad·Royal Road·웹소설 작가 (플랫폼 export) |
+| **Google Docs (OAuth)** | 양방향 sync | 영어권 협업·한국 협업 ~50% |
+
+**P1 (settings 노출)**:
+
+| 모드 | 설명 | 적합 시장 |
+|---|---|---|
+| **PDF (OCR + layout)** | 출판·이미 발행 자료 | 출판 작가·아카이브 |
+| **Notion (API sync)** | 양방향 sync | tech-savvy 영어권 |
+| **Scrivener `.scrivx`** | 프로젝트 import | 영어권 전문가 |
+
+**P2 (advanced·secondary 시장)**:
+
+| 모드 | 설명 | 적합 시장 |
+|---|---|---|
+| **한글 `.hwp`** | 한국어 출판 표준 | 한국 secondary track |
+| **WPS Office (`.wps`/`.docx`)** | 중국 표준 | 중국 secondary |
+| **一太郎 `.jtd`** | 일본 출판 표준 | 일본 secondary (어려움) |
+
+**P3 (advanced·hidden settings)**:
+
+| 모드 | 설명 | 적합 시장 |
+|---|---|---|
+| **Obsidian vault sync** | 마크다운 양방향 | tech-savvy 5% |
+| **Roam·Logseq** | 네트워크 노트 | 변두리 |
+| **Raw save (no extract)** | 원본만 보존·분석 X | 캐논화 거부 |
+
+**롤아웃 우선순위**: W3~W4 빌드 = P0 4종 풀 + P1 PDF·Notion. P2 한글 `.hwp`·일본 一太郎은 한국·일본 secondary GTM cycle (W7~W12)에서. P3는 advanced settings에 link만.
 
 ### 3.4 §05 Canon 충돌 자동 검출
 
@@ -271,48 +307,51 @@ candidate 2 — ⚠️ leak risk
    자기 Anthropic·Google·OpenAI 키 등록·50% 할인.
 ```
 
-### 3.7 §08 가격 (lock — `seizn-author-pricing-2026-05.md` 정합)
+### 3.7 §08 Pricing (lock — `seizn-author-pricing-2026-05.md` 정합)
 
 ```text
-30일 무료 체험 — 신용카드 등록 X
+30-day free trial — no credit card required
 
 ┌─────────────┬─────────────┬─────────────┬──────────────┐
 │  Author     │  Pro ★      │  Studio     │  Enterprise  │
 │  $39 / mo   │  $129 / mo  │  $399 / mo  │  Custom      │
 │             │             │             │              │
-│  단편 IP·   │  중장편·    │  스튜디오·  │  스튜디오·   │
-│  단일 IP·   │  다중 IP·   │  팀 협업·   │  법인 계약·  │
-│  최신 모델  │  최신 모델  │  최신 모델  │  SOC 2·SLA   │
+│  Short IP·  │  Series·    │  Studio·    │  Studio·     │
+│  Single IP· │  Multi-IP·  │  Team·      │  Contract·   │
+│  Latest LLM │  Latest LLM │  Latest LLM │  SOC 2·SLA   │
 │             │             │             │              │
-│  [무료 시작]│  [무료 시작]│  [무료 시작]│  [문의하기]  │
+│  [Start free] │ [Start free] │ [Start free] │ [Contact us] │
 └─────────────┴─────────────┴─────────────┴──────────────┘
 
-* 모든 플랜 Opus 4.7 단일·BYOK 50% 할인 옵션
+* All plans on the latest Anthropic flagship model.
+* BYOK option available in Settings (advanced) — direct Anthropic billing.
 ```
 
-### 3.8 §09 FAQ
+BYOK는 footnote만·hero·card 강조 X (95% 작가 = 컴맹·BYOK 셋업 불가).
 
-- 내 자료 소유권은? → 100% 작가 소유. Seizn은 처리만.
-- 옵시디언·노션 양방향 sync 되나요? → 네. 양방향·실시간·충돌 시 작가 결정.
-- BYOK 어떻게 작동? → 자기 Anthropic 키 등록 시 가격 50% 할인·토큰 무제한.
-- data residency? → 서울·도쿄 리전 선택. 기본 서울.
-- 결제 취소? → 언제든. 30일 trial = 신용카드 등록 X.
-- 게임 스튜디오인데? → [Seizn Engine →](https://engine.seizn.com)
-- 데모 자료는 실제 작가 작품인가요? → 아닙니다. 모든 데모는 Seizn 시연용 합성 IP·외부 작가 자료는 본인 동의 시에만 case study에 인용.
+### 3.8 §09 FAQ (en master)
 
-### 3.9 §10 Footer
+- **Who owns my work?** → You do. 100%. Seizn only processes — your story is yours.
+- **Can I import from Word, Google Docs, or Notion?** → Yes — `.docx`, Google Docs (OAuth), Notion API, plain text/copy-paste. Scrivener `.scrivx` and Obsidian vaults supported in advanced settings.
+- **How does BYOK work?** → Register your own Anthropic API key in Settings. 50% off your Seizn plan + bill Anthropic directly.
+- **Where is my data stored?** → Choose your region: Seoul, Tokyo, Frankfurt (EU GDPR). Default Seoul.
+- **Can I cancel anytime?** → Yes. 30-day trial requires no credit card. Cancel from Settings → Billing.
+- **I make games, not novels.** → [Seizn Engine for game studios →](https://engine.seizn.com)
+- **Are the demo characters real authors' work?** → No. All demos use a synthetic *Sample IP* designed for Seizn. External author case studies appear only with their explicit consent.
+
+### 3.9 §10 Footer (en master)
 
 ```text
 [Seizn Author]
-작가의 도구·작품의 기억.
+The author's tool. Your story, remembered.
 
-제품              리소스           법적 고지
-- 가격            - 가이드         - 이용약관
-- 문서            - 블로그         - 개인정보처리방침
-- 변경 이력       - 케이스 스터디  - 문의하기
-- 상태            - GitHub
+Product          Resources        Legal
+- Pricing        - Guides         - Terms of Service
+- Docs           - Blog           - Privacy Policy
+- Changelog      - Case Studies   - Contact
+- Status         - GitHub
 
-게임 스튜디오? Seizn Engine for game studios →
+Make games? Seizn Engine for game studios →
                                                         © 2026 Litheon LLC
 ```
 
@@ -379,20 +418,20 @@ Code / data:           JetBrains Mono 400
 
 | 언어 | 우선순위 | 톤 | 폰트 | 비고 |
 |---|---|---|---|---|
-| ko 한국어 | 1순위 | 친절·간결·존댓말·작가 친화 | Pretendard Variable | 카피 master |
-| en 영어 | 2순위 | refined SaaS voice·no announcement | Inter (fallback) | sample IP 명·라벨 영문 정합 |
-| ja 일본어 | 3순위 | 丁寧·書き手寄り·ですます | Hiragino Sans / Noto Sans JP | 라노벨 작가 시장 타깃 |
-| zh-hans 중문 간체 | 4순위 | 简洁·亲切·写作者友好 | Noto Sans SC | 웹소설 시장 타깃 |
-| zh-hant 중문 번체 | 4순위 | 同 | Noto Sans TC | 대만·홍콩 |
+| **en 영어** | **1순위 (master)** | refined SaaS voice·no announcement·Stripe·Linear 톤 | Inter / Geist | **카피 master·landing default** |
+| ja 일본어 | 2순위 | 丁寧·書き手寄り·ですます | Hiragino Sans / Noto Sans JP | 라노벨·一太郎 layer |
+| zh-hans 중문 간체 | 3순위 | 简洁·亲切·写作者友好 | Noto Sans SC | 起点·番茄 웹소설 |
+| zh-hant 중문 번체 | 3순위 | 同 | Noto Sans TC | 대만·홍콩 |
+| ko 한국어 | 4순위 | 친절·간결·존댓말 | Pretendard Variable | 한국 secondary track (W7~W12 GTM cycle) |
 
 ### 5.2 i18n 누수 0 룰
 
-현 seizn.com/ko 의 영문 누수 (`Watch an NPC form memory in one turn` 등) 재발 방지:
+각 언어 페이지에 다른 언어 잔존 X — `seizn.com/en` 의 한국어 누수, `seizn.com/ko` 의 영문 누수 재발 방지:
 
-- ko 페이지 = 영문 0 (브랜드명 `Seizn`·`Sample IP` 라벨 외)
-- en 페이지 = sample IP 명·라벨 영문 그대로
-- ja 페이지 = 한국어 단어 그대로 + 한자 음차 병기
-- zh 페이지 = 한국어 음차 + 한자 의역 병기
+- en 페이지 = 영문만 (브랜드명 `Seizn`·sample IP 명 외 다른 언어 0)
+- ja 페이지 = 일본어만 + 한자 음차 일관
+- zh 페이지 = 중문만 + 의역 일관
+- ko 페이지 = 한국어만 (브랜드명 `Seizn`·`Sample IP` 라벨 외 영문 0)
 
 ## 6. Sample IP live demo 기술 사양
 
@@ -422,21 +461,45 @@ Codex 빌드 입력. Author UI `/app` surface 와 동일 query/binding 재사용
 
 | 메트릭 | 측정 도구 | 목표 (W6 시점) |
 |---|---|---|
-| Hero CTA `30일 무료로 시작` 클릭율 | PostHog or Plausible | ≥ 8% |
+| Hero CTA `Start 30-day free trial` 클릭율 | PostHog or Plausible | ≥ 8% |
 | Sample IP live demo 인터랙션 (hover·click·scroll into view) | 자체 telemetry | ≥ 60% 방문자 |
 | Trial signup → trial activation | 내부 analytics | ≥ 50% |
 | Trial activation → paid conversion (30일 후) | 내부 analytics | ≥ 15% |
-| ko / en / ja / zh 트래픽 분포 | 자체 | ko 60% / en 25% / ja 10% / zh 5% |
+| en / ja / zh / ko 트래픽 분포 | 자체 | **en 50% / ja 20% / zh 15% / ko 15%** (EN-first GTM 정합) |
 
 W4 동안 측정 인프라 lock·W5 launch에 반영.
 
-## 8. SEO·메타
+## 8. SEO·메타·콘텐츠 마케팅 (en master)
 
-- title: `Seizn Author — 작가의 도구·작품의 기억`
-- meta description: `세계관·캐릭·씬을 한 곳에·AI가 캐논 충돌 자동 검출·작가 검수가 곧 정전. 작가용 메모리 도구.`
-- og:image: 합성 sample IP canon graph thumbnail (warm tones)
+### 8.1 메타
+
+- title: `Seizn Author — AI Memory for Writers`
+- meta description: `Bring worldbuilding, characters, and scenes together. Seizn catches canon conflicts automatically. Your review becomes the source of truth.`
+- og:image: synthetic sample IP canon graph thumbnail (warm tones)
 - og:type: website
 - structured data: `SoftwareApplication` schema·`offerCount: 3`
+
+### 8.2 콘텐츠 마케팅 채널 (W5+)
+
+**1순위 (영어권)**:
+- Reddit — r/writing·r/worldbuilding·r/fantasywriters·r/scifiwriting·r/selfpublish
+- Wattpad community·KDP author forums
+- Twitter / X — #WritingCommunity·#amwriting·#worldbuilding
+- Hacker News — Show HN (lateral developer-author crossover)
+- Substack newsletter — Seizn Author 자체 뉴스레터·writers' workflow tips
+- YouTube — author workflow walkthroughs (Sample IP demo·1차 콘텐츠)
+- Indie author podcasts (The Creative Penn·Self Publishing Show 등)
+
+**2순위 (일본·중국·secondary GTM W7+)**:
+- 일본: Twitter·カクヨム·小説家になろう·Note·일본 라노벨 인플루언서
+- 중국: 微博·小红书·知乎 author 커뮤니티·起点·晋江 인플루언서
+- 한국: 네이버 카페·블로그·웹소설 작가 커뮤니티·트위터 한국 작가
+
+**3순위 (다국어 공통)**:
+- Product Hunt launch (en master)
+- Indie Hackers
+- BetaList
+- 작가 컨퍼런스 후원 (NaNoWriMo·20Books to 50K·LBF 등)
 
 ## 9. 접근성
 
@@ -459,17 +522,19 @@ W4 동안 측정 인프라 lock·W5 launch에 반영.
 
 ## 11. 검증 체크리스트 (W5 launch readiness)
 
-- [ ] H1 4 언어 풀 번역·tone 정합
+- [ ] **H1 master = English**·4 언어 풀 번역·tone 정합
 - [ ] hero 본문 로고 X (#11 결함 회피)
-- [ ] CTA 2개 max·primary `30일 무료로 시작`
+- [ ] CTA 2개 max·primary `Start 30-day free trial`
 - [ ] 합성 sample IP demo 작동·30초 안에 wow 모먼트
-- [ ] 9 섹션 풀 카피·4 언어
-- [ ] $39/$129/$399/Enterprise 카드 노출·BYOK 옵션
-- [ ] 큰따옴표 0건 ([feedback_no_double_quotes.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_double_quotes.md))
-- [ ] 영문 누수 0건 (ko 페이지)
+- [ ] 9 섹션 풀 카피·4 언어 (en·ja·zh·ko 우선순위)
+- [ ] $39/$129/$399/Enterprise 카드 노출·BYOK는 footnote만
+- [ ] 입력 모드 P0 4종 (Direct·.docx·plain text·gdocs) 풀 작동
+- [ ] 큰따옴표 0건 ([feedback_no_double_quotes.md](C:/Users/admin/.claude/projects/c--Users-admin--codex/memory/feedback_no_double_quotes.md))·en 카피에도 적용
+- [ ] 언어 간 누수 0건 (en·ja·zh·ko 각자 단일 언어)
 - [ ] visual cue Celovin/Notrivo/TheLabForge/Usan과 공유 X
 - [ ] **KNOT 자료·캐릭·세계관 노출 0건**·합성 sample IP 라벨 명시
 - [ ] footer cross-link to engine.seizn.com
-- [ ] 결제·trial 흐름 작동
+- [ ] 결제·trial 흐름 작동 (Stripe USD·Stripe Tax 자동)
 - [ ] WCAG AA 통과
 - [ ] PostHog telemetry 작동
+- [ ] SEO meta·og 영어권 검색어 정합 (`AI memory for writers`·`worldbuilding tool`·`canon conflict detection`)
