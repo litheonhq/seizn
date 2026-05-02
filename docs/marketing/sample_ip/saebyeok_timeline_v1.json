@@ -1,0 +1,373 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "ip_label": "Sample IP — Synthetic Demo Data",
+  "ip_title": "Saebyeok Academy / 새벽 학원",
+  "scope": "short_demo_30day",
+  "schema_notes": [
+    "각 사건 = graph_entities(type='event')",
+    "when (Day + scene_id), where (location), who (참여 캐릭), what (사건 요약)",
+    "knowledge_partition = {public, character_known, character_unknown, author_only}",
+    "valid_at·invalid_at·source 필드"
+  ],
+  "demo_calendar": {
+    "phase_1_setup": {"days": "D1~D10", "dates": "2026-04-02 ~ 2026-04-11", "type": "캐릭 도입·풍문 + 첫 데이터"},
+    "phase_2_discovery": {"days": "D11~D20", "dates": "2026-04-12 ~ 2026-04-21", "type": "첫 측정·동아리 합류·정보 연결"},
+    "phase_3_resolution": {"days": "D21~D30", "dates": "2026-04-22 ~ 2026-05-01", "type": "여명재단 추적·결말 3분기"},
+    "key_milestones": [
+      "D1 = 2026-04-02 목·봄학기 개학",
+      "D8 = 2026-04-09 목·예린 전학",
+      "D11 = 2026-04-12 일·첫 옥상 측정",
+      "D14 = 2026-04-15 수·동아리 합류",
+      "D17 = 2026-04-18 토·종탑 언덕 진입",
+      "D22 = 2026-04-23 목·여명재단 흔적",
+      "D27 = 2026-04-28 화·도윤 공개",
+      "D29 = 2026-04-30 목·노트 핵심 페이지",
+      "D30 = 2026-05-01 금·결말 3 분기"
+    ]
+  },
+  "progressive_introduction_rule": {
+    "principle": "1 Day 1~2 신규 캐릭 max·점진 도입",
+    "schedule": {
+      "D1": "이슬 + 세린 (반장·룸메 아님·통학)",
+      "D2": "도윤 (음악부·이슬 같은 반)",
+      "D3": "민채 (학생회 서기·복도 마주침)",
+      "D5": "하나 (사진부장·고3·옥상 마주침)",
+      "D6": "지오 (기상부·옥상 카운터파트)",
+      "D8": "예린 (전학생·교실 좌석 맨 뒤)",
+      "D11": "임선재 (도서관 사서·이슬 단독 첫 자료 요청)"
+    }
+  },
+  "events": [
+    {
+      "id": "saebyeok.event.d1-firstday",
+      "day": "D1",
+      "date": "2026-04-02 목",
+      "phase": 1,
+      "where": "교실 2-3·운동장",
+      "who": ["iseul", "serin"],
+      "what": "봄학기 개학·이슬·세린 같은 반 확인·자리 짝꿍·교실 첫 인사·운동장 조회",
+      "knowledge_partition": {
+        "public": ["봄학기 시작", "2-3 반장 = 세린", "이슬 = 세린 옆자리"],
+        "author_only": ["여명 진동 D11 첫 측정 예고"]
+      },
+      "scene_status": "draft"
+    },
+    {
+      "id": "saebyeok.event.d2-music",
+      "day": "D2",
+      "date": "2026-04-03 금",
+      "phase": 1,
+      "where": "교실·음악실",
+      "who": ["iseul", "doyun", "serin"],
+      "what": "도윤 첫 등장·점심 음악실 우연 마주침·도윤 베이스 한 곡·이슬 메모·도윤 손목 가죽 끈 인지 X",
+      "knowledge_partition": {
+        "public": ["도윤 = 음악부", "도윤 = 같은 반"],
+        "author_only": ["도윤 D-2 새벽 11분 결손 미보고"]
+      }
+    },
+    {
+      "id": "saebyeok.event.d3-corridor",
+      "day": "D3",
+      "date": "2026-04-04 토 (보충)",
+      "phase": 1,
+      "where": "복도·교무실",
+      "who": ["iseul", "minchae"],
+      "what": "민채 첫 마주침·학생회 서기 자기소개·민채 정보 거래 톤 시그널·이슬 한 박자 늦은 응답"
+    },
+    {
+      "id": "saebyeok.event.d4-quiet",
+      "day": "D4",
+      "date": "2026-04-05 일",
+      "phase": 1,
+      "where": "이슬 자취방·강변",
+      "who": ["iseul"],
+      "what": "주말·이슬 단독·강변 산책·일출 4:55 카메라 한 컷·셔터 후 미세 frame skip 의심 (본인은 모름·하나가 D5에 발견)"
+    },
+    {
+      "id": "saebyeok.event.d5-photo",
+      "day": "D5",
+      "date": "2026-04-06 월",
+      "phase": 1,
+      "where": "사진부 동아리실·옥상",
+      "who": ["iseul", "hana"],
+      "what": "하나 첫 등장·이슬 D4 사진 frame skip 발견·하나 28년 아카이브 frame skip 11건 공개 (이슬에게)·옥상 키 위치 공유",
+      "knowledge_partition": {
+        "public": ["하나 = 사진부장 고3", "사진부 아카이브 frame skip 11건"],
+        "character_known": {"iseul": ["frame skip 사실", "옥상 키 체육부"]},
+        "author_only": ["frame skip 11건 = 여명 진동 1991/2003/2014 시점과 부분 일치"]
+      }
+    },
+    {
+      "id": "saebyeok.event.d6-rooftop",
+      "day": "D6",
+      "date": "2026-04-07 화",
+      "phase": 1,
+      "where": "옥상",
+      "who": ["iseul", "jio"],
+      "what": "이슬 점심 옥상·지오 = 기상부·기압계 작동 중·간단 인사·지오 새벽 종탑 언덕 갔다는 언급 (이슬 메모)"
+    },
+    {
+      "id": "saebyeok.event.d7-archive",
+      "day": "D7",
+      "date": "2026-04-08 수",
+      "phase": 1,
+      "where": "사진부 동아리실",
+      "who": ["iseul", "hana", "serin"],
+      "what": "이슬 + 세린 + 하나 = 첫 3인 회의·아카이브 frame skip 좌표 표시·세린 = 회의록 작성·도서관 자료 추정"
+    },
+    {
+      "id": "saebyeok.event.d8-transfer",
+      "day": "D8",
+      "date": "2026-04-09 목",
+      "phase": 1,
+      "where": "교실 2-3",
+      "who": ["iseul", "serin", "yerin"],
+      "what": "예린 전학·교실 자기소개·이전 학교 = 강원도·세린 환영 위원회·예린 = 노트 1권 책상 보임·이슬 = 노트 표지 한 박자 봄·예린 자기 노트 빠르게 가방에",
+      "knowledge_partition": {
+        "public": ["예린 = 전학생", "강원도 출신"],
+        "author_only": ["예린 = 여명 진동 인지자·노트 = 여명 모임 인계품·예린은 D14까지 신분 노출 X"]
+      }
+    },
+    {
+      "id": "saebyeok.event.d9-photo-share",
+      "day": "D9",
+      "date": "2026-04-10 금",
+      "phase": 1,
+      "where": "사진부 동아리실·도서관",
+      "who": ["iseul", "hana", "seonjae"],
+      "what": "하나 추가 frame skip 16건 (총 27건)·이슬 도서관 자료 요청·임선재 첫 등장·이슬에게 1991/2003 신문 클리핑 1차 자료 공개",
+      "knowledge_partition": {
+        "public": ["하나 = 27건 frame skip 인지", "도서관 비공개실 존재"],
+        "character_known": {"iseul": ["1991/2003 사례 = 11분 결손"], "seonjae": ["이슬 = 이 자료 다룰 신뢰 가능"]},
+        "author_only": ["임선재 = 1978 사건 자료 별도 보유·D17 단계적 공개"]
+      }
+    },
+    {
+      "id": "saebyeok.event.d10-weekend",
+      "day": "D10",
+      "date": "2026-04-11 토",
+      "phase": 1,
+      "where": "강변·이슬 자취방",
+      "who": ["iseul", "serin"],
+      "what": "이슬 + 세린 강변 산책·세린이 D11 일요일 새벽 옥상 측정 동행 결정·각자 알람 04:00"
+    },
+    {
+      "id": "saebyeok.event.d11-first-measurement",
+      "day": "D11",
+      "date": "2026-04-12 일",
+      "phase": 2,
+      "where": "옥상",
+      "who": ["iseul", "serin", "jio"],
+      "what": "첫 측정·일출 05:43·이슬 + 세린 + 지오 우연 합류·기압계 미세 스파이크·이슬 시계 11분 결손 측정·세린이 인지·세린은 결손 안 겪음 (옥상 가장자리 못 도달)·결손 지수 9.2·역대 2위",
+      "knowledge_partition": {
+        "public": ["옥상 새벽 만남"],
+        "character_known": {"iseul": ["본인 11분 결손 직접 경험"], "serin": ["이슬 11분 결손 목격자"], "jio": ["기압 스파이크 직접 측정"]},
+        "author_only": ["여명재단 측정 장비 옥상 실외기 박스 안에 있음 (4월 D14 점검)"]
+      },
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d12-aftermath",
+      "day": "D12",
+      "date": "2026-04-13 월",
+      "phase": 2,
+      "where": "교실·사진부 동아리실",
+      "who": ["iseul", "serin", "hana"],
+      "what": "D11 결과 하나에게 보고·하나 = 28년치 frame skip 좌표 + 측정 좌표 매핑·일치 확인",
+      "scene_status": "draft"
+    },
+    {
+      "id": "saebyeok.event.d13-jio-data",
+      "day": "D13",
+      "date": "2026-04-14 화",
+      "phase": 2,
+      "where": "기상부 동아리실",
+      "who": ["iseul", "jio", "serin"],
+      "what": "지오 1년치 데이터 공유·결손 지수 7건 + D11 = 8건·1년 평균 + 0.7 hPa 스파이크 패턴·anchor 추정 좌표 = 옥상·종탑 언덕·강변 산책로·도서관 비공개실 등 4곳 + 미확인 3곳"
+    },
+    {
+      "id": "saebyeok.event.d14-club-formed",
+      "day": "D14",
+      "date": "2026-04-15 수",
+      "phase": 2,
+      "where": "사진부 동아리실 (저녁)",
+      "who": ["iseul", "serin", "hana", "jio", "yerin"],
+      "what": "예린 자진 합류·노트 일부 페이지 공개 (D14 페이지만)·여명 모임 명칭 첫 노출·이슬·세린·하나·지오·예린 5인 합류·도윤·민채는 미합류",
+      "knowledge_partition": {
+        "public": ["여명 모임 = 비공식 동아리"],
+        "character_known": {"all_5": ["예린이 노트 인수자"]},
+        "author_only": ["예린 노트 4페이지 찢김·여명재단 압력 추정 (예린 본인은 D29까지 일부만 인지)"]
+      },
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d15-doyun-suspicion",
+      "day": "D15",
+      "date": "2026-04-16 목",
+      "phase": 2,
+      "where": "교실·음악실",
+      "who": ["iseul", "doyun"],
+      "what": "이슬 도윤이 새벽 자주 사라지는 것 인지·도윤은 회피·이슬 노트 한 줄: '도윤 결손 인지자 가능성'"
+    },
+    {
+      "id": "saebyeok.event.d16-minchae-trade",
+      "day": "D16",
+      "date": "2026-04-17 금",
+      "phase": 2,
+      "where": "복도·학생회실",
+      "who": ["iseul", "minchae"],
+      "what": "민채 정보 거래 제안·여명재단 후원금 명단 일부 vs 이슬 측정 데이터·이슬 거절 (D17 후 재제안)"
+    },
+    {
+      "id": "saebyeok.event.d17-bell-hill",
+      "day": "D17",
+      "date": "2026-04-18 토",
+      "phase": 2,
+      "where": "여명 종탑 언덕·도서관 비공개실",
+      "who": ["iseul", "serin", "yerin", "seonjae"],
+      "what": "종탑 언덕 펜스 안쪽 04:30 진입·예린 노트 D17 페이지 좌표 정확·일출 05:42·이슬·세린·예린 11분 결손·예린만 결손 인지함 (이전 경험)·도서관 → 임선재 1978 자료 공개·1958년 종탑 7개 시설 매설 암시",
+      "knowledge_partition": {
+        "public": ["3인 종탑 언덕 진입"],
+        "character_known": {"iseul": ["1978 자료 첫 접촉"], "serin": ["1978 자료 함께 봄"], "yerin": ["본인 결손 인지·이슬·세린에게 인지 능력 노출"], "seonjae": ["3인이 자료 다룰 단계 됐다 판단"]},
+        "author_only": ["7개 매설 시설 좌표 = 여명 진동 anchor 7개와 정확 일치·D27 회수"]
+      },
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d18-doyun-followup",
+      "day": "D18",
+      "date": "2026-04-19 일",
+      "phase": 2,
+      "where": "음악실·이슬 자취방",
+      "who": ["iseul", "doyun"],
+      "what": "이슬 도윤에게 D17 결과 일부 공개·도윤 듣고 침묵·자기 경험 인정 D27까지 보류"
+    },
+    {
+      "id": "saebyeok.event.d19-data-merge",
+      "day": "D19",
+      "date": "2026-04-20 월",
+      "phase": 2,
+      "where": "사진부 동아리실",
+      "who": ["iseul", "serin", "hana", "jio", "yerin"],
+      "what": "5인 회의·사진 + 기상 + 노트 + 1978 자료 통합·anchor 7개 추정 좌표 확정·최종 검증 D22 강변 측정 결정"
+    },
+    {
+      "id": "saebyeok.event.d20-council-attempt",
+      "day": "D20",
+      "date": "2026-04-21 화",
+      "phase": 2,
+      "where": "학생회실",
+      "who": ["minchae"],
+      "what": "민채 학생회 의제 발표 시도·여명 진동 학교 조사 요청·교무실 거절·민채 신중 모드 전환"
+    },
+    {
+      "id": "saebyeok.event.d21-bell-history",
+      "day": "D21",
+      "date": "2026-04-22 수",
+      "phase": 3,
+      "where": "도서관 비공개실",
+      "who": ["iseul", "yerin", "seonjae"],
+      "what": "임선재 1958 종탑 건설 기록 일부 공개·7개 시설 매설 좌표 부분 공개 (정확 좌표 아직 X)·예린 노트 = 같은 좌표 추정 일치"
+    },
+    {
+      "id": "saebyeok.event.d22-foundation-trace",
+      "day": "D22",
+      "date": "2026-04-23 목",
+      "phase": 3,
+      "where": "강변 산책로 (anchor 4)",
+      "who": ["iseul", "hana", "jio"],
+      "what": "강변 측정·하나 카메라 + 지오 기압계·일출 05:39·결손 지수 6.5·강변 = 약한 anchor 확증·여명재단 측정 장비 강변 가로등에 부착 (하나 발견)",
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d23-evidence",
+      "day": "D23",
+      "date": "2026-04-24 금",
+      "phase": 3,
+      "where": "사진부 동아리실",
+      "who": ["iseul", "serin", "hana", "jio", "yerin"],
+      "what": "5인 회의·여명재단 측정 장비 사진 공유·민채 정보 거래 재제안 (이슬·세린 수락)·후원금 명단 → 강변 가로등 설치 자금원 = 여명재단 확증"
+    },
+    {
+      "id": "saebyeok.event.d24-minchae-trade-2",
+      "day": "D24",
+      "date": "2026-04-25 토",
+      "phase": 3,
+      "where": "학생회실",
+      "who": ["iseul", "minchae"],
+      "what": "민채 정보 거래·여명재단 후원금 = 다온시 7개 지점 측정 장비 비공개 설치·민채 합류 제안 (이슬 D26 결정 보류)"
+    },
+    {
+      "id": "saebyeok.event.d25-tension",
+      "day": "D25",
+      "date": "2026-04-26 일",
+      "phase": 3,
+      "where": "도서관·이슬 자취방",
+      "who": ["iseul", "yerin"],
+      "what": "예린 노트 추가 페이지 공유·D29 핵심 페이지 예고·예린 자기 정체 일부 공개 (이전 학교 동아리 인계자·신분은 미공개)"
+    },
+    {
+      "id": "saebyeok.event.d26-decision",
+      "day": "D26",
+      "date": "2026-04-27 월",
+      "phase": 3,
+      "where": "교실·복도",
+      "who": ["iseul", "minchae", "serin"],
+      "what": "이슬 민채 합류 결정·세린 동의·6인 동아리 + 도윤·임선재 협력자 구도"
+    },
+    {
+      "id": "saebyeok.event.d27-doyun-reveal",
+      "day": "D27",
+      "date": "2026-04-28 화",
+      "phase": 3,
+      "where": "음악실 저녁",
+      "who": ["iseul", "doyun"],
+      "what": "도윤 자기 D-2년 새벽 종탑 언덕 11분 결손 경험 인정·아버지 사망 직전·아버지 유작 악보 = 결손 시간 메우려는 시도·이슬 노트 한 줄: '도윤 = 결손 인지자 #4'",
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d28-prep",
+      "day": "D28",
+      "date": "2026-04-29 수",
+      "phase": 3,
+      "where": "사진부 동아리실 + 도서관",
+      "who": ["iseul", "serin", "hana", "jio", "yerin", "minchae"],
+      "what": "6인 + 임선재 협의·D30 발표 또는 비공개 결정 분기 준비·예린 D29 핵심 페이지 사전 알림"
+    },
+    {
+      "id": "saebyeok.event.d29-notebook-page",
+      "day": "D29",
+      "date": "2026-04-30 목",
+      "phase": 3,
+      "where": "도서관 비공개실 저녁",
+      "who": ["iseul", "yerin", "seonjae"],
+      "what": "예린 노트 핵심 페이지 공개·찢긴 4페이지 = 1958 매설 시설 7곳 좌표 + 1978~2024 결손 사례 연감·여명재단의 압력으로 찢긴 추정·임선재 동의·D30 발표 분기 결정",
+      "knowledge_partition": {
+        "public": [],
+        "character_known": {"iseul": ["1958 매설 좌표 = anchor 7곳 일치 확증"], "yerin": ["본인 가족 = 1991 사례자 사촌"], "seonjae": ["1958 시설 본질 = 시간 인식 보호 안전 장치 추정"]},
+        "author_only": ["7개 시설 = 1958년 시정이 대규모 산업 가속 부작용 차폐 목적·여명 진동 = 차폐 노화 결과·여명재단 = 차폐 유지 목적 (외부 학생들이 알면 안 되는 이유 = 이미 7곳 중 2곳 노화 임계)"]
+      },
+      "scene_status": "key"
+    },
+    {
+      "id": "saebyeok.event.d30-ending",
+      "day": "D30",
+      "date": "2026-05-01 금",
+      "phase": 3,
+      "where": "옥상·종탑 언덕·강변 (3 분기)",
+      "who": ["iseul", "serin", "hana", "jio", "yerin", "minchae", "doyun"],
+      "what": "결말 3 분기: (A) 학생회 공식 발표·여명재단 압력 정면·교무실 갈등 (B) 도서관 비공개 보존·임선재 + 이슬 그룹만 알기·다른 학생 보호 (C) 예린 노트 추가 페이지 회수 → 차기 인계 멤버 양성·계속 모임",
+      "ending_branches": [
+        {"id": "A_public", "label": "공개 분기 — 압력·갈등·연대", "tone": "용기·갈등"},
+        {"id": "B_private", "label": "비공개 분기 — 보존·온건·다음 세대 보호", "tone": "온화·신중"},
+        {"id": "C_continue", "label": "계속 분기 — 동아리 인계·여명 모임 부활", "tone": "희망·관계"}
+      ],
+      "knowledge_partition": {
+        "public": ["3 분기 중 1개 선택"],
+        "author_only": ["7곳 시설 중 2곳 노화 임계 = D60 시점 새 측정 필요·후속작 시드"]
+      },
+      "scene_status": "key"
+    }
+  ]
+}

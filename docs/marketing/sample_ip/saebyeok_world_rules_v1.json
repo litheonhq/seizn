@@ -1,0 +1,234 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "ip_label": "Sample IP — Synthetic Demo Data",
+  "ip_title": "Saebyeok Academy / 새벽 학원",
+  "scope": "short_demo_30day",
+  "purpose": "Saebyeok world rules — landing live demo source. Soft SF rules for a near-future Korean schoolyard mystery. Internal-IP separation rule compliant (verification in saebyeok-readme.md §5).",
+  "schema_notes": [
+    "각 룰 = graph_entities(type='rule' or 'concept')",
+    "valid_at·invalid_at·source·confidence·status·scope 필드",
+    "tier:1 (공개)·tier:2 (작가 only) 분리"
+  ],
+  "rule_categories": [
+    "geography",
+    "school",
+    "phenomenon",
+    "tech",
+    "society",
+    "club",
+    "rumor",
+    "historical_record",
+    "organization"
+  ],
+  "rules": [
+    {
+      "id": "saebyeok.world.geo.daon_city",
+      "category": "geography",
+      "name": "다온시 (Daon City)",
+      "scope": "short_demo_30day",
+      "description": "서울 인근 가상 신도시·인구 약 30만·1995년 신도시 지정·다온강(가상)이 시 가운데를 가로지름. 합성 IP 가상 도시·실재 한국 도시와 무관.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.geo.dawn_river",
+      "category": "geography",
+      "name": "다온강",
+      "scope": "short_demo_30day",
+      "description": "다온시 가운데를 흐르는 가상 하천·여명 진동 후보 지점 4번이 강변 산책로에 위치. 봄철 벚꽃이 강변에 핀다.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.geo.bell_hill",
+      "category": "geography",
+      "name": "여명 종탑 언덕",
+      "scope": "short_demo_30day",
+      "description": "다온시 북쪽 표고 84m 언덕·1958년 시립 천문 종탑 (현재 비공개)·여명 진동 후보 지점 1번 (가장 강한 anchor 추정)·학생 출입 금지 펜스 있음.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.school.saebyeok_high",
+      "category": "school",
+      "name": "새벽고등학교",
+      "scope": "short_demo_30day",
+      "description": "다온시립 공립 남녀공학·1962 개교·전교 1200명·운동장과 옥상이 종탑 언덕에서 직선 800m·옥상 출입은 비공식 (체육 교사 키 보관).",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.phenomenon.dawn_tremor",
+      "category": "phenomenon",
+      "name": "여명 진동 (Dawn Tremor)",
+      "scope": "short_demo_30day",
+      "description": "도시 일부 지점에서 새벽 일출 직전 약 11분 시간 인식 결손이 발생한다는 현상·관측 가능자: 해당 지점에서 일출 ±5분 안에 머문 사람·시계·카메라·기압계 모두 미세 이상 기록·물리적 위해 사례 0건·기억 손상 사례 0건·결손 시간만 측정.",
+      "status": "canon",
+      "tier": 1,
+      "details": {
+        "mechanism_known": "관찰만 가능·물리적 메커니즘 단편 1 시점 미해명",
+        "duration": "관측 결손 시간 = 정확히 11분",
+        "casualty_history": "1991/2003/2014 학생 1명씩 11분 결손 보고·다친 사람 0",
+        "anchor_count": 7,
+        "tier_2_truth": "anchor 7개는 1958년 종탑 건설 시 묻은 시설 7개와 좌표 일치 (Tier 2·임선재·여명재단만 인지)"
+      }
+    },
+    {
+      "id": "saebyeok.world.phenomenon.skip_index",
+      "category": "phenomenon",
+      "name": "결손 지수 (Skip Index)",
+      "scope": "short_demo_30day",
+      "description": "기상부에서 비공식 사용·결손 사건의 강도를 1~10 척도로 기록 (지오 작성)·1년 평균 7건·봄철 집중 (4~5월)·D11 = 9.2 (역대 2위) 측정.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.tech.ecard",
+      "category": "tech",
+      "name": "학생수첩 e-card",
+      "scope": "short_demo_30day",
+      "description": "RFID 학생증·등하교 자동 기록·옥상·도서관 비공개실 출입은 별 키·교내 카페·자판기 결제 가능.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.tech.curfew",
+      "category": "society",
+      "name": "다온시 청소년 야간통행 조례",
+      "scope": "short_demo_30day",
+      "description": "만 18세 미만 21:00~06:00 통행 제한·도서관 자율학습 예외·새벽 일출 전후 단속 약함·D17 종탑 접근 시점 = 04:30 = 통행제한 시간대 (위반 위험).",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.tech.no_supernatural",
+      "category": "phenomenon",
+      "name": "현상 외 일반 물리·과학 정상 작동",
+      "scope": "short_demo_30day",
+      "description": "Saebyeok IP는 soft SF 톤·여명 진동만 비표준·그 외 마법·초능력·이세계·환생 등 0건·캐릭터에 능력 없음·도구·기록·관찰력만 사용.",
+      "status": "canon",
+      "tier": 1,
+      "separation_note": "내부 전용 IP의 능력 컨셉과 명확 분리·검증 절차는 saebyeok-readme.md §5"
+    },
+    {
+      "id": "saebyeok.world.club.daybreak_watch",
+      "category": "club",
+      "name": "여명 모임 (Daybreak Watch)",
+      "scope": "short_demo_30day",
+      "description": "비공식 학생 동아리·교무실 미등록·구 멤버 4명 (2024 졸업)·노트 인계로만 유지·예린이 D8에 노트 인수자로 등장·이슬·세린·도윤·하나·지오·민채 = 단편 1 신규 멤버 후보 (D17~D22 합류).",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.club.photo_archive",
+      "category": "club",
+      "name": "사진부 아카이브",
+      "scope": "short_demo_30day",
+      "description": "1998년부터 28년치 새벽 사진·학교 옥상 정기 촬영·하나가 D5에 frame skip 11건 발견·D9 이슬에게 일부 공개.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.club.weather_log",
+      "category": "club",
+      "name": "기상부 관측 로그",
+      "scope": "short_demo_30day",
+      "description": "10년치 기압·풍속·일출 시각 데이터·지오가 D-2년 전 데이터에서 새벽 기압 미세 스파이크 7회·1년 평균 = 결손 지수 평균 + 0.7 hPa.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.club.student_council",
+      "category": "club",
+      "name": "학생회",
+      "scope": "short_demo_30day",
+      "description": "16개 부서·민채 = 서기 (정보 흐름 통제)·여명재단 후원금 명단 일부 보유·D20 학생회 의제 시도·D25 신중 모드.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.club.music_club",
+      "category": "club",
+      "name": "음악부",
+      "scope": "short_demo_30day",
+      "description": "도윤 = 베이스·아버지 유작 악보 작업·새벽 연습 종탑 언덕 자주 (D-N 스파이크 의심).",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.rumor.eleven_minutes",
+      "category": "rumor",
+      "name": "11분 룰",
+      "scope": "short_demo_30day",
+      "description": "도시 전설·여명 진동 강한 anchor에 일출 시각 머문 사람은 정확히 11분의 시간 인식 결손을 겪는다·신체·기억은 무손상·다만 본인은 자기가 결손 인지 못 하고 주변 사람이 알려줘야 함.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.rumor.disappearance_history",
+      "category": "rumor",
+      "name": "1991/2003/2014 학생 11분 결손 사례",
+      "scope": "short_demo_30day",
+      "description": "각 사건 = 새벽고등학교 학생 1명·종탑 언덕 펜스 안쪽·일출 시각 11분 결손 후 무사 귀환·언론 보도 X·사서 비공개실 신문 클리핑.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.history.bell_tower_1958",
+      "category": "historical_record",
+      "name": "1958년 종탑 건설 + 7개 시설 매설",
+      "scope": "short_demo_30day",
+      "description": "다온시 종탑 건설 당시 7개 보조 시설 매설 (시정 비공개 기록)·매설 좌표가 여명 진동 anchor 7개와 일치.",
+      "status": "canon",
+      "tier": 2,
+      "tier_2_note": "이슬 그룹은 D27까지 좌표 일치 인지·매설 사실은 단편 1 본문 직접 노출 X (부분 암시만)"
+    },
+    {
+      "id": "saebyeok.world.history.notebook",
+      "category": "historical_record",
+      "name": "여명 노트 (Daybreak Notebook)",
+      "scope": "short_demo_30day",
+      "description": "여명 모임 2018~2024 활동 기록·관측 로그 + 풍문 정리·예린이 D8에 인수·일부 페이지 찢김 (이전 압력 추정)·D29 이슬 그룹과 협의.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.org.yeomyeong_foundation",
+      "category": "organization",
+      "name": "여명재단 (Yeomyeong Foundation)",
+      "scope": "short_demo_30day",
+      "description": "다온시 준공공 연구재단·1992 설립·여명 진동 측정·연구 명목 활동·실 공개 자료 거의 없음·학교·도서관·언덕에 비공개 측정 장비 (이슬 그룹 D22 추정·D27 일부 확증)",
+      "status": "canon",
+      "tier": 1,
+      "tier_2_note": "이사회 명단·자금원·연구 결과 = 단편 1 외부 노출 X (Tier 2)"
+    },
+    {
+      "id": "saebyeok.world.org.school_office",
+      "category": "organization",
+      "name": "새벽고등학교 교무실",
+      "scope": "short_demo_30day",
+      "description": "교장·교감·교무부장·생활지도부장·체육부장 = 옥상 키 관리·민채는 학생회 자격으로 출입권·이슬·세린·하나는 사진부·기상부 자격으로 제한 출입.",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.school.spring_calendar",
+      "category": "school",
+      "name": "봄학기 D1~D30 캘린더",
+      "scope": "short_demo_30day",
+      "description": "D1 = 2026-04-02 목 (개학)·D11 = 2026-04-12 일 (첫 측정)·D14 = 2026-04-15 수 (동아리 합류)·D22 = 2026-04-23 목 (여명재단 흔적)·D29 = 2026-04-30 목 (예린 노트 핵심 페이지)·D30 = 2026-05-08 금 (결말 분기).",
+      "status": "canon",
+      "tier": 1
+    },
+    {
+      "id": "saebyeok.world.tech.cherry_blossom",
+      "category": "society",
+      "name": "다온시 봄철 벚꽃",
+      "scope": "short_demo_30day",
+      "description": "강변 산책로·종탑 언덕 산책로 벚꽃·D5~D14 만개·D14 일제히 떨어짐·D17 비 오면 다 떨어짐·시각적 시그니처.",
+      "status": "canon",
+      "tier": 1
+    }
+  ]
+}
