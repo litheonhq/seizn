@@ -9,5 +9,6 @@ export * from './replay';
 export * from './runner';
 export * from './snapshot';
 export * from './store';
+export * from './supabase-store';
 export * from './temporal';
 export * from './types';
