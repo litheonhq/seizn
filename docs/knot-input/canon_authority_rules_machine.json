@@ -1,0 +1,65 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "source": "docs/knot-input/canon_authority_rules.md",
+  "scope_defaults": {
+    "default_scope": "short1",
+    "default_tier": "tier:1",
+    "default_status": "candidate"
+  },
+  "allowed_candidate_types": [
+    "character",
+    "world_rule",
+    "event",
+    "relationship",
+    "voice_sample",
+    "fact"
+  ],
+  "allowed_statuses": [
+    "candidate",
+    "canon",
+    "rejected",
+    "retired",
+    "past_only",
+    "contradicted",
+    "invalidated",
+    "author_only",
+    "character_known",
+    "character_unknown"
+  ],
+  "forbidden_in_scope": {
+    "short1": [
+      "결",
+      "허 정체",
+      "타오 정체",
+      "도서관장 정체",
+      "13번째 초월체",
+      "자서가 본질",
+      "혈통환상계 본질",
+      "연금 변환계 본질",
+      "청월 사건",
+      "테게오스",
+      "제3금 하늘",
+      "제4금",
+      "제5금",
+      "제6금",
+      "제7금"
+    ]
+  },
+  "tier2_tags": [
+    "tier:2",
+    "author_only",
+    "main_episode_link",
+    "forbidden_in_scope"
+  ],
+  "critical_categories": [
+    "author_only_leak",
+    "forbidden_in_scope",
+    "tier_2_secret",
+    "scope_isolation",
+    "canon_critical",
+    "character_voice_consistency"
+  ],
+  "duplicate_threshold": 0.85,
+  "eval_seed_v3_min_pass_rate": 0.8
+}

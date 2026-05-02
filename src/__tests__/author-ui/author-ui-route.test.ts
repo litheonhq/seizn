@@ -132,10 +132,11 @@ describe('Author UI route guard', () => {
     expect(uploaded).toMatchObject({
       file_name: 'route-import.md',
       parse_status: 'parsed',
-      extract_status: 'queued',
+      extract_status: 'extracted',
       parser_version: 'author-parser-md-v1',
       source_role: 'canon',
     });
+    expect(uploaded?.candidate_count).toBeGreaterThan(0);
     expect(uploaded?.parsed_text_preview).toContain('Parsed through route.');
   });
 });

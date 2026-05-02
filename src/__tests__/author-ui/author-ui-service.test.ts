@@ -168,17 +168,17 @@ describe('Author UI service', () => {
 
     const saved = service.saveByok({
       provider: 'anthropic',
-      api_key: 'sk-ant-test-value-1234',
+      api_key: 'sk-ant-short-1',
     });
 
-    expect(saved).toEqual({ valid: true, key_last_4: '1234' });
+    expect(saved).toEqual({ valid: true, key_last_4: 'rt-1' });
     expect(service.getByok()).toMatchObject({
       enabled: true,
       provider: 'anthropic',
-      key_last_4: '1234',
+      key_last_4: 'rt-1',
       status: 'active',
     });
-    expect(JSON.stringify(service.getByok())).not.toContain('sk-ant-test-value');
+    expect(JSON.stringify(service.getByok())).not.toContain('sk-ant-short');
   });
 
   it('persists upload bytes through the parser pipeline before extraction', async () => {
@@ -196,12 +196,23 @@ describe('Author UI service', () => {
     const uploaded = service.listImports(projectId).imports.find((item) => item.id === result.import_id);
     expect(uploaded).toMatchObject({
       parse_status: 'parsed',
-      extract_status: 'queued',
-      candidate_count: 0,
+      extract_status: 'extracted',
+      candidate_count: 1,
       storage_key: `knot/${result.import_id}/sori.md`,
       parser_version: 'author-parser-md-v1',
     });
     expect(uploaded?.parsed_text_preview).toContain('Parsed canon body');
+
+    const candidates = service.listCandidates(projectId, new URLSearchParams(`source_id=${result.import_id}`));
+    expect(candidates.total).toBe(1);
+    expect(candidates.candidates[0]).toMatchObject({
+      type: 'world_rule',
+      source: {
+        document_id: result.import_id,
+        file_path: 'sori.md',
+      },
+      tags: expect.arrayContaining(['short1', 'tier:1']),
+    });
   });
 
   it('records unsupported upload formats as failed imports', async () => {

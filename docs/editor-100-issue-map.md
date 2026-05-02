@@ -25,6 +25,10 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | AMV3-P2-02 | Production Author LLM calls could accidentally depend on managed keys | Existing generic provider fallback allowed managed keys broadly | Author resolver now requires Anthropic BYOK in production and allows managed fallback only outside production | Closed |
 | AMV3-P2-03 | Author LLM token usage was not persisted for account usage or audit | No `model_usage` ledger existed | Added `model_usage` migration, usage store, and account usage merge path | Closed |
 | AMV3-P2-04 | BYOK provider keys could fail for NextAuth profile IDs | `provider_keys.user_id` still followed the older `auth.users` UUID model | Added profile-ID alignment migration for `provider_keys` and `provider_keys_audit` | Closed |
+| AMV3-P3-01 | Author imports parsed source text but did not create real review candidates | Upload flow stopped at parsed text and kept extraction as a queued fixture state | Added `src/lib/author/extraction/` orchestrator and wired `uploadImport` to create candidates from parsed text | Closed |
+| AMV3-P3-02 | Extraction prompts and response schemas were not locked for repeatable LLM calls | Phase 2 runtime had no Author-specific structured prompt catalog | Added five prompt files and five JSON schemas for character, world rule, event, relationship, and voice-sample extraction | Closed |
+| AMV3-P3-03 | KNOT canon authority rules were only human-readable | Validator could not machine-enforce forbidden short1 leaks, tier tags, status, scope, or duplicate candidates | Added `docs/knot-input/canon_authority_rules_machine.json` and validator enforcement with regression tests | Closed |
+| AMV3-P3-04 | Eval seed v3 coverage and KNOT character extraction thresholds were not automated | The 100-case seed and short1 character thresholds were docs-only artifacts | Added Phase 3 test harness covering 100 eval cases, 7/7 main character match threshold, and 8 supporting character heading extraction | Closed |
 
 ## Files Changed
 
@@ -37,14 +41,17 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 - `src/app/(dashboard)/dashboard/author/author-memory-v3-client.tsx`
 - `supabase/migrations/20260502003_author_imports_text.sql`
 - `src/lib/author/llm/`
+- `src/lib/author/extraction/`
 - `src/app/api/account/byok/route.ts`
 - `src/app/api/account/usage/route.ts`
 - `src/lib/byok/index.ts`
 - `supabase/migrations/20260502004_model_usage.sql`
 - `supabase/migrations/20260502005_provider_keys_profile_user_id.sql`
+- `docs/knot-input/canon_authority_rules_machine.json`
+- `src/__tests__/author/extraction/eval-seed-v3.test.ts`
 
 ## Follow-up Notes
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
-3. Author Memory v3 Phase 3 can now call the Phase 2 Anthropic runtime; extraction prompts, validators, and candidate persistence remain next-phase work.
+3. Author Memory v3 Phase 3 now calls the Phase 2 Anthropic runtime in production mode and uses a deterministic heuristic fallback in non-production tests; backlog generation, audit/replay hardening, and Litheon migration remain next-phase work.
