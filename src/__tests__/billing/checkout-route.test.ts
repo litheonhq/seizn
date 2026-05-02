@@ -17,6 +17,7 @@ const mocks = vi.hoisted(() => ({
     subscription_status?: string | null;
   } | null,
   customerCreate: vi.fn(),
+  subscriptionsList: vi.fn(),
   checkoutCreate: vi.fn(),
   portalCreate: vi.fn(),
   profileUpdates: [] as Record<string, unknown>[],
@@ -54,6 +55,7 @@ vi.mock('@/lib/supabase', () => ({
 vi.mock('@/lib/stripe', () => ({
   getStripeClient: () => ({
     customers: { create: mocks.customerCreate },
+    subscriptions: { list: mocks.subscriptionsList },
     checkout: { sessions: { create: mocks.checkoutCreate } },
     billingPortal: { sessions: { create: mocks.portalCreate } },
   }),
@@ -76,6 +78,7 @@ describe('Author checkout route', () => {
     mocks.byokStatus = { enabled: false };
     mocks.profileUpdates = [];
     mocks.customerCreate.mockResolvedValue({ id: 'cus_created_123' });
+    mocks.subscriptionsList.mockResolvedValue({ data: [] });
     mocks.checkoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/session_123' });
     mocks.portalCreate.mockResolvedValue({ url: 'https://billing.stripe.com/session_123' });
   });
@@ -94,6 +97,9 @@ describe('Author checkout route', () => {
         stripe_subscription_status: status,
         subscription_status: status,
       };
+      mocks.subscriptionsList.mockResolvedValue({
+        data: [stripeSubscription('sub_author_123', status, 'price_pro_monthly_v7')],
+      });
 
       const response = await POST(makeCheckoutRequest());
       const body = await response.json();
@@ -108,23 +114,36 @@ describe('Author checkout route', () => {
         customer: 'cus_author_123',
         return_url: 'https://app.seizn.test/dashboard/billing',
       });
+      expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
+        stripe_subscription_id: 'sub_author_123',
+        stripe_subscription_status: status,
+        stripe_price_id: 'price_pro_monthly_v7',
+      }));
       expect(mocks.checkoutCreate).not.toHaveBeenCalled();
     }
   );
 
-  it('redirects a subscriber with missing local status to the billing portal', async () => {
+  it('recovers a stale local profile from a live Stripe subscription before checkout', async () => {
     mocks.profile = {
       stripe_customer_id: 'cus_author_123',
-      stripe_subscription_id: 'sub_author_123',
+      stripe_subscription_id: null,
       stripe_subscription_status: null,
       subscription_status: null,
     };
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSubscription('sub_live_123', 'active', 'price_pro_monthly_v7')],
+    });
 
     const response = await POST(makeCheckoutRequest());
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body.destination).toBe('billing_portal');
+    expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
+      stripe_subscription_id: 'sub_live_123',
+      stripe_subscription_status: 'active',
+      subscription_status: 'active',
+    }));
     expect(mocks.checkoutCreate).not.toHaveBeenCalled();
   });
 
@@ -137,6 +156,9 @@ describe('Author checkout route', () => {
         stripe_subscription_status: status,
         subscription_status: status,
       };
+      mocks.subscriptionsList.mockResolvedValue({
+        data: [stripeSubscription('sub_author_123', status, 'price_pro_monthly_v7')],
+      });
 
       const response = await POST(makeCheckoutRequest());
       const body = await response.json();
@@ -150,6 +172,82 @@ describe('Author checkout route', () => {
       expect(mocks.portalCreate).not.toHaveBeenCalled();
     }
   );
+
+  it('allows checkout when local active state is stale but Stripe only has canceled subscriptions', async () => {
+    mocks.profile = {
+      stripe_customer_id: 'cus_author_123',
+      stripe_subscription_id: 'sub_stale_123',
+      stripe_subscription_status: 'active',
+      subscription_status: 'active',
+    };
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSubscription('sub_canceled_123', 'canceled', 'price_pro_monthly_v7')],
+    });
+
+    const response = await POST(makeCheckoutRequest());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expect(mocks.portalCreate).not.toHaveBeenCalled();
+    expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+      customer: 'cus_author_123',
+    }));
+  });
+
+  it('chooses an active subscription from multiple Stripe subscriptions', async () => {
+    mocks.profile = {
+      stripe_customer_id: 'cus_author_123',
+      stripe_subscription_id: null,
+      stripe_subscription_status: null,
+      subscription_status: null,
+    };
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [
+        stripeSubscription('sub_canceled_123', 'canceled', 'price_pro_monthly_v7'),
+        stripeSubscription('sub_trial_123', 'trialing', 'price_pro_monthly_v7'),
+      ],
+    });
+
+    const response = await POST(makeCheckoutRequest());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      destination: 'billing_portal',
+      reason: 'active_subscription',
+    });
+    expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
+      stripe_subscription_id: 'sub_trial_123',
+      stripe_subscription_status: 'trialing',
+      subscription_status: 'active',
+    }));
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
+  });
+
+  it('blocks duplicate checkout for other live Stripe subscription states', async () => {
+    mocks.profile = {
+      stripe_customer_id: 'cus_author_123',
+      stripe_subscription_id: null,
+      stripe_subscription_status: null,
+      subscription_status: null,
+    };
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSubscription('sub_paused_123', 'paused', 'price_pro_monthly_v7')],
+    });
+
+    const response = await POST(makeCheckoutRequest());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.destination).toBe('billing_portal');
+    expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
+      stripe_subscription_id: 'sub_paused_123',
+      stripe_subscription_status: 'paused',
+      subscription_status: 'paused',
+    }));
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
+  });
 
   it('creates a Stripe customer before checkout when none exists', async () => {
     mocks.profile = {
@@ -202,6 +300,16 @@ function makeCheckoutRequest(): NextRequest {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ tier: 'pro', cadence: 'monthly' }),
   });
+}
+
+function stripeSubscription(id: string, status: string, priceId: string) {
+  return {
+    id,
+    status,
+    items: {
+      data: [{ price: { id: priceId } }],
+    },
+  };
 }
 
 function restoreEnv(name: keyof typeof ORIGINAL_ENV, value: string | undefined): void {

@@ -13,6 +13,7 @@ import {
   getBillingCadenceFromStripePriceId,
   isAuthorBillingTier,
   isBillingCadence,
+  mapStripeSubscriptionStatus,
   type AuthorBillingTier,
   type BillingCadence,
 } from "@/lib/stripe-config";
@@ -42,6 +43,31 @@ interface CheckoutCustomerState {
   subscriptionId: string | null;
   subscriptionStatus: string | null;
 }
+
+interface StripeSubscriptionLike {
+  id?: string | null;
+  status?: string | null;
+  items?: {
+    data?: Array<{
+      price?: {
+        id?: string | null;
+      } | null;
+    }> | null;
+  } | null;
+}
+
+interface LiveSubscriptionState {
+  subscriptionId: string;
+  subscriptionStatus: string;
+  priceId: string | null;
+}
+
+const CHECKOUT_ALLOWED_SUBSCRIPTION_STATUSES = new Set([
+  "canceled",
+  "cancelled",
+  "incomplete",
+  "incomplete_expired",
+]);
 
 function resolveSameOriginUrl(
   value: unknown,
@@ -90,10 +116,33 @@ async function getOrCreateCheckoutCustomer(input: {
     .single<CheckoutBillingProfile>();
 
   if (profile?.stripe_customer_id) {
+    const liveSubscription = await findLiveCheckoutSubscription(
+      input.stripe,
+      profile.stripe_customer_id
+    );
+
+    if (liveSubscription) {
+      await supabase
+        .from("profiles")
+        .update({
+          stripe_subscription_id: liveSubscription.subscriptionId,
+          stripe_subscription_status: liveSubscription.subscriptionStatus,
+          subscription_status: mapStripeSubscriptionStatus(liveSubscription.subscriptionStatus),
+          ...(liveSubscription.priceId ? { stripe_price_id: liveSubscription.priceId } : {}),
+        })
+        .eq("id", input.userId);
+
+      return {
+        customerId: profile.stripe_customer_id,
+        subscriptionId: liveSubscription.subscriptionId,
+        subscriptionStatus: liveSubscription.subscriptionStatus,
+      };
+    }
+
     return {
       customerId: profile.stripe_customer_id,
-      subscriptionId: profile.stripe_subscription_id ?? null,
-      subscriptionStatus: profile.stripe_subscription_status ?? profile.subscription_status ?? null,
+      subscriptionId: null,
+      subscriptionStatus: null,
     };
   }
 
@@ -228,9 +277,40 @@ function shouldRedirectExistingSubscriberToPortal(
   }
 
   const normalized = status?.toLowerCase() ?? "";
-  if (["canceled", "cancelled", "incomplete", "incomplete_expired"].includes(normalized)) {
-    return false;
-  }
+  return !CHECKOUT_ALLOWED_SUBSCRIPTION_STATUSES.has(normalized);
+}
 
-  return true;
+async function findLiveCheckoutSubscription(
+  stripe: ReturnType<typeof getStripeClient>,
+  customerId: string
+): Promise<LiveSubscriptionState | null> {
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: "all",
+    limit: 10,
+  });
+
+  const live = subscriptions.data
+    .map(normalizeStripeSubscription)
+    .find((subscription): subscription is LiveSubscriptionState => {
+      if (!subscription?.subscriptionId) return false;
+      return !CHECKOUT_ALLOWED_SUBSCRIPTION_STATUSES.has(subscription.subscriptionStatus.toLowerCase());
+    });
+
+  return live ?? null;
+}
+
+function normalizeStripeSubscription(subscription: StripeSubscriptionLike): LiveSubscriptionState | null {
+  const subscriptionId = typeof subscription.id === "string" ? subscription.id : null;
+  const subscriptionStatus = typeof subscription.status === "string" ? subscription.status : null;
+  if (!subscriptionId || !subscriptionStatus) return null;
+
+  const priceId = subscription.items?.data?.find((item) => typeof item.price?.id === "string")
+    ?.price?.id ?? null;
+
+  return {
+    subscriptionId,
+    subscriptionStatus,
+    priceId,
+  };
 }

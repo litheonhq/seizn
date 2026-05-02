@@ -46,6 +46,32 @@ export interface AuthorTokenMeterResult {
   actualProjected: number;
 }
 
+export interface AuthorTokenEstimateInput {
+  prompt: string;
+  system?: string;
+  maxTokens: number;
+  responseFormat?: string;
+}
+
+export interface AuthorBillableUsageInput {
+  input_tokens?: number | null;
+  output_tokens?: number | null;
+  cache_creation_input_tokens?: number | null;
+  cache_read_input_tokens?: number | null;
+}
+
+export interface AuthorBillableUsageTokens {
+  tokensIn: number;
+  tokensOut: number;
+  totalTokens: number;
+  cacheCreationInputTokens: number;
+  cacheReadInputTokens: number;
+}
+
+const JSON_RESPONSE_INSTRUCTION_TOKENS = 12;
+const CACHE_CREATION_TOKEN_WEIGHT = 1.25;
+const CACHE_READ_TOKEN_WEIGHT = 0.1;
+
 export async function getAuthorBillingUsageState(
   userId: string,
   usageSummary?: AuthorModelUsageSummary | null,
@@ -156,10 +182,10 @@ export async function enforceAuthorTokenBudget(
 export async function meterAuthorTokenOverage(input: {
   userId: string;
   byokActive: boolean;
-  actualOutputTokens: number;
+  actualTotalTokens: number;
   budget: AuthorTokenBudgetResult;
 }): Promise<AuthorTokenMeterResult> {
-  const actualTokens = Math.max(0, Math.floor(input.actualOutputTokens));
+  const actualTokens = Math.max(0, Math.floor(input.actualTotalTokens));
   const cap = input.budget.cap;
   const actualProjected = input.budget.used + actualTokens;
 
@@ -199,6 +225,58 @@ export async function meterAuthorTokenOverage(input: {
     overageTokens,
     actualProjected,
   };
+}
+
+export function estimateAuthorRequestTotalTokens(input: AuthorTokenEstimateInput): number {
+  return (
+    estimateAuthorTextTokens(input.prompt) +
+    estimateAuthorTextTokens(input.system ?? "") +
+    (input.responseFormat === "json" ? JSON_RESPONSE_INSTRUCTION_TOKENS : 0) +
+    Math.max(0, Math.floor(input.maxTokens))
+  );
+}
+
+export function calculateAuthorBillableUsageTokens(
+  usage: AuthorBillableUsageInput | null | undefined
+): AuthorBillableUsageTokens {
+  const inputTokens = readUsageTokenCount(usage?.input_tokens);
+  const outputTokens = readUsageTokenCount(usage?.output_tokens);
+  const cacheCreationInputTokens = readUsageTokenCount(usage?.cache_creation_input_tokens);
+  const cacheReadInputTokens = readUsageTokenCount(usage?.cache_read_input_tokens);
+  const weightedCacheTokens = Math.ceil(
+    (cacheCreationInputTokens * CACHE_CREATION_TOKEN_WEIGHT) +
+    (cacheReadInputTokens * CACHE_READ_TOKEN_WEIGHT)
+  );
+  const tokensIn = inputTokens + weightedCacheTokens;
+
+  return {
+    tokensIn,
+    tokensOut: outputTokens,
+    totalTokens: tokensIn + outputTokens,
+    cacheCreationInputTokens,
+    cacheReadInputTokens,
+  };
+}
+
+function estimateAuthorTextTokens(text: string): number {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (!normalized) return 0;
+
+  let cjkCharacters = 0;
+  for (const char of normalized) {
+    if (/[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/u.test(char)) {
+      cjkCharacters += 1;
+    }
+  }
+
+  const nonCjkCharacters = Math.max(0, normalized.length - cjkCharacters);
+  return Math.ceil(nonCjkCharacters / 4) + cjkCharacters;
+}
+
+function readUsageTokenCount(value: number | null | undefined): number {
+  return typeof value === "number" && Number.isFinite(value)
+    ? Math.max(0, Math.floor(value))
+    : 0;
 }
 
 export async function emitAuthorTokenOverage(input: {

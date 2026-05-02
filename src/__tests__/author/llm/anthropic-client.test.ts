@@ -91,11 +91,12 @@ describe('Author Anthropic client', () => {
     expect(recordByokUsage).toHaveBeenCalledWith(expect.objectContaining({
       providerKeyId: 'provider-key-1',
     }), 0);
-    expect(enforceBudget).toHaveBeenCalledWith({
+    expect(enforceBudget).toHaveBeenCalledWith(expect.objectContaining({
       userId: 'user-1',
       byokActive: true,
-      requestedTokens: 64,
-    });
+      requestedTokens: expect.any(Number),
+    }));
+    expect(enforceBudget.mock.calls[0][0].requestedTokens).toBeGreaterThan(64);
   });
 
   it('parses and validates JSON response format', async () => {
@@ -191,8 +192,8 @@ describe('Author Anthropic client', () => {
       allowed: true as const,
       cap: 1_000_000,
       used: 999_990,
-      projected: 1_000_054,
-      overageTokens: 54,
+      projected: 1_000_064,
+      overageTokens: 64,
       metered: false,
       stripeCustomerId: 'cus_author_123',
     };
@@ -233,12 +234,13 @@ describe('Author Anthropic client', () => {
     expect(enforceBudget).toHaveBeenCalledWith({
       userId: 'user-1',
       byokActive: false,
-      requestedTokens: 64,
+      requestedTokens: expect.any(Number),
     });
+    expect(enforceBudget.mock.calls[0][0].requestedTokens).toBeGreaterThan(64);
     expect(meterOverage).toHaveBeenCalledWith({
       userId: 'user-1',
       byokActive: false,
-      actualOutputTokens: 17,
+      actualTotalTokens: 28,
       budget,
     });
   });

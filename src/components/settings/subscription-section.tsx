@@ -4,6 +4,12 @@ import { CreditCard, ExternalLink, TriangleAlert } from "lucide-react";
 import type { AuthorSettingsCopy, SubscriptionState } from "./author-settings-types";
 import { formatDate } from "./author-settings-types";
 import type { Locale } from "@/i18n/config";
+import {
+  getAuthorTierConfig,
+  getBillingCadenceFromStripePriceId,
+  isAuthorBillingTier,
+  type BillingCadence,
+} from "@/lib/stripe-config";
 
 interface SubscriptionSectionProps {
   subscription: SubscriptionState;
@@ -13,14 +19,6 @@ interface SubscriptionSectionProps {
   onManageBilling: () => Promise<void>;
 }
 
-const PLAN_PRICES: Record<string, string> = {
-  indie: "$39/mo",
-  pro: "$149/mo",
-  studio: "$499/mo",
-  enterprise: "$2,500/mo",
-  free: "$0",
-};
-
 export function SubscriptionSection({
   subscription,
   copy,
@@ -29,7 +27,11 @@ export function SubscriptionSection({
   onManageBilling,
 }: SubscriptionSectionProps) {
   const planKey = (subscription.tier ?? subscription.plan ?? "free").toLowerCase();
-  const planPrice = PLAN_PRICES[planKey] ?? "";
+  const cadence = resolveBillingCadence(subscription);
+  const planPrice = formatPlanPrice(planKey, cadence);
+  const cadenceNote = isAuthorBillingTier(planKey) && cadence === "yearly"
+    ? "Saves about 15% yearly"
+    : null;
   const trialText =
     typeof subscription.trial_days_remaining === "number"
       ? `${subscription.trial_days_remaining}d`
@@ -69,8 +71,11 @@ export function SubscriptionSection({
         <div className="rounded-md border border-szn-border bg-szn-bg p-3">
           <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.currentPlan}</dt>
           <dd className="mt-1 text-sm font-semibold text-szn-text-1">
-            {subscription.tier_label} {planPrice ? `· ${planPrice}` : ""}
+            {subscription.tier_label} {planPrice ? ` - ${planPrice}` : ""}
           </dd>
+          {cadenceNote ? (
+            <dd className="mt-1 text-xs text-szn-text-3">{cadenceNote}</dd>
+          ) : null}
         </div>
         <div className="rounded-md border border-szn-border bg-szn-bg p-3">
           <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.status}</dt>
@@ -89,4 +94,32 @@ export function SubscriptionSection({
       </dl>
     </section>
   );
+}
+
+function resolveBillingCadence(subscription: SubscriptionState): BillingCadence {
+  if (subscription.billing_cadence === "monthly" || subscription.billing_cadence === "yearly") {
+    return subscription.billing_cadence;
+  }
+
+  if (subscription.stripe_price_id) {
+    return getBillingCadenceFromStripePriceId(subscription.stripe_price_id) ?? "monthly";
+  }
+
+  return "monthly";
+}
+
+function formatPlanPrice(planKey: string, cadence: BillingCadence): string {
+  if (planKey === "free") return "$0";
+  if (!isAuthorBillingTier(planKey)) return "";
+
+  const config = getAuthorTierConfig(planKey);
+  const amount = cadence === "yearly" ? config.yearlyUsd : config.monthlyUsd;
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+
+  return cadence === "yearly" ? `${formatted} per year` : `${formatted}/mo`;
 }

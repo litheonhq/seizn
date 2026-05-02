@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AuthorLlmError } from '@/lib/author/llm';
 import {
+  calculateAuthorBillableUsageTokens,
   enforceAuthorTokenBudget,
+  estimateAuthorRequestTotalTokens,
   meterAuthorTokenOverage,
 } from '@/lib/author/billing/token-budget';
 
@@ -99,14 +101,14 @@ describe('Author token budget enforcement', () => {
     expect(mocks.meterEventsCreate).not.toHaveBeenCalled();
   });
 
-  it('emits a Stripe meter event after success using actual output overage only', async () => {
+  it('emits a Stripe meter event after success using actual total-token overage', async () => {
     process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
     process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
 
     await expect(meterAuthorTokenOverage({
       userId: 'user-1',
       byokActive: false,
-      actualOutputTokens: 20_000,
+      actualTotalTokens: 20_000,
       budget: {
         allowed: true,
         cap: 1_000_000,
@@ -139,7 +141,7 @@ describe('Author token budget enforcement', () => {
     await expect(meterAuthorTokenOverage({
       userId: 'user-1',
       byokActive: false,
-      actualOutputTokens: 5_000,
+      actualTotalTokens: 5_000,
       budget: {
         allowed: true,
         cap: 1_000_000,
@@ -156,6 +158,29 @@ describe('Author token budget enforcement', () => {
     });
 
     expect(mocks.meterEventsCreate).not.toHaveBeenCalled();
+  });
+
+  it('estimates pre-call budget from prompt input plus max output tokens', () => {
+    expect(estimateAuthorRequestTotalTokens({
+      prompt: 'A'.repeat(20_000),
+      system: 'Return precise canon-safe prose.',
+      maxTokens: 64,
+    })).toBeGreaterThan(5_000);
+  });
+
+  it('weights Anthropic cache usage into the billable total token field', () => {
+    expect(calculateAuthorBillableUsageTokens({
+      input_tokens: 100,
+      output_tokens: 25,
+      cache_creation_input_tokens: 40,
+      cache_read_input_tokens: 80,
+    })).toEqual({
+      tokensIn: 158,
+      tokensOut: 25,
+      totalTokens: 183,
+      cacheCreationInputTokens: 40,
+      cacheReadInputTokens: 80,
+    });
   });
 
   it('does not treat historic BYOK usage as current BYOK for cap bypass', async () => {

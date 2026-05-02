@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  return withAuthorUiService(request, async (_service, userId) => {
+  return withAuthorUiService(request, async (service, userId) => {
     if (hasServerSupabaseServiceRoleConfig()) {
       const supabase = createServerClient();
       await supabase
@@ -58,6 +58,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const discount = await removeAuthorByokDiscount(userId);
+    service.clearByok();
     return {
       enabled: false,
       provider: null,

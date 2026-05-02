@@ -244,9 +244,9 @@ interface AuthorUiState {
   byok: {
     enabled: boolean;
     provider: 'anthropic' | 'google' | 'openai' | null;
-    key_last_4?: string;
-    verified_at?: string;
-    status: 'active' | 'invalid' | 'revoked' | null;
+    key_last_4?: string | null;
+    verified_at?: string | null;
+    status: 'active' | 'invalid' | 'revoked' | 'missing' | null;
   };
 }
 
@@ -1094,6 +1094,22 @@ export class AuthorUiService {
   }
 
   getByok() {
+    return this.state.byok;
+  }
+
+  clearByok() {
+    const previousProvider = this.state.byok.provider;
+    this.state.byok = {
+      enabled: false,
+      provider: null,
+      key_last_4: null,
+      verified_at: null,
+      status: 'missing',
+    };
+    this.logAudit(DEFAULT_PROJECT_ID, 'byok.updated', {
+      provider: previousProvider,
+      status: 'missing',
+    });
     return this.state.byok;
   }
 

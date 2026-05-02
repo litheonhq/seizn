@@ -1,7 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { buildAnthropicSdkDefaultHeaders } from '@/lib/anthropic/prompt-caching';
 import {
+  calculateAuthorBillableUsageTokens,
   enforceAuthorTokenBudget,
+  estimateAuthorRequestTotalTokens,
   meterAuthorTokenOverage,
 } from '@/lib/author/billing/token-budget';
 import {
@@ -35,6 +37,8 @@ interface AnthropicMessageLike {
   usage?: {
     input_tokens?: number | null;
     output_tokens?: number | null;
+    cache_creation_input_tokens?: number | null;
+    cache_read_input_tokens?: number | null;
   } | null;
   stop_reason?: string | null;
 }
@@ -83,15 +87,17 @@ export class AuthorAnthropicClient {
     const budget = await this.enforceBudget({
       userId: request.userId,
       byokActive: resolved.byok,
-      requestedTokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
+      requestedTokens: estimateAuthorRequestTotalTokens({
+        prompt: request.prompt,
+        system: request.system,
+        maxTokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
+        responseFormat: request.responseFormat,
+      }),
     });
     const client = this.createClient(resolved.apiKey);
     const response = await this.createWithRetry(client, request, model);
     const text = extractText(response);
-    const usage = {
-      tokensIn: response.usage?.input_tokens ?? 0,
-      tokensOut: response.usage?.output_tokens ?? 0,
-    };
+    const usage = calculateAuthorBillableUsageTokens(response.usage);
     const requestId = response._request_id ?? response.id ?? request.requestId ?? `author-${Date.now()}`;
     const json = request.responseFormat === 'json'
       ? parseAndValidateJson<TJson>(text, request.jsonSchema)
@@ -111,7 +117,7 @@ export class AuthorAnthropicClient {
     await this.meterOverage({
       userId: request.userId,
       byokActive: resolved.byok,
-      actualOutputTokens: usage.tokensOut,
+      actualTotalTokens: usage.totalTokens,
       budget,
     });
 
