@@ -2,7 +2,11 @@
 
 import crypto from 'crypto';
 import dns from 'dns/promises';
+import http from 'http';
+import https from 'https';
 import { isIP } from 'net';
+import type { IncomingMessage, RequestOptions } from 'http';
+import type { LookupFunction } from 'net';
 import { createServerClient } from './supabase';
 
 interface WebhookDelivery {
@@ -20,6 +24,19 @@ interface WebhookConfig {
   url: string;
   secret: string | null;
   is_active?: boolean;
+}
+
+interface ValidatedWebhookEndpoint {
+  url: URL;
+  hostname: string;
+  pinnedIp: string;
+  family: 4 | 6;
+}
+
+interface WebhookHttpResponse {
+  ok: boolean;
+  status: number;
+  body: string;
 }
 
 interface Ipv4Cidr {
@@ -209,10 +226,17 @@ function isBlockedIp(ip: string): boolean {
   return true;
 }
 
+function getIpFamily(ip: string): 4 | 6 | null {
+  const family = isIP(normalizeHostname(ip));
+  return family === 4 || family === 6 ? family : null;
+}
+
 async function resolveWebhookHostname(hostname: string): Promise<string[]> {
-  const addresses4 = await dns.resolve4(hostname).catch(() => [] as string[]);
-  const addresses6 = await dns.resolve6(hostname).catch(() => [] as string[]);
-  return [...addresses4, ...addresses6];
+  const [addresses4, addresses6] = await Promise.all([
+    dns.resolve4(hostname).catch(() => [] as string[]),
+    dns.resolve6(hostname).catch(() => [] as string[]),
+  ]);
+  return Array.from(new Set([...addresses4, ...addresses6].filter((ip) => getIpFamily(ip) !== null)));
 }
 
 /** Validate webhook URL and block private/internal IPs (SSRF prevention). */
@@ -235,20 +259,133 @@ export function isValidWebhookUrl(urlString: string): boolean {
   }
 }
 
-async function validateWebhookEndpoint(urlString: string): Promise<boolean> {
-  if (!isValidWebhookUrl(urlString)) return false;
+async function validateWebhookEndpoint(urlString: string): Promise<ValidatedWebhookEndpoint | null> {
+  if (!isValidWebhookUrl(urlString)) return null;
 
   const url = new URL(urlString);
   const hostname = normalizeHostname(url.hostname);
+  const directIpFamily = getIpFamily(hostname);
 
-  if (isIP(hostname) !== 0) {
-    return !isBlockedIp(hostname);
+  if (directIpFamily !== null) {
+    if (isBlockedIp(hostname)) return null;
+    return {
+      url,
+      hostname,
+      pinnedIp: hostname,
+      family: directIpFamily,
+    };
   }
 
   const resolvedIps = await resolveWebhookHostname(hostname);
-  if (resolvedIps.length === 0) return false;
+  if (resolvedIps.length === 0) return null;
+  if (resolvedIps.some((ip) => isBlockedIp(ip))) return null;
 
-  return resolvedIps.every((ip) => !isBlockedIp(ip));
+  const pinnedIp = resolvedIps[0];
+  const family = getIpFamily(pinnedIp);
+  if (family === null) return null;
+
+  return {
+    url,
+    hostname,
+    pinnedIp,
+    family,
+  };
+}
+
+function createPinnedLookup(endpoint: ValidatedWebhookEndpoint): LookupFunction {
+  return (hostname, options, callback) => {
+    if (normalizeHostname(hostname) !== endpoint.hostname) {
+      const error = new Error('Pinned DNS lookup rejected unexpected hostname') as NodeJS.ErrnoException;
+      error.code = 'ENOTFOUND';
+      callback(error, '', endpoint.family);
+      return;
+    }
+
+    if (options.all) {
+      callback(null, [{ address: endpoint.pinnedIp, family: endpoint.family }]);
+      return;
+    }
+
+    callback(null, endpoint.pinnedIp, endpoint.family);
+  };
+}
+
+function readResponseBody(response: IncomingMessage, maxChars = 500): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    response.setEncoding('utf8');
+    response.on('data', (chunk: string) => {
+      if (body.length >= maxChars) return;
+      body += chunk.slice(0, maxChars - body.length);
+    });
+    response.on('end', () => resolve(body));
+    response.on('error', reject);
+  });
+}
+
+function sendPinnedWebhookRequest(
+  endpoint: ValidatedWebhookEndpoint,
+  headers: Record<string, string>,
+  body: string,
+  timeoutMs: number
+): Promise<WebhookHttpResponse> {
+  return new Promise((resolve, reject) => {
+    const bodyBuffer = Buffer.from(body);
+    const requestHeaders: Record<string, string> = {
+      ...headers,
+      'Content-Length': bodyBuffer.byteLength.toString(),
+    };
+
+    const options: RequestOptions = {
+      protocol: endpoint.url.protocol,
+      hostname: endpoint.hostname,
+      port: endpoint.url.port || undefined,
+      path: `${endpoint.url.pathname}${endpoint.url.search}`,
+      method: 'POST',
+      headers: requestHeaders,
+      lookup: createPinnedLookup(endpoint),
+    };
+
+    let settled = false;
+    const settle = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      callback();
+    };
+
+    const handleResponse = (response: IncomingMessage) => {
+      readResponseBody(response)
+        .then((responseBody) => {
+          const status = response.statusCode ?? 0;
+          settle(() =>
+            resolve({
+              ok: status >= 200 && status < 300,
+              status,
+              body: responseBody,
+            })
+          );
+        })
+        .catch((error: unknown) => settle(() => reject(error)));
+    };
+
+    const request =
+      endpoint.url.protocol === 'https:'
+        ? https.request(
+            {
+              ...options,
+              servername: isIP(endpoint.hostname) === 0 ? endpoint.hostname : undefined,
+            },
+            handleResponse
+          )
+        : http.request(options, handleResponse);
+
+    request.setTimeout(timeoutMs, () => {
+      request.destroy(new Error('Webhook request timed out'));
+    });
+
+    request.on('error', (error) => settle(() => reject(error)));
+    request.end(bodyBuffer);
+  });
 }
 
 // Deliver a single webhook
@@ -270,31 +407,19 @@ export async function deliverWebhook(
     headers['X-Seizn-Signature'] = `sha256=${generateSignature(payloadString, webhook.secret)}`;
   }
 
-  // SSRF check before delivery. DNS is still resolved again by fetch, so redirects are blocked below.
-  if (!(await validateWebhookEndpoint(webhook.url))) {
+  // Resolve and pin the delivery socket to a validated public IP to reduce DNS rebinding TOCTOU risk.
+  const endpoint = await validateWebhookEndpoint(webhook.url);
+  if (!endpoint) {
     return { success: false, error: 'Webhook URL blocked by SSRF policy' };
   }
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-    const response = await fetch(webhook.url, {
-      method: 'POST',
-      headers,
-      body: payloadString,
-      signal: controller.signal,
-      redirect: 'manual',
-    });
-
-    clearTimeout(timeout);
-
-    const responseText = await response.text().catch(() => '');
+    const response = await sendPinnedWebhookRequest(endpoint, headers, payloadString, 10000);
 
     return {
       success: response.ok,
       statusCode: response.status,
-      error: response.ok ? undefined : responseText.slice(0, 500),
+      error: response.ok ? undefined : response.body.slice(0, 500),
     };
   } catch (error) {
     return {
