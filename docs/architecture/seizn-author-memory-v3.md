@@ -164,10 +164,20 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/replay.ts`
 - `src/lib/author/memory-v3/eval.ts`
 - `src/lib/author/memory-v3/fall-adapter.ts`
+- `src/lib/author/memory-v3/temporal.ts`
+- `src/lib/author/memory-v3/runner.ts`
+- `src/lib/author/memory-v3/store.ts`
+- `src/lib/author/memory-v3/job.ts`
+
+The storage contract is deliberately adapter-shaped:
+
+- `AuthorMemoryV3Store` owns project-scoped records, snapshots, side effects, and eval results.
+- `InMemoryAuthorMemoryV3Store` is the local/test implementation and also implements the replay side-effect store.
+- `runAuthorEvalJob` executes eval cases sequentially, persists records, snapshots, side effects, and per-case eval results, then returns a run summary.
 
 Next implementation work should add:
 
-- temporal explanation helpers
-- Author eval runner
+- API route handlers around the store/job contract
+- Supabase persistence adapter after JSON contracts stabilize
 - KNOT eval fixture expansion
-- persistence adapter after JSON contracts stabilize
+- UI data contract binding after Claude provides Author UI requirements

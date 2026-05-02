@@ -124,18 +124,22 @@ Implemented now:
 - simple Author eval scorer
 - Fall eval adapter
 - KNOT eval fixture v1
+- temporal canon explanation helpers
+- single-case Author eval runner
+- project-scoped in-memory store contract
+- sequential Author eval job runner
 
 Next implementation:
 
-- temporal explanation helpers
-- Author eval runner
+- API route handlers for eval job execution
+- Supabase-backed store adapter
 - persisted side-effect store
 - Fall dataset import helper
 - KNOT eval fixture expansion
 
 ## Persistence Strategy
 
-Start with pure in-memory contracts for tests and local runner behavior. Persist later through existing Fall eval tables and a dedicated side-effect table or trace-store extension once the record shape is proven.
+Start with pure in-memory contracts for tests and local runner behavior. The store contract already separates records, snapshots, side effects, and eval results so a Supabase adapter can be added without changing runner semantics. Persist later through existing Fall eval tables and a dedicated side-effect table or trace-store extension once the record shape is proven.
 
 Do not add database migrations until:
 
@@ -155,3 +159,4 @@ The harness is acceptable when:
 - current canon excludes invalidated/candidate/rejected records
 - Author eval result carries snapshot hash and side-effect keys
 - Fall adapter preserves Author metadata without Fall schema changes
+- sequential job runs preserve case order and persist per-case evidence
