@@ -3,9 +3,9 @@ import path from "path";
 import matter from "gray-matter";
 import {
   LEGAL_DOCUMENT_FILES,
-  LEGAL_DOCUMENT_LABELS,
   LEGAL_DOCUMENTS,
   LEGAL_PAGE_COPY,
+  getLegalDocumentLabels,
   resolveLegalContentLocale,
   type LegalContentLocale,
   type LegalDocumentSlug,
@@ -29,7 +29,7 @@ export async function getLegalDocument(
   const absolutePath = path.join(process.cwd(), "legal", contentLocale, filename);
   const source = await readFile(absolutePath, "utf8");
   const parsed = matter(source);
-  const title = extractTitle(parsed.content) ?? LEGAL_DOCUMENT_LABELS[slug];
+  const title = extractTitle(parsed.content) ?? getLegalDocumentLabels(contentLocale)[slug];
 
   return {
     slug,
@@ -41,6 +41,16 @@ export async function getLegalDocument(
   };
 }
 
+export async function getBetaDisclosureUntil(locale = "en"): Promise<string | null> {
+  const document = await getLegalDocument("beta-disclosure", locale);
+  const betaUntil = document.metadata.beta_until;
+  if (typeof betaUntil === "string") return betaUntil;
+  if (betaUntil instanceof Date && !Number.isNaN(betaUntil.getTime())) {
+    return betaUntil.toISOString().slice(0, 10);
+  }
+  return null;
+}
+
 export function getLegalPageCopy(locale: string) {
   return LEGAL_PAGE_COPY[resolveLegalContentLocale(locale)];
 }
@@ -48,9 +58,15 @@ export function getLegalPageCopy(locale: string) {
 export function assertLegalI18nComplete(): void {
   for (const locale of ["en", "ko", "ja", "zh"] as const) {
     const copy = LEGAL_PAGE_COPY[locale];
+    const labels = getLegalDocumentLabels(locale);
     for (const key of ["eyebrow", "title", "subtitle", "backHome", "draftNotice"]) {
       if (!copy[key as keyof typeof copy]) {
         throw new Error(`Missing legal copy key ${locale}.${key}`);
+      }
+    }
+    for (const slug of LEGAL_DOCUMENTS) {
+      if (!labels[slug]) {
+        throw new Error(`Missing legal document label ${locale}.${slug}`);
       }
     }
   }

@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   assertLegalI18nComplete,
+  getBetaDisclosureUntil,
   getLegalDocument,
   listLegalDocumentsForLaunchLocales,
 } from "@/lib/legal-docs";
 import {
   LEGAL_DOCUMENTS,
+  getLegalDocumentLabels,
   getLegalPath,
   resolveLegalContentLocale,
   resolveLegalMarkdownHref,
@@ -38,6 +40,21 @@ describe("legal document loader", () => {
     expect(() => assertLegalI18nComplete()).not.toThrow();
     expect(resolveLegalContentLocale("ko")).toBe("ko");
     expect(resolveLegalContentLocale("fr")).toBe("en");
+  });
+
+  it.each([
+    ["en", ["Privacy", "Terms", "Beta Disclosure"]],
+    ["ko", ["개인정보", "이용약관", "베타 고지"]],
+    ["ja", ["プライバシー", "利用規約", "ベータ開示"]],
+    ["zh-hans", ["隐私", "条款", "Beta 披露"]],
+  ])("returns localized legal nav labels for %s", (locale, expectedLabels) => {
+    const labels = getLegalDocumentLabels(locale);
+
+    expect(LEGAL_DOCUMENTS.map((slug) => labels[slug])).toEqual(expectedLabels);
+  });
+
+  it("reads beta_until from beta disclosure frontmatter", async () => {
+    await expect(getBetaDisclosureUntil("en")).resolves.toBe("2026-08-31");
   });
 
   it("builds localized legal route paths", () => {

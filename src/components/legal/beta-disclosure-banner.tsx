@@ -14,36 +14,46 @@ const BANNER_COPY = {
     body: "Some storage infrastructure is temporarily operated during beta before migration to Litheon LLC.",
     link: "Read beta disclosure",
     dismiss: "Dismiss",
+    untilLabel: "Beta period until",
   },
   ko: {
     title: "Seizn Author는 베타입니다",
     body: "일부 스토리지 인프라는 Litheon LLC 이전 전까지 베타 기간에 임시 운영됩니다.",
     link: "베타 고지 보기",
     dismiss: "닫기",
+    untilLabel: "베타 기간 종료일",
   },
   ja: {
-    title: "Seizn Author はベータ版です",
-    body: "一部のストレージ基盤は Litheon LLC への移行前にベータ期間中の暫定運用となります。",
-    link: "ベータ開示を見る",
+    title: "Seizn Authorはベータ版です",
+    body: "一部のストレージ基盤は、Litheon LLCへの移行前のベータ期間中に暫定運用されています。",
+    link: "ベータ開示を読む",
     dismiss: "閉じる",
+    untilLabel: "ベータ期間終了日",
   },
   zh: {
-    title: "Seizn Author 处于 beta 阶段",
-    body: "部分存储基础设施在迁移至 Litheon LLC 之前会在 beta 期间临时运行。",
-    link: "查看 beta 披露",
+    title: "Seizn Author 仍处于 Beta 阶段",
+    body: "部分存储基础设施在迁移至 Litheon LLC 前，会在 Beta 期间临时运行。",
+    link: "阅读 Beta 披露",
     dismiss: "关闭",
+    untilLabel: "Beta 期限",
   },
 };
 
-export function BetaDisclosureBanner() {
+interface BetaDisclosureBannerProps {
+  betaUntil?: string | null;
+  now?: Date | string;
+}
+
+export function BetaDisclosureBanner({ betaUntil, now }: BetaDisclosureBannerProps = {}) {
   const { locale } = useDashboardTranslation();
   const dismissedByCookie = useSyncExternalStore(subscribeCookieSnapshot, hasDismissedCookie, () => true);
   const [dismissedInSession, setDismissedInSession] = useState(false);
   const dismissed = dismissedByCookie || dismissedInSession;
   const contentLocale = resolveLegalContentLocale(locale);
   const copy = BANNER_COPY[contentLocale];
+  const betaUntilDate = parseBetaUntilDate(betaUntil);
 
-  if (dismissed) return null;
+  if (dismissed || !isBetaDisclosureActive(betaUntil, now)) return null;
 
   return (
     <div className="border-b border-amber-300 bg-amber-50 px-4 py-3 text-amber-950" role="status">
@@ -51,6 +61,12 @@ export function BetaDisclosureBanner() {
         <div>
           <p className="text-sm font-semibold">{copy.title}</p>
           <p className="mt-1 text-sm leading-6">{copy.body}</p>
+          {betaUntil && betaUntilDate ? (
+            <p className="mt-1 text-xs leading-5">
+              {copy.untilLabel}:{" "}
+              <time dateTime={betaUntil}>{formatBetaUntilDate(betaUntilDate, contentLocale)}</time>
+            </p>
+          ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Link
@@ -78,6 +94,34 @@ export function BetaDisclosureBanner() {
 export function hasDismissedCookie(): boolean {
   if (typeof document === "undefined") return true;
   return document.cookie.split(";").some((entry) => entry.trim() === `${COOKIE_NAME}=1`);
+}
+
+export function isBetaDisclosureActive(
+  betaUntil: string | null | undefined,
+  now: Date | string = new Date()
+): boolean {
+  const betaUntilDate = parseBetaUntilDate(betaUntil);
+  if (!betaUntilDate) return true;
+
+  const currentDate = typeof now === "string" ? new Date(now) : now;
+  if (Number.isNaN(currentDate.getTime())) return true;
+  return currentDate.getTime() <= betaUntilDate.getTime();
+}
+
+function parseBetaUntilDate(betaUntil: string | null | undefined): Date | null {
+  if (!betaUntil || !/^\d{4}-\d{2}-\d{2}$/.test(betaUntil)) return null;
+  const date = new Date(`${betaUntil}T23:59:59.999Z`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatBetaUntilDate(date: Date, locale: string): string {
+  const normalizedLocale = locale === "zh" ? "zh-hans" : locale;
+  return new Intl.DateTimeFormat(normalizedLocale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
 }
 
 function subscribeCookieSnapshot(): () => void {
