@@ -12,6 +12,7 @@ import type { AuthorEvalJobPayload } from './contract';
 export interface KnotInputBundle {
   characterRegistry?: {
     characters?: unknown[];
+    supporting_cast?: unknown[];
   };
   worldRuleRegistry?: {
     rules?: unknown[];
@@ -30,6 +31,9 @@ export interface KnotInputBundle {
 export function knotInputBundleToAuthorRecords(bundle: KnotInputBundle): AuthorMemoryRecord[] {
   return [
     ...(bundle.characterRegistry?.characters ?? []).map((item, index) =>
+      knotCharacterToRecord(item, index)
+    ),
+    ...(bundle.characterRegistry?.supporting_cast ?? []).map((item, index) =>
       knotCharacterToRecord(item, index)
     ),
     ...(bundle.worldRuleRegistry?.rules ?? []).map((item, index) =>

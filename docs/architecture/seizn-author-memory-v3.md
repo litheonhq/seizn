@@ -119,6 +119,8 @@ The side-effect key is a hash over:
 
 Replay-only mode must never fall back to live calls. A missing side effect is a failed replay, not a live retry.
 
+Persistent replay storage must scope side effects by Author project as well as user and canonical key. The same provider request can appear in two fictional projects; those records must replay independently and must not overwrite each other.
+
 ## Fall Eval Integration
 
 Author evals should use existing Fall eval storage through JSON-compatible payloads:
@@ -174,12 +176,13 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/supabase-store.ts`
 - `src/app/api/author/memory-v3/eval/route.ts`
 - `supabase/migrations/20260502001_author_memory_v3_store.sql`
+- `supabase/migrations/20260502002_author_memory_v3_side_effect_project_scope.sql`
 
 The storage contract is deliberately adapter-shaped:
 
 - `AuthorMemoryV3Store` owns project-scoped records, snapshots, side effects, and eval results.
 - `InMemoryAuthorMemoryV3Store` is the local/test implementation and also implements the replay side-effect store.
-- `SupabaseAuthorMemoryV3Store` persists project-scoped records, snapshots, replay side effects, and eval results behind the same store contract.
+- `SupabaseAuthorMemoryV3Store` persists project-scoped records, snapshots, replay side effects, and eval results behind the same store contract. Supabase mode fails closed if service-role configuration is missing instead of silently falling back to memory-only storage.
 - `runAuthorEvalJob` executes eval cases sequentially, persists records, snapshots, side effects, and per-case eval results, then returns a run summary.
 - `parseAuthorEvalJobPayload` validates external JSON before it reaches the runner.
 - `runAuthorEvalJobPayload` supports deterministic fixture execution through per-case `liveOutput`.

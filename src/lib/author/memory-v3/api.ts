@@ -1,4 +1,5 @@
 import { AuthorReplayCacheMissError } from './replay';
+import { logServerError } from '@/lib/server/logger';
 import {
   AuthorMemoryV3ContractError,
   parseAuthorEvalJobPayload,
@@ -78,17 +79,23 @@ export async function handleAuthorEvalJobRequest(
       };
     }
 
-    return {
-      status: 500,
-      body: {
-        success: false,
-        error: {
-          code: 'AUTHOR_MEMORY_V3_EXECUTION_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown Author Memory v3 error',
-        },
-      },
-    };
+    return authorMemoryV3ExecutionErrorResponse(error);
   }
+}
+
+export function authorMemoryV3ExecutionErrorResponse(error: unknown): AuthorEvalJobApiResponse {
+  logServerError('Author Memory v3 execution failed', error);
+
+  return {
+    status: 500,
+    body: {
+      success: false,
+      error: {
+        code: 'AUTHOR_MEMORY_V3_EXECUTION_ERROR',
+        message: 'Author Memory v3 execution failed',
+      },
+    },
+  };
 }
 
 function toSuccessBody(output: RunAuthorEvalJobOutput): AuthorEvalJobApiSuccess {

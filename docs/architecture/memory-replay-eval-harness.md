@@ -133,7 +133,7 @@ Implemented now:
 - KNOT input adapter for character, world rule, relationship, timeline, and eval seed registries
 - Next.js `POST /api/author/memory-v3/eval` route with API-key auth, rate-limit headers, request logging, and invalid-JSON handling
 - Supabase-backed store adapter for records, snapshots, side effects, and eval results
-- persisted side-effect store with async replay lookup
+- project-scoped persisted side-effect store with async replay lookup
 - Fall dataset import helper for Author eval seed cases
 
 Next implementation:
@@ -143,11 +143,11 @@ Next implementation:
 
 ## Persistence Strategy
 
-The store contract separates records, snapshots, side effects, and eval results. Local tests can keep using `InMemoryAuthorMemoryV3Store`, while production can opt into `SupabaseAuthorMemoryV3Store` with `AUTHOR_MEMORY_V3_STORE=supabase` after `20260502001_author_memory_v3_store.sql` is applied. Fall eval cases reuse existing Fall dataset tables through JSON metadata instead of adding Fall-specific Author columns.
+The store contract separates records, snapshots, side effects, and eval results. Local tests can keep using `InMemoryAuthorMemoryV3Store`, while production can opt into `SupabaseAuthorMemoryV3Store` with `AUTHOR_MEMORY_V3_STORE=supabase` after `20260502001_author_memory_v3_store.sql` and `20260502002_author_memory_v3_side_effect_project_scope.sql` are applied. Supabase replay side effects are keyed by `(user_id, project_id, key)` so identical canonical request keys from different Author projects cannot overwrite each other. Fall eval cases reuse existing Fall dataset tables through JSON metadata instead of adding Fall-specific Author columns.
 
 Production activation remains gated until:
 
-- `20260502001_author_memory_v3_store.sql` has been applied to the target Supabase project
+- `20260502001_author_memory_v3_store.sql` and `20260502002_author_memory_v3_side_effect_project_scope.sql` have been applied to the target Supabase project
 - `AUTHOR_MEMORY_V3_STORE=supabase` is explicitly configured
 - Claude-prepared KNOT input artifacts define source IDs and source spans
 - Author UI data contracts are available

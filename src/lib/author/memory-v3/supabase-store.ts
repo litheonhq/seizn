@@ -32,6 +32,7 @@ interface CreateAuthorMemoryV3StoreOptions {
 }
 
 interface AuthorMemoryRecordRow {
+  record_id?: string;
   record_payload: AuthorMemoryRecord;
 }
 
@@ -65,10 +66,12 @@ export class SupabaseAuthorMemoryV3Store implements AuthorMemoryV3Store {
   async get<TOutput extends JsonValue>(
     key: string
   ): Promise<AuthorSideEffectRecord<TOutput> | undefined> {
+    const projectId = this.requireActiveProjectId('load replay side effect');
     const { data, error } = await this.client
       .from('author_memory_v3_side_effects')
       .select('side_effect_payload')
       .eq('user_id', this.userId)
+      .eq('project_id', projectId)
       .eq('key', key)
       .maybeSingle();
 
@@ -81,17 +84,18 @@ export class SupabaseAuthorMemoryV3Store implements AuthorMemoryV3Store {
   }
 
   async put<TOutput extends JsonValue>(record: AuthorSideEffectRecord<TOutput>): Promise<void> {
+    const projectId = this.requireActiveProjectId('save replay side effect');
     const { error } = await this.client
       .from('author_memory_v3_side_effects')
       .upsert({
         user_id: this.userId,
-        project_id: this.activeProjectId,
+        project_id: projectId,
         key: record.key,
         side_effect_payload: record,
         captured_at: record.capturedAt,
         updated_at: new Date().toISOString(),
       }, {
-        onConflict: 'user_id,key',
+        onConflict: 'user_id,project_id,key',
       });
 
     if (error) {
@@ -123,18 +127,9 @@ export class SupabaseAuthorMemoryV3Store implements AuthorMemoryV3Store {
   async saveRecords(input: SaveAuthorMemoryRecordsInput): Promise<AuthorMemoryRecord[]> {
     assertUniqueRecordIds(input.records);
     this.activeProjectId = input.projectId;
-
-    if (input.mode === 'replace') {
-      const { error } = await this.client
-        .from('author_memory_v3_records')
-        .delete()
-        .eq('user_id', this.userId)
-        .eq('project_id', input.projectId);
-
-      if (error) {
-        throw new Error(`Failed to replace Author Memory v3 records: ${error.message}`);
-      }
-    }
+    const existingRecordIds = input.mode === 'replace'
+      ? await this.listRecordIds(input.projectId)
+      : [];
 
     if (input.records.length > 0) {
       const now = new Date().toISOString();
@@ -158,6 +153,24 @@ export class SupabaseAuthorMemoryV3Store implements AuthorMemoryV3Store {
 
       if (error) {
         throw new Error(`Failed to save Author Memory v3 records: ${error.message}`);
+      }
+    }
+
+    if (input.mode === 'replace') {
+      const nextRecordIds = new Set(input.records.map((record) => record.id));
+      const staleRecordIds = existingRecordIds.filter((recordId) => !nextRecordIds.has(recordId));
+
+      if (staleRecordIds.length > 0) {
+        const { error } = await this.client
+          .from('author_memory_v3_records')
+          .delete()
+          .eq('user_id', this.userId)
+          .eq('project_id', input.projectId)
+          .in('record_id', staleRecordIds);
+
+        if (error) {
+          throw new Error(`Failed to delete stale Author Memory v3 records: ${error.message}`);
+        }
       }
     }
 
@@ -319,15 +332,49 @@ export class SupabaseAuthorMemoryV3Store implements AuthorMemoryV3Store {
       metadata: row.metadata ?? undefined,
     }));
   }
+
+  private async listRecordIds(projectId: string): Promise<string[]> {
+    const { data, error } = await this.client
+      .from('author_memory_v3_records')
+      .select('record_id')
+      .eq('user_id', this.userId)
+      .eq('project_id', projectId);
+
+    if (error) {
+      throw new Error(`Failed to list Author Memory v3 record ids: ${error.message}`);
+    }
+
+    return ((data ?? []) as Pick<AuthorMemoryRecordRow, 'record_id'>[])
+      .map((row) => row.record_id)
+      .filter((recordId): recordId is string => typeof recordId === 'string');
+  }
+
+  private requireActiveProjectId(operation: string): string {
+    if (!this.activeProjectId) {
+      throw new Error(`Cannot ${operation} without an active Author Memory v3 project`);
+    }
+
+    return this.activeProjectId;
+  }
+}
+
+export class AuthorMemoryV3StoreConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthorMemoryV3StoreConfigError';
+  }
 }
 
 export function createAuthorMemoryV3StoreForUser(
   options: CreateAuthorMemoryV3StoreOptions
 ): AuthorMemoryV3Store {
-  if (
-    process.env.AUTHOR_MEMORY_V3_STORE === 'supabase' &&
-    hasServerSupabaseServiceRoleConfig()
-  ) {
+  if (process.env.AUTHOR_MEMORY_V3_STORE === 'supabase') {
+    if (!options.client && !hasServerSupabaseServiceRoleConfig()) {
+      throw new AuthorMemoryV3StoreConfigError(
+        'AUTHOR_MEMORY_V3_STORE=supabase requires Supabase service-role configuration'
+      );
+    }
+
     return new SupabaseAuthorMemoryV3Store(options);
   }
 

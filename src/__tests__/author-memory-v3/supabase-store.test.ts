@@ -1,13 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   SupabaseAuthorMemoryV3Store,
+  createAuthorMemoryV3StoreForUser,
   createAuthorSideEffectKey,
   runAuthorSideEffect,
   type AuthorEvalResult,
   type AuthorMemoryRecord,
   type AuthorSideEffectRequest,
 } from '@/lib/author/memory-v3';
+import { hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 
 const records: AuthorMemoryRecord[] = [
   {
@@ -46,6 +48,10 @@ const result: AuthorEvalResult = {
 };
 
 describe('SupabaseAuthorMemoryV3Store', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('persists records, snapshots, side effects, and eval results', async () => {
     const client = new FakeSupabaseClient();
     const store = new SupabaseAuthorMemoryV3Store({
@@ -104,6 +110,95 @@ describe('SupabaseAuthorMemoryV3Store', () => {
       },
     ]);
   });
+
+  it('scopes replay side effects by project', async () => {
+    const client = new FakeSupabaseClient();
+    const store = new SupabaseAuthorMemoryV3Store({
+      userId: 'user-1',
+      client: client.asStoreClient(),
+    });
+    const key = createAuthorSideEffectKey(request);
+
+    await store.saveRecords({ projectId: 'knot', records, mode: 'replace' });
+    await runAuthorSideEffect({
+      request,
+      mode: 'record',
+      store,
+      capturedAt: '2026-05-02T00:00:00.000Z',
+      live: () => ({ text: 'KNOT output' }),
+    });
+
+    await store.saveRecords({ projectId: 'other-world', records, mode: 'replace' });
+    await runAuthorSideEffect({
+      request,
+      mode: 'record',
+      store,
+      capturedAt: '2026-05-02T00:00:00.000Z',
+      live: () => ({ text: 'Other output' }),
+    });
+
+    await expect(runAuthorSideEffect({
+      request,
+      mode: 'replay',
+      store,
+      live: () => {
+        throw new Error('replay must not call live');
+      },
+    })).resolves.toMatchObject({
+      key,
+      output: { text: 'Other output' },
+    });
+
+    await store.saveRecords({ projectId: 'knot', records, mode: 'upsert' });
+
+    await expect(runAuthorSideEffect({
+      request,
+      mode: 'replay',
+      store,
+      live: () => {
+        throw new Error('replay must not call live');
+      },
+    })).resolves.toMatchObject({
+      key,
+      output: { text: 'KNOT output' },
+    });
+    await expect(store.listSideEffects('knot')).resolves.toHaveLength(1);
+    await expect(store.listSideEffects('other-world')).resolves.toHaveLength(1);
+  });
+
+  it('does not clear existing records when replace upsert fails', async () => {
+    const client = new FakeSupabaseClient();
+    const store = new SupabaseAuthorMemoryV3Store({
+      userId: 'user-1',
+      client: client.asStoreClient(),
+    });
+
+    await store.saveRecords({ projectId: 'knot', records, mode: 'replace' });
+    client.failNext('author_memory_v3_records', 'upsert', 'simulated upsert failure');
+
+    await expect(store.saveRecords({
+      projectId: 'knot',
+      records: [{
+        id: 'replacement-record',
+        kind: 'world_rule',
+        status: 'canon',
+        content: 'Replacement canon.',
+      }],
+      mode: 'replace',
+    })).rejects.toThrow('simulated upsert failure');
+
+    await expect(store.getRecord('knot', 'person-sori')).resolves.toEqual(records[0]);
+    await expect(store.getRecord('knot', 'replacement-record')).resolves.toBeNull();
+  });
+
+  it('fails closed when Supabase persistence is requested without config', () => {
+    vi.stubEnv('AUTHOR_MEMORY_V3_STORE', 'supabase');
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '');
+    vi.mocked(hasServerSupabaseServiceRoleConfig).mockReturnValue(false);
+
+    expect(() => createAuthorMemoryV3StoreForUser({ userId: 'user-1' }))
+      .toThrow('AUTHOR_MEMORY_V3_STORE=supabase requires Supabase service-role configuration');
+  });
 });
 
 interface QueryResult {
@@ -115,9 +210,10 @@ type Row = Record<string, unknown>;
 
 class FakeSupabaseClient {
   private readonly tables = new Map<string, Row[]>();
+  private readonly failures = new Map<string, string>();
 
   from(table: string): FakeQuery {
-    return new FakeQuery(this.tables, table);
+    return new FakeQuery(this.tables, this.failures, table);
   }
 
   asStoreClient(): ConstructorParameters<typeof SupabaseAuthorMemoryV3Store>[0]['client'] {
@@ -125,10 +221,15 @@ class FakeSupabaseClient {
       typeof SupabaseAuthorMemoryV3Store
     >[0]['client'];
   }
+
+  failNext(table: string, operation: string, message: string): void {
+    this.failures.set(`${table}:${operation}`, message);
+  }
 }
 
 class FakeQuery {
   private filters: Array<[string, unknown]> = [];
+  private inFilters: Array<[string, unknown[]]> = [];
   private orderKey: string | null = null;
   private orderAscending = true;
   private operation: 'select' | 'upsert' | 'delete' = 'select';
@@ -137,6 +238,7 @@ class FakeQuery {
 
   constructor(
     private readonly tables: Map<string, Row[]>,
+    private readonly failures: Map<string, string>,
     private readonly table: string
   ) {}
 
@@ -162,6 +264,11 @@ class FakeQuery {
     return this;
   }
 
+  in(key: string, values: unknown[]): this {
+    this.inFilters.push([key, values]);
+    return this;
+  }
+
   order(key: string, options?: { ascending?: boolean }): this {
     this.orderKey = key;
     this.orderAscending = options?.ascending ?? true;
@@ -170,6 +277,10 @@ class FakeQuery {
 
   async maybeSingle(): Promise<QueryResult> {
     const result = await this.execute();
+    if (result.error) {
+      return result;
+    }
+
     const rows = Array.isArray(result.data) ? result.data : [];
     return { data: rows[0] ?? null, error: null };
   }
@@ -182,6 +293,14 @@ class FakeQuery {
   }
 
   private async execute(): Promise<QueryResult> {
+    const failure = this.consumeFailure();
+    if (failure) {
+      return {
+        data: null,
+        error: { message: failure },
+      };
+    }
+
     const rows = this.tables.get(this.table) ?? [];
 
     if (this.operation === 'delete') {
@@ -215,7 +334,8 @@ class FakeQuery {
   }
 
   private matches(row: Row): boolean {
-    return this.filters.every(([key, value]) => row[key] === value);
+    return this.filters.every(([key, value]) => row[key] === value) &&
+      this.inFilters.every(([key, values]) => values.includes(row[key]));
   }
 
   private matchesConflict(existing: Row, row: Row): boolean {
@@ -225,5 +345,12 @@ class FakeQuery {
 
   private compare(left: unknown, right: unknown): number {
     return String(left ?? '').localeCompare(String(right ?? ''));
+  }
+
+  private consumeFailure(): string | null {
+    const key = `${this.table}:${this.operation}`;
+    const message = this.failures.get(key) ?? null;
+    this.failures.delete(key);
+    return message;
   }
 }
