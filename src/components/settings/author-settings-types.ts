@@ -35,6 +35,8 @@ export interface SubscriptionState {
   byok_discount_active: boolean;
   byok_discount_status: ByokDiscountStatus;
   byok_discount_error?: string | null;
+  stripe_price_id?: string | null;
+  billing_cadence?: "monthly" | "yearly" | null;
   price_lock_version: string;
   usage?: {
     tokens_used_month?: number;

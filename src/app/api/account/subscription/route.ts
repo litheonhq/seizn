@@ -1,7 +1,12 @@
 import { NextRequest } from "next/server";
 import { getStripeClient } from "@/lib/stripe";
 import { createServerClient } from "@/lib/supabase";
-import { AUTHOR_PRICE_LOCK_VERSION, getAuthorTierConfig, isAuthorBillingTier } from "@/lib/stripe-config";
+import {
+  AUTHOR_PRICE_LOCK_VERSION,
+  getAuthorTierConfig,
+  getBillingCadenceFromStripePriceId,
+  isAuthorBillingTier,
+} from "@/lib/stripe-config";
 import { getAuthorByokStatus, getAuthorModelUsageSummary } from "@/lib/author/llm";
 import {
   AuthorUiNotFoundError,
@@ -78,6 +83,9 @@ export async function GET(request: NextRequest) {
     const tier = isAuthorBillingTier(profile.plan) ? profile.plan : null;
     const tierConfig = tier ? getAuthorTierConfig(tier) : null;
     const trialDaysRemaining = getDaysRemaining(profile.subscription_trial_ends_at);
+    const billingCadence = profile.stripe_price_id
+      ? getBillingCadenceFromStripePriceId(profile.stripe_price_id)
+      : null;
 
     return {
       plan: profile.plan ?? "free",
@@ -88,6 +96,7 @@ export async function GET(request: NextRequest) {
       stripe_customer_id_present: Boolean(profile.stripe_customer_id),
       stripe_subscription_id_present: Boolean(profile.stripe_subscription_id),
       stripe_price_id: profile.stripe_price_id ?? null,
+      billing_cadence: billingCadence,
       current_period_start: profile.stripe_current_period_start ?? null,
       current_period_end: profile.stripe_current_period_end ?? profile.subscription_ends_at ?? null,
       renews_at: profile.subscription_renews_at ?? null,

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
         tokens_cap_month: tokenCap,
         overage_tokens: overageTokens,
         overage_charges_usd: usage.overage_charges_usd ?? 0,
-        byok_active: billingUsage.byokActive || usage.byok_active,
+        byok_active: billingUsage.byokActive,
       };
     }
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       tokens_cap_month: tokenCap,
       overage_tokens: overageTokens,
       overage_charges_usd: usage.overage_charges_usd ?? 0,
-      byok_active: modelUsage.byok_active || usage.byok_active,
+      byok_active: modelUsage.byok_active,
       model_usage: modelUsage,
     };
   });

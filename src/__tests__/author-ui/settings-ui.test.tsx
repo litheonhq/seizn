@@ -5,6 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { AuthorSettingsClient } from "@/components/settings/author-settings-client";
 import { getAuthorSettingsCopy, authorSettingsI18nLocales } from "@/components/settings/author-settings-i18n";
 import { ByokSection } from "@/components/settings/byok-section";
+import { SubscriptionSection } from "@/components/settings/subscription-section";
 import { UsageSection } from "@/components/settings/usage-section";
 import type { ByokDiscountStatus, ByokState, SubscriptionState, UsageState } from "@/components/settings/author-settings-types";
 
@@ -66,6 +67,13 @@ const usage: UsageState = {
   tier: "pro",
 };
 
+const ORIGINAL_PRICE_ENV = {
+  STRIPE_PRICE_ID_INDIE_MONTHLY: process.env.STRIPE_PRICE_ID_INDIE_MONTHLY,
+  STRIPE_PRICE_ID_INDIE_YEARLY: process.env.STRIPE_PRICE_ID_INDIE_YEARLY,
+  STRIPE_PRICE_ID_PRO_MONTHLY: process.env.STRIPE_PRICE_ID_PRO_MONTHLY,
+  STRIPE_PRICE_ID_PRO_YEARLY: process.env.STRIPE_PRICE_ID_PRO_YEARLY,
+};
+
 let root: Root | null = null;
 let container: HTMLDivElement | null = null;
 
@@ -81,6 +89,7 @@ afterEach(async () => {
   root = null;
   container = null;
   document.cookie = "seizn_csrf_token=; Max-Age=0; path=/";
+  restorePriceEnv();
 });
 
 describe("Author settings UI", () => {
@@ -183,6 +192,61 @@ describe("Author settings UI", () => {
       expect(copy.sync.comingSoon).toBeTruthy();
     }
   });
+
+  it("shows Indie monthly pricing from the Stripe price id", async () => {
+    installPriceEnv();
+    await renderSubscription({
+      plan: "indie",
+      tier: "indie",
+      tier_label: "Indie",
+      stripe_price_id: "price_indie_monthly_v7",
+    });
+
+    expect(renderedText()).toContain("Indie");
+    expect(renderedText()).toContain("$39/mo");
+    expect(queryText("Saves about 15% yearly")).toBeNull();
+  });
+
+  it("shows Indie yearly pricing and savings from the Stripe price id", async () => {
+    installPriceEnv();
+    await renderSubscription({
+      plan: "indie",
+      tier: "indie",
+      tier_label: "Indie",
+      stripe_price_id: "price_indie_yearly_v7",
+    });
+
+    expect(renderedText()).toContain("Indie");
+    expect(renderedText()).toContain("$397.80 per year");
+    expect(getText("Saves about 15% yearly")).toBeTruthy();
+  });
+
+  it("shows Pro monthly pricing from the Stripe price id", async () => {
+    installPriceEnv();
+    await renderSubscription({
+      plan: "pro",
+      tier: "pro",
+      tier_label: "Pro",
+      stripe_price_id: "price_pro_monthly_v7",
+    });
+
+    expect(renderedText()).toContain("Pro");
+    expect(renderedText()).toContain("$149/mo");
+  });
+
+  it("shows Pro yearly pricing and savings from the Stripe price id", async () => {
+    installPriceEnv();
+    await renderSubscription({
+      plan: "pro",
+      tier: "pro",
+      tier_label: "Pro",
+      stripe_price_id: "price_pro_yearly_v7",
+    });
+
+    expect(renderedText()).toContain("Pro");
+    expect(renderedText()).toContain("$1,519.80 per year");
+    expect(getText("Saves about 15% yearly")).toBeTruthy();
+  });
 });
 
 async function renderByokStatus(status: ByokDiscountStatus): Promise<void> {
@@ -195,6 +259,18 @@ async function renderByokStatus(status: ByokDiscountStatus): Promise<void> {
       action="idle"
       onSave={async () => ({ status })}
       onRemove={async () => ({ status: "inactive" })}
+    />
+  );
+}
+
+async function renderSubscription(overrides: Partial<SubscriptionState>): Promise<void> {
+  await render(
+    <SubscriptionSection
+      subscription={{ ...subscription, billing_cadence: null, ...overrides }}
+      copy={getAuthorSettingsCopy("en").subscription}
+      locale="en"
+      action="idle"
+      onManageBilling={async () => undefined}
     />
   );
 }
@@ -217,6 +293,10 @@ function getText(text: string): Element {
 function queryText(text: string): Element | null {
   const elements = Array.from((container ?? document.body).querySelectorAll("*"));
   return elements.find((element) => element.textContent === text) ?? null;
+}
+
+function renderedText(): string {
+  return container?.textContent?.replace(/\s+/g, " ").trim() ?? "";
 }
 
 async function findText(text: string): Promise<Element> {
@@ -331,4 +411,21 @@ function jsonResponse(body: unknown, status = 200): Response {
     status,
     headers: { "content-type": "application/json" },
   });
+}
+
+function installPriceEnv(): void {
+  process.env.STRIPE_PRICE_ID_INDIE_MONTHLY = "price_indie_monthly_v7";
+  process.env.STRIPE_PRICE_ID_INDIE_YEARLY = "price_indie_yearly_v7";
+  process.env.STRIPE_PRICE_ID_PRO_MONTHLY = "price_pro_monthly_v7";
+  process.env.STRIPE_PRICE_ID_PRO_YEARLY = "price_pro_yearly_v7";
+}
+
+function restorePriceEnv(): void {
+  for (const [name, value] of Object.entries(ORIGINAL_PRICE_ENV)) {
+    if (value === undefined) {
+      delete process.env[name];
+    } else {
+      process.env[name] = value;
+    }
+  }
 }

@@ -87,6 +87,7 @@ const ORIGINAL_ENV = {
   AUTHOR_UI_ENABLED: process.env.AUTHOR_UI_ENABLED,
   AUTHOR_UI_ALLOWED_USER_IDS: process.env.AUTHOR_UI_ALLOWED_USER_IDS,
   AUTHOR_UI_ALLOWED_EMAILS: process.env.AUTHOR_UI_ALLOWED_EMAILS,
+  STRIPE_PRICE_ID_PRO_MONTHLY: process.env.STRIPE_PRICE_ID_PRO_MONTHLY,
 };
 
 describe('account subscription route guard', () => {
@@ -97,6 +98,7 @@ describe('account subscription route guard', () => {
     delete process.env.AUTHOR_UI_ENABLED;
     delete process.env.AUTHOR_UI_ALLOWED_USER_IDS;
     delete process.env.AUTHOR_UI_ALLOWED_EMAILS;
+    process.env.STRIPE_PRICE_ID_PRO_MONTHLY = 'price_pro_monthly_v7';
     vi.mocked(getRequestUser).mockResolvedValue({
       id: 'profile-user-1',
       email: 'author@example.com',
@@ -112,6 +114,7 @@ describe('account subscription route guard', () => {
     restoreEnv('AUTHOR_UI_ENABLED', ORIGINAL_ENV.AUTHOR_UI_ENABLED);
     restoreEnv('AUTHOR_UI_ALLOWED_USER_IDS', ORIGINAL_ENV.AUTHOR_UI_ALLOWED_USER_IDS);
     restoreEnv('AUTHOR_UI_ALLOWED_EMAILS', ORIGINAL_ENV.AUTHOR_UI_ALLOWED_EMAILS);
+    restoreEnv('STRIPE_PRICE_ID_PRO_MONTHLY', ORIGINAL_ENV.STRIPE_PRICE_ID_PRO_MONTHLY);
   });
 
   it('returns 401 when the Author UI request user is missing', async () => {
@@ -154,6 +157,8 @@ describe('account subscription route guard', () => {
       byok_discount_active: false,
       byok_discount_status: 'pending',
       byok_discount_error: null,
+      stripe_price_id: 'price_pro_monthly_v7',
+      billing_cadence: 'monthly',
     });
   });
 

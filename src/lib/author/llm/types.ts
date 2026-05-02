@@ -26,6 +26,9 @@ export interface AuthorLlmRequest {
 export interface AuthorLlmUsage {
   tokensIn: number;
   tokensOut: number;
+  totalTokens?: number;
+  cacheCreationInputTokens?: number;
+  cacheReadInputTokens?: number;
 }
 
 export interface AuthorLlmResponse<TJson = unknown> {
