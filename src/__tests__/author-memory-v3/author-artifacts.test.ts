@@ -17,6 +17,8 @@ const knotJsonFiles = [
   'relationship_matrix.json',
   'timeline_event_ledger.json',
   'knot_author_eval_seed_v1.json',
+  'knot_author_eval_seed_v2.json',
+  'knot_author_eval_seed_v3.json',
 ];
 
 const knotMarkdownFiles = [
@@ -38,7 +40,7 @@ const authorUiMarkdownFiles = [
 ];
 
 describe('Author Memory v3 artifact contracts', () => {
-  it('keeps all 15 Codex specification artifacts present', () => {
+  it('keeps all 17 Codex specification artifacts present', () => {
     const artifactPaths = [
       ...knotJsonFiles.map((file) => join('docs', 'knot-input', file)),
       ...knotMarkdownFiles.map((file) => join('docs', 'knot-input', file)),
@@ -46,7 +48,7 @@ describe('Author Memory v3 artifact contracts', () => {
       ...authorUiMarkdownFiles.map((file) => join('docs', 'author-ui', file)),
     ];
 
-    expect(artifactPaths).toHaveLength(15);
+    expect(artifactPaths).toHaveLength(17);
     for (const path of artifactPaths) {
       expect(readFileSync(join(root, path), 'utf8').length).toBeGreaterThan(0);
     }
@@ -68,21 +70,30 @@ describe('Author Memory v3 artifact contracts', () => {
     const worldRuleRegistry = readJson('docs/knot-input/world_rule_registry.json');
     const relationshipMatrix = readJson('docs/knot-input/relationship_matrix.json');
     const timelineEventLedger = readJson('docs/knot-input/timeline_event_ledger.json');
-    const evalSeed = readJson('docs/knot-input/knot_author_eval_seed_v1.json');
+    const evalSeedV1 = readJson('docs/knot-input/knot_author_eval_seed_v1.json');
+    const evalSeedV2 = readJson('docs/knot-input/knot_author_eval_seed_v2.json');
+    const evalSeedV3 = readJson('docs/knot-input/knot_author_eval_seed_v3.json');
     const bundle = {
       characterRegistry,
       worldRuleRegistry,
       relationshipMatrix,
       timelineEventLedger,
-      evalSeed,
+      evalSeed: evalSeedV3,
     };
 
     const records = knotInputBundleToAuthorRecords(bundle);
-    const cases = knotEvalSeedToAuthorEvalCases(evalSeed);
+    const casesV1 = knotEvalSeedToAuthorEvalCases(evalSeedV1);
+    const casesV2 = knotEvalSeedToAuthorEvalCases(evalSeedV2, {
+      source: 'docs/knot-input/knot_author_eval_seed_v2.json',
+    });
+    const cases = knotEvalSeedToAuthorEvalCases(evalSeedV3, {
+      source: 'docs/knot-input/knot_author_eval_seed_v3.json',
+    });
     const payload = knotInputBundleToAuthorEvalJobPayload({
       projectId: 'knot',
       runId: 'knot-artifact-regression',
       bundle,
+      evalSeedSource: 'docs/knot-input/knot_author_eval_seed_v3.json',
     });
 
     const characters = readArray(characterRegistry, 'characters');
@@ -96,9 +107,11 @@ describe('Author Memory v3 artifact contracts', () => {
     expect(characters.length + supportingCast.length + supportingPointers.length)
       .toBeGreaterThanOrEqual(12);
     expect(rules.length).toBeGreaterThanOrEqual(18);
-    expect(relationships.length).toBeGreaterThanOrEqual(8);
+    expect(relationships.length).toBeGreaterThanOrEqual(21);
     expect(events.length).toBeGreaterThanOrEqual(22);
-    expect(cases).toHaveLength(12);
+    expect(casesV1).toHaveLength(12);
+    expect(casesV2.length).toBeGreaterThanOrEqual(52);
+    expect(cases).toHaveLength(100);
     expect(records.length).toBe(
       characters.length
         + supportingCast.length

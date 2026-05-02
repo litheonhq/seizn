@@ -188,11 +188,11 @@ The storage contract is deliberately adapter-shaped:
 - `runAuthorEvalJobPayload` supports deterministic fixture execution through per-case `liveOutput`.
 - `handleAuthorEvalJobRequest` maps contract, replay, and execution failures to stable API response envelopes.
 - `knotInputBundleToAuthorRecords` maps Claude-prepared KNOT registries into Author memory records without committing to the raw artifact files.
-- `knotInputBundleToAuthorEvalJobPayload` builds a replay-ready Author eval payload from the KNOT seed set.
+- `knotInputBundleToAuthorEvalJobPayload` builds a replay-ready Author eval payload from the KNOT seed set, including the v3 100-case regression fixture.
 - `POST /api/author/memory-v3/eval` exposes the eval job contract behind existing API-key auth and stable error envelopes.
 - `importAuthorEvalCasesToFallDataset` imports Author eval cases into existing Fall eval datasets without adding Fall columns.
 
 Next implementation work should add:
 
-- KNOT eval fixture expansion from Claude's completed seed set
 - UI data contract binding after Claude provides Author UI requirements
+- live verifier/judge-model adapters once the v3 seed passes replay-only harness checks

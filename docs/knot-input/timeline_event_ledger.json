@@ -1,9 +1,10 @@
 {
-  "version": "v1-schema",
+  "version": "v2-full-day-coverage",
   "generated_at": "2026-05-02",
   "scope": "short1",
-  "status": "schema_with_seed_entries",
-  "fill_status": "stories/short1/day-sheet.md + 본문 D1~D20 deep-read 필요·다음 cycle 풀 fill",
+  "status": "all_35_days_listed_event_partition_partial",
+  "fill_status": "D1~D35 모든 Day 이벤트 entry 등록 완료. Day별 knowledge_partition·캐릭별 perspective는 다음 cycle deep-fill (본문 작성 진행과 함께).",
+  "source_primary": "C:\\Users\\admin\\Projects\\knot\\stories\\short1\\day-sheet.md (v3.7.9azax)",
   "schema_notes": [
     "각 사건 = graph_entities(type='event') 매핑",
     "when (Day + scene_id), where (location), who (참여 캐릭), what (사건 요약)",
@@ -11,193 +12,324 @@
     "valid_at = 사건 시점·invalid_at = 후속 사건이 사건 의미 무효화 시"
   ],
   "demo_calendar": {
-    "phase_1_pref_week": {"days": "D1~D10", "dates": "2/20 금 ~ 3/1 일", "type": "정해진 흐름"},
-    "phase_2_post_entrance": {"days": "D11~D24", "dates": "3/2 월 ~ 3/15 일", "type": "입학식 + 일상 + 자유 슬롯 6"},
-    "phase_3_crisis": {"days": "D25~D35", "dates": "3/16 월 ~ 3/26 목", "type": "위기 + 정비 + 보스전"}
+    "phase_1_pref_week": {"days": "D1~D10", "dates": "2/20 금 ~ 3/1 일", "type": "사전 입주·정해진 흐름·기숙사생 한정 친목"},
+    "phase_2_post_entrance": {"days": "D11~D24", "dates": "3/2 월 ~ 3/15 일", "type": "입학식 + 일상 + 자유 슬롯 6 (D15~D17·D22~D24)"},
+    "phase_3_crisis": {"days": "D25~D35", "dates": "3/16 월 ~ 3/26 목", "type": "위기 (D25~D29) + 정비 (D30~D34) + 보스전 (D35)"},
+    "free_slot_days": ["D15", "D16", "D17", "D22", "D23", "D24", "D28", "D30", "D31", "D32", "D33"],
+    "free_slot_total": 11,
+    "key_milestones": [
+      "D1 = 2/20 금 (이주·도깨비 첫 만남)",
+      "D11 = 3/2 월 (입학식)",
+      "D14 = 3/5 목 (동아리 정식 합류)",
+      "D29 = 3/20 금 (타오 사망·3월 4주차 금요일 밤)",
+      "D35 = 3/26 목 (보스전·4 ending teaser·결과 카드)"
+    ]
+  },
+  "progressive_introduction_rule_v113": {
+    "principle": "1 Day 1~2명 max·한 자리 다수 등장 X (feedback_knot_new_info_per_day_limit.md)",
+    "schedule": {
+      "D1": "나리 (도깨비 3인 + 나리 첫 인사)",
+      "D2": "룰루 (식당 단독)",
+      "D3": "아오이 (복도 단독)",
+      "D5": "레이카 (동아리실 단독·자고 있음)",
+      "D6": "나나 (동아리실 짧은 대화)",
+      "D9": "유이 (룰루+유이 페어)"
+    }
   },
   "events": [
     {
       "id": "knot.short1.event.d1-arrival",
       "day": "D1",
       "date": "2/20 금",
+      "phase": 1,
       "scene_id": "D1-S01~S04",
       "where": "청학여고 후문 골목·기숙사 308호·식당",
       "who": ["sori", "nari", "dokkaebi.tora", "dokkaebi.dori", "dokkaebi.chibi"],
-      "what": "이주 + 도깨비 첫 만남 (어묵) + 308호 입실 + 식당 + 잠자리",
+      "what": "이주 + 도깨비 첫 만남 (어묵) + 308호 입실 + 나리 첫 인사 + 식당 + 잠자리 closure",
       "knowledge_partition": {
         "public": ["사전 입주 시작", "소리 청학여고 신입생", "나리 룸메이트", "도깨비 어묵 가게"],
         "author_only": ["도깨비 본질 (달의 위상·이계 유입·삭 조건)", "소리 능력 (자서가)"]
       },
+      "scene_status": "draft",
       "tags": ["scope:short1", "phase:1", "category:event", "tier:1"]
     },
     {
       "id": "knot.short1.event.d2-cafeteria-lulu",
       "day": "D2",
       "date": "2/21 토",
-      "scene_id": "D2-S01~S02",
+      "phase": 1,
+      "scene_id": "D2-S01~S0?",
       "where": "식당·308호",
       "who": ["sori", "lulu", "nari"],
-      "what": "룰루 첫 마주침 (식당 아침 합석)·잠자리 회상",
-      "knowledge_partition": {
-        "public": ["룰루 = 2반 학생", "아침 식당 합석"],
-        "character_known:lulu": ["소리 = 1반 신입생·룸메 나리"],
-        "character_known:sori": ["룰루 = 친근·말 빠름·자기 얘기 ↑"]
-      },
+      "what": "룰루 첫 마주침 (식당 아침 합석·단독)·308호 저녁·잠자리",
+      "scene_status": "draft (재작성 필요·아오이 → D3로)",
       "tags": ["scope:short1", "phase:1", "category:event"]
     },
     {
       "id": "knot.short1.event.d3-corridor-clip",
       "day": "D3",
       "date": "2/22 일",
-      "scene_id": "D3-S01~S02",
-      "where": "서관 복도 + 308호",
+      "phase": 1,
+      "scene_id": "D3-S01~S0?",
+      "where": "복도·308호",
       "who": ["sori", "aoi"],
-      "what": "아오이 첫 마주침 (복도 클립)·잠자리",
+      "what": "복도 클립 줍기 (아오이 단독)·308호 저녁·잠자리",
+      "scene_status": "placeholder (재작성 필요)",
       "tags": ["scope:short1", "phase:1"]
     },
     {
       "id": "knot.short1.event.d4-library-first",
       "day": "D4",
       "date": "2/23 월",
+      "phase": 1,
       "scene_id": "D4-S01~S02",
       "where": "도서관·308호",
       "who": ["sori", "nari", "heo"],
-      "what": "도서관 첫 방문·허 사서·4시 메모 노출",
+      "what": "도서관 첫 방문·허 사서 첫 만남·4시 메모 첫 등장 (게시판 5시와 어긋남)·308호 저녁·잠자리",
       "knowledge_partition": {
         "character_known:sori": ["허 사서 = 집사 톤·도서관 4시 메모 존재"],
         "author_only": ["허 = 자허·삼족오위 OB", "도서관장 = 월주"]
       },
+      "scene_status": "draft",
       "tags": ["scope:short1", "phase:1", "tier:1", "subtag:library_first"]
     },
     {
       "id": "knot.short1.event.d5-clubroom-found",
       "day": "D5",
       "date": "2/24 화",
-      "scene_id": "D5-S01~S02",
+      "phase": 1,
+      "scene_id": "D5-S01~S0?",
       "where": "본관 4층 동아리실·308호",
       "who": ["sori", "reika"],
-      "what": "동아리실 비공식 발견·레이카 자고 있음·명부 회장 빈 줄 시각 노출",
+      "what": "본관 4층 동아리실 첫 발견·레이카 단독 (자고 있음)·명부 회장 빈 줄 시각 노출·308호 저녁·잠자리",
       "knowledge_partition": {
-        "character_known:sori": ["동아리실 위치", "잠든 학생 = 동물 귀 (레이카·이름 X)", "명부 회장 자리 빈 줄 (시각만)"]
+        "character_known:sori": ["동아리실 위치", "잠든 학생 = 동물 귀 (레이카·이름 X)", "명부 회장 자리 빈 줄 (시각만)"],
+        "character_known:reika": ["소리가 동아리실에 들어옴·말 X (자고 있어서)"]
       },
+      "scene_status": "placeholder (재작성 필요)",
       "tags": ["scope:short1", "phase:1", "tier:1", "anchor:meibu_blank"]
     },
     {
       "id": "knot.short1.event.d6-nana-short-talk",
       "day": "D6",
       "date": "2/25 수",
+      "phase": 1,
       "where": "동아리실 재방문",
       "who": ["sori", "nana"],
-      "what": "동아리실 재방문·나나 짧은 대화",
-      "tags": ["scope:short1", "phase:1"]
+      "what": "4층 다시 가서 나나와 짧은 대화 + 명부 단서·308호 저녁·잠자리",
+      "tags": ["scope:short1", "phase:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d7-dokkaebi-regular",
       "day": "D7",
       "date": "2/26 목",
+      "phase": 1,
       "where": "후문 골목 도깨비 가게",
       "who": ["sori", "nari", "dokkaebi.tora", "dokkaebi.dori", "dokkaebi.chibi"],
-      "what": "도깨비 단골화·D1 anchor 회수",
-      "tags": ["scope:short1", "phase:1", "tier:1", "anchor_resolution:dokkaebi"]
+      "what": "도깨비 포장마차 단골 격상·일주일 후 어묵 anchor 회수·308호 저녁·잠자리",
+      "tags": ["scope:short1", "phase:1", "tier:1", "anchor_resolution:dokkaebi"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d8-cold-open-medicine",
       "day": "D8",
       "date": "2/27 금",
+      "phase": 1,
+      "scene_id": "D8-S00~S0?",
       "where": "TBD",
       "who": ["sori"],
-      "what": "콜드 오픈 약 큐 (노트 자동 기재 시드)",
+      "what": "콜드 오픈·첫 노트 자동 기재 약 큐 (구 D6-S00 reference 재활용)·308호 저녁·잠자리",
       "knowledge_partition": {
-        "character_known:sori": ["노트에 무언가 자동 기재됨"],
+        "character_known:sori": ["노트에 무언가 자동 기재됨 (인지 시작 시그널)"],
         "author_only": ["자서가 능력 발현 시작 신호"]
       },
-      "tags": ["scope:short1", "phase:1", "tier:1", "anchor:notebook_auto"]
+      "tags": ["scope:short1", "phase:1", "tier:1", "anchor:notebook_auto"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d9-yui-first",
       "day": "D9",
       "date": "2/28 토",
+      "phase": 1,
       "where": "TBD",
       "who": ["sori", "lulu", "yui"],
-      "what": "유이 첫 등장 (룰루+유이 페어)",
-      "tags": ["scope:short1", "phase:1"]
+      "what": "유이 첫 등장 (룰루+유이 페어·룰루가 유이 끌고 옴·짧은 첫 인사)·308호 저녁·잠자리",
+      "tags": ["scope:short1", "phase:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d10-eve-of-entrance",
       "day": "D10",
       "date": "3/1 일",
+      "phase": 1,
       "where": "308호",
       "who": ["sori", "nari"],
-      "what": "입학식 전날 (교복 수령·약한 불안)",
-      "tags": ["scope:short1", "phase:1", "tier:1"]
+      "what": "입학식 전날·교복 수령·약한 불안·입학식 직전 정리·308호 저녁·잠자리",
+      "tags": ["scope:short1", "phase:1", "tier:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d11-entrance",
       "day": "D11",
       "date": "3/2 월",
+      "phase": 2,
       "where": "강당·1반",
       "who": ["sori", "nari", "lulu", "aoi", "reika", "nana", "yui"],
-      "what": "입학식·통학생 합류·1반 첫 등교",
-      "tags": ["scope:short1", "phase:2", "tier:1", "milestone"]
+      "what": "입학식·통학생 합류·1반 첫 등교·4반 분산 배정",
+      "tags": ["scope:short1", "phase:2", "tier:1", "milestone"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d12-club-recruit-1",
+      "day": "D12",
+      "date": "3/3 화",
+      "phase": 2,
+      "where": "게시판·복도",
+      "who": ["sori", "lulu"],
+      "what": "동아리 가입 흐름 1·게시판 룰루 강권 → 동아리실 견학 (구 D9 재활용)",
+      "tags": ["scope:short1", "phase:2", "tier:1"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d13-club-recruit-2",
+      "day": "D13",
+      "date": "3/4 수",
+      "phase": 2,
+      "where": "동아리실",
+      "who": ["sori", "nari", "lulu", "aoi", "reika", "nana", "yui"],
+      "what": "동아리 가입 흐름 2·7인 동아리실 합동 첫 자리·canon 첫 가입 흐름 정합",
+      "tags": ["scope:short1", "phase:2", "tier:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d14-club-join",
       "day": "D14",
       "date": "3/5 목",
+      "phase": 2,
       "where": "동아리실",
       "who": ["sori", "nari", "lulu", "aoi", "reika", "nana", "yui"],
-      "what": "동아리 정식 합류·7인 합동 첫 자리",
-      "tags": ["scope:short1", "phase:2", "tier:1", "milestone"]
+      "what": "동아리 정식 합류·기숙사 첫 밤 톤 (구 D10 재활용)",
+      "tags": ["scope:short1", "phase:2", "tier:1", "milestone"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d15-free-1",
+      "day": "D15",
+      "date": "3/6 금",
+      "phase": 2,
+      "where": "TBD",
+      "who": ["sori"],
+      "what": "일상 시작·자유 슬롯 첫 활성·평일 수업 + 자유 슬롯 활동 풀 첫 사용 (친구 어울리기·동아리·정비·알바·임무 조사·기숙사 친목 단체 6택)",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d16-free-2",
+      "day": "D16",
+      "date": "3/7 토",
+      "phase": 2,
+      "what": "자유 시간 1·자유 슬롯 + 친목 누적",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d17-free-3",
+      "day": "D17",
+      "date": "3/8 일",
+      "phase": 2,
+      "what": "자유 시간 2·자유 슬롯 + 친목 누적·도깨비 단골 가능",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d18-note-anomaly",
       "day": "D18",
       "date": "3/9 월",
+      "phase": 2,
       "who": ["sori"],
-      "what": "노트 이상 1차 ('오늘은 쉬는 게 좋겠다')",
+      "what": "노트 이상 1차·노트 자동 기재 ('오늘은 쉬는 게 좋겠다.')·구 D11-S02 재활용",
       "knowledge_partition": {
         "character_known:sori": ["노트가 자동으로 한 줄 적혀 있음"],
         "author_only": ["자서가 능력 점진 발현"]
       },
-      "tags": ["scope:short1", "phase:2", "tier:1", "anchor:notebook_auto"]
+      "tags": ["scope:short1", "phase:2", "tier:1", "anchor:notebook_auto"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d19-library-second",
       "day": "D19",
       "date": "3/10 화",
+      "phase": 2,
       "where": "도서관",
       "who": ["sori", "heo"],
-      "what": "도서관 두 번째 방문·4시 메모 사라짐",
+      "what": "도서관 두 번째 방문·메모지 사라짐·게시판 5시 그대로 (구 D12 재활용)",
       "knowledge_partition": {
         "character_known:sori": ["4시 메모가 D19 시점엔 없음"],
         "author_only": ["허가 의도적으로 제거"]
       },
-      "tags": ["scope:short1", "phase:2", "tier:1"]
+      "tags": ["scope:short1", "phase:2", "tier:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d20-board-clash",
       "day": "D20",
       "date": "3/11 수",
-      "where": "게시판",
+      "phase": 2,
+      "where": "본관 1층 게시판",
       "who": ["sori", "nari"],
-      "what": "게시판 16:00 충돌 (D4 4시 메모와 시간 anchor 충돌)",
-      "tags": ["scope:short1", "phase:2", "tier:1"]
+      "what": "본관 1층 게시판 도서관 안내 16:00 어긋남 (구 D13 재활용)·D4 4시 메모와 시간 anchor 충돌",
+      "tags": ["scope:short1", "phase:2", "tier:1"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d21-meibu-formal-find",
       "day": "D21",
       "date": "3/12 목",
+      "phase": 2,
       "where": "동아리실",
       "who": ["sori", "nari", "lulu", "aoi", "reika", "nana", "yui"],
-      "what": "명부 회장 빈 줄 정식 발견 (D5 시각만 → D21 plot anchor)",
+      "what": "동아리 명부 회장 빈 줄 발견·회장 자리 빈 줄 + 패턴 인지 시작 (구 D14-S02 재활용)·D5 시각 노출 → D21 plot anchor 격상",
       "tags": ["scope:short1", "phase:2", "tier:1", "anchor_resolution:meibu_blank"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d22-daily-friction",
+      "day": "D22",
+      "date": "3/13 금",
+      "phase": 2,
+      "what": "일상 + 작은 어긋남 누적·자유 슬롯 + 어긋남 압박 시드",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d23-bonding",
+      "day": "D23",
+      "date": "3/14 토",
+      "phase": 2,
+      "what": "친목 강화 + 자유 슬롯·자유 슬롯 + 7인 친목 누적",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d24-pre-crisis",
+      "day": "D24",
+      "date": "3/15 일",
+      "phase": 2,
+      "what": "어긋남 누적 압박·자유 슬롯 + 위기 직전 압박",
+      "tags": ["scope:short1", "phase:2", "free_slot_active"],
       "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d25-sayaka",
       "day": "D25",
       "date": "3/16 월",
-      "what": "위기 1: 사야카 명명 (실종자 신원 추론)",
+      "phase": 3,
+      "where": "TBD",
+      "what": "위기 1: 사야카 명명·청학 괴담 12 + 외부 자료실 사본 → 사야카 = 실종자 013 (구 D15 재활용)",
+      "knowledge_partition": {
+        "character_known": "TBD by 7-char per-perspective"
+      },
       "tags": ["scope:short1", "phase:3", "tier:1", "milestone"],
       "scene_status": "placeholder"
     },
@@ -205,43 +337,87 @@
       "id": "knot.short1.event.d26-attendance-9",
       "day": "D26",
       "date": "3/17 화",
-      "what": "위기 2: 출석부 9번 균열",
+      "phase": 3,
+      "what": "위기 2: 출석부 9번 균열·출석부 9번 자리 균열 + 점심 시간 확인 (구 D16 재활용)",
       "tags": ["scope:short1", "phase:3", "tier:1"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d27-pressure",
+      "day": "D27",
+      "date": "3/18 수",
+      "phase": 3,
+      "what": "위기 누적 + 정념 압박·미세 압박 누적·7인 분위기 점진 변화",
+      "tags": ["scope:short1", "phase:3", "tier:1"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d28-breath",
+      "day": "D28",
+      "date": "3/19 목",
+      "phase": 3,
+      "what": "자유 슬롯 + 작은 정비·위기 직전 한 박 호흡·자유 슬롯 활성",
+      "tags": ["scope:short1", "phase:3", "free_slot_active"],
       "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d29-tao-death",
       "day": "D29",
       "date": "3/20 금",
-      "what": "위기 3: 타오 과장 사망 (3월 4주차 금요일 밤)",
-      "tags": ["scope:short1", "phase:3", "tier:1", "milestone", "death_event"],
-      "scene_status": "placeholder",
+      "phase": 3,
+      "where": "야간 본관 1층",
+      "what": "위기 3: 타오 사망 + 첫 비의도 자르기·화장실 칸 첫 비의도 자르기 ('불')·사후 정리 (구 D17 재활용)·3월 4주차 금요일 밤",
       "knowledge_partition": {
-        "public": ["타오 사망 사실"],
-        "character_known": "TBD by 7-char per-perspective"
-      }
+        "public": ["타오 사망 사실 (이후 동아리실에 소식 퍼짐)"],
+        "character_known": "TBD by 7-char per-perspective",
+        "author_only": ["소리 능력 (자서가) '불' 우연 말소·첫 비의도 자르기"]
+      },
+      "tags": ["scope:short1", "phase:3", "tier:1", "milestone", "death_event", "anchor:erasure_first"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d30-aftermath-silence",
+      "day": "D30",
+      "date": "3/21 토",
+      "phase": 3,
+      "where": "동아리실",
+      "what": "정비 1·사망 직후 동료 정비·동아리실 동료 정비 + 침묵 (구 D18 재활용)",
+      "tags": ["scope:short1", "phase:3", "tier:1", "free_slot_active"],
+      "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d31-card-restoration",
       "day": "D31",
       "date": "3/22 일",
-      "what": "정비 2: 도서관 학적 카드 복원",
-      "tags": ["scope:short1", "phase:3", "tier:1"],
+      "phase": 3,
+      "what": "정비 2·도서관 학적 카드 복원·010~013 4명 패턴 확인 (구 D19 재활용)",
+      "tags": ["scope:short1", "phase:3", "tier:1", "free_slot_active"],
       "scene_status": "placeholder"
     },
     {
       "id": "knot.short1.event.d32-pattern-4",
       "day": "D32",
       "date": "3/23 월",
-      "what": "정비 3: 010~013 4명 패턴 확인",
-      "tags": ["scope:short1", "phase:3", "tier:1"],
+      "phase": 3,
+      "what": "정비 3·010~013 4명 패턴 정합·패턴 정합 + 보스전 사전 준비",
+      "tags": ["scope:short1", "phase:3", "tier:1", "free_slot_active"],
       "scene_status": "placeholder"
     },
     {
-      "id": "knot.short1.event.d33-sango-resolve",
+      "id": "knot.short1.event.d33-storage-resolve",
       "day": "D33",
       "date": "3/24 화",
-      "what": "정비 4 + 결의 (서고 진입 결의)",
+      "phase": 3,
+      "what": "정비 4 + 결의·서고 진입 결의 (구 D20 재활용)",
+      "tags": ["scope:short1", "phase:3", "tier:1", "free_slot_active"],
+      "scene_status": "placeholder"
+    },
+    {
+      "id": "knot.short1.event.d34-pre-boss",
+      "day": "D34",
+      "date": "3/25 수",
+      "phase": 3,
+      "what": "보스전 직전 정비·회의·7인 회의 + 결의 강화",
       "tags": ["scope:short1", "phase:3", "tier:1"],
       "scene_status": "placeholder"
     },
@@ -249,17 +425,34 @@
       "id": "knot.short1.event.d35-boss-fight",
       "day": "D35",
       "date": "3/26 목",
-      "what": "보스전 + 4 ending teaser + 결과 카드 + ending_recall",
-      "tags": ["scope:short1", "phase:3", "tier:1", "milestone", "climax"],
+      "phase": 3,
+      "where": "정비 서고 심부",
+      "what": "보스전·정비 서고 심부 진입·보스전 6턴·Rule 6 자기 폭로·결과 카드 PNG·4 ending teaser·ending_recall 6 멤버 회상 (구 D21 재활용)",
+      "tags": ["scope:short1", "phase:3", "tier:1", "milestone", "climax", "ending_branch"],
       "scene_status": "placeholder"
     }
   ],
-  "deferred_for_cycle_2": [
-    "D12·D13·D15·D16·D17 (free slot 자유 슬롯) 본문 추출",
-    "D22·D23·D24 (자유 슬롯 + 작은 어긋남 누적) 본문 추출",
-    "D27·D28·D30·D34 본문 추출",
-    "각 사건의 knowledge_partition 7-character per-perspective 분배",
-    "각 사건의 scene_id·source_span (md 파일 line 범위)",
-    "이벤트 간 인과 chain (caused_by·caused·foreshadows·resolves)"
+  "scene_status_summary": {
+    "draft": ["D1", "D2", "D3", "D4"],
+    "draft_재작성_필요": ["D2", "D3", "D5"],
+    "placeholder": ["D6", "D7", "D8", "D9", "D10", "D11", "D12", "D13", "D14", "D15", "D16", "D17", "D18", "D19", "D20", "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30", "D31", "D32", "D33", "D34", "D35"],
+    "completed_for_extraction": ["D1", "D4"],
+    "extraction_priority": "본문 작성 진행 시점에 자동 extract → memory snapshot 갱신 (Phase 4 retrieval)"
+  },
+  "key_anchors_and_resolutions": [
+    {"anchor": "도깨비 첫 만남 (D1)", "resolution": "도깨비 단골화 (D7)·일주일 anchor 회수"},
+    {"anchor": "허 사서 4시 메모 (D4)", "resolution": "메모지 사라짐 (D19)·게시판 5시 그대로 (D20 충돌)"},
+    {"anchor": "명부 회장 빈 줄 시각 (D5)", "resolution": "정식 발견 + 패턴 인지 (D21)"},
+    {"anchor": "노트 자동 기재 약 큐 (D8)", "resolution": "노트 이상 1차 (D18)·첫 비의도 자르기 (D29)"},
+    {"anchor": "타오 위험 인지 (D27~D28)", "resolution": "타오 사망 (D29)"},
+    {"anchor": "사야카 명명 (D25)", "resolution": "010~013 4명 패턴 (D31~D32)"},
+    {"anchor": "출석부 9번 균열 (D26)", "resolution": "보스전 6턴 자기 폭로 (D35)"}
+  ],
+  "deferred_for_cycle_3": [
+    "각 사건의 knowledge_partition 7-character per-perspective 분배 (D5 동아리실 발견 = 룰루·아오이·나나·유이는 모름·소리·레이카만 인지·나리는 룸메이트라 들었지만 직접 못 봄)",
+    "각 사건의 source_span (md 파일 line 범위)·본문 작성 진행 시 자동 추출",
+    "이벤트 간 인과 chain (caused_by·caused·foreshadows·resolves)",
+    "자유 슬롯 D별 actual 활동 풀 (친구 어울리기 vs 동아리 vs 정비 vs 알바 vs 임무 조사 vs 기숙사 친목 6택)",
+    "관계 이벤트 R1~R12 (선택 관계 이벤트·D 사이가 아닌 별도 R 시트)"
   ]
 }

@@ -1,9 +1,10 @@
 {
-  "version": "v1-schema",
+  "version": "v2-deep-fill-main7",
   "generated_at": "2026-05-02",
   "scope": "short1",
-  "status": "schema_with_seed_entries",
-  "fill_status": "사용자 7 캐릭 페르소나 (worldbuilding/short1-characters.md 1100줄+) deep-read 필요·다음 cycle 풀 fill",
+  "status": "deep_fill_main7_complete_supporting_partial",
+  "fill_status": "단편 1 주연 7인 풀 fill (소리·나리·레이카·아오이·나나·룰루·유이). 조연 (도깨비 3인·허·타오·민·코우) 다음 cycle.",
+  "source_primary": "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-characters.md (1492 lines·v3.7.9azx 락)",
   "schema_notes": [
     "각 캐릭 = graph_entities(type='person') 매핑·Seizn primitive 정합",
     "scope·forbidden_in_scope·tier 태그 필수",
@@ -17,63 +18,188 @@
       "name": "소리",
       "aliases": ["주인공"],
       "scope": ["short1"],
+      "main_scope_pointer": "본편 8동료 특별 편입 — knot.main.char.sori 별도 등록 (Phase 2)",
       "story_role": "protagonist",
-      "current_status": "청학여자고등학교 1학년 신입생·D{N} 시점별 갱신",
+      "current_status": "청학여고 1학년 1반 신입생·기숙사 서관 308호·D{N}별 갱신",
+      "tier": 1,
+      "commercial_tier": "Tier 1 (포스터·트레일러·굿즈)",
       "basic_info": {
         "gender": "여성",
         "age": 16,
-        "shen_age": "TBD",
-        "ti_age": "TBD",
         "ben_age": "비공개",
-        "region": "global",
-        "ethnic_culture": "TBD",
-        "family_name": "없음 (성씨 미보유·일반 시민 정상)"
+        "region_culture": "무공권·한국어 기반·한자 자연 노출",
+        "ethnic": "한어계",
+        "family_name": "없음 (제국 특권 시민 힌트 0)",
+        "family_status": "부모 조기 사망·보호자 공백·중1 만 13세 사고",
+        "height": 163,
+        "build": "보통·근력 학생 평균 이상이지만 복장 아래 감춤"
       },
-      "archetype": "TBD - cycle 2 fill from short1-characters.md §1.2",
+      "appearance": {
+        "hair": "흑발 단발·어깨선 살짝 위·귀 뒤로 넘기는 습관",
+        "hair_accessory": "왼쪽 귀 뒤 작은 은 십자 헤어핀 1개 (부모 유품 추정·작중 해명 없음)",
+        "face": "검은 고양이 상 (黑猫)·무표정 직선 입·아몬드형 눈·경계하다 천천히 녹는 미세 표정",
+        "morphology": "S0 (수인 외형 없음)",
+        "scars": "등에 얕은 흉터 1~2개 (본편 떡밥·단편 1 해명 X·체육 갈아입기에서 가림 동작 1회)",
+        "uniform": "청학여고 동복·리본 살짝 느슨·팔찌형 학생증 (평범한 가죽/금속 팔찌처럼 보임)",
+        "shoes": "학교 지정 로퍼·앞코부터 벗는 습관"
+      },
+      "archetype": "겉은 차분·속은 여섯 살에 멈춘 소녀 (쿨데레 변형)",
       "voice": {
-        "speech_pattern": "TBD - §1.4",
-        "vocabulary": "TBD",
-        "taboo_words": "큰따옴표 X·외래어 음차 X (엣또·Yes·Ok)",
-        "signature_expressions": "TBD"
+        "narration_style": "해라체 (~다·~한다)",
+        "default_speech": "~네·~예·~어요 (존댓말 쪽 중립체)",
+        "first_person": "초면·어른 앞 '저'·친해진 뒤 '나'·내레이션 항상 '나'",
+        "signature_expressions": [
+          "…네.",
+          "…괜찮아요.",
+          "아, 네. …네.",
+          "저는, 오늘은, 좀…",
+          "…어울리는 글자예요. (허 따라하기·W2+)",
+          "…미안. (친구에게 짧은 반말·W3+)",
+          "…하지 마. (Act 2 위기 ② 이후·처음 강단)"
+        ],
+        "taboo_expressions": [
+          "큰따옴표 X",
+          "외래어 음차 X (엣또·Yes·Ok 등)",
+          "과장된 감탄사 X (헐·대박)",
+          "유행어 X·축약형 반말 X (ㅇㅇ·ㅎㅎ)"
+        ],
+        "answer_patterns": [
+          "즉답 '네' (규칙·요청·수업)",
+          "지연 '…네' (친절·배려)",
+          "침묵 '…' (처음 듣는 개념·진짜 마음 질문)"
+        ],
+        "silence_ratio": "전체 대사의 20%+",
+        "dialect_allowance": "한자·일본어 감탄사 극소 (氣·文鎭 허의 따라 반복)"
       },
       "personality_core": {
-        "traits": "TBD - §1.3",
-        "vulnerability": "TBD - §1.7"
+        "traits": [
+          "등록된 나 ≠ 실제 나의 분리가 아직 어설픔",
+          "감정 표현 1~2박자 늦음 (W1~W2 가장 선명·W3+ 점진 단축)",
+          "친절을 의심·'이 사람은 왜 나에게 이걸 주는가' 먼저 셈",
+          "고통 역치 높음·'다치면 말하지 않는 것' 기본 학습",
+          "거짓말에 능한데 자기 자신은 못 속임",
+          "혼자 있는 시간에 숨이 느려짐 (해리·나리 들어오면 자동 해제)",
+          "분노 표현이 가장 어려움·Act 2 위기 ②까지 0회",
+          "거울 안 봄 습관·본인 얼굴 보는 것 익숙하지 않음",
+          "이름이 불리면 반 박자 멈춤·또래 호명 자체가 낯섦",
+          "정체성 = 기록/등록·Act 3 엔딩 분기 핵심"
+        ],
+        "desires": [
+          "평범한 신입생으로 학교생활 적응 (표면 목표)",
+          "실종 사건 추적과 친구 보호 (사건 목표)",
+          "친구 사귀기가 생존 전략인지 진짜 관계인지 구분"
+        ],
+        "vulnerabilities": [
+          "친구에게 거짓말할 때 몸 반 박자 굳음 ([연반] 태그가 잡음)",
+          "도서관장 앞에서 의사 표현 통째 얼어붙음 (씬 1-5)",
+          "허가 말하지 않는 공간 느꼈을 때 아무 말 못 함",
+          "혼자 빈 시간에 숨 한 박자씩 느려짐 (해리)",
+          "친구 '너 이상해' 즉각 경계 모드",
+          "유이 반창고 받을 때 한 박자 멈춤",
+          "나리 자고 있는 방 들어갈 때 발소리 완전히 죽임"
+        ]
       },
-      "habits_actions": "TBD - §1.5",
-      "appeal_points": "TBD - §1.6",
-      "background": "TBD - §1.8 (내부 캐논·플레이어 직접 노출 금지)",
-      "scene_perspective": "TBD - §1.9",
-      "relationships": "별도 relationship_matrix.json에서 관리",
-      "inner_voices": {
+      "habits_actions": [
+        "상대 웃음 후 자기 웃음까지 0.5~1초 지연 (W1~W2 명확·W3+ 줄어듦)",
+        "생각할 때 아랫입술 안쪽 살짝 깨물기",
+        "계단 내려갈 때 한 칸씩 양발 모아 (발소리 줄이는 오래된 습관)",
+        "앉을 때 등받이에서 한 주먹 거리 유지",
+        "긴장 시 왼쪽 귀 뒤 헤어핀 무의식 만지기 (W3+ 나리 목격)",
+        "잠들기 전 침대 옆 벽에 오른손 손등 1초 (방 확인)",
+        "새 공간 들어갈 때 출구 위치·발 위치 빠져나갈 각도 잡음 (레이카만 알아봄)",
+        "급식 빠르고 흘리지 않음",
+        "잠들 때 숨 깊어지지 않음 (Act 2 합숙 나리 관찰)"
+      ],
+      "background_author_only": [
+        "중1 (만 13세) 부모 사망 사고·어머니 장도(裝刀) 가문 보관 중·시간 왜곡 트리거 X",
+        "중1~중3 어머니 유품 장도·본인 죽는 꿈 → 데자뷰 → 회피 → 사고 → 별 1 소멸 패턴 3회 (단편 1 시작 = 별 10 → 7)",
+        "중1~15세 폐쇄 생활권·학교/친구 경험 부족",
+        "16세 청학여고 입학·생애 첫 일반 사회·학생증 숨은 권한 본인은 모름"
+      ],
+      "ability": {
+        "name": "자서가(自書家)",
+        "category_v3.7.9ay": "현실조작자",
+        "description": "소리에게 가까운 짧은 근미래 사건이 글을 적을 수 있는 표면과 노트에 문장으로 새겨지고, 소리가 그 문장 일부를 지우거나 바꿔 현실 진행을 비틈",
+        "scope_lock_v3.7.9ay": [
+          "과거 변경 X",
+          "짧은 근미래만",
+          "문장 매개",
+          "일부 지우기 제한",
+          "이름/고유명사 대가",
+          "상위 존재 영향 미미"
+        ],
+        "blood_color": "에메랄드-금색 그라데이션",
+        "scope_short1_lock": "단편 1 본문 직접 노출 금지·본편에서 명명 회수·terminology.md §6 기갑무인 X",
+        "tags_for_extraction": ["forbidden_in_scope:short1", "tier:2", "author_only"]
+      },
+      "scene_perspective": {
+        "surface_goal": "평범한 신입생으로 학교생활 적응",
+        "incident_goal": "실종 사건과 반석·파인 회수 논리 연결 확인·친구 보호",
+        "internal_confusion": "친구 사귀기가 생존 전략인지 진짜 관계인지 구분 불가 (Act 2~3 주제)",
+        "info_strategy": "혼자 적는 메모·도서관 자료·동아리 회의·공식 보고선 X·기록 남기되 누가 읽는지 의심",
+        "exposure_response": "매뉴얼 X·본능 우선·우회 답변·침묵·친구 기대기 순",
+        "failure_condition": "실종자 추가 + 단서 회수 X (Act 3 C 루트)"
+      },
+      "inner_voices_v3.7.2": {
         "type_count": 4,
-        "tags": "TBD - §1.12 4종 내적 목소리 시스템 (decisions.md v3.7.9 단순화)"
+        "tags": ["[심안] 외부 관찰·추리 (D1~D2 최다)", "[연반] 관계·친구 박자 (D3+ 증가)", "[서인] 약속·규율·자기 원칙·기록 권한 (D1~D14 꾸준·위기 ③ 흔들림)", "[공방] 자기 자신 못 속임 (Act 2~3 최다)"],
+        "note": "v3.7.2 이후 문학적 플레이버만·스탯 X·태그 편향은 씬 안 감정 파라미터"
       },
-      "arc": "TBD - §1.13 작중 심경 아크",
+      "arc_per_phase": [
+        {"day": "D1·W1", "core_state": "첫 등교·학생으로 등록된 나 따라 움직임·룸메 나리 첫 대화·룰루 강권 동아리 견학·도서관 방문", "decisive_beat": "노트 자동 기재 첫 시연 + 동아리 합류", "key_flags": ["FIRST_DAY", "CLUB_INVITED", "ROOMMATE_NARI"]},
+        {"day": "D2~D7·W2", "core_state": "명단 공란·게시판 시간 어긋남 발견·기록 따라 이름 없는 자리 의식", "decisive_beat": "나리 공부 약속 수락·기록 바깥 관계 첫 수락", "key_flags": ["CLUE_01", "FRIEND_RANK_NARI=1"]},
+        {"day": "D8~D11·W3", "core_state": "감정 첫 노출·013 사야카 명단 추가 시 미세 반응·학교 기록 시스템 첫 균열", "decisive_beat": "타오 사망 직후 도주·노트 자동 기재와 '불' 우연 말소", "key_flags": ["CLUE_02", "FRIEND_RANK_AOI=1", "TAO_DEAD", "FIRST_ERASURE_UNAWARE"]},
+        {"day": "D12~D14·W4", "core_state": "정비·제3안내문 보스전·4 ending 결과 카드·Act 1 닫힘", "decisive_beat": "비상계단 레이카 '싸움 해 본 적 있지' 받고도 침묵 지킴", "key_flags": ["FRIEND_RANK_RAIKA=1", "RAIKA_READS_YOU=TRUE", "ACT1_CLOSE"]}
+      ],
       "knowledge_state": {
         "known_facts": [
-          {"fact_id": "TBD", "learned_at": "D{N}", "source": "본문 D{N}-S{M}"}
+          {"fact_id": "knot.short1.event.d1-arrival", "learned_at": "D1", "source": "본문 D1-S01~S04"},
+          {"fact_id": "knot.short1.event.d4-library-first", "learned_at": "D4", "source": "본문 D4·4시 메모 인지"},
+          {"fact_id": "knot.short1.event.d5-clubroom-found", "learned_at": "D5", "source": "본문 D5·동아리실 발견·명부 회장 빈 줄 시각"}
         ],
         "unknown_facts": [
-          {"fact_id": "knot.canon.tier2.identity_knot13", "reason": "Tier 2 작가 only"}
+          {"fact_id": "knot.canon.tier2.identity_knot13", "reason": "Tier 2 작가 only·본편 회수"},
+          {"fact_id": "knot.canon.tier2.heo_identity", "reason": "Tier 2·허 = 자허·삼족오위 OB"},
+          {"fact_id": "knot.canon.tier2.librarian_identity", "reason": "Tier 2·도서관장 = 월주"},
+          {"fact_id": "knot.canon.tier2.dokkaebi_essence", "reason": "Tier 2·도깨비 = 달의 위상 이계 유입·삭 전이"}
         ],
         "hidden_facts": [
-          {"fact_id": "TBD", "hidden_from": ["other_chars"], "reason": "TBD"}
+          {"fact_id": "knot.short1.fact.sori_jagaba_ability", "hidden_from": ["all_chars"], "reason": "단편 1 본문 X·점진 발현"},
+          {"fact_id": "knot.short1.fact.sori_jangdo_inheritance", "hidden_from": ["all_chars"], "reason": "별자리 고유명 본문 노출 금지"},
+          {"fact_id": "knot.short1.fact.sori_back_scars", "hidden_from": ["all_chars"], "reason": "본편 떡밥·단편 1 해명 X"}
         ],
         "misunderstandings": []
       },
-      "main_episode_link": "Tier 2 - 13번째 초월체 결 (본편 진입 시 노출·단편 1 본문 X)",
-      "writing_checklist": "TBD - §1.15",
+      "main_episode_link_tier_2": [
+        "본편 13번째 초월체 결",
+        "은 십자 헤어핀 = 어머니 가호 물건·본편 에피 2~3 회수",
+        "장도(裝刀) 별 10개·자서가 매개·본편 에피별 회수",
+        "노트 = 자서가 자동 기재 매개체",
+        "폐쇄 생활권 시절 인연 = 본편 아리아드네 합류 전 매개 가능성",
+        "이름 불릴 때 반 박자 멈춤 = 본편 재회/자각 씬 회수"
+      ],
+      "writing_checklist": [
+        "대사 종결체 W1 초면 존댓말 → 친밀 후 반말·어른 앞 존댓말",
+        "웃음·반응 지연 0.5~1초 (W1~W2)·W3+ 점진 단축",
+        "침묵 '…' 전체 대사 20%+",
+        "헤어핀 언급 (긴장·머리 넘김·나리 관찰 시)",
+        "긴장 시 장도 칼집·노트 모서리·헤어핀·발 위치 중 1",
+        "내적 목소리 태그 1~2개/씬",
+        "분노 W3까지 0회·표정 변화 최소",
+        "캐릭 호칭 표 §1.10 정합",
+        "도서관장 앞 얼어붙음 유지",
+        "헬멧 일체 언급 금지"
+      ],
       "source_provenance": {
-        "primary": "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-characters.md §1",
+        "primary": "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-characters.md §1 (L284~518)",
         "secondary": [
-          "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-character-detail-guide.md",
+          "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-character-detail-guide.md §1 (얼굴상)",
           "C:\\Users\\admin\\Projects\\knot\\briefs\\character_personas\\sori.md",
           "C:\\Users\\admin\\Projects\\knot\\artifacts\\interviews\\20260422-130501-sori.md"
         ]
       },
       "review_status": "candidate",
-      "tags": ["scope:short1", "tier:1", "category:identity"]
+      "tags": ["scope:short1", "tier:1", "category:identity", "commercial_tier:1", "main_link:knot13"]
     },
     {
       "id": "knot.short1.char.nari",
@@ -81,184 +207,1050 @@
       "aliases": [],
       "scope": ["short1"],
       "story_role": "supporting_main",
-      "current_status": "308호 룸메이트·풍기위원장 (단편 1 캐논 lock)",
+      "current_status": "1학년 1반·소리 룸메이트 308호·풍기위원장 (W2 화요일 정식 임명)",
+      "tier": 1,
+      "commercial_tier": "Tier 1",
       "basic_info": {
         "gender": "여성",
-        "ethnic_culture": "한국",
-        "family_name": "TBD"
+        "age": 16,
+        "region_culture": "무공권·한어계",
+        "ethnic": "한어계",
+        "family_name": "없음",
+        "family_status": "일반 가정",
+        "height": 165,
+        "build": "마른 편·근육 위 군더더기 X·무공 견습자 체형"
       },
-      "archetype": "셜록식 관찰 + 패턴 분석",
+      "appearance": {
+        "hair_w1": "어깨 아래 흑발·정리된 앞머리·풀어둔 상태",
+        "hair_w2plus": "흑발 로우 포니테일 (목 뒤) + 짧은 잔머리 귀 뒤 정돈",
+        "face": "백학 상 (白鶴)·길고 정돈된 선·수평 정렬·규율미",
+        "uniform": "청학여고 동복 완벽 착용·조끼 칼주름·리본타이 각",
+        "accessories_w2plus": "왼팔 풍기위 완장 (학년 색 + 한자 風紀)·금박 2줄 리본타이·선학 배지 수평·수첩+가죽 끈·은 시계핀·오른손 검지 은 반지 (가족 유품 추정)",
+        "morphology": "S0"
+      },
+      "archetype": "츤데레 과로 리더 (츤 80% / 데레 20% W4 기준)",
       "voice": {
-        "signature_expressions": "TBD - §2.4",
-        "taboo_words": "큰따옴표 X·외래어 음차 X"
+        "default_speech": "표준 존대/중립 (~요·~니다·~어요·~지)·동급생 반말 평어 혼재",
+        "public_mode": "건조한 격식·'규정입니다·확인하겠습니다'",
+        "private_mode": "급격히 풀림·'…또 늦었어?·내일 시험 같이 공부할래?'",
+        "vocabulary": "한자 어휘 자주 (규정·패턴·입증·근거)",
+        "signature_expressions": [
+          "…또 늦으셨네요.",
+          "이 학교 풍기는 제가 관리합니다. 오해 없으시길.",
+          "시험 전날, 같이 공부하자고 해도 안 될까?",
+          "…너, 오늘 복도에서 두 번 예외 처리된 걸 알고 있었어?",
+          "규정은 학생을 지키기 위해 있는 거야. 잊지 마.",
+          "…내가 틀릴 수도 있어. 그래도 확인은 해야겠어. (Act 2)",
+          "…너한테 묻는 거 맞아."
+        ],
+        "taboo_expressions": [
+          "욕설·비속어 X",
+          "'몰라' 거의 X (대신 '확인 중이야')",
+          "외래어 음차 X·큰따옴표 X"
+        ],
+        "tone_patterns": [
+          "공적 = 낮고 건조·억양 평평",
+          "사적 = 반 톤 높고 박자 약간 빨라짐 (본인 자각 X)"
+        ]
       },
+      "personality_core": {
+        "traits": [
+          "학교를 자기가 지킨다고 믿음·풍기위 완장 = 책임의 질량",
+          "의심이 기본 도구·확정 전 행동 X·관찰의 사람",
+          "거짓말 감정 없이 감지·자랑 X·피곤하게 느낌",
+          "소리를 처음부터 수상하게 읽음·관찰 프로젝트 처리",
+          "혼자 있으면 풀어짐·머리카락 귀 뒤 넘기기 잦아짐",
+          "친구 만들기 어렵다 자각·풍기위 거리 유지·룸메 예외",
+          "승인 욕구 X·자기 기준 엄격·자기 실패 오래 남김",
+          "감정 표현을 말보다 시선으로",
+          "실패 후 자기 반성 길음·W3 기록 균열 후 소리 동선 놓침 자책 3일"
+        ],
+        "vulnerabilities": [
+          "자기 유능함이 사람 피로하게 만든다 스스로 믿음 (외로움)",
+          "소리 비밀 알아내면 → 배신감이 승리감보다 큼·위기 ③ 분기 결정"
+        ]
+      },
+      "habits_actions": [
+        "거짓말 감지 시 눈동자 흔들림 X·상대 턱 끝 봄 (실전 기법)",
+        "공부 중 한 손으로 머리카락 귀 뒤 넘기기 (사적 상태)",
+        "풍기위 완장을 교복 밖 살짝 당긴 뒤 복도 (의례)",
+        "책상 위 필통·교과서·노트 간격 자 댄 듯 균일",
+        "소리 늦게 들어올 때 자는 척 → 10분 후 '…또 늦었어?'",
+        "연필 깎는 각도 30도 (본인 자각 X)",
+        "웃음 전 입가 떨림 (공적 상황 웃음 억누르기 실패 징후)",
+        "혼자일 때만 어깨 한 박자 내려감 (피로·소리만 목격)"
+      ],
+      "ability": {
+        "name": "무공 견습 (학생 상위)",
+        "style": "셜록식 관찰 + 패턴 분석 + 거짓말·미세 표정 감지",
+        "blood_color": "금색 (Gold·v3.7.9o·무공 단일)"
+      },
+      "moe_points": [
+        "완장 + 칼주름 교복 금욕적 정돈",
+        "사적 모드 머리카락 넘기기",
+        "Week 2 공부 같이 하자 첫 제안 (츤데레 데레 해금 1)",
+        "공부 중 졸음 참는 샤프 꾹 쥔 손",
+        "풍기위 보고서 완벽 글씨",
+        "공적 모드에서 소리 이름 부를 때 0.2초 풀어짐 (W4+)"
+      ],
       "knowledge_state": {
-        "known_facts": "TBD",
-        "unknown_facts": "TBD"
+        "known_facts": [
+          {"fact_id": "knot.short1.event.d1-arrival", "learned_at": "D1", "source": "308호 첫 만남"}
+        ],
+        "unknown_facts": [
+          {"fact_id": "knot.short1.fact.sori_jagaba_ability", "reason": "소리 능력 본인도 모름"},
+          {"fact_id": "knot.canon.tier2.heo_identity", "reason": "Tier 2"},
+          {"fact_id": "knot.canon.tier2.librarian_identity", "reason": "Tier 2"}
+        ],
+        "hidden_facts": [
+          {"fact_id": "knot.short1.fact.nari_obs_project_sori", "hidden_from": ["sori"], "reason": "내심 관찰 프로젝트로 처리"}
+        ],
+        "misunderstandings": [
+          {"correct_fact_id": "knot.short1.fact.sori_jagaba_ability", "what_char_thinks": "소리가 *조직 비밀* 숨긴다고 짐작 (실제는 능력)·위기 ③ 분기 핵심"}
+        ]
       },
+      "arc_per_phase": [
+        {"day": "W1", "state": "첫 만남·룸메이트·지각 경고 1회", "sori_temp": "관찰 프로젝트 개시·기초 의심 +0.5"},
+        {"day": "W2", "state": "시험 전 공부 약속 제안 → 수락", "sori_temp": "FRIEND_RANK_NARI=1·데레 첫 박자 (공부 파트너)"},
+        {"day": "W3", "state": "기록 시스템 균열 후 복도 소리 짧게 응시", "sori_temp": "NARI_SUSPICION +0.5 (셜록 모드 재가동)"},
+        {"day": "W4", "state": "자기 관찰 한 박자 봉인·허 당부 수용", "sori_temp": "시선은 피하지 않고 유지·말 걸지 않음"}
+      ],
+      "writing_checklist": [
+        "공적/사적 말투 전환 구분 명확",
+        "완장 언급 (공적 씬)",
+        "턱 끝 보기 동작 (거짓말 의심)",
+        "머리카락 넘기기 (사적 모드)",
+        "손 반지 언급 1회 (자연 노출)"
+      ],
       "source_provenance": {
-        "primary": "worldbuilding/short1-characters.md §2"
+        "primary": "worldbuilding/short1-characters.md §2 (L521~664)"
       },
       "review_status": "candidate",
-      "tags": ["scope:short1", "tier:1", "category:identity"],
-      "fill_status": "TBD - cycle 2"
-    },
-    {
-      "id": "knot.short1.char.lulu",
-      "name": "룰루",
-      "aliases": [],
-      "scope": ["short1"],
-      "story_role": "supporting",
-      "basic_info": {
-        "gender": "여성",
-        "ethnic_culture": "서양 (마법권 혼혈)",
-        "morphology": "S1 케모미미 (작은 여우 귀 + 슬림한 여우 꼬리)"
-      },
-      "archetype": "TBD - §6.2",
-      "morphology_canon_lock": "v3.7.5 로리 정향 lock·v3.7.9azq Vex 정의·v3.7.9azx 혈통환상계",
-      "source_provenance": {
-        "primary": "worldbuilding/short1-characters.md §6"
-      },
-      "review_status": "candidate",
-      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:lori_position"],
-      "fill_status": "TBD - cycle 2"
-    },
-    {
-      "id": "knot.short1.char.aoi",
-      "name": "아오이",
-      "scope": ["short1"],
-      "story_role": "supporting",
-      "basic_info": {
-        "gender": "여성",
-        "ethnic_culture": "일본"
-      },
-      "tags": ["scope:short1", "tier:1"],
-      "fill_status": "TBD - §4 cycle 2"
+      "tags": ["scope:short1", "tier:1", "category:identity", "commercial_tier:1", "subtag:roommate", "subtag:풍기위원장"]
     },
     {
       "id": "knot.short1.char.reika",
       "name": "레이카",
+      "aliases": [],
       "scope": ["short1"],
       "story_role": "supporting_main",
+      "current_status": "1학년 3반·오컬트 동아리 W2 명목 리더 (룰루 등쌀 + 학생회 처리)",
+      "tier": 1,
+      "commercial_tier": "Tier 1",
       "basic_info": {
         "gender": "여성",
-        "ethnic_culture": "일본",
-        "morphology": "S1 늑대 귀 + 꼬리 (피부 문양 X·털 X·v3.7.1)"
+        "age": 16,
+        "region_culture": "무공권·일본어계",
+        "ethnic": "일본어계",
+        "race": "합일 인간 + S1 늑대 수인 (귀+꼬리·피부 문양 X·털 X·v3.7.1)",
+        "family_name": "없음",
+        "height": 170,
+        "build": "길쭉·늘씬·근력 상급이나 평소 힘 뺀 상태"
       },
-      "club_role": "오컬트 동아리 W2 명목 리더",
-      "tags": ["scope:short1", "tier:1"],
-      "fill_status": "TBD - §3 cycle 2"
+      "appearance": {
+        "hair": "롱헤어 흑발·등 중간까지·앞머리 길어 눈가 반쯤 가림·정돈 안 함 습관",
+        "face": "잠든 늑대 상 (眠狼)·나른한 반눈·긴 앞머리·S1 귀·꼬리 실루엣",
+        "morphology": "S1 늑대 (귀 + 꼬리·기본 실루엣 자연 포함·두건/후드/보닛 가림 X)",
+        "uniform": "느슨한 리본타이 (나리 2회 지적)·꽁무니 옆 헤어클립 1개 (자주 잊어버림)·조끼 안쪽 호주머니 오컬트 동아리 은 펜던트 (작은 오망성)",
+        "blood_color": "금-적갈 혼합 (v3.7.9o·무공+S1 늑대 혈통)"
+      },
+      "archetype": "나른한 쿠데레 늑대 수인 (쿠 90% / 데레 10%)",
+      "voice": {
+        "default_speech": "반말 단문 (~지·~해·~네·~야·~거든)",
+        "first_person": "나",
+        "second_person": "너",
+        "japanese_interjections": "~10% (다루이·마아·후우)",
+        "signature_expressions": [
+          "…다루이(귀찮아).",
+          "…너, 싸움 해 본 적 있지?",
+          "…답 안 해도 돼.",
+          "…오늘은 내가 먼저 갈게.",
+          "…귀여워. (룰루 포즈 보고·한 박자)",
+          "…됐어. 가자.",
+          "…음, 좀 자자."
+        ],
+        "silence_state": "기본·말 안 하는 시간이 말하는 시간보다 김",
+        "questions": "거의 X·필요 시만 '…왜?' 한 단어",
+        "system_explanation_taboo": "제3안내문·학적 통신망·정정 절차·잔향·침식 내부 룰 해설 금지·관찰 표현으로 낮춤"
+      },
+      "personality_core": {
+        "traits": [
+          "나른함 = 본성 (위장 X)·힘 빼는 게 디폴트·위기 순간 반 박자 먼저 반응 본능",
+          "보호본능 스스로도 이해 못 할 정도로 강함·소리의 어깨/걸음/시선 W3 어느 시점에 알아봄",
+          "귀·꼬리 본인 대부분 의식 못 함·머리카락 정돈 안 함·감정 노출 새어나가는데 본인 모름",
+          "성별·관계 거리감 동아리 안 가장 평평함",
+          "과거 언급 0·본편 D형질 강 이식 배경 회수",
+          "말하지 않는 것에 가치·소리에 그 원칙 적용",
+          "수업 시간 책상 턱 괴고 창밖·성적 평균보다 조금 위·잠재 머리 좋음",
+          "실종 사건 관심 동아리 컨셉 안에서만·Act 2까지 현실 수사 X",
+          "오컬트 동아리 리더 W1 처음부터 X·룰루 등쌀+학생회 처리로 W2 명목 리더 확정·활동 주도자는 룰루",
+          "단편 1 시스템 룰 사전 인지 X·화면/카드 단어 읽고 반응 가능·해설 X",
+          "위험 판단 = 시스템 지식 아닌 전투 감각·관찰력·몸 반사",
+          "결과 카드/UI 정확한 수치 임계·변조 규칙 설명 X·말없이 먼저 알아차리는 사람"
+        ],
+        "vulnerabilities": [
+          "혼자 있는 시간이 가장 진짜 레이카 (씬 4-3 비상계단)",
+          "보호본능 이유 묻는 순간 → 답이 없음·본인도 모름",
+          "동아리 흩어질 조짐 보이면 가장 먼저 소리 쳐다봄 (본인 자각 X)",
+          "룰루 다쳤을 때 자기 몸보다 반 박자 빨리 움직임",
+          "유이 아플 때 '…괜찮아?' 묻는 유일한 선배 톤"
+        ]
+      },
+      "habits_actions": [
+        "동아리실 창가 책상 엎드린 자세 기본·꼬리 몸 옆 정리",
+        "귀 한 박자 움직임 ⭐ 핵심 (놀람 쫑긋·안심 느슨·경계 곧게·귀찮음 탁탁)",
+        "꼬리 움직임 (놀람 쭈그림·안심 느슨·경계 곧게·귀찮음 탁탁)",
+        "창밖 자주 봄·딴 생각",
+        "동아리 회의 중 한쪽 팔 괴고 듣기만",
+        "소리에게 스쳐 지날 때 손 닿지 않는 거리 의식적 유지",
+        "하품 시 한 손 입 살짝 가림 (송곳니 노출 회피·자각 있음)",
+        "앉을 때 꼬리 깔리지 않게 한 박자 정렬"
+      ],
+      "ability": {
+        "level": "숨긴 무공 잠재 상급 (표면 X)",
+        "irregular_v3.7.9p": "S1 수인 혈통 + 무공 = 이레귤러 X (S1 = 혈통 형질)·다만 수인 본능 + 기 격발 시 본능 폭주 위험·숙련 억제가 평소 늘어진 태도의 기능적 이유",
+        "terminology_v3.7.9": "S1 수인 = 별도 분류·교차점 집단 미소속·2권역 이레귤러 X"
+      },
+      "knowledge_state": {
+        "known_facts": [
+          {"fact_id": "knot.short1.event.d5-clubroom-found", "learned_at": "D5 (자고 있음)", "source": "본문 D5"}
+        ],
+        "unknown_facts": [
+          {"fact_id": "knot.short1.fact.sori_jagaba_ability", "reason": "본인도 시스템 룰 모름"},
+          {"fact_id": "knot.canon.tier2.heo_identity", "reason": "Tier 2"},
+          {"fact_id": "knot.canon.tier2.librarian_identity", "reason": "Tier 2"}
+        ],
+        "hidden_facts": [
+          {"fact_id": "knot.short1.fact.reika_sori_observation", "hidden_from": ["sori"], "reason": "W3 시점 소리 어깨/걸음/시선 알아봄·말 X"}
+        ]
+      },
+      "writing_checklist": [
+        "반말 단문·문장 짧음 유지",
+        "귀 한 박자 움직임 감정 누출 필요 장면에만",
+        "일본어 감탄사 다루이/마아/후우 중 1",
+        "창가 책상 엎드린 자세 (동아리실)",
+        "꼬리 자연 묘사·포커스 주목 X",
+        "제3안내문·학적 통신망·잔향·침식 시스템 내부 룰 해설 X·관찰 표현"
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §3 (L667~830)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity", "commercial_tier:1", "subtag:S1_wolf", "subtag:club_w2_leader"]
+    },
+    {
+      "id": "knot.short1.char.aoi",
+      "name": "아오이",
+      "aliases": [],
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "current_status": "1학년 2반·오컬트 동아리 총무·실무 (예산·규칙·잠입 기록)",
+      "tier": 2,
+      "commercial_tier": "Tier 2 (단체 샷 1회·여백 엄수)",
+      "basic_info": {
+        "gender": "여성",
+        "age": 16,
+        "region_culture": "무공권 재학 + 사펑 적성 심화 수업 대상",
+        "ethnic": "일본어계",
+        "family_name": "없음",
+        "height": 162,
+        "build": "마른 편·책상 생활"
+      },
+      "appearance": {
+        "hair": "검은 세미 롱·오른쪽 사이드 테일 (낮게 묶음)",
+        "face": "밤부엉이 상 (夜梟)·안경 뒤 관찰자 눈·피로한 총무 인상",
+        "accessories": "사각 검정테 안경·블라우스 가슴 포켓 펜 2자루·영수증 클립보드·허리 영수증 집게·학생회 보조 브로치·손목 얇은 은 팔찌",
+        "morphology": "S0",
+        "blood_color": "청록 형광 (Cyan·v3.7.9o·사펑 단일)"
+      },
+      "archetype": "성실 천연 예산관리자·쿨덤·천연 실무형",
+      "voice": {
+        "default_speech": "동기생·동아리 내 반말 평어 (~야·~어·~지·~잖아·~해)",
+        "public_mode": "공적 격식 존대 (~요·~니다)",
+        "vocabulary": "숫자·문서·규정 (예산·기록·로그·서명·서류)",
+        "japanese_interjections": "최소 (실무 톤·일본어계지만 자국어 혼재 가장 적음)",
+        "signature_expressions": [
+          "…규정이 실제로 있는지는 묻지 마. 내가 오늘 하나 만들어 놨어.",
+          "…그래서 네가 옆에 있어 줬으면 좋겠어.",
+          "…그건 제가 알 필요 없는 것 같아요. (공적 톤)",
+          "…풍기위 동선 리스트에서 두 번 예외 처리돼 있어.",
+          "…씨도 빼. 그냥 아오이라고 해.",
+          "기록은 남기되 해석은 안 해. 그게 내 일이야. (Act 2)"
+        ],
+        "taboo_expressions": ["감정 과장 X (대박·헐 X)", "외래어 음차 X"]
+      },
+      "personality_core": {
+        "traits": [
+          "예산·규칙 입으로 엄격·손으로 본인이 마무리",
+          "거짓말 감지 = 서류·숫자 불일치 기반 (나리는 관찰 기반)",
+          "W3 동아리실 회의 동석·출석부 균열·사야카 정보 같이 들음·W4 정비 씬에서 보탬",
+          "소리 정체 W4 짐작·추궁 X·내가 알 필요 없는 건 묻지 않음 실무주의",
+          "사펑 해킹 = 취미 + 일·교내 단말기 로그 즐김·과시 X",
+          "감정 서툼·실무로 애정 표현·소리가 뒤늦게 알아냄",
+          "진짜 친구 기준 높음·같이 일 할 수 있는 사람·W4 기준 레이카·나리·소리 셋만"
+        ],
+        "vulnerabilities": [
+          "감정 표현 서툼·고맙다·미안하다 말로 못 함·서류로 대신",
+          "혼자 밤 뒷정리 졸아 책상 엎드림 1회 (Act 2 소리 목격)",
+          "서류 실수 안 지적해도 사흘 자책",
+          "친구 부상 시 반창고·약 빠른데 '…괜찮아?'는 한 박자 늦음"
+        ]
+      },
+      "habits_actions": [
+        "교복 포켓 펜 두 자루 (실무 준비성)",
+        "대화 중 서류 정렬 (긴장 분산)",
+        "웃음 한 박자 뒤 '…후훗'",
+        "단말/자료 화면 손가락 두드리는 리듬",
+        "안경 다리 한 번 올리고 내림 (집중 진입)",
+        "클립보드 품에 끌어안고 걷기",
+        "계산할 때 손가락 먼저 (자각 X)"
+      ],
+      "ability": {
+        "category": "사펑 계열·정보·재무 해킹",
+        "tools": "학생회 자료·교내 로그·출입 기록 정리"
+      },
+      "knowledge_state": {
+        "known_facts_partial": "동아리 예산·풍기위 동선 리스트·교내 출입 기록",
+        "tier_2_concealed": ["허·도서관장 정체·도깨비 본질"]
+      },
+      "writing_checklist": [
+        "안경 올리기 (집중 씬)",
+        "서류·클립보드 자연 배치",
+        "'아오이 씨' → '아오이' 호칭 전환 W3 기점",
+        "반말 평어 기본·공적 시만 존대"
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §4 (L834~966)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:2", "category:identity", "commercial_tier:2", "subtag:club_general_affairs"]
     },
     {
       "id": "knot.short1.char.nana",
       "name": "나나",
+      "aliases": [],
       "scope": ["short1"],
       "story_role": "supporting",
+      "current_status": "1학년 3반·오컬트 동아리 현장 잠입 담당",
+      "tier": 2,
+      "commercial_tier": "Tier 2 (단체 샷 1회·여백 엄수)",
       "basic_info": {
         "gender": "여성",
-        "ethnic_culture": "서양"
+        "age": 16,
+        "region_culture": "무공권 재학 + 사펑 적성 심화 수업 대상 (서방어계)",
+        "ethnic": "서방어계",
+        "family_name": "없음",
+        "family_background_tier_2": "서방어계 이주 2세대 추정·부모 반석 중공업 하급직",
+        "height": 166,
+        "build": "탄탄·무공 격투 훈련 흔적"
       },
-      "club_role": "오컬트 동아리 잠입 담당",
-      "tags": ["scope:short1", "tier:1"],
-      "fill_status": "TBD - §5 cycle 2"
+      "appearance": {
+        "hair": "플래티넘 은발 단발·어깨선 살짝 위·끝이 안쪽으로 정리",
+        "eyes": "푸른 눈·무표정 기본",
+        "face": "은여우 상 (銀狐)·은발·푸른 눈·무표정 잠입자",
+        "accessories": "달 모양 머리핀·오른쪽 귀 얇은 은 이어 커프 1개·낮게 묶은 신발끈·소매 안쪽 납작한 카드 케이스·무음 사펑식 손목 밴드 (검정)·블레이저 속 경량 호신 단검",
+        "morphology": "S0",
+        "blood_color": "에메랄드-금색 그라데이션 (v3.7.9o·무공+사펑 이레귤러)"
+      },
+      "archetype": "무표정 쿠데레 서양 미소녀 (쿠 95% / 데레 5%)",
+      "voice": {
+        "default_speech": "짧은 평어 (~다·~지·~해)·중립체",
+        "first_person": "나",
+        "second_person": "이름 호칭 또는 '너'",
+        "western_interjections": "~10% (자연 혼재)",
+        "western_loanwords_taboo_v3.7.9": "본문 외래어 음차 금지 (Yes·Ok 등)·한국어 시그니처로 대체 (좋아·응 등)",
+        "signature_expressions": [
+          "…괜찮아.",
+          "…가자.",
+          "단말, 내가 지운다.",
+          "…어묵 하나 더.",
+          "…(이름). 가자."
+        ],
+        "sentence_length": "3~5어절·5어절 넘는 경우 드묾",
+        "taboo_expressions": ["감정 과장 X·장문 설명 일체 X"]
+      },
+      "personality_core": {
+        "traits": [
+          "무표정 기본·특정 상황 과감하게 돌진 (친구 위험·증거 회수)",
+          "이 돌진력 위기 ② 해결 트리거 (단말 증거 소거)",
+          "말수 적지만 좋아하는 대상 (도깨비 어묵·치비·고양이) 한 박자 더 시선",
+          "소리 초반 무관심·W4+ 천천히 관심 누적·시선 길어짐으로만 표현",
+          "말 표현 거의 X·행동·선물·자리 내주기",
+          "집요함 방향: 한번 관심 생긴 대상 오래 지켜봄·1년 지나도 그대로"
+        ],
+        "vulnerabilities": [
+          "감정 표현 너무 적어 친구들이 본인 마음 놓침·외로움 자각 가끔",
+          "어묵 가게 치비와 눈 마주치면 살짝 시선 피함 (표현법 모름)",
+          "친구 부상 시 말 없이 옆에 서 있기만 함 (나나식 위로·아오이만 알아봄)",
+          "소리 '나나 고마워' 하면 한 박자 눈 깜빡임·말 답 못 함"
+        ]
+      },
+      "habits_actions": [
+        "상체 거의 X·목만 돌려 시선 옮김",
+        "좋아하는 것 앞 눈 반 박자 더 머무름 (무표정 유지 중)",
+        "근접전 준비 자세·허리·어깨 긴장도 다른 애들보다 약간 낮음 (숙련자 평온)",
+        "걷는 속도 일정",
+        "앉을 때 등 완전히 기대지 않음 (소리와 비슷·경계 습관 공통)",
+        "단말 만질 때 손가락 거의 X·최소 동작"
+      ],
+      "ability": {
+        "category": "무공 격투 + 외부 사펑 단말·근접전·손목 밴드/해킹 인터페이스 양용·의체 삽입 X",
+        "irregular_v3.7.9p": "이레귤러 무공+사펑 (외부 단말형)·외부 매개로만·의체화 X·기갑무인 X·기 운용 지장 회피·주화입마 경계선에서 의식적으로 단말 안 심는 선택"
+      },
+      "knowledge_state": {
+        "tier_2_concealed": ["허·도서관장 정체·도깨비 본질"]
+      },
+      "writing_checklist": [
+        "문장 3~5어절 유지",
+        "시선 길어짐으로 호감 표현",
+        "이어 커프·손목 밴드 첫 등장·클로즈업·정비 장면에서만 선택적",
+        "무표정 유지·갭은 미세 박자로만"
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §5 (L969~1100)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:2", "category:identity", "commercial_tier:2", "subtag:club_infiltrator"]
+    },
+    {
+      "id": "knot.short1.char.lulu",
+      "name": "룰루",
+      "aliases": ["Vex (자칭 악당명·무대용 페르소나명·v3.7.9azq 락)"],
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "current_status": "1학년 2반·오컬트 동아리 컨셉 메이커",
+      "tier": 1,
+      "commercial_tier": "Tier 1 (훅 담당·포스터·트레일러·굿즈)",
+      "lori_position": "2/2 (v3.7.5)",
+      "basic_info": {
+        "gender": "여성",
+        "age": 16,
+        "region_culture": "무공권 재학 + 청학여고 마법 적성 심화 수업 대상 + 선학 전액 장학 권유로 진학 + 표면 파인 지망 + 실제 마법권 유학 동경 미정리 잔존",
+        "ethnic": "서방어계·마법권 수인계 선주민 옅은 혼혈",
+        "family_status_tier_2": "마법권 이주 1세대 부모·룰루는 가족 이야기를 진로 핑계로 쓰지 않으려 함",
+        "height": 150,
+        "build": "작음·교복 체구보다 살짝 크게 보임"
+      },
+      "appearance": {
+        "hair": "금발 두 갈래 (트윈테일)",
+        "morphology": "S1 케모미미 — 작은 여우 귀 + 슬림한 여우 꼬리 (금색/크림 톤·룰루 금발 트윈테일과 동조)",
+        "face": "작은 소악마 상 (小惡魔)·작은 여우 귀·꼬리·망토·악당 코스프레와 허당 갭",
+        "uniform": "감청 망토 (교복 위·교칙 위반 누적)·악당 스타일 스터드 벨트 (악당 코스프레 컨셉)·동아리 오컬트 뱃지 (가슴)·손목 굵은 가죽 밴드 (오컬트 시계·장난감 급)",
+        "magic_props": "서브 완드 (가방 안쪽 15cm 호신용 소품)·마법사 길드 수습 ID·아카데미 예비과 12세 기초/체험 수료증 — 모두 단편 1에서는 과거 흔적·오컬트 소품으로 보이며 성공 주문 시전이나 정규 교육 수료 증거로 쓰지 않음",
+        "blood_color": "자색-은색 혼합 (v3.7.9o·마법+S1 케모미미 혈통)"
+      },
+      "archetype": "겐키 허당 폰코츠 케모미미 로리·악당 코스프레 + 어설픔 + 작은 체구",
+      "voice": {
+        "default_speech": "활기찬 평어 (~지!·~야!·~해!·~다!)",
+        "western_interjections": "강렬·컨셉 대사 (Vex! 외 'Yes'·'Ugh' 같은 외래어는 한국어 시그니처로 대체·v3.7.9 외래어 룰)",
+        "vex_definition_v3.7.9azq": "자칭 악당명·무대용 페르소나명·동아리 컨셉 키워드 (Vex 연구회·canon.md L127)",
+        "vex_signature": "Vex다! 룰루라 부르지 마! (자칭 악당명 호명 + 본명 거부 2단)",
+        "vex_inner_truth": "본인 속내: 룰루로 불리길 원함·Vex 컨셉은 미정리 감정(마법권 유학 동경) 가볍게 덮는 무대 장치",
+        "signature_expressions": [
+          "Vex다! 룰루라 부르지 마!",
+          "우리 동아리가 제일 수상해!",
+          "…아니, 농담이야. 진짜는 그게 아니라…",
+          "못 간 거 아니야. 안 간 거야. (후속부 장학·진로 깊어진 직후)",
+          "…어? 진짜야? (잘못된 단서 놓친 직후)",
+          "I'll destroy you! (악당 컨셉 분노)"
+        ],
+        "voice_tone": "동아리 내 최고·복도에선 본인도 의식해서 낮춤"
+      },
+      "personality_core": {
+        "traits": [
+          "악당 컨셉 100% 포즈·본인도 알고 계속함·동아리 컨셉 유지",
+          "허당이지만 본능적으로 압박 시 진짜 감정·인간미",
+          "실종 사건 잘못된 단서 자주 던짐 (오해 주도형)·진짜 단서 배경 부각",
+          "환상계는 없는 거짓 만드는 힘 X·이미 있는 단서의 주목 순서 비트는 힘·본인은 '연출' 또는 '감'으로 착각",
+          "선학 전액 장학 권유 받아 청학여고 진학·돈 때문에 마법권 유학 못 간 게 X·선학 장학·진로 루트 선택 후 합리화",
+          "Vex 컨셉 = 미정리 감정 가볍게 덮는 무대 장치·장학·진로 후속부에서만",
+          "혼자 있는 시간 작아짐·악당 컨셉 팀 있을 때만·혼자 동그랗게 앉아 창밖 (유이만 목격)",
+          "친구 = 나를 룰루라고 불러주는 사람·Vex다 외치면서도 속으론 이름 불리기 원함"
+        ],
+        "vulnerabilities": [
+          "선학 장학 루트 선택 후에도 마법권 유학 동경 완전히 못 버림·장학·진로 얘기 나오면 방어적·과장된 Vex 포즈로 덮음",
+          "압박 시 인간미 노출·일회용 X·친구 관계 확장 트리거",
+          "실제 능력 본인도 완전히 설명 못 함·단편 1 = 감각·시선 유도·짧은 마력 반응·소품 단서 수준",
+          "이름 불리면 한 박자 멈춤 (소리와 유사 패턴·룰루는 애칭 때문)"
+        ]
+      },
+      "habits_actions": [
+        "귀 쫑긋 = 감정 노출 ⭐ 메인 서비스 장치",
+        "손 과장되게 크게 써 포즈 (작은 체구 + 큰 동작 갭)",
+        "망토와 벨트 장식 자주 고쳐 씀",
+        "말하다 귀 움직이면 본인 모름 (레이카처럼 무자각)",
+        "높은 데 닿을 때 발끝으로 섰다가 넘어질 뻔 (유이가 붙잡음)",
+        "신발 끈 자주 풀림 (달리기 빠른데 매듭 허당)",
+        "망토 펼치면 주변 시선 망토 끝·보닛 리본·게시판 장식 같은 엉뚱한 곳으로 먼저 끌림 (단편 1 본인도 마법으로 인지 X)"
+      ],
+      "ability": {
+        "name": "혈통환상계 (Haima-Phantasia)·v3.7.9azx",
+        "support": "보조 소형 결계",
+        "scope_short1": "대형 사건 메인 이벤트 X·위기 때 시선 유도·감각 오독·짧은 마력 반응·소품 단서 정도로만 노출",
+        "irregular_v3.7.9p": "혼혈 환상계 미세 발현·마법권 정식 교육 미수료·마력 제어 루틴 없음·단편 1 = 대형 사건 대신 감각 이상·시선 유도·짧은 마력 반응·소품 단서·장기적 마력 제어 붕괴·자멸 가능성",
+        "terminology_v3.7.9": "현재 마법 단일·잠재 마도기인 가능성·의체 개조 시 마력 그릇 손실로 회피 권고·S1 혈통 별도 분류"
+      },
+      "knowledge_state": {
+        "tier_2_concealed": ["허·도서관장 정체·도깨비 본질"]
+      },
+      "writing_checklist": [
+        "Vex다! 첫 등장·컨셉 소개·활기 장면에서만·W3~W4 호러/보스전 0회 허용",
+        "귀 쫑긋 (감정 노출 시)",
+        "작은 체구 유지·의자·책상·교복 실루엣 언급",
+        "유이 콤비 활용 (동아리 씬)",
+        "귀·꼬리 기본 실루엣 포함·색·질감·크기 디테일 소비·과한 클로즈업만 제한",
+        "환상계 = 없는 단서 생성 X·시선 유도·오독으로만",
+        "소형 결계 = 망토·뱃지 주변 짧은 방호막 정도로만 암시",
+        "서브 완드·수습 ID·수료증 = 소품/과거 흔적·성공 주문 시전·전투 발현·정규 교육 수료처럼 쓰지 않음"
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §6 (L1103~1262)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity", "commercial_tier:1", "subtag:lori_position", "subtag:S1_fox", "subtag:club_concept_maker"]
     },
     {
       "id": "knot.short1.char.yui",
       "name": "유이",
+      "aliases": [],
       "scope": ["short1"],
       "story_role": "supporting",
+      "current_status": "1학년 4반·오컬트 동아리 정보 연결·응급 연성 담당",
+      "tier": 3,
+      "commercial_tier": "Tier 3 (NG+ 전용)",
+      "lori_position": "1/2 (v3.7.5)",
       "basic_info": {
         "gender": "여성",
-        "ethnic_culture": "일본"
+        "age": 16,
+        "region_culture": "마법권 (일본어계·무공권 학교 재학) + 청학여고 마법 적성 심화 수업 대상 (v3.7.9azah)",
+        "ethnic": "마법권·일본어계 가족 환경 (친조부모)",
+        "family_name": "없음",
+        "height": 145,
+        "build": "가장 어림"
       },
-      "club_role": "오컬트 동아리 응급 연성 담당",
-      "tags": ["scope:short1", "tier:3", "subtag:lori_position"],
-      "fill_status": "TBD - §7 cycle 2"
-    },
+      "appearance": {
+        "hair": "검은 중단발·앞머리 무겁게 내림",
+        "eyes": "눈매 날카로움·무서운 인상 (본인 의도 X)",
+        "face": "작은 검은 토끼 무드 (黑兎)·작은 체구·무거운 앞머리·무서운 눈매와 응급 연성 갭",
+        "key_lock": "키 매우 작음·반 친구들 중 최단신·소리 어깨 아래·의자 다리 바닥에 닿지 않아 발 반 뼘 떠 있음",
+        "uniform": "재킷 소매 한 번 접어 올림·이마 작은 반창고·밴드 (상처 가림·자주 교체)·흰색 이어폰 한 쪽 상시 (집중 습관·마법 매개체 X)·허리 작은 응급 키트 파우치·가슴 포켓 작은 배려 물건 (사탕·반창고 메모)",
+        "morphology": "S0",
+        "blood_color": "자색 (v3.7.9azw·마법 단일)"
+      },
+      "archetype": "무서운 인상의 응급 연성 상식인 로리·4중 갭 (인상↔체구↔상식인↔다정한 손이 사실 물성 바꾸는 손)",
+      "voice": {
+        "default_speech": "반말 단문 평어 (~다·~어·~야·~지)·말수 적어 종결체 자체 짧음",
+        "public_mode": "공적 격식 (교사 앞) 시 존대 전환",
+        "sentence_length": "한 번에 5~7자 이하 발화 표준",
+        "japanese_interjections": "최소 (엣또 음… 등)",
+        "external_loanwords_taboo_v3.7.9": "엣또 같은 외래어는 한국어 시그니처로 대체 (예: 저기·아…)",
+        "signature_expressions": [
+          "…반갑다.",
+          "빵 사준 적 없어.",
+          "크림빵은 네가 훔친 거야.",
+          "…저기, 이건 먼저 고정. (외래어 음차 X·v3.7.9 룰)",
+          "…괜찮아? (동아리 흔들릴 때 가장 먼저)",
+          "…물, 마실래?",
+          "소리. 너. (이름 + 짧은 호명)",
+          "낫는 거 아니야. 버티게 하는 거야. (본편/NG+ 자각 후)"
+        ]
+      },
+      "personality_core": {
+        "traits": [
+          "조용하지만 모두의 상식 브레이크·동아리 흔들릴 때 가장 먼저 '괜찮아?'를 한 박자 느리게",
+          "작은 것 (찻잔·반창고·정돈된 도구·창문 너머 풍경) 은근한 애정",
+          "피해자 정보망 개인 관리 → 외부 실종자 구출률 보너스 루트 (Act 2~3)",
+          "겁 많고 잘 놀라지만 친구 다친 직후 가장 먼저 붕대 꺼냄",
+          "무서운 인상에 대한 자각 있음·눈 마주칠 때 한 박자 피함은 그 배려",
+          "도구 제자리 안심·응급 키트 순서 바뀌면 말없이 다시 정렬",
+          "가장 나이 많은 누나 역할처럼 행동·본인이 제일 작은 게 아이러니"
+        ],
+        "vulnerabilities": [
+          "자기 인상이 친구 사귀기 어렵게 한다고 내심 위축",
+          "본인 부상 숨김·이마 반창고 늘어도 말 안 함",
+          "룰루 다치면 가장 먼저 손 뻗음 (콤비 보호 본능)",
+          "친구 '유이 무서워' 농담해도 반 박자 굳음 (본인이 진심 아닌 걸 알아도)",
+          "체구 놀림 받으면 조용히 사라짐 (동아리 밖)",
+          "연금 변환계 미인지 (v3.7.9azx)·테이프 너무 단단히 붙거나 거즈 순간 뻣뻣 경험·본인은 재질 문제·손힘·우연 오인",
+          "변환계는 복구 X·물성 변경·잘못 쓰면 더 조이거나 굳어 사고·본능적으로 큰 변화 피하고 작은 고정만"
+        ]
+      },
+      "habits_actions": [
+        "눈 마주칠 때 한 박자 피한 뒤 돌아옴",
+        "가방에 소형 응급 키트 상시 (가방이 체구에 비해 커 보여 한쪽 기울어짐)",
+        "이어폰 집중 시 한쪽만·대화할 때 빼는 건 친구 말 놓치지 않으려·마법 매개체 X",
+        "교실 책상 의자 다리 바닥에 닿기엔 한 뼘 짧음 (보조 발판 사용 가능)",
+        "교복 재킷 소매 한 번 접어 올려 손 나옴 (오버사이즈 자연 연출)",
+        "응급 키트 손동작 빠르고 정확·거즈→테이프→붕대 순서 의식 X로 맞춤",
+        "친구 앞에서 이마 반창고 만지는 일 거의 X (자기 아픔 안 드러냄)"
+      ],
+      "ability": {
+        "name": "연금 변환계 (Metamorphosis·소재변환)·v3.7.9azx",
+        "tools": "응급 키트의 거즈·붕대·의료 테이프·소독액 같은 작은 물건 성질 변환·고정·봉합·제한·임시 방어",
+        "not_what": "회복 주문/음악 마법 X",
+        "scope_short1": "정확한 손놀림과 응급 키트 담당으로만·본편/NG+에서 자각",
+        "main_recovery_v3.7.9azx": "본편 에피 4 결단 — 나나 무공 격투 + 유이 응급 연성 = 전투·구조 클라이맥스"
+      },
+      "knowledge_state": {
+        "tier_2_concealed": ["자기 능력 미인지·허·도서관장·도깨비"]
+      },
+      "writing_checklist": [
+        "문장 5~7자 이하",
+        "응급 키트 언급 (위험·사소한 부상 처리·도구 정리)",
+        "눈 마주칠 때 한 박자 피함",
+        "이마 반창고 자연 묘사",
+        "단편 1 연금 변환 직접 노출 X (손재주·재질 우연 정도로만)",
+        "회복 주문/치유 마법/음악 마법 사용 X"
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §7 (L1265~1407)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:3", "category:identity", "commercial_tier:3", "subtag:lori_position", "subtag:club_emergency_alchemy"]
+    }
+  ],
+  "supporting_cast": [
     {
       "id": "knot.short1.char.heo",
       "name": "허 (虛)",
-      "internal_name": "자허(子虛)",
+      "internal_name_tier_2": "자허(子虛)·사기 자허부 차용·단편 1 본문 노출 금지",
       "scope": ["short1"],
       "story_role": "supporting_npc",
-      "current_status": "도서관 사서·집사 톤·~십시오/~ㅂ니다 형식",
+      "current_status": "도서관 사서·안내자·집사 톤·~십시오/~ㅂ니다 형식",
+      "tier": 2,
+      "basic_info": {
+        "gender": "남성",
+        "age_external": "60대 노신사",
+        "age_actual_tier_2": "600년+ (단편 1 일체 미언급)",
+        "region_canon_tier_2": "마법 적성 (단편 1 본문 X·UI·대사·전투 일체 노출 X)",
+        "blood_color_tier_2": "비공개·자색 기반 + 자허 봉인 색 변질 가능성·출혈 장면 회피"
+      },
+      "appearance": {
+        "hair": "회색 머리·뒤로 넘긴 올백·목덜미까지",
+        "glasses": "얇은 안경테·렌즈 2개",
+        "build": "중키·손이 가늘고 긴",
+        "telltale_calluses": "손가락 끝에 굳은살 1~2개·플레이어가 무공권 인물로 오인하게 만드는 단서·실제는 마법권 (반전 후속 보존)",
+        "uniform": "셔츠+카디건+조끼·회색 크로스타이·납작한 은제 서표 (책갈피·중앙 빈 사각형·후속 전투 회수 시 무기성)·겨울 울 코트"
+      },
+      "archetype": "멀리서 한 박자 먼저 보는 멘토 노신사·연기가 완벽한 사람",
       "voice": {
-        "tone_lock": "집사 톤 (~십시오·~ㅂ니다)",
-        "taboo_expressions": "~네요·~지요·~거예요·챙기다 회피"
+        "tone_lock": "집사 톤·~습니다·~지요·~십시오 (중간에 풀리는 일 X)",
+        "addressing_sori": "당신·소리 양 (학생·넌 절대 X)",
+        "taboo_expressions": ["~네요 X", "~지요 X 회피", "~거예요 X", "챙기다 X", "감탄사 (와·헉) X", "강조어 (정말로·진짜로) X", "유행어 X", "외래어 음차 X"],
+        "vocabulary": "한자 자연 노출 (結·氣·文鎭·정비 서고)",
+        "signature_expressions": [
+          "오셨습니까. 앉으시지요.",
+          "…예.",
+          "…어울리는 글자입니다.",
+          "…저는 오늘 당신을 가르칠 입이 없습니다.",
+          "받으시는 쪽도 용기입니다.",
+          "이번 사람은 늦지 않도록. (혼잣말·씬 3-4)"
+        ]
+      },
+      "personality_core": {
+        "traits": [
+          "연기 완벽·학생·교직원 누구도 이상하다고 못 느낌·친절·유머·배려 진심 반·연기 반·본인은 둘의 경계 잊었음",
+          "가르치지 않는 선생·명령·훈계 X·'고르시지요·말씀하시지요' 선택권 상대에게·소리 스스로 자라게",
+          "도서관장 앞에서만 다른 사람·평소의 여유 + 깊어진 시선·소리 2~3회 우연 목격 (추리 단서 #8·본편 회수)",
+          "600년 관록의 대기·급하지 않음·대화 한 박자 쉬는 것은 잊어서가 아니라 공간 주는 습관",
+          "자기 과거 본문에 비치지 않음·단편 1 자기 개시 0·허 더 말하지 않는 공간이 유일한 장치"
+        ]
+      },
+      "habits_actions": [
+        "카드 한 번에 한 장씩 테이블 가운데 밀어 둠 (던지지 X)",
+        "대화 중 안경 만지지 X·긴장 시 시선이 반 박자 내려감",
+        "결(結) 카드 소리 쪽 보낼 때 카드 뒷면만 밂 (앞면 돌리지 않음·결정 상대에게 남기는 태도)",
+        "웃음 작게 한 박자·치아 노출 X·눈꼬리만 반 박자 내려감",
+        "서랍 열 때 소리 X·닫을 때 의도적 한 박자 소리 (씬 리듬 끊는 장치)"
+      ],
+      "tier_2_secrets": {
+        "name": "자허(子虛)·사기 자허부 차용",
+        "lifespan": "600년+",
+        "history": "600년 전 정념 사서·아내 복수 사건으로 제명·이후 제국과 계약 하수인",
+        "relationship_with_librarian": "월주(도서관장)와의 관계·단편 1 외부 폭로 영역·노출 금지",
+        "region_actual": "마법 적성 (반전·후속 폭로용 보존)",
+        "combat_capacity": "마법사임에도 순수 육체 강함만으로 무공권·사펑권 고수 어지간한 사람 이김·단편 1 X",
+        "reveals_forbidden_in_short1": ["본명 자허", "600년 수명 암시조차 X", "과거 조직·전투 이력", "아내·개인 비극 (먼지 낀 사진첩 간접 암시 prop만 Act 3 또는 NG+ 트리거 허용)", "도서관장과의 정확한 관계성"]
       },
       "knowledge_state": {
-        "tier_2_secret": "삼족오위 OB·실제 정체"
+        "tier_2_known": ["자기 정체·도서관장 정체·결 정체·소리 능력 (자서가) 추정·과거 사건 전체"],
+        "concealed_in_short1": "전부"
       },
-      "tags": ["scope:short1", "tier:2", "forbidden_in_scope:short1", "subtag:author_only_identity"],
+      "arc_per_phase": [
+        {"week": "W1", "state": "지하 도서관 첫 안내·당신 호칭 확립", "approach_to_sori": "거리 유지·카드·규칙만"},
+        {"week": "W2", "state": "소리 첫 감정 미세노출 관찰", "approach_to_sori": "한 박자 더 기다림·어울리는 글자 호감 한 장"},
+        {"week": "W3", "state": "밤의 학교 규칙 전조 이후 침묵 보호", "approach_to_sori": "훈계 거부·가르칠 입이 없습니다·공간 한 박자"},
+        {"week": "W4", "state": "서명 없는 문서 직접 노출 (CLUE 03)·1월령 클로즈", "approach_to_sori": "네 가지 목록 선언·결(結) 카드 서랍에 봉"},
+        {"act": "Act 2", "state": "공식 지휘 계통 외 자체 판단 가속", "approach_to_sori": "보호 위해 라인 밖으로 한 걸음씩"},
+        {"act": "Act 3", "state": "이중 의도 폭로 (선택지: 알아냄 vs 끝까지 보호)", "approach_to_sori": "엔딩 따라 희생·단절·봉인 분기"}
+      ],
+      "writing_checklist": [
+        "종결체 ~십시오/~ㅂ니다 고정·중간 풀림 X",
+        "호칭 '당신'·'소리 양' 고정·'학생'·'넌' X",
+        "받아주는 어법 (예·그렇지요·…예)",
+        "도서관장 앞 사적 한정 살짝 놀리는 반격 어법",
+        "한자 어휘 자연 노출 (結·氣·文鎭)",
+        "감탄사·강조어·유행어 X",
+        "본명 자허·600년·과거 일체 본문 노출 X",
+        "tier:2 author_only·forbidden_in_scope:short1 strict"
+      ],
       "source_provenance": {
-        "primary": "stories/short1-school.md §도서관 사서",
-        "memory_pointer": "knot-hur-voice.md (Claude memory)"
+        "primary": "worldbuilding/short1-characters-supporting.md §1 (L103~209)",
+        "memory_pointer": "knot-hur-voice.md (집사 톤 lock)"
       },
-      "fill_status": "TBD - cycle 2"
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:2", "category:identity", "subtag:librarian", "forbidden_in_scope:short1", "subtag:tier2_identity_hidden"]
     },
     {
-      "id": "knot.short1.char.dokkaebi.tora",
-      "name": "토라",
+      "id": "knot.short1.char.librarian",
+      "name": "도서관장",
+      "aliases_public": ["그분"],
+      "internal_name_tier_2": "월주 (13 초월체의 月·삼두군주 1인·canon §천년+)",
       "scope": ["short1"],
-      "story_role": "npc_mascot",
+      "story_role": "supporting_npc·INTERNAL_ONLY",
+      "current_status": "1회차 완전 부재 (v3.7.9s)·2회차+ 점진 가시화·메타 감지 트리거",
+      "tier": 2,
       "basic_info": {
-        "morphology": "도깨비·금빛·둥근·200세+",
-        "is_human": false,
-        "race": "도깨비 (선주민 X·이계 유입·달의 위상)"
+        "gender": "여성",
+        "age_external": "10대 후반 여고생 같은 동양 소녀",
+        "age_actual_tier_2": "천년+ (단편 1 노출 X)",
+        "region_canon_tier_2": "13 초월체 (단편 1 절대 X)",
+        "blood_color_tier_2": "삼두군주 = 붉은 피 (v3.7.9o·v3.7.9q 예외 범주)·단편 1 출혈 묘사 X·본편 월주 정체 공개 시점에 해금"
       },
-      "tags": ["scope:global", "subtag:dokkaebi_3"],
-      "knot_marker": "v3.7.9y KNOT 마스코트화 lock",
-      "fill_status": "TBD - worldbuilding/short1-characters-supporting.md cycle 2"
-    },
-    {
-      "id": "knot.short1.char.dokkaebi.dori",
-      "name": "도리",
-      "scope": ["short1"],
-      "story_role": "npc_mascot",
-      "basic_info": {
-        "morphology": "도깨비·녹색·뿔1·무표정·후각",
-        "race": "도깨비"
+      "appearance": {
+        "hair": "은발 긴 생머리·윗엉덩이 정도까지·잠결·기상 직후 자연 흐트러짐·빗질 안 한 상태",
+        "hair_accessory": "측두부 비뚤어진 흰 꽃핀/조개빛 핀 1개·초승달 머리핀 X",
+        "eyes": "흐린 회은색/진주빛 회색·금속광·발광 X·반쯤 감긴 나른한 눈매·옅은 회색·특정 조명에서만 달빛 같은 은색 하이라이트 약하게",
+        "build": "아담·자기 체격보다 훨씬 큰 오버핏 상의 (카디건/니트/헐렁한 셔츠·허의 옷을 빌려 입은 듯한)",
+        "feet": "맨발",
+        "moon_motif_secret": "기본 일러스트·스탠딩·홍보 이미지에 달 단서 노출 X·디자이너 후처리용으로만·카디건 한쪽 소매 안감의 작은 흰 반달 스티치가 단편 1 특정 이벤트 CG 딱 1장면에서만 소매 뒤집히며 보임",
+        "gaze": "나른한 곁눈질 + 장난기·소리 앞에서 거의 침묵"
       },
-      "tags": ["scope:global", "subtag:dokkaebi_3"],
-      "fill_status": "TBD - cycle 2"
-    },
-    {
-      "id": "knot.short1.char.dokkaebi.chibi",
-      "name": "치비",
-      "scope": ["short1"],
-      "story_role": "npc_mascot",
-      "basic_info": {
-        "morphology": "도깨비·청색·뿔2·작음·어린이체",
-        "race": "도깨비"
+      "archetype": "겉은 로리·속은 천년 장난꾸러기 고위 권력자·단편 1 공개 X·본편 회수 구조",
+      "voice_internal": {
+        "with_heo_private": "장난 반말 + 어린이 어투·자허~ 또 그거 어디 뒀어?·이번엔 뭘 찾아 줄 거야?·단편 1 플레이어 노출 X",
+        "public_or_with_sori": "거의 침묵·말해도 단문 (왔니·응·그래)",
+        "main_episode_persona": "전혀 다른 말투 (월주 고위체)·해금"
       },
-      "tags": ["scope:global", "subtag:dokkaebi_3"],
-      "fill_status": "TBD - cycle 2"
+      "personality_core_internal": {
+        "traits": [
+          "천년 가까운 관록을 장난으로 소비·모든 것이 너무 오래된 사람이라 심각한 게 남아 있지 않음·유일한 예외 = 허",
+          "허에게는 완전히 다른 사람·애착을 장난으로 포장·허의 물건 숨기기·어깨에 턱 괴기·쓸데없는 심부름·갑자기 말 걸어 놀리기·사실상 허가 없으면 하루도 지루함",
+          "업무 3회 등장 전부 방관자·개입·구원·적대 X·소리 운명에 직접 손 X (본인 규칙)",
+          "달(月) 모티프 기본 일러스트 보이지 X·단편 1 특정 이벤트 CG 딱 1장면에서만 카디건 한쪽 소매 안감 작은 흰 반달 스티치 우연히 보임·대사·설명 0 (본편 회수 이스터에그)"
+        ]
+      },
+      "exposure_policy_v3.7.9s": {
+        "1회차": "0회 완전 부재·간접 부재 힌트만 (빈 카운터·'오늘은 안 계세요'·닫힌 사서실 문 지문)·이름·발화·실루엣 전부 X",
+        "2회차": "씬 1-9 배경 스침 1회 해금·'왜 지금 계시지?' 기시감 트리거·메타 감지 시그널",
+        "3회차+": "최대 3회 (씬 1-9 배경·중반 방관·클라이맥스 현장) + 메타 포인트 K1·K3·K5 대사·new-game-plus §3.6 도서관장 톤 엄수",
+        "4회차+": "이스터 E1~E5 숨김 대사·진엔딩 전조 단계적 해금"
+      },
+      "common_strict": [
+        "호칭은 '도서관장' 또는 '그분'만·'월주' 일체 X",
+        "13 초월체·천년 수명·삼두군주 일체 X",
+        "허용된 단서: 소매 안감 작은 흰 반달 스티치 1회 노출 (말 X·특정 이벤트 CG 1장면 한정)",
+        "허와의 사적 모먼트 (2회차+): 소리가 우연히 엿봄 형식·짧게·해석 없이",
+        "플레이어 해석: '기묘한 가족 같다·할아버지와 손녀 같다' 정도로 넘어감"
+      ],
+      "knowledge_state": {
+        "tier_2_known": ["자기 정체 (월주)·허 정체·결 정체·우주의 거의 모든 것"],
+        "concealed_in_short1": "전부 + 1회차 부재로 캐릭 자체 미등장"
+      },
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters-supporting.md §2 (L212~267)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:2", "category:identity", "INTERNAL_ONLY", "forbidden_in_scope:short1", "subtag:tier2_identity_hidden", "subtag:wol-zhu_main"]
     },
     {
       "id": "knot.short1.char.tao",
       "name": "타오",
+      "aliases": [],
       "scope": ["short1"],
-      "story_role": "supporting_npc",
+      "story_role": "supporting_npc·external_informant",
+      "current_status": "선학 그룹 측 인물·관찰·보호선 (명령·지휘선 X)·D29 사망",
+      "tier": 1,
       "basic_info": {
         "gender": "남성 (v3.7.9x 락·기존 여성 표기 정정)",
-        "title": "과장"
+        "age": "30대 후반",
+        "region_culture": "무공권",
+        "affiliation": "선학 그룹 측·canon §3.7.9ap+ar+ax·코우 교장 윗선 보고 받은 윗선 담당 배정·소리 상급자·감독자·핸들러 X·조직 배지 노출 X",
+        "blood_color": "에메랄드-금색 그라데이션 (v3.7.9o·무공+사펑 이레귤러)·사망/부상 씬 BA식 비현실 처리 + 색 피 가이드 적용"
       },
+      "appearance": {
+        "hair": "흑발 숏컷·귀 노출",
+        "uniform": "무채색 짙은 회색 수트·단말기 품에서 꺼내는 속도 빠름",
+        "accessories": "무광 검정 손목시계·사펑식 단말 팔찌·조직 배지 노출 X"
+      },
+      "archetype": "거리를 유지하는 유능한 외부 성인 제보자·쿨한 정보원 + 희미한 선배/형적 애정·짧은 통신 말미 한 박자 얹는 '조심해'",
+      "voice": {
+        "default_speech": "반말 단문 (~야·~지·~해·~한다)·존댓말 X",
+        "first_person": "내",
+        "second_person": "너",
+        "signature_expressions": [
+          "네 입으로 '표준'이라는 말이 나오면 대개 표준이 아니지.",
+          "오늘 밤 11시. 확인만 해. 끊는다.",
+          "잊지 마. 실종 규모가 학교 소문보다 크다.",
+          "스피커가 꺼져 있는데.",
+          "보지 말고 나가.",
+          "나도 확인 중이야. 지금은 나가.",
+          "조심해."
+        ],
+        "dialog_pattern": "대화 종료 일방적·항상 '끊는다'로 닫음 (송신 습관)"
+      },
+      "personality_core": {
+        "traits": [
+          "절제된 유능함·잡담 0·정보 전달 효율 업계 기준 한 단계 위",
+          "소리에 대한 개인적 걱정 직접 표현 X·통신 말미 한두 마디로 누설 ('조심해. 끊는다.')",
+          "소리에게 '너' 호칭 고정·반말이지만 명령권 X·이것이 상급자-피지휘자 관계가 아니라 오래된 거리감 단서",
+          "단편 1 사망/퇴장 = 학교 바깥에서 사건을 추적하던 어른이 사라지는 충격으로 재정의·소리 조직 라인 단절 X",
+          "W3 밤 제3안내문/이격 시스템 해석 X·시설·방송·전산 로그 이상만 알아차림·규칙형 이격 원리 말 X",
+          "타오 사망 장면 기능 = 해설 X·실패한 현장 판단·유능한 어른도 반복 관측 없이 이격 패턴 특정 X 증거"
+        ]
+      },
+      "habits_actions": [
+        "소리 앞 직접 대면 시 상의 주머니에 한 손 넣은 자세 (리드미컬한 긴장 유지)",
+        "사망 씬 플롯 복선·본인도 자기 사망을 한 박자 예감하는 대사 1~2개 권장"
+      ],
       "knowledge_state": {
-        "death_event": "D29 (3/20 금) 사망"
+        "known_facts_partial": "외부 실종자 자료·정비 서고 권한 단서·외부 로그·시설 이상·방송 이상",
+        "unknown_facts": ["제3안내문/이격 시스템 원리", "13 초월체", "도서관장·허 정체"]
       },
-      "tags": ["scope:short1", "tier:1", "subtag:death_d29"],
-      "fill_status": "TBD - cycle 2"
+      "arc_per_phase": [
+        {"week": "W1", "state": "정비 서고 권한 단서와 학교 바깥 실종자 자료 제보·소리 지휘관 X"},
+        {"week": "W2", "state": "원거리 제보·공개 자료·외부 로그 일부 전달"},
+        {"week": "W3 (사망)", "state": "학교 바깥 반응 확인·밤 방송/시설 이상 감지하지만 이격 원리 모른 채 사망"},
+        {"week": "W4 (사망 후)", "state": "허의 자체 판단선과 직접 연결 X·소리는 타오와 허 사이 지휘선 전달자 X"},
+        {"act": "Act 2~3", "state": "회상·간접 흔적·남은 외부 자료로만 영향·공식 라인 단절 X·외부 제보선 상실"}
+      ],
+      "death_event": {
+        "day": "D29 (3/20 금·3월 4주차 금요일 밤)",
+        "where": "야간 본관 1층",
+        "scope_lock_v3.7.9aq": "단편 1 Week 3 씬 3-5 확정·플롯 고정"
+      },
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters-supporting.md §3 (L270~325)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:death_d29", "subtag:external_informant"]
+    },
+    {
+      "id": "knot.short1.char.min",
+      "name": "민",
+      "aliases": [],
+      "scope": ["short1"],
+      "story_role": "supporting_npc·homeroom_teacher",
+      "current_status": "소리 반 (1학년 1반) 담임·평범 교사·낮 파트의 일상 측 인물",
+      "tier": 3,
+      "basic_info": {
+        "gender": "여성",
+        "age": "30대 초반",
+        "region_culture": "무공권",
+        "blood_color": "금색 (Gold·v3.7.9o·무공 단일·일반 정규 교사)"
+      },
+      "appearance": {
+        "hair": "밤색 긴 머리 질끈 하나로 묶음 (목뒤 낮은 위치)",
+        "uniform": "단정한 세미 정장·짙은 회색",
+        "accessories": "얇은 철제 안경·손목 은 시계·가죽 수업 노트 + 검정 만년필·교사 인주 도장"
+      },
+      "archetype": "낮 파트의 평범한 담임·데모 위기 발생원 X·밤의 제3안내문과 대비되는 일상 측 인물·적도 아군도 아니며 구조를 모르는 교사 조연",
+      "voice": {
+        "default_speech": "교사 존대 (~요·~예요·~세요·~니다)",
+        "addressing_students": "학생 또는 이름 직접 호칭·'너' X",
+        "signature_expressions": [
+          "…학생, 매일 늦게까지 어디 가는 거예요?",
+          "학생 몫의 변명이 있으면 다음 주 월요일까지 제게 주세요.",
+          "…그때 한 번 더 이 자리에서 봐요."
+        ]
+      },
+      "personality_core": {
+        "traits": [
+          "규정을 지킴·출결·생활지도·교실 질서 같은 낮의 학교 업무 절차대로",
+          "데모에서 위기 트리거 X·소리 압박 주체는 민 개인 X·밤에 작동하는 제3안내문/학교 기록 시스템",
+          "청학여고 정규 교사·선학 후원 성격은 '운 좋은 학교' 수준까지만 인지·학교 하부 숨은 구조 모름",
+          "진심 걱정 추궁으로 감정 갈등 만들지 X·필요하면 담임 업무상 확인·출결 정리·일상 대조 장면으로만"
+        ]
+      },
+      "habits_actions": [
+        "생활지도 중 책상 서랍 한 번 열었다 닫음 (기록 의식)",
+        "안경 가끔 벗어 닦음 (박자 조율)"
+      ],
+      "arc_per_phase": [
+        {"week": "W1", "state": "입학 첫 주 조례·자기소개·생활규칙 안내·출결부와 학생 명단 한 번 가볍게 점검·소리에게는 평범한 신입생 한 명으로만 인지"},
+        {"week": "W2", "state": "일상 출결·생활지도 루틴·동아리 등록 마감 행정 보조·출결 기록 미세 불일치(canon §475) 한두 번 발견하지만 학생 관리 문제 또는 시스템 오류로 보고 처리·위기 트리거 X"},
+        {"week": "W3", "state": "낮 파트 생활지도/출결 확인 정도·위기 트리거 X"},
+        {"week": "W3+", "state": "필요 시 배경 행정 로그로만 기능·교장 보고 분기 X"}
+      ],
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters-supporting.md §4 (L327~379)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:3", "category:identity", "subtag:teacher"]
+    },
+    {
+      "id": "knot.short1.char.koh",
+      "name": "코우",
+      "aliases": [],
+      "scope": ["short1"],
+      "story_role": "supporting_npc·principal·background",
+      "current_status": "청학여자고등학교 교장·공립학교 행정 책임자·단편 1 직접 등장 거의 X",
+      "tier": 3,
+      "basic_info": {
+        "gender": "남성 (v3.7.9azab·2026-04-27 락)",
+        "age": "50대",
+        "region_culture": "무공권",
+        "blood_color": "금색 추정 (Gold·v3.7.9o·무공 단일·일반 행정 인물·잠정·단편 1 출혈 X)"
+      },
+      "appearance": {
+        "general": "차분한 관료 인상 기본·50대 한국 남성 교장 톤·구체 디자인 본편 등장 시점 확정"
+      },
+      "archetype": "회색 관료·동조자 가능성·단편 1 명확한 적/아군 판정 X·배경에 머무름",
+      "personality_core": {
+        "traits": [
+          "학교 운영 중시·내부 분란 원치 않음",
+          "학교 이면 관찰망 알고 있지만 어디까지 알고 있는지 플레이어 노출 X",
+          "민의 정상 행정 보고가 이상 권한 라인에 흘러갈 수는 있으나 데모 위기 트리거 X"
+        ]
+      },
+      "tier_2_internal_canon": {
+        "imperial_position": "제국 측 인물·청학여고 교장 자리는 제국 윗선 정치적 배치",
+        "soriya_bracelet_authority_insertion": "윗선 지시로 소리의 팔찌형 학생증에 이상 권한이 사전 삽입·코우 본인은 삽입 사실은 알지만 그 권한이 무엇인지·왜 소리에게 부여되었는지 전체 진실 미인지",
+        "tao_dispatch_chain": "소리 첫 전투 직후 윗선에 보고 → 윗선이 선학 그룹에 학교 지원 요청 → 타오 과장 담당 배정",
+        "knowledge_limit": "학교 이면 관찰망(반석 후원·해태청 단편적 협조) 일부는 알지만 도서관장·허의 정체나 13 초월체·삼두군주 라인은 미접근",
+        "short1_appearance": "본문에서 코우의 정치적 위치는 민의 행정 보고가 흘러가는 종착점으로만 간접 노출·직접 등장·대사 거의 X"
+      },
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters-supporting.md §5 (L383~422)"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:3", "category:identity", "subtag:principal", "subtag:background", "tier_2_internal_canon"]
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.tora",
+      "name": "토라 (虎羅)",
+      "aliases": [],
+      "scope": ["short1", "global"],
+      "story_role": "npc_mascot·KNOT_official_mascot",
+      "current_status": "도깨비 포장마차 주인·소리 단골",
+      "tier": 1,
+      "knot_official_mascot": "v3.7.9y 락·로고·굿즈·마케팅 자산·크라우드펀딩 리워드 1순위",
+      "basic_info": {
+        "gender": "여성",
+        "age": "200세+",
+        "race": "도깨비 (선주민 X·이계 유입·🌒 초승달 분류)",
+        "is_human": false,
+        "external_age_appearance": "어린이 외형 + 마스코트 귀여움",
+        "blood_canon_v3.7.9": "도깨비 종족 고유색 (인간 혈액 체계 적용 X·단편 1 출혈 일체 없음·본편/단편 3 삭 전이 노출 시점까지 본문 노출 X)"
+      },
+      "appearance": {
+        "morphology_v3.7.9y_azap": "키 120cm·둥근 얼굴 + 복슬복슬 파스텔 버터 옐로우 털 전신·큰 눈·부드러운 곡선·푹신한 인상·작은 뿔 2개 (털 사이로 돌출)",
+        "uniform": "앞치마 (기름 자국)·이마 머리띠 (포장마차 유니폼)·주걱 상시·작은 동전 주머니 허리"
+      },
+      "archetype": "200세 할머니 소녀 (어린이 외형 + 장년 화법 갭)·쾌활·참견·겁 많음·인생 충고 자주",
+      "voice": {
+        "default_speech": "해요체 + 친절 이웃 해체 혼용·'어휴'·'요즘 애들~'",
+        "signature_expressions": [
+          "어휴 요즘 애들 너무 말랐어",
+          "학생, 어묵 하나 더 드릴게요"
+        ]
+      },
+      "role": "포장마차 주인·소리 단골·실종 거리 목격 정보 1~2회",
+      "main_episode_link": "본편·단편 3 재등장 확정·단편 3 저항군 조력자 도깨비와 동일 인물",
+      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:dokkaebi_3", "subtag:knot_mascot"]
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.dori",
+      "name": "도리 (道利)",
+      "aliases": [],
+      "scope": ["short1", "global"],
+      "story_role": "npc_mascot·KNOT_official_mascot",
+      "tier": 1,
+      "basic_info": {
+        "gender": "남성",
+        "age": "약 250세",
+        "race": "도깨비",
+        "external_age_appearance": "둥근 곰형 실루엣"
+      },
+      "appearance": {
+        "morphology_v3.7.9y_azap": "키 140cm·토라보다 체격 큼·복슬복슬 파스텔 세이지 그린 털 전신·둥근 곰형·큰 눈·우직한 인상·뿔 1개 (오른쪽만·털 사이로 돌출)",
+        "uniform": "회색 작업 앞치마 (두툼)·양팔 팔토시 (기름 보호)·허리 수건 상시"
+      },
+      "archetype": "우직·손재주·단어 단위 말투의 묵직한 맨모에",
+      "voice": {
+        "default_speech": "단답·단어 단위·긴 문장 일체 X",
+        "dialog_frequency": "단편 1 전체 ≤10줄 (현재 8줄)·단어·단문 위주",
+        "signature_expressions": ["…음.", "…국물.", "…더?"]
+      },
+      "role": "요리·재료 운반·튀김·어묵 솥 관리",
+      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:dokkaebi_3", "subtag:knot_mascot"]
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.chibi",
+      "name": "치비",
+      "aliases": [],
+      "scope": ["short1", "global"],
+      "story_role": "npc_mascot·KNOT_official_mascot",
+      "tier": 1,
+      "basic_info": {
+        "gender": "중성",
+        "age": "외형 10대 / 실제 80세+",
+        "race": "도깨비",
+        "external_age_appearance": "가장 작고 푹신한 마스코트 라인·겐키 케모 인상"
+      },
+      "appearance": {
+        "morphology_v3.7.9y_azap": "키 100cm·복슬복슬 파스텔 스카이 블루 털 전신·큰 눈·작은 뿔 2개 (털 사이로 돌출)",
+        "uniform": "큰 두건 (얼굴 절반)·빗자루 상시·허리 앞치마 (짧음)·동전 주머니 목걸이"
+      },
+      "archetype": "케모한 디테일(뿔·청색 털) + 겐키 어린이체·호기심 많고 수다스러움",
+      "voice": {
+        "default_speech": "반복 감탄사 + 어린이체·'앗! 앗!'·'언니 언니!'",
+        "signature_expressions": [
+          "앗! 소리 언니 왔다!",
+          "언니, 오늘은 뭐 드실래요?"
+        ]
+      },
+      "role": "호객·계산·청소·소리에게 제일 먼저 말 걸고 친구가 되려 시도·독립 도깨비 부족 연락원 (본편 떡밥)",
+      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:dokkaebi_3", "subtag:knot_mascot"]
     }
   ],
+  "supporting_cast_meta": {
+    "appearance_rule": {
+      "total_dokkaebi_appearances": "학기 총 3~5회",
+      "demo_w1_w4": "W1-1 통학로 포켓 첫 인상 (영업 준비 중)·W2-1 끝 화요일 종례 후 단골 인식·W3·W4 호러·보스전 톤 정합으로 비등장·W5+ Act 2~3 추가",
+      "info_provision": "실종 거리 목격·소소한 거리 정보·정서적 쉼터",
+      "no_confidant": "관계 랭크 심화 루트 X·순수 배경·쉼터",
+      "stall_location_v3.7.9": "상가 뒤편 후면 주차장·큰길 노출은 작은 입간판만·포장마차 '토라쨩'·학교 정문은 상가 건물에 가려져 시야 완전 차단 (학교 권한·관찰망에서 격리된 비공식 공간)"
+    },
+    "tier_2_global_taboos_for_dokkaebi": [
+      "🌑 삭 전이·청월 사건·관상감 관리 일체 노출 X",
+      "도깨비 = 선주민 X·이계 유입 본문 X",
+      "장로급 이상 일부 도깨비 마력·내공 대가 거래는 공공연한 사실 X·토라 3인조가 먼저 그런 대가 요구 장면 X"
+    ]
+  },
   "main_scope_pointer": [
     "본편 8동료 (아리아드네·레이카·룰루·나리·아오이·나나·유이 + 소리 특별 편입) = scope:main 별도 등록",
     "절(折) = scope:main 본편 최종 적대 = character-折.md 별도 등록",
     "본편 진입 시 cycle 2에 fill"
   ],
-  "deferred_for_cycle_2": [
-    "각 캐릭 §1.1~§1.15 (소리), §2.1~§2.11 (나리), §3~§7 동아리 6인 풀 페르소나 추출",
-    "knowledge_state.known_facts D1~D20 시점별 누적 (timeline_event_ledger.json 의존)",
-    "voice signature 표현 sample dialogue 5~10개씩 추출 (briefs/character_personas/*.md)",
-    "relationships 벡터는 relationship_matrix.json에서 별도 관리"
+  "language_dialect_matrix": {
+    "source": "worldbuilding/short1-characters.md §8 (L1410~1424)",
+    "rule": "무공권 학교 재학·기본 소통 한국어 + 한자·각자 권역 감탄사·단어 자연 노출 디테일로만",
+    "by_character": {
+      "sori": {"region": "무공권(한어)", "interjection_allowance": "한자·일본어 감탄사 극소"},
+      "nari": {"region": "무공권(한어)", "interjection_allowance": "한자·한국어 공식체"},
+      "reika": {"region": "무공권(일본어)", "interjection_allowance": "일본어 감탄사 ~10% (다루이·마아·후우)"},
+      "aoi": {"region": "무공권(일본어)", "interjection_allowance": "일본어 감탄사 최소 (실무 톤)"},
+      "nana": {"region": "무공권(서방어)", "interjection_allowance": "서방어 감탄사 ~10% — 단 v3.7.9 외래어 음차 룰: 본문에서 Yes·Ok 같은 음차 X·한국어 시그니처로 대체"},
+      "lulu": {"region": "무공권(서방어)", "interjection_allowance": "서방어 감탄사 강렬·Vex! 컨셉 대사·단 일반 외래어(Yes·Ugh)는 v3.7.9 룰로 한국어 시그니처 대체"},
+      "yui": {"region": "마법권(일본어계·v3.7.9azw·무공권 학교 재학)", "interjection_allowance": "일본어 엣또 등 소수·마법권 그리스어 어휘 노출 X (자각 전)·v3.7.9 외래어 음차 X (저기·아 등으로 대체)"}
+    }
+  },
+  "deferred_for_cycle_3_or_later": [
+    "본편 scope 캐릭 (절·8동료 본편 시점·삼두군주·아린·소꿉친구 등)",
+    "조연 캐릭 (도깨비 3인·허·도서관장·타오·민·코우)",
+    "Day별 knowledge_state.known_facts 시점 누적 (timeline_event_ledger 의존)",
+    "voice signature dialogue sample 30~50건씩 (briefs/character_personas/*.md cross-reference)",
+    "relationships 풀 매트릭스 = relationship_matrix.json v2 deep-fill"
   ]
 }
