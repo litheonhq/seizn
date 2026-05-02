@@ -1,11 +1,11 @@
 ---
 doc_type: marketing-positioning
-version: v2
+version: v3
 generated_at: 2026-05-02
 status: locked-by-founder
 applies_to: seizn.com (Author flagship) + engine.seizn.com (NPC SDK surface)
 decision_basis: 5-persona evaluation 2026-05-02 (cost no object scenario)
-revision: v2 — Seizn↔KNOT 분리 룰 적용 (2026-05-02 사용자 지시)
+revision: v3 — Litheon LLC 미국 법인 정합·EN-first GTM 재배치 (2026-05-02). 영어권 1순위·일본·중국·한국 secondary tracks. v2 = Seizn↔KNOT 분리 룰 (그대로 유지)
 ---
 
 # Dual Surface Positioning — Seizn Author + Seizn Engine
@@ -72,13 +72,15 @@ engine.seizn.com             NPC SDK surface (보완재 포지션)
 
 | 항목 | seizn.com (Author) | engine.seizn.com (Engine) |
 |---|---|---|
-| **1차 청자** | 작가·라노벨/웹소설 작가·게임 시나리오 작가·만화 작가·IP 빌더 | 게임 스튜디오 PM·시니어 게임 엔지니어·Inworld/Convai 도입 팀 |
-| **시장 크기** | 한국 작가 ~5만·일본 ~30만·중국 ~100만·글로벌 IP 빌더 | 게임 스튜디오 ~수천·진지하게 NPC 메모리 도입 ~수백 |
-| **세일즈 사이클** | 셀프 서브 (PLG)·30일 trial → $39~$399 | 6~12 개월·엔터프라이즈 PoC·SOC 2 요구 |
+| **법인** | Litheon LLC (Wyoming) — 미국 법인 | Litheon LLC (Wyoming) — 미국 법인 |
+| **1차 청자** | 영어권 작가 (소설·자가출판·라노벨·웹소설·시나리오·만화 작가·IP 빌더) | 게임 스튜디오 PM·시니어 게임 엔지니어·Inworld/Convai 도입 팀 |
+| **시장 우선순위** | **EN 1순위 (영어권 수십만~수백만 + KDP·Wattpad·Royal Road = 수천만)** · JA 2순위 (~30만) · ZH 3순위 (~100만 웹소설·플랫폼 lock-in) · KO 4순위 (~5만 secondary track) | 영어권 게임 스튜디오 1순위·일본·중국·한국 secondary |
+| **세일즈 사이클** | 셀프 서브 (PLG)·30일 trial → $39~$399 USD flat | 6~12 개월·엔터프라이즈 PoC·SOC 2 요구 |
 | **conversion goal** | trial signup → trial → paid | demo 예약 → PoC → 연 계약 |
-| **카테고리 메시지** | AI 메모리로 작품 IP 검수 (카테고리 정의자) | NPC 위에 얹는 영속 메모리 레이어 (보완재) |
-| **차별화 핵심** | 세계관·캐릭·씬 시뮬레이션·캐논 충돌 자동 검출·작가 워크플로우 | Inworld·Convai·NVIDIA ACE 위에 얹음·엔티티 단위 과금·세대 넘는 기억 |
-| **결제** | USD flat ($39/$129/$399)·BYOK 50% | 엔티티·이벤트 종량제 |
+| **카테고리 메시지** | AI Memory for Authors (카테고리 정의자) | Memory layer for NPCs (보완재) |
+| **차별화 핵심** | 세계관·캐릭·씬 시뮬레이션·캐논 충돌 자동 검출·작가 워크플로우·NovelCrafter·Sudowrite 직접 경쟁 | Inworld·Convai·NVIDIA ACE 위에 얹음·엔티티 단위 과금·세대 넘는 기억 |
+| **결제** | USD flat ($39/$129/$399)·Stripe·Stripe Tax 자동·BYOK advanced | 엔티티·이벤트 종량제 |
+| **마케팅 채널 1순위** | Reddit·Wattpad·KDP·HN·Twitter·Substack·Indie author podcasts | 영어권 게임 dev 컨퍼런스·GDC·SDK docs·OSS GitHub |
 
 ## 3. Brand 분리 룰
 
@@ -107,22 +109,28 @@ cross-link은 footer + about page만:
 - 도메인 DNS·SSL·subdomain routing 준비
 
 ### W3~W4 (design + dev)
-- Claude Designer가 Author surface 풀 디자인 (4 언어 대응)
+- Claude Designer가 Author surface 풀 디자인 (en master + ja·zh·ko 대응)
 - 합성 sample IP demo 인터랙티브 컴포넌트 빌드 (Cosmos.gl·실시간 검수 흐름·시뮬레이션 라이브)
 - engine.seizn.com 도메인 분기 — 현 콘텐츠를 그대로 마이그레이션
-- seizn.com 새 Author landing 빌드
-- **외부 베타 작가 모집 시작** (5~10명) — 각자 동의 후 W5+ case study source
+- seizn.com 새 Author landing 빌드 (default = `seizn.com` 영어·`/ja`·`/zh`·`/ko` sub-routes)
+- **외부 베타 작가 모집 시작** (5~10명) — 영어권 우선·각자 동의 후 W5+ case study source
 
-### W5~W6 (Author launch)
-- seizn.com Author surface 풀 launch
+### W5~W6 (Author launch — EN-first)
+- seizn.com Author surface 풀 launch (en master)
 - Author 30일 trial 가입 흐름 활성
-- 한국 작가 커뮤니티·일본 라노벨·중국 웹소설 콘텐츠 마케팅 시작
-- 외부 베타 작가 case study 1차 발행 (KNOT X)
+- **콘텐츠 마케팅 1순위 (영어권)**: Reddit (r/writing·r/worldbuilding·r/fantasywriters·r/selfpublish)·Wattpad·KDP author forums·Twitter #WritingCommunity·HN Show HN·Substack·Indie author podcasts (The Creative Penn·Self Publishing Show)
+- Product Hunt launch (en)·Indie Hackers·BetaList
+- 외부 베타 작가 case study 1차 발행 (영어권 작가 우선·KNOT X)
 
-### W7~W12 (NPC surface 부활 신호 평가)
+### W7~W12 (secondary 시장 + NPC surface 부활 신호 평가)
 
-**부활 트리거 (모두 충족 시)**:
-- Author trial 가입 ≥ 200건/월
+**Secondary 시장 GTM 시작 (영어 launch 검증 후)**:
+- 일본 (W7~W8): 카쿠요무·나로우·Note·Twitter 일본 작가 커뮤니티
+- 중국 (W9~W10): 微博·小红书·知乎·起点·晋江 인플루언서
+- 한국 (W11~W12): 네이버 카페·블로그·웹소설 작가 커뮤니티·트위터·`.hwp` 입력 모드 W11 활성
+
+**NPC surface 부활 트리거 (모두 충족 시)**:
+- Author trial 가입 ≥ 200건/월 (영어권 위주)
 - 외부 작가 베타 → 후속 작가 5+ 도입
 - NPC surface footer 링크 → engine.seizn.com 트래픽 ≥ 500/월
 
@@ -164,11 +172,17 @@ W3~W4 동안 현 seizn.com/ko 콘텐츠를 engine.seizn.com 으로 이전:
 
 seizn.com 은 *Author 100%* — NPC 메시지 흔적 0.
 
-## 7. Multi-product narrative
+## 7. Multi-product narrative (en master·펀딩 deck)
 
-펀딩·프레스·세일즈에 들고 갈 narrative:
+```text
+Seizn supplies AI memory infrastructure to two audiences. Writers use Seizn
+Author to keep their canon, characters, and scenes coherent across long-form
+work. Game studios use Seizn Engine so NPCs remember across generations.
 
-> Seizn은 AI 메모리 인프라를 두 청자에 공급한다. 작가에게는 IP 캐논·캐릭·씬을 검수하는 Seizn Author, 게임 스튜디오에는 NPC가 세대를 넘어 기억하는 Seizn Engine. 두 surface는 동일한 Spring·Summer·Fall·Winter 메모리 인프라 위에서 작동하며, 작가가 만든 IP가 게임 스튜디오로 흐르는 양면 시장을 형성한다.
+Both surfaces run on the same Spring · Summer · Fall · Winter memory layer.
+Writer-built IP can flow downstream to studios under license — a two-sided
+market on a single technical foundation.
+```
 
 이 narrative는 W7~W12 NPC surface 부활 시점에 펀딩 deck에 lock.
 
@@ -176,16 +190,18 @@ seizn.com 은 *Author 100%* — NPC 메시지 흔적 0.
 
 W6 Author launch 시점 점검:
 
-- [ ] seizn.com Author hero — 단일 메시지·합성 sample IP demo·CTA 1개 ($39 trial)
+- [ ] seizn.com Author hero — 단일 메시지·합성 sample IP demo·CTA 1개 (`Start 30-day free trial`)
 - [ ] engine.seizn.com — 별도 도메인·visual 분리·NPC SDK 콘텐츠 100%
 - [ ] 두 surface 간 cross-link은 footer만
-- [ ] Author surface 4 언어 (ko·en·ja·zh) 풀 launch
+- [ ] **Author surface en master·ja·zh·ko sub-routes 풀 launch** (en 1순위)
 - [ ] 합성 sample IP demo 작동·작가가 30초 안에 wow 모먼트
-- [ ] $39/$129/$399 가격 카드 노출·BYOK 옵션 표시
+- [ ] $39/$129/$399 가격 카드 노출·BYOK는 advanced settings에 격하
 - [ ] Audit log·Replay 데모 작동
 - [ ] engine.seizn.com 마이그레이션 완료·dead link 0
 - [ ] **KNOT 자료·캐릭·세계관·canon 노출 0건** (Seizn↔KNOT 분리 룰)
-- [ ] 외부 베타 작가 1+ case study 발행 (또는 W7~W8 fast follow)
+- [ ] 외부 베타 작가 1+ case study 발행 (영어권 우선·또는 W7~W8 fast follow)
+- [ ] Stripe·Stripe Tax 글로벌 결제 작동 (USD flat·VAT/GST 자동)
+- [ ] SEO 영어권 검색어 정합 (`AI memory for writers`·`worldbuilding tool`·`canon conflict detection`)
 
 ## 9. 본 brief 작업 범위 외
 
