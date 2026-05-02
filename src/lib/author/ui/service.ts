@@ -21,6 +21,9 @@ import {
 } from '@/lib/author/storage/r2-store';
 import {
   extractAuthorCandidates,
+  generateBacklogForCharacter,
+  type AuthorBacklogCandidate,
+  type AuthorBacklogCategory,
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
 
@@ -627,6 +630,57 @@ export class AuthorUiService {
       : undefined;
     this.touchProject(projectId);
     return { updated: true, review_required: reviewRequired, candidate_id: candidateId };
+  }
+
+  async generateCharacterBacklog(projectId: string, characterId: string, input: JsonRecord = {}) {
+    const character = this.findCharacter(projectId, characterId);
+    const existingCandidates = (this.state.candidatesByProject.get(projectId) ?? [])
+      .map((candidate) => ({
+        id: candidate.id,
+        content: candidate.content,
+        type: candidate.type,
+      }));
+    const result = await generateBacklogForCharacter({
+      userId: this.state.userId,
+      projectId,
+      character: {
+        id: character.id,
+        name: character.name,
+        summary: character.summary,
+        archetype: character.archetype,
+        voice: character.voice,
+        persona: character.persona,
+        appearance: character.appearance,
+        background: character.background,
+        currentArcPhase: character.current_arc_phase,
+      },
+      categories: normalizeBacklogCategories(readStringArray(input, 'categories')),
+      itemsPerCategory: readNumber(input, 'items_per_category'),
+      existingEntries: readStringArray(input, 'existing_entries'),
+      existingCandidates,
+      principles: readString(input, 'principles'),
+    });
+    const generated = result.candidates.map((candidate, index) =>
+      authorUiCandidateFromBacklog(candidate, character, index)
+    );
+    const candidates = this.state.candidatesByProject.get(projectId) ?? [];
+    this.state.candidatesByProject.set(projectId, [
+      ...generated,
+      ...candidates,
+    ]);
+    this.touchProject(projectId);
+    return {
+      character_id: character.id,
+      character_name: character.name,
+      candidate_ids: generated.map((candidate) => candidate.id),
+      candidates: result.candidates,
+      rejected: result.rejected,
+      conflicts_detected: result.rejected.filter((item) =>
+        item.reasons.some((reason) => reason.includes('duplicate'))
+      ).length,
+      export_markdown: result.exportMarkdown,
+      metrics: result.metrics,
+    };
   }
 
   getGraph(projectId: string, filters: URLSearchParams) {
@@ -1350,6 +1404,59 @@ function authorUiCandidateFromExtraction(
   };
 }
 
+function authorUiCandidateFromBacklog(
+  candidate: AuthorBacklogCandidate,
+  character: AuthorUiCharacterDetail,
+  index: number
+): AuthorUiCandidate {
+  const content = `${candidate.category} - ${candidate.content}`;
+  return {
+    id: `candidate.backlog.${slugId(character.id)}.${Date.now().toString(36)}.${index + 1}`,
+    content,
+    type: 'fact',
+    status: 'candidate',
+    confidence: 0.78,
+    suggested_status: 'candidate',
+    tags: [
+      'short1',
+      'tier:1',
+      'backlog',
+      `backlog:${candidate.category}`,
+      `character:${character.id}`,
+    ],
+    source: {
+      document_id: `backlog.${character.id}`,
+      file_path: 'generated-backlog',
+      span: {
+        start_line: index + 1,
+        end_line: index + 1,
+        start_char: 0,
+        end_char: content.length,
+      },
+      excerpt: content.slice(0, 180),
+    },
+    related_existing: [{
+      entity_id: character.id,
+      entity_type: 'character',
+      relationship: 'similar',
+    }],
+    extracted_at: nowIso(index),
+    target_entity_id: character.id,
+  };
+}
+
+function normalizeBacklogCategories(values: string[]): AuthorBacklogCategory[] | undefined {
+  const allowed: AuthorBacklogCategory[] = ['좋아하는 것', '싫어하는 것', '작은 보상', '작은 짜증'];
+  const selected = values.filter((value): value is AuthorBacklogCategory =>
+    allowed.includes(value as AuthorBacklogCategory)
+  );
+  return selected.length > 0 ? selected : undefined;
+}
+
+function slugId(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'character';
+}
+
 function buildVoice(item: JsonRecord): AuthorUiCharacterDetail['voice'] {
   const voice = asRecord(item.voice);
   return {
@@ -1686,6 +1793,16 @@ function confidenceFrom(value: unknown): number {
 function readString(object: JsonRecord, key: string): string | undefined {
   const value = object[key];
   return typeof value === 'string' && value.length > 0 ? value : undefined;
+}
+
+function readNumber(object: JsonRecord, key: string): number | undefined {
+  const value = object[key];
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
 }
 
 function readStringArray(object: JsonRecord, key: string): string[] {

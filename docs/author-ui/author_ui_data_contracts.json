@@ -270,6 +270,34 @@
       "PATCH /api/projects/{id}/characters/{character_id}": {
         "request": {"field": "string", "value": "any"},
         "response": {"updated": "boolean", "review_required": "boolean", "candidate_id": "string?"}
+      },
+      "POST /api/projects/{id}/characters/{character_id}/backlog": {
+        "request": {
+          "categories": ["좋아하는 것|싫어하는 것|작은 보상|작은 짜증"],
+          "items_per_category": "5..7",
+          "existing_entries": ["string?"],
+          "principles": "string?"
+        },
+        "response": {
+          "character_id": "string",
+          "character_name": "string",
+          "candidate_ids": ["string"],
+          "candidates": [
+            {
+              "category": "좋아하는 것|싫어하는 것|작은 보상|작은 짜증",
+              "content": "string",
+              "rationale": "string",
+              "tier": "1",
+              "scope": "short1"
+            }
+          ],
+          "rejected": [
+            {"candidate": "object", "reasons": ["string"]}
+          ],
+          "conflicts_detected": "number",
+          "export_markdown": "string",
+          "metrics": "object"
+        }
       }
     },
     "relationship_graph": {

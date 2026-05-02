@@ -29,6 +29,10 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | AMV3-P3-02 | Extraction prompts and response schemas were not locked for repeatable LLM calls | Phase 2 runtime had no Author-specific structured prompt catalog | Added five prompt files and five JSON schemas for character, world rule, event, relationship, and voice-sample extraction | Closed |
 | AMV3-P3-03 | KNOT canon authority rules were only human-readable | Validator could not machine-enforce forbidden short1 leaks, tier tags, status, scope, or duplicate candidates | Added `docs/knot-input/canon_authority_rules_machine.json` and validator enforcement with regression tests | Closed |
 | AMV3-P3-04 | Eval seed v3 coverage and KNOT character extraction thresholds were not automated | The 100-case seed and short1 character thresholds were docs-only artifacts | Added Phase 3 test harness covering 100 eval cases, 7/7 main character match threshold, and 8 supporting character heading extraction | Closed |
+| AMV3-P4-01 | Character Card could not generate likes/dislikes/reward/irritation backlog candidates | No backlog prompt, API, or service method existed | Added `generateBacklogForCharacter()`, `POST /characters/{id}/backlog`, and Review Queue insertion | Closed |
+| AMV3-P4-02 | Author UI had no control or preview for character backlog generation | Character screen only rendered a read-only table | Added character selector, Generate backlog button, and inline preview on the Author dashboard | Closed |
+| AMV3-P4-03 | Generated backlog had no export path for detail-guide §X.6 | Candidate generation returned review items only | Added `export_markdown` to the backlog API response for manual detail-guide sync/export | Closed |
+| AMV3-P4-04 | Cross-character backlog duplication was not regression-tested | Backlog generation acceptance lived only in the task pack | Added KNOT five-character dogfood test: 20 candidates each, four categories, zero duplicate content | Closed |
 
 ## Files Changed
 
@@ -49,9 +53,13 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 - `supabase/migrations/20260502005_provider_keys_profile_user_id.sql`
 - `docs/knot-input/canon_authority_rules_machine.json`
 - `src/__tests__/author/extraction/eval-seed-v3.test.ts`
+- `src/app/api/projects/[projectId]/characters/[characterId]/backlog/route.ts`
+- `src/hooks/useAuthorMemoryV3.ts`
+- `src/app/(dashboard)/dashboard/author/author-memory-v3-client.tsx`
+- `src/__tests__/author/extraction/generate-backlog.test.ts`
 
 ## Follow-up Notes
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
-3. Author Memory v3 Phase 3 now calls the Phase 2 Anthropic runtime in production mode and uses a deterministic heuristic fallback in non-production tests; backlog generation, audit/replay hardening, and Litheon migration remain next-phase work.
+3. Author Memory v3 Phase 4 now generates character backlog review candidates with detail-guide export markdown; audit/replay hardening and Litheon migration remain next-phase work.

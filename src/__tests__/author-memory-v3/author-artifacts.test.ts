@@ -156,9 +156,9 @@ describe('Author Memory v3 artifact contracts', () => {
       'timeline',
     ]);
     expect(queryCount).toBe(14);
-    expect(mutationCount).toBe(13);
-    expect(contractEndpoints).toHaveLength(26);
-    expect(screenBindingEndpoints).toHaveLength(26);
+    expect(mutationCount).toBe(14);
+    expect(contractEndpoints).toHaveLength(27);
+    expect(screenBindingEndpoints).toHaveLength(27);
     expect(screenBindingEndpoints).toEqual(contractEndpoints);
 
     const contractScreens = asObject(contracts.screens);

@@ -4,6 +4,7 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { isAuthorUiAccessAllowed, withAuthorUiService } from '@/lib/author/ui/route';
 import { getAuthorUiService } from '@/lib/author/ui/service';
 import { POST as postProjectImport } from '@/app/api/projects/[projectId]/imports/route';
+import { POST as postCharacterBacklog } from '@/app/api/projects/[projectId]/characters/[characterId]/backlog/route';
 
 vi.mock('@/lib/api/request-user', () => ({
   getRequestUser: vi.fn(),
@@ -138,6 +139,40 @@ describe('Author UI route guard', () => {
     });
     expect(uploaded?.candidate_count).toBeGreaterThan(0);
     expect(uploaded?.parsed_text_preview).toContain('Parsed through route.');
+  });
+
+  it('generates backlog candidates through the character route', async () => {
+    process.env.NODE_ENV = 'test';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'route-backlog-user',
+      email: 'route-backlog@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+
+    const request = new NextRequest('https://example.com/api/projects/knot/characters/knot.short1.char.sori/backlog', {
+      method: 'POST',
+      body: JSON.stringify({ items_per_category: 5 }),
+      headers: { 'content-type': 'application/json' },
+    });
+    const response = await postCharacterBacklog(request, {
+      params: Promise.resolve({
+        projectId: 'knot',
+        characterId: 'knot.short1.char.sori',
+      }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json() as {
+      character_id: string;
+      candidate_ids: string[];
+      export_markdown: string;
+    };
+    expect(body.character_id).toBe('knot.short1.char.sori');
+    expect(body.candidate_ids).toHaveLength(20);
+    expect(body.export_markdown).toContain('§X.6 backlog candidates');
   });
 });
 
