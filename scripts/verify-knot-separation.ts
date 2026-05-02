@@ -47,7 +47,6 @@ const TEXT_EXTENSIONS = new Set([
 const DEFAULT_EXCLUDE = new Set([
   normalizePath("docs/marketing/dual_surface_positioning.md"),
   normalizePath("docs/marketing/seizn_author_landing_brief.md"),
-  normalizePath("docs/marketing/sample_ip/saebyeok-readme.md"),
 ]);
 
 const args = parseArgs(process.argv.slice(2));

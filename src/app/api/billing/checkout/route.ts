@@ -174,12 +174,18 @@ export async function POST(request: NextRequest) {
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
+      payment_method_collection: "if_required",
       line_items: [{ price: resolvedPriceId, quantity: 1 }],
       customer: customerState.customerId,
       allow_promotion_codes: !discounts,
       ...(discounts ? { discounts } : {}),
       subscription_data: {
         trial_period_days: AUTHOR_TRIAL_DAYS,
+        trial_settings: {
+          end_behavior: {
+            missing_payment_method: "cancel",
+          },
+        },
         metadata: {
           user_id: session.user.id,
           author_billing_tier: selection.tier,

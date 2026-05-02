@@ -11,6 +11,7 @@ import {
   type AuthorBillingTier,
   type BillingCadence,
 } from "@/lib/stripe-config";
+import { loadSaebyeokDemoData } from "@/lib/sample-ip-demo";
 
 const launchLocales = ["en", "ko", "ja", "zh-hans"] as const;
 const tiers = ["indie", "pro", "studio", "enterprise"] as const;
@@ -50,6 +51,13 @@ describe("Author flagship landing", () => {
     expect(element).toHaveProperty("props.locale", "en");
     expect(element).toHaveProperty("props.data.summary.characters", 8);
     expect(element).toHaveProperty("props.data.summary.reviewCases", 50);
+  });
+
+  it("keeps the sample IP README free of private dogfood terms", async () => {
+    const data = await loadSaebyeokDemoData();
+
+    expect(data.readme.body).not.toMatch(/\bKNOT\b/i);
+    expect(data.readme.body).not.toMatch(/소리|레이카|청학여고|Worldspire/);
   });
 
   it.each(launchLocales)("ships complete pricing page copy for %s", (locale) => {

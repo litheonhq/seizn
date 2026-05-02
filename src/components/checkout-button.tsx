@@ -33,6 +33,12 @@ function isAuthorTier(value: unknown): value is AuthorBillingTier {
   return value === "indie" || value === "pro" || value === "studio" || value === "enterprise";
 }
 
+function getCheckoutAuthRedirectUrl(): string {
+  if (typeof window === "undefined") return "/signup";
+  const callbackUrl = `${window.location.pathname}${window.location.search}${window.location.hash}` || "/";
+  return `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+}
+
 export function CheckoutButton({
   children,
   className = "",
@@ -76,6 +82,12 @@ export function CheckoutButton({
       });
 
       const data = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        setIsLoading(false);
+        window.open(getCheckoutAuthRedirectUrl(), "_self", "noopener,noreferrer");
+        return;
+      }
+
       if (!response.ok || typeof data.url !== "string") {
         throw new Error(typeof data.error === "string" ? data.error : legalCopy.error);
       }
@@ -90,16 +102,21 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       {requireLegalAgreement ? (
-        <label htmlFor={agreementId} className="flex items-start gap-2 text-left text-xs leading-5 text-szn-text-2">
+        <div className="flex items-start gap-2 text-left text-xs leading-5 text-szn-text-2">
           <input
             id={agreementId}
             type="checkbox"
             checked={legalAgreementAccepted}
             onChange={(event) => setLegalAgreementAccepted(event.currentTarget.checked)}
+            aria-describedby={`${agreementId}-copy`}
             className="mt-0.5 h-4 w-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
           />
-          <span>
-            {legalCopy.prefix ? `${legalCopy.prefix} ` : ""}
+          <span id={`${agreementId}-copy`}>
+            {legalCopy.prefix ? (
+              <label htmlFor={agreementId} className="cursor-pointer">
+                {legalCopy.prefix}{" "}
+              </label>
+            ) : null}
             <a
               href={termsHref}
               target="_blank"
@@ -108,7 +125,9 @@ export function CheckoutButton({
             >
               {legalCopy.terms}
             </a>{" "}
-            {legalCopy.connector}{" "}
+            <label htmlFor={agreementId} className="cursor-pointer">
+              {legalCopy.connector}{" "}
+            </label>
             <a
               href={privacyHref}
               target="_blank"
@@ -117,9 +136,13 @@ export function CheckoutButton({
             >
               {legalCopy.privacy}
             </a>
-            {legalCopy.suffix}
+            {legalCopy.suffix ? (
+              <label htmlFor={agreementId} className="cursor-pointer">
+                {legalCopy.suffix}
+              </label>
+            ) : null}
           </span>
-        </label>
+        </div>
       ) : null}
       <button
         type="button"

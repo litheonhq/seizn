@@ -25,6 +25,7 @@ describe("CheckoutButton legal agreement", () => {
     root = null;
     container = null;
     document.cookie = "seizn_csrf_token=; Max-Age=0; path=/";
+    window.history.pushState({}, "", "/");
   });
 
   it("disables checkout until the legal agreement checkbox is checked", async () => {
@@ -52,6 +53,14 @@ describe("CheckoutButton legal agreement", () => {
     expectLink("Privacy Policy", "/ko/legal/privacy");
   });
 
+  it("keeps legal links outside checkbox labels", async () => {
+    await render(<CheckoutButton priceId="pro">Start Pro</CheckoutButton>);
+
+    expect(getLink("Terms of Service").closest("label")).toBeNull();
+    expect(getLink("Privacy Policy").closest("label")).toBeNull();
+    expect(getCheckbox().getAttribute("aria-describedby")).toBeTruthy();
+  });
+
   it("posts to checkout only after agreement is accepted", async () => {
     document.cookie = "seizn_csrf_token=csrf-legal; path=/";
     await render(
@@ -73,6 +82,27 @@ describe("CheckoutButton legal agreement", () => {
         headers: expect.objectContaining({ "x-csrf-token": "csrf-legal" }),
       }));
       expect(window.open).toHaveBeenCalledWith("https://checkout.stripe.test/session", "_self", "noopener,noreferrer");
+    });
+  });
+
+  it("sends unauthenticated public checkout attempts to signup with the current page as callback", async () => {
+    window.history.pushState({}, "", "/en/pricing?plan=pro");
+    global.fetch = vi.fn(async () => jsonResponse({ error: "Unauthorized" }, 401)) as typeof fetch;
+    await render(
+      <CheckoutButton tier="pro" cadence="monthly">
+        Start Pro
+      </CheckoutButton>
+    );
+
+    await click(getCheckbox());
+    await click(getButton("Start Pro"));
+
+    await waitForCondition(() => {
+      expect(window.open).toHaveBeenCalledWith(
+        "/signup?callbackUrl=%2Fen%2Fpricing%3Fplan%3Dpro",
+        "_self",
+        "noopener,noreferrer"
+      );
     });
   });
 
@@ -115,12 +145,17 @@ function getCheckbox(): HTMLInputElement {
 }
 
 function expectLink(label: string, href: string): void {
-  const link = Array.from((container ?? document.body).querySelectorAll("a"))
-    .find((element) => element.textContent?.trim() === label) as HTMLAnchorElement | undefined;
-  if (!link) throw new Error(`Missing link: ${label}`);
+  const link = getLink(label);
   expect(link.getAttribute("href")).toBe(href);
   expect(link.getAttribute("target")).toBe("_blank");
   expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+}
+
+function getLink(label: string): HTMLAnchorElement {
+  const link = Array.from((container ?? document.body).querySelectorAll("a"))
+    .find((element) => element.textContent?.trim() === label) as HTMLAnchorElement | undefined;
+  if (!link) throw new Error(`Missing link: ${label}`);
+  return link;
 }
 
 async function click(element: HTMLElement): Promise<void> {

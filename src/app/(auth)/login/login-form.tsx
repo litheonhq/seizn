@@ -7,10 +7,18 @@ import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
 
+function buildAuthHref(path: string, callbackUrl: string): string {
+  if (callbackUrl === "/dashboard") {
+    return path;
+  }
+  return `${path}?${new URLSearchParams({ callbackUrl }).toString()}`;
+}
+
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = sanitizeRelativeRedirect(searchParams.get("callbackUrl"));
+  const signupHref = buildAuthHref("/signup", callbackUrl);
   const error = searchParams.get("error");
 
   const [email, setEmail] = useState("");
@@ -227,7 +235,7 @@ export default function LoginForm() {
           {/* Sign Up Link */}
           <p className="mt-6 text-center text-szn-text-2 text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-purple-600 hover:text-purple-500 font-medium transition-colors">
+            <Link href={signupHref} className="text-purple-600 hover:text-purple-500 font-medium transition-colors">
               Sign up
             </Link>
           </p>
