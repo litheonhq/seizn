@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { BetaDisclosureBanner, hasDismissedCookie } from "@/components/legal/beta-disclosure-banner";
+import {
+  BetaDisclosureBanner,
+  hasDismissedCookie,
+  isBetaDisclosureActive,
+} from "@/components/legal/beta-disclosure-banner";
 
 vi.mock("@/contexts/DashboardLocaleContext", () => ({
   useDashboardTranslation: () => ({
@@ -31,15 +35,25 @@ describe("BetaDisclosureBanner", () => {
   });
 
   it("shows the beta disclosure link on first dashboard entry", async () => {
-    await renderBanner();
+    await renderBanner({ betaUntil: "2026-08-31", now: "2026-05-03T00:00:00.000Z" });
 
     expect(await findText("Seizn Author is in beta")).toBeTruthy();
     const link = getLink("Read beta disclosure");
     expect(link.getAttribute("href")).toBe("/en/legal/beta-disclosure");
+    const time = (container ?? document.body).querySelector("time");
+    expect(time?.getAttribute("dateTime")).toBe("2026-08-31");
+    expect(time?.textContent).toBe("Aug 31, 2026");
+  });
+
+  it("hides automatically after the beta_until frontmatter date", async () => {
+    await renderBanner({ betaUntil: "2026-01-01", now: "2026-05-03T00:00:00.000Z" });
+
+    expect(queryText("Seizn Author is in beta")).toBeNull();
+    expect(isBetaDisclosureActive("2026-01-01", "2026-05-03T00:00:00.000Z")).toBe(false);
   });
 
   it("dismisses the banner and stores the cookie", async () => {
-    await renderBanner();
+    await renderBanner({ betaUntil: "2026-08-31", now: "2026-05-03T00:00:00.000Z" });
 
     await click(await findButton("Dismiss"));
 
@@ -50,12 +64,12 @@ describe("BetaDisclosureBanner", () => {
   });
 });
 
-async function renderBanner(): Promise<void> {
+async function renderBanner(props: Parameters<typeof BetaDisclosureBanner>[0] = {}): Promise<void> {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
   await act(async () => {
-    root?.render(<BetaDisclosureBanner />);
+    root?.render(<BetaDisclosureBanner {...props} />);
   });
 }
 

@@ -10,10 +10,27 @@ export const LEGAL_DOCUMENT_FILES: Record<LegalDocumentSlug, string> = {
   "beta-disclosure": "beta-disclaimer.md",
 };
 
-export const LEGAL_DOCUMENT_LABELS: Record<LegalDocumentSlug, string> = {
-  privacy: "Privacy Policy",
-  terms: "Terms of Service",
-  "beta-disclosure": "Beta Disclosure",
+export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocumentSlug, string>> = {
+  en: {
+    privacy: "Privacy",
+    terms: "Terms",
+    "beta-disclosure": "Beta Disclosure",
+  },
+  ko: {
+    privacy: "개인정보",
+    terms: "이용약관",
+    "beta-disclosure": "베타 고지",
+  },
+  ja: {
+    privacy: "プライバシー",
+    terms: "利用規約",
+    "beta-disclosure": "ベータ開示",
+  },
+  zh: {
+    privacy: "隐私",
+    terms: "条款",
+    "beta-disclosure": "Beta 披露",
+  },
 };
 
 export const LEGAL_PAGE_COPY = {
@@ -51,6 +68,12 @@ export function resolveLegalContentLocale(locale: string | undefined | null): Le
   if (locale === "ko" || locale === "ja") return locale;
   if (locale === "zh" || locale === "zh-hans" || locale === "zh-hant") return "zh";
   return "en";
+}
+
+export function getLegalDocumentLabels(
+  locale: string | undefined | null,
+): Record<LegalDocumentSlug, string> {
+  return LEGAL_DOCUMENT_LABELS[resolveLegalContentLocale(locale)];
 }
 
 export function getLegalRouteLocale(locale: string | undefined | null): string {

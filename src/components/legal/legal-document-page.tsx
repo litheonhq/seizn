@@ -1,11 +1,10 @@
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import {
-  LEGAL_DOCUMENT_LABELS,
   LEGAL_DOCUMENTS,
+  getLegalDocumentLabels,
   getLegalPath,
   resolveLegalMarkdownHref,
-  type LegalDocumentSlug,
 } from "@/lib/legal-routes";
 import type { LegalDocument } from "@/lib/legal-docs";
 
@@ -22,6 +21,7 @@ interface LegalDocumentPageProps {
 
 export function LegalDocumentPage({ document, copy }: LegalDocumentPageProps) {
   const routeLocale = document.requestedLocale;
+  const documentLabels = getLegalDocumentLabels(routeLocale);
 
   return (
     <main className="min-h-screen bg-szn-bg text-szn-text-1">
@@ -39,7 +39,7 @@ export function LegalDocumentPage({ document, copy }: LegalDocumentPageProps) {
             {LEGAL_DOCUMENTS.map((slug) => (
               <LegalNavLink
                 key={slug}
-                slug={slug}
+                label={documentLabels[slug]}
                 active={slug === document.slug}
                 href={getLegalPath(routeLocale, slug)}
               />
@@ -103,11 +103,11 @@ export function LegalDocumentPage({ document, copy }: LegalDocumentPageProps) {
 }
 
 function LegalNavLink({
-  slug,
+  label,
   href,
   active,
 }: {
-  slug: LegalDocumentSlug;
+  label: string;
   href: string;
   active: boolean;
 }) {
@@ -121,7 +121,7 @@ function LegalNavLink({
           : "border-szn-border bg-szn-bg text-szn-text-2 hover:text-szn-text-1"
       }`}
     >
-      {LEGAL_DOCUMENT_LABELS[slug]}
+      {label}
     </Link>
   );
 }
