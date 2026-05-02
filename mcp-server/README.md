@@ -109,6 +109,9 @@ This generates `.github/copilot-instructions.md`, `CONVENTIONS.md`, and `AGENTS.
 | `SEIZN_API_KEY` | Yes* | - | Your Seizn API key |
 | `SEIZN_API_URL` | No | https://www.seizn.com | Seizn API endpoint |
 | `SEIZN_MCP_PORT` | No | 3100 | HTTP server port (when using `--http`) |
+| `SEIZN_MCP_HTTP_TOKEN` | No | random per process | Bearer token required by the HTTP transport |
+| `SEIZN_MCP_ALLOWED_ORIGINS` | No | local MCP origins | Comma-separated browser origins allowed to call HTTP transport |
+| `SEIZN_MCP_HOST` | No | 127.0.0.1 | HTTP bind host; non-loopback hosts require `SEIZN_MCP_UNSAFE_HTTP=1` |
 
 \* Or use `auth_login` tool for browser-based OAuth authentication.
 
@@ -209,8 +212,11 @@ npm install
 npm run dev        # Development mode
 npm run build      # Build
 npm start          # Start (stdio)
-npm run start:http # Start (HTTP)
+SEIZN_MCP_HTTP_TOKEN=$(openssl rand -base64 32) npm run start:http # Start local HTTP
+curl -H "Authorization: Bearer $SEIZN_MCP_HTTP_TOKEN" http://127.0.0.1:3100/mcp
 ```
+
+HTTP transport is intended for local clients. It binds to `127.0.0.1` by default, requires a bearer token for `/mcp`, and rejects browser origins outside the allowlist.
 
 ## Troubleshooting
 

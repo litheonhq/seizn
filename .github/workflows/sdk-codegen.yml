@@ -41,20 +41,17 @@ jobs:
       spec_valid: ${{ steps.validate.outputs.valid }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install validation tools
-        run: npm install -g @redocly/cli
 
       - name: Validate OpenAPI spec
         id: validate
         run: |
-          if redocly lint ${{ env.OPENAPI_PATH }} --skip-rule=no-server-example.com; then
+          if npx --yes --package @redocly/cli@2.30.3 redocly lint ${{ env.OPENAPI_PATH }} --skip-rule=no-server-example.com; then
             echo "valid=true" >> $GITHUB_OUTPUT
             echo "OpenAPI spec is valid"
           else
@@ -72,26 +69,21 @@ jobs:
       changes_detected: ${{ steps.check-changes.outputs.changes }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install code generation tools
-        run: |
-          npm install -g openapi-typescript-codegen@0.29.0
-          npm install -g prettier
 
       - name: Create output directory
         run: mkdir -p ${{ env.OUTPUT_DIR }}/src/generated
 
       - name: Generate TypeScript SDK from OpenAPI
         run: |
-          openapi \
+          npx --yes --package openapi-typescript-codegen@0.29.0 openapi \
             --input ${{ env.OPENAPI_PATH }} \
             --output ${{ env.OUTPUT_DIR }}/src/generated \
             --client fetch \
@@ -105,10 +97,7 @@ jobs:
       - name: Format generated code
         run: |
           cd ${{ env.OUTPUT_DIR }}
-          if [ -f "package.json" ]; then
-            npm install --ignore-scripts || true
-          fi
-          npx prettier --write "src/generated/**/*.ts" || prettier --write "src/generated/**/*.ts"
+          npx --yes --package prettier@3.8.3 prettier --write "src/generated/**/*.ts"
 
       - name: Generate package.json if not exists
         run: |
@@ -348,7 +337,7 @@ jobs:
           fi
 
       - name: Upload generated SDK as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
@@ -363,12 +352,12 @@ jobs:
       (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_pr == 'true'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
       - name: Download generated SDK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
@@ -378,7 +367,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore(sdk): regenerate TypeScript SDK from OpenAPI spec'
@@ -422,12 +411,12 @@ jobs:
       github.event.inputs.create_pr == 'false'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
       - name: Download generated SDK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
