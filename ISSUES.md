@@ -75,3 +75,8 @@
 **Cause:** The public status route was executing in Vercel `iad1` while Supabase was hosted in `ap-northeast-1`, so the DB health probe paid inter-region latency and occasional cold-start spikes. The status endpoint then cached that degraded result.
 **Fix:** Switched the status probe to `profiles`, raised degraded/down thresholds, disabled caching for non-operational states, and set `vercel.json` `regions` to `["hnd1"]` so Node functions execute near the Supabase region. A route-level `preferredRegion` hint on the Node status handler did not change the actual runtime region and was removed.
 
+### Author UI Slug Regex Patch Context Mismatch
+**Date:** 2026-05-02
+**Symptom:** Direct `apply_patch` replacement for the Author UI slug regex failed because the shell-rendered context showed mojibake while the file contained the valid Korean range `가-힣`.
+**Cause:** PowerShell output encoding did not match the file's actual Unicode content, so the patch context copied from terminal output was stale.
+**Fix:** Re-read the actual line with `Select-String`, then patched the real Unicode regex context. For future edits, verify suspect non-ASCII context from the file before building a manual patch.

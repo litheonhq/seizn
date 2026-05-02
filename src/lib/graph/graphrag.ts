@@ -111,12 +111,12 @@ export interface GraphRAGContext {
 // ============================================
 
 export class EntityExtractor {
-  private anthropic: Anthropic;
-  private model: string = 'claude-sonnet-4-20250514';
+  private anthropic?: Anthropic;
+  private openRouterModel: string = process.env.GRAPHRAG_OPENROUTER_MODEL ?? 'anthropic/claude-sonnet-4.5';
+  private anthropicModel: string = process.env.GRAPHRAG_ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514';
+  private baseUrl: string = process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1';
 
-  constructor() {
-    this.anthropic = new Anthropic();
-  }
+  constructor() {}
 
   /**
    * Extract entities and relationships from text
@@ -173,23 +173,16 @@ Output as JSON:
 
 Only output valid JSON, no other text.`;
 
-    const response = await this.anthropic.messages.create({
-      model: this.model,
-      max_tokens: 4096,
-      messages: [{ role: 'user', content: prompt }],
-    });
-
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type');
-    }
+    const responseText = process.env.OPENROUTER_API_KEY
+      ? await this.extractViaOpenRouter(prompt)
+      : await this.extractViaAnthropic(prompt);
 
     let parsed;
     try {
-      parsed = JSON.parse(content.text);
+      parsed = JSON.parse(responseText);
     } catch {
       // Try to extract JSON from response
-      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         parsed = JSON.parse(jsonMatch[0]);
       } else {
@@ -240,6 +233,57 @@ Only output valid JSON, no other text.`;
       .filter(Boolean) as Relationship[];
 
     return { entities, relationships };
+  }
+
+  private async extractViaOpenRouter(prompt: string): Promise<string> {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      throw new Error('OPENROUTER_API_KEY not set');
+    }
+
+    const resp = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://www.seizn.com',
+        'X-Title': 'Seizn GraphRAG',
+      },
+      body: JSON.stringify({
+        model: this.openRouterModel,
+        max_tokens: 4096,
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+      }),
+    });
+    if (!resp.ok) {
+      throw new Error(`OpenRouter ${resp.status}: ${await resp.text()}`);
+    }
+    const data = await resp.json();
+    const responseText = data?.choices?.[0]?.message?.content;
+    if (typeof responseText !== 'string' || responseText.length === 0) {
+      throw new Error('Empty response from OpenRouter');
+    }
+    return responseText;
+  }
+
+  private async extractViaAnthropic(prompt: string): Promise<string> {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('OPENROUTER_API_KEY or ANTHROPIC_API_KEY not set');
+    }
+
+    this.anthropic ??= new Anthropic();
+    const response = await this.anthropic.messages.create({
+      model: this.anthropicModel,
+      max_tokens: 4096,
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    const content = response.content[0];
+    if (content?.type !== 'text') {
+      throw new Error('Unexpected response type');
+    }
+    return content.text;
   }
 
   /**

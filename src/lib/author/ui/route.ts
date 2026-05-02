@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRequestUser } from '@/lib/api/request-user';
+import { getRequestUser, type RequestUser } from '@/lib/api/request-user';
 import {
   AuthorUiNotFoundError,
   AuthorUiValidationError,
@@ -20,6 +20,9 @@ export async function withAuthorUiService(
   const user = await getRequestUser(request);
   if (!user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!isAuthorUiAccessAllowed(user)) {
+    return NextResponse.json({ error: 'Author UI is not enabled for this account' }, { status: 403 });
   }
 
   try {
@@ -45,4 +48,31 @@ export async function readJsonBody(request: NextRequest): Promise<Record<string,
   } catch {
     return {};
   }
+}
+
+export function isAuthorUiAccessAllowed(user: Pick<RequestUser, 'id' | 'email'>): boolean {
+  const enabled = process.env.AUTHOR_UI_ENABLED;
+  if (enabled === '0' || enabled === 'false') {
+    return false;
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    return true;
+  }
+
+  if (enabled !== '1' && enabled !== 'true') {
+    return false;
+  }
+
+  const allowedIds = envList('AUTHOR_UI_ALLOWED_USER_IDS');
+  const allowedEmails = envList('AUTHOR_UI_ALLOWED_EMAILS').map((email) => email.toLowerCase());
+  const email = user.email?.toLowerCase() ?? '';
+  return allowedIds.includes(user.id) || (email.length > 0 && allowedEmails.includes(email));
+}
+
+function envList(name: string): string[] {
+  return (process.env[name] ?? '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
