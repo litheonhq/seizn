@@ -245,10 +245,16 @@ exclusions:
 - 인접 Author API (BYOK·usage 등)와 정합
 
 **Acceptance**:
-- [ ] BYOK discount 미적용 케이스 (secret 누락·customer 누락·coupon API 실패) UI에 'Pending'/'Error' 표시
-- [ ] AUTHOR_UI_ENABLED=false 또는 allowlist 미정합 user → subscription route도 401/403
-- [ ] `npm run typecheck·test·lint·build` 통과
-- [ ] `docs/author-memory-v3-llm-phaseB-prime-prime-signoff.md` 작성
+- [x] BYOK discount 미적용 케이스 (secret 누락·customer 누락·coupon API 실패) UI에 'Pending'/'Error' 표시
+- [x] AUTHOR_UI_ENABLED=false 또는 allowlist 미정합 user → subscription route도 401/403
+- [x] `npm run typecheck·test·lint·build` 통과
+- [x] `docs/author-memory-v3-llm-phaseB-prime-prime-signoff.md` 작성
+
+**Phase B″ Codex execution note (2026-05-03)**:
+- Implemented BYOK discount `inactive|pending|applied|error` state, dashboard 3-state display, and `withAuthorUiService()` wrapping for `/api/account/subscription`.
+- Added migration `20260503001_author_byok_discount_status.sql` for explicit status/error persistence.
+- Verification passed: targeted Phase B″ tests (11), Author UI JSON parse check, `npm run typecheck`, `npm run test -- --run` (129 files, 1092 passed, 16 skipped), `npm run lint`, and `npm run build`.
+- Signoff: `docs/author-memory-v3-llm-phaseB-prime-prime-signoff.md`.
 
 **예상 시간**: 0.25~0.5 working day
 

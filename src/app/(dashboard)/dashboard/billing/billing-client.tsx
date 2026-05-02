@@ -18,6 +18,8 @@ interface SubscriptionState {
   payment_failed: boolean;
   byok_active: boolean;
   byok_discount_active: boolean;
+  byok_discount_status?: "inactive" | "pending" | "applied" | "error";
+  byok_discount_error?: string | null;
   price_lock_version: string;
   usage: {
     tokens_used_month: number;
@@ -236,7 +238,7 @@ export function BillingDashboardClient() {
             <div>
               <dt className="text-xs uppercase text-szn-text-2">BYOK discount</dt>
               <dd className="mt-1 text-sm font-medium text-szn-text-1">
-                {subscription?.byok_discount_active ? "Applied" : subscription?.byok_active ? "Pending customer" : "Not active"}
+                {formatByokDiscountLabel(subscription)}
               </dd>
             </div>
           </dl>
@@ -281,4 +283,20 @@ export function BillingDashboardClient() {
       </section>
     </div>
   );
+}
+
+function formatByokDiscountLabel(subscription: SubscriptionState | null): string {
+  if (!subscription) return "Not active";
+  switch (subscription.byok_discount_status) {
+    case "applied":
+      return "Applied";
+    case "pending":
+      return "Pending";
+    case "error":
+      return "Error";
+    case "inactive":
+      return "Not active";
+    default:
+      return subscription.byok_discount_active ? "Applied" : subscription.byok_active ? "Pending" : "Not active";
+  }
 }

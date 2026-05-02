@@ -860,6 +860,7 @@
           "consumed_by": ["<BillingDashboard>", "<UsageMeter>", "<TrialBanner>"],
           "select_transformations": [
             "billing dashboard: plan, tier_label, status, renewal/cancel dates, price_lock_version",
+            "BYOK discount badge: byok_discount_status -> Applied/Pending/Error/Not active",
             "trial banner: trial_days_remaining <= 3",
             "usage meter: usage.tokens_used_month + usage.tokens_cap_month"
           ]
@@ -874,7 +875,7 @@
           "validation": "client-side: Anthropic key format check before submit (sk-ant-)",
           "on_success": {
             "invalidate": ["['account', 'byok']", "['account', 'usage']"],
-            "toast": "BYOK 키 등록 완료·할인 적용"
+            "toast": "BYOK 키 등록 완료·할인 상태 갱신"
           },
           "on_error": {
             "toast_variant": "error",
