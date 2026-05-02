@@ -2,12 +2,23 @@
 doc_type: codex-task-pack
 version: v1
 generated_at: 2026-05-02
-status: handoff-ready
+status: implementation-tracked
 applies_to: Seizn Author Memory v3 LLM integration — Codex sequential dispatch
 audience: Codex CLI implementation agents
 pair_with: seizn-author-memory-v3-llm-integration.md
 dispatch_rule: Sequential only (per feedback_codex_sequential_execution.md). Each phase = separate Codex run.
 ---
+
+## Implementation Status Ledger (updated 2026-05-02)
+
+| Phase | Status | Evidence | Remaining blocker |
+|---|---|---|---|
+| [x] Phase 1 - File Persistence + Parsing | Code complete, committed, pushed | `fc1da94f`; `docs/author-memory-v3-llm-phase1-signoff.md`; R2/import text smoke recorded in `docs/editor-100-execution-log.md` | None for code path |
+| [x] Phase 2 - Anthropic SDK + BYOK Runtime | Code complete, committed, pushed | `d3c74975`, `d4a70511`; `docs/author-memory-v3-llm-phase2-signoff.md` | Live paid Anthropic smoke remains optional/operator-gated |
+| [x] Phase 3 - Extraction Prompt + Structured Output | Code complete, committed, pushed | `c0add945`; `docs/author-memory-v3-llm-phase3-signoff.md`; eval harness recorded in execution log | None for deterministic/local path |
+| [x] Phase 4 - Character Backlog Generation | Code complete, committed, pushed | `85f1d8e5`; `docs/author-memory-v3-llm-phase4-signoff.md`; KNOT 5-character backlog test recorded | Manual detail-guide write-back remains intentionally off; export markdown is implemented |
+| [x] Phase 5 - Persistent Audit Log + Replay | Code complete, committed, pushed | `e75a9d1e`; `9cb1fbcb`; `docs/author-memory-v3-llm-phase5-signoff.md`; user reported SQL was applied manually in Supabase SQL Editor | Local post-migration verification still needs a valid `POSTGRES_URL_NON_POOLING` |
+| [ ] Phase 6 - Litheon Migration | Preflight tooling complete, migration execution blocked | `0c17c231`; `scripts/migrate-r2-to-litheon.sh`; `scripts/verify-r2-integrity.ts`; `docs/migrations/20260502-r2-litheon-migration.md` | Needs Litheon-owned R2 bucket `seizn-author-uploads` and `R2_AUTHOR_NEW_*` target credentials |
 
 # Seizn Author Memory v3 LLM Integration — Codex Task Pack
 
