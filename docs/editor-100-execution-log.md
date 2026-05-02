@@ -143,3 +143,34 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 
 - Phase 3 extraction prompts, validator harness, candidate persistence wiring, and eval-seed scoring are intentionally not included in this Phase 2 commit.
 - Live Anthropic paid-call smoke is not required for this commit because the SDK wrapper is covered by mocked response, retry, BYOK, JSON, and DB persistence tests.
+
+## 9) Author Memory v3 LLM Integration - Phase 3 (2026-05-02)
+
+### Scope
+
+- Added structured Author extraction runtime under `src/lib/author/extraction/`.
+- Added five prompt files and five JSON schemas for character, world-rule, event, relationship, and voice-sample candidates.
+- Added machine-readable canon authority rules for KNOT short1 scope.
+- Refactored Author import upload flow so parsed source text now creates review candidates instead of leaving extraction queued.
+- Added eval seed v3 harness coverage for all 100 cases, 7/7 main character registry matching, and 8+ supporting character heading extraction.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `npm run test:run -- src/__tests__/author/extraction/eval-seed-v3.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (19/19) |
+| `npm run test:run -- src/__tests__/author src/__tests__/author-ui src/__tests__/author-memory-v3` | Pass (87/87) |
+| `npx ts-node -r tsconfig-paths/register --project tsconfig.node.json -e "...extract short1-characters.md + short1-characters-supporting.md..."` | Pass; local KNOT main produced 7 character candidates and supporting produced 9 character candidates |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json); JSON.parse(...canon_authority_rules_machine.json); JSON.parse(...knot_author_eval_seed_v3.json)"` | Pass |
+| `npm run test:run` | Pass (1026/1026, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- Live paid Anthropic extraction was not executed; the LLM path is covered by mocked JSON-schema tests and the non-production upload path uses deterministic heuristic extraction.
+- Phase 4 backlog generation, Phase 5 audit/replay hardening, and Phase 6 Litheon migration remain outside this Phase 3 commit by the sequential phase plan.

@@ -19,6 +19,10 @@ import {
   buildAuthorR2ObjectKey,
   putAuthorImportObject,
 } from '@/lib/author/storage/r2-store';
+import {
+  extractAuthorCandidates,
+  type ExtractedAuthorCandidate,
+} from '@/lib/author/extraction';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -400,6 +404,45 @@ export class AuthorUiService {
       item.error_message = null;
       item.parsed_text_preview = parsed.text.slice(0, 500);
       item.parser_version = parsed.parserVersion;
+
+      if (item.a_or_d_mode === 'extract') {
+        try {
+          item.extract_status = 'extracting';
+          item.extract_progress = 35;
+          const existingCandidates = (this.state.candidatesByProject.get(projectId) ?? [])
+            .map((candidate) => ({
+              id: candidate.id,
+              content: candidate.content,
+              type: candidate.type,
+            }));
+          const extraction = await extractAuthorCandidates({
+            userId: this.state.userId,
+            projectId,
+            importId: id,
+            fileName,
+            sourceRole: item.source_role,
+            text: parsed.text,
+            headings: parsed.headingStructure,
+            existingCandidates,
+          });
+          const extractedCandidates = extraction.candidates.map((candidate, index) =>
+            authorUiCandidateFromExtraction(candidate, id, index)
+          );
+          const projectCandidates = this.state.candidatesByProject.get(projectId) ?? [];
+          this.state.candidatesByProject.set(projectId, [
+            ...extractedCandidates,
+            ...projectCandidates,
+          ]);
+          item.extract_status = 'extracted';
+          item.extract_progress = 100;
+          item.candidate_count = extractedCandidates.length;
+        } catch (extractError) {
+          item.extract_status = 'failed';
+          item.extract_progress = 0;
+          item.candidate_count = 0;
+          item.error_message = formatImportError(extractError);
+        }
+      }
     } catch (error) {
       markImportFailed(item, formatImportError(error));
     }
@@ -1284,6 +1327,26 @@ function candidateFromRaw(input: {
       : [],
     extracted_at: nowIso(input.index),
     target_entity_id: input.targetEntityId,
+  };
+}
+
+function authorUiCandidateFromExtraction(
+  candidate: ExtractedAuthorCandidate,
+  importId: string,
+  index: number
+): AuthorUiCandidate {
+  return {
+    id: `candidate.${importId}.${index + 1}`,
+    content: candidate.content,
+    type: candidate.type,
+    status: candidate.status ?? 'candidate',
+    confidence: candidate.confidence,
+    suggested_status: candidate.suggested_status,
+    tags: candidate.tags,
+    source: candidate.source,
+    related_existing: candidate.related_existing,
+    extracted_at: nowIso(index),
+    target_entity_id: candidate.target_entity_id,
   };
 }
 

@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "required": ["candidates"],
+  "properties": {
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["content", "confidence", "suggested_status", "tags"],
+        "properties": {
+          "content": { "type": "string" },
+          "confidence": { "type": "number" },
+          "suggested_status": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "target_entity_id": { "type": "string" }
+        }
+      }
+    }
+  }
+}
