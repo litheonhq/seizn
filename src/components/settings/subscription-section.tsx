@@ -1,0 +1,92 @@
+"use client";
+
+import { CreditCard, ExternalLink, TriangleAlert } from "lucide-react";
+import type { AuthorSettingsCopy, SubscriptionState } from "./author-settings-types";
+import { formatDate } from "./author-settings-types";
+import type { Locale } from "@/i18n/config";
+
+interface SubscriptionSectionProps {
+  subscription: SubscriptionState;
+  copy: AuthorSettingsCopy["subscription"];
+  locale: Locale;
+  action: "idle" | "portal";
+  onManageBilling: () => Promise<void>;
+}
+
+const PLAN_PRICES: Record<string, string> = {
+  indie: "$39/mo",
+  pro: "$149/mo",
+  studio: "$499/mo",
+  enterprise: "$2,500/mo",
+  free: "$0",
+};
+
+export function SubscriptionSection({
+  subscription,
+  copy,
+  locale,
+  action,
+  onManageBilling,
+}: SubscriptionSectionProps) {
+  const planKey = (subscription.tier ?? subscription.plan ?? "free").toLowerCase();
+  const planPrice = PLAN_PRICES[planKey] ?? "";
+  const trialText =
+    typeof subscription.trial_days_remaining === "number"
+      ? `${subscription.trial_days_remaining}d`
+      : copy.noTrial;
+
+  return (
+    <section className="rounded-lg border border-szn-border bg-szn-card p-5" aria-labelledby="author-settings-subscription">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5 text-szn-accent" aria-hidden="true" />
+            <h2 id="author-settings-subscription" className="text-lg font-semibold text-szn-text-1">
+              {copy.title}
+            </h2>
+          </div>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-szn-text-2">{copy.description}</p>
+        </div>
+        <button
+          type="button"
+          onClick={onManageBilling}
+          disabled={action !== "idle"}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-szn-accent px-4 text-sm font-medium text-white hover:bg-szn-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          {action === "portal" ? copy.opening : copy.manage}
+        </button>
+      </div>
+
+      {subscription.payment_failed ? (
+        <div className="mt-5 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <TriangleAlert className="mt-0.5 h-4 w-4" aria-hidden="true" />
+          <span>{copy.paymentFailed}</span>
+        </div>
+      ) : null}
+
+      <dl className="mt-5 grid gap-3 sm:grid-cols-4">
+        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
+          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.currentPlan}</dt>
+          <dd className="mt-1 text-sm font-semibold text-szn-text-1">
+            {subscription.tier_label} {planPrice ? `· ${planPrice}` : ""}
+          </dd>
+        </div>
+        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
+          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.status}</dt>
+          <dd className="mt-1 text-sm font-semibold text-szn-text-1">{subscription.status}</dd>
+        </div>
+        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
+          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.trial}</dt>
+          <dd className="mt-1 text-sm font-semibold text-szn-text-1">{trialText}</dd>
+        </div>
+        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
+          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.renews}</dt>
+          <dd className="mt-1 text-sm font-semibold text-szn-text-1">
+            {formatDate(subscription.renews_at ?? subscription.current_period_end, locale)}
+          </dd>
+        </div>
+      </dl>
+    </section>
+  );
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { type ChangeEvent, useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
   AlertTriangle,
   Clock3,
@@ -9,6 +10,7 @@ import {
   Play,
   RefreshCw,
   ScrollText,
+  Settings,
   Sparkles,
   UploadCloud,
   UserRound,
@@ -21,7 +23,6 @@ import {
   useAuthorGraph,
   useAuthorImports,
   useAuthorProjects,
-  useAuthorSettings,
   useAuthorTimeline,
   useGenerateAuthorBacklog,
   useReplayAuthorAuditDecision,
@@ -58,7 +59,6 @@ export function AuthorMemoryV3Client() {
   const graph = useAuthorGraph(projectId);
   const timeline = useAuthorTimeline(projectId);
   const conflicts = useAuthorConflicts(projectId, { status: 'open' });
-  const settings = useAuthorSettings(projectId);
   const audit = useAuthorAuditLogs(projectId, { limit: 25 });
   const auditReplay = useReplayAuthorAuditDecision(projectId, replayDecisionId);
   const runSimulation = useRunAuthorSimulation(projectId);
@@ -143,15 +143,24 @@ export function AuthorMemoryV3Client() {
                 {String(currentProject?.name ?? 'KNOT Author Memory')} · {String(currentProject?.phase ?? 'Phase 1')}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleRunSimulation}
-              disabled={runSimulation.isMutating}
-              className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Play className="h-4 w-4" aria-hidden="true" />
-              Run Scene
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/dashboard/author/settings"
+                className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 hover:bg-slate-100"
+              >
+                <Settings className="h-4 w-4" aria-hidden="true" />
+                Settings
+              </Link>
+              <button
+                type="button"
+                onClick={handleRunSimulation}
+                disabled={runSimulation.isMutating}
+                className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Play className="h-4 w-4" aria-hidden="true" />
+                Run Scene
+              </button>
+            </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
             <Metric label="Imports" value={counts.imports} />
@@ -345,11 +354,6 @@ export function AuthorMemoryV3Client() {
                 </div>
               ) : null}
             </Panel>
-          ) : null}
-          {settings.error ? (
-            <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-              Settings could not be loaded. The API surface is still available for direct contract testing.
-            </div>
           ) : null}
         </section>
       </main>
