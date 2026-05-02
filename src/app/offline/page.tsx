@@ -33,15 +33,15 @@ export default function OfflinePage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <main className="min-h-screen flex items-center justify-center bg-szn-bg">
       <div className="text-center space-y-6 p-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted">
-          <WifiOff className="w-10 h-10 text-muted-foreground" />
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-szn-surface">
+          <WifiOff className="w-10 h-10 text-szn-text-3" aria-hidden="true" />
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">You&apos;re offline</h1>
-          <p className="text-muted-foreground max-w-md">
+          <h1 className="text-2xl font-bold text-szn-text-1">You&apos;re offline</h1>
+          <p className="text-szn-text-2 max-w-md">
             It looks like you&apos;re not connected to the internet. Some features may not be
             available until you&apos;re back online.
           </p>
@@ -54,9 +54,9 @@ export default function OfflinePage() {
             </p>
             <button
               onClick={handleRetry}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-szn-accent text-white hover:bg-szn-accent/90"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4" aria-hidden="true" />
               Reload Page
             </button>
           </div>
@@ -64,13 +64,13 @@ export default function OfflinePage() {
           <div className="space-y-4">
             <button
               onClick={handleRetry}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:bg-muted"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-szn-border hover:bg-szn-surface text-szn-text-1"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4" aria-hidden="true" />
               Try Again
             </button>
 
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-szn-text-2">
               <p>While you&apos;re offline, you can still:</p>
               <ul className="mt-2 space-y-1">
                 <li>• View cached memories</li>
@@ -83,12 +83,12 @@ export default function OfflinePage() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-szn-text-2 hover:text-szn-text-1"
         >
-          <Home className="w-4 h-4" />
+          <Home className="w-4 h-4" aria-hidden="true" />
           Go to Home
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

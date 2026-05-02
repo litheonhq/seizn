@@ -12,12 +12,12 @@ export default function GlobalError({
 
   return (
     <html>
-      <body className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">
+      <body className="min-h-screen bg-szn-bg flex items-center justify-center p-4">
+        <main className="max-w-md text-center">
+          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">
             Something went wrong
           </h1>
-          <p className="text-zinc-400 mb-8">
+          <p className="text-szn-text-3 mb-8">
             We apologize for the inconvenience. Our team has been notified.
           </p>
           <button
@@ -26,7 +26,7 @@ export default function GlobalError({
           >
             Try again
           </button>
-        </div>
+        </main>
       </body>
     </html>
   );
