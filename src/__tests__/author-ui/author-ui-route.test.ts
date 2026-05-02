@@ -5,6 +5,7 @@ import { isAuthorUiAccessAllowed, withAuthorUiService } from '@/lib/author/ui/ro
 import { getAuthorUiService } from '@/lib/author/ui/service';
 import { POST as postProjectImport } from '@/app/api/projects/[projectId]/imports/route';
 import { POST as postCharacterBacklog } from '@/app/api/projects/[projectId]/characters/[characterId]/backlog/route';
+import { GET as getProjectAudit } from '@/app/api/projects/[projectId]/audit/route';
 
 vi.mock('@/lib/api/request-user', () => ({
   getRequestUser: vi.fn(),
@@ -173,6 +174,44 @@ describe('Author UI route guard', () => {
     expect(body.character_id).toBe('knot.short1.char.sori');
     expect(body.candidate_ids).toHaveLength(20);
     expect(body.export_markdown).toContain('§X.6 backlog candidates');
+  });
+  it('exposes audit log search and replay through the project audit route', async () => {
+    process.env.NODE_ENV = 'test';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'route-audit-user',
+      email: 'route-audit@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+
+    const service = getAuthorUiService('route-audit-user');
+    const run = service.runSimulation('knot', {
+      scene_input: {
+        text: 'Route audit scene.',
+        perspective: 'knot.short1.char.sori',
+        candidate_count: 2,
+      },
+    });
+
+    const listResponse = await getProjectAudit(
+      new NextRequest('https://example.com/api/projects/knot/audit?event_type=simulation.run&limit=10'),
+      { params: Promise.resolve({ projectId: 'knot' }) }
+    );
+
+    expect(listResponse.status).toBe(200);
+    const listBody = await listResponse.json() as { audit_logs: Array<Record<string, unknown>> };
+    expect(listBody.audit_logs.some((entry) => entry.decision_id === run.decision_id)).toBe(true);
+    expect(listBody.audit_logs.every((entry) => entry.event_type === 'simulation.run')).toBe(true);
+
+    const replayResponse = await getProjectAudit(
+      new NextRequest(`https://example.com/api/projects/knot/audit?replay=1&decision_id=${run.decision_id}`),
+      { params: Promise.resolve({ projectId: 'knot' }) }
+    );
+    const replayBody = await replayResponse.json() as { replayStatus: string; chainLength: number };
+    expect(replayBody.replayStatus).toBe('deterministic');
+    expect(replayBody.chainLength).toBeGreaterThanOrEqual(1);
   });
 });
 

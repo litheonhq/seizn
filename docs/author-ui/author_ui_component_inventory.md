@@ -187,6 +187,7 @@ applies_to: Seizn Author surface 컴포넌트 목록
 **Should have (Phase 2)**:
 - RelationshipGraph (Cosmos.gl)·MiniGraph·Timeline
 - SimulationCandidateGrid·EvidencePanel
+- AuditLogView·ReplayPanel
 - BYOKKeyManager·UsageMeter
 - SyncStatusIndicator·ConflictResolutionModal
 

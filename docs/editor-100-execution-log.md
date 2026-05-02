@@ -205,3 +205,36 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 
 - Live paid Anthropic backlog generation was not executed in this phase. The LLM branch is covered by mocked JSON-schema prompt tests; deterministic heuristic generation covers local and CI behavior.
 - Automatic write-back into `short1-character-detail-guide.md` remains intentionally off. The Phase 4 API returns export markdown for manual sync; persistent audit and replay remain Phase 5.
+
+## 11) Author Memory v3 LLM Integration - Phase 5 (2026-05-02)
+
+### Scope
+
+- Added `author_audit_log` Supabase migration with RLS, decision IDs, parent chain IDs, payload, LLM metadata, and source spans.
+- Added `src/lib/author/audit/` logger, sanitizer, search store, and deterministic replay chain hashing.
+- Wired Author UI mutations, backlog generation, BYOK updates, import parse/extract, and scene simulation into audit events.
+- Added `GET /api/projects/{projectId}/audit` for audit search and `replay=1&decision_id=...` deterministic replay.
+- Added dashboard Audit screen plus SWR hooks for audit list and replay preview.
+- Added regression tests for replay chains, route search/replay, mutation audit logging, and raw secret redaction.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | Pass |
+| `npm run test:run -- src/__tests__/author/audit/replay.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (19/19) |
+| `npm run test:run -- src/__tests__/author-memory-v3/author-artifacts.test.ts src/__tests__/author/audit/replay.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (23/23) |
+| `npm run test:run -- src/__tests__/author src/__tests__/author-ui src/__tests__/author-memory-v3` | Pass (96/96) |
+| `npm run test:run` | Pass (1035 passed, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass (0 vulnerabilities) |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json)"` | Pass |
+| `git diff --check` | Pass |
+| Added-line and Author Memory v3 secret scans | Pass; no matches |
+
+### Residual Risk
+
+- The dashboard audit viewer is intentionally a Phase 5 list view; timeline/graph audit visualization remains a later UI cycle.
+- Live Supabase migration apply is not executed in this local phase until the user chooses to apply DB migrations; SQL is committed and covered by local schema review/tests.

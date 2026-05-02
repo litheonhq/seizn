@@ -766,6 +766,36 @@
       ]
     },
 
+    "audit": {
+      "route": "/project/{projectId}/audit",
+      "queries": [
+        {
+          "name": "useAuthorAuditLogs",
+          "key": "['audit', projectId, filters]",
+          "endpoint": "GET /api/projects/{id}/audit",
+          "stale_time_ms": 30000,
+          "gc_time_ms": 600000,
+          "refetch_on_window_focus": true,
+          "consumed_by": ["<AuditLogView>", "<ReplayPanel>"],
+          "select_transformations": [
+            "audit_logs[] list sorted by created_at desc",
+            "replay=1 + decision_id returns deterministic replay chain"
+          ],
+          "loading_state": "<LoadingState skeleton='audit-log' />",
+          "empty_state": "<EmptyState variant='audit-empty' />",
+          "error_state": "<ErrorState variant='audit-load-fail' />"
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "audit.created",
+          "action": "patch",
+          "target_query": "['audit', projectId, filters]",
+          "patch_logic": "prepend payload.audit_log if it matches filters; otherwise invalidate"
+        }
+      ]
+    },
+
     "settings": {
       "route": "/project/{projectId}/settings",
       "queries": [
