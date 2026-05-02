@@ -20,6 +20,38 @@ import {
 } from './types';
 import { validateScopeConfig, validateIpRestriction } from './validation';
 
+async function assertOrganizationScopeAccess(
+  userId: string,
+  scope: ApiKeyScope
+): Promise<void> {
+  if (scope.level === 'user') {
+    if (scope.organizationId || scope.projectIds?.length) {
+      throw new Error('User-level API keys cannot be bound to an organization or project');
+    }
+    return;
+  }
+
+  if (!scope.organizationId) {
+    throw new Error('Organization-scoped API keys require an organization ID');
+  }
+
+  const supabase = createServerClient();
+  const { data: membership, error } = await supabase
+    .from('organization_members')
+    .select('role')
+    .eq('organization_id', scope.organizationId)
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !membership) {
+    throw new Error('User is not a member of the specified organization');
+  }
+
+  if (scope.actions.includes('admin') && !['owner', 'admin'].includes(membership.role)) {
+    throw new Error('Only organization admins can create keys with admin permissions');
+  }
+}
+
 /**
  * Create a new scoped API key
  */
@@ -41,7 +73,6 @@ export async function createScopedApiKey(
     }
   }
 
-  // Check user's plan limits
   const supabase = createServerClient();
 
   const { data: profile } = await supabase
@@ -70,24 +101,7 @@ export async function createScopedApiKey(
     throw new Error(`API key limit reached (${keyLimit} keys for ${plan} plan)`);
   }
 
-  // Verify organization membership if organization/project scope
-  if (request.scope.level !== 'user' && request.scope.organizationId) {
-    const { data: membership } = await supabase
-      .from('organization_members')
-      .select('role')
-      .eq('organization_id', request.scope.organizationId)
-      .eq('user_id', userId)
-      .single();
-
-    if (!membership) {
-      throw new Error('User is not a member of the specified organization');
-    }
-
-    // Only admins/owners can create organization-scoped keys with admin action
-    if (request.scope.actions.includes('admin') && !['owner', 'admin'].includes(membership.role)) {
-      throw new Error('Only organization admins can create keys with admin permissions');
-    }
-  }
+  await assertOrganizationScopeAccess(userId, request.scope as ApiKeyScope);
 
   // Generate new API key
   const { key, hash, prefix } = generateApiKey();
@@ -100,8 +114,8 @@ export async function createScopedApiKey(
   // Build scope config
   const scopeConfig: ApiKeyScope = {
     level: request.scope.level,
-    organizationId: request.scope.organizationId,
-    projectIds: request.scope.projectIds,
+    organizationId: request.scope.level === 'user' ? undefined : request.scope.organizationId,
+    projectIds: request.scope.level === 'project' ? request.scope.projectIds : undefined,
     actions: request.scope.actions,
     customPermissions: request.scope.customPermissions as Permission[] | undefined,
     deniedPermissions: request.scope.deniedPermissions as Permission[] | undefined,
@@ -112,7 +126,7 @@ export async function createScopedApiKey(
     .from('api_keys')
     .insert({
       user_id: userId,
-      organization_id: request.scope.organizationId || null,
+      organization_id: scopeConfig.organizationId || null,
       name: request.name,
       key_hash: hash,
       key_prefix: prefix,
@@ -294,19 +308,24 @@ export async function updateScopedApiKey(
     const newScopeConfig = {
       ...(currentKey.scope_config || {}),
       ...updates.scope,
-    };
+    } as ApiKeyScope;
 
-    const scopeValidation = validateScopeConfig(newScopeConfig as ApiKeyScope);
+    if (newScopeConfig.level === 'user') {
+      delete newScopeConfig.organizationId;
+      delete newScopeConfig.projectIds;
+    } else if (newScopeConfig.level === 'organization') {
+      delete newScopeConfig.projectIds;
+    }
+
+    const scopeValidation = validateScopeConfig(newScopeConfig);
     if (!scopeValidation.valid) {
       throw new Error(`Invalid scope configuration: ${scopeValidation.errors.join(', ')}`);
     }
 
-    updateData.scope_config = newScopeConfig;
+    await assertOrganizationScopeAccess(userId, newScopeConfig);
 
-    // Update organization_id if changed
-    if (updates.scope.organizationId !== undefined) {
-      updateData.organization_id = updates.scope.organizationId || null;
-    }
+    updateData.scope_config = newScopeConfig;
+    updateData.organization_id = newScopeConfig.organizationId || null;
   }
 
   if (updates.ipRestriction !== undefined) {
@@ -538,14 +557,20 @@ function mapActionsToLegacyScopes(actions: string[]): string[] {
 
   if (actions.includes('read') || actions.includes('write') || actions.includes('admin')) {
     scopes.push('memory:read');
+    scopes.push('graph:read');
+    scopes.push('fall:read');
   }
 
   if (actions.includes('write') || actions.includes('admin')) {
     scopes.push('memory:write');
+    scopes.push('graph:write');
+    scopes.push('fall:write');
   }
 
   if (actions.includes('admin')) {
     scopes.push('memory:delete');
+    scopes.push('graph:delete');
+    scopes.push('fall:delete');
     scopes.push('settings:write');
   }
 

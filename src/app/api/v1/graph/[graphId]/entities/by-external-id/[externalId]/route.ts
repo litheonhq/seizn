@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { hasApiScope, validateApiKey } from '@/lib/auth/api-key';
 import {
   getEntityExternalId,
   isMissingExternalIdColumnError,
@@ -16,6 +16,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const auth = await validateApiKey(request);
     if (!auth.valid) {
       return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
+    }
+    if (!hasApiScope(auth.scopes, 'graph:read')) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: 'Requires graph:read scope' },
+        { status: 403 }
+      );
     }
 
     const { graphId, externalId } = await params;
