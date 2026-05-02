@@ -8,6 +8,7 @@ import {
 import { InMemoryAuthorMemoryV3Store, type AuthorMemoryV3Store } from './store';
 import type { AuthorEvalJobSummary, RunAuthorEvalJobOutput } from './job';
 import type { AuthorEvalResult } from './types';
+import type { AuthorEvalVerifier } from './verifier';
 
 export interface AuthorEvalJobApiSuccess {
   success: true;
@@ -38,6 +39,7 @@ export async function handleAuthorEvalJobRequest(
   body: unknown,
   options: {
     store?: AuthorMemoryV3Store;
+    verifier?: AuthorEvalVerifier;
   } = {}
 ): Promise<AuthorEvalJobApiResponse> {
   try {
@@ -45,6 +47,7 @@ export async function handleAuthorEvalJobRequest(
     const output = await runAuthorEvalJobPayload({
       payload,
       store: options.store ?? new InMemoryAuthorMemoryV3Store(),
+      verifier: options.verifier,
     });
 
     return {

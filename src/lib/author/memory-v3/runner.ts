@@ -16,6 +16,10 @@ import type {
   AuthorSideEffectRecord,
   AuthorSideEffectRequest,
 } from './types';
+import {
+  applyAuthorEvalVerifierResult,
+  type AuthorEvalVerifier,
+} from './verifier';
 
 export interface RunAuthorEvalCaseParams {
   testCase: AuthorEvalCase;
@@ -28,6 +32,7 @@ export interface RunAuthorEvalCaseParams {
   capturedAt?: string;
   live: () => Promise<JsonValue> | JsonValue;
   outputToText?: (output: JsonValue) => string;
+  verifier?: AuthorEvalVerifier;
 }
 
 export interface RunAuthorEvalCaseOutput {
@@ -59,12 +64,22 @@ export async function runAuthorEvalCase(
   const output = params.outputToText
     ? params.outputToText(sideEffect.output)
     : defaultOutputToText(sideEffect.output);
-  const result = evaluateAuthorOutput({
+  let result = evaluateAuthorOutput({
     testCase: params.testCase,
     output,
     memorySnapshotHash: snapshot.snapshotHash,
     sideEffectKeys: [sideEffect.key],
   });
+  if (params.verifier) {
+    const verifierResult = await params.verifier.verify({
+      testCase: params.testCase,
+      output,
+      records: params.records,
+      snapshot,
+      sideEffect,
+    });
+    result = applyAuthorEvalVerifierResult(result, verifierResult);
+  }
 
   return {
     snapshot,
