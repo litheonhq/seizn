@@ -112,6 +112,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let organizationId: string | undefined;
+    if (body.organization_id != null) {
+      if (typeof body.organization_id !== 'string') {
+        return NextResponse.json(
+          { error: 'organization_id must be a string' },
+          { status: 400 }
+        );
+      }
+      organizationId = body.organization_id.trim() || undefined;
+    }
+
+    if (organizationId && !(await hasOrgAccess(organizationId, userId))) {
+      return NextResponse.json(
+        { error: 'Access denied to this organization' },
+        { status: 403 }
+      );
+    }
+
     // Encrypt sensitive config
     const encryptedConfig = await encrypt(JSON.stringify(body.config));
 
@@ -126,7 +144,7 @@ export async function POST(request: NextRequest) {
         config_encrypted: encryptedConfig,
         capabilities: body.capabilities ?? { vector: true },
         is_active: true,
-        organization_id: body.organization_id ?? null,
+        organization_id: organizationId ?? null,
         created_by: userId,
         verification_status: 'pending',
       })
@@ -137,7 +155,7 @@ export async function POST(request: NextRequest) {
       await logFederatedOperation(
         {
           userId,
-          organizationId: body.organization_id,
+          organizationId,
           operation: 'source.create',
           resourceType: 'source',
           details: { name: body.name, provider: body.provider },
@@ -154,7 +172,7 @@ export async function POST(request: NextRequest) {
     await logFederatedOperation(
       {
         userId,
-        organizationId: body.organization_id,
+        organizationId,
         operation: 'source.create',
         resourceType: 'source',
         resourceId: source.id,
