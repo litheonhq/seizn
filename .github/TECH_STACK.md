@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 142 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 164 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -53,6 +53,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01), namespace scope enforcement via `src/lib/auth/api-scope.ts` for Graph/Fall APIs |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
+| Object Storage | Cloudflare R2 (S3-compatible) | @aws-sdk/client-s3 ^3.1041.0 | Author Memory v3 upload persistence via private `seizn-author-uploads-temp` bucket and signed-read support |
 | Email | Resend | ^6.12.2 | Transactional emails (`src/lib/email/`) |
 | Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
@@ -61,7 +62,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | AI Providers | OpenAI | ^6.16.0 | AI Gateway, embeddings |
 | AI Providers | Google Generative AI | ^0.24.1 | AI Gateway multi-provider support |
 | AI SDK | Vercel AI SDK | ^6.0.69 | Integration package in `packages/vercel-ai/` |
-| Document Parsing | mammoth | ^1.11.0 | DOCX ingestion (`src/lib/summer/ingest/parsers/docx.ts`) |
+| Document Parsing | mammoth + pdf-parse + gray-matter/remark + iconv-lite | mammoth ^1.11.0, pdf-parse ^2.4.5 | Summer DOCX/PDF ingestion plus Author Memory v3 md/docx/pdf/txt parsing with UTF-8/EUC-KR text handling |
 | PII Detection | Custom + Presidio (optional) | -- | `src/lib/pii/` with scanner, pipeline, config |
 | Provenance | KMS Signing | -- | AWS KMS, Azure Key Vault, Google Cloud KMS for content signing |
 | Observability | OpenTelemetry | ^2.5.0 | OTLP HTTP/Proto export, custom GenAI semantic conventions |
@@ -161,6 +162,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `@google/generative-ai` | ^0.24.1 | Google AI for gateway multi-provider support |
 | `ai` (Vercel AI SDK) | ^6.0.69 | Streaming AI integration, memory middleware |
 | `@upstash/redis` | ^1.36.1 | Distributed caching and rate limiting |
+| `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner` | ^3.1041.0 | Cloudflare R2 object persistence and signed reads for Author Memory v3 imports |
 | `@sentry/nextjs` | ^10.51.0 | Error tracking, performance monitoring, source maps |
 | `posthog-js` | ^1.316.0 | Product analytics, TTFS tracking, conversion funnels |
 | `@xyflow/react` | ^12.10.0 | Interactive graph/flow visualization (mind maps, knowledge graphs) |
@@ -170,7 +172,9 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `lucide-react` | ^0.563.0 | Icon library |
 | `tailwind-merge` | ^3.4.0 | Tailwind CSS class conflict resolution |
 | `swr` | ^2.4.0 | Client-side data fetching with caching |
-| `mammoth` | ^1.11.0 | DOCX document parsing for Summer ingestion |
+| `mammoth` | ^1.11.0 | DOCX document parsing for Summer and Author imports |
+| `gray-matter` + `remark` + `remark-parse` | ^4.0.3 / ^15.0.1 / ^11.0.0 | Markdown frontmatter and heading AST extraction for Author imports |
+| `iconv-lite` | ^0.7.2 | EUC-KR fallback decoding for Author text imports |
 | `react-error-boundary` | ^6.1.0 | Declarative error boundaries for streaming |
 | `@octokit/rest` | ^22.0.1 | GitHub API integration (Auto-PR, Autopilot code fixer) |
 
@@ -263,8 +267,8 @@ Two auth systems coexist: NextAuth manages session/JWT while Supabase Auth handl
 **next-intl in package.json but barely used**
 `next-intl` (^4.11.0) is installed but only imported in 1 file (`docs/components/page.tsx`). The project primarily uses a custom dictionary system. This creates an unnecessary dependency.
 
-**pdf-parse usage is limited to PDF extraction paths**
-`pdf-parse` (^2.4.5) is imported in `src/lib/connectors/external/google-drive.ts` and `src/lib/summer/ingestion/layout-parser.ts`. PDF parsing is implemented, but primarily scoped to ingestion/connectors.
+**PDF parsing is scoped to ingestion paths**
+`pdf-parse` (^2.4.5) is imported in `src/lib/connectors/external/google-drive.ts`, `src/lib/summer/ingestion/layout-parser.ts`, and `src/lib/author/parser/pdf.ts`. It remains an ingestion/parser dependency, not a general rendering dependency.
 
 **React 18 on Next.js 16**
 Next.js 16 supports React 19, but this project pins React 18.3.1. This works but prevents access to React 19 features (use, Actions, Server Actions improvements). The `params: Promise<>` pattern in layouts suggests Next.js 16 compatibility is intentional.
@@ -350,7 +354,7 @@ User Request
 | Vercel AI SDK | Fully Implemented | `src/lib/integrations/vercel-ai/` (3 files) | Memory provider + middleware |
 | Paddle Payments | Partially Implemented | `src/lib/paddle-config.ts`, `src/components/checkout-button.tsx` | Price IDs are placeholders |
 | Resend Email | Fully Implemented | `src/lib/email/index.ts` | Single email service module |
-| Document Ingestion (DOCX) | Fully Implemented | `src/lib/summer/ingest/parsers/docx.ts` | Via mammoth |
+| Document Ingestion (DOCX/PDF/Markdown/Text) | Fully Implemented | `src/lib/summer/ingest/parsers/docx.ts`, `src/lib/author/parser/` | Summer uses mammoth for DOCX; Author Memory v3 parses md/docx/pdf/txt with heading/page span metadata |
 | Octokit GitHub Integration | Fully Implemented | `src/lib/auto-pr/github-client.ts`, `src/lib/autopilot/code-fixer.ts` | Auto-PR and autopilot |
 | PII Detection | Fully Implemented | `src/lib/pii/` (5 files) | Custom scanner + optional Presidio |
 | KMS Provenance Signing | Fully Implemented | `src/lib/provenance/kms-signer.ts` | AWS + Azure + Google Cloud KMS |
@@ -362,7 +366,7 @@ User Request
 | Adaptive Memory Router Learning | Fully Implemented | `src/lib/memory/router-learning.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/v1/memories/feedback/route.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Online strategy stats by query bucket + automatic override in `mode=auto` + feedback reward loop |
 | Lifecycle Scene Profile Sync | Fully Implemented | `src/lib/memory/lifecycle.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Consolidation scene profile updates now sync into slots/profile card and persist trace logs (`memory_scene_profile_sync_events`) |
 | Scheduled Memory Quality Auto-Eval | Fully Implemented | `src/lib/memory/eval-automation.ts`, `src/app/api/internal/eval-processor/route.ts` | Internal cron path emits synthetic auto-eval triggers when feedback degradation / zero-result ratio crosses thresholds |
-| Author Memory v3 Eval Route | Partially Implemented | `src/lib/author/memory-v3/`, `src/lib/author/ui/`, `src/app/api/author/memory-v3/eval/route.ts`, `src/app/api/projects/`, `src/app/api/account/`, `src/app/(dashboard)/dashboard/author/`, `src/hooks/useAuthorMemoryV3.ts`, `supabase/migrations/20260502001_author_memory_v3_store.sql`, `supabase/migrations/20260502002_author_memory_v3_side_effect_project_scope.sql`, `docs/knot-input/`, `docs/author-ui/` | Exposes deterministic author-canon eval payloads behind API-key auth with replay/fail-closed semantics; includes opt-in Supabase persistence for records/snapshots/project-scoped side effects/eval results, fail-closed Supabase config, KNOT v1/v2/v3 eval seed ingestion, v3 100-case record/replay fixture runner, optional Anthropic judge verifier, Fall dataset import helper, Author UI contract/query binding artifacts locked by tests, fixture-backed Author UI API routes, SWR hooks, polling fallback, and the first dashboard Author operator surface; durable Author UI store and production realtime remain next-phase work |
+| Author Memory v3 Eval Route | Partially Implemented | `src/lib/author/memory-v3/`, `src/lib/author/ui/`, `src/lib/author/parser/`, `src/lib/author/storage/`, `src/app/api/author/memory-v3/eval/route.ts`, `src/app/api/projects/`, `src/app/api/account/`, `src/app/(dashboard)/dashboard/author/`, `src/hooks/useAuthorMemoryV3.ts`, `supabase/migrations/20260502001_author_memory_v3_store.sql`, `supabase/migrations/20260502002_author_memory_v3_side_effect_project_scope.sql`, `supabase/migrations/20260502003_author_imports_text.sql`, `docs/knot-input/`, `docs/author-ui/` | Exposes deterministic author-canon eval payloads behind API-key auth with replay/fail-closed semantics; includes opt-in Supabase persistence for records/snapshots/project-scoped side effects/eval results, fail-closed Supabase config, KNOT v1/v2/v3 eval seed ingestion, v3 100-case record/replay fixture runner, optional Anthropic judge verifier, Fall dataset import helper, Author UI contract/query binding artifacts locked by tests, fixture-backed Author UI API routes, SWR hooks, polling fallback, dashboard upload control, Phase 1 Cloudflare R2 import persistence, md/docx/pdf/txt parser pipeline, and durable parsed import text storage; production realtime and later LLM extraction phases remain next-phase work |
 | Memory Search Canary Linkage | Fully Implemented | `src/app/api/v1/memories/route.ts`, `src/lib/fall/canary/` | v1 memory search now records canary quality/latency outcomes and supports canary forced mode override in auto routing |
 | Companion Memory Metadata & Analytics (v0) | Fully Implemented | `src/app/api/memories/route.ts`, `src/app/api/memories/[id]/route.ts`, `src/app/api/memories/analytics/route.ts`, `supabase/migrations/20260222_001_companion_meta_and_analytics.sql` | Added `search` alias filtering (`ILIKE`), `sort=-field` syntax, `companion_meta` POST/PATCH/filter support, JWT fallback auth for legacy v0 routes, CSRF validation for state-changing cookie-auth requests, and analytics endpoint backed by companion RPC functions with timing-safe admin token checks |
 | Graph Entity External ID APIs | Fully Implemented | `src/app/api/v1/graph/[graphId]/entities/route.ts`, `src/app/api/v1/graph/[graphId]/entities/[entityId]/route.ts`, `src/app/api/v1/graph/[graphId]/entities/by-external-id/[externalId]/route.ts`, `src/lib/graph/external-id.ts`, `supabase/migrations/20260415001_external_id.sql` | Added SDK-facing `external_id` create/list/detail/lookup support with runtime fallback to `properties.external_id` when the production column migration is not yet present |
@@ -373,7 +377,7 @@ User Request
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
 | next-intl | Partially Implemented | 1 file (`src/app/[locale]/docs/components/page.tsx`) | Mostly unused, custom system preferred |
-| pdf-parse | Fully Implemented | `src/lib/connectors/external/google-drive.ts`, `src/lib/summer/ingestion/layout-parser.ts` | Used for PDF text extraction in connector sync and Summer layout-aware parsing |
+| pdf-parse | Fully Implemented | `src/lib/connectors/external/google-drive.ts`, `src/lib/summer/ingestion/layout-parser.ts`, `src/lib/author/parser/pdf.ts` | Used for PDF text extraction in connector sync, Summer layout-aware parsing, and Author Memory v3 imports |
 | Stripe Payments | Configured but Unused | `src/lib/stripe-config.ts`, `.env.example` | Paddle is the active provider |
 | react-markdown | Partially Implemented | 1 file (`src/components/extreme-homepage/snippet-tabs.tsx`) | Homepage only |
 | SWR | Partially Implemented | 3 files | Limited client-side use |

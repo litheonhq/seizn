@@ -9,6 +9,16 @@ import {
   knotInputBundleToAuthorRecords,
   type KnotInputBundle,
 } from '@/lib/author/memory-v3/knot-input';
+import {
+  AuthorDocumentParseError,
+  parseAuthorDocument,
+} from '@/lib/author/parser';
+import { saveAuthorImportText } from '@/lib/author/storage/import-text-store';
+import {
+  AuthorR2ConfigError,
+  buildAuthorR2ObjectKey,
+  putAuthorImportObject,
+} from '@/lib/author/storage/r2-store';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -57,6 +67,9 @@ export interface AuthorUiImport {
   extract_progress: number;
   candidate_count: number;
   error_message?: string | null;
+  storage_key?: string | null;
+  parsed_text_preview?: string | null;
+  parser_version?: string | null;
   source_role: 'canon' | 'character' | 'scene' | 'reference' | 'visual';
   a_or_d_mode: 'extract' | 'raw_keep';
 }
@@ -295,35 +308,102 @@ export class AuthorUiService {
     };
   }
 
-  uploadImport(
+  async uploadImport(
     projectId: string,
     input: {
       fileName?: string;
       fileSize?: number;
       fileType?: string;
+      fileBytes?: Buffer;
       sourceRole?: string;
       aOrDMode?: string;
     }
-  ): { import_id: string } {
+  ): Promise<{ import_id: string }> {
     this.ensureProject(projectId);
+    if (!input.fileBytes || input.fileBytes.length === 0) {
+      throw new AuthorUiValidationError('file is required');
+    }
+
     const imports = this.state.importsByProject.get(projectId) ?? [];
     const id = `import-${imports.length + 1}-${Date.now().toString(36)}`;
-    imports.unshift({
+    const fileName = input.fileName ?? 'untitled.md';
+    const contentType = input.fileType;
+    const fileSize = input.fileSize ?? input.fileBytes.length;
+    const item: AuthorUiImport = {
       id,
-      file_name: input.fileName ?? 'untitled.md',
-      file_size: input.fileSize ?? 0,
-      file_type: normalizeFileType(input.fileType ?? input.fileName),
+      file_name: fileName,
+      file_size: fileSize,
+      file_type: normalizeFileType(contentType ?? fileName),
       upload_at: nowIso(),
-      parse_status: 'parsed',
-      parse_progress: 100,
-      extract_status: input.aOrDMode === 'raw_keep' ? 'queued' : 'extracted',
-      extract_progress: input.aOrDMode === 'raw_keep' ? 0 : 100,
-      candidate_count: input.aOrDMode === 'raw_keep' ? 0 : 1,
+      parse_status: 'parsing',
+      parse_progress: 10,
+      extract_status: 'queued',
+      extract_progress: 0,
+      candidate_count: 0,
       error_message: null,
+      storage_key: null,
+      parsed_text_preview: null,
+      parser_version: null,
       source_role: normalizeSourceRole(input.sourceRole),
       a_or_d_mode: input.aOrDMode === 'raw_keep' ? 'raw_keep' : 'extract',
-    });
+    };
+
+    imports.unshift(item);
     this.state.importsByProject.set(projectId, imports);
+    this.touchProject(projectId);
+
+    if (fileSize > 50 * 1024 * 1024) {
+      markImportFailed(item, 'file_too_large');
+      this.touchProject(projectId);
+      return { import_id: id };
+    }
+
+    try {
+      const storageKey = buildAuthorR2ObjectKey({ projectId, importId: id, fileName });
+      const storageRef = await putAuthorImportObject({
+        key: storageKey,
+        body: input.fileBytes,
+        contentType,
+        metadata: {
+          project_id: projectId,
+          import_id: id,
+          source_role: item.source_role,
+        },
+      });
+      item.storage_key = storageRef.key;
+      item.parse_progress = 45;
+
+      const parsed = await parseAuthorDocument({
+        buffer: input.fileBytes,
+        fileName,
+        contentType,
+      });
+      item.file_type = parsed.fileType;
+      item.parse_progress = 80;
+
+      await saveAuthorImportText({
+        importId: id,
+        projectId,
+        userId: this.state.userId,
+        fileName,
+        fileSize,
+        contentType,
+        storageRef,
+        parsed,
+      });
+
+      item.parse_status = 'parsed';
+      item.parse_progress = 100;
+      item.extract_status = 'queued';
+      item.extract_progress = 0;
+      item.candidate_count = 0;
+      item.error_message = null;
+      item.parsed_text_preview = parsed.text.slice(0, 500);
+      item.parser_version = parsed.parserVersion;
+    } catch (error) {
+      markImportFailed(item, formatImportError(error));
+    }
+
     this.touchProject(projectId);
     return { import_id: id };
   }
@@ -1350,6 +1430,28 @@ function normalizeFileType(value: string | undefined): AuthorUiImport['file_type
   if (lower.includes('notion')) return 'notion_export';
   if (lower.includes('obsidian')) return 'obsidian_md';
   return 'md';
+}
+
+function markImportFailed(item: AuthorUiImport, message: string): void {
+  item.parse_status = 'failed';
+  item.parse_progress = 100;
+  item.extract_status = 'failed';
+  item.extract_progress = 0;
+  item.candidate_count = 0;
+  item.error_message = message;
+}
+
+function formatImportError(error: unknown): string {
+  if (error instanceof AuthorDocumentParseError) {
+    return error.code === 'unsupported_format' ? 'unsupported_format' : error.message;
+  }
+  if (error instanceof AuthorR2ConfigError) {
+    return 'r2_not_configured';
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return 'import_failed';
 }
 
 function normalizeCandidateType(value: string | undefined): CandidateType {

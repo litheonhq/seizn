@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { type ChangeEvent, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   Clock3,
@@ -8,6 +8,7 @@ import {
   GitBranch,
   Play,
   RefreshCw,
+  UploadCloud,
   UserRound,
 } from 'lucide-react';
 import {
@@ -21,6 +22,7 @@ import {
   useAuthorTimeline,
   useRunAuthorSimulation,
   useAuthorSimulation,
+  useUploadAuthorImport,
 } from '@/hooks/useAuthorMemoryV3';
 
 type JsonRecord = Record<string, unknown>;
@@ -49,7 +51,11 @@ export function AuthorMemoryV3Client() {
   const settings = useAuthorSettings(projectId);
   const runSimulation = useRunAuthorSimulation(projectId);
   const simulation = useAuthorSimulation(projectId, simulationId);
+  const uploadImport = useUploadAuthorImport(projectId);
   const currentProject = projects.data?.projects?.[0];
+  const [uploadRole, setUploadRole] = useState('canon');
+  const [uploadMode, setUploadMode] = useState('extract');
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const counts = useMemo(() => ({
     imports: imports.data?.summary?.total ?? 0,
@@ -81,6 +87,25 @@ export function AuthorMemoryV3Client() {
     });
     setSimulationId(result.simulation_id);
     setScreen('simulate');
+  }
+
+  async function handleImportFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    setUploadError(null);
+    const form = new FormData();
+    form.set('file', file);
+    form.set('source_role', uploadRole);
+    form.set('a_or_d_mode', uploadMode);
+
+    try {
+      await uploadImport.trigger(form);
+      setScreen('inbox');
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : 'Upload failed');
+    }
   }
 
   return (
@@ -146,7 +171,52 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'inbox' ? (
             <Panel title="Document Inbox">
-              <Rows rows={imports.data?.imports ?? []} columns={['file_name', 'source_role', 'parse_status', 'candidate_count']} />
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <label
+                  aria-disabled={uploadImport.isMutating}
+                  className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
+                >
+                  <UploadCloud className="h-4 w-4" aria-hidden="true" />
+                  Upload
+                  <input
+                    type="file"
+                    className="sr-only"
+                    accept=".md,.markdown,.docx,.pdf,.txt,text/markdown,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    aria-disabled={uploadImport.isMutating}
+                    disabled={uploadImport.isMutating}
+                    onChange={handleImportFile}
+                  />
+                </label>
+                <select
+                  value={uploadRole}
+                  onChange={(event) => setUploadRole(event.target.value)}
+                  className="min-h-10 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800"
+                >
+                  <option value="canon">Canon</option>
+                  <option value="character">Character</option>
+                  <option value="scene">Scene</option>
+                  <option value="reference">Reference</option>
+                  <option value="visual">Visual</option>
+                </select>
+                <select
+                  value={uploadMode}
+                  onChange={(event) => setUploadMode(event.target.value)}
+                  className="min-h-10 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800"
+                >
+                  <option value="extract">Extract</option>
+                  <option value="raw_keep">Raw keep</option>
+                </select>
+                {uploadImport.isMutating ? (
+                  <span className="text-sm text-slate-600">Uploading</span>
+                ) : null}
+                {uploadError ? (
+                  <span className="text-sm text-red-700">{uploadError}</span>
+                ) : null}
+              </div>
+              <Rows
+                rows={imports.data?.imports ?? []}
+                columns={['file_name', 'source_role', 'parse_status', 'extract_status', 'candidate_count', 'parsed_text_preview', 'error_message']}
+              />
             </Panel>
           ) : null}
           {!isLoading && screen === 'review' ? (

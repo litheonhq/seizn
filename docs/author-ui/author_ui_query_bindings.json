@@ -183,7 +183,7 @@
           "optimistic": true,
           "optimistic_patch": {
             "target_query": "['imports', projectId]",
-            "patch": "imports.push({ id: tempId, file_name, file_size, file_type, parse_status: 'queued', extract_status: 'queued', upload_at: now, parse_progress: 0, extract_progress: 0, candidate_count: 0, source_role, a_or_d_mode })"
+            "patch": "imports.push({ id: tempId, file_name, file_size, file_type, parse_status: 'queued', extract_status: 'queued', upload_at: now, parse_progress: 0, extract_progress: 0, candidate_count: 0, storage_key: null, parsed_text_preview: null, parser_version: null, source_role, a_or_d_mode })"
           },
           "on_success": {
             "invalidate": ["['imports', projectId]"],
@@ -241,7 +241,7 @@
           "event": "import.parsed",
           "action": "patch",
           "target_query": "['imports', projectId]",
-          "patch_logic": "imports.find(i => i.id === payload.import_id) = { ...item, parse_status: 'parsed', candidate_count: payload.candidate_count }",
+          "patch_logic": "imports.find(i => i.id === payload.import_id) = { ...item, parse_status: 'parsed', storage_key: payload.storage_key, parsed_text_preview: payload.parsed_text_preview, parser_version: payload.parser_version, candidate_count: payload.candidate_count }",
           "side_effects": [
             "invalidate ['candidates', projectId] (새 후보가 검수 큐에 추가됨)",
             "toast variant='info' '{file_name} 파싱 완료·{candidate_count}건 검수 대기'"

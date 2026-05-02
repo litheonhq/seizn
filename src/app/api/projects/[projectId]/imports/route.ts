@@ -25,10 +25,14 @@ export async function POST(
     const sourceRole = form.get('source_role');
     const aOrDMode = form.get('a_or_d_mode');
     const fileRecord = file && typeof file === 'object' ? file as File : null;
+    const fileBytes = fileRecord
+      ? Buffer.from(await fileRecord.arrayBuffer())
+      : undefined;
     return service.uploadImport(projectId, {
       fileName: fileRecord?.name,
       fileSize: fileRecord?.size,
-      fileType: fileRecord?.type || fileRecord?.name,
+      fileType: fileRecord?.type || undefined,
+      fileBytes,
       sourceRole: typeof sourceRole === 'string' ? sourceRole : undefined,
       aOrDMode: typeof aOrDMode === 'string' ? aOrDMode : undefined,
     });
