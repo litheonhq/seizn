@@ -218,8 +218,9 @@ export function ServiceSelectorClient({ dict, locale }: ServiceSelectorClientPro
             {dict.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
           <nav className="flex items-center gap-6">
-            <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.terms}</a>
+            <a href={`/${locale}/legal/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.privacy}</a>
+            <a href={`/${locale}/legal/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.terms}</a>
+            <a href={`/${locale}/legal/beta-disclosure`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Beta Disclosure</a>
             <a href="mailto:support@seizn.com" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{dict.footer.contact}</a>
           </nav>
         </div>

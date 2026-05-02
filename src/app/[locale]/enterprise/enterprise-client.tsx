@@ -363,7 +363,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
 
           <p className="text-center text-sm text-gray-500">
             {t.form.privacyNote}{' '}
-            <Link href={`/${locale}/privacy`} className="text-blue-400 hover:underline">{dict.footer.privacy}</Link>.
+            <Link href={`/${locale}/legal/privacy`} className="text-blue-400 hover:underline">{dict.footer.privacy}</Link>.
           </p>
         </form>
       </div>

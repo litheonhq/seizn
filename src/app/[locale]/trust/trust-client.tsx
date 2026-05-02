@@ -645,11 +645,14 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
             {dict.footer?.copyright?.replace("{year}", "2026") || "2026 Seizn. All rights reserved."}
           </p>
           <div className="flex items-center gap-6">
-            <Link href={`/${locale}/privacy`} className="text-sm text-gray-400 hover:text-white">
+            <Link href={`/${locale}/legal/privacy`} className="text-sm text-gray-400 hover:text-white">
               {dict.footer?.privacy || "Privacy"}
             </Link>
-            <Link href={`/${locale}/terms`} className="text-sm text-gray-400 hover:text-white">
+            <Link href={`/${locale}/legal/terms`} className="text-sm text-gray-400 hover:text-white">
               {dict.footer?.terms || "Terms"}
+            </Link>
+            <Link href={`/${locale}/legal/beta-disclosure`} className="text-sm text-gray-400 hover:text-white">
+              Beta Disclosure
             </Link>
             <Link href={`/${locale}/enterprise`} className="text-sm text-gray-400 hover:text-white">
               Enterprise

@@ -362,6 +362,8 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.plus}
+                privacyHref={`/${locale}/legal/privacy`}
+                termsHref={`/${locale}/legal/terms`}
                 className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8"
               >
                 {t.pricing.plus.cta}
@@ -392,6 +394,8 @@ const memories = await seizn.search({
                 </ul>
                 <CheckoutButton
                   priceId={PLAN_VARIANTS.pro}
+                  privacyHref={`/${locale}/legal/privacy`}
+                  termsHref={`/${locale}/legal/terms`}
                   className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg mt-8"
                 >
                   {t.pricing.pro.cta}
@@ -437,8 +441,9 @@ const memories = await seizn.search({
             {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
           <nav className="flex items-center gap-6" aria-label="Footer navigation">
-            <a href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
-            <a href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
+            <a href={`/${locale}/legal/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
+            <a href={`/${locale}/legal/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
+            <a href={`/${locale}/legal/beta-disclosure`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Beta Disclosure</a>
             <a href="mailto:support@seizn.com" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</a>
           </nav>
         </div>

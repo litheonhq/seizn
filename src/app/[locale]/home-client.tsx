@@ -319,6 +319,8 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.starter}
+                privacyHref={`/${locale}/legal/privacy`}
+                termsHref={`/${locale}/legal/terms`}
                 className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.starter.cta}
@@ -342,6 +344,8 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.plus}
+                privacyHref={`/${locale}/legal/privacy`}
+                termsHref={`/${locale}/legal/terms`}
                 className="block w-full py-3 rounded-full border border-szn-border text-szn-text-1 font-medium hover:bg-szn-bg transition-colors text-center"
               >
                 {t.pricing.plus.cta}
@@ -368,6 +372,8 @@ const memories = await seizn.search({
               </ul>
               <CheckoutButton
                 priceId={PLAN_VARIANTS.pro}
+                privacyHref={`/${locale}/legal/privacy`}
+                termsHref={`/${locale}/legal/terms`}
                 className="block w-full py-3 rounded-full bg-white text-black font-medium hover:bg-gray-100 transition-colors text-center"
               >
                 {t.pricing.pro.cta}
@@ -412,8 +418,9 @@ const memories = await seizn.search({
             </div>
           </div>
           <nav className="flex flex-wrap items-center gap-6" aria-label="Footer navigation">
-            <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</Link>
-            <Link href={`/${locale}/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</Link>
+            <Link href={`/${locale}/legal/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</Link>
+            <Link href={`/${locale}/legal/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</Link>
+            <Link href={`/${locale}/legal/beta-disclosure`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Beta Disclosure</Link>
             <Link href={`/${locale}/docs/faq`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</Link>
           </nav>
         </div>
