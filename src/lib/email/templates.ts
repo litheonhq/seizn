@@ -1,3 +1,12 @@
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Base template wrapper
 function baseTemplate(content: string, previewText?: string) {
   return `
@@ -7,7 +16,7 @@ function baseTemplate(content: string, previewText?: string) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seizn</title>
-  ${previewText ? `<span style="display:none;font-size:1px;color:#fff;max-height:0;">${previewText}</span>` : ''}
+  ${previewText ? `<span style="display:none;font-size:1px;color:#fff;max-height:0;">${escapeHtml(previewText)}</span>` : ''}
 </head>
 <body style="margin:0;padding:0;background-color:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9fafb;padding:40px 20px;">
@@ -253,13 +262,15 @@ export function weeklyUsageSummaryEmail(
 
 // Enterprise inquiry confirmation
 export function enterpriseInquiryConfirmationEmail(companyName: string, contactName: string) {
+  const safeCompanyName = escapeHtml(companyName);
+  const safeContactName = escapeHtml(contactName);
   const content = `
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">We Received Your Inquiry</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Hi ${contactName},
+      Hi ${safeContactName},
     </p>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Thank you for your interest in Seizn Enterprise for <strong>${companyName}</strong>.
+      Thank you for your interest in Seizn Enterprise for <strong>${safeCompanyName}</strong>.
       Our team will review your inquiry and get back to you within 1-2 business days.
     </p>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">

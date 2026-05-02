@@ -142,7 +142,7 @@ export async function GET(
     logServerError('Connector OAuth callback failed', error);
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_APP_URL}/settings/connections?error=${encodeURIComponent(
-        error instanceof Error ? error.message : 'OAuth callback failed'
+        'OAuth callback failed'
       )}`
     );
   }

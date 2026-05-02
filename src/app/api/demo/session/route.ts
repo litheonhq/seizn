@@ -17,6 +17,16 @@ export async function POST(request: NextRequest) {
     const forwardedFor = request.headers.get("x-forwarded-for");
     const clientIp = forwardedFor?.split(",")[0]?.trim() || "unknown";
 
+    // Rate limit unauthenticated demo session creation per IP.
+    const { checkIpRateLimitAsync, getRateLimitHeaders } = await import("@/lib/rate-limit");
+    const rateLimitResult = await checkIpRateLimitAsync(clientIp);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429, headers: getRateLimitHeaders(rateLimitResult) }
+      );
+    }
+
     // Generate demo token
     const demoToken = generateDemoToken();
     const expiresAt = new Date(Date.now() + DEMO_CONFIG.ttlMs);
