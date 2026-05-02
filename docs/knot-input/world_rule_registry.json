@@ -1,0 +1,282 @@
+{
+  "version": "v1-schema",
+  "generated_at": "2026-05-02",
+  "scope": "global + short1 적용",
+  "status": "schema_with_seed_entries",
+  "fill_status": "worldbuilding/ 50+ md deep-read 필요·다음 cycle 풀 fill",
+  "schema_notes": [
+    "각 룰 = graph_entities(type='rule' or 'concept') + graph_edges 매핑",
+    "valid_at·invalid_at·source·confidence·status·retired 필드 필수",
+    "scope (global·short1·main 등) 명시"
+  ],
+  "rule_categories": [
+    "dimension",
+    "empire_law",
+    "region",
+    "organization",
+    "magic_or_ability",
+    "tech",
+    "school",
+    "custom",
+    "taboo",
+    "moon_phase",
+    "transcendent_power",
+    "transport",
+    "currency",
+    "calendar"
+  ],
+  "rules": [
+    {
+      "id": "knot.world.dimension.afe5",
+      "category": "dimension",
+      "scope": "global",
+      "name": "A~E 5차원 → F차원 합일",
+      "description": "A·B·C·D·E 5개 차원이 F차원으로 합일된 후 천주제국이 출현. E는 붕괴·선유입.",
+      "valid_at": "history start",
+      "invalid_at": null,
+      "status": "canon",
+      "confidence": "high",
+      "source": "worldbuilding/dimensions.md",
+      "tags": ["scope:global", "category:fact", "tier:1"]
+    },
+    {
+      "id": "knot.world.empire.churju",
+      "category": "empire_law",
+      "scope": "global",
+      "name": "천주제국 (天柱帝國) / The Worldspire Empire",
+      "description": "수직 22km 도시 (지상 10km + 지하 12km)·인구 ~411억·면적 ~850만 km² (중심부 10만 km²·1.2%)",
+      "status": "canon",
+      "source": "canon.md §제국·worldbuilding/geography.md",
+      "tags": ["scope:global", "category:fact"]
+    },
+    {
+      "id": "knot.world.empire.7laws",
+      "category": "empire_law",
+      "scope": "global",
+      "name": "천주칠금 (7대 금제)",
+      "description": "제국 통치 최상위 7대 금제·공개적 인지",
+      "details": [
+        {"order": 1, "name": "문을 넘지 말것", "status": "canon"},
+        {"order": 2, "name": "몫을 숨기지 말것", "status": "canon"},
+        {"order": 3, "name": "하늘을 가르지 말것", "status": "canon", "added_at": "2026-05-02", "reasons": ["테게오스 보호", "부유 인프라 제국 비밀 보호", "중심부 접근 차단", "광역 테러 방지"]},
+        {"order": 4, "name": "(미정)", "status": "tbd"},
+        {"order": 5, "name": "(미정)", "status": "tbd"},
+        {"order": 6, "name": "(미정)", "status": "tbd"},
+        {"order": 7, "name": "(미정)", "status": "tbd"}
+      ],
+      "source": "worldbuilding/imperial-laws.md",
+      "tags": ["scope:global", "tier:1"],
+      "scope_notes": "단편 1 본문에 4~7금 노출 금지"
+    },
+    {
+      "id": "knot.world.regions.3",
+      "category": "region",
+      "scope": "global",
+      "name": "3 권역 — 무공권·마법권·사펑권",
+      "details": [
+        {"name": "무공권", "language": "한자·한국어 + 일본어 10%"},
+        {"name": "마법권", "language": "그리스·라틴·룬 + 룬 15%"},
+        {"name": "사펑권", "language": "일본·영어·한국어 + 일본어 40%"}
+      ],
+      "source": "canon.md §권역",
+      "tags": ["scope:global"]
+    },
+    {
+      "id": "knot.world.org.10siplease",
+      "category": "organization",
+      "scope": "global",
+      "name": "십장생 10 기업국가",
+      "details": [
+        {"name": "운몽 (雲夢)·네펠레 테크", "field": "차원 기술·룬코어·기상·예언 (표면) · 운반(雲盤) 다인용 공중 운수 + 부유 섬 운영 (비공개)"},
+        {"name": "일륜 (日輪)·헬리오스 에너지", "field": "에너지/동력·태양 발전·빛 길(光路)·간이 빛 길 생성기·수직 승강"},
+        {"name": "송백 (松柏)·파인 바이오닉스", "field": "TBD·단편 1 핵심 적대 명시"},
+        {"name": "반석 (磐石)·반석 중공업", "field": "TBD·단편 1 핵심 적대"},
+        {"name": "태산 (泰山)·태산 방위산업", "field": "사신청·외벽·구파일방"},
+        {"name": "현무 (玄武)·현무 무예기공", "field": "무공 임플란트·자기 방어 인형"},
+        {"name": "영지 (靈芝)·영지 제약", "field": "연단·내단·무당파 협력"},
+        {"name": "녹원 (鹿苑)·녹원 생명과학", "field": "6시 분쟁·인어 교역"},
+        {"name": "창류 (蒼流)·아쿠아넷 시스템즈", "field": "외곽 순환·기간 인프라"},
+        {"name": "선학 (仙鶴)·선학 그룹", "field": "청학여고 후원·검열 바다·잠식체 사후 처리"}
+      ],
+      "source": "worldbuilding/organizations.md·worldbuilding/glossary/네펠레 테크.md (외 9)",
+      "tags": ["scope:global", "tier:1"]
+    },
+    {
+      "id": "knot.world.org.13transcendents",
+      "category": "transcendent_power",
+      "scope": "global",
+      "name": "13 초월체",
+      "description": "정확히 13명·🌑 삭급",
+      "details": [
+        {"order": 13, "name": "결 (結) / The Knot", "role": "주인공 (비공개)", "tier": 2},
+        {"order": 2, "name": "절 (折) / The Sever", "role": "본편 최종 적대·차원분리파 수괴", "tier": 1},
+        {"order": 6, "name": "萌 (맹)", "role": "E 선주민 3인", "tier": 1},
+        {"order": 11, "name": "覺 (각)", "role": "E 선주민 3인", "tier": 1},
+        {"order": 12, "name": "陰 (음)", "role": "E 선주민 3인", "tier": 1}
+      ],
+      "scope_notes": "단편 1 본문에 13 초월체 직접 노출 금지·결 정체 = Tier 2 작가 only",
+      "source": "worldbuilding/transcendents.md",
+      "tags": ["scope:global", "forbidden_in_scope:short1"]
+    },
+    {
+      "id": "knot.world.moon.6phase",
+      "category": "moon_phase",
+      "scope": "global",
+      "name": "달의 위상 6단계",
+      "details": ["🌒 초승", "🌓 상현", "🌕 보름", "🌗 하현", "🌘 그믐", "🌑 삭"],
+      "scope_notes": "한국 관습 4·5단계와 다름·6단계 정확",
+      "source": "worldbuilding/unknowns.md·canon.md",
+      "tags": ["scope:global", "tier:1", "high_priority_check"]
+    },
+    {
+      "id": "knot.world.moon.dokkaebi",
+      "category": "moon_phase",
+      "scope": "global",
+      "name": "도깨비 = 달의 위상 (이계 유입)",
+      "description": "선주민 X·이계 유입·표면 🌒 초승·실제 조건부 🌑 삭 전이",
+      "scope_notes": "단편 1·2·3 본문에 삭 조건·청월 사건·관상감 관리 노출 금지",
+      "source": "worldbuilding/unknowns.md·canon.md",
+      "tags": ["scope:global", "forbidden_in_scope:short1,short2,short3", "tier:1"]
+    },
+    {
+      "id": "knot.world.school.cheonghak",
+      "category": "school",
+      "scope": "short1",
+      "name": "청학여자고등학교 / 청학여고",
+      "description": "단편 1 무대·예조 거점 학교 X·선학 후원 + 십장생 다자 진로 파이프라인",
+      "details": {
+        "tier_lock": "v3.7.9ab → v3.7.9ai 거점 공립 일반고",
+        "location": "7시 권역 외곽 250만 km² + 중심부 가까운 신도시 (경계 신도시 폐기·v3.7.9azau)",
+        "principal_org": "선학 그룹 후원",
+        "club": "오컬트 연구회 (6인 + 주인공 = 7인)",
+        "secret_facility": "정비 서고 (지상 도서관 1층 관리자 문 → 팔찌형 학생증 인증 → 지하 계단)"
+      },
+      "source": "stories/short1-school.md·worldbuilding/school-life.md",
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.world.school.dorm.308",
+      "category": "school",
+      "scope": "short1",
+      "name": "기숙사 308호",
+      "description": "소리·나리 룸메이트 방",
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.world.education.system",
+      "category": "school",
+      "scope": "global",
+      "name": "교육 제도",
+      "details": ["초6·중3·고3·대4", "초등만 무상", "예조 거점 학교 체계"],
+      "source": "worldbuilding/education.md",
+      "tags": ["scope:global"]
+    },
+    {
+      "id": "knot.world.school.day_system",
+      "category": "school",
+      "scope": "short1",
+      "name": "단편 1 D1~D35 데모 분배",
+      "details": {
+        "phase_1_pref_week": "D1~D10 (사전 입주·정해진 흐름)",
+        "phase_2_post_entrance": "D11~D24 (입학식·일상·자유 슬롯 6 Day)",
+        "phase_3_crisis": "D25~D35 (위기·정비·보스전)",
+        "key_anchors": [
+          "D1 = 2/20 금",
+          "D11 = 3/2 월 입학식",
+          "D29 = 3/20 금 타오 사망",
+          "D35 = 3/26 목 보스전"
+        ],
+        "free_slots_total": 11,
+        "free_slot_days": ["D15-D17", "D22-D24", "D28", "D30-D33"]
+      },
+      "source": "INDEX.md v113·stories/short1/day-sheet.md",
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.world.transport.imperial",
+      "category": "transport",
+      "scope": "global",
+      "name": "이동 수단 매트릭스",
+      "details": {
+        "ground_local": "지역 기업 + 창류 (서민)",
+        "vertical_22km": "현무·운몽 등 (중상류)",
+        "air_alternative": "운반(雲盤·운몽 차원 기술) + 빛 길(光路·일륜 에너지) (상류)",
+        "dimension_skip": "마탑 결계 통로 (마법사 능력)",
+        "secret_imperial": "기계섬·부유 섬 (황제 비공개)",
+        "law_constraint": "천주칠금 제3금 = 하늘을 가르지 말것·면허 체계 별도"
+      },
+      "source": "worldbuilding/transport.md",
+      "tags": ["scope:global"]
+    },
+    {
+      "id": "knot.world.eight_virtues",
+      "category": "organization",
+      "scope": "global",
+      "name": "8덕목 (지하 조직)",
+      "details": ["慧·勇·靜·義·信·願·慈·忘 (忘 = 제국의 개·v2026-04-18)"],
+      "source": "worldbuilding/organizations.md·canon.md",
+      "tags": ["scope:global", "tier:1"]
+    },
+    {
+      "id": "knot.world.star.9rank",
+      "category": "magic_or_ability",
+      "scope": "global",
+      "name": "星(성) 9단계 강함 등급",
+      "description": "제국 인간 강함 등급",
+      "source": "canon.md §星 9단계",
+      "tags": ["scope:global"],
+      "fill_status": "TBD - canon.md §星 9단계 cycle 2 fill"
+    },
+    {
+      "id": "knot.world.taboo.short1.boundaries",
+      "category": "taboo",
+      "scope": "short1",
+      "name": "단편 1 본문 노출 금지 목록",
+      "details": [
+        "13 초월체 직접 노출",
+        "결 정체",
+        "허 사서 정체 (자허·삼족오위)",
+        "도서관장 정체 (월주)",
+        "도깨비 삭 조건·청월 사건·관상감 관리",
+        "천주칠금 4~7금 본문",
+        "본편 8동료·헬멧 폐기 등 본편 한정 설정"
+      ],
+      "tags": ["scope:short1", "forbidden_in_scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.world.protag.power.short1",
+      "category": "magic_or_ability",
+      "scope": "short1",
+      "name": "소리 능력 — 자서가(自書家)",
+      "description": "단편 1 주인공 능력·v3.7.9ay·6 constraints + 발현 단계",
+      "source": "canon.md §소리 능력",
+      "tags": ["scope:short1", "tier:2"],
+      "fill_status": "TBD - canon.md §자서가 cycle 2 fill"
+    },
+    {
+      "id": "knot.world.protag.weapon.short1",
+      "category": "magic_or_ability",
+      "scope": "short1",
+      "name": "장도(裝刀) — 출처 미상 메타 시스템 매개",
+      "description": "v3.7.9ax·2026-04-28 중립화",
+      "source": "canon.md §장도",
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD - cycle 2"
+    }
+  ],
+  "deferred_for_cycle_2": [
+    "차원·앵커·위상폭풍 상세 (worldbuilding/dimensions.md)",
+    "권역별 디테일 (factions/wugong·magic·sapeng/**/*.md)",
+    "유협회·8협회 (worldbuilding/organizations.md)",
+    "혈액 색 캐논 (canon.md v3.7.9o·v3.7.9aj)",
+    "사펑권 상세 체계 (canon.md v3.7.9azad)",
+    "무공권 상세 체계 (canon.md v3.7.9azac)",
+    "역천자(逆天者) 탐지 — 제국 시점 3단계 (v3.7.9ax)",
+    "이격(異格) 카테고리 — SCP 류 적",
+    "데모 임팩트 5단 스택 + ARG 확장 (v3.7.9azb)",
+    "선행 문명 (worldbuilding/precursor-civ.md)",
+    "이브 & 아담 검은 안개 (worldbuilding/mist-couple.md)",
+    "13 초월체 풀 명단 + 능력 (worldbuilding/transcendents.md)",
+    "용어 모음집 풀 dump (worldbuilding/terminology.md + glossary/**/*.md)"
+  ]
+}

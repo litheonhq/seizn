@@ -1,0 +1,188 @@
+{
+  "version": "v1-schema",
+  "generated_at": "2026-05-02",
+  "scope": "short1",
+  "status": "schema_with_seed_entries",
+  "fill_status": "스토리 timeline + character interaction matrix deep-read 필요·다음 cycle 풀 fill",
+  "schema_notes": [
+    "각 관계 = graph_edges 매핑",
+    "관계 차원: 신뢰·의심·애착·적대·부채감·정보 비대칭",
+    "각 차원은 -1.0 ~ 1.0 또는 강도 enum (none·weak·moderate·strong)",
+    "관계 변화 시점 = events 배열 (timeline_event_ledger.json 참조)",
+    "valid_at·invalid_at·source 필수"
+  ],
+  "dimensions": {
+    "trust": "신뢰 (-1.0 적대 ~ 1.0 신뢰)",
+    "suspicion": "의심 (0.0 ~ 1.0)",
+    "attachment": "애착 (0.0 ~ 1.0)",
+    "hostility": "적대 (0.0 ~ 1.0)",
+    "debt": "부채감 (0.0 ~ 1.0)",
+    "information_asymmetry": "정보 비대칭 (A가 B 모르는 것 / B가 A 모르는 것)"
+  },
+  "intensity_enum": ["none", "weak", "moderate", "strong"],
+  "relationships": [
+    {
+      "id": "knot.short1.rel.sori-nari",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.nari",
+      "scope": "short1",
+      "relationship_type": "roommate",
+      "valid_at": "D1 (2/20 금)",
+      "current_state": {
+        "trust": "moderate",
+        "suspicion": "weak",
+        "attachment": "moderate-strong",
+        "hostility": "none",
+        "debt": "weak",
+        "information_asymmetry": "양방향 — 소리는 자기 능력(자서가) 작가 only·나리는 풍기위원장 활동 부분 비공개"
+      },
+      "events": [
+        {"event_id": "knot.short1.event.d1-308-meet", "delta": "관계 시작", "at": "D1"},
+        {"event_id": "knot.short1.event.d2-cafeteria-debrief", "delta": "trust +", "at": "D2"},
+        {"event_id": "knot.short1.event.d20-clue-tracking", "delta": "trust +·attachment +", "at": "D20"}
+      ],
+      "narrative_function": "단편 1 핵심 듀오·정보 추적 협력",
+      "source": "stories/short1/prefweek/d1.md·stories/short1/week1/d20.md",
+      "tags": ["scope:short1", "tier:1", "core_pair"]
+    },
+    {
+      "id": "knot.short1.rel.sori-lulu",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "friend_class_adjacent",
+      "valid_at": "D2 (2/21 토)",
+      "current_state": {
+        "trust": "weak-moderate",
+        "attachment": "moderate",
+        "information_asymmetry": "룰루는 마법권 혼혈 가정 비공개·소리는 자기 능력 비공개"
+      },
+      "events": [
+        {"event_id": "knot.short1.event.d2-cafeteria-lulu", "delta": "관계 시작", "at": "D2"},
+        {"event_id": "knot.short1.event.d12-club-recommend", "delta": "trust +", "at": "D12"},
+        {"event_id": "knot.short1.event.d14-club-join", "delta": "attachment +", "at": "D14"}
+      ],
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD - cycle 2 events"
+    },
+    {
+      "id": "knot.short1.rel.sori-aoi",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.aoi",
+      "scope": "short1",
+      "relationship_type": "acquaintance_corridor",
+      "valid_at": "D3 (2/22 일)",
+      "current_state": {"trust": "weak", "attachment": "weak"},
+      "events": [
+        {"event_id": "knot.short1.event.d3-corridor-clip", "delta": "관계 시작", "at": "D3"}
+      ],
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD"
+    },
+    {
+      "id": "knot.short1.rel.sori-reika",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.reika",
+      "scope": "short1",
+      "relationship_type": "club_member",
+      "valid_at": "D5 (2/24 화) — D14 가입 정식",
+      "events": [
+        {"event_id": "knot.short1.event.d5-clubroom-reika-sleeping", "delta": "최초 인지 (말 X)", "at": "D5"},
+        {"event_id": "knot.short1.event.d14-club-join", "delta": "정식 멤버", "at": "D14"}
+      ],
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD"
+    },
+    {
+      "id": "knot.short1.rel.sori-nana",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.nana",
+      "scope": "short1",
+      "relationship_type": "club_member",
+      "valid_at": "D6 (2/25 수)",
+      "events": [
+        {"event_id": "knot.short1.event.d6-nana-short-talk", "delta": "관계 시작", "at": "D6"}
+      ],
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD"
+    },
+    {
+      "id": "knot.short1.rel.sori-yui",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "club_member",
+      "valid_at": "D9 (2/28 토)",
+      "events": [
+        {"event_id": "knot.short1.event.d9-yui-first-with-lulu", "delta": "관계 시작 (룰루+유이 페어)", "at": "D9"}
+      ],
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD"
+    },
+    {
+      "id": "knot.short1.rel.sori-heo",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.heo",
+      "scope": "short1",
+      "relationship_type": "library_user_to_librarian",
+      "valid_at": "D4 (2/23 월)",
+      "current_state": {
+        "trust": "weak",
+        "suspicion": "weak (소리 입장)·moderate (D19 이후)",
+        "information_asymmetry": "허는 자허·삼족오위 정체 비공개 (Tier 2 작가 only)·소리는 자서가 능력 비공개"
+      },
+      "events": [
+        {"event_id": "knot.short1.event.d4-library-first", "delta": "관계 시작·4시 메모 노출", "at": "D4"},
+        {"event_id": "knot.short1.event.d19-library-second", "delta": "허 자발성·duty 표명", "at": "D19"}
+      ],
+      "tags": ["scope:short1", "tier:1", "subtag:tier2_identity_hidden"],
+      "source": "stories/short1/prefweek/d4.md·stories/short1/week1/d19.md"
+    },
+    {
+      "id": "knot.short1.rel.sori-dokkaebi",
+      "from": "knot.short1.char.sori",
+      "to": "[knot.short1.char.dokkaebi.tora,knot.short1.char.dokkaebi.dori,knot.short1.char.dokkaebi.chibi]",
+      "scope": "short1",
+      "relationship_type": "regular_at_food_stall",
+      "valid_at": "D1 (2/20 금) 첫 만남·D7 (2/26 목) 단골화",
+      "current_state": {
+        "trust": "moderate",
+        "attachment": "moderate (캐주얼·따뜻함)",
+        "information_asymmetry": "도깨비 본질 (달의 위상·이계 유입·삭 조건) = 작가 only·소리 본문 X"
+      },
+      "events": [
+        {"event_id": "knot.short1.event.d1-dokkaebi-first", "delta": "관계 시작·어묵", "at": "D1"},
+        {"event_id": "knot.short1.event.d7-dokkaebi-regular", "delta": "단골 격상", "at": "D7"}
+      ],
+      "tags": ["scope:short1", "tier:1", "forbidden_in_scope:short1_essence", "subtag:dokkaebi_3"]
+    },
+    {
+      "id": "knot.short1.rel.cluborg",
+      "from": "knot.short1.char.sori",
+      "to": "occult_club_7",
+      "scope": "short1",
+      "relationship_type": "club_official_member",
+      "valid_at": "D14 (3/5 목)",
+      "tags": ["scope:short1", "tier:1"]
+    }
+  ],
+  "asymmetric_pairs_summary": {
+    "tier_2_secrets_hidden_from_all_chars": [
+      "결 (소리 = 13번째 초월체) — 단편 1 본문 X·작가 only",
+      "허 사서 = 자허·삼족오위 OB — 단편 1 본문 X·작가 only",
+      "도서관장 = 월주 — 단편 1 본문 X·작가 only",
+      "도깨비 본질 = 달의 위상 이계 유입·삭 전이 조건 — 단편 1 본문 X·작가 only"
+    ],
+    "tier_1_partial_disclosure": [
+      "명부 회장 빈 줄 → D5 시각 노출·D21 정식 발견·점진 공개"
+    ]
+  },
+  "deferred_for_cycle_2": [
+    "동아리 7인 inter-relationship matrix (룰루↔아오이·레이카↔나나·유이↔모두 등)",
+    "각 관계 dimension 정량 (-1.0~1.0)",
+    "이벤트 기반 관계 변화 sequence (D1~D35 시간순)",
+    "원수·라이벌·정념 등 negative dimensions 추출 (worldbuilding/short1-characters.md §관계 벡터)",
+    "타오 과장 ↔ 동아리 7인 (D29 사망 영향)",
+    "본편 scope 관계 (절·아리아드네·삼두군주 등)"
+  ]
+}

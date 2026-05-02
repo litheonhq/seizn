@@ -1,0 +1,264 @@
+{
+  "version": "v1-schema",
+  "generated_at": "2026-05-02",
+  "scope": "short1",
+  "status": "schema_with_seed_entries",
+  "fill_status": "사용자 7 캐릭 페르소나 (worldbuilding/short1-characters.md 1100줄+) deep-read 필요·다음 cycle 풀 fill",
+  "schema_notes": [
+    "각 캐릭 = graph_entities(type='person') 매핑·Seizn primitive 정합",
+    "scope·forbidden_in_scope·tier 태그 필수",
+    "current_knowledge / unknown / hidden 분리 = Theory of Mind 인지 비대칭 핵심",
+    "voice·desire·relationships = persona simulation 입력",
+    "모든 항목에 source_id + source_span 부착·근거 추적성"
+  ],
+  "characters": [
+    {
+      "id": "knot.short1.char.sori",
+      "name": "소리",
+      "aliases": ["주인공"],
+      "scope": ["short1"],
+      "story_role": "protagonist",
+      "current_status": "청학여자고등학교 1학년 신입생·D{N} 시점별 갱신",
+      "basic_info": {
+        "gender": "여성",
+        "age": 16,
+        "shen_age": "TBD",
+        "ti_age": "TBD",
+        "ben_age": "비공개",
+        "region": "global",
+        "ethnic_culture": "TBD",
+        "family_name": "없음 (성씨 미보유·일반 시민 정상)"
+      },
+      "archetype": "TBD - cycle 2 fill from short1-characters.md §1.2",
+      "voice": {
+        "speech_pattern": "TBD - §1.4",
+        "vocabulary": "TBD",
+        "taboo_words": "큰따옴표 X·외래어 음차 X (엣또·Yes·Ok)",
+        "signature_expressions": "TBD"
+      },
+      "personality_core": {
+        "traits": "TBD - §1.3",
+        "vulnerability": "TBD - §1.7"
+      },
+      "habits_actions": "TBD - §1.5",
+      "appeal_points": "TBD - §1.6",
+      "background": "TBD - §1.8 (내부 캐논·플레이어 직접 노출 금지)",
+      "scene_perspective": "TBD - §1.9",
+      "relationships": "별도 relationship_matrix.json에서 관리",
+      "inner_voices": {
+        "type_count": 4,
+        "tags": "TBD - §1.12 4종 내적 목소리 시스템 (decisions.md v3.7.9 단순화)"
+      },
+      "arc": "TBD - §1.13 작중 심경 아크",
+      "knowledge_state": {
+        "known_facts": [
+          {"fact_id": "TBD", "learned_at": "D{N}", "source": "본문 D{N}-S{M}"}
+        ],
+        "unknown_facts": [
+          {"fact_id": "knot.canon.tier2.identity_knot13", "reason": "Tier 2 작가 only"}
+        ],
+        "hidden_facts": [
+          {"fact_id": "TBD", "hidden_from": ["other_chars"], "reason": "TBD"}
+        ],
+        "misunderstandings": []
+      },
+      "main_episode_link": "Tier 2 - 13번째 초월체 결 (본편 진입 시 노출·단편 1 본문 X)",
+      "writing_checklist": "TBD - §1.15",
+      "source_provenance": {
+        "primary": "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-characters.md §1",
+        "secondary": [
+          "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-character-detail-guide.md",
+          "C:\\Users\\admin\\Projects\\knot\\briefs\\character_personas\\sori.md",
+          "C:\\Users\\admin\\Projects\\knot\\artifacts\\interviews\\20260422-130501-sori.md"
+        ]
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity"]
+    },
+    {
+      "id": "knot.short1.char.nari",
+      "name": "나리",
+      "aliases": [],
+      "scope": ["short1"],
+      "story_role": "supporting_main",
+      "current_status": "308호 룸메이트·풍기위원장 (단편 1 캐논 lock)",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "한국",
+        "family_name": "TBD"
+      },
+      "archetype": "셜록식 관찰 + 패턴 분석",
+      "voice": {
+        "signature_expressions": "TBD - §2.4",
+        "taboo_words": "큰따옴표 X·외래어 음차 X"
+      },
+      "knowledge_state": {
+        "known_facts": "TBD",
+        "unknown_facts": "TBD"
+      },
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §2"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity"],
+      "fill_status": "TBD - cycle 2"
+    },
+    {
+      "id": "knot.short1.char.lulu",
+      "name": "룰루",
+      "aliases": [],
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "서양 (마법권 혼혈)",
+        "morphology": "S1 케모미미 (작은 여우 귀 + 슬림한 여우 꼬리)"
+      },
+      "archetype": "TBD - §6.2",
+      "morphology_canon_lock": "v3.7.5 로리 정향 lock·v3.7.9azq Vex 정의·v3.7.9azx 혈통환상계",
+      "source_provenance": {
+        "primary": "worldbuilding/short1-characters.md §6"
+      },
+      "review_status": "candidate",
+      "tags": ["scope:short1", "tier:1", "category:identity", "subtag:lori_position"],
+      "fill_status": "TBD - cycle 2"
+    },
+    {
+      "id": "knot.short1.char.aoi",
+      "name": "아오이",
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "일본"
+      },
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD - §4 cycle 2"
+    },
+    {
+      "id": "knot.short1.char.reika",
+      "name": "레이카",
+      "scope": ["short1"],
+      "story_role": "supporting_main",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "일본",
+        "morphology": "S1 늑대 귀 + 꼬리 (피부 문양 X·털 X·v3.7.1)"
+      },
+      "club_role": "오컬트 동아리 W2 명목 리더",
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD - §3 cycle 2"
+    },
+    {
+      "id": "knot.short1.char.nana",
+      "name": "나나",
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "서양"
+      },
+      "club_role": "오컬트 동아리 잠입 담당",
+      "tags": ["scope:short1", "tier:1"],
+      "fill_status": "TBD - §5 cycle 2"
+    },
+    {
+      "id": "knot.short1.char.yui",
+      "name": "유이",
+      "scope": ["short1"],
+      "story_role": "supporting",
+      "basic_info": {
+        "gender": "여성",
+        "ethnic_culture": "일본"
+      },
+      "club_role": "오컬트 동아리 응급 연성 담당",
+      "tags": ["scope:short1", "tier:3", "subtag:lori_position"],
+      "fill_status": "TBD - §7 cycle 2"
+    },
+    {
+      "id": "knot.short1.char.heo",
+      "name": "허 (虛)",
+      "internal_name": "자허(子虛)",
+      "scope": ["short1"],
+      "story_role": "supporting_npc",
+      "current_status": "도서관 사서·집사 톤·~십시오/~ㅂ니다 형식",
+      "voice": {
+        "tone_lock": "집사 톤 (~십시오·~ㅂ니다)",
+        "taboo_expressions": "~네요·~지요·~거예요·챙기다 회피"
+      },
+      "knowledge_state": {
+        "tier_2_secret": "삼족오위 OB·실제 정체"
+      },
+      "tags": ["scope:short1", "tier:2", "forbidden_in_scope:short1", "subtag:author_only_identity"],
+      "source_provenance": {
+        "primary": "stories/short1-school.md §도서관 사서",
+        "memory_pointer": "knot-hur-voice.md (Claude memory)"
+      },
+      "fill_status": "TBD - cycle 2"
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.tora",
+      "name": "토라",
+      "scope": ["short1"],
+      "story_role": "npc_mascot",
+      "basic_info": {
+        "morphology": "도깨비·금빛·둥근·200세+",
+        "is_human": false,
+        "race": "도깨비 (선주민 X·이계 유입·달의 위상)"
+      },
+      "tags": ["scope:global", "subtag:dokkaebi_3"],
+      "knot_marker": "v3.7.9y KNOT 마스코트화 lock",
+      "fill_status": "TBD - worldbuilding/short1-characters-supporting.md cycle 2"
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.dori",
+      "name": "도리",
+      "scope": ["short1"],
+      "story_role": "npc_mascot",
+      "basic_info": {
+        "morphology": "도깨비·녹색·뿔1·무표정·후각",
+        "race": "도깨비"
+      },
+      "tags": ["scope:global", "subtag:dokkaebi_3"],
+      "fill_status": "TBD - cycle 2"
+    },
+    {
+      "id": "knot.short1.char.dokkaebi.chibi",
+      "name": "치비",
+      "scope": ["short1"],
+      "story_role": "npc_mascot",
+      "basic_info": {
+        "morphology": "도깨비·청색·뿔2·작음·어린이체",
+        "race": "도깨비"
+      },
+      "tags": ["scope:global", "subtag:dokkaebi_3"],
+      "fill_status": "TBD - cycle 2"
+    },
+    {
+      "id": "knot.short1.char.tao",
+      "name": "타오",
+      "scope": ["short1"],
+      "story_role": "supporting_npc",
+      "basic_info": {
+        "gender": "남성 (v3.7.9x 락·기존 여성 표기 정정)",
+        "title": "과장"
+      },
+      "knowledge_state": {
+        "death_event": "D29 (3/20 금) 사망"
+      },
+      "tags": ["scope:short1", "tier:1", "subtag:death_d29"],
+      "fill_status": "TBD - cycle 2"
+    }
+  ],
+  "main_scope_pointer": [
+    "본편 8동료 (아리아드네·레이카·룰루·나리·아오이·나나·유이 + 소리 특별 편입) = scope:main 별도 등록",
+    "절(折) = scope:main 본편 최종 적대 = character-折.md 별도 등록",
+    "본편 진입 시 cycle 2에 fill"
+  ],
+  "deferred_for_cycle_2": [
+    "각 캐릭 §1.1~§1.15 (소리), §2.1~§2.11 (나리), §3~§7 동아리 6인 풀 페르소나 추출",
+    "knowledge_state.known_facts D1~D20 시점별 누적 (timeline_event_ledger.json 의존)",
+    "voice signature 표현 sample dialogue 5~10개씩 추출 (briefs/character_personas/*.md)",
+    "relationships 벡터는 relationship_matrix.json에서 별도 관리"
+  ]
+}
