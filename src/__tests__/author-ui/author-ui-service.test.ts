@@ -43,6 +43,81 @@ describe('Author UI service', () => {
     expect(patch.candidate_id).toMatch(/^candidate-/);
   });
 
+  it('blocks unsafe field paths and does not mutate object prototypes', () => {
+    const service = resetAuthorUiServiceForTests('field-path-user');
+    const projectId = service.listProjects().projects[0].id;
+    const character = service.listCharacters(projectId).characters[0];
+
+    try {
+      expect(() =>
+        service.updateCharacter(projectId, character.id, {
+          field: '__proto__.polluted',
+          value: 'yes',
+        })
+      ).toThrow('field path is not allowed');
+      expect(() =>
+        service.updateSettings(projectId, {
+          field: 'constructor.prototype.polluted',
+          value: 'yes',
+        })
+      ).toThrow('field path is not allowed');
+      expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    } finally {
+      delete (Object.prototype as Record<string, unknown>).polluted;
+    }
+  });
+
+  it('returns not found instead of auto-creating arbitrary projects', () => {
+    const service = resetAuthorUiServiceForTests('project-guard-user');
+
+    expect(() => service.listImports('missing-project')).toThrow('Project not found: missing-project');
+    expect(service.listProjects().projects.map((project) => project.id)).not.toContain('missing-project');
+  });
+
+  it('applies candidate, graph, and timeline contract filters', () => {
+    const service = resetAuthorUiServiceForTests('filter-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    const scoped = service.listCandidates(projectId, new URLSearchParams('scope=short1&page_size=100'));
+    expect(scoped.total).toBeGreaterThan(0);
+    expect(scoped.candidates.every((candidate) => candidate.tags.includes('short1'))).toBe(true);
+
+    const sourceFiltered = service.listCandidates(
+      projectId,
+      new URLSearchParams('source_id=character_registry.json&page_size=100')
+    );
+    expect(sourceFiltered.total).toBeGreaterThan(0);
+    expect(sourceFiltered.candidates.every((candidate) =>
+      candidate.source.file_path.endsWith('character_registry.json')
+    )).toBe(true);
+
+    const created = service.createCandidate(projectId, {
+      content: 'Tier filter candidate',
+      type: 'fact',
+      tags: ['tier:2', 'short1'],
+    });
+    const tierFiltered = service.listCandidates(projectId, new URLSearchParams('tier=2&page_size=100'));
+    expect(tierFiltered.candidates.map((candidate) => candidate.id)).toContain(created.candidate_id);
+
+    const graph = service.getGraph(projectId, new URLSearchParams('scope=short1&type=person&time_state=D1'));
+    expect(graph.nodes.length).toBeGreaterThan(0);
+    expect(graph.nodes.every((node) => node.type === 'person')).toBe(true);
+    const nodeIds = new Set(graph.nodes.map((node) => node.id));
+    expect(graph.edges.every((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to))).toBe(true);
+
+    const timeline = service.getTimeline(projectId, new URLSearchParams('day_range=[D1,D3]'));
+    expect(timeline.events.length).toBeGreaterThan(0);
+    expect(timeline.events.every((event) => ['D1', 'D2', 'D3'].includes(event.day))).toBe(true);
+
+    const characterId = service.listCharacters(projectId).characters[0].id;
+    const characterTimeline = service.getTimeline(projectId, new URLSearchParams(`character_ids=${characterId}`));
+    const characterTail = characterId.split('.').pop() ?? characterId;
+    expect(characterTimeline.events.length).toBeGreaterThan(0);
+    expect(characterTimeline.events.every((event) =>
+      event.who.includes(characterId) || event.who.includes(characterTail)
+    )).toBe(true);
+  });
+
   it('runs deterministic scene simulations and promotes simulation candidates', () => {
     const service = resetAuthorUiServiceForTests('simulation-user');
     const projectId = service.listProjects().projects[0].id;

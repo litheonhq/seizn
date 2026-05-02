@@ -217,6 +217,7 @@ interface AuthorUiState {
 }
 
 const DEFAULT_PROJECT_ID = 'knot';
+const FORBIDDEN_FIELD_PATH_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor']);
 const statesByUser = new Map<string, AuthorUiState>();
 
 const seedBundle: KnotInputBundle = {
@@ -353,6 +354,9 @@ export class AuthorUiService {
     const status = filters.get('status');
     const type = filters.get('type');
     const confidenceMin = Number(filters.get('confidence_min') ?? '0');
+    const scopes = csv(filters, 'scope');
+    const tiers = csv(filters, 'tier');
+    const sourceId = filters.get('source_id')?.trim();
     const page = Math.max(1, Number(filters.get('page') ?? '1') || 1);
     const pageSize = Math.max(1, Math.min(100, Number(filters.get('page_size') ?? '50') || 50));
 
@@ -368,6 +372,18 @@ export class AuthorUiService {
 
     if (Number.isFinite(confidenceMin) && confidenceMin > 0) {
       candidates = candidates.filter((item) => item.confidence >= confidenceMin);
+    }
+
+    if (scopes.length > 0) {
+      candidates = candidates.filter((item) => matchesCandidateScope(item, scopes));
+    }
+
+    if (tiers.length > 0) {
+      candidates = candidates.filter((item) => matchesCandidateTier(item, tiers));
+    }
+
+    if (sourceId) {
+      candidates = candidates.filter((item) => matchesSourceId(item, sourceId));
     }
 
     const sort = filters.get('sort') ?? 'priority';
@@ -493,9 +509,13 @@ export class AuthorUiService {
   getGraph(projectId: string, filters: URLSearchParams) {
     this.ensureProject(projectId);
     const characterDetails = this.state.characterDetailsByProject.get(projectId) ?? new Map();
-    const scope = filters.get('scope');
+    const scopes = csv(filters, 'scope');
+    const types = csv(filters, 'type');
+    const relationshipTypes = types.filter((type) => type !== 'person');
+    const queryDay = parseDay(filters.get('time_state'));
     const nodes = [...characterDetails.values()]
-      .filter((character) => !scope || character.scope.includes(scope))
+      .filter((character) => scopes.length === 0 || character.scope.some((scope: string) => scopes.includes(scope)))
+      .filter(() => types.length === 0 || types.includes('person') || relationshipTypes.length > 0)
       .map((character) => ({
         id: character.id,
         type: 'person' as const,
@@ -504,6 +524,7 @@ export class AuthorUiService {
         color_group: 'character',
         scope: character.scope[0] ?? 'short1',
       }));
+    const nodeIds = new Set(nodes.map((node) => node.id));
 
     const edges = relationshipItems().map((item, index) => ({
       id: readString(item, 'id') ?? `relationship-edge-${index}`,
@@ -512,9 +533,13 @@ export class AuthorUiService {
       type: readString(item, 'relationship_type') ?? 'relationship',
       intensity: relationshipIntensity(item),
       valid_at: readString(item, 'valid_at') ?? readString(item, 'day') ?? 'D1',
-      invalid_at: null,
+      invalid_at: readString(item, 'invalid_at') ?? null,
       sources: [readString(item, 'source') ?? 'docs/knot-input/relationship_matrix.json'],
-    })).filter((edge) => edge.from && edge.to);
+    }))
+      .filter((edge) => edge.from && edge.to)
+      .filter((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to))
+      .filter((edge) => relationshipTypes.length === 0 || relationshipTypes.includes(edge.type))
+      .filter((edge) => matchesTimeState(edge.valid_at, edge.invalid_at, queryDay));
 
     return { nodes, edges };
   }
@@ -537,6 +562,21 @@ export class AuthorUiService {
     const phase = filters.get('phase');
     if (phase) {
       events = events.filter((event) => event.phase === phase);
+    }
+
+    const dayRange = parseDayRange(filters.get('day_range'));
+    if (dayRange) {
+      events = events.filter((event) => {
+        const day = parseDay(event.day);
+        return day !== undefined && day >= dayRange.start && day <= dayRange.end;
+      });
+    }
+
+    const characterIds = csv(filters, 'character_ids');
+    if (characterIds.length > 0) {
+      events = events.filter((event) =>
+        event.who.some((id) => characterIds.some((candidate) => matchesCharacterId(id, candidate)))
+      );
     }
 
     return {
@@ -699,24 +739,7 @@ export class AuthorUiService {
       return;
     }
 
-    this.state.projects.set(projectId, {
-      id: projectId,
-      name: projectId,
-      description: 'Author Memory project',
-      scope: ['global'],
-      entity_count: 0,
-      candidate_count: 0,
-      conflict_count: 0,
-      last_updated: nowIso(),
-      phase: 'draft',
-      trial_status: { is_trial: true, days_remaining: 14 },
-    });
-    this.state.importsByProject.set(projectId, []);
-    this.state.candidatesByProject.set(projectId, []);
-    this.state.characterDetailsByProject.set(projectId, new Map());
-    this.state.conflictsByProject.set(projectId, []);
-    this.state.simulationsByProject.set(projectId, new Map());
-    this.state.settingsByProject.set(projectId, buildDefaultSettings());
+    throw new AuthorUiNotFoundError(`Project not found: ${projectId}`);
   }
 
   private findImport(projectId: string, importId: string): AuthorUiImport {
@@ -1115,7 +1138,7 @@ function buildDefaultSettings() {
   return {
     sync: {
       obsidian_enabled: true,
-      obsidian_vault_path: 'C:\\Users\\admin\\Dendron\\notes',
+      obsidian_vault_path: null as string | null,
       notion_enabled: false,
       notion_workspace_id: null,
       sync_direction: 'bidirectional' as const,
@@ -1150,6 +1173,13 @@ function candidateFromRaw(input: {
   const id = readString(input.raw, 'id') ?? `${input.type}-${input.index + 1}`;
   const content = input.content || id;
   const status = normalizeFactStatus(readString(input.raw, 'status')) ?? 'candidate';
+  const scopes = readStringArrayOrFallback(input.raw, 'scope', []);
+  const tier = readString(input.raw, 'tier') ?? readString(input.raw, 'authority_tier');
+  const tags = uniqueStrings([
+    ...readStringArray(input.raw, 'tags'),
+    ...scopes,
+    ...(tier ? [tier, `tier:${tier}`] : []),
+  ]);
   return {
     id: `candidate.${id}`,
     content,
@@ -1157,7 +1187,7 @@ function candidateFromRaw(input: {
     status,
     confidence: input.confidence,
     suggested_status: status === 'canon' ? 'canon' : 'candidate',
-    tags: readStringArray(input.raw, 'tags'),
+    tags,
     source: {
       document_id: input.sourcePath,
       file_path: input.sourcePath,
@@ -1243,10 +1273,7 @@ function applyCharacterPatch(character: AuthorUiCharacterDetail, field: string, 
 }
 
 function setDeepValue(target: JsonRecord, field: string, value: unknown): void {
-  const parts = field.split('.').filter(Boolean);
-  if (parts.length === 0) {
-    throw new AuthorUiValidationError('field is required');
-  }
+  const parts = parseFieldPath(field);
   let cursor: JsonRecord = target;
   for (const part of parts.slice(0, -1)) {
     if (!cursor[part] || typeof cursor[part] !== 'object' || Array.isArray(cursor[part])) {
@@ -1255,6 +1282,17 @@ function setDeepValue(target: JsonRecord, field: string, value: unknown): void {
     cursor = cursor[part] as JsonRecord;
   }
   cursor[parts[parts.length - 1]] = value;
+}
+
+function parseFieldPath(field: string): string[] {
+  const parts = field.split('.').map((part) => part.trim()).filter(Boolean);
+  if (parts.length === 0) {
+    throw new AuthorUiValidationError('field is required');
+  }
+  if (parts.some((part) => FORBIDDEN_FIELD_PATH_SEGMENTS.has(part))) {
+    throw new AuthorUiValidationError('field path is not allowed');
+  }
+  return parts;
 }
 
 function simulationPromoteContent(service: AuthorUiService, projectId: string, input: JsonRecord): string | undefined {
@@ -1401,6 +1439,64 @@ function statusPriority(status: FactStatus): number {
   return status === 'candidate' ? 0 : 1;
 }
 
+function csv(params: URLSearchParams, key: string): string[] {
+  return params.getAll(key)
+    .flatMap((value) => value.split(','))
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function matchesCandidateScope(candidate: AuthorUiCandidate, scopes: string[]): boolean {
+  return candidate.tags.some((tag) => scopes.includes(tag));
+}
+
+function matchesCandidateTier(candidate: AuthorUiCandidate, tiers: string[]): boolean {
+  return candidate.tags.some((tag) => tiers.includes(tag) || tiers.some((tier) => tag === `tier:${tier}`));
+}
+
+function matchesSourceId(candidate: AuthorUiCandidate, sourceId: string): boolean {
+  return [candidate.source.document_id, candidate.source.file_path].some((source) =>
+    source === sourceId || source.endsWith(`/${sourceId}`) || source.endsWith(`\\${sourceId}`)
+  );
+}
+
+function matchesTimeState(validAt: string, invalidAt: string | null, queryDay: number | undefined): boolean {
+  if (queryDay === undefined) {
+    return true;
+  }
+  const validDay = parseDay(validAt) ?? Number.NEGATIVE_INFINITY;
+  const invalidDay = invalidAt ? parseDay(invalidAt) : undefined;
+  return validDay <= queryDay && (invalidDay === undefined || queryDay < invalidDay);
+}
+
+function matchesCharacterId(eventCharacterId: string, requestedCharacterId: string): boolean {
+  const requestedTail = requestedCharacterId.split('.').pop() ?? requestedCharacterId;
+  return eventCharacterId === requestedCharacterId || eventCharacterId === requestedTail;
+}
+
+function parseDayRange(value: string | null): { start: number; end: number } | null {
+  if (!value) {
+    return null;
+  }
+  const days = value.match(/D?\d+/gi)?.map((part) => parseDay(part)).filter((day): day is number => day !== undefined);
+  if (!days || days.length < 2) {
+    return null;
+  }
+  return { start: Math.min(days[0], days[1]), end: Math.max(days[0], days[1]) };
+}
+
+function parseDay(value: string | null | undefined): number | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const match = value.match(/\bD?(\d{1,3})\b/i);
+  if (!match) {
+    return undefined;
+  }
+  const day = Number(match[1]);
+  return Number.isFinite(day) ? day : undefined;
+}
+
 function relationshipIntensity(item: JsonRecord): number {
   const dimensions = asRecord(item.current_state_w4 ?? item.current_state);
   const values = Object.values(dimensions)
@@ -1430,6 +1526,10 @@ function readString(object: JsonRecord, key: string): string | undefined {
 function readStringArray(object: JsonRecord, key: string): string[] {
   const value = object[key];
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+}
+
+function uniqueStrings(values: string[]): string[] {
+  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
 function readStringArrayOrFallback(object: JsonRecord, key: string, fallback: string[]): string[] {
@@ -1478,7 +1578,7 @@ function compactText(parts: Array<string | undefined>): string {
 function slugify(value: string): string {
   return value
     .toLowerCase()
-    .replace(/[^a-z0-9가-힣]+/g, '-')
+    .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
 }
