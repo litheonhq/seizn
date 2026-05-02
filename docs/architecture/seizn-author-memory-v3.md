@@ -198,9 +198,13 @@ The storage contract is deliberately adapter-shaped:
 - `docs/author-ui/author_ui_query_bindings.json` maps 12 Author UI screens to 14 queries, 13 mutations, query keys, state branches, WebSocket events, and optimistic update expectations.
 - `docs/author-ui/author_ui_mutation_invalidation_matrix.md` documents mutation invalidation, WebSocket cache patching, URL state sync, and race-condition guards.
 - `src/__tests__/author-memory-v3/author-artifacts.test.ts` now validates 19 Author/KNOT artifacts and locks the 26 required screen endpoints against `author_ui_data_contracts.json`.
+- `src/lib/author/ui/` provides the Author UI fixture-backed service seeded from KNOT input artifacts, with project, import, candidate, character, graph, timeline, conflict, simulation, BYOK, usage, sync, and search DTOs.
+- `src/app/api/projects/**`, `src/app/api/account/**`, and `src/app/api/telemetry/event` expose the Author UI contract routes behind the existing session/JWT request-user boundary.
+- `src/hooks/useAuthorMemoryV3.ts` provides SWR query/mutation hooks matching the binding registry, including polling fallback intervals and invalidation after review, conflict, character, simulation, and BYOK mutations.
+- `src/app/(dashboard)/dashboard/author/` adds the first operator Author Memory screen for inbox, review, characters, graph, timeline, conflicts, and scene simulation.
 
 Next implementation work should add:
 
-- concrete API route handlers for the 26 Author UI endpoints
-- frontend query hooks/components that consume the Author UI binding registry
+- durable Supabase-backed Author UI project/import/settings persistence beyond the current fixture-backed service
+- production WebSocket transport for project events; the current hooks use polling fallback behavior from the binding contract
 - production calibration of judge-model prompts against Claude-prepared KNOT review cases

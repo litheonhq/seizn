@@ -140,11 +140,13 @@ Implemented now:
 - optional Author eval verifier contract that can fail a lexically passing case after judge-model review
 - Anthropic judge adapter with fail-closed missing-key behavior and compact JSON response parsing
 - Author UI query binding artifacts with 12 screens, 14 queries, 13 mutations, and 26 required screen endpoints locked against the data contract
+- fixture-backed Author UI API service and routes for project, import, candidate review, character cards, graph, timeline, conflicts, scene simulation/replay/promote, settings, BYOK, usage, sync, search, and telemetry event ingestion
+- SWR hooks and the first `/dashboard/author` operator surface consuming the Author UI contract
 
 Next implementation:
 
-- Author UI API route handlers for the 26 contract endpoints
-- frontend query hooks/components that consume the Author UI binding registry
+- durable Supabase-backed Author UI storage for imports, settings, BYOK metadata, and simulation jobs
+- production realtime transport for project event delivery; polling fallback is implemented at the hook layer
 
 ## Persistence Strategy
 
@@ -156,6 +158,7 @@ Production activation remains gated until:
 - `AUTHOR_MEMORY_V3_STORE=supabase` is explicitly configured
 - Claude-prepared KNOT input artifacts define source IDs and source spans
 - Author UI data contracts, query bindings, and mutation invalidation matrix are available and artifact tests pass
+- Author UI service has a production store adapter for user-created imports/settings/simulations
 
 ## Acceptance Gates
 
@@ -172,3 +175,4 @@ The harness is acceptable when:
 - Fall adapter preserves Author metadata without Fall schema changes
 - sequential job runs preserve case order and persist per-case evidence
 - Author UI screen binding endpoints stay equal to the data contract endpoint set
+- Author UI fixture service tests cover KNOT seeding, review decisions, simulation/replay/promote, and BYOK masking
