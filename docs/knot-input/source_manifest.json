@@ -1,0 +1,612 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "project": "KNOT",
+  "ip_owner": "Celovin",
+  "tool_owner": "Litheon (Seizn)",
+  "ssot_root": "C:\\Users\\admin\\Projects\\knot",
+  "obsidian_vault": true,
+  "priority_rules": [
+    "최신 사용자 본문 (stories/short1/**/*.md) > 최신 결정문 (decisions.md) > 캐논 요약 (canon.md) > 캐릭터 시트 (worldbuilding/short1-characters.md) > 옛 설정 (archive/)",
+    "decisions.md가 canon.md와 충돌 시 decisions.md 최신 블록이 승",
+    "사용자가 본문에서 새로 박은 표현은 시트의 옛 표현을 자동 폐기",
+    "archive/는 historical reference only — current canon 후보로 추출 금지"
+  ],
+  "documents": [
+    {
+      "path": "canon.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "전체 IP 캐논 요약 + v3.7.9azax까지 lock 기록",
+      "extractable": true,
+      "notes": "단편/본편 scope 구분 주의 — 본편 8동료·여성 확정 등은 본편 한정"
+    },
+    {
+      "path": "decisions.md",
+      "role": "canon",
+      "priority": 1,
+      "purpose": "결정 로그·날짜 역순·최신 30~50 블록이 가장 신선",
+      "extractable": true,
+      "notes": "raw 보존(A 양식)·자동 entity 추출 X — 작가 메타이지 narrative facts 아님"
+    },
+    {
+      "path": "INDEX.md",
+      "role": "reference",
+      "priority": 4,
+      "purpose": "파일 위치 맵·navigation",
+      "extractable": false,
+      "notes": "파싱 대상 X·source_manifest 자체가 대체"
+    },
+    {
+      "path": "creation-guidelines.md",
+      "role": "reference",
+      "priority": 3,
+      "purpose": "캐릭 이름 원칙·기업 전쟁 대사 가이드",
+      "extractable": true
+    },
+    {
+      "path": "brand.md",
+      "role": "reference",
+      "priority": 4,
+      "purpose": "브랜드·법인 정보 (KNOT/Ara Studio)",
+      "extractable": false,
+      "notes": "Author 도구 추출 대상 X"
+    },
+    {
+      "path": "brand-strategy.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false
+    },
+    {
+      "path": "funding.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false
+    },
+    {
+      "path": "tasks.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false,
+      "notes": "프로덕션 작업 큐·narrative 아님"
+    },
+    {
+      "path": "worldbuilding/characters.md",
+      "role": "character",
+      "priority": 2,
+      "purpose": "캐릭 허브·라우팅 파일",
+      "extractable": true,
+      "notes": "scope 표시 필수 — 본편 vs 단편 1·2·3"
+    },
+    {
+      "path": "worldbuilding/short1-characters.md",
+      "role": "character",
+      "priority": 1,
+      "purpose": "단편 1 주연 7인 (소리·나리·룰루·아오이·레이카·나나·유이) 풀 페르소나·1100줄+",
+      "extractable": true,
+      "scope": "short1",
+      "notes": "0.4 로리 포지션·v3.7.5·v3.7.6·v3.7.9an·v3.7.9at·v3.7.9av 등 다중 lock 버전·decisions.md와 cross-check 필수"
+    },
+    {
+      "path": "worldbuilding/short1-character-detail-guide.md",
+      "role": "character",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "얼굴상·표정·포즈·취향·일러 금지선",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/short1-characters-supporting.md",
+      "role": "character",
+      "priority": 2,
+      "scope": "short1",
+      "purpose": "조연 캐릭 (도깨비 3인·허 사서 등)",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/character-折.md",
+      "role": "character",
+      "priority": 2,
+      "scope": "main",
+      "purpose": "本편 최종 적대 절(折) 풀 프로필",
+      "extractable": true,
+      "notes": "단편 1 본문 X — main scope 한정"
+    },
+    {
+      "path": "worldbuilding/transcendents.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "13 초월체 명단·능력·계보",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/organizations.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "십장생·유협회·8협회·8덕목",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/geography.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/politics.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/dimensions.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/history.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/foreshadowing.md",
+      "role": "canon",
+      "priority": 1,
+      "purpose": "Tier 1/2 떡밥 마스터·작가 only vs character known 분리",
+      "extractable": true,
+      "notes": "Tier 2 = 작가 only·캐릭터에게 노출 금지"
+    },
+    {
+      "path": "worldbuilding/terminology.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/precursor-civ.md",
+      "role": "canon",
+      "priority": 3,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/unknowns.md",
+      "role": "canon",
+      "priority": 1,
+      "purpose": "달의 위상 (도깨비 등)·미지의 존재",
+      "extractable": true,
+      "notes": "단편 1 본문에 삭 조건·청월 사건 노출 금지"
+    },
+    {
+      "path": "worldbuilding/mist-couple.md",
+      "role": "canon",
+      "priority": 3,
+      "scope": "main",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/buddhist-framework.md",
+      "role": "canon",
+      "priority": 3,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/indigenous-races.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/education.md",
+      "role": "canon",
+      "priority": 2,
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/school-life.md",
+      "role": "canon",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "학교 운영·시간표·교복·풍기위원회·학적 통신망",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/imperial-laws.md",
+      "role": "canon",
+      "priority": 1,
+      "purpose": "천주칠금 7대 금제 (제3금 하늘을 가르지 말것 등)·v3.7.9 이후 갱신",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/transport.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "지상·수직·공중·차원 이동 수단 + 권역별 매트릭스",
+      "extractable": true
+    },
+    {
+      "path": "worldbuilding/glossary/**/*.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "용어별 카드 (십장생 9 기업·8덕목·차원·도깨비·초능력·학원도시 등)",
+      "extractable": true,
+      "glob": true
+    },
+    {
+      "path": "worldbuilding/factions/**/*.md",
+      "role": "canon",
+      "priority": 2,
+      "purpose": "무공권·마법권·사펑권 권역별 체계",
+      "extractable": true,
+      "glob": true
+    },
+    {
+      "path": "stories/short1-school.md",
+      "role": "canon",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "단편 1 캐논 본문·v3.7.9azah",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/canon.md",
+      "role": "canon",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "notes": "단편 1 전용 캐논 (있을 경우)"
+    },
+    {
+      "path": "stories/short1/decisions.md",
+      "role": "canon",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "notes": "단편 1 결정 로그 (있을 경우)·raw 보존 권고"
+    },
+    {
+      "path": "stories/short1/INDEX.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false
+    },
+    {
+      "path": "stories/short1/day-sheet.md",
+      "role": "timeline",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D1~D35 Day별 핵심 사건·Phase 분배",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/scene-sheet.md",
+      "role": "timeline",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/free-slot-catalog.md",
+      "role": "reference",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": false
+    },
+    {
+      "path": "stories/short1/ending-recall-catalog.md",
+      "role": "reference",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": false
+    },
+    {
+      "path": "stories/short1/p2-scene-grid.md",
+      "role": "scene",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/w1-cold-open.md",
+      "role": "scene",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/prefweek/d1.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D1 본문 (2/20 금)·도깨비·308호·식당·잠자리·이미 완성",
+      "extractable": true,
+      "scene_status": "draft_v3"
+    },
+    {
+      "path": "stories/short1/prefweek/d2.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D2 본문 (2/21 토)·룰루 첫 마주침",
+      "extractable": true,
+      "scene_status": "draft_v3"
+    },
+    {
+      "path": "stories/short1/prefweek/d3.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D3 본문 (2/22 일)·아오이 첫 마주침",
+      "extractable": true,
+      "scene_status": "draft_v3"
+    },
+    {
+      "path": "stories/short1/prefweek/d4.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D4 본문 (2/23 월)·도서관 첫 방문·허 사서·4시 메모",
+      "extractable": true,
+      "scene_status": "draft_v3"
+    },
+    {
+      "path": "stories/short1/prefweek/d5.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D5 본문 (2/24 화)·동아리실 발견·레이카 자고 있음",
+      "extractable": true,
+      "scene_status": "draft_v3"
+    },
+    {
+      "path": "stories/short1/prefweek/d6.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/prefweek/d7.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/prefweek/d8.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D8 본문·콜드 오픈 약 큐",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/prefweek/d9.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D9 본문·유이 첫 등장",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/prefweek/d10.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/week1/d11.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D11 입학식 (3/2 월)",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/week1/d12.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/week1/d13.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/week1/d14.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "purpose": "D14 동아리 정식 합류·7인 합동 첫 자리",
+      "extractable": true
+    },
+    {
+      "path": "stories/short1/week1/d15.md - d20.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "glob": true,
+      "purpose": "D15~D20 일상·노트 이상·게시판 충돌·명부 회장 빈 줄 발견"
+    },
+    {
+      "path": "stories/short1/week1/d21.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "scene_status": "placeholder",
+      "purpose": "D21 명부 회장 빈 줄 정식 발견·작성 대기"
+    },
+    {
+      "path": "stories/short1/week1/d22.md - d24.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "glob": true,
+      "scene_status": "placeholder"
+    },
+    {
+      "path": "stories/short1/week2/d25.md - d29.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "glob": true,
+      "scene_status": "placeholder",
+      "purpose": "D25 사야카 명명·D26 출석부 9번 균열·D29 타오 사망"
+    },
+    {
+      "path": "stories/short1/week3/d30.md - d35.md",
+      "role": "scene",
+      "priority": 1,
+      "scope": "short1",
+      "extractable": true,
+      "glob": true,
+      "scene_status": "placeholder",
+      "purpose": "D30~D34 정비·D35 보스전·4 ending teaser"
+    },
+    {
+      "path": "stories/short1/p2-integration-preflight-report.md",
+      "role": "reference",
+      "priority": 3,
+      "extractable": false
+    },
+    {
+      "path": "stories/short2-manager.md",
+      "role": "canon",
+      "priority": 2,
+      "scope": "short2",
+      "purpose": "단편 2 (관리자) 캐릭·세계관·Phase 1 KNOT 입력 외",
+      "extractable": false,
+      "notes": "단편 1 dogfood scope 외 — Phase 2"
+    },
+    {
+      "path": "stories/short3-liar.md",
+      "role": "canon",
+      "priority": 2,
+      "scope": "short3",
+      "extractable": false,
+      "notes": "단편 1 dogfood scope 외 — Phase 2"
+    },
+    {
+      "path": "stories/main-episodes.md",
+      "role": "canon",
+      "priority": 2,
+      "scope": "main",
+      "extractable": false,
+      "notes": "본편 — Phase 2"
+    },
+    {
+      "path": "stories/novel-moon-waxing.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false
+    },
+    {
+      "path": "briefs/character_personas/sori.md",
+      "role": "character",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": true,
+      "notes": "AI 일러 프롬프트용 페르소나 — short1-characters.md와 cross-check"
+    },
+    {
+      "path": "briefs/character_personas/{nari,lulu,aoi,reika,nana,yui,ariadne}.md",
+      "role": "character",
+      "priority": 2,
+      "scope": "short1",
+      "extractable": true,
+      "glob": true
+    },
+    {
+      "path": "artifacts/interviews/20260422-130501-sori.md",
+      "role": "reference",
+      "priority": 3,
+      "extractable": true,
+      "notes": "캐릭 인터뷰 양식 — 페르소나 보강 자료"
+    },
+    {
+      "path": "templates/character.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false,
+      "notes": "obsidian 템플릿"
+    },
+    {
+      "path": "templates/{term,location,foreshadowing,scene}.md",
+      "role": "reference",
+      "priority": 4,
+      "extractable": false,
+      "glob": true
+    },
+    {
+      "path": "archive/**/*.md",
+      "role": "retired",
+      "priority": 5,
+      "extractable": false,
+      "glob": true,
+      "notes": "폐기 설정 reference만·current canon 후보 추출 금지"
+    },
+    {
+      "path": "planning/**/*.md",
+      "role": "reference",
+      "priority": 5,
+      "extractable": false,
+      "glob": true,
+      "notes": "Codex handoff·작가 메타·narrative 아님"
+    },
+    {
+      "path": "dev/**/*.md",
+      "role": "reference",
+      "priority": 5,
+      "extractable": false,
+      "glob": true
+    },
+    {
+      "path": "parabreak/**/*.md",
+      "role": "reference",
+      "priority": 5,
+      "extractable": false,
+      "glob": true,
+      "notes": "Parabreak 엔진·KNOT canon 외"
+    },
+    {
+      "path": "references/**/*.md",
+      "role": "reference",
+      "priority": 5,
+      "extractable": false,
+      "glob": true
+    },
+    {
+      "path": "assets/**/*",
+      "role": "visual",
+      "priority": 3,
+      "extractable": true,
+      "glob": true,
+      "notes": "이미지·오디오 — 멀티모달 (Gemini Embedding 2)로 처리"
+    }
+  ],
+  "extraction_scope_default": {
+    "include_role": ["canon", "character", "scene", "timeline"],
+    "exclude_role": ["retired", "reference", "visual"],
+    "include_scope_short1": ["short1", "global"],
+    "exclude_scope_short1": ["short2", "short3", "main"]
+  },
+  "exclusions_explicit": [
+    "단편 1 본문에 13 초월체 직접 노출 금지 (decisions.md v3.7.9 이후)",
+    "단편 1 본문에 허 사서 정체 (자허·삼족오위) 노출 금지",
+    "단편 1 본문에 도서관장 (월주) 정체 노출 금지",
+    "단편 1 본문에 도깨비 삭 조건·청월 사건·관상감 관리 노출 금지",
+    "단편 1 본문에 천주칠금 4~7금 본문 노출 금지 (미정 상태)",
+    "본편 8동료 여성 확정·헬멧 폐기 등은 본편 scope 한정 — 단편 1 적용 X"
+  ]
+}
