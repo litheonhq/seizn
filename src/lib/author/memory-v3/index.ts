@@ -4,6 +4,7 @@ export * from './contract';
 export * from './eval';
 export * from './fall-adapter';
 export * from './job';
+export * from './knot-input';
 export * from './replay';
 export * from './runner';
 export * from './snapshot';
