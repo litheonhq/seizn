@@ -805,7 +805,7 @@
           "endpoint": "POST /api/account/byok",
           "trigger_components": ["<BYOKKeyManager.SaveButton>"],
           "optimistic": false,
-          "validation": "client-side: provider-specific key format check before submit (Anthropic sk-ant-, OpenAI sk-, Google AI key)",
+          "validation": "client-side: Anthropic key format check before submit (sk-ant-)",
           "on_success": {
             "invalidate": ["['account', 'byok']", "['account', 'usage']"],
             "toast": "BYOK 키 등록 완료·할인 적용"

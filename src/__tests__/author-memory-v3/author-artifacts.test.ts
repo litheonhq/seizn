@@ -180,7 +180,7 @@ describe('Author Memory v3 artifact contracts', () => {
       simulation_id: 'string',
       status: 'queued|running',
     });
-    expect(saveByokRequest.provider).toBe('anthropic|google|openai');
+    expect(saveByokRequest.provider).toBe('anthropic');
     expect(websocketEvents['candidate.status_changed']).toBe(
       '{candidate_id, old_status, new_status, type, target_entity_id?, ack_token?}'
     );
