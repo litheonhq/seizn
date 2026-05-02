@@ -139,10 +139,12 @@ Implemented now:
 - KNOT v3 fixture runner that executes the 100-case seed in record mode and replays the same canonical side effects without live output
 - optional Author eval verifier contract that can fail a lexically passing case after judge-model review
 - Anthropic judge adapter with fail-closed missing-key behavior and compact JSON response parsing
+- Author UI query binding artifacts with 12 screens, 14 queries, 13 mutations, and 26 required screen endpoints locked against the data contract
 
 Next implementation:
 
-- Author UI API/query binding
+- Author UI API route handlers for the 26 contract endpoints
+- frontend query hooks/components that consume the Author UI binding registry
 
 ## Persistence Strategy
 
@@ -153,7 +155,7 @@ Production activation remains gated until:
 - `20260502001_author_memory_v3_store.sql` and `20260502002_author_memory_v3_side_effect_project_scope.sql` have been applied to the target Supabase project
 - `AUTHOR_MEMORY_V3_STORE=supabase` is explicitly configured
 - Claude-prepared KNOT input artifacts define source IDs and source spans
-- Author UI data contracts are available
+- Author UI data contracts, query bindings, and mutation invalidation matrix are available and artifact tests pass
 
 ## Acceptance Gates
 
@@ -169,3 +171,4 @@ The harness is acceptable when:
 - optional verifier metadata is preserved in Author and Fall-compatible debug output
 - Fall adapter preserves Author metadata without Fall schema changes
 - sequential job runs preserve case order and persist per-case evidence
+- Author UI screen binding endpoints stay equal to the data contract endpoint set

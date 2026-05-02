@@ -60,7 +60,7 @@
       "POST /api/projects/{id}/imports": {
         "request_form_data": {
           "file": "binary",
-          "source_role": "string",
+          "source_role": "canon|character|scene|reference|visual",
           "a_or_d_mode": "extract|raw_keep"
         },
         "response": {"import_id": "string"}
@@ -119,6 +119,40 @@
           "total": "number",
           "page": "number"
         }
+      },
+      "GET /api/projects/{id}/candidates/{candidate_id}": {
+        "response": {
+          "candidate": {
+            "id": "string",
+            "content": "string",
+            "type": "character|world_rule|event|relationship|voice_sample|fact",
+            "status": "FactStatus",
+            "confidence": "0.0-1.0",
+            "suggested_status": "FactStatus",
+            "tags": ["string"],
+            "source": {
+              "document_id": "string",
+              "file_path": "string",
+              "span": {"start_line": "number", "end_line": "number", "start_char": "number", "end_char": "number"},
+              "excerpt": "string"
+            },
+            "related_existing": [{"entity_id": "string", "relationship": "duplicate|similar|conflicts"}],
+            "extracted_at": "ISO8601"
+          }
+        }
+      },
+      "POST /api/projects/{id}/candidates": {
+        "description": "수동 candidate 생성 또는 simulation promote",
+        "request": {
+          "content": "string",
+          "type": "string",
+          "suggested_status": "FactStatus",
+          "tags": ["string"],
+          "source": "object?",
+          "from_simulation_id": "string?",
+          "from_simulation_candidate_index": "number?"
+        },
+        "response": {"candidate_id": "string"}
       },
       "POST /api/projects/{id}/candidates/{candidate_id}/decide": {
         "request": {
@@ -361,6 +395,11 @@
             "candidate_count": "number (default 5)"
           }
         },
+        "response": {
+          "simulation_id": "string",
+          "status": "queued|running",
+          "stream_url": "string?"
+        },
         "response_streaming": "see author_scene_simulation_output_contract.json"
       },
       "GET /api/projects/{id}/simulations/{simulation_id}": {
@@ -402,8 +441,30 @@
         "request": {"field": "string", "value": "any"}
       },
       "POST /api/account/byok": {
-        "request": {"provider": "string", "api_key": "string"},
+        "request": {
+          "provider": "anthropic|google|openai",
+          "api_key": "string (provider-specific key format)"
+        },
         "response": {"valid": "boolean", "key_last_4": "string"}
+      },
+      "GET /api/account/byok": {
+        "response": {
+          "enabled": "boolean",
+          "provider": "anthropic|google|openai|null",
+          "key_last_4": "string?",
+          "verified_at": "ISO8601?",
+          "status": "active|invalid|revoked|null"
+        }
+      },
+      "GET /api/account/usage": {
+        "response": {
+          "tokens_used_month": "number",
+          "tokens_cap_month": "number",
+          "overage_charges_usd": "number",
+          "tier": "Author|Pro|Studio|Enterprise|Trial",
+          "trial_days_remaining": "number?",
+          "byok_active": "boolean"
+        }
       }
     }
   },
@@ -425,11 +486,36 @@
       "reviewed_at": "ISO8601?"
     }
   },
+  "optional_auxiliary_contracts": {
+    "GET /api/projects/{id}/sync/status": {
+      "status": "optional",
+      "reason": "settings response already contains sync state; expose separately only if polling needs a lighter payload",
+      "response": {
+        "direction": "bidirectional|to_seizn|from_seizn",
+        "last_sync": "ISO8601?",
+        "error": "string?"
+      }
+    },
+    "GET /api/projects/{id}/search": {
+      "status": "optional",
+      "query": {"q": "string"},
+      "response": {
+        "results": [
+          {"id": "string", "type": "string", "label": "string", "snippet": "string"}
+        ]
+      }
+    },
+    "POST /api/telemetry/event": {
+      "status": "optional",
+      "request": {"event": "string", "payload": "object"},
+      "privacy": "raw story text must not be sent"
+    }
+  },
   "websocket_events": {
     "namespace": "/projects/{id}/ws",
     "events": {
       "candidate.added": "{candidate_id, type, source_id}",
-      "candidate.status_changed": "{candidate_id, old_status, new_status}",
+      "candidate.status_changed": "{candidate_id, old_status, new_status, type, target_entity_id?, ack_token?}",
       "conflict.detected": "{conflict_id, severity}",
       "import.parsed": "{import_id, candidate_count}",
       "import.failed": "{import_id, error}",

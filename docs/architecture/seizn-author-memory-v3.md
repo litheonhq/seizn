@@ -154,7 +154,7 @@ Expected incoming artifacts:
 - timeline event ledger
 - review taxonomy
 - KNOT eval seed set
-- UI data contracts
+- UI data contracts, query bindings, and mutation invalidation matrix
 
 ## Immediate Implementation Surface
 
@@ -195,8 +195,12 @@ The storage contract is deliberately adapter-shaped:
 - `AuthorEvalVerifier` lets a judge adapter reject a case after deterministic lexical checks; `createAnthropicAuthorEvalVerifier` provides the first live Anthropic-backed implementation and fails closed when the API key is not configured.
 - `POST /api/author/memory-v3/eval` exposes the eval job contract behind existing API-key auth and stable error envelopes.
 - `importAuthorEvalCasesToFallDataset` imports Author eval cases into existing Fall eval datasets without adding Fall columns.
+- `docs/author-ui/author_ui_query_bindings.json` maps 12 Author UI screens to 14 queries, 13 mutations, query keys, state branches, WebSocket events, and optimistic update expectations.
+- `docs/author-ui/author_ui_mutation_invalidation_matrix.md` documents mutation invalidation, WebSocket cache patching, URL state sync, and race-condition guards.
+- `src/__tests__/author-memory-v3/author-artifacts.test.ts` now validates 19 Author/KNOT artifacts and locks the 26 required screen endpoints against `author_ui_data_contracts.json`.
 
 Next implementation work should add:
 
-- UI data contract binding after Claude provides Author UI requirements
+- concrete API route handlers for the 26 Author UI endpoints
+- frontend query hooks/components that consume the Author UI binding registry
 - production calibration of judge-model prompts against Claude-prepared KNOT review cases
