@@ -136,6 +136,9 @@ Implemented now:
 - project-scoped persisted side-effect store with async replay lookup
 - Fall dataset import helper for Author eval seed cases
 - KNOT adapter support for deep-filled main/supporting character registries and expanded v2/v3 eval categories
+- KNOT v3 fixture runner that executes the 100-case seed in record mode and replays the same canonical side effects without live output
+- optional Author eval verifier contract that can fail a lexically passing case after judge-model review
+- Anthropic judge adapter with fail-closed missing-key behavior and compact JSON response parsing
 
 Next implementation:
 
@@ -157,10 +160,12 @@ Production activation remains gated until:
 The harness is acceptable when:
 
 - replay-only cache miss fails closed
+- KNOT v3 100-case fixture passes in record and replay modes with identical snapshot hash and side-effect keys
 - same input produces same side-effect key
 - same memory records in different order produce same snapshot hash
 - changed canon content changes snapshot hash
 - current canon excludes invalidated/candidate/rejected records
 - Author eval result carries snapshot hash and side-effect keys
+- optional verifier metadata is preserved in Author and Fall-compatible debug output
 - Fall adapter preserves Author metadata without Fall schema changes
 - sequential job runs preserve case order and persist per-case evidence

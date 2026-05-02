@@ -173,6 +173,8 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/contract.ts`
 - `src/lib/author/memory-v3/api.ts`
 - `src/lib/author/memory-v3/knot-input.ts`
+- `src/lib/author/memory-v3/knot-fixture-runner.ts`
+- `src/lib/author/memory-v3/verifier.ts`
 - `src/lib/author/memory-v3/supabase-store.ts`
 - `src/app/api/author/memory-v3/eval/route.ts`
 - `supabase/migrations/20260502001_author_memory_v3_store.sql`
@@ -189,10 +191,12 @@ The storage contract is deliberately adapter-shaped:
 - `handleAuthorEvalJobRequest` maps contract, replay, and execution failures to stable API response envelopes.
 - `knotInputBundleToAuthorRecords` maps Claude-prepared KNOT registries into Author memory records without committing to the raw artifact files.
 - `knotInputBundleToAuthorEvalJobPayload` builds a replay-ready Author eval payload from the KNOT seed set, including the v3 100-case regression fixture.
+- `runKnotAuthorEvalFixture` executes the KNOT v3 seed in deterministic record/replay modes and proves replay can run without `liveOutput`.
+- `AuthorEvalVerifier` lets a judge adapter reject a case after deterministic lexical checks; `createAnthropicAuthorEvalVerifier` provides the first live Anthropic-backed implementation and fails closed when the API key is not configured.
 - `POST /api/author/memory-v3/eval` exposes the eval job contract behind existing API-key auth and stable error envelopes.
 - `importAuthorEvalCasesToFallDataset` imports Author eval cases into existing Fall eval datasets without adding Fall columns.
 
 Next implementation work should add:
 
 - UI data contract binding after Claude provides Author UI requirements
-- live verifier/judge-model adapters once the v3 seed passes replay-only harness checks
+- production calibration of judge-model prompts against Claude-prepared KNOT review cases

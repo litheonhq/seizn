@@ -1,6 +1,7 @@
 import type { JsonValue } from './canonical';
 import { runAuthorEvalJob, type RunAuthorEvalJobOutput } from './job';
 import type { AuthorMemoryV3Store } from './store';
+import type { AuthorEvalVerifier } from './verifier';
 import {
   AUTHOR_MEMORY_V3_SCHEMA_VERSION,
   KNOT_AUTHOR_EVAL_V1_SCHEMA_VERSION,
@@ -115,6 +116,7 @@ export function parseAuthorEvalJobPayload(value: unknown): AuthorEvalJobPayload 
 export async function runAuthorEvalJobPayload(params: {
   payload: AuthorEvalJobPayload;
   store: AuthorMemoryV3Store;
+  verifier?: AuthorEvalVerifier;
 }): Promise<RunAuthorEvalJobOutput> {
   return runAuthorEvalJob({
     projectId: params.payload.projectId,
@@ -128,6 +130,7 @@ export async function runAuthorEvalJobPayload(params: {
     mode: params.payload.mode,
     generatedAt: params.payload.generatedAt,
     capturedAt: params.payload.capturedAt,
+    verifier: params.verifier,
     live: ({ caseIndex, testCase }) => {
       const output = params.payload.cases[caseIndex].liveOutput;
       if (output === undefined) {

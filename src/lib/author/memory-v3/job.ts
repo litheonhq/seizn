@@ -7,6 +7,7 @@ import type {
   AuthorReplayMode,
   AuthorSideEffectRequest,
 } from './types';
+import type { AuthorEvalVerifier } from './verifier';
 
 export interface AuthorEvalJobCase {
   testCase: AuthorEvalCase;
@@ -23,6 +24,7 @@ export interface RunAuthorEvalJobParams {
   mode: AuthorReplayMode;
   generatedAt?: string;
   capturedAt?: string;
+  verifier?: AuthorEvalVerifier;
   live: (input: {
     testCase: AuthorEvalCase;
     request: AuthorSideEffectRequest;
@@ -74,6 +76,7 @@ export async function runAuthorEvalJob(
       generatedAt: params.generatedAt,
       capturedAt: params.capturedAt,
       outputToText: jobCase.outputToText,
+      verifier: params.verifier,
       live: () =>
         params.live({
           testCase: jobCase.testCase,
