@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "seizn.knot_author_eval.v1",
+  "id": "knot-current-canon-001",
+  "kind": "invalidated_fact_exclusion",
+  "prompt": "What should the assistant say about Sori's current role?",
+  "expected": {
+    "mustInclude": ["Sori is a student"],
+    "mustExclude": ["Sori is an agent"]
+  },
+  "tags": ["knot", "canon", "invalidated-fact"]
+}
