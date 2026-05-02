@@ -2,6 +2,10 @@
 
 import { useId, useState } from "react";
 import type { AuthorBillingTier, BillingCadence } from "@/lib/stripe-config";
+import {
+  DEFAULT_CHECKOUT_LEGAL_COPY,
+  type CheckoutLegalCopy,
+} from "@/lib/checkout-copy";
 
 interface CheckoutButtonProps {
   children: React.ReactNode;
@@ -16,6 +20,7 @@ interface CheckoutButtonProps {
   requireLegalAgreement?: boolean;
   privacyHref?: string;
   termsHref?: string;
+  legalCopy?: CheckoutLegalCopy;
 }
 
 function getCsrfToken(): string | null {
@@ -40,6 +45,7 @@ export function CheckoutButton({
   requireLegalAgreement = true,
   privacyHref = "/en/legal/privacy",
   termsHref = "/en/legal/terms",
+  legalCopy = DEFAULT_CHECKOUT_LEGAL_COPY,
 }: CheckoutButtonProps) {
   const agreementId = useId();
   const [isLoading, setIsLoading] = useState(false);
@@ -71,12 +77,12 @@ export function CheckoutButton({
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok || typeof data.url !== "string") {
-        throw new Error(typeof data.error === "string" ? data.error : "Checkout could not start.");
+        throw new Error(typeof data.error === "string" ? data.error : legalCopy.error);
       }
 
       window.open(data.url, "_self", "noopener,noreferrer");
     } catch (checkoutError) {
-      setError(checkoutError instanceof Error ? checkoutError.message : "Checkout could not start.");
+      setError(checkoutError instanceof Error ? checkoutError.message : legalCopy.error);
       setIsLoading(false);
     }
   };
@@ -93,25 +99,25 @@ export function CheckoutButton({
             className="mt-0.5 h-4 w-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
           />
           <span>
-            I agree to the{" "}
+            {legalCopy.prefix ? `${legalCopy.prefix} ` : ""}
             <a
               href={termsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-szn-accent underline-offset-2 hover:underline"
+              className="font-medium text-cyan-700 underline-offset-2 hover:underline"
             >
-              Terms of Service
+              {legalCopy.terms}
             </a>{" "}
-            and{" "}
+            {legalCopy.connector}{" "}
             <a
               href={privacyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-szn-accent underline-offset-2 hover:underline"
+              className="font-medium text-cyan-700 underline-offset-2 hover:underline"
             >
-              Privacy Policy
+              {legalCopy.privacy}
             </a>
-            .
+            {legalCopy.suffix}
           </span>
         </label>
       ) : null}
@@ -122,7 +128,7 @@ export function CheckoutButton({
         className={className}
         aria-busy={isLoading}
       >
-        {isLoading ? "Opening Stripe..." : children}
+        {isLoading ? legalCopy.loading : children}
       </button>
       {error ? (
         <p className="text-xs text-red-600" role="alert">

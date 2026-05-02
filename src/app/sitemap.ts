@@ -36,6 +36,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Add static docs routes (non-locale)
   const docsRoutes = [
+    { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
+    { path: '/demo', priority: 0.85, changeFreq: 'weekly' as const },
     { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
     { path: '/docs/tutorial', priority: 0.85, changeFreq: 'monthly' as const },
     { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
@@ -56,6 +58,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/refund', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/privacy', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/terms', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/privacy', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/terms', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/beta-disclosure', priority: 0.5, changeFreq: 'monthly' as const },
   ];
   for (const route of legalRoutes) {
     sitemapEntries.push({
