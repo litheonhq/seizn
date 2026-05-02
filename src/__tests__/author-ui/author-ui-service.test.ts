@@ -1,9 +1,11 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createServerClient } from '@/lib/supabase';
 import { resetAuthorUiServiceForTests } from '@/lib/author/ui/service';
 
 describe('Author UI service', () => {
   afterEach(() => {
     delete process.env.AUTHOR_IMPORT_DISABLE_R2;
+    delete process.env.AUTHOR_AUDIT_LOG_STORE;
   });
 
   it('seeds the Author UI surface from KNOT input artifacts', () => {
@@ -199,7 +201,7 @@ describe('Author UI service', () => {
       api_key: 'raw-secret-test',
     })).toThrow('invalid provider api key');
 
-    const audit = service.listAuditLogs(projectId, new URLSearchParams('limit=50'));
+    const audit = await service.listAuditLogs(projectId, new URLSearchParams('limit=50'));
     const eventTypes = audit.audit_logs.map((entry) => entry.event_type);
 
     expect(eventTypes).toEqual(expect.arrayContaining([
@@ -210,7 +212,7 @@ describe('Author UI service', () => {
     ]));
     expect(JSON.stringify(audit)).not.toContain('raw-secret-test');
 
-    const replay = service.replayAuditDecision(projectId, run.decision_id);
+    const replay = await service.replayAuditDecision(projectId, run.decision_id);
     expect(replay.replayStatus).toBe('deterministic');
     expect(replay.chainLength).toBeGreaterThanOrEqual(1);
     expect(String(replay.payloadHash)).toMatch(/^[a-f0-9]{64}$/);
@@ -290,5 +292,45 @@ describe('Author UI service', () => {
       extract_status: 'failed',
       error_message: 'unsupported_format',
     });
+  });
+
+  it('wires Author UI audit logs to the configured Supabase store', async () => {
+    process.env.AUTHOR_AUDIT_LOG_STORE = 'supabase';
+    const rows: Array<Record<string, unknown>> = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const builder: any = {};
+    Object.assign(builder, {
+      insert: vi.fn(async (row: Record<string, unknown>) => {
+        rows.push(row);
+        return { error: null };
+      }),
+      select: vi.fn(() => builder),
+      eq: vi.fn(() => builder),
+      in: vi.fn(() => builder),
+      gte: vi.fn(() => builder),
+      lte: vi.fn(() => builder),
+      order: vi.fn(() => builder),
+      limit: vi.fn(async () => ({ data: rows, error: null })),
+      maybeSingle: vi.fn(async () => ({ data: rows[0] ?? null, error: null })),
+    });
+    vi.mocked(createServerClient).mockReturnValue({
+      from: vi.fn(() => builder),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const service = resetAuthorUiServiceForTests('persistent-audit-user');
+    const projectId = service.listProjects().projects[0].id;
+    const run = service.runSimulation(projectId, {
+      scene_input: {
+        text: 'Persistent audit scene.',
+        candidate_count: 1,
+      },
+    });
+
+    await service.flushAuditWrites();
+    const audit = await service.listAuditLogs(projectId, new URLSearchParams('event_type=simulation.run&limit=10'));
+
+    expect(rows.some((row) => row.event_type === 'simulation.run')).toBe(true);
+    expect(audit.audit_logs.some((entry) => entry.decision_id === run.decision_id)).toBe(true);
   });
 });

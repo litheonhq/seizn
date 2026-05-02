@@ -6,12 +6,13 @@ import timelineEventLedger from '../../../../docs/knot-input/timeline_event_ledg
 import { canonicalJson } from '@/lib/author/memory-v3/canonical';
 import { createAuthorMemorySnapshot } from '@/lib/author/memory-v3/snapshot';
 import {
+  createAuthorAuditLogStoreForUser,
   createAuthorAuditLogEntry,
   hashAuthorAuditPrompt,
-  InMemoryAuthorAuditLogStore,
   replayAuthorAuditChain,
   type AuthorAuditEventType,
   type AuthorAuditLogEntry,
+  type AuthorAuditLogStore,
   type AuthorAuditSearchFilter,
 } from '@/lib/author/audit';
 import {
@@ -236,7 +237,8 @@ interface AuthorUiState {
   conflictsByProject: Map<string, ReturnType<typeof buildSeedConflicts>>;
   simulationsByProject: Map<string, Map<string, AuthorUiSimulation>>;
   settingsByProject: Map<string, ReturnType<typeof buildDefaultSettings>>;
-  auditLog: InMemoryAuthorAuditLogStore;
+  auditLog: AuthorAuditLogStore;
+  auditLogWrites: Set<Promise<void>>;
   byok: {
     enabled: boolean;
     provider: 'anthropic' | 'google' | 'openai' | null;
@@ -247,6 +249,7 @@ interface AuthorUiState {
 }
 
 const DEFAULT_PROJECT_ID = 'knot';
+export const AUTHOR_IMPORT_MAX_BYTES = 50 * 1024 * 1024;
 const FORBIDDEN_FIELD_PATH_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor']);
 const statesByUser = new Map<string, AuthorUiState>();
 
@@ -342,7 +345,8 @@ export class AuthorUiService {
     }
   ): Promise<{ import_id: string }> {
     this.ensureProject(projectId);
-    if (!input.fileBytes || input.fileBytes.length === 0) {
+    const declaredFileSize = input.fileSize ?? input.fileBytes?.length ?? 0;
+    if (declaredFileSize <= AUTHOR_IMPORT_MAX_BYTES && (!input.fileBytes || input.fileBytes.length === 0)) {
       throw new AuthorUiValidationError('file is required');
     }
 
@@ -350,7 +354,7 @@ export class AuthorUiService {
     const id = `import-${imports.length + 1}-${Date.now().toString(36)}`;
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
-    const fileSize = input.fileSize ?? input.fileBytes.length;
+    const fileSize = declaredFileSize;
     const item: AuthorUiImport = {
       id,
       file_name: fileName,
@@ -382,7 +386,7 @@ export class AuthorUiService {
       a_or_d_mode: item.a_or_d_mode,
     });
 
-    if (fileSize > 50 * 1024 * 1024) {
+    if (fileSize > AUTHOR_IMPORT_MAX_BYTES) {
       markImportFailed(item, 'file_too_large');
       this.touchProject(projectId);
       this.logAudit(projectId, 'import.failed', {
@@ -391,12 +395,16 @@ export class AuthorUiService {
       }, { parentDecisionId: uploadAudit.decisionId });
       return { import_id: id };
     }
+    const fileBytes = input.fileBytes;
+    if (!fileBytes || fileBytes.length === 0) {
+      throw new AuthorUiValidationError('file is required');
+    }
 
     try {
       const storageKey = buildAuthorR2ObjectKey({ projectId, importId: id, fileName });
       const storageRef = await putAuthorImportObject({
         key: storageKey,
-        body: input.fileBytes,
+        body: fileBytes,
         contentType,
         metadata: {
           project_id: projectId,
@@ -408,7 +416,7 @@ export class AuthorUiService {
       item.parse_progress = 45;
 
       const parsed = await parseAuthorDocument({
-        buffer: input.fileBytes,
+        buffer: fileBytes,
         fileName,
         contentType,
       });
@@ -1079,10 +1087,11 @@ export class AuthorUiService {
     };
   }
 
-  listAuditLogs(projectId: string, filters: URLSearchParams) {
+  async listAuditLogs(projectId: string, filters: URLSearchParams) {
     this.ensureProject(projectId);
+    await this.flushAuditWrites();
     const filter = auditFilterFromSearchParams(projectId, filters);
-    const auditLogs = this.state.auditLog.search(filter);
+    const auditLogs = await this.state.auditLog.search(filter);
     return {
       audit_logs: auditLogs.map(toAuthorAuditApiRecord),
       total: auditLogs.length,
@@ -1090,9 +1099,10 @@ export class AuthorUiService {
     };
   }
 
-  replayAuditDecision(projectId: string, decisionId: string) {
+  async replayAuditDecision(projectId: string, decisionId: string) {
     this.ensureProject(projectId);
-    const entries = this.state.auditLog.search({ projectId, limit: 500 });
+    await this.flushAuditWrites();
+    const entries = await this.state.auditLog.search({ projectId, limit: 500 });
     const replay = replayAuthorAuditChain(entries, decisionId);
     return {
       ...replay,
@@ -1311,6 +1321,13 @@ export class AuthorUiService {
     };
   }
 
+  async flushAuditWrites(): Promise<void> {
+    if (this.state.auditLogWrites.size === 0) {
+      return;
+    }
+    await Promise.all([...this.state.auditLogWrites]);
+  }
+
   private logAudit(
     projectId: string,
     eventType: AuthorAuditEventType,
@@ -1330,7 +1347,18 @@ export class AuthorUiService {
       sourceSpan: options.sourceSpan,
       parentDecisionId: options.parentDecisionId,
     });
-    this.state.auditLog.log(entry);
+    let write: Promise<void>;
+    try {
+      write = Promise.resolve(this.state.auditLog.log(entry));
+    } catch (error) {
+      write = Promise.reject(error);
+    }
+    this.state.auditLogWrites.add(write);
+    void write.then(() => {
+      this.state.auditLogWrites.delete(write);
+    }, () => {
+      this.state.auditLogWrites.delete(write);
+    });
     return entry;
   }
 }
@@ -1426,7 +1454,8 @@ function createSeedState(userId: string): AuthorUiState {
     conflictsByProject: new Map([[DEFAULT_PROJECT_ID, conflicts]]),
     simulationsByProject: new Map([[DEFAULT_PROJECT_ID, new Map()]]),
     settingsByProject: new Map([[DEFAULT_PROJECT_ID, settings]]),
-    auditLog: new InMemoryAuthorAuditLogStore(),
+    auditLog: createAuthorAuditLogStoreForUser({ userId }),
+    auditLogWrites: new Set(),
     byok: {
       enabled: false,
       provider: null,
