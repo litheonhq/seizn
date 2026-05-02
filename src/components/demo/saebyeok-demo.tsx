@@ -15,6 +15,8 @@ const COPY = {
     title: "Saebyeok Academy demo",
     subtitle: "A read-only walkthrough of the same Author Memory v3 surfaces used in production: inbox, review, characters, graph, timeline, and scene simulation.",
     note: "Demo data is synthetic and designed for Seizn. Not affiliated with any author or studio.",
+    unavailableTitle: "Sample data temporarily unavailable",
+    unavailableBody: "Some source files could not be read, so this demo is showing the available data only.",
     cta: "View pricing",
     source: "Source snapshot",
     screens: ["Intro", "Inbox", "Review", "Characters", "Graph", "Timeline", "Simulate"],
@@ -24,6 +26,8 @@ const COPY = {
     title: "새벽 아카데미 데모",
     subtitle: "Inbox, Review, Characters, Graph, Timeline, Scene Simulation을 실제 Author Memory v3 흐름과 같은 구조로 읽기 전용 시연합니다.",
     note: "본 데모 데이터는 Seizn 기능 시연용 합성 자료이며 실제 작가·스튜디오와 무관합니다.",
+    unavailableTitle: "샘플 데이터를 잠시 불러올 수 없습니다",
+    unavailableBody: "일부 원본 파일을 읽지 못해 현재 불러온 데이터만 데모로 표시합니다.",
     cta: "가격 보기",
     source: "원본 스냅샷",
     screens: ["소개", "Inbox", "Review", "Characters", "Graph", "Timeline", "Simulate"],
@@ -33,6 +37,8 @@ const COPY = {
     title: "Saebyeok Academy デモ",
     subtitle: "Inbox、Review、Characters、Graph、Timeline、Scene Simulation を Author Memory v3 と同じ読み取り専用フローで確認できます。",
     note: "このデモデータは Seizn のために作成された合成サンプルで、実在の作者やスタジオとは関係ありません。",
+    unavailableTitle: "サンプルデータを一時的に利用できません",
+    unavailableBody: "一部のソースファイルを読めないため、取得できたデータだけを表示しています。",
     cta: "料金を見る",
     source: "ソース snapshot",
     screens: ["Intro", "Inbox", "Review", "Characters", "Graph", "Timeline", "Simulate"],
@@ -42,6 +48,8 @@ const COPY = {
     title: "Saebyeok Academy 演示",
     subtitle: "以只读方式展示 Author Memory v3 的 Inbox、Review、Characters、Graph、Timeline 和 Scene Simulation 流程。",
     note: "演示数据为 Seizn 设计的合成样本，与任何作者或工作室无关。",
+    unavailableTitle: "样本数据暂时不可用",
+    unavailableBody: "部分源文件无法读取，因此当前只显示已加载的数据。",
     cta: "查看价格",
     source: "源快照",
     screens: ["Intro", "Inbox", "Review", "Characters", "Graph", "Timeline", "Simulate"],
@@ -68,6 +76,12 @@ export function SaebyeokDemo({ data, locale }: { data: SaebyeokDemoData; locale:
             <p className="mt-3 rounded-lg border border-[#c8d8d5] bg-[#eef8f6] px-4 py-3 text-sm text-[#24514c]">
               {copy.note}
             </p>
+            {data.hasSourceErrors ? (
+              <div className="mt-3 rounded-lg border border-[#e3c073] bg-[#fff8df] px-4 py-3" role="status">
+                <p className="text-sm font-semibold text-[#4a3711]">{copy.unavailableTitle}</p>
+                <p className="mt-1 text-sm leading-6 text-[#6a4a0c]">{copy.unavailableBody}</p>
+              </div>
+            ) : null}
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href={`/${locale}/pricing`} className="rounded-lg bg-[#171717] px-4 py-2 text-sm font-medium text-white hover:bg-[#2d2d2d]">

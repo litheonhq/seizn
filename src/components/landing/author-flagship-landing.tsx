@@ -39,6 +39,8 @@ interface LandingCopy {
     title: string;
     body: string;
     openDemo: string;
+    unavailableTitle: string;
+    unavailableBody: string;
     stats: {
       characters: string;
       rules: string;
@@ -52,6 +54,7 @@ interface LandingCopy {
   };
   inputs: {
     title: string;
+    subtitle: string;
     modes: Array<{ name: string; body: string }>;
   };
   conflicts: {
@@ -126,6 +129,8 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
       body:
         "The public demo uses a synthetic 30-day school SF mystery, separated from internal dogfood material and loaded from the Phase C sample files.",
       openDemo: "Open full demo",
+      unavailableTitle: "Sample data temporarily unavailable",
+      unavailableBody: "Some source files could not be read, so this preview is showing the available data only.",
       stats: {
         characters: "characters",
         rules: "world rules",
@@ -152,6 +157,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
     },
     inputs: {
       title: "Input modes for real author habits.",
+      subtitle: "Use the way authors already work: native entry, manuscripts, text paste, or collaborative docs.",
       modes: [
         { name: "Native UI", body: "Add characters, rules, events, and relationships directly." },
         { name: "DOCX upload", body: "Extract facts from manuscript and worldbuilding documents." },
@@ -254,7 +260,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
     },
     hero: {
       eyebrow: "01 / 작가 메모리",
-      title: "작품의 기억을, 흩어지지 않게.",
+      title: "작품의 기억을\n흩어지지 않게.",
       subtitle:
         "세계관, 캐릭터, 장면을 한곳에 모으고 캐논 충돌을 자동으로 잡아냅니다. 작가의 검수가 곧 작품의 기준이 됩니다.",
       primaryCta: "30일 무료로 시작",
@@ -269,6 +275,8 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
       body:
         "공개 데모는 내부 자료와 분리된 합성 30일 학원 SF 미스터리 데이터를 사용하며 Phase C 샘플 파일에서 직접 불러옵니다.",
       openDemo: "전체 데모 열기",
+      unavailableTitle: "샘플 데이터를 잠시 불러올 수 없습니다",
+      unavailableBody: "일부 원본 파일을 읽지 못해 현재 불러온 데이터만 미리보기로 표시합니다.",
       stats: {
         characters: "캐릭터",
         rules: "세계관 룰",
@@ -286,6 +294,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
     },
     inputs: {
       title: "실제 작가 습관에 맞춘 입력 방식.",
+      subtitle: "작가가 실제로 쓰는 방식 그대로 직접 입력, 원고, 붙여넣기, 협업 문서를 받아들입니다.",
       modes: [
         { name: "직접 입력", body: "캐릭터, 룰, 사건, 관계를 화면에서 바로 추가합니다." },
         { name: "DOCX 업로드", body: "원고와 설정 문서에서 사실 후보를 추출합니다." },
@@ -389,6 +398,8 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
       body:
         "公開デモは内部素材から分離された合成の30日学園SFミステリーを使い、Phase C のサンプルファイルから読み込みます。",
       openDemo: "完全なデモを開く",
+      unavailableTitle: "サンプルデータを一時的に利用できません",
+      unavailableBody: "一部のソースファイルを読めないため、取得できたデータだけを表示しています。",
       stats: {
         characters: "人物",
         rules: "世界ルール",
@@ -406,6 +417,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
     },
     inputs: {
       title: "実際の執筆習慣に合う入力方式。",
+      subtitle: "直接入力、原稿、貼り付けテキスト、共同編集ドキュメントまで作家の作業方法に合わせます。",
       modes: [
         { name: "直接入力", body: "人物、ルール、事件、関係を画面で追加します。" },
         { name: "DOCX アップロード", body: "原稿や設定資料から事実候補を抽出します。" },
@@ -509,6 +521,8 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
       body:
         "公开演示使用与内部材料隔离的合成 30 天校园科幻悬疑数据，并直接读取 Phase C 样本文件。",
       openDemo: "打开完整演示",
+      unavailableTitle: "样本数据暂时不可用",
+      unavailableBody: "部分源文件无法读取，因此当前只显示已加载的数据。",
       stats: {
         characters: "角色",
         rules: "世界规则",
@@ -526,6 +540,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
     },
     inputs: {
       title: "适合真实写作习惯的输入方式。",
+      subtitle: "按作者已有习惯接入：原生输入、稿件、文本粘贴或协作文档。",
       modes: [
         { name: "原生输入", body: "直接添加角色、规则、事件和关系。" },
         { name: "DOCX 上传", body: "从稿件和设定文档中抽取事实候选。" },
@@ -607,6 +622,7 @@ const COPY: Record<LaunchLocale, LandingCopy> = {
 
 const LAUNCH_LOCALES = new Set<Locale>(["en", "ko", "ja", "zh-hans"]);
 const TIERS = ["indie", "pro", "studio", "enterprise"] as const;
+const ENGINE_SURFACE_URL = "https://engine.seizn.com";
 const NODE_POSITIONS = [
   "left-[12%] top-[18%]",
   "left-[42%] top-[10%]",
@@ -615,6 +631,10 @@ const NODE_POSITIONS = [
   "right-[26%] bottom-[14%]",
   "left-[54%] bottom-[34%]",
 ] as const;
+
+export function isAuthorEngineSurfaceLive(value = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE): boolean {
+  return value === "1";
+}
 
 export function getAuthorLandingCopy(locale: Locale): LandingCopy {
   return COPY[toLaunchLocale(locale)];
@@ -636,6 +656,11 @@ export function AuthorFlagshipLanding({
   const copy = getAuthorLandingCopy(locale);
   const launchLocale = toLaunchLocale(locale);
   const legalBase = `/${locale}/legal`;
+  const engineSurfaceLive = isAuthorEngineSurfaceLive();
+  const resourceLinks = [
+    ...(engineSurfaceLive ? [{ label: copy.footer.engine, href: ENGINE_SURFACE_URL, external: true }] : []),
+    { label: copy.footer.contact, href: `/${locale}/docs/faq` },
+  ];
 
   return (
     <div className="min-h-screen bg-[#f8fbff] text-slate-950">
@@ -652,9 +677,16 @@ export function AuthorFlagshipLanding({
             <Link href={`/${locale}/demo`} className="text-sm text-slate-600 hover:text-slate-950">{copy.nav.demo}</Link>
             <Link href={`/${locale}/pricing`} className="text-sm text-slate-600 hover:text-slate-950">{copy.nav.pricing}</Link>
             <Link href={`/${locale}/docs`} className="text-sm text-slate-600 hover:text-slate-950">{copy.nav.docs}</Link>
-            <a href="https://engine.seizn.com" className="text-sm text-slate-600 hover:text-slate-950" rel="noopener noreferrer">
-              {copy.footer.engine}
-            </a>
+            {engineSurfaceLive ? (
+              <a
+                href={ENGINE_SURFACE_URL}
+                className="text-sm text-slate-600 hover:text-slate-950"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copy.footer.engine}
+              </a>
+            ) : null}
             <LanguageSwitcher currentLocale={locale} />
             <Link href="/login" className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100">
               {copy.nav.signIn}
@@ -669,7 +701,7 @@ export function AuthorFlagshipLanding({
           <div className="relative mx-auto flex min-h-[760px] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:py-28">
             <div className="max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200">{copy.hero.eyebrow}</p>
-              <h1 className="mt-6 text-5xl font-semibold leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 whitespace-pre-line text-5xl font-semibold leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl">
                 {copy.hero.title}
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200 sm:text-xl">
@@ -735,7 +767,7 @@ export function AuthorFlagshipLanding({
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <h2 className="text-3xl font-semibold tracking-normal text-slate-950">{copy.inputs.title}</h2>
-              <p className="mt-4 text-sm leading-6 text-slate-600">{copy.pricing.yearlyNote}</p>
+              <p className="mt-4 text-sm leading-6 text-slate-600">{copy.inputs.subtitle}</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {copy.inputs.modes.map((mode) => (
@@ -844,10 +876,7 @@ export function AuthorFlagshipLanding({
             { label: copy.nav.pricing, href: `/${locale}/pricing` },
             { label: copy.nav.docs, href: `/${locale}/docs` },
           ]} />
-          <FooterColumn title={copy.footer.resources} links={[
-            { label: copy.footer.engine, href: "https://engine.seizn.com", external: true },
-            { label: copy.footer.contact, href: `/${locale}/docs/faq` },
-          ]} />
+          <FooterColumn title={copy.footer.resources} links={resourceLinks} />
           <FooterColumn title={copy.footer.legal} links={[
             { label: copy.footer.privacy, href: `${legalBase}/privacy` },
             { label: copy.footer.terms, href: `${legalBase}/terms` },
@@ -855,7 +884,7 @@ export function AuthorFlagshipLanding({
           ]} />
         </div>
         <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-sm text-slate-400">
-          © 2026 Seizn. {copy.localeLabel}
+          © 2026 Seizn by Litheon LLC
           <span className="sr-only"> launch locale {launchLocale}</span>
         </div>
       </footer>
@@ -913,6 +942,12 @@ function DemoWidget({ data, copy }: { data: SaebyeokDemoData; copy: LandingCopy 
         </div>
         <span className="rounded-md bg-slate-950 px-3 py-1 text-xs font-semibold text-white">read-only</span>
       </div>
+      {data.hasSourceErrors ? (
+        <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-4" role="status">
+          <p className="text-sm font-semibold text-amber-950">{copy.demo.unavailableTitle}</p>
+          <p className="mt-1 text-sm leading-6 text-amber-900">{copy.demo.unavailableBody}</p>
+        </div>
+      ) : null}
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div className="rounded-md border border-slate-200 bg-white p-4">
           <h4 className="text-sm font-semibold text-slate-950">{copy.hero.graphLabel}</h4>
