@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   AUTHOR_MEMORY_V3_SCHEMA_VERSION,
   handleAuthorEvalJobRequest,
+  type AuthorMemoryV3Store,
 } from '@/lib/author/memory-v3';
 
 const basePayload = {
@@ -98,6 +99,25 @@ describe('Author Memory v3 API handler contract', () => {
       success: false,
       error: {
         code: 'AUTHOR_MEMORY_V3_REPLAY_MISS',
+      },
+    });
+  });
+
+  it('maps execution errors to a generic 500 response', async () => {
+    const response = await handleAuthorEvalJobRequest(basePayload, {
+      store: {
+        saveRecords: async () => {
+          throw new Error('relation "author_memory_v3_records" does not exist');
+        },
+      } as unknown as AuthorMemoryV3Store,
+    });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({
+      success: false,
+      error: {
+        code: 'AUTHOR_MEMORY_V3_EXECUTION_ERROR',
+        message: 'Author Memory v3 execution failed',
       },
     });
   });

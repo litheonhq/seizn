@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
 import { AUTHOR_MEMORY_V3_SCHEMA_VERSION } from '@/lib/author/memory-v3';
+import { hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import { POST } from './route';
 
 const mocks = vi.hoisted(() => ({
@@ -59,6 +60,10 @@ const payload = {
 };
 
 describe('/api/author/memory-v3/eval', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.authenticateRequest.mockResolvedValue({
@@ -133,6 +138,25 @@ describe('/api/author/memory-v3/eval', () => {
       },
     });
     expect(mocks.logRequest).toHaveBeenCalledWith(expect.any(Object), 400);
+  });
+
+  it('fails closed when Supabase persistence is requested without config', async () => {
+    vi.stubEnv('AUTHOR_MEMORY_V3_STORE', 'supabase');
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '');
+    vi.mocked(hasServerSupabaseServiceRoleConfig).mockReturnValue(false);
+
+    const response = await POST(makeRequest(payload));
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toEqual({
+      success: false,
+      error: {
+        code: 'AUTHOR_MEMORY_V3_EXECUTION_ERROR',
+        message: 'Author Memory v3 execution failed',
+      },
+    });
+    expect(mocks.logRequest).toHaveBeenCalledWith(expect.any(Object), 500);
   });
 });
 

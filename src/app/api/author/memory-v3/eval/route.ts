@@ -6,6 +6,7 @@ import {
   logRequest,
 } from '@/lib/api-auth';
 import {
+  authorMemoryV3ExecutionErrorResponse,
   createAuthorMemoryV3StoreForUser,
   handleAuthorEvalJobRequest,
 } from '@/lib/author/memory-v3';
@@ -47,9 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return withAuthHeaders(response, authResult.rateLimitHeaders);
   }
 
-  const result = await handleAuthorEvalJobRequest(body, {
-    store: createAuthorMemoryV3StoreForUser({ userId: authResult.userId }),
-  });
+  const result = await handleRequestWithStore(body, authResult.userId);
   const response = NextResponse.json(result.body, { status: result.status });
 
   await logRequest({
@@ -61,6 +60,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }, result.status);
 
   return withAuthHeaders(response, authResult.rateLimitHeaders);
+}
+
+async function handleRequestWithStore(body: unknown, userId: string) {
+  try {
+    return await handleAuthorEvalJobRequest(body, {
+      store: createAuthorMemoryV3StoreForUser({ userId }),
+    });
+  } catch (error) {
+    return authorMemoryV3ExecutionErrorResponse(error);
+  }
 }
 
 function withAuthHeaders(
