@@ -262,14 +262,14 @@ exclusions:
 
 ## Phase H — Settings UI 빌드 (P1·dogfood 진입 차단 해제)
 
-**사전 조건**: Phase B″-1 완료 (BYOK discount 3 상태 분기·`byok_discount_active`/`pending`/`error`). Settings UI가 그 3 상태를 표시하므로 의존.
+**사전 조건**: Phase B″-1 완료 (BYOK discount **4 상태** 분기·`inactive`/`pending`/`applied`/`error`·commit `0ae112c5`). Settings UI가 그 4 상태를 표시하므로 의존.
 
 **Why**: Author Memory v3 dashboard에 Settings UI surface 부재 — yellow banner 'Settings could not be loaded' 표시·dogfood 진입 차단. 백엔드는 풀 빌드 완료된 상태:
 - `/api/account/byok` (GET·POST·DELETE) — Phase 2·B′
-- `/api/account/subscription` (GET) — Phase B
+- `/api/account/subscription` (GET) — Phase B·B″-2 (withAuthorUiService wrap 정합)
 - `/api/account/usage` (GET) — Phase B
 - `/api/account/billing-portal` (POST) — Phase B
-- BYOK discount 3 상태 분기 — Phase B″-1 (사전 의존)
+- BYOK discount **4 상태** 분기 — Phase B″-1 (commit `0ae112c5`·완료)
 
 **디스패치 prompt**:
 
@@ -291,7 +291,7 @@ exclusions:
 
 - Anthropic key 등록 form (provider hard-coded `anthropic`·v3 단일 LLM)
 - 현 상태 표시: `Active` / `Missing` / `Error`
-- Discount status: `Applied` / `Pending` / `Error` 3 상태 (B″-1 정합·미빌드 시 임시 `Active`/`None`)
+- Discount status: `Applied` / `Pending` / `Error` / `Inactive` **4 상태** (B″-1 정합·`inactive` = 미등록·`pending` = coupon API 호출 중·`applied` = 실 Stripe coupon 적용 성공·`error` = 실패·secret 누락·customer 누락 등)
 - 등록 키 마지막 4자리·삭제 버튼
 - Wire: `GET·POST·DELETE /api/account/byok`
 - 산출물: `src/components/settings/byok-section.tsx`
@@ -339,7 +339,7 @@ exclusions:
 - [ ] Settings 페이지 4 sections 모두 200 OK·4 lang 정합
 - [ ] BYOK 등록 → 즉시 LLM 호출에 Anthropic 키 사용 (Phase B′ managed fallback과 정합)
 - [ ] BYOK 삭제 → managed key fallback·discount 제거
-- [ ] Discount 3 상태 표시 (B″-1 미빌드 시 임시 `Active`/`None`·B″-1 빌드 후 `Applied`/`Pending`/`Error` 정합)
+- [ ] Discount **4 상태** (`Applied`·`Pending`·`Error`·`Inactive`) 표시·B″-1 commit `0ae112c5`·migration `20260503001` 정합
 - [ ] Plan·trial·usage·portal 모두 작동
 - [ ] yellow banner 'Settings could not be loaded' 제거
 - [ ] `npm run typecheck·test·lint·build` 모두 통과
@@ -358,7 +358,7 @@ exclusions:
 
 - Stripe coupon 적용 mechanism (Phase B′ 완료)
 - Token cap enforcement (Phase B′ 완료)
-- BYOK discount 3 상태 분기 (Phase B″-1·사전 의존)
+- BYOK discount 4 상태 분기 (Phase B″-1·완료·commit `0ae112c5`)
 - Project-scoped settings (Phase D+ 확장)
 - 옵시디언 sync 풀 (placeholder만 본 cycle)
 - 변호사 검토 (legal·별 cycle)
