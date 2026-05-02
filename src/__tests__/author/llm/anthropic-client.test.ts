@@ -7,7 +7,7 @@ import {
 
 function resolvedKey(overrides: Partial<ResolvedAuthorAnthropicKey> = {}): ResolvedAuthorAnthropicKey {
   return {
-    apiKey: 'sk-ant-test-key',
+    apiKey: 'anthropic-test-key',
     source: 'byok',
     byok: true,
     providerKeyId: 'provider-key-1',
@@ -36,7 +36,7 @@ describe('Author Anthropic client', () => {
     const client = new AuthorAnthropicClient({
       resolveKey: async () => resolvedKey(),
       createClient: (apiKey) => {
-        expect(apiKey).toBe('sk-ant-test-key');
+        expect(apiKey).toBe('anthropic-test-key');
         return { messages: { create } };
       },
       recordUsage,

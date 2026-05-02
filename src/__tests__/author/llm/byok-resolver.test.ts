@@ -40,7 +40,7 @@ describe('Author BYOK resolver', () => {
         lookupProviderKey: async () => ({
           id: 'provider-key-1',
           provider: 'anthropic',
-          apiKey: 'sk-ant-user-key',
+          apiKey: 'anthropic-user-key',
           isDefault: true,
         }),
         nodeEnv: 'production',
@@ -48,7 +48,7 @@ describe('Author BYOK resolver', () => {
     );
 
     expect(resolved).toEqual({
-      apiKey: 'sk-ant-user-key',
+      apiKey: 'anthropic-user-key',
       source: 'byok',
       byok: true,
       providerKeyId: 'provider-key-1',
@@ -74,12 +74,12 @@ describe('Author BYOK resolver', () => {
       {
         lookupProviderKey: async () => null,
         nodeEnv: 'test',
-        env: { AUTHOR_ANTHROPIC_DEV_API_KEY: 'sk-ant-dev-key' },
+        env: { AUTHOR_ANTHROPIC_DEV_API_KEY: 'anthropic-dev-key' },
       }
     );
 
     expect(resolved).toEqual({
-      apiKey: 'sk-ant-dev-key',
+      apiKey: 'anthropic-dev-key',
       source: 'managed',
       byok: false,
     });
