@@ -401,6 +401,8 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 - 2026-05-03 — **Designer Round 1 도착·Hero B + Mark A + 토큰 lock** — monochrome slate + 3 signals (canon-green·pending-yellow·conflict-red) + Pretendard + Source Serif 4 + JetBrains Mono. Round 1 cover: N·O·P·S·U
 - 2026-05-03 — **Designer Round 2 도착·풀 11 섹션 landing + 360/768 viewport + Tweaks panel + favicon scale check** — Round 2 cover 8/8 P2 items (N·O·P·Q·R·S·T·U). Pricing: Indie/Pro full cards (Pro highlighted dark + 'most picked' badge) + Studio/Enterprise slim rows. Footer: '© 2026 Seizn by Litheon LLC · Wyoming' discreet mono
 - 2026-05-03 — **Designer Round 2.1 진행 중 (사용자 dispatch)** — KNOT leak 2곳 reword (`KNOT-isolated` → `Workspace-isolated`·FAQ #4 'KNOT separation is enforced by CI grep' 문장 제거) + Pricing cadence 일관성 (Studio/Enterprise '$X / month' 통일) + FAQ #5 trial-archive 60-day 정책 confirm
+- 2026-05-03 — **Designer Round 2.1 도착·정확히 3 fix 적용** — Trust 'Workspace-isolated'·Pricing Studio/Enterprise '$X / month' + 'XM tokens / mo'·FAQ #4 'KNOT CI grep' 문장 제거·FAQ #5 60-day archive 카피 lock으로 유지. Designer bundle commit `e250e4ef` (`docs/architecture/designer-round-2-1/`) + Phase D″ 핸드오프 doc 작성
+- 2026-05-03 — **Phase D″ Codex 완료** commit `1d3a3c49` + pre-fix `0261c1fe` — 9 sections React 분리·token migration (cyan stack 제거·monochrome ink + 3 signals)·Pretendard + Source Serif 4 + JetBrains Mono·Mark A favicon (32 + 16 simplified)·`NEXT_PUBLIC_ENGINE_SURFACE_LIVE` env gate·detector default seed 'Han Iseul transfers to Class 2 on day 9.'·1163 tests pass·Lighthouse 100·KNOT separation 0·1440/768/360 overflow 0·1 lint warning (`@next/next/no-page-custom-font`·next/font 마이그레이션 P2 별 cycle)
 
 ## 10. 새 세션 시작 권장 순서
 
