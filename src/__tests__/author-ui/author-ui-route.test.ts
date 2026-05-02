@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { getRequestUser } from '@/lib/api/request-user';
 import { isAuthorUiAccessAllowed, withAuthorUiService } from '@/lib/author/ui/route';
 import { AUTHOR_IMPORT_MAX_BYTES, getAuthorUiService } from '@/lib/author/ui/service';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 import { POST as postProjectImport } from '@/app/api/projects/[projectId]/imports/route';
 import { POST as postCharacterBacklog } from '@/app/api/projects/[projectId]/characters/[characterId]/backlog/route';
 import { GET as getProjectAudit } from '@/app/api/projects/[projectId]/audit/route';
@@ -18,6 +19,7 @@ const ORIGINAL_ENV = {
   AUTHOR_UI_ALLOWED_EMAILS: process.env.AUTHOR_UI_ALLOWED_EMAILS,
   AUTHOR_IMPORT_DISABLE_R2: process.env.AUTHOR_IMPORT_DISABLE_R2,
 };
+const CSRF_TOKEN = 'test-csrf-token';
 
 describe('Author UI route guard', () => {
   beforeEach(() => {
@@ -122,7 +124,8 @@ describe('Author UI route guard', () => {
     );
     const request = {
       method: 'POST',
-      headers: new Headers({ origin: 'http://localhost:3000' }),
+      headers: new Headers(csrfHeaders({ origin: 'http://localhost:3000' })),
+      cookies: csrfCookies(),
       formData: async () => ({
         get: (name: string) => {
           if (name === 'file') {
@@ -182,7 +185,8 @@ describe('Author UI route guard', () => {
     const arrayBuffer = vi.fn(async () => new ArrayBuffer(0));
     const request = {
       method: 'POST',
-      headers: new Headers({ origin: 'http://localhost:3000' }),
+      headers: new Headers(csrfHeaders({ origin: 'http://localhost:3000' })),
+      cookies: csrfCookies(),
       formData: async () => ({
         get: (name: string) => {
           if (name === 'file') {
@@ -221,6 +225,50 @@ describe('Author UI route guard', () => {
     });
   });
 
+  it('rejects oversized Author imports from Content-Length before parsing multipart data', async () => {
+    process.env.NODE_ENV = 'test';
+    process.env.AUTHOR_IMPORT_DISABLE_R2 = '1';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'route-content-length-user',
+      email: 'route-content-length@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+    const formData = vi.fn();
+    const request = {
+      method: 'POST',
+      headers: new Headers(csrfHeaders({
+        origin: 'http://localhost:3000',
+        'content-length': String(AUTHOR_IMPORT_MAX_BYTES + 1),
+        'content-type': 'multipart/form-data; boundary=test',
+      })),
+      cookies: csrfCookies(),
+      formData,
+    } as unknown as NextRequest;
+
+    const response = await postProjectImport(
+      request,
+      { params: Promise.resolve({ projectId: 'knot' }) }
+    );
+
+    expect(response.status).toBe(200);
+    expect(formData).not.toHaveBeenCalled();
+    const body = await response.json() as { import_id: string };
+    const uploaded = getAuthorUiService('route-content-length-user')
+      .listImports('knot')
+      .imports
+      .find((item) => item.id === body.import_id);
+
+    expect(uploaded).toMatchObject({
+      file_name: 'oversized-upload',
+      parse_status: 'failed',
+      extract_status: 'failed',
+      error_message: 'file_too_large',
+    });
+  });
+
   it('generates backlog candidates through the character route', async () => {
     process.env.NODE_ENV = 'test';
     vi.mocked(getRequestUser).mockResolvedValue({
@@ -235,7 +283,7 @@ describe('Author UI route guard', () => {
     const request = new NextRequest('https://example.com/api/projects/knot/characters/knot.short1.char.sori/backlog', {
       method: 'POST',
       body: JSON.stringify({ items_per_category: 5 }),
-      headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
+      headers: csrfHeaders({ 'content-type': 'application/json', origin: 'http://localhost:3000' }),
     });
     const response = await postCharacterBacklog(request, {
       params: Promise.resolve({
@@ -300,4 +348,18 @@ function restoreEnv(name: keyof typeof ORIGINAL_ENV, value: string | undefined):
   } else {
     process.env[name] = value;
   }
+}
+
+function csrfHeaders(headers: Record<string, string>): Record<string, string> {
+  return {
+    ...headers,
+    cookie: `${CSRF_COOKIE_NAME}=${CSRF_TOKEN}`,
+    [CSRF_HEADER_NAME]: CSRF_TOKEN,
+  };
+}
+
+function csrfCookies() {
+  return {
+    get: (name: string) => name === CSRF_COOKIE_NAME ? { value: CSRF_TOKEN } : undefined,
+  };
 }

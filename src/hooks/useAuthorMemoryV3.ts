@@ -6,6 +6,18 @@ import useSWRMutation from 'swr/mutation';
 
 type JsonRecord = Record<string, unknown>;
 
+function getCsrfToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(/(?:^|;\s*)seizn_csrf_token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function csrfHeaders(base?: Record<string, string>): Record<string, string> | undefined {
+  const token = getCsrfToken();
+  if (!token) return base;
+  return { ...(base ?? {}), 'x-csrf-token': token };
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     credentials: 'include',
@@ -20,7 +32,7 @@ async function postJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise<
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: csrfHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(arg ?? {}),
   });
   if (!response.ok) {
@@ -33,7 +45,7 @@ async function patchJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise
   const response = await fetch(url, {
     method: 'PATCH',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: csrfHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(arg ?? {}),
   });
   if (!response.ok) {
@@ -46,6 +58,7 @@ async function deleteJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     method: 'DELETE',
     credentials: 'include',
+    headers: csrfHeaders(),
   });
   if (!response.ok) {
     throw new Error(await response.text());
@@ -106,6 +119,7 @@ export function useUploadAuthorImport(projectId?: string) {
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
+        headers: csrfHeaders(),
         body: arg,
       });
       if (!response.ok) {
