@@ -8,11 +8,13 @@ import {
   GitBranch,
   Play,
   RefreshCw,
+  ScrollText,
   Sparkles,
   UploadCloud,
   UserRound,
 } from 'lucide-react';
 import {
+  useAuthorAuditLogs,
   useAuthorCandidates,
   useAuthorCharacters,
   useAuthorConflicts,
@@ -22,10 +24,12 @@ import {
   useAuthorSettings,
   useAuthorTimeline,
   useGenerateAuthorBacklog,
+  useReplayAuthorAuditDecision,
   useRunAuthorSimulation,
   useAuthorSimulation,
   useUploadAuthorImport,
 } from '@/hooks/useAuthorMemoryV3';
+import { AuditLogView } from './audit-log-view';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -37,6 +41,7 @@ const screens = [
   { id: 'timeline', label: 'Timeline', icon: Clock3 },
   { id: 'conflicts', label: 'Conflicts', icon: AlertTriangle },
   { id: 'simulate', label: 'Simulate', icon: Play },
+  { id: 'audit', label: 'Audit', icon: ScrollText },
 ] as const;
 
 export function AuthorMemoryV3Client() {
@@ -44,6 +49,7 @@ export function AuthorMemoryV3Client() {
   const [simulationId, setSimulationId] = useState<string | undefined>();
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>();
   const [backlogResult, setBacklogResult] = useState<JsonRecord | null>(null);
+  const [replayDecisionId, setReplayDecisionId] = useState<string | undefined>();
   const projects = useAuthorProjects();
   const projectId = String(projects.data?.projects?.[0]?.id ?? 'knot');
   const imports = useAuthorImports(projectId);
@@ -53,6 +59,8 @@ export function AuthorMemoryV3Client() {
   const timeline = useAuthorTimeline(projectId);
   const conflicts = useAuthorConflicts(projectId, { status: 'open' });
   const settings = useAuthorSettings(projectId);
+  const audit = useAuthorAuditLogs(projectId, { limit: 25 });
+  const auditReplay = useReplayAuthorAuditDecision(projectId, replayDecisionId);
   const runSimulation = useRunAuthorSimulation(projectId);
   const simulation = useAuthorSimulation(projectId, simulationId);
   const uploadImport = useUploadAuthorImport(projectId);
@@ -322,6 +330,20 @@ export function AuthorMemoryV3Client() {
                   Run a scene to generate candidate thoughts, dialogue, and actions from current memory.
                 </div>
               )}
+            </Panel>
+          ) : null}
+          {!isLoading && screen === 'audit' ? (
+            <Panel title="Audit Log">
+              <AuditLogView
+                logs={audit.data?.audit_logs ?? []}
+                replayResult={auditReplay.data ?? null}
+                onReplay={setReplayDecisionId}
+              />
+              {audit.error ? (
+                <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                  Audit log could not be loaded.
+                </div>
+              ) : null}
             </Panel>
           ) : null}
           {settings.error ? (

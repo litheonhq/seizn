@@ -33,6 +33,10 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | AMV3-P4-02 | Author UI had no control or preview for character backlog generation | Character screen only rendered a read-only table | Added character selector, Generate backlog button, and inline preview on the Author dashboard | Closed |
 | AMV3-P4-03 | Generated backlog had no export path for detail-guide §X.6 | Candidate generation returned review items only | Added `export_markdown` to the backlog API response for manual detail-guide sync/export | Closed |
 | AMV3-P4-04 | Cross-character backlog duplication was not regression-tested | Backlog generation acceptance lived only in the task pack | Added KNOT five-character dogfood test: 20 candidates each, four categories, zero duplicate content | Closed |
+| AMV3-P5-01 | Author Memory v3 decisions had no persistent audit schema | Phase 1-4 mutations only updated runtime state and docs | Added `author_audit_log` migration with RLS, decision chain IDs, payload, LLM meta, and source span columns | Closed |
+| AMV3-P5-02 | Mutation and simulation decisions could not be replayed by decision ID | No audit logger or replay chain utility existed | Added `src/lib/author/audit/` logger, sanitizer, search, and replay chain hashing | Closed |
+| AMV3-P5-03 | Author dashboard had no audit log surface | Author UI nav stopped at simulation and conflict views | Added `/api/projects/{id}/audit`, SWR hooks, and an Audit screen with deterministic replay preview | Closed |
+| AMV3-P5-04 | Raw provider keys could leak into trace payloads | Mutation logs had no centralized redaction step | Added audit JSON sanitizer and regression tests covering secret-field redaction | Closed |
 
 ## Files Changed
 
@@ -54,12 +58,17 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 - `docs/knot-input/canon_authority_rules_machine.json`
 - `src/__tests__/author/extraction/eval-seed-v3.test.ts`
 - `src/app/api/projects/[projectId]/characters/[characterId]/backlog/route.ts`
+- `src/app/api/projects/[projectId]/audit/route.ts`
 - `src/hooks/useAuthorMemoryV3.ts`
 - `src/app/(dashboard)/dashboard/author/author-memory-v3-client.tsx`
+- `src/app/(dashboard)/dashboard/author/audit-log-view.tsx`
 - `src/__tests__/author/extraction/generate-backlog.test.ts`
+- `src/lib/author/audit/`
+- `src/__tests__/author/audit/replay.test.ts`
+- `supabase/migrations/20260502006_author_audit_log.sql`
 
 ## Follow-up Notes
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
-3. Author Memory v3 Phase 4 now generates character backlog review candidates with detail-guide export markdown; audit/replay hardening and Litheon migration remain next-phase work.
+3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; Litheon R2/account migration remains next-phase work.

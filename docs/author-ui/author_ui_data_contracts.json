@@ -504,6 +504,45 @@
           }
         }
       }
+    },
+    "audit": {
+      "GET /api/projects/{id}/audit": {
+        "query": {
+          "event_type": "comma-separated event type filter?",
+          "decision_id": "decision UUID?",
+          "q": "text search?",
+          "since": "ISO8601?",
+          "until": "ISO8601?",
+          "limit": "number?",
+          "replay": "1 enables replay response for decision_id"
+        },
+        "response": {
+          "audit_logs": [
+            {
+              "id": "uuid",
+              "project_id": "string",
+              "user_id": "profile id",
+              "event_type": "AuthorAuditEventType",
+              "payload": "redacted JSON",
+              "llm_meta": "provider/model/tokens/request_id/prompt_hash object?",
+              "source_span": "document/file/span object?",
+              "decision_id": "uuid",
+              "parent_decision_id": "uuid?",
+              "created_at": "ISO8601"
+            }
+          ],
+          "total": "number",
+          "replay_available": "boolean"
+        },
+        "replay_response": {
+          "decisionId": "uuid",
+          "replayStatus": "deterministic|not_found|drift_risk",
+          "chainLength": "number",
+          "payloadHash": "sha256?",
+          "llmMetaHash": "sha256?",
+          "warnings": "string[]"
+        }
+      }
     }
   },
   "common_models": {

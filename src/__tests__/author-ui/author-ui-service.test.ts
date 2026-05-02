@@ -181,6 +181,41 @@ describe('Author UI service', () => {
     expect(backlogCandidates.every((candidate) => candidate.target_entity_id === 'knot.short1.char.sori')).toBe(true);
   });
 
+  it('records mutation audit logs and replays deterministic decisions without raw secrets', async () => {
+    const service = resetAuthorUiServiceForTests('audit-user');
+    const projectId = service.listProjects().projects[0].id;
+    const character = service.listCharacters(projectId).characters[0];
+    const run = service.runSimulation(projectId, {
+      scene_input: {
+        text: 'Audit replay scene.',
+        perspective: character.id,
+        candidate_count: 2,
+      },
+    });
+    await service.generateCharacterBacklog(projectId, character.id, { items_per_category: 5 });
+
+    expect(() => service.saveByok({
+      provider: 'anthropic',
+      api_key: 'raw-secret-test',
+    })).toThrow('invalid provider api key');
+
+    const audit = service.listAuditLogs(projectId, new URLSearchParams('limit=50'));
+    const eventTypes = audit.audit_logs.map((entry) => entry.event_type);
+
+    expect(eventTypes).toEqual(expect.arrayContaining([
+      'simulation.run',
+      'backlog.generated',
+      'candidate.added',
+      'byok.updated',
+    ]));
+    expect(JSON.stringify(audit)).not.toContain('raw-secret-test');
+
+    const replay = service.replayAuditDecision(projectId, run.decision_id);
+    expect(replay.replayStatus).toBe('deterministic');
+    expect(replay.chainLength).toBeGreaterThanOrEqual(1);
+    expect(String(replay.payloadHash)).toMatch(/^[a-f0-9]{64}$/);
+  });
+
   it('validates and masks BYOK keys without returning raw secret material', () => {
     const service = resetAuthorUiServiceForTests('byok-user');
 

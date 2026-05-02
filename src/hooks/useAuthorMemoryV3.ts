@@ -116,6 +116,9 @@ export function useUploadAuthorImport(projectId?: string) {
     {
       onSuccess: (_, key) => {
         if (key) void globalMutate(key);
+        if (projectId) void globalMutate((cacheKey) =>
+          typeof cacheKey === 'string' && cacheKey.includes(`/api/projects/${projectId}/audit`)
+        );
       },
     }
   );
@@ -230,6 +233,7 @@ export function useGenerateAuthorBacklog(projectId?: string, characterId?: strin
           void globalMutate(`/api/projects/${projectId}/characters`);
           void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/candidates`));
           void globalMutate(`/api/projects/${projectId}/conflicts`);
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/audit`));
         }
       },
     }
@@ -285,7 +289,14 @@ export function useResolveAuthorConflict(projectId?: string, conflictId?: string
 export function useRunAuthorSimulation(projectId?: string) {
   return useSWRMutation<{ simulation_id: string; status: string; stream_url?: string }, Error, string | null, JsonRecord>(
     projectId ? `/api/projects/${projectId}/simulate` : null,
-    postJson
+    postJson,
+    {
+      onSuccess: () => {
+        if (projectId) {
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/audit`));
+        }
+      },
+    }
   );
 }
 
@@ -313,6 +324,26 @@ export function useReplayAuthorSimulation(projectId?: string, simulationId?: str
   );
 }
 
+export function useAuthorAuditLogs(projectId?: string, filters?: JsonRecord) {
+  const key = useMemo(
+    () => projectId ? `/api/projects/${projectId}/audit${queryString(filters)}` : null,
+    [projectId, filters]
+  );
+  return useSWR<{ audit_logs: JsonRecord[]; total: number; replay_available: boolean }>(key, fetchJson, {
+    revalidateOnFocus: true,
+    refreshInterval: 30000,
+  });
+}
+
+export function useReplayAuthorAuditDecision(projectId?: string, decisionId?: string) {
+  return useSWR<JsonRecord>(
+    projectId && decisionId
+      ? `/api/projects/${projectId}/audit?replay=1&decision_id=${encodeURIComponent(decisionId)}`
+      : null,
+    fetchJson
+  );
+}
+
 export function useAuthorSettings(projectId?: string) {
   return useSWR<JsonRecord>(projectId ? `/api/projects/${projectId}/settings` : null, fetchJson, {
     refreshInterval: 60000,
@@ -326,6 +357,9 @@ export function useUpdateAuthorSettings(projectId?: string) {
     {
       onSuccess: (_, key) => {
         if (key) void globalMutate(key);
+        if (projectId) void globalMutate((cacheKey) =>
+          typeof cacheKey === 'string' && cacheKey.includes(`/api/projects/${projectId}/audit`)
+        );
       },
     }
   );
@@ -376,6 +410,7 @@ export function useDeleteAuthorImport(projectId?: string, importId?: string) {
         if (projectId) {
           void globalMutate(`/api/projects/${projectId}/imports`);
           void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/candidates`));
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/audit`));
         }
       },
     }
@@ -388,7 +423,10 @@ export function useRetryAuthorImport(projectId?: string, importId?: string) {
     postJson,
     {
       onSuccess: () => {
-        if (projectId) void globalMutate(`/api/projects/${projectId}/imports`);
+        if (projectId) {
+          void globalMutate(`/api/projects/${projectId}/imports`);
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/audit`));
+        }
       },
     }
   );

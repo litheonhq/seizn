@@ -6,6 +6,15 @@ import timelineEventLedger from '../../../../docs/knot-input/timeline_event_ledg
 import { canonicalJson } from '@/lib/author/memory-v3/canonical';
 import { createAuthorMemorySnapshot } from '@/lib/author/memory-v3/snapshot';
 import {
+  createAuthorAuditLogEntry,
+  hashAuthorAuditPrompt,
+  InMemoryAuthorAuditLogStore,
+  replayAuthorAuditChain,
+  type AuthorAuditEventType,
+  type AuthorAuditLogEntry,
+  type AuthorAuditSearchFilter,
+} from '@/lib/author/audit';
+import {
   knotInputBundleToAuthorRecords,
   type KnotInputBundle,
 } from '@/lib/author/memory-v3/knot-input';
@@ -227,6 +236,7 @@ interface AuthorUiState {
   conflictsByProject: Map<string, ReturnType<typeof buildSeedConflicts>>;
   simulationsByProject: Map<string, Map<string, AuthorUiSimulation>>;
   settingsByProject: Map<string, ReturnType<typeof buildDefaultSettings>>;
+  auditLog: InMemoryAuthorAuditLogStore;
   byok: {
     enabled: boolean;
     provider: 'anthropic' | 'google' | 'openai' | null;
@@ -297,6 +307,11 @@ export class AuthorUiService {
     this.state.conflictsByProject.set(id, []);
     this.state.simulationsByProject.set(id, new Map());
     this.state.settingsByProject.set(id, buildDefaultSettings());
+    this.logAudit(id, 'project.created', {
+      project_id: id,
+      name,
+      scope: [readString(input, 'initial_scope') ?? 'global'],
+    });
     return { project_id: id };
   }
 
@@ -358,10 +373,22 @@ export class AuthorUiService {
     imports.unshift(item);
     this.state.importsByProject.set(projectId, imports);
     this.touchProject(projectId);
+    const uploadAudit = this.logAudit(projectId, 'import.upload', {
+      import_id: id,
+      file_name: fileName,
+      file_size: fileSize,
+      file_type: item.file_type,
+      source_role: item.source_role,
+      a_or_d_mode: item.a_or_d_mode,
+    });
 
     if (fileSize > 50 * 1024 * 1024) {
       markImportFailed(item, 'file_too_large');
       this.touchProject(projectId);
+      this.logAudit(projectId, 'import.failed', {
+        import_id: id,
+        error_message: item.error_message,
+      }, { parentDecisionId: uploadAudit.decisionId });
       return { import_id: id };
     }
 
@@ -407,6 +434,19 @@ export class AuthorUiService {
       item.error_message = null;
       item.parsed_text_preview = parsed.text.slice(0, 500);
       item.parser_version = parsed.parserVersion;
+      this.logAudit(projectId, 'import.parsed', {
+        import_id: id,
+        parser_version: parsed.parserVersion,
+        storage_key: storageRef.key,
+        text_hash: hashAuthorAuditPrompt(parsed.text),
+        heading_count: parsed.headingStructure.length,
+      }, {
+        parentDecisionId: uploadAudit.decisionId,
+        sourceSpan: {
+          document_id: id,
+          file_path: fileName,
+        },
+      });
 
       if (item.a_or_d_mode === 'extract') {
         try {
@@ -439,15 +479,40 @@ export class AuthorUiService {
           item.extract_status = 'extracted';
           item.extract_progress = 100;
           item.candidate_count = extractedCandidates.length;
+          this.logAudit(projectId, 'candidate.added', {
+            import_id: id,
+            candidate_ids: extractedCandidates.map((candidate) => candidate.id),
+            candidate_count: extractedCandidates.length,
+            extraction_metrics: extraction.metrics,
+          }, {
+            parentDecisionId: uploadAudit.decisionId,
+            llmMeta: extraction.metrics.mode === 'llm'
+              ? {
+                  provider: 'anthropic',
+                  operation: 'extractAuthorCandidates',
+                  mode: extraction.metrics.mode,
+                }
+              : undefined,
+          });
         } catch (extractError) {
           item.extract_status = 'failed';
           item.extract_progress = 0;
           item.candidate_count = 0;
           item.error_message = formatImportError(extractError);
+          this.logAudit(projectId, 'import.failed', {
+            import_id: id,
+            stage: 'extract',
+            error_message: item.error_message,
+          }, { parentDecisionId: uploadAudit.decisionId });
         }
       }
     } catch (error) {
       markImportFailed(item, formatImportError(error));
+      this.logAudit(projectId, 'import.failed', {
+        import_id: id,
+        stage: 'parse_or_store',
+        error_message: item.error_message,
+      }, { parentDecisionId: uploadAudit.decisionId });
     }
 
     this.touchProject(projectId);
@@ -462,6 +527,7 @@ export class AuthorUiService {
     item.extract_progress = 0;
     item.error_message = null;
     this.touchProject(projectId);
+    this.logAudit(projectId, 'import.retried', { import_id: importId });
     return { status: 'queued' };
   }
 
@@ -471,7 +537,9 @@ export class AuthorUiService {
     const next = imports.filter((item) => item.id !== importId);
     this.state.importsByProject.set(projectId, next);
     this.touchProject(projectId);
-    return { deleted: next.length !== imports.length };
+    const deleted = next.length !== imports.length;
+    this.logAudit(projectId, 'import.deleted', { import_id: importId, deleted });
+    return { deleted };
   }
 
   listCandidates(projectId: string, filters: URLSearchParams) {
@@ -525,7 +593,7 @@ export class AuthorUiService {
     return { candidate };
   }
 
-  createCandidate(projectId: string, input: JsonRecord): { candidate_id: string } {
+  createCandidate(projectId: string, input: JsonRecord): { candidate_id: string; decision_id: string } {
     this.ensureProject(projectId);
     const candidates = this.state.candidatesByProject.get(projectId) ?? [];
     const content = readString(input, 'content') ?? simulationPromoteContent(this, projectId, input);
@@ -534,7 +602,7 @@ export class AuthorUiService {
     }
 
     const id = `candidate-${Date.now().toString(36)}-${candidates.length + 1}`;
-    candidates.unshift({
+    const candidate: AuthorUiCandidate = {
       id,
       content,
       type: normalizeCandidateType(readString(input, 'type')),
@@ -551,10 +619,27 @@ export class AuthorUiService {
       related_existing: [],
       extracted_at: nowIso(),
       target_entity_id: readString(input, 'target_entity_id'),
-    });
+    };
+    candidates.unshift(candidate);
     this.state.candidatesByProject.set(projectId, candidates);
     this.touchProject(projectId);
-    return { candidate_id: id };
+    const audit = this.logAudit(projectId, 'candidate.added', {
+      candidate_id: id,
+      candidate_type: candidate.type,
+      source_document_id: candidate.source.document_id,
+      target_entity_id: candidate.target_entity_id,
+      tags: candidate.tags,
+    }, {
+      sourceSpan: {
+        document_id: candidate.source.document_id,
+        file_path: candidate.source.file_path,
+        start_line: candidate.source.span.start_line,
+        end_line: candidate.source.span.end_line,
+        start_char: candidate.source.span.start_char,
+        end_char: candidate.source.span.end_char,
+      },
+    });
+    return { candidate_id: id, decision_id: audit.decisionId };
   }
 
   decideCandidate(projectId: string, candidateId: string, input: JsonRecord) {
@@ -567,10 +652,27 @@ export class AuthorUiService {
         ? candidate.target_entity_id ?? candidate.related_existing[0]?.entity_id ?? candidate.id
         : undefined;
     this.touchProject(projectId);
+    const audit = this.logAudit(projectId, 'candidate.decided', {
+      candidate_id: candidateId,
+      action,
+      new_status: nextStatus,
+      promoted_entity_id: promotedEntityId,
+      candidate_type: candidate.type,
+    }, {
+      sourceSpan: {
+        document_id: candidate.source.document_id,
+        file_path: candidate.source.file_path,
+        start_line: candidate.source.span.start_line,
+        end_line: candidate.source.span.end_line,
+        start_char: candidate.source.span.start_char,
+        end_char: candidate.source.span.end_char,
+      },
+    });
     return {
       candidate_id: candidateId,
       new_status: nextStatus,
       promoted_entity_id: promotedEntityId,
+      decision_id: audit.decisionId,
       side_effects: [
         {
           type: nextStatus === 'canon' ? 'memory_added' : 'graph_updated',
@@ -588,7 +690,13 @@ export class AuthorUiService {
     const ids = readStringArray(input, 'candidate_ids');
     const action = readString(input, 'action') ?? 'approve';
     const results = ids.map((id) => this.decideCandidate(projectId, id, { action }));
-    return { processed: results.length, results };
+    const audit = this.logAudit(projectId, 'candidate.batch_decided', {
+      candidate_ids: ids,
+      action,
+      processed: results.length,
+      child_decision_ids: results.map((result) => result.decision_id),
+    });
+    return { processed: results.length, results, decision_id: audit.decisionId };
   }
 
   listCharacters(projectId: string): { characters: AuthorUiCharacterSummary[] } {
@@ -629,7 +737,13 @@ export class AuthorUiService {
         }).candidate_id
       : undefined;
     this.touchProject(projectId);
-    return { updated: true, review_required: reviewRequired, candidate_id: candidateId };
+    const audit = this.logAudit(projectId, 'character.updated', {
+      character_id: characterId,
+      field,
+      review_required: reviewRequired,
+      candidate_id: candidateId,
+    });
+    return { updated: true, review_required: reviewRequired, candidate_id: candidateId, decision_id: audit.decisionId };
   }
 
   async generateCharacterBacklog(projectId: string, characterId: string, input: JsonRecord = {}) {
@@ -669,10 +783,42 @@ export class AuthorUiService {
       ...candidates,
     ]);
     this.touchProject(projectId);
+    const audit = this.logAudit(projectId, 'backlog.generated', {
+      character_id: character.id,
+      character_name: character.name,
+      candidate_ids: generated.map((candidate) => candidate.id),
+      candidate_count: generated.length,
+      rejected_count: result.rejected.length,
+      conflicts_detected: result.rejected.filter((item) =>
+        item.reasons.some((reason) => reason.includes('duplicate'))
+      ).length,
+      metrics: result.metrics,
+      export_hash: hashAuthorAuditPrompt(result.exportMarkdown),
+    }, {
+      llmMeta: {
+        provider: result.metrics.mode === 'llm' ? 'anthropic' : 'heuristic',
+        operation: 'generateBacklogForCharacter',
+        mode: result.metrics.mode,
+        prompt_hash: hashAuthorAuditPrompt({
+          character_id: character.id,
+          categories: result.metrics.categories,
+          items_per_category: result.metrics.requested_per_category,
+        }),
+      },
+    });
+    this.logAudit(projectId, 'candidate.added', {
+      source: 'backlog.generated',
+      character_id: character.id,
+      candidate_ids: generated.map((candidate) => candidate.id),
+      candidate_count: generated.length,
+    }, {
+      parentDecisionId: audit.decisionId,
+    });
     return {
       character_id: character.id,
       character_name: character.name,
       candidate_ids: generated.map((candidate) => candidate.id),
+      decision_id: audit.decisionId,
       candidates: result.candidates,
       rejected: result.rejected,
       conflicts_detected: result.rejected.filter((item) =>
@@ -790,7 +936,12 @@ export class AuthorUiService {
     conflict.status = 'resolved';
     conflict.resolution = readString(input, 'decision') ?? 'defer';
     this.touchProject(projectId);
-    return { resolved: true, side_effects: [`conflict:${conflictId}:${conflict.resolution}`] };
+    const audit = this.logAudit(projectId, 'conflict.resolved', {
+      conflict_id: conflictId,
+      decision: conflict.resolution,
+      affected_entities: conflict.affected_entities,
+    });
+    return { resolved: true, decision_id: audit.decisionId, side_effects: [`conflict:${conflictId}:${conflict.resolution}`] };
   }
 
   runSimulation(projectId: string, input: JsonRecord) {
@@ -801,10 +952,25 @@ export class AuthorUiService {
     projectSimulations.set(simulationId, simulation);
     this.state.simulationsByProject.set(projectId, projectSimulations);
     this.touchProject(projectId);
+    const audit = this.logAudit(projectId, 'simulation.run', {
+      simulation_id: simulationId,
+      status: simulation.status,
+      candidate_count: simulation.candidates.length,
+      memory_snapshot_hash: String(simulation.context_used.memory_snapshot_hash ?? ''),
+      deterministic: Boolean(simulation.trace_metadata.deterministic),
+    }, {
+      llmMeta: {
+        provider: 'heuristic',
+        model: 'author-memory-v3-sim-deterministic',
+        operation: 'runSimulation',
+        prompt_hash: hashAuthorAuditPrompt(input),
+      },
+    });
     return {
       simulation_id: simulationId,
       status: 'running' as const,
       stream_url: `/api/projects/${projectId}/simulations/${simulationId}`,
+      decision_id: audit.decisionId,
     };
   }
 
@@ -817,9 +983,24 @@ export class AuthorUiService {
   }
 
   replaySimulation(projectId: string, simulationId: string) {
+    const simulation = this.getSimulation(projectId, simulationId);
+    const audit = this.logAudit(projectId, 'simulation.replay', {
+      simulation_id: simulationId,
+      replay_status: 'deterministic',
+      output_hash: hashAuthorAuditPrompt(simulation),
+      deterministic: true,
+    }, {
+      llmMeta: {
+        provider: 'heuristic',
+        model: 'author-memory-v3-sim-deterministic',
+        operation: 'replaySimulation',
+        prompt_hash: hashAuthorAuditPrompt(simulation.input),
+      },
+    });
     return {
       replay_status: 'deterministic' as const,
-      outputs: this.getSimulation(projectId, simulationId),
+      decision_id: audit.decisionId,
+      outputs: simulation,
     };
   }
 
@@ -838,7 +1019,8 @@ export class AuthorUiService {
     setDeepValue(settings, field, input.value);
     this.state.settingsByProject.set(projectId, settings);
     this.touchProject(projectId);
-    return { updated: true };
+    const audit = this.logAudit(projectId, 'settings.updated', { field });
+    return { updated: true, decision_id: audit.decisionId };
   }
 
   saveByok(input: JsonRecord) {
@@ -850,6 +1032,11 @@ export class AuthorUiService {
         provider: isProvider(provider) ? provider : null,
         status: 'invalid',
       };
+      this.logAudit(DEFAULT_PROJECT_ID, 'byok.updated', {
+        provider: isProvider(provider) ? provider : null,
+        status: 'invalid',
+        api_key: apiKey,
+      });
       throw new AuthorUiValidationError('invalid provider api key');
     }
 
@@ -860,6 +1047,11 @@ export class AuthorUiService {
       verified_at: nowIso(),
       status: 'active',
     };
+    this.logAudit(DEFAULT_PROJECT_ID, 'byok.updated', {
+      provider,
+      status: 'active',
+      key_last_4: apiKey.slice(-4),
+    });
     return { valid: true, key_last_4: apiKey.slice(-4) };
   }
 
@@ -884,6 +1076,27 @@ export class AuthorUiService {
       direction: settings.sync.sync_direction,
       last_sync: settings.sync.last_sync,
       error: settings.sync.error,
+    };
+  }
+
+  listAuditLogs(projectId: string, filters: URLSearchParams) {
+    this.ensureProject(projectId);
+    const filter = auditFilterFromSearchParams(projectId, filters);
+    const auditLogs = this.state.auditLog.search(filter);
+    return {
+      audit_logs: auditLogs.map(toAuthorAuditApiRecord),
+      total: auditLogs.length,
+      replay_available: auditLogs.some((entry) => entry.decisionId),
+    };
+  }
+
+  replayAuditDecision(projectId: string, decisionId: string) {
+    this.ensureProject(projectId);
+    const entries = this.state.auditLog.search({ projectId, limit: 500 });
+    const replay = replayAuthorAuditChain(entries, decisionId);
+    return {
+      ...replay,
+      chain: replay.chain.map(toAuthorAuditApiRecord),
     };
   }
 
@@ -1097,10 +1310,92 @@ export class AuthorUiService {
       },
     };
   }
+
+  private logAudit(
+    projectId: string,
+    eventType: AuthorAuditEventType,
+    payload: unknown,
+    options: {
+      llmMeta?: AuthorAuditLogEntry['llmMeta'];
+      sourceSpan?: AuthorAuditLogEntry['sourceSpan'];
+      parentDecisionId?: string;
+    } = {}
+  ): AuthorAuditLogEntry {
+    const entry = createAuthorAuditLogEntry({
+      projectId,
+      userId: this.state.userId,
+      eventType,
+      payload,
+      llmMeta: options.llmMeta,
+      sourceSpan: options.sourceSpan,
+      parentDecisionId: options.parentDecisionId,
+    });
+    this.state.auditLog.log(entry);
+    return entry;
+  }
 }
 
 export class AuthorUiValidationError extends Error {}
 export class AuthorUiNotFoundError extends Error {}
+
+function auditFilterFromSearchParams(projectId: string, params: URLSearchParams): AuthorAuditSearchFilter {
+  return {
+    projectId,
+    eventTypes: auditEventTypesFromCsv(params.get('event_type') ?? params.get('event')),
+    decisionId: readParam(params, 'decision_id'),
+    q: readParam(params, 'q'),
+    since: readParam(params, 'since'),
+    until: readParam(params, 'until'),
+    limit: Math.max(1, Math.min(500, Number(params.get('limit') ?? '100') || 100)),
+  };
+}
+
+function auditEventTypesFromCsv(value: string | null): AuthorAuditEventType[] | undefined {
+  if (!value) return undefined;
+  const allowed = new Set<AuthorAuditEventType>([
+    'project.created',
+    'import.upload',
+    'import.parsed',
+    'import.failed',
+    'import.retried',
+    'import.deleted',
+    'candidate.added',
+    'candidate.decided',
+    'candidate.batch_decided',
+    'character.updated',
+    'conflict.resolved',
+    'simulation.run',
+    'simulation.replay',
+    'backlog.generated',
+    'settings.updated',
+    'byok.updated',
+  ]);
+  const selected = value
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item): item is AuthorAuditEventType => allowed.has(item as AuthorAuditEventType));
+  return selected.length > 0 ? selected : undefined;
+}
+
+function toAuthorAuditApiRecord(entry: AuthorAuditLogEntry): JsonRecord {
+  return {
+    id: entry.id,
+    project_id: entry.projectId,
+    user_id: entry.userId,
+    event_type: entry.eventType,
+    payload: entry.payload,
+    llm_meta: entry.llmMeta ?? null,
+    source_span: entry.sourceSpan ?? null,
+    decision_id: entry.decisionId,
+    parent_decision_id: entry.parentDecisionId ?? null,
+    created_at: entry.createdAt,
+  };
+}
+
+function readParam(params: URLSearchParams, name: string): string | undefined {
+  const value = params.get(name)?.trim();
+  return value ? value : undefined;
+}
 
 function createSeedState(userId: string): AuthorUiState {
   const characters = buildSeedCharacters();
@@ -1131,6 +1426,7 @@ function createSeedState(userId: string): AuthorUiState {
     conflictsByProject: new Map([[DEFAULT_PROJECT_ID, conflicts]]),
     simulationsByProject: new Map([[DEFAULT_PROJECT_ID, new Map()]]),
     settingsByProject: new Map([[DEFAULT_PROJECT_ID, settings]]),
+    auditLog: new InMemoryAuthorAuditLogStore(),
     byok: {
       enabled: false,
       provider: null,
