@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { resetAuthorUiServiceForTests } from '@/lib/author/ui/service';
 
 describe('Author UI service', () => {
+  afterEach(() => {
+    delete process.env.AUTHOR_IMPORT_DISABLE_R2;
+  });
+
   it('seeds the Author UI surface from KNOT input artifacts', () => {
     const service = resetAuthorUiServiceForTests();
     const projects = service.listProjects();
@@ -175,5 +179,47 @@ describe('Author UI service', () => {
       status: 'active',
     });
     expect(JSON.stringify(service.getByok())).not.toContain('sk-ant-test-value');
+  });
+
+  it('persists upload bytes through the parser pipeline before extraction', async () => {
+    process.env.AUTHOR_IMPORT_DISABLE_R2 = '1';
+    const service = resetAuthorUiServiceForTests('import-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    const result = await service.uploadImport(projectId, {
+      fileName: 'sori.md',
+      fileType: 'text/markdown',
+      fileBytes: Buffer.from('---\ntitle: Sori\n---\n# Sori\n\nParsed canon body', 'utf8'),
+      sourceRole: 'canon',
+    });
+
+    const uploaded = service.listImports(projectId).imports.find((item) => item.id === result.import_id);
+    expect(uploaded).toMatchObject({
+      parse_status: 'parsed',
+      extract_status: 'queued',
+      candidate_count: 0,
+      storage_key: `knot/${result.import_id}/sori.md`,
+      parser_version: 'author-parser-md-v1',
+    });
+    expect(uploaded?.parsed_text_preview).toContain('Parsed canon body');
+  });
+
+  it('records unsupported upload formats as failed imports', async () => {
+    process.env.AUTHOR_IMPORT_DISABLE_R2 = '1';
+    const service = resetAuthorUiServiceForTests('unsupported-import-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    const result = await service.uploadImport(projectId, {
+      fileName: 'draft.hwp',
+      fileType: 'application/octet-stream',
+      fileBytes: Buffer.from('hwp'),
+    });
+
+    const uploaded = service.listImports(projectId).imports.find((item) => item.id === result.import_id);
+    expect(uploaded).toMatchObject({
+      parse_status: 'failed',
+      extract_status: 'failed',
+      error_message: 'unsupported_format',
+    });
   });
 });

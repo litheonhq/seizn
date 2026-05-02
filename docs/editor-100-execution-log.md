@@ -82,3 +82,31 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 | `npx playwright test e2e/core-pages.spec.ts --project=chromium --workers=1` | Pass (11/11) |
 | `npx playwright test e2e/spring-memory-crud.spec.ts --project=chromium --workers=1` | Pass (9/9) |
 | `$env:PLAYWRIGHT_DISABLE_TURNSTILE='1'; $env:E2E_ALLOW_AUTO_PROVISION='1'; npx playwright test e2e/core-pages.spec.ts e2e/dashboard-smoke.spec.ts e2e/dashboard-auth-smoke.spec.ts e2e/spring-memory-crud.spec.ts e2e/api-key.spec.ts --project=chromium --workers=1` | Pass (30/30) |
+
+## 7) Author Memory v3 LLM Integration - Phase 1 (2026-05-02)
+
+### Scope
+
+- Implemented file persistence and parsing for Author Memory v3 imports.
+- Added R2 object storage adapter, md/docx/pdf/txt parser pipeline, `author_imports_text` migration, route byte pass-through, and dashboard Inbox upload wiring.
+- Updated Author UI contracts/query bindings and `.github/TECH_STACK.md`.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502003_author_imports_text.sql` | Pass; migration applied and post-verification passed |
+| R2 + `author_imports_text` smoke | Pass; put/get plus insert/select verified, then smoke artifacts cleaned up |
+| `npm run test:run -- src/__tests__/author/parser/author-parser.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts src/__tests__/author-memory-v3/author-artifacts.test.ts` | Pass (23/23) |
+| `npm run test:run` | Pass (1011/1011, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- Phase 2-6 remain out of this commit by sequential phase rules.
+- Browser-level authenticated upload Playwright coverage is still pending; current coverage is parser/service/route/full unit/build/live R2+DB smoke.

@@ -31,6 +31,9 @@ applies_to: Seizn Author 7 핵심 화면
     extract_progress: 0~100
     candidate_count: number
     error_message?: string
+    storage_key?: string
+    parsed_text_preview?: string
+    parser_version?: string
     source_role: 'canon' | 'character' | 'scene' | 'reference' | 'visual' (선택 가능)
     a_or_d_mode: 'extract' | 'raw_keep'  // A 양식 vs D 양식
   }>
