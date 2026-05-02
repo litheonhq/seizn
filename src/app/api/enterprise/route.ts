@@ -23,9 +23,32 @@ interface EnterpriseInquiryRequest {
   utm_campaign?: string;
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sanitizeEmailSubjectPart(str: string): string {
+  return str.replace(/[\r\n]+/g, ' ').trim().slice(0, 180);
+}
+
 // POST /api/enterprise - Submit enterprise inquiry
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const { checkIpRateLimitAsync, getRateLimitHeaders } = await import('@/lib/rate-limit');
+    const rateLimitResult = await checkIpRateLimitAsync(ip);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: getRateLimitHeaders(rateLimitResult) }
+      );
+    }
+
     const body: EnterpriseInquiryRequest = await request.json();
 
     // Validate required fields
@@ -37,7 +60,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Contact name is required' }, { status: 400 });
     }
 
-    if (!body.email || !body.email.includes('@')) {
+    const normalizedEmail = typeof body.email === 'string' ? body.email.toLowerCase().trim() : '';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!normalizedEmail || !emailRegex.test(normalizedEmail)) {
       return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
     }
 
@@ -54,7 +79,7 @@ export async function POST(request: NextRequest) {
     const { data: existing } = await supabase
       .from('enterprise_inquiries')
       .select('id')
-      .eq('email', body.email.toLowerCase())
+      .eq('email', normalizedEmail)
       .gte('created_at', oneDayAgo.toISOString())
       .single();
 
@@ -73,7 +98,7 @@ export async function POST(request: NextRequest) {
       .insert({
         company_name: body.company_name.trim(),
         contact_name: body.contact_name.trim(),
-        email: body.email.toLowerCase().trim(),
+        email: normalizedEmail,
         phone: body.phone?.trim() || null,
         job_title: body.job_title?.trim() || null,
         company_size: body.company_size || null,
@@ -100,30 +125,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email to user (non-blocking)
+    const safeCompanySubject = sanitizeEmailSubjectPart(body.company_name);
     sendEmail({
-      to: body.email,
-      subject: `We received your enterprise inquiry - ${body.company_name}`,
+      to: normalizedEmail,
+      subject: `We received your enterprise inquiry - ${safeCompanySubject}`,
       html: enterpriseInquiryConfirmationEmail(body.company_name, body.contact_name),
     }).catch((err) => logServerError('Enterprise confirmation email failed', err));
 
     // Send notification to sales team (non-blocking)
     sendEmail({
-      to: 'dev@kicpartners.com',
-      subject: `[Enterprise Inquiry] ${body.company_name} - ${determineInquiryPriority(body).toUpperCase()}`,
+      to: 'contact@seizn.com',
+      subject: `[Enterprise Inquiry] ${safeCompanySubject} - ${determineInquiryPriority(body).toUpperCase()}`,
       html: `
         <h2>New Enterprise Inquiry</h2>
-        <p><strong>Company:</strong> ${body.company_name}</p>
-        <p><strong>Contact:</strong> ${body.contact_name} (${body.email})</p>
-        <p><strong>Phone:</strong> ${body.phone || 'N/A'}</p>
-        <p><strong>Job Title:</strong> ${body.job_title || 'N/A'}</p>
-        <p><strong>Company Size:</strong> ${body.company_size || 'N/A'}</p>
-        <p><strong>Industry:</strong> ${body.industry || 'N/A'}</p>
-        <p><strong>Website:</strong> ${body.website || 'N/A'}</p>
+        <p><strong>Company:</strong> ${escapeHtml(body.company_name)}</p>
+        <p><strong>Contact:</strong> ${escapeHtml(body.contact_name)} (${escapeHtml(normalizedEmail)})</p>
+        <p><strong>Phone:</strong> ${escapeHtml(body.phone || 'N/A')}</p>
+        <p><strong>Job Title:</strong> ${escapeHtml(body.job_title || 'N/A')}</p>
+        <p><strong>Company Size:</strong> ${escapeHtml(body.company_size || 'N/A')}</p>
+        <p><strong>Industry:</strong> ${escapeHtml(body.industry || 'N/A')}</p>
+        <p><strong>Website:</strong> ${escapeHtml(body.website || 'N/A')}</p>
         <h3>Use Case</h3>
-        <p>${body.use_case}</p>
-        <p><strong>Expected Volume:</strong> ${body.expected_volume || 'N/A'}</p>
-        <p><strong>Timeline:</strong> ${body.timeline || 'N/A'}</p>
-        <p><strong>Requirements:</strong> ${body.requirements || 'N/A'}</p>
+        <p>${escapeHtml(body.use_case)}</p>
+        <p><strong>Expected Volume:</strong> ${escapeHtml(body.expected_volume || 'N/A')}</p>
+        <p><strong>Timeline:</strong> ${escapeHtml(body.timeline || 'N/A')}</p>
+        <p><strong>Requirements:</strong> ${escapeHtml(body.requirements || 'N/A')}</p>
         <hr/>
         <p><strong>Priority:</strong> ${determineInquiryPriority(body)}</p>
         <p><strong>Inquiry ID:</strong> ${inquiry.id}</p>
