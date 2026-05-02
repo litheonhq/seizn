@@ -34,7 +34,7 @@ pair_with:
 
 | 영역 | 상태 | 증거 |
 |---|---|---|
-| **Stripe activate + payout 등록 + 가격 lock** | ✓ Indie $39·Pro $999·Studio $299·Enterprise $2,500 (월)·yearly ~15% off·Memories $0.05/unit/월·Ops $0.01/unit/월 metered·webhook·token | 사용자 확인 (b) |
+| **Stripe activate + payout 등록 + 가격 v7 lock** | ✓ Indie $39·Pro $149·Studio $499·Enterprise $2,500 (월)·yearly ~15% off·Memories $0.05/unit/월·Ops $0.01/unit/월 metered·BYOK 50%·webhook·token·구 NPC tier (Starter·Plus·Pro NPC·Enterprise NPC) deactivated | 사용자 확인 (b) |
 | **Phase 1~5 LLM integration backend + UI** | ✓ 1035 tests pass·typecheck·0 vulnerabilities | commits `fc1da94f·d3c74975·d4a70511·c0add945·85f1d8e5·e75a9d1e·9cb1fbcb`·signoff docs `phase1~5` |
 | **R2 bucket (개인 임시)** | ✓ `seizn-author-uploads-temp` (APAC·default jurisdiction·empty) | account `892951c988b7c6bf05c45a8916df205e` |
 | **R2 자격증명 등록** | ✓ `R2_AUTHOR_*` 9 키 (`~/.codex/private/consolidated/litheon.env`) | env 등록 완료 |
@@ -151,7 +151,7 @@ docs/marketing/sample_ip/
 **산출물**:
 - `seizn.com` (또는 dev `localhost:3000`) 라우트 빌드:
   - `/` (Author flagship hero)
-  - `/pricing` ($39/$129/$399 + Stripe Checkout link)
+  - `/pricing` (Indie $39 / Pro $149 / Studio $499 / Enterprise $2,500 + Stripe Checkout link·v7)
   - `/demo` (sample IP `Saebyeok` live demo)
   - `/legal/privacy`·`/legal/terms`·`/legal/beta-disclosure`
 - `seizn_author_landing_brief.md` v3 정합 (en master·ja·zh·ko sub-routes)
@@ -180,11 +180,12 @@ docs/marketing/sample_ip/
 - 작가 본인 네트워크 (단 KNOT 외부 노출 X 분리 룰 정합·KNOT IP 사례 활용 X)
 - 한국 작가 (네이버 카페·Twitter)·secondary track 시작 시점 (W3+)
 
-**Founding Member offer (실 Stripe 가격표 정합·§15 참조)**:
+**Founding Member offer (v7 가격표 정합·§15 참조)**:
 - *Indie yearly* $397.80 (이미 ~15% off·founding 별도 할인 X)
-- 또는 *Indie monthly $39·founding 코드로 첫 3개월 50% off* (Stripe coupon 신규 발급 필요)
-- 또는 *Pro yearly $10,189.80*에 founding 코드 30% off ~$7,132.86 (high-touch 대상·1:1 onboarding 포함)
+- 또는 *Indie monthly $39·founding 코드로 첫 3개월 50% off* ($19.50/mo·Stripe coupon 신규 발급 필요)
+- 또는 *Pro yearly $1,519.80*에 founding 코드 30% off ~$1,063.86 (high-touch·1:1 onboarding 포함)
 - 단순화 옵션: 첫 1~3개월 무료 (Stripe trial 연장)·신용카드 등록 X 그대로
+- BYOK 작가 우선: BYOK 50% 할인 + founding 30% off 중첩 가능 검토 (Stripe coupon stack)
 
 **Acceptance criteria**:
 - [ ] 5명 이상 founding member 결제 — Stripe 매출 ≥ $500
@@ -372,7 +373,7 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 - `feedback_codex_dispatch_template.md` — Codex prompt 표준 양식 (작업 디렉토리·실행 대상·지침 분리 문서)
 - `feedback_delegate_implementation_to_codex.md` — 디자인·카피·스펙은 Claude·구현은 Codex
 - `seizn-pivot-creative-writing-2026-05.md` — 2nd pivot 후보 (작가 도구)
-- `seizn-author-pricing-2026-05.md` — 가격 v5 lock ($39/$129/$399)
+- `seizn-author-pricing-2026-05.md` — 가격 v7 lock ($39/$149/$499/$2,500·yearly·metered·BYOK 50%)
 - `seizn-dual-surface-decision-2026-05.md` — Dual surface split 결정
 - `litheon-r2-personal-temp-2026-05.md` — R2 개인 임시·W6 이전 Litheon 강제
 
@@ -380,10 +381,13 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 
 - 2026-05-02 — Seizn Author Memory v3 LLM 통합 5 phase 풀 빌드 완료 (Codex)
 - 2026-05-02 — R2 bucket `seizn-author-uploads-temp` 개인 명의 임시 시작·APAC region·default jurisdiction
+- 2026-05-02 — R2 ENAM 변경 시도 (DELETE + POST) — 한국 IP에서 자동 APAC 강제·`locationHint` 무시·APAC 유지 결정
 - 2026-05-02 — Litheon LLC 카드 발급 불가·Mercury initial deposit 강제 확인
 - 2026-05-02 — 한국 은행 → Mercury 직 SWIFT 막힘
 - 2026-05-02 — Stripe (b) activate + payout 등록 + 가격 lock 확인
 - 2026-05-02 — **revenue-bootstrap path lock** (본 결정·자본 출자 우회·Stripe 매출 → Mercury deposit → Phase 6 R2 Litheon migration)
+- 2026-05-02 — Stripe 옛 NPC tier 4 product (Apr 8 Starter·Plus·Pro NPC·Enterprise NPC) deactivate·옛 prices 일괄 deactivate
+- 2026-05-02 — Stripe 가격 v6 ($999 Pro·$299 Studio) 역전 발견 → **v7 lock** ($149 Pro·$499 Studio·Opus 4.7 cost-aligned)·새 price 발급·옛 deactivate·env STRIPE_PRICE_LOCK_VERSION=v7
 
 ## 10. 새 세션 시작 권장 순서
 
@@ -401,11 +405,17 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 
 ## 11. Stripe 추가 점검 (새 세션 시작 시)
 
-**가격·Product** (`~/.codex/private/consolidated/litheon.env`에 `STRIPE_*` 등록됐는지·또는 Stripe Dashboard 직접 확인):
+**가격·Product (v7 lock — `~/.codex/private/consolidated/litheon.env` STRIPE_PRICE_LOCK_VERSION=v7)**:
 
-- Stripe Product `Seizn Author $39`·`Seizn Pro $129`·`Seizn Studio $399`·`Seizn Enterprise (Custom)` 4개 lock
-- Trial 30 day·신용카드 등록 X (per `seizn-author-pricing-2026-05.md`)
-- BYOK 50% 할인 — Stripe coupon 또는 별 price 분기
+- 활성 Product 5개:
+  - `Seizn Indie` $39/mo·$397.80/yr (`prod_UNGacXMozktNgE`)
+  - `Seizn Pro` $149/mo·$1,519.80/yr (`prod_UNGajiXXpdiSYR`)
+  - `Seizn Studio` $499/mo·$5,089.80/yr (`prod_UNGa1KL7DhxWGw`)
+  - `Seizn Enterprise` $2,500/mo·$30,000/yr (`prod_UNGaW9bFkuycVQ`)
+  - `Seizn Metered Overage` Memories $0.05/unit·Ops $0.01/unit (`prod_UNRnTbBPgIPLrR`)
+- Deactivated (history): 옛 NPC tier 4 product (Apr 8 Starter·Plus·Pro·Enterprise)·옛 v6 가격 (Pro $999·Studio $299)
+- Trial 30 day·신용카드 등록 X (`seizn-author-pricing-2026-05.md` v7)
+- BYOK 50% 할인 — *Stripe coupon 또는 별 price 분기 빌드 필요* (Phase 1~5에 wired 안 됨·P0-2에서 검증·연결)
 
 **webhook**:
 - `checkout.session.completed`·`customer.subscription.updated`·`invoice.payment_failed` 이벤트 listening
@@ -413,7 +423,7 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 
 **payout**:
 - Stripe Dashboard → Settings → Payouts → 등록된 bank 확인
-- Mercury 미활성화 상태에서 어느 bank으로 wired됐는지 — 이게 Phase 6 시점 전환 대상
+- Mercury 미활성화 (initial deposit 미충당) 상태에서 어느 bank으로 wired됐는지 — Phase 6 시점 Mercury로 전환 대상
 
 ## 12. Phase 6 unblock 흐름
 
@@ -442,11 +452,14 @@ Phase 6 완료·외부 launch 정합 100% (W6 정상 흐름)
 | Risk | 완화 |
 |---|---|
 | Founding member 5명 모집 실패 | 옵션 C 자본 출자 ~$300 fallback·Wise Business 활용 |
-| Stripe payout 현재 목적지 = Mercury이면 입금 후 출금 X | 새 세션 시 Stripe payout 등록된 bank 확인·Wise·다른 미국 은행 가능성 |
+| Stripe payout 현재 목적지 미확인 (Mercury 미활성화 상태) | 새 세션 시 Stripe Dashboard → Settings → Payouts 등록된 bank 확인·Wise·다른 미국 은행 가능성 |
+| Mercury initial deposit 강제 confirmed·자금 unblock 의존 | P1-1 founding member 매출 누적·또는 옵션 C 자본 출자 |
 | 베타 사용자에 personal-name R2 개인정보 처리 disclaimer 법적 정합 | 변호사 검토·또는 W6 정상 흐름으로 회귀 |
 | KNOT 5명 backlog 결과를 Seizn 외부 marketing에 노출 | grep 검증·Seizn↔KNOT 분리 룰 자동 검증 추가 |
 | Phase 6 실행 시 코드·migration 충돌 | dry run + SHA256 verify·rollback path |
 | W6 launch 못 하면 베타 disclaimer 만료·연장 결정 | design spec §11 launch 연기 룰 그대로 |
+| v7 가격이 in-app pricing UI (`pricing-client.tsx`)에 wired 안 됐을 가능성 | P0-2 Stripe 흐름 검증 시 함께 점검·옛 v5·v6 가격 잔존 시 정정 |
+| BYOK 50% coupon 또는 별 price 분기 미빌드 (Phase 1~5에 미포함) | P0-2 또는 별 cycle에서 Stripe coupon 발급·in-app BYOK 등록 후 자동 적용 |
 
 ## 14. Open decisions (새 세션이 사용자에게 받을 답)
 
@@ -455,81 +468,95 @@ Phase 6 완료·외부 launch 정합 100% (W6 정상 흐름)
 3. **KNOT 트랙 병행 여부** — P0 빌드와 동시에 KNOT 5명 backlog 시작? 또는 P0 완료 후?
 4. **베타 disclaimer 변호사 검토** — 본 cycle에 포함? 또는 W6 풀 launch 전?
 5. **Stripe payout 현재 목적지** — 어느 bank? (Mercury·Wise·다른 곳·확인 필요)
+6. **v7 가격 in-app UI wiring 검증** — `src/app/[locale]/pricing/pricing-client.tsx`·기타 가격 노출 곳에 v7 반영됐나·옛 v5·v6 가격 잔존 시 정정
+7. **BYOK 50% 할인 메커니즘 빌드** — Stripe coupon 발급 + in-app BYOK 등록 시 자동 coupon apply·또는 별 price 분기·어느 패턴?
+8. **v5 lifetime deal 폐기 결정** — v5 lock에 "Pro $499 평생 (첫 100명)·Studio $1,499 평생 (첫 30명)" 있었는데 v7에선 미정·founding member offer로 통합하거나 명시적 폐기
 
 답 받으면 P0-N task pack 또는 Codex dispatch prompt 즉시 작성.
 
----
+## 15. Stripe 가격표 v7 lock (2026-05-02 confirmed·Opus 4.7 cost-aligned)
 
-**본 runbook은 새 세션 self-contained pickup 정합으로 작성**. 본 문서 + 절대 경로 reference 7번·메모리 룰 8번만 참조하면 컨텍스트 0에서 launch 흐름 즉시 진입 가능.
+**v7 (실 Stripe 등록값·v5·v6 lock 폐기)**:
 
-## 15. Stripe 가격표 lock (실 등록 정합·2026-05-02 query 결과)
-
-**v6 (실 Stripe 등록값·v5 lock 폐기)**:
-
-| Tier | Stripe Product | 월 | 연 | metered overage |
+| Tier | Stripe Product ID | 월 | 연 (~15% off) | env price ID prefix |
 |---|---|---|---|---|
-| **Indie** (구 Author) | `STRIPE_PRICE_ID_INDIE_*` | $39 | $397.80 (~15% off) | + Memories·Ops |
-| **Pro** | `STRIPE_PRICE_ID_PRO_*` | **$999** ⚠️ | $10,189.80 | + Memories·Ops |
-| **Studio** | `STRIPE_PRICE_ID_STUDIO_*` | $299 | $3,049.80 | + Memories·Ops |
-| **Enterprise** | `STRIPE_PRICE_ID_ENTERPRISE_*` | $2,500 | $30,000 | + Memories·Ops |
+| **Indie** | `prod_UNGacXMozktNgE` | **$39** | $397.80 | `STRIPE_PRICE_ID_INDIE_*` |
+| **Pro** | `prod_UNGajiXXpdiSYR` | **$149** | $1,519.80 | `STRIPE_PRICE_ID_PRO_*` |
+| **Studio** | `prod_UNGa1KL7DhxWGw` | **$499** | $5,089.80 | `STRIPE_PRICE_ID_STUDIO_*` |
+| **Enterprise** | `prod_UNGaW9bFkuycVQ` | **$2,500** | $30,000 | `STRIPE_PRICE_ID_ENTERPRISE_*` |
 
-**Metered (사용량 overage)**:
+**Metered overage (tier 한도 초과분만)**:
 
 | Meter | 단가 | env |
 |---|---|---|
 | Memories | $0.05 / unit / 월 | `STRIPE_METER_ID_MEMORIES`·`STRIPE_METERED_PRICE_ID_MEMORIES` |
 | Ops | $0.01 / unit / 월 | `STRIPE_METER_ID_OPS`·`STRIPE_METERED_PRICE_ID_OPS` |
 
-**⚠️ Pro vs Studio 가격 역전 검증 필요**:
+**Tier 토큰 한도 (Opus 4.7 cost-aligned·overage 강제 메커니즘)**:
 
-일반 SaaS tier ladder는 Indie < Pro < Studio < Enterprise. 현 구조는 *Pro $999 > Studio $299* 역전. 의도 (Pro = high-volume 개인·Studio = small team)·또는 typo·*사용자 confirm 필요*.
+| Tier | tokens/mo | Opus 4.7 cost @ tier 한도 | margin |
+|---|---|---|---|
+| Indie | ~1M | ~$15 | 60%+ |
+| Pro | ~5M | ~$75 | 50%+ |
+| Studio | ~20M | ~$300 | 40%+ |
+| Enterprise | 무제한 (BYOK 강제) | — | platform fee + SLA |
 
-만약 의도라면 명명·가치 제안 명확화:
-- **Pro**: 개인 prolific author·high token 사용량·Memories·Ops 풀 포함
-- **Studio**: small team (~5명)·collaborative·base usage·메모리·Ops은 share
+**BYOK 50% 할인** — 자기 Anthropic 키 등록 시 토큰 무제한·tier 가격 50% off:
+- Indie BYOK: $19.50/mo
+- Pro BYOK: $74.50/mo
+- Studio BYOK: $249.50/mo
+- Enterprise: BYOK 강제·platform fee 별 협의
 
-만약 typo라면: Pro $99 (내가 임의 제안) 또는 다른 가격으로 정정.
+**Stripe 정합 (2026-05-02 lock)**:
+- 옛 v6 가격 (Pro $999·Studio $299) deactivated
+- 옛 NPC tier (Apr 8: Starter·Plus·Pro NPC·Enterprise NPC) deactivated
+- 활성 product 5개: Indie·Pro·Studio·Enterprise·Metered Overage
+- env STRIPE_PRICE_LOCK_VERSION=v7
 
-**Trial·BYOK·Coupon**:
+**Trial·BYOK·Coupon (v7 lock 정합)**:
 
 | 항목 | 정책 |
 |---|---|
-| Trial | 30일·신용카드 등록 X (per `seizn-author-pricing-2026-05.md` v5 lock 그대로) |
-| BYOK 50% 할인 | v5 lock — 실 Stripe coupon 또는 별 price ID로 wired됐는지 검증 필요 |
+| Trial | 30일·신용카드 등록 X (`seizn-author-pricing-2026-05.md` v7) |
+| BYOK 50% 할인 | v7 lock — 실 Stripe coupon 또는 별 price ID *wired 미확인*·P0-2 검증 대상 |
 | Founding Member | 본 runbook §P1-1·실 Stripe coupon 발급 필요 |
-| Yearly | 모든 tier yearly 옵션 ~15% off (이미 wired) |
+| Yearly | 모든 tier yearly 옵션 ~15% off (이미 wired·Stripe price 4 tier × 2 cadence active) |
 
-**v6 lock 결정 시 메모리 갱신**:
-- `seizn-author-pricing-2026-05.md` → v6으로 갱신
-- decisions.md에 v6 lock 결정 블록 추가
-- canon_version bump (Seizn 컨텍스트는 KNOT canon과 다른 trail)
+**v7 lock 메모리 갱신 완료 (2026-05-02)**:
+- `seizn-author-pricing-2026-05.md` → v7 lock 갱신 완료
+- 옛 v5·v6 lock 표는 history 섹션에 보존
+- Seizn project decisions.md (있다면) v7 결정 블록 추가 — 별 cycle (현재 Seizn에 decisions.md 표준 패턴 미확립)
 
-## 16. v5 → v6 가격 변경 영향
+## 16. v5 → v7 가격 변천 (2026-05-02 lock)
 
-**원래 v5 lock (memory)**:
-- Author·Pro·Studio·Enterprise·monthly only·BYOK 50% off
+| Tier | v5 lock (memory) | v6 실 Stripe (history) | **v7 (현 lock·Opus 4.7 cost-aligned)** | 결정 |
+|---|---|---|---|---|
+| Indie (구 Author) | $39 | $39 | **$39** | 그대로 |
+| Pro | $129 | $999 ⚠️ | **$149** | v5 위 약간·Opus cost margin 50%+·시장 정합 |
+| Studio | $399 | $299 | **$499** | Opus cost margin·5명 share 정합 |
+| Enterprise | from $1,500 | $2,500 | **$2,500** | fixed·BYOK 강제 |
 
-**v6 실 Stripe 등록**:
-- *Indie 이름 변경* (Author → Indie)
-- *Pro 가격 변경* ($129 → $999·확인 필요)
-- *Studio 가격 변경* ($399 → $299)
-- *Enterprise fixed 가격* (Custom → $2,500/mo)
-- *Yearly 추가* (모든 tier·~15% off)
-- *Metered 추가* (Memories·Ops 사용량 overage)
+**v6 → v7 변경 (2026-05-02)**:
+- Pro $999 → $149 (시장·Opus cost·tier ladder 정합)
+- Studio $299 → $499 (cost margin 정합)
+- Indie·Enterprise·yearly·metered 그대로
+- 옛 NPC tier (Apr 8 Starter·Plus·Pro·Enterprise) deactivated
 
-**Marketing brief v3 영향**:
+**Marketing brief 갱신 완료 (2026-05-02)**:
 
-`docs/marketing/seizn_author_landing_brief.md` §3.7 §08 Pricing은 v5 lock 정합이라 *갱신 필요*:
+`docs/marketing/seizn_author_landing_brief.md` §3.7 §08 Pricing — v7 정합 갱신 완료:
+- 가격 카드 4 tier (Indie $39·Pro $149·Studio $499·Enterprise $2,500)
+- Yearly toggle·~15% off
+- Tier 토큰 한도 명시
+- Metered overage footnote (tier 초과분만)
+- BYOK 50% 할인 (Settings → API Keys)
 
-```text
-v5 → v6 갱신 대상:
-  - landing 가격 카드 4 tier (Indie·Pro·Studio·Enterprise·실 가격)
-  - yearly 옵션 표시 (toggle·또는 dual price)
-  - Metered overage 설명 footnote
-  - tier rename (Author → Indie)
-```
+**FAQ §3.8 갱신 완료**:
+- "내가 토큰 한도 초과하면?" → Memories·Ops unit overage·tier 초과분만·자세히 docs
+- "yearly 결제하면?" → ~15% off (2달 무료)
+- "BYOK 어떻게?" → 자기 Anthropic 키·tier 가격 50% off + 토큰 무제한
+- "Pro vs Studio?" → Pro = 개인 power user (multi-IP·heavy LLM)·Studio = small team (5명·collaborative)
 
-**FAQ 갱신**:
-- "내가 사용량 초과하면?" → Memories·Ops 단위 overage·자세히 docs
-- "yearly 결제하면 할인?" → ~15% off (2달 무료)
-- "왜 Pro가 Studio보다 비싸?" (역전 의도면 답변·아니면 정정)
+---
+
+**본 runbook은 새 세션 self-contained pickup 정합으로 작성**. 본 문서 + 절대 경로 reference §7·메모리 룰 §8만 참조하면 컨텍스트 0에서 launch 흐름 즉시 진입 가능.

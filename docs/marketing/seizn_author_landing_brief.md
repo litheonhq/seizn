@@ -307,24 +307,28 @@ candidate 2 — ⚠️ leak risk
    자기 Anthropic·Google·OpenAI 키 등록·50% 할인.
 ```
 
-### 3.7 §08 Pricing (lock — `seizn-author-pricing-2026-05.md` 정합)
+### 3.7 §08 Pricing (v7 lock — 2026-05-02 갱신·Opus 4.7 cost-aligned)
 
 ```text
 30-day free trial — no credit card required
 
 ┌─────────────┬─────────────┬─────────────┬──────────────┐
-│  Author     │  Pro ★      │  Studio     │  Enterprise  │
-│  $39 / mo   │  $129 / mo  │  $399 / mo  │  Custom      │
+│  Indie      │  Pro ★      │  Studio     │  Enterprise  │
+│  $39 / mo   │  $149 / mo  │  $499 / mo  │  $2,500 / mo │
+│  $397.80/yr │  $1,519.80/yr│ $5,089.80/yr│ $30,000/yr   │
 │             │             │             │              │
-│  Short IP·  │  Series·    │  Studio·    │  Studio·     │
-│  Single IP· │  Multi-IP·  │  Team·      │  Contract·   │
-│  Latest LLM │  Latest LLM │  Latest LLM │  SOC 2·SLA   │
+│  1 IP·      │  Multi-IP·  │  5 collab·  │  Unlimited·  │
+│  Solo       │  Multimodal·│  Real-time  │  SLA·SOC 2·  │
+│  ~1M tokens │  ~5M tokens │  ~20M tokens│  BYOK req.   │
 │             │             │             │              │
 │  [Start free] │ [Start free] │ [Start free] │ [Contact us] │
 └─────────────┴─────────────┴─────────────┴──────────────┘
 
-* All plans on the latest Anthropic flagship model.
-* BYOK option available in Settings (advanced) — direct Anthropic billing.
+Yearly toggle: ~15% off (2 months free)
+Tier overage: Memories $0.05/unit · Ops $0.01/unit (tier 한도 초과분만)
+
+* All plans on the latest Anthropic flagship model (Opus 4.7).
+* BYOK option in Settings → API Keys: 50% off + unlimited tokens.
 ```
 
 BYOK는 footnote만·hero·card 강조 X (95% 작가 = 컴맹·BYOK 셋업 불가).
@@ -333,7 +337,10 @@ BYOK는 footnote만·hero·card 강조 X (95% 작가 = 컴맹·BYOK 셋업 불�
 
 - **Who owns my work?** → You do. 100%. Seizn only processes — your story is yours.
 - **Can I import from Word, Google Docs, or Notion?** → Yes — `.docx`, Google Docs (OAuth), Notion API, plain text/copy-paste. Scrivener `.scrivx` and Obsidian vaults supported in advanced settings.
-- **How does BYOK work?** → Register your own Anthropic API key in Settings. 50% off your Seizn plan + bill Anthropic directly.
+- **How does BYOK work?** → Register your own Anthropic API key in Settings. 50% off your Seizn plan + unlimited tokens (Anthropic billed directly to you).
+- **What if I exceed my tier's token limit?** → Memories overage $0.05/unit·Ops overage $0.01/unit. Or upgrade tier·or switch to BYOK for unlimited.
+- **Why is Pro $149 and Studio $499? Studio costs more than Pro.** → Pro = individual prolific author·multi-IP·heavy LLM use. Studio = small team (5 collaborators)·real-time·shared workspace. Different value proposition.
+- **Yearly billing?** → Yes — ~15% off (2 months free) on every tier.
 - **Where is my data stored?** → Choose your region: Seoul, Tokyo, Frankfurt (EU GDPR). Default Seoul.
 - **Can I cancel anytime?** → Yes. 30-day trial requires no credit card. Cancel from Settings → Billing.
 - **I make games, not novels.** → [Seizn Engine for game studios →](https://engine.seizn.com)
