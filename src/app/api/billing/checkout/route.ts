@@ -32,10 +32,12 @@ interface CheckoutSelection {
 }
 
 interface CheckoutBillingProfile {
+  plan?: string | null;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
   stripe_subscription_status?: string | null;
   subscription_status?: string | null;
+  stripe_price_id?: string | null;
 }
 
 interface CheckoutCustomerState {
@@ -111,7 +113,7 @@ async function getOrCreateCheckoutCustomer(input: {
   const supabase = createServerClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("stripe_customer_id,stripe_subscription_id,stripe_subscription_status,subscription_status")
+    .select("plan,stripe_customer_id,stripe_subscription_id,stripe_subscription_status,subscription_status,stripe_price_id")
     .eq("id", input.userId)
     .single<CheckoutBillingProfile>();
 
@@ -138,6 +140,12 @@ async function getOrCreateCheckoutCustomer(input: {
         subscriptionStatus: liveSubscription.subscriptionStatus,
       };
     }
+
+    await clearStaleCheckoutSubscriptionProfile({
+      supabase,
+      userId: input.userId,
+      profile,
+    });
 
     return {
       customerId: profile.stripe_customer_id,
@@ -284,20 +292,30 @@ async function findLiveCheckoutSubscription(
   stripe: ReturnType<typeof getStripeClient>,
   customerId: string
 ): Promise<LiveSubscriptionState | null> {
-  const subscriptions = await stripe.subscriptions.list({
-    customer: customerId,
-    status: "all",
-    limit: 10,
-  });
+  let startingAfter: string | undefined;
 
-  const live = subscriptions.data
-    .map(normalizeStripeSubscription)
-    .find((subscription): subscription is LiveSubscriptionState => {
-      if (!subscription?.subscriptionId) return false;
-      return !CHECKOUT_ALLOWED_SUBSCRIPTION_STATUSES.has(subscription.subscriptionStatus.toLowerCase());
+  while (true) {
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: "all",
+      limit: 10,
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
     });
 
-  return live ?? null;
+    const live = subscriptions.data
+      .map(normalizeStripeSubscription)
+      .find((subscription): subscription is LiveSubscriptionState => {
+        if (!subscription?.subscriptionId) return false;
+        return !CHECKOUT_ALLOWED_SUBSCRIPTION_STATUSES.has(subscription.subscriptionStatus.toLowerCase());
+      });
+
+    if (live) return live;
+    if (!subscriptions.has_more) return null;
+
+    const lastSubscriptionId = subscriptions.data[subscriptions.data.length - 1]?.id;
+    if (!lastSubscriptionId) return null;
+    startingAfter = lastSubscriptionId;
+  }
 }
 
 function normalizeStripeSubscription(subscription: StripeSubscriptionLike): LiveSubscriptionState | null {
@@ -313,4 +331,34 @@ function normalizeStripeSubscription(subscription: StripeSubscriptionLike): Live
     subscriptionStatus,
     priceId,
   };
+}
+
+async function clearStaleCheckoutSubscriptionProfile(input: {
+  supabase: ReturnType<typeof createServerClient>;
+  userId: string;
+  profile: CheckoutBillingProfile;
+}): Promise<void> {
+  if (!hasLocalCheckoutSubscriptionState(input.profile)) {
+    return;
+  }
+
+  await input.supabase
+    .from("profiles")
+    .update({
+      stripe_subscription_id: null,
+      stripe_subscription_status: null,
+      subscription_status: "inactive",
+      stripe_price_id: null,
+      ...(isAuthorBillingTier(input.profile.plan) ? { plan: "free" } : {}),
+    })
+    .eq("id", input.userId);
+}
+
+function hasLocalCheckoutSubscriptionState(profile: CheckoutBillingProfile): boolean {
+  if (profile.stripe_subscription_id || profile.stripe_price_id) {
+    return true;
+  }
+
+  const status = (profile.subscription_status ?? profile.stripe_subscription_status ?? "").toLowerCase();
+  return Boolean(status && status !== "inactive" && status !== "free");
 }

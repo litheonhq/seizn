@@ -134,6 +134,39 @@ describe('Author token budget enforcement', () => {
     }));
   });
 
+  it('meters only newly created overage when the user is already above cap', async () => {
+    process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
+    process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';
+
+    await expect(meterAuthorTokenOverage({
+      userId: 'user-1',
+      byokActive: false,
+      actualTotalTokens: 5_000,
+      budget: {
+        allowed: true,
+        cap: 1_000_000,
+        used: 1_100_000,
+        projected: 1_105_000,
+        overageTokens: 5_000,
+        metered: false,
+        stripeCustomerId: 'cus_author_123',
+      },
+    })).resolves.toMatchObject({
+      actualProjected: 1_105_000,
+      overageTokens: 5_000,
+      metered: true,
+    });
+
+    expect(mocks.meterEventsCreate).toHaveBeenCalledWith(expect.objectContaining({
+      event_name: 'meter_author_tokens',
+      payload: expect.objectContaining({
+        stripe_customer_id: 'cus_author_123',
+        value: '5000',
+        user_id: 'user-1',
+      }),
+    }));
+  });
+
   it('does not emit a post-call meter event when actual output stays under the cap', async () => {
     process.env.STRIPE_SECRET_KEY = 'sk_test_meter';
     process.env.STRIPE_METER_ID_MEMORIES = 'meter_author_tokens';

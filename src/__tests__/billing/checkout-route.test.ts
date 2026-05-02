@@ -6,15 +6,19 @@ import { AUTHOR_TRIAL_DAYS } from '@/lib/stripe-config';
 const mocks = vi.hoisted(() => ({
   session: { user: { id: 'user-1', email: 'author@example.com' } } as { user?: { id?: string; email?: string | null } } | null,
   profile: {
+    plan: 'free',
     stripe_customer_id: 'cus_author_123',
     stripe_subscription_id: null,
     stripe_subscription_status: null,
     subscription_status: null,
+    stripe_price_id: null,
   } as {
+    plan?: string | null;
     stripe_customer_id?: string | null;
     stripe_subscription_id?: string | null;
     stripe_subscription_status?: string | null;
     subscription_status?: string | null;
+    stripe_price_id?: string | null;
   } | null,
   customerCreate: vi.fn(),
   subscriptionsList: vi.fn(),
@@ -70,10 +74,12 @@ describe('Author checkout route', () => {
     process.env.STRIPE_PRICE_ID_PRO_MONTHLY = 'price_pro_monthly_v7';
     mocks.session = { user: { id: 'user-1', email: 'author@example.com' } };
     mocks.profile = {
+      plan: 'free',
       stripe_customer_id: 'cus_author_123',
       stripe_subscription_id: null,
       stripe_subscription_status: null,
       subscription_status: null,
+      stripe_price_id: null,
     };
     mocks.byokStatus = { enabled: false };
     mocks.profileUpdates = [];
@@ -175,10 +181,12 @@ describe('Author checkout route', () => {
 
   it('allows checkout when local active state is stale but Stripe only has canceled subscriptions', async () => {
     mocks.profile = {
+      plan: 'pro',
       stripe_customer_id: 'cus_author_123',
       stripe_subscription_id: 'sub_stale_123',
       stripe_subscription_status: 'active',
       subscription_status: 'active',
+      stripe_price_id: 'price_pro_monthly_v7',
     };
     mocks.subscriptionsList.mockResolvedValue({
       data: [stripeSubscription('sub_canceled_123', 'canceled', 'price_pro_monthly_v7')],
@@ -193,6 +201,46 @@ describe('Author checkout route', () => {
     expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
       customer: 'cus_author_123',
     }));
+    expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
+      plan: 'free',
+      stripe_subscription_id: null,
+      stripe_subscription_status: null,
+      subscription_status: 'inactive',
+      stripe_price_id: null,
+    }));
+  });
+
+  it('paginates Stripe subscription history before allowing checkout', async () => {
+    mocks.profile = {
+      plan: 'free',
+      stripe_customer_id: 'cus_author_123',
+      stripe_subscription_id: null,
+      stripe_subscription_status: null,
+      subscription_status: null,
+      stripe_price_id: null,
+    };
+    const canceledSubscriptions = Array.from({ length: 10 }, (_, index) =>
+      stripeSubscription(`sub_canceled_${index}`, 'canceled', 'price_pro_monthly_v7')
+    );
+    mocks.subscriptionsList
+      .mockResolvedValueOnce({ data: canceledSubscriptions, has_more: true })
+      .mockResolvedValueOnce({
+        data: [stripeSubscription('sub_trial_late', 'trialing', 'price_pro_monthly_v7')],
+        has_more: false,
+      });
+
+    const response = await POST(makeCheckoutRequest());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.destination).toBe('billing_portal');
+    expect(mocks.subscriptionsList).toHaveBeenNthCalledWith(2, {
+      customer: 'cus_author_123',
+      status: 'all',
+      limit: 10,
+      starting_after: 'sub_canceled_9',
+    });
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
   });
 
   it('chooses an active subscription from multiple Stripe subscriptions', async () => {
