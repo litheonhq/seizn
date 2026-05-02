@@ -1,10 +1,12 @@
 import { execFileSync } from "child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { cpSync, mkdtempSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import path from "path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import DemoPage from "@/app/[locale]/demo/page";
-import { getSaebyeokDemoCopy } from "@/components/demo/saebyeok-demo";
+import { SaebyeokDemo, getSaebyeokDemoCopy } from "@/components/demo/saebyeok-demo";
 import {
   SAEBYEOK_SOURCE_FILES,
   getArray,
@@ -16,6 +18,9 @@ describe("Saebyeok sample IP demo", () => {
     const data = await loadSaebyeokDemoData();
 
     expect(SAEBYEOK_SOURCE_FILES).toHaveLength(7);
+    expect(data.sourceStatus).toHaveLength(7);
+    expect(data.sourceStatus.every((status) => status.ok)).toBe(true);
+    expect(data.hasSourceErrors).toBe(false);
     expect(data.readme.title).toContain("Saebyeok");
     expect(data.summary).toEqual({
       characters: 8,
@@ -43,7 +48,83 @@ describe("Saebyeok sample IP demo", () => {
       const copy = getSaebyeokDemoCopy(locale);
       expect(copy.label).toBeTruthy();
       expect(copy.title).toBeTruthy();
+      expect(copy.unavailableTitle).toBeTruthy();
       expect(copy.screens).toHaveLength(7);
+    }
+  });
+
+  it("falls back when one source file is missing", async () => {
+    const dir = copySampleIpFixture();
+    rmSync(path.join(dir, "saebyeok_review_cases_v1.json"));
+
+    try {
+      const data = await loadSaebyeokDemoData({ sourceDir: dir });
+
+      expect(data.hasSourceErrors).toBe(true);
+      expect(data.sourceStatus.find((status) => status.file === "saebyeok_review_cases_v1.json")).toMatchObject({
+        ok: false,
+      });
+      expect(data.summary.characters).toBe(8);
+      expect(data.summary.reviewCases).toBe(0);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("falls back when a JSON source file cannot be parsed", async () => {
+    const dir = copySampleIpFixture();
+    writeFileSync(path.join(dir, "saebyeok_timeline_v1.json"), "{ invalid json", "utf8");
+
+    try {
+      const data = await loadSaebyeokDemoData({ sourceDir: dir });
+
+      expect(data.hasSourceErrors).toBe(true);
+      expect(data.sourceStatus.find((status) => status.file === "saebyeok_timeline_v1.json")).toMatchObject({
+        ok: false,
+      });
+      expect(data.summary.timelineEvents).toBe(0);
+      expect(data.summary.characters).toBe(8);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("returns an empty safe snapshot when every source file is missing", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "seizn-saebyeok-empty-"));
+
+    try {
+      const data = await loadSaebyeokDemoData({ sourceDir: dir });
+
+      expect(data.hasSourceErrors).toBe(true);
+      expect(data.sourceStatus).toHaveLength(7);
+      expect(data.sourceStatus.every((status) => !status.ok)).toBe(true);
+      expect(data.readme.title).toBe("Saebyeok Academy");
+      expect(data.summary).toEqual({
+        characters: 0,
+        worldRules: 0,
+        timelineEvents: 0,
+        relationships: 0,
+        reviewCases: 0,
+        simulations: 0,
+      });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("renders the localized unavailable placeholder when sources are partial", async () => {
+    const dir = copySampleIpFixture();
+    rmSync(path.join(dir, "saebyeok_review_cases_v1.json"));
+
+    try {
+      const data = await loadSaebyeokDemoData({ sourceDir: dir });
+      const copy = getSaebyeokDemoCopy("ko");
+      const html = renderToStaticMarkup(createElement(SaebyeokDemo, { data, locale: "ko" }));
+
+      expect(html).toContain(copy.unavailableTitle);
+      expect(html).toContain(copy.unavailableBody);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 
@@ -84,3 +165,9 @@ describe("Saebyeok sample IP demo", () => {
     }
   });
 });
+
+function copySampleIpFixture(): string {
+  const dir = mkdtempSync(path.join(tmpdir(), "seizn-saebyeok-fixture-"));
+  cpSync(path.join(process.cwd(), "docs", "marketing", "sample_ip"), dir, { recursive: true });
+  return dir;
+}
