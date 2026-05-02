@@ -34,7 +34,7 @@ pair_with:
 
 | 영역 | 상태 | 증거 |
 |---|---|---|
-| **Stripe activate + payout 등록 + 가격 lock** | ✓ ($39/$129/$399 + Enterprise·prices·webhook·token) | 사용자 확인 (b) |
+| **Stripe activate + payout 등록 + 가격 lock** | ✓ Indie $39·Pro $999·Studio $299·Enterprise $2,500 (월)·yearly ~15% off·Memories $0.05/unit/월·Ops $0.01/unit/월 metered·webhook·token | 사용자 확인 (b) |
 | **Phase 1~5 LLM integration backend + UI** | ✓ 1035 tests pass·typecheck·0 vulnerabilities | commits `fc1da94f·d3c74975·d4a70511·c0add945·85f1d8e5·e75a9d1e·9cb1fbcb`·signoff docs `phase1~5` |
 | **R2 bucket (개인 임시)** | ✓ `seizn-author-uploads-temp` (APAC·default jurisdiction·empty) | account `892951c988b7c6bf05c45a8916df205e` |
 | **R2 자격증명 등록** | ✓ `R2_AUTHOR_*` 9 키 (`~/.codex/private/consolidated/litheon.env`) | env 등록 완료 |
@@ -180,9 +180,11 @@ docs/marketing/sample_ip/
 - 작가 본인 네트워크 (단 KNOT 외부 노출 X 분리 룰 정합·KNOT IP 사례 활용 X)
 - 한국 작가 (네이버 카페·Twitter)·secondary track 시작 시점 (W3+)
 
-**Founding Member offer**:
-- $99 lifetime 또는 첫 1년 50% off ($19.5/월·BYOK 미적용)
-- 또는 founding member tier $199 lifetime + 1:1 onboarding session
+**Founding Member offer (실 Stripe 가격표 정합·§15 참조)**:
+- *Indie yearly* $397.80 (이미 ~15% off·founding 별도 할인 X)
+- 또는 *Indie monthly $39·founding 코드로 첫 3개월 50% off* (Stripe coupon 신규 발급 필요)
+- 또는 *Pro yearly $10,189.80*에 founding 코드 30% off ~$7,132.86 (high-touch 대상·1:1 onboarding 포함)
+- 단순화 옵션: 첫 1~3개월 무료 (Stripe trial 연장)·신용카드 등록 X 그대로
 
 **Acceptance criteria**:
 - [ ] 5명 이상 founding member 결제 — Stripe 매출 ≥ $500
@@ -459,3 +461,75 @@ Phase 6 완료·외부 launch 정합 100% (W6 정상 흐름)
 ---
 
 **본 runbook은 새 세션 self-contained pickup 정합으로 작성**. 본 문서 + 절대 경로 reference 7번·메모리 룰 8번만 참조하면 컨텍스트 0에서 launch 흐름 즉시 진입 가능.
+
+## 15. Stripe 가격표 lock (실 등록 정합·2026-05-02 query 결과)
+
+**v6 (실 Stripe 등록값·v5 lock 폐기)**:
+
+| Tier | Stripe Product | 월 | 연 | metered overage |
+|---|---|---|---|---|
+| **Indie** (구 Author) | `STRIPE_PRICE_ID_INDIE_*` | $39 | $397.80 (~15% off) | + Memories·Ops |
+| **Pro** | `STRIPE_PRICE_ID_PRO_*` | **$999** ⚠️ | $10,189.80 | + Memories·Ops |
+| **Studio** | `STRIPE_PRICE_ID_STUDIO_*` | $299 | $3,049.80 | + Memories·Ops |
+| **Enterprise** | `STRIPE_PRICE_ID_ENTERPRISE_*` | $2,500 | $30,000 | + Memories·Ops |
+
+**Metered (사용량 overage)**:
+
+| Meter | 단가 | env |
+|---|---|---|
+| Memories | $0.05 / unit / 월 | `STRIPE_METER_ID_MEMORIES`·`STRIPE_METERED_PRICE_ID_MEMORIES` |
+| Ops | $0.01 / unit / 월 | `STRIPE_METER_ID_OPS`·`STRIPE_METERED_PRICE_ID_OPS` |
+
+**⚠️ Pro vs Studio 가격 역전 검증 필요**:
+
+일반 SaaS tier ladder는 Indie < Pro < Studio < Enterprise. 현 구조는 *Pro $999 > Studio $299* 역전. 의도 (Pro = high-volume 개인·Studio = small team)·또는 typo·*사용자 confirm 필요*.
+
+만약 의도라면 명명·가치 제안 명확화:
+- **Pro**: 개인 prolific author·high token 사용량·Memories·Ops 풀 포함
+- **Studio**: small team (~5명)·collaborative·base usage·메모리·Ops은 share
+
+만약 typo라면: Pro $99 (내가 임의 제안) 또는 다른 가격으로 정정.
+
+**Trial·BYOK·Coupon**:
+
+| 항목 | 정책 |
+|---|---|
+| Trial | 30일·신용카드 등록 X (per `seizn-author-pricing-2026-05.md` v5 lock 그대로) |
+| BYOK 50% 할인 | v5 lock — 실 Stripe coupon 또는 별 price ID로 wired됐는지 검증 필요 |
+| Founding Member | 본 runbook §P1-1·실 Stripe coupon 발급 필요 |
+| Yearly | 모든 tier yearly 옵션 ~15% off (이미 wired) |
+
+**v6 lock 결정 시 메모리 갱신**:
+- `seizn-author-pricing-2026-05.md` → v6으로 갱신
+- decisions.md에 v6 lock 결정 블록 추가
+- canon_version bump (Seizn 컨텍스트는 KNOT canon과 다른 trail)
+
+## 16. v5 → v6 가격 변경 영향
+
+**원래 v5 lock (memory)**:
+- Author·Pro·Studio·Enterprise·monthly only·BYOK 50% off
+
+**v6 실 Stripe 등록**:
+- *Indie 이름 변경* (Author → Indie)
+- *Pro 가격 변경* ($129 → $999·확인 필요)
+- *Studio 가격 변경* ($399 → $299)
+- *Enterprise fixed 가격* (Custom → $2,500/mo)
+- *Yearly 추가* (모든 tier·~15% off)
+- *Metered 추가* (Memories·Ops 사용량 overage)
+
+**Marketing brief v3 영향**:
+
+`docs/marketing/seizn_author_landing_brief.md` §3.7 §08 Pricing은 v5 lock 정합이라 *갱신 필요*:
+
+```text
+v5 → v6 갱신 대상:
+  - landing 가격 카드 4 tier (Indie·Pro·Studio·Enterprise·실 가격)
+  - yearly 옵션 표시 (toggle·또는 dual price)
+  - Metered overage 설명 footnote
+  - tier rename (Author → Indie)
+```
+
+**FAQ 갱신**:
+- "내가 사용량 초과하면?" → Memories·Ops 단위 overage·자세히 docs
+- "yearly 결제하면 할인?" → ~15% off (2달 무료)
+- "왜 Pro가 Studio보다 비싸?" (역전 의도면 답변·아니면 정정)
