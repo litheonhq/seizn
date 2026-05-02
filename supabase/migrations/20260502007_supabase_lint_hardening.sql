@@ -87,8 +87,12 @@ BEGIN
   END IF;
 END $$;
 
-ALTER FUNCTION IF EXISTS public.update_relay_agents_updated_at()
-SET search_path = public, pg_temp;
+DO $$
+BEGIN
+  IF to_regprocedure('public.update_relay_agents_updated_at()') IS NOT NULL THEN
+    EXECUTE 'ALTER FUNCTION public.update_relay_agents_updated_at() SET search_path = public, pg_temp';
+  END IF;
+END $$;
 
 DO $$
 BEGIN
