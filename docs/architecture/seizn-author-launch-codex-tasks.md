@@ -136,7 +136,7 @@ exclusions:
 
 **Acceptance criteria**:
 - [ ] `pricing-client.tsx` v7 가격 정합·옛 가격 잔존 0 (grep `999`·`299`·`129` 으로 검증)
-- [ ] Stripe Checkout 흐름 작동 — Indie monthly·yearly·Pro·Studio·Enterprise 5 tier × 2 cadence (총 10 흐름) 모두 trial 30 day 진입
+- [ ] Stripe Checkout 흐름 작동 — Indie·Pro·Studio·Enterprise monthly·yearly 4 tier × 2 cadence (총 8 흐름) 모두 trial 30 day 진입
 - [ ] webhook 4 이벤트 처리·DB sync 정합·테스트 mock 모두 통과
 - [ ] billing 페이지에서 plan 확인·cancel·upgrade 가능
 - [ ] BYOK on/off 전환 시 coupon apply/remove + 정상 invoice 발행
@@ -424,7 +424,7 @@ exclusions:
 
 **Acceptance criteria** (runbook §P0-4 정합):
 - [ ] hero + sample IP demo widget 작동
-- [ ] 가격 카드 4 tier·Stripe Checkout 흐름 5 tier × 2 cadence = 10 흐름 동작
+- [ ] 가격 카드 4 tier·Stripe Checkout 흐름 4 tier × 2 cadence = 8 흐름 동작
 - [ ] legal docs 링크 footer
 - [ ] cross-link to engine.seizn.com 작동
 - [ ] WCAG AA Lighthouse score ≥ 90
