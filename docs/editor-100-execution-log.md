@@ -110,3 +110,36 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 
 - Phase 2-6 remain out of this commit by sequential phase rules.
 - Browser-level authenticated upload Playwright coverage is still pending; current coverage is parser/service/route/full unit/build/live R2+DB smoke.
+
+## 8) Author Memory v3 LLM Integration - Phase 2 (2026-05-02)
+
+### Scope
+
+- Added Anthropic SDK runtime for Author Memory v3 with BYOK-first key resolution, production fail-closed behavior, non-production managed-key fallback, 429 retry backoff, and JSON response schema validation.
+- Persisted Author LLM token usage in `model_usage` and exposed monthly totals through `/api/account/usage`.
+- Integrated `/api/account/byok` with encrypted provider-key storage and masked status reads.
+- Aligned `provider_keys` and `provider_keys_audit` user IDs with `profiles.id TEXT` so Author BYOK follows the current Seizn identity model.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502004_model_usage.sql` | Pass; migration applied and post-verification passed |
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502005_provider_keys_profile_user_id.sql` | Pass; migration applied and post-verification passed |
+| `model_usage` + `provider_keys` DB smoke | Pass; profile-ID insert/select verified in a transaction and rolled back |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json)"` | Pass |
+| `npm run test:run -- src/__tests__/author/llm/byok-resolver.test.ts src/__tests__/author/llm/anthropic-client.test.ts` | Pass (9/9) |
+| `npm run test:run -- src/__tests__/author/llm/byok-resolver.test.ts src/__tests__/author/llm/anthropic-client.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts src/__tests__/author-memory-v3/author-artifacts.test.ts` | Pass (26/26) |
+| `npm run test:run` | Pass (1020/1020, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| Secret scan over git diff | Pass; no non-empty key material matched |
+
+### Residual Risk
+
+- Phase 3 extraction prompts, validator harness, candidate persistence wiring, and eval-seed scoring are intentionally not included in this Phase 2 commit.
+- Live Anthropic paid-call smoke is not required for this commit because the SDK wrapper is covered by mocked response, retry, BYOK, JSON, and DB persistence tests.

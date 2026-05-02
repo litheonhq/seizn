@@ -41,6 +41,10 @@ export {
   hasUserBYOKKeys,
 } from "./provider-factory";
 
+export {
+  resolveAuthorAnthropicKey as byokResolver,
+} from "../author/llm/byok-resolver";
+
 // KMS (Key Management Service) exports
 export {
   // Types

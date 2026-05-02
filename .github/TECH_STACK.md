@@ -41,7 +41,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| Database | PostgreSQL + pgvector | -- | Via Supabase; 164 migration files in `supabase/migrations/` |
+| Database | PostgreSQL + pgvector | -- | Via Supabase; 166 migration files in `supabase/migrations/` |
 | ORM/Client | @supabase/supabase-js | ^2.90.0 | Browser client (anon key) + Server client (service role key) |
 | Auth | NextAuth v5 | ^5.0.0-beta.30 | JWT strategy, GitHub + Google OAuth + Credentials (Supabase password) |
 | SSO | SAML 2.0 + OIDC | -- | Org-scoped SSO connections + domain verification; SAML ACS + OIDC callback routes |
@@ -58,7 +58,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Payments | Paddle | -- | Client token + server API key, plan-based billing (free/starter/plus/pro/enterprise) |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Embeddings | Voyage AI (voyage-3) | -- | 1024-dim embeddings with Redis caching |
-| AI Providers | Anthropic Claude | ^0.71.2 (SDK) | Memory extraction, summarization, vision/multimodal |
+| AI Providers | Anthropic Claude | ^0.71.2 (SDK) | Memory extraction, summarization, vision/multimodal, and Author Memory v3 Opus BYOK runtime |
 | AI Providers | OpenAI | ^6.16.0 | AI Gateway, embeddings |
 | AI Providers | Google Generative AI | ^0.24.1 | AI Gateway multi-provider support |
 | AI SDK | Vercel AI SDK | ^6.0.69 | Integration package in `packages/vercel-ai/` |
@@ -157,7 +157,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `@supabase/supabase-js` | ^2.90.0 | PostgreSQL database client with RLS |
 | `next-auth` | ^5.0.0-beta.30 | Authentication (JWT, OAuth, Credentials) |
 | `@node-saml/node-saml` | ^5.1.0 | SAML 2.0 processing for Enterprise SSO (ACS, metadata, assertions) |
-| `@anthropic-ai/sdk` | ^0.71.2 | Claude AI for memory extraction, summarization, vision |
+| `@anthropic-ai/sdk` | ^0.71.2 | Claude AI for memory extraction, summarization, vision, and Author Memory v3 BYOK calls |
 | `openai` | ^6.16.0 | OpenAI API for AI Gateway multi-provider routing |
 | `@google/generative-ai` | ^0.24.1 | Google AI for gateway multi-provider support |
 | `ai` (Vercel AI SDK) | ^6.0.69 | Streaming AI integration, memory middleware |
@@ -227,7 +227,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 - OPA policy engine (`src/lib/opa/`)
 - Prompt firewall (`src/lib/prompt-firewall/`)
 - PII detection and anonymization (`src/lib/pii/`)
-- BYOK encryption (`src/lib/byok/`)
+- BYOK encryption (`src/lib/byok/`) plus Author Memory v3 Anthropic BYOK resolver (`src/lib/author/llm/`)
 - Data residency controls (`src/lib/residency/`)
 - Audit logging (`src/lib/audit/`)
 - GitHub webhook idempotency lock/claim flow for Autopilot deliveries (`src/app/api/webhooks/github/route.ts`)
@@ -251,7 +251,7 @@ A single Redis instance serves dual purposes: sliding-window rate limiting for A
 Three observability layers complement each other: OTEL for distributed traces (backend performance), Sentry for error tracking and alerting, PostHog for product analytics (TTFS, conversion funnels). The flight recorder in `fall/` ties production traces to test failures.
 
 **Anthropic SDK + Vercel AI SDK + Multi-provider Gateway**
-The AI Gateway (`src/lib/ai-gateway/`) routes requests to Anthropic, OpenAI, or Google based on cost/capability. The Vercel AI SDK provides streaming integration. The Anthropic SDK is used directly for memory extraction where fine-grained control is needed.
+The AI Gateway (`src/lib/ai-gateway/`) routes requests to Anthropic, OpenAI, or Google based on cost/capability. The Vercel AI SDK provides streaming integration. The Anthropic SDK is used directly for memory extraction where fine-grained control is needed, including Author Memory v3 BYOK calls through `src/lib/author/llm/`.
 
 **Tailwind CSS v4 + Geist + Pretendard**
 Tailwind v4 custom properties integrate with class-based dark mode. Geist provides clean Latin typography while Pretendard handles Korean/CJK scripts, both loaded via `next/font` for zero-CLS font loading.
@@ -348,7 +348,7 @@ User Request
 | Web Vitals (RUM) | Fully Implemented | `src/components/rum/WebVitalsReporter.tsx` | Root layout integration |
 | Recharts Dashboards | Fully Implemented | `src/components/retops/`, analytics, evals, traces | 7 files with chart components |
 | React Flow Graphs | Fully Implemented | `src/app/(dashboard)/dashboard/memories/mindmap/`, `src/components/graph/` | 8 files |
-| Anthropic Claude Integration | Fully Implemented | `src/lib/ai.ts`, `src/lib/ai-gateway/gateway.ts`, `src/lib/anthropic/prompt-caching.ts`, `src/lib/spring/memory-v4/` (6 files) | Memory extraction, summarization, vision, and prompt caching signals (`anthropic-beta`, `cache_control`) in core paths |
+| Anthropic Claude Integration | Fully Implemented | `src/lib/ai.ts`, `src/lib/ai-gateway/gateway.ts`, `src/lib/anthropic/prompt-caching.ts`, `src/lib/spring/memory-v4/` (6 files), `src/lib/author/llm/` | Memory extraction, summarization, vision, prompt caching signals (`anthropic-beta`, `cache_control`), and Author Memory v3 BYOK-backed Opus runtime |
 | OpenAI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts`, `src/app/api/gateway/embed/` | Gateway multi-provider |
 | Google AI Integration | Fully Implemented | `src/lib/ai-gateway/gateway.ts` | Gateway multi-provider |
 | Vercel AI SDK | Fully Implemented | `src/lib/integrations/vercel-ai/` (3 files) | Memory provider + middleware |
@@ -366,7 +366,7 @@ User Request
 | Adaptive Memory Router Learning | Fully Implemented | `src/lib/memory/router-learning.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/v1/memories/feedback/route.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Online strategy stats by query bucket + automatic override in `mode=auto` + feedback reward loop |
 | Lifecycle Scene Profile Sync | Fully Implemented | `src/lib/memory/lifecycle.ts`, `supabase/migrations/20260221_memory_router_learning_and_scene_sync.sql` | Consolidation scene profile updates now sync into slots/profile card and persist trace logs (`memory_scene_profile_sync_events`) |
 | Scheduled Memory Quality Auto-Eval | Fully Implemented | `src/lib/memory/eval-automation.ts`, `src/app/api/internal/eval-processor/route.ts` | Internal cron path emits synthetic auto-eval triggers when feedback degradation / zero-result ratio crosses thresholds |
-| Author Memory v3 Eval Route | Partially Implemented | `src/lib/author/memory-v3/`, `src/lib/author/ui/`, `src/lib/author/parser/`, `src/lib/author/storage/`, `src/app/api/author/memory-v3/eval/route.ts`, `src/app/api/projects/`, `src/app/api/account/`, `src/app/(dashboard)/dashboard/author/`, `src/hooks/useAuthorMemoryV3.ts`, `supabase/migrations/20260502001_author_memory_v3_store.sql`, `supabase/migrations/20260502002_author_memory_v3_side_effect_project_scope.sql`, `supabase/migrations/20260502003_author_imports_text.sql`, `docs/knot-input/`, `docs/author-ui/` | Exposes deterministic author-canon eval payloads behind API-key auth with replay/fail-closed semantics; includes opt-in Supabase persistence for records/snapshots/project-scoped side effects/eval results, fail-closed Supabase config, KNOT v1/v2/v3 eval seed ingestion, v3 100-case record/replay fixture runner, optional Anthropic judge verifier, Fall dataset import helper, Author UI contract/query binding artifacts locked by tests, fixture-backed Author UI API routes, SWR hooks, polling fallback, dashboard upload control, Phase 1 Cloudflare R2 import persistence, md/docx/pdf/txt parser pipeline, and durable parsed import text storage; production realtime and later LLM extraction phases remain next-phase work |
+| Author Memory v3 Eval Route | Partially Implemented | `src/lib/author/memory-v3/`, `src/lib/author/ui/`, `src/lib/author/parser/`, `src/lib/author/storage/`, `src/lib/author/llm/`, `src/app/api/author/memory-v3/eval/route.ts`, `src/app/api/projects/`, `src/app/api/account/`, `src/app/(dashboard)/dashboard/author/`, `src/hooks/useAuthorMemoryV3.ts`, `supabase/migrations/20260502001_author_memory_v3_store.sql`, `supabase/migrations/20260502002_author_memory_v3_side_effect_project_scope.sql`, `supabase/migrations/20260502003_author_imports_text.sql`, `supabase/migrations/20260502004_model_usage.sql`, `supabase/migrations/20260502005_provider_keys_profile_user_id.sql`, `docs/knot-input/`, `docs/author-ui/` | Exposes deterministic author-canon eval payloads behind API-key auth with replay/fail-closed semantics; includes opt-in Supabase persistence for records/snapshots/project-scoped side effects/eval results, fail-closed Supabase config, KNOT v1/v2/v3 eval seed ingestion, v3 100-case record/replay fixture runner, optional Anthropic judge verifier, Fall dataset import helper, Author UI contract/query binding artifacts locked by tests, fixture-backed Author UI API routes, SWR hooks, polling fallback, dashboard upload control, Phase 1 Cloudflare R2 import persistence, md/docx/pdf/txt parser pipeline, durable parsed import text storage, Phase 2 Anthropic BYOK runtime, model usage ledger, and profile-ID-aligned BYOK storage; production realtime and extraction/generation/audit phases remain next-phase work |
 | Memory Search Canary Linkage | Fully Implemented | `src/app/api/v1/memories/route.ts`, `src/lib/fall/canary/` | v1 memory search now records canary quality/latency outcomes and supports canary forced mode override in auto routing |
 | Companion Memory Metadata & Analytics (v0) | Fully Implemented | `src/app/api/memories/route.ts`, `src/app/api/memories/[id]/route.ts`, `src/app/api/memories/analytics/route.ts`, `supabase/migrations/20260222_001_companion_meta_and_analytics.sql` | Added `search` alias filtering (`ILIKE`), `sort=-field` syntax, `companion_meta` POST/PATCH/filter support, JWT fallback auth for legacy v0 routes, CSRF validation for state-changing cookie-auth requests, and analytics endpoint backed by companion RPC functions with timing-safe admin token checks |
 | Graph Entity External ID APIs | Fully Implemented | `src/app/api/v1/graph/[graphId]/entities/route.ts`, `src/app/api/v1/graph/[graphId]/entities/[entityId]/route.ts`, `src/app/api/v1/graph/[graphId]/entities/by-external-id/[externalId]/route.ts`, `src/lib/graph/external-id.ts`, `supabase/migrations/20260415001_external_id.sql` | Added SDK-facing `external_id` create/list/detail/lookup support with runtime fallback to `properties.external_id` when the production column migration is not yet present |
