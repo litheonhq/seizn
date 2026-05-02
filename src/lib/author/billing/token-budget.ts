@@ -197,7 +197,8 @@ export async function meterAuthorTokenOverage(input: {
     };
   }
 
-  const overageTokens = Math.max(0, actualProjected - cap);
+  const alreadyBillableThrough = Math.max(cap, input.budget.used);
+  const overageTokens = Math.max(0, actualProjected - alreadyBillableThrough);
   if (overageTokens <= 0) {
     return {
       metered: false,
