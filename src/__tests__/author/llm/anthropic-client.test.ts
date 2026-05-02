@@ -35,6 +35,7 @@ function allowBudget() {
     projected: 0,
     overageTokens: 0,
     metered: false,
+    stripeCustomerId: null,
   });
 }
 
@@ -180,5 +181,116 @@ describe('Author Anthropic client', () => {
 
     expect(create).toHaveBeenCalledTimes(3);
     expect(sleeps).toEqual([1000, 2000]);
+  });
+
+  it('meters managed overage only after a successful validated response', async () => {
+    const create = vi.fn().mockResolvedValue(message('{"ok":true}', {
+      usage: { input_tokens: 11, output_tokens: 17 },
+    }));
+    const budget = {
+      allowed: true as const,
+      cap: 1_000_000,
+      used: 999_990,
+      projected: 1_000_054,
+      overageTokens: 54,
+      metered: false,
+      stripeCustomerId: 'cus_author_123',
+    };
+    const enforceBudget = vi.fn().mockResolvedValue(budget);
+    const meterOverage = vi.fn().mockResolvedValue({
+      metered: true,
+      overageTokens: 7,
+      actualProjected: 1_000_007,
+    });
+
+    const client = new AuthorAnthropicClient({
+      resolveKey: async () => resolvedKey({ source: 'managed', byok: false, providerKeyId: undefined }),
+      createClient: () => ({ messages: { create } }),
+      recordUsage: vi.fn().mockResolvedValue(undefined),
+      recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget,
+      meterOverage,
+      sleep: async () => undefined,
+    });
+
+    await expect(client.generate({
+      userId: 'user-1',
+      projectId: 'knot',
+      prompt: 'Return JSON.',
+      maxTokens: 64,
+      responseFormat: 'json',
+      jsonSchema: {
+        type: 'object',
+        required: ['ok'],
+        properties: { ok: { type: 'boolean' } },
+      },
+    })).resolves.toMatchObject({
+      json: { ok: true },
+      byok: false,
+      usage: { tokensIn: 11, tokensOut: 17 },
+    });
+
+    expect(enforceBudget).toHaveBeenCalledWith({
+      userId: 'user-1',
+      byokActive: false,
+      requestedTokens: 64,
+    });
+    expect(meterOverage).toHaveBeenCalledWith({
+      userId: 'user-1',
+      byokActive: false,
+      actualOutputTokens: 17,
+      budget,
+    });
+  });
+
+  it('does not meter when the Anthropic request fails', async () => {
+    const meterOverage = vi.fn();
+    const client = new AuthorAnthropicClient({
+      resolveKey: async () => resolvedKey({ source: 'managed', byok: false, providerKeyId: undefined }),
+      createClient: () => ({ messages: { create: vi.fn().mockRejectedValue(new Error('timeout')) } }),
+      recordUsage: vi.fn().mockResolvedValue(undefined),
+      recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget: allowBudget(),
+      meterOverage,
+      sleep: async () => undefined,
+      maxRetries: 0,
+    });
+
+    await expect(client.generate({
+      userId: 'user-1',
+      projectId: 'knot',
+      prompt: 'fail',
+    })).rejects.toMatchObject<Partial<AuthorLlmError>>({
+      code: 'ANTHROPIC_REQUEST_FAILED',
+    });
+    expect(meterOverage).not.toHaveBeenCalled();
+  });
+
+  it('does not meter when JSON validation fails after the Anthropic response', async () => {
+    const meterOverage = vi.fn();
+    const client = new AuthorAnthropicClient({
+      resolveKey: async () => resolvedKey({ source: 'managed', byok: false, providerKeyId: undefined }),
+      createClient: () => ({ messages: { create: vi.fn().mockResolvedValue(message('{"ok":"yes"}')) } }),
+      recordUsage: vi.fn().mockResolvedValue(undefined),
+      recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget: allowBudget(),
+      meterOverage,
+      sleep: async () => undefined,
+    });
+
+    await expect(client.generate({
+      userId: 'user-1',
+      projectId: 'knot',
+      prompt: 'Return JSON.',
+      responseFormat: 'json',
+      jsonSchema: {
+        type: 'object',
+        required: ['ok'],
+        properties: { ok: { type: 'boolean' } },
+      },
+    })).rejects.toMatchObject<Partial<AuthorLlmError>>({
+      code: 'JSON_SCHEMA_VALIDATION_FAILED',
+    });
+    expect(meterOverage).not.toHaveBeenCalled();
   });
 });

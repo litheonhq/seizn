@@ -1,6 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { buildAnthropicSdkDefaultHeaders } from '@/lib/anthropic/prompt-caching';
-import { enforceAuthorTokenBudget } from '@/lib/author/billing/token-budget';
+import {
+  enforceAuthorTokenBudget,
+  meterAuthorTokenOverage,
+} from '@/lib/author/billing/token-budget';
 import {
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
@@ -42,6 +45,7 @@ interface AuthorAnthropicClientDeps {
   recordUsage?: typeof recordAuthorModelUsage;
   recordByokUsage?: typeof recordAuthorByokUsage;
   enforceBudget?: typeof enforceAuthorTokenBudget;
+  meterOverage?: typeof meterAuthorTokenOverage;
   sleep?: (ms: number) => Promise<void>;
   maxRetries?: number;
   backoffMs?: readonly number[];
@@ -53,6 +57,7 @@ export class AuthorAnthropicClient {
   private readonly recordUsage: typeof recordAuthorModelUsage;
   private readonly recordByokUsage: typeof recordAuthorByokUsage;
   private readonly enforceBudget: typeof enforceAuthorTokenBudget;
+  private readonly meterOverage: typeof meterAuthorTokenOverage;
   private readonly sleep: (ms: number) => Promise<void>;
   private readonly maxRetries: number;
   private readonly backoffMs: readonly number[];
@@ -63,6 +68,7 @@ export class AuthorAnthropicClient {
     this.recordUsage = deps.recordUsage ?? recordAuthorModelUsage;
     this.recordByokUsage = deps.recordByokUsage ?? recordAuthorByokUsage;
     this.enforceBudget = deps.enforceBudget ?? enforceAuthorTokenBudget;
+    this.meterOverage = deps.meterOverage ?? meterAuthorTokenOverage;
     this.sleep = deps.sleep ?? sleep;
     this.maxRetries = deps.maxRetries ?? 3;
     this.backoffMs = deps.backoffMs ?? DEFAULT_RATE_LIMIT_BACKOFF_MS;
@@ -74,7 +80,7 @@ export class AuthorAnthropicClient {
       userId: request.userId,
       projectId: request.projectId,
     });
-    await this.enforceBudget({
+    const budget = await this.enforceBudget({
       userId: request.userId,
       byokActive: resolved.byok,
       requestedTokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
@@ -102,6 +108,12 @@ export class AuthorAnthropicClient {
       requestId,
     });
     await this.recordByokUsage(resolved, 0);
+    await this.meterOverage({
+      userId: request.userId,
+      byokActive: resolved.byok,
+      actualOutputTokens: usage.tokensOut,
+      budget,
+    });
 
     return {
       provider: 'anthropic',

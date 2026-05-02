@@ -200,13 +200,19 @@ exclusions:
 - 업그레이드/다운그레이드 = portal subscription update 활용
 
 **Acceptance**:
-- [ ] 비-BYOK 사용자 LLM 호출 작동·tier cap 도달 시 metered overage·실 사용량 기준 invoice
-- [ ] BYOK on→off 전환 즉시 cap 복귀 (단위 테스트로 validation)
-- [ ] 호출 실패·JSON 검증 실패 시 meter event 0건
-- [ ] 활성 subscriber → /pricing → checkout 클릭 시 portal redirect
-- [ ] 1035 + Phase B 25 baseline + Phase B′ 신규 ≥ 12 케이스 통과
-- [ ] `npm run typecheck·test·lint·build` 모두 통과
-- [ ] `docs/author-memory-v3-llm-phaseB-prime-signoff.md` 작성·각 fix별 before/after diff·테스트 케이스 list
+- [x] 비-BYOK 사용자 LLM 호출 작동·tier cap 도달 시 metered overage·실 사용량 기준 invoice
+- [x] BYOK on→off 전환 즉시 cap 복귀 (단위 테스트로 validation)
+- [x] 호출 실패·JSON 검증 실패 시 meter event 0건
+- [x] 활성 subscriber → /pricing → checkout 클릭 시 portal redirect
+- [x] 1035 + Phase B 25 baseline + Phase B′ 신규 ≥ 12 케이스 통과
+- [x] `npm run typecheck·test·lint·build` 모두 통과
+- [x] `docs/author-memory-v3-llm-phaseB-prime-signoff.md` 작성·각 fix별 before/after diff·테스트 케이스 list
+
+**Phase B′ Codex execution note (2026-05-03)**:
+- Implemented managed Anthropic fallback, current-BYOK-only cap bypass, post-success actual-output overage metering, and duplicate subscription checkout portal redirect.
+- Added Phase B′ tests for resolver fallback, usage summary current/historic BYOK split, token budget pre/post metering, Anthropic failure/validation no-meter behavior, and checkout portal/allow states.
+- Verification passed: targeted Phase B′ tests (31), `npm run typecheck`, `npm run test -- --run` (128 files, 1085 passed, 16 skipped), `npm run lint`, and `npm run build`.
+- Signoff: `docs/author-memory-v3-llm-phaseB-prime-signoff.md`.
 
 **예상 시간**: 0.5~1 working day (file 명·line 명세 명확)
 
