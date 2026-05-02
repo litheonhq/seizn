@@ -254,6 +254,114 @@ exclusions:
 
 ---
 
+## Phase H — Settings UI 빌드 (P1·dogfood 진입 차단 해제)
+
+**사전 조건**: Phase B″-1 완료 (BYOK discount 3 상태 분기·`byok_discount_active`/`pending`/`error`). Settings UI가 그 3 상태를 표시하므로 의존.
+
+**Why**: Author Memory v3 dashboard에 Settings UI surface 부재 — yellow banner 'Settings could not be loaded' 표시·dogfood 진입 차단. 백엔드는 풀 빌드 완료된 상태:
+- `/api/account/byok` (GET·POST·DELETE) — Phase 2·B′
+- `/api/account/subscription` (GET) — Phase B
+- `/api/account/usage` (GET) — Phase B
+- `/api/account/billing-portal` (POST) — Phase B
+- BYOK discount 3 상태 분기 — Phase B″-1 (사전 의존)
+
+**디스패치 prompt**:
+
+```text
+작업 디렉토리: C:/Users/admin/Projects/seizn
+실행 대상: Settings UI 4 sections (BYOK·Subscription·Usage·Sync placeholder)·4 lang i18n·yellow banner 제거
+지침 분리 문서: docs/architecture/seizn-author-launch-codex-tasks.md §Phase H + docs/architecture/seizn-author-launch-runbook.md §P0-2 §11 §15 + docs/author-ui/author_ui_information_architecture.md §1 §2 §11 + docs/author-ui/author_ui_screen_specs.md + docs/author-ui/author_ui_data_contracts.json + docs/author-ui/author_ui_query_bindings.json
+```
+
+**범위**:
+
+### H-1. 신규 라우트
+
+- `src/app/[locale]/(dashboard)/dashboard/author/settings/page.tsx` — user-scoped Settings (project-scoped는 Phase D+ 확장)
+
+### H-2. 4 sections (분리 컴포넌트·재사용)
+
+#### H-2a. API Keys (BYOK)
+
+- Anthropic key 등록 form (provider hard-coded `anthropic`·v3 단일 LLM)
+- 현 상태 표시: `Active` / `Missing` / `Error`
+- Discount status: `Applied` / `Pending` / `Error` 3 상태 (B″-1 정합·미빌드 시 임시 `Active`/`None`)
+- 등록 키 마지막 4자리·삭제 버튼
+- Wire: `GET·POST·DELETE /api/account/byok`
+- 산출물: `src/components/settings/byok-section.tsx`
+
+#### H-2b. Subscription & Billing
+
+- 현 plan (`Indie $39` / `Pro $149` / `Studio $499` / `Enterprise $2,500`·v7)
+- Trial 잔여 일수·종료일
+- `Manage Billing` 버튼 → Stripe Customer Portal redirect
+- Wire: `GET /api/account/subscription`·`POST /api/account/billing-portal`
+- 산출물: `src/components/settings/subscription-section.tsx`
+
+#### H-2c. Usage
+
+- 이번 달 token 사용량·tier 한도·progress bar
+- BYOK 사용자는 `Unlimited (BYOK)` 표시
+- Wire: `GET /api/account/usage`
+- 산출물: `src/components/settings/usage-section.tsx`
+
+#### H-2d. Sync (placeholder)
+
+- 옵시디언 sync placeholder card·`Coming soon` (founding member 후 빌드)
+- 산출물: `src/components/settings/sync-placeholder.tsx`
+
+### H-3. Yellow banner 제거
+
+- 현 dashboard에 'Settings could not be loaded' placeholder 제거 (Settings 라우트가 작동하므로 banner 불필요)
+
+### H-4. 디자인 가이드
+
+- Tailwind + Pretendard·기존 dashboard 토큰 정합
+- 섹션별 card 양식·dark mode compat
+- 4 언어 i18n (en master·ja·zh·ko) — `messages/<locale>/settings.json` 또는 동등
+- WCAG AA·키보드 navigation·screen reader
+
+**제약 (메모리 룰 정합)**:
+
+- `feedback_seizn_knot_separation.md` — 모든 카피·placeholder에 KNOT 단어 0
+- `feedback_no_double_quotes.md` — 공개 카피 큰따옴표 X
+- `feedback_brand_separation_seizn.md` — Seizn visual cue Celovin·Notrivo·TheLabForge·Usan과 공유 X
+- `feedback_no_secrets_in_memory.md` — raw API key UI 표시 X (마지막 4자리만)
+
+**Acceptance criteria**:
+
+- [ ] Settings 페이지 4 sections 모두 200 OK·4 lang 정합
+- [ ] BYOK 등록 → 즉시 LLM 호출에 Anthropic 키 사용 (Phase B′ managed fallback과 정합)
+- [ ] BYOK 삭제 → managed key fallback·discount 제거
+- [ ] Discount 3 상태 표시 (B″-1 미빌드 시 임시 `Active`/`None`·B″-1 빌드 후 `Applied`/`Pending`/`Error` 정합)
+- [ ] Plan·trial·usage·portal 모두 작동
+- [ ] yellow banner 'Settings could not be loaded' 제거
+- [ ] `npm run typecheck·test·lint·build` 모두 통과
+- [ ] Settings unit test ≥ 8 cases (route 렌더·BYOK 등록·삭제·plan 표시·usage·portal redirect 등)
+- [ ] `docs/author-memory-v3-llm-settings-ui-signoff.md` 작성·각 섹션 스크린샷·테스트 결과·변경 파일 list
+
+**산출물**:
+
+- `src/app/[locale]/(dashboard)/dashboard/author/settings/page.tsx` 신규
+- `src/components/settings/byok-section.tsx`·`subscription-section.tsx`·`usage-section.tsx`·`sync-placeholder.tsx` 분리·재사용
+- 4 lang i18n string (`messages/<locale>/settings.json` 또는 동등)
+- yellow banner 제거 commit
+- signoff 문서
+
+**범위 외 (다른 트랙)**:
+
+- Stripe coupon 적용 mechanism (Phase B′ 완료)
+- Token cap enforcement (Phase B′ 완료)
+- BYOK discount 3 상태 분기 (Phase B″-1·사전 의존)
+- Project-scoped settings (Phase D+ 확장)
+- 옵시디언 sync 풀 (placeholder만 본 cycle)
+- 변호사 검토 (legal·별 cycle)
+- KNOT 5명 backlog generation (사용자 직접·Author UI 사용)
+
+**예상 시간**: 1~1.5 working day
+
+---
+
 ## Phase C — P0-3 tail: sample IP demo widget 통합
 
 **사전 조건**: Claude가 `docs/marketing/sample_ip/saebyeok_*.json` 7 산출물 작성 완료 + KNOT 단어 grep 검증 통과.
@@ -288,7 +396,7 @@ exclusions:
 
 ## Phase D — P0-4: seizn.com landing minimum viable build
 
-**사전 조건**: Phase A·B·C 완료 + `seizn_author_landing_brief.md` v3 lock (이미 ✓).
+**사전 조건**: Phase A·B·C·H 완료 + `seizn_author_landing_brief.md` v3 lock (이미 ✓).
 
 **디스패치 prompt**:
 
@@ -352,13 +460,25 @@ exclusions:
 
 | Phase | 차단 조건 | unblock 조건 |
 |---|---|---|
-| A | legal en master 미작성 | Claude P0-1 cycle 완료 |
+| A | legal en master 미작성 | Claude P0-1 cycle 완료 (✓ 2026-05-02 — `legal/{en,ko,ja,zh}/` 12 파일 작성·Codex Phase A는 라우트 + i18n 구현만) |
 | B | 없음 | 즉시 진입 가능 |
-| C | saebyeok 7 산출물 미작성 | Claude P0-3 cycle 완료 |
-| D | A·B·C 미완 | A·B·C 모두 ✓ |
+| B′ | Phase B 미완 | Phase B ✓ |
+| B″ | Phase B′ 미완 | Phase B′ ✓ |
+| H | Phase B″-1 미완 | B″-1 ✓ (BYOK discount 3 상태 분기) |
+| C | saebyeok 7 산출물 미작성 | Claude P0-3 cycle 완료 (✓ 2026-05-02 — `docs/marketing/sample_ip/saebyeok_*` 7 파일·Codex Phase C는 demo widget 통합만) |
+| D | A·B·C·H 미완 | A·B·C·H 모두 ✓ |
 | E | Mercury initial deposit 미충당 | P1-1 founding member 매출 누적 → Mercury 활성화 |
 
-**병행 가능**: Phase B는 A·C와 무관하므로 Claude가 A·C cycle 진행 중에도 Phase B 즉시 dispatch 가능.
+**현재 sequential 큐 순서 (2026-05-03 lock)**:
+
+1. Phase B″ (진행 중·예상 ~0.25~0.5 day)
+2. Phase H (Settings UI·B″-1 의존)
+3. Phase A (legal route + i18n·Claude legal 본문 ✓)
+4. Phase C (demo widget·Claude saebyeok ✓)
+5. Phase D (landing·A·B·C·H 후)
+6. Phase E (R2 migration·Mercury 충당 후)
+
+**병행 가능 (sequential 룰 예외)**: 없음. `feedback_codex_sequential_execution.md` 정합 — 한 Phase 완료 + verify 통과 후 다음.
 
 ## 3. Verify·Signoff 표준
 
