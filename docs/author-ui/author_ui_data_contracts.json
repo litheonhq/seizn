@@ -476,7 +476,29 @@
           "provider": "anthropic",
           "api_key": "string (provider-specific key format)"
         },
-        "response": {"valid": "boolean", "key_last_4": "string"}
+        "response": {
+          "valid": "boolean",
+          "key_last_4": "string",
+          "byok_discount": {
+            "applied": "boolean",
+            "removed": "boolean?",
+            "coupon": "string",
+            "reason": "missing_billing_customer|stripe_not_configured?"
+          }
+        }
+      },
+      "DELETE /api/account/byok": {
+        "response": {
+          "enabled": "false",
+          "provider": "null",
+          "status": "missing",
+          "byok_discount": {
+            "applied": "boolean",
+            "removed": "boolean?",
+            "coupon": "string",
+            "reason": "missing_billing_customer|stripe_not_configured?"
+          }
+        }
       },
       "GET /api/account/byok": {
         "response": {
@@ -490,7 +512,8 @@
       "GET /api/account/usage": {
         "response": {
           "tokens_used_month": "number",
-          "tokens_cap_month": "number",
+          "tokens_cap_month": "number|null",
+          "overage_tokens": "number",
           "overage_charges_usd": "number",
           "tier": "Author|Pro|Studio|Enterprise|Trial",
           "trial_days_remaining": "number?",
@@ -502,6 +525,49 @@
             "request_count": "number",
             "byok_active": "boolean"
           }
+        }
+      },
+      "GET /api/account/subscription": {
+        "response": {
+          "plan": "free|indie|pro|studio|enterprise",
+          "tier": "indie|pro|studio|enterprise|null",
+          "tier_label": "string",
+          "status": "active|trialing|past_due|cancelled|inactive|string",
+          "stripe_status": "string|null",
+          "stripe_customer_id_present": "boolean",
+          "stripe_subscription_id_present": "boolean",
+          "stripe_price_id": "string|null",
+          "current_period_start": "ISO8601|null",
+          "current_period_end": "ISO8601|null",
+          "renews_at": "ISO8601|null",
+          "ends_at": "ISO8601|null",
+          "trial_ends_at": "ISO8601|null",
+          "trial_days_remaining": "number|null",
+          "cancel_at_period_end": "boolean",
+          "payment_failed": "boolean",
+          "payment_failed_at": "ISO8601|null",
+          "byok_active": "boolean",
+          "byok_discount_active": "boolean",
+          "price_lock_version": "v7",
+          "usage": {
+            "tokens_used_month": "number",
+            "tokens_cap_month": "number|null",
+            "request_count": "number",
+            "byok_active": "boolean"
+          }
+        }
+      },
+      "POST /api/account/subscription": {
+        "request": {
+          "action": "portal|cancel|resume"
+        },
+        "response": {
+          "url": "string? portal action only",
+          "ok": "boolean? cancel/resume only",
+          "action": "portal|cancel|resume?",
+          "cancel_at_period_end": "boolean?",
+          "status": "string?",
+          "current_period_end": "ISO8601|null?"
         }
       }
     },

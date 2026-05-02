@@ -27,11 +27,23 @@ function message(text: string, overrides: Record<string, unknown> = {}) {
   };
 }
 
+function allowBudget() {
+  return vi.fn().mockResolvedValue({
+    allowed: true,
+    cap: null,
+    used: 0,
+    projected: 0,
+    overageTokens: 0,
+    metered: false,
+  });
+}
+
 describe('Author Anthropic client', () => {
   it('generates text with the BYOK key and records usage', async () => {
     const create = vi.fn().mockResolvedValue(message('hello author'));
     const recordUsage = vi.fn().mockResolvedValue(undefined);
     const recordByokUsage = vi.fn().mockResolvedValue(undefined);
+    const enforceBudget = allowBudget();
 
     const client = new AuthorAnthropicClient({
       resolveKey: async () => resolvedKey(),
@@ -41,6 +53,7 @@ describe('Author Anthropic client', () => {
       },
       recordUsage,
       recordByokUsage,
+      enforceBudget,
       sleep: async () => undefined,
     });
 
@@ -77,6 +90,11 @@ describe('Author Anthropic client', () => {
     expect(recordByokUsage).toHaveBeenCalledWith(expect.objectContaining({
       providerKeyId: 'provider-key-1',
     }), 0);
+    expect(enforceBudget).toHaveBeenCalledWith({
+      userId: 'user-1',
+      byokActive: true,
+      requestedTokens: 64,
+    });
   });
 
   it('parses and validates JSON response format', async () => {
@@ -86,6 +104,7 @@ describe('Author Anthropic client', () => {
       createClient: () => ({ messages: { create } }),
       recordUsage: vi.fn().mockResolvedValue(undefined),
       recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget: allowBudget(),
       sleep: async () => undefined,
     });
 
@@ -116,6 +135,7 @@ describe('Author Anthropic client', () => {
       createClient: () => ({ messages: { create: vi.fn().mockResolvedValue(message('{"ok":"yes"}')) } }),
       recordUsage: vi.fn().mockResolvedValue(undefined),
       recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget: allowBudget(),
       sleep: async () => undefined,
     });
 
@@ -147,6 +167,7 @@ describe('Author Anthropic client', () => {
       createClient: () => ({ messages: { create } }),
       recordUsage: vi.fn().mockResolvedValue(undefined),
       recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      enforceBudget: allowBudget(),
       sleep: async (ms) => { sleeps.push(ms); },
       maxRetries: 3,
     });

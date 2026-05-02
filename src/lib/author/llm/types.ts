@@ -46,7 +46,8 @@ export type AuthorLlmErrorCode =
   | 'ANTHROPIC_REQUEST_FAILED'
   | 'INVALID_JSON_RESPONSE'
   | 'JSON_SCHEMA_VALIDATION_FAILED'
-  | 'MODEL_USAGE_RECORD_FAILED';
+  | 'MODEL_USAGE_RECORD_FAILED'
+  | 'TOKEN_LIMIT_EXCEEDED';
 
 export class AuthorLlmError extends Error {
   constructor(

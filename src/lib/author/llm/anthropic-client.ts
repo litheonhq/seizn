@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { buildAnthropicSdkDefaultHeaders } from '@/lib/anthropic/prompt-caching';
+import { enforceAuthorTokenBudget } from '@/lib/author/billing/token-budget';
 import {
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
@@ -40,6 +41,7 @@ interface AuthorAnthropicClientDeps {
   createClient?: (apiKey: string) => AnthropicClientLike;
   recordUsage?: typeof recordAuthorModelUsage;
   recordByokUsage?: typeof recordAuthorByokUsage;
+  enforceBudget?: typeof enforceAuthorTokenBudget;
   sleep?: (ms: number) => Promise<void>;
   maxRetries?: number;
   backoffMs?: readonly number[];
@@ -50,6 +52,7 @@ export class AuthorAnthropicClient {
   private readonly createClient: (apiKey: string) => AnthropicClientLike;
   private readonly recordUsage: typeof recordAuthorModelUsage;
   private readonly recordByokUsage: typeof recordAuthorByokUsage;
+  private readonly enforceBudget: typeof enforceAuthorTokenBudget;
   private readonly sleep: (ms: number) => Promise<void>;
   private readonly maxRetries: number;
   private readonly backoffMs: readonly number[];
@@ -59,6 +62,7 @@ export class AuthorAnthropicClient {
     this.createClient = deps.createClient ?? createDefaultAnthropicClient;
     this.recordUsage = deps.recordUsage ?? recordAuthorModelUsage;
     this.recordByokUsage = deps.recordByokUsage ?? recordAuthorByokUsage;
+    this.enforceBudget = deps.enforceBudget ?? enforceAuthorTokenBudget;
     this.sleep = deps.sleep ?? sleep;
     this.maxRetries = deps.maxRetries ?? 3;
     this.backoffMs = deps.backoffMs ?? DEFAULT_RATE_LIMIT_BACKOFF_MS;
@@ -69,6 +73,11 @@ export class AuthorAnthropicClient {
     const resolved = await this.resolveKey({
       userId: request.userId,
       projectId: request.projectId,
+    });
+    await this.enforceBudget({
+      userId: request.userId,
+      byokActive: resolved.byok,
+      requestedTokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
     });
     const client = this.createClient(resolved.apiKey);
     const response = await this.createWithRetry(client, request, model);
