@@ -1,4 +1,4 @@
-import { Locale, defaultLocale, getLocaleFromCountry } from '@/i18n/config';
+import { Locale, defaultLocale, locales, getLocaleFromCountry } from '@/i18n/config';
 
 const LOCALE_STORAGE_KEY = 'seizn-locale';
 
@@ -8,7 +8,7 @@ const LOCALE_STORAGE_KEY = 'seizn-locale';
 export function getStoredLocale(): Locale | null {
   if (typeof window === 'undefined') return null;
   const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-  if (stored && ['en', 'ko', 'ja'].includes(stored)) {
+  if (stored && (locales as readonly string[]).includes(stored)) {
     return stored as Locale;
   }
   return null;
