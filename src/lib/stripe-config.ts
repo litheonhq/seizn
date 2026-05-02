@@ -12,26 +12,25 @@ export type PlanName = "free" | "starter" | "plus" | "pro" | "enterprise";
 // Update these IDs from your Stripe dashboard
 export const STRIPE_PLAN_PRICES: Record<string, PlanName> = {
   // Monthly plans
-  // Replace with actual Stripe price IDs (format: price_xxx)
-  price_starter_monthly: "starter",
-  price_plus_monthly: "plus",
-  price_pro_monthly: "pro",
-  price_enterprise_monthly: "enterprise",
+  "price_1TJdcl8XSoMws9Uf0hNjQdar": "starter",
+  "price_1TJdcm8XSoMws9UfAYJ7xu7G": "plus",
+  "price_1TJdcn8XSoMws9Uf2iQnKLYx": "pro",
+  "price_1TJdco8XSoMws9UfbdjjdUzo": "enterprise",
 
   // Yearly plans
-  price_starter_yearly: "starter",
-  price_plus_yearly: "plus",
-  price_pro_yearly: "pro",
-  price_enterprise_yearly: "enterprise",
+  "price_1TJdcl8XSoMws9UfcVXAWAcd": "starter",
+  "price_1TJdcm8XSoMws9Ufwe5uDBU1": "plus",
+  "price_1TJdcn8XSoMws9UfIOiIxnlX": "pro",
+  "price_1TJdco8XSoMws9UfTDmV7rh1": "enterprise",
 };
 
 // Reverse mapping: plan name to default price ID (monthly)
 export const PLAN_TO_STRIPE_PRICE: Record<PlanName, string | null> = {
   free: null,
-  starter: "price_starter_monthly",
-  plus: "price_plus_monthly",
-  pro: "price_pro_monthly",
-  enterprise: "price_enterprise_monthly",
+  starter: "price_1TJdcl8XSoMws9Uf0hNjQdar",
+  plus: "price_1TJdcm8XSoMws9UfAYJ7xu7G",
+  pro: "price_1TJdcn8XSoMws9Uf2iQnKLYx",
+  enterprise: "price_1TJdco8XSoMws9UfbdjjdUzo",
 };
 
 /**
