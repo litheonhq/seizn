@@ -22,6 +22,16 @@ const bundle = {
         },
       },
     ],
+    supporting_cast: [
+      {
+        id: 'knot.short1.char.tao',
+        name: 'Tao',
+        story_role: 'supporting_npc',
+        current_status: 'External informant',
+        review_status: 'candidate',
+        scope: ['short1'],
+      },
+    ],
   },
   worldRuleRegistry: {
     rules: [
@@ -74,6 +84,20 @@ const bundle = {
         scoring: 'exact_match',
         tags: ['forbidden_leak'],
       },
+      {
+        case_id: 'knot.eval.002',
+        category: 'relationship_coherence_score',
+        question: 'Should Sori and Nari preserve roommate trust?',
+        expected_behavior: 'Preserve roommate trust.',
+        scoring: 'rubric',
+      },
+      {
+        case_id: 'knot.eval.003',
+        category: 'character_simulation',
+        question: 'Simulate Sori under scene pressure.',
+        expected_behavior: 'Candidate scene simulation only.',
+        scoring: 'rubric',
+      },
     ],
   },
 };
@@ -84,6 +108,7 @@ describe('KNOT input adapter', () => {
 
     expect(records.map((record) => record.kind).sort()).toEqual([
       'event',
+      'person',
       'person',
       'relationship',
       'world_rule',
@@ -105,7 +130,7 @@ describe('KNOT input adapter', () => {
   it('maps KNOT eval seed cases to Author eval cases', () => {
     const cases = knotEvalSeedToAuthorEvalCases(bundle.evalSeed);
 
-    expect(cases).toEqual([
+    expect(cases).toEqual(expect.arrayContaining([
       expect.objectContaining({
         id: 'knot.eval.001',
         kind: 'invalidated_fact_exclusion',
@@ -116,7 +141,15 @@ describe('KNOT input adapter', () => {
         },
         tags: ['forbidden_leak', 'category:author_only_leak'],
       }),
-    ]);
+      expect.objectContaining({
+        id: 'knot.eval.002',
+        kind: 'relationship_continuity',
+      }),
+      expect.objectContaining({
+        id: 'knot.eval.003',
+        kind: 'scene_simulation',
+      }),
+    ]));
   });
 
   it('builds a replay-ready Author eval payload from KNOT input', () => {
@@ -131,8 +164,8 @@ describe('KNOT input adapter', () => {
       runId: 'knot-seed-run',
       mode: 'replay',
     });
-    expect(payload.records).toHaveLength(4);
-    expect(payload.cases).toHaveLength(1);
+    expect(payload.records).toHaveLength(5);
+    expect(payload.cases).toHaveLength(3);
     expect(payload.cases[0].request).toMatchObject({
       kind: 'llm',
       provider: 'author-memory-v3',

@@ -28,6 +28,10 @@ export interface KnotInputBundle {
   };
 }
 
+interface KnotEvalSeedOptions {
+  source?: string;
+}
+
 export function knotInputBundleToAuthorRecords(bundle: KnotInputBundle): AuthorMemoryRecord[] {
   return [
     ...(bundle.characterRegistry?.characters ?? []).map((item, index) =>
@@ -48,9 +52,12 @@ export function knotInputBundleToAuthorRecords(bundle: KnotInputBundle): AuthorM
   ].sort((a, b) => a.id.localeCompare(b.id));
 }
 
-export function knotEvalSeedToAuthorEvalCases(seed: { cases?: unknown[] }): AuthorEvalCase[] {
+export function knotEvalSeedToAuthorEvalCases(
+  seed: { cases?: unknown[] },
+  options: KnotEvalSeedOptions = {}
+): AuthorEvalCase[] {
   return (seed.cases ?? [])
-    .map((item, index) => knotEvalSeedCaseToAuthorEvalCase(item, index))
+    .map((item, index) => knotEvalSeedCaseToAuthorEvalCase(item, index, options))
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
@@ -61,8 +68,11 @@ export function knotInputBundleToAuthorEvalJobPayload(params: {
   mode?: AuthorEvalJobPayload['mode'];
   generatedAt?: string;
   capturedAt?: string;
+  evalSeedSource?: string;
 }): AuthorEvalJobPayload {
-  const testCases = knotEvalSeedToAuthorEvalCases(params.bundle.evalSeed ?? {});
+  const testCases = knotEvalSeedToAuthorEvalCases(params.bundle.evalSeed ?? {}, {
+    source: params.evalSeedSource,
+  });
 
   return {
     schemaVersion: AUTHOR_MEMORY_V3_SCHEMA_VERSION,
@@ -213,7 +223,11 @@ function knotTimelineEventToRecord(value: unknown, index: number): AuthorMemoryR
   };
 }
 
-function knotEvalSeedCaseToAuthorEvalCase(value: unknown, index: number): AuthorEvalCase {
+function knotEvalSeedCaseToAuthorEvalCase(
+  value: unknown,
+  index: number,
+  options: KnotEvalSeedOptions
+): AuthorEvalCase {
   const item = asRecord(value);
   const id = readString(item, 'case_id') ?? `knot.eval.${index}`;
   const category = readString(item, 'category');
@@ -234,7 +248,7 @@ function knotEvalSeedCaseToAuthorEvalCase(value: unknown, index: number): Author
       category ? `category:${category}` : undefined,
     ].filter((item): item is string => Boolean(item)),
     metadata: metadataFrom({
-      source: 'docs/knot-input/knot_author_eval_seed_v1.json',
+      source: options.source ?? 'docs/knot-input/knot_author_eval_seed_v1.json',
       scoring: readString(item, 'scoring') ?? null,
       expectedEvidence: canonicalize(item.expected_evidence ?? []),
       raw: canonicalize(item),
@@ -247,12 +261,17 @@ function toEvalCaseKind(category: string | undefined): AuthorEvalCaseKind {
     case 'author_only_leak':
     case 'forbidden_in_scope':
     case 'retired_setting_exclusion':
+    case 'tier_2_secret':
       return 'invalidated_fact_exclusion';
     case 'relationship_explanation':
+    case 'relationship_coherence_score':
       return 'relationship_continuity';
     case 'character_voice_consistency':
-    case 'character_simulation':
+    case 'persona_consistency_score':
+    case 'writing_checklist_compliance':
       return 'persona_consistency';
+    case 'character_simulation':
+      return 'scene_simulation';
     case 'timeline_consistency':
     case 'character_knowledge':
     case 'scope_isolation':

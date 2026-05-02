@@ -123,7 +123,7 @@ Implemented now:
 - replay miss error
 - simple Author eval scorer
 - Fall eval adapter
-- KNOT eval fixture v1
+- KNOT eval fixtures v1/v2/v3, including the v3 100-case regression seed
 - temporal canon explanation helpers
 - single-case Author eval runner
 - project-scoped in-memory store contract
@@ -135,10 +135,10 @@ Implemented now:
 - Supabase-backed store adapter for records, snapshots, side effects, and eval results
 - project-scoped persisted side-effect store with async replay lookup
 - Fall dataset import helper for Author eval seed cases
+- KNOT adapter support for deep-filled main/supporting character registries and expanded v2/v3 eval categories
 
 Next implementation:
 
-- KNOT eval fixture expansion
 - Author UI API/query binding
 
 ## Persistence Strategy
