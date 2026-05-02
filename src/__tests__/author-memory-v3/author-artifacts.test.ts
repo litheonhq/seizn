@@ -28,6 +28,7 @@ const knotMarkdownFiles = [
 
 const authorUiJsonFiles = [
   'author_ui_data_contracts.json',
+  'author_ui_query_bindings.json',
   'author_scene_simulation_output_contract.json',
 ];
 
@@ -37,10 +38,11 @@ const authorUiMarkdownFiles = [
   'author_ui_user_flows.md',
   'author_ui_component_inventory.md',
   'author_ui_empty_error_states.md',
+  'author_ui_mutation_invalidation_matrix.md',
 ];
 
 describe('Author Memory v3 artifact contracts', () => {
-  it('keeps all 17 Codex specification artifacts present', () => {
+  it('keeps all 19 Codex specification artifacts present', () => {
     const artifactPaths = [
       ...knotJsonFiles.map((file) => join('docs', 'knot-input', file)),
       ...knotMarkdownFiles.map((file) => join('docs', 'knot-input', file)),
@@ -48,7 +50,7 @@ describe('Author Memory v3 artifact contracts', () => {
       ...authorUiMarkdownFiles.map((file) => join('docs', 'author-ui', file)),
     ];
 
-    expect(artifactPaths).toHaveLength(17);
+    expect(artifactPaths).toHaveLength(19);
     for (const path of artifactPaths) {
       expect(readFileSync(join(root, path), 'utf8').length).toBeGreaterThan(0);
     }
@@ -122,6 +124,68 @@ describe('Author Memory v3 artifact contracts', () => {
     expect(payload.records).toHaveLength(records.length);
     expect(payload.cases).toHaveLength(cases.length);
   });
+
+  it('keeps Author UI query bindings aligned with data contracts', () => {
+    const contracts = readJson('docs/author-ui/author_ui_data_contracts.json');
+    const bindings = readJson('docs/author-ui/author_ui_query_bindings.json');
+    const contractEndpoints = extractContractEndpoints(contracts);
+    const screenBindingEndpoints = extractRequiredScreenBindingEndpoints(bindings);
+    const screens = asObject(bindings.screens);
+    const screenSpecs = Object.values(screens).map(asObject);
+    const queryCount = screenSpecs.reduce(
+      (count, screen) => count + readArray(screen, 'queries').length,
+      0
+    );
+    const mutationCount = screenSpecs.reduce(
+      (count, screen) => count + readArray(screen, 'mutations').length,
+      0
+    );
+
+    expect(Object.keys(screens).sort()).toEqual([
+      'account_byok',
+      'character_detail',
+      'characters_list',
+      'conflicts',
+      'dashboard',
+      'graph',
+      'inbox',
+      'review_queue',
+      'settings',
+      'simulate',
+      'sync',
+      'timeline',
+    ]);
+    expect(queryCount).toBe(14);
+    expect(mutationCount).toBe(13);
+    expect(contractEndpoints).toHaveLength(26);
+    expect(screenBindingEndpoints).toHaveLength(26);
+    expect(screenBindingEndpoints).toEqual(contractEndpoints);
+
+    const contractScreens = asObject(contracts.screens);
+    const inboxContracts = asObject(contractScreens.inbox);
+    const importUpload = asObject(inboxContracts['POST /api/projects/{id}/imports']);
+    const importUploadFormData = asObject(importUpload.request_form_data);
+    const sceneSimulationContracts = asObject(contractScreens.scene_simulation);
+    const runSimulation = asObject(sceneSimulationContracts['POST /api/projects/{id}/simulate']);
+    const runSimulationResponse = asObject(runSimulation.response);
+    const settingsContracts = asObject(contractScreens.settings);
+    const saveByok = asObject(settingsContracts['POST /api/account/byok']);
+    const saveByokRequest = asObject(saveByok.request);
+    const websocketEvents = asObject(asObject(contracts.websocket_events).events);
+    const formStateBindings = asObject(bindings.form_state_bindings);
+    const byokForm = asObject(formStateBindings.byok_form);
+
+    expect(importUploadFormData.source_role).toBe('canon|character|scene|reference|visual');
+    expect(runSimulationResponse).toMatchObject({
+      simulation_id: 'string',
+      status: 'queued|running',
+    });
+    expect(saveByokRequest.provider).toBe('anthropic|google|openai');
+    expect(websocketEvents['candidate.status_changed']).toBe(
+      '{candidate_id, old_status, new_status, type, target_entity_id?, ack_token?}'
+    );
+    expect(readArray(byokForm, 'fields')).toEqual(['provider', 'api_key']);
+  });
 });
 
 function readJson(path: string): Record<string, unknown> {
@@ -131,4 +195,81 @@ function readJson(path: string): Record<string, unknown> {
 function readArray(object: Record<string, unknown>, key: string): unknown[] {
   const value = object[key];
   return Array.isArray(value) ? value : [];
+}
+
+function asObject(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
+function extractContractEndpoints(rootObject: Record<string, unknown>): string[] {
+  const endpoints = new Set<string>();
+  collectEndpointKeys(asObject(rootObject.screens), endpoints);
+  return [...endpoints].sort();
+}
+
+function extractRequiredScreenBindingEndpoints(rootObject: Record<string, unknown>): string[] {
+  const endpoints = new Set<string>();
+  collectBindingEndpoints(asObject(rootObject.screens), endpoints);
+  return [...endpoints].sort();
+}
+
+function collectEndpointKeys(value: unknown, endpoints: Set<string>): void {
+  if (!value || typeof value !== 'object') {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      collectEndpointKeys(item, endpoints);
+    }
+    return;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    if (isEndpoint(key)) {
+      endpoints.add(key);
+    }
+    collectEndpointKeys(child, endpoints);
+  }
+}
+
+function collectBindingEndpoints(value: unknown, endpoints: Set<string>): void {
+  if (!value || typeof value !== 'object') {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      collectBindingEndpoints(item, endpoints);
+    }
+    return;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    if (key === 'endpoint' && typeof child === 'string') {
+      const endpoint = normalizeRequiredEndpoint(child);
+      if (endpoint) {
+        endpoints.add(endpoint);
+      }
+      continue;
+    }
+
+    collectBindingEndpoints(child, endpoints);
+  }
+}
+
+function normalizeRequiredEndpoint(value: string): string | null {
+  const trimmed = value.trim();
+  if (trimmed.startsWith('(')) {
+    return null;
+  }
+
+  const match = trimmed.match(/^(GET|POST|PATCH|DELETE)\s+\/api\/[^\s,)]+/);
+  return match?.[0] ?? null;
+}
+
+function isEndpoint(value: string): boolean {
+  return /^(GET|POST|PATCH|DELETE)\s+\/api\//.test(value);
 }
