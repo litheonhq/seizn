@@ -97,8 +97,9 @@ Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
 
 3. **HTTP Transport** (로컬):
    ```bash
-   SEIZN_API_KEY=szn_... npx seizn-mcp --http  # localhost:3100
-   curl localhost:3100/health
+   SEIZN_API_KEY=szn_... SEIZN_MCP_HTTP_TOKEN=<random-token> npx seizn-mcp --http  # 127.0.0.1:3100
+   curl http://127.0.0.1:3100/health
+   curl -H "Authorization: Bearer <random-token>" http://127.0.0.1:3100/mcp
    ```
 
 ## API v1 기능
