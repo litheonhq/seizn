@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
 import type { Assignment, Experiment, ExperimentArm } from './types';
@@ -68,13 +67,13 @@ export async function assignExperimentArm(params: {
 
   let chosen: ExperimentArm;
 
-  if (String((exp as any).allocation_strategy) === 'bandit') {
+  if (exp.allocation_strategy === 'bandit') {
     const { arm } = await pickBanditArm({ experimentId: params.experimentId });
     chosen = arm;
   } else {
     // A/B: stable hash allocation by unit
     const unitKey =
-      String((exp as any).unit) === 'api_key'
+      exp.unit === 'api_key'
         ? params.apiKeyId ?? params.userId
         : params.userId;
 

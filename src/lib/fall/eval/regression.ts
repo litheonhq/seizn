@@ -84,7 +84,7 @@ export async function detectRegression(params: RegressionCheckParams): Promise<R
     return { isRegression: false };
   }
 
-  const [latest, previous] = runs as any[];
+  const [latest, previous] = runs;
 
   const candidateValue = Number(latest?.summary_metrics?.[params.metricKey]);
   const baselineValue = Number(previous?.summary_metrics?.[params.metricKey]);

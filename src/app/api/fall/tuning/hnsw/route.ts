@@ -35,7 +35,11 @@ export async function GET(request: NextRequest) {
     // Parse query parameters
     const vectorCount = Number(url.searchParams.get('vector_count') ?? 0);
     const dim = Number(url.searchParams.get('dim') ?? 0);
-    const workload = (url.searchParams.get('workload') ?? 'balanced') as any;
+    const workloadParam = url.searchParams.get('workload') ?? 'balanced';
+    const workload =
+      workloadParam === 'latency' || workloadParam === 'recall' || workloadParam === 'balanced'
+        ? workloadParam
+        : 'balanced';
     const topK = Number(url.searchParams.get('top_k') ?? 20);
     const collectionId = url.searchParams.get('collection_id');
     const daysBack = Number(url.searchParams.get('days_back') ?? 7);
