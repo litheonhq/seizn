@@ -148,8 +148,103 @@ exclusions:
 - Implemented Stripe v7 pricing, checkout, subscription API, webhook sync, billing dashboard, BYOK coupon apply/remove, token-budget metering, query/data contracts, migration, and signoff doc.
 - Verification passed: `npm run typecheck`, `npm run test:run` (126 files, 1068 passed, 16 skipped), `npm run lint`, `npm run build`, Author UI JSON parse checks, and legacy price grep in touched pricing surfaces.
 - Live Stripe checkout/portal/webhook and live Supabase migration application were not executed in this local session; see `docs/author-memory-v3-llm-phaseB-signoff.md`.
+- **Codex self-audit (2026-05-03)** — 6 findings (P0×1·P1×3·P2×2)·dogfood 차단 X·Phase B′·B″ 분리 진행. 자세히 §Phase B′·§Phase B″.
 
 **예상 시간**: 2~3 working day
+
+---
+
+## Phase B′ — Phase B 결제 흐름 결함 fix (P0 + P1×3)
+
+**사전 조건**: Phase B 커밋 `840dcbae`·Codex self-audit 결과 정합.
+
+**Why**: Phase B 빌드는 typecheck·test·lint·build 통과했지만 정적 검증으로 잡히지 않는 4개 결함 잔존:
+- 관리형 토큰 플랜 (Indie/Pro/Studio) 결제 후 LLM 호출 X (BYOK 미등록 시 즉시 `BYOK_REQUIRED` throw·v7 pricing 의도 위배)
+- BYOK 한 번 쓴 달은 cap 우회 가능 (revenue leak)
+- overage meter event가 LLM 호출 전 emit·실패·검증 실패에도 과대 과금
+- 활성 subscriber → /pricing 재진입 시 중복 구독 생성
+
+**Block-paid**: launch 전 fix 강제. dogfood (BYOK·결제 X)는 영향 X.
+
+**디스패치 prompt**:
+
+```text
+작업 디렉토리: C:/Users/admin/Projects/seizn
+실행 대상: P0 + P1×3 fix (관리형 토큰·BYOK 우회 차단·meter post-call·중복 구독 차단)
+지침 분리 문서: docs/architecture/seizn-author-launch-codex-tasks.md §Phase B′ + Codex self-audit 메시지
+```
+
+**범위**:
+
+### B′-1 (P0). 관리형 토큰 플랜 작동 — `BYOK_REQUIRED` fallback 흐름
+- `src/lib/author/llm/byok-resolver.ts:104` `resolveAuthorAnthropicKey()`: BYOK 미등록 사용자 → 시스템 `ANTHROPIC_API_KEY`로 fallback (managed key 흐름)·`BYOK_REQUIRED` throw 제거
+- `src/lib/author/llm/anthropic-client.ts:73` 호출부: managed key 흐름 시 tier 토큰 한도 enforcement 진입·v7 pricing copy ('managed tokens' 판매) 의도 정합
+- `src/app/[locale]/pricing/pricing-client.tsx:21` 카피 정합 검증 — managed tokens·BYOK optional 두 흐름 모두 명시
+- BYOK 사용자만 토큰 무제한·v7 50% coupon 적용은 그대로 유지
+
+### B′-2 (P1). BYOK 우회 차단 — usage summary 의미 재정의
+- `src/lib/author/llm/usage-store.ts:97` monthly summary `byok_active`을 'currently active'로 재정의 (또는 신규 필드 분리: `byok_currently_active`·`byok_had_this_month`)
+- `src/lib/author/billing/token-budget.ts:71·100` cap bypass 조건은 'currently active'만 참조
+- BYOK on→off 전환 시 즉시 cap 복귀·과거 이력 무관
+
+### B′-3 (P1). overage meter post-call emission
+- `enforceBudget()` = pre-call check 전용·meter event emit 제거
+- Anthropic 응답 성공·JSON 검증 통과 후 `response.usage.output_tokens` (실 사용량) 기준 emit
+- 호출 실패·검증 실패·timeout = emit 0
+- `src/lib/author/llm/anthropic-client.ts:77`·`src/lib/author/billing/token-budget.ts:96·123` 흐름 재배치
+
+### B′-4 (P1). 중복 구독 차단
+- `src/app/api/billing/checkout/route.ts:67·138` 활성 `stripe_subscription_id` 체크 추가
+- `status` ∈ `{active, trialing, past_due}` → 새 checkout 차단·portal redirect (`/api/account/billing-portal`)
+- `{canceled, incomplete, incomplete_expired}` → 새 checkout 허용
+- 업그레이드/다운그레이드 = portal subscription update 활용
+
+**Acceptance**:
+- [ ] 비-BYOK 사용자 LLM 호출 작동·tier cap 도달 시 metered overage·실 사용량 기준 invoice
+- [ ] BYOK on→off 전환 즉시 cap 복귀 (단위 테스트로 validation)
+- [ ] 호출 실패·JSON 검증 실패 시 meter event 0건
+- [ ] 활성 subscriber → /pricing → checkout 클릭 시 portal redirect
+- [ ] 1035 + Phase B 25 baseline + Phase B′ 신규 ≥ 12 케이스 통과
+- [ ] `npm run typecheck·test·lint·build` 모두 통과
+- [ ] `docs/author-memory-v3-llm-phaseB-prime-signoff.md` 작성·각 fix별 before/after diff·테스트 케이스 list
+
+**예상 시간**: 0.5~1 working day (file 명·line 명세 명확)
+
+---
+
+## Phase B″ — Phase B polish (P2×2)
+
+**사전 조건**: Phase B′ 완료 + dogfood 검증 후.
+
+**Why**: P2×2 — 결제 흐름 결함은 아니지만 UX·gate 일관성 폴리시·founding member 결제 시점 전 정리 권장.
+
+**디스패치 prompt**:
+
+```text
+작업 디렉토리: C:/Users/admin/Projects/seizn
+실행 대상: P2 fix (BYOK discount 표시 정합·subscription route gate 정합)
+지침 분리 문서: docs/architecture/seizn-author-launch-codex-tasks.md §Phase B″
+```
+
+**범위**:
+
+### B″-1 (P2). BYOK discount 표시 정합
+- `src/lib/stripe/byok-discount.ts:38·82` Stripe coupon 실 적용 성공 시만 `byok_discount_active=true`
+- 실패·secret 누락·customer 누락 시 `pending` 또는 `error` 상태 분리
+- `src/app/(dashboard)/dashboard/billing/billing-client.tsx:237` UI에 3 상태 (`Applied`·`Pending`·`Error`) 표시
+
+### B″-2 (P2). subscription route gate 일관성
+- `src/app/api/account/subscription/route.ts:36·108` `withAuthorUiService()` wrap 적용
+- AUTHOR_UI_ENABLED·allowlist·CSRF·ID normalization 일관 적용
+- 인접 Author API (BYOK·usage 등)와 정합
+
+**Acceptance**:
+- [ ] BYOK discount 미적용 케이스 (secret 누락·customer 누락·coupon API 실패) UI에 'Pending'/'Error' 표시
+- [ ] AUTHOR_UI_ENABLED=false 또는 allowlist 미정합 user → subscription route도 401/403
+- [ ] `npm run typecheck·test·lint·build` 통과
+- [ ] `docs/author-memory-v3-llm-phaseB-prime-prime-signoff.md` 작성
+
+**예상 시간**: 0.25~0.5 working day
 
 ---
 

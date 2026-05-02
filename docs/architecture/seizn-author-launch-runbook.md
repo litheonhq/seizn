@@ -388,6 +388,10 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 - 2026-05-02 — **revenue-bootstrap path lock** (본 결정·자본 출자 우회·Stripe 매출 → Mercury deposit → Phase 6 R2 Litheon migration)
 - 2026-05-02 — Stripe 옛 NPC tier 4 product (Apr 8 Starter·Plus·Pro NPC·Enterprise NPC) deactivate·옛 prices 일괄 deactivate
 - 2026-05-02 — Stripe 가격 v6 ($999 Pro·$299 Studio) 역전 발견 → **v7 lock** ($149 Pro·$499 Studio·Opus 4.7 cost-aligned)·새 price 발급·옛 deactivate·env STRIPE_PRICE_LOCK_VERSION=v7
+- 2026-05-02 — Codex Phase B (Stripe billing) 풀 구현 commit `840dcbae`·typecheck·test·lint·build 통과 (1068 tests)
+- 2026-05-03 — Paddle 잔존 코드 dead 확인·삭제 commit `c0195898` (paddle-init·webhook handler·paddle-config 3 파일·721 lines deleted)
+- 2026-05-03 — Vercel preview env 7개 추가 (`AUTHOR_UI_ENABLED`·`AUTHOR_UI_ALLOWED_EMAILS`·`ANTHROPIC_API_KEY`·`R2_AUTHOR_*` 4)·branch alias `seizn-git-feat-npc-memory-pivot-litheon.vercel.app` ready·KNOT 5명 backlog generation dogfood 진입 가능
+- 2026-05-03 — **Codex self-audit (Phase B)** 6 findings (P0×1·P1×3·P2×2)·정적 검증으로 잡히지 않는 결제·메터·중복구독·관리형 토큰 미작동·BYOK 우회·discount 표시·gate 일관성 결함 발견·**Phase B′** (P0+P1×3·블로커) + **Phase B″** (P2×2·후순위) 분리 dispatch 결정·dogfood (BYOK 전용·결제 X) 차단 X·preview 진행 그대로
 
 ## 10. 새 세션 시작 권장 순서
 
