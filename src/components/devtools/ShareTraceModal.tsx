@@ -96,13 +96,13 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="share-trace-title" onKeyDown={(e) => { if (e.key === 'Escape') handleClose(); }}>
+      <div className="absolute inset-0 bg-black/50" onClick={handleClose} aria-hidden="true" />
       <div className="relative bg-gray-900 rounded-xl border border-szn-border shadow-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Share Trace</h2>
-          <button onClick={handleClose} className="text-szn-text-3 hover:text-white">
-            <XIcon className="w-5 h-5" />
+          <h2 id="share-trace-title" className="text-lg font-semibold text-white">Share Trace</h2>
+          <button onClick={handleClose} className="text-szn-text-3 hover:text-white" aria-label="Close">
+            <XIcon className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
