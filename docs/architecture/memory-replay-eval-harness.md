@@ -132,22 +132,23 @@ Implemented now:
 - API response envelope handler for route/worker reuse
 - KNOT input adapter for character, world rule, relationship, timeline, and eval seed registries
 - Next.js `POST /api/author/memory-v3/eval` route with API-key auth, rate-limit headers, request logging, and invalid-JSON handling
+- Supabase-backed store adapter for records, snapshots, side effects, and eval results
+- persisted side-effect store with async replay lookup
+- Fall dataset import helper for Author eval seed cases
 
 Next implementation:
 
-- Supabase-backed store adapter
-- persisted side-effect store
-- Fall dataset import helper
 - KNOT eval fixture expansion
+- Author UI API/query binding
 
 ## Persistence Strategy
 
-Start with pure in-memory contracts for tests and local runner behavior. The store contract already separates records, snapshots, side effects, and eval results so a Supabase adapter can be added without changing runner semantics. Persist later through existing Fall eval tables and a dedicated side-effect table or trace-store extension once the record shape is proven.
+The store contract separates records, snapshots, side effects, and eval results. Local tests can keep using `InMemoryAuthorMemoryV3Store`, while production can opt into `SupabaseAuthorMemoryV3Store` with `AUTHOR_MEMORY_V3_STORE=supabase` after `20260502001_author_memory_v3_store.sql` is applied. Fall eval cases reuse existing Fall dataset tables through JSON metadata instead of adding Fall-specific Author columns.
 
-Do not add database migrations until:
+Production activation remains gated until:
 
-- KNOT eval seed set has at least 10 cases
-- replay-only mode is stable
+- `20260502001_author_memory_v3_store.sql` has been applied to the target Supabase project
+- `AUTHOR_MEMORY_V3_STORE=supabase` is explicitly configured
 - Claude-prepared KNOT input artifacts define source IDs and source spans
 - Author UI data contracts are available
 

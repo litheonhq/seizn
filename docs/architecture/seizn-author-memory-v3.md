@@ -171,12 +171,15 @@ The current implementation surface is:
 - `src/lib/author/memory-v3/contract.ts`
 - `src/lib/author/memory-v3/api.ts`
 - `src/lib/author/memory-v3/knot-input.ts`
+- `src/lib/author/memory-v3/supabase-store.ts`
 - `src/app/api/author/memory-v3/eval/route.ts`
+- `supabase/migrations/20260502001_author_memory_v3_store.sql`
 
 The storage contract is deliberately adapter-shaped:
 
 - `AuthorMemoryV3Store` owns project-scoped records, snapshots, side effects, and eval results.
 - `InMemoryAuthorMemoryV3Store` is the local/test implementation and also implements the replay side-effect store.
+- `SupabaseAuthorMemoryV3Store` persists project-scoped records, snapshots, replay side effects, and eval results behind the same store contract.
 - `runAuthorEvalJob` executes eval cases sequentially, persists records, snapshots, side effects, and per-case eval results, then returns a run summary.
 - `parseAuthorEvalJobPayload` validates external JSON before it reaches the runner.
 - `runAuthorEvalJobPayload` supports deterministic fixture execution through per-case `liveOutput`.
@@ -184,9 +187,9 @@ The storage contract is deliberately adapter-shaped:
 - `knotInputBundleToAuthorRecords` maps Claude-prepared KNOT registries into Author memory records without committing to the raw artifact files.
 - `knotInputBundleToAuthorEvalJobPayload` builds a replay-ready Author eval payload from the KNOT seed set.
 - `POST /api/author/memory-v3/eval` exposes the eval job contract behind existing API-key auth and stable error envelopes.
+- `importAuthorEvalCasesToFallDataset` imports Author eval cases into existing Fall eval datasets without adding Fall columns.
 
 Next implementation work should add:
 
-- Supabase persistence adapter after JSON contracts stabilize
 - KNOT eval fixture expansion from Claude's completed seed set
 - UI data contract binding after Claude provides Author UI requirements

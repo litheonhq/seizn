@@ -13,8 +13,10 @@ export class AuthorReplayCacheMissError extends Error {
 }
 
 export interface AuthorSideEffectStore {
-  get<TOutput extends JsonValue>(key: string): AuthorSideEffectRecord<TOutput> | undefined;
-  put<TOutput extends JsonValue>(record: AuthorSideEffectRecord<TOutput>): void;
+  get<TOutput extends JsonValue>(
+    key: string
+  ): AuthorSideEffectRecord<TOutput> | undefined | Promise<AuthorSideEffectRecord<TOutput> | undefined>;
+  put<TOutput extends JsonValue>(record: AuthorSideEffectRecord<TOutput>): void | Promise<void>;
 }
 
 export class InMemoryAuthorSideEffectStore implements AuthorSideEffectStore {
@@ -55,7 +57,7 @@ export async function runAuthorSideEffect<TOutput extends JsonValue>(
   }
 ): Promise<AuthorSideEffectRecord<TOutput>> {
   const key = createAuthorSideEffectKey(params.request);
-  const existing = params.store.get<TOutput>(key);
+  const existing = await params.store.get<TOutput>(key);
 
   if (existing) {
     return existing;
@@ -74,7 +76,7 @@ export async function runAuthorSideEffect<TOutput extends JsonValue>(
   };
 
   if (params.mode === 'record') {
-    params.store.put(record);
+    await params.store.put(record);
   }
 
   return record;

@@ -5,7 +5,10 @@ import {
   isAuthError,
   logRequest,
 } from '@/lib/api-auth';
-import { handleAuthorEvalJobRequest } from '@/lib/author/memory-v3';
+import {
+  createAuthorMemoryV3StoreForUser,
+  handleAuthorEvalJobRequest,
+} from '@/lib/author/memory-v3';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -44,7 +47,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return withAuthHeaders(response, authResult.rateLimitHeaders);
   }
 
-  const result = await handleAuthorEvalJobRequest(body);
+  const result = await handleAuthorEvalJobRequest(body, {
+    store: createAuthorMemoryV3StoreForUser({ userId: authResult.userId }),
+  });
   const response = NextResponse.json(result.body, { status: result.status });
 
   await logRequest({

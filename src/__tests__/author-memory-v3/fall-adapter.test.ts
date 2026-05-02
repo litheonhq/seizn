@@ -2,12 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import {
   AUTHOR_MEMORY_V3_FALL_METADATA_KEY,
+  authorEvalCasesToFallInputs,
   authorEvalCaseToFallInput,
   authorEvalResultToFallDebug,
   authorEvalResultToFallMetrics,
+  importAuthorEvalCasesToFallDataset,
   type AuthorEvalCase,
   type AuthorEvalResult,
 } from '@/lib/author/memory-v3';
+import type { createDataset } from '@/lib/fall/eval/dataset';
 
 const testCase: AuthorEvalCase = {
   schemaVersion: 'seizn.knot_author_eval.v1',
@@ -42,6 +45,7 @@ describe('Author Memory v3 Fall eval adapter', () => {
     >;
 
     expect(fallInput.query).toBe(testCase.prompt);
+    expect(fallInput.expected_answer).toBe('Yui distrusts Sori');
     expect(metadata.caseId).toBe('case-1');
     expect(metadata.caseKind).toBe('relationship_continuity');
     expect(metadata.tags).toEqual(['knot', 'relationship']);
@@ -63,6 +67,49 @@ describe('Author Memory v3 Fall eval adapter', () => {
         failures: ['included forbidden text: Yui knows the hidden archive'],
         metadata: {},
       },
+    });
+  });
+
+  it('creates Fall dataset input from Author cases', () => {
+    const inputs = authorEvalCasesToFallInputs([testCase]);
+
+    expect(inputs).toHaveLength(1);
+    expect(inputs[0].metadata?.[AUTHOR_MEMORY_V3_FALL_METADATA_KEY]).toMatchObject({
+      caseId: 'case-1',
+      caseKind: 'relationship_continuity',
+    });
+  });
+
+  it('imports Author cases into a Fall dataset with Author metadata', async () => {
+    const createDatasetFn = async (params: Parameters<typeof createDataset>[0]) => ({
+      dataset: {
+        id: 'dataset-1',
+        userId: params.userId,
+        name: params.input.name,
+        description: params.input.description,
+        source: params.input.source,
+        caseCount: params.input.cases?.length,
+        metadata: params.input.metadata,
+        createdAt: '2026-05-02T00:00:00.000Z',
+        updatedAt: '2026-05-02T00:00:00.000Z',
+      },
+      casesCreated: params.input.cases?.length ?? 0,
+    });
+
+    const output = await importAuthorEvalCasesToFallDataset({
+      userId: 'user-1',
+      projectId: 'knot',
+      name: 'KNOT Author Eval Seed',
+      cases: [testCase],
+      createDatasetFn,
+    });
+
+    expect(output.casesCreated).toBe(1);
+    expect(output.dataset.metadata?.[AUTHOR_MEMORY_V3_FALL_METADATA_KEY]).toMatchObject({
+      schemaVersion: 'seizn.author_memory_v3.v1',
+      projectId: 'knot',
+      source: 'author_memory_v3',
+      caseCount: 1,
     });
   });
 });

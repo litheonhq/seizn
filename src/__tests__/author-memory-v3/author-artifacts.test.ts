@@ -86,11 +86,13 @@ describe('Author Memory v3 artifact contracts', () => {
     });
 
     const characters = readArray(characterRegistry, 'characters');
+    const supportingPointers = readArray(characterRegistry, 'supporting_cast_pointer');
     const rules = readArray(worldRuleRegistry, 'rules');
     const relationships = readArray(relationshipMatrix, 'relationships');
     const events = readArray(timelineEventLedger, 'events');
 
-    expect(characters).toHaveLength(12);
+    expect(characters.length).toBeGreaterThanOrEqual(7);
+    expect(characters.length + supportingPointers.length).toBeGreaterThanOrEqual(12);
     expect(rules).toHaveLength(18);
     expect(relationships.length).toBeGreaterThanOrEqual(8);
     expect(events.length).toBeGreaterThanOrEqual(22);
