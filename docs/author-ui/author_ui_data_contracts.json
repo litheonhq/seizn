@@ -483,7 +483,9 @@
             "applied": "boolean",
             "removed": "boolean?",
             "coupon": "string",
-            "reason": "missing_billing_customer|stripe_not_configured?"
+            "status": "inactive|pending|applied|error",
+            "reason": "missing_billing_customer|pending_subscription|stripe_not_configured|stripe_sync_failed?",
+            "error": "string?"
           }
         }
       },
@@ -496,7 +498,9 @@
             "applied": "boolean",
             "removed": "boolean?",
             "coupon": "string",
-            "reason": "missing_billing_customer|stripe_not_configured?"
+            "status": "inactive|pending|applied|error",
+            "reason": "missing_billing_customer|pending_subscription|stripe_not_configured|stripe_sync_failed?",
+            "error": "string?"
           }
         }
       },
@@ -548,6 +552,8 @@
           "payment_failed_at": "ISO8601|null",
           "byok_active": "boolean",
           "byok_discount_active": "boolean",
+          "byok_discount_status": "inactive|pending|applied|error",
+          "byok_discount_error": "string|null",
           "price_lock_version": "v7",
           "usage": {
             "tokens_used_month": "number",
