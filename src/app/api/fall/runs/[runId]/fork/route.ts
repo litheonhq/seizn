@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireApiScope } from '@/lib/auth/api-scope';
+import { applySafeStatePatch, isPatchRecord, UnsafePatchError } from '@/lib/fall/patch-safety';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
@@ -85,10 +86,17 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Apply patches to create initial state for forked run
     let forkedState = JSON.parse(JSON.stringify(checkpoint.state_json));
-    const appliedPatches = patches || {};
+    let appliedPatches: Record<string, unknown> = {};
 
-    if (patches) {
-      forkedState = applyPatch(forkedState, patches);
+    if (patches !== undefined && patches !== null) {
+      if (!isPatchRecord(patches)) {
+        return NextResponse.json(
+          { error: 'Bad Request', message: 'patches must be an object' },
+          { status: 400 }
+        );
+      }
+      appliedPatches = patches;
+      forkedState = applySafeStatePatch(forkedState, patches);
     }
 
     // Determine what was modified
@@ -166,30 +174,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       new_run: newRun,
     }, { status: 201 });
   } catch (error) {
+    if (error instanceof UnsafePatchError) {
+      return NextResponse.json(
+        { error: 'Bad Request', message: error.message },
+        { status: 400 }
+      );
+    }
     console.error('[FallFork] POST error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
-
-function applyPatch(
-  state: Record<string, unknown>,
-  patch: Record<string, unknown>
-): Record<string, unknown> {
-  const result = JSON.parse(JSON.stringify(state));
-
-  for (const [key, value] of Object.entries(patch)) {
-    if (key === 'messages' && Array.isArray(value)) {
-      result.messages = value;
-    } else if (key === 'context' && typeof value === 'object' && value !== null) {
-      result.context = { ...result.context, ...value };
-    } else if (key === 'memory' && typeof value === 'object' && value !== null) {
-      result.memory = { ...result.memory, ...value };
-    } else if (key === 'toolCalls' && Array.isArray(value)) {
-      result.toolCalls = value;
-    } else {
-      result[key] = value;
-    }
-  }
-
-  return result;
 }

@@ -5,6 +5,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 import type {
   Alert,
   AlertRule,
@@ -451,7 +452,12 @@ async function sendToChannel(
     case 'slack':
       // Slack webhook
       if (channel.config.webhookUrl) {
-        await fetch(channel.config.webhookUrl as string, {
+        const webhookUrl = await normalizeOutboundWebhookUrl(channel.config.webhookUrl, {
+          label: 'Control Tower Slack webhook',
+        });
+        if (!webhookUrl) break;
+
+        await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -464,7 +470,12 @@ async function sendToChannel(
     case 'webhook':
       // Generic webhook
       if (channel.config.url) {
-        await fetch(channel.config.url as string, {
+        const webhookUrl = await normalizeOutboundWebhookUrl(channel.config.url, {
+          label: 'Control Tower generic webhook',
+        });
+        if (!webhookUrl) break;
+
+        await fetch(webhookUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
