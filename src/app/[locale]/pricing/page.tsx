@@ -8,12 +8,12 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const dict = await getDictionary(locale);
+  await params;
   
   return {
-    title: `${dict.pricingPage.title} | Seizn`,
-    description: dict.pricingPage.subtitle,
+    title: 'Author memory plans for launch teams | Seizn',
+    description:
+      'Choose a managed token cap, connect Stripe Checkout, and reduce managed usage costs by adding your own Anthropic key.',
   };
 }
 

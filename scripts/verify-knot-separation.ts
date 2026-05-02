@@ -5,9 +5,18 @@ const path = require("path");
 
 const DEFAULT_PATHS = [
   "docs/marketing",
+  "src/app/[locale]/page.tsx",
   "src/app/[locale]/demo",
+  "src/app/demo",
+  "src/app/legal",
+  "src/app/pricing",
+  "src/components/landing",
   "public",
+  ".next/server/app/[locale]/page.js",
   ".next/server/app/[locale]/demo",
+  ".next/server/app/demo",
+  ".next/server/app/legal",
+  ".next/server/app/pricing",
 ];
 
 const DEFAULT_KEYWORDS = [
