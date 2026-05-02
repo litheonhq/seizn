@@ -392,6 +392,15 @@ KNOT SSOT (canon-verify 룰·Seizn 외부 노출 X):
 - 2026-05-03 — Paddle 잔존 코드 dead 확인·삭제 commit `c0195898` (paddle-init·webhook handler·paddle-config 3 파일·721 lines deleted)
 - 2026-05-03 — Vercel preview env 7개 추가 (`AUTHOR_UI_ENABLED`·`AUTHOR_UI_ALLOWED_EMAILS`·`ANTHROPIC_API_KEY`·`R2_AUTHOR_*` 4)·branch alias `seizn-git-feat-npc-memory-pivot-litheon.vercel.app` ready·KNOT 5명 backlog generation dogfood 진입 가능
 - 2026-05-03 — **Codex self-audit (Phase B)** 6 findings (P0×1·P1×3·P2×2)·정적 검증으로 잡히지 않는 결제·메터·중복구독·관리형 토큰 미작동·BYOK 우회·discount 표시·gate 일관성 결함 발견·**Phase B′** (P0+P1×3·블로커) + **Phase B″** (P2×2·후순위) 분리 dispatch 결정·dogfood (BYOK 전용·결제 X) 차단 X·preview 진행 그대로
+- 2026-05-03 — Phase B′ Codex 완료 commit `1b673cf7` — managed token fallback·BYOK bypass guard·post-call meter emission·duplicate sub block. 1085 tests pass
+- 2026-05-03 — Phase B″ Codex 완료 commit `0ae112c5` — BYOK discount 4 상태 (`inactive`/`pending`/`applied`/`error`) + subscription route `withAuthorUiService` wrap + migration `20260503001`. 1092 tests pass
+- 2026-05-03 — **H+A+C+D chain Codex 풀 완료** — Phase H Settings UI (`0aa0a3ff`) + Phase A legal routes (`af8c6999`) + Phase C demo widget (`56cf2993`) + Phase D Author flagship landing (`f1a8c483`) + checkout/auth/trial hardening (`c1ddb149`). 1145 tests pass·Lighthouse 100·KNOT separation grep PASS
+- 2026-05-03 — **Phase D Claude 리뷰 + Codex self-audit 합산 18+ 결함**: Codex 4 P1 + 5 P2 + Claude 1 P0 + 4 P1 + 8 P2. 13 fixable items 분리 (P2 polish 8 items + 사용자 권한 2 items은 별 cycle). 단일 핸드오프 doc 작성 commit `03854c8c` (`docs/architecture/seizn-author-audit-fix-handoff.md`)
+- 2026-05-03 — **Audit fix chain 풀 완료** — Phase 0 doc cleanup (`954e33d9`) + Phase D′ landing fixes (`318c59cf`) + Phase B‴ billing/budget/BYOK (`c8719a5e`) + Phase A′ legal i18n + beta banner (`6ad192fa`). 1171 tests pass (+26)·Lighthouse 100 유지·KNOT separation 0 matches·Vercel preview Ready
+- 2026-05-03 — **Claude Designer 트랙 시작** — P2 polish 8 items 디자인 핸드오프 brief 작성 commit `e256d357·b8d847ed` (`docs/architecture/seizn-author-landing-design-claude-designer-brief.md`·`docs/marketing/`에 두면 KNOT grep trip → `docs/architecture/`로 이동)
+- 2026-05-03 — **Designer Round 1 도착·Hero B + Mark A + 토큰 lock** — monochrome slate + 3 signals (canon-green·pending-yellow·conflict-red) + Pretendard + Source Serif 4 + JetBrains Mono. Round 1 cover: N·O·P·S·U
+- 2026-05-03 — **Designer Round 2 도착·풀 11 섹션 landing + 360/768 viewport + Tweaks panel + favicon scale check** — Round 2 cover 8/8 P2 items (N·O·P·Q·R·S·T·U). Pricing: Indie/Pro full cards (Pro highlighted dark + 'most picked' badge) + Studio/Enterprise slim rows. Footer: '© 2026 Seizn by Litheon LLC · Wyoming' discreet mono
+- 2026-05-03 — **Designer Round 2.1 진행 중 (사용자 dispatch)** — KNOT leak 2곳 reword (`KNOT-isolated` → `Workspace-isolated`·FAQ #4 'KNOT separation is enforced by CI grep' 문장 제거) + Pricing cadence 일관성 (Studio/Enterprise '$X / month' 통일) + FAQ #5 trial-archive 60-day 정책 confirm
 
 ## 10. 새 세션 시작 권장 순서
 
