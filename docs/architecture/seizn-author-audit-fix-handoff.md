@@ -81,9 +81,13 @@ exclusions:
 - v7 SKU 4 tier 정합·metered overage는 별 meter (5번째 tier X)
 
 **Acceptance**:
-- [ ] `grep -n "5 tier\|10 flows" docs/architecture/seizn-author-launch-codex-tasks.md` = 0 매치
-- [ ] `4 tier × 2 cadence = 8 flows` 양식 정합·Phase B·D·H acceptance 모두 8 flows로 통일
-- [ ] commit + push (별 signoff doc X·본 §6에 완료 표시)
+- [x] `grep -n "5 tier\|10 flows" docs/architecture/seizn-author-launch-codex-tasks.md` = 0 매치
+- [x] `4 tier × 2 cadence = 8 flows` 양식 정합·Phase B·D·H acceptance 모두 8 flows로 통일
+- [x] commit + push (별 signoff doc X·본 §6에 완료 표시)
+
+**Phase 0 completion note (2026-05-03)**:
+- Updated `docs/architecture/seizn-author-launch-codex-tasks.md` Phase B and Phase D acceptance from 5-tier/10-flow wording to the v7 4-tier/8-flow model.
+- Verification passed: residual `5 tier|10 flows|10 흐름` grep returned zero matches, `npm run typecheck`, `npm run test:run` (137 files, 1145 passed, 16 skipped), `npm run lint`, and `npm run build`.
 
 **예상 시간**: ~5분
 
