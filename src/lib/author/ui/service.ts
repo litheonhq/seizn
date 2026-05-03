@@ -4,7 +4,7 @@ import worldRuleRegistry from '../../../../docs/knot-input/world_rule_registry.j
 import relationshipMatrix from '../../../../docs/knot-input/relationship_matrix.json';
 import timelineEventLedger from '../../../../docs/knot-input/timeline_event_ledger.json';
 import { randomUUID } from 'node:crypto';
-import { canonicalJson } from '@/lib/author/memory-v3/canonical';
+import { canonicalJson, canonicalize, type JsonValue } from '@/lib/author/memory-v3/canonical';
 import { createAuthorMemorySnapshot } from '@/lib/author/memory-v3/snapshot';
 import {
   createAuthorAuditLogStoreForUser,
@@ -37,6 +37,22 @@ import {
   type AuthorBacklogCategory,
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
+import { InMemoryAuthorUiStore } from './in-memory-store';
+import { seedAuthorUiProject, type AuthorUiSeedRows } from './seed-project';
+import { createAuthorUiStoreForUser, type AuthorUiStore } from './store';
+import type {
+  AuthorCandidateFilter,
+  AuthorCandidateKind,
+  AuthorCandidateRow,
+  AuthorCandidateStatus,
+  AuthorCharacterRow,
+  AuthorConflictFilter,
+  AuthorConflictSeverity,
+  AuthorConflictStatus,
+  AuthorConflictRow,
+  AuthorImportRow,
+  AuthorSimulationRow,
+} from './store-types';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -241,6 +257,7 @@ interface AuthorUiState {
   settingsByProject: Map<string, ReturnType<typeof buildDefaultSettings>>;
   auditLog: AuthorAuditLogStore;
   auditLogWrites: Set<Promise<void>>;
+  uiStore?: AuthorUiStore;
   byok: {
     enabled: boolean;
     provider: 'anthropic' | 'google' | 'openai' | null;
@@ -273,14 +290,20 @@ export function getAuthorUiService(userId: string): AuthorUiService {
   }
   state.lastAccessedAt = Date.now();
 
-  return new AuthorUiService(state);
+  const store = process.env.AUTHOR_UI_STORE === 'supabase'
+    ? createAuthorUiStoreForUser({ userId })
+    : state.uiStore ?? createInMemoryStoreFromState(state);
+  state.uiStore = store;
+  return new AuthorUiService(state, store, userId);
 }
 
 export function resetAuthorUiServiceForTests(userId = 'test-user'): AuthorUiService {
   const state = createSeedState(userId);
   state.lastAccessedAt = Date.now();
+  const store = createInMemoryStoreFromState(state);
+  state.uiStore = store;
   statesByUser.set(userId, state);
-  return new AuthorUiService(state);
+  return new AuthorUiService(state, store, userId);
 }
 
 function pruneAuthorUiStates(): void {
@@ -306,8 +329,16 @@ function newAuthorUiId(prefix: string): string {
   return `${prefix}-${randomUUID()}`;
 }
 
+function newPersistedAuthorUiId(prefix: string): string {
+  return process.env.AUTHOR_UI_STORE === 'supabase' ? randomUUID() : newAuthorUiId(prefix);
+}
+
 export class AuthorUiService {
-  constructor(private readonly state: AuthorUiState) {}
+  constructor(
+    private readonly state: AuthorUiState,
+    private readonly store: AuthorUiStore,
+    private readonly userId: string,
+  ) {}
 
   listProjects(): { projects: AuthorUiProject[] } {
     this.refreshProjectCounts();
@@ -348,9 +379,10 @@ export class AuthorUiService {
     return { project_id: id };
   }
 
-  listImports(projectId: string) {
+  async listImports(projectId: string) {
     this.ensureProject(projectId);
-    const imports = this.state.importsByProject.get(projectId) ?? [];
+    await this.seedProjectIfNeeded(projectId);
+    const imports = await this.store.listImports(this.userId, projectId);
     return {
       imports,
       summary: {
@@ -380,8 +412,7 @@ export class AuthorUiService {
       throw new AuthorUiValidationError('file is required');
     }
 
-    const imports = this.state.importsByProject.get(projectId) ?? [];
-    const id = newAuthorUiId('import');
+    const id = newPersistedAuthorUiId('import');
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
     const fileSize = declaredFileSize;
@@ -404,8 +435,7 @@ export class AuthorUiService {
       a_or_d_mode: input.aOrDMode === 'raw_keep' ? 'raw_keep' : 'extract',
     };
 
-    imports.unshift(item);
-    this.state.importsByProject.set(projectId, imports);
+    await this.store.insertImport(authorImportToRow(item, this.userId, projectId));
     this.touchProject(projectId);
     const uploadAudit = this.logAudit(projectId, 'import.upload', {
       import_id: id,
@@ -418,6 +448,7 @@ export class AuthorUiService {
 
     if (fileSize > AUTHOR_IMPORT_MAX_BYTES) {
       markImportFailed(item, 'file_too_large');
+      await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
       this.touchProject(projectId);
       this.logAudit(projectId, 'import.failed', {
         import_id: id,
@@ -444,6 +475,7 @@ export class AuthorUiService {
       });
       item.storage_key = storageRef.key;
       item.parse_progress = 45;
+      await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
 
       const parsed = await parseAuthorDocument({
         buffer: fileBytes,
@@ -452,6 +484,7 @@ export class AuthorUiService {
       });
       item.file_type = parsed.fileType;
       item.parse_progress = 80;
+      await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
 
       await saveAuthorImportText({
         importId: id,
@@ -472,6 +505,7 @@ export class AuthorUiService {
       item.error_message = null;
       item.parsed_text_preview = parsed.text.slice(0, 500);
       item.parser_version = parsed.parserVersion;
+      await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
       this.logAudit(projectId, 'import.parsed', {
         import_id: id,
         parser_version: parsed.parserVersion,
@@ -490,7 +524,8 @@ export class AuthorUiService {
         try {
           item.extract_status = 'extracting';
           item.extract_progress = 35;
-          const existingCandidates = (this.state.candidatesByProject.get(projectId) ?? [])
+          await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
+          const existingCandidates = (await this.store.listCandidates(this.userId, projectId, {}))
             .map((candidate) => ({
               id: candidate.id,
               content: candidate.content,
@@ -509,14 +544,13 @@ export class AuthorUiService {
           const extractedCandidates = extraction.candidates.map((candidate, index) =>
             authorUiCandidateFromExtraction(candidate, id, index)
           );
-          const projectCandidates = this.state.candidatesByProject.get(projectId) ?? [];
-          this.state.candidatesByProject.set(projectId, [
-            ...extractedCandidates,
-            ...projectCandidates,
-          ]);
+          await this.store.insertCandidates(extractedCandidates.map((candidate) =>
+            authorCandidateToRow(candidate, this.userId, projectId)
+          ));
           item.extract_status = 'extracted';
           item.extract_progress = 100;
           item.candidate_count = extractedCandidates.length;
+          await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
           this.logAudit(projectId, 'candidate.added', {
             import_id: id,
             candidate_ids: extractedCandidates.map((candidate) => candidate.id),
@@ -537,6 +571,7 @@ export class AuthorUiService {
           item.extract_progress = 0;
           item.candidate_count = 0;
           item.error_message = formatImportError(extractError);
+          await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
           this.logAudit(projectId, 'import.failed', {
             import_id: id,
             stage: 'extract',
@@ -546,6 +581,7 @@ export class AuthorUiService {
       }
     } catch (error) {
       markImportFailed(item, formatImportError(error));
+      await this.store.updateImport(this.userId, projectId, id, authorImportPatchToRowPatch(item));
       this.logAudit(projectId, 'import.failed', {
         import_id: id,
         stage: 'parse_or_store',
@@ -557,89 +593,56 @@ export class AuthorUiService {
     return { import_id: id };
   }
 
-  retryImport(projectId: string, importId: string): { status: 'queued' } {
-    const item = this.findImport(projectId, importId);
-    item.parse_status = 'queued';
-    item.parse_progress = 0;
-    item.extract_status = 'queued';
-    item.extract_progress = 0;
-    item.error_message = null;
+  async retryImport(projectId: string, importId: string): Promise<{ status: 'queued' }> {
+    const item = await this.findImport(projectId, importId);
+    const patch: Partial<AuthorImportRow> = {
+      parse_status: 'queued',
+      parse_progress: 0,
+      extract_status: 'queued',
+      extract_progress: 0,
+      error_message: null,
+    };
+    await this.store.updateImport(this.userId, projectId, item.id, patch);
     this.touchProject(projectId);
     this.logAudit(projectId, 'import.retried', { import_id: importId });
     return { status: 'queued' };
   }
 
-  deleteImport(projectId: string, importId: string): { deleted: boolean } {
+  async deleteImport(projectId: string, importId: string): Promise<{ deleted: boolean }> {
     this.ensureProject(projectId);
-    const imports = this.state.importsByProject.get(projectId) ?? [];
-    const next = imports.filter((item) => item.id !== importId);
-    this.state.importsByProject.set(projectId, next);
+    const existing = await this.store.getImport(this.userId, projectId, importId);
+    await this.store.deleteImport(this.userId, projectId, importId);
     this.touchProject(projectId);
-    const deleted = next.length !== imports.length;
+    const deleted = Boolean(existing);
     this.logAudit(projectId, 'import.deleted', { import_id: importId, deleted });
     return { deleted };
   }
 
-  listCandidates(projectId: string, filters: URLSearchParams) {
+  async listCandidates(projectId: string, filters: URLSearchParams) {
     this.ensureProject(projectId);
-    let candidates = [...(this.state.candidatesByProject.get(projectId) ?? [])];
-    const status = filters.get('status');
-    const type = filters.get('type');
-    const confidenceMin = Number(filters.get('confidence_min') ?? '0');
-    const scopes = csv(filters, 'scope');
-    const tiers = csv(filters, 'tier');
-    const sourceId = filters.get('source_id')?.trim();
+    await this.seedProjectIfNeeded(projectId);
+    const filter = candidateFilterFromSearchParams(filters);
     const page = Math.max(1, Number(filters.get('page') ?? '1') || 1);
     const pageSize = Math.max(1, Math.min(100, Number(filters.get('page_size') ?? '50') || 50));
-
-    if (status) {
-      const statuses = status.split(',').map((item) => item.trim()).filter(Boolean);
-      candidates = candidates.filter((item) => statuses.includes(item.status));
-    }
-
-    if (type) {
-      const types = type.split(',').map((item) => item.trim()).filter(Boolean);
-      candidates = candidates.filter((item) => types.includes(item.type));
-    }
-
-    if (Number.isFinite(confidenceMin) && confidenceMin > 0) {
-      candidates = candidates.filter((item) => item.confidence >= confidenceMin);
-    }
-
-    if (scopes.length > 0) {
-      candidates = candidates.filter((item) => matchesCandidateScope(item, scopes));
-    }
-
-    if (tiers.length > 0) {
-      candidates = candidates.filter((item) => matchesCandidateTier(item, tiers));
-    }
-
-    if (sourceId) {
-      candidates = candidates.filter((item) => matchesSourceId(item, sourceId));
-    }
-
-    const sort = filters.get('sort') ?? 'priority';
-    candidates.sort((a, b) => sortCandidates(a, b, sort));
-
+    let candidates = await this.store.listCandidates(this.userId, projectId, filter);
     const total = candidates.length;
     candidates = candidates.slice((page - 1) * pageSize, page * pageSize);
     return { candidates, total, page };
   }
 
-  getCandidate(projectId: string, candidateId: string): { candidate: AuthorUiCandidate } {
-    const candidate = this.findCandidate(projectId, candidateId);
+  async getCandidate(projectId: string, candidateId: string): Promise<{ candidate: AuthorUiCandidate }> {
+    const candidate = await this.findCandidate(projectId, candidateId);
     return { candidate };
   }
 
-  createCandidate(projectId: string, input: JsonRecord): { candidate_id: string; decision_id: string } {
+  async createCandidate(projectId: string, input: JsonRecord): Promise<{ candidate_id: string; decision_id: string }> {
     this.ensureProject(projectId);
-    const candidates = this.state.candidatesByProject.get(projectId) ?? [];
-    const content = readString(input, 'content') ?? simulationPromoteContent(this, projectId, input);
+    const content = readString(input, 'content') ?? await simulationPromoteContent(this, projectId, input);
     if (!content) {
       throw new AuthorUiValidationError('content is required');
     }
 
-    const id = newAuthorUiId('candidate');
+    const id = newPersistedAuthorUiId('candidate');
     const candidate: AuthorUiCandidate = {
       id,
       content,
@@ -658,8 +661,7 @@ export class AuthorUiService {
       extracted_at: nowIso(),
       target_entity_id: readString(input, 'target_entity_id'),
     };
-    candidates.unshift(candidate);
-    this.state.candidatesByProject.set(projectId, candidates);
+    await this.store.insertCandidates([authorCandidateToRow(candidate, this.userId, projectId)]);
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'candidate.added', {
       candidate_id: id,
@@ -680,16 +682,14 @@ export class AuthorUiService {
     return { candidate_id: id, decision_id: audit.decisionId };
   }
 
-  decideCandidate(projectId: string, candidateId: string, input: JsonRecord) {
-    const candidate = this.findCandidate(projectId, candidateId);
+  async decideCandidate(projectId: string, candidateId: string, input: JsonRecord) {
+    const candidate = await this.findCandidate(projectId, candidateId);
     const action = readString(input, 'action') ?? 'approve';
     const nextStatus: FactStatus = actionToStatus(action);
-    candidate.status = nextStatus;
     const promotedEntityId =
       nextStatus === 'canon'
         ? candidate.target_entity_id ?? candidate.related_existing[0]?.entity_id ?? candidate.id
         : undefined;
-    this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'candidate.decided', {
       candidate_id: candidateId,
       action,
@@ -706,6 +706,13 @@ export class AuthorUiService {
         end_char: candidate.source.span.end_char,
       },
     });
+    await this.store.updateCandidate(this.userId, projectId, candidateId, {
+      status: nextStatus,
+      decided_at: nowIso(),
+      decision_id: audit.decisionId,
+      promoted_entity_id: promotedEntityId ?? null,
+    });
+    this.touchProject(projectId);
     return {
       candidate_id: candidateId,
       new_status: nextStatus,
@@ -724,10 +731,13 @@ export class AuthorUiService {
     };
   }
 
-  batchDecideCandidates(projectId: string, input: JsonRecord) {
+  async batchDecideCandidates(projectId: string, input: JsonRecord) {
     const ids = readStringArray(input, 'candidate_ids');
     const action = readString(input, 'action') ?? 'approve';
-    const results = ids.map((id) => this.decideCandidate(projectId, id, { action }));
+    const results = [];
+    for (const id of ids) {
+      results.push(await this.decideCandidate(projectId, id, { action }));
+    }
     const audit = this.logAudit(projectId, 'candidate.batch_decided', {
       candidate_ids: ids,
       action,
@@ -737,42 +747,38 @@ export class AuthorUiService {
     return { processed: results.length, results, decision_id: audit.decisionId };
   }
 
-  listCharacters(projectId: string): { characters: AuthorUiCharacterSummary[] } {
+  async listCharacters(projectId: string): Promise<{ characters: AuthorUiCharacterSummary[] }> {
     this.ensureProject(projectId);
-    const details = this.state.characterDetailsByProject.get(projectId) ?? new Map();
+    await this.seedProjectIfNeeded(projectId);
+    const characters = await this.store.listCharacterSummaries(this.userId, projectId);
     return {
-      characters: [...details.values()].map(({ id, name, aliases, scope, summary }) => ({
-        id,
-        name,
-        aliases,
-        scope,
-        summary,
-      })),
+      characters,
     };
   }
 
-  getCharacter(projectId: string, characterId: string): { character: AuthorUiCharacterDetail } {
-    const character = this.findCharacter(projectId, characterId);
+  async getCharacter(projectId: string, characterId: string): Promise<{ character: AuthorUiCharacterDetail }> {
+    const character = await this.findCharacter(projectId, characterId);
     return { character };
   }
 
-  updateCharacter(projectId: string, characterId: string, input: JsonRecord) {
-    const character = this.findCharacter(projectId, characterId);
+  async updateCharacter(projectId: string, characterId: string, input: JsonRecord) {
+    const character = await this.findCharacter(projectId, characterId);
     const field = readString(input, 'field');
     if (!field) {
       throw new AuthorUiValidationError('field is required');
     }
 
     applyCharacterPatch(character, field, input.value);
+    await this.store.upsertCharacter(authorCharacterToRow(character, this.userId, projectId));
     const reviewRequired = field.startsWith('knowledge_state') || field.startsWith('background');
     const candidateId = reviewRequired
-      ? this.createCandidate(projectId, {
+      ? (await this.createCandidate(projectId, {
           content: `Author edit for ${character.name}: ${field}`,
           type: 'fact',
           suggested_status: 'candidate',
           tags: ['author_edit'],
           target_entity_id: characterId,
-        }).candidate_id
+        })).candidate_id
       : undefined;
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'character.updated', {
@@ -785,8 +791,8 @@ export class AuthorUiService {
   }
 
   async generateCharacterBacklog(projectId: string, characterId: string, input: JsonRecord = {}) {
-    const character = this.findCharacter(projectId, characterId);
-    const existingCandidates = (this.state.candidatesByProject.get(projectId) ?? [])
+    const character = await this.findCharacter(projectId, characterId);
+    const existingCandidates = (await this.store.listCandidates(this.userId, projectId, {}))
       .map((candidate) => ({
         id: candidate.id,
         content: candidate.content,
@@ -815,11 +821,9 @@ export class AuthorUiService {
     const generated = result.candidates.map((candidate, index) =>
       authorUiCandidateFromBacklog(candidate, character, index)
     );
-    const candidates = this.state.candidatesByProject.get(projectId) ?? [];
-    this.state.candidatesByProject.set(projectId, [
-      ...generated,
-      ...candidates,
-    ]);
+    await this.store.insertCandidates(generated.map((candidate) =>
+      authorCandidateToRow(candidate, this.userId, projectId)
+    ));
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'backlog.generated', {
       character_id: character.id,
@@ -950,45 +954,40 @@ export class AuthorUiService {
     };
   }
 
-  listConflicts(projectId: string, filters: URLSearchParams) {
+  async listConflicts(projectId: string, filters: URLSearchParams) {
     this.ensureProject(projectId);
-    let conflicts = [...(this.state.conflictsByProject.get(projectId) ?? [])];
-    const severity = filters.get('severity');
-    const status = filters.get('status');
-    if (severity) {
-      conflicts = conflicts.filter((conflict) => conflict.severity === severity);
-    }
-    if (status) {
-      conflicts = conflicts.filter((conflict) => conflict.status === status);
-    }
+    await this.seedProjectIfNeeded(projectId);
+    const conflicts = (await this.store.listConflicts(
+      this.userId,
+      projectId,
+      conflictFilterFromSearchParams(filters)
+    )).map(authorConflictRowToUi);
     return { conflicts };
   }
 
-  resolveConflict(projectId: string, conflictId: string, input: JsonRecord) {
+  async resolveConflict(projectId: string, conflictId: string, input: JsonRecord) {
     this.ensureProject(projectId);
-    const conflicts = this.state.conflictsByProject.get(projectId) ?? [];
-    const conflict = conflicts.find((item) => item.id === conflictId);
+    const conflicts = await this.store.listConflicts(this.userId, projectId, {});
+    const conflict = conflicts.find((item) => item.conflict_key === conflictId || item.id === conflictId);
     if (!conflict) {
       throw new AuthorUiNotFoundError(`Conflict not found: ${conflictId}`);
     }
-    conflict.status = 'resolved';
-    conflict.resolution = readString(input, 'decision') ?? 'defer';
+    const resolution = readString(input, 'decision') ?? 'defer';
+    await this.store.resolveConflict(this.userId, projectId, conflict.conflict_key, resolution);
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'conflict.resolved', {
       conflict_id: conflictId,
-      decision: conflict.resolution,
-      affected_entities: conflict.affected_entities,
+      decision: resolution,
+      affected_entities: authorConflictAffectedEntities(conflict),
     });
-    return { resolved: true, decision_id: audit.decisionId, side_effects: [`conflict:${conflictId}:${conflict.resolution}`] };
+    return { resolved: true, decision_id: audit.decisionId, side_effects: [`conflict:${conflictId}:${resolution}`] };
   }
 
-  runSimulation(projectId: string, input: JsonRecord) {
+  async runSimulation(projectId: string, input: JsonRecord) {
     this.ensureProject(projectId);
     const simulationId = newAuthorUiId('sim');
     const simulation = this.buildSimulation(projectId, simulationId, input);
-    const projectSimulations = this.state.simulationsByProject.get(projectId) ?? new Map();
-    projectSimulations.set(simulationId, simulation);
-    this.state.simulationsByProject.set(projectId, projectSimulations);
+    await this.store.upsertSimulation(authorSimulationToRow(simulation, this.userId, projectId));
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'simulation.run', {
       simulation_id: simulationId,
@@ -1012,16 +1011,17 @@ export class AuthorUiService {
     };
   }
 
-  getSimulation(projectId: string, simulationId: string): AuthorUiSimulation {
-    const simulation = this.state.simulationsByProject.get(projectId)?.get(simulationId);
+  async getSimulation(projectId: string, simulationId: string): Promise<AuthorUiSimulation> {
+    const row = await this.store.getSimulation(this.userId, projectId, simulationId);
+    const simulation = row ? authorSimulationRowToUi(row) : undefined;
     if (!simulation) {
       throw new AuthorUiNotFoundError(`Simulation not found: ${simulationId}`);
     }
     return simulation;
   }
 
-  replaySimulation(projectId: string, simulationId: string) {
-    const simulation = this.getSimulation(projectId, simulationId);
+  async replaySimulation(projectId: string, simulationId: string) {
+    const simulation = await this.getSimulation(projectId, simulationId);
     const audit = this.logAudit(projectId, 'simulation.replay', {
       simulation_id: simulationId,
       replay_status: 'deterministic',
@@ -1156,10 +1156,10 @@ export class AuthorUiService {
     };
   }
 
-  search(projectId: string, query: string) {
+  async search(projectId: string, query: string) {
     this.ensureProject(projectId);
     const lower = query.toLowerCase();
-    const characters = this.listCharacters(projectId).characters
+    const characters = (await this.store.listCharacterSummaries(this.userId, projectId))
       .filter((item) => item.name.toLowerCase().includes(lower) || item.summary.toLowerCase().includes(lower))
       .slice(0, 8)
       .map((item) => ({
@@ -1168,7 +1168,7 @@ export class AuthorUiService {
         label: item.name,
         snippet: item.summary,
       }));
-    const candidates = (this.state.candidatesByProject.get(projectId) ?? [])
+    const candidates = (await this.store.listCandidates(this.userId, projectId, {}))
       .filter((item) => item.content.toLowerCase().includes(lower))
       .slice(0, 8)
       .map((item) => ({
@@ -1188,27 +1188,28 @@ export class AuthorUiService {
     throw new AuthorUiNotFoundError(`Project not found: ${projectId}`);
   }
 
-  private findImport(projectId: string, importId: string): AuthorUiImport {
+  private async findImport(projectId: string, importId: string): Promise<AuthorUiImport> {
     this.ensureProject(projectId);
-    const item = (this.state.importsByProject.get(projectId) ?? []).find((entry) => entry.id === importId);
+    const item = await this.store.getImport(this.userId, projectId, importId);
     if (!item) {
       throw new AuthorUiNotFoundError(`Import not found: ${importId}`);
     }
     return item;
   }
 
-  private findCandidate(projectId: string, candidateId: string): AuthorUiCandidate {
+  private async findCandidate(projectId: string, candidateId: string): Promise<AuthorUiCandidate> {
     this.ensureProject(projectId);
-    const item = (this.state.candidatesByProject.get(projectId) ?? []).find((entry) => entry.id === candidateId);
+    const item = await this.store.getCandidate(this.userId, projectId, candidateId);
     if (!item) {
       throw new AuthorUiNotFoundError(`Candidate not found: ${candidateId}`);
     }
     return item;
   }
 
-  private findCharacter(projectId: string, characterId: string): AuthorUiCharacterDetail {
+  private async findCharacter(projectId: string, characterId: string): Promise<AuthorUiCharacterDetail> {
     this.ensureProject(projectId);
-    const character = this.state.characterDetailsByProject.get(projectId)?.get(characterId);
+    await this.seedProjectIfNeeded(projectId);
+    const character = await this.store.getCharacter(this.userId, projectId, characterId);
     if (!character) {
       throw new AuthorUiNotFoundError(`Character not found: ${characterId}`);
     }
@@ -1367,6 +1368,13 @@ export class AuthorUiService {
     };
   }
 
+  private async seedProjectIfNeeded(projectId: string): Promise<void> {
+    if (process.env.AUTHOR_UI_STORE !== 'supabase') {
+      return;
+    }
+    await seedAuthorUiProject(this.store, this.userId, projectId, buildSeedRowsFromState(this.state, projectId));
+  }
+
   async flushAuditWrites(): Promise<void> {
     if (this.state.auditLogWrites.size === 0) {
       return;
@@ -1411,6 +1419,297 @@ export class AuthorUiService {
 
 export class AuthorUiValidationError extends Error {}
 export class AuthorUiNotFoundError extends Error {}
+
+function createInMemoryStoreFromState(state: AuthorUiState): InMemoryAuthorUiStore {
+  const store = new InMemoryAuthorUiStore();
+  const seedRows = buildAllRowsFromState(state);
+  for (const row of seedRows.imports ?? []) {
+    void store.insertImport(row);
+  }
+  if (seedRows.candidates?.length) {
+    void store.insertCandidates(seedRows.candidates);
+  }
+  for (const row of seedRows.characters ?? []) {
+    void store.upsertCharacter(row);
+  }
+  for (const row of seedRows.conflicts ?? []) {
+    void store.upsertConflict(row);
+  }
+  for (const row of seedRows.simulations ?? []) {
+    void store.upsertSimulation(row);
+  }
+  return store;
+}
+
+function buildAllRowsFromState(state: AuthorUiState): AuthorUiSeedRows {
+  const seedRows: AuthorUiSeedRows = {
+    imports: [],
+    candidates: [],
+    characters: [],
+    conflicts: [],
+    simulations: [],
+  };
+  for (const [projectId, imports] of state.importsByProject.entries()) {
+    seedRows.imports?.push(...imports.map((item) => authorImportToRow(item, state.userId, projectId)));
+  }
+  for (const [projectId, candidates] of state.candidatesByProject.entries()) {
+    seedRows.candidates?.push(...candidates.map((item) => authorCandidateToRow(item, state.userId, projectId)));
+  }
+  for (const [projectId, characters] of state.characterDetailsByProject.entries()) {
+    seedRows.characters?.push(...[...characters.values()].map((item) =>
+      authorCharacterToRow(item, state.userId, projectId)
+    ));
+  }
+  for (const [projectId, conflicts] of state.conflictsByProject.entries()) {
+    seedRows.conflicts?.push(...conflicts.map((item) => authorConflictToRow(item, state.userId, projectId)));
+  }
+  for (const [projectId, simulations] of state.simulationsByProject.entries()) {
+    seedRows.simulations?.push(...[...simulations.values()].map((item) =>
+      authorSimulationToRow(item, state.userId, projectId)
+    ));
+  }
+  return seedRows;
+}
+
+function buildSeedRowsFromState(state: AuthorUiState, projectId: string): AuthorUiSeedRows {
+  return {
+    imports: (state.importsByProject.get(projectId) ?? []).map((item) =>
+      authorImportToRow(item, state.userId, projectId)
+    ),
+    candidates: (state.candidatesByProject.get(projectId) ?? []).map((item) =>
+      authorCandidateToRow(item, state.userId, projectId)
+    ),
+    characters: [...(state.characterDetailsByProject.get(projectId)?.values() ?? [])].map((item) =>
+      authorCharacterToRow(item, state.userId, projectId)
+    ),
+    conflicts: (state.conflictsByProject.get(projectId) ?? []).map((item) =>
+      authorConflictToRow(item, state.userId, projectId)
+    ),
+    simulations: [...(state.simulationsByProject.get(projectId)?.values() ?? [])].map((item) =>
+      authorSimulationToRow(item, state.userId, projectId)
+    ),
+  };
+}
+
+function authorImportToRow(item: AuthorUiImport, userId: string, projectId: string): AuthorImportRow {
+  return {
+    id: item.id,
+    user_id: userId,
+    project_id: projectId,
+    file_name: item.file_name,
+    file_size: item.file_size,
+    file_type: item.file_type,
+    source_role: item.source_role,
+    a_or_d_mode: item.a_or_d_mode,
+    parse_status: item.parse_status,
+    parse_progress: item.parse_progress,
+    extract_status: item.extract_status,
+    extract_progress: item.extract_progress,
+    candidate_count: item.candidate_count,
+    error_message: item.error_message ?? null,
+    storage_key: item.storage_key ?? null,
+    parsed_text_preview: item.parsed_text_preview ?? null,
+    parser_version: item.parser_version ?? null,
+    upload_at: item.upload_at,
+    created_at: item.upload_at,
+    updated_at: nowIso(),
+  };
+}
+
+function authorImportPatchToRowPatch(item: AuthorUiImport): Partial<AuthorImportRow> {
+  return {
+    file_type: item.file_type,
+    parse_status: item.parse_status,
+    parse_progress: item.parse_progress,
+    extract_status: item.extract_status,
+    extract_progress: item.extract_progress,
+    candidate_count: item.candidate_count,
+    error_message: item.error_message ?? null,
+    storage_key: item.storage_key ?? null,
+    parsed_text_preview: item.parsed_text_preview ?? null,
+    parser_version: item.parser_version ?? null,
+    updated_at: nowIso(),
+  };
+}
+
+function authorCandidateToRow(item: AuthorUiCandidate, userId: string, projectId: string): AuthorCandidateRow {
+  return {
+    id: item.id,
+    user_id: userId,
+    project_id: projectId,
+    content: item.content,
+    kind: item.type,
+    status: item.status,
+    suggested_status: item.suggested_status,
+    confidence: item.confidence,
+    tags: [...item.tags],
+    source: canonicalize(item.source),
+    related_existing: canonicalize(item.related_existing),
+    target_entity_id: item.target_entity_id ?? null,
+    decision_id: null,
+    promoted_entity_id: null,
+    extracted_at: item.extracted_at,
+    decided_at: null,
+    created_at: item.extracted_at,
+    updated_at: nowIso(),
+  };
+}
+
+function authorCharacterToRow(item: AuthorUiCharacterDetail, userId: string, projectId: string): AuthorCharacterRow {
+  return {
+    id: randomUUID(),
+    user_id: userId,
+    project_id: projectId,
+    character_key: item.id,
+    name: item.name,
+    aliases: [...item.aliases],
+    scope: [...item.scope],
+    summary: item.summary,
+    archetype: item.archetype,
+    voice: canonicalize(item.voice),
+    persona: canonicalize(item.persona),
+    appearance: canonicalize(item.appearance),
+    background: canonicalize(item.background),
+    knowledge_state: canonicalize(item.knowledge_state),
+    relationships: canonicalize(item.relationships),
+    recent_important_memories: canonicalize(item.recent_important_memories),
+    voice_samples: canonicalize(item.voice_samples),
+    current_arc_phase: item.current_arc_phase,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  };
+}
+
+function authorConflictToRow(
+  item: ReturnType<typeof buildSeedConflicts>[number],
+  userId: string,
+  projectId: string
+): AuthorConflictRow {
+  return {
+    id: randomUUID(),
+    user_id: userId,
+    project_id: projectId,
+    conflict_key: item.id,
+    severity: item.severity,
+    status: item.status,
+    payload: canonicalize({
+      detected_at: item.detected_at,
+      existing_fact: item.existing_fact,
+      new_fact: item.new_fact,
+      llm_analysis: item.llm_analysis,
+      impact_summary: item.impact_summary,
+      affected_entities: item.affected_entities,
+    }),
+    resolution: item.resolution,
+    resolved_at: item.status === 'resolved' ? nowIso() : null,
+    created_at: item.detected_at,
+    updated_at: nowIso(),
+  };
+}
+
+function authorConflictRowToUi(row: AuthorConflictRow): ReturnType<typeof buildSeedConflicts>[number] {
+  const payload = asRecord(row.payload);
+  return {
+    id: row.conflict_key,
+    severity: row.severity === 'low' ? 'medium' : row.severity,
+    status: row.status,
+    detected_at: readString(payload, 'detected_at') ?? row.created_at,
+    existing_fact: asRecord(payload.existing_fact),
+    new_fact: asRecord(payload.new_fact),
+    llm_analysis: readString(payload, 'llm_analysis') ?? '',
+    impact_summary: readString(payload, 'impact_summary') ?? '',
+    affected_entities: readStringArray(payload, 'affected_entities'),
+    resolution: typeof row.resolution === 'string' ? row.resolution : null,
+  } as ReturnType<typeof buildSeedConflicts>[number];
+}
+
+function authorConflictAffectedEntities(row: AuthorConflictRow): string[] {
+  return readStringArray(asRecord(row.payload), 'affected_entities');
+}
+
+function authorSimulationToRow(item: AuthorUiSimulation, userId: string, projectId: string): AuthorSimulationRow {
+  return {
+    id: randomUUID(),
+    user_id: userId,
+    project_id: projectId,
+    simulation_key: item.simulation_id,
+    status: item.status,
+    progress: item.progress,
+    input: canonicalize(item.input),
+    context_used: canonicalize(item.context_used),
+    candidates: canonicalize(item.candidates),
+    trace_metadata: canonicalize(item.trace_metadata),
+    diagnostics: canonicalize(item.diagnostics),
+    llm_meta: null,
+    started_at: item.started_at,
+    completed_at: item.completed_at ?? null,
+    created_at: item.started_at,
+    updated_at: nowIso(),
+  };
+}
+
+function authorSimulationRowToUi(row: AuthorSimulationRow): AuthorUiSimulation {
+  return {
+    simulation_id: row.simulation_key,
+    status: row.status,
+    progress: row.progress,
+    started_at: row.started_at,
+    completed_at: row.completed_at ?? undefined,
+    input: row.input as AuthorUiSimulation['input'],
+    context_used: row.context_used as AuthorUiSimulation['context_used'],
+    candidates: row.candidates as AuthorUiSimulation['candidates'],
+    trace_metadata: row.trace_metadata as AuthorUiSimulation['trace_metadata'],
+    diagnostics: row.diagnostics as AuthorUiSimulation['diagnostics'],
+  };
+}
+
+function candidateFilterFromSearchParams(filters: URLSearchParams): AuthorCandidateFilter {
+  return {
+    statuses: csv(filters, 'status').filter(isAuthorCandidateStatus),
+    kinds: csv(filters, 'type').filter(isAuthorCandidateKind),
+    confidenceMin: Number(filters.get('confidence_min') ?? '0'),
+    scopes: csv(filters, 'scope'),
+    tiers: csv(filters, 'tier'),
+    sourceId: filters.get('source_id')?.trim(),
+    sort: filters.get('sort') ?? 'priority',
+  };
+}
+
+function conflictFilterFromSearchParams(filters: URLSearchParams): AuthorConflictFilter {
+  const severity = filters.get('severity');
+  const status = filters.get('status');
+  return {
+    severity: isAuthorConflictSeverity(severity) ? severity : undefined,
+    status: isAuthorConflictStatus(status) ? status : undefined,
+  };
+}
+
+function isAuthorCandidateStatus(value: string): value is AuthorCandidateStatus {
+  return [
+    'candidate',
+    'canon',
+    'rejected',
+    'retired',
+    'past_only',
+    'contradicted',
+    'invalidated',
+    'author_only',
+    'character_known',
+    'character_unknown',
+  ].includes(value);
+}
+
+function isAuthorCandidateKind(value: string): value is AuthorCandidateKind {
+  return ['character', 'world_rule', 'event', 'relationship', 'voice_sample', 'fact'].includes(value);
+}
+
+function isAuthorConflictSeverity(value: string | null): value is AuthorConflictSeverity {
+  return value === 'low' || value === 'medium' || value === 'high' || value === 'critical';
+}
+
+function isAuthorConflictStatus(value: string | null): value is AuthorConflictStatus {
+  return value === 'open' || value === 'resolved';
+}
 
 function auditFilterFromSearchParams(projectId: string, params: URLSearchParams): AuthorAuditSearchFilter {
   return {
@@ -1917,7 +2216,11 @@ function parseFieldPath(field: string): string[] {
   return parts;
 }
 
-function simulationPromoteContent(service: AuthorUiService, projectId: string, input: JsonRecord): string | undefined {
+async function simulationPromoteContent(
+  service: AuthorUiService,
+  projectId: string,
+  input: JsonRecord
+): Promise<string | undefined> {
   const simulationId = readString(input, 'from_simulation_id');
   const candidateIndex = Number(input.from_simulation_candidate_index ?? 0);
   if (!simulationId) {
@@ -1925,7 +2228,7 @@ function simulationPromoteContent(service: AuthorUiService, projectId: string, i
   }
 
   try {
-    const simulation = service.getSimulation(projectId, simulationId);
+    const simulation = await service.getSimulation(projectId, simulationId);
     const candidate = simulation.candidates[candidateIndex] ?? simulation.candidates[0];
     return candidate?.dialogue_candidates[0]?.text ?? candidate?.internal_thought_candidates[0]?.text;
   } catch {

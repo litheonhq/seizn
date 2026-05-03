@@ -139,7 +139,6 @@ export function AuthorMemoryV3Client() {
 
   useEffect(() => {
     if (!generateBacklog.isMutating) {
-      setBacklogElapsedSec(0);
       return;
     }
     const startedAt = Date.now();
