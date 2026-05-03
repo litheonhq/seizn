@@ -152,13 +152,13 @@ export function ShareTraceModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="dashboard-share-trace-title" onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}>
-      <div className="bg-szn-card rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
+      <div className="bg-[var(--ink-0)] rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-szn-border">
-          <h2 id="dashboard-share-trace-title" className="text-xl font-semibold text-szn-text-1">Share Trace</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[var(--ink-200)]">
+          <h2 id="dashboard-share-trace-title" className="text-xl font-semibold text-[var(--ink-900)]">Share Trace</h2>
           <button
             onClick={onClose}
-            className="text-szn-text-3 hover:text-szn-text-2"
+            className="text-[var(--ink-500)] hover:text-[var(--ink-600)]"
             aria-label="Close"
           >
             <svg
@@ -181,8 +181,8 @@ export function ShareTraceModal({
         <div className="p-6 space-y-6">
           {/* Success State */}
           {shareUrl && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-green-700 mb-2">
+            <div className="bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] rounded-xl p-4">
+              <div className="flex items-center gap-2 text-[var(--signal-canon-ink)] mb-2">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -203,7 +203,7 @@ export function ShareTraceModal({
                   type="text"
                   value={shareUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-szn-card border border-szn-border rounded-lg text-sm font-mono"
+                  className="flex-1 px-3 py-2 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg text-sm font-mono"
                 />
                 <button
                   onClick={() => handleCopy(shareUrl)}
@@ -217,7 +217,7 @@ export function ShareTraceModal({
 
           {/* Error State */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700">
+            <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-xl p-4 text-[var(--signal-conflict-ink)]">
               {error}
             </div>
           )}
@@ -226,7 +226,7 @@ export function ShareTraceModal({
           {!shareUrl && (
             <>
               <div>
-                <label className="block text-sm font-medium text-szn-text-1 mb-2">
+                <label className="block text-sm font-medium text-[var(--ink-900)] mb-2">
                   Expiration
                 </label>
                 <select
@@ -242,7 +242,7 @@ export function ShareTraceModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-szn-text-1 mb-3">
+                <label className="block text-sm font-medium text-[var(--ink-900)] mb-3">
                   Privacy Settings
                 </label>
                 <div className="space-y-3">
@@ -251,13 +251,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={maskPii}
                       onChange={(e) => setMaskPii(e.target.checked)}
-                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                      className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                     />
                     <div>
-                      <span className="text-sm text-szn-text-1">
+                      <span className="text-sm text-[var(--ink-900)]">
                         Mask PII (emails, phones, etc.)
                       </span>
-                      <p className="text-xs text-szn-text-2">
+                      <p className="text-xs text-[var(--ink-600)]">
                         Automatically redact personal information
                       </p>
                     </div>
@@ -268,13 +268,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={maskSecrets}
                       onChange={(e) => setMaskSecrets(e.target.checked)}
-                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                      className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                     />
                     <div>
-                      <span className="text-sm text-szn-text-1">
+                      <span className="text-sm text-[var(--ink-900)]">
                         Mask API Keys & Secrets
                       </span>
-                      <p className="text-xs text-szn-text-2">
+                      <p className="text-xs text-[var(--ink-600)]">
                         Hide API keys, tokens, and passwords
                       </p>
                     </div>
@@ -285,13 +285,13 @@ export function ShareTraceModal({
                       type="checkbox"
                       checked={hideRawContent}
                       onChange={(e) => setHideRawContent(e.target.checked)}
-                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                      className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                     />
                     <div>
-                      <span className="text-sm text-szn-text-1">
+                      <span className="text-sm text-[var(--ink-900)]">
                         Hide Raw Content
                       </span>
-                      <p className="text-xs text-szn-text-2">
+                      <p className="text-xs text-[var(--ink-600)]">
                         Don&apos;t show original chunk text
                       </p>
                     </div>
@@ -302,7 +302,7 @@ export function ShareTraceModal({
               <button
                 onClick={handleCreateShare}
                 disabled={loading}
-                className="w-full py-3 bg-szn-accent text-white rounded-xl hover:bg-szn-accent/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="w-full py-3 bg-[var(--ink-900)] text-white rounded-xl hover:bg-[var(--ink-900)]/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -337,7 +337,7 @@ export function ShareTraceModal({
           {/* Existing Shares */}
           {existingShares.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-szn-text-1 mb-3">
+              <h3 className="text-sm font-medium text-[var(--ink-900)] mb-3">
                 Existing Share Links
               </h3>
               <div className="space-y-2">
@@ -346,22 +346,22 @@ export function ShareTraceModal({
                     key={share.id}
                     className={`flex items-center justify-between p-3 rounded-lg border ${
                       share.isExpired
-                        ? "bg-szn-bg border-szn-border"
-                        : "bg-szn-card border-szn-border"
+                        ? "bg-[var(--ink-50)] border-[var(--ink-200)]"
+                        : "bg-[var(--ink-0)] border-[var(--ink-200)]"
                     }`}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-mono text-szn-text-2 truncate">
+                        <span className="text-sm font-mono text-[var(--ink-600)] truncate">
                           {share.shareUrl}
                         </span>
                         {share.isExpired && (
-                          <span className="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded">
+                          <span className="px-2 py-0.5 text-xs bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded">
                             Expired
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-szn-text-2">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-[var(--ink-600)]">
                         <span>{share.viewCount} views</span>
                         <span>
                           Created{" "}
@@ -379,7 +379,7 @@ export function ShareTraceModal({
                       {!share.isExpired && (
                         <button
                           onClick={() => handleCopy(share.shareUrl)}
-                          className="p-2 text-szn-text-3 hover:text-szn-text-2"
+                          className="p-2 text-[var(--ink-500)] hover:text-[var(--ink-600)]"
                           title="Copy link"
                         >
                           <svg
@@ -399,7 +399,7 @@ export function ShareTraceModal({
                       )}
                       <button
                         onClick={() => handleDeleteShare(share.id)}
-                        className="p-2 text-red-400 hover:text-red-600"
+                        className="p-2 text-[var(--signal-conflict-soft)] hover:text-[var(--signal-conflict-ink)]"
                         title="Delete share"
                       >
                         <svg
@@ -425,8 +425,8 @@ export function ShareTraceModal({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-szn-border bg-szn-bg rounded-b-2xl">
-          <p className="text-xs text-szn-text-2 text-center">
+        <div className="p-6 border-t border-[var(--ink-200)] bg-[var(--ink-50)] rounded-b-2xl">
+          <p className="text-xs text-[var(--ink-600)] text-center">
             Shared traces are automatically redacted to protect sensitive
             information. Anyone with the link can view the trace.
           </p>

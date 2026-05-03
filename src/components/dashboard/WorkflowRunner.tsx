@@ -76,11 +76,11 @@ export function WorkflowRunner({
 
 function StateBadge({ state }: { state: WorkflowRun["state"] }) {
   const styles: Record<WorkflowRun["state"], string> = {
-    idle: "bg-szn-surface-2 text-szn-text-3",
-    running: "bg-cyan-500/10 text-cyan-400",
-    paused: "bg-amber-500/10 text-amber-400",
+    idle: "bg-[var(--ink-100)] text-[var(--ink-500)]",
+    running: "bg-[var(--ink-900)]/10 text-[var(--ink-900)]",
+    paused: "bg-[var(--signal-pending)]/10 text-[var(--signal-pending-soft)]",
     done: "bg-green-500/10 text-green-400",
-    failed: "bg-red-500/10 text-red-400",
+    failed: "bg-[var(--signal-conflict)]/10 text-[var(--signal-conflict-soft)]",
   };
 
   return (
@@ -92,10 +92,10 @@ function StateBadge({ state }: { state: WorkflowRun["state"] }) {
 
 function StepStatusBadge({ status }: { status: "pending" | "running" | "done" | "failed" }) {
   const styles: Record<typeof status, string> = {
-    pending: "text-szn-text-3",
-    running: "text-cyan-400 font-semibold",
+    pending: "text-[var(--ink-500)]",
+    running: "text-[var(--ink-900)] font-semibold",
     done: "text-green-400 font-semibold",
-    failed: "text-red-400 font-semibold",
+    failed: "text-[var(--signal-conflict-soft)] font-semibold",
   };
 
   return <strong className={`text-xs ${styles[status]}`}>{status}</strong>;
