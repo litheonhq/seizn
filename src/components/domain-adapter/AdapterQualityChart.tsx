@@ -107,7 +107,7 @@ export function AdapterQualityChart({
           {currentMrr !== undefined && (
             <div className="text-right">
               <p className="text-sm text-gray-500">Current MRR</p>
-              <p className="text-xl font-bold text-green-600">
+              <p className="text-xl font-bold text-[var(--signal-canon-ink)]">
                 {(currentMrr * 100).toFixed(1)}%
               </p>
             </div>
@@ -231,7 +231,7 @@ export function AdapterQualityChart({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-gray-500">Final MRR</p>
-              <p className="text-lg font-bold text-green-600">
+              <p className="text-lg font-bold text-[var(--signal-canon-ink)]">
                 {((selectedRun.final_mrr ?? 0) * 100).toFixed(1)}%
               </p>
             </div>

@@ -207,7 +207,7 @@ export function ShareTraceModal({
                 />
                 <button
                   onClick={() => handleCopy(shareUrl)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
+                  className="px-4 py-2 bg-[var(--signal-canon)] text-white rounded-lg hover:bg-[var(--signal-canon)] text-sm font-medium"
                 >
                   {copied ? "Copied!" : "Copy"}
                 </button>

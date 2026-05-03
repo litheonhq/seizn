@@ -32,14 +32,14 @@ interface HighlightConfig {
 const HIGHLIGHT_CONFIGS: Record<HighlightSpan["type"], HighlightConfig> = {
   exact_match: {
     type: "exact_match",
-    bgClass: "bg-green-200 dark:bg-green-900/50",
-    borderClass: "border-green-500",
+    bgClass: "bg-green-200 dark:bg-[var(--signal-canon-ink)]/50",
+    borderClass: "border-[var(--signal-canon)]",
     label: "Exact Match",
   },
   semantic_match: {
     type: "semantic_match",
-    bgClass: "bg-amber-200 dark:bg-amber-900/50",
-    borderClass: "border-amber-500",
+    bgClass: "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/50",
+    borderClass: "border-[var(--signal-pending)]",
     label: "Semantic Match",
   },
   keyword: {
@@ -50,8 +50,8 @@ const HIGHLIGHT_CONFIGS: Record<HighlightSpan["type"], HighlightConfig> = {
   },
   entity: {
     type: "entity",
-    bgClass: "bg-purple-200 dark:bg-purple-900/50",
-    borderClass: "border-purple-500",
+    bgClass: "bg-[var(--ink-900)] dark:bg-[var(--ink-900)]/50",
+    borderClass: "border-[var(--ink-900)]",
     label: "Entity",
   },
 };
@@ -239,24 +239,24 @@ export function HighlightedPassage({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Match Summary */}
-      <div className="flex items-center justify-between p-3 bg-szn-surface rounded-lg">
+      <div className="flex items-center justify-between p-3 bg-[var(--ink-50)] rounded-lg">
         <div className="flex items-center gap-4">
           <div className="text-sm">
-            <span className="text-szn-text-2">Exact: </span>
-            <span className="font-medium text-green-600 dark:text-green-400">
+            <span className="text-[var(--ink-600)]">Exact: </span>
+            <span className="font-medium text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]">
               {matchSummary.exactMatches}
             </span>
           </div>
           <div className="text-sm">
-            <span className="text-szn-text-2">Semantic: </span>
-            <span className="font-medium text-amber-600 dark:text-amber-400">
+            <span className="text-[var(--ink-600)]">Semantic: </span>
+            <span className="font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
               {matchSummary.semanticMatches}
             </span>
           </div>
         </div>
         <div className="text-sm">
-          <span className="text-szn-text-2">Coverage: </span>
-          <span className="font-medium text-szn-text-1">
+          <span className="text-[var(--ink-600)]">Coverage: </span>
+          <span className="font-medium text-[var(--ink-900)]">
             {matchSummary.totalCoverage.toFixed(1)}%
           </span>
         </div>
@@ -272,7 +272,7 @@ export function HighlightedPassage({
                 <span
                   className={`w-4 h-4 rounded ${config.bgClass} border-2 ${config.borderClass}`}
                 />
-                <span className="text-xs text-szn-text-2">
+                <span className="text-xs text-[var(--ink-600)]">
                   {config.label}
                 </span>
               </div>
@@ -282,8 +282,8 @@ export function HighlightedPassage({
       )}
 
       {/* Passage Content */}
-      <div className="p-4 bg-szn-bg border border-szn-border rounded-lg">
-        <p className="text-sm leading-relaxed text-szn-text-1 whitespace-pre-wrap">
+      <div className="p-4 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-lg">
+        <p className="text-sm leading-relaxed text-[var(--ink-900)] whitespace-pre-wrap">
           {segments.map((segment, index) => {
             if (segment.highlight) {
               const config = HIGHLIGHT_CONFIGS[segment.highlight.type];
@@ -304,20 +304,20 @@ export function HighlightedPassage({
 
       {/* Coverage Bar */}
       <div>
-        <div className="flex items-center justify-between text-xs text-szn-text-2 mb-1">
+        <div className="flex items-center justify-between text-xs text-[var(--ink-600)] mb-1">
           <span>Text Coverage</span>
           <span>{matchSummary.totalCoverage.toFixed(1)}% highlighted</span>
         </div>
-        <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+        <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-green-500 via-amber-500 to-blue-500 rounded-full"
+            className="h-full bg-gradient-to-r from-green-500 via-amber-500 to-[var(--ink-900)] rounded-full"
             style={{ width: `${Math.min(100, matchSummary.totalCoverage)}%` }}
           />
         </div>
       </div>
 
       {/* Character Count */}
-      <div className="text-xs text-szn-text-3 text-right">
+      <div className="text-xs text-[var(--ink-500)] text-right">
         {content.length} characters | {highlights.length} highlighted regions
       </div>
     </div>

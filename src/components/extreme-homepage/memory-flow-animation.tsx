@@ -97,7 +97,7 @@ const FlowNode = memo(function FlowNode({
             "transition-colors duration-300",
             isActive
               ? "bg-[color:var(--theme-primary)]/10 text-[color:var(--theme-primary)]"
-              : "bg-szn-surface text-szn-text-3",
+              : "bg-[var(--ink-50)] text-[var(--ink-500)]",
           ].join(" ")}
         >
           <Icon className="w-4 h-4 md:w-5 md:h-5" />
@@ -109,7 +109,7 @@ const FlowNode = memo(function FlowNode({
             "text-[11px] sm:text-xs md:text-sm font-medium transition-colors duration-300",
             isActive
               ? "theme-gradient-text"
-              : "text-szn-text-3",
+              : "text-[var(--ink-500)]",
           ].join(" ")}
         >
           {step.label}
@@ -124,7 +124,7 @@ const FlowNode = memo(function FlowNode({
           "transition-all duration-300",
           isActive
             ? "bg-[color:var(--theme-primary)] text-white scale-100"
-            : "bg-szn-surface text-szn-text-3 scale-75",
+            : "bg-[var(--ink-50)] text-[var(--ink-500)] scale-75",
         ].join(" ")}
       >
         {index + 1}
@@ -133,7 +133,7 @@ const FlowNode = memo(function FlowNode({
       {/* Tooltip on hover */}
       {isHovered && (
         <div
-          className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 szn-card rounded-lg px-3 py-2 text-xs text-szn-text-2 w-max max-w-[200px] text-center animate-fade-in pointer-events-none"
+          className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 szn-card rounded-lg px-3 py-2 text-xs text-[var(--ink-600)] w-max max-w-[200px] text-center animate-fade-in pointer-events-none"
           role="tooltip"
         >
           {step.description}

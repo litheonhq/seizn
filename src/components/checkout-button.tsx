@@ -109,14 +109,14 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       {requireLegalAgreement ? (
-        <div className="flex items-start gap-2 text-left text-xs leading-5 text-szn-text-2">
+        <div className="flex items-start gap-2 text-left text-xs leading-5 text-[var(--ink-600)]">
           <input
             id={agreementId}
             type="checkbox"
             checked={legalAgreementAccepted}
             onChange={(event) => setLegalAgreementAccepted(event.currentTarget.checked)}
             aria-describedby={`${agreementId}-copy`}
-            className="mt-0.5 h-4 w-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+            className="mt-0.5 h-4 w-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
           />
           <span id={`${agreementId}-copy`}>
             {legalCopy.prefix ? (
@@ -161,7 +161,7 @@ export function CheckoutButton({
         {isLoading ? legalCopy.loading : children}
       </button>
       {error ? (
-        <p className="text-xs text-red-600" role="alert">
+        <p className="text-xs text-[var(--signal-conflict-ink)]" role="alert">
           {error}
         </p>
       ) : null}

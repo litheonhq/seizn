@@ -284,8 +284,8 @@ export function SimulationSetup({
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600">{error}</p>
+        <div className="p-4 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg">
+          <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         </div>
       )}
 
@@ -355,12 +355,12 @@ export function SimulationSetup({
               <p
                 className={`text-lg font-semibold ${
                   result.summary.impactLevel === 'critical'
-                    ? 'text-red-600'
+                    ? 'text-[var(--signal-conflict-ink)]'
                     : result.summary.impactLevel === 'high'
                     ? 'text-orange-600'
                     : result.summary.impactLevel === 'medium'
-                    ? 'text-yellow-600'
-                    : 'text-green-600'
+                    ? 'text-[var(--signal-pending-ink)]'
+                    : 'text-[var(--signal-canon-ink)]'
                 }`}
               >
                 {(result.summary.overallImpactScore * 100).toFixed(1)}%
@@ -371,12 +371,12 @@ export function SimulationSetup({
               <p
                 className={`text-lg font-semibold capitalize ${
                   result.summary.impactLevel === 'critical'
-                    ? 'text-red-600'
+                    ? 'text-[var(--signal-conflict-ink)]'
                     : result.summary.impactLevel === 'high'
                     ? 'text-orange-600'
                     : result.summary.impactLevel === 'medium'
-                    ? 'text-yellow-600'
-                    : 'text-green-600'
+                    ? 'text-[var(--signal-pending-ink)]'
+                    : 'text-[var(--signal-canon-ink)]'
                 }`}
               >
                 {result.summary.impactLevel}
@@ -385,13 +385,13 @@ export function SimulationSetup({
           </div>
 
           <div className="flex gap-4 text-sm">
-            <span className="text-red-600">
+            <span className="text-[var(--signal-conflict-ink)]">
               +{result.summary.blockedChunksCount} blocked
             </span>
-            <span className="text-green-600">
+            <span className="text-[var(--signal-canon-ink)]">
               +{result.summary.unblockedChunksCount} unblocked
             </span>
-            <span className="text-yellow-600">
+            <span className="text-[var(--signal-pending-ink)]">
               {result.summary.maskingChangedCount} masking changed
             </span>
           </div>

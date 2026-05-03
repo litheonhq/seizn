@@ -110,10 +110,10 @@ export function LatencyDistribution({
           <span
             className={`text-sm font-semibold ${
               sloCompliance >= 99
-                ? "text-green-600"
+                ? "text-[var(--signal-canon-ink)]"
                 : sloCompliance >= 95
-                ? "text-yellow-600"
-                : "text-red-600"
+                ? "text-[var(--signal-pending-ink)]"
+                : "text-[var(--signal-conflict-ink)]"
             }`}
           >
             {sloCompliance.toFixed(1)}%
@@ -296,15 +296,15 @@ function StatCard({
   status: "good" | "warn" | "bad";
 }) {
   const statusColors = {
-    good: "bg-green-50 border-green-200",
-    warn: "bg-yellow-50 border-yellow-200",
-    bad: "bg-red-50 border-red-200",
+    good: "bg-[var(--signal-canon-soft)] border-[var(--signal-canon)]",
+    warn: "bg-[var(--signal-pending-soft)] border-[var(--signal-pending)]",
+    bad: "bg-[var(--signal-conflict-soft)] border-[var(--signal-conflict)]",
   };
 
   const indicatorColors = {
-    good: "bg-green-500",
+    good: "bg-[var(--signal-canon)]",
     warn: "bg-yellow-500",
-    bad: "bg-red-500",
+    bad: "bg-[var(--signal-conflict)]",
   };
 
   return (

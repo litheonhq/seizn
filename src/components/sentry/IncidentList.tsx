@@ -34,10 +34,10 @@ const SEVERITY_CONFIG: Record<
   { bgColor: string; textColor: string; borderColor: string; dotColor: string }
 > = {
   critical: {
-    bgColor: "bg-red-50",
-    textColor: "text-red-800",
-    borderColor: "border-red-200",
-    dotColor: "bg-red-500",
+    bgColor: "bg-[var(--signal-conflict-soft)]",
+    textColor: "text-[var(--signal-conflict-ink)]",
+    borderColor: "border-[var(--signal-conflict)]",
+    dotColor: "bg-[var(--signal-conflict)]",
   },
   high: {
     bgColor: "bg-orange-50",
@@ -46,9 +46,9 @@ const SEVERITY_CONFIG: Record<
     dotColor: "bg-orange-500",
   },
   medium: {
-    bgColor: "bg-yellow-50",
-    textColor: "text-yellow-800",
-    borderColor: "border-yellow-200",
+    bgColor: "bg-[var(--signal-pending-soft)]",
+    textColor: "text-[var(--signal-pending-ink)]",
+    borderColor: "border-[var(--signal-pending)]",
     dotColor: "bg-yellow-500",
   },
   low: {
@@ -135,7 +135,7 @@ export function IncidentList({
             <div className="flex items-center gap-4 text-xs text-gray-500">
               {summary.criticalIncidents > 0 && (
                 <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-red-500" />
+                  <span className="w-2 h-2 rounded-full bg-[var(--signal-conflict)]" />
                   {summary.criticalIncidents} critical
                 </span>
               )}
@@ -300,7 +300,7 @@ function IncidentRow({
           >
             <button
               onClick={onResolve}
-              className="px-2.5 py-1 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium text-[var(--signal-canon-ink)] bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon-soft)] transition-colors"
             >
               Resolve
             </button>

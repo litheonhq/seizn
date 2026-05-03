@@ -131,7 +131,7 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
   return (
     <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-[var(--ink-200)] flex items-center justify-between">
+      <div className="p-4 bg-gradient-to-r from-[var(--ink-900)]/10 to-[var(--ink-900)]/10 border-b border-[var(--ink-200)] flex items-center justify-between">
         <div>
           <h3 className="font-semibold text-[var(--ink-900)]">Trace Comparison</h3>
           <p className="text-sm text-[var(--ink-600)]">

@@ -22,16 +22,16 @@ const SEVERITY_CONFIG: Record<
   { bgColor: string; textColor: string; borderColor: string; icon: React.ReactNode }
 > = {
   critical: {
-    bgColor: "bg-red-50",
-    textColor: "text-red-800",
-    borderColor: "border-red-200",
-    icon: <CriticalIcon className="w-5 h-5 text-red-600" />,
+    bgColor: "bg-[var(--signal-conflict-soft)]",
+    textColor: "text-[var(--signal-conflict-ink)]",
+    borderColor: "border-[var(--signal-conflict)]",
+    icon: <CriticalIcon className="w-5 h-5 text-[var(--signal-conflict-ink)]" />,
   },
   warning: {
-    bgColor: "bg-yellow-50",
-    textColor: "text-yellow-800",
-    borderColor: "border-yellow-200",
-    icon: <WarningIcon className="w-5 h-5 text-yellow-600" />,
+    bgColor: "bg-[var(--signal-pending-soft)]",
+    textColor: "text-[var(--signal-pending-ink)]",
+    borderColor: "border-[var(--signal-pending)]",
+    icon: <WarningIcon className="w-5 h-5 text-[var(--signal-pending-ink)]" />,
   },
   info: {
     bgColor: "bg-blue-50",
@@ -42,9 +42,9 @@ const SEVERITY_CONFIG: Record<
 };
 
 const STATUS_BADGE: Record<AlertStatus, { bgColor: string; textColor: string }> = {
-  active: { bgColor: "bg-red-100", textColor: "text-red-700" },
-  acknowledged: { bgColor: "bg-yellow-100", textColor: "text-yellow-700" },
-  resolved: { bgColor: "bg-green-100", textColor: "text-green-700" },
+  active: { bgColor: "bg-[var(--signal-conflict-soft)]", textColor: "text-[var(--signal-conflict-ink)]" },
+  acknowledged: { bgColor: "bg-[var(--signal-pending-soft)]", textColor: "text-[var(--signal-pending-ink)]" },
+  resolved: { bgColor: "bg-[var(--signal-canon-soft)]", textColor: "text-[var(--signal-canon-ink)]" },
 };
 
 // ============================================
@@ -83,7 +83,7 @@ export function AlertsPanel({ alerts, loading, onAcknowledge }: AlertsPanelProps
         <div className="flex items-center gap-3">
           <h3 className="text-lg font-semibold text-gray-900">Alerts</h3>
           {activeCount > 0 && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-700 rounded-full">
+            <span className="px-2 py-0.5 text-xs font-medium bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded-full">
               {activeCount} active
             </span>
           )}

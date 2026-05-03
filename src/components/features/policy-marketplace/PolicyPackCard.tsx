@@ -23,18 +23,18 @@ const CATEGORY_STYLES: Record<
     label: "Governance",
   },
   compliance: {
-    bg: "bg-purple-50 dark:bg-purple-950/30",
-    text: "text-purple-700 dark:text-purple-300",
+    bg: "bg-[var(--ink-50)] dark:bg-[var(--ink-900)]/30",
+    text: "text-[var(--ink-900)] underline dark:text-[var(--ink-500)]",
     label: "Compliance",
   },
   security: {
-    bg: "bg-red-50 dark:bg-red-950/30",
-    text: "text-red-700 dark:text-red-300",
+    bg: "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/30",
+    text: "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]",
     label: "Security",
   },
   performance: {
-    bg: "bg-green-50 dark:bg-green-950/30",
-    text: "text-green-700 dark:text-green-300",
+    bg: "bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/30",
+    text: "text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]",
     label: "Performance",
   },
   custom: {
@@ -70,7 +70,7 @@ export function PolicyPackCard({
           </p>
         </div>
         {pack.popular && (
-          <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 ring-1 ring-amber-200 dark:ring-amber-800">
+          <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] ring-1 ring-amber-200 dark:ring-amber-800">
             Popular
           </span>
         )}

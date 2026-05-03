@@ -5,12 +5,12 @@ import type { CandidateListProps } from "./CandidateList";
 
 // Loading skeleton for CandidateList
 const CandidateListSkeleton = () => (
-  <div className="bg-gray-900 rounded-lg border border-gray-800 p-6">
+  <div className="bg-[var(--ink-900)] rounded-lg border border-gray-800 p-6">
     <div className="animate-pulse">
       <div className="h-6 w-32 bg-gray-700 rounded mb-4" />
       <div className="space-y-3">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-12 bg-gray-800 rounded" />
+          <div key={i} className="h-12 bg-[var(--ink-800)] rounded" />
         ))}
       </div>
     </div>
