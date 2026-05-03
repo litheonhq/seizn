@@ -47,7 +47,13 @@ export interface AuthorUiStore {
 
   listConflicts(userId: string, projectId: string, filter: AuthorConflictFilter): Promise<AuthorConflictRow[]>;
   upsertConflict(row: AuthorConflictRow): Promise<void>;
-  resolveConflict(userId: string, projectId: string, conflictKey: string, resolution: JsonValue): Promise<void>;
+  resolveConflict(
+    userId: string,
+    projectId: string,
+    conflictKey: string,
+    resolution: JsonValue,
+    status?: AuthorConflictRow['status']
+  ): Promise<void>;
 
   listSimulations(userId: string, projectId: string): Promise<AuthorSimulationRow[]>;
   getSimulation(userId: string, projectId: string, simulationKey: string): Promise<AuthorSimulationRow | undefined>;

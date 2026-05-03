@@ -273,6 +273,27 @@
         "finops": "USAGE & COST",
         "connect": "INTEGRATE",
         "system": "WORKSPACE"
+      },
+      "memory": {
+        "author_memory": "Author Memory"
+      },
+      "author": {
+        "workspace": "Author Workspace",
+        "groups": {
+          "work": "Work",
+          "account": "Account"
+        },
+        "inbox": "Inbox",
+        "review": "Review",
+        "characters": "Characters",
+        "graph": "Graph",
+        "timeline": "Timeline",
+        "conflicts": "Conflicts",
+        "simulate": "Simulate",
+        "audit": "Audit",
+        "usage": "Usage",
+        "byok": "BYOK",
+        "settings": "Settings"
       }
     },
     "pinSidebar": "Pin sidebar",
@@ -3198,6 +3219,262 @@
       "title": "Subscribe to Updates",
       "rss": "RSS Feed",
       "email": "Email Notifications"
+    }
+  },
+  "author": {
+    "tabs": {
+      "inbox": "Inbox",
+      "review": "Review",
+      "characters": "Characters",
+      "graph": "Graph",
+      "timeline": "Timeline",
+      "conflicts": "Conflicts",
+      "simulate": "Simulate",
+      "audit": "Audit"
+    },
+    "cards": {
+      "imports": "Imports",
+      "candidates": "Candidates",
+      "characters": "Characters",
+      "conflicts": "Conflicts",
+      "edges": "Edges",
+      "events": "Events"
+    },
+    "table": {
+      "imports": {
+        "columns": {
+          "file_name": "File name",
+          "source_role": "Source role",
+          "parse_status": "Parse status",
+          "extract_status": "Extract status",
+          "candidate_count": "Candidates",
+          "parsed_text_preview": "Text preview",
+          "error_message": "Error message"
+        },
+        "parse_status": {
+          "queued": "Queued",
+          "parsing": "Parsing",
+          "parsed": "Parsed",
+          "failed": "Failed"
+        },
+        "extract_status": {
+          "queued": "Queued",
+          "extracting": "Extracting",
+          "extracted": "Extracted",
+          "failed": "Failed"
+        },
+        "source_role": {
+          "canon": "Canon",
+          "character": "Character",
+          "scene": "Scene",
+          "reference": "Reference",
+          "visual": "Visual"
+        }
+      },
+      "candidates": {
+        "columns": {
+          "type": "Type",
+          "status": "Status",
+          "confidence": "Confidence",
+          "content": "Content",
+          "id": "Details"
+        },
+        "type": {
+          "character": "Character",
+          "world_rule": "World rule",
+          "event": "Event",
+          "relationship": "Relationship",
+          "voice_sample": "Voice sample",
+          "fact": "Fact"
+        },
+        "status": {
+          "candidate": "In review",
+          "canon": "Canon",
+          "rejected": "Rejected",
+          "retired": "Retired",
+          "past_only": "Past only",
+          "contradicted": "Contradicted",
+          "invalidated": "Invalidated",
+          "author_only": "Author only",
+          "character_known": "Character known",
+          "character_unknown": "Character unknown"
+        }
+      },
+      "characters": {
+        "columns": {
+          "name": "Name",
+          "summary": "Summary",
+          "scope": "Scope",
+          "aliases": "Aliases"
+        }
+      },
+      "graph": {
+        "columns": {
+          "from_name": "From",
+          "relation": "Relation",
+          "to_name": "To",
+          "intensity_band": "Intensity",
+          "valid_at": "Valid at"
+        }
+      },
+      "timeline": {
+        "columns": {
+          "day": "Day",
+          "date": "Date",
+          "where": "Where",
+          "what": "What"
+        }
+      },
+      "audit": {
+        "columns": {
+          "event": "Event",
+          "created": "Created",
+          "decision": "Decision ID",
+          "llm": "LLM",
+          "payload": "Payload",
+          "replay": "Replay"
+        }
+      }
+    },
+    "empty": {
+      "inbox": {
+        "title": "No source files yet",
+        "body": "Upload a manuscript or reference file and Seizn will parse it into review candidates.",
+        "cta": "Upload file",
+        "parsing": {
+          "title": "Reading your files",
+          "body": "Large files can take a minute or two. Candidates appear here when parsing finishes.",
+          "cta": ""
+        }
+      },
+      "inbox_parsing": {
+        "title": "Reading your files",
+        "body": "Large files can take a minute or two. Candidates appear here when parsing finishes.",
+        "cta": ""
+      },
+      "review": {
+        "title": "No candidates to review",
+        "body": "Upload new material or generate a backlog from a character to fill the queue.",
+        "cta": "Generate backlog"
+      },
+      "characters": {
+        "title": "No characters registered yet",
+        "body": "Once material is imported, character candidates can be accepted into canon.",
+        "cta": "Upload file"
+      },
+      "character_detail": {
+        "title": "This character is still empty",
+        "body": "Generate a backlog to quickly fill small texture such as likes, dislikes, and habits.",
+        "cta": "Generate backlog"
+      },
+      "graph": {
+        "title": "No relationship graph yet",
+        "body": "When two or more characters and their relationships exist, the map appears here.",
+        "cta": ""
+      },
+      "timeline": {
+        "title": "No timeline events yet",
+        "body": "Events are arranged by day after they are extracted from source files or added manually.",
+        "cta": "Add event"
+      },
+      "conflicts": {
+        "title": "No conflicts",
+        "body": "New facts that collide with canon will gather here. For now, everything is clean.",
+        "cta": ""
+      },
+      "simulate": {
+        "title": "No scene has been run yet",
+        "body": "Choose characters and write a scene prompt to preview what they might feel and say.",
+        "cta": "Create scene"
+      },
+      "audit": {
+        "title": "No decisions recorded yet",
+        "body": "Accepted candidates and resolved conflicts appear here in chronological order.",
+        "cta": ""
+      }
+    },
+    "graph": {
+      "bands": {
+        "very_strong_positive": "Very strong affinity",
+        "positive": "Affinity",
+        "weak_positive": "Weak affinity",
+        "neutral": "Neutral",
+        "weak_negative": "Weak distance",
+        "negative": "Distance",
+        "very_strong_negative": "Very strong hostility"
+      },
+      "relation": {
+        "best_friend": "Best friend",
+        "co_lead": "Co-lead",
+        "senior_mentor": "Senior mentor",
+        "family": "Family",
+        "informant": "Informant",
+        "crush": "Crush",
+        "rival": "Rival",
+        "acquaintance": "Acquaintance",
+        "unknown": "Unknown"
+      },
+      "view": {
+        "diagram": "Diagram view",
+        "table": "Table view"
+      },
+      "unknown_name": "This character name has not been registered yet.",
+      "unknown_relation": "This relationship type has not been registered yet."
+    },
+    "conflict": {
+      "severity": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "status": {
+        "unresolved": "Unresolved",
+        "resolved": "Resolved",
+        "deferred": "Deferred"
+      },
+      "actions": {
+        "keep_existing": "Keep existing canon",
+        "replace_with_new": "Replace with new fact",
+        "defer_both": "Defer both",
+        "custom": "Edit manually"
+      },
+      "title": "Conflict",
+      "reasoning_title": "Reasoning",
+      "impact_title": "Impact",
+      "impact_fallback": "This decision has limited impact on other canon.",
+      "undo": "Undo"
+    },
+    "events": {
+      "project.created": "Project created",
+      "import.upload": "Import uploaded",
+      "import.parsed": "Import parsed",
+      "import.failed": "Import failed",
+      "import.retried": "Import retried",
+      "import.deleted": "Import deleted",
+      "candidate.added": "Candidate added",
+      "candidate.decided": "Candidate decided",
+      "candidate.batch_decided": "Candidates batch decided",
+      "character.updated": "Character updated",
+      "conflict.resolved": "Conflict resolved",
+      "simulation.run": "Simulation run",
+      "simulation.replay": "Simulation replay",
+      "backlog.generated": "Backlog generated",
+      "settings.updated": "Settings updated",
+      "byok.updated": "BYOK updated"
+    },
+    "actions": {
+      "generate_backlog": "Generate backlog",
+      "run_scene": "Run Scene",
+      "upload": "Upload"
+    },
+    "toasts": {
+      "review_queue_updated": "Review Queue updated",
+      "uploading": "Uploading…",
+      "ai_generating": "AI is generating…"
+    },
+    "panels": {
+      "inbox": "Document Inbox",
+      "review": "Review Queue"
     }
   }
 }

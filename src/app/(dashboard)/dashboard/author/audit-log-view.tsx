@@ -1,5 +1,8 @@
 'use client';
 
+import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { AUDIT_COLUMNS } from './table-specs';
+
 type JsonRecord = Record<string, unknown>;
 
 interface AuditLogViewProps {
@@ -9,6 +12,8 @@ interface AuditLogViewProps {
 }
 
 export function AuditLogView({ logs, replayResult, onReplay }: AuditLogViewProps) {
+  const { t } = useDashboardTranslation();
+
   if (logs.length === 0) {
     return (
       <div className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600">
@@ -21,14 +26,13 @@ export function AuditLogView({ logs, replayResult, onReplay }: AuditLogViewProps
     <div className="space-y-4">
       <div className="overflow-x-auto rounded-md border border-slate-200">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-500">
+          <thead className="bg-slate-50 text-xs tracking-normal text-slate-500">
             <tr>
-              <th className="px-3 py-2 font-medium">event</th>
-              <th className="px-3 py-2 font-medium">created</th>
-              <th className="px-3 py-2 font-medium">decision</th>
-              <th className="px-3 py-2 font-medium">llm</th>
-              <th className="px-3 py-2 font-medium">payload</th>
-              <th className="px-3 py-2 font-medium">replay</th>
+              {AUDIT_COLUMNS.map((column) => (
+                <th key={column} className="px-3 py-2 font-medium">
+                  {t(`author.table.audit.columns.${column}`)}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -37,7 +41,7 @@ export function AuditLogView({ logs, replayResult, onReplay }: AuditLogViewProps
               return (
                 <tr key={String(entry.id ?? index)} className="align-top">
                   <td className="whitespace-nowrap px-3 py-2 font-medium text-slate-900">
-                    {String(entry.event_type ?? '')}
+                    {t(`author.events.${String(entry.event_type ?? '')}`)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2 text-slate-600">
                     {formatDate(entry.created_at)}
@@ -58,7 +62,7 @@ export function AuditLogView({ logs, replayResult, onReplay }: AuditLogViewProps
                       onClick={() => onReplay(decisionId)}
                       className="min-h-9 rounded-md border border-slate-300 px-3 text-sm text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      Replay
+                      {t('author.table.audit.columns.replay')}
                     </button>
                   </td>
                 </tr>
