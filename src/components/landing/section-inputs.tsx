@@ -23,6 +23,7 @@ export function SectionInputs({ copy }: { copy: AuthorLandingCopy }) {
                   key={item.id}
                   type="button"
                   onClick={() => setActive(item.id)}
+                  aria-pressed={selected}
                   className="flex min-h-[76px] items-start gap-4 rounded-[var(--radius-md)] border p-4 text-left transition-colors"
                   style={{
                     borderColor: selected ? "var(--ink-200)" : "transparent",

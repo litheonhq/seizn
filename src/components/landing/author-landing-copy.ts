@@ -88,6 +88,9 @@ export interface AuthorLandingCopy {
       docs: string;
       about: string;
       trust: string;
+      privacy: string;
+      terms: string;
+      beta: string;
       status: string;
       contact: string;
       ledger: string;
@@ -197,7 +200,7 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
     subtitle:
       "Severity is signal, not noise. Critical breaks canon outright. Minor flags a soft drift you may want to keep.",
     graphNote:
-      "The graph is not cosmetic. Every conflict points to the exact node and edge that broke. One click jumps you there.",
+      "The graph is not cosmetic. Every conflict points to the exact node and edge that broke.",
     items: [
       {
         severity: "critical",
@@ -254,7 +257,7 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
     subtitle: "Decisions you can defend, infrastructure you can audit, separation rules you can prove.",
     items: [
       { icon: "lock", title: "Workspace-isolated", body: "Sample IP is synthetic. Your manuscript never trains a public model." },
-      { icon: "key", title: "BYOK supported", body: "Bring your own model key. 50% off list price, unlimited tokens." },
+      { icon: "key", title: "BYOK supported", body: "Bring your own Anthropic key. 50% off list price, unlimited tokens." },
       { icon: "archive", title: "Replayable canon", body: "Every verdict is logged. Roll back, branch, or audit any decision." },
       { icon: "shield", title: "SFW-only policy", body: "Litheon LLC operates Seizn under a strict safe-for-work content rule." },
     ],
@@ -291,7 +294,7 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
       },
       {
         q: "What does BYOK actually unlock?",
-        a: "Bring your own model key from Anthropic, OpenAI, or another supported provider and pay 50% of list price with unlimited tokens.",
+        a: "Bring your own Anthropic key and pay 50% of list price with unlimited tokens.",
       },
       {
         q: "Can I export my canon?",
@@ -319,6 +322,9 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
       docs: "Docs",
       about: "About",
       trust: "Trust and privacy",
+      privacy: "Privacy",
+      terms: "Terms",
+      beta: "Beta Disclosure",
       status: "Status",
       contact: "Contact",
       ledger: "Canon ledger",
@@ -346,7 +352,7 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
 };
 
 export function isAuthorEngineSurfaceLive(value = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE): boolean {
-  return value === "1";
+  return value === "1" || value?.toLowerCase() === "true";
 }
 
 export function getAuthorLandingCopy(_locale: Locale): AuthorLandingCopy {

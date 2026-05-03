@@ -23,6 +23,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
+const launchLocales = ["en", "ko", "ja", "zh-hans"] as const;
 const tiers = ["indie", "pro", "studio", "enterprise"] as const;
 const cadences = ["monthly", "yearly"] as const;
 const originalEngineSurfaceLive = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
@@ -49,6 +50,7 @@ describe("Author flagship landing", () => {
     ]);
     expect(copy.conflicts.items.map((item) => item.severity)).toEqual(["critical", "major", "minor"]);
     expect(copy.trust.items.map((item) => item.title)).toContain("Workspace-isolated");
+    expect(copy.trust.items.find((item) => item.title === "BYOK supported")?.body).toContain("Anthropic key");
     expect(copy.faq.items).toHaveLength(5);
     expect(copy.faq.items[3].a).toBe("Your work is isolated from sample IPs and from any public model training. The Saebyeok demo on this page is synthetic data, not a real customer.");
     expect(copy.faq.items.map((item) => item.a).join("\n")).not.toContain("CI grep");
@@ -76,6 +78,9 @@ describe("Author flagship landing", () => {
 
     delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
     expect(isAuthorEngineSurfaceLive()).toBe(false);
+    expect(isAuthorEngineSurfaceLive("0")).toBe(false);
+    expect(isAuthorEngineSurfaceLive("false")).toBe(false);
+    expect(isAuthorEngineSurfaceLive("true")).toBe(true);
     expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }))).not.toContain("https://engine.seizn.com");
 
     process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
@@ -97,16 +102,27 @@ describe("Author flagship landing", () => {
     expect(html).toContain("From $2,500 / month");
     expect(html).toContain("character-chip-strip");
     expect(html).toContain("hero-plan-picker");
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).toContain('href="/en/legal/privacy"');
+    expect(html).toContain('href="/en/legal/terms"');
+    expect(html).toContain('href="/en/legal/beta-disclosure"');
     expect(html).toContain("© 2026 Seizn by Litheon LLC · Wyoming");
     expect(html).toContain("v1.0 · saebyeok demo is synthetic data");
   });
 
   it("registers Mark A favicon assets", () => {
     const root = process.cwd();
+    const metadataFiles = [
+      readFileSync(path.join(root, "src", "app", "layout.tsx"), "utf8"),
+      readFileSync(path.join(root, "src", "app", "[locale]", "layout.tsx"), "utf8"),
+    ].join("\n");
 
     expect(existsSync(path.join(root, "public", "icons", "seizn-mark.svg"))).toBe(true);
     expect(existsSync(path.join(root, "public", "icons", "seizn-mark-16.svg"))).toBe(true);
     expect(existsSync(path.join(root, "src", "app", "icon.svg"))).toBe(true);
+    expect(metadataFiles).toContain("/icons/seizn-mark.svg");
+    expect(metadataFiles).not.toContain("/favicon-32.png");
+    expect(metadataFiles).not.toContain("/favicon-16.png");
   });
 
   it("keeps the cyan stack out of the migrated landing and pricing surfaces", () => {
@@ -142,8 +158,30 @@ describe("Author flagship landing", () => {
     expect(element).toHaveProperty("props.data.summary.reviewCases", 50);
   });
 
+  it("keeps the sample IP README free of private dogfood terms", async () => {
+    const data = await loadSaebyeokDemoData();
+
+    expect(data.readme.body).not.toMatch(/\bKNOT\b/i);
+    expect(data.readme.body).not.toMatch(/소리|레이카|청학여고|Worldspire/);
+  });
+
   it("ships complete pricing page copy and checkout coverage", () => {
     const copy = getPricingPageCopy("en");
+
+    expect(copy.hero.title).toBeTruthy();
+    expect(copy.launchNotes).toHaveLength(3);
+    expect(copy.faq.items).toHaveLength(4);
+    expect(copy.checkout.terms).toBeTruthy();
+    expect(getPricingPageCopy("ko").checkout.terms).toBe("이용약관");
+    expect(getPricingPageCopy("ja").checkout.terms).toBe("利用規約");
+    expect(getPricingPageCopy("zh-hant").checkout.terms).toBe("服务条款");
+    for (const tier of tiers) {
+      expect(copy.features[tier].length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it.each(launchLocales)("ships complete pricing page copy for %s", (locale) => {
+    const copy = getPricingPageCopy(locale);
 
     expect(copy.hero.title).toBeTruthy();
     expect(copy.launchNotes).toHaveLength(3);
@@ -152,6 +190,21 @@ describe("Author flagship landing", () => {
     for (const tier of tiers) {
       expect(copy.features[tier].length).toBeGreaterThanOrEqual(3);
     }
+  });
+
+  it("keeps metered overage as a billing meter note, not a fifth checkout tier", () => {
+    const copy = getPricingPageCopy("en");
+
+    expect(Object.keys(AUTHOR_BILLING_TIERS)).toEqual([...tiers]);
+    expect(copy.launchNotes.some((note) => note.title.includes("Metered"))).toBe(true);
+  });
+
+  it("keeps the KNOT separation gate scoped to landing and pricing build outputs", () => {
+    const script = readFileSync(path.join(process.cwd(), "scripts", "verify-knot-separation.ts"), "utf8");
+
+    expect(script).toContain('"src/app/[locale]/pricing"');
+    expect(script).toContain("collectNextRouteBuildFiles");
+    expect(script).not.toContain('".next/static"');
   });
 
   it("covers every active author tier and cadence checkout selection", () => {

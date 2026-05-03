@@ -8,6 +8,11 @@ export interface CheckoutLegalCopy {
   error: string;
 }
 
+export const CHECKOUT_LEGAL_VERSIONS = {
+  terms: "terms-of-service:v1",
+  privacy: "privacy-policy:v1",
+} as const;
+
 export const DEFAULT_CHECKOUT_LEGAL_COPY: CheckoutLegalCopy = {
   prefix: "I agree to the",
   terms: "Terms of Service",
