@@ -155,8 +155,8 @@ describe('Author UI route guard', () => {
       throw new Error(`Expected upload route 200, got ${response.status}: ${await response.text()}`);
     }
     const body = await response.json() as { import_id: string };
-    const uploaded = getAuthorUiService('route-upload-user')
-      .listImports('knot')
+    const uploaded = (await getAuthorUiService('route-upload-user')
+      .listImports('knot'))
       .imports
       .find((item) => item.id === body.import_id);
 
@@ -212,8 +212,8 @@ describe('Author UI route guard', () => {
     expect(response.status).toBe(200);
     expect(arrayBuffer).not.toHaveBeenCalled();
     const body = await response.json() as { import_id: string };
-    const uploaded = getAuthorUiService('route-oversize-user')
-      .listImports('knot')
+    const uploaded = (await getAuthorUiService('route-oversize-user')
+      .listImports('knot'))
       .imports
       .find((item) => item.id === body.import_id);
 
@@ -256,8 +256,8 @@ describe('Author UI route guard', () => {
     expect(response.status).toBe(200);
     expect(formData).not.toHaveBeenCalled();
     const body = await response.json() as { import_id: string };
-    const uploaded = getAuthorUiService('route-content-length-user')
-      .listImports('knot')
+    const uploaded = (await getAuthorUiService('route-content-length-user')
+      .listImports('knot'))
       .imports
       .find((item) => item.id === body.import_id);
 
@@ -314,7 +314,7 @@ describe('Author UI route guard', () => {
     });
 
     const service = getAuthorUiService('route-audit-user');
-    const run = service.runSimulation('knot', {
+    const run = await service.runSimulation('knot', {
       scene_input: {
         text: 'Route audit scene.',
         perspective: 'knot.short1.char.sori',
