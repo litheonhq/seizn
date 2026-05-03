@@ -13,6 +13,7 @@ import {
   ScrollText,
   Settings,
   Sparkles,
+  Trash2,
   UploadCloud,
   UserRound,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import {
   useAuthorImports,
   useAuthorProjects,
   useAuthorTimeline,
+  useDeleteAuthorImport,
   useGenerateAuthorBacklog,
   useReplayAuthorAuditDecision,
   useRunAuthorSimulation,
@@ -255,15 +257,22 @@ export function AuthorMemoryV3Client() {
                   <option value="raw_keep">Raw keep</option>
                 </select>
                 {uploadImport.isMutating ? (
-                  <span className="text-sm text-slate-600">Uploading</span>
+                  <span
+                    className="inline-flex items-center gap-1.5 text-sm text-slate-600"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                    Uploading…
+                  </span>
                 ) : null}
                 {uploadError ? (
                   <span className="text-sm text-[var(--signal-conflict-ink)]">{uploadError}</span>
                 ) : null}
               </div>
-              <Rows
-                rows={imports.data?.imports ?? []}
-                columns={['file_name', 'source_role', 'parse_status', 'extract_status', 'candidate_count', 'parsed_text_preview', 'error_message']}
+              <ImportsTable
+                projectId={projectId}
+                imports={(imports.data?.imports as JsonRecord[] | undefined) ?? []}
               />
             </Panel>
           ) : null}
@@ -444,6 +453,96 @@ function Rows({ rows, columns }: { rows: JsonRecord[]; columns: string[] }) {
               ))}
             </tr>
           ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+const IMPORT_COLUMNS = [
+  'file_name',
+  'source_role',
+  'parse_status',
+  'extract_status',
+  'candidate_count',
+  'parsed_text_preview',
+  'error_message',
+] as const;
+
+function ImportsTable({
+  projectId,
+  imports,
+}: {
+  projectId: string;
+  imports: JsonRecord[];
+}) {
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const deleteImport = useDeleteAuthorImport(projectId, pendingId ?? undefined);
+
+  async function handleDelete(importId: string, fileName: string) {
+    if (!importId) return;
+    if (!window.confirm(`'${fileName}'을 삭제하시겠습니까? 이 파일에서 추출된 후보·이력도 함께 사라집니다.`)) {
+      return;
+    }
+    setPendingId(importId);
+    try {
+      await deleteImport.trigger(null);
+    } finally {
+      setPendingId(null);
+    }
+  }
+
+  if (imports.length === 0) {
+    return (
+      <div className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600">
+        업로드된 파일이 없습니다.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-md border border-slate-200">
+      <table className="min-w-full text-left text-sm">
+        <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-500">
+          <tr>
+            {IMPORT_COLUMNS.map((column) => (
+              <th key={column} className="px-3 py-2 font-medium">
+                {column.replaceAll('_', ' ')}
+              </th>
+            ))}
+            <th className="px-3 py-2 font-medium" aria-label="actions" />
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {imports.map((row, index) => {
+            const importId = String(row.id ?? row.import_id ?? '');
+            const fileName = String(row.file_name ?? '');
+            const isDeleting = pendingId === importId && deleteImport.isMutating;
+            return (
+              <tr key={importId || index} className="align-top">
+                {IMPORT_COLUMNS.map((column) => (
+                  <td key={column} className="max-w-[360px] px-3 py-2 text-slate-700">
+                    <span className="line-clamp-3 break-words">{formatCell(row[column])}</span>
+                  </td>
+                ))}
+                <td className="px-3 py-2 text-right">
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(importId, fileName)}
+                    disabled={!importId || isDeleting}
+                    aria-label={`${fileName} 삭제`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-[var(--signal-conflict-ink)] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
