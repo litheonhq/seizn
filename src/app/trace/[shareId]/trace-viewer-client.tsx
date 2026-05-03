@@ -72,12 +72,12 @@ export function TraceViewerClient({ shareId }: Props) {
     return (
       <div className="min-h-screen bg-zinc-950">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <div className="bg-red-900/20 border border-red-800 rounded-xl p-8 text-center">
-            <h1 className="text-2xl font-bold text-red-400 mb-4">Trace Not Found</h1>
+          <div className="bg-[var(--signal-conflict-ink)]/20 border border-[var(--signal-conflict)] rounded-xl p-8 text-center">
+            <h1 className="text-2xl font-bold text-[var(--signal-conflict-soft)] mb-4">Trace Not Found</h1>
             <p className="text-zinc-400 mb-6">{error}</p>
             <Link
               href="/"
-              className="px-6 py-3 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/80"
+              className="px-6 py-3 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/80"
             >
               Go to Homepage
             </Link>
@@ -99,7 +99,7 @@ export function TraceViewerClient({ shareId }: Props) {
       <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-white">
-            Seizn<span className="text-szn-accent">.</span>
+            Seizn<span className="text-[var(--ink-900)]">.</span>
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-sm text-zinc-500">
@@ -107,7 +107,7 @@ export function TraceViewerClient({ shareId }: Props) {
             </span>
             <Link
               href="/signup"
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors"
             >
               Get Started
             </Link>
@@ -119,7 +119,7 @@ export function TraceViewerClient({ shareId }: Props) {
         {/* Title */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 bg-szn-accent/20 text-szn-accent text-sm font-medium rounded-full">
+            <span className="px-3 py-1 bg-[var(--ink-900)]/20 text-[var(--ink-900)] text-sm font-medium rounded-full">
               Shared Trace
             </span>
             <span className="text-zinc-500 text-sm font-mono">{shareId}</span>
@@ -214,7 +214,7 @@ export function TraceViewerClient({ shareId }: Props) {
             </Link>
             <Link
               href="/signup"
-              className="px-6 py-3 bg-szn-accent text-white font-medium rounded-lg hover:bg-szn-accent/80"
+              className="px-6 py-3 bg-[var(--ink-900)] text-white font-medium rounded-lg hover:bg-[var(--ink-900)]/80"
             >
               Start Free
             </Link>
@@ -232,9 +232,9 @@ export function TraceViewerClient({ shareId }: Props) {
 
 function StatCard({ label, value, color }: { label: string; value: string; color: string }) {
   const colorClasses: Record<string, string> = {
-    emerald: 'bg-szn-accent/20 text-szn-accent',
+    emerald: 'bg-[var(--ink-900)]/20 text-[var(--ink-900)]',
     blue: 'bg-blue-600/20 text-blue-400',
-    purple: 'bg-purple-600/20 text-purple-400',
+    purple: 'bg-[var(--ink-900)]/20 text-[var(--ink-700)]',
     orange: 'bg-orange-600/20 text-orange-400',
   };
 
@@ -279,7 +279,7 @@ function TimingBar({ label, ms, total }: { label: string; ms: number; total: num
       </div>
       <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-szn-accent rounded-full transition-all duration-500"
+          className="h-full bg-[var(--ink-900)] rounded-full transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>

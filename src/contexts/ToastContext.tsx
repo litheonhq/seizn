@@ -99,8 +99,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 // ============================================
 
 const variantStyles: Record<ToastType, string> = {
-  success: "bg-szn-card border-l-4 border-l-szn-success border-szn-border text-szn-text-1",
-  error: "bg-szn-card border-l-4 border-l-szn-danger border-szn-border text-szn-text-1",
-  warning: "bg-szn-card border-l-4 border-l-szn-warning border-szn-border text-szn-text-1",
-  info: "bg-szn-card border-l-4 border-l-szn-accent border-szn-border text-szn-text-1",
+  success: "bg-[var(--ink-0)] border-l-4 border-l-szn-success border-[var(--ink-200)] text-[var(--ink-900)]",
+  error: "bg-[var(--ink-0)] border-l-4 border-l-szn-danger border-[var(--ink-200)] text-[var(--ink-900)]",
+  warning: "bg-[var(--ink-0)] border-l-4 border-l-szn-warning border-[var(--ink-200)] text-[var(--ink-900)]",
+  info: "bg-[var(--ink-0)] border-l-4 border-l-szn-accent border-[var(--ink-200)] text-[var(--ink-900)]",
 };

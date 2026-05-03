@@ -27,7 +27,7 @@ export default function RefundPolicyPage() {
             <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
               <Link
                 href="/"
-                className="text-xl font-semibold text-gray-900 hover:text-violet-500 transition-colors"
+                className="text-xl font-semibold text-gray-900 hover:text-[var(--ink-900)] transition-colors"
               >
                 Seizn
               </Link>
@@ -62,12 +62,12 @@ export default function RefundPolicyPage() {
               {/* 14-Day Money-Back Guarantee */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     1
                   </span>
                   14-Day Money-Back Guarantee
                 </h2>
-                <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 rounded-xl p-6 mb-4">
+                <div className="bg-gradient-to-r from-[var(--ink-50)] to-[var(--ink-100)] border border-[var(--ink-900)] rounded-xl p-6 mb-4">
                   <p className="text-gray-700 leading-relaxed">
                     We offer a <strong>full refund within 14 days</strong> of your initial purchase
                     date. If you&apos;re not satisfied with Seizn for any reason during this period, you
@@ -84,7 +84,7 @@ export default function RefundPolicyPage() {
               {/* Eligibility Conditions */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     2
                   </span>
                   Eligibility Conditions
@@ -95,7 +95,7 @@ export default function RefundPolicyPage() {
                 <ul className="space-y-3 mb-4">
                   <li className="flex items-start gap-3">
                     <svg
-                      className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-[var(--signal-canon-ink)] mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -113,7 +113,7 @@ export default function RefundPolicyPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <svg
-                      className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-[var(--signal-canon-ink)] mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -132,7 +132,7 @@ export default function RefundPolicyPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <svg
-                      className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-[var(--signal-canon-ink)] mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -150,7 +150,7 @@ export default function RefundPolicyPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <svg
-                      className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-[var(--signal-canon-ink)] mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -172,7 +172,7 @@ export default function RefundPolicyPage() {
               {/* Non-Refundable Items */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     3
                   </span>
                   Non-Refundable Items
@@ -184,7 +184,7 @@ export default function RefundPolicyPage() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-[var(--signal-conflict-soft)] mt-0.5 flex-shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -204,7 +204,7 @@ export default function RefundPolicyPage() {
                     </li>
                     <li className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-[var(--signal-conflict-soft)] mt-0.5 flex-shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -223,7 +223,7 @@ export default function RefundPolicyPage() {
                     </li>
                     <li className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-[var(--signal-conflict-soft)] mt-0.5 flex-shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -242,7 +242,7 @@ export default function RefundPolicyPage() {
                     </li>
                     <li className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-[var(--signal-conflict-soft)] mt-0.5 flex-shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -266,7 +266,7 @@ export default function RefundPolicyPage() {
               {/* Subscription Cancellation vs. Refund */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     4
                   </span>
                   Subscription Cancellation vs. Refund
@@ -303,7 +303,7 @@ export default function RefundPolicyPage() {
                   <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <svg
-                        className="w-5 h-5 text-violet-500"
+                        className="w-5 h-5 text-[var(--ink-900)]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -330,7 +330,7 @@ export default function RefundPolicyPage() {
               {/* How to Request a Refund */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     5
                   </span>
                   How to Request a Refund
@@ -341,7 +341,7 @@ export default function RefundPolicyPage() {
                 <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                   <div className="border-b border-gray-100 p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-bold flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center font-bold flex-shrink-0">
                         1
                       </div>
                       <div>
@@ -350,7 +350,7 @@ export default function RefundPolicyPage() {
                           Contact us at{" "}
                           <a
                             href="mailto:support@seizn.com"
-                            className="text-violet-600 hover:text-violet-700 font-medium"
+                            className="text-[var(--ink-900)] hover:text-[var(--ink-900)] font-medium"
                           >
                             support@seizn.com
                           </a>{" "}
@@ -361,7 +361,7 @@ export default function RefundPolicyPage() {
                   </div>
                   <div className="border-b border-gray-100 p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-bold flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center font-bold flex-shrink-0">
                         2
                       </div>
                       <div>
@@ -375,7 +375,7 @@ export default function RefundPolicyPage() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-bold flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center font-bold flex-shrink-0">
                         3
                       </div>
                       <div>
@@ -393,12 +393,12 @@ export default function RefundPolicyPage() {
               {/* Processing Time */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     6
                   </span>
                   Processing Time
                 </h2>
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-6">
+                <div className="bg-gradient-to-r from-[var(--ink-50)] to-[var(--ink-100)] border border-blue-100 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <svg
                       className="w-8 h-8 text-blue-500 flex-shrink-0"
@@ -432,7 +432,7 @@ export default function RefundPolicyPage() {
               {/* Refund Method */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     7
                   </span>
                   Refund Method
@@ -505,12 +505,12 @@ export default function RefundPolicyPage() {
               {/* Contact Information */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     8
                   </span>
                   Contact Information
                 </h2>
-                <div className="bg-gray-900 text-white rounded-xl p-8">
+                <div className="bg-[var(--ink-900)] text-white rounded-xl p-8">
                   <p className="text-gray-300 mb-6 leading-relaxed">
                     If you have any questions about this refund policy or need assistance with a
                     refund request, please don&apos;t hesitate to contact us:
@@ -519,7 +519,7 @@ export default function RefundPolicyPage() {
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                         <svg
-                          className="w-5 h-5 text-violet-400"
+                          className="w-5 h-5 text-[var(--ink-900)]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -536,7 +536,7 @@ export default function RefundPolicyPage() {
                         <p className="text-sm text-gray-400">Email</p>
                         <a
                           href="mailto:support@seizn.com"
-                          className="text-white hover:text-violet-400 transition-colors font-medium"
+                          className="text-white hover:text-[var(--ink-900)] transition-colors font-medium"
                         >
                           support@seizn.com
                         </a>
@@ -545,7 +545,7 @@ export default function RefundPolicyPage() {
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                         <svg
-                          className="w-5 h-5 text-violet-400"
+                          className="w-5 h-5 text-[var(--ink-900)]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -570,7 +570,7 @@ export default function RefundPolicyPage() {
               {/* Policy Updates */}
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     9
                   </span>
                   Policy Updates
@@ -599,7 +599,7 @@ export default function RefundPolicyPage() {
                   <Link href="/privacy" className="hover:text-gray-900 transition-colors">
                     Privacy Policy
                   </Link>
-                  <Link href="/refund" className="text-violet-600 font-medium">
+                  <Link href="/refund" className="text-[var(--ink-900)] font-medium">
                     Refund Policy
                   </Link>
                 </nav>
