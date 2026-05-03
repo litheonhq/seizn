@@ -8,7 +8,7 @@ describe('Author UI service', () => {
     delete process.env.AUTHOR_AUDIT_LOG_STORE;
   });
 
-  it('seeds the Author UI surface from KNOT input artifacts', () => {
+  it('seeds the Author UI surface from KNOT input artifacts', async () => {
     const service = resetAuthorUiServiceForTests();
     const projects = service.listProjects();
     const projectId = projects.projects[0].id;
@@ -19,29 +19,29 @@ describe('Author UI service', () => {
       phase: 'Phase 1',
     });
 
-    expect(service.listImports(projectId).summary.total).toBeGreaterThan(0);
-    expect(service.listCandidates(projectId, new URLSearchParams()).total).toBeGreaterThan(100);
-    expect(service.listCharacters(projectId).characters).toHaveLength(15);
+    expect((await service.listImports(projectId)).summary.total).toBeGreaterThan(0);
+    expect((await service.listCandidates(projectId, new URLSearchParams())).total).toBeGreaterThan(100);
+    expect((await service.listCharacters(projectId)).characters).toHaveLength(15);
     expect(service.getGraph(projectId, new URLSearchParams()).edges.length).toBeGreaterThan(10);
     expect(service.getTimeline(projectId, new URLSearchParams()).events).toHaveLength(35);
-    expect(service.listConflicts(projectId, new URLSearchParams('status=open')).conflicts.length)
+    expect((await service.listConflicts(projectId, new URLSearchParams('status=open'))).conflicts.length)
       .toBeGreaterThan(0);
   });
 
-  it('updates review state and creates review candidates for sensitive character edits', () => {
+  it('updates review state and creates review candidates for sensitive character edits', async () => {
     const service = resetAuthorUiServiceForTests('review-user');
     const projectId = service.listProjects().projects[0].id;
-    const candidate = service.listCandidates(projectId, new URLSearchParams('status=candidate'))
+    const candidate = (await service.listCandidates(projectId, new URLSearchParams('status=candidate')))
       .candidates[0];
 
-    const decision = service.decideCandidate(projectId, candidate.id, { action: 'approve' });
+    const decision = await service.decideCandidate(projectId, candidate.id, { action: 'approve' });
     expect(decision).toMatchObject({
       candidate_id: candidate.id,
       new_status: 'canon',
     });
 
-    const character = service.listCharacters(projectId).characters[0];
-    const patch = service.updateCharacter(projectId, character.id, {
+    const character = (await service.listCharacters(projectId)).characters[0];
+    const patch = await service.updateCharacter(projectId, character.id, {
       field: 'knowledge_state.known_facts',
       value: [],
     });
@@ -49,18 +49,18 @@ describe('Author UI service', () => {
     expect(patch.candidate_id).toMatch(/^candidate-/);
   });
 
-  it('blocks unsafe field paths and does not mutate object prototypes', () => {
+  it('blocks unsafe field paths and does not mutate object prototypes', async () => {
     const service = resetAuthorUiServiceForTests('field-path-user');
     const projectId = service.listProjects().projects[0].id;
-    const character = service.listCharacters(projectId).characters[0];
+    const character = (await service.listCharacters(projectId)).characters[0];
 
     try {
-      expect(() =>
+      await expect(
         service.updateCharacter(projectId, character.id, {
           field: '__proto__.polluted',
           value: 'yes',
         })
-      ).toThrow('field path is not allowed');
+      ).rejects.toThrow('field path is not allowed');
       expect(() =>
         service.updateSettings(projectId, {
           field: 'constructor.prototype.polluted',
@@ -73,22 +73,22 @@ describe('Author UI service', () => {
     }
   });
 
-  it('returns not found instead of auto-creating arbitrary projects', () => {
+  it('returns not found instead of auto-creating arbitrary projects', async () => {
     const service = resetAuthorUiServiceForTests('project-guard-user');
 
-    expect(() => service.listImports('missing-project')).toThrow('Project not found: missing-project');
+    await expect(service.listImports('missing-project')).rejects.toThrow('Project not found: missing-project');
     expect(service.listProjects().projects.map((project) => project.id)).not.toContain('missing-project');
   });
 
-  it('applies candidate, graph, and timeline contract filters', () => {
+  it('applies candidate, graph, and timeline contract filters', async () => {
     const service = resetAuthorUiServiceForTests('filter-user');
     const projectId = service.listProjects().projects[0].id;
 
-    const scoped = service.listCandidates(projectId, new URLSearchParams('scope=short1&page_size=100'));
+    const scoped = await service.listCandidates(projectId, new URLSearchParams('scope=short1&page_size=100'));
     expect(scoped.total).toBeGreaterThan(0);
     expect(scoped.candidates.every((candidate) => candidate.tags.includes('short1'))).toBe(true);
 
-    const sourceFiltered = service.listCandidates(
+    const sourceFiltered = await service.listCandidates(
       projectId,
       new URLSearchParams('source_id=character_registry.json&page_size=100')
     );
@@ -97,12 +97,12 @@ describe('Author UI service', () => {
       candidate.source.file_path.endsWith('character_registry.json')
     )).toBe(true);
 
-    const created = service.createCandidate(projectId, {
+    const created = await service.createCandidate(projectId, {
       content: 'Tier filter candidate',
       type: 'fact',
       tags: ['tier:2', 'short1'],
     });
-    const tierFiltered = service.listCandidates(projectId, new URLSearchParams('tier=2&page_size=100'));
+    const tierFiltered = await service.listCandidates(projectId, new URLSearchParams('tier=2&page_size=100'));
     expect(tierFiltered.candidates.map((candidate) => candidate.id)).toContain(created.candidate_id);
 
     const graph = service.getGraph(projectId, new URLSearchParams('scope=short1&type=person&time_state=D1'));
@@ -115,7 +115,7 @@ describe('Author UI service', () => {
     expect(timeline.events.length).toBeGreaterThan(0);
     expect(timeline.events.every((event) => ['D1', 'D2', 'D3'].includes(event.day))).toBe(true);
 
-    const characterId = service.listCharacters(projectId).characters[0].id;
+    const characterId = (await service.listCharacters(projectId)).characters[0].id;
     const characterTimeline = service.getTimeline(projectId, new URLSearchParams(`character_ids=${characterId}`));
     const characterTail = characterId.split('.').pop() ?? characterId;
     expect(characterTimeline.events.length).toBeGreaterThan(0);
@@ -124,12 +124,12 @@ describe('Author UI service', () => {
     )).toBe(true);
   });
 
-  it('runs deterministic scene simulations and promotes simulation candidates', () => {
+  it('runs deterministic scene simulations and promotes simulation candidates', async () => {
     const service = resetAuthorUiServiceForTests('simulation-user');
     const projectId = service.listProjects().projects[0].id;
-    const character = service.listCharacters(projectId).characters[0];
+    const character = (await service.listCharacters(projectId)).characters[0];
 
-    const run = service.runSimulation(projectId, {
+    const run = await service.runSimulation(projectId, {
       scene_input: {
         text: 'A scene pressure check.',
         setting: { location: 'club room', time: 'D29' },
@@ -142,15 +142,15 @@ describe('Author UI service', () => {
     });
 
     expect(run.status).toBe('running');
-    const simulation = service.getSimulation(projectId, run.simulation_id);
+    const simulation = await service.getSimulation(projectId, run.simulation_id);
     expect(simulation.status).toBe('complete');
     expect(simulation.candidates).toHaveLength(3);
     expect(simulation.trace_metadata.deterministic).toBe(true);
 
-    const replay = service.replaySimulation(projectId, run.simulation_id);
+    const replay = await service.replaySimulation(projectId, run.simulation_id);
     expect(replay.replay_status).toBe('deterministic');
 
-    const promoted = service.createCandidate(projectId, {
+    const promoted = await service.createCandidate(projectId, {
       from_simulation_id: run.simulation_id,
       from_simulation_candidate_index: 0,
       type: 'fact',
@@ -163,7 +163,7 @@ describe('Author UI service', () => {
   it('generates character backlog candidates into the review queue', async () => {
     const service = resetAuthorUiServiceForTests('backlog-user');
     const projectId = service.listProjects().projects[0].id;
-    const character = service.listCharacters(projectId).characters
+    const character = (await service.listCharacters(projectId)).characters
       .find((item) => item.id === 'knot.short1.char.sori');
 
     const result = await service.generateCharacterBacklog(projectId, character?.id ?? '', {
@@ -175,8 +175,8 @@ describe('Author UI service', () => {
     expect(result.conflicts_detected).toBe(0);
     expect(result.export_markdown).toContain('§X.6 backlog candidates');
 
-    const backlogCandidates = service
-      .listCandidates(projectId, new URLSearchParams('source_id=backlog.knot.short1.char.sori&page_size=25'))
+    const backlogCandidates = (await service
+      .listCandidates(projectId, new URLSearchParams('source_id=backlog.knot.short1.char.sori&page_size=25')))
       .candidates;
     expect(backlogCandidates).toHaveLength(20);
     expect(backlogCandidates.every((candidate) => candidate.tags.includes('backlog'))).toBe(true);
@@ -186,8 +186,8 @@ describe('Author UI service', () => {
   it('records mutation audit logs and replays deterministic decisions without raw secrets', async () => {
     const service = resetAuthorUiServiceForTests('audit-user');
     const projectId = service.listProjects().projects[0].id;
-    const character = service.listCharacters(projectId).characters[0];
-    const run = service.runSimulation(projectId, {
+    const character = (await service.listCharacters(projectId)).characters[0];
+    const run = await service.runSimulation(projectId, {
       scene_input: {
         text: 'Audit replay scene.',
         perspective: character.id,
@@ -253,7 +253,7 @@ describe('Author UI service', () => {
       sourceRole: 'canon',
     });
 
-    const uploaded = service.listImports(projectId).imports.find((item) => item.id === result.import_id);
+    const uploaded = (await service.listImports(projectId)).imports.find((item) => item.id === result.import_id);
     expect(uploaded).toMatchObject({
       parse_status: 'parsed',
       extract_status: 'extracted',
@@ -263,7 +263,7 @@ describe('Author UI service', () => {
     });
     expect(uploaded?.parsed_text_preview).toContain('Parsed canon body');
 
-    const candidates = service.listCandidates(projectId, new URLSearchParams(`source_id=${result.import_id}`));
+    const candidates = await service.listCandidates(projectId, new URLSearchParams(`source_id=${result.import_id}`));
     expect(candidates.total).toBe(1);
     expect(candidates.candidates[0]).toMatchObject({
       type: 'world_rule',
@@ -286,7 +286,7 @@ describe('Author UI service', () => {
       fileBytes: Buffer.from('hwp'),
     });
 
-    const uploaded = service.listImports(projectId).imports.find((item) => item.id === result.import_id);
+    const uploaded = (await service.listImports(projectId)).imports.find((item) => item.id === result.import_id);
     expect(uploaded).toMatchObject({
       parse_status: 'failed',
       extract_status: 'failed',
@@ -320,7 +320,7 @@ describe('Author UI service', () => {
 
     const service = resetAuthorUiServiceForTests('persistent-audit-user');
     const projectId = service.listProjects().projects[0].id;
-    const run = service.runSimulation(projectId, {
+    const run = await service.runSimulation(projectId, {
       scene_input: {
         text: 'Persistent audit scene.',
         candidate_count: 1,
