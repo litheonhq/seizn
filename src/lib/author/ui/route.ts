@@ -52,9 +52,12 @@ export async function withAuthorUiService(
       );
     }
     const message = error instanceof Error ? error.message : 'Internal error';
+    const debug = process.env.VERCEL_ENV !== 'production' && error instanceof Error
+      ? { stack: error.stack, name: error.name }
+      : undefined;
     return ensureCsrfCookie(
       request,
-      NextResponse.json({ error: message }, { status: 500 })
+      NextResponse.json({ error: message, ...(debug ? { debug } : {}) }, { status: 500 })
     );
   }
 }
