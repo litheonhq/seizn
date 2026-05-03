@@ -115,9 +115,7 @@ export class SupabaseAuthorUiStore implements AuthorUiStore {
       candidates = candidates.filter((item) => matchesSourceId(item, filter.sourceId ?? ''));
     }
     candidates.sort((a, b) => sortCandidates(a, b, filter.sort ?? 'priority'));
-    const page = Math.max(1, filter.page ?? 1);
-    const pageSize = Math.max(1, Math.min(100, filter.pageSize ?? 50));
-    return candidates.slice((page - 1) * pageSize, page * pageSize);
+    return candidates;
   }
 
   async getCandidate(userId: string, projectId: string, candidateId: string): Promise<AuthorUiCandidate | undefined> {
