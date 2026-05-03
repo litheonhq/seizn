@@ -41,7 +41,7 @@ export type AuthorCandidateStatus =
   | 'character_unknown';
 
 export type AuthorConflictSeverity = 'low' | 'medium' | 'high' | 'critical';
-export type AuthorConflictStatus = 'open' | 'resolved';
+export type AuthorConflictStatus = 'open' | 'resolved' | 'deferred';
 export type AuthorSimulationStatus = 'queued' | 'running' | 'complete' | 'failed';
 
 export interface AuthorImportRow {

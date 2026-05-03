@@ -34,6 +34,8 @@ import {
   useUploadAuthorImport,
 } from '@/hooks/useAuthorMemoryV3';
 import { EmptyState } from '@/components/author/empty-state';
+import { ConflictList } from '@/components/author/conflicts/conflict-list';
+import type { AuthorUiConflict } from '@/components/author/conflicts/conflict-card';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { AuditLogView } from './audit-log-view';
 import {
@@ -460,7 +462,10 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'conflicts' ? (
             <Panel title={activeScreen.label} description={t('author.tabs.conflicts.subline')}>
-              <RawRows rows={conflicts.data?.conflicts ?? []} columns={['id', 'severity', 'status', 'impact_summary']} />
+              <ConflictList
+                conflicts={(conflicts.data?.conflicts as AuthorUiConflict[] | undefined) ?? []}
+                projectId={projectId}
+              />
             </Panel>
           ) : null}
           {!isLoading && screen === 'simulate' ? (

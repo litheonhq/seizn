@@ -161,14 +161,15 @@ export class InMemoryAuthorUiStore implements AuthorUiStore {
     userId: string,
     projectId: string,
     conflictKey: string,
-    resolution: AuthorConflictRow['resolution']
+    resolution: AuthorConflictRow['resolution'],
+    status: AuthorConflictRow['status'] = 'resolved'
   ): Promise<void> {
     const rows = new Map(this.conflictRows(userId, projectId));
     const row = rows.get(conflictKey);
     if (!row) return;
     rows.set(conflictKey, cloneConflictRow({
       ...row,
-      status: 'resolved',
+      status,
       resolution,
       resolved_at: nowIso(),
       updated_at: nowIso(),
