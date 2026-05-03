@@ -1,6 +1,10 @@
-import type { createServerClient } from '@/lib/supabase';
+import {
+  hasServerSupabaseServiceRoleConfig,
+  type createServerClient,
+} from '@/lib/supabase';
 import type { JsonValue } from '@/lib/author/memory-v3/canonical';
 import { InMemoryAuthorUiStore } from './in-memory-store';
+import { SupabaseAuthorUiStore } from './supabase-store';
 import type {
   AuthorUiCandidate,
   AuthorUiCharacterDetail,
@@ -65,5 +69,14 @@ export function createAuthorUiStoreForUser(_options: {
   userId: string;
   client?: SupabaseClientLike;
 }): AuthorUiStore {
+  if (process.env.AUTHOR_UI_STORE === 'supabase') {
+    if (!_options.client && !hasServerSupabaseServiceRoleConfig()) {
+      throw new AuthorUiStoreConfigError(
+        'AUTHOR_UI_STORE=supabase requires Supabase service-role configuration'
+      );
+    }
+    return new SupabaseAuthorUiStore(_options);
+  }
+
   return new InMemoryAuthorUiStore();
 }
