@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AuthCard, AuthHomeLink, AuthPage } from "@/components/auth/auth-shell";
@@ -16,6 +16,8 @@ export default function DeviceForm() {
   const [step, setStep] = useState<Step>("input");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const codeInputRef = useRef<HTMLInputElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   // Auto-format: insert dash after 4 chars
   const handleCodeChange = (val: string) => {
@@ -126,6 +128,21 @@ export default function DeviceForm() {
     };
   }, []);
 
+  useEffect(() => {
+    if (step === "input") {
+      codeInputRef.current?.focus();
+      return;
+    }
+
+    statusRef.current?.focus();
+  }, [step]);
+
+  useEffect(() => {
+    if (step === "input" && errorMsg) {
+      statusRef.current?.focus();
+    }
+  }, [errorMsg, step]);
+
   return (
     <AuthPage subtitle="Authorize Device">
       <AuthCard>
@@ -144,7 +161,13 @@ export default function DeviceForm() {
               </div>
 
               {errorMsg && (
-                <div className="auth-status auth-status-compact auth-status-conflict mb-4">
+                <div
+                  ref={statusRef}
+                  role="alert"
+                  aria-live="assertive"
+                  tabIndex={-1}
+                  className="auth-status auth-status-compact auth-status-conflict mb-4"
+                >
                   <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -155,6 +178,7 @@ export default function DeviceForm() {
               <form onSubmit={handleLookup}>
                 <div className="mb-6">
                   <input
+                    ref={codeInputRef}
                     type="text"
                     value={userCode}
                     onChange={(e) => handleCodeChange(e.target.value)}
@@ -197,7 +221,7 @@ export default function DeviceForm() {
 
           {/* Step: Confirm approval */}
           {step === "confirming" && (
-            <div className="text-center">
+            <div ref={statusRef} role="status" aria-live="polite" tabIndex={-1} className="text-center">
               <div className="auth-icon auth-icon-pending">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -234,7 +258,7 @@ export default function DeviceForm() {
 
           {/* Step: Approved */}
           {step === "approved" && (
-            <div className="text-center">
+            <div ref={statusRef} role="status" aria-live="polite" tabIndex={-1} className="text-center">
               <div className="auth-icon auth-icon-canon">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -255,7 +279,7 @@ export default function DeviceForm() {
 
           {/* Step: Denied */}
           {step === "denied" && (
-            <div className="text-center">
+            <div ref={statusRef} role="status" aria-live="polite" tabIndex={-1} className="text-center">
               <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -276,7 +300,7 @@ export default function DeviceForm() {
 
           {/* Step: Expired */}
           {step === "expired" && (
-            <div className="text-center">
+            <div ref={statusRef} role="alert" aria-live="assertive" tabIndex={-1} className="text-center">
               <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -297,7 +321,7 @@ export default function DeviceForm() {
 
           {/* Step: Error */}
           {step === "error" && (
-            <div className="text-center">
+            <div ref={statusRef} role="alert" aria-live="assertive" tabIndex={-1} className="text-center">
               <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
