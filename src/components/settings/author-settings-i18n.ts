@@ -30,6 +30,15 @@ const en: AuthorSettingsCopy = {
       error: "Error",
       inactive: "Inactive",
     },
+    helper: {
+      title: "Don't have an Anthropic key?",
+      buttonLabel: "Get a key from Anthropic Console",
+      buttonAriaLabel: "Open Anthropic Console API Keys page in a new tab",
+      step1: "Click the button above to open Anthropic Console",
+      step2: "Go to Settings → API Keys → Create Key",
+      step3: "Copy the new key (starts with sk-ant-…)",
+      step4: "Paste it here and save",
+    },
   },
   subscription: {
     title: "Subscription & Billing",
@@ -88,6 +97,15 @@ const ko: AuthorSettingsCopy = {
       pending: "대기 중",
       error: "오류",
       inactive: "비활성",
+    },
+    helper: {
+      title: "Anthropic 키가 없으신가요?",
+      buttonLabel: "Anthropic Console에서 키 발급하기",
+      buttonAriaLabel: "Anthropic Console API 키 페이지를 새 탭으로 열기",
+      step1: "위 버튼으로 Anthropic Console을 엽니다",
+      step2: "Settings → API Keys → Create Key 진입",
+      step3: "발급된 키를 복사 (sk-ant-…로 시작)",
+      step4: "이 칸에 붙여넣고 저장",
     },
   },
   subscription: {
@@ -148,6 +166,15 @@ const ja: AuthorSettingsCopy = {
       error: "エラー",
       inactive: "無効",
     },
+    helper: {
+      title: "Anthropic キーをお持ちでない場合",
+      buttonLabel: "Anthropic Console でキーを発行",
+      buttonAriaLabel: "Anthropic Console API キーページを新しいタブで開く",
+      step1: "上のボタンで Anthropic Console を開く",
+      step2: "Settings → API Keys → Create Key へ進む",
+      step3: "キー (sk-ant-… で始まる) をコピー",
+      step4: "このフィールドに貼り付けて保存",
+    },
   },
   subscription: {
     title: "サブスクリプションと請求",
@@ -206,6 +233,15 @@ const zhHans: AuthorSettingsCopy = {
       pending: "待处理",
       error: "错误",
       inactive: "未启用",
+    },
+    helper: {
+      title: "没有 Anthropic 密钥？",
+      buttonLabel: "在 Anthropic Console 获取密钥",
+      buttonAriaLabel: "在新标签页打开 Anthropic Console API 密钥页面",
+      step1: "点击上方按钮打开 Anthropic Console",
+      step2: "进入 Settings → API Keys → Create Key",
+      step3: "复制密钥 (以 sk-ant-… 开头)",
+      step4: "粘贴到此处并保存",
     },
   },
   subscription: {

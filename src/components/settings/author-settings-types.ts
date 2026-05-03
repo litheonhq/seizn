@@ -79,6 +79,15 @@ export interface AuthorSettingsCopy {
     keyHint: string;
     discount: string;
     discountStates: Record<ByokDiscountStatus, string>;
+    helper: {
+      title: string;
+      buttonLabel: string;
+      buttonAriaLabel: string;
+      step1: string;
+      step2: string;
+      step3: string;
+      step4: string;
+    };
   };
   subscription: {
     title: string;
