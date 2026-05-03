@@ -22,16 +22,15 @@ if (targets.length === 0) {
   exit(1);
 }
 
-// Paths that must never be modified during phases 2-6 (Phase D'' lock zones
-// + settings UI deferred to phase 1 / final phase to avoid mid-dogfood UI churn)
+// Paths that must never be modified (Phase D'' lock zones).
+// Settings paths were temporarily added during phases 2-6 (dogfood lock) and
+// removed in phase 1 (final pass).
 const LOCK_PATHS = [
   "src/components/landing/",
   "src/app/(auth)/",
   "src/components/auth/auth-shell.tsx",
   "docs/brand/assets/raster/",
   "docs/knot-input/",
-  "src/components/settings/",
-  "src/app/(dashboard)/dashboard/settings/",
 ];
 
 // Ordered class-replacement rules. Each rule is [regex, replacement].

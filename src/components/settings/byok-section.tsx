@@ -63,52 +63,52 @@ export function ByokSection({
   }
 
   return (
-    <section className="rounded-lg border border-szn-border bg-szn-card p-5" aria-labelledby="author-settings-byok">
+    <section className="rounded-lg border border-[var(--ink-200)] bg-[var(--ink-0)] p-5" aria-labelledby="author-settings-byok">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <KeyRound className="h-5 w-5 text-szn-accent" aria-hidden="true" />
-            <h2 id="author-settings-byok" className="text-lg font-semibold text-szn-text-1">
+            <KeyRound className="h-5 w-5 text-[var(--ink-900)]" aria-hidden="true" />
+            <h2 id="author-settings-byok" className="text-lg font-semibold text-[var(--ink-900)]">
               {copy.title}
             </h2>
           </div>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-szn-text-2">{copy.description}</p>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-600)]">{copy.description}</p>
         </div>
         <StatusBadge active={isActive} activeLabel={copy.active} missingLabel={copy.missing} />
       </div>
 
       <dl className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
-          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.status}</dt>
-          <dd className="mt-1 text-sm font-semibold text-szn-text-1">
+        <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
+          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.status}</dt>
+          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
             {isActive ? copy.active : byok.status === "invalid" || byok.status === "error" ? copy.error : copy.missing}
           </dd>
         </div>
-        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
-          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.lastFour}</dt>
-          <dd className="mt-1 text-sm font-semibold text-szn-text-1">
+        <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
+          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.lastFour}</dt>
+          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
             {byok.key_last_4 ? `•••• ${byok.key_last_4}` : "—"}
           </dd>
         </div>
-        <div className="rounded-md border border-szn-border bg-szn-bg p-3">
-          <dt className="text-xs font-medium uppercase text-szn-text-3">{copy.discount}</dt>
-          <dd className="mt-1 text-sm font-semibold text-szn-text-1">
+        <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
+          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.discount}</dt>
+          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
             {copy.discountStates[normalizedDiscountStatus]}
           </dd>
           {normalizedDiscountStatus === "error" && discountError ? (
-            <p className="mt-1 text-xs text-red-600">{discountError}</p>
+            <p className="mt-1 text-xs text-[var(--signal-conflict-ink)]">{discountError}</p>
           ) : null}
         </div>
       </dl>
 
       {!isActive ? (
         <div
-          className="mt-5 rounded-md border border-szn-border bg-szn-bg p-4"
+          className="mt-5 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-4"
           aria-labelledby={`${inputId}-helper-title`}
         >
           <p
             id={`${inputId}-helper-title`}
-            className="text-sm font-medium text-szn-text-1"
+            className="text-sm font-medium text-[var(--ink-900)]"
           >
             {copy.helper.title}
           </p>
@@ -117,12 +117,12 @@ export function ByokSection({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.helper.buttonAriaLabel}
-            className="mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-szn-border bg-szn-card px-4 text-sm font-medium text-szn-text-1 transition-colors hover:bg-szn-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-szn-accent/40"
+            className="mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] bg-[var(--ink-0)] px-4 text-sm font-medium text-[var(--ink-900)] transition-colors hover:bg-[var(--ink-50)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink-900)]/40"
           >
             {copy.helper.buttonLabel}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
-          <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs leading-5 text-szn-text-2">
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs leading-5 text-[var(--ink-600)]">
             <li>{copy.helper.step1}</li>
             <li>{copy.helper.step2}</li>
             <li>{copy.helper.step3}</li>
@@ -133,7 +133,7 @@ export function ByokSection({
 
       <form onSubmit={handleSave} className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
         <div>
-          <label htmlFor={inputId} className="block text-sm font-medium text-szn-text-1">
+          <label htmlFor={inputId} className="block text-sm font-medium text-[var(--ink-900)]">
             {copy.keyLabel}
           </label>
           <input
@@ -143,15 +143,15 @@ export function ByokSection({
             value={apiKey}
             onChange={(event) => setApiKey(event.target.value)}
             placeholder={copy.keyPlaceholder}
-            className="mt-2 min-h-10 w-full rounded-md border border-szn-border bg-szn-bg px-3 text-sm text-szn-text-1 outline-none focus:border-szn-accent focus:ring-2 focus:ring-szn-accent/20"
+            className="mt-2 min-h-10 w-full rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] px-3 text-sm text-[var(--ink-900)] outline-none focus:border-[var(--ink-900)] focus:ring-2 focus:ring-[var(--ink-900)]/20"
           />
-          <p className="mt-2 text-xs text-szn-text-3">{copy.keyHint}</p>
+          <p className="mt-2 text-xs text-[var(--ink-500)]">{copy.keyHint}</p>
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <button
             type="submit"
             disabled={busy || !apiKey.trim()}
-            className="inline-flex min-h-10 items-center justify-center rounded-md bg-szn-accent px-4 text-sm font-medium text-white hover:bg-szn-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-10 items-center justify-center rounded-md bg-[var(--ink-900)] px-4 text-sm font-medium text-white hover:bg-[var(--ink-900)]/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {action === "saving" ? copy.saving : copy.save}
           </button>
@@ -159,7 +159,7 @@ export function ByokSection({
             type="button"
             onClick={handleRemove}
             disabled={busy || !isActive}
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-szn-border px-4 text-sm font-medium text-szn-text-1 hover:bg-szn-surface disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
             {action === "removing" ? copy.removing : copy.remove}
@@ -168,13 +168,13 @@ export function ByokSection({
       </form>
 
       {message ? (
-        <div className="mt-4 flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+        <div className="mt-4 flex items-start gap-2 rounded-md border border-[var(--signal-canon)] bg-[var(--signal-canon-soft)] p-3 text-sm text-[var(--signal-canon-ink)]">
           <CheckCircle2 className="mt-0.5 h-4 w-4" aria-hidden="true" />
           <span>{message}</span>
         </div>
       ) : null}
       {error ? (
-        <div className="mt-4 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mt-4 flex items-start gap-2 rounded-md border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] p-3 text-sm text-[var(--signal-conflict-ink)]">
           <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
           <span>{error}</span>
         </div>
@@ -196,8 +196,8 @@ function StatusBadge({
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
         active
-          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200"
-          : "bg-szn-surface text-szn-text-2"
+          ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]"
+          : "bg-[var(--ink-50)] text-[var(--ink-600)]"
       }`}
     >
       {active ? activeLabel : missingLabel}

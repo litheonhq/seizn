@@ -128,24 +128,24 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-szn-text-2">{copy.eyebrow}</p>
-          <h1 className="mt-1 text-2xl font-semibold text-szn-text-1">{copy.title}</h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-szn-text-2">{copy.subtitle}</p>
+          <p className="text-sm font-medium text-[var(--ink-600)]">{copy.eyebrow}</p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--ink-900)]">{copy.title}</h1>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-600)]">{copy.subtitle}</p>
         </div>
         <button
           type="button"
           onClick={refresh}
           disabled={action !== "idle"}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-szn-border px-4 text-sm font-medium text-szn-text-1 hover:bg-szn-surface disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} aria-hidden="true" />
           {copy.refresh}
         </button>
       </header>
 
-      {loading ? <div className="text-sm text-szn-text-2">{copy.loading}</div> : null}
+      {loading ? <div className="text-sm text-[var(--ink-600)]">{copy.loading}</div> : null}
       {error ? (
-        <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="flex items-start gap-2 rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending-ink)]/30 dark:text-[var(--signal-pending-soft)]">
           <TriangleAlert className="mt-0.5 h-4 w-4" aria-hidden="true" />
           <span>{error || copy.loadError}</span>
         </div>
