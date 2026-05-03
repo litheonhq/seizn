@@ -10,24 +10,19 @@ import {
   type AuthorBillingTier,
   type BillingCadence,
 } from "@/lib/stripe-config";
-import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { formatTokenLabel, formatUsd } from "@/components/landing/section-pricing";
-import { getPricingPageCopy } from "./pricing-copy";
 import type { PricingPageCopy } from "./pricing-copy";
 
 interface PricingClientProps {
-  dict: Dictionary;
   locale: Locale;
+  copy: PricingPageCopy;
 }
 
 const TIERS = ["indie", "pro", "studio", "enterprise"] as const satisfies readonly AuthorBillingTier[];
 
-export { getPricingPageCopy } from "./pricing-copy";
-
-export function PricingClient({ locale }: PricingClientProps) {
+export function PricingClient({ locale, copy }: PricingClientProps) {
   const [cadence, setCadence] = useState<BillingCadence>("monthly");
-  const copy = getPricingPageCopy(locale);
   const yearly = cadence === "yearly";
   const plans = useMemo(() => TIERS.map((tier) => AUTHOR_BILLING_TIERS[tier]), []);
 

@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import "../globals.css";
 import { Providers } from "@/components/providers";
@@ -9,17 +8,6 @@ import { BetaDisclosureBanner } from "@/components/legal/beta-disclosure-banner"
 import { getBetaDisclosureUntil } from "@/lib/legal-docs";
 
 import { DashboardClientWrapper } from "@/components/dashboard/DashboardClientWrapper";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -47,7 +35,7 @@ export default async function DashboardLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased szn-app-bg min-h-screen`}
+        className="antialiased szn-app-bg min-h-screen"
       >
         <Providers>
           <DashboardLocaleProvider initialLocale={locale}>

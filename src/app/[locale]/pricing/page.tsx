@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { PricingClient } from './pricing-client';
+import { getPricingPageCopy } from './pricing-copy';
 
 interface PageProps {
   params: Promise<{ locale: Locale }>;
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
-  const dict = await getDictionary(locale);
+  const copy = getPricingPageCopy(locale);
   
-  return <PricingClient dict={dict} locale={locale} />;
+  return <PricingClient locale={locale} copy={copy} />;
 }

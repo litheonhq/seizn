@@ -27,8 +27,7 @@ export default async function AuthLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className="antialiased"
-        style={{ fontFamily: "var(--font-sans)" }}
+        className="auth-root antialiased"
       >
         {children}
       </body>

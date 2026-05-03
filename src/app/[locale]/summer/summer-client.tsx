@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-client";
+import type { CheckoutLegalCopy } from "@/lib/checkout-copy";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -17,9 +17,10 @@ declare global {
 interface SummerClientProps {
   dict: Dictionary;
   locale: Locale;
+  checkoutLegalCopy: CheckoutLegalCopy;
 }
 
-export function SummerClient({ dict, locale }: SummerClientProps) {
+export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -51,7 +52,6 @@ export function SummerClient({ dict, locale }: SummerClientProps) {
   };
 
   const t = dict;
-  const checkoutLegalCopy = getPricingPageCopy(locale).checkout;
 
   return (
     <div className="min-h-screen gradient-summer relative overflow-hidden">

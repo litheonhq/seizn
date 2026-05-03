@@ -130,6 +130,14 @@ export default defineConfig({
     env: {
       ...process.env,
       NEXT_PUBLIC_E2E_MODE: 'true',
+      AUTH_SECRET:
+        process.env.AUTH_SECRET ??
+        process.env.NEXTAUTH_SECRET ??
+        'seizn-local-playwright-secret-minimum-32-chars',
+      NEXTAUTH_SECRET:
+        process.env.NEXTAUTH_SECRET ??
+        process.env.AUTH_SECRET ??
+        'seizn-local-playwright-secret-minimum-32-chars',
       ...(disableTurnstile
         ? {
             // Force-disable Turnstile in local E2E runs.

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckoutButton, PLAN_VARIANTS } from "@/components/checkout-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-client";
+import type { CheckoutLegalCopy } from "@/lib/checkout-copy";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 
@@ -12,9 +12,10 @@ import type { Locale } from "@/i18n/config";
 interface HomeClientProps {
   dict: Dictionary;
   locale: Locale;
+  checkoutLegalCopy: CheckoutLegalCopy;
 }
 
-export function HomeClient({ dict, locale }: HomeClientProps) {
+export function HomeClient({ dict, locale, checkoutLegalCopy }: HomeClientProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,7 +43,6 @@ export function HomeClient({ dict, locale }: HomeClientProps) {
   };
 
   const t = dict;
-  const checkoutLegalCopy = getPricingPageCopy(locale).checkout;
 
   return (
     <div className="min-h-screen bg-white">
