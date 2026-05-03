@@ -30,3 +30,20 @@ Rationale:
 References:
 - Design spec: [seizn-author-memory-v3-persistence-handoff.md](./seizn-author-memory-v3-persistence-handoff.md)
 - Codex playbook: [seizn-author-memory-v3-persistence-task-pack.md](./seizn-author-memory-v3-persistence-task-pack.md)
+
+## 2026-05-04 — Author UI Rebrand (handoff)
+
+Status: design locked; Codex execution runs parallel to persistence cycle (no file overlap).
+
+Decision:
+- Convert `/dashboard/author` from English dev-tone surface to Korean writer-friendly UI: author-only sidebar via `buildAuthorNavigationGroups`, 8 tabs / 6 cards / 6 tables Korean i18n, `<EmptyState>` across 10 screens, conflicts UI redesigned as card list with offending rule citation + 4 one-click resolve actions, relationship graph rebuilt as react-flow diagram with qualitative intensity bands (no raw IDs or numeric weights visible).
+- ~130 new keys land under `author.*` in `src/i18n/dictionaries/{ko,en}.json`; other 20 locales auto-fall-back to `en.json` until the standard translation pass.
+- Branch cuts from `feat/npc-memory-pivot-persistence` to inherit the lint hotfix (`8c1d28c2`); rebase onto `feat/npc-memory-pivot` once after the persistence PR merges.
+
+Rationale:
+- Dogfood report 2026-05-03 §8 P1 items 1–8 flagged author onboarding friction: NPC SDK menus visible to authors, English dev labels, snake_case headers, raw entity IDs, missing empty states, conflicts UI without offending rule citation.
+- Spec is fully self-contained against KNOT identifiers (sample IP = Saebyeok Academy at `docs/marketing/sample_ip/`); rebrand work touches only client-side files (no `service.ts`, no migrations).
+
+References:
+- Design spec: [seizn-author-ui-rebrand-spec.md](../design/seizn-author-ui-rebrand-spec.md)
+- Codex playbook: [seizn-author-ui-rebrand-task-pack.md](./seizn-author-ui-rebrand-task-pack.md)
