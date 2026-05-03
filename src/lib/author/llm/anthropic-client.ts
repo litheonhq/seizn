@@ -187,12 +187,22 @@ function createDefaultAnthropicClient(apiKey: string): AnthropicClientLike {
   }) as unknown as AnthropicClientLike;
 }
 
+function modelSupportsTemperature(model: string): boolean {
+  // Opus 4.7+ removed the temperature parameter (extended-thinking generation).
+  // Keep an explicit deny-list rather than allow-list so older Sonnet/Opus
+  // models continue to receive the value when callers ask for it.
+  if (/claude-opus-4-7/i.test(model)) return false;
+  return true;
+}
+
 function buildAnthropicMessageParams(request: AuthorLlmRequest, model: string): Record<string, unknown> {
   const system = buildSystemPrompt(request.system, request.responseFormat);
+  const includeTemperature =
+    typeof request.temperature === 'number' && modelSupportsTemperature(model);
   return {
     model,
     max_tokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
-    ...(typeof request.temperature === 'number' ? { temperature: request.temperature } : {}),
+    ...(includeTemperature ? { temperature: request.temperature } : {}),
     ...(system ? { system } : {}),
     messages: [{
       role: 'user',
