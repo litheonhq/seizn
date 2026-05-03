@@ -227,12 +227,31 @@ function extractText(response: AnthropicMessageLike): string {
     .trim() ?? '';
 }
 
+function stripJsonFence(text: string): string {
+  const trimmed = text.trim();
+  // ```json ... ``` or ``` ... ```
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenced) return fenced[1].trim();
+  // Best-effort: take the first JSON-looking object/array if surrounded by prose
+  const firstBrace = trimmed.search(/[\[{]/);
+  const lastBrace = Math.max(trimmed.lastIndexOf('}'), trimmed.lastIndexOf(']'));
+  if (firstBrace > 0 && lastBrace > firstBrace) {
+    return trimmed.slice(firstBrace, lastBrace + 1);
+  }
+  return trimmed;
+}
+
 function parseAndValidateJson<TJson>(text: string, schema?: AuthorJsonSchema): TJson {
   let parsed: unknown;
+  const candidate = stripJsonFence(text);
   try {
-    parsed = JSON.parse(text);
+    parsed = JSON.parse(candidate);
   } catch {
-    throw new AuthorLlmError('INVALID_JSON_RESPONSE', 'Anthropic response was not valid JSON');
+    const preview = text.slice(0, 200).replace(/\s+/g, ' ').trim();
+    throw new AuthorLlmError(
+      'INVALID_JSON_RESPONSE',
+      `Anthropic response was not valid JSON: ${preview}`
+    );
   }
 
   if (schema) {
