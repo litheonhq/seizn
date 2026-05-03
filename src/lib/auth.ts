@@ -9,7 +9,10 @@ import { logServerError } from '@/lib/server/logger';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const VERCEL_ENV = process.env.VERCEL_ENV;
+const IS_PRODUCTION = VERCEL_ENV
+  ? VERCEL_ENV === 'production'
+  : process.env.NODE_ENV === 'production';
 const SHOULD_VERIFY_TURNSTILE = IS_PRODUCTION || Boolean(TURNSTILE_SECRET_KEY);
 
 async function verifyTurnstileToken(token: string): Promise<boolean> {
