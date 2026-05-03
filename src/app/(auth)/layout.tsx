@@ -1,20 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { isRtl, locales, type Locale } from "@/i18n/config";
 import "../globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -40,7 +27,8 @@ export default async function AuthLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="antialiased"
+        style={{ fontFamily: "var(--font-sans)" }}
       >
         {children}
       </body>

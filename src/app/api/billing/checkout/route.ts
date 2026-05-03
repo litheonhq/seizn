@@ -62,6 +62,12 @@ interface StripeSubscriptionLike {
   } | null;
 }
 
+interface StripeCheckoutSessionLike {
+  id?: string | null;
+  url?: string | null;
+  metadata?: Record<string, string | null> | null;
+}
+
 interface LiveSubscriptionState {
   subscriptionId: string;
   subscriptionStatus: string;
@@ -178,6 +184,8 @@ async function getOrCreateCheckoutCustomer(input: {
       user_id: input.userId,
       source: "author_launch_v7",
     },
+  }, {
+    idempotencyKey: createCheckoutCustomerIdempotencyKey(input.userId),
   });
 
   await supabase
@@ -259,6 +267,24 @@ export async function POST(request: NextRequest) {
       "/dashboard/billing?success=true"
     );
     const resolvedCancelUrl = resolveSameOriginUrl(cancelUrl, origin, "/pricing");
+    const checkoutMetadata = createCheckoutMetadata({
+      userId: session.user.id,
+      tier: selection.tier,
+      cadence: selection.cadence,
+      byokEnabled: byokStatus.enabled,
+    });
+    const reusableCheckoutSession = await findReusableCheckoutSession(stripe, {
+      customerId: customerState.customerId,
+      metadata: checkoutMetadata,
+    });
+
+    if (reusableCheckoutSession) {
+      return NextResponse.json({
+        url: reusableCheckoutSession.url,
+        destination: "checkout_session",
+        reason: "open_checkout_session",
+      });
+    }
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -275,29 +301,12 @@ export async function POST(request: NextRequest) {
             missing_payment_method: "cancel",
           },
         },
-        metadata: {
-          user_id: session.user.id,
-          author_billing_tier: selection.tier,
-          billing_cadence: selection.cadence,
-          price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
-          byok_discount: byokStatus.enabled ? "true" : "false",
-          legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
-          legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
-          legal_accepted: "true",
-        },
+        metadata: checkoutMetadata,
       },
       success_url: resolvedSuccessUrl,
       cancel_url: resolvedCancelUrl,
       client_reference_id: session.user.id,
-      metadata: {
-        user_id: session.user.id,
-        author_billing_tier: selection.tier,
-        billing_cadence: selection.cadence,
-        price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
-        legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
-        legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
-        legal_accepted: "true",
-      },
+      metadata: checkoutMetadata,
     }, {
       idempotencyKey: createCheckoutIdempotencyKey({
         userId: session.user.id,
@@ -377,6 +386,50 @@ function normalizeStripeSubscription(subscription: StripeSubscriptionLike): Live
   };
 }
 
+async function findReusableCheckoutSession(
+  stripe: ReturnType<typeof getStripeClient>,
+  input: {
+    customerId: string;
+    metadata: Record<string, string>;
+  }
+): Promise<{ id: string; url: string } | null> {
+  const sessions = await stripe.checkout.sessions.list({
+    customer: input.customerId,
+    status: "open",
+    limit: 10,
+  });
+
+  for (const session of sessions.data.map(normalizeStripeCheckoutSession)) {
+    if (!session || !hasMatchingCheckoutMetadata(session.metadata, input.metadata)) {
+      continue;
+    }
+    return { id: session.id, url: session.url };
+  }
+
+  return null;
+}
+
+function normalizeStripeCheckoutSession(
+  session: StripeCheckoutSessionLike
+): { id: string; url: string; metadata: Record<string, string | null> } | null {
+  const id = typeof session.id === "string" ? session.id : null;
+  const url = typeof session.url === "string" ? session.url : null;
+  if (!id || !url) return null;
+
+  return {
+    id,
+    url,
+    metadata: session.metadata ?? {},
+  };
+}
+
+function hasMatchingCheckoutMetadata(
+  actual: Record<string, string | null>,
+  expected: Record<string, string>
+): boolean {
+  return Object.entries(expected).every(([key, value]) => actual[key] === value);
+}
+
 async function clearStaleCheckoutSubscriptionProfile(input: {
   supabase: ReturnType<typeof createServerClient>;
   userId: string;
@@ -405,6 +458,36 @@ function hasLocalCheckoutSubscriptionState(profile: CheckoutBillingProfile): boo
 
   const status = (profile.subscription_status ?? profile.stripe_subscription_status ?? "").toLowerCase();
   return Boolean(status && status !== "inactive" && status !== "free");
+}
+
+function createCheckoutMetadata(input: {
+  userId: string;
+  tier: AuthorBillingTier;
+  cadence: BillingCadence;
+  byokEnabled: boolean;
+}): Record<string, string> {
+  return {
+    user_id: input.userId,
+    author_billing_tier: input.tier,
+    billing_cadence: input.cadence,
+    price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
+    byok_discount: input.byokEnabled ? "true" : "false",
+    legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+    legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+    legal_accepted: "true",
+  };
+}
+
+function createCheckoutCustomerIdempotencyKey(userId: string): string {
+  const digest = createHash("sha256")
+    .update(JSON.stringify({
+      userId,
+      source: "author_launch_v7",
+    }))
+    .digest("hex")
+    .slice(0, 40);
+
+  return `author-customer-${AUTHOR_PRICE_LOCK_VERSION}-${digest}`;
 }
 
 function createCheckoutIdempotencyKey(input: {

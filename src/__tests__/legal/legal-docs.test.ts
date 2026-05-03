@@ -12,6 +12,10 @@ import {
   resolveLegalContentLocale,
   resolveLegalMarkdownHref,
 } from "@/lib/legal-routes";
+import {
+  CHECKOUT_LEGAL_VERSIONS,
+  formatCheckoutLegalVersion,
+} from "@/lib/checkout-copy";
 
 describe("legal document loader", () => {
   it("loads all 4 launch locales across the 3 legal documents", async () => {
@@ -53,8 +57,26 @@ describe("legal document loader", () => {
     expect(LEGAL_DOCUMENTS.map((slug) => labels[slug])).toEqual(expectedLabels);
   });
 
-  it("reads beta_until from beta disclosure frontmatter", async () => {
+  it("reads launch legal frontmatter used by runtime gates", async () => {
     await expect(getBetaDisclosureUntil("en")).resolves.toBe("2026-08-31");
+    const terms = await getLegalDocument("terms", "en");
+    const privacy = await getLegalDocument("privacy", "en");
+    const termsDocType = terms.metadata.doc_type;
+    const termsVersion = terms.metadata.version;
+    const privacyDocType = privacy.metadata.doc_type;
+    const privacyVersion = privacy.metadata.version;
+
+    expect(typeof termsDocType).toBe("string");
+    expect(typeof termsVersion).toBe("string");
+    expect(typeof privacyDocType).toBe("string");
+    expect(typeof privacyVersion).toBe("string");
+
+    expect(CHECKOUT_LEGAL_VERSIONS.terms).toBe(
+      formatCheckoutLegalVersion(termsDocType as string, termsVersion as string)
+    );
+    expect(CHECKOUT_LEGAL_VERSIONS.privacy).toBe(
+      formatCheckoutLegalVersion(privacyDocType as string, privacyVersion as string)
+    );
   });
 
   it("builds localized legal route paths", () => {

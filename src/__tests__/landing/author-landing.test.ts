@@ -81,6 +81,7 @@ describe("Author flagship landing", () => {
     expect(isAuthorEngineSurfaceLive("0")).toBe(false);
     expect(isAuthorEngineSurfaceLive("false")).toBe(false);
     expect(isAuthorEngineSurfaceLive("true")).toBe(true);
+    expect(isAuthorEngineSurfaceLive(" TRUE ")).toBe(true);
     expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }))).not.toContain("https://engine.seizn.com");
 
     process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
@@ -143,6 +144,7 @@ describe("Author flagship landing", () => {
       "src/components/landing/section-trust.tsx",
       "src/components/landing/section-workflow.tsx",
       "src/app/[locale]/page.tsx",
+      "src/app/[locale]/pricing/pricing-copy.ts",
       "src/app/[locale]/pricing/pricing-client.tsx",
     ];
     const content = files.map((file) => readFileSync(path.join(process.cwd(), file), "utf8")).join("\n");

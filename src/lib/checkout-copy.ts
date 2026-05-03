@@ -8,9 +8,13 @@ export interface CheckoutLegalCopy {
   error: string;
 }
 
+export function formatCheckoutLegalVersion(docType: string, version: string): `${string}:${string}` {
+  return `${docType}:${version}`;
+}
+
 export const CHECKOUT_LEGAL_VERSIONS = {
-  terms: "terms-of-service:v1",
-  privacy: "privacy-policy:v1",
+  terms: formatCheckoutLegalVersion("terms-of-service", "v1"),
+  privacy: formatCheckoutLegalVersion("privacy-policy", "v1"),
 } as const;
 
 export const DEFAULT_CHECKOUT_LEGAL_COPY: CheckoutLegalCopy = {
