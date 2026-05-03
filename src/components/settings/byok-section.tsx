@@ -131,11 +131,11 @@ export function ByokSection({
         </div>
       ) : null}
 
-      <form onSubmit={handleSave} className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
-        <div>
-          <label htmlFor={inputId} className="block text-sm font-medium text-[var(--ink-900)]">
-            {copy.keyLabel}
-          </label>
+      <form onSubmit={handleSave} className="mt-5">
+        <label htmlFor={inputId} className="block text-sm font-medium text-[var(--ink-900)]">
+          {copy.keyLabel}
+        </label>
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-stretch">
           <input
             id={inputId}
             type="password"
@@ -143,28 +143,28 @@ export function ByokSection({
             value={apiKey}
             onChange={(event) => setApiKey(event.target.value)}
             placeholder={copy.keyPlaceholder}
-            className="mt-2 min-h-10 w-full rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] px-3 text-sm text-[var(--ink-900)] outline-none focus:border-[var(--ink-900)] focus:ring-2 focus:ring-[var(--ink-900)]/20"
+            className="min-h-10 w-full flex-1 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] px-3 text-sm text-[var(--ink-900)] outline-none focus:border-[var(--ink-900)] focus:ring-2 focus:ring-[var(--ink-900)]/20"
           />
-          <p className="mt-2 text-xs text-[var(--ink-500)]">{copy.keyHint}</p>
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+            <button
+              type="submit"
+              disabled={busy || !apiKey.trim()}
+              className="inline-flex min-h-10 items-center justify-center rounded-md bg-[var(--ink-900)] px-4 text-sm font-medium text-white hover:bg-[var(--ink-900)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {action === "saving" ? copy.saving : copy.save}
+            </button>
+            <button
+              type="button"
+              onClick={handleRemove}
+              disabled={busy || !isActive}
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              {action === "removing" ? copy.removing : copy.remove}
+            </button>
+          </div>
         </div>
-        <div className="flex flex-wrap items-end gap-2">
-          <button
-            type="submit"
-            disabled={busy || !apiKey.trim()}
-            className="inline-flex min-h-10 items-center justify-center rounded-md bg-[var(--ink-900)] px-4 text-sm font-medium text-white hover:bg-[var(--ink-900)]/90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {action === "saving" ? copy.saving : copy.save}
-          </button>
-          <button
-            type="button"
-            onClick={handleRemove}
-            disabled={busy || !isActive}
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
-            {action === "removing" ? copy.removing : copy.remove}
-          </button>
-        </div>
+        <p className="mt-2 text-xs text-[var(--ink-500)]">{copy.keyHint}</p>
       </form>
 
       {message ? (
