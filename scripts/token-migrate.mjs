@@ -191,8 +191,14 @@ const rules = [
   [/\bto-szn-bg\b/g, "to-[var(--ink-50)]"],
   [/\bfrom-szn-text-1\b/g, "from-[var(--ink-900)]"],
   [/\bto-szn-text-1\b/g, "to-[var(--ink-900)]"],
+  [/\bfrom-szn-text-2\b/g, "from-[var(--ink-600)]"],
+  [/\bto-szn-text-2\b/g, "to-[var(--ink-600)]"],
+  [/\bfrom-szn-text-3\b/g, "from-[var(--ink-500)]"],
+  [/\bto-szn-text-3\b/g, "to-[var(--ink-500)]"],
   [/\bfrom-szn-border\b/g, "from-[var(--ink-200)]"],
   [/\bto-szn-border\b/g, "to-[var(--ink-200)]"],
+  [/\bfrom-szn-accent-2\b/g, "from-[var(--ink-700)]"],
+  [/\bto-szn-accent-2\b/g, "to-[var(--ink-700)]"],
 
   // ---- text-emerald 950, text-yellow-950 etc. (high digit not in earlier list) ----
   [/\btext-emerald-950\b/g, "text-[var(--signal-canon-ink)]"],

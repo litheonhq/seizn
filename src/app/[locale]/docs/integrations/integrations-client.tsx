@@ -72,32 +72,32 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-50">
+      <header className="border-b border-[var(--ink-200)] sticky top-0 bg-[var(--ink-50)]/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href={`/${locale}`} className="text-xl font-bold text-szn-text-1">
-              Seizn<span className="text-szn-accent">.</span>
+            <Link href={`/${locale}`} className="text-xl font-bold text-[var(--ink-900)]">
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
+            <span className="text-[var(--ink-500)]">/</span>
+            <Link href={`/${locale}/docs`} className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
               {t("nav.docs")}
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <span className="text-szn-text-1">{t("docs.integrationsPage.breadcrumb")}</span>
+            <span className="text-[var(--ink-500)]">/</span>
+            <span className="text-[var(--ink-900)]">{t("docs.integrationsPage.breadcrumb")}</span>
           </div>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/dashboard`}
-              className="text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               Dashboard
             </Link>
             <Link
               href={`/${locale}/login`}
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors"
             >
               {t("nav.getStarted")}
             </Link>
@@ -108,10 +108,10 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">
+          <h1 className="text-4xl font-bold text-[var(--ink-900)] mb-4">
             {t("docs.integrationsPage.title")}
           </h1>
-          <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
+          <p className="text-xl text-[var(--ink-600)] max-w-2xl mx-auto">
             {t("docs.integrationsPage.subtitle")}
           </p>
         </div>
@@ -124,36 +124,36 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
                 <div className="text-4xl">{integration.icon}</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-xl font-semibold text-szn-text-1 group-hover:text-szn-accent transition-colors">
+                    <h2 className="text-xl font-semibold text-[var(--ink-900)] group-hover:text-[var(--ink-900)] transition-colors">
                       {t(integration.titleKey)}
                     </h2>
-                    <span className="px-2 py-0.5 text-xs font-medium bg-szn-accent/10 text-szn-accent rounded">
+                    <span className="px-2 py-0.5 text-xs font-medium bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded">
                       {t(integration.badgeKey)}
                     </span>
                   </div>
-                  <p className="text-szn-text-2 mb-3">
+                  <p className="text-[var(--ink-600)] mb-3">
                     {t(integration.descKey)}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {integration.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 text-xs bg-szn-surface-1 text-szn-text-2 rounded"
+                        className="px-2 py-1 text-xs bg-[var(--ink-50)] text-[var(--ink-600)] rounded"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                   {integration.id === 'mcp-server' && (
-                    <div className="mt-4 p-3 bg-szn-surface rounded-lg">
-                      <code className="text-xs text-szn-accent font-mono">npx seizn-mcp@latest</code>
-                      <span className="text-xs text-szn-text-3 ml-2">— works in 30 seconds</span>
+                    <div className="mt-4 p-3 bg-[var(--ink-50)] rounded-lg">
+                      <code className="text-xs text-[var(--ink-900)] font-mono">npx seizn-mcp@latest</code>
+                      <span className="text-xs text-[var(--ink-500)] ml-2">— works in 30 seconds</span>
                     </div>
                   )}
                 </div>
                 {integration.href && (
                   <svg
-                    className="w-5 h-5 text-szn-text-3 group-hover:text-szn-accent transition-colors flex-shrink-0"
+                    className="w-5 h-5 text-[var(--ink-500)] group-hover:text-[var(--ink-900)] transition-colors flex-shrink-0"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -169,7 +169,7 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
                 <Link
                   key={integration.id}
                   href={`/${locale}${integration.href}`}
-                  className="group block bg-szn-surface border border-szn-border rounded-xl p-6 hover:border-szn-accent transition-colors"
+                  className="group block bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6 hover:border-[var(--ink-900)] transition-colors"
                 >
                   {cardContent}
                 </Link>
@@ -179,7 +179,7 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
             return (
               <div
                 key={integration.id}
-                className="group block bg-szn-surface border border-szn-accent/50 rounded-xl p-6"
+                className="group block bg-[var(--ink-50)] border border-[var(--ink-900)]/50 rounded-xl p-6"
               >
                 {cardContent}
               </div>
@@ -188,18 +188,18 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
         </div>
 
         {/* Coming Soon Section */}
-        <div className="mt-12 p-6 bg-szn-surface border border-szn-border rounded-xl">
-          <h3 className="text-lg font-semibold text-szn-text-1 mb-3">
+        <div className="mt-12 p-6 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-3">
             {t("docs.integrationsPage.comingSoon.title")}
           </h3>
-          <p className="text-szn-text-2 mb-4">
+          <p className="text-[var(--ink-600)] mb-4">
             {t("docs.integrationsPage.comingSoon.description")}
           </p>
           <div className="flex flex-wrap gap-3">
             {['Vercel AI SDK', 'Haystack', 'Semantic Kernel', 'AutoGen'].map((name) => (
               <span
                 key={name}
-                className="px-3 py-1.5 text-sm bg-szn-surface-1 text-szn-text-3 rounded-lg"
+                className="px-3 py-1.5 text-sm bg-[var(--ink-50)] text-[var(--ink-500)] rounded-lg"
               >
                 {name}
               </span>
@@ -211,7 +211,7 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
         <div className="mt-8 text-center">
           <Link
             href={`/${locale}/docs`}
-            className="text-szn-accent hover:underline"
+            className="text-[var(--ink-900)] hover:underline"
           >
             {t("docs.integrationsPage.backToDocs")}
           </Link>
@@ -219,8 +219,8 @@ export function IntegrationsClient({ locale, dictionary }: Props) {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-szn-border py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center text-szn-text-3 text-sm">
+      <footer className="border-t border-[var(--ink-200)] py-8">
+        <div className="max-w-6xl mx-auto px-6 text-center text-[var(--ink-500)] text-sm">
           {t("docs.footer.copyright").replace("{year}", new Date().getFullYear().toString())}
         </div>
       </footer>

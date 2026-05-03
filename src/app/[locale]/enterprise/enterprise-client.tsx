@@ -178,7 +178,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
           {t.subtitle}
         </p>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
+        <div className="bg-[var(--ink-900)] border border-gray-800 rounded-lg p-6 mb-8">
           <h2 className="text-lg font-semibold mb-4">{t.includes}</h2>
           <ul className="grid grid-cols-2 gap-3 text-sm text-gray-300">
             {t.includesList.map((item, i) => (
@@ -189,7 +189,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
           </ul>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
+        <div className="bg-[var(--ink-900)] border border-gray-800 rounded-lg p-6 mb-8">
           <h2 className="text-lg font-semibold mb-2">{enterpriseSnapshotTitle}</h2>
           <p className="text-sm text-gray-400 mb-5">{enterpriseSnapshotSubtitle}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -210,7 +210,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6">
+          <div className="bg-[var(--signal-conflict)]/10 border border-[var(--signal-conflict)]/50 text-[var(--signal-conflict-soft)] p-4 rounded-lg mb-6">
             {error}
           </div>
         )}
@@ -225,7 +225,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 value={formData.company_name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
             <div>
@@ -236,7 +236,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 value={formData.contact_name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
@@ -250,7 +250,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
             <div>
@@ -260,7 +260,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
@@ -273,7 +273,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 name="job_title"
                 value={formData.job_title}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
             <div>
@@ -282,7 +282,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 name="company_size"
                 value={formData.company_size}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               >
                 <option value="">{t.companySizes.select}</option>
                 <option value="1-10">{t.companySizes['1-10']}</option>
@@ -303,7 +303,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
               required
               rows={4}
               placeholder={t.form.useCasePlaceholder}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
             />
           </div>
 
@@ -314,7 +314,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 name="expected_volume"
                 value={formData.expected_volume}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               >
                 <option value="">{t.volumes.select}</option>
                 <option value="< 100K">{t.volumes.lt100k}</option>
@@ -330,7 +330,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
               >
                 <option value="">{t.timelines.select}</option>
                 <option value="immediate">{t.timelines.immediate}</option>
@@ -349,7 +349,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
               onChange={handleChange}
               rows={3}
               placeholder={t.form.requirementsPlaceholder}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
             />
           </div>
 

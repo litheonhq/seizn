@@ -57,17 +57,17 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
     <div className="min-h-screen gradient-summer relative overflow-hidden">
       {/* Decorative Floating Elements - Ocean Waves */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-300/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--ink-900)]/30 rounded-full blur-3xl animate-float" />
         <div
           className="absolute top-40 right-20 w-96 h-96 bg-sky-200/30 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "2s" }}
         />
         <div
-          className="absolute bottom-40 left-1/4 w-64 h-64 bg-szn-accent/30 rounded-full blur-3xl animate-float"
+          className="absolute bottom-40 left-1/4 w-64 h-64 bg-[var(--ink-900)]/30 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "4s" }}
         />
         <div
-          className="absolute bottom-20 right-1/3 w-80 h-80 bg-cyan-200/20 rounded-full blur-3xl animate-float"
+          className="absolute bottom-20 right-1/3 w-80 h-80 bg-[var(--ink-900)]/20 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "3s" }}
         />
       </div>
@@ -76,22 +76,22 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/20" role="navigation" aria-label="Main navigation">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2 group" aria-label="Seizn Home">
-            <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 via-sky-500 to-szn-accent rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+            <div className="w-8 h-8 bg-gradient-to-br from-[var(--ink-900)] via-sky-500 to-[var(--ink-900)] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
               <span className="text-white font-bold text-sm">S</span>
             </div>
-            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-cyan-600 to-szn-accent bg-clip-text text-transparent">
+            <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] bg-clip-text text-transparent">
               Seizn
             </span>
-            <span className="text-amber-500 text-xl">☀️</span>
+            <span className="text-[var(--signal-pending-ink)] text-xl">☀️</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href={`/${locale}/spring`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌿</Link>
-            <a href="#features" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.features}</a>
-            <Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.pricing}</Link>
-            <a href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.docs}</a>
-            <Link href="/login" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.nav.login}</Link>
+            <Link href={`/${locale}/spring`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">Spring 🌿</Link>
+            <a href="#features" className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.nav.features}</a>
+            <Link href={`/${locale}/pricing`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.nav.pricing}</Link>
+            <a href={`/${locale}/docs`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.nav.docs}</a>
+            <Link href="/login" className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.nav.login}</Link>
             <LanguageSwitcher currentLocale={locale} />
             <Link href="/login" className="text-sm summer-gradient-btn text-white px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
               {t.nav.getStarted}
@@ -100,7 +100,7 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-szn-text-2 hover:text-szn-text-1 transition-colors"
+            className="md:hidden p-2 text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
@@ -121,11 +121,11 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
         {mobileMenuOpen && (
           <div className="md:hidden glass border-t border-white/20 animate-fade-in">
             <div className="px-6 py-4 space-y-4">
-              <Link href={`/${locale}/spring`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors">Spring 🌿</Link>
-              <a href="#features" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
-              <Link href={`/${locale}/pricing`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
-              <a href={`/${locale}/docs`} className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
-              <Link href="/login" className="block text-szn-text-2 hover:text-szn-text-1 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
+              <Link href={`/${locale}/spring`} className="block text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">Spring 🌿</Link>
+              <a href="#features" className="block text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.features}</a>
+              <Link href={`/${locale}/pricing`} className="block text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.pricing}</Link>
+              <a href={`/${locale}/docs`} className="block text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.docs}</a>
+              <Link href="/login" className="block text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors" onClick={() => setMobileMenuOpen(false)}>{t.nav.login}</Link>
               <div className="py-2">
                 <LanguageSwitcher currentLocale={locale} />
               </div>
@@ -142,28 +142,28 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 szn-card rounded-full px-4 py-1.5 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-gradient-to-r from-cyan-500 to-szn-accent rounded-full animate-pulse" />
-            <span className="text-sm text-cyan-700 font-medium">{t.hero.badge}</span>
+            <span className="w-2 h-2 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] rounded-full animate-pulse" />
+            <span className="text-sm text-[var(--ink-900)] font-medium">{t.hero.badge}</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-szn-text-1 mb-6 animate-fade-in">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-[var(--ink-900)] mb-6 animate-fade-in">
             {t.hero.title}
             <br />
-            <span className="bg-gradient-to-r from-cyan-500 via-sky-400 to-szn-accent bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--ink-900)] via-sky-400 to-[var(--ink-900)] bg-clip-text text-transparent">
               {t.hero.titleHighlight}
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl text-szn-text-2 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <p className="text-lg sm:text-xl text-[var(--ink-600)] max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
             {t.hero.subtitle}
           </p>
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             {status === "success" ? (
-              <div className="flex items-center gap-2 text-cyan-600 szn-card px-6 py-4 rounded-full shadow-lg">
+              <div className="flex items-center gap-2 text-[var(--ink-900)] szn-card px-6 py-4 rounded-full shadow-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -203,18 +203,18 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
           {/* Stats */}
           <div className="szn-card rounded-2xl p-8 inline-flex items-center justify-center gap-12 text-center">
             <div>
-              <div className="text-3xl font-semibold text-szn-text-1">90%</div>
-              <div className="text-sm text-szn-text-2">{t.hero.stats.tokenSavings}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)]">90%</div>
+              <div className="text-sm text-[var(--ink-600)]">{t.hero.stats.tokenSavings}</div>
             </div>
-            <div className="w-px h-12 bg-szn-surface-1" />
+            <div className="w-px h-12 bg-[var(--ink-50)]" />
             <div>
-              <div className="text-3xl font-semibold text-szn-text-1">&lt;50ms</div>
-              <div className="text-sm text-szn-text-2">{t.hero.stats.retrievalTime}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)]">&lt;50ms</div>
+              <div className="text-sm text-[var(--ink-600)]">{t.hero.stats.retrievalTime}</div>
             </div>
-            <div className="w-px h-12 bg-szn-surface-1" />
+            <div className="w-px h-12 bg-[var(--ink-50)]" />
             <div>
-              <div className="text-3xl font-semibold text-szn-text-1">99.9%</div>
-              <div className="text-sm text-szn-text-2">{t.hero.stats.uptimeSla}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)]">99.9%</div>
+              <div className="text-sm text-[var(--ink-600)]">{t.hero.stats.uptimeSla}</div>
             </div>
           </div>
         </div>
@@ -224,46 +224,46 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
       <section id="features" className="py-20 px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-[var(--ink-900)] mb-4">
               {t.features.title}
             </h2>
-            <p className="text-szn-text-2 max-w-xl mx-auto">
+            <p className="text-[var(--ink-600)] max-w-xl mx-auto">
               {t.features.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="szn-card rounded-3xl p-8 szn-card-hover">
-              <div className="w-14 h-14 bg-gradient-to-br from-cyan-100 to-sky-100 rounded-2xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div className="szn-card rounded-2xl p-8 szn-card-hover">
+              <div className="w-14 h-14 bg-gradient-to-br from-[var(--ink-50)] to-sky-100 rounded-2xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-szn-text-1 mb-3">{t.features.smartExtraction.title}</h3>
-              <p className="text-szn-text-2 leading-relaxed">{t.features.smartExtraction.description}</p>
+              <h3 className="text-xl font-semibold text-[var(--ink-900)] mb-3">{t.features.smartExtraction.title}</h3>
+              <p className="text-[var(--ink-600)] leading-relaxed">{t.features.smartExtraction.description}</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="szn-card rounded-3xl p-8 szn-card-hover">
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div className="szn-card rounded-2xl p-8 szn-card-hover">
+              <div className="w-14 h-14 bg-gradient-to-br from-[var(--ink-50)] to-[var(--ink-100)] rounded-2xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7 text-[var(--ink-900)] underline" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-szn-text-1 mb-3">{t.features.instantRetrieval.title}</h3>
-              <p className="text-szn-text-2 leading-relaxed">{t.features.instantRetrieval.description}</p>
+              <h3 className="text-xl font-semibold text-[var(--ink-900)] mb-3">{t.features.instantRetrieval.title}</h3>
+              <p className="text-[var(--ink-600)] leading-relaxed">{t.features.instantRetrieval.description}</p>
             </div>
 
             {/* Feature 3 */}
-            <div className="szn-card rounded-3xl p-8 szn-card-hover">
-              <div className="w-14 h-14 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 rounded-2xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div className="szn-card rounded-2xl p-8 szn-card-hover">
+              <div className="w-14 h-14 bg-gradient-to-br from-[var(--ink-900)]/10 to-[var(--ink-900)]-2/10 rounded-2xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-szn-text-1 mb-3">{t.features.enterpriseSecurity.title}</h3>
-              <p className="text-szn-text-2 leading-relaxed">{t.features.enterpriseSecurity.description}</p>
+              <h3 className="text-xl font-semibold text-[var(--ink-900)] mb-3">{t.features.enterpriseSecurity.title}</h3>
+              <p className="text-[var(--ink-600)] leading-relaxed">{t.features.enterpriseSecurity.description}</p>
             </div>
           </div>
         </div>
@@ -273,18 +273,18 @@ export function SummerClient({ dict, locale, checkoutLegalCopy }: SummerClientPr
       <section className="py-20 px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-[var(--ink-900)] mb-4">
               {t.codePreview.title}
             </h2>
-            <p className="text-szn-text-2">
+            <p className="text-[var(--ink-600)]">
               {t.codePreview.subtitle}
             </p>
           </div>
 
-          <div className="szn-card rounded-3xl overflow-hidden shadow-2xl">
-            <div className="bg-gray-900 p-6">
+          <div className="szn-card rounded-2xl overflow-hidden shadow-2xl">
+            <div className="bg-[var(--ink-900)] p-6">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-[var(--signal-conflict)]" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
@@ -314,25 +314,25 @@ const memories = await seizn.search({
       <section id="pricing" className="py-20 px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-szn-text-1 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-[var(--ink-900)] mb-4">
               {t.pricing.title}
             </h2>
-            <p className="text-szn-text-2">
+            <p className="text-[var(--ink-600)]">
               {t.pricing.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Free */}
-            <div className="szn-card rounded-3xl p-6 szn-card-hover flex flex-col">
-              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.free.name}</div>
-              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.free.price}</div>
-              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.free.period}</div>
+            <div className="szn-card rounded-2xl p-6 szn-card-hover flex flex-col">
+              <div className="text-sm font-medium text-[var(--ink-600)] mb-2">{t.pricing.free.name}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)] mb-1">{t.pricing.free.price}</div>
+              <div className="text-sm text-[var(--ink-600)] mb-6">{t.pricing.free.period}</div>
               <ul className="space-y-3 flex-grow">
                 {t.pricing.free.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-szn-text-2">
-                    <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-3 text-sm text-[var(--ink-600)]">
+                    <div className="w-5 h-5 rounded-full bg-[var(--ink-100)] flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
@@ -340,21 +340,21 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <Link href="/login" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
+              <Link href="/login" className="block w-full py-3.5 rounded-full border-2 border-[var(--ink-900)] text-[var(--ink-900)] font-medium hover:bg-[var(--ink-50)] transition-all duration-300 text-center mt-8">
                 {t.pricing.free.cta}
               </Link>
             </div>
 
             {/* Plus */}
-            <div className="szn-card rounded-3xl p-6 szn-card-hover flex flex-col">
-              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.plus.name}</div>
-              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.plus.price}</div>
-              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.plus.period}</div>
+            <div className="szn-card rounded-2xl p-6 szn-card-hover flex flex-col">
+              <div className="text-sm font-medium text-[var(--ink-600)] mb-2">{t.pricing.plus.name}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)] mb-1">{t.pricing.plus.price}</div>
+              <div className="text-sm text-[var(--ink-600)] mb-6">{t.pricing.plus.period}</div>
               <ul className="space-y-3 flex-grow">
                 {t.pricing.plus.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-szn-text-2">
-                    <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-3 text-sm text-[var(--ink-600)]">
+                    <div className="w-5 h-5 rounded-full bg-[var(--ink-100)] flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
@@ -367,25 +367,25 @@ const memories = await seizn.search({
                 privacyHref={`/${locale}/legal/privacy`}
                 termsHref={`/${locale}/legal/terms`}
                 legalCopy={checkoutLegalCopy}
-                className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8"
+                className="block w-full py-3.5 rounded-full border-2 border-[var(--ink-900)] text-[var(--ink-900)] font-medium hover:bg-[var(--ink-50)] transition-all duration-300 text-center mt-8"
               >
                 {t.pricing.plus.cta}
               </CheckoutButton>
             </div>
 
             {/* Pro */}
-            <div className="relative summer-gradient-btn rounded-3xl p-6 szn-card-hover overflow-hidden flex flex-col">
+            <div className="relative summer-gradient-btn rounded-2xl p-6 szn-card-hover overflow-hidden flex flex-col">
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
               <div className="relative flex flex-col flex-grow">
-                <div className="absolute top-0 right-0 bg-white text-cyan-600 text-xs px-3 py-1 rounded-full font-medium shadow-md">
+                <div className="absolute top-0 right-0 bg-white text-[var(--ink-900)] text-xs px-3 py-1 rounded-full font-medium shadow-md">
                   {t.pricing.pro.badge}
                 </div>
-                <div className="text-sm font-medium text-cyan-100 mb-2">{t.pricing.pro.name}</div>
+                <div className="text-sm font-medium text-[var(--ink-900)] mb-2">{t.pricing.pro.name}</div>
                 <div className="text-3xl font-semibold text-white mb-1">{t.pricing.pro.price}</div>
-                <div className="text-sm text-cyan-100 mb-6">{t.pricing.pro.period}</div>
+                <div className="text-sm text-[var(--ink-900)] mb-6">{t.pricing.pro.period}</div>
                 <ul className="space-y-3 flex-grow">
                   {t.pricing.pro.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm text-cyan-50">
+                    <li key={i} className="flex items-center gap-3 text-sm text-[var(--ink-900)]">
                       <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -400,7 +400,7 @@ const memories = await seizn.search({
                   privacyHref={`/${locale}/legal/privacy`}
                   termsHref={`/${locale}/legal/terms`}
                   legalCopy={checkoutLegalCopy}
-                  className="block w-full py-3.5 rounded-full bg-white text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center shadow-lg mt-8"
+                  className="block w-full py-3.5 rounded-full bg-white text-[var(--ink-900)] font-medium hover:bg-[var(--ink-50)] transition-all duration-300 text-center shadow-lg mt-8"
                 >
                   {t.pricing.pro.cta}
                 </CheckoutButton>
@@ -408,15 +408,15 @@ const memories = await seizn.search({
             </div>
 
             {/* Enterprise */}
-            <div className="szn-card rounded-3xl p-6 szn-card-hover flex flex-col">
-              <div className="text-sm font-medium text-szn-text-2 mb-2">{t.pricing.enterprise.name}</div>
-              <div className="text-3xl font-semibold text-szn-text-1 mb-1">{t.pricing.enterprise.price}</div>
-              <div className="text-sm text-szn-text-2 mb-6">{t.pricing.enterprise.period}</div>
+            <div className="szn-card rounded-2xl p-6 szn-card-hover flex flex-col">
+              <div className="text-sm font-medium text-[var(--ink-600)] mb-2">{t.pricing.enterprise.name}</div>
+              <div className="text-3xl font-semibold text-[var(--ink-900)] mb-1">{t.pricing.enterprise.price}</div>
+              <div className="text-sm text-[var(--ink-600)] mb-6">{t.pricing.enterprise.period}</div>
               <ul className="space-y-3 flex-grow">
                 {t.pricing.enterprise.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-szn-text-2">
-                    <div className="w-5 h-5 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <li key={i} className="flex items-center gap-3 text-sm text-[var(--ink-600)]">
+                    <div className="w-5 h-5 rounded-full bg-[var(--ink-100)] flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
@@ -424,7 +424,7 @@ const memories = await seizn.search({
                   </li>
                 ))}
               </ul>
-              <a href="mailto:enterprise@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-cyan-200 text-cyan-600 font-medium hover:bg-cyan-50 transition-all duration-300 text-center mt-8">
+              <a href="mailto:enterprise@seizn.com" className="block w-full py-3.5 rounded-full border-2 border-[var(--ink-900)] text-[var(--ink-900)] font-medium hover:bg-[var(--ink-50)] transition-all duration-300 text-center mt-8">
                 {t.pricing.enterprise.cta}
               </a>
             </div>
@@ -436,19 +436,19 @@ const memories = await seizn.search({
       <footer className="py-12 px-6 glass border-t border-white/20 relative z-10" role="contentinfo">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <Link href={`/${locale}`} className="flex items-center gap-2 group" aria-label="Seizn Home">
-            <div className="w-6 h-6 bg-gradient-to-br from-cyan-400 via-sky-500 to-szn-accent rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-6 h-6 bg-gradient-to-br from-[var(--ink-900)] via-sky-500 to-[var(--ink-900)] rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
               <span className="text-white font-bold text-xs">S</span>
             </div>
-            <span className="font-medium text-szn-text-1">Seizn</span>
+            <span className="font-medium text-[var(--ink-900)]">Seizn</span>
           </Link>
-          <div className="text-sm text-szn-text-2">
+          <div className="text-sm text-[var(--ink-600)]">
             {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </div>
           <nav className="flex items-center gap-6" aria-label="Footer navigation">
-            <a href={`/${locale}/legal/privacy`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.privacy}</a>
-            <a href={`/${locale}/legal/terms`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.terms}</a>
-            <a href={`/${locale}/legal/beta-disclosure`} className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">Beta Disclosure</a>
-            <a href="mailto:support@seizn.com" className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">{t.footer.contact}</a>
+            <a href={`/${locale}/legal/privacy`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.footer.privacy}</a>
+            <a href={`/${locale}/legal/terms`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.footer.terms}</a>
+            <a href={`/${locale}/legal/beta-disclosure`} className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">Beta Disclosure</a>
+            <a href="mailto:support@seizn.com" className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">{t.footer.contact}</a>
           </nav>
         </div>
       </footer>
