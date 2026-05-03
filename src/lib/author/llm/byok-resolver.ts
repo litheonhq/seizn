@@ -179,28 +179,28 @@ export async function saveAuthorByokKey(
 
   const supabase = (client ?? createServerClient()) as ProviderKeyClient;
   const providerKeys = supabase.from('provider_keys');
-  const update = providerKeys.update;
-  if (update) {
-    await update({ is_default: false })
+  if (typeof providerKeys.update === 'function') {
+    await providerKeys
+      .update({ is_default: false })
       .eq('user_id', input.userId)
       .eq('provider', AUTHOR_BYOK_PROVIDER);
   }
 
-  const insert = providerKeys.insert;
-  if (!insert) {
+  if (typeof providerKeys.insert !== 'function') {
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'BYOK storage client is unavailable', 500);
   }
 
-  const { data, error } = await insert({
-    user_id: input.userId,
-    provider: AUTHOR_BYOK_PROVIDER,
-    key_encrypted: encryptApiKey(input.apiKey),
-    key_hint: generateKeyHint(input.apiKey),
-    label: `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`,
-    is_default: true,
-    is_active: true,
-    metadata: { source: 'author_memory_v3' },
-  })
+  const { data, error } = await providerKeys
+    .insert({
+      user_id: input.userId,
+      provider: AUTHOR_BYOK_PROVIDER,
+      key_encrypted: encryptApiKey(input.apiKey),
+      key_hint: generateKeyHint(input.apiKey),
+      label: `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`,
+      is_default: true,
+      is_active: true,
+      metadata: { source: 'author_memory_v3' },
+    })
     .select('id, provider, key_hint, created_at')
     .single();
 
