@@ -352,7 +352,8 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
 };
 
 export function isAuthorEngineSurfaceLive(value = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE): boolean {
-  return value === "1" || value?.toLowerCase() === "true";
+  const normalized = value?.trim().toLowerCase();
+  return normalized === "1" || normalized === "true";
 }
 
 export function getAuthorLandingCopy(_locale: Locale): AuthorLandingCopy {

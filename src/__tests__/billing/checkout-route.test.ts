@@ -23,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   } | null,
   customerCreate: vi.fn(),
   subscriptionsList: vi.fn(),
+  checkoutList: vi.fn(),
   checkoutCreate: vi.fn(),
   portalCreate: vi.fn(),
   profileUpdates: [] as Record<string, unknown>[],
@@ -61,7 +62,7 @@ vi.mock('@/lib/stripe', () => ({
   getStripeClient: () => ({
     customers: { create: mocks.customerCreate },
     subscriptions: { list: mocks.subscriptionsList },
-    checkout: { sessions: { create: mocks.checkoutCreate } },
+    checkout: { sessions: { create: mocks.checkoutCreate, list: mocks.checkoutList } },
     billingPortal: { sessions: { create: mocks.portalCreate } },
   }),
 }));
@@ -86,6 +87,7 @@ describe('Author checkout route', () => {
     mocks.profileUpdates = [];
     mocks.customerCreate.mockResolvedValue({ id: 'cus_created_123' });
     mocks.subscriptionsList.mockResolvedValue({ data: [] });
+    mocks.checkoutList.mockResolvedValue({ data: [] });
     mocks.checkoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/session_123' });
     mocks.portalCreate.mockResolvedValue({ url: 'https://billing.stripe.com/session_123' });
   });
@@ -314,6 +316,8 @@ describe('Author checkout route', () => {
     expect(mocks.customerCreate).toHaveBeenCalledWith(expect.objectContaining({
       email: 'author@example.com',
       metadata: expect.objectContaining({ user_id: 'user-1' }),
+    }), expect.objectContaining({
+      idempotencyKey: expect.stringMatching(/^author-customer-v7-[a-z0-9]+$/),
     }));
     expect(mocks.profileUpdates).toContainEqual({ stripe_customer_id: 'cus_created_123' });
     expectCheckoutCreateWith({
@@ -345,11 +349,49 @@ describe('Author checkout route', () => {
         }),
       }),
       metadata: expect.objectContaining({
+        byok_discount: 'false',
         legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
         legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
         legal_accepted: 'true',
       }),
     });
+
+    mocks.checkoutCreate.mockClear();
+    mocks.checkoutList.mockResolvedValue({
+      data: [{
+        id: 'cs_open_123',
+        url: 'https://checkout.stripe.com/open_123',
+        metadata: {
+          user_id: 'user-1',
+          author_billing_tier: 'pro',
+          billing_cadence: 'monthly',
+          price_lock_version: 'v7',
+          byok_discount: 'false',
+          legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+          legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+          legal_accepted: 'true',
+        },
+      }],
+    });
+
+    const reuseResponse = await POST(makeCheckoutRequest({
+      successUrl: 'https://app.seizn.test/dashboard/billing?from=hero',
+      cancelUrl: 'https://app.seizn.test/pricing?from=hero',
+    }));
+    const reuseBody = await reuseResponse.json();
+
+    expect(reuseResponse.status).toBe(200);
+    expect(reuseBody).toEqual({
+      url: 'https://checkout.stripe.com/open_123',
+      destination: 'checkout_session',
+      reason: 'open_checkout_session',
+    });
+    expect(mocks.checkoutList).toHaveBeenCalledWith({
+      customer: 'cus_author_123',
+      status: 'open',
+      limit: 10,
+    });
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
   });
 
   it('requires current legal agreement metadata before creating checkout', async () => {

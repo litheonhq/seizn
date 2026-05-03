@@ -819,6 +819,55 @@ body {
   color: #fff;
 }
 
+/* Auth utilities aligned to V1 monochrome ink tokens. */
+.auth-btn-primary {
+  background: var(--ink-900);
+  color: var(--ink-0);
+  border: 1px solid var(--ink-900);
+  transition: background 160ms ease;
+}
+
+.auth-btn-primary:hover {
+  background: var(--ink-700);
+}
+
+.auth-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-btn-secondary {
+  background: var(--ink-0);
+  color: var(--ink-900);
+  border: 1px solid var(--ink-200);
+  transition: background 160ms ease;
+}
+
+.auth-btn-secondary:hover {
+  background: var(--ink-50);
+}
+
+.auth-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-btn-oauth-github {
+  background: var(--ink-900);
+  color: var(--ink-0);
+  border: 1px solid var(--ink-900);
+  transition: background 160ms ease;
+}
+
+.auth-btn-oauth-github:hover {
+  background: var(--ink-800);
+}
+
+.auth-btn-oauth-github:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Alert system */
 .szn-alert {
   border: 1px solid var(--szn-border);

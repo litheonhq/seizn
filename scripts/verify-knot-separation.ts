@@ -199,19 +199,22 @@ function collectRouteClientChunks(manifestPath) {
   if (!fs.existsSync(manifestPath)) return [];
   try {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-    const files = [];
-    for (const value of Object.values(manifest)) {
-      if (Array.isArray(value)) {
-        files.push(...value);
-      }
-    }
-    return files
+    return collectManifestStrings(manifest)
       .filter((file) => typeof file === "string" && file.startsWith("static/"))
       .map((file) => path.resolve(process.cwd(), ".next", file))
       .filter((file) => fs.existsSync(file));
   } catch {
     return [];
   }
+}
+
+function collectManifestStrings(value) {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(collectManifestStrings);
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(collectManifestStrings);
+  }
+  return [];
 }
 
 function compileKeyword(keyword) {
