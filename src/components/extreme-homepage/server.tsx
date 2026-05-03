@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { SVGProps } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import { ExtremeHomepageClient } from "./index";
+import { SeiznMark } from "@/components/landing/brand-marks";
 import {
   getFeatureContent,
   getMCPFeatureContent,
@@ -484,15 +484,9 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href={`/${locale}`} className="flex items-center gap-2 mb-3">
-              <Image
-                src="/seizn-icon.svg"
-                alt="Seizn"
-                className="w-6 h-6"
-                width={24}
-                height={24}
-                priority={false}
-                unoptimized
-              />
+              <span aria-label="Seizn" className="w-6 h-6 inline-flex items-center justify-center">
+                <SeiznMark size={24} color="var(--ink-900)" />
+              </span>
               <span className="font-semibold text-szn-text-1">Seizn</span>
             </Link>
             <p className="text-sm text-szn-text-2 leading-relaxed">

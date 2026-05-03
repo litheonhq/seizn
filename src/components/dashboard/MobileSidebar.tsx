@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import type { NavGroup } from "./DashboardShell";
+import { SeiznMark } from "@/components/landing/brand-marks";
 
 interface MobileSidebarProps {
   isOpen: boolean;
@@ -121,12 +122,12 @@ export default function MobileSidebar({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-szn-border">
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/seizn-icon.svg"
-              alt="Seizn"
-              className="w-8 h-8 rounded-lg"
-            />
+            <span
+              aria-label="Seizn"
+              className="w-8 h-8 rounded-lg inline-flex items-center justify-center"
+            >
+              <SeiznMark size={28} color="var(--ink-900)" />
+            </span>
             <div>
               <span className="text-sm font-semibold text-szn-text-1 block">
                 Seizn
