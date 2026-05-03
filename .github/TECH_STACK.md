@@ -90,6 +90,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Seizn CI (Trace-Test-Fix) | `seizn-ci.yml` | PR/push to main/develop |
 | Auth E2E Smoke | `auth-e2e.yml` | Auth shell/pages/token/font changes |
 | Bundle Budget | `bundle-budget.yml` | Static JS/CSS budget changes |
+| Web Quality Gates | `web-quality-gates.yml` | SEO surface, security headers, telemetry privacy, API auth surface |
 | E2E Tests (Linux) | `e2e-linux.yml` | PR/push, Playwright (Chromium + Firefox) |
 | Lighthouse CI | `lighthouse-ci.yml` | PR to main/develop |
 | Security Tests (OWASP LLM Top 10) | `security-tests.yml` | PR/push to main, releases |
@@ -119,6 +120,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Playwright + axe-core | ^1.57.0 / @axe-core/playwright | E2E tests (`e2e/`): core pages, auth V1 token smoke, API keys, Spring memory CRUD, dashboard smoke, accessibility smoke |
 | Static bundle budget | -- | `npm run analyze:budget` writes a Turbopack static report and fails if JS/CSS budgets regress |
 | API auth surface snapshot | -- | `npm run verify:api-auth-surface` compares `src/app/api/**/route.ts` methods and auth markers against `docs/security/api-auth-surface.json` |
+| Web quality contract gates | -- | `npm run verify:seo-surface`, `npm run verify:security-headers`, and `npm run verify:telemetry-privacy` guard SEO canonicalization, browser headers, and privacy-safe telemetry |
 | @testing-library/react | ^16.3.1 | Component testing |
 | Lighthouse CI | ^0.14.0 | Performance auditing |
 | Custom Red Team | -- | `scripts/red-team-ci.ts` for prompt injection/jailbreak testing |
@@ -237,8 +239,8 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 - Audit logging (`src/lib/audit/`)
 - GitHub webhook idempotency lock/claim flow for Autopilot deliveries (`src/app/api/webhooks/github/route.ts`)
 - Review token system for secure dashboard sharing
-- Security headers: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
-- Dashboard-specific stricter headers (DENY framing, no-referrer)
+- Security headers: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, X-DNS-Prefetch-Control, Origin-Agent-Cluster, Referrer-Policy, Permissions-Policy
+- Dashboard-specific stricter headers (DENY framing, no-referrer) with `npm run verify:security-headers` drift detection
 
 ---
 
@@ -348,7 +350,7 @@ User Request
 | i18n (22 locales) | Fully Implemented | `src/i18n/config.ts`, `src/i18n/dictionaries/`, `src/proxy.ts` | Cookie, Accept-Language, IP geolocation |
 | PostHog Analytics | Fully Implemented | `src/components/posthog-provider.tsx`, `src/lib/analytics.ts` | TTFS, conversion, feature tracking |
 | Sentry Error Tracking | Fully Implemented | `src/instrumentation.ts`, `src/instrumentation-client.ts`, `next.config.ts` | Source maps disabled (build stability) |
-| OpenTelemetry Tracing | Fully Implemented | `src/lib/otel/instrumentation.ts`, `src/lib/telemetry/` | GenAI semantic conventions |
+| OpenTelemetry Tracing | Fully Implemented | `src/lib/otel/instrumentation.ts`, `src/lib/telemetry/` | GenAI semantic conventions plus bounded browser telemetry attribute sanitization |
 | MCP Sampling (`sampling.tools`) | Fully Implemented | `mcp-server/src/index.ts` | `sampling_draft` tool invokes `sampling/createMessage` with `tools`/`toolChoice` and graceful fallback for clients without sampling.tools |
 | Web Vitals + LoAF (RUM) | Fully Implemented | `src/components/rum/WebVitalsReporter.tsx`, `src/app/api/rum/route.ts` | Root layout integration with Web Vitals attribution, capped Long Animation Frames reporting, and server-side RUM payload sanitization |
 | Recharts Dashboards | Fully Implemented | `src/components/retops/`, analytics, evals, traces | 7 files with chart components |
@@ -378,7 +380,8 @@ User Request
 | Memory API Compatibility & Encoding Integrity Signals | Fully Implemented | `src/app/api/memories/route.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/v1/memories/[id]/route.ts`, `src/lib/memory/content-integrity.ts` | Added `q` query alias support for v0/v1 search, keyword fallback on search errors and zero-result cases (including post-filter zero), v1 `GET /api/v1/memories/{id}` endpoint parity, and soft POST integrity warnings (`integrity_warnings` / `meta.integrityWarnings`) to detect likely encoding corruption without blocking normal users |
 | Memory Search Guardrails, Timeout Budget, and Dashboard Diagnostics | Fully Implemented | `src/lib/memory/search-executor.ts`, `src/lib/memory/search-types.ts`, `src/lib/memory/semantic-cache-experiment.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/memories/route.ts`, `src/app/(dashboard)/dashboard/memories/memories-client.tsx`, `src/types/dashboard.ts`, `supabase/migrations/20260302001_search_bounded_rpc_wrappers.sql`, `supabase/migrations/20260302002_semantic_cache_experiment_events.sql` | Added mode/threshold input validation, bounded search timeout (`MEMORY_SEARCH_TIMEOUT_MS`, default 2500ms), deterministic keyword fallback with explicit `504 search_timeout` for terminal timeouts, DB-side statement timeout wrappers (`*_search_memories_bounded`), semantic cache A/B controls (`MEMORY_SEMANTIC_CACHE_AB_ENABLED/SCOPE/RATIO`) with deterministic user bucketing, variant-level experiment event persistence (`hit/latency/result_count/error`) for v0/v1 search, shared v0/v1 cache mapping utility, adaptive thresholding in dashboard search, stale request cancellation via `AbortController`, and retrieval diagnostics chips (`mode/requested/cache/fallback/router-learning/latency/semantic-cache-variant`) with `aria-live` status updates. |
 | Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
-| Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml`, `docs/security/api-auth-surface.json` | OWASP LLM Top 10 plus API auth surface drift detection |
+| Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml`, `.github/workflows/web-quality-gates.yml`, `docs/security/api-auth-surface.json` | OWASP LLM Top 10 plus API auth surface, security header, SEO surface, and telemetry privacy drift detection |
+| SEO Surface Guard | Fully Implemented | `src/app/sitemap.ts`, `src/app/robots.ts`, `src/__tests__/seo/sitemap-robots-contract.test.ts` | Sitemap excludes private/redirect-only routes and validates hreflang alternates for all supported locales |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
 | next-intl | Partially Implemented | 1 file (`src/app/[locale]/docs/components/page.tsx`) | Mostly unused, custom system preferred |

@@ -54,7 +54,9 @@ const nextConfig: NextConfig = {
     const securityHeaders = [
       { key: 'Content-Security-Policy', value: contentSecurityPolicy },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Origin-Agent-Cluster', value: '?1' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       {
         key: 'Strict-Transport-Security',
@@ -71,7 +73,9 @@ const nextConfig: NextConfig = {
       { key: 'Content-Security-Policy', value: contentSecurityPolicy },
       { key: 'Referrer-Policy', value: 'no-referrer' },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Origin-Agent-Cluster', value: '?1' },
     ];
 
     return [
