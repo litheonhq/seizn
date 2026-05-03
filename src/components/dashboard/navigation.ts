@@ -11,6 +11,15 @@ import {
   BuildingIcon, ChartIcon, WalletIcon, FileTextIcon, CalculatorIcon,
   KeyIcon, PlugIcon, WebhookIcon, BookIcon, UsersIcon, SettingsIcon,
 } from "./dashboard-icons";
+import {
+  AlertTriangleIcon,
+  BarChart3Icon,
+  Clock3Icon,
+  GitBranchIcon,
+  RefreshCwIcon,
+  ScrollTextIcon,
+  UserRoundIcon,
+} from "lucide-react";
 
 // =============================================================================
 // Types
@@ -76,7 +85,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
       defaultOpen: true,
       items: [
         { label: t("dashboard.nav.memories"), href: "/dashboard/memories", icon: BrainIcon },
-        { label: "Author Memory", href: "/dashboard/author", icon: BookIcon },
+        { label: t("dashboard.nav.memory.author_memory"), href: "/dashboard/author", icon: BookIcon },
         { label: t("dashboard.nav.mindMap"), href: "/dashboard/memories/mindmap", icon: MapIcon },
         { label: t("dashboard.nav.candidates"), href: "/dashboard/memories/candidates", icon: InboxIcon },
       ],
@@ -134,6 +143,43 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
         { label: t("dashboard.nav.organizations"), href: "/dashboard/organizations", icon: UsersIcon },
         { label: "Author Settings", href: "/dashboard/author/settings", icon: SettingsIcon },
         { label: t("dashboard.nav.settings"), href: "/dashboard/settings", icon: SettingsIcon },
+      ],
+    },
+  ];
+}
+
+export function buildAuthorNavigationGroups(t: (key: string) => string): NavGroup[] {
+  return [
+    {
+      key: "",
+      label: "",
+      items: [
+        { label: t("dashboard.nav.author.workspace"), href: "/dashboard/author", icon: BookIcon },
+      ],
+    },
+    {
+      key: "work",
+      label: t("dashboard.nav.author.groups.work"),
+      defaultOpen: true,
+      items: [
+        { label: t("dashboard.nav.author.inbox"), href: "/dashboard/author?tab=inbox", icon: FileTextIcon },
+        { label: t("dashboard.nav.author.review"), href: "/dashboard/author?tab=review", icon: RefreshCwIcon },
+        { label: t("dashboard.nav.author.characters"), href: "/dashboard/author?tab=characters", icon: UserRoundIcon },
+        { label: t("dashboard.nav.author.graph"), href: "/dashboard/author?tab=graph", icon: GitBranchIcon },
+        { label: t("dashboard.nav.author.timeline"), href: "/dashboard/author?tab=timeline", icon: Clock3Icon },
+        { label: t("dashboard.nav.author.conflicts"), href: "/dashboard/author?tab=conflicts", icon: AlertTriangleIcon },
+        { label: t("dashboard.nav.author.simulate"), href: "/dashboard/author?tab=simulate", icon: PlayIcon },
+        { label: t("dashboard.nav.author.audit"), href: "/dashboard/author?tab=audit", icon: ScrollTextIcon },
+      ],
+    },
+    {
+      key: "account",
+      label: t("dashboard.nav.author.groups.account"),
+      defaultOpen: false,
+      items: [
+        { label: t("dashboard.nav.author.usage"), href: "/dashboard/usage", icon: BarChart3Icon },
+        { label: t("dashboard.nav.author.byok"), href: "/dashboard/settings/byok", icon: KeyIcon },
+        { label: t("dashboard.nav.author.settings"), href: "/dashboard/settings/author", icon: SettingsIcon },
       ],
     },
   ];
