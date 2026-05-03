@@ -47,12 +47,12 @@ export async function recordAuthorModelUsage(
   }
 
   const supabase = client ?? createServerClient();
-  const insert = supabase.from('model_usage').insert;
-  if (!insert) {
+  const modelUsage = supabase.from('model_usage');
+  if (typeof modelUsage.insert !== 'function') {
     throw new AuthorLlmError('MODEL_USAGE_RECORD_FAILED', 'model_usage insert client is unavailable');
   }
 
-  const { error } = await insert({
+  const { error } = await modelUsage.insert({
     user_id: input.userId,
     project_id: input.projectId,
     provider: input.provider,
@@ -86,10 +86,11 @@ export async function getAuthorModelUsageSummary(
   monthStart.setUTCHours(0, 0, 0, 0);
 
   const supabase = client ?? createServerClient();
-  const query = supabase.from('model_usage').select?.('tokens_in,tokens_out,byok');
-  if (!query) return null;
+  const modelUsage = supabase.from('model_usage');
+  if (typeof modelUsage.select !== 'function') return null;
 
-  const { data, error } = await query
+  const { data, error } = await modelUsage
+    .select('tokens_in,tokens_out,byok')
     .eq('user_id', userId)
     .gte('created_at', monthStart.toISOString());
 
